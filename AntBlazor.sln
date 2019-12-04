@@ -11,6 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntBlazor.Docs.ServerApp", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntBlazor.Docs.ClientApp", "src\AntBlazor.Docs.ClientApp\AntBlazor.Docs.ClientApp.csproj", "{1FD08A02-2249-44F6-B79E-B2E6836D551F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0CB79B3D-E483-4051-8026-6A80FCA0C6A6}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\gh-pages.yml = .github\workflows\gh-pages.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

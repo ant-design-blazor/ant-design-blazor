@@ -1,4 +1,4 @@
-name: publish gh-pages
+name: Publish Docs
 
 on: 
   push:
@@ -20,7 +20,7 @@ jobs:
       uses: einaregilsson/build-number@v2 
       with:
         token: ${{secrets.github_token}}        
-    - name: Publish App
+    - name: Publish Docs to github pages
       env:
         GH_PUSH_TOKEN: ${{secrets.GH_PUSH_TOKEN}}  
       run: |
@@ -28,6 +28,9 @@ jobs:
         git config --global user.email 'shunjiey@hotmail.com'
         dotnet publish -c Release -o tmp
         cd tmp/AntBlazor.Docs.ClientApp/dist
+        rm index.html
+        cp -r gh-pages/* gh-pages/.nojekyll ./
+        rm -r gh-pages
         git init
         git checkout -b gh-pages
         git add -A
