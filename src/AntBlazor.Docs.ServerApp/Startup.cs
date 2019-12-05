@@ -1,4 +1,5 @@
 using System.Net.Http;
+using EmbeddedBlazorContent;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -42,6 +43,10 @@ namespace AntBlazor.Docs.ServerApp
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseEmbeddedBlazorContent(typeof(AntBlazor._Imports).Assembly, "~/assets");
+
+            app.UseEmbeddedBlazorContent(typeof(AntBlazor.Docs.Pages.Index).Assembly, "~/assets");
 
             app.UseRouting();
 
