@@ -1,0 +1,12 @@
+[
+  {
+    "outputFile": "assets/css/antd.min.css",
+    "inputFile": "Style/index.less",
+    "minify": {
+      "enabled": true
+    },
+    "options": {
+      "sourceMap": true
+    }
+  }
+]
