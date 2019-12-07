@@ -1,0 +1,23 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
+    @ChildContent
+</div>
+
+@code
+     {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public bool HasSider { get; set; }
+
+    public AntLayout()
+    {
+        ClassMapper
+            .Add("ant-layout")
+            .If("ant-layout-has-sider", () => HasSider);
+    }
+
+}
