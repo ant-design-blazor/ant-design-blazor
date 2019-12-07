@@ -1,15 +1,72 @@
 ﻿@inherits LayoutComponentBase
-
-<div class="sidebar">
-    <NavMenu />
-</div>
-
-<div class="main">
-    <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/en-us/aspnet/" target="_blank">About</a>
+@*<div class="sidebar">
+        <NavMenu />
     </div>
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
+    <div class="main">
+        <div class="top-row px-4">
+            <a href="https://docs.microsoft.com/en-us/aspnet/" target="_blank">About</a>
+        </div>
+
+        <div class="content px-4">
+            @Body
+        </div>
+    </div>*@
+
+<AntLayout class="app-layout" HasSider="true">
+    <AntLayoutSider class="menu-sidebar"
+                    adCollapsible
+                    adWidth="256px"
+                    adBreakpoint="md"
+                    adCollapsed="isCollapsed">
+        <div class="sidebar-logo">
+            <a href="https://github.com/ElderJames/ant-design-blazor" target="_blank">
+                <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
+                <h1>Ant Design Of Blazor</h1>
+            </a>
+        </div>
+        <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+            <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+                <ul>
+                    <li nz-menu-item nzMatchRouter>
+                        <a routerLink="/welcome">Welcome</a>
+                    </li>
+                    <li nz-menu-item nzMatchRouter>
+                        <a>Monitor</a>
+                    </li>
+                    <li nz-menu-item nzMatchRouter>
+                        <a>Workplace</a>
+                    </li>
+                </ul>
+            </li>
+            <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
+                <ul>
+                    <li nz-menu-item nzMatchRouter>
+                        <a>Basic Form</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </AntLayoutSider>
+    <AntLayout>
+        <AntLayoutHeader>
+            <div class="app-header">
+                <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+                    <i class="trigger"
+                       nz-icon
+                       [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+                </span>
+            </div>
+        </AntLayoutHeader>
+        <div class="inner-content">
+            @Body
+        </div>
+    </AntLayout>
+</AntLayout>
+
+@code
+{
+
+    bool isCollapsed = false;
+
+}

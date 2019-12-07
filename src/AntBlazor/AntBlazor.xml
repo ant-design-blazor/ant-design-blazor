@@ -4,5 +4,109 @@
         <name>AntBlazor</name>
     </assembly>
     <members>
+        <member name="P:AntBlazor.AntLayoutSiderBase.adBreakpoint">
+            <summary>
+            "xs" | "sm" | "md" | "lg" | "xl" | "xxl"
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntTheme.Primary">
+            <summary>
+            The theme primary color
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntTheme.Secondary">
+            <summary>
+            The theme secondary color
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntTheme.Background">
+            <summary>
+            The theme background color
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntTheme.Surface">
+            <summary>
+            The theme surface color
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntTheme.OnPrimary">
+            <summary>
+            Text color on top of a primary background
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntTheme.OnSecondary">
+            <summary>
+            Text color on top of a secondary background
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntTheme.OnSurface">
+            <summary>
+            Text color on top of a surface background
+            </summary>
+        </member>
+        <member name="T:AntBlazor.BaseMatThemeProvider">
+            <summary>
+            The Ant Design color system can be used to create a color theme that reflects your brand or style.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntDomComponentBase.Ref">
+            <summary>
+            Returned ElementRef reference for DOM element.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntDomComponentBase.Class">
+            <summary>
+            Specifies one or more classnames for an DOM element.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntDomComponentBase.Style">
+            <summary>
+            Specifies an inline style for an DOM element.
+            </summary>
+        </member>
+        <member name="T:AntBlazor.AntInputComponentBase`1">
+            <summary>
+            Base class for any input control that optionally supports an <see cref="P:AntBlazor.AntInputComponentBase`1.EditContext"/>.
+            </summary>
+            <typeparam name="T">the natural type of the input's value</typeparam>
+        </member>
+        <member name="P:AntBlazor.AntInputComponentBase`1.ValidationDisabled">
+            <summary>
+            When contained within an <see cref="P:AntBlazor.AntInputComponentBase`1.EditContext"/> disables this control's
+            participation in validation checking.  This means that this control will not
+            reflect the validation state of the underlying data binding.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntInputComponentBase`1.EditContext">
+            <summary>
+            Gets the associated <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntInputComponentBase`1.FieldIdentifier">
+            <summary>
+            Gets the <see cref="P:AntBlazor.AntInputComponentBase`1.FieldIdentifier"/> for the bound value.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntInputComponentBase`1.FieldClass">
+            <summary>
+            Gets a string that indicates the status of the field being edited. This will include
+            some combination of "modified", "valid", or "invalid", depending on the status of the field.
+            </summary>
+        </member>
+        <member name="M:AntBlazor.AntInputComponentBase`1.NotifyFieldChanged">
+            <summary>
+            Should be invoked by whenever a bound value is changed, such
+            as right after the value's corresponding <i>ValueChanged</i>
+            EventCallback is invoked.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntInputComponentBase`1.ValueExpression">
+            <summary>
+            Gets or sets an expression that identifies the bound value.
+            </summary>
+        </member>
+        <member name="M:AntBlazor.AntInputComponentBase`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>
