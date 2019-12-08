@@ -1,0 +1,53 @@
+﻿@namespace AntBlazor
+@inherits AntSubMenuBase
+
+<CascadingValue Value=this>
+    <li nz-submenu class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
+        <div class="@TitleDivClass.Class" style="@titleStyle"
+             @onmouseover="()=>setMouseEnterState(true)"
+             @onmousemove="()=>setMouseEnterState(false)"
+             @onclick="()=>clickSubMenuTitle()">
+            @if (nzIcon != null)
+            {
+                <i nz-icon nzType="@nzIcon"></i>
+            }
+            @*<ng-container *nzStringTemplateOutlet="nzTitle">*@
+            <span>@nzTitle</span>
+            @*</ng-container>*@
+            <ng-content select="[title]" *ngIf="!nzTitle"></ng-content>
+
+            @if (Menu.isInDropDown)
+            {
+                <span class="ant-dropdown-menu-submenu-arrow">
+                    <i nz-icon nzType="right" class="anticon-right ant-dropdown-menu-submenu-arrow-icon"></i>
+                </span>
+            }
+            else
+            {
+                <i class="ant-menu-submenu-arrow"></i>
+            }
+
+            <ng-template #notDropdownTpl>
+                <i class="ant-menu-submenu-arrow"></i>
+            </ng-template>
+        </div>
+        <ul>
+            @ChildContent
+        </ul>
+    </li>
+</CascadingValue>
+@code {
+
+    string titleStyle => Menu.nzMode == NzDirectionVHIType.inline ?
+        (nzPaddingLeft ?? Level * Menu.nzInlineIndent) + "px" : "";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        TitleDivClass
+            .If("ant-dropdown-menu-submenu-title", () => Menu.isInDropDown)
+            .If("ant-menu-submenu-title", () => !Menu.isInDropDown)
+            ;
+    }
+
+}

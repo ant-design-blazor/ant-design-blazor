@@ -1,0 +1,17 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
+    @ChildContent
+</div>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public AntLayoutFooter()
+    {
+        ClassMapper.Add("ant-layout-footer");
+    }
+}

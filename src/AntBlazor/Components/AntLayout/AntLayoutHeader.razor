@@ -1,9 +1,9 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<header class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
+<nz-header class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
     @ChildContent
-</header>
+</nz-header>
 
 @code {
 
@@ -12,6 +12,7 @@
 
     public AntLayoutHeader()
     {
-        ClassMapper.Add("ant-layout-header");
+        ClassMapper.Add("ant-layout-header")
+            .Add("nz-header");
     }
 }
