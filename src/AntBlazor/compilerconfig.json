@@ -1,7 +1,17 @@
 [
+  //{
+  //  "outputFile": "assets/css/antd.min.css",
+  //  "inputFile": "Style/index.less",
+  //  "minify": {
+  //    "enabled": true
+  //  },
+  //  "options": {
+  //    "sourceMap": true
+  //  }
+  //}
   {
-    "outputFile": "assets/css/antd.min.css",
-    "inputFile": "Style/index.less",
+    "outputFile": "assets/css/antblazor.min.css",
+    "inputFile": "Components/Styles.less",
     "minify": {
       "enabled": true
     },

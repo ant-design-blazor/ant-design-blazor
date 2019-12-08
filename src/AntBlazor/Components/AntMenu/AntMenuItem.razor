@@ -1,0 +1,12 @@
+﻿@namespace AntBlazor
+@inherits AntMenuItemBase
+
+<CascadingValue Value=this>
+    <li nz-menu-item class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
+        @ChildContent
+    </li>
+</CascadingValue>
+
+@code {
+
+}

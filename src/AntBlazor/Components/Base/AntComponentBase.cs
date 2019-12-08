@@ -11,16 +11,14 @@ namespace AntBlazor
         [Parameter]
         public ForwardRef RefBack { get; set; }
 
-
-        private Queue<Func<Task>> afterRenderCallQuene = new Queue<Func<Task>>();
+        private readonly Queue<Func<Task>> afterRenderCallQuene = new Queue<Func<Task>>();
 
         protected void CallAfterRender(Func<Task> action)
         {
             afterRenderCallQuene.Enqueue(action);
         }
 
-
-        protected async override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
@@ -72,7 +70,6 @@ namespace AntBlazor
             });
         }
 
-
         [Inject]
         protected IJSRuntime Js { get; set; }
 
@@ -103,6 +100,6 @@ namespace AntBlazor
             value?.Dispose();
         }
 
-        #endregion
+        #endregion Hack to fix https://github.com/aspnet/AspNetCore/issues/11159
     }
 }
