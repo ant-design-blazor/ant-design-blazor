@@ -47,9 +47,10 @@ namespace AntBlazor
         private void SetClassMap()
         {
             string prefixName = Menu.isInDropDown ? "ant-dropdown-menu-submenu" : "ant-menu-submenu";
-            ClassMapper.Add(prefixName)
+            ClassMapper.Clear()
+                .Add(prefixName)
                 .If($"{prefixName}-disabled", () => nzDisabled)
-                .If($"{prefixName}-open", () => nzOpen)
+                .If($"{prefixName}-open", () => this.nzOpen)
                 .If($"{prefixName}-selected", () => isChildMenuSelected)
                 .Add($"{prefixName}-{Menu.nzMode}")
                 .If($"{prefixName}-active", () => isMouseHover && !nzDisabled)
@@ -58,9 +59,9 @@ namespace AntBlazor
 
         protected override void OnInitialized()
         {
-            this.SetClassMap();
             this.open = nzOpen;
-            base.OnInitializedAsync();
+            this.SetClassMap();
+            base.OnInitialized();
         }
 
         protected void setMouseEnterState(bool value)
@@ -73,7 +74,8 @@ namespace AntBlazor
         {
             if (Menu.nzMode == NzDirectionVHIType.inline && !Menu.isInDropDown && !this.nzDisabled)
             {
-                open = !this.nzOpen;
+                this.nzOpen = !this.nzOpen;
+                this.SetClassMap();
             }
         }
     }
