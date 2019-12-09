@@ -1,17 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@*<div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <div class="main">
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/en-us/aspnet/" target="_blank">About</a>
-        </div>
-
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>*@
 
 <AntLayout Class="app-layout" HasSider="true">
     <AntLayoutSider class="menu-sidebar"
@@ -28,18 +15,26 @@
         <AntMenu nzTheme="dark" nzMode="NzDirectionVHIType.inline" nzInlineCollapsed="isCollapsed">
             <AntSubMenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
                 <AntMenuItem nzMatchRouter>
-                    <a routerLink="/welcome">Welcome</a>
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        Home
+                    </NavLink>
                 </AntMenuItem>
                 <AntMenuItem nzMatchRouter>
-                    <a>Monitor</a>
+                    <NavLink href="counter">
+                        Counter
+                    </NavLink>
                 </AntMenuItem>
                 <AntMenuItem nzMatchRouter>
-                    <a>Workplace</a>
+                    <NavLink href="fetchdata">
+                        Fetch data
+                    </NavLink>
                 </AntMenuItem>
             </AntSubMenu>
             <AntSubMenu nzOpen nzTitle="Form" nzIcon="form">
                 <AntMenuItem nzMatchRouter>
-                    <a>Basic Form</a>
+                    <NavLink href="fetchdata">
+                        Basic Form
+                    </NavLink>
                 </AntMenuItem>
             </AntSubMenu>
         </AntMenu>
