@@ -5,8 +5,8 @@
     <li nz-submenu class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
         <div class="@TitleDivClass.Class" style="@titleStyle"
              @onmouseover="()=>setMouseEnterState(true)"
-             @onmousemove="()=>setMouseEnterState(false)"
-             @onclick="()=>clickSubMenuTitle()">
+             @onmouseout="()=>setMouseEnterState(false)"
+             @onclick="()=> clickSubMenuTitle()">
             @if (nzIcon != null)
             {
                 <i nz-icon nzType="@nzIcon"></i>
@@ -31,15 +31,20 @@
                 <i class="ant-menu-submenu-arrow"></i>
             </ng-template>
         </div>
-        <ul>
-            @ChildContent
-        </ul>
+        @if (Menu.nzMode == NzDirectionVHIType.inline)
+        {
+            <ul class="@nzMenuClassName ant-menu ant-menu-inline ant-menu-sub" style="@submenuStyle">
+                @ChildContent
+            </ul>
+        }
     </li>
 </CascadingValue>
 @code {
 
     string titleStyle => Menu.nzMode == NzDirectionVHIType.inline ?
-        (nzPaddingLeft ?? Level * Menu.nzInlineIndent) + "px" : "";
+        $"padding-left:{(nzPaddingLeft ?? Level * Menu.nzInlineIndent)}px" : "";
+
+    string submenuStyle => nzOpen ? "" : "height: 0px; overflow: hidden;";
 
     protected override void OnInitialized()
     {

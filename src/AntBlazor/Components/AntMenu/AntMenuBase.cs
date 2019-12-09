@@ -42,6 +42,7 @@ namespace AntBlazor
             ClassMapper.Add(prefixName)
                 .Add($"{prefixName}-root")
                 .Add($"{prefixName}-{nzTheme}")
+                .Add($"{prefixName}-{nzMode}")
                 .If($"{prefixName}-inline-collapsed", () => nzInlineCollapsed);
         }
     }
