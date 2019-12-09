@@ -43,5 +43,11 @@ namespace AntBlazor
             map.Add(() => name, func);
             return this;
         }
+
+        public ClassMapper Clear()
+        {
+            map.Clear();
+            return this;
+        }
     }
 }
