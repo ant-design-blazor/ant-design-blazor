@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
@@ -28,25 +30,34 @@ namespace AntBlazor
         [CascadingParameter]
         public AntSubMenu SubMenu { get; set; }
 
-        public bool isInDropDown { get; set; }
-
         private int originalPadding;
-
-        public AntMenuItemBase()
-        {
-        }
 
         private void SetClassMap()
         {
-            string prefixName = isInDropDown ? "ant-dropdown-menu-item" : "ant-menu-item";
-            ClassMapper.Add(prefixName)
+            string prefixName = Menu.isInDropDown ? "ant-dropdown-menu-item" : "ant-menu-item";
+            ClassMapper.Clear()
+                .Add(prefixName)
                 .If($"{prefixName}-selected", () => nzSelected)
                 .If($"{prefixName}-disabled", () => nzDisabled);
+        }
+
+        internal void SelectedChanged(bool value)
+        {
+            this.nzSelected = value;
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            if (this is AntMenuItem item)
+            {
+                SubMenu.Items.Add(item);
+            }
+
+            if (Attributes?.TryGetValue("style", out var style) == true)
+            {
+            }
+
             int? padding = null;
             if (Menu.nzMode == NzDirectionVHIType.inline)
             {
