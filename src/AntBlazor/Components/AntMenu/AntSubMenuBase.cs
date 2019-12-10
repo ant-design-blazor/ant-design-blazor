@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
@@ -9,6 +12,11 @@ namespace AntBlazor
 
         [CascadingParameter]
         protected AntMenu Menu { get; set; }
+
+        internal IList<AntMenuItem> Items { get; set; } = new List<AntMenuItem>();
+
+        [CascadingParameter]
+        protected AntSubMenu ParentSubMenu { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -46,6 +54,8 @@ namespace AntBlazor
 
         private void SetClassMap()
         {
+            this.isChildMenuSelected = this.Items.Any(x => x.nzSelected);
+
             string prefixName = Menu.isInDropDown ? "ant-dropdown-menu-submenu" : "ant-menu-submenu";
             ClassMapper.Clear()
                 .Add(prefixName)
@@ -59,6 +69,8 @@ namespace AntBlazor
 
         protected override void OnInitialized()
         {
+            this.Level = this.ParentSubMenu?.Level + 1 ?? 1;
+
             this.open = nzOpen;
             this.SetClassMap();
             base.OnInitialized();

@@ -9,6 +9,36 @@
             "xs" | "sm" | "md" | "lg" | "xl" | "xxl"
             </summary>
         </member>
+        <member name="P:AntBlazor.AntNavLink.ActiveClass">
+            <summary>
+            Gets or sets the CSS class name applied to the NavLink when the
+            current route matches the NavLink href.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntNavLink.CssClass">
+            <summary>
+            Gets or sets the computed CSS class based on whether or not the link is active.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntNavLink.ChildContent">
+            <summary>
+            Gets or sets the child content of the component.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntNavLink.Match">
+            <summary>
+            Gets or sets a value representing the URL matching behavior.
+            </summary>
+        </member>
+        <member name="M:AntBlazor.AntNavLink.OnInitialized">
+            <inheritdoc />
+        </member>
+        <member name="M:AntBlazor.AntNavLink.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:AntBlazor.AntNavLink.Dispose">
+            <inheritdoc />
+        </member>
         <member name="P:AntBlazor.AntTheme.Primary">
             <summary>
             The theme primary color
