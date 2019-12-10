@@ -34,6 +34,7 @@ namespace AntBlazor
         {
             base.OnInitialized();
             SetClassMap();
+            isInDropDown = nzInDropDown;
         }
 
         private void SetClassMap()

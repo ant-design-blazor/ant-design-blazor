@@ -26,14 +26,10 @@
             {
                 <i class="ant-menu-submenu-arrow"></i>
             }
-
-            <ng-template #notDropdownTpl>
-                <i class="ant-menu-submenu-arrow"></i>
-            </ng-template>
         </div>
         @if (Menu.nzMode == NzDirectionVHIType.inline)
         {
-            <ul class="@nzMenuClassName ant-menu ant-menu-inline ant-menu-sub" style="@submenuStyle">
+            <ul class="@nzMenuClassName ant-menu ant-menu-inline ant-menu-sub" style="transition: height 0.5s; @submenuStyle">
                 @ChildContent
             </ul>
         }
