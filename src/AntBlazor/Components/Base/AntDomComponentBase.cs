@@ -30,7 +30,7 @@ namespace AntBlazor
         }
 
         [CascadingParameter]
-        public AntTheme Theme { get; set; }
+        public AntTheme AntTheme { get; set; }
 
         protected ClassMapper ClassMapper { get; } = new ClassMapper();
 
@@ -38,7 +38,7 @@ namespace AntBlazor
         {
             ClassMapper
                 .Get(() => this.Class)
-                .Get(() => this.Theme?.GetClass());
+                .Get(() => this.AntTheme?.GetClass());
         }
 
         /// <summary>

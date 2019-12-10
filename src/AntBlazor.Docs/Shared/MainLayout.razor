@@ -43,9 +43,7 @@
         <AntLayoutHeader>
             <div class="app-header">
                 <span class="header-trigger" @onclick="()=>isCollapsed = !isCollapsed">
-                    <i class="trigger"
-                       nz-icon
-                       [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+                    <AntIcon class="trigger"nz-icon Type="@(isCollapsed ? "menu-unfold" : "menu-fold")"></AntIcon>
                 </span>
             </div>
         </AntLayoutHeader>
