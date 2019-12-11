@@ -9,17 +9,17 @@
              @onclick="()=> clickSubMenuTitle()">
             @if (nzIcon != null)
             {
-                <i nz-icon nzType="@nzIcon"></i>
+                <AntIcon Type="@nzIcon"></AntIcon>
             }
             @*<ng-container *nzStringTemplateOutlet="nzTitle">*@
-            <span>@nzTitle</span>
+            <span>@((MarkupString)nzTitle)</span>
             @*</ng-container>*@
-            <ng-content select="[title]" *ngIf="!nzTitle"></ng-content>
+            @*<ng-content select="[title]" *ngIf="!nzTitle"></ng-content>*@
 
             @if (Menu.isInDropDown)
             {
                 <span class="ant-dropdown-menu-submenu-arrow">
-                    <i nz-icon nzType="right" class="anticon-right ant-dropdown-menu-submenu-arrow-icon"></i>
+                    <AntIcon Type="right" class="anticon-right ant-dropdown-menu-submenu-arrow-icon"></AntIcon>
                 </span>
             }
             else
