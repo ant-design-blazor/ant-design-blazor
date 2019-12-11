@@ -69,6 +69,11 @@ namespace AntBlazor
 
         protected override void OnInitialized()
         {
+            if (this is AntSubMenu subMenu)
+            {
+                this.Menu?.SubMenus.Add(subMenu);
+            }
+
             this.Level = this.ParentSubMenu?.Level + 1 ?? 1;
 
             this.open = nzOpen;
@@ -89,6 +94,13 @@ namespace AntBlazor
                 this.nzOpen = !this.nzOpen;
                 this.SetClassMap();
             }
+        }
+
+        public void SetOpenState(bool value)
+        {
+            this.nzOpen = value;
+            this.open = value;
+            StateHasChanged();
         }
     }
 }
