@@ -1,4 +1,3 @@
-using System.Net.Http;
 using EmbeddedBlazorContent;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,8 +22,7 @@ namespace AntBlazor.Docs.ServerApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddHttpClient();
-            services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient());
+            services.AddAntBlazor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,9 +42,9 @@ namespace AntBlazor.Docs.ServerApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseEmbeddedBlazorContent(typeof(AntBlazor._Imports).Assembly, "~/assets");
+            app.UseEmbeddedBlazorContent(typeof(AntBlazor._Imports).Assembly, "~/_content/AntBlazor");
 
-            app.UseEmbeddedBlazorContent(typeof(AntBlazor.Docs.Pages.Index).Assembly, "~/assets");
+            app.UseEmbeddedBlazorContent(typeof(AntBlazor.Docs.Pages.Index).Assembly, "~/_content/AntBlazor.Docs");
 
             app.UseRouting();
 

@@ -43,7 +43,7 @@ else
     {
         // httpClient request in server side must has the base url; 
         var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-        forecasts = await Http.GetJsonAsync<WeatherForecast[]>(new Uri(baseUrl,"sample-data/weather.json").ToString());
+        forecasts = await Http.GetJsonAsync<WeatherForecast[]>(new Uri(baseUrl,"_content/AntBlazor.Docs/sample-data/weather.json").ToString());
     }
 
     public class WeatherForecast
