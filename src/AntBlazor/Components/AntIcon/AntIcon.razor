@@ -2,7 +2,6 @@
 @inherits AntIconBase
 
 <i class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
-   @*<img src="@($"/_content/AntBlazor/icons/{Theme}/{Type}.svg".ToLower())" style="@(Rotate!=0?$"transform: rotate({Rotate}deg)":"")" focusable="false" width="@Width" height="@Height" fill="@Fill"/>*@
      @((MarkupString)SvgImg)
 </i>
 
