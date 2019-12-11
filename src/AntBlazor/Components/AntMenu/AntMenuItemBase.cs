@@ -51,7 +51,8 @@ namespace AntBlazor
             base.OnInitialized();
             if (this is AntMenuItem item)
             {
-                SubMenu.Items.Add(item);
+                Menu?.MenuItems.Add(item);
+                SubMenu?.Items.Add(item);
             }
 
             if (Attributes?.TryGetValue("style", out var style) == true)
