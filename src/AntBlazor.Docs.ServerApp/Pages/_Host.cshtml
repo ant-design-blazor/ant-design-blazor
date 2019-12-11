@@ -10,7 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AntBlazor.Docs.ServerApp</title>
     <base href="~/" />
-    @Html.EmbeddedBlazorContent(requestPath:"~/assets")
+    @Html.EmbeddedBlazorContent(assembly: typeof(AntBlazor._Imports).Assembly, requestPath: "~/_content/AntBlazor")
+    @Html.EmbeddedBlazorContent(assembly: typeof(AntBlazor.Docs.Pages.Index).Assembly, requestPath: "~/_content/AntBlazor.Docs")
 </head>
 <body>
     <app>

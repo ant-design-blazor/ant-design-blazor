@@ -61,9 +61,9 @@ namespace AntBlazor
         {
             var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
 
-            _iconSvg = await httpClient.GetStringAsync(new Uri(baseUrl, $"/_content/AntBlazor/icons/{Theme}/{Type}.svg".ToLower()));
-
-            base.OnInitializedAsync();
+            _iconSvg = await httpClient.GetStringAsync(new Uri(baseUrl, $"_content/AntBlazor/icons/{Theme}/{Type}.svg".ToLower()));
+            SetupSvgImg();
+            await base.OnInitializedAsync();
         }
 
         protected void SetupSvgImg()
