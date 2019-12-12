@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
@@ -58,13 +59,13 @@ namespace AntBlazor
                 .If($"{prefixName}-inline-collapsed", () => nzInlineCollapsed);
         }
 
-        protected override void OnParametersSet()
+        protected override async Task OnParametersSetAsync()
         {
             base.OnParametersSet();
-            updateInLineCollapse();
+            await updateInLineCollapse();
         }
 
-        private void updateInLineCollapse()
+        private async Task updateInLineCollapse()
         {
             if (MenuItems.Any())
             {
@@ -73,7 +74,7 @@ namespace AntBlazor
                     openedSubMenus = this.SubMenus.Where(x => x.nzOpen).ToList();
                     foreach (var antSubMenu in this.SubMenus)
                     {
-                        antSubMenu.SetOpenState(false);
+                        await antSubMenu.SetOpenState(false);
                     }
 
                     this.nzMode = NzDirectionVHIType.vertical;
@@ -82,11 +83,12 @@ namespace AntBlazor
                 {
                     foreach (var subMenu in openedSubMenus)
                     {
-                        subMenu.SetOpenState(false);
+                        await subMenu.SetOpenState(false);
                     }
                     openedSubMenus.Clear();
                     this.nzMode = this.cacheMode;
                 }
+                StateHasChanged();
             }
         }
     }
