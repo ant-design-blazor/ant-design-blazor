@@ -1,40 +1,54 @@
 ﻿@namespace AntBlazor
 @inherits AntSubMenuBase
 
-<CascadingValue Value=this>
-    <li nz-submenu class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
-        <div class="@TitleDivClass.Class" style="@titleStyle"
-             @onmouseover="()=>setMouseEnterState(true)"
-             @onmouseout="()=>setMouseEnterState(false)"
-             @onclick="()=> clickSubMenuTitle()">
-            @if (nzIcon != null)
-            {
-                <AntIcon Type="@nzIcon"></AntIcon>
-            }
-            @*<ng-container *nzStringTemplateOutlet="nzTitle">*@
-            <span>@((MarkupString)nzTitle)</span>
-            @*</ng-container>*@
-            @*<ng-content select="[title]" *ngIf="!nzTitle"></ng-content>*@
+    <CascadingValue Value=this>
+        <li nz-submenu class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
+            <div class="@TitleDivClass.Class" style="@titleStyle"
+                 @onmouseover="()=>SetMouseEnterState(true)"
+                 @onmouseout="()=>SetMouseEnterState(false)"
+                 @onclick="()=> ClickSubMenuTitle()">
+                @if (nzIcon != null)
+                {
+                    <AntIcon Type="@nzIcon"></AntIcon>
+                }
+                @*<ng-container *nzStringTemplateOutlet="nzTitle">*@
+                <span>@((MarkupString)nzTitle)</span>
+                @*</ng-container>*@
+                @*<ng-content select="[title]" *ngIf="!nzTitle"></ng-content>*@
 
-            @if (Menu.isInDropDown)
+                @if (Menu.isInDropDown)
+                {
+                    <span class="ant-dropdown-menu-submenu-arrow">
+                        <AntIcon Type="right" class="anticon-right ant-dropdown-menu-submenu-arrow-icon"></AntIcon>
+                    </span>
+                }
+                else
+                {
+                    <i class="ant-menu-submenu-arrow"></i>
+                }
+            </div>
+            @if (Menu.nzMode == NzDirectionVHIType.inline)
             {
-                <span class="ant-dropdown-menu-submenu-arrow">
-                    <AntIcon Type="right" class="anticon-right ant-dropdown-menu-submenu-arrow-icon"></AntIcon>
-                </span>
+                <ul class="@nzMenuClassName ant-menu ant-menu-inline ant-menu-sub" style="transition: height 0.5s; @submenuStyle">
+                    @ChildContent
+                </ul>
             }
-            else
+            </li>
+
+            @if (nzOpen && Menu.nzMode != NzDirectionVHIType.inline)
             {
-                <i class="ant-menu-submenu-arrow"></i>
-            }
-        </div>
-        @if (Menu.nzMode == NzDirectionVHIType.inline)
-        {
-            <ul class="@nzMenuClassName ant-menu ant-menu-inline ant-menu-sub" style="transition: height 0.5s; @submenuStyle">
-                @ChildContent
-            </ul>
+                <div style="position: absolute; top: 0px; left: 0px; width: 100%;">
+                <div class="ant-menu-submenu ant-menu-submenu-popup @PopupClassMapper.Class"
+                     style="left:@(element.offsetLeft+element.clientWidth)px; top:@(element.offsetTop)px; @(isMouseHover?"":"display: none;")"
+                     @onmouseout="()=>SetMouseEnterState(false)"
+                     @onmouseover="()=>SetMouseEnterState(true)">
+                    <ul class="@nzMenuClassName @PopupUlClassMapper.Class ant-menu-submenu-content" style="@(isMouseHover?"":"display: none;")">
+                        @ChildContent
+                    </ul>
+                </div>
+            </div>
         }
-    </li>
-</CascadingValue>
+    </CascadingValue>
 @code {
 
     string titleStyle => Menu.nzMode == NzDirectionVHIType.inline ?
@@ -49,6 +63,7 @@
             .If("ant-dropdown-menu-submenu-title", () => Menu.isInDropDown)
             .If("ant-menu-submenu-title", () => !Menu.isInDropDown)
             ;
+
     }
 
 }

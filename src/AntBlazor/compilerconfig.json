@@ -18,5 +18,15 @@
     "options": {
       "sourceMap": true
     }
+  },
+  {
+    "outputFile": "assets/js/antblazor.min.js",
+    "inputFile": "JsInterop/interop.js",
+    "minify": {
+      "enabled": true
+    },
+    "options": {
+      "sourceMap": true
+    }
   }
 ]
