@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
@@ -42,15 +43,24 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<bool> nzOpenChange { get; set; }
 
+        [Inject]
+        public JsInterop.JsInterop JsInterop { get; set; }
+
         protected ClassMapper TitleDivClass { get; } = new ClassMapper();
+
+        protected ClassMapper PopupClassMapper { get; } = new ClassMapper();
+
+        protected ClassMapper PopupUlClassMapper { get; } = new ClassMapper();
 
         private string placement = "rightTop";
         private int triggerWidth;
         private string expandState = "collapsed";
         private string[] overlayPositions = new[] { "" };
         private bool isChildMenuSelected = false;
-        private bool isMouseHover = false;
+        protected bool isMouseHover { get; set; } = false;
         private bool open;
+
+        protected Element element;
 
         private void SetClassMap()
         {
@@ -79,27 +89,57 @@ namespace AntBlazor
             this.open = nzOpen;
             this.SetClassMap();
             base.OnInitialized();
+
+            PopupClassMapper.Clear()
+                .If("ant-menu-light", () => Menu.nzTheme == "light")
+                .If("ant-menu-dark", () => Menu.nzTheme == "dark")
+                .If("ant-menu-submenu-placement-bottomLeft", () => Menu.nzMode == NzDirectionVHIType.horizontal)
+                .If("ant-menu-submenu-placement-rightTop",
+                    () => Menu.nzMode == NzDirectionVHIType.vertical && placement == "rightTop")
+                .If("ant-menu-submenu-placement-leftTop",
+                    () => Menu.nzMode == NzDirectionVHIType.vertical && placement == "leftTop")
+                ;
+
+            PopupUlClassMapper.Clear()
+                .If("ant-dropdown-menu", () => Menu.isInDropDown)
+                .If("ant-menu", () => !Menu.isInDropDown)
+                .If("ant-dropdown-menu-vertical", () => Menu.isInDropDown)
+                .If("ant-menu-vertical", () => !Menu.isInDropDown)
+                .If("ant-dropdown-menu-sub", () => Menu.isInDropDown)
+                .If("ant-menu-sub", () => !Menu.isInDropDown)
+                ;
         }
 
-        protected void setMouseEnterState(bool value)
+        protected void SetMouseEnterState(bool value)
         {
-            this.isMouseHover = value;
-            this.SetClassMap();
-        }
-
-        protected void clickSubMenuTitle()
-        {
-            if (Menu.nzMode == NzDirectionVHIType.inline && !Menu.isInDropDown && !this.nzDisabled)
+            if (isMouseHover != value)
             {
-                this.nzOpen = !this.nzOpen;
+                this.isMouseHover = value;
                 this.SetClassMap();
             }
         }
 
-        public void SetOpenState(bool value)
+        protected override async Task OnParametersSetAsync()
+        {
+            await base.OnParametersSetAsync();
+            this.element = await JsInterop.GetDom(Ref);
+        }
+
+        protected async Task ClickSubMenuTitle()
+        {
+            if (Menu.nzMode == NzDirectionVHIType.inline && !Menu.isInDropDown && !this.nzDisabled)
+            {
+                this.nzOpen = !this.nzOpen;
+                await nzOpenChange.InvokeAsync(this.nzOpen);
+                this.SetClassMap();
+            }
+        }
+
+        public async Task SetOpenState(bool value)
         {
             this.nzOpen = value;
             this.open = value;
+            await nzOpenChange.InvokeAsync(this.nzOpen);
             StateHasChanged();
         }
     }
