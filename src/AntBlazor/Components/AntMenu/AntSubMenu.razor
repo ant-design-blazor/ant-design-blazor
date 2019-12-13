@@ -39,7 +39,7 @@
             {
                 <div style="position: absolute; top: 0px; left: 0px; width: 100%;">
                 <div class="ant-menu-submenu ant-menu-submenu-popup @PopupClassMapper.Class"
-                     style="left:@(element.offsetLeft+element.clientWidth)px; top:@(element.offsetTop)px; @(isMouseHover?"":"display: none;")"
+                     style="left:@(element.offsetLeft+element.clientWidth+10)px; top:@(element.offsetTop)px; @(isMouseHover?"":"display: none;")"
                      @onmouseout="()=>SetMouseEnterState(false)"
                      @onmouseover="()=>SetMouseEnterState(true)">
                     <ul class="@nzMenuClassName @PopupUlClassMapper.Class ant-menu-submenu-content" style="@(isMouseHover?"":"display: none;")">
@@ -49,6 +49,8 @@
             </div>
         }
     </CascadingValue>
+
+@inject JsInterop.JsInterop js
 @code {
 
     string titleStyle => Menu.nzMode == NzDirectionVHIType.inline ?

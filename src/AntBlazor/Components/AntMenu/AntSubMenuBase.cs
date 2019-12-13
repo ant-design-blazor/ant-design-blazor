@@ -43,9 +43,6 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<bool> nzOpenChange { get; set; }
 
-        [Inject]
-        public JsInterop.JsInterop JsInterop { get; set; }
-
         protected ClassMapper TitleDivClass { get; } = new ClassMapper();
 
         protected ClassMapper PopupClassMapper { get; } = new ClassMapper();
@@ -60,7 +57,7 @@ namespace AntBlazor
         protected bool isMouseHover { get; set; } = false;
         private bool open;
 
-        protected Element element;
+        protected Element element = new Element();
 
         private void SetClassMap()
         {
@@ -110,19 +107,21 @@ namespace AntBlazor
                 ;
         }
 
-        protected void SetMouseEnterState(bool value)
+        protected async Task SetMouseEnterState(bool value)
         {
             if (isMouseHover != value)
             {
                 this.isMouseHover = value;
                 this.SetClassMap();
+
+                this.element = await JsInvokeAsync<Element>("GetDomInfo", Ref);
             }
         }
 
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            this.element = await JsInterop.GetDom(Ref);
+            this.element = await JsInvokeAsync<Element>("GetDomInfo", Ref);
         }
 
         protected async Task ClickSubMenuTitle()
