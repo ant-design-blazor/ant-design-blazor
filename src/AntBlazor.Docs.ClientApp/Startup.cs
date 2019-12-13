@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace AntBlazor.Docs.ClientApp
 {
@@ -8,7 +7,7 @@ namespace AntBlazor.Docs.ClientApp
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.TryAddScoped<JsInterop.JsInterop>();
+            services.AddAntBlazor();
         }
 
         public void Configure(IComponentsApplicationBuilder app)
