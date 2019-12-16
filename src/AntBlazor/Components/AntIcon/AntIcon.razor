@@ -1,10 +1,6 @@
 ﻿@namespace AntBlazor
 @inherits AntIconBase
 
-<i class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" @onclick="OnClick">
+<i class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" @onclick="OnClick" type="@Type">
      @((MarkupString)SvgImg)
 </i>
-
-@code {
-
-}
