@@ -36,18 +36,6 @@
 
     bool isSiderTrigger => this.adCollapsible && this.trigger != null && this.adCollapsedWidth != 0;
 
-    bool below;
-
-    private Hashtable dimensionMap = new Hashtable()
-    {
-        ["xs"] = "480px",
-        ["sm"] = "576px",
-        ["md"] = "768px",
-        ["lg"] = "992px",
-        ["xl"] = "1200px",
-        ["xxl"] = "1600px"
-    };
-
     RenderFragment trigger => adTrigger ?? defaultTrigger(this);
 
     public RenderFragment<AntLayoutSider> defaultTrigger = (sider) =>
