@@ -1,9 +1,12 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
-    @ChildContent
-</div>
+
+<CascadingValue Value="this">
+    <div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
+        @ChildContent
+    </div>
+</CascadingValue>
 
 @code
      {
@@ -13,8 +16,10 @@
     [Parameter]
     public bool HasSider { get; set; }
 
-    public AntLayout()
+
+    protected override void OnInitialized()
     {
+        base.OnInitialized();
         ClassMapper
             .Add("ant-layout")
             .If("ant-layout-has-sider", () => HasSider);
