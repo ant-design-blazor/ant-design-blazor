@@ -15,7 +15,7 @@
             }
             else
             {
-                <i nz-icon nzType="bars"></i>
+                <AntIcon Type="bars"></AntIcon>
             }
         </span>
     }
@@ -48,12 +48,18 @@
         ["xxl"] = "1600px"
     };
 
-    RenderFragment trigger => adTrigger;//?? defaultTrigger;
+    RenderFragment trigger => adTrigger ?? defaultTrigger(this);
 
-    public RenderFragment defaultTrigger =
-    @<div>
-        <i nz-icon [nzType]="nzCollapsed ? 'right' : 'left'" *ngIf="!nzReverseArrow"></i>
-        <i nz-icon [nzType]="nzCollapsed ? 'left' : 'right'" *ngIf="nzReverseArrow"></i>
-    </div>;
+    public RenderFragment<AntLayoutSider> defaultTrigger = (sider) =>
+    @<content>
+        @if (!sider.adReverseArrow)
+        {
+            <AntIcon Type="@(sider.adCollapsed ? "right" : "left")"></AntIcon>
+        }
+        else
+        {
+            <AntIcon Type="@(sider.adCollapsed ? "left" : "right")"></AntIcon>
+        }
+    </content>;
 
 }

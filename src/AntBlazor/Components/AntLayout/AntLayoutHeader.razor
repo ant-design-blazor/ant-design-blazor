@@ -10,9 +10,13 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-    public AntLayoutHeader()
+
+    protected override void OnInitialized()
     {
-        ClassMapper.Add("ant-layout-header")
+        base.OnInitialized();
+        ClassMapper.Clear()
+            .Add("ant-layout-header")
             .Add("nz-header");
     }
+
 }

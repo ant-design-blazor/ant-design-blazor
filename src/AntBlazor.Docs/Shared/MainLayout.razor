@@ -5,7 +5,8 @@
                     adCollapsible
                     adWidth="256px"
                     adBreakpoint="md"
-                    adCollapsed="isCollapsed">
+                    adCollapsed="isCollapsed"
+                    onCollapsedChange="()=>isCollapsed = !isCollapsed">
         <div class="sidebar-logo">
             <a href="https://github.com/ElderJames/ant-design-blazor" target="_blank">
                 <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
@@ -43,7 +44,7 @@
         <AntLayoutHeader>
             <div class="app-header">
                 <span class="header-trigger" @onclick="()=>isCollapsed = !isCollapsed">
-                    <AntIcon class="trigger"nz-icon Type="@(isCollapsed ? "menu-unfold" : "menu-fold")"></AntIcon>
+                    <AntIcon class="trigger" Type="@(isCollapsed ? "menu-unfold" : "menu-fold")"></AntIcon>
                 </span>
             </div>
         </AntLayoutHeader>
