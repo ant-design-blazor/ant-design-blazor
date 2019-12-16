@@ -1,0 +1,184 @@
+﻿@page "/button"
+
+<AntButton>
+    Default
+</AntButton>
+<AntButton type="@AntButtonType.Primary">
+    Primary
+</AntButton>
+<AntButton type="@AntButtonType.Dashed">
+    Dashed
+</AntButton>
+<AntButton type="@AntButtonType.Danger">
+    Danger
+</AntButton>
+<AntButton type="@AntButtonType.Link">
+    Link
+</AntButton>
+
+<br />
+<br />
+<h3>Icon Button</h3>
+<AntButton type="primary" shape="circle" icon="search" />
+<AntButton type="primary" icon="search">
+    Search
+</AntButton>
+<AntButton shape="circle" icon="search" />
+<AntButton icon="search">Search</AntButton>
+<br />
+<AntButton shape="circle" icon="search" />
+<AntButton icon="search">Search</AntButton>
+<AntButton type="dashed" shape="circle" icon="search" />
+<AntButton type="dashed" icon="search">
+    Search
+</AntButton>
+
+<br />
+<br />
+<h3>Loading Button</h3>
+
+<AntButton type="primary" loading>
+    Loading
+</AntButton>
+<AntButton type="primary" size="small" loading>
+    Loading
+</AntButton>
+<br />
+<AntButton type="primary" loading=@(loading) onclick="()=> enterLoading()">
+    Click me!
+</AntButton>
+<AntButton type="primary"
+           icon="poweroff"
+           loading="iconLoading"
+           onclick="()=>enterIconLoading()">
+    Click me!
+</AntButton>
+<br />
+<AntButton shape="circle" loading />
+<AntButton type="primary" shape="circle" loading />
+@code{
+    private bool loading = false;
+    void enterLoading()
+    {
+        loading = !loading;
+    }
+    private bool iconLoading = false;
+    void enterIconLoading()
+    {
+        iconLoading = !iconLoading;
+    }
+}
+
+
+<br />
+<br />
+<h3>Button size</h3>
+
+<AntButton Size="@AntButtonSize.Small" Type="@(size.Equals(AntButtonSize.Small) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Small))">
+    Small
+</AntButton>
+
+<AntButton Type="@(size.Equals(AntButtonSize.Default) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Default))">
+    Default
+</AntButton>
+<AntButton Size="@AntButtonSize.Large" Type="@(size.Equals(AntButtonSize.Large) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Large))">
+    Large
+</AntButton>
+
+@code {
+    string size = AntButtonSize.Default;
+    void OnClick(string s)
+    {
+        size = s;
+    }
+}
+
+<div>
+    <AntButton Size="@size">
+        Default
+    </AntButton>
+
+    <AntButton Size="@size" Type="@AntButtonType.Primary">
+        Primary
+    </AntButton>
+
+    <AntButton Size="@size" Type="@AntButtonType.Dashed">
+        Dashed
+    </AntButton>
+
+
+    <AntButton Size="@size" Type="@AntButtonType.Danger">
+        Danger
+    </AntButton>
+
+    <AntButton Size="@size" Type="@AntButtonType.Link">
+        Link
+    </AntButton>
+</div>
+
+
+
+<br />
+<br />
+<h3>Button size</h3>
+
+<AntButton type="primary" block>
+    Primary
+</AntButton>
+<AntButton block>Default</AntButton>
+<AntButton type="dashed" block>
+    Dashed
+</AntButton>
+<AntButton type="danger" block>
+    Danger
+</AntButton>
+<AntButton type="link" block>
+    Link
+</AntButton>
+
+
+<br />
+<br />
+<h3>Ghost Button</h3>
+<div style="background-color: rgb(190, 200, 200);    padding: 26px 16px 16px;">
+    <AntButton type="primary" ghost>
+        Primary
+    </AntButton>
+    <AntButton ghost>Default</AntButton>
+    <AntButton type="dashed" ghost>
+        Dashed
+    </AntButton>
+    <AntButton type="danger" ghost>
+        danger
+    </AntButton>
+    <AntButton type="link" ghost>
+        link
+    </AntButton>
+</div>
+
+<br />
+<br />
+<h3>Disabled Button</h3>
+<AntButton type="primary">Primary</AntButton>
+<AntButton type="primary" disabled>
+    Primary(disabled)
+</AntButton>
+<br />
+<AntButton>Default</AntButton>
+<AntButton disabled>Default(disabled)</AntButton>
+<br />
+<AntButton type="dashed">Dashed</AntButton>
+<AntButton type="dashed" disabled>
+    Dashed(disabled)
+</AntButton>
+<br />
+<AntButton type="link">Link</AntButton>
+<AntButton type="link" disabled>
+    Link(disabled)
+</AntButton>
+<div style="padding:8px 8px 0 8px; background:rgb(190, 200, 200); ">
+    <AntButton ghost>Ghost</AntButton>
+    <AntButton ghost disabled>
+        Ghost(disabled)
+    </AntButton>
+</div>
