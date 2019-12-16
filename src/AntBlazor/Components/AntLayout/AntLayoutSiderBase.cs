@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections;
+using System.Threading.Tasks;
+using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
@@ -38,8 +40,13 @@ namespace AntBlazor
         [Parameter]
         public RenderFragment adTrigger { get; set; }
 
+        [CascadingParameter]
+        public AntLayout Layout { get; set; }
+
         [Parameter]
         public EventCallback<bool> onCollapsedChange { get; set; }
+
+        [Inject] private DomEventService domEventService { get; set; }
 
         protected string widthSetting => this.adCollapsed ? $"{this.adCollapsedWidth}px" : StyleHelper.ToCssPixel(adWidth);
 
@@ -51,6 +58,18 @@ namespace AntBlazor
                     min-width:{widthSetting};
                     width:{widthSetting};";
 
+        protected bool below { get; set; }
+
+        private Hashtable dimensionMap = new Hashtable()
+        {
+            ["xs"] = "480px",
+            ["sm"] = "576px",
+            ["md"] = "768px",
+            ["lg"] = "992px",
+            ["xl"] = "1200px",
+            ["xxl"] = "1600px"
+        };
+
         public AntLayoutSiderBase()
         {
             ClassMapper.Add("ant-layout-sider")
@@ -60,10 +79,28 @@ namespace AntBlazor
                 ;
         }
 
+        protected override void OnInitialized()
+        {
+            domEventService.onResize += async () => await watchMatchMedia();
+            domEventService.RegisterResizeListener();
+            base.OnInitialized();
+        }
+
         public async Task toggleCollapse()
         {
             this.adCollapsed = !this.adCollapsed;
             await onCollapsedChange.InvokeAsync(adCollapsed);
+        }
+
+        public async Task watchMatchMedia()
+        {
+            if (string.IsNullOrEmpty(adBreakpoint))
+                return;
+
+            var matchBelow = await JsInvokeAsync<bool>("antMatchMedia", $"(max-width: {dimensionMap[adBreakpoint]})");
+            this.below = matchBelow;
+            this.adCollapsed = matchBelow;
+            await this.onCollapsedChange.InvokeAsync(matchBelow);
         }
     }
 }

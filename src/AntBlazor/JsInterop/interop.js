@@ -22,3 +22,7 @@ window.addDomEventListener = function (eventName, invoker) {
     invoker.invokeMethodAsync('Invoke');
   });
 }
+
+window.antMatchMedia = function (query) {
+  return window.matchMedia(query).matches;
+}
