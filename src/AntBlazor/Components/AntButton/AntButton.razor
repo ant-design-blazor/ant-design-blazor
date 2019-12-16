@@ -1,0 +1,17 @@
+﻿@namespace AntBlazor
+@inherits AntButtonBase
+
+<CascadingValue Value="this">
+    <button class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" @onclick="OnClick">
+        @if (loading)
+        {
+            <AntIcon Type="loading"></AntIcon>
+        }
+        @if (!string.IsNullOrEmpty(icon))
+        {
+            <AntIcon Type="@icon" Style="@iconStyle"></AntIcon>
+        }
+
+        @ChildContent
+    </button>
+</CascadingValue>

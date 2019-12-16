@@ -35,8 +35,11 @@ namespace AntBlazor
         [Parameter]
         public string Fill { get; set; } = "currentColor";
 
+        [CascadingParameter]
+        public AntButton Button { get; set; }
+
         [Parameter]
-        public EventCallback<MouseEventArgs> OnClick { get; set; }
+        public EventCallback<MouseEventArgs> onclick { get; set; }
 
         [Inject]
         private HttpClient httpClient { get; set; }
@@ -63,6 +66,12 @@ namespace AntBlazor
 
             _iconSvg = await httpClient.GetStringAsync(new Uri(baseUrl, $"_content/AntBlazor/icons/{Theme.ToLower()}/{Type.ToLower()}.svg"));
             SetupSvgImg();
+
+            if (this is AntIcon icon)
+            {
+                Button?.Icons.Add(icon);
+            }
+
             await base.OnInitializedAsync();
         }
 
@@ -75,6 +84,14 @@ namespace AntBlazor
         {
             base.OnParametersSet();
             SetupSvgImg();
+        }
+
+        public async Task OnClick(MouseEventArgs args)
+        {
+            if (onclick.HasDelegate)
+            {
+                await onclick.InvokeAsync(args);
+            }
         }
     }
 }
