@@ -1,0 +1,8 @@
+﻿@namespace AntBlazor
+@inherits AntButtonGroupBase
+
+<CascadingValue Value="this">
+    <div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
+        @ChildContent
+    </div>
+</CascadingValue>
