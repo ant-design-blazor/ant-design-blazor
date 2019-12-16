@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Routing;
@@ -11,8 +10,10 @@ namespace AntBlazor
         private const string DefaultActiveClass = "active";
 
         private bool _isActive;
-        private string _hrefAbsolute;
+        public string _hrefAbsolute;
         private string _class;
+
+        internal string Href => _hrefAbsolute;
 
         /// <summary>
         /// Gets or sets the CSS class name applied to the NavLink when the
@@ -41,6 +42,9 @@ namespace AntBlazor
         [CascadingParameter]
         public AntMenuItem MenuItem { get; set; }
 
+        [CascadingParameter]
+        public AntButton Button { get; set; }
+
         [Inject] private NavigationManager NavigationManger { get; set; }
 
         /// <inheritdoc />
@@ -48,6 +52,10 @@ namespace AntBlazor
         {
             // We'll consider re-rendering on each location change
             NavigationManger.LocationChanged += OnLocationChanged;
+            if (Button != null && this is AntNavLink link)
+            {
+                Button.Link = link;
+            }
         }
 
         /// <inheritdoc />
