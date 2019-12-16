@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using AntBlazor.JsInterop;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -10,6 +11,7 @@ namespace AntBlazor
         {
             services.TryAddSingleton<HttpClient>();
             services.TryAddScoped<JsInterop.JsInterop>();
+            services.TryAddScoped<DomEventService>();
             return services;
         }
     }
