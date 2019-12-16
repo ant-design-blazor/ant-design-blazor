@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -47,9 +48,13 @@ namespace AntBlazor
         [Inject]
         private NavigationManager NavigationManager { get; set; }
 
+        private static IDictionary<string, string> _typeSvgDict = new Dictionary<string, string>();
+
         protected string SvgImg { get; set; }
         private string SvgStyle { get; set; }
         private string _iconSvg;
+
+        private Uri baseUrl;
 
         public AntIconBase()
         {
@@ -62,10 +67,7 @@ namespace AntBlazor
 
         protected override async Task OnInitializedAsync()
         {
-            var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-
-            _iconSvg = await httpClient.GetStringAsync(new Uri(baseUrl, $"_content/AntBlazor/icons/{Theme.ToLower()}/{Type.ToLower()}.svg"));
-            SetupSvgImg();
+            baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
 
             if (this is AntIcon icon)
             {
@@ -75,15 +77,25 @@ namespace AntBlazor
             await base.OnInitializedAsync();
         }
 
-        protected void SetupSvgImg()
+        protected override async Task OnParametersSetAsync()
         {
-            SvgImg = _iconSvg.Insert(_iconSvg.IndexOf("svg") + 3, $" {SvgStyle} ");
+            await SetupSvgImg();
+            await base.OnParametersSetAsync();
         }
 
-        protected override void OnParametersSet()
+        protected async Task SetupSvgImg()
         {
-            base.OnParametersSet();
-            SetupSvgImg();
+            if (_typeSvgDict.TryGetValue($"{Theme}-{Type}", out var svg))
+            {
+                _iconSvg = svg;
+            }
+            else
+            {
+                _iconSvg = await httpClient.GetStringAsync(new Uri(baseUrl, $"_content/AntBlazor/icons/{Theme.ToLower()}/{Type.ToLower()}.svg"));
+                _typeSvgDict.Add($"{Theme}-{Type}", _iconSvg);
+            }
+
+            SvgImg = _iconSvg.Insert(_iconSvg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {SvgStyle} ");
         }
 
         public async Task OnClick(MouseEventArgs args)
