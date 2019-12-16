@@ -3,8 +3,7 @@
 
   if (!element) {
     element = document.body;
-  }
-  else if (typeof element === 'string') {
+  } else if (typeof element === 'string') {
     element = document.querySelector(element);
   }
 
@@ -16,4 +15,10 @@
   }
 
   return result;
+}
+
+window.addDomEventListener = function (eventName, invoker) {
+  window.addEventListener(eventName, function (args) {
+    invoker.invokeMethodAsync('Invoke');
+  });
 }
