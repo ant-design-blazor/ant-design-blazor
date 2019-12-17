@@ -1,0 +1,14 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+@if (If == null || If.Invoke())
+{
+    @ChildContent
+}
+
+@code{
+
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    [Parameter] public Func<bool> If { get; set; }
+}
