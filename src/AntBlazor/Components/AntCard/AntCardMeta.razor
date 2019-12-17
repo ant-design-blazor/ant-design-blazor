@@ -1,0 +1,42 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
+    @if (Avatar != null)
+    {
+        <div class="ant-card-meta-avatar">
+            @Avatar
+        </div>
+    }
+    @if (Title != null || Description != null)
+    {
+        <div class="ant-card-meta-detail">
+            @if (Title != null)
+            {
+                <div class="ant-card-meta-title">
+                    @Title
+                </div>
+            }
+            @if (Description != null)
+            {
+                @Description
+            }
+        </div>
+    }
+</div>
+
+@code{
+
+    [Parameter] public RenderFragment Title { get; set; }
+
+    [Parameter] public RenderFragment Description { get; set; }
+
+    [Parameter] public RenderFragment Avatar { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ClassMapper.Add("ant-card-meta");
+    }
+
+}
