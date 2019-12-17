@@ -1,0 +1,42 @@
+﻿@page "/card"
+
+<h3>Actions Card</h3>
+<AntCard bordered Actions="new[] { actionSetting,actionEdit,actionEllipsis}">
+    <Title>Card</Title>
+    <Extra>
+        <a>More</a>
+    </Extra>
+    <Body>
+        Body
+    </Body>
+</AntCard>
+
+<h3>Loading Card</h3>
+<AntCard bordered Actions="new[] { actionSetting,actionEdit,actionEllipsis}" loading>
+    <Title>Card</Title>
+    <Extra>
+        <a>More</a>
+    </Extra>
+    <Body>
+    Body
+    </Body>
+</AntCard>
+
+@code
+{
+    private RenderFragment actionSetting =
+    @<Template>
+        <AntIcon Type="setting" />
+    </Template>;
+
+private RenderFragment actionEdit =
+@<Template>
+    <AntIcon Type="edit" />
+</Template>;
+
+private RenderFragment actionEllipsis =
+@<Template>
+    <AntIcon Type="ellipsis" />
+</Template>;
+
+}

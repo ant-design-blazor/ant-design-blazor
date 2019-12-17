@@ -1,0 +1,60 @@
+﻿@namespace AntBlazor
+@inherits AntCardBase
+<CascadingValue Value="this">
+    <div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
+        @if (Title != null || Extra != null || AntCardTab != null)
+        {
+            <div class="ant-card-head">
+                <div class="ant-card-head-wrapper">
+                    @if (Title != null)
+                    {
+
+                        <div class="ant-card-head-title">
+                            @Title
+                        </div>
+                    }
+                    @if (Extra != null)
+                    {
+                        <div class="ant-card-extra">
+                            @Extra
+                        </div>
+                    }
+                </div>
+                @if (AntCardTab != null)
+                {
+                    @AntCardTab
+                }
+            </div>
+        }
+
+        @if (Cover != null)
+        {
+            <div class="ant-card-cover">
+                @Cover
+            </div>
+        }
+
+        <div class="ant-card-body" style="@bodyStyle">
+            @if (!loading)
+            {
+                @Body
+            }
+            else
+            {
+                <AntCardLoading></AntCardLoading>
+            }
+        </div>
+
+        @if (Actions.Count > 0)
+        {
+            <ul class="ant-card-actions">
+                @foreach (var action in Actions)
+                {
+                    <li style="@($"width:{100 / Actions.Count}%") ">
+                        <span>@action</span>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</CascadingValue>

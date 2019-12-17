@@ -1,0 +1,21 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter] public bool hoverable { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ClassMapper.Add("ant-card-grid")
+            .If("ant-card-hoverable", () => hoverable);
+    }
+
+}
