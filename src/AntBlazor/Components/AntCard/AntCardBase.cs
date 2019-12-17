@@ -6,6 +6,9 @@ namespace AntBlazor
     public class AntCardBase : AntDomComponentBase
     {
         [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
         public RenderFragment Body { get; set; }
 
         [Parameter]

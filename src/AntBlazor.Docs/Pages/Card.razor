@@ -1,7 +1,7 @@
 ﻿@page "/card"
 
 <h3>Actions Card</h3>
-<AntCard bordered Actions="new[] { actionSetting,actionEdit,actionEllipsis}">
+<AntCard bordered Actions="new[] { actionSetting,actionEdit,actionEllipsis}" avatar="avatarTemplate">
     <Title>Card</Title>
     <Extra>
         <a>More</a>
@@ -18,8 +18,16 @@
         <a>More</a>
     </Extra>
     <Body>
-    Body
+    Loading Card
     </Body>
+</AntCard>
+
+<h3>Meta Card</h3>
+<AntCard style="width:300px;" bordered Cover="coverTemplate" Actions="new[] { actionSetting,actionEdit,actionEllipsis}">
+    <AntCardMeta Avatar="avatarTemplate">
+        <Title>Meta Card</Title>
+        <Description>This is the description</Description>
+    </AntCardMeta>
 </AntCard>
 
 @code
@@ -38,5 +46,10 @@ private RenderFragment actionEllipsis =
 @<Template>
     <AntIcon type="ellipsis" />
 </Template>;
+
+private RenderFragment avatarTemplate =
+@<AntAvatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></AntAvatar>;
+
+    private RenderFragment coverTemplate = @<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"/>;
 
 }
