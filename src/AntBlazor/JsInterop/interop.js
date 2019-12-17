@@ -17,6 +17,16 @@
   return result;
 }
 
+window.GetBoundingClientRect = function (element) {
+  if (!element) {
+    element = document.body;
+  } else if (typeof element === 'string') {
+    element = document.querySelector(element);
+  }
+
+  return element.getBoundingClientRect();
+}
+
 window.addDomEventListener = function (eventName, invoker) {
   window.addEventListener(eventName, function (args) {
     invoker.invokeMethodAsync('Invoke');
