@@ -1,0 +1,19 @@
+﻿@namespace AntBlazor
+@inherits AntAvatarBase
+
+<span class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" @ref="Ref">
+    @if (!string.IsNullOrEmpty(icon) && hasIcon)
+    {
+        <AntIcon type="@icon" />
+    }
+    @if (!string.IsNullOrEmpty(src) && hasSrc)
+    {
+        <img src="@src" srcset="@srcSet" alt="@alt" @onerror="ImgError" />
+    }
+    @if (!string.IsNullOrEmpty(text) && hasText)
+    {
+        <span class="ant-avatar-string" @ref="textEl" style="@textStyles">
+            @text
+        </span>
+    }
+</span>
