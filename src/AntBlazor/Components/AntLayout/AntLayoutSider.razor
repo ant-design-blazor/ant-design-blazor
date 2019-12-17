@@ -39,7 +39,7 @@
     RenderFragment trigger => adTrigger ?? defaultTrigger(this);
 
     public RenderFragment<AntLayoutSider> defaultTrigger = (sider) =>
-    @<content>
+    @<Template>
         @if (!sider.adReverseArrow)
         {
             <AntIcon Type="@(sider.adCollapsed ? "right" : "left")"></AntIcon>
@@ -48,6 +48,6 @@
         {
             <AntIcon Type="@(sider.adCollapsed ? "left" : "right")"></AntIcon>
         }
-    </content>;
+    </Template>;
 
 }
