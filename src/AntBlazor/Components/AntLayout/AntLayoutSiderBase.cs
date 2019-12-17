@@ -81,10 +81,15 @@ namespace AntBlazor
 
         protected override async Task OnInitializedAsync()
         {
-            await watchMatchMedia();
             domEventService.onResize += async () => await watchMatchMedia();
             domEventService.RegisterResizeListener();
             await base.OnInitializedAsync();
+        }
+
+        protected override async Task OnFirstAfterRenderAsync()
+        {
+            await watchMatchMedia();
+            await base.OnFirstAfterRenderAsync();
         }
 
         public async Task toggleCollapse()
