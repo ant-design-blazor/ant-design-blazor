@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -48,7 +48,7 @@ namespace AntBlazor
         [Inject]
         private NavigationManager NavigationManager { get; set; }
 
-        private static IDictionary<string, string> _typeSvgDict = new Dictionary<string, string>();
+        private static readonly ConcurrentDictionary<string, string> SvgCache = new ConcurrentDictionary<string, string>();
 
         protected string SvgImg { get; set; }
         private string SvgStyle { get; set; }
@@ -85,14 +85,14 @@ namespace AntBlazor
 
         protected async Task SetupSvgImg()
         {
-            if (_typeSvgDict.TryGetValue($"{Theme}-{Type}", out var svg))
+            if (SvgCache.TryGetValue($"{Theme}-{Type}", out var svg))
             {
                 _iconSvg = svg;
             }
             else
             {
                 _iconSvg = await httpClient.GetStringAsync(new Uri(baseUrl, $"_content/AntBlazor/icons/{Theme.ToLower()}/{Type.ToLower()}.svg"));
-                _typeSvgDict.Add($"{Theme}-{Type}", _iconSvg);
+                SvgCache.TryAdd($"{Theme}-{Type}", _iconSvg);
             }
 
             SvgImg = _iconSvg.Insert(_iconSvg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {SvgStyle} ");
