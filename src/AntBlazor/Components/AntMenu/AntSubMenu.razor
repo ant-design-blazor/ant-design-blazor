@@ -9,7 +9,7 @@
                  @onclick="()=> ClickSubMenuTitle()">
                 @if (nzIcon != null)
                 {
-                    <AntIcon Type="@nzIcon"></AntIcon>
+                    <AntIcon type="@nzIcon"></AntIcon>
                 }
                 @*<ng-container *nzStringTemplateOutlet="nzTitle">*@
                 <span>@((MarkupString)nzTitle)</span>
@@ -19,7 +19,7 @@
                 @if (Menu.isInDropDown)
                 {
                     <span class="ant-dropdown-menu-submenu-arrow">
-                        <AntIcon Type="right" class="anticon-right ant-dropdown-menu-submenu-arrow-icon"></AntIcon>
+                        <AntIcon type="right" class="anticon-right ant-dropdown-menu-submenu-arrow-icon"></AntIcon>
                     </span>
                 }
                 else

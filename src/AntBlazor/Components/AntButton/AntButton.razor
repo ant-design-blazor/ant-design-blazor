@@ -5,11 +5,11 @@
     <button class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" @onclick="OnClick">
         @if (loading)
         {
-            <AntIcon Type="loading"></AntIcon>
+            <AntIcon type="loading"></AntIcon>
         }
         @if (!string.IsNullOrEmpty(icon))
         {
-            <AntIcon Type="@icon" Style="@iconStyle"></AntIcon>
+            <AntIcon type="@icon" Style="@iconStyle"></AntIcon>
         }
 
         @ChildContent
