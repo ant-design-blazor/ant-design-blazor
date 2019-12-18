@@ -138,6 +138,16 @@
         <member name="M:AntBlazor.AntInputComponentBase`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)">
             <inheritdoc />
         </member>
+        <member name="P:AntBlazor.AntDivider.type">
+            <summary>
+             'horizontal' | 'vertical'
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntDivider.orientation">
+            <summary>
+            'left' | 'right' | 'center'
+            </summary>
+        </member>
         <member name="P:AntBlazor.AntTag.mode">
             <summary>
              'default' | 'closeable' | 'checkable'
