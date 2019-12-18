@@ -138,5 +138,10 @@
         <member name="M:AntBlazor.AntInputComponentBase`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)">
             <inheritdoc />
         </member>
+        <member name="P:AntBlazor.AntTag.mode">
+            <summary>
+             'default' | 'closeable' | 'checkable'
+            </summary>
+        </member>
     </members>
 </doc>
