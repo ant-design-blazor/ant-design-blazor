@@ -1,0 +1,61 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<span class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" @ref="Ref">
+    @if (text != null || ChildContent != null)
+    {
+    <span class="ant-divider-inner-text">
+        @if (text != null)
+        {
+            @text
+        }
+        else
+        {
+            @ChildContent
+        }
+    </span>
+    }
+</span>
+
+@code {
+
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+
+    [Parameter] public string text { get; set; }
+
+    /// <summary>
+    ///  'horizontal' | 'vertical'
+    /// </summary>
+    [Parameter] public string type { get; set; } = "horizontal";
+
+    /// <summary>
+    /// 'left' | 'right' | 'center'
+    /// </summary>
+    [Parameter] public string orientation { get; set; } = "center";
+
+    [Parameter] public bool dashed { get; set; } = false;
+
+    private void setClass()
+    {
+        ClassMapper.Clear()
+            .Add("ant-divider")
+            .Add($"ant-divider-{this.type}")
+            .If($"ant-divider-with-text-{this.orientation}", () => text != null || ChildContent != null)
+            .If("ant-divider-dashed", () => dashed)
+            ;
+    }
+
+    protected override void OnParametersSet()
+    {
+        setClass();
+        base.OnParametersSet();
+    }
+
+    protected override void OnInitialized()
+    {
+        setClass();
+        base.OnInitialized();
+    }
+
+}

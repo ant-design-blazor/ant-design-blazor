@@ -56,7 +56,7 @@ namespace AntBlazor
 
         private Uri baseUrl;
 
-        public AntIconBase()
+        public void setClassSet()
         {
             string prefixName = "anticon";
             ClassMapper.Add(prefixName)
@@ -67,6 +67,8 @@ namespace AntBlazor
 
         protected override async Task OnInitializedAsync()
         {
+            this.setClassSet();
+
             baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
 
             if (this is AntIcon icon)
@@ -96,6 +98,7 @@ namespace AntBlazor
             }
 
             SvgImg = _iconSvg.Insert(_iconSvg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {SvgStyle} ");
+            StateHasChanged();
         }
 
         public async Task OnClick(MouseEventArgs args)
