@@ -1,0 +1,35 @@
+﻿@page "/tag"
+
+
+<h3>Basic Tag</h3>
+<AntTag>Tag 1</AntTag>
+<AntTag>
+    <a href="https://github.com/NG-ZORRO/ng-zorro-antd">Link</a>
+</AntTag>
+<AntTag mode="closeable" onClose="()=>onClose()">Tag 2</AntTag>
+<AntTag mode="closeable" onClose="preventDefault">Prevent Default</AntTag>
+
+
+<br />
+<br />
+<h3>Checkable Tag</h3>
+<AntTag mode="checkable" checked checkedChange="_checked=>checkChange(_checked)">Tag1</AntTag>
+<AntTag mode="checkable" checked checkedChange="_checked=>checkChange(_checked)">Tag2</AntTag>
+<AntTag mode="checkable" checked checkedChange="_checked=>checkChange(_checked)">Tag3</AntTag>
+
+@code {
+    public void onClose()
+    {
+
+    }
+
+    public void preventDefault(MouseEventArgs e)
+    {
+
+    }
+
+    private void checkChange(bool e)
+    {
+
+    }
+}
