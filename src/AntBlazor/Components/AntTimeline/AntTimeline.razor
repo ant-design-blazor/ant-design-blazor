@@ -1,0 +1,30 @@
+﻿@namespace AntBlazor
+@inherits AntTimelineBase
+
+<CascadingValue Value="this">
+    <ul class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
+        @ChildContent
+
+        @foreach (var item in displayItems)
+        {
+            <li class="@item.Class" @ref="item.Ref" style="@item.Style" @attributes="item.Attributes" Id="@item.Id">
+                <div class="ant-timeline-item-tail"></div>
+                <div class="@item.HeadClassMapper.Class" style="@item.headStyle">
+                    @if (item.Dot != null)
+                    {
+                        @item.Dot
+                    }
+                </div>
+                <div class="ant-timeline-item-content">
+                    @item.ChildContent
+                </div>
+            </li>
+        }
+    </ul>
+</CascadingValue>
+
+@code{
+
+  protected override RenderFragment LoadingDot => @<AntIcon type="loading"></AntIcon>;
+
+}
