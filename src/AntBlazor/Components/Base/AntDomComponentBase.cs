@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
@@ -34,7 +35,7 @@ namespace AntBlazor
         protected AntDomComponentBase()
         {
             ClassMapper
-                .Get(() => this.Class)
+                .Get(() => this.@class)
                 .Get(() => this.AntTheme?.GetClass());
         }
 
@@ -42,10 +43,14 @@ namespace AntBlazor
         /// Specifies one or more classnames for an DOM element.
         /// </summary>
         [Parameter]
-        public string Class
+        public string @class
         {
             get => _class;
-            set { _class = value; }
+            set
+            {
+                _class = value;
+                ClassMapper.OriginalClass = value;
+            }
         }
 
         /// <summary>

@@ -8,6 +8,8 @@ namespace AntBlazor
     {
         public string Class => AsString();
 
+        internal string OriginalClass { get; set; }
+
         public string AsString()
         {
             return string.Join(" ", map.Where(i => i.Value()).Select(i => i.Key()));
@@ -47,6 +49,9 @@ namespace AntBlazor
         public ClassMapper Clear()
         {
             map.Clear();
+
+            map.Add(() => OriginalClass, () => !string.IsNullOrEmpty(OriginalClass));
+
             return this;
         }
     }
