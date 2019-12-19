@@ -79,12 +79,17 @@
             The Ant Design color system can be used to create a color theme that reflects your brand or style.
             </summary>
         </member>
+        <member name="P:AntBlazor.AntTimelineBase.mode">
+            <summary>
+            'left' | 'alternate' | 'right'
+            </summary>
+        </member>
         <member name="P:AntBlazor.AntDomComponentBase.Ref">
             <summary>
             Returned ElementRef reference for DOM element.
             </summary>
         </member>
-        <member name="P:AntBlazor.AntDomComponentBase.Class">
+        <member name="P:AntBlazor.AntDomComponentBase.class">
             <summary>
             Specifies one or more classnames for an DOM element.
             </summary>
