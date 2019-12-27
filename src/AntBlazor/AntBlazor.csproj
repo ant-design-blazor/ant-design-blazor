@@ -14,12 +14,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
-    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/ElderJames/ant-design-blazor/blob/master/LICENSE</PackageLicenseUrl>
     <Copyright>James Yeung</Copyright>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression></PackageLicenseExpression>
     <Authors>James Yeung</Authors>
-    <PackageIconUrl></PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/ElderJames/ant-design-blazor/master/logo.svg?sanitize=true</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
