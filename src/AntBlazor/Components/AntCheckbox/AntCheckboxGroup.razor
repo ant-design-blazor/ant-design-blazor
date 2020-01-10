@@ -1,0 +1,17 @@
+﻿@namespace AntBlazor
+@inherits AntCheckboxGroupBase
+
+<CascadingValue Value="this">
+    <div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" @ref="Ref">
+        @foreach (var option in options)
+        {
+            <AntCheckbox class="ant-checkbox-group-item"
+                         disabled="option.disabled || disabled"
+                         checked="@(option.@checked)"
+                         value="@option.value"
+                         checkedChange="@onOptionChange">
+                <span>@option.label</span>
+            </AntCheckbox>
+        }
+    </div>
+</CascadingValue>
