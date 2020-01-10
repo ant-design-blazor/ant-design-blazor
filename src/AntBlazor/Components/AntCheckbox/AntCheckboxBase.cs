@@ -1,15 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntBlazor
 {
-    public class AntCheckboxBase : AntInputComponentBase<bool>
+    public class AntCheckboxBase : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
+
+        protected Action<bool> onChange;
+
+        protected Func<object> onTouched;
+
+        protected ElementReference inputElement;
+
+        protected ElementReference contentElement;
 
         [Parameter]
         public EventCallback<bool> checkedChange { get; set; }
@@ -29,15 +37,37 @@ namespace AntBlazor
         [Parameter]
         public bool @checked { get; set; }
 
-        protected Action<bool> onChange;
-
-        protected Func<object> onTouched;
-
-        protected ElementReference inputElement;
-
-        protected ElementReference contentElement;
+        [CascadingParameter]
+        public AntCheckboxGroup CheckboxGroup { get; set; }
 
         protected Dictionary<string, object> inputAttributes { get; set; }
+
+        protected string contentStyles = "";
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            setClass();
+        }
+
+        protected void setClass()
+        {
+            var prefixName = "ant-checkbox";
+            ClassMapper.Add(prefixName)
+                .If($"{prefixName}-checked", () => @checked && !indeterminate)
+                .If($"{prefixName}-disabled", () => disabled)
+                .If($"{prefixName}-indeterminate", () => indeterminate);
+        }
+
+        protected async Task hostClick(MouseEventArgs args)
+        {
+            await innerCheckedChange(this.@checked);
+        }
+
+        protected async Task inputCheckedChange(ChangeEventArgs args)
+        {
+            await innerCheckedChange(Convert.ToBoolean(args.Value));
+        }
 
         protected async Task innerCheckedChange(bool @checked)
         {
@@ -46,10 +76,10 @@ namespace AntBlazor
                 this.@checked = @checked;
                 this.onChange(this.@checked);
                 await this.checkedChange.InvokeAsync(this.@checked);
-                //if (this.checkboxWrapperComponent)
-                //{
-                //    this.nzCheckboxWrapperComponent.onChange();
-                //}
+                if (this.CheckboxGroup != null)
+                {
+                    // this.CheckboxGroup.onChange();
+                }
             }
         }
 
@@ -89,6 +119,10 @@ namespace AntBlazor
         protected void setDisabledState(bool isDisabled)
         {
             this.disabled = isDisabled;
+        }
+
+        protected void checkContent()
+        {
         }
     }
 }
