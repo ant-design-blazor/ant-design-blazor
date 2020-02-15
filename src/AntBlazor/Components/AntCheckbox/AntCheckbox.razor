@@ -1,21 +1,19 @@
 ﻿@namespace AntBlazor
 @inherits AntCheckboxBase
 
-<CascadingValue Value="this">
-    <div class="ant-checkbox-wrapper" @onclick="hostClick" style="@Style" @attributes="Attributes" Id="@Id" @ref="Ref">
-        <span class="@ClassMapper.Class">
-            <input @ref="inputElement"
-                   @bind-value="@(@checked)"
-                   @bind-value:event="checked"
-                   disabled="@disabled"
-                   @onchange="inputCheckedChange"
-                   onclick-stop-propagation="true"
-                   type="checkbox"
-                   class="ant-checkbox-input" />
-            <span class="ant-checkbox-inner"></span>
-        </span>
-        <span @ref="contentElement">
-            @ChildContent
-        </span>
-    </div>
-</CascadingValue>
+<label class="ant-checkbox-wrapper" @onclick="hostClick" style="@Style" @attributes="Attributes" Id="@Id" @ref="Ref">
+    <span class="@ClassMapper.Class" style="">
+        <input @ref="inputElement"
+               value="@(value)"
+               checked="@(@checked)"
+               disabled="@disabled"
+               @onchange="@inputCheckedChange"
+               @attributes="@inputAttributes"
+               type="checkbox"
+               class="ant-checkbox-input" />
+        <span class="ant-checkbox-inner"></span>
+    </span>
+    <span @ref="contentElement">
+        @ChildContent
+    </span>
+</label>
