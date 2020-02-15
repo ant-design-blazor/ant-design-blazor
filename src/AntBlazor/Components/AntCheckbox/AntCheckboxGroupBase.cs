@@ -25,7 +25,7 @@ namespace AntBlazor
 
         public void onOptionChange()
         {
-            this.onChange(this.options);
+            this.onChange?.Invoke(this.options);
         }
     }
 }

@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EmbeddedBlazorContent" Version="1.10.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AntBlazor.Docs\AntBlazor.Docs.csproj" />
     <ProjectReference Include="..\AntBlazor\AntBlazor.csproj" />
   </ItemGroup>

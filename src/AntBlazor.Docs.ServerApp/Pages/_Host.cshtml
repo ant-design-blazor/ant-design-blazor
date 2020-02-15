@@ -1,7 +1,6 @@
 ﻿@page "/"
 @namespace AntBlazor.Docs.ServerApp.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@using EmbeddedBlazorContent;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,8 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AntBlazor.Docs.ServerApp</title>
     <base href="~/" />
-    @Html.EmbeddedBlazorContent(assembly: typeof(AntBlazor._Imports).Assembly, requestPath: "~/_content/AntBlazor")
-    @Html.EmbeddedBlazorContent(assembly: typeof(AntBlazor.Docs.Pages.Index).Assembly, requestPath: "~/_content/AntBlazor.Docs")
+    <script src="_content/AntBlazor/js/antblazor.min.js"></script>
+    <link href="_content/AntBlazor/css/antblazor.min.css" rel="stylesheet">
+    <link href="_content/AntBlazor/css/ng-zorro-antd.min.css" rel="stylesheet">
+    <link href="_content/AntBlazor.Docs/css/docs.min.css" rel="stylesheet">
 </head>
 <body>
     <app>

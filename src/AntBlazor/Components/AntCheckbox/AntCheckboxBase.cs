@@ -44,16 +44,17 @@ namespace AntBlazor
 
         protected string contentStyles = "";
 
-        protected override void OnInitialized()
+        protected override void OnParametersSet()
         {
-            base.OnInitialized();
             setClass();
+            base.OnParametersSet();
         }
 
         protected void setClass()
         {
             var prefixName = "ant-checkbox";
-            ClassMapper.Add(prefixName)
+            ClassMapper.Clear()
+                .Add(prefixName)
                 .If($"{prefixName}-checked", () => @checked && !indeterminate)
                 .If($"{prefixName}-disabled", () => disabled)
                 .If($"{prefixName}-indeterminate", () => indeterminate);
@@ -74,7 +75,7 @@ namespace AntBlazor
             if (!this.disabled)
             {
                 this.@checked = @checked;
-                this.onChange(this.@checked);
+                onChange?.Invoke(this.@checked);
                 await this.checkedChange.InvokeAsync(this.@checked);
                 if (this.CheckboxGroup != null)
                 {
@@ -98,31 +99,6 @@ namespace AntBlazor
         protected void writeValue(bool value)
         {
             this.@checked = value;
-        }
-
-        protected void registerOnChange(Action<bool> fn)
-        {
-            if (fn != null)
-            {
-                this.onChange = fn;
-            }
-        }
-
-        protected void registerOnTouched(Func<object> fn)
-        {
-            if (fn != null)
-            {
-                this.onTouched = fn;
-            }
-        }
-
-        protected void setDisabledState(bool isDisabled)
-        {
-            this.disabled = isDisabled;
-        }
-
-        protected void checkContent()
-        {
         }
     }
 }
