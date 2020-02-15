@@ -1,16 +1,18 @@
-﻿using Microsoft.AspNetCore.Blazor.Hosting;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Blazor.Hosting;
 
 namespace AntBlazor.Docs.ClientApp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-        public static IWebAssemblyHostBuilder CreateHostBuilder(string[] args) =>
-            BlazorWebAssemblyHost.CreateDefaultBuilder()
-                .UseBlazorStartup<Startup>();
+            builder.Services.AddAntBlazor();
+            builder.RootComponents.Add<App>("app");
+
+            await builder.Build().RunAsync();
+        }
     }
 }
