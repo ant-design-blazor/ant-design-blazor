@@ -15,6 +15,7 @@
         // http://www.foo.tld/?p=/one/two&q=a=b~and~c=d#qwe
         // Note: this 404.html file must be at least 512 bytes for it to work
         // with Internet Explorer (it is currently > 512 bytes)
+
         // If you're creating a Project Pages site and NOT using a custom domain,
         // then set segmentCount to 1 (enterprise users may need to set it to > 1).
         // This way the code will only replace the route part of the path, and not
@@ -22,7 +23,8 @@
         // https://username.github.io/repo-name/one/two?a=b&c=d#qwe becomes
         // https://username.github.io/repo-name/?p=/one/two&q=a=b~and~c=d#qwe
         // Otherwise, leave segmentCount as 0.
-        var segmentCount = 1;
+        var segmentCount = 0;
+
         var l = window.location;
         l.replace(
             l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
