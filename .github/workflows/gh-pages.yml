@@ -45,7 +45,7 @@ jobs:
 
             - name: Package Nightly Nuget
               run: |
-                  dotnet pack components/AntBlazor/AntBlazor.csproj /p:PackageVersion=$Version-nightly-${BUILD_NUMBER} -c Release -o pack-${BUILD_NUMBER} --no-build --no-restore
+                  dotnet pack components/AntBlazor.csproj /p:PackageVersion=$Version-nightly-${BUILD_NUMBER} -c Release -o pack-${BUILD_NUMBER} --no-build --no-restore
 
             - name: Publish to Nuget
               run: |
