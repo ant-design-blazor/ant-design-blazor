@@ -10,8 +10,8 @@
 
 An enterprise-class UI components based on Ant Design and Blazor.
 
-![](https://github.com/elderjames/ant-design-blazor/workflows/Publish%20Docs/badge.svg)
-[![AntBlazor](https://img.shields.io/nuget/v/AntBlazor.svg)](https://www.nuget.org/packages/AntBlazor/)
-[![AntBlazor](https://img.shields.io/nuget/dt/AntBlazor.svg)](https://www.nuget.org/packages/AntBlazor/)
-
+![](https://img.shields.io/github/workflow/status/elderjames/ant-design-blazor/Publish%20Docs?style=flat-square)
+[![AntBlazor](https://img.shields.io/nuget/v/AntBlazor.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
+[![AntBlazor](https://img.shields.io/nuget/dt/AntBlazor.svg?style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
+[![AntBlazor](https://img.shields.io/github/license/ElderJames/ant-design-blazor?color=blue&style=flat-square)]()
 </div>
