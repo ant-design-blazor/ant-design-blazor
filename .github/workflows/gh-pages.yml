@@ -1,54 +1,52 @@
 name: Publish Docs
 
 env:
-  Version: 0.0.1
-  NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
+    Version: 0.0.1
+    NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
 
-on: 
-  push:
-    branches: 
-      - master
+on:
+    push:
+        branches:
+            - master
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
 
-    steps:
-    - uses: actions/checkout@v1
-      
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.100
+            - name: Setup .NET Core
+              uses: actions/setup-dotnet@v1
+              with:
+                  dotnet-version: 3.1.100
 
-    - name: Generate build number
-      uses: einaregilsson/build-number@v2 
-      with:
-        token: ${{secrets.github_token}}
+            - name: Generate build number
+              uses: einaregilsson/build-number@v2
+              with:
+                  token: ${{secrets.github_token}}
 
-    - name: Publish Docs to github pages
-      env:
-        GH_PUSH_TOKEN: ${{secrets.GH_PUSH_TOKEN}}  
-      run: |
-        git config --global user.name 'ElderJames'
-        git config --global user.email 'shunjiey@hotmail.com'
-        dotnet publish -c Release -o tmp
-        cd tmp/AntBlazor.Docs.ClientApp/dist
-        rm index.html
-        cp -r gh-pages/* gh-pages/.nojekyll ./
-        rm -r gh-pages
-        git init
-        git checkout -b gh-pages
-        git add -A
-        git commit -m "Create build $BUILD_NUMBER"
-        git push -f https://ElderJames:$GH_PUSH_TOKEN@github.com/ElderJames/ant-design-blazor.git gh-pages
-        
-    - name: Package Nightly Nuget
-      run: |
-        dotnet pack src/AntBlazor/AntBlazor.csproj /p:PackageVersion=$Version-nightly-${BUILD_NUMBER} -c Release -o pack-${BUILD_NUMBER} --no-build --no-restore
-        
-    - name: Publish to Nuget
-      run: |
-        dotnet nuget push pack-${BUILD_NUMBER}/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY
-        
+            - name: Publish Docs to github pages
+              env:
+                  GH_PUSH_TOKEN: ${{secrets.GH_PUSH_TOKEN}}
+              run: |
+                  git config --global user.name 'ElderJames'
+                  git config --global user.email 'shunjiey@hotmail.com'
+                  dotnet publish -c Release -o tmp
+                  cd tmp/AntBlazor.Docs.ClientApp/dist
+                  rm index.html
+                  cp -r gh-pages/* gh-pages/.nojekyll ./
+                  rm -r gh-pages
+                  git init
+                  git checkout -b gh-pages
+                  git add -A
+                  git commit -m "Create build $BUILD_NUMBER"
+                  git push -f https://ElderJames:$GH_PUSH_TOKEN@github.com/ElderJames/ant-design-blazor.git gh-pages
+
+            - name: Package Nightly Nuget
+              run: |
+                  dotnet pack components/AntBlazor/AntBlazor.csproj /p:PackageVersion=$Version-nightly-${BUILD_NUMBER} -c Release -o pack-${BUILD_NUMBER} --no-build --no-restore
+
+            - name: Publish to Nuget
+              run: |
+                  dotnet nuget push pack-${BUILD_NUMBER}/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY

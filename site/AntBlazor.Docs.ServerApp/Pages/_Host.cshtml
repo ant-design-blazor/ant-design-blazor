@@ -1,0 +1,24 @@
+﻿@page "/"
+@namespace AntBlazor.Docs.ServerApp.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AntBlazor.Docs.ServerApp</title>
+    <base href="~/" />
+    <link href="_content/AntBlazor/css/antblazor.min.css" rel="stylesheet">
+    <link href="_content/AntBlazor/css/ng-zorro-antd.min.css" rel="stylesheet">
+    <link href="_content/AntBlazor.Docs/css/docs.min.css" rel="stylesheet">
+</head>
+<body>
+    <app>
+        @(await Html.RenderComponentAsync<App>(RenderMode.Server))
+    </app>
+
+    <script src="_framework/blazor.server.js"></script>
+<script src="_content/AntBlazor/js/antblazor.min.js"></script>
+</body>
+</html>
