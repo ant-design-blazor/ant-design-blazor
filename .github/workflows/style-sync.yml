@@ -1,0 +1,49 @@
+name: Style sync Bot
+
+on:
+    push:
+        branches:
+            - master
+    schedule:
+        - cron: '0/30 * * * *'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Sync styles from ant-design
+              shell: bash
+              env:
+                  GH_PUSH_TOKEN: ${{secrets.GH_PUSH_TOKEN}}
+              run: |
+                  git clone https://github.com/ant-design/ant-design.git
+                  git clone https://github.com/ElderJames/ant-design-blazor.git
+                  cd ant-design
+                  LAST_VERSION=$(git describe --abbrev=0 --tags | sed 's/* //'  )
+                  echo "Last Version of ant-design: ${LAST_VERSION}"
+                  git checkout ${LAST_VERSION}
+                  find ./components/ -name '*.less' -exec cp --parents -a '{}' '../ant-design-blazor/' ';'
+                  cd ../ant-design-blazor
+                  TOTAL_MODIFIED=$(git status -s | wc -l)
+                  if [ "$TOTAL_MODIFIED" -eq "0" ]; then 
+                    echo "nothing modified" 
+                    exit 0
+                  fi
+                  echo "modified: ${TOTAL_MODIFIED}"
+                  git config --global user.name 'ElderJames'
+                  git config --global user.email 'shunjiey@hotmail.com'
+                  git add -A
+                  git commit -m "chore: sync ant-design v${LAST_VERSION}"
+                  git push https://ElderJames:$GH_PUSH_TOKEN@github.com/ElderJames/ant-design-blazor.git master:sync-style/${LAST_VERSION}
+
+            - name: Create a pull request
+              shell: bash
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
+              run: |
+                  curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
+                  cat>PR<<EOF
+                  chore: sync ant-design v${LAST_VERSION}
+                  EOF
+                  hub pull-request -F PR -b ElderJames:master -h ElderJames:sync-style/${LAST_VERSION} -a ElderJames
