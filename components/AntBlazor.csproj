@@ -31,7 +31,22 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.0" />
   </ItemGroup>
 
-  <Target Name="MyPreCompileTarget" BeforeTargets="Build">
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('node_modules') ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="npm install" />
+  </Target>
+
+  <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('node_modules') ">
+    <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp" />
+  </Target>
+
+  <Target Name="PublishRunGulp"  AfterTargets="ComputeFilesToPublish">
+    <Exec WorkingDirectory="$(ProjectDir)" Command="npm install" />
     <Exec WorkingDirectory="$(ProjectDir)" Command="node_modules\.bin\gulp" />
   </Target>
 
