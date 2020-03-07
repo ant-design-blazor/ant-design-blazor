@@ -23,6 +23,10 @@ jobs:
                   LAST_VERSION=$(git describe --abbrev=0 --tags | sed 's/* //'  )
                   echo "Last Version of ant-design: ${LAST_VERSION}"
                   git checkout ${LAST_VERSION}
+                  cd ../ant-design-blazor
+                  git checkout sync-style/${LAST_VERSION}
+                  git pull origin sync-style/${LAST_VERSION}
+                  cd ../ant-design
                   find ./components/ -name '*.less' -exec cp --parents -a '{}' '../ant-design-blazor/' ';'
                   cd ../ant-design-blazor
                   TOTAL_MODIFIED=$(git status -s | wc -l)
@@ -35,7 +39,7 @@ jobs:
                   git config --global user.email 'shunjiey@hotmail.com'
                   git add -A
                   git commit -m "chore: sync ant-design v${LAST_VERSION}"
-                  git push https://ElderJames:$GH_PUSH_TOKEN@github.com/ElderJames/ant-design-blazor.git master:sync-style/${LAST_VERSION}
+                  git push https://ElderJames:$GH_PUSH_TOKEN@github.com/ElderJames/ant-design-blazor.git sync-style/${LAST_VERSION}
 
             - name: Create a pull request
               shell: bash
