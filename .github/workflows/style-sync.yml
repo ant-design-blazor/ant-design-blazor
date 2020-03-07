@@ -15,7 +15,7 @@ jobs:
             - name: Sync styles from ant-design
               shell: bash
               env:
-                  GH_PUSH_TOKEN: ${{secrets.GH_PUSH_TOKEN}}
+                  GITHUB_TOKEN: ${{secrets.GH_PUSH_TOKEN}}
               run: |
                   git clone https://github.com/ant-design/ant-design.git
                   git clone https://github.com/ElderJames/ant-design-blazor.git
@@ -39,15 +39,9 @@ jobs:
                   git config --global user.email 'shunjiey@hotmail.com'
                   git add -A
                   git commit -m "chore: sync ant-design v${LAST_VERSION}"
-                  git push https://ElderJames:$GH_PUSH_TOKEN@github.com/ElderJames/ant-design-blazor.git sync-style/${LAST_VERSION}
-
-            - name: Create a pull request
-              shell: bash
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
-              run: |
+                  git push https://ElderJames:$GITHUB_TOKEN@github.com/ElderJames/ant-design-blazor.git sync-style/${LAST_VERSION}
                   curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
                   cat>PR<<EOF
                   chore: sync ant-design v${LAST_VERSION}
                   EOF
-                  hub pull-request -F PR -b ElderJames:master -h ElderJames:sync-style/${LAST_VERSION} -a ElderJames
+                  bin/hub pull-request -F PR -b ElderJames:master -h ElderJames:sync-style/${LAST_VERSION} -a ElderJames
