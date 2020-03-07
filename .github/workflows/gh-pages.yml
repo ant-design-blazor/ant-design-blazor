@@ -21,6 +21,10 @@ jobs:
               with:
                   dotnet-version: 3.1.100
 
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: '10.x'
+
             - name: Generate build number
               uses: einaregilsson/build-number@v2
               with:
