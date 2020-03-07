@@ -25,10 +25,6 @@ jobs:
               with:
                   node-version: '10.x'
 
-            - name: Generate build number
-              uses: einaregilsson/build-number@v2
-              with:
-                  token: ${{secrets.github_token}}
 
             - name: Publish Docs to github pages
               env:
@@ -44,13 +40,13 @@ jobs:
                   git init
                   git checkout -b gh-pages
                   git add -A
-                  git commit -m "Create build $BUILD_NUMBER"
+                  git commit -m "Create build $GITHUB_RUN_ID"
                   git push -f https://ElderJames:$GH_PUSH_TOKEN@github.com/ElderJames/ant-design-blazor.git gh-pages
 
             - name: Package Nightly Nuget
               run: |
-                  dotnet pack components/AntBlazor.csproj /p:PackageVersion=$Version-nightly-${BUILD_NUMBER} -c Release -o pack-${BUILD_NUMBER} --no-build --no-restore
+                  dotnet pack components/AntBlazor.csproj /p:PackageVersion=$Version-nightly-${GITHUB_RUN_ID} -c Release -o pack-${GITHUB_RUN_ID} --no-build --no-restore
 
             - name: Publish to Nuget
               run: |
-                  dotnet nuget push pack-${BUILD_NUMBER}/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY
+                  dotnet nuget push pack-${GITHUB_RUN_ID}/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY
