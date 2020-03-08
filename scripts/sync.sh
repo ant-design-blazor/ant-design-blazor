@@ -34,4 +34,3 @@ cat>PR<<EOF
 chore: sync ant-design v${LAST_VERSION}
 EOF
 bin/hub pull-request -F PR -b ElderJames:master -h ElderJames:${BRANCH_NAME} -a ElderJames
-                  
