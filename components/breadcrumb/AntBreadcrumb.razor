@@ -1,0 +1,19 @@
+﻿@namespace AntBlazor
+@inherits AntBreadcrumbBase
+
+<CascadingValue Value="this">
+    <span class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id" @ref="Ref">
+        @ChildContent
+        @if (autoGenerate)
+        {
+            foreach (var breadcrumb in _breadcrumbs)
+            {
+                <AntBreadcrumbItem>
+                    <a href="@breadcrumb.Url" @onclick="(e)=>navigate(breadcrumb.Url, e)">@breadcrumb.Label</a>
+                </AntBreadcrumbItem>
+            }
+
+        }
+    </span>
+</CascadingValue>
+
