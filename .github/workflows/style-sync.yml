@@ -8,7 +8,7 @@ on:
         - cron: '0/30 * * * *'
 
 jobs:
-    build:
+    style-sync:
         runs-on: ubuntu-latest
 
         steps:
@@ -24,9 +24,15 @@ jobs:
                   echo "Last Version of ant-design: ${LAST_VERSION}"
                   git checkout ${LAST_VERSION}
                   cd ../ant-design-blazor
-                  git checkout sync-style/${LAST_VERSION}
-                  git pull origin sync-style/${LAST_VERSION}
+                  BRANCH_NAME="sync-style/${LAST_VERSION}"
+                  if [ -n $(git branch | grep "${BRANCH_NAME}") ]; then
+                    echo "Branch ${BRANCH_NAME} already exists."
+                    exit 0
+                  fi
+                  echo "Creating a New Branch ${BRANCH_NAME} ..."
+                  git branch ${BRANCH_NAME}
                   cd ../ant-design
+                  echo "Synchronizing the sytle flies to ant-design-blazor..."
                   find ./components/ -name '*.less' -exec cp --parents -a '{}' '../ant-design-blazor/' ';'
                   cd ../ant-design-blazor
                   TOTAL_MODIFIED=$(git status -s | wc -l)
@@ -34,14 +40,14 @@ jobs:
                     echo "nothing modified" 
                     exit 0
                   fi
-                  echo "modified: ${TOTAL_MODIFIED}"
+                  echo "Total modified: ${TOTAL_MODIFIED}"
                   git config --global user.name 'ElderJames'
                   git config --global user.email 'shunjiey@hotmail.com'
                   git add -A
                   git commit -m "chore: sync ant-design v${LAST_VERSION}"
-                  git push https://ElderJames:$GITHUB_TOKEN@github.com/ElderJames/ant-design-blazor.git sync-style/${LAST_VERSION}
+                  git push https://ElderJames:$GITHUB_TOKEN@github.com/ElderJames/ant-design-blazor.git ${BRANCH_NAME}
                   curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
                   cat>PR<<EOF
                   chore: sync ant-design v${LAST_VERSION}
                   EOF
-                  bin/hub pull-request -F PR -b ElderJames:master -h ElderJames:sync-style/${LAST_VERSION} -a ElderJames
+                  bin/hub pull-request -F PR -b ElderJames:master -h ElderJames:${BRANCH_NAME} -a ElderJames
