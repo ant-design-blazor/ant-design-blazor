@@ -55,8 +55,4 @@
       <Pack>false</Pack>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="popconfirm\" />
-  </ItemGroup>
 </Project>
