@@ -25,7 +25,7 @@ jobs:
                   git checkout ${LAST_VERSION}
                   cd ../ant-design-blazor
                   BRANCH_NAME="sync-style/${LAST_VERSION}"
-                  if [ -n $(git branch | grep "${BRANCH_NAME}") ]; then
+                  if [ $( git branch -a | egrep "remotes/origin/${BRANCH_NAME}" | wc -l) -gt 0 ]; then
                     echo "Branch ${BRANCH_NAME} already exists."
                     exit 0
                   fi
