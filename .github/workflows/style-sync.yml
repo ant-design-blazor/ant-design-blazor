@@ -30,7 +30,7 @@ jobs:
                     exit 0
                   fi
                   echo "Creating a New Branch ${BRANCH_NAME} ..."
-                  git branch ${BRANCH_NAME}
+                  git checkout -b ${BRANCH_NAME}
                   cd ../ant-design
                   echo "Synchronizing the sytle flies to ant-design-blazor..."
                   find ./components/ -name '*.less' -exec cp --parents -a '{}' '../ant-design-blazor/' ';'
