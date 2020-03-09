@@ -1,12 +1,21 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<nz-content class="@ClassMapper.Class" @ref="Ref" style="display: block;@Style" @attributes="Attributes" Id="@Id">
+<nz-content class="@ClassMapper.Class" @ref="Ref" style="@_customStyle; display: block;@Style" @attributes="Attributes" Id="@Id">
     @ChildContent
 </nz-content>
 @code {
     [Parameter]
     public RenderFragment ChildContent { get; set; }
+
+    /// <summary>
+    /// use to fix the user has long content, but they don't want to scroll all body.
+    /// </summary>
+    [Parameter]
+    public bool longContentMode { get; set; } = false;
+
+    private string _customStyle=>
+        @$"{(longContentMode?"min-height:auto;":"")}";
 
     public AntLayoutContent()
     {
