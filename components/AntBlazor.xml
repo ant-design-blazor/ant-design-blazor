@@ -103,6 +103,18 @@
         <member name="M:AntBlazor.AntInputComponentBase`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)">
             <inheritdoc />
         </member>
+        <member name="M:AntBlazor.StyleHelper.ToCssPixel(System.String)">
+            <summary>
+            fix the user set 100% or xxxVH etc..
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="P:AntBlazor.AntLayoutSiderBase.longBodyMode">
+            <summary>
+            use to fix the user has long content, but they don't want to scroll all body.
+            </summary>
+        </member>
         <member name="P:AntBlazor.AntLayoutSiderBase.adBreakpoint">
             <summary>
             "xs" | "sm" | "md" | "lg" | "xl" | "xxl"
@@ -151,6 +163,11 @@
         <member name="P:AntBlazor.AntDivider.orientation">
             <summary>
             'left' | 'right' | 'center'
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntLayoutContent.longContentMode">
+            <summary>
+            use to fix the user has long content, but they don't want to scroll all body.
             </summary>
         </member>
         <member name="P:AntBlazor.AntTag.mode">

@@ -7,11 +7,19 @@ namespace AntBlazor
 {
     public class AntLayoutSiderBase : AntDomComponentBase
     {
+        private string _currentWidth, _customWidth = "256";
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public string adWidth { get; set; }
+        public string adWidth { get => _currentWidth; set { _currentWidth = _customWidth = value; } }
+
+        /// <summary>
+        /// use to fix the user has long content, but they don't want to scroll all body.
+        /// </summary>
+        [Parameter]
+        public bool longBodyMode { get; set; } = false;
+
 
         [Parameter]
         public string adTheme { get; set; } = "dark";
@@ -50,13 +58,14 @@ namespace AntBlazor
 
         protected string widthSetting => this.adCollapsed ? $"{this.adCollapsedWidth}px" : StyleHelper.ToCssPixel(adWidth);
 
-        private string flexSetting => $"0 0 ${widthSetting}";
+        private string flexSetting => $"0 0 {widthSetting}";
 
         protected string style =>
-                    $@"flex:{flexSetting}
+                    $@"flex:{flexSetting};
                     max-width:{widthSetting};
                     min-width:{widthSetting};
-                    width:{widthSetting};";
+                    width:{widthSetting};
+                    {(longBodyMode ? ";overflow:auto;height:100vh !important;position:fixed;left:0;" : "")}";
 
         protected bool below { get; set; }
 
@@ -106,6 +115,14 @@ namespace AntBlazor
             var matchBelow = await JsInvokeAsync<bool>("antMatchMedia", $"(max-width: {dimensionMap[adBreakpoint]})");
             this.below = matchBelow;
             this.adCollapsed = matchBelow;
+            if (matchBelow)
+            {
+                this._currentWidth = "100%";
+            }
+            else
+            {
+                this._currentWidth = this._customWidth;
+            }
             await this.onCollapsedChange.InvokeAsync(matchBelow);
         }
     }

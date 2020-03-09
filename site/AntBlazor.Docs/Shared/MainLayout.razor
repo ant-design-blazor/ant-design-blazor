@@ -3,9 +3,9 @@
 <AntLayout Class="app-layout" HasSider="true">
     <AntLayoutSider class="menu-sidebar"
                     adCollapsible
-                    adWidth="256px"
                     adBreakpoint="md"
                     adCollapsed="isCollapsed"
+                    longBodyMode=true
                     onCollapsedChange="(collapsed)=>isCollapsed = collapsed">
         <div class="sidebar-logo">
             <a href="https://github.com/ElderJames/ant-design-blazor" target="_blank">
@@ -13,7 +13,7 @@
                 <h1>Ant Design for Blazor</h1>
             </a>
         </div>
-        <AntMenu nzTheme="dark" nzMode="NzDirectionVHIType.inline" nzInlineCollapsed="isCollapsed">
+        <AntMenu nzTheme="dark" nzMode="NzDirectionVHIType.inline" Style="margin-bottom:40px;" nzInlineCollapsed="isCollapsed">
             <AntSubMenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
                 <AntMenuItem nzMatchRouter>
                     <AntNavLink href="" Match="NavLinkMatch.All">
@@ -70,7 +70,7 @@
             </AntSubMenu>
         </AntMenu>
     </AntLayoutSider>
-    <AntLayout>
+    <AntLayout class="main-content" Style="@(isCollapsed?"margin-left:80px":"margin-left:256px")">
         <AntLayoutHeader>
             <div class="app-header">
                 <span class="header-trigger" @onclick="()=>isCollapsed = !isCollapsed">
@@ -78,17 +78,19 @@
                 </span>
             </div>
         </AntLayoutHeader>
-        <AntLayoutContent>
+        <AntLayoutContent longContentMode=true>
             <div class="inner-content">
                 @Body
             </div>
         </AntLayoutContent>
+        <AntLayoutFooter Style="text-align:center;">
+            Ant Design for Blazor @@2020 Create by XXX
+        </AntLayoutFooter>
     </AntLayout>
 </AntLayout>
 
 @code
 {
 
-    bool isCollapsed = false;
-
+    bool isCollapsed = false; 
 }
