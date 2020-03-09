@@ -20,6 +20,10 @@
     "bugs": {
         "url": "https://github.com/ElderJames/ant-design-blazor/issues"
     },
+    "scripts": {
+        "gulp:components": "gulp --gulpfile ./components/gulpfile.js",
+        "gulp:docs": "gulp --gulpfile ./site/AntBlazor.Docs/gulpfile.js"
+    },
     "dependencies": {},
     "devDependencies": {
         "gulp": "^4.0.2",

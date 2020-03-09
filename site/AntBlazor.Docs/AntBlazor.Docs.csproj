@@ -24,11 +24,11 @@
   </Target>
 
   <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(RootDir)node_modules') ">
-    <Exec WorkingDirectory="$(RootDir)" Command="node_modules\.bin\gulp --gulpfile $(ProjectDir)\gulpfile.js" />
+    <Exec WorkingDirectory="$(RootDir)" Command="npm run gulp:docs" />
   </Target>
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
     <Exec WorkingDirectory="$(RootDir)" Command="npm install" />
-    <Exec WorkingDirectory="$(RootDir)" Command="node_modules\.bin\gulp --gulpfile $(ProjectDir)\gulpfile.js" />
+    <Exec WorkingDirectory="$(RootDir)" Command="npm run gulp:docs" />
   </Target>
 </Project>
