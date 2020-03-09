@@ -2,14 +2,7 @@
 {
     public class StyleHelper
     {
-        public static string ToCssPixel(string value)
-        {
-            if (value.EndsWith("px"))
-            {
-                return value;
-            }
-
-            return $"{value}px";
-        }
+        //fix the user set 100% or xxxVH etc.. 
+        public static string ToCssPixel(string value)=> int.TryParse(value, out var _) ? $"{value}px" : value;
     }
 }

@@ -30,6 +30,7 @@ jobs:
               env:
                   GH_PUSH_TOKEN: ${{secrets.GH_PUSH_TOKEN}}
               run: |
+                  npm install
                   git config --global user.name 'ElderJames'
                   git config --global user.email 'shunjiey@hotmail.com'
                   dotnet publish -c Release -o tmp
