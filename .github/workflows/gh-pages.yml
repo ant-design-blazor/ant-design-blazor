@@ -40,7 +40,7 @@ jobs:
                   git init
                   git checkout -b gh-pages
                   git add -A
-                  git commit -m "Create build $GITHUB_RUN_ID"
+                  git commit -m "docs: Create build $GITHUB_RUN_ID"
                   git push -f https://ElderJames:$GH_PUSH_TOKEN@github.com/ElderJames/ant-design-blazor.git gh-pages
 
             - name: Package Nightly Nuget
