@@ -1,0 +1,20 @@
+﻿
+    <div class="code-box" id="components-typography-demo-basic">
+        <section class="code-box-demo">
+            @Demo
+        </section>
+        <section class="code-box-meta markdown">
+            <div class="code-box-title">
+                @Title
+            </div>
+            <div class="code-box-description">
+                @Description
+            </div>
+        </section>
+    </div>
+
+@code {
+    [Parameter] public RenderFragment Demo { get; set; }
+    [Parameter] public RenderFragment Title { get; set; }
+    [Parameter] public RenderFragment Description { get; set; }
+}
