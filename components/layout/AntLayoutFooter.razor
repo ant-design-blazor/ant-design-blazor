@@ -1,9 +1,9 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" @ref="Ref" style="display: block;@Style" @attributes="Attributes" Id="@Id">
+<footer class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
     @ChildContent
-</div>
+</footer>
 
 @code {
 
@@ -12,6 +12,6 @@
 
     public AntLayoutFooter()
     {
-        ClassMapper.Add("ant-layout-footer");
+        //ClassMapper.Add("ant-layout-footer");
     }
 }
