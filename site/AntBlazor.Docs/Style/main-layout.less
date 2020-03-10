@@ -6,83 +6,106 @@
 }
 
 .app-layout {
-  height: 100vh;
+    height: 100vh;
 
-  .menu-sidebar {
-    position: relative;
-    z-index: 10;
-    min-height: 100vh;
-    box-shadow: 2px 0 6px rgba(0,21,41,.35);
-  }
+    .menu-sidebar {
+        position: relative;
+        z-index: 10;
+        min-height: 100vh;
+        box-shadow: 2px 0 6px rgba(0,21,41,.35);
 
-  .header-trigger {
-    height: 64px;
-    padding: 20px 24px;
-    font-size: 20px;
-    cursor: pointer;
-    transition: all .3s,padding 0s;
-  }
+       &::-webkit-scrollbar {
+            width: 9px;
+            height: 9px;
+        }
 
-  .trigger:hover {
-    color: #1890ff;
-  }
+        &::-webkit-scrollbar-track {
+            width: 6px;
+            background-color: #0d1b20;
+            -webkit-border-radius: 2em;
+            -moz-border-radius: 2em;
+            border-radius: 2em;
+        }
 
-  .header-buttons {
-    float: right;
 
-    .github-stars {
-      margin-right: 20px;
+        &::-webkit-scrollbar-thumb {
+            background-color: #606d71;
+            background-clip: padding-box;
+            min-height: 28px;
+            -webkit-border-radius: 2em;
+            -moz-border-radius: 2em;
+            border-radius: 2em;
+        }
     }
-  }
 
-  .sidebar-logo {
-    position: relative;
-    height: 64px;
-    padding-left: 24px;
-    overflow: hidden;
-    line-height: 64px;
-    background: #001529;
-    transition: all .3s;
-  }
+    .header-trigger {
+        height: 64px;
+        padding: 20px 24px;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all .3s,padding 0s;
+    }
 
-  .sidebar-logo img {
-    display: inline-block;
-    height: 32px;
-    width: 32px;
-    vertical-align: middle;
-  }
+    .trigger:hover {
+        color: #1890ff;
+    }
 
-  .sidebar-logo h1 {
-    display: inline-block;
-    margin: 0 0 0 20px;
-    color: #fff;
-    font-weight: 600;
-    font-size: 14px;
-    font-family: Avenir,Helvetica Neue,Arial,Helvetica,sans-serif;
-    vertical-align: middle;
-  }
+    .header-buttons {
+        float: right;
 
-  nz-header {
-    padding: 0;
-    width: 100%;
-    z-index: 2;
-  }
+        .github-stars {
+            margin-right: 20px;
+        }
+    }
 
-  .app-header {
-    position: relative;
-    height: 64px;
-    padding: 0;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0,21,41,.08);
-  }
+    .sidebar-logo {
+        position: relative;
+        height: 64px;
+        padding-left: 24px;
+        overflow: hidden;
+        line-height: 64px;
+        background: #001529;
+        transition: all .3s;
+    }
 
-  nz-content {
-    margin: 24px;
-  }
+    .sidebar-logo img {
+        display: inline-block;
+        height: 32px;
+        width: 32px;
+        vertical-align: middle;
+    }
 
-  .inner-content {
-    padding: 24px;
-    background: #fff;
-    height: 100%;
-  }
+    .sidebar-logo h1 {
+        display: inline-block;
+        margin: 0 0 0 20px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        font-family: Avenir,Helvetica Neue,Arial,Helvetica,sans-serif;
+        vertical-align: middle;
+    }
+
+    nz-header {
+        padding: 0;
+        width: 100%;
+        z-index: 2;
+    }
+
+    .app-header {
+        position: relative;
+        height: 64px;
+        padding: 0;
+        background: #fff;
+        box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    }
+
+    nz-content {
+        margin: 24px;
+    }
+
+    .inner-content {
+        padding: 24px;
+        background: #fff;
+        height: 100%;
+    }
 }
