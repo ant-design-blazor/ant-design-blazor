@@ -1,16 +1,17 @@
 ﻿@page "/typography"
+@using AntBlazor.Docs.Components;
+
 <h1>Typography 排版</h1>
 <p>文本的基本格式</p>
 
-<h2>代码演示</h2    >
-<AntCard bordered="true">
-    <Title>基本</Title>
-    <Body>
+<h2>代码演示</h2>
+<DemoCard >
+    <Demo>
         <AntTitle level="1">Introduction</AntTitle>
         <AntParagraph>In the process of internal desktop applications development, many different design specs and implementations would be involved, which might cause designers and developers difficulties and duplication and reduce the efficiency of development.</AntParagraph>
         <AntParagraph>
             After massive project practice and summaries, Ant Design, a design language for background applications, is refined by Ant UED Team, which aims to
-            <AntText strong="true">
+            <AntText strong>
                 uniform the user interface specs for internal background projects, lower the unnecessary cost of design differences and implementation and liberate the resources of design and front-end development.
             </AntText>
         </AntParagraph>
@@ -65,23 +66,29 @@
                 </li>
             </ul>
         </AntParagraph>
-    </Body>
-</AntCard>
+    </Demo>
+    <Title>基本</Title>
+    <Description>展示文档样例</Description>
+</DemoCard>
 <br />
-<AntCard bordered="true">
-    <Title>标题组件</Title>
-    <Body>
+
+<DemoCard>
+    <Demo>
         <AntTitle level="1">h1. Ant Design 标题一</AntTitle>
         <AntTitle level="2">h2. Ant Design 标题二</AntTitle>
         <AntTitle level="3">h3. Ant Design 标题三</AntTitle>
         <AntTitle level="4">h4. Ant Design 标题四</AntTitle>
-    </Body>
-
-</AntCard>
+    </Demo>
+    <Title>
+        标题组件
+    </Title>
+    <Description>
+        展示不同级别的标题。
+    </Description>
+</DemoCard>
 <br />
-<AntCard bordered="true">
-    <Title>文本组件</Title>
-    <Body>
+<DemoCard>
+    <Demo>
         <AntText>Ant Design</AntText>
         <br />
         <AntText type="secondary">Ant Design</AntText>
@@ -101,9 +108,10 @@
         <AntText delete="true">Ant Design</AntText>
         <br />
         <AntText strong="true">Ant Design</AntText>
-    </Body>
-
-</AntCard>
+    </Demo>
+    <Title>文本组件</Title>
+    <Description>内置不同样式的文本。</Description>
+</DemoCard>
 
 
 @code {

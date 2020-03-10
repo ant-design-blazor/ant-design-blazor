@@ -28,14 +28,20 @@ namespace AntBlazor
                 .If($"{prefixName}-disabled", () => disabled);
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            SetClassMap();
+        }
+
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
             // According to Ant-Design 4.0, Fallback to 1 if level is invalid.
 
             builder.OpenElement(0, "div");
-            builder.OpenElement(1, "span");
-            builder.AddAttribute(2, "class", this.ClassMapper.Class);
+            builder.AddAttribute(1, "class", this.ClassMapper.Class);
+            builder.OpenElement(2, "span");
             if (mark) builder.OpenElement(3, "mark");
             if (delete) builder.OpenElement(4, "del");
             if (underline) builder.OpenElement(5, "u");

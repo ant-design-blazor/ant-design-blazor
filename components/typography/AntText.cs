@@ -28,6 +28,12 @@ namespace AntBlazor
                 .If($"{prefixName}-disabled", () => disabled);
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            SetClassMap();
+        }
+
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
