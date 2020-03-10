@@ -20,7 +20,7 @@ namespace AntBlazor
 
         [Parameter] public string shape { get; set; } = null;
 
-        [Parameter] public string size { get; set; } = NzSizeLDSType.Default;
+        [Parameter] public string size { get; set; } = AntSizeLDSType.Default;
 
         [Parameter] public string icon { get; set; }
 
