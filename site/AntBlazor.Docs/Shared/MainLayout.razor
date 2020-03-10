@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Reflection
+@inherits LayoutComponentBase
 
 <AntLayout Class="app-layout" HasSider="true">
     <AntLayoutSider class="menu-sidebar"
@@ -93,14 +94,17 @@
                 @Body
             </div>
         </AntLayoutContent>
-        <AntLayoutFooter Style="text-align:center;">
-            Ant Design for Blazor @@2020 Create by XXX
-        </AntLayoutFooter>
+        <footer>
+            @*<div class="footer-wrap"></div>*@
+            <div class="bottom-bar">
+                Made with <span class="heart">❤</span> by ant-design-blazor team
+            </div>
+        </footer>
     </AntLayout>
 </AntLayout>
 
 @code
 {
 
-    bool isCollapsed = false; 
+    bool isCollapsed = false;
 }
