@@ -101,8 +101,8 @@ namespace AntBlazor
                 return;
             }
 
-            var childrenWidth = (await this.JsInvokeAsync<Element>("GetDomInfo", this.textEl)).offsetWidth;
-            var avatarWidth = (await this.JsInvokeAsync<DomRect>("GetBoundingClientRect", this.Ref)).width;
+            var childrenWidth = (await this.JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, this.textEl)).offsetWidth;
+            var avatarWidth = (await this.JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, this.Ref)).width;
             var scale = avatarWidth - 8 < childrenWidth ? (avatarWidth - 8) / childrenWidth : 1;
             this.textStyles = $"transform: scale({scale}) translateX(-50%);";
             if (decimal.TryParse(this.size, out var pxSize))
