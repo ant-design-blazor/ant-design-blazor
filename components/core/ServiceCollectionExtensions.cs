@@ -10,7 +10,6 @@ namespace AntBlazor
         public static IServiceCollection AddAntBlazor(this IServiceCollection services)
         {
             services.TryAddSingleton<HttpClient>();
-            services.TryAddScoped<JsInterop.JsInterop>();
             services.TryAddScoped<DomEventService>();
             return services;
         }

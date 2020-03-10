@@ -21,7 +21,7 @@ namespace AntBlazor.JsInterop
         {
             if (!domEventListeners.ContainsKey("resize"))
             {
-                _jsRuntime.InvokeAsync<string>("addDomEventListener", "resize", DotNetObjectReference.Create(new Invoker(() =>
+                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, "resize", DotNetObjectReference.Create(new Invoker(() =>
                  {
                      onResize?.Invoke();
                  })));
