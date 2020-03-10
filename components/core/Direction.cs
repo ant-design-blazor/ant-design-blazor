@@ -5,20 +5,20 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public enum NzDirectionVHIType
+    public enum AntDirectionVHIType
     {
         vertical,
         horizontal,
         inline
     }
 
-    public enum NzDirectionVHType
+    public enum AntDirectionVHType
     {
         vertical,
         horizontal
     }
 
-    public enum NzFourDirectionType
+    public enum AntFourDirectionType
     {
         top,
         bottom,
@@ -26,7 +26,7 @@ namespace AntBlazor
         right
     }
 
-    public enum NzAlignType
+    public enum AntAlignType
     {
         top,
         middle,
