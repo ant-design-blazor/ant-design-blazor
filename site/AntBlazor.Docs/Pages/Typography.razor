@@ -1,9 +1,45 @@
 ﻿@page "/typography"
+<h1>Typography 排版</h1>
+<p>文本的基本格式</p>
 
-    <AntTitle level="1">h1. Ant Design 标题一</AntTitle>
-    <AntTitle level="2">h2. Ant Design 标题二</AntTitle>
-    <AntTitle level="3">h3. Ant Design 标题三</AntTitle>
-    <AntTitle level="4">h4. Ant Design 标题四</AntTitle>
+<h2>代码演示</h2    >
+<AntCard bordered="true">
+    <Title>标题组件</Title>
+    <Body>
+        <AntTitle level="1">h1. Ant Design 标题一</AntTitle>
+        <AntTitle level="2">h2. Ant Design 标题二</AntTitle>
+        <AntTitle level="3">h3. Ant Design 标题三</AntTitle>
+        <AntTitle level="4">h4. Ant Design 标题四</AntTitle>
+    </Body>
+
+</AntCard>
+<br />
+<AntCard bordered="true">
+    <Title>文本组件</Title>
+    <Body>
+        <AntText>Ant Design</AntText>
+        <br />
+        <AntText type="secondary">Ant Design</AntText>
+        <br />
+        <AntText type="warning">Ant Design</AntText>
+        <br />
+        <AntText type="danger">Ant Design</AntText>
+        <br />
+        <AntText disabled="true">Ant Design</AntText>
+        <br />
+        <AntText mark="true">Ant Design</AntText>
+        <br />
+        <AntText code="true">Ant Design</AntText>
+        <br />
+        <AntText underline="true">Ant Design</AntText>
+        <br />
+        <AntText delete="true">Ant Design</AntText>
+        <br />
+        <AntText strong="true">Ant Design</AntText>
+    </Body>
+
+</AntCard>
+
 
 @code {
 
