@@ -66,7 +66,8 @@ namespace AntBlazor
                     max-width:{widthSetting};
                     min-width:{widthSetting};
                     width:{widthSetting};
-                    {(longBodyMode ? ";overflow:auto;height:100vh !important;position:fixed;left:0;" : "")}";
+                    {((longBodyMode&!adCollapsed) ? ";height:100vh !important;position:fixed;left:0;" : "")};
+                    {(adCollapsed ? "" : ";overflow:auto;")}";
 
         protected bool below { get; set; }
 
