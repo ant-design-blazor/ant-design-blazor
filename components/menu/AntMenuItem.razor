@@ -2,7 +2,7 @@
 @inherits AntMenuItemBase
 
 <CascadingValue Value=this>
-    <li nz-menu-item class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id" @onclick="()=> Menu.nzClick.InvokeAsync(this)">
+    <li ant-menu-item class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id" @onclick="()=> Menu.click.InvokeAsync(this)">
         @ChildContent
     </li>
 </CascadingValue>
