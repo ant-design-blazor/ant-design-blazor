@@ -22,25 +22,25 @@ namespace AntBlazor
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public string nzMenuClassName { get; set; }
+        public string menuClassName { get; set; }
 
         [Parameter]
-        public int? nzPaddingLeft { get; set; }
+        public int? paddingLeft { get; set; }
 
         [Parameter]
-        public string nzTitle { get; set; }
+        public string title { get; set; }
 
         [Parameter]
-        public string nzIcon { get; set; }
+        public string icon { get; set; }
 
         [Parameter]
-        public bool nzOpen { get; set; } = false;
+        public bool open { get; set; } = false;
 
         [Parameter]
-        public bool nzDisabled { get; set; } = false;
+        public bool disabled { get; set; } = false;
 
         [Parameter]
-        public EventCallback<bool> nzOpenChange { get; set; }
+        public EventCallback<bool> openChange { get; set; }
 
         protected ClassMapper TitleDivClass { get; } = new ClassMapper();
 
@@ -54,22 +54,22 @@ namespace AntBlazor
         private string[] overlayPositions = new[] { "" };
         private bool isChildMenuSelected = false;
         protected bool isMouseHover { get; set; } = false;
-        private bool open;
+        private bool _hasOpened;
 
         protected Element element = new Element();
 
         private void SetClassMap()
         {
-            this.isChildMenuSelected = this.Items.Any(x => x.nzSelected);
+            this.isChildMenuSelected = this.Items.Any(x => x.selected);
 
             string prefixName = Menu.isInDropDown ? "ant-dropdown-menu-submenu" : "ant-menu-submenu";
             ClassMapper.Clear()
                 .Add(prefixName)
-                .If($"{prefixName}-disabled", () => nzDisabled)
-                .If($"{prefixName}-open", () => this.nzOpen)
+                .If($"{prefixName}-disabled", () => disabled)
+                .If($"{prefixName}-open", () => this.open)
                 .If($"{prefixName}-selected", () => isChildMenuSelected)
-                .Add($"{prefixName}-{Menu.nzMode}")
-                .If($"{prefixName}-active", () => isMouseHover && !nzDisabled)
+                .Add($"{prefixName}-{Menu.mode}")
+                .If($"{prefixName}-active", () => isMouseHover && !disabled)
                 ;
         }
 
@@ -82,18 +82,18 @@ namespace AntBlazor
 
             this.Level = this.ParentSubMenu?.Level + 1 ?? 1;
 
-            this.open = nzOpen;
+            this._hasOpened = open;
             this.SetClassMap();
             base.OnInitialized();
 
             PopupClassMapper.Clear()
-                .If("ant-menu-light", () => Menu.nzTheme == "light")
-                .If("ant-menu-dark", () => Menu.nzTheme == "dark")
-                .If("ant-menu-submenu-placement-bottomLeft", () => Menu.nzMode == NzDirectionVHIType.horizontal)
+                .If("ant-menu-light", () => Menu.theme == "light")
+                .If("ant-menu-dark", () => Menu.theme == "dark")
+                .If("ant-menu-submenu-placement-bottomLeft", () => Menu.mode == AntDirectionVHIType.horizontal)
                 .If("ant-menu-submenu-placement-rightTop",
-                    () => Menu.nzMode == NzDirectionVHIType.vertical && placement == "rightTop")
+                    () => Menu.mode == AntDirectionVHIType.vertical && placement == "rightTop")
                 .If("ant-menu-submenu-placement-leftTop",
-                    () => Menu.nzMode == NzDirectionVHIType.vertical && placement == "leftTop")
+                    () => Menu.mode == AntDirectionVHIType.vertical && placement == "leftTop")
                 ;
 
             PopupUlClassMapper.Clear()
@@ -103,6 +103,11 @@ namespace AntBlazor
                 .If("ant-menu-vertical", () => !Menu.isInDropDown)
                 .If("ant-dropdown-menu-sub", () => Menu.isInDropDown)
                 .If("ant-menu-sub", () => !Menu.isInDropDown)
+                ;
+
+            TitleDivClass
+                .If("ant-dropdown-menu-submenu-title", () => Menu.isInDropDown)
+                .If("ant-menu-submenu-title", () => !Menu.isInDropDown)
                 ;
         }
 
@@ -120,24 +125,25 @@ namespace AntBlazor
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            this.element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Ref);
+            this.open = this._hasOpened;
         }
 
         protected async Task ClickSubMenuTitle()
         {
-            if (Menu.nzMode == NzDirectionVHIType.inline && !Menu.isInDropDown && !this.nzDisabled)
+            if (Menu.mode == AntDirectionVHIType.inline && !Menu.isInDropDown && !this.disabled)
             {
-                this.nzOpen = !this.nzOpen;
-                await nzOpenChange.InvokeAsync(this.nzOpen);
+                this.open = !this.open;
+                this._hasOpened = this.open;
+                await openChange.InvokeAsync(this.open);
                 this.SetClassMap();
             }
         }
 
         public async Task SetOpenState(bool value)
         {
-            this.nzOpen = value;
             this.open = value;
-            await nzOpenChange.InvokeAsync(this.nzOpen);
+            this._hasOpened = value;
+            await openChange.InvokeAsync(this.open);
             StateHasChanged();
         }
     }

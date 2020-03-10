@@ -11,25 +11,25 @@ namespace AntBlazor
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public int nzInlineIndent { get; set; } = 24;
+        public int inlineIndent { get; set; } = 24;
 
         [Parameter]
-        public string nzTheme { get; set; } = "light";//'light' | 'dark' = 'light';
+        public string theme { get; set; } = "light";//'light' | 'dark' = 'light';
 
         [Parameter]
-        public NzDirectionVHIType nzMode { get; set; } = NzDirectionVHIType.vertical;
+        public AntDirectionVHIType mode { get; set; } = AntDirectionVHIType.vertical;
 
         [Parameter]
-        public bool nzInDropDown { get; set; } = false;
+        public bool inDropDown { get; set; } = false;
 
         [Parameter]
-        public bool nzInlineCollapsed { get; set; } = false;
+        public bool inlineCollapsed { get; set; } = false;
 
         [Parameter]
-        public bool nzSelectable { get; set; } //= !this.nzMenuService.isInDropDown;
+        public bool selectable { get; set; }
 
         [Parameter]
-        public EventCallback<AntMenuItem> nzClick { get; set; }
+        public EventCallback<AntMenuItem> click { get; set; }
 
         public IList<AntMenuItem> MenuItems = new List<AntMenuItem>();
 
@@ -39,14 +39,14 @@ namespace AntBlazor
 
         public bool isInDropDown { get; set; }
 
-        private NzDirectionVHIType cacheMode;
+        private AntDirectionVHIType cacheMode;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
             SetClassMap();
-            isInDropDown = nzInDropDown;
-            cacheMode = nzMode;
+            isInDropDown = inDropDown;
+            cacheMode = mode;
         }
 
         private void SetClassMap()
@@ -54,9 +54,9 @@ namespace AntBlazor
             string prefixName = isInDropDown ? "ant-dropdown-menu" : "ant-menu";
             ClassMapper.Add(prefixName)
                 .Add($"{prefixName}-root")
-                .Add($"{prefixName}-{nzTheme}")
-                .Add($"{prefixName}-{nzMode}")
-                .If($"{prefixName}-inline-collapsed", () => nzInlineCollapsed);
+                .Add($"{prefixName}-{theme}")
+                .Add($"{prefixName}-{mode}")
+                .If($"{prefixName}-inline-collapsed", () => inlineCollapsed);
         }
 
         protected override async Task OnParametersSetAsync()
@@ -69,15 +69,15 @@ namespace AntBlazor
         {
             if (MenuItems.Any())
             {
-                if (nzInlineCollapsed)
+                if (inlineCollapsed)
                 {
-                    openedSubMenus = this.SubMenus.Where(x => x.nzOpen).ToList();
+                    openedSubMenus = this.SubMenus.Where(x => x.open).ToList();
                     foreach (var antSubMenu in this.SubMenus)
                     {
                         await antSubMenu.SetOpenState(false);
                     }
 
-                    this.nzMode = NzDirectionVHIType.vertical;
+                    this.mode = AntDirectionVHIType.vertical;
                 }
                 else
                 {
@@ -86,7 +86,7 @@ namespace AntBlazor
                         await subMenu.SetOpenState(false);
                     }
                     openedSubMenus.Clear();
-                    this.nzMode = this.cacheMode;
+                    this.mode = this.cacheMode;
                 }
                 StateHasChanged();
             }

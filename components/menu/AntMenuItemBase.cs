@@ -10,19 +10,19 @@ namespace AntBlazor
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public bool nzDisabled { get; set; } = false;
+        public bool disabled { get; set; } = false;
 
         [Parameter]
-        public bool nzSelected { get; set; } = false;
+        public bool selected { get; set; } = false;
 
         [Parameter]
-        public int? nzPaddingLeft { get; set; }
+        public int? paddingLeft { get; set; }
 
         [Parameter]
-        public bool nzMatchRouterExact { get; set; } = false;
+        public bool matchRouterExact { get; set; } = false;
 
         [Parameter]
-        public bool nzMatchRouter { get; set; } = false;
+        public bool matchRouter { get; set; } = false;
 
         [CascadingParameter]
         public AntMenu Menu { get; set; }
@@ -37,13 +37,13 @@ namespace AntBlazor
             string prefixName = Menu.isInDropDown ? "ant-dropdown-menu-item" : "ant-menu-item";
             ClassMapper.Clear()
                 .Add(prefixName)
-                .If($"{prefixName}-selected", () => nzSelected)
-                .If($"{prefixName}-disabled", () => nzDisabled);
+                .If($"{prefixName}-selected", () => selected)
+                .If($"{prefixName}-disabled", () => disabled);
         }
 
         internal void SelectedChanged(bool value)
         {
-            this.nzSelected = value;
+            this.selected = value;
         }
 
         protected override void OnInitialized()
@@ -60,16 +60,16 @@ namespace AntBlazor
             }
 
             int? padding = null;
-            if (Menu.nzMode == NzDirectionVHIType.inline)
+            if (Menu.mode == AntDirectionVHIType.inline)
             {
-                if (nzPaddingLeft != null)
+                if (paddingLeft != null)
                 {
-                    padding = nzPaddingLeft;
+                    padding = paddingLeft;
                 }
                 else
                 {
                     int level = SubMenu?.Level + 1 ?? 1;
-                    padding = level * this.Menu.nzInlineIndent;
+                    padding = level * this.Menu.inlineIndent;
                 }
             }
             else
