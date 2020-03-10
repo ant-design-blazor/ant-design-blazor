@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AntBlazor
 {
-    public class AntText :AntTypographyBase
+    public class AntText : AntTypographyBase
     {
         [Parameter]
         public bool code { get; set; }
@@ -26,6 +26,12 @@ namespace AntBlazor
                 .Add("ant-typography")
                 .If($"{prefixName}-{type}", () => !string.IsNullOrEmpty(type))
                 .If($"{prefixName}-disabled", () => disabled);
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            SetClassMap();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
