@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AntBlazor
 {
-    public class AntTitle: AntTypographyBase
+    public class AntTitle : AntTypographyBase
     {
         [Parameter]
         public int level { get; set; } = 1;
@@ -28,6 +28,11 @@ namespace AntBlazor
                 .If($"{prefixName}-disabled", () => disabled);
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            SetClassMap();
+        }
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
