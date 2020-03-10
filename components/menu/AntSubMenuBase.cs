@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AntBlazor.JsInterop;
@@ -114,14 +113,14 @@ namespace AntBlazor
                 this.isMouseHover = value;
                 this.SetClassMap();
 
-                this.element = await JsInvokeAsync<Element>("GetDomInfo", Ref);
+                this.element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Ref);
             }
         }
 
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            this.element = await JsInvokeAsync<Element>("GetDomInfo", Ref);
+            this.element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Ref);
         }
 
         protected async Task ClickSubMenuTitle()

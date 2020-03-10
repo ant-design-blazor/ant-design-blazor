@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Threading.Tasks;
+using AntBlazor.core;
 using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
 
@@ -8,6 +9,7 @@ namespace AntBlazor
     public class AntLayoutSiderBase : AntDomComponentBase
     {
         private string _currentWidth, _customWidth = "256";
+
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -19,7 +21,6 @@ namespace AntBlazor
         /// </summary>
         [Parameter]
         public bool longBodyMode { get; set; } = false;
-
 
         [Parameter]
         public string adTheme { get; set; } = "dark";
@@ -112,7 +113,7 @@ namespace AntBlazor
             if (string.IsNullOrEmpty(adBreakpoint))
                 return;
 
-            var matchBelow = await JsInvokeAsync<bool>("antMatchMedia", $"(max-width: {dimensionMap[adBreakpoint]})");
+            var matchBelow = await JsInvokeAsync<bool>(JSInteropConstants.antMatchMedia, $"(max-width: {dimensionMap[adBreakpoint]})");
             this.below = matchBelow;
             this.adCollapsed = matchBelow;
             if (matchBelow)
