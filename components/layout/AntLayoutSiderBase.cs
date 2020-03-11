@@ -91,8 +91,7 @@ namespace AntBlazor
 
         protected override async Task OnInitializedAsync()
         {
-            domEventService.onResize += async () => await watchMatchMedia();
-            domEventService.RegisterResizeListener();
+            domEventService.AddEventListener<object>("window", "resize", async _ => await watchMatchMedia());
             await base.OnInitializedAsync();
         }
 

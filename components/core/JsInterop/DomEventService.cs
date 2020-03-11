@@ -10,38 +10,36 @@ namespace AntBlazor.JsInterop
 
         private readonly IJSRuntime _jsRuntime;
 
-        internal event Action onResize;
-
         public DomEventService(IJSRuntime jsRuntime)
         {
             _jsRuntime = jsRuntime;
         }
 
-        public void RegisterResizeListener()
+        public void AddEventListener<T>(string dom, string eventName, Action<T> callback)
         {
-            if (!domEventListeners.ContainsKey("resize"))
+            if (!domEventListeners.ContainsKey($"{dom}-{eventName}"))
             {
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, "resize", DotNetObjectReference.Create(new Invoker(() =>
+                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
                  {
-                     onResize?.Invoke();
+                     callback?.Invoke(p);
                  })));
             }
         }
     }
 
-    public class Invoker
+    public class Invoker<T>
     {
-        private Action action;
+        private Action<T> action;
 
-        public Invoker(Action invoker)
+        public Invoker(Action<T> invoker)
         {
             this.action = invoker;
         }
 
         [JSInvokable]
-        public void Invoke()
+        public void Invoke(T param)
         {
-            action.Invoke();
+            action.Invoke(param);
         }
     }
 }
