@@ -103,6 +103,12 @@
         <member name="M:AntBlazor.AntInputComponentBase`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)">
             <inheritdoc />
         </member>
+        <member name="M:AntBlazor.HtmlRenderer.UpdateDisplayAsync(Microsoft.AspNetCore.Components.RenderTree.RenderBatch@)">
+            <inheritdoc />
+        </member>
+        <member name="M:AntBlazor.HtmlRenderer.HandleException(System.Exception)">
+            <inheritdoc />
+        </member>
         <member name="P:AntBlazor.AntLayoutSiderBase.longBodyMode">
             <summary>
             use to fix the user has long content, but they don't want to scroll all body.
