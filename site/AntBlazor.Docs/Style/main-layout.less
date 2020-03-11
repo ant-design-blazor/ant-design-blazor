@@ -1,4 +1,4 @@
-﻿:host {
+:host {
   display: flex;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -6,115 +6,106 @@
 }
 
 .app-layout {
-  height: 100vh;
+    height: 100vh;
 
-  .menu-sidebar {
-    position: relative;
-    z-index: 10;
-    min-height: 100vh;
-    box-shadow: 2px 0 6px rgba(0,21,41,.35);
-  }
+    .menu-sidebar {
+        position: relative;
+        z-index: 10;
+        min-height: 100vh;
+        box-shadow: 2px 0 6px rgba(0,21,41,.35);
 
-  .header-trigger {
-    height: 64px;
-    padding: 20px 24px;
-    font-size: 20px;
-    cursor: pointer;
-    transition: all .3s,padding 0s;
-  }
+       &::-webkit-scrollbar {
+            width: 9px;
+            height: 9px;
+        }
 
-  .trigger:hover {
-    color: #1890ff;
-  }
+        &::-webkit-scrollbar-track {
+            width: 6px;
+            background-color: #0d1b20;
+            -webkit-border-radius: 2em;
+            -moz-border-radius: 2em;
+            border-radius: 2em;
+        }
 
-  .header-buttons {
-    float: right;
 
-    .github-stars {
-      margin-right: 20px;
-    }
-  }
-
-  .sidebar-logo {
-    position: relative;
-    height: 64px;
-    padding-left: 24px;
-    overflow: hidden;
-    line-height: 64px;
-    background: #001529;
-    transition: all .3s;
-  }
-
-  .sidebar-logo img {
-    display: inline-block;
-    height: 32px;
-    width: 32px;
-    vertical-align: middle;
-  }
-
-  .sidebar-logo h1 {
-    display: inline-block;
-    margin: 0 0 0 20px;
-    color: #fff;
-    font-weight: 600;
-    font-size: 14px;
-    font-family: Avenir,Helvetica Neue,Arial,Helvetica,sans-serif;
-    vertical-align: middle;
-  }
-
-  ant-header {
-    padding: 0;
-    width: 100%;
-    z-index: 2;
-  }
-
-  .app-header {
-    position: relative;
-    height: 64px;
-    padding: 0;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0,21,41,.08);
-  }
-
-  ant-content {
-    margin: 24px;
-  }
-
-  .inner-content {
-    padding: 24px;
-    background: #fff;
-    height: 100%;
-  }
-
-  footer {
-    clear: both;
-    font-size: 14px;
-    background-color: #000;
-    position: relative;
-    z-index: 9;
-    margin-left: -1px;
-    color: rgba(255,255,255,.65);
-
-    .footer-wrap {
-      position: relative;
-      padding: 86px 24px 93px;
-      border-bottom: 1px solid rgba(255,255,255,.25);
+        &::-webkit-scrollbar-thumb {
+            background-color: #606d71;
+            background-clip: padding-box;
+            min-height: 28px;
+            -webkit-border-radius: 2em;
+            -moz-border-radius: 2em;
+            border-radius: 2em;
+        }
     }
 
-    .bottom-bar {
-      text-align: center;
-      padding: 16px 24px;
-      margin: 0;
-      line-height: 32px;
-      overflow: hidden;
-      font-family: Avenir,-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';
-      font-size: 16px;
-      font-variant: tabular-nums;
-
-      .heart {
-        color: #f73f51;
-        font-size: 22px;
-      }
+    .header-trigger {
+        height: 64px;
+        padding: 20px 24px;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all .3s,padding 0s;
     }
-  }
+
+    .trigger:hover {
+        color: #1890ff;
+    }
+
+    .header-buttons {
+        float: right;
+
+        .github-stars {
+            margin-right: 20px;
+        }
+    }
+
+    .sidebar-logo {
+        position: relative;
+        height: 64px;
+        padding-left: 24px;
+        overflow: hidden;
+        line-height: 64px;
+        background: #001529;
+        transition: all .3s;
+    }
+
+    .sidebar-logo img {
+        display: inline-block;
+        height: 32px;
+        width: 32px;
+        vertical-align: middle;
+    }
+
+    .sidebar-logo h1 {
+        display: inline-block;
+        margin: 0 0 0 20px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        font-family: Avenir,Helvetica Neue,Arial,Helvetica,sans-serif;
+        vertical-align: middle;
+    }
+
+    nz-header {
+        padding: 0;
+        width: 100%;
+        z-index: 2;
+    }
+
+    .app-header {
+        position: relative;
+        height: 64px;
+        padding: 0;
+        background: #fff;
+        box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    }
+
+    nz-content {
+        margin: 24px;
+    }
+
+    .inner-content {
+        padding: 24px;
+        background: #fff;
+        height: 100%;
+    }
 }
