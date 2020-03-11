@@ -87,17 +87,26 @@ namespace AntBlazor
 
         protected async Task SetupSvgImg()
         {
-            if (SvgCache.TryGetValue($"{theme}-{type}", out var svg))
+            try
             {
-                _iconSvg = svg;
+                if (SvgCache.TryGetValue($"{theme}-{type}", out var svg))
+                {
+                    _iconSvg = svg;
+                }
+                else
+                {
+                    _iconSvg = await httpClient.GetStringAsync(new Uri(baseUrl,
+                        $"_content/AntBlazor/icons/{theme.ToLower()}/{type.ToLower()}.svg"));
+                    SvgCache.TryAdd($"{theme}-{type}", _iconSvg);
+                }
+
+                SvgImg = _iconSvg.Insert(_iconSvg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {SvgStyle} ");
             }
-            else
+            catch
             {
-                _iconSvg = await httpClient.GetStringAsync(new Uri(baseUrl, $"_content/AntBlazor/icons/{theme.ToLower()}/{type.ToLower()}.svg"));
-                SvgCache.TryAdd($"{theme}-{type}", _iconSvg);
+                // ignored
             }
 
-            SvgImg = _iconSvg.Insert(_iconSvg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {SvgStyle} ");
             StateHasChanged();
         }
 
