@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.18.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\components\AntBlazor.csproj" />
   </ItemGroup>
 
