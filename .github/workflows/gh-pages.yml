@@ -19,7 +19,7 @@ jobs:
             - name: Setup .NET Core
               uses: actions/setup-dotnet@v1
               with:
-                  dotnet-version: 3.1.100
+                  dotnet-version: 3.1.102
 
             - uses: actions/setup-node@v1
               with:
@@ -35,7 +35,7 @@ jobs:
                   git config --global user.email 'shunjiey@hotmail.com'
                   dotnet build
                   dotnet publish -c Release -o tmp
-                  cd tmp/AntBlazor.Docs.ClientApp/dist
+                  cd tmp/wwwroot
                   rm index.html
                   cp -r gh-pages/* gh-pages/.nojekyll ./
                   rm -r gh-pages
