@@ -1,0 +1,25 @@
+﻿@page "/icon"
+
+
+<DemoCard>
+    <Title>基本使用</Title>
+    <Description>
+       @(@"使用 `<AntIcon></AntIcon>` 标签声明组件，指定图标对应的 `type` 属性。可以通过 `theme` 属性来设置不同的主题风格的图标，也可以通过设置 `spin` 属性来实现动画旋转效果。")
+    </Description>
+    <Demo>
+        <div class="icons-list">
+            <AntIcon type="home"></AntIcon>
+            <AntIcon type="setting" theme="fill"></AntIcon>
+            <AntIcon type="smile" theme="outline"></AntIcon>
+            <AntIcon type="sync" theme="true"></AntIcon>
+            <AntIcon type="smile" theme="outline" rotate="180"></AntIcon>
+            <!-- Loading with new API would spin automatically! -->
+            <AntIcon type="loading"></AntIcon>
+        </div>
+    </Demo>
+</DemoCard>
+
+
+@code {
+
+}
