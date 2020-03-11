@@ -1,0 +1,26 @@
+﻿@page "/docs/{fileName}"
+@inject HttpClient HttpClient
+
+<Markdown>
+    @markdown
+</Markdown>
+
+@code {
+
+    [Parameter] public string fileName { get; set; }
+
+    string docUrl => "https://raw.githubusercontent.com/NG-ZORRO/ng-zorro-antd/master/docs/introduce.zh-CN.md"; //fileName;
+
+    string markdown = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(docUrl))
+        {
+            markdown = await this.HttpClient.GetStringAsync(docUrl);
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+}
