@@ -1,0 +1,101 @@
+[
+  //{
+  //  "title": "Ant Design of Blazor",
+  //  "type": "menuItem",
+  //  "url": "docs/introduce",
+  //  "default": true
+  //},
+  {
+    "title": "Components",
+    "type": "subMenu",
+    "open": true,
+    "prefix": "components",
+    "children": [
+      {
+        "title": "General",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Button",
+            "type": "menuItem",
+            "url": "button"
+          },
+          {
+            "title": "Icon",
+            "type": "menuItem",
+            "url": "icon"
+          },
+          {
+            "title": "Typography",
+            "type": "menuItem",
+            "url": "typography"
+          }
+        ]
+      },
+      {
+        "title": "Layout",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Layout",
+            "type": "menuItem",
+            "url": "layout"
+          }
+        ]
+      },
+      {
+        "title": "Navigation",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Breadcrumb",
+            "type": "menuItem",
+            "url": "breadcrumb"
+          },
+          {
+            "title": "Menu",
+            "type": "menuItem",
+            "url": "menu"
+          }
+        ]
+      },
+      {
+        "title": "Data Display",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Avatar",
+            "type": "menuItem",
+            "url": "avatar"
+          },
+          {
+            "title": "Card",
+            "type": "menuItem",
+            "url": "card"
+          },
+          {
+            "title": "Tag",
+            "type": "menuItem",
+            "url": "tag"
+          },
+          {
+            "title": "Timeline",
+            "type": "menuItem",
+            "url": "timeline"
+          }
+        ]
+      },
+      {
+        "title": "Other",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Divider",
+            "type": "menuItem",
+            "url": "divider"
+          }
+        ]
+      }
+    ]
+  }
+]
