@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Blazor.Hosting;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AntBlazor.Docs.ClientApp
 {
@@ -8,9 +9,10 @@ namespace AntBlazor.Docs.ClientApp
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-
-            builder.Services.AddAntBlazor();
             builder.RootComponents.Add<App>("app");
+
+            builder.Services.AddBaseAddressHttpClient();
+            builder.Services.AddAntBlazor();
 
             await builder.Build().RunAsync();
         }

@@ -1,5 +1,5 @@
-﻿
-@using System.Net
+﻿@using System.Net
+@using Markdig
 @inherits ComponentBase
 @inject HtmlRenderService HtmlRenderService
 
@@ -18,7 +18,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         if (ChildContent != null)
         {
             markdown = await HtmlRenderService.RenderAsync(ChildContent);
@@ -27,9 +27,9 @@
 
         if (!string.IsNullOrEmpty(markdown))
         {
-            markdown = markdown.Trim(' ','\r','\n');
-
-            html = Markdig.Markdown.ToHtml(markdown);
+            markdown = markdown.Trim(' ', '\r', '\n');
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+            html = Markdig.Markdown.ToHtml(markdown, pipeline);
         }
 
         await base.OnInitializedAsync();
