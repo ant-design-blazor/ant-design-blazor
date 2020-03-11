@@ -33,6 +33,7 @@ jobs:
                   npm install
                   git config --global user.name 'ElderJames'
                   git config --global user.email 'shunjiey@hotmail.com'
+                  dotnet build
                   dotnet publish -c Release -o tmp
                   cd tmp/AntBlazor.Docs.ClientApp/dist
                   rm index.html
