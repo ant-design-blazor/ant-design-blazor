@@ -1,5 +1,4 @@
-﻿@using System.Reflection
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 <AntLayout Class="app-layout" HasSider="true">
     <AntLayoutSider class="menu-sidebar"
@@ -15,65 +14,7 @@
             </a>
         </div>
         <AntMenu theme="dark" mode="AntDirectionVHIType.inline" Style="margin-bottom:40px;" inlineCollapsed="isCollapsed">
-            <AntSubMenu open title="Dashboard" icon="dashboard">
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="" Match="NavLinkMatch.All">
-                        Home
-                    </AntNavLink>
-                </AntMenuItem>
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="counter">
-                        Counter
-                    </AntNavLink>
-                </AntMenuItem>
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="fetchdata">
-                        Fetch data
-                    </AntNavLink>
-                </AntMenuItem>
-            </AntSubMenu>
-            <AntSubMenu open title="Form" icon="form">
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="button">
-                        Button
-                    </AntNavLink>
-                </AntMenuItem>
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="card">
-                        Card
-                    </AntNavLink>
-                </AntMenuItem>
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="avatar">
-                        Avatar
-                    </AntNavLink>
-                </AntMenuItem>
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="tag">
-                        Tag
-                    </AntNavLink>
-                </AntMenuItem>
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="divider">
-                        Divider
-                    </AntNavLink>
-                </AntMenuItem>
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="timeline">
-                        Timeline
-                    </AntNavLink>
-                </AntMenuItem>
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="breadcrumb">
-                        Breadcrumb
-                    </AntNavLink>
-                </AntMenuItem>
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="typography">
-                        Typography
-                    </AntNavLink>
-                </AntMenuItem>
-            </AntSubMenu>
+            @menuItemTemplate(MenuItems)
         </AntMenu>
     </AntLayoutSider>
     <AntLayout class="main-content" Style="@(isCollapsed?"margin-left:80px":"margin-left:256px")">
@@ -103,8 +44,73 @@
     </AntLayout>
 </AntLayout>
 
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+
 @code
 {
-
     bool isCollapsed = false;
+
+    MenuItem[] MenuItems = {};
+
+    static readonly RenderFragment<MenuItem[]> menuItemTemplate = (items)
+        => @<Template>
+               @foreach (var menu in items)
+               {
+                   if (menu.Type == "menuItem")
+                   {
+                       <AntMenuItem matchRouter>
+                           <AntNavLink href="@menu.Url" Match="@NavLinkMatch.All">
+                               @menu.Title
+                           </AntNavLink>
+                       </AntMenuItem>
+                   }
+                   else if (menu.Type == "subMenu")
+                   {
+                       <AntSubMenu open="@menu.Open" title="@menu.Title" icon="@menu.Icon">
+                           @if (menu.Children.Any())
+                           {
+                               @menuItemTemplate(menu.Children)
+                           }
+                       </AntSubMenu>
+                   }
+                   else if (menu.Type == "itemGroup")
+                   {
+                       <AntMenuItemGroup title="@menu.Title">
+                           @if (menu.Children.Any())
+                           {
+                               @menuItemTemplate(menu.Children)
+                           }
+                       </AntMenuItemGroup>
+                   }
+               }
+           </Template>;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
+        MenuItems = await HttpClient.GetJsonAsync<MenuItem[]>(new Uri(baseUrl, "_content/AntBlazor.Docs/menu.json"));
+
+        await base.OnInitializedAsync();
+    }
+
+    public class MenuItem
+    {
+        public string Title { get; set; }
+
+        public string Type { get; set; }
+
+        public string Url { get; set; }
+
+        public string Prefix { get; set; }
+
+        public bool Open { get; set; }
+
+        public string Icon { get; set; }
+
+        public bool Default { get; set; }
+
+        public MenuItem[] Children { get; set; }
+    }
 }

@@ -46,7 +46,7 @@
     <Exec WorkingDirectory="$(RootDir)" Command="npm run gulp:components" />
   </Target>
 
-  <Target Name="PublishRunGulp"  AfterTargets="ComputeFilesToPublish">
+  <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
     <Exec WorkingDirectory="$(RootDir)" Command="npm install" />
     <Exec WorkingDirectory="$(RootDir)" Command="npm run gulp:components" />
   </Target>
