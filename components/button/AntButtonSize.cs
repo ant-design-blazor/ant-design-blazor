@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public class AntButtonSize : NzSizeLDSType
+    public class AntButtonSize : AntSizeLDSType
     {
     }
 }

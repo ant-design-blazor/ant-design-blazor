@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public class NzSizeLDSType
+    public class AntSizeLDSType
     {
         public const string Default = "default";
         public const string Large = "large";

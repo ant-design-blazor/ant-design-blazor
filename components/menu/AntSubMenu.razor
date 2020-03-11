@@ -2,19 +2,17 @@
 @inherits AntSubMenuBase
 
     <CascadingValue Value=this>
-        <li nz-submenu class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
+        <li Ant-submenu class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
             <div class="@TitleDivClass.Class" style="@titleStyle"
                  @onmouseover="()=>SetMouseEnterState(true)"
                  @onmouseout="()=>SetMouseEnterState(false)"
                  @onclick="()=> ClickSubMenuTitle()">
-                @if (nzIcon != null)
+                @if (icon != null)
                 {
-                    <AntIcon type="@nzIcon"></AntIcon>
+                    <AntIcon type="@icon"></AntIcon>
                 }
-                @*<ng-container *nzStringTemplateOutlet="nzTitle">*@
-                <span>@((MarkupString)nzTitle)</span>
-                @*</ng-container>*@
-                @*<ng-content select="[title]" *ngIf="!nzTitle"></ng-content>*@
+     
+                <span>@((MarkupString)title)</span>
 
                 @if (Menu.isInDropDown)
                 {
@@ -27,22 +25,22 @@
                     <i class="ant-menu-submenu-arrow"></i>
                 }
             </div>
-            @if (Menu.nzMode == NzDirectionVHIType.inline)
+            @if (Menu.mode == AntDirectionVHIType.inline)
             {
-                <ul class="@nzMenuClassName ant-menu ant-menu-inline ant-menu-sub" style="transition: height 0.5s; @submenuStyle">
+                <ul class="@menuClassName ant-menu ant-menu-inline ant-menu-sub" style="transition: height 0.5s; @submenuStyle">
                     @ChildContent
                 </ul>
             }
-            </li>
+        </li>
 
-            @if (nzOpen && Menu.nzMode != NzDirectionVHIType.inline)
+            @if (open && Menu.mode != AntDirectionVHIType.inline)
             {
                 <div style="position: absolute; top: 0px; left: 0px; width: 100%;">
                 <div class="ant-menu-submenu ant-menu-submenu-popup @PopupClassMapper.Class"
                      style="left:@(element.offsetLeft+element.clientWidth+2)px; top:@(element.offsetTop)px; @(isMouseHover?"":"display: none;")"
                      @onmouseout="()=>SetMouseEnterState(false)"
                      @onmouseover="()=>SetMouseEnterState(true)">
-                    <ul class="@nzMenuClassName @PopupUlClassMapper.Class ant-menu-submenu-content" style="@(isMouseHover?"":"display: none;")">
+                    <ul class="@menuClassName @PopupUlClassMapper.Class ant-menu-submenu-content" style="@(isMouseHover?"":"display: none;")">
                         @ChildContent
                     </ul>
                 </div>
@@ -53,19 +51,8 @@
 
 @code {
 
-    string titleStyle => Menu.nzMode == NzDirectionVHIType.inline ?
-        $"padding-left:{(nzPaddingLeft ?? Level * Menu.nzInlineIndent)}px" : "";
+    string titleStyle => Menu.mode == AntDirectionVHIType.inline ?
+        $"padding-left:{(paddingLeft ?? Level * Menu.inlineIndent)}px" : "";
 
-    string submenuStyle => nzOpen ? "" : "height: 0px; overflow: hidden;";
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        TitleDivClass
-            .If("ant-dropdown-menu-submenu-title", () => Menu.isInDropDown)
-            .If("ant-menu-submenu-title", () => !Menu.isInDropDown)
-            ;
-
-    }
-
+    string submenuStyle => open ? "" : "height: 0px; overflow: hidden;";
 }
