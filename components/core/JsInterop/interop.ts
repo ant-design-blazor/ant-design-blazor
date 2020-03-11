@@ -27,10 +27,16 @@ export function getBoundingClientRect(element) {
   return element.getBoundingClientRect();
 }
 
-export function addDomEventListener(eventName, invoker) {
-  window.addEventListener(eventName, (args) => {
-    invoker.invokeMethodAsync('Invoke');
-  });
+export function addDomEventListener(dom, eventName, invoker) {
+  let callback = (args) => {
+    invoker.invokeMethodAsync('Invoke', args);
+  };
+
+  if (dom == 'window') {
+    window.addEventListener(eventName, callback);
+  } else {
+    (document.querySelector(dom) as HTMLElement).addEventListener(eventName, callback);
+  }
 }
 
 export function antMatchMedia(query) {
