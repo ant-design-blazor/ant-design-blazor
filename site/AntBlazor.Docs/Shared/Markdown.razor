@@ -1,0 +1,37 @@
+﻿
+@using System.Net
+@inherits ComponentBase
+@inject HtmlRenderService HtmlRenderService
+
+@((MarkupString)html)
+
+@code {
+
+    [Parameter] public string docUrl { get; set; }
+
+    [Parameter] public string markdown { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    string html = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        if (ChildContent != null)
+        {
+            markdown = await HtmlRenderService.RenderAsync(ChildContent);
+            markdown = WebUtility.HtmlDecode(markdown);
+        }
+
+        if (!string.IsNullOrEmpty(markdown))
+        {
+            markdown = markdown.Trim(' ','\r','\n');
+
+            html = Markdig.Markdown.ToHtml(markdown);
+        }
+
+        await base.OnInitializedAsync();
+    }
+}
