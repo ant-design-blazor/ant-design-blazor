@@ -13,6 +13,11 @@
     z-index: 10;
     min-height: 100vh;
     box-shadow: 2px 0 6px rgba(0,21,41,.35);
+    overflow-y: hidden;
+
+    &:hover {
+      overflow-y: scroll;
+    }
   }
 
   .header-trigger {
@@ -78,12 +83,13 @@
 
   main {
     margin: 24px;
+    min-height: initial;
   }
 
   .inner-content {
     padding: 24px;
     background: #fff;
-    height: 100%;
+    min-height: 100%;
   }
 
   footer {

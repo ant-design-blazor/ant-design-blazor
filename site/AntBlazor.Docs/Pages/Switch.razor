@@ -1,0 +1,75 @@
+﻿@page "/switch"
+
+<h1>Switch开关</h1>
+<p>开关选择器。</p>
+
+
+<DemoCard>
+    <Title>基本使用</Title>
+    <Description>
+        @(@"最简单的用法。")
+    </Description>
+    <Demo>
+        <AntSwitch checked="switchValue"></AntSwitch>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>不可用</Title>
+    <Description>
+        @(@"Switch 失效状态。")
+    </Description>
+    <Demo>
+        <AntSwitch checked="switchValue2" disabled="isDisabled2"></AntSwitch>
+        <br />
+        <br />
+        <AntButton type="primary" @onclick="(_)=>isDisabled2 = !isDisabled2">Toggle disabled</AntButton>
+    </Demo>
+</DemoCard>
+
+
+
+<DemoCard>
+    <Title>文字和图标</Title>
+    <Description>
+        @(@"带有文字和图标。")
+    </Description>
+    <Demo>
+        <AntSwitch checked="true">
+            <CheckedChildren>开</CheckedChildren>
+            <UnCheckedChildren>关</UnCheckedChildren>
+        </AntSwitch>
+        <br />
+        <AntSwitch checked="false">
+            <CheckedChildren>1</CheckedChildren>
+            <UnCheckedChildren>0</UnCheckedChildren>
+        </AntSwitch>
+        <br />
+        <AntSwitch checked="true" CheckedChildren="checkedChildren" UnCheckedChildren="unCheckedChildren">
+        </AntSwitch>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>两种大小</Title>
+    <Description>
+        `size="small"`表示小号开关。
+    </Description>
+    <Demo>
+        <AntSwitch checked="true"></AntSwitch>
+        <br />
+        <AntSwitch size="small" checked="true"></AntSwitch>
+    </Demo>
+</DemoCard>
+
+@code{
+    bool switchValue = false;
+
+    bool switchValue2 = false;
+    bool isDisabled2 = true;
+
+    RenderFragment checkedChildren = @<AntIcon type="check"></AntIcon>;
+
+    RenderFragment unCheckedChildren = @<AntIcon type="close"></AntIcon>;
+
+}
