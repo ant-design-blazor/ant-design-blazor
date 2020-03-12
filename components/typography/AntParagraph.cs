@@ -12,8 +12,6 @@ namespace AntBlazor
         private HtmlRenderService _service { get; set; }
         [Parameter]
         public bool code { get; set; } = false;
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
 
         protected override void OnInitialized()
         {
@@ -39,7 +37,6 @@ namespace AntBlazor
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             base.BuildRenderTree(builder);
-            // According to Ant-Design 4.0, Fallback to 1 if level is invalid.
             builder.OpenElement(0, "div");
             builder.AddAttribute(1, "class", this.ClassMapper.Class);
             builder.OpenElement(2, "span");
@@ -58,7 +55,7 @@ namespace AntBlazor
             if (copyable)
             {
                 builder.OpenElement(9, "a");
-                builder.AddAttribute(10, "onclick", (Action)(async ()=> await this.JsInvokeAsync<object>(JSInteropConstants.log, await _service.RenderAsync(ChildContent))));
+                builder.AddAttribute(10, "onclick", (Action)(async ()=> await Copy()));
                 builder.OpenComponent<AntIcon>(10);
                 builder.AddAttribute(11, "type", "copy");
                 builder.AddAttribute(12, "theme", AntIconThemeType.Outline);
