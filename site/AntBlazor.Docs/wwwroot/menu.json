@@ -60,6 +60,17 @@
         ]
       },
       {
+        "title": "Data Entry",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Switch",
+            "type": "menuItem",
+            "url": "switch"
+          }
+        ]
+      },
+      {
         "title": "Data Display",
         "type": "itemGroup",
         "children": [

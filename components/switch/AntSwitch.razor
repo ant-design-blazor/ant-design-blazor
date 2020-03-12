@@ -1,0 +1,87 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<button type="button" role="switch"
+        aria-checked="@isChecked"
+        disabled="@disabled"
+        class="@ClassMapper.Class"
+        style="@Style"
+        @onclick="@OnClickHandler">
+    @if (loading)
+    {
+        <AntIcon type="loading" Class="@($"{prefixCls}-loading-icon")" />
+    }
+    <span class="@($"{prefixCls}-inner")">
+        @(isChecked ? CheckedChildren : UnCheckedChildren)
+    </span>
+</button>
+
+@code {
+
+    protected string prefixCls = "ant-switch";
+
+    protected override Task OnParametersSetAsync()
+    {
+        ClassMapper.Clear()
+            .Add(prefixCls)
+            .If($"{prefixCls}-checked", () => isChecked)
+            .If($"{prefixCls}-disabled", () => disabled || loading)
+            .If($"{prefixCls}-loading", () => loading)
+            .If($"{prefixCls}-small", () => size.Equals("small"))
+            ;
+
+
+        return base.OnParametersSetAsync();
+    }
+
+    private bool isChecked = false;
+
+    [Parameter]
+    public bool @checked { get; set; }
+
+    [Parameter]
+    public bool disabled { get; set; }
+
+    [Parameter]
+    public bool loading { get; set; }
+
+    [Parameter]
+    public bool control { get; set; }
+
+    [Parameter]
+    public string size { get; set; } = "default";
+
+
+    [Parameter]
+    public EventCallback<bool> OnChange { get; set; }
+
+    [Parameter]
+    public RenderFragment CheckedChildren { get; set; }
+
+    [Parameter]
+    public RenderFragment UnCheckedChildren { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        this.isChecked = @checked;
+        base.OnInitialized();
+    }
+
+    protected void OnClickHandler(MouseEventArgs ev)
+    {
+        if (!disabled && !loading&&!control)
+        {
+            this.updateValue(!this.isChecked);
+        }
+    }
+
+    private void updateValue(bool value)
+    {
+        if (this.isChecked != value) {
+            this.isChecked = value;
+            this.OnChange.InvokeAsync(this.isChecked);
+        }
+    }
+
+}
