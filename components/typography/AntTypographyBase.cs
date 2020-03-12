@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AntBlazor
 {
     public abstract class AntTypographyBase : AntDomComponentBase
     {
+        [Inject]
+        public HtmlRenderService _service { get; set; }
         [Parameter]
         public bool copyable { get; set; } = false;
         [Parameter]
@@ -35,6 +38,36 @@ namespace AntBlazor
         
         [Parameter]
         public string type { get; set; } = string.Empty;
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        public async Task Copy()
+        {
+            if (!copyable)
+            {
+                return;
+            }
+            else if (copyConfig is null)
+            {
+                await this.JsInvokeAsync<object>(JSInteropConstants.copy, await _service.RenderAsync(ChildContent));
+            }
+            else if (copyConfig.onCopy is null)
+            {
+                if (string.IsNullOrEmpty(copyConfig.text))
+                {
+                    await this.JsInvokeAsync<object>(JSInteropConstants.copy, await _service.RenderAsync(ChildContent));
+                }
+                else
+                {
+                    await this.JsInvokeAsync<object>(JSInteropConstants.copy, copyConfig.text);
+                }
+            }
+            else
+            {
+                copyConfig.onCopy.Invoke();
+            }
+        }
     }
 
     public class TypographyCopyableConfig
