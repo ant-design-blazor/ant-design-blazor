@@ -39,20 +39,18 @@ namespace AntBlazor
 
     public class TypographyCopyableConfig
     {
-        public bool copyable { get; set; } = false;
+        public string text { get; set; } = string.Empty;
         public Action onCopy { get; set; } = null;
     }
 
     public class TypographyEditableConfig
     {
-        public bool editable { get; set; } = false;
         public Action onStart { get; set; }
         public Action<string> onChange { get; set; }
     }
 
     public class TypographyEllipsisConfig
     {
-        public bool expandable { get; set; }
         public string suffix { get; set; } = "...";
         public int rows { get; set; }
         public Action onExpand { get; set; }
