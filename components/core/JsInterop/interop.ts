@@ -73,3 +73,7 @@ export function copy(text): Promise<any> {
         }
     });
 }
+
+export function log(text) {
+    console.log(text);
+}
