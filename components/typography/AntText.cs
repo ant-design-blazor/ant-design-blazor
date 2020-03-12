@@ -10,8 +10,6 @@ namespace AntBlazor
     {
         [Parameter]
         public bool code { get; set; }
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
 
         protected override void OnInitialized()
         {
@@ -52,6 +50,16 @@ namespace AntBlazor
             if (underline) builder.CloseElement();
             if (delete) builder.CloseElement();
             if (mark) builder.CloseElement();
+            if (copyable)
+            {
+                builder.OpenElement(7, "a");
+                builder.AddAttribute(8, "onclick", (Action)(async () => await Copy()));
+                builder.OpenComponent<AntIcon>(9);
+                builder.AddAttribute(10, "type", "copy");
+                builder.AddAttribute(11, "theme", AntIconThemeType.Outline);
+                builder.CloseComponent();
+                builder.CloseElement();
+            }
             builder.CloseElement();
         }
     }
