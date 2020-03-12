@@ -1,4 +1,4 @@
-name: Publish Docs
+﻿name: Publish Docs
 
 env:
     Version: 0.0.1
@@ -26,9 +26,7 @@ jobs:
                   node-version: '10.x'
 
 
-            - name: Publish Docs to github pages
-              env:
-                  GH_PUSH_TOKEN: ${{secrets.GH_PUSH_TOKEN}}
+            - name: Publish Docs 🎉
               run: |
                   npm install
                   git config --global user.name 'ElderJames'
@@ -39,16 +37,18 @@ jobs:
                   rm index.html
                   cp -r gh-pages/* gh-pages/.nojekyll ./
                   rm -r gh-pages
-                  git init
-                  git checkout -b gh-pages
-                  git add -A
-                  git commit -m "docs: Create build $GITHUB_RUN_ID"
-                  git push -f https://ElderJames:$GH_PUSH_TOKEN@github.com/ElderJames/ant-design-blazor.git gh-pages
 
-            - name: Package Nightly Nuget
-              run: |
-                  dotnet pack components/AntBlazor.csproj /p:PackageVersion=$Version-nightly-${GITHUB_RUN_ID} -c Release -o pack-${GITHUB_RUN_ID} --no-build --no-restore
+            - name: Deploy 🚀
+              uses: JamesIves/github-pages-deploy-action@releases/v3
+              with:
+                ACCESS_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
+                BRANCH: gh-pages
+                FOLDER: tmp/wwwroot
 
-            - name: Publish to Nuget
+            - name: Package Nightly Nuget ✨
               run: |
-                  dotnet nuget push pack-${GITHUB_RUN_ID}/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY
+                  dotnet pack components/AntBlazor.csproj /p:PackageVersion=$Version-nightly-$GITHUB_RUN_ID -c Release -o pack-$GITHUB_RUN_ID --no-build --no-restore
+
+            - name: Publish to Nuget ✔
+              run: |
+                  dotnet nuget push pack-$GITHUB_RUN_ID/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY
