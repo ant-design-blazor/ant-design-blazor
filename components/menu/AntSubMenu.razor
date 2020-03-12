@@ -39,7 +39,9 @@
                 <div class="ant-menu-submenu ant-menu-submenu-popup @PopupClassMapper.Class"
                      style="left:@(element.offsetLeft+element.clientWidth+10)px; top:@(element.offsetTop)px; @(isMouseHover?"":"display: none;")"
                      @onmouseout="()=>SetMouseEnterState(false)"
-                     @onmouseover="()=>SetMouseEnterState(true)">
+                     @onmouseover="()=>SetMouseEnterState(true)"
+                     @onmouseout:stopPropagation
+                     @onmouseover:stopPropagation>
                     <ul class="@menuClassName @PopupUlClassMapper.Class ant-menu-submenu-content" style="@(isMouseHover?"":"display: none;")">
                         @ChildContent
                     </ul>

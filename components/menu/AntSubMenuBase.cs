@@ -122,18 +122,11 @@ namespace AntBlazor
             }
         }
 
-        protected override async Task OnParametersSetAsync()
-        {
-            await base.OnParametersSetAsync();
-            this.open = this._hasOpened;
-        }
-
         protected async Task ClickSubMenuTitle()
         {
             if (Menu.mode == AntDirectionVHIType.inline && !Menu.isInDropDown && !this.disabled)
             {
                 this.open = !this.open;
-                this._hasOpened = this.open;
                 await openChange.InvokeAsync(this.open);
                 this.SetClassMap();
             }
