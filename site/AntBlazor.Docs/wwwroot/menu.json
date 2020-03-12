@@ -95,6 +95,17 @@
             "url": "divider"
           }
         ]
+      },
+      {
+        "title": "Data Entry",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Input",
+            "type": "menuItem",
+            "url": "input"
+          }
+        ]
       }
     ]
   }
