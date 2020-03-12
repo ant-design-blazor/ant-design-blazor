@@ -116,11 +116,26 @@
     <Title>可交互</Title>
     <Description>提供可编辑和可复制等额外的交互能力。</Description>
     <Demo>
-        <AntParagraph copyable="true">在控制台中查看此文本的log</AntParagraph>
+        <AntParagraph copyable>Simple copyable text</AntParagraph>
+        <AntParagraph copyable copyConfig="@selfDefinedText">Copy a self defiend text</AntParagraph>
+        <AntParagraph copyable copyConfig="@selfDefinedCopy">在控制台中查看此文本的log</AntParagraph>
+        <AntTitle copyable>可复制的标题</AntTitle>
+        <AntParagraph >不可复制的段落中穿插着<AntText strong copyable>可复制的文字</AntText>以及其他</AntParagraph>
     </Demo>
 </DemoCard>
 
 
+
 @code {
+    public TypographyCopyableConfig selfDefinedText;
+    public TypographyCopyableConfig selfDefinedCopy;
+
+    protected override void OnInitialized()
+    {
+        selfDefinedText = new TypographyCopyableConfig() { text = "Just copied from self defined text" };
+        selfDefinedCopy = new TypographyCopyableConfig();
+        selfDefinedCopy.onCopy += () => System.Console.WriteLine("Log in console as a self defined copy behavior");
+        base.OnInitialized();
+    }
 
 }

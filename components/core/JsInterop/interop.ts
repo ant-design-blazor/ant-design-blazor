@@ -43,34 +43,38 @@ export function antMatchMedia(query) {
     return window.matchMedia(query).matches;
 }
 
-export function copy(text): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-        let copyTextArea = null;
-        try {
-            copyTextArea = this.document.createElement('textarea');
-            copyTextArea.style.all = 'unset';
-            copyTextArea.style.position = 'fixed';
-            copyTextArea.style.top = '0';
-            copyTextArea.style.clip = 'rect(0, 0, 0, 0)';
-            copyTextArea.style.whiteSpace = 'pre';
-            copyTextArea.style.webkitUserSelect = 'text';
-            copyTextArea.style.MozUserSelect = 'text';
-            copyTextArea.style.msUserSelect = 'text';
-            copyTextArea.style.userSelect = 'text';
-            this.document.body.appendChild(copyTextArea);
-            copyTextArea.value = text;
-            copyTextArea.select();
+function fallbackCopyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
 
-            const successful = this.document.execCommand('copy');
-            if (!successful) {
-                reject(text);
-            }
-            resolve(text);
-        } finally {
-            if (copyTextArea) {
-                this.document.body.removeChild(copyTextArea);
-            }
-        }
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Fallback: Copying text command was ' + msg);
+    } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+    }
+
+    document.body.removeChild(textArea);
+}
+export function copy(text) {
+    if (!navigator.clipboard) {
+        fallbackCopyTextToClipboard(text);
+        return;
+    }
+    navigator.clipboard.writeText(text).then(function () {
+        console.log('Async: Copying to clipboard was successful!');
+    }, function (err) {
+        console.error('Async: Could not copy text: ', err);
     });
 }
 
