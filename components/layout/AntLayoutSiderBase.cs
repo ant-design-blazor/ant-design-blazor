@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Threading.Tasks;
-using AntBlazor.core;
 using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
 
@@ -8,46 +7,40 @@ namespace AntBlazor
 {
     public class AntLayoutSiderBase : AntDomComponentBase
     {
-        private string _currentWidth, _customWidth = "256";
-
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public string adWidth { get => _currentWidth; set { _currentWidth = _customWidth = value; } }
+        [Parameter] public string width { get; set; } = "200";
 
         /// <summary>
-        /// use to fix the user has long content, but they don't want to scroll all body.
+        ///  'light' | 'dark'
         /// </summary>
         [Parameter]
-        public bool longBodyMode { get; set; } = false;
+        public string theme { get; set; } = "dark";
 
         [Parameter]
-        public string adTheme { get; set; } = "dark";
-
-        [Parameter]
-        public int adCollapsedWidth { get; set; } = 80;
+        public int collapsedWidth { get; set; } = 80;
 
         /// <summary>
         /// "xs" | "sm" | "md" | "lg" | "xl" | "xxl"
         /// </summary>
         [Parameter]
-        public string adBreakpoint { get; set; }
+        public string breakpoint { get; set; }
 
         [Parameter]
-        public RenderFragment adZeroTrigger { get; set; }
+        public RenderFragment zeroTrigger { get; set; }
 
         [Parameter]
-        public bool adReverseArrow { get; set; } = false;
+        public bool reverseArrow { get; set; } = false;
 
         [Parameter]
-        public bool adCollapsible { get; set; } = false;
+        public bool collapsible { get; set; } = false;
 
         [Parameter]
-        public bool adCollapsed { get; set; } = false;
+        public bool collapsed { get; set; } = false;
 
         [Parameter]
-        public RenderFragment adTrigger { get; set; }
+        public RenderFragment trigger { get; set; }
 
         [CascadingParameter]
         public AntLayout Layout { get; set; }
@@ -57,16 +50,16 @@ namespace AntBlazor
 
         [Inject] private DomEventService domEventService { get; set; }
 
-        protected string widthSetting => this.adCollapsed ? $"{this.adCollapsedWidth}px" : StyleHelper.ToCssPixel(adWidth);
+        protected string widthSetting => this.collapsed ? $"{this.collapsedWidth}px" : StyleHelper.ToCssPixel(width);
 
         private string flexSetting => $"0 0 {widthSetting}";
 
         protected string style =>
-                    $@"flex:{flexSetting};
+            $@"flex:{flexSetting};
                     max-width:{widthSetting};
                     min-width:{widthSetting};
                     width:{widthSetting};
-                    {(longBodyMode ? ";overflow:auto;height:100vh !important;position:fixed;left:0;" : "")}";
+           ";
 
         protected bool below { get; set; }
 
@@ -83,9 +76,9 @@ namespace AntBlazor
         public AntLayoutSiderBase()
         {
             ClassMapper.Add("ant-layout-sider")
-                .If("ant-layout-sider-zero-width", () => adCollapsed && adCollapsedWidth == 0)
-                .If("ant-layout-sider-light", () => adTheme == "light")
-                .If("ant-layout-sider-collapsed", () => adCollapsed)
+                .If("ant-layout-sider-zero-width", () => collapsed && collapsedWidth == 0)
+                .If("ant-layout-sider-light", () => theme == "light")
+                .If("ant-layout-sider-collapsed", () => collapsed)
                 ;
         }
 
@@ -103,26 +96,18 @@ namespace AntBlazor
 
         public async Task toggleCollapse()
         {
-            this.adCollapsed = !this.adCollapsed;
-            await onCollapsedChange.InvokeAsync(adCollapsed);
+            this.collapsed = !this.collapsed;
+            await onCollapsedChange.InvokeAsync(collapsed);
         }
 
         public async Task watchMatchMedia()
         {
-            if (string.IsNullOrEmpty(adBreakpoint))
+            if (string.IsNullOrEmpty(breakpoint))
                 return;
 
-            var matchBelow = await JsInvokeAsync<bool>(JSInteropConstants.antMatchMedia, $"(max-width: {dimensionMap[adBreakpoint]})");
+            var matchBelow = await JsInvokeAsync<bool>(JSInteropConstants.antMatchMedia, $"(max-width: {dimensionMap[breakpoint]})");
             this.below = matchBelow;
-            this.adCollapsed = matchBelow;
-            if (matchBelow)
-            {
-                this._currentWidth = "100%";
-            }
-            else
-            {
-                this._currentWidth = this._customWidth;
-            }
+            this.collapsed = matchBelow;
             await this.onCollapsedChange.InvokeAsync(matchBelow);
         }
     }
