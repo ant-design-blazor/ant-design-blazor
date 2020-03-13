@@ -9,7 +9,8 @@
         </span>
     }
     <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id"
-           placeholder="@placeholder" />
+           placeholder="@placeholder" value="@(string.IsNullOrEmpty(defaultValue)?Value:defaultValue)"
+           @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync" />
     @if (!string.IsNullOrEmpty(suffix))
     {
         <span class="ant-input-suffix">
