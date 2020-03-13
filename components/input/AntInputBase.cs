@@ -27,8 +27,7 @@ namespace AntBlazor
             this.ClassMapper.Clear()
                 .Add($"{prefix}")
                 .If($"{prefix}-lg", () => size == AntInputSize.Large)
-                .If($"{prefix}-sm", () => size == AntInputSize.Small)
-                ;
+                .If($"{prefix}-sm", () => size == AntInputSize.Small);
         }
     }
 }
