@@ -1,6 +1,13 @@
 ﻿@namespace AntBlazor
 @inherits AntInputBase
 
-<div>
-    <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" />
-</div>
+<span class="ant-input-affix-wrapper">
+    @if (!string.IsNullOrEmpty(icon))
+    {
+        <span class="ant-input-prefix">
+            <AntIcon type="@icon"></AntIcon>
+        </span>
+    }
+    <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id"
+           placeholder="@placeholder" />
+</span>
