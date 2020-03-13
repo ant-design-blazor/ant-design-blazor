@@ -15,19 +15,21 @@ namespace AntBlazor
         public string placeholder { get; set; }
 
         [Parameter]
-        public string icon { get; set; }
+        public string prefix { get; set; }
+
+        [Parameter]
+        public string suffix { get; set; }
 
         protected override void OnInitialized()
         {
-            Debug.WriteLine($"size: {size}");
             base.OnInitialized();
 
             //this.presetColor = this.isPresetColor(this.color);
-            string prefix = "ant-input";
+            string prefixCls = "ant-input";
             this.ClassMapper.Clear()
-                .Add($"{prefix}")
-                .If($"{prefix}-lg", () => size == AntInputSize.Large)
-                .If($"{prefix}-sm", () => size == AntInputSize.Small);
+                .Add($"{prefixCls}")
+                .If($"{prefixCls}-lg", () => size == AntInputSize.Large)
+                .If($"{prefixCls}-sm", () => size == AntInputSize.Small);
         }
     }
 }

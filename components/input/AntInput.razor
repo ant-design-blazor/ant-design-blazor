@@ -2,12 +2,18 @@
 @inherits AntInputBase
 
 <span class="ant-input-affix-wrapper">
-    @if (!string.IsNullOrEmpty(icon))
+    @if (!string.IsNullOrEmpty(prefix))
     {
         <span class="ant-input-prefix">
-            <AntIcon type="@icon"></AntIcon>
+            <AntIcon type="@prefix"></AntIcon>
         </span>
     }
     <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id"
            placeholder="@placeholder" />
+    @if (!string.IsNullOrEmpty(suffix))
+    {
+        <span class="ant-input-suffix">
+            <AntIcon type="@suffix"></AntIcon>
+        </span>
+    }
 </span>
