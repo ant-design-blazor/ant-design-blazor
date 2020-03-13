@@ -12,7 +12,7 @@ namespace AntBlazor.Docs.ClientApp
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddBaseAddressHttpClient();
-            builder.Services.AddAntBlazor();
+            builder.Services.AddAntBlazorDocs();
 
             await builder.Build().RunAsync();
         }
