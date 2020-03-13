@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AntBlazor
 {
@@ -16,6 +11,12 @@ namespace AntBlazor
         [Parameter]
         public string size { get; set; } = AntInputSize.Default;
 
+        [Parameter]
+        public string placeholder { get; set; }
+
+        [Parameter]
+        public string icon { get; set; }
+
         protected override void OnInitialized()
         {
             Debug.WriteLine($"size: {size}");
@@ -24,6 +25,7 @@ namespace AntBlazor
             //this.presetColor = this.isPresetColor(this.color);
             string prefix = "ant-input";
             this.ClassMapper.Clear()
+                .Add($"{prefix}")
                 .If($"{prefix}-lg", () => size == AntInputSize.Large)
                 .If($"{prefix}-sm", () => size == AntInputSize.Small)
                 ;

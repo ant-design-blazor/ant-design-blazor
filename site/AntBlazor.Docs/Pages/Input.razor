@@ -1,7 +1,7 @@
 ﻿@page "/input"
 
 <AntTitle level="1">Input</AntTitle>
-<AntText>Input用于输入文字</AntText>
+<AntText>Input用于输入文字123</AntText>
 <AntTitle level="2">何时使用</AntTitle>
 <AntParagraph>xxxxxxx。</AntParagraph>
 <AntParagraph>在 Ant Design 中，xxxxxxx。</AntParagraph>
@@ -12,10 +12,16 @@
     <Title>Input Size</Title>
     <Description>Input xxxxxxx。</Description>
     <Demo>
-        <AntInput></AntInput>
-        <br />
-        <AntInput size="@AntInputSize.Large"></AntInput>
-        <br />
-        <AntInput size="@AntInputSize.Small"></AntInput>
+        <style>
+            .example-input > span {
+                width: 200px;
+                margin: 0 8px 8px 0;
+            }
+        </style>
+        <span class="example-input">
+            <AntInput placeholder="default size"></AntInput>
+            <AntInput icon="car" placeholder="large size" size="@AntInputSize.Large"></AntInput>
+            <AntInput icon="user" placeholder="small size" size="@AntInputSize.Small"></AntInput>
+        </span>
     </Demo>
 </DemoCard>
