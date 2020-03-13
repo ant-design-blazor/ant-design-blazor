@@ -25,25 +25,23 @@ jobs:
               with:
                   node-version: '10.x'
 
-
             - name: Publish Docs 🎉
               run: |
                   npm install
-                  git config --global user.name 'ElderJames'
-                  git config --global user.email 'shunjiey@hotmail.com'
-                  dotnet build
-                  dotnet publish -c Release -o tmp
-                  cd tmp/wwwroot
+                  cd site/AntBlazor.Docs.ClientApp/wwwroot
                   rm index.html
                   cp -r gh-pages/* gh-pages/.nojekyll ./
                   rm -r gh-pages
+                  cd ../../../
+                  dotnet build
+                  dotnet publish -c Release -o tmp
 
             - name: Deploy 🚀
               uses: JamesIves/github-pages-deploy-action@releases/v3
               with:
-                ACCESS_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
-                BRANCH: gh-pages
-                FOLDER: tmp/wwwroot
+                  ACCESS_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
+                  BRANCH: gh-pages
+                  FOLDER: tmp/wwwroot
 
             - name: Package Nightly Nuget ✨
               run: |
