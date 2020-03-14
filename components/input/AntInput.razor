@@ -14,8 +14,8 @@
            @oninput="OnInputAsync" />
     @if (!string.IsNullOrEmpty(suffix))
     {
-        <span class="ant-input-suffix">
-            <AntIcon type="@suffix"></AntIcon>
+        <span class="ant-input-suffix ant-input-clear-icon">
+            <AntIcon type="@suffix" @onclick="ClearContent"></AntIcon>
         </span>
     }
 </span>

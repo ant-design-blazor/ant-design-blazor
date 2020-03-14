@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    // TODO:addonAfter, addonBefore, disabled, allowClear
+    // TODO:addonAfter, addonBefore, disabled
 
     /// <summary>
     ///
@@ -72,12 +72,8 @@ namespace AntBlazor
 
             if (Attributes.ContainsKey("allowClear"))
             {
-                // TODO: show clear button
                 _allowClear = true;
-                if (!string.IsNullOrEmpty(defaultValue) || !string.IsNullOrEmpty(Value))
-                {
-                    suffix = "close-circle";
-                }
+                ToggleClearBtn();
             }
         }
 
@@ -97,24 +93,43 @@ namespace AntBlazor
             }
         }
 
-        protected virtual async Task OnInputAsync(ChangeEventArgs args)
+        private void ToggleClearBtn()
+        {
+            if (string.IsNullOrEmpty(Value))
+            {
+                suffix = string.Empty;
+                StateHasChanged();
+            }
+            else
+            {
+                suffix = "close-circle";
+                StateHasChanged();
+            }
+        }
+
+        /// <summary>
+        /// Invoked when user add/remove content
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        protected virtual Task OnInputAsync(ChangeEventArgs args)
         {
             // AntInputComponentBase.Value will be empty, use args.Value
             Value = args.Value.ToString();
-
             if (_allowClear)
             {
-                // TODO: toggle clear button
-                if (string.IsNullOrEmpty(Value))
-                {
-                    suffix = string.Empty;
-                    this.StateHasChanged();
-                }
-                else
-                {
-                    suffix = "close-circle";
-                    this.StateHasChanged();
-                }
+                ToggleClearBtn();
+            }
+
+            return Task.CompletedTask;
+        }
+
+        protected virtual void ClearContent()
+        {
+            if (_allowClear)
+            {
+                Value = string.Empty;
+                ToggleClearBtn();
             }
         }
     }
