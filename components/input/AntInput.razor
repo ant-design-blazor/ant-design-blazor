@@ -9,7 +9,7 @@
         </span>
     }
     <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id"
-           placeholder="@placeholder" value="@(string.IsNullOrEmpty(defaultValue)?Value:defaultValue)"
+           placeholder="@placeholder" value="@Value"
            @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
            @oninput="OnInputAsync" />
     @if (!string.IsNullOrEmpty(suffix))

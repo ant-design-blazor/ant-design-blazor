@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AntBlazor.JsInterop;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace AntBlazor
     public class AntInputBase : AntInputComponentBase<string>
     {
         protected bool _allowClear;
+        protected ElementReference inputEl { get; set; }
 
         [Parameter]
         public string size { get; set; } = AntInputSize.Default;
@@ -41,6 +43,11 @@ namespace AntBlazor
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            if (!string.IsNullOrEmpty(defaultValue))
+            {
+                Value = defaultValue;
+            }
 
             string prefixCls = "ant-input";
             ClassMapper.Clear()
@@ -90,7 +97,7 @@ namespace AntBlazor
             }
         }
 
-        protected async Task OnInputAsync(ChangeEventArgs args)
+        protected virtual async Task OnInputAsync(ChangeEventArgs args)
         {
             // AntInputComponentBase.Value will be empty, use args.Value
             Value = args.Value.ToString();
