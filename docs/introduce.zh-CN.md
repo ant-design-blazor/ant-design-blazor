@@ -1,20 +1,22 @@
-<p align="center">
-  <a href="https://yangshunjie.com/ant-design-blazor/">
-    <img src="https://raw.githubusercontent.com/ElderJames/ant-design-blazor/master/logo.svg?sanitize=true">
-  </a>
-</p>
+这里是 Ant Design 的 Blazor 实现，开发和服务于企业级后台产品。
 
-<h1 align="center">Ant Design Blazor</h1>
-
-<div align="center">
-
-An enterprise-class UI components based on Ant Design and Blazor.
-
-![](https://img.shields.io/github/workflow/status/elderjames/ant-design-blazor/Publish%20Docs?style=flat-square)
-[![AntBlazor](https://img.shields.io/nuget/v/AntBlazor.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
-[![AntBlazor](https://img.shields.io/nuget/dt/AntBlazor.svg?style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
-[![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/blob/master/LICENSE)
+<div class="pic-plus">
+  <img width="150" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg">
+  <span>+</span>
+  <img height="150" src="./assets/blazor.svg">
 </div>
+
+<style>
+.pic-plus > * {
+  display: inline-block !important;
+  vertical-align: middle;
+}
+.pic-plus span {
+  font-size: 30px;
+  color: #aaa;
+  margin: 0 20px;
+}
+</style>
 
 ## ✨ 特性
 
@@ -124,7 +126,7 @@ An enterprise-class UI components based on Ant Design and Blazor.
 
 如果您在使用的过程中碰到问题，可以通过 QQ 群寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
 
-<img src="./docs/assets/qq_group.jpg" width="300">
+<img src="./assets/qq_group.jpg" width="300">
 
 ## ☀️ 授权协议
 
