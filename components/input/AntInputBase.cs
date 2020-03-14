@@ -5,11 +5,15 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
+    // TODO:addonAfter, addonBefore, disabled, allowClear
+
     /// <summary>
     ///
     /// </summary>
     public class AntInputBase : AntInputComponentBase<string>
     {
+        protected bool _allowClear;
+
         [Parameter]
         public string size { get; set; } = AntInputSize.Default;
 
@@ -18,6 +22,9 @@ namespace AntBlazor
 
         [Parameter]
         public string defaultValue { get; set; }
+
+        [Parameter]
+        public int maxLength { get; set; } = -1;
 
         [Parameter]
         public string prefix { get; set; }
@@ -35,12 +42,36 @@ namespace AntBlazor
         {
             base.OnInitialized();
 
-            //this.presetColor = this.isPresetColor(this.color);
             string prefixCls = "ant-input";
-            this.ClassMapper.Clear()
+            ClassMapper.Clear()
                 .Add($"{prefixCls}")
                 .If($"{prefixCls}-lg", () => size == AntInputSize.Large)
                 .If($"{prefixCls}-sm", () => size == AntInputSize.Small);
+
+            if (Attributes is null)
+            {
+                Attributes = new System.Collections.Generic.Dictionary<string, object>();
+            }
+
+            if (maxLength >= 0)
+            {
+                Attributes?.Add("maxlength", maxLength);
+            }
+
+            if (Attributes.ContainsKey("disabled"))
+            {
+                // TODO: disable element
+            }
+
+            if (Attributes.ContainsKey("allowClear"))
+            {
+                // TODO: show clear button
+                _allowClear = true;
+                if (!string.IsNullOrEmpty(defaultValue) || !string.IsNullOrEmpty(Value))
+                {
+                    suffix = "close-circle";
+                }
+            }
         }
 
         protected async Task OnChangeAsync(ChangeEventArgs args)
@@ -56,6 +87,27 @@ namespace AntBlazor
             if (args.Code == "Enter" && onPressEnter.HasDelegate)
             {
                 await onPressEnter.InvokeAsync(args);
+            }
+        }
+
+        protected async Task OnInputAsync(ChangeEventArgs args)
+        {
+            // AntInputComponentBase.Value will be empty, use args.Value
+            Value = args.Value.ToString();
+
+            if (_allowClear)
+            {
+                // TODO: toggle clear button
+                if (string.IsNullOrEmpty(Value))
+                {
+                    suffix = string.Empty;
+                    this.StateHasChanged();
+                }
+                else
+                {
+                    suffix = "close-circle";
+                    this.StateHasChanged();
+                }
             }
         }
     }
