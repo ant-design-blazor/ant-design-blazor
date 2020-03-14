@@ -1,13 +1,13 @@
 {
   "iisSettings": {
     "windowsAuthentication": false,
-    "anonymousAuthentication": true 
+    "anonymousAuthentication": true
   },
-  "profiles": { 
+  "profiles": {
     "AntBlazor.Docs.ServerApp": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5000",
+      "applicationUrl": "https://localhost:50001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
