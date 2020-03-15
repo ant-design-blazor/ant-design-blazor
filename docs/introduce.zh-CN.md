@@ -124,10 +124,10 @@
 
 ## ❓ 社区互助
 
-如果您在使用的过程中碰到问题，可以通过 QQ 群寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
+如果您在使用的过程中碰到问题，可以通过 [钉钉群](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) 寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
 
-<img src="./assets/qq_group.jpg" width="300">
+<img src="./assets/dingtalk.jpg" width="300">
 
 ## ☀️ 授权协议
 
-MIT
+[![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/blob/master/LICENSE)
