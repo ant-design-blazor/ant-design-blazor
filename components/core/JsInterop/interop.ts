@@ -1,83 +1,83 @@
 ﻿export function getDom(element) {
-    if (!element) {
-        element = document.body;
-    } else if (typeof element === 'string') {
-        element = document.querySelector(element);
-    }
-    return element;
+  if (!element) {
+    element = document.body;
+  } else if (typeof element === 'string') {
+    element = document.querySelector(element);
+  }
+  return element;
 }
 
 export function getDomInfo(element) {
-    var result = {};
+  var result = {};
 
-    var dom = getDom(element);
+  var dom = getDom(element);
 
-    for (var key in dom) {
-        var item = dom[key];
-        if (!item) continue;
-        if (typeof item === 'string' || (typeof item === 'number' && !isNaN(item))) result[key] = item;
-    }
+  for (var key in dom) {
+    var item = dom[key];
+    if (!item) continue;
+    if (typeof item === 'string' || (typeof item === 'number' && !isNaN(item))) result[key] = item;
+  }
 
-    return result;
+  return result;
 }
 
 export function getBoundingClientRect(element) {
-    let dom = getDom(element);
-    return dom.getBoundingClientRect();
+  let dom = getDom(element);
+  return dom.getBoundingClientRect();
 }
 
 export function addDomEventListener(element, eventName, invoker) {
-    let callback = args => {
-        invoker.invokeMethodAsync('Invoke', args);
-    };
+  let callback = args => {
+    invoker.invokeMethodAsync('Invoke', args);
+  };
 
-    if (element == 'window') {
-        window.addEventListener(eventName, callback);
-    } else {
-        let dom = getDom(element);
-        (document.querySelector(dom) as HTMLElement).addEventListener(eventName, callback);
-    }
+  if (element == 'window') {
+    window.addEventListener(eventName, callback);
+  } else {
+    let dom = getDom(element);
+    (document.querySelector(dom) as HTMLElement).addEventListener(eventName, callback);
+  }
 }
 
-export function antMatchMedia(query) {
-    return window.matchMedia(query).matches;
+export function matchMedia(query) {
+  return window.matchMedia(query).matches;
 }
 
 function fallbackCopyTextToClipboard(text) {
-    var textArea = document.createElement("textarea");
-    textArea.value = text;
+  var textArea = document.createElement("textarea");
+  textArea.value = text;
 
-    // Avoid scrolling to bottom
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.position = "fixed";
+  // Avoid scrolling to bottom
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.position = "fixed";
 
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
 
-    try {
-        var successful = document.execCommand('copy');
-        var msg = successful ? 'successful' : 'unsuccessful';
-        console.log('Fallback: Copying text command was ' + msg);
-    } catch (err) {
-        console.error('Fallback: Oops, unable to copy', err);
-    }
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'successful' : 'unsuccessful';
+    console.log('Fallback: Copying text command was ' + msg);
+  } catch (err) {
+    console.error('Fallback: Oops, unable to copy', err);
+  }
 
-    document.body.removeChild(textArea);
+  document.body.removeChild(textArea);
 }
 export function copy(text) {
-    if (!navigator.clipboard) {
-        fallbackCopyTextToClipboard(text);
-        return;
-    }
-    navigator.clipboard.writeText(text).then(function () {
-        console.log('Async: Copying to clipboard was successful!');
-    }, function (err) {
-        console.error('Async: Could not copy text: ', err);
-    });
+  if (!navigator.clipboard) {
+    fallbackCopyTextToClipboard(text);
+    return;
+  }
+  navigator.clipboard.writeText(text).then(function () {
+    console.log('Async: Copying to clipboard was successful!');
+  }, function (err) {
+    console.error('Async: Could not copy text: ', err);
+  });
 }
 
 export function log(text) {
-    console.log(text);
+  console.log(text);
 }

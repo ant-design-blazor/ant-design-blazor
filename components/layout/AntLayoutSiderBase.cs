@@ -105,7 +105,7 @@ namespace AntBlazor
             if (string.IsNullOrEmpty(breakpoint))
                 return;
 
-            var matchBelow = await JsInvokeAsync<bool>(JSInteropConstants.antMatchMedia, $"(max-width: {dimensionMap[breakpoint]})");
+            var matchBelow = await JsInvokeAsync<bool>(JSInteropConstants.matchMedia, $"(max-width: {dimensionMap[breakpoint]})");
             this.below = matchBelow;
             this.collapsed = matchBelow;
             await this.onCollapsedChange.InvokeAsync(matchBelow);
