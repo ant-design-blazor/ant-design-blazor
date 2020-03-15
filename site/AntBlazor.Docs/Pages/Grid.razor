@@ -1,0 +1,300 @@
+﻿<h3>Grid 栅格</h3>
+
+
+
+<DemoCard id="grid-demo-basic">
+    <Title>基础栅格</Title>
+    <Description>
+        @(@"
+从堆叠到水平排列。
+使用单一的一组 `nz-row` 和 `nz-col` 栅格组件，就可以创建一个基本的栅格系统，所有列（`nz-col`）必须放在 `nz-row` 内。
+")
+    </Description>
+    <Demo>
+        <AntRow>
+            <AntCol span="12">col-12</AntCol>
+            <AntCol span="12">col-12</AntCol>
+        </AntRow>
+        <AntRow>
+            <AntCol span="8">col-8</AntCol>
+            <AntCol span="8">col-8</AntCol>
+            <AntCol span="8">col-8</AntCol>
+        </AntRow>
+        <AntRow>
+            <AntCol span="6">col-6</AntCol>
+            <AntCol span="6">col-6</AntCol>
+            <AntCol span="6">col-6</AntCol>
+            <AntCol span="6">col-6</AntCol>
+        </AntRow>
+    </Demo>
+</DemoCard>
+
+
+
+<DemoCard id="grid-demo-gutter">
+    <Title>区块间隔</Title>
+    <Description>
+        @(@"
+栅格常常需要和间隔进行配合，你可以使用 `` 的 `nzGutter` 属性，我们推荐使用 `(16+8n)px` 作为栅格间隔。(n 是自然数)
+
+如果要支持响应式，可以写成 `{ xs: 8, sm: 16, md: 24, lg: 32, xl: 32, xxl: 32 }`。
+")
+    </Description>
+    <Demo>
+        <div class="gutter-example">
+            <AntRow gutter="16">
+                <AntCol class="gutter-row" span="6">
+                    <div class="gutter-box">col-6</div>
+                </AntCol>
+                <AntCol class="gutter-row" span="6">
+                    <div class="gutter-box">col-6</div>
+                </AntCol>
+                <AntCol class="gutter-row" span="6">
+                    <div class="gutter-box">col-6</div>
+                </AntCol>
+                <AntCol class="gutter-row" span="6">
+                    <div class="gutter-box">col-6</div>
+                </AntCol>
+            </AntRow>
+        </div>
+        <div class="gutter-example">
+            <AntRow gutter="gutter">
+                <AntCol class="gutter-row" span="6">
+                    <div class="gutter-box">col-6</div>
+                </AntCol>
+                <AntCol class="gutter-row" span="6">
+                    <div class="gutter-box">col-6</div>
+                </AntCol>
+                <AntCol class="gutter-row" span="6">
+                    <div class="gutter-box">col-6</div>
+                </AntCol>
+                <AntCol class="gutter-row" span="6">
+                    <div class="gutter-box">col-6</div>
+                </AntCol>
+            </AntRow>
+        </div>
+    </Demo>
+    <Styles>
+        <style>
+            .gutter-box {
+                background: #00a0e9;
+                padding: 5px 0;
+            }
+        </style>
+    </Styles>
+</DemoCard>
+
+@code
+{
+    Dictionary<string, int> gutter = new Dictionary<string, int>()
+    {
+        ["xs"] = 8,
+        ["sm"] = 16,
+        ["md"] = 24,
+        ["lg"] = 32,
+        ["xl"] = 32,
+        ["xxl"] = 32
+    };
+}
+
+<DemoCard id="grid-demo-offset">
+    <Title>左右偏移</Title>
+    <Description>
+        @(@"
+列偏移。
+
+使用 `nzOffset` 可以将列向右侧偏。例如，`nzOffset=""4""` 将元素向右侧偏移了 4 个列（column）的宽度。
+")
+    </Description>
+    <Demo>
+        <AntRow>
+            <AntCol span="8">
+                col-8
+            </AntCol>
+            <AntCol span="8" offset="8">
+                col-8
+            </AntCol>
+        </AntRow>
+        <AntRow>
+            <AntCol span="6" offset="6">
+                col-6 col-offset-6
+            </AntCol>
+            <AntCol span="6" offset="6">
+                col-6 col-offset-6
+            </AntCol>
+        </AntRow>
+        <AntRow>
+            <AntCol span="12" offset="6">
+                col-12 col-offset-6
+            </AntCol>
+        </AntRow>
+    </Demo>
+</DemoCard>
+
+<DemoCard id="grid-demo-sort">
+    <Title>栅格排序</Title>
+    <Description>
+        @(@"
+列排序。
+
+通过使用 `nzPush` 和 `nzPull` 类就可以很容易的改变列（column）的顺序。
+")
+    </Description>
+    <Demo>
+        <AntRow>
+            <AntCol span="18" push="6">
+                col-18 col-push-6
+            </AntCol>
+            <AntCol span="6" pull="18">
+                col-6 col-pull-18
+            </AntCol>
+        </AntRow>
+    </Demo>
+</DemoCard>
+
+<DemoCard id="grid-demo-flex">
+    <Title>Flex 布局</Title>
+    <Description>
+        @(@"
+布局基础。
+
+子元素根据不同的值 `start`,`center`,`end`,`space-between`,`space-around`，分别定义其在父节点里面的排版方式。
+")
+    </Description>
+    <Demo>
+        <div id="flex-demo">
+            <p>sub-element align left</p>
+            <AntRow justify="start">
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+            </AntRow>
+            <p>sub-element align center</p>
+            <AntRow justify="center">
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+            </AntRow>
+            <p>sub-element align right</p>
+            <AntRow justify="end">
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+            </AntRow>
+            <p>sub-element monospaced arrangement</p>
+            <AntRow justify="space-between">
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+            </AntRow>
+            <p>sub-element align full</p>
+            <AntRow justify="space-around">
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+                <AntCol span="4">col-4</AntCol>
+            </AntRow>
+        </div>
+    </Demo>
+    <Styles>
+        <style>
+            #flex-demo .ant-row {
+                background-color: rgba(128, 128, 128, 0.08);
+            }
+        </style>
+    </Styles>
+</DemoCard>
+
+<DemoCard id="grid-demo-flex-align">
+    <Title>Flex 对齐</Title>
+    <Description>
+        @(@"
+子元素垂直对齐。
+")
+    </Description>
+    <Demo>
+        <div>
+            <p>Align Top</p>
+            <AntRow justify="center" align="top">
+                <AntCol span="4"><p class="height-100">col-4</p></AntCol>
+                <AntCol span="4"><p class="height-50">col-4</p></AntCol>
+                <AntCol span="4"><p class="height-120">col-4</p></AntCol>
+                <AntCol span="4"><p class="height-80">col-4</p></AntCol>
+            </AntRow>
+            <p>Align Center</p>
+            <AntRow justify="space-around" align="middle">
+                <AntCol span="4"><p class="height-100">col-4</p></AntCol>
+                <AntCol span="4"><p class="height-50">col-4</p></AntCol>
+                <AntCol span="4"><p class="height-120">col-4</p></AntCol>
+                <AntCol span="4"><p class="height-80">col-4</p></AntCol>
+            </AntRow>
+            <p>Align Bottom</p>
+            <AntRow justify="space-between" align="bottom">
+                <AntCol span="4"><p class="height-100">col-4</p></AntCol>
+                <AntCol span="4"><p class="height-50">col-4</p></AntCol>
+                <AntCol span="4"><p class="height-120">col-4</p></AntCol>
+                <AntCol span="4"><p class="height-80">col-4</p></AntCol>
+            </AntRow>
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard id="grid-demo-flex-order">
+    <Title>Flex排序</Title>
+    <Description>
+        @(@"
+通过 `order` 来改变元素的排序。
+")
+    </Description>
+    <Demo>
+        <div id="grid-demo-flex-order">
+            <AntRow>
+                <AntCol span="6" order="4">
+                    1 col-order-4
+                </AntCol>
+                <AntCol span="6" order="3">
+                    2 col-order-3
+                </AntCol>
+                <AntCol span="6" order="2">
+                    3 col-order-2
+                </AntCol>
+                <AntCol span="6" order="1">
+                    4 col-order-1
+                </AntCol>
+            </AntRow>
+        </div>
+    </Demo>
+    <Styles>
+        <style>
+            #grid-demo-flex-order .ant-row {
+                background-color: rgba(128, 128, 128, 0.08);
+            }
+        </style>
+    </Styles>
+</DemoCard>
+
+<DemoCard id="grid-demo-responsive">
+    <Title>响应式布局</Title>
+    <Description>
+        @(@"
+参照 Bootstrap 的 [响应式设计](http://getbootstrap.com/css/#grid-media-queries)，预设五个响应尺寸：`xs` `sm` `md` `lg` `xl`  `xxl`。
+")
+    </Description>
+    <Demo>
+        <AntRow>
+            <AntCol xs="2" sm="4" md="6" lg="8" xl="10">
+                Col
+            </AntCol>
+            <AntCol xs="20" sm="16" md="12" lg="8" xl="4">
+                Col
+            </AntCol>
+            <AntCol xs="2" sm="4" md="6" lg="8" xl="10">
+                Col
+            </AntCol>
+        </AntRow>
+    </Demo>
+</DemoCard>
