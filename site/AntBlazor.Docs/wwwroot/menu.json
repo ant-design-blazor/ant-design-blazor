@@ -37,6 +37,11 @@
         "type": "itemGroup",
         "children": [
           {
+            "title": "Grid",
+            "type": "menuItem",
+            "url": "grid"
+          },
+          {
             "title": "Layout",
             "type": "menuItem",
             "url": "layout"
