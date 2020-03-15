@@ -207,7 +207,7 @@
     }
 
     &.@{menu-prefix-cls}-item-only-child {
-      .@{iconfont-css-prefix} {
+      > .@{iconfont-css-prefix} {
         margin-right: 0;
 
         .@{menu-prefix-cls}-rtl & {
@@ -520,6 +520,11 @@
         }
       }
     }
+
+    .@{iconfont-css-prefix} {
+      display: inline-block;
+    }
+
     &-tooltip {
       pointer-events: none;
       .@{iconfont-css-prefix} {
@@ -536,9 +541,6 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-    }
-    .anticon {
-      display: block;
     }
   }
 
