@@ -1,0 +1,95 @@
+﻿@namespace AntBlazor
+@inherits AntInputBase
+<!-- Structure Example
+<span class="ant-input-group-wrapper">
+    <span class="ant-input-wrapper ant-input-group">
+        <span class="ant-input-group-addon">Http://</span>
+            <span class="ant-input-affix-wrapper">
+                <span class="ant-input-prefix">￥</span>
+                <input class="ant-input" type="text" value=""></span>
+                <span class="ant-input-suffix">RMB</span>
+        <span class="ant-input-group-addon">.com</span>
+    </span>
+</span>
+-->
+
+@if (AddOnBefore is null && AddOnAfter is null)
+{
+    @if (string.IsNullOrEmpty(prefix) && string.IsNullOrEmpty(suffix))
+    {
+        <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
+               placeholder="@placeholder" value="@Value"
+               @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
+               @oninput="OnInputAsync" />
+    }
+    else
+    {
+        <span class="ant-input-password ant-input-affix-wrapper @_wrapperClass">
+            @if (!string.IsNullOrEmpty(prefix))
+            {
+                <span class="ant-input-prefix">
+                    <AntIcon type="@prefix"></AntIcon>
+                </span>
+            }
+
+            <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
+                   placeholder="@placeholder" value="@Value"
+                   @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
+                   @oninput="OnInputAsync" />
+            @if (!string.IsNullOrEmpty(suffix))
+            {
+                <span class="ant-input-suffix">
+                    <AntIcon class="ant-input-search-icon" type="@suffix" onclick="Search"></AntIcon>
+                </span>
+            }
+        </span>
+    }
+}
+else
+{
+    <span class="ant-input-group-wrapper">
+        <span class="ant-input-wrapper ant-input-group">
+            @if (!(AddOnBefore is null))
+            {
+                <span class="ant-input-group-addon">
+                    @AddOnBefore
+                </span>
+            }
+            @if (string.IsNullOrEmpty(prefix) && string.IsNullOrEmpty(suffix))
+            {
+                <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
+                       placeholder="@placeholder" value="@Value"
+                       @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
+                       @oninput="OnInputAsync" />
+            }
+            else
+            {
+                <span class="ant-input-password ant-input-affix-wrapper @_wrapperClass">
+                    @if (!string.IsNullOrEmpty(prefix))
+                    {
+                        <span class="ant-input-prefix">
+                            <AntIcon type="@prefix"></AntIcon>
+                        </span>
+                    }
+
+                    <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
+                           placeholder="@placeholder" value="@Value"
+                           @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
+                           @oninput="OnInputAsync" />
+                    @if (!string.IsNullOrEmpty(suffix))
+                    {
+                        <span class="ant-input-suffix">
+                            <AntIcon class="ant-input-search-icon" type="@suffix" onclick="Search"></AntIcon>
+                        </span>
+                    }
+                </span>
+            }
+            @if (!(AddOnAfter is null))
+            {
+                <span class="ant-input-group-addon">
+                    @AddOnAfter
+                </span>
+            }
+        </span>
+    </span>
+}
