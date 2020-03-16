@@ -114,6 +114,13 @@
             
              </summary>
         </member>
+        <member name="M:AntBlazor.AntInputBase.OnInputAsync(Microsoft.AspNetCore.Components.ChangeEventArgs)">
+            <summary>
+            Invoked when user add/remove content
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
         <member name="P:AntBlazor.AntLayoutSiderBase.longBodyMode">
             <summary>
             use to fix the user has long content, but they don't want to scroll all body.

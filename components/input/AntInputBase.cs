@@ -1,12 +1,10 @@
-﻿using AntBlazor.JsInterop;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    // TODO:addonAfter, addonBefore, disabled
+    // TODO: allowClear, password
 
     /// <summary>
     ///
@@ -14,7 +12,14 @@ namespace AntBlazor
     public class AntInputBase : AntInputComponentBase<string>
     {
         protected bool _allowClear;
+        protected string _disabledWrapper;
         protected ElementReference inputEl { get; set; }
+
+        [Parameter]
+        public RenderFragment AddOnBefore { get; set; }
+
+        [Parameter]
+        public RenderFragment AddOnAfter { get; set; }
 
         [Parameter]
         public string size { get; set; } = AntInputSize.Default;
@@ -68,6 +73,8 @@ namespace AntBlazor
             if (Attributes.ContainsKey("disabled"))
             {
                 // TODO: disable element
+                _disabledWrapper = "ant-input-affix-wrapper-disabled";
+                ClassMapper.Add($"{prefixCls}-disabled");
             }
 
             if (Attributes.ContainsKey("allowClear"))
@@ -75,6 +82,18 @@ namespace AntBlazor
                 _allowClear = true;
                 ToggleClearBtn();
             }
+
+            //AddOnBefore = (builder) =>
+            //{
+            //    builder.OpenElement(0, "p");
+            //    builder.AddContent(1, "https://");
+            //    builder.CloseElement();
+            //};
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
         }
 
         protected async Task OnChangeAsync(ChangeEventArgs args)

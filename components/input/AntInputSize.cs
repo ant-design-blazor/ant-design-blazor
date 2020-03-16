@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AntBlazor
+﻿namespace AntBlazor
 {
-    public class AntInputSize
+    public static class AntInputSize
     {
         public const string Default = "default";
         public const string Large = "large";

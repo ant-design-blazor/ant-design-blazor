@@ -19,7 +19,10 @@
             }
         </style>
         <span class="example-input">
-            <AntInput placeholder="basic usage" allowClear></AntInput>
+            <AntInput>123</AntInput>
+            <AntInput placeholder="basic usage"></AntInput>
+            <AntInput placeholder="allwoClear" allowClear></AntInput>
+            <AntInput placeholder="disabled" disabled></AntInput>
         </span>
     </Demo>
 </DemoCard>
@@ -67,6 +70,19 @@
             <AntTextArea defaultValue="hello world!"></AntTextArea>
             <AntTextArea autoSize="true"></AntTextArea>
             <AntTextArea defaultValue="onResize"></AntTextArea>
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Pre / Post tab</Title>
+    <Description>Using pre & post tabs example.</Description>
+    <Demo>
+        <div>
+            <AntInput placeholder="url">
+                <AddOnBefore>https://</AddOnBefore>
+                <AddOnAfter>.com</AddOnAfter>
+            </AntInput>
         </div>
     </Demo>
 </DemoCard>
