@@ -37,9 +37,21 @@
             }
         </style>
         <span class="example-input">
-            <AntInput prefix="user" placeholder="large size" defaultValue="123" size="@AntInputSize.Large" />
-            <AntInput prefix="user" placeholder="default size" />
-            <AntInput prefix="user" placeholder="small size" size="@AntInputSize.Small" />
+            <AntInput placeholder="large size" defaultValue="123" size="@AntInputSize.Large">
+                <prefix>
+                    <AntIcon type="user" />
+                </prefix>
+            </AntInput>
+            <AntInput placeholder="default size">
+                <prefix>
+                    <AntIcon type="user" />
+                </prefix>
+            </AntInput>
+            <AntInput placeholder="small size" size="@AntInputSize.Small">
+                <prefix>
+                    <AntIcon type="user" />
+                </prefix>
+            </AntInput>
             <AntInputPassword placeholder="large Password" size="@AntInputSize.Large" />
         </span>
     </Demo>
@@ -62,9 +74,15 @@
     <Description>Using pre & post tabs example.</Description>
     <Demo>
         <div>
-            <AntInput placeholder="url">
-                <AddOnBefore>https://</AddOnBefore>
-                <AddOnAfter>.com</AddOnAfter>
+            <AntInput defaultValue="mysite">
+                <addOnBefore>https://</addOnBefore>
+                <addOnAfter>.com</addOnAfter>
+            </AntInput>
+            <AntInput defaultValue="mysite">
+                <addOnAfter><AntIcon type="setting"></AntIcon></addOnAfter>
+            </AntInput>
+            <AntInput defaultValue="mysite">
+                <addOnBefore>https://</addOnBefore>
             </AntInput>
         </div>
     </Demo>

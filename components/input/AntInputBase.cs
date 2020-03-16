@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    // TODO: allowClear, password
-
     /// <summary>
     ///
     /// </summary>
@@ -19,12 +18,11 @@ namespace AntBlazor
         protected ElementReference inputEl { get; set; }
         protected string _type = "text";
 
+        [Parameter]
+        public RenderFragment addOnBefore { get; set; }
 
         [Parameter]
-        public RenderFragment AddOnBefore { get; set; }
-
-        [Parameter]
-        public RenderFragment AddOnAfter { get; set; }
+        public RenderFragment addOnAfter { get; set; }
 
         [Parameter]
         public string size { get; set; } = AntInputSize.Default;
@@ -39,10 +37,10 @@ namespace AntBlazor
         public int maxLength { get; set; } = -1;
 
         [Parameter]
-        public string prefix { get; set; }
+        public RenderFragment prefix { get; set; }
 
         [Parameter]
-        public string suffix { get; set; }
+        public RenderFragment suffix { get; set; }
 
         [Parameter]
         public EventCallback<ChangeEventArgs> onChange { get; set; }
@@ -135,12 +133,12 @@ namespace AntBlazor
         {
             if (string.IsNullOrEmpty(Value))
             {
-                suffix = string.Empty;
+                suffix = null;
                 StateHasChanged();
             }
             else
             {
-                suffix = "close-circle";
+                suffix = BuildAntIcon("close-circle");
                 StateHasChanged();
             }
         }
@@ -169,6 +167,24 @@ namespace AntBlazor
                 Value = string.Empty;
                 ToggleClearBtn();
             }
+        }
+
+        protected virtual RenderFragment BuildAntIcon(string icon, Dictionary<string, object> attrDict = null)
+        {
+            return new RenderFragment((builder) =>
+            {
+                int i = 0;
+                builder.OpenComponent<AntIcon>(i++);
+                builder.AddAttribute(i++, "type", icon);
+                if (attrDict != null)
+                {
+                    foreach (var pair in attrDict)
+                    {
+                        builder.AddAttribute(i++, pair.Key, pair.Value);
+                    }
+                }
+                builder.CloseComponent();
+            });
         }
     }
 }
