@@ -13,9 +13,9 @@
 </span>
 -->
 
-@if (AddOnBefore is null && AddOnAfter is null)
+@if (addOnBefore is null && addOnAfter is null)
 {
-    @if (string.IsNullOrEmpty(prefix) && string.IsNullOrEmpty(suffix))
+    @if (prefix is null && suffix is null)
     {
         <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
                placeholder="@placeholder" value="@Value"
@@ -24,11 +24,11 @@
     }
     else
     {
-        <span class="ant-input-password ant-input-affix-wrapper @_wrapperClass">
-            @if (!string.IsNullOrEmpty(prefix))
+        <span class="ant-input-affix-wrapper @_wrapperClass">
+            @if (!(prefix is null))
             {
                 <span class="ant-input-prefix">
-                    <AntIcon type="@prefix"></AntIcon>
+                    @prefix
                 </span>
             }
 
@@ -36,18 +36,18 @@
                    placeholder="@placeholder" value="@Value"
                    @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
                    @oninput="OnInputAsync" />
-            @if (!string.IsNullOrEmpty(suffix))
+            @if (!(suffix is null))
             {
                 @if (_allowClear)
                 {
                     <span class="ant-input-suffix">
-                        <AntIcon class="ant-input-clear-icon" theme="fill" type="@suffix" onclick="ClearContent"></AntIcon>
+                        <AntIcon class="ant-input-clear-icon" theme="fill" type="close-circle" onclick="ClearContent"></AntIcon>
                     </span>
                 }
                 else
                 {
                     <span class="ant-input-suffix">
-                        <AntIcon type="@suffix"></AntIcon>
+                        @suffix
                     </span>
                 }
             }
@@ -58,13 +58,13 @@ else
 {
     <span class="ant-input-group-wrapper">
         <span class="ant-input-wrapper ant-input-group">
-            @if (!(AddOnBefore is null))
+            @if (!(addOnBefore is null))
             {
                 <span class="ant-input-group-addon">
-                    @AddOnBefore
+                    @addOnBefore
                 </span>
             }
-            @if (string.IsNullOrEmpty(prefix) && string.IsNullOrEmpty(suffix))
+            @if (prefix is null && suffix is null)
             {
                 <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
                        placeholder="@placeholder" value="@Value"
@@ -73,11 +73,11 @@ else
             }
             else
             {
-                <span class="ant-input-password ant-input-affix-wrapper @_wrapperClass">
-                    @if (!string.IsNullOrEmpty(prefix))
+                <span class="ant-input-affix-wrapper @_wrapperClass">
+                    @if (!(prefix is null))
                     {
                         <span class="ant-input-prefix">
-                            <AntIcon type="@prefix"></AntIcon>
+                            @prefix
                         </span>
                     }
 
@@ -85,27 +85,27 @@ else
                            placeholder="@placeholder" value="@Value"
                            @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
                            @oninput="OnInputAsync" />
-                    @if (!string.IsNullOrEmpty(suffix))
+                    @if (!(suffix is null))
                     {
                         @if (_allowClear)
                         {
                             <span class="ant-input-suffix">
-                                <AntIcon class="ant-input-clear-icon" theme="fill" type="@suffix" onclick="ClearContent"></AntIcon>
+                                <AntIcon class="ant-input-clear-icon" theme="fill" type="close-circle" onclick="ClearContent"></AntIcon>
                             </span>
                         }
                         else
                         {
                             <span class="ant-input-suffix">
-                                <AntIcon type="@suffix"></AntIcon>
+                                @suffix
                             </span>
                         }
                     }
                 </span>
             }
-            @if (!(AddOnAfter is null))
+            @if (!(addOnAfter is null))
             {
                 <span class="ant-input-group-addon">
-                    @AddOnAfter
+                    @addOnAfter
                 </span>
             }
         </span>

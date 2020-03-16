@@ -12,50 +12,73 @@
     </span>
 </span>
 -->
-
-@if (AddOnBefore is null && AddOnAfter is null)
+@if (!Attributes.ContainsKey("enterButton"))
 {
-    @if (string.IsNullOrEmpty(prefix) && string.IsNullOrEmpty(suffix))
+    if (addOnBefore is null && addOnAfter is null)
     {
-        <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
-               placeholder="@placeholder" value="@Value"
-               @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
-               @oninput="OnInputAsync" />
-    }
-    else
-    {
-        <span class="ant-input-password ant-input-affix-wrapper @_wrapperClass">
-            @if (!string.IsNullOrEmpty(prefix))
+        <span class="ant-input-search ant-input-affix-wrapper @_wrapperClass">
+            @if (!(prefix is null))
             {
                 <span class="ant-input-prefix">
-                    <AntIcon type="@prefix"></AntIcon>
+                    @prefix
                 </span>
             }
-
             <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
                    placeholder="@placeholder" value="@Value"
                    @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
                    @oninput="OnInputAsync" />
-            @if (!string.IsNullOrEmpty(suffix))
-            {
-                <span class="ant-input-suffix">
-                    <AntIcon class="ant-input-search-icon" type="@suffix" onclick="Search"></AntIcon>
+            <span class="ant-input-suffix">
+                <AntIcon class="ant-input-search-icon" type="search" onclick="Search" />
+            </span>
+        </span>
+
+    }
+    else
+    {
+        <span class="ant-input-search ant-input-group-wrapper">
+            <span class="ant-input-wrapper ant-input-group">
+                @if (!(addOnBefore is null))
+                {
+                    <span class="ant-input-group-addon">
+                        @addOnBefore
+                    </span>
+                }
+                <span class="ant-input-affix-wrapper @_wrapperClass">
+                    @if (!(prefix is null))
+                    {
+                        <span class="ant-input-prefix">
+                            @prefix
+                        </span>
+                    }
+                    <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
+                           placeholder="@placeholder" value="@Value"
+                           @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
+                           @oninput="OnInputAsync" />
+                    <span class="ant-input-suffix">
+                        <AntIcon class="ant-input-search-icon" type="search" onclick="Search" />
+                    </span>
                 </span>
-            }
+                @if (!(addOnAfter is null))
+                {
+                    <span class="ant-input-group-addon">
+                        @addOnAfter
+                    </span>
+                }
+            </span>
         </span>
     }
 }
 else
 {
-    <span class="ant-input-group-wrapper">
+    <span class="ant-input-search ant-input-search-enter-button ant-input-group-wrapper">
         <span class="ant-input-wrapper ant-input-group">
-            @if (!(AddOnBefore is null))
+            @if (!(addOnBefore is null))
             {
                 <span class="ant-input-group-addon">
-                    @AddOnBefore
+                    @addOnBefore
                 </span>
             }
-            @if (string.IsNullOrEmpty(prefix) && string.IsNullOrEmpty(suffix))
+            @if (prefix is null && suffix is null)
             {
                 <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
                        placeholder="@placeholder" value="@Value"
@@ -64,30 +87,35 @@ else
             }
             else
             {
-                <span class="ant-input-password ant-input-affix-wrapper @_wrapperClass">
-                    @if (!string.IsNullOrEmpty(prefix))
+                <span class="ant-input-affix-wrapper @_wrapperClass">
+                    @if (!(prefix is null))
                     {
                         <span class="ant-input-prefix">
-                            <AntIcon type="@prefix"></AntIcon>
+                            @prefix
                         </span>
                     }
-
                     <input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
                            placeholder="@placeholder" value="@Value"
                            @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
                            @oninput="OnInputAsync" />
-                    @if (!string.IsNullOrEmpty(suffix))
+                    @if (!(suffix is null))
                     {
                         <span class="ant-input-suffix">
-                            <AntIcon class="ant-input-search-icon" type="@suffix" onclick="Search"></AntIcon>
+                            @suffix
                         </span>
                     }
                 </span>
             }
-            @if (!(AddOnAfter is null))
+            @if (Attributes["enterButton"].ToString() == "Search")
             {
                 <span class="ant-input-group-addon">
-                    @AddOnAfter
+                    <AntButton class="ant-input-search-button" type="primary" onclick="Search">Search</AntButton>
+                </span>
+            }
+            else
+            {
+                <span class="ant-input-group-addon">
+                    <AntButton class="ant-input-search-button" type="primary" icon="search" onclick="Search" />
                 </span>
             }
         </span>

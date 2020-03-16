@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System;
+using System.Collections.Generic;
+
 namespace AntBlazor
 {
     public partial class AntSearch : AntInputBase
@@ -13,32 +15,36 @@ namespace AntBlazor
 
             if (!Attributes.ContainsKey("enterButton"))
             {
-                suffix = "search";
+                Dictionary<string, object> attrDict = new Dictionary<string, object>();
+                attrDict.Add("class", "ant-input-search-icon");
+                suffix = BuildAntIcon("search", attrDict);
             }
             else
             {
                 if (Attributes["enterButton"].ToString() == "Search")
                 {
-                    AddOnAfter = new RenderFragment((builder) =>
+                    addOnAfter = new RenderFragment((builder) =>
                     {
-                        //<AntButton type="primary" icon="search" /></AntButton>
-                        builder.OpenElement(0, "AntButton");
-                        builder.AddAttribute(1, "type", "primary");
-                        builder.AddContent(2, "Search");
-                        builder.CloseElement();
+                        //<AntButton type="primary" icon="search" onlick="Search" />Search</AntButton>
+                        builder.OpenComponent<AntButton>(0);
+                        builder.AddAttribute(1, "class", "ant-input-search-button");
+                        builder.AddAttribute(2, "type", "primary");
+                        builder.AddContent(3, "Search");
+                        builder.CloseComponent();
                     });
 
                     StateHasChanged();
                 }
                 else
                 {
-                    AddOnAfter = new RenderFragment((builder) =>
+                    addOnAfter = new RenderFragment((builder) =>
                     {
                         //<AntButton type="primary" icon="search" /></AntButton>
-                        builder.OpenElement(0, "AntButton");
-                        builder.AddAttribute(1, "type", "primary");
-                        builder.AddAttribute(2, "icon", "search");
-                        builder.CloseElement();
+                        builder.OpenComponent<AntButton>(0);
+                        builder.AddAttribute(1, "class", "ant-input-search-button");
+                        builder.AddAttribute(2, "type", "primary");
+                        builder.AddAttribute(3, "icon", "search");
+                        builder.CloseComponent();
                     });
 
                     StateHasChanged();
