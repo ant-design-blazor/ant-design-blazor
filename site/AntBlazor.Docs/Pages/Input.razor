@@ -19,13 +19,16 @@
             }
         </style>
         <span class="example-input">
-            <AntInput placeholder="basic usage" allowClear></AntInput>
+            <AntInput>123</AntInput>
+            <AntInput placeholder="basic usage"></AntInput>
+            <AntInput placeholder="allwoClear" allowClear></AntInput>
+            <AntInput placeholder="disabled" disabled></AntInput>
         </span>
     </Demo>
 </DemoCard>
 <DemoCard>
-    <Title>Input Size</Title>
-    <Description>Input xxxxxxx。</Description>
+    <Title>Three sizes of input</Title>
+    <Description>There are three sizes of an Input box: <code>large</code> (40px), <code>default</code> (32px) and <code>small</code> (24px).</Description>
     <Demo>
         <style>
             .example-input > span {
@@ -34,30 +37,13 @@
             }
         </style>
         <span class="example-input">
-            <AntInput prefix="user" placeholder="large size" defaultValue="123" size="@AntInputSize.Large"
-                      onChange="@((ChangeEventArgs args)=>OnChange(args, DateTime.Now.ToLongTimeString()))"
-                      onPressEnter="@(()=>OnPressEnter())" allowClear></AntInput>
-            <AntInput prefix="user" placeholder="default size"></AntInput>
-            <AntInput prefix="user" Value="@str" placeholder="small size" size="@AntInputSize.Small"></AntInput>
+            <AntInput prefix="user" placeholder="large size" defaultValue="123" size="@AntInputSize.Large" />
+            <AntInput prefix="user" placeholder="default size" />
+            <AntInput prefix="user" placeholder="small size" size="@AntInputSize.Small" />
+            <AntInputPassword placeholder="large Password" size="@AntInputSize.Large" />
         </span>
     </Demo>
 </DemoCard>
-
-@code
-{
-    string str = "hello world!";
-    void OnChange(ChangeEventArgs args, string s)
-    {
-        System.Diagnostics.Debug.WriteLine("OnChange invoked.");
-        str = args.Value.ToString();
-    }
-
-    void OnPressEnter()
-    {
-        System.Diagnostics.Debug.WriteLine("OnPressEnter invoked.");
-        str = DateTime.Now.ToLongDateString();
-    }
-}
 
 <DemoCard>
     <Title>TextArea</Title>
@@ -67,6 +53,31 @@
             <AntTextArea defaultValue="hello world!"></AntTextArea>
             <AntTextArea autoSize="true"></AntTextArea>
             <AntTextArea defaultValue="onResize"></AntTextArea>
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Pre / Post tab</Title>
+    <Description>Using pre & post tabs example.</Description>
+    <Demo>
+        <div>
+            <AntInput placeholder="url">
+                <AddOnBefore>https://</AddOnBefore>
+                <AddOnAfter>.com</AddOnAfter>
+            </AntInput>
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Search box</Title>
+    <Description>Example of creating a search box by grouping a standard input with a search button.</Description>
+    <Demo>
+        <div>
+            <AntSearch placeholder="input search text" />
+            <AntSearch placeholder="input search text" enterButton />
+            <AntSearch placeholder="input search text" enterButton="Search" />
         </div>
     </Demo>
 </DemoCard>

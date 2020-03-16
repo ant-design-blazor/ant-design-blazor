@@ -38,18 +38,9 @@
                    @oninput="OnInputAsync" />
             @if (!string.IsNullOrEmpty(suffix))
             {
-                @if (_allowClear)
-                {
-                    <span class="ant-input-suffix">
-                        <AntIcon class="ant-input-clear-icon" theme="fill" type="@suffix" onclick="ClearContent"></AntIcon>
-                    </span>
-                }
-                else
-                {
-                    <span class="ant-input-suffix">
-                        <AntIcon type="@suffix"></AntIcon>
-                    </span>
-                }
+                <span class="ant-input-suffix">
+                    <AntIcon class="ant-input-search-icon" type="@suffix" onclick="Search"></AntIcon>
+                </span>
             }
         </span>
     }
@@ -87,18 +78,9 @@ else
                            @oninput="OnInputAsync" />
                     @if (!string.IsNullOrEmpty(suffix))
                     {
-                        @if (_allowClear)
-                        {
-                            <span class="ant-input-suffix">
-                                <AntIcon class="ant-input-clear-icon" theme="fill" type="@suffix" onclick="ClearContent"></AntIcon>
-                            </span>
-                        }
-                        else
-                        {
-                            <span class="ant-input-suffix">
-                                <AntIcon type="@suffix"></AntIcon>
-                            </span>
-                        }
+                        <span class="ant-input-suffix">
+                            <AntIcon class="ant-input-search-icon" type="@suffix" onclick="Search"></AntIcon>
+                        </span>
                     }
                 </span>
             }
