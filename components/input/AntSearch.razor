@@ -14,17 +14,6 @@
 -->
 <!--ant-input-search ant-input-search-enter-button ant-input-search-large ant-input-group-wrapper ant-input-group-wrapper-lg-->
 
-@code {
-    private RenderFragment _inputFragment;
-    private void GenerateInput()
-    {
-        @*_inputFragment =@<input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
-            placeholder="@placeholder" value="@Value"
-            @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
-            @oninput="OnInputAsync" />;*@
-    }
-}
-
 @if (!Attributes.ContainsKey("enterButton"))
 {
     if (addOnBefore is null && addOnAfter is null)
@@ -124,32 +113,8 @@ else
                     }
                 </span>
             }
-            @if (Attributes["enterButton"].ToString() == "Search")
-            {
-                <span class="ant-input-group-addon">
-                    @if (_isSearching)
-                    {
-                        <AntButton class="ant-input-search-button" type="primary" size="@size" loading>Search</AntButton>
-                    }
-                    else
-                    {
-                        <AntButton class="ant-input-search-button" type="primary" size="@size" onclick="Search">Search</AntButton>
-                    }
-                </span>
-            }
-            else
-            {
-                <span class="ant-input-group-addon">
-                    @if (_isSearching)
-                    {
-                        <AntButton class="ant-input-search-button" type="primary" size="@size" icon="search" loading />
-                    }
-                    else
-                    {
-                        <AntButton class="ant-input-search-button" type="primary" size="@size" icon="search" onclick="Search" />
-                    }
-                </span>
-            }
+
+            @_btnAddonFragment
         </span>
     </span>
 }
