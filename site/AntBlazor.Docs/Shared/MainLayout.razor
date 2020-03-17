@@ -1,10 +1,11 @@
 ﻿@inherits LayoutComponentBase
 
 <AntLayout class="app-layout" hasSider>
-    <AntLayoutSider class="menu-sidebar"
+    <AntSider class="menu-sidebar"
                     collapsible
-                    breakpoint="md"
+                    breakpoint="lg"
                     collapsed="isCollapsed"
+                    collapsedWidth="0"
                     width="256px"
                     onCollapsedChange="(collapsed)=>isCollapsed = collapsed">
         <div class="sidebar-logo">
@@ -16,9 +17,9 @@
         <AntMenu theme="dark" mode="AntDirectionVHIType.inline" inlineCollapsed="isCollapsed">
             @menuItemTemplate(MenuItems)
         </AntMenu>
-    </AntLayoutSider>
+    </AntSider>
     <AntLayout>
-        <AntLayoutHeader>
+        <AntHeader>
             <div class="app-header">
                 <span class="header-trigger" @onclick="()=>isCollapsed = !isCollapsed">
                     <AntIcon class="trigger" type="@(isCollapsed ? "menu-unfold" : "menu-fold")"></AntIcon>
@@ -29,12 +30,12 @@
                     </a>
                 </span>
             </div>
-        </AntLayoutHeader>
-        <AntLayoutContent>
+        </AntHeader>
+        <AntContent>
             <div class="inner-content">
                 @Body
             </div>
-        </AntLayoutContent>
+        </AntContent>
         <footer>
             @*<div class="footer-wrap"></div>*@
             <div class="bottom-bar">
@@ -49,7 +50,7 @@
 
 @code
 {
-    bool isCollapsed = false;
+    bool isCollapsed { get; set; } = true;
 
     MenuItem[] MenuItems = {};
 

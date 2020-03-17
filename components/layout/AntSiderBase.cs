@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public class AntLayoutSiderBase : AntDomComponentBase
+    public class AntSiderBase : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -56,9 +56,9 @@ namespace AntBlazor
 
         protected string style =>
             $@"flex:{flexSetting};
-                    max-width:{widthSetting};
-                    min-width:{widthSetting};
-                    width:{widthSetting};
+               max-width:{widthSetting};
+               min-width:{widthSetting};
+               width:{widthSetting};
            ";
 
         protected bool below { get; set; }
@@ -73,7 +73,7 @@ namespace AntBlazor
             ["xxl"] = "1600px"
         };
 
-        public AntLayoutSiderBase()
+        public AntSiderBase()
         {
             ClassMapper.Add("ant-layout-sider")
                 .If("ant-layout-sider-zero-width", () => collapsed && collapsedWidth == 0)
