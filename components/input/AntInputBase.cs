@@ -10,6 +10,8 @@ namespace AntBlazor
     /// </summary>
     public class AntInputBase : AntInputComponentBase<string>
     {
+        protected const string InputMarkup = "<input class=\"@ClassMapper.Class\" style=\"@Style\" @attributes=\"Attributes\" Id=\"@Id\" type=\"@_type\" placeholder=\"@placeholder\" value=\"@Value\" @onchange=\"OnChangeAsync\" @onkeypress=\"OnPressEnterAsync\" @oninput=\"OnInputAsync\" />";
+
         protected const string PrefixCls = "ant-input";
 
         protected bool _allowClear;
