@@ -82,10 +82,11 @@ namespace AntBlazor
         }
 
         /// <inheritdoc />
-        public void Dispose()
+        public override void Dispose()
         {
             // To avoid leaking memory, it's important to detach any event handlers in Dispose()
             NavigationManger.LocationChanged -= OnLocationChanged;
+            base.Dispose();
         }
 
         private void UpdateCssClass()

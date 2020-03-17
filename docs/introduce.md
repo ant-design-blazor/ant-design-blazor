@@ -3,7 +3,7 @@
 <div class="pic-plus">
   <img width="150" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg">
   <span>+</span>
-  <img height="150" src="./assets/blazor.svg">
+  <img height="150" src="/docs/assets/blazor.svg">
 </div>
 
 <style>
@@ -126,7 +126,7 @@
 
 如果您在使用的过程中碰到问题，可以通过 [钉钉群](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) 寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
 
-<img src="./assets/dingtalk.jpg" width="300">
+<img src="/docs/assets/dingtalk.jpg" width="300">
 
 ## ☀️ 授权协议
 

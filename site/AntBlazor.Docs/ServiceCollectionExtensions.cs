@@ -9,7 +9,6 @@ namespace AntBlazor.Docs
         {
             services.AddAntBlazor();
             services.AddSingleton<RouteManager>();
-
             return services;
         }
     }

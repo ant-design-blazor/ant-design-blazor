@@ -1,26 +1,27 @@
-﻿
-@inject HttpClient HttpClient
+﻿@page "/docs/{fileName}"
 
-<Markdown>
-    @markdown
-</Markdown>
+@inject NavigationManager NavigationManager
+
+<article class="markdown">
+    <Markdown docUrl="@docUrl"></Markdown>
+</article>
 
 @code {
 
     [Parameter] public string fileName { get; set; }
 
-    string docUrl => "https://raw.githubusercontent.com/NG-ZORRO/ng-zorro-antd/master/docs/introduce.zh-CN.md"; //fileName;
+    string docUrl { get; set; }
 
-    string markdown = "";
-
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        if (!string.IsNullOrEmpty(docUrl))
+
+        if (!string.IsNullOrEmpty(fileName))
         {
-            markdown = await this.HttpClient.GetStringAsync(docUrl);
+            var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
+            docUrl = new Uri(baseUrl, $"docs/{fileName}.md").ToString();
         }
 
-        await base.OnInitializedAsync();
+        base.OnInitialized();
     }
 
 }
