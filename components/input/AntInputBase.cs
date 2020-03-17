@@ -14,6 +14,7 @@ namespace AntBlazor
 
         protected bool _allowClear;
         protected string _wrapperClass;
+        protected string _groupClass;
         protected string _clearIconClass;
         protected ElementReference inputEl { get; set; }
         protected string _type = "text";
@@ -94,10 +95,12 @@ namespace AntBlazor
             if (size == AntInputSize.Large)
             {
                 _wrapperClass = string.Join(" ", _wrapperClass, $"{PrefixCls}-affix-wrapper-lg");
+                _groupClass = string.Join(" ", _groupClass, $"{PrefixCls}-group-wrapper-lg");
             }
             else if (size == AntInputSize.Small)
             {
                 _wrapperClass = string.Join(" ", _wrapperClass, $"{PrefixCls}-affix-wrapper-sm");
+                _groupClass = string.Join(" ", _groupClass, $"{PrefixCls}-group-wrapper-sm");
             }
         }
 

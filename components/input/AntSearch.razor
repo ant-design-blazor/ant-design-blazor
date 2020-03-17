@@ -12,6 +12,7 @@
     </span>
 </span>
 -->
+<!--ant-input-search ant-input-search-enter-button ant-input-search-large ant-input-group-wrapper ant-input-group-wrapper-lg-->
 @if (!Attributes.ContainsKey("enterButton"))
 {
     if (addOnBefore is null && addOnAfter is null)
@@ -28,7 +29,14 @@
                    @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
                    @oninput="OnInputAsync" />
             <span class="ant-input-suffix">
-                <AntIcon class="ant-input-search-icon" type="search" onclick="Search" />
+                @if (_isSearching)
+                {
+                    <AntIcon class="ant-input-search-icon" type="loading" />
+                }
+                else
+                {
+                    <AntIcon class="ant-input-search-icon" type="search" onclick="Search" />
+                }
             </span>
         </span>
 
@@ -55,7 +63,14 @@
                            @onchange="OnChangeAsync" @onkeypress="OnPressEnterAsync"
                            @oninput="OnInputAsync" />
                     <span class="ant-input-suffix">
-                        <AntIcon class="ant-input-search-icon" type="search" onclick="Search" />
+                        @if (_isSearching)
+                        {
+                            <AntIcon class="ant-input-search-icon" type="loading" />
+                        }
+                        else
+                        {
+                            <AntIcon class="ant-input-search-icon" type="search" onclick="Search" />
+                        }
                     </span>
                 </span>
                 @if (!(addOnAfter is null))
@@ -70,7 +85,7 @@
 }
 else
 {
-    <span class="ant-input-search ant-input-search-enter-button ant-input-group-wrapper">
+    <span class="ant-input-search ant-input-search-enter-button ant-input-group-wrapper @_groupClass">
         <span class="ant-input-wrapper ant-input-group">
             @if (!(addOnBefore is null))
             {
@@ -109,13 +124,27 @@ else
             @if (Attributes["enterButton"].ToString() == "Search")
             {
                 <span class="ant-input-group-addon">
-                    <AntButton class="ant-input-search-button" type="primary" onclick="Search">Search</AntButton>
+                    @if (_isSearching)
+                    {
+                        <AntButton class="ant-input-search-button" type="primary" size="@size" loading>Search</AntButton>
+                    }
+                    else
+                    {
+                        <AntButton class="ant-input-search-button" type="primary" size="@size" onclick="Search">Search</AntButton>
+                    }
                 </span>
             }
             else
             {
                 <span class="ant-input-group-addon">
-                    <AntButton class="ant-input-search-button" type="primary" icon="search" onclick="Search" />
+                    @if (_isSearching)
+                    {
+                        <AntButton class="ant-input-search-button" type="primary" size="@size" icon="search" loading />
+                    }
+                    else
+                    {
+                        <AntButton class="ant-input-search-button" type="primary" size="@size" icon="search" onclick="Search" />
+                    }
                 </span>
             }
         </span>
