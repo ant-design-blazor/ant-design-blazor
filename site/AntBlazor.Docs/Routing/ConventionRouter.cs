@@ -71,21 +71,17 @@ namespace AntBlazor.Docs.Routing
         private void Refresh()
         {
             var relativeUri = NavigationManager.ToBaseRelativePath(_location);
-            var parameters = ParseQueryString(relativeUri);
 
             if (relativeUri.IndexOf('?') > -1)
             {
                 relativeUri = relativeUri.Substring(0, relativeUri.IndexOf('?'));
             }
 
-            var segments = relativeUri.Trim().Split('/', StringSplitOptions.RemoveEmptyEntries);
-            var matchResult = RouteManager.Match(segments);
+            var matchResult = RouteManager.Match(relativeUri);
 
             if (matchResult.IsMatch)
             {
-                var routeData = new RouteData(
-                    matchResult.MatchedRoute.Handler,
-                    parameters);
+                var routeData = new RouteData(matchResult.MatchedRoute.PageType, matchResult.MatchedRoute.Parameters);
 
                 _renderHandle.Render(Found(routeData));
             }
@@ -93,22 +89,6 @@ namespace AntBlazor.Docs.Routing
             {
                 _renderHandle.Render(NotFound);
             }
-        }
-
-        private Dictionary<string, object> ParseQueryString(string uri)
-        {
-            var querystring = new Dictionary<string, object>();
-
-            foreach (string kvp in uri.Substring(uri.IndexOf("?") + 1).Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                if (kvp != "" && kvp.Contains("="))
-                {
-                    var pair = kvp.Split('=');
-                    querystring.Add(pair[0], pair[1]);
-                }
-            }
-
-            return querystring;
         }
     }
 }
