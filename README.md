@@ -116,6 +116,7 @@ An enterprise-class UI components based on Ant Design and Blazor.
 ## 🤝 如何贡献
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/pulls)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FElderJames%2Fant-design-blazor.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FElderJames%2Fant-design-blazor?ref=badge_shield)
 
 
 如果你希望参与贡献，欢迎 [Pull Request](https://github.com/ElderJames/ant-design-blazor/pulls)，或给我们 [报告 Bug](https://github.com/ElderJames/ant-design-blazor/issues/new) 。
@@ -129,3 +130,6 @@ An enterprise-class UI components based on Ant Design and Blazor.
 ## ☀️ 授权协议
 
 [![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/blob/master/LICENSE)
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FElderJames%2Fant-design-blazor.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FElderJames%2Fant-design-blazor?ref=badge_large)
