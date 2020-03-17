@@ -12,6 +12,7 @@
     </span>
 </span>
 -->
+<!--ant-input-search ant-input-search-enter-button ant-input-search-large ant-input-group-wrapper ant-input-group-wrapper-lg-->
 @if (!Attributes.ContainsKey("enterButton"))
 {
     if (addOnBefore is null && addOnAfter is null)
@@ -84,7 +85,7 @@
 }
 else
 {
-    <span class="ant-input-search ant-input-search-enter-button ant-input-group-wrapper">
+    <span class="ant-input-search ant-input-search-enter-button ant-input-group-wrapper @_groupClass">
         <span class="ant-input-wrapper ant-input-group">
             @if (!(addOnBefore is null))
             {
@@ -125,11 +126,11 @@ else
                 <span class="ant-input-group-addon">
                     @if (_isSearching)
                     {
-                        <AntButton class="ant-input-search-button" type="primary" loading>Search</AntButton>
+                        <AntButton class="ant-input-search-button" type="primary" size="@size" loading>Search</AntButton>
                     }
                     else
                     {
-                        <AntButton class="ant-input-search-button" type="primary" onclick="Search">Search</AntButton>
+                        <AntButton class="ant-input-search-button" type="primary" size="@size" onclick="Search">Search</AntButton>
                     }
                 </span>
             }
@@ -138,11 +139,11 @@ else
                 <span class="ant-input-group-addon">
                     @if (_isSearching)
                     {
-                        <AntButton class="ant-input-search-button" type="primary" icon="search" loading />
+                        <AntButton class="ant-input-search-button" type="primary" size="@size" icon="search" loading />
                     }
                     else
                     {
-                        <AntButton class="ant-input-search-button" type="primary" icon="search" onclick="Search" />
+                        <AntButton class="ant-input-search-button" type="primary" size="@size" icon="search" onclick="Search" />
                     }
                 </span>
             }
