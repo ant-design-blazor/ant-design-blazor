@@ -1,5 +1,5 @@
 ﻿@namespace AntBlazor
-@inherits AntLayoutSiderBase
+@inherits AntSiderBase
 
 <aside class="@ClassMapper.Class" @ref="Ref" style="@style @Style" @attributes="Attributes" Id="@Id">
     <div class="ant-layout-sider-children">
@@ -37,7 +37,7 @@
 
     RenderFragment siderTrigger => trigger ?? defaultTrigger(this);
 
-    public RenderFragment<AntLayoutSider> defaultTrigger = (sider) =>
+    public RenderFragment<AntSider> defaultTrigger = (sider) =>
     @<Template>
         @if (!sider.reverseArrow)
         {
