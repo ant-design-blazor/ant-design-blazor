@@ -94,8 +94,16 @@
     <Demo>
         <div>
             <AntSearch placeholder="input search text" size="@AntInputSize.Small" />
-            <AntSearch placeholder="input search text" enterButton />
+            <AntSearch placeholder="input search text" onChange="(e)=>Handle(e)" enterButton />
             <AntSearch placeholder="input search text" size="@AntInputSize.Large" enterButton="Search" />
         </div>
     </Demo>
 </DemoCard>
+
+@code{
+    private void Handle(ChangeEventArgs args)
+    {
+        Console.WriteLine("123");
+        System.Diagnostics.Debug.WriteLine("456");
+    }
+}
