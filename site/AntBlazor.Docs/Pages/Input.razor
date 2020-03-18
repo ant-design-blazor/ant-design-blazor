@@ -12,20 +12,23 @@
     <Title>Basic usage</Title>
     <Description>Basic usage example.</Description>
     <Demo>
-        <style>
-            .example-input > span {
-                width: 400px;
-                margin: 0 8px 8px 0;
-            }
-        </style>
-        <span class="example-input">
-            <AntInput>123</AntInput>
-            <AntInput placeholder="basic usage"></AntInput>
-            <AntInput placeholder="allwoClear" allowClear></AntInput>
-            <AntInput placeholder="disabled" disabled></AntInput>
-        </span>
+        <AntButton onclick="(e)=>Click(e)">Change addOnAfter</AntButton>
+        <AntInput addOnAfter="@addOn">
+            123
+        </AntInput>
+        <AntInput placeholder="basic usage"></AntInput>
+        <AntInput placeholder="allwoClear" allowClear></AntInput>
+        <AntInput placeholder="disabled" disabled></AntInput>
     </Demo>
 </DemoCard>
+@code{
+    private RenderFragment addOn = new RenderFragment((builder) => { builder.AddContent(0, ".com"); });
+    private void Click(MouseEventArgs args)
+    {
+        addOn = new RenderFragment((builder) => { builder.AddContent(0, ".net"); });
+    }
+}
+
 <DemoCard>
     <Title>Three sizes of input</Title>
     <Description>There are three sizes of an Input box: <code>large</code> (40px), <code>default</code> (32px) and <code>small</code> (24px).</Description>
@@ -52,10 +55,18 @@
                     <AntIcon type="user" />
                 </prefix>
             </AntInput>
-            <AntInputPassword placeholder="large Password" size="@AntInputSize.Large" />
+            @*<AntInputPassword @bind="password" placeholder="large Password" size="@AntInputSize.Large" onPressEnter="(e)=>Submit(e)" />*@
+            <AntInputPassword @bind-Value="@_password" placeholder="large Password" size="@AntInputSize.Large" onPressEnter="(e)=>Submit(e)" />
         </span>
     </Demo>
 </DemoCard>
+@code{
+    private string _password;
+    private void Submit(KeyboardEventArgs args)
+    {
+        Console.WriteLine($"password: {_password}");
+    }
+}
 
 <DemoCard>
     <Title>TextArea</Title>

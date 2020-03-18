@@ -15,9 +15,9 @@
     [Parameter]
     public EventCallback<object> onResize { get; set; }
 
-    protected override async Task OnInputAsync(ChangeEventArgs args)
+    protected override async void OnInputAsync(ChangeEventArgs args)
     {
-        await base.OnInputAsync(args);
+        base.OnInputAsync(args);
 
         if (autoSize)
         {

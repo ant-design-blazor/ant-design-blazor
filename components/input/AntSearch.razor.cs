@@ -5,17 +5,9 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public partial class AntSearch : AntInputBase
+    public partial class AntSearch : AntInput
     {
         private bool _isSearching;
-
-        //<input class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" type="@_type"
-        //              placeholder = "@placeholder" value = "@Value"
-        //              @onchange = "OnChangeAsync" @onkeypress = "OnPressEnterAsync"
-        //              @oninput = "OnInputAsync" />
-        private RenderFragment _inputFragment;
-
-        private RenderFragment _btnAddonFragment;
 
         [Parameter]
         public EventCallback<EventArgs> onSearch { get; set; }
@@ -24,30 +16,50 @@ namespace AntBlazor
         {
             base.OnInitialized();
 
-            _inputFragment = new RenderFragment((builder) =>
+            if (Attributes == null || !Attributes.ContainsKey("enterButton"))
             {
-                int i = 0;
-                builder.OpenElement(i++, "input");
-                builder.AddAttribute(i++, "class", ClassMapper.Class);
-                builder.AddAttribute(i++, "style", Style);
-                if (Attributes != null)
+                suffix = new RenderFragment((builder) =>
                 {
-                    foreach (var pair in Attributes)
+                    builder.OpenComponent<AntIcon>(_renderSequence++);
+                    builder.AddAttribute(_renderSequence++, "class", $"{PrefixCls}-search-icon");
+                    builder.AddAttribute(_renderSequence++, "type", "search");
+                    builder.AddAttribute(_renderSequence++, "onclick", _callbackFactory.Create<MouseEventArgs>(this, Search));
+                    builder.CloseComponent();
+                });
+            }
+            else
+            {
+                addOnAfter = new RenderFragment((builder) =>
+                {
+                    builder.OpenComponent<AntButton>(_renderSequence++);
+                    builder.AddAttribute(_renderSequence++, "class", $"{PrefixCls}-search-button");
+                    builder.AddAttribute(_renderSequence++, "type", "primary");
+                    builder.AddAttribute(_renderSequence++, "size", size);
+                    if (_isSearching)
                     {
-                        builder.AddAttribute(i++, pair.Key, pair.Value);
+                        builder.AddAttribute(_renderSequence++, "loading", true);
                     }
-                }
-                builder.AddAttribute(i++, "Id", Id);
-                builder.AddAttribute(i++, "type", _type);
-                builder.AddAttribute(i++, "placeholder", placeholder);
-                builder.AddAttribute(i++, "value", Value);
-                builder.AddAttribute(i++, "onchange", onChange);
-                builder.AddAttribute(i++, "onkeypress", onPressEnter);
-                //builder.AddAttribute(i++, "oninput", OnInputAsync);
-                builder.CloseElement();
-            });
+                    else
+                    {
+                        EventCallback<MouseEventArgs> e = new EventCallbackFactory().Create(this, Search);
+                        builder.AddAttribute(_renderSequence++, "onclick", e);
+                    }
 
-            GenerateSearchBtn();
+                    if (Attributes["enterButton"].ToString() == true.ToString()) // show search icon button
+                    {
+                        builder.AddAttribute(_renderSequence++, "icon", "search");
+                    }
+                    else // show search content button
+                    {
+                        builder.AddAttribute(_renderSequence++, "ChildContent", new RenderFragment((b) =>
+                        {
+                            b.AddContent(_renderSequence++, Attributes["enterButton"].ToString());
+                        }));
+                    }
+
+                    builder.CloseComponent();
+                });
+            }
         }
 
         protected override void SetClasses()
@@ -56,12 +68,16 @@ namespace AntBlazor
 
             if (size == AntInputSize.Large)
             {
-                _groupClass = string.Join(" ", _groupClass, $"{PrefixCls}-search-large");
+                _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search-large");
             }
             else if (size == AntInputSize.Small)
             {
-                _groupClass = string.Join(" ", _groupClass, $"{PrefixCls}-search-small");
+                _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search-small");
             }
+
+            _affixWrapperClass = string.Join(" ", _affixWrapperClass, $"{PrefixCls}-search");
+            _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search");
+            _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search-enter-button");
         }
 
         private async void Search(MouseEventArgs args)
@@ -75,50 +91,6 @@ namespace AntBlazor
             await Task.Delay(TimeSpan.FromSeconds(10));
             _isSearching = false;
             StateHasChanged();
-        }
-
-        private int i = 0;
-
-        private void GenerateSearchBtn()
-        {
-            _btnAddonFragment = new RenderFragment((builder) =>
-            {
-                builder.OpenElement(i++, "span");
-                builder.AddAttribute(i++, "class", "ant-input-group-addon");
-                //<AntButton class="ant-input-search-button" type="primary" size="@size" icon="search" onclick="Search" />
-                builder.OpenComponent<AntButton>(i++);
-                builder.AddAttribute(i++, "class", "ant-input-search-button");
-                builder.AddAttribute(i++, "type", "primary");
-                builder.AddAttribute(i++, "size", size);
-                if (_isSearching)
-                {
-                    builder.AddAttribute(i++, "loading", true);
-                }
-                else
-                {
-                    EventCallback<MouseEventArgs> e = new EventCallbackFactory().Create(this, Search);
-                    builder.AddAttribute(i++, "onclick", e);
-                }
-
-                if (Attributes != null && Attributes.ContainsKey("enterButton"))
-                {
-                    if (Attributes["enterButton"].ToString() == true.ToString()) // show search icon
-                    {
-                        builder.AddAttribute(i++, "icon", "search");
-                    }
-                    else
-                    {
-                        //builder.AddContent(i++, Attributes["enterButton"].ToString());
-                        builder.AddAttribute(i++, "ChildContent", new RenderFragment((b) =>
-                        {
-                            b.AddContent(i++, "Search");
-                        }));
-                    }
-                }
-
-                builder.CloseComponent();
-                builder.CloseElement();
-            });
         }
     }
 }
