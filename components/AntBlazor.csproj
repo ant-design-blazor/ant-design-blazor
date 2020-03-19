@@ -28,6 +28,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- ignore the tsconfig.json file in package -->
+    <Content Remove="tsconfig.json" />
+    <None Include="tsconfig.json" CopyToOutputDirectory="Never"></None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.2" />
     <PackageReference Include="OneOf" Version="2.1.151" />
