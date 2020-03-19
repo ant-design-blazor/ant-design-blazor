@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using System.Timers;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntBlazor
@@ -66,7 +63,7 @@ namespace AntBlazor
         /// <summary>
         /// "left" | "right" | "top" | "bottom"
         /// </summary>
-        [Parameter] public string placement { get; set; }
+        [Parameter] public string placement { get; set; } = "right";
 
         [Parameter] public string maskStyle { get; set; }
 
@@ -97,12 +94,11 @@ namespace AntBlazor
 
         protected bool isOpen = default;
 
-        private bool placementChanging = false;
+        private string originalPlacement;
+
+        private bool placementChanging { get; set; } = false;
+
         private int placementChangeTimeoutId = -1;
-        // nzContentParams: D; // only service
-        // overlayRef: OverlayRef | null;
-        // portal: TemplatePortal;
-        //focusTrap: FocusTrap;
 
         protected string offsetTransform
         {
@@ -180,16 +176,51 @@ namespace AntBlazor
 
         protected override void OnInitialized()
         {
+            this.originalPlacement = placement;
+
             this.SetClass();
 
             base.OnInitialized();
         }
 
+        private bool isPlacementFirstChange = true;
+
         protected override void OnParametersSet()
         {
             this.SetClass();
+            if (string.IsNullOrEmpty(placement) && placement != originalPlacement)
+            {
+                this.originalPlacement = placement;
+                isPlacementFirstChange = false;
+                if (!isPlacementFirstChange)
+                {
+                    this.triggerPlacementChangeCycleOnce();
+                }
+            }
 
             base.OnParametersSet();
+        }
+
+        private Timer timer;
+
+        private void triggerPlacementChangeCycleOnce()
+        {
+            if (!noAnimation)
+            {
+                this.placementChanging = true;
+                InvokeStateHasChanged();
+                timer = new Timer()
+                {
+                    AutoReset = false,
+                    Interval = 300,
+                };
+                timer.Elapsed += (_, args) =>
+                {
+                    this.placementChanging = false;
+                    InvokeStateHasChanged();
+                };
+                timer.Start();
+            }
         }
 
         protected async Task maskClick()
@@ -204,6 +235,8 @@ namespace AntBlazor
         {
             if (onClose.HasDelegate)
             {
+                timer?.Dispose();
+
                 await onClose.InvokeAsync(this);
             }
         }
