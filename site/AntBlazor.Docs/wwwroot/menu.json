@@ -1,10 +1,10 @@
 [
-  //{
-  //  "title": "Ant Design of Blazor",
-  //  "type": "menuItem",
-  //  "url": "docs/introduce",
-  //  "default": true
-  //},
+  {
+    "title": "Ant Design of Blazor",
+    "type": "menuItem",
+    "url": "docs/introduce",
+    "default": true
+  },
   {
     "title": "Components",
     "type": "subMenu",
@@ -37,6 +37,11 @@
         "type": "itemGroup",
         "children": [
           {
+            "title": "Grid",
+            "type": "menuItem",
+            "url": "grid"
+          },
+          {
             "title": "Layout",
             "type": "menuItem",
             "url": "layout"
@@ -56,6 +61,17 @@
             "title": "Menu",
             "type": "menuItem",
             "url": "menu"
+          }
+        ]
+      },
+      {
+        "title": "Data Entry",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Switch",
+            "type": "menuItem",
+            "url": "switch"
           }
         ]
       },

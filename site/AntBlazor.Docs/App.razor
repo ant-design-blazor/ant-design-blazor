@@ -1,4 +1,4 @@
-﻿<Router AppAssembly="@typeof(MainLayout).Assembly">
+﻿<ConventionRouter>
     <Found Context="routeData">
         <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)" />
     </Found>
@@ -7,4 +7,4 @@
             <p>Sorry, there's nothing at this address.</p>
         </LayoutView>
     </NotFound>
-</Router>
+</ConventionRouter>

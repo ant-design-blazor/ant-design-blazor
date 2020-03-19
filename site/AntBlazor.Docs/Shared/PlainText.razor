@@ -1,0 +1,26 @@
+﻿@using System.Net
+@inject HtmlRenderService HtmlRenderService
+
+
+@((MarkupString)text)
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+
+    private string text { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        if (ChildContent != null)
+        {
+            text = await HtmlRenderService.RenderAsync(ChildContent);
+            text = WebUtility.HtmlDecode(text);
+        }
+        await base.OnInitializedAsync();
+    }
+
+}

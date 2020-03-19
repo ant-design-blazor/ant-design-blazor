@@ -20,7 +20,7 @@
     <PackageLicenseExpression></PackageLicenseExpression>
     <Authors>James Yeung</Authors>
     <PackageIconUrl>https://raw.githubusercontent.com/ElderJames/ant-design-blazor/master/logo.svg?sanitize=true</PackageIconUrl>
-    <RootDir>..\</RootDir>
+    <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,27 +28,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.0" />
+    <!-- ignore the tsconfig.json file in package -->
+    <Content Remove="tsconfig.json" />
+    <None Include="tsconfig.json" CopyToOutputDirectory="Never"></None>
   </ItemGroup>
 
-  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(RootDir)node_modules') ">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.2" />
+    <PackageReference Include="OneOf" Version="2.1.151" />
+  </ItemGroup>
+
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
     </Exec>
     <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-    <Exec WorkingDirectory="$(RootDir)" Command="npm install" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
   </Target>
 
-  <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(RootDir)node_modules') ">
-    <Exec WorkingDirectory="$(RootDir)" Command="npm run gulp:components" />
+  <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:components" />
   </Target>
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
-    <Exec WorkingDirectory="$(RootDir)" Command="npm install" />
-    <Exec WorkingDirectory="$(RootDir)" Command="npm run gulp:components" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:components" />
   </Target>
 
   <ItemGroup>

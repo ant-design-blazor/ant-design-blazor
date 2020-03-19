@@ -1,0 +1,15 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<main class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
+    @ChildContent
+</main>
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public AntContent()
+    {
+        ClassMapper.Add("ant-layout-content");
+    }
+}
