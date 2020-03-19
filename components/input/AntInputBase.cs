@@ -12,7 +12,7 @@ namespace AntBlazor
     {
         protected const string PrefixCls = "ant-input";
 
-        protected RenderFragment _rederFragment;
+        protected RenderFragment _renderFragment;
 
         protected bool _allowClear;
         protected string _affixWrapperClass = $"{PrefixCls}-affix-wrapper";
@@ -61,7 +61,7 @@ namespace AntBlazor
                 Value = defaultValue;
             }
 
-            _rederFragment = new RenderFragment(builder => GenerateRenderFragment(builder));
+            _renderFragment = new RenderFragment(builder => GenerateRenderFragment(builder));
 
             SetClasses();
         }
@@ -189,10 +189,14 @@ namespace AntBlazor
         {
             base.BuildRenderTree(builder);
 
+            string container = "input";
+
             if (addOnBefore != null || addOnAfter != null)
             {
+                container = "groupWrapper";
                 builder.OpenElement(_renderSequence++, "span");
                 builder.AddAttribute(_renderSequence++, "class", _groupWrapperClass);
+                builder.AddAttribute(_renderSequence++, "style", Style);
                 builder.OpenElement(_renderSequence++, "span");
                 builder.AddAttribute(_renderSequence++, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
             }
@@ -210,6 +214,11 @@ namespace AntBlazor
             {
                 builder.OpenElement(_renderSequence++, "span");
                 builder.AddAttribute(_renderSequence++, "class", _affixWrapperClass);
+                if (container == "input")
+                {
+                    container = "affixWrapper";
+                    builder.AddAttribute(_renderSequence++, "style", Style);
+                }
             }
 
             if (prefix != null)
@@ -224,7 +233,10 @@ namespace AntBlazor
             // input
             builder.OpenElement(_renderSequence++, "input");
             builder.AddAttribute(_renderSequence++, "class", ClassMapper.Class);
-            builder.AddAttribute(_renderSequence++, "style", Style);
+            if (container == "input")
+            {
+                builder.AddAttribute(_renderSequence++, "style", Style);
+            }
             if (Attributes != null)
             {
                 foreach (var pair in Attributes)

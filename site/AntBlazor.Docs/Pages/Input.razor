@@ -1,4 +1,5 @@
 ﻿@page "/input"
+@using AntBlazor
 
 <AntTitle level="1">Input</AntTitle>
 <AntText>Input用于输入文字123</AntText>
@@ -118,3 +119,27 @@
         System.Diagnostics.Debug.WriteLine("456");
     }
 }
+
+<DemoCard>
+    <Title>Input Group</Title>
+    <Description>
+        Input.Group example
+        Note: You don't need <code>Col</code> to control the width in the <code>compact</code> mode.
+    </Description>
+    <Demo>
+        <AntInputGroup size="@AntInputSize.Large">
+            <AntInput defaultValue="0571" />
+            <AntInput defaultValue="26888888" />
+        </AntInputGroup>
+        <br />
+        <AntInputGroup compact>
+            <AntInput defaultValue="0571" Style="width: 20%;" />
+            <AntInput defaultValue="26888888" Style="width: 30%;" />
+        </AntInputGroup>
+        <br />
+        <AntInputGroup compact>
+            <AntInput defaultValue="0571" Style="width: 20%;" />
+            <AntSearch defaultValue="26888888" Style="width: 30%;" />
+        </AntInputGroup>
+    </Demo>
+</DemoCard>
