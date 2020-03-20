@@ -12,6 +12,8 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<EventArgs> onSearch { get; set; }
 
+        private int _sequence = 0;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -20,10 +22,10 @@ namespace AntBlazor
             {
                 suffix = new RenderFragment((builder) =>
                 {
-                    builder.OpenComponent<AntIcon>(_renderSequence++);
-                    builder.AddAttribute(_renderSequence++, "class", $"{PrefixCls}-search-icon");
-                    builder.AddAttribute(_renderSequence++, "type", "search");
-                    builder.AddAttribute(_renderSequence++, "onclick", _callbackFactory.Create<MouseEventArgs>(this, Search));
+                    builder.OpenComponent<AntIcon>(35);
+                    builder.AddAttribute(36, "class", $"{PrefixCls}-search-icon");
+                    builder.AddAttribute(37, "type", "search");
+                    builder.AddAttribute(38, "onclick", _callbackFactory.Create<MouseEventArgs>(this, Search));
                     builder.CloseComponent();
                 });
             }
@@ -31,29 +33,29 @@ namespace AntBlazor
             {
                 addOnAfter = new RenderFragment((builder) =>
                 {
-                    builder.OpenComponent<AntButton>(_renderSequence++);
-                    builder.AddAttribute(_renderSequence++, "class", $"{PrefixCls}-search-button");
-                    builder.AddAttribute(_renderSequence++, "type", "primary");
-                    builder.AddAttribute(_renderSequence++, "size", size);
+                    builder.OpenComponent<AntButton>(_sequence++);
+                    builder.AddAttribute(_sequence++, "class", $"{PrefixCls}-search-button");
+                    builder.AddAttribute(_sequence++, "type", "primary");
+                    builder.AddAttribute(_sequence++, "size", size);
                     if (_isSearching)
                     {
-                        builder.AddAttribute(_renderSequence++, "loading", true);
+                        builder.AddAttribute(_sequence++, "loading", true);
                     }
                     else
                     {
                         EventCallback<MouseEventArgs> e = new EventCallbackFactory().Create(this, Search);
-                        builder.AddAttribute(_renderSequence++, "onclick", e);
+                        builder.AddAttribute(_sequence++, "onclick", e);
                     }
 
                     if (Attributes["enterButton"].ToString() == true.ToString()) // show search icon button
                     {
-                        builder.AddAttribute(_renderSequence++, "icon", "search");
+                        builder.AddAttribute(_sequence++, "icon", "search");
                     }
                     else // show search content button
                     {
-                        builder.AddAttribute(_renderSequence++, "ChildContent", new RenderFragment((b) =>
+                        builder.AddAttribute(_sequence++, "ChildContent", new RenderFragment((b) =>
                         {
-                            b.AddContent(_renderSequence++, Attributes["enterButton"].ToString());
+                            b.AddContent(_sequence++, Attributes["enterButton"].ToString());
                         }));
                     }
 
