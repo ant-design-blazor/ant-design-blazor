@@ -1,0 +1,22 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<header class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
+    @ChildContent
+</header>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ClassMapper.Clear()
+            .Add("ant-layout-header")
+            .Add("ant-header");
+    }
+
+}

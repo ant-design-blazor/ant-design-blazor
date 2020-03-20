@@ -21,7 +21,7 @@ namespace AntBlazor.Docs.ServerApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddAntBlazor();
+            services.AddAntBlazorDocs();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

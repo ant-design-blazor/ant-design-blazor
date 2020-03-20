@@ -6,7 +6,7 @@ namespace AntBlazor
 {
     public static class JSInteropConstants
     {
-        public const string FUNC_PREFIX = "antBlazor.interop.";
+        private const string FUNC_PREFIX = "antBlazor.interop.";
 
         public static string getDomInfo => $"{FUNC_PREFIX}getDomInfo";
 
@@ -14,8 +14,10 @@ namespace AntBlazor
 
         public static string addDomEventListener => $"{FUNC_PREFIX}addDomEventListener";
 
-        public static string antMatchMedia => $"{FUNC_PREFIX}antMatchMedia";
+        public static string matchMedia => $"{FUNC_PREFIX}matchMedia";
 
         public static string copy => $"{FUNC_PREFIX}copy";
+
+        public static string log => $"{FUNC_PREFIX}log";
     }
 }

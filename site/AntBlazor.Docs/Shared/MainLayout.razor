@@ -1,24 +1,25 @@
 ﻿@inherits LayoutComponentBase
 
-<AntLayout Class="app-layout" HasSider="true">
-    <AntLayoutSider class="menu-sidebar"
-                    adCollapsible
-                    adBreakpoint="md"
-                    adCollapsed="isCollapsed"
-                    longBodyMode=true
+<AntLayout class="app-layout" hasSider>
+    <AntSider class="menu-sidebar"
+                    collapsible
+                    breakpoint="lg"
+                    collapsed="isCollapsed"
+                    collapsedWidth="0"
+                    width="256px"
                     onCollapsedChange="(collapsed)=>isCollapsed = collapsed">
         <div class="sidebar-logo">
             <a href="https://github.com/ElderJames/ant-design-blazor" target="_blank">
                 <img src="https://raw.githubusercontent.com/ElderJames/ant-design-blazor/master/logo.svg?sanitize=true" alt="logo">
-                <h1>Ant Design for Blazor</h1>
+                <h1>Ant Design Blazor</h1>
             </a>
         </div>
-        <AntMenu theme="dark" mode="AntDirectionVHIType.inline" Style="margin-bottom:40px;" inlineCollapsed="isCollapsed">
+        <AntMenu theme="dark" mode="AntDirectionVHIType.inline" inlineCollapsed="isCollapsed">
             @menuItemTemplate(MenuItems)
         </AntMenu>
-    </AntLayoutSider>
-    <AntLayout class="main-content" Style="@(isCollapsed?"margin-left:80px":"margin-left:256px")">
-        <AntLayoutHeader>
+    </AntSider>
+    <AntLayout>
+        <AntHeader>
             <div class="app-header">
                 <span class="header-trigger" @onclick="()=>isCollapsed = !isCollapsed">
                     <AntIcon class="trigger" type="@(isCollapsed ? "menu-unfold" : "menu-fold")"></AntIcon>
@@ -29,12 +30,12 @@
                     </a>
                 </span>
             </div>
-        </AntLayoutHeader>
-        <AntLayoutContent longContentMode=true>
+        </AntHeader>
+        <AntContent>
             <div class="inner-content">
                 @Body
             </div>
-        </AntLayoutContent>
+        </AntContent>
         <footer>
             @*<div class="footer-wrap"></div>*@
             <div class="bottom-bar">
@@ -49,7 +50,7 @@
 
 @code
 {
-    bool isCollapsed = false;
+    bool isCollapsed { get; set; } = true;
 
     MenuItem[] MenuItems = {};
 
@@ -90,7 +91,12 @@
     protected override async Task OnInitializedAsync()
     {
         var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-        MenuItems = await HttpClient.GetJsonAsync<MenuItem[]>(new Uri(baseUrl, "_content/AntBlazor.Docs/menu.json"));
+        MenuItems = await HttpClient.GetJsonAsync<MenuItem[]>(new Uri(baseUrl,"_content/AntBlazor.Docs/menu.json"));
+        var defaultUrl = MenuItems.FirstOrDefault(x => x.Default);
+        if (defaultUrl!=null)
+        {
+            NavigationManager.NavigateTo(defaultUrl.Url);
+        }
 
         await base.OnInitializedAsync();
     }

@@ -1,10 +1,6 @@
 ﻿@namespace AntBlazor
 @inherits AntColBase
 
-    <div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
-        @ChildContent
-  
-    </div>
-@code {
-
-}
+<div class="@ClassMapper.Class" style="@gutterStyle @Style" @attributes="Attributes" Id="@Id">
+    @ChildContent
+</div>

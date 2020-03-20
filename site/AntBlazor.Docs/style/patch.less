@@ -1,0 +1,158 @@
+.pic-plus > * {
+  display: inline-block !important;
+  vertical-align: middle;
+}
+.pic-plus span {
+  font-size: 30px;
+  color: #aaa;
+  margin: 0 20px;
+}
+
+.top-menu-additional {
+  position: relative;
+  right: 80px;
+  width: 190px;
+}
+
+.theme-color-content .ant-popover-inner-content {
+  width: 200px;
+  padding: 0;
+}
+
+#ng-content {
+  height: 100%;
+  transition: transform 0.3s @ease-in-out-circ;
+}
+
+.toc-affix {
+
+  .ant-anchor {
+    font-size: 12px;
+
+    .ant-anchor-ink::before {
+      width: 1px;
+      border-left: 1px solid @site-border-color-split;
+    }
+
+    .ant-anchor-link-active {
+      border-left: 2px solid @primary-color;
+      margin-left: -2px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .ant-anchor-ink-ball.visible {
+      display: none;
+    }
+
+    .ant-anchor-link {
+      padding: 0 0 4px 16px;
+      line-height: 1.5;
+
+      &.ant-anchor-link-active {
+        .ant-anchor-link-title {
+          color: @primary-color;
+        }
+      }
+
+      .ant-anchor-link-title {
+        color: @site-text-color;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 110px;
+      }
+    }
+  }
+
+}
+
+.site-page-header {
+  border: 1px solid rgb(235, 237, 240);
+}
+
+.site-page-header-ghost-wrapper {
+  background-color: #f5f5f5;
+  padding: 24px;
+}
+
+body[data-theme='dark'], [data-theme='dark'] * {
+  scrollbar-color: #434343 #262626;
+
+  &::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #262626;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color:  #434343;
+    border-radius: 6px;
+    border: 2px solid #262626;
+    :hover {
+      background-color: #262626;
+    }
+  }
+}
+
+label {
+  &.api-type-label {
+    padding: 1px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    line-height: 18px;
+    display: inline;
+    vertical-align: middle;
+    color: #fff;
+    margin-left: 8px;
+    font-weight: normal;
+    text-transform: uppercase;
+
+    &.directive {
+      color: @magenta-6;
+      border: 2px solid @magenta-6;
+    }
+
+    &.component {
+      color: @blue-6;
+      border: 2px solid @blue-6;
+    }
+
+    &.service {
+      color: @green-6;
+      border: 2px solid @green-6;
+    }
+  }
+}
+
+
+[data-theme='dark'] {
+
+  .popover-menu .ant-popover-inner-content #nav a {
+    color: @text-color;
+  }
+
+  .gh-ico {
+    background-image: url(/assets/img/GitHub-Mark-Light-64px.png);
+  }
+
+  nz-breadcrumb-item:last-child {
+    color: #ffffffa6;
+  }
+
+  .site-page-header {
+    border: 1px solid #303030;
+  }
+
+  .site-page-header-ghost-wrapper {
+    background-color: rgba(255,255,255,0.08);
+  }
+
+  .drawer-content-wrapper {
+    background-color: @component-background;
+  }
+  .ant-tooltip, .ant-popover {
+    position: relative;
+  }
+}

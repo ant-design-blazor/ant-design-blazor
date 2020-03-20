@@ -1,0 +1,27 @@
+﻿@page "/docs/{fileName}"
+
+@inject NavigationManager NavigationManager
+
+<article class="markdown">
+    <Markdown docUrl="@docUrl"></Markdown>
+</article>
+
+@code {
+
+    [Parameter] public string fileName { get; set; }
+
+    string docUrl { get; set; }
+
+    protected override void OnInitialized()
+    {
+
+        if (!string.IsNullOrEmpty(fileName))
+        {
+            var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
+            docUrl = new Uri(baseUrl, $"docs/{fileName}.md").ToString();
+        }
+
+        base.OnInitialized();
+    }
+
+}

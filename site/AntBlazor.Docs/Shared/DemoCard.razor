@@ -1,19 +1,22 @@
-﻿<div class="code-box" id="components-typography-demo-basic">
+﻿<div class="code-box" id="components-@id">
     <section class="code-box-demo">
-        @Demo
+            @Demo
     </section>
     <section class="code-box-meta markdown">
         <div class="code-box-title">
             @Title
         </div>
         <div class="code-box-description">
-          <Markdown>@Description</Markdown>
+            <Markdown>@Description</Markdown>
         </div>
     </section>
 </div>
+<PlainText>@Styles</PlainText>
 
 @code {
+    [Parameter] public string id { get; set; }
     [Parameter] public RenderFragment Demo { get; set; }
     [Parameter] public RenderFragment Title { get; set; }
     [Parameter] public RenderFragment Description { get; set; }
+    [Parameter] public RenderFragment Styles { get; set; }
 }
