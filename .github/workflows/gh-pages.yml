@@ -28,22 +28,18 @@ jobs:
             - name: Publish Docs 🎉
               run: |
                   npm install
-                  cd site/AntBlazor.Docs.ClientApp/wwwroot
-                  rm index.html
-                  cp -r gh-pages/* gh-pages/.nojekyll ./
-                  rm -r gh-pages
-                  cd ../../../
+                  cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntBlazor.Docs.ClientApp/wwwroot
                   dotnet build
-                  dotnet publish -c Release -o tmp
+                  dotnet publish -c Release -o cargo
 
             - name: Deploy 🚀
               uses: JamesIves/github-pages-deploy-action@releases/v3
               with:
                   ACCESS_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
                   BRANCH: gh-pages
-                  FOLDER: tmp/wwwroot
+                  FOLDER: cargo/wwwroot
 
-            - name: Package Nightly Nuget ✨
+            - name: Package Nightly Nuget 📦
               run: |
                   dotnet pack components/AntBlazor.csproj /p:PackageVersion=$Version-nightly-$GITHUB_RUN_ID -c Release -o pack-$GITHUB_RUN_ID --no-build --no-restore
 

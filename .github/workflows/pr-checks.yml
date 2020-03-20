@@ -24,10 +24,5 @@ jobs:
             - name: Check Building
               run: |
                   npm install
-                  cd site/AntBlazor.Docs.ClientApp/wwwroot
-                  rm index.html
-                  cp -r gh-pages/* gh-pages/.nojekyll ./
-                  rm -r gh-pages
-                  cd ../../../
                   dotnet build
-                  dotnet publish -c Release -o tmp
+                  dotnet publish -c Release
