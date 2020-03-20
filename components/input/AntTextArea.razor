@@ -1,5 +1,4 @@
 ﻿@namespace AntBlazor
-@using AntBlazor.JsInterop;
 @inherits AntInput
 <!--TODO: minheight, maxheight, onResize-->
 
@@ -8,35 +7,4 @@
           @oninput="OnInputAsync"
           @onkeypress="OnPressEnterAsync">@Value</textarea>
 
-@code{
-    [Parameter]
-    public bool autoSize { get; set; }
-
-    [Parameter]
-    public EventCallback<object> onResize { get; set; }
-
-    protected override async void OnInputAsync(ChangeEventArgs args)
-    {
-        base.OnInputAsync(args);
-
-        if (autoSize)
-        {
-            await ChangeSizeAsync();
-        }
-
-    }
-
-    private async Task ChangeSizeAsync()
-    {
-        // TODO: compare with maxheight
-        Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, inputEl);
-        Style = $"height: {element.scrollHeight}px;overflow-y: hidden;";
-        System.Diagnostics.Debug.WriteLine(Style);
-        StateHasChanged();
-    }
-
-    protected async Task OnResizeAsync(object args)
-    {
-
-    }
-}
+@_hidden
