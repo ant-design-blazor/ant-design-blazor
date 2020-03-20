@@ -22,10 +22,10 @@ namespace AntBlazor
             {
                 suffix = new RenderFragment((builder) =>
                 {
-                    builder.OpenComponent<AntIcon>(34);
-                    builder.AddAttribute(35, "class", $"{PrefixCls}-search-icon");
-                    builder.AddAttribute(36, "type", "search");
-                    builder.AddAttribute(37, "onclick", _callbackFactory.Create<MouseEventArgs>(this, Search));
+                    builder.OpenComponent<AntIcon>(35);
+                    builder.AddAttribute(36, "class", $"{PrefixCls}-search-icon");
+                    builder.AddAttribute(37, "type", "search");
+                    builder.AddAttribute(38, "onclick", _callbackFactory.Create<MouseEventArgs>(this, Search));
                     builder.CloseComponent();
                 });
             }

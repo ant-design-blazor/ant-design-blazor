@@ -139,24 +139,26 @@ namespace AntBlazor
 
         private void ToggleClearBtn()
         {
-            if (string.IsNullOrEmpty(Value))
+            suffix = new RenderFragment((builder) =>
             {
-                suffix = null;
-            }
-            else
-            {
-                suffix = new RenderFragment((builder) =>
+                builder.OpenComponent<AntIcon>(31);
+                builder.AddAttribute(32, "type", "close-circle");
+                if (string.IsNullOrEmpty(Value))
                 {
-                    builder.OpenComponent<AntIcon>(31);
-                    builder.AddAttribute(32, "type", "close-circle");
-                    builder.AddAttribute(33, "onclick", _callbackFactory.Create<MouseEventArgs>(this, (args) =>
-                    {
-                        Value = string.Empty;
-                        ToggleClearBtn();
-                    }));
-                    builder.CloseComponent();
-                });
-            }
+                    builder.AddAttribute(33, "style", "visibility: hidden;");
+                }
+                else
+                {
+                    builder.AddAttribute(33, "style", "visibility: visible;");
+                }
+                builder.AddAttribute(34, "onclick", _callbackFactory.Create<MouseEventArgs>(this, (args) =>
+                {
+                    Value = string.Empty;
+                    ToggleClearBtn();
+                }));
+                builder.CloseComponent();
+            });
+
         }
 
         /// <summary>
