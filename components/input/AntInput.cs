@@ -8,19 +8,19 @@ namespace AntBlazor
     /// <summary>
     ///
     /// </summary>
-    public class AntInputBase : AntInputComponentBase<string>
+    public class AntInput : AntInputComponentBase<string>
     {
         protected const string PrefixCls = "ant-input";
 
-        protected RenderFragment _renderFragment;
-
+        protected int _renderSequence = 0;
+        //protected RenderFragment _renderFragment;
         protected bool _allowClear;
+        protected string _type = "text";
         protected string _affixWrapperClass = $"{PrefixCls}-affix-wrapper";
         protected string _groupWrapperClass = $"{PrefixCls}-group-wrapper";
         protected string _clearIconClass;
         protected EventCallbackFactory _callbackFactory = new EventCallbackFactory();
         protected ElementReference inputEl { get; set; }
-        protected string _type = "text";
 
         [Parameter]
         public RenderFragment addOnBefore { get; set; }
@@ -61,7 +61,7 @@ namespace AntBlazor
                 Value = defaultValue;
             }
 
-            _renderFragment = new RenderFragment(builder => GenerateRenderFragment(builder));
+            //_renderFragment = new RenderFragment(builder => GenerateRenderFragment(builder));
 
             SetClasses();
         }
@@ -184,9 +184,12 @@ namespace AntBlazor
             }
         }
 
-        protected int _renderSequence = 0;
-        protected virtual void GenerateRenderFragment(RenderTreeBuilder builder)
+
+
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            base.BuildRenderTree(builder);
+
             base.BuildRenderTree(builder);
 
             string container = "input";

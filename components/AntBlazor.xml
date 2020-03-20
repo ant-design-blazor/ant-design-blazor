@@ -109,12 +109,12 @@
         <member name="M:AntBlazor.HtmlRenderer.HandleException(System.Exception)">
             <inheritdoc />
         </member>
-        <member name="T:AntBlazor.AntInputBase">
+        <member name="T:AntBlazor.AntInput">
              <summary>
             
              </summary>
         </member>
-        <member name="M:AntBlazor.AntInputBase.OnInputAsync(Microsoft.AspNetCore.Components.ChangeEventArgs)">
+        <member name="M:AntBlazor.AntInput.OnInputAsync(Microsoft.AspNetCore.Components.ChangeEventArgs)">
             <summary>
             Invoked when user add/remove content
             </summary>
