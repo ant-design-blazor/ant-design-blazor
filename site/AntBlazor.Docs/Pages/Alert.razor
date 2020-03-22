@@ -1,0 +1,159 @@
+﻿<AntTitle level="1">Alert</AntTitle>
+<AntText>Alert component for feedback.</AntText>
+<AntTitle level="2">When to use</AntTitle>
+<AntParagraph>
+    <ul>
+        <li>When you need to show alert messages to users.</li>
+        <li>When you need a persistent static container which is closable by user actions.</li>
+    </ul>
+</AntParagraph>
+<br />
+<h2>Examples</h2>
+<br />
+<DemoCard>
+    <Title>Basic</Title>
+    <Description>The simplest usage for short messages.</Description>
+    <Demo>
+        <AntAlert Type="@AntAlertType.Success"
+                  Message="Success Text" />
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>Closable</Title>
+    <Description>To show close button.</Description>
+    <Demo>
+        <AntAlert Type="@AntAlertType.Warning"
+                  Message="Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text"
+                  Closable
+                  OnClose="LogSomething" />
+        <br />
+        <AntAlert Type="@AntAlertType.Error"
+                  Message="Error Text"
+                  Description="Error Description Error Description Error Description Error Description Error Description Error Description"
+                  Closable
+                  OnClose="LogSomething" />
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>Icon</Title>
+    <Description>A relevant icon will make information clearer and more friendly.</Description>
+    <Demo>
+        <AntAlert Type="@AntAlertType.Success"
+                  Message="Success Tips"
+                  ShowIcon />
+        <br />
+        <AntAlert Type="@AntAlertType.Info"
+                  Message="Informational Notes"
+                  ShowIcon />
+        <br />
+        <AntAlert Type="@AntAlertType.Warning"
+                  Message="Warning"
+                  ShowIcon />
+        <br />
+        <AntAlert Type="@AntAlertType.Error"
+                  Message="Error"
+                  ShowIcon />
+        <br />
+        <AntAlert Type="@AntAlertType.Success"
+                  Message="Success Tips"
+                  Description="Detailed description and advice about successful copywriting."
+                  ShowIcon />
+        <br />
+        <AntAlert Type="@AntAlertType.Info"
+                  Message="Informational Notes"
+                  Description="Additional description and information about copywriting."
+                  ShowIcon />
+        <br />
+        <AntAlert Type="@AntAlertType.Warning"
+                  Message="Warning"
+                  Description="This is a warning notice about copywriting."
+                  ShowIcon />
+        <br />
+        <AntAlert Type="@AntAlertType.Error"
+                  Message="Error"
+                  Description="This is an error message about copywriting."
+                  ShowIcon />
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>Banner</Title>
+    <Description>Display Alert as a banner at top of page.</Description>
+    <Demo>
+        <AntAlert Type="@AntAlertType.Warning"
+                  Message="Warning Text"
+                  Banner
+                  Closable />
+        <br />
+        <AntAlert Type="@AntAlertType.Warning"
+                  Message="Warning Text"
+                  Description="Very long warning text warning text text text text text text text"
+                  Banner
+                  Closable />
+        <br />
+        <AntAlert Type="@AntAlertType.Warning"
+                  Message="Warning Text Without Icon"
+                  Banner
+                  ShowIcon="false" />
+        <br />
+        <AntAlert Type="@AntAlertType.Error"
+                  Message="Error Text"
+                  Banner />
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>More Types</Title>
+    <Description>There are 4 types of Alert: success, info, warning, error.</Description>
+    <Demo>
+        <AntAlert Message="Success Text" Type="@AntAlertType.Success" />
+        <br />
+        <AntAlert Message="Info Text" Type="@AntAlertType.Info" />
+        <br />
+        <AntAlert Message="Warning Text" Type="@AntAlertType.Warning" />
+        <br />
+        <AntAlert Message="Error Text" Type="@AntAlertType.Error" />
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>Description</Title>
+    <Description>Additional description for alert message.</Description>
+    <Demo>
+        <AntAlert Message="Success Text"
+                  Description="Success Description Success Description Success Description"
+                  Type="@AntAlertType.Success" />
+        <br />
+        <AntAlert Message="Info Text"
+                  Description="Info Description Info Description Info Description Info Description"
+                  Type="@AntAlertType.Info" />
+        <br />
+        <AntAlert Message="Warning Text"
+                  Description="Warning Description Warning Description Warning Description Warning Description"
+                  Type="@AntAlertType.Warning" />
+        <br />
+        <AntAlert Message="Error Text"
+                  Description="Error Description Error Description Error Description Error Description"
+                  Type="@AntAlertType.Error" />
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>Customized Close Text</Title>
+    <Description>Replace the default icon with customized text.</Description>
+    <Demo>
+        <AntAlert Message="Info Text" Type="@AntAlertType.Info" CloseText="Close Now"  Closable/>
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>Customized Icon</Title>
+    <Description>Replace the default icons with a custom one</Description>
+    <Demo>
+        <AntAlert Message="Info Text" Type="@AntAlertType.Info" Icon="github" ShowIcon />
+    </Demo>
+</DemoCard>
+@code{
+    private void LogSomething()
+    {
+        Console.WriteLine("Logging Something...");
+    }
+}

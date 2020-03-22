@@ -102,6 +102,17 @@
         ]
       },
       {
+        "title": "Feedback",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Alert",
+            "type": "menuItem",
+            "url": "alert"
+          }
+        ]
+      },
+      {
         "title": "Other",
         "type": "itemGroup",
         "children": [
