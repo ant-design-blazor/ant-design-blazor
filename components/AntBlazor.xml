@@ -4,6 +4,110 @@
         <name>AntBlazor</name>
     </assembly>
     <members>
+        <member name="T:AntBlazor.AntAlertBase">
+            <summary>
+            Alert component for feedback.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.AfterClose">
+            <summary>
+            Called when close animation is finished	
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.Banner">
+            <summary>
+            Whether to show as banner
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.Closable">
+            <summary>
+            Whether Alert can be closed	
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.CloseText">
+            <summary>
+            Close text to show	
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.Description">
+            <summary>
+            Additional content of Alert	
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.Icon">
+            <summary>
+            Custom icon, effective when showIcon is true	
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.Message">
+            <summary>
+            Content of Aler
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.ShowIcon">
+            <summary>
+            Whether to show icon.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.Type">
+            <summary>
+            Type of Alert styles, options: success, info, warning, error	
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.OnClose">
+            <summary>
+            Callback when Alert is closed.
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.ChildContent">
+            <summary>
+            Additional Content
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntAlertBase.iconType">
+            <summary>
+            Icon to show.
+            </summary>
+        </member>
+        <member name="F:AntBlazor.AntAlertBase.isClosed">
+            <summary>
+            Indicator if the component is closed or not.
+            </summary>
+        </member>
+        <member name="F:AntBlazor.AntAlertBase.isClosing">
+            <summary>
+            Just before we close the component we set this indicator to show a closing animation.
+            </summary>
+        </member>
+        <member name="M:AntBlazor.AntAlertBase.SetClassMap">
+            <summary>
+            Sets the default classes.
+            </summary>
+        </member>
+        <member name="M:AntBlazor.AntAlertBase.OnParametersSet">
+            <summary>
+            Triggered each time a parameter is changed.
+            </summary>
+        </member>
+        <member name="M:AntBlazor.AntAlertBase.OnInitialized">
+            <summary>
+            Start-up code.
+            </summary>
+        </member>
+        <member name="M:AntBlazor.AntAlertBase.OnCloseHandler(Microsoft.AspNetCore.Components.Web.MouseEventArgs)">
+            <summary>
+            Handles the close callback.
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AntBlazor.AntAlertBase.AfterCloseHandler(Microsoft.AspNetCore.Components.Web.MouseEventArgs)">
+            <summary>
+            Handles the after close callback.
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
         <member name="P:AntBlazor.AntTheme.Primary">
             <summary>
             The theme primary color
@@ -109,12 +213,22 @@
         <member name="M:AntBlazor.HtmlRenderer.HandleException(System.Exception)">
             <inheritdoc />
         </member>
-        <member name="P:AntBlazor.AntLayoutSiderBase.longBodyMode">
+        <member name="P:AntBlazor.AntRowBase.align">
             <summary>
-            use to fix the user has long content, but they don't want to scroll all body.
+            'top' | 'middle' | 'bottom'
             </summary>
         </member>
-        <member name="P:AntBlazor.AntLayoutSiderBase.adBreakpoint">
+        <member name="P:AntBlazor.AntRowBase.justify">
+            <summary>
+            'start' | 'end' | 'center' | 'space-around' | 'space-between'
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntSiderBase.theme">
+            <summary>
+             'light' | 'dark'
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntSiderBase.breakpoint">
             <summary>
             "xs" | "sm" | "md" | "lg" | "xl" | "xxl"
             </summary>
@@ -162,11 +276,6 @@
         <member name="P:AntBlazor.AntDivider.orientation">
             <summary>
             'left' | 'right' | 'center'
-            </summary>
-        </member>
-        <member name="P:AntBlazor.AntLayoutContent.longContentMode">
-            <summary>
-            use to fix the user has long content, but they don't want to scroll all body.
             </summary>
         </member>
         <member name="P:AntBlazor.AntTag.mode">
