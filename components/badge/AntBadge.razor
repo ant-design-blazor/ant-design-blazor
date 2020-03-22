@@ -1,0 +1,38 @@
+﻿@namespace AntBlazor
+@inherits AntBadgeBase
+
+    <span class="@ClassMapper.Class" @attributes="Attributes" Id="@Id">
+
+        @if (ChildContent != null)
+        {
+            @ChildContent
+            @if ((Count == 0 && ShowZero) || Count > 0)
+            {
+                <sup class="@($"ant-badge-count {@class}")" style="@Style" title="@DisplayCount">@DisplayCount</sup>
+            }
+            @if (Dot && Count != 0 || (Dot && ShowZero))
+            {
+                <sup class="ant-scroll-number ant-badge-dot" style="@Style"></sup>
+            }
+        }
+        else
+        {
+            @if (!string.IsNullOrEmpty(Status))
+            {
+                <span class="@($"ant-badge-status-dot ant-badge-status-{Status}")"></span>
+            }
+            @if (!string.IsNullOrEmpty(Color))
+            {
+                <span class="@($"ant-badge-status-dot ant-badge-status-{Color}")"></span>
+            }
+            @if (!string.IsNullOrEmpty(Text))
+            {
+                <span class="ant-badge-status-text">@Text</span>
+            }
+            @if ((Count == 0 && ShowZero) || Count > 0)
+            {
+                <sup class="@($"ant-scroll-number ant-badge-count ant-badge-multiple-words {@class}")" style="@Style" title="@DisplayCount">@DisplayCount</sup>
+            }
+
+        }
+    </span>
