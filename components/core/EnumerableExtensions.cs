@@ -32,5 +32,10 @@ namespace AntBlazor
                 await func(items.ElementAt(i));
             }
         }
+
+        public static bool IsIn<T>(this T source, params T[] array)
+        {
+            return array.Contains(source);
+        }
     }
 }
