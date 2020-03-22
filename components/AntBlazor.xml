@@ -4,6 +4,56 @@
         <name>AntBlazor</name>
     </assembly>
     <members>
+        <member name="P:AntBlazor.AntBadgeBase.Color">
+            <summary>
+            Customize Badge dot color
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntBadgeBase.Count">
+            <summary>
+            Number to show in badge
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntBadgeBase.Dot">
+            <summary>
+            Whether to display a red dot instead of count
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntBadgeBase.Offset">
+            <summary>
+            Set offset of the badge dot, like[x, y]
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntBadgeBase.OverflowCount">
+            <summary>
+            Max count to show
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntBadgeBase.ShowZero">
+            <summary>
+            Whether to show badge when count is zero
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntBadgeBase.Status">
+            <summary>
+            Set Badge as a status dot
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntBadgeBase.Text">
+            <summary>
+            If status is set, text sets the display text of the status dot
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntBadgeBase.Title">
+            <summary>
+            Text to show when hovering over the badge
+            </summary>
+        </member>
+        <member name="P:AntBlazor.AntBadgeBase.ChildContent">
+            <summary>
+            Wrapping this item.
+            </summary>
+        </member>
         <member name="T:AntBlazor.AntAlertBase">
             <summary>
             Alert component for feedback.
