@@ -109,6 +109,11 @@
             "title": "Divider",
             "type": "menuItem",
             "url": "divider"
+          },
+          {
+            "title": "Badge",
+            "type": "menuItem",
+            "url": "badge"
           }
         ]
       }

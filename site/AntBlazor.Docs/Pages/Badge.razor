@@ -1,0 +1,135 @@
+﻿<AntTitle level="1">Badge</AntTitle>
+<AntText>Small numerical value or status descriptor for UI elements.</AntText>
+<AntTitle level="2">When to use</AntTitle>
+<AntText>Badge normally appears in proximity to notifications or user avatars with eye-catching appeal, typically displaying unread messages count.</AntText>
+<br />
+<h2>Examples</h2>
+<br />
+<DemoCard>
+    <Title>Basic</Title>
+    <Description>Simplest Usage. Badge will be hidden when count is `0`, but we can use `ShowZero` to show it.</Description>
+    <Demo>
+        <AntBadge Count="5">
+            <span class="head-example" />
+        </AntBadge>
+        <AntBadge Count="0" ShowZero>
+            <span class="head-example" />
+        </AntBadge>
+        <AntBadge Count="0">
+            <span class="head-example" />
+        </AntBadge>
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>Overflow Count</Title>
+    <Description>`$[OverflowCount]+` is displayed when `count` is larger than `OverflowCount`. The default value of `OverflowCount` is `99`.</Description>
+    <Demo>
+        <AntBadge Count="99">
+            <span class="head-example" />
+        </AntBadge>
+        <AntBadge Count="100" ShowZero>
+            <span class="head-example" />
+        </AntBadge>
+        <AntBadge Count="11" OverflowCount="10">
+            <span class="head-example" />
+        </AntBadge>
+        <AntBadge Count="1000" OverflowCount="999">
+            <span class="head-example" />
+        </AntBadge>
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>Clickable</Title>
+    <Description>The badge can be wrapped with `a tag` to make it linkable.</Description>
+    <Demo>
+        <a href="#">
+            <AntBadge Count="5">
+                <span class="head-example" />
+            </AntBadge>
+        </a>
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>Status</Title>
+    <Description>Standalone badge with status.</Description>
+    <Demo>
+        <AntBadge Status="@AntBadgeStatus.Success" />
+        <AntBadge Status="@AntBadgeStatus.Error" />
+        <AntBadge Status="@AntBadgeStatus.Default" />
+        <AntBadge Status="@AntBadgeStatus.Processing" />
+        <AntBadge Status="@AntBadgeStatus.Warning" />
+        <br />
+        <AntBadge Status="@AntBadgeStatus.Success" Text="@AntBadgeStatus.Success" />
+        <br />
+        <AntBadge Status="@AntBadgeStatus.Error" Text="@AntBadgeStatus.Error" />
+        <br />
+        <AntBadge Status="@AntBadgeStatus.Default" Text="@AntBadgeStatus.Default" />
+        <br />
+        <AntBadge Status="@AntBadgeStatus.Processing" Text="@AntBadgeStatus.Processing" />
+        <br />
+        <AntBadge Status="@AntBadgeStatus.Warning" Text="@AntBadgeStatus.Warning" />
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>Standalone</Title>
+    <Description>Used in standalone when children is empty.</Description>
+    <Demo>
+        <AntBadge Count="25" />
+        <AntBadge Count="4" class="site-badge-count-4" />
+        <AntBadge class="site-badge-count-109" Count=109 Style="background-color: #52c41a" />
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>Red Badge</Title>
+    <Description>This will simply display a red badge, without a specific count. If count equals 0, it won't display the dot.</Description>
+    <Demo>
+        <AntBadge Dot>
+            <AntIcon type="notification"/>
+        </AntBadge>
+        <AntBadge Count=0 Dot>
+            <AntIcon type="notification" />
+        </AntBadge>
+        <AntBadge Dot>
+            <a href="#">Link something</a>
+        </AntBadge>
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>Colorful Badge</Title>
+    <Description>We preset a series of colorful Badge styles for use in different situations.</Description>
+    <Demo>
+        @{
+            Type type = typeof(AntBadgeColor); // MyClass is static class with static properties
+            foreach (var p in type.GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public))
+            {
+                var v = p.GetValue(null); // static classes cannot be instanced, so use null...
+                <AntBadge Color="@v.ToString()" Text="@v.ToString()" />
+                <br/>
+            }
+        }
+    </Demo>
+</DemoCard>
+<style>
+    .head-example {
+        width: 42px;
+        height: 42px;
+        border-radius: 2px;
+        background: #eee;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .ant-badge-not-a-wrapper:not(.ant-badge-status) {
+        margin-right: 8px;
+    }
+
+    .ant-badge:not(.ant-badge-not-a-wrapper) {
+        margin-right: 20px;
+    }
+
+    .site-badge-count-4 .ant-badge-count {
+        background-color: #fff;
+        color: #999;
+        box-shadow: 0 0 0 1px #d9d9d9 inset;
+    }
+</style>
