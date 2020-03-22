@@ -113,6 +113,17 @@
         ]
       },
       {
+        "title": "Feedback",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Drawer",
+            "type": "menuItem",
+            "url": "drawer"
+          }
+        ]
+      },
+      {
         "title": "Other",
         "type": "itemGroup",
         "children": [
