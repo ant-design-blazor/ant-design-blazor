@@ -102,6 +102,28 @@
         ]
       },
       {
+        "title": "Feedback",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Alert",
+            "type": "menuItem",
+            "url": "alert"
+          }
+        ]
+      },
+      {
+        "title": "Feedback",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Drawer",
+            "type": "menuItem",
+            "url": "drawer"
+          }
+        ]
+      },
+      {
         "title": "Other",
         "type": "itemGroup",
         "children": [
