@@ -1,0 +1,143 @@
+﻿
+<AntTitle level="1">Input</AntTitle>
+<AntText>Input用于输入文字123</AntText>
+<AntTitle level="2">何时使用</AntTitle>
+<AntParagraph>xxxxxxx。</AntParagraph>
+<AntParagraph>在 Ant Design 中，xxxxxxx。</AntParagraph>
+<br />
+<h2>演示</h2>
+<br />
+<DemoCard>
+    <Title>Basic usage</Title>
+    <Description>Basic usage example.</Description>
+    <Demo>
+        <AntButton onclick="(e)=>Click(e)">Change addOnAfter</AntButton>
+        <AntInput addOnAfter="@addOn">
+            123
+        </AntInput>
+        <AntInput placeholder="basic usage"></AntInput>
+        <AntInput placeholder="allwoClear" allowClear></AntInput>
+        <AntInput placeholder="disabled" disabled></AntInput>
+    </Demo>
+</DemoCard>
+@code{
+    private RenderFragment addOn = new RenderFragment((builder) => { builder.AddContent(0, ".com"); });
+    private void Click(MouseEventArgs args)
+    {
+        addOn = new RenderFragment((builder) => { builder.AddContent(0, ".net"); });
+    }
+}
+
+<DemoCard>
+    <Title>Three sizes of input</Title>
+    <Description>There are three sizes of an Input box: <code>large</code> (40px), <code>default</code> (32px) and <code>small</code> (24px).</Description>
+    <Demo>
+        <style>
+            .example-input > span {
+                width: 200px;
+                margin: 0 8px 8px 0;
+            }
+        </style>
+        <span class="example-input">
+            <AntInput placeholder="large size" defaultValue="123" size="@AntInputSize.Large">
+                <prefix>
+                    <AntIcon type="user" />
+                </prefix>
+            </AntInput>
+            <AntInput placeholder="default size">
+                <prefix>
+                    <AntIcon type="user" />
+                </prefix>
+            </AntInput>
+            <AntInput placeholder="small size" size="@AntInputSize.Small">
+                <prefix>
+                    <AntIcon type="user" />
+                </prefix>
+            </AntInput>
+            @*<AntInputPassword @bind="password" placeholder="large Password" size="@AntInputSize.Large" onPressEnter="(e)=>Submit(e)" />*@
+            <AntInputPassword @bind-Value="@_password" placeholder="large Password" size="@AntInputSize.Large" onPressEnter="(e)=>Submit(e)" />
+        </span>
+    </Demo>
+</DemoCard>
+@code{
+    private string _password;
+    private void Submit(KeyboardEventArgs args)
+    {
+        Console.WriteLine($"password: {_password}");
+    }
+}
+
+<DemoCard>
+    <Title>TextArea</Title>
+    <Description>For multi-line input.</Description>
+    <Demo>
+        <div>
+            <AntTextArea defaultValue="hello world!"></AntTextArea>
+            <AntTextArea autoSize="true"></AntTextArea>
+            <AntTextArea defaultValue="onResize"></AntTextArea>
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Pre / Post tab</Title>
+    <Description>Using pre & post tabs example.</Description>
+    <Demo>
+        <div>
+            <AntInput defaultValue="mysite">
+                <addOnBefore>https://</addOnBefore>
+                <addOnAfter>.com</addOnAfter>
+            </AntInput>
+            <AntInput defaultValue="mysite">
+                <addOnAfter><AntIcon type="setting"></AntIcon></addOnAfter>
+            </AntInput>
+            <AntInput defaultValue="mysite">
+                <addOnBefore>https://</addOnBefore>
+            </AntInput>
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Search box</Title>
+    <Description>Example of creating a search box by grouping a standard input with a search button.</Description>
+    <Demo>
+        <div>
+            <AntSearch placeholder="input search text" size="@AntInputSize.Small" />
+            <AntSearch placeholder="input search text" onChange="(e)=>Handle(e)" enterButton />
+            <AntSearch placeholder="input search text" size="@AntInputSize.Large" enterButton="Search" />
+        </div>
+    </Demo>
+</DemoCard>
+
+@code{
+    private void Handle(ChangeEventArgs args)
+    {
+        Console.WriteLine("123");
+        System.Diagnostics.Debug.WriteLine("456");
+    }
+}
+
+<DemoCard>
+    <Title>Input Group</Title>
+    <Description>
+        Input.Group example
+        Note: You don't need <code>Col</code> to control the width in the <code>compact</code> mode.
+    </Description>
+    <Demo>
+        <AntInputGroup size="@AntInputSize.Large">
+            <AntInput defaultValue="0571" />
+            <AntInput defaultValue="26888888" />
+        </AntInputGroup>
+        <br />
+        <AntInputGroup compact>
+            <AntInput defaultValue="0571" Style="width: 20%;" />
+            <AntInput defaultValue="26888888" Style="width: 30%;" />
+        </AntInputGroup>
+        <br />
+        <AntInputGroup compact>
+            <AntInput defaultValue="0571" Style="width: 20%;" />
+            <AntSearch defaultValue="26888888" Style="width: 30%;" />
+        </AntInputGroup>
+    </Demo>
+</DemoCard>
