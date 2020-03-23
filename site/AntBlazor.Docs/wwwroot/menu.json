@@ -72,6 +72,11 @@
             "title": "Switch",
             "type": "menuItem",
             "url": "switch"
+          },
+          {
+            "title": "Input",
+            "type": "menuItem",
+            "url": "input"
           }
         ]
       },
@@ -102,6 +107,28 @@
         ]
       },
       {
+        "title": "Feedback",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Alert",
+            "type": "menuItem",
+            "url": "alert"
+          }
+        ]
+      },
+      {
+        "title": "Feedback",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Drawer",
+            "type": "menuItem",
+            "url": "drawer"
+          }
+        ]
+      },
+      {
         "title": "Other",
         "type": "itemGroup",
         "children": [
@@ -109,17 +136,11 @@
             "title": "Divider",
             "type": "menuItem",
             "url": "divider"
-          }
-        ]
-      },
-      {
-        "title": "Data Entry",
-        "type": "itemGroup",
-        "children": [
+          },
           {
-            "title": "Input",
+            "title": "Badge",
             "type": "menuItem",
-            "url": "input"
+            "url": "badge"
           }
         ]
       }
