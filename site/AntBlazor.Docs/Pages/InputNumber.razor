@@ -12,3 +12,21 @@
         <AntInputNumber></AntInputNumber>
     </Demo>
 </DemoCard>
+
+<DemoCard>
+    <Title>Sizes</Title>
+    <Description>There are three sizes available to a numeric input box. By default, the size is <code>32px</code>. The two additional sizes are <code>large</code> and <code>small</code> which means <code>40px</code> and <code>24px</code>, respectively.</Description>
+    <Demo>
+        <style>
+            .example-input > span {
+                width: 200px;
+                margin: 0 8px 8px 0;
+            }
+        </style>
+        <span class="example-input">
+            <AntInputNumber defaultValue="3" size="@AntInputSize.Large"></AntInputNumber>
+            <AntInputNumber defaultValue="3"></AntInputNumber>
+            <AntInputNumber defaultValue="3" size="@AntInputSize.Small"></AntInputNumber>
+        </span>
+    </Demo>
+</DemoCard>

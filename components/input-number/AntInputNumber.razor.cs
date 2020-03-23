@@ -29,6 +29,7 @@ namespace AntBlazor
         //        <input class="ant-input-number-input" role="spinbutton" aria-valuenow="3" aria-valuemin="1" aria-valuemax="10" min="1" max="10" step="1" value="3" autocomplete="off">
         //    </div>
         //</div>
+        protected const string PrefixCls = "ant-input-number";
 
         [Parameter]
         public double step { get; set; } = 1;
@@ -42,6 +43,9 @@ namespace AntBlazor
         [Parameter]
         public double min { get; set; } = double.NegativeInfinity;
 
+        [Parameter]
+        public string size { get; set; } = AntInputSize.Default;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -50,6 +54,21 @@ namespace AntBlazor
             {
                 Value = defaultValue.Value;
             }
+        }
+
+        private void SetClass()
+        {
+            ClassMapper.Clear()
+                .Add(PrefixCls)
+                .If($"{PrefixCls}-lg", () => size == AntInputSize.Large)
+                .If($"{PrefixCls}-sm", () => size == AntInputSize.Small);
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            SetClass();
         }
 
         private void Increase()
