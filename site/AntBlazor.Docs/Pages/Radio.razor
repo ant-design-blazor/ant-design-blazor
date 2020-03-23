@@ -1,0 +1,42 @@
+﻿<AntTitle level="1">Radio</AntTitle>
+<AntText>Radio.</AntText>
+<AntTitle level="2">When to use</AntTitle>
+<AntParagraph>
+    <ul>
+        <li>Used to select a single state from multiple options.</li>
+        <li>The difference from Select is that Radio is visible to the user and can facilitate the comparison of choice, which means there shouldn't be too many of them.</li>
+    </ul>
+</AntParagraph>
+<br />
+<h2>Examples</h2>
+<br />
+<DemoCard>
+    <Title>Basic</Title>
+    <Description>The simplest use.</Description>
+    <Demo>
+        <AntRadio>Radio</AntRadio>
+    </Demo>
+</DemoCard>
+<br />
+
+<DemoCard>
+    <Title>disabled</Title>
+    <Description>Radio unavailable.</Description>
+    <Demo>
+        <AntRadio checked disabled="@disabled">
+            Disabled
+        </AntRadio>
+        <br />
+        <AntRadio disabled="@disabled">
+            Disabled
+        </AntRadio>
+        <div style="margin-top: 20px">
+            <AntButton type="primary" onclick="_=>disabled=!disabled">Toggle disabled</AntButton>
+        </div>
+    </Demo>
+</DemoCard>
+
+@code
+{
+    bool disabled = true;
+}

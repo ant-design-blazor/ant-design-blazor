@@ -78,6 +78,16 @@ export function copy(text) {
   });
 }
 
+export function focus(selector) {
+  let dom = getDom(selector);
+  dom.focus();
+}
+
+export function blur(selector) {
+  let dom = getDom(selector);
+  dom.blur();
+}
+
 export function log(text) {
   console.log(text);
 }
