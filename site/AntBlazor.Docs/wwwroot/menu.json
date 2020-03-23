@@ -72,6 +72,11 @@
             "title": "Switch",
             "type": "menuItem",
             "url": "switch"
+          },
+          {
+            "title": "Input",
+            "type": "menuItem",
+            "url": "input"
           }
         ]
       },

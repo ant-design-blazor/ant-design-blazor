@@ -1,0 +1,10 @@
+﻿@namespace AntBlazor
+@inherits AntInput
+<!--TODO: minheight, maxheight, onResize-->
+
+<textarea class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id" placeholder="@placeholder"
+          @ref="inputEl"
+          @oninput="OnInputAsync"
+          @onkeypress="OnPressEnterAsync">@Value</textarea>
+
+@_hidden
