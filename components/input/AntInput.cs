@@ -22,6 +22,9 @@ namespace AntBlazor
         protected ElementReference inputEl { get; set; }
 
         [Parameter]
+        public bool isNumber { get; set; } = false;
+
+        [Parameter]
         public RenderFragment addOnBefore { get; set; }
 
         [Parameter]
@@ -66,7 +69,7 @@ namespace AntBlazor
         protected virtual void SetClasses()
         {
             ClassMapper.Clear()
-                .Add($"{PrefixCls}")
+                .If($"{PrefixCls}", () => !isNumber)
                 .If($"{PrefixCls}-lg", () => size == AntInputSize.Large)
                 .If($"{PrefixCls}-sm", () => size == AntInputSize.Small);
 

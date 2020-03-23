@@ -77,6 +77,11 @@
             "title": "Input",
             "type": "menuItem",
             "url": "input"
+          },
+          {
+            "title": "Input Number",
+            "type": "menuItem",
+            "url": "inputnumber"
           }
         ]
       },
