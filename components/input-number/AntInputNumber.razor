@@ -18,7 +18,7 @@
         </span>
     </div>
     <div class="ant-input-number-input-wrap">
-        <AntInput class="ant-input-number-input" Value="@Value.ToString()" isNumber="true"></AntInput>
+        <AntInput class="ant-input-number-input" @bind-Value="@ValueStr" @bind-Value:event="oninput" type="number"></AntInput>
         @*<input class="ant-input-number-input" role="spinbutton" aria-valuenow="3" aria-valuemin="1" aria-valuemax="10" min="1" max="10" step="1" value="3" autocomplete="off">*@
     </div>
 </div>

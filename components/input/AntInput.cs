@@ -14,7 +14,6 @@ namespace AntBlazor
 
         protected int _renderSequence = 0;
         protected bool _allowClear;
-        protected string _type = "text";
         protected string _affixWrapperClass = $"{PrefixCls}-affix-wrapper";
         protected string _groupWrapperClass = $"{PrefixCls}-group-wrapper";
         protected string _clearIconClass;
@@ -22,7 +21,7 @@ namespace AntBlazor
         protected ElementReference inputEl { get; set; }
 
         [Parameter]
-        public bool isNumber { get; set; } = false;
+        public string type { get; set; } = "text";
 
         [Parameter]
         public RenderFragment addOnBefore { get; set; }
@@ -54,6 +53,9 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<KeyboardEventArgs> onPressEnter { get; set; }
 
+        [Parameter]
+        public EventCallback<ChangeEventArgs> onInput { get; set; }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -69,7 +71,7 @@ namespace AntBlazor
         protected virtual void SetClasses()
         {
             ClassMapper.Clear()
-                .If($"{PrefixCls}", () => !isNumber)
+                .If($"{PrefixCls}", () => type != "number")
                 .If($"{PrefixCls}-lg", () => size == AntInputSize.Large)
                 .If($"{PrefixCls}-sm", () => size == AntInputSize.Small);
 
@@ -169,7 +171,7 @@ namespace AntBlazor
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        protected virtual void OnInputAsync(ChangeEventArgs args)
+        protected async virtual void OnInputAsync(ChangeEventArgs args)
         {
             bool flag = true;
             if (!string.IsNullOrEmpty(Value) && !string.IsNullOrEmpty(args.Value.ToString()))
@@ -181,6 +183,11 @@ namespace AntBlazor
             if (_allowClear && flag)
             {
                 ToggleClearBtn();
+            }
+
+            if (onInput.HasDelegate)
+            {
+                await onInput.InvokeAsync(args);
             }
         }
 
@@ -244,7 +251,7 @@ namespace AntBlazor
                 }
             }
             builder.AddAttribute(18, "Id", Id);
-            builder.AddAttribute(19, "type", _type);
+            builder.AddAttribute(19, "type", type);
             builder.AddAttribute(20, "placeholder", placeholder);
             builder.AddAttribute(21, "value", Value);
             builder.AddAttribute(22, "onchange", _callbackFactory.Create(this, OnChangeAsync));
