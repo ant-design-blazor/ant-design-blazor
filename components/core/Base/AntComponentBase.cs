@@ -86,6 +86,19 @@ namespace AntBlazor
             }
         }
 
+        protected async Task JsInvokeAsync(string code, params object[] args)
+        {
+            try
+            {
+                await Js.InvokeVoidAsync(code, args);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         #region Hack to fix https://github.com/aspnet/AspNetCore/issues/11159
 
         public static object CreateDotNetObjectRefSyncObj = new object();
