@@ -10,7 +10,7 @@ namespace AntBlazor
         public string Id { get; set; } = IdGeneratorHelper.Generate("antBlazor_id_");
 
         [Parameter(CaptureUnmatchedValues = true)]
-        public Dictionary<string, object> Attributes { get; set; }
+        public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
 
         private ElementReference _ref;
 

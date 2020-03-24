@@ -1,0 +1,19 @@
+﻿@namespace AntBlazor
+@inherits AntRadioBase
+
+<label @onclick="OnClick" class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" @ref="Ref">
+    <span class="@RadioClassMapper.Class">
+        <input type="radio"
+               autofocus="@AutoFocus"
+               class="@InputClassMapper.Class"
+               disabled="@disabled"
+               checked="@isChecked"
+               name="@name"
+               @bind="@Value"
+               @ref="inputRef" />
+        <span class="@InnerClassMapper.Class"></span>
+    </span>
+    <span>@ChildContent</span>
+</label>
+
+

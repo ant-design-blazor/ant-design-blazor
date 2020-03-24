@@ -20,7 +20,6 @@
     <PackageLicenseExpression></PackageLicenseExpression>
     <Authors>James Yeung</Authors>
     <PackageIconUrl>https://raw.githubusercontent.com/ElderJames/ant-design-blazor/master/logo.svg?sanitize=true</PackageIconUrl>
-    <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
