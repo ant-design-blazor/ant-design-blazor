@@ -30,3 +30,33 @@
         </span>
     </Demo>
 </DemoCard>
+
+<DemoCard>
+    <Title>Disabled</Title>
+    <Description>Click the button to toggle between available and disabled states.</Description>
+    <Demo>
+        <div>
+            <AntInputNumber defaultValue="3" disabled="@disabled"></AntInputNumber>
+            <div style="margin: 20px 0px 20px 0px;">
+                <AntButton type="@AntButtonType.Primary" onclick="(e)=> ToggleDisable()">Toggle disabled</AntButton>
+            </div>
+        </div>
+    </Demo>
+</DemoCard>
+
+@code{
+    private bool disabled = true;
+
+    private void ToggleDisable()
+    {
+        disabled = !disabled;
+    }
+}
+
+<DemoCard>
+    <Title>Decimals</Title>
+    <Description>A numeric-only input box whose values can be increased or decreased using a decimal step. The number of decimals (also known as precision) is determined by the step prop.</Description>
+    <Demo>
+        <AntInputNumber step="0.1"></AntInputNumber>
+    </Demo>
+</DemoCard>

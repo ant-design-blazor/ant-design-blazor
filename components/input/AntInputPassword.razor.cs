@@ -15,7 +15,7 @@ namespace AntBlazor
         {
             base.OnInitialized();
 
-            _type = "password";
+            type = "password";
             ToggleVisibility(new MouseEventArgs());
         }
 
@@ -53,12 +53,12 @@ namespace AntBlazor
                 if (_visible)
                 {
                     _eyeIcon = "eye";
-                    _type = "text";
+                    type = "text";
                 }
                 else
                 {
                     _eyeIcon = "eye-invisible";
-                    _type = "password";
+                    type = "password";
                 }
 
                 _visible = !_visible;

@@ -31,6 +31,20 @@ namespace AntBlazor
         //</div>
         protected const string PrefixCls = "ant-input-number";
 
+        protected string _valueStr;
+        protected string ValueStr
+        {
+            get
+            {
+                return Value.ToString();
+            }
+            set
+            {
+                _valueStr = value;
+                Value = double.Parse(_valueStr);
+            }
+        }
+
         [Parameter]
         public double step { get; set; } = 1;
 
@@ -61,7 +75,8 @@ namespace AntBlazor
             ClassMapper.Clear()
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-lg", () => size == AntInputSize.Large)
-                .If($"{PrefixCls}-sm", () => size == AntInputSize.Small);
+                .If($"{PrefixCls}-sm", () => size == AntInputSize.Small)
+                .If($"{PrefixCls}-disabled", () => Attributes != null && Attributes["disabled"].ToString() == true.ToString());
         }
 
         protected override void OnParametersSet()
@@ -79,6 +94,11 @@ namespace AntBlazor
         private void Decrease()
         {
             Value -= step;
+        }
+
+        private void OnInput(ChangeEventArgs args)
+        {
+
         }
     }
 }
