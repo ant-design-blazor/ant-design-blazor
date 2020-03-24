@@ -13,11 +13,13 @@ namespace AntBlazor
 
         [Parameter] public string Value { get; set; }
 
-        //[Parameter] public bool Disabled { get; set; } = false;
+        // [Parameter] public bool Disabled { get; set; } = false;
 
         [Parameter] public bool AutoFocus { get; set; } = false;
 
         [Parameter] public bool RadioButton { get; set; }
+
+        [CascadingParameter] public AntRadioGroup RadioGroup { get; set; }
 
         protected ClassMapper RadioClassMapper { get; set; } = new ClassMapper();
 
@@ -36,7 +38,7 @@ namespace AntBlazor
 
         protected bool? _checked { get; set; }
 
-        protected string name { get; set; } = null;
+        internal string name { get; set; } = null;
 
         protected bool disabled => this.Attributes.TryGetValue("disabled", out var val)
             ? bool.TryParse(val.ToString(), out bool _disabled) ? _disabled : true : false;
@@ -72,6 +74,7 @@ namespace AntBlazor
         protected override void OnInitialized()
         {
             SetClass();
+
             base.OnInitialized();
         }
 
@@ -81,18 +84,38 @@ namespace AntBlazor
             {
                 await this.Focus();
             }
-
+            if (this is AntRadio radio)
+            {
+                RadioGroup?.AddRadio(radio);
+            }
             await base.OnFirstAfterRenderAsync();
         }
 
-        public async Task OnClick(MouseEventArgs e)
+        internal async Task Select()
         {
-            await this.Focus();
-
             if (!disabled && !isChecked)
             {
                 this._checked = true;
             }
+
+            if (RadioGroup != null)
+            {
+                await RadioGroup.OnRadioChange(this.Value);
+            }
+        }
+
+        internal async Task UnSelect()
+        {
+            if (this.isChecked)
+            {
+                this._checked = false;
+            }
+            await Task.CompletedTask;
+        }
+
+        public async Task OnClick(MouseEventArgs e)
+        {
+            await Select();
         }
 
         protected async Task Focus()
