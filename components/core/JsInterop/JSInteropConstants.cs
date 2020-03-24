@@ -19,5 +19,9 @@ namespace AntBlazor
         public static string copy => $"{FUNC_PREFIX}copy";
 
         public static string log => $"{FUNC_PREFIX}log";
+
+        public static string focus => $"{FUNC_PREFIX}focus";
+
+        public static string blur => $"{FUNC_PREFIX}blur";
     }
 }

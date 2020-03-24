@@ -77,6 +77,11 @@
             "title": "Input",
             "type": "menuItem",
             "url": "input"
+          },
+          {
+            "title": "Radio",
+            "type": "menuItem",
+            "url": "radio"
           }
         ]
       },
