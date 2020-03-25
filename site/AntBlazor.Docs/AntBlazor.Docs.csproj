@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.18.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.2.0-preview2.20160.5" />
   </ItemGroup>
 
   <ItemGroup>
