@@ -16,7 +16,7 @@ An enterprise-class UI components based on Ant Design and Blazor.
 [![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/blob/master/LICENSE)
 </div>
 
-[简体中文](README-cn.md)
+[简体中文](README-zh_CN.md)
 
 ## ✨ Features
 
@@ -30,7 +30,7 @@ An enterprise-class UI components based on Ant Design and Blazor.
 
 ## 🌈 Online Examples
 
-WebAssembly static hosting on Gitee Pages
+WebAssembly static hosting examples:
 
 - [Gitee](https://ant-design-blazor.gitee.io/)
 - [GitHub](https://elderjames.github.io/ant-design-blazor)

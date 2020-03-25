@@ -30,7 +30,7 @@
 
 ## 🌈 在线示例
 
-WebAssembly 静态托管页面
+WebAssembly 静态托管页面示例
 
 - [Gitee](https://ant-design-blazor.gitee.io/)
 - [GitHub](https://elderjames.github.io/ant-design-blazor)
