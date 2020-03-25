@@ -82,6 +82,11 @@
             "title": "Input Number",
             "type": "menuItem",
             "url": "inputnumber"
+          },
+          {
+            "title": "Radio",
+            "type": "menuItem",
+            "url": "radio"
           }
         ]
       },
