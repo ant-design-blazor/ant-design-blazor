@@ -60,3 +60,18 @@
         <AntInputNumber step="0.25" min="-1" max="5"></AntInputNumber>
     </Demo>
 </DemoCard>
+
+<DemoCard>
+    <Title>Formatter</Title>
+    <Description>Display value within it's situation with formatter.</Description>
+    <Demo>
+        <AntInputNumber formatter="Display"></AntInputNumber>
+    </Demo>
+</DemoCard>
+
+@code{
+    private string Display(string value)
+    {
+        return "h" + value + "w";
+    }
+}
