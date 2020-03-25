@@ -1,4 +1,6 @@
-﻿<AntTitle level="1">InputNumber</AntTitle>
+﻿@using  System.Text.RegularExpressions;
+
+<AntTitle level="1">InputNumber</AntTitle>
 <AntText>Enter a number within certain range with the mouse or keyboard.</AntText>
 <AntTitle level="2">When To Use</AntTitle>
 <AntParagraph>When a numeric value needs to be provided.</AntParagraph>
@@ -57,6 +59,39 @@
     <Title>Decimals</Title>
     <Description>A numeric-only input box whose values can be increased or decreased using a decimal step. The number of decimals (also known as precision) is determined by the step prop.</Description>
     <Demo>
-        <AntInputNumber step="0.1"></AntInputNumber>
+        <AntInputNumber step="0.25" min="-1" max="5"></AntInputNumber>
     </Demo>
 </DemoCard>
+
+<DemoCard>
+    <Title>Formatter</Title>
+    <Description>Display value within it's situation with formatter.</Description>
+    <Demo>
+        <AntInputNumber defaultValue="1000" formatter="Display" parser="Parse"></AntInputNumber>
+        <AntInputNumber defaultValue="100" min="0" max="100" formatter="Display2" parser="Parse2"></AntInputNumber>
+    </Demo>
+</DemoCard>
+
+@code{
+    private string Display(double value)
+    {
+        return $"${value.ToString("n0")}";
+    }
+
+    private double Parse(string str)
+    {
+        double value = double.Parse(Regex.Replace(str, @"\$\s?|(,*)", ""));
+        return value;
+    }
+
+    private string Display2(double value)
+    {
+        return value.ToString() + "%";
+    }
+
+    private double Parse2(string str)
+    {
+        double value = double.Parse(str.Replace("%", ""));
+        return value;
+    }
+}

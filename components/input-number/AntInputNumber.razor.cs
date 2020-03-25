@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System;
+using System.Linq;
 
 namespace AntBlazor
 {
@@ -29,24 +31,34 @@ namespace AntBlazor
         //        <input class="ant-input-number-input" role="spinbutton" aria-valuenow="3" aria-valuemin="1" aria-valuemax="10" min="1" max="10" step="1" value="3" autocomplete="off">
         //    </div>
         //</div>
+        private string _format;
+
         protected const string PrefixCls = "ant-input-number";
 
-        protected string _valueStr;
-        protected string ValueStr
+        [Parameter]
+        public Func<double, string> formatter { get; set; }
+
+        [Parameter]
+        public Func<string, double> parser { get; set; }
+
+        private double _step = 1;
+
+        [Parameter]
+        public double step
         {
             get
             {
-                return Value.ToString();
+                return _step;
             }
             set
             {
-                _valueStr = value;
-                Value = double.Parse(_valueStr);
+                _step = value;
+                if (string.IsNullOrEmpty(_format))
+                {
+                    _format = string.Join('.', _step.ToString().Split('.').Select(n => new string('0', n.Length)));
+                }
             }
         }
-
-        [Parameter]
-        public double step { get; set; } = 1;
 
         [Parameter]
         public double? defaultValue { get; set; }
@@ -88,17 +100,56 @@ namespace AntBlazor
 
         private void Increase()
         {
-            Value += step;
+            OnInput(new ChangeEventArgs() { Value = Value + step });
         }
 
         private void Decrease()
         {
-            Value -= step;
+            OnInput(new ChangeEventArgs() { Value = Value - step });
         }
 
         private void OnInput(ChangeEventArgs args)
         {
+            // TODO: handle non-number input, parser
+            double val;
+            if (parser != null)
+            {
+                val = parser(args.Value.ToString());
+            }
+            else
+            {
+                double.TryParse(args.Value.ToString(), out val);
+            }
 
+            if (val >= min && val <= max)
+            {
+                Value = val;
+            }
+        }
+
+        private string GetIconClass(string direction)
+        {
+            string cls = string.Empty;
+            if (direction == "up")
+            {
+                cls = $"ant-input-number-handler ant-input-number-handler-up " + (Value >= max ? "ant-input-number-handler-up-disabled" : string.Empty);
+            }
+            else
+            {
+                cls = $"ant-input-number-handler ant-input-number-handler-down " + (Value <= min ? "ant-input-number-handler-down-disabled" : string.Empty);
+            }
+
+            return cls;
+        }
+
+        private string DisplayValue()
+        {
+            if (formatter != null)
+            {
+                return formatter(Value);
+            }
+
+            return Value.ToString(_format);
         }
     }
 }

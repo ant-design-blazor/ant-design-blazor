@@ -251,7 +251,10 @@ namespace AntBlazor
                 }
             }
             builder.AddAttribute(18, "Id", Id);
-            builder.AddAttribute(19, "type", type);
+            if (type != "number")
+            {
+                builder.AddAttribute(19, "type", type);
+            }
             builder.AddAttribute(20, "placeholder", placeholder);
             builder.AddAttribute(21, "value", Value);
             builder.AddAttribute(22, "onchange", _callbackFactory.Create(this, OnChangeAsync));
