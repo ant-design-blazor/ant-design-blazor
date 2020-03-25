@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System.Linq;
 
 namespace AntBlazor
 {
@@ -29,24 +30,24 @@ namespace AntBlazor
         //        <input class="ant-input-number-input" role="spinbutton" aria-valuenow="3" aria-valuemin="1" aria-valuemax="10" min="1" max="10" step="1" value="3" autocomplete="off">
         //    </div>
         //</div>
+        private string _format;
         protected const string PrefixCls = "ant-input-number";
 
-        protected string _valueStr;
-        protected string ValueStr
+        private double _step = 1;
+        [Parameter]
+        public double step
         {
             get
             {
-                return Value.ToString();
+                return _step;
             }
             set
             {
-                _valueStr = value;
-                Value = double.Parse(_valueStr);
+                _step = value;
+                _format = string.Join('.', _step.ToString().Split('.').Select(n => new string('0', n.Length)));
             }
-        }
 
-        [Parameter]
-        public double step { get; set; } = 1;
+        }
 
         [Parameter]
         public double? defaultValue { get; set; }
@@ -88,17 +89,21 @@ namespace AntBlazor
 
         private void Increase()
         {
-            Value += step;
+            OnInput(new ChangeEventArgs() { Value = Value + step });
         }
 
         private void Decrease()
         {
-            Value -= step;
+            OnInput(new ChangeEventArgs() { Value = Value - step });
         }
 
         private void OnInput(ChangeEventArgs args)
         {
-
+            // TODO: handle non-number input
+            if (double.TryParse(args.Value.ToString(), out double num) && num >= min && num <= max)
+            {
+                Value = num;
+            }
         }
     }
 }
