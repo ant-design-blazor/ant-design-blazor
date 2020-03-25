@@ -121,7 +121,7 @@ WebAssembly 静态托管页面示例
 
 - 打开浏览器访问 https://localhost:5001 ，详情参考[本地开发文档](https://github.com/ElderJames/ant-design-blazor/wiki)。
   
-  > 推荐使用 Visual Studio 2019 开发，目前需运行 `AntBlazor.Docs.ClientApp` 项目才能进行断点调试。
+  > 推荐使用 Visual Studio 2019 开发，目前需运行 `AntBlazor.Docs.ServerApp` 项目才能进行断点调试。
 
 ## 🔗 链接
 
@@ -142,11 +142,14 @@ WebAssembly 静态托管页面示例
 
 如果您在使用的过程中碰到问题，可以通过以下途径寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
 
+- [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/antblazor/shared_invite/zt-cw1enker-xVw3s93cTf4uhY2lRGRyRw) (中文/英文)
 - [![钉钉群](https://img.shields.io/badge/钉钉-AntBlazor-blue.svg?style=flat-square)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) (中文)
 
-<img src="./docs/assets/dingtalk.jpg" width="300">
+<details>
+  <summary>点击扫描钉钉二维码</summary>
+  <img src="./docs/assets/dingtalk.jpg" width="300">
+</details>
 
-- [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/antblazor/shared_invite/zt-cw1enker-xVw3s93cTf4uhY2lRGRyRw) (中文/英文)
 
 ## ☀️ 授权协议
 

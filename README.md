@@ -122,7 +122,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 - Visit https://localhost:5001 in your supported browser and check [local development documentation](https://github.com/ElderJames/ant-design-blazor/wiki) for details.
   
-  > Visual Studio 2019 is recommended for development. Currently `AntBlazor.Docs.ClientApp` project is required to run for breakpoint debugging.
+  > Visual Studio 2019 is recommended for development. Currently `AntBlazor.Docs.ServerApp` project is required to run for breakpoint debugging.
 
 ## 🔗 Links
 
@@ -143,11 +143,14 @@ If you would like to contribute, feel free to create a [Pull Request](https://gi
 
 If you encounter any problems in the process, feel free to ask for help via following channels. We also encourage experienced users to help newcomers.
 
+- [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/antblazor/shared_invite/zt-cw1enker-xVw3s93cTf4uhY2lRGRyRw) (Chinese & English)
 - [![Ding Talk Group](https://img.shields.io/badge/DingTalk-AntBlazor-blue.svg?style=flat-square)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) (Chinese)
 
-<img src="./docs/assets/dingtalk.jpg" width="300">
+<details>
+  <summary>Scan QR Code with DingTalk</summary>
+  <img src="./docs/assets/dingtalk.jpg" width="300">
+</details>
 
-- [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/antblazor/shared_invite/zt-cw1enker-xVw3s93cTf4uhY2lRGRyRw) (Chinese & English)
 
 ## ☀️ License
 
