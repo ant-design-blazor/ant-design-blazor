@@ -143,6 +143,11 @@
             "url": "divider"
           },
           {
+            "title": "BackTop",
+            "type": "menuItem",
+            "url": "backtop"
+          },
+          {
             "title": "Badge",
             "type": "menuItem",
             "url": "badge"

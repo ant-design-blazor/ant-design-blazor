@@ -1,0 +1,18 @@
+﻿
+<AntBackTop Title="Panel Title from Parent"
+                OnClickCallback="@ShowMessage">
+    Content of the child component is supplied
+    by the parent component.
+</AntBackTop>
+
+<p><b>@_messageText</b></p>
+
+@code   
+{
+    private string _messageText;
+
+    private void ShowMessage(MouseEventArgs e)
+    {
+        _messageText = $"Blaze a new trail with Blazor! ";
+    }
+}
