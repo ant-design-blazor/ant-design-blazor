@@ -41,11 +41,11 @@ jobs:
 
             - name: Package Nightly Nuget 📦
               run: |
-                  dotnet pack components/AntBlazor.csproj /p:PackageVersion=$Version-nightly-$GITHUB_RUN_ID -c Release -o pack-$GITHUB_RUN_ID --no-build --no-restore
+                  dotnet pack components/AntBlazor.csproj /p:PackageVersion=$Version-nightly-$GITHUB_RUN_ID -c Release -o pack-$GITHUB_RUN_ID --no-build --no-restore 
 
             - name: Publish to Nuget ✔
               run: |
-                  dotnet nuget push pack-$GITHUB_RUN_ID/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY
+                  dotnet nuget push pack-$GITHUB_RUN_ID/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
 
             - name: Sync to Gitee 💕
               uses: wearerequired/git-mirror-action@master
