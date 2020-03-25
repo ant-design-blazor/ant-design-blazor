@@ -32,12 +32,17 @@ namespace AntBlazor
         //    </div>
         //</div>
         private string _format;
+
         protected const string PrefixCls = "ant-input-number";
 
         [Parameter]
-        public Func<string, string> formatter { get; set; }
+        public Func<double, string> formatter { get; set; }
+
+        [Parameter]
+        public Func<string, double> parser { get; set; }
 
         private double _step = 1;
+
         [Parameter]
         public double step
         {
@@ -106,9 +111,19 @@ namespace AntBlazor
         private void OnInput(ChangeEventArgs args)
         {
             // TODO: handle non-number input, parser
-            if (double.TryParse(args.Value.ToString(), out double num) && num >= min && num <= max)
+            double val;
+            if (parser != null)
             {
-                Value = num;
+                val = parser(args.Value.ToString());
+            }
+            else
+            {
+                double.TryParse(args.Value.ToString(), out val);
+            }
+
+            if (val >= min && val <= max)
+            {
+                Value = val;
             }
         }
 
@@ -131,7 +146,7 @@ namespace AntBlazor
         {
             if (formatter != null)
             {
-                return formatter(Value.ToString());
+                return formatter(Value);
             }
 
             return Value.ToString(_format);

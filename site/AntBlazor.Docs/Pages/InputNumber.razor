@@ -1,4 +1,6 @@
-﻿<AntTitle level="1">InputNumber</AntTitle>
+﻿@using  System.Text.RegularExpressions;
+
+<AntTitle level="1">InputNumber</AntTitle>
 <AntText>Enter a number within certain range with the mouse or keyboard.</AntText>
 <AntTitle level="2">When To Use</AntTitle>
 <AntParagraph>When a numeric value needs to be provided.</AntParagraph>
@@ -65,13 +67,31 @@
     <Title>Formatter</Title>
     <Description>Display value within it's situation with formatter.</Description>
     <Demo>
-        <AntInputNumber formatter="Display"></AntInputNumber>
+        <AntInputNumber defaultValue="1000" formatter="Display" parser="Parse"></AntInputNumber>
+        <AntInputNumber defaultValue="100" min="0" max="100" formatter="Display2" parser="Parse2"></AntInputNumber>
     </Demo>
 </DemoCard>
 
 @code{
-    private string Display(string value)
+    private string Display(double value)
     {
-        return "h" + value + "w";
+        return $"${value.ToString("n0")}";
+    }
+
+    private double Parse(string str)
+    {
+        double value = double.Parse(Regex.Replace(str, @"\$\s?|(,*)", ""));
+        return value;
+    }
+
+    private string Display2(double value)
+    {
+        return value.ToString() + "%";
+    }
+
+    private double Parse2(string str)
+    {
+        double value = double.Parse(str.Replace("%", ""));
+        return value;
     }
 }
