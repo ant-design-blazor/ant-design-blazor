@@ -19,12 +19,17 @@
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseExpression></PackageLicenseExpression>
     <Authors>James Yeung</Authors>
-    <PackageIconUrl>https://raw.githubusercontent.com/ElderJames/ant-design-blazor/master/logo.svg?sanitize=true</PackageIconUrl>
+    <PackageIcon>logo.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>AntBlazor.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The nuget package icon -->
+    <None Include="logo.png" Pack="true" PackagePath=""/>
+  </ItemGroup>
 
   <ItemGroup>
     <!-- ignore the tsconfig.json file in package -->
