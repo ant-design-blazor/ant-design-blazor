@@ -1,6 +1,7 @@
 ﻿using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
 using System;
+using Microsoft.AspNetCore.Components.Web;
 using System.Threading.Tasks;
 
 namespace AntBlazor
