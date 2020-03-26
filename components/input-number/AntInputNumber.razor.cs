@@ -86,7 +86,7 @@ namespace AntBlazor
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-lg", () => size == AntInputSize.Large)
                 .If($"{PrefixCls}-sm", () => size == AntInputSize.Small)
-                .If($"{PrefixCls}-disabled", () => Attributes != null && Attributes.ContainsKey("disabled") && Attributes["disabled"].ToString() == true.ToString());
+                .If($"{PrefixCls}-disabled", () => Attributes.TryGetValue("disabled", out object disabled) && disabled.ToString() == true.ToString());
         }
 
         protected override void OnParametersSet()
