@@ -91,3 +91,8 @@ export function blur(selector) {
 export function log(text) {
   console.log(text);
 }
+
+export function BackTop(element) {
+    let dom = document.getElementById("BodyContainer");
+    dom.scrollTo(0, 0);
+}

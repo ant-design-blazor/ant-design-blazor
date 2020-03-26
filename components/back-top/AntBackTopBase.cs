@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,16 +13,18 @@ namespace AntBlazor
         [Parameter]
         public string Title { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
-
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+        //[Parameter]
+        //public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
 
         protected async Task OnClick(MouseEventArgs args)
         {
-            //JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Ref);
+            await JsInvokeAsync(JSInteropConstants.backTop, "BodyConatainer");
         }
+
+        //protected async Task OnScroll(EventArgs args)
+        //{
+        //    await JsInvokeAsync(JSInteropConstants.getDomInfo, Ref);
+        //}
 
 
     }
