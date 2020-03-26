@@ -31,15 +31,13 @@ jobs:
             - name: Deploy Preview 🚀
               env: 
                   SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-                  DEPLOY_DOMAIN: preview-${{ github.event.number }}-ant-design-blazor.surge.sh
+                  DEPLOY_DOMAIN: preview-$GITHUB_RUN_ID-ant-design-blazor.surge.sh
               run: |
                   npm install -g surge
                   surge --project ./cargo/wwwroot --domain $DEPLOY_DOMAIN
 
             - uses: actions/github-script@0.2.0
-              env:
-                DEPLOY_DOMAIN: preview-${{ github.event.number }}-ant-design-blazor.surge.sh
               with:
                 github-token: ${{secrets.GH_PUSH_TOKEN}}
                 script: |
-                  await github.issues.createComment({...context.issue, body: '[<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">]($DEPLOY_DOMAIN)'})
+                  await github.issues.createComment({...context.issue, body: '[<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">](preview-$GITHUB_RUN_ID-ant-design-blazor.surge.sh)'})
