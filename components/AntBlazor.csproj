@@ -14,7 +14,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
-    <PackageLicenseUrl>https://github.com/ElderJames/ant-design-blazor/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>James Yeung</Copyright>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseExpression></PackageLicenseExpression>
