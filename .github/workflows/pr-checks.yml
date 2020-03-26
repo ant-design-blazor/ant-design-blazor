@@ -36,9 +36,8 @@ jobs:
                     `.trim();
                     
                   let comments = await github.issues.listComments(context.issue);
-                  console.log(comments);
                   // Find my comment
-                  const updateComment = comments.find(({ body }) => body.includes(REPLACE_MARK));
+                  const updateComment = comments.data.find(({ body }) => body.includes(REPLACE_MARK));
                   // eslint-disable-next-line no-console
                   console.log('Origin comment:', updateComment);
                   let res;
@@ -81,7 +80,7 @@ jobs:
                     
                   let comments = await github.issues.listComments(context.issue);
                   // Find my comment
-                  const updateComment = comments.find(({ body }) => body.includes(REPLACE_MARK));
+                  const updateComment = comments.data.find(({ body }) => body.includes(REPLACE_MARK));
                   // eslint-disable-next-line no-console
                   console.log('Origin comment:', updateComment);
                   let res;
