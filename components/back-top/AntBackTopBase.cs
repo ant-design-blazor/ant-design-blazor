@@ -25,7 +25,18 @@ namespace AntBlazor
         //{
         //    await JsInvokeAsync(JSInteropConstants.getDomInfo, Ref);
         //}
+        protected override void OnInitialized()
+        {
+            SetClass();
 
-
+            base.OnInitialized();
+        }
+        protected void SetClass()
+        {
+            string prefixCls = "ant-backtop";
+            ClassMapper.Clear()
+                .If($"{prefixCls}-wrapper", () => !RadioButton)
+                .If($"{prefixCls}-button-wrapper", () => RadioButton);
+        }
     }
 }
