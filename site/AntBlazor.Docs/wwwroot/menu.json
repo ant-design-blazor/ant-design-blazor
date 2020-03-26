@@ -61,6 +61,11 @@
             "title": "Menu",
             "type": "menuItem",
             "url": "menu"
+          },
+          {
+            "title": "Steps",
+            "type": "menuItem",
+            "url": "step"
           }
         ]
       },
