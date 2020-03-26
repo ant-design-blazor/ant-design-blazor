@@ -36,6 +36,7 @@ jobs:
                     `.trim();
                     
                   let comments = await github.issues.listComments(context.issue);
+                  console.log(comments);
                   // Find my comment
                   const updateComment = comments.find(({ body }) => body.includes(REPLACE_MARK));
                   // eslint-disable-next-line no-console
