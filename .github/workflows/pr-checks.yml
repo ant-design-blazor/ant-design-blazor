@@ -40,5 +40,4 @@ jobs:
               with:
                 github-token: ${{secrets.GH_PUSH_TOKEN}}
                 script: |
-                  export DEPLOY_DOMAIN=https://preview-${{ github.event.number }}-ant-design-blazor.surge.sh
                   await github.issues.createComment({...context.issue, body: '[<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">]($DEPLOY_DOMAIN)'})
