@@ -1,4 +1,4 @@
-name: Pull Request Checks
+﻿name: Pull Request Checks
 
 on:
     pull_request:
@@ -24,5 +24,21 @@ jobs:
             - name: Check Building
               run: |
                   npm install
+                  cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntBlazor.Docs.ClientApp/wwwroot
                   dotnet build
-                  dotnet publish -c Release
+                  dotnet publish -c Release -o cargo
+
+            - name: Deploy Preview 🚀
+              env: 
+                  SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+              run: |
+                  npm install -g surge
+                  export DEPLOY_DOMAIN=https://preview-${{ github.event.number }}-ant-design-blazor.surge.sh
+                  surge --project ./cargo --domain $DEPLOY_DOMAIN
+
+            - uses: actions/github-script@0.2.0
+              with:
+                github-token: ${{secrets.GH_PUSH_TOKEN}}
+              script: |
+                  export DEPLOY_DOMAIN=https://preview-${{ github.event.number }}-ant-design-blazor.surge.sh
+                  await github.issues.createComment({...context.issue, body: '[<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">]($DEPLOY_DOMAIN)'})
