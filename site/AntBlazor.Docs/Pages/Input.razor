@@ -11,6 +11,27 @@
     <Title>Basic usage</Title>
     <Description>Basic usage example.</Description>
     <Demo>
+        <AntInput defaultValue="test onchange" onChange="(e) => TestOnChnage(e)"></AntInput>
+        <AntInput defaultValue="test onpressenter" onPressEnter="(e) => TestOnEnter(e)"></AntInput><input onkeypress="" onchange="" oninput="" />
+    </Demo>
+</DemoCard>
+@code
+{
+    private void TestOnChnage(ChangeEventArgs args)
+    {
+
+    }
+
+    private void TestOnEnter(KeyboardEventArgs args)
+    {
+
+    }
+}
+
+<DemoCard>
+    <Title>Basic usage</Title>
+    <Description>Basic usage example.</Description>
+    <Demo>
         <AntButton onclick="(e)=>Click(e)">Change addOnAfter</AntButton>
         <AntInput addOnAfter="@addOn">
             123
