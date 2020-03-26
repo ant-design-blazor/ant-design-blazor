@@ -14,6 +14,8 @@ namespace AntBlazor
         private bool _isCustomStatus;
         private int _groupCurrent;
 
+        protected Dictionary<string, object> ContainerAttributes = new Dictionary<string, object>();
+
         internal bool Clickable { get; set; }
         internal bool Last { get; set; }
         internal bool ShowProcessDot { get; set; }
@@ -56,6 +58,10 @@ namespace AntBlazor
             Parent.Children.Add(this);
             this.Index = Parent.Children.Count - 1;
             SetClassMap();
+            if (Clickable && !Disabled)
+            {
+                ContainerAttributes["role"] = "button";
+            }
         }
 
         public override void Dispose()
@@ -63,11 +69,6 @@ namespace AntBlazor
             Parent.Children.Remove(this);
             Parent.ResetChildrenSteps();
             base.Dispose();
-        }
-
-        internal string? GetStepRole()
-        {
-            return !Disabled && Clickable ? "button" : null;
         }
 
         internal int? GetTabIndex()

@@ -21,6 +21,10 @@ namespace AntBlazor
                 ResetChildrenSteps();
             }    
         }
+        [Parameter] public bool ShowProgressDot {
+            get => _showProgressDot;
+            set => _showProgressDot = value;
+        }
         [Parameter] public string Direction { get; set; } = "horizontal";
         [Parameter] public string LabelPlacement { get; set; } = "horizontal";
         [Parameter] public string Type { get; set; } = "default";
@@ -28,6 +32,8 @@ namespace AntBlazor
         [Parameter] public int StartIndex { get; set; } = 0;
         [Parameter] public string Status { get; set; } = "process";
         [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter] public string ClassName { get; set; }
+        [Parameter] public Action<int> OnChange { get; set; }
 
         public override void Dispose()
         {
@@ -45,11 +51,11 @@ namespace AntBlazor
             {
                 Children[i].GroupStatus = this.Status;
                 Children[i].ShowProcessDot = this._showProgressDot;
-                if (this.ProgressDot !=null )
-                {
-                    Children[i].ProgressDot = this.ProgressDot;
-                }
-                Children[i].Clickable = this.Children.Count > 0; //TODO: Develop event emitter
+                //if (this.ProgressDot !=null )
+                //{
+                //    Children[i].ProgressDot = this.ProgressDot;
+                //}
+                Children[i].Clickable = OnChange!=null; //TODO: Develop event emitter
                 Children[i].Direction = this.Direction;
                 Children[i].Index = i + this.StartIndex;
                 Children[i].GroupCurrentIndex = this.Current;
@@ -81,12 +87,13 @@ namespace AntBlazor
             string prefixName = "ant-steps";
             ClassMapper.Clear()
                 .Add(prefixName)
+                .Add(ClassName)
                 .If($"{prefixName}-{Direction}", () => !string.IsNullOrEmpty(Direction))
                 .If($"{prefixName}-label-horizontal", ()=>Direction=="horizontal")
                 .If($"{prefixName}-label-vertical", () => (_showProgressDot || LabelPlacement=="vertical") && Direction=="horizontal" )
                 .If($"{prefixName}-dot", () => _showProgressDot)
                 .If($"{prefixName}-small", () => Size == "small")
-                .If($"{prefixName}-navigation", () => Direction == "navigation")
+                .If($"{prefixName}-navigation", () => Type == "navigation")
                 ;
         }
     }

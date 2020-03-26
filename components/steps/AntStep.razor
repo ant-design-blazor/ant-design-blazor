@@ -3,7 +3,7 @@
 
 
     <div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
-        <div class="ant-steps-item-container" @onclick="@OnClick" tabindex="@GetTabIndex()">
+        <div class="ant-steps-item-container" @onclick="@OnClick" tabindex="@GetTabIndex()" @attributes="@ContainerAttributes">
             @if (!Last)
             {
                 <div class="ant-steps-item-tail"></div>
@@ -44,17 +44,9 @@
                 }
                 else
                 {
-                    if (ProgressDot is null)
-                    {
+                    <span class="ant-steps-icon">
                         <span class="ant-steps-icon-dot"></span>
-                    }
-                    else
-                    {
-                        <CascadingValue Value="this">
-                            @ProgressDot
-                        </CascadingValue>
-                    }
-
+                    </span>
                 }
             </div>
             <div class="ant-steps-item-content">

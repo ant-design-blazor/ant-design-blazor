@@ -14,8 +14,10 @@
 </DemoCard>
 <br />
 <DemoCard>
-    <Title>基本用法</Title>
-    <Description>简单的步骤条。</Description>
+    <Title>迷你版</Title>
+    <Description>
+        <AntText>迷你版的步骤条，通过设置<AntText code>@((MarkupString)"Steps size=\"small\"")</AntText>启用</AntText>
+    </Description>
     <Demo>
         <AntSteps Size="small" Current=1>
             <AntStep Title="Finished" />
@@ -26,17 +28,99 @@
 </DemoCard>
 <br />
 <DemoCard>
-    <Title>基本用法</Title>
-    <Description>简单的步骤条。</Description>
+    <Title>带图标的步骤条</Title>
+    <Description>
+        <AntText>通过设置 <AntText code>Steps.Step</AntText> 的 <AntText code>icon</AntText> 属性，可以启用自定义图标。</AntText>
+    </Description>
+    <Demo>
+        <AntSteps>
+            <AntStep Title="Login" Icon="user" Status="finish" />
+            <AntStep Title="In Progress" Icon="solution" Status="finish" />
+            <AntStep Title="Waiting" Icon="loading" Status="process" />
+            <AntStep Title="Waiting" Icon="smile" Status="wait" />
+        </AntSteps>
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>竖直方向的步骤条</Title>
+    <Description>简单的竖直方向的步骤条。</Description>
     <Demo>
         <AntSteps Direction="vertical" Current="1">
             <AntStep Title="Finished" Description="This is a description." />
             <AntStep Title="In Progress" Description="This is a description." />
             <AntStep Title="Waiting" Description="This is a description." />
-        </AntSteps>,
+        </AntSteps>
     </Demo>
 </DemoCard>
-
+<br />
+<DemoCard>
+    <Title>竖直方向的小型步骤条</Title>
+    <Description>简单的竖直方向的小型步骤条。</Description>
+    <Demo>
+        <AntSteps Direction="vertical" Size="small" Current="1">
+            <AntStep Title="Finished" Description="This is a description." />
+            <AntStep Title="In Progress" Description="This is a description." />
+            <AntStep Title="Waiting" Description="This is a description." />
+        </AntSteps>
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>步骤运行错误</Title>
+    <Description>使用Steps的<AntText code>Status</AntText>属性来指定当前步骤的状态</Description>
+    <Demo>
+        <AntSteps Current="1" Status="error">
+            <AntStep Title="Finished" Description="This is a description." />
+            <AntStep Title="In Progress" Description="This is a description." />
+            <AntStep Title="Waiting" Description="This is a description." />
+        </AntSteps>
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>点状步骤条</Title>
+    <Description>包含步骤点的进度条。</Description>
+    <Demo>
+        <AntSteps ShowProgressDot Current="1">
+            <AntStep Title="Finished" Description="This is a description." />
+            <AntStep Title="In Progress" Description="This is a description." />
+            <AntStep Title="Waiting" Description="This is a description." />
+        </AntSteps>
+        <AntDivider />
+        <AntSteps ShowProgressDot Current="1" Direction="vertical">
+            <AntStep Title="Finished" Description="This is a description. This is a description." />
+            <AntStep Title="Finished" Description="This is a description. This is a description." />
+            <AntStep Title="In Progress" Description="This is a description. This is a description." />
+            <AntStep Title="Waiting" Description="This is a description." />
+            <AntStep Title="Waiting" Description="This is a description." />
+        </AntSteps>
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>导航步骤</Title>
+    <Description>导航类型的步骤条。</Description>
+    <Demo>
+        <AntSteps Type="navigation" Size="small" Current=@Current ClassName="site-navigation-steps" >
+            <AntStep Title="Step 1" Subtitle="00:00:05" Status="finish" Description="This is a description." />
+            <AntStep Title="Step 2" Subtitle="00:01:02" Status="process" Description="This is a description." />
+            <AntStep Title="Step 3" Subtitle="waiting for longlong time" Status="wait" Description="This is a description." />
+        </AntSteps>
+        <AntSteps Type="navigation" Current="@Current"  ClassName="site-navigation-steps" >
+            <AntStep Status="finish" Title="Step 1" />
+            <AntStep Status="process" Title="Step 2" />
+            <AntStep Status="wait" Title="Step 3" />
+            <AntStep Status="wait" Title="Step 4" />
+        </AntSteps>
+        <AntSteps Type="navigation" Size="small" Current="@Current" ClassName="site-navigation-steps">
+            <AntStep Status="finish" Title="finish 1" />
+            <AntStep Status="finish" Title="finish 2" />
+            <AntStep Status="process" Title="current process" />
+            <AntStep Status="wait" Title="wait" Disabled />
+        </AntSteps>
+    </Demo>
+</DemoCard>
 @code {
-
+    public int Current { get; set; } = 0;
 }
