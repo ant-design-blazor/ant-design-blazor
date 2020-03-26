@@ -21,7 +21,35 @@ jobs:
               with:
                   node-version: '10.x'
 
-            - name: Check Building
+            - uses: actions/github-script@0.9.0
+              name: Prepare preview ⛏
+              env:
+                  RUN_PATH: https://github.com/ElderJames/ant-design-blazor/actions/runs/${{ github.run_id }}
+              with:
+                github-token: ${{ github.token }}
+                script: |
+                  const REPLACE_MARK = '<!-- PREVIEW_UPDATE_COMMENT -->';
+                  const comment = `[<img width="306" src="https://user-images.githubusercontent.com/5378891/72351368-2c979e00-371b-11ea-9652-eb4e825d745e.gif">](${process.env.RUN_PATH})`;
+                  const wrappedComment = `
+                    ${REPLACE_MARK}
+                    ${comment}
+                    `.trim();
+                    
+                  let comments = await github.issues.listComments(context.issue);
+                  // Find my comment
+                  const updateComment = comments.find(({ body }) => body.includes(REPLACE_MARK));
+                  // eslint-disable-next-line no-console
+                  console.log('Origin comment:', updateComment);
+                  let res;
+                  if (!updateComment) {
+                    res = await github.issues.createComment({...context.issue, body: wrappedComment })
+                  } else {
+                    res = await github.issues.updateComment({...context.issue, comment_id: updateComment.id, body: wrappedComment })
+                  }
+
+                  console.log(res);
+
+            - name: Check Building ⚙
               run: |
                   npm install
                   cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntBlazor.Docs.ClientApp/wwwroot
@@ -37,9 +65,29 @@ jobs:
                   surge --project ./cargo/wwwroot --domain $DEPLOY_DOMAIN
 
             - uses: actions/github-script@0.9.0
+              name: Show preview ⛏
               env:
                   DEPLOY_DOMAIN: https://preview-${{ github.run_id }}-ant-design-blazor.surge.sh
               with:
                 github-token: ${{ github.token }}
                 script: |
-                  await github.issues.createComment({...context.issue, body: `[<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">](${process.env.DEPLOY_DOMAIN})`})
+                  const REPLACE_MARK = '<!-- PREVIEW_UPDATE_COMMENT -->';
+                  const comment = `[<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">](${process.env.DEPLOY_DOMAIN})`;
+                  const wrappedComment = `
+                    ${REPLACE_MARK}
+                    ${comment}
+                    `.trim();
+                    
+                  let comments = await github.issues.listComments(context.issue);
+                  // Find my comment
+                  const updateComment = comments.find(({ body }) => body.includes(REPLACE_MARK));
+                  // eslint-disable-next-line no-console
+                  console.log('Origin comment:', updateComment);
+                  let res;
+                  if (!updateComment) {
+                    res = await github.issues.createComment({...context.issue, body: wrappedComment })
+                  } else {
+                    res = await github.issues.updateComment({...context.issue, comment_id: updateComment.id, body: wrappedComment })
+                  }
+
+                  console.log(res);
