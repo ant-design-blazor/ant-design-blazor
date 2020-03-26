@@ -31,14 +31,14 @@ jobs:
             - name: Deploy Preview 🚀
               env: 
                   SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-                  DEPLOY_DOMAIN: https://preview-$GITHUB_RUN_ID-ant-design-blazor.surge.sh
+                  DEPLOY_DOMAIN: preview-${GITHUB_RUN_ID}-ant-design-blazor.surge.sh
               run: |
                   npm install -g surge
                   surge --project ./cargo/wwwroot --domain $DEPLOY_DOMAIN
 
-            - uses: actions/github-script@0.2.0
+            - uses: actions/github-script@0.9.0
               env:
-                  DEPLOY_DOMAIN: https://preview-$GITHUB_RUN_ID-ant-design-blazor.surge.sh
+                  DEPLOY_DOMAIN: https://preview-${GITHUB_RUN_ID}-ant-design-blazor.surge.sh
               with:
                 github-token: ${{ github.token }}
                 script: |
