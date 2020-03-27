@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace AntBlazor.Docs.ServerApp
+namespace AntBlazor.Docs.Server
 {
     public class Startup
     {

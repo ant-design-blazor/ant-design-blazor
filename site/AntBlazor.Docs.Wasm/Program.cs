@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AntBlazor.Docs.ClientApp
+namespace AntBlazor.Docs.Wasm
 {
     public class Program
     {
