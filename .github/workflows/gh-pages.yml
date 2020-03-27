@@ -1,7 +1,7 @@
 ﻿name: Publish Docs
 
 env:
-    Version: 0.0.1
+    Version: 0.1.0
     NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
 
 on:
@@ -19,7 +19,7 @@ jobs:
             - name: Setup .NET Core
               uses: actions/setup-dotnet@v1
               with:
-                  dotnet-version: 3.1.102
+                  dotnet-version: 3.1.201
 
             - uses: actions/setup-node@v1
               with:
@@ -61,4 +61,3 @@ jobs:
                   repository: ant-design-blazor/ant-design-blazor
                   cookie: ${{ secrets.GITEE_COOKIE }}
                   branch: gh-pages
-

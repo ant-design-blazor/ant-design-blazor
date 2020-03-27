@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
@@ -18,6 +19,8 @@ namespace AntBlazor.Docs.Routing
 
         [Parameter] public RenderFragment NotFound { get; set; }
         [Parameter] public RenderFragment<RouteData> Found { get; set; }
+
+        [Parameter] public Assembly AppAssembly { get; set; }
 
         public void Attach(RenderHandle renderHandle)
         {
@@ -40,7 +43,7 @@ namespace AntBlazor.Docs.Routing
                 throw new InvalidOperationException($"The {nameof(ConventionRouter)} component requires a value for the parameter {nameof(NotFound)}.");
             }
 
-            RouteManager.Initialise();
+            RouteManager.Initialise(AppAssembly);
             Refresh();
 
             return Task.CompletedTask;

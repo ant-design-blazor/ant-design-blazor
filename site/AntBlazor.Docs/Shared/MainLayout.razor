@@ -91,7 +91,7 @@
     protected override async Task OnInitializedAsync()
     {
         var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-        MenuItems = await HttpClient.GetJsonAsync<MenuItem[]>(new Uri(baseUrl,"_content/AntBlazor.Docs/menu.json").ToString());
+        MenuItems = await HttpClient.GetFromJsonAsync<MenuItem[]>(new Uri(baseUrl,"_content/AntBlazor.Docs/menu.json").ToString());
         var defaultUrl = MenuItems.FirstOrDefault(x => x.Default);
         if (defaultUrl!=null)
         {
