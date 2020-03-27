@@ -33,20 +33,37 @@
 <h2>API</h2>
 <br />
 
-<p>
-    When <code>TriggerJsPrompt</code> is executed by selecting the component's <b>Trigger JavaScript Prompt</b> button, the JavaScript <code>showPrompt</code> function provided in the <em>wwwroot/exampleJsInterop.js</em> file is executed.
-</p>
-<p>
-    The <code>showPrompt</code> function accepts user input (the user's name), which is HTML-encoded and returned to the <code>Prompt</code> method and ultimately back to the component. The component stores the user's name in a local variable, <code>name</code>.
-</p>
-<p>
-    The string stored in <code>name</code> is incorporated into a welcome message, which is passed to a JavaScript function, <code>displayWelcome</code>, which renders the welcome message into a heading tag.
-</p>
-
-<h2>Invoke .NET methods from JavaScript functions</h2>
-
-<p>Examine the console output in your broswer's developer tools when selecting the following buttons to trigger .NET static and instance methods.</p>
-
-<p>When the button to call the C# static method is selected, the JavaScript <code>returnArrayAsyncJs</code> function in <em>wwwroot/exampleJsInterop.js</em> is executed. The function uses <code>DotNet.invokeMethodAsync</code> to call the C# static method <code>ReturnArrayAsync</code>. The C# method returns an integer array to the JavaScript function, which writes the array to the console.</p>
-
-<p>When the button to call the C# instance method is selected, <code>ExampleJsInterop.CallHelloHelperSayHello</code> is called and passes a name to the method. <code>ExampleJsInterop.CallHelloHelperSayHello</code> invokes the JavaScript function <code>sayHello</code> with a new instance of <code>HelloHelper</code>. The name is passed to <code>HelloHelper</code>'s constructor, which sets the <code>HelloHelper.Name</code> property. When the JavaScript function <code>sayHello</code> is executed, <code>HelloHelper.SayHello</code> returns the <code>Hello, {Name}!</code> message, which is written to the console.</p>
+<table>
+    <thead>
+    <tr>
+        <th>参数</th>
+        <th>说明</th>
+        <th>类型</th>
+        <th>默认值</th>
+        <th>版本</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>target</td>
+        <td>设置需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数</td>
+        <td>Function</td>
+        <td>() =&gt; window</td>
+        <td></td>
+     </tr>
+    <tr>
+        <td>visibilityHeight</td>
+        <td>滚动高度达到此参数值才出现 <code>BackTop</code></td>
+        <td>number</td>
+        <td>400</td>
+        <td></td>
+        </tr>
+    <tr>
+        <td>onClick</td>
+        <td>点击按钮的回调函数</td>
+        <td>Function</td>
+        <td>-</td>
+        <td></td>
+     </tr>
+    </tbody>
+</table>

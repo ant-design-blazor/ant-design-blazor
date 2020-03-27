@@ -12,11 +12,11 @@ namespace AntBlazor
     {
         [Parameter]
         public string Title { get; set; }
-        protected ClassMapper ButtonClassMapper { get; set; } = new ClassMapper();
+        protected ClassMapper BackTopClassMapper { get; set; } = new ClassMapper();
+        protected ClassMapper BackTopContentClassMapper { get; set; } = new ClassMapper();
+        protected ClassMapper BackTopIconClassMapper { get; set; } = new ClassMapper();
 
-        //[Parameter]
-        //public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
-
+        protected ClassMapper InputClassMapper { get; set; } = new ClassMapper();
         protected async Task OnClick(MouseEventArgs args)
         {
             await JsInvokeAsync(JSInteropConstants.backTop, "BodyConatainer");
@@ -35,7 +35,9 @@ namespace AntBlazor
         protected void SetClass()
         {
             string prefixCls = "ant-back-top";
-            ButtonClassMapper.Add(prefixCls);
+            BackTopClassMapper.Add(prefixCls);
+            BackTopContentClassMapper.Add($"{prefixCls}-content");
+            BackTopIconClassMapper.Add($"{prefixCls}-icon");
         }
     }
 }
