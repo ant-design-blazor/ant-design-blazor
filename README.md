@@ -38,7 +38,7 @@ WebAssembly static hosting examples:
 ## 🖥 Environment Support
 
 - .NET Core 3.1
-- Blazor WebAssembly 3.2 Preview 2
+- Blazor WebAssembly 3.2 Preview 3
 - Supports two-way binding on the server side
 - Supports WebAssembly static file deployment
 - Support 4 major browsers engines, and Internet Explorer 11+ ([Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1) only)
@@ -62,11 +62,11 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 ## 📦 Installation Guide
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download) 3.1.102 or above
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 or later
 - Install Blazor WebAssembly Templates
 
   ```bash
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview2.20160.5
+  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview3.20168.3
   ```
 
 - Create Blazor WebAssembly Project
@@ -79,7 +79,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
   ```bash
   $ cd MyAntBlazorApp
-  $ dotnet add package AntBlazor --version 0.0.1-nightly-55111624
+  $ dotnet add package AntBlazor --version 0.1.0-*
   ```
 
 - Register the services
@@ -122,7 +122,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 - Visit https://localhost:5001 in your supported browser and check [local development documentation](https://github.com/ElderJames/ant-design-blazor/wiki) for details.
   
-  > Visual Studio 2019 is recommended for development. Currently `AntBlazor.Docs.ServerApp` project is required to run for breakpoint debugging.
+  > Visual Studio 2019 is recommended for development. Currently `AntBlazor.Docs.Server` project is required to run for breakpoint debugging.
 
 ## 🔗 Links
 

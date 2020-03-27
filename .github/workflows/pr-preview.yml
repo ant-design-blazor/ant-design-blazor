@@ -41,7 +41,7 @@ jobs:
             - name: Setup .NET Core
               uses: actions/setup-dotnet@v1
               with:
-                  dotnet-version: 3.1.102
+                  dotnet-version: 3.1.201
 
             - name: Setup Node.js
               uses: actions/setup-node@v1
@@ -57,7 +57,7 @@ jobs:
                   git fetch origin pull/$PULL_NUMBER/head:fork
                   git checkout fork
                   npm install
-                  cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntBlazor.Docs.ClientApp/wwwroot
+                  cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntBlazor.Docs.Wasm/wwwroot
                   dotnet build
                   dotnet publish -c Release -o cargo
 
