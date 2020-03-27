@@ -12,6 +12,7 @@ namespace AntBlazor
     {
         [Parameter]
         public string Title { get; set; }
+        protected ClassMapper ButtonClassMapper { get; set; } = new ClassMapper();
 
         //[Parameter]
         //public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
@@ -33,10 +34,8 @@ namespace AntBlazor
         }
         protected void SetClass()
         {
-            string prefixCls = "ant-backtop";
-            ClassMapper.Clear()
-                .If($"{prefixCls}-wrapper", () => !RadioButton)
-                .If($"{prefixCls}-button-wrapper", () => RadioButton);
+            string prefixCls = "ant-back-top";
+            ButtonClassMapper.Add(prefixCls);
         }
     }
 }
