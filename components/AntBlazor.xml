@@ -303,6 +303,12 @@
             'start' | 'end' | 'center' | 'space-around' | 'space-between'
             </summary>
         </member>
+        <member name="T:AntBlazor.AntInputNumber">
+            <summary>
+            base class for InputNumber component
+            https://ant.design/components/input-number/
+            </summary>
+        </member>
         <member name="T:AntBlazor.AntInput">
              <summary>
             
