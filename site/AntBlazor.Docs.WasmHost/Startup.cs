@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace AntBlazor.Docs.ServerApp
+namespace AntBlazor.Docs.WasmHost
 {
     public class Startup
     {
@@ -19,9 +19,8 @@ namespace AntBlazor.Docs.ServerApp
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
-            services.AddServerSideBlazor();
-            services.AddAntBlazorDocs();
+
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -30,6 +29,7 @@ namespace AntBlazor.Docs.ServerApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseWebAssemblyDebugging();
             }
             else
             {
@@ -39,14 +39,15 @@ namespace AntBlazor.Docs.ServerApp
             }
 
             app.UseHttpsRedirection();
+            app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapBlazorHub();
-                endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapControllers();
+                endpoints.MapFallbackToFile("index.html");
             });
         }
     }

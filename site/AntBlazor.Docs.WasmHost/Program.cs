@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace AntBlazor.Docs.ServerApp
+namespace AntBlazor.Docs.WasmHost
 {
     public class Program
     {

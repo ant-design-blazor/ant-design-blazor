@@ -11,9 +11,9 @@ namespace AntBlazor.Docs.Routing
     {
         public Route[] Routes { get; private set; }
 
-        public void Initialise()
+        public void Initialise(Assembly appAssembly)
         {
-            var pageComponentTypes = Assembly.GetExecutingAssembly()
+            var pageComponentTypes = appAssembly
                 .ExportedTypes
                 .Where(t => t.Namespace != null && (t.IsSubclassOf(typeof(ComponentBase))
                                                     && t.Namespace.Contains(".Pages")));
