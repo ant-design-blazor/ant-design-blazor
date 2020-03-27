@@ -24,6 +24,6 @@ jobs:
             - name: Check Building ⚙
               run: |
                   npm install
-                  cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntBlazor.Docs.ClientApp/wwwroot
+                  cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntBlazor.Docs.Wasm/wwwroot
                   dotnet build
                   dotnet publish -c Release -o cargo
