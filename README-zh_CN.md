@@ -38,7 +38,7 @@ WebAssembly 静态托管页面示例
 ## 🖥 支持环境
 
 - .NET Core 3.1。
-- Blazor WebAssembly 3.2 preievew2。
+- Blazor WebAssembly 3.2 preview 3。
 - 支持服务端双向绑定。
 - 支持 WebAssembly 静态文件部署。
 - 主流4款现代浏览器，以及 Internet Explorer 11+（限 [Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1)）。
@@ -61,11 +61,11 @@ WebAssembly 静态托管页面示例
 
 ## 📦 安装
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download) 3.1.102 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
 - 安装 Blazor WebAssembly 模板
 
   ``` bash
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview2.20160.5
+  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview3.20168.3
   ```
 
 - 创建 Blazor WebAssembly 项目
@@ -78,7 +78,7 @@ WebAssembly 静态托管页面示例
 
   ```bash
   $ cd MyAntBlazorApp
-  $ dotnet add package AntBlazor --version 0.0.1-nightly-55111624
+  $ dotnet add package AntBlazor --version 0.1.0-*
   ```
 
 - 在项目中注册:
@@ -121,7 +121,7 @@ WebAssembly 静态托管页面示例
 
 - 打开浏览器访问 https://localhost:5001 ，详情参考[本地开发文档](https://github.com/ElderJames/ant-design-blazor/wiki)。
   
-  > 推荐使用 Visual Studio 2019 开发，目前需运行 `AntBlazor.Docs.ServerApp` 项目才能进行断点调试。
+  > 推荐使用 Visual Studio 2019 开发，目前需运行 `AntBlazor.Docs.Server` 项目才能进行断点调试。
 
 ## 🔗 链接
 

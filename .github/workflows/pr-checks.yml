@@ -15,7 +15,7 @@ jobs:
             - name: Setup .NET Core
               uses: actions/setup-dotnet@v1
               with:
-                  dotnet-version: 3.1.102
+                  dotnet-version: 3.1.201
 
             - uses: actions/setup-node@v1
               with:
@@ -24,6 +24,6 @@ jobs:
             - name: Check Building ⚙
               run: |
                   npm install
-                  cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntBlazor.Docs.ClientApp/wwwroot
+                  cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntBlazor.Docs.Wasm/wwwroot
                   dotnet build
                   dotnet publish -c Release -o cargo
