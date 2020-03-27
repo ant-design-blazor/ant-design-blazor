@@ -23,5 +23,6 @@ namespace AntBlazor
         public static string focus => $"{FUNC_PREFIX}focus";
 
         public static string blur => $"{FUNC_PREFIX}blur";
+        public static string backTop => $"{FUNC_PREFIX}BackTop";
     }
 }
