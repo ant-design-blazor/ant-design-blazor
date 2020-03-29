@@ -19,7 +19,7 @@
                 </span>
                 <span class="header-buttons">
                     @if (CurrentLanguage != "en-US")
-                    { 
+                    {
                         <AntButton size="small" onclick="@(_ => ChangeLanguage("en-US"))">English</AntButton>
                     }
                     else
@@ -56,7 +56,7 @@
     {
         var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
-        NavigationManager.NavigateTo($"{language}/{newUrl}",true);
+        NavigationManager.NavigateTo($"{language}/{newUrl}");
         StateHasChanged();
     }
 }

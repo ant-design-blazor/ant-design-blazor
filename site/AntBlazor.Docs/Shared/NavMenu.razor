@@ -55,6 +55,10 @@
         var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
         MenuItems = await HttpClient.GetFromJsonAsync<MenuItem[]>(new Uri(baseUrl, "_content/AntBlazor.Docs/menu.json").ToString());
 
+        NavigationManager.LocationChanged += (_, args) =>
+        {
+            StateHasChanged();
+        };
         await base.OnInitializedAsync();
     }
 
