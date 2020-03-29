@@ -1,4 +1,5 @@
-﻿<div class="sidebar-logo">
+﻿@using System.Globalization
+<div class="sidebar-logo">
     <a href="https://github.com/ElderJames/ant-design-blazor" target="_blank">
         <img src="https://raw.githubusercontent.com/ElderJames/ant-design-blazor/master/logo.svg?sanitize=true" alt="logo">
         <h1>Ant Design Blazor</h1>
@@ -23,7 +24,7 @@
             if (menu.Type == "menuItem")
             {
                 <AntMenuItem matchRouter>
-                    <AntNavLink href="@menu.Url" Match="@NavLinkMatch.All" Default="@menu.Default">
+                    <AntNavLink href="@($"{CultureInfo.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All" Default="@menu.Default">
                         @menu.Title
                     </AntNavLink>
                 </AntMenuItem> 
