@@ -1,4 +1,5 @@
 ﻿@page "/docs/{fileName}"
+@using System.Globalization
 
 @inject NavigationManager NavigationManager
 
@@ -18,7 +19,7 @@
         if (!string.IsNullOrEmpty(fileName))
         {
             var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-            docUrl = new Uri(baseUrl, $"docs/{fileName}.md").ToString();
+            docUrl = new Uri(baseUrl, $"docs/{fileName}_{CultureInfo.CurrentCulture.Name}.md").ToString();
         }
 
         base.OnInitialized();

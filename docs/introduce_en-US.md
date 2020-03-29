@@ -1,22 +1,25 @@
-<p align="center">
-  <a href="https://yangshunjie.com/ant-design-blazor/">
-    <img src="https://raw.githubusercontent.com/ElderJames/ant-design-blazor/master/logo.svg?sanitize=true">
-  </a>
-</p>
+# Ant Design of Blazor  [![Github Stars](https://img.shields.io/github/stars/ElderJames/ant-design-blazor?style=social)](https://github.com/ElderJames/ant-design-blazor)
 
-<h1 align="center">Ant Design Blazor</h1>
 
-<div align="center">
+Following the Ant Design specification, we developed a Blazor Components library `ant-design-blazor` that contains a set of high quality components and demos for building rich, interactive user interfaces.
 
-An enterprise-class UI components based on Ant Design and Blazor.
-
-![](https://img.shields.io/github/workflow/status/elderjames/ant-design-blazor/Publish%20Docs?style=flat-square)
-[![AntBlazor](https://img.shields.io/nuget/v/AntBlazor.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
-[![AntBlazor](https://img.shields.io/nuget/dt/AntBlazor.svg?style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
-[![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/blob/master/LICENSE)
+<div class="pic-plus">
+  <img width="150" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg">
+  <span>+</span>
+  <img height="150" src="/docs/assets/blazor.svg">
 </div>
 
-[简体中文](README-zh_CN.md)
+<style>
+.pic-plus > * {
+  display: inline-block !important;
+  vertical-align: middle;
+}
+.pic-plus span {
+  font-size: 30px;
+  color: #aaa;
+  margin: 0 20px;
+}
+</style>
 
 ## ✨ Features
 
@@ -109,7 +112,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 ## 🔨 Local Development
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 or later.
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download) 3.1.102 or later.
 - Install Node.js (only for building style files and interoperable TypeScript files)
 - Clone to local development
 

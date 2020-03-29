@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Routing;
@@ -47,38 +49,67 @@ namespace AntBlazor
 
         [Inject] private NavigationManager NavigationManger { get; set; }
 
+        private string CurrentLanguage => CultureInfo.CurrentCulture.Name;
+
+        private static readonly CultureInfo[] AllCultureInfo = CultureInfo.GetCultures(CultureTypes.AllCultures);
+
         /// <inheritdoc />
         protected override void OnInitialized()
         {
             // We'll consider re-rendering on each location change
             NavigationManger.LocationChanged += OnLocationChanged;
-            if (Button != null && this is AntNavLink link)
+            if (Button != null)
             {
-                Button.Link = link;
+                Button.Link = this;
             }
         }
 
         /// <inheritdoc />
         protected override void OnParametersSet()
         {
-            // Update computed state
-            var href = (string)null;
-            if (Attributes != null && Attributes.TryGetValue("href", out var obj))
-            {
-                href = Convert.ToString(obj);
-            }
+            RefreshHref();
 
-            _hrefAbsolute = href == null ? null : NavigationManger.ToAbsoluteUri(href).AbsoluteUri;
             _isActive = ShouldMatch(NavigationManger.Uri);
 
             _class = (string)null;
-            if (Attributes != null && Attributes.TryGetValue("class", out obj))
+            if (Attributes != null && Attributes.TryGetValue("class", out var obj))
             {
                 _class = Convert.ToString(obj);
             }
 
             UpdateCssClass();
             MenuItem?.SelectedChanged(_isActive);
+        }
+
+        private void RefreshHref()
+        {
+            // Update computed state
+            var href = (string)null;
+            if (Attributes != null && Attributes.TryGetValue("href", out var obj))
+            {
+                href = Convert.ToString(obj);
+
+                var firstSegment = href.IndexOf('/') > 0 ? href.Substring(0, href.IndexOf('/')) : null;
+
+                if (firstSegment != null && AllCultureInfo.Any(x => x.Name == firstSegment))
+                {
+                    if (firstSegment != CurrentLanguage)
+                    {
+                        var originalUrl = href.Remove(0, firstSegment.Length + 1);
+                        href = $"{CurrentLanguage}/{originalUrl}";
+                        Attributes["href"] = href;
+                        //StateHasChanged();
+                    }
+                }
+                else
+                {
+                    href = $"{CurrentLanguage}/{href}";
+                    Attributes["href"] = href;
+                    //StateHasChanged();
+                }
+            }
+
+            _hrefAbsolute = href == null ? null : NavigationManger.ToAbsoluteUri(href).AbsoluteUri;
         }
 
         /// <inheritdoc />
@@ -96,6 +127,7 @@ namespace AntBlazor
 
         private void OnLocationChanged(object sender, LocationChangedEventArgs args)
         {
+            RefreshHref();
             // We could just re-render always, but for this component we know the
             // only relevant state change is to the _isActive property.
             var shouldBeActiveNow = ShouldMatch(args.Location);
@@ -141,7 +173,7 @@ namespace AntBlazor
                 // which in turn is because it's common for servers to return the same page
                 // for http://host/vdir as they do for host://host/vdir/ as it's no
                 // good to display a blank page in that case.
-                if (_hrefAbsolute[_hrefAbsolute.Length - 1] == '/'
+                if (_hrefAbsolute[^1] == '/'
                     && _hrefAbsolute.StartsWith(currentUriAbsolute, StringComparison.Ordinal))
                 {
                     return true;

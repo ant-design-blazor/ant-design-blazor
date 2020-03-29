@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using AntBlazor.core.Internal;
 using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor.Docs.Routing
@@ -30,13 +30,7 @@ namespace AntBlazor.Docs.Routing
 
                 if (!routeAttributes.Any())
                 {
-                    var newRoute = new Route
-                    {
-                        UriSegments = uriSegments,
-                        PageType = pageType,
-                    };
-                    routesList.Add(newRoute);
-                    continue;
+                    routeAttributes = new[] { new RouteAttribute($"/{string.Join("/", uriSegments)}"), };
                 }
 
                 var templates = routeAttributes.Select(t => t.Template).ToArray();
@@ -54,7 +48,6 @@ namespace AntBlazor.Docs.Routing
 
                     var newRoute = new Route
                     {
-                        UriSegments = uriSegments,
                         PageType = pageType,
                         Template = parsedTemplate,
                         UnusedRouteParameterNames = unusedRouteParameterNames
@@ -69,7 +62,15 @@ namespace AntBlazor.Docs.Routing
 
         public MatchResult Match(string relativeUri)
         {
+            var originalUri = relativeUri;
+
+            if (relativeUri.IndexOf('?') > -1)
+            {
+                relativeUri = relativeUri.Substring(0, relativeUri.IndexOf('?'));
+            }
+
             var segments = relativeUri.Trim().Split('/', StringSplitOptions.RemoveEmptyEntries).Select(Uri.UnescapeDataString).ToArray();
+
             if (segments.Length == 0)
             {
                 var indexRoute = Routes.SingleOrDefault(x => x.PageType.FullName != null && x.PageType.FullName.ToLower().EndsWith("index"));
@@ -80,9 +81,14 @@ namespace AntBlazor.Docs.Routing
                 }
             }
 
+            if (segments[0] == CultureInfo.CurrentCulture.Name)
+            {
+                segments = segments[1..];
+            }
+
             foreach (var route in Routes)
             {
-                var matchResult = route.Match(segments, relativeUri);
+                var matchResult = route.Match(segments, originalUri);
 
                 if (matchResult.IsMatch)
                 {

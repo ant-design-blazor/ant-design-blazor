@@ -1,7 +1,6 @@
 ﻿using AntBlazor.Docs.Routing;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace AntBlazor.Docs
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {

@@ -1,22 +1,25 @@
-<p align="center">
-  <a href="https://yangshunjie.com/ant-design-blazor/">
-    <img src="https://raw.githubusercontent.com/ElderJames/ant-design-blazor/master/logo.svg?sanitize=true">
-  </a>
-</p>
+# Ant Design of Blazor  [![Github Stars](https://img.shields.io/github/stars/ElderJames/ant-design-blazor?style=social)](https://github.com/ElderJames/ant-design-blazor)
 
-<h1 align="center">Ant Design Blazor</h1>
 
-<div align="center">
+这里是 Ant Design 的 Blazor 实现，开发和服务于企业级后台产品。
 
-基于 Ant Design 和 Blazor 的企业级组件库
-
-![](https://img.shields.io/github/workflow/status/elderjames/ant-design-blazor/Publish%20Docs?style=flat-square)
-[![AntBlazor](https://img.shields.io/nuget/v/AntBlazor.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
-[![AntBlazor](https://img.shields.io/nuget/dt/AntBlazor.svg?style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
-[![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/blob/master/LICENSE)
+<div class="pic-plus">
+  <img width="150" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg">
+  <span>+</span>
+  <img height="150" src="/docs/assets/blazor.svg">
 </div>
 
-[English](README.md)
+<style>
+.pic-plus > * {
+  display: inline-block !important;
+  vertical-align: middle;
+}
+.pic-plus span {
+  font-size: 30px;
+  color: #aaa;
+  margin: 0 20px;
+}
+</style>
 
 ## ✨ 特性
 
@@ -30,30 +33,28 @@
 
 ## 🌈 在线示例
 
-WebAssembly 静态托管页面示例
-
-- [Gitee](https://ant-design-blazor.gitee.io/)
-- [GitHub](https://elderjames.github.io/ant-design-blazor)
+由 WebAssembly 构建，托管在 Gitee Pages http://ant-design-blazor.gitee.io/
 
 ## 🖥 支持环境
 
-- .NET Core 3.1。
-- Blazor WebAssembly 3.2 preview 3。
-- 支持服务端双向绑定。
-- 支持 WebAssembly 静态文件部署。
-- 主流4款现代浏览器，以及 Internet Explorer 11+（限 [Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1)）。
-- 可直接运行在 [Electron](http://electron.atom.io/) 等基于 Web 标准的环境上。
+- .NET Core 3.1
+- Blazor WebAssembly 3.2 preievew 3
+- 支持服务端双向绑定
+- 支持 WebAssembly 静态文件部署
+- 主流4款现代浏览器，以及 Internet Explorer 11+ （使用 [Blazor Server](https://angular.io/guide/browser-support)）
+- 可直接运行在 [Electron](http://electron.atom.io/) 等基于 Web 标准的环境上
 
 | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br> Edge / IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Electron |
 | :---------: | :---------: | :---------: | :---------: | :---------: | :---------: |
 | Edge 16 / IE 11† | 522 | 57 | 11 | 44 | Chromium 57
 
-> 由于 [WebAssembly](https://webassembly.org) 的限制，Blazor WebAssembly 不支持 IE 浏览器，但 Blazor Server 支持 IE 11†。 详见[官网说明](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1)。
+> 由于 [WebAssembly](https://webassembly.org) 的缘故，Blazor WebAssembly 不支持 IE 浏览器，但 Blazor Server 支持 IE 11†。 [官网说明](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1) 
 
 ## 💿 当前版本
 
 - 开发构建： [![AntBlazor](https://img.shields.io/nuget/v/AntBlazor.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
-- 0.1.0：基本实现组件后发布。
+
+- 0.1.0：基本实现组件后发布
 
 ## 🎨 设计规范
 
@@ -63,46 +64,33 @@ WebAssembly 静态托管页面示例
 
 - 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
 - 安装 Blazor WebAssembly 模板
-
-  ``` bash
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview3.20168.3
   ```
-
+  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview3.20168.3
+  ```   
 - 创建 Blazor WebAssembly 项目
-
-  ```bash
+  ```
   $ dotnet new blazorwasm -o MyAntBlazorApp
   ```
-
 - 进入应用的项目文件夹，安装 Nuget 包引用
-
   ```bash
   $ cd MyAntBlazorApp
   $ dotnet add package AntBlazor --version 0.1.0-*
   ```
-
 - 在项目中注册:
-
-  ```csharp
+  ```
   services.AddAntBlazor();
   ```
-
 - 在 `wwwroot/index.html`(WebAssembly) 或 `Pages/_Host.razor`(Server) 中引入静态文件:
-
-  ```html
+  ```
     <link href="_content/AntBlazor/css/ant-design-blazor.css" rel="stylesheet">
     <script src="_content/AntBlazor/js/ant-design-blazor.js"></script>
   ```
-
 - 在 `_Imports.razor` 中加入命名空间
-
-  ```csharp
+  ```
   @using AntBlazor
   ```
-
 - 最后就可以在`.razor`组件中引用啦！
-
-  ```html
+  ```
   <AntButton type="primary">Hello World!</AntButton>
   ```
 
@@ -111,17 +99,15 @@ WebAssembly 静态托管页面示例
 - 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
-
-  ```bash
+  ```
   $ git clone git@github.com:ElderJames/ant-design-blazor.git
   $ cd ant-design-blazor
   $ npm install
   $ npm start
   ```
-
-- 打开浏览器访问 https://localhost:5001 ，详情参考[本地开发文档](https://github.com/ElderJames/ant-design-blazor/wiki)。
+  打开浏览器访问 https://localhost:5001 ，详情参考[本地开发文档](https://github.com/ElderJames/ant-design-blazor/wiki)。
   
-  > 推荐使用 Visual Studio 2019 开发，目前需运行 `AntBlazor.Docs.Server` 项目才能进行断点调试。
+  > 推荐使用 Visual Studio 2019 开发，目前需运行 `AntBlazor.Docs.ClientApp` 项目才能进行断点调试。
 
 ## 🔗 链接
 
@@ -130,26 +116,20 @@ WebAssembly 静态托管页面示例
 
 ## 🗺 开发路线
 
-查看[这个 issue](https://github.com/ElderJames/ant-design-blazor/issues/21) 来了解我们 2020 年的开发计划。
+查看 [这个 issue](https://github.com/ElderJames/ant-design-blazor/issues/21) 来了解我们 2020 年的开发计划。
 
 ## 🤝 如何贡献
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/pulls)
 
+
 如果你希望参与贡献，欢迎 [Pull Request](https://github.com/ElderJames/ant-design-blazor/pulls)，或给我们 [报告 Bug](https://github.com/ElderJames/ant-design-blazor/issues/new) 。
 
 ## ❓ 社区互助
 
-如果您在使用的过程中碰到问题，可以通过以下途径寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
+如果您在使用的过程中碰到问题，可以通过 [钉钉群](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) 寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
 
-- [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/antblazor/shared_invite/zt-cw1enker-xVw3s93cTf4uhY2lRGRyRw) (中文/英文)
-- [![钉钉群](https://img.shields.io/badge/钉钉-AntBlazor-blue.svg?style=flat-square)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) (中文)
-
-<details>
-  <summary>点击扫描钉钉二维码</summary>
-  <img src="./docs/assets/dingtalk.jpg" width="300">
-</details>
-
+<img src="/docs/assets/dingtalk.jpg" width="300">
 
 ## ☀️ 授权协议
 
