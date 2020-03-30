@@ -58,6 +58,5 @@
         var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
         NavigationManager.NavigateTo($"{language}/{newUrl}");
-        StateHasChanged();
     }
 }
