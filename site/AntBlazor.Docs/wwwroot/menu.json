@@ -70,7 +70,7 @@
         ]
       },
       {
-        "title": "Data Entry",
+        "title": "DataEntry",
         "type": "itemGroup",
         "children": [
           {
@@ -84,7 +84,7 @@
             "url": "input"
           },
           {
-            "title": "Input Number",
+            "title": "InputNumber",
             "type": "menuItem",
             "url": "inputnumber"
           },
@@ -96,13 +96,18 @@
         ]
       },
       {
-        "title": "Data Display",
+        "title": "DataDisplay",
         "type": "itemGroup",
         "children": [
           {
             "title": "Avatar",
             "type": "menuItem",
             "url": "avatar"
+          },
+          {
+            "title": "Badge",
+            "type": "menuItem",
+            "url": "badge"
           },
           {
             "title": "Card",
@@ -129,13 +134,7 @@
             "title": "Alert",
             "type": "menuItem",
             "url": "alert"
-          }
-        ]
-      },
-      {
-        "title": "Feedback",
-        "type": "itemGroup",
-        "children": [
+          },
           {
             "title": "Drawer",
             "type": "menuItem",
@@ -157,11 +156,6 @@
             "type": "menuItem",
             "url": "backtop"
           },
-          {
-            "title": "Badge",
-            "type": "menuItem",
-            "url": "badge"
-          }
         ]
       }
     ]
