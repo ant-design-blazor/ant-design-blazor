@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.18.3" />
+    <PackageReference Include="YamlDotnet" Version="8.1.0" />
     <PackageReference Include="System.Net.Http.Json" Version="3.2.0-preview3.20175.8" />
   </ItemGroup>
 
@@ -20,6 +21,11 @@
 
   <ItemGroup>
     <Content Include="$(SolutionDir)docs\**" LinkBase="docs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\*.yml" />
+    <EmbeddedResource Include="Resources\*.yml" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">

@@ -7,6 +7,8 @@ namespace AntBlazor.Docs.Localization
     {
         CultureInfo CurrentCulture { get; }
 
+        Resources Resources { get; }
+
         event EventHandler<CultureInfo> LanguageChanged;
 
         void SetLanguage(CultureInfo culture);
