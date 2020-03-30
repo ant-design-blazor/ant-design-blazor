@@ -110,7 +110,7 @@ WebAssembly 静态托管页面示例
 
 ## 🔨 本地开发
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download) 3.1.102 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
 

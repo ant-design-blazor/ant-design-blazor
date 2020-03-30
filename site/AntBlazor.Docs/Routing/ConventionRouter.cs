@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AntBlazor.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 
@@ -16,11 +18,15 @@ namespace AntBlazor.Docs.Routing
         [Inject] private NavigationManager NavigationManager { get; set; }
         [Inject] private INavigationInterception NavigationInterception { get; set; }
         [Inject] private RouteManager RouteManager { get; set; }
-
+        [Inject] private ILanguageService LanguageService { get; set; }
         [Parameter] public RenderFragment NotFound { get; set; }
         [Parameter] public RenderFragment<RouteData> Found { get; set; }
 
         [Parameter] public Assembly AppAssembly { get; set; }
+
+        [Parameter] public string DefaultUrl { get; set; }
+
+        private static CultureInfo[] AllCultureInfos => CultureInfo.GetCultures(CultureTypes.AllCultures);
 
         public void Attach(RenderHandle renderHandle)
         {
@@ -75,9 +81,26 @@ namespace AntBlazor.Docs.Routing
         {
             var relativeUri = NavigationManager.ToBaseRelativePath(_location);
 
-            if (relativeUri.IndexOf('?') > -1)
+            var currentCulture = LanguageService.CurrentCulture;
+
+            var segment = relativeUri.IndexOf('/') > 0 ? relativeUri.Substring(0, relativeUri.IndexOf('/')) : null;
+
+            if (segment == null)
             {
-                relativeUri = relativeUri.Substring(0, relativeUri.IndexOf('?'));
+                NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}", true);
+                return;
+            }
+            else
+            {
+                if (AllCultureInfos.Any(x => x.Name == segment))
+                {
+                    LanguageService.SetLanguage(CultureInfo.GetCultureInfo(segment));
+                }
+                else
+                {
+                    NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}", true);
+                    return;
+                }
             }
 
             var matchResult = RouteManager.Match(relativeUri);
@@ -90,6 +113,11 @@ namespace AntBlazor.Docs.Routing
             }
             else
             {
+                if (!string.IsNullOrEmpty(DefaultUrl))
+                {
+                    NavigationManager.NavigateTo($"{currentCulture}/{DefaultUrl}", true);
+                }
+
                 _renderHandle.Render(NotFound);
             }
         }
