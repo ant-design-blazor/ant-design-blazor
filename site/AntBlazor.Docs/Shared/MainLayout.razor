@@ -1,4 +1,4 @@
-﻿@using System.Globalization
+﻿@using AntBlazor.Docs.Localization
 @inherits LayoutComponentBase
 
 <AntLayout class="app-layout" hasSider>
@@ -47,10 +47,11 @@
 </AntLayout>
 
 @inject NavigationManager NavigationManager
+@inject ILanguageService LanguageService
 @code{
     bool isCollapsed { get; set; } = true;
 
-    string CurrentLanguage => CultureInfo.CurrentCulture.Name;
+    string CurrentLanguage => LanguageService.CurrentCulture.Name;
 
     public void ChangeLanguage(string language)
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using AntBlazor.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor.Docs.Routing
@@ -10,6 +10,13 @@ namespace AntBlazor.Docs.Routing
     public class RouteManager
     {
         public Route[] Routes { get; private set; }
+
+        private readonly ILanguageService _languageService;
+
+        public RouteManager(ILanguageService languageService)
+        {
+            _languageService = languageService;
+        }
 
         public void Initialise(Assembly appAssembly)
         {
@@ -81,7 +88,7 @@ namespace AntBlazor.Docs.Routing
                 }
             }
 
-            if (segments[0] == CultureInfo.CurrentCulture.Name)
+            if (segments[0] == _languageService.CurrentCulture.Name)
             {
                 segments = segments[1..];
             }
