@@ -155,7 +155,7 @@
             "title": "BackTop",
             "type": "menuItem",
             "url": "backtop"
-          },
+          }
         ]
       }
     ]
