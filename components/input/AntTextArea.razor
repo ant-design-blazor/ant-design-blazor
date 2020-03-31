@@ -2,9 +2,12 @@
 @inherits AntInput
 <!--TODO: minheight, maxheight, onResize-->
 
-<textarea class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id" placeholder="@placeholder"
+<textarea class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id" placeholder="@placeholder" @bind="Value"
           @ref="inputEl"
           @oninput="OnInputAsync"
-          @onkeypress="OnPressEnterAsync">@Value</textarea>
+          @onkeypress="OnPressEnterAsync" />
 
-@_hidden
+@if (AutoSize)
+{
+    <textarea class="@ClassMapper.Class" style="position:absolute;z-index:-1; visibility: hidden;height: 0px;overflow-y:hidden; @_hiddenWidth" @ref="_hiddenEle">@Value</textarea>
+}
