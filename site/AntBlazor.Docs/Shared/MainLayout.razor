@@ -1,30 +1,31 @@
-﻿@inherits LayoutComponentBase
+﻿@using AntBlazor.Docs.Localization
+@inherits LayoutComponentBase
 
 <AntLayout class="app-layout" hasSider>
     <AntSider class="menu-sidebar"
-                    collapsible
-                    breakpoint="lg"
-                    collapsed="isCollapsed"
-                    collapsedWidth="0"
-                    width="256px"
-                    onCollapsedChange="(collapsed)=>isCollapsed = collapsed">
-        <div class="sidebar-logo">
-            <a href="https://github.com/ElderJames/ant-design-blazor" target="_blank">
-                <img src="https://raw.githubusercontent.com/ElderJames/ant-design-blazor/master/logo.svg?sanitize=true" alt="logo">
-                <h1>Ant Design Blazor</h1>
-            </a>
-        </div>
-        <AntMenu theme="dark" mode="AntDirectionVHIType.inline" inlineCollapsed="isCollapsed">
-            @menuItemTemplate(MenuItems)
-        </AntMenu>
+              collapsible
+              breakpoint="lg"
+              collapsed="isCollapsed"
+              collapsedWidth="0"
+              width="256px"
+              onCollapsedChange="(collapsed)=>isCollapsed = collapsed">
+        <NavMenu isCollapsed="isCollapsed"></NavMenu>
     </AntSider>
-    <AntLayout>
+    <AntLayout id="BodyContainer">
         <AntHeader>
             <div class="app-header">
                 <span class="header-trigger" @onclick="()=>isCollapsed = !isCollapsed">
                     <AntIcon class="trigger" type="@(isCollapsed ? "menu-unfold" : "menu-fold")"></AntIcon>
                 </span>
                 <span class="header-buttons">
+                    @if (CurrentLanguage != "en-US")
+                    {
+                        <AntButton size="small" onclick="@(_ => ChangeLanguage("en-US"))">English</AntButton>
+                    }
+                    else
+                    {
+                        <AntButton size="small" onclick="@(_ => ChangeLanguage("zh-CN"))">简体中文</AntButton>
+                    }
                     <a class="github-stars" href="https://github.com/ElderJames/ant-design-blazor">
                         <img alt="GitHub stars" src="https://img.shields.io/github/stars/ElderJames/ant-design-blazor?style=social">
                     </a>
@@ -45,78 +46,17 @@
     </AntLayout>
 </AntLayout>
 
-@inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
-
-@code
-{
+@inject ILanguageService LanguageService
+@code{
     bool isCollapsed { get; set; } = true;
 
-    MenuItem[] MenuItems = {};
+    string CurrentLanguage => LanguageService.CurrentCulture.Name;
 
-    static readonly RenderFragment<MenuItem[]> menuItemTemplate = (items)
-        => @<Template>
-               @foreach (var menu in items)
-               {
-                   if (menu.Type == "menuItem")
-                   {
-                       <AntMenuItem matchRouter>
-                           <AntNavLink href="@menu.Url" Match="@NavLinkMatch.All">
-                               @menu.Title
-                           </AntNavLink>
-                       </AntMenuItem>
-                   }
-                   else if (menu.Type == "subMenu")
-                   {
-                       <AntSubMenu open="@menu.Open" title="@menu.Title" icon="@menu.Icon">
-                           @if (menu.Children.Any())
-                           {
-                               @menuItemTemplate(menu.Children)
-                           }
-                       </AntSubMenu>
-                   }
-                   else if (menu.Type == "itemGroup")
-                   {
-                       <AntMenuItemGroup title="@menu.Title">
-                           @if (menu.Children.Any())
-                           {
-                               @menuItemTemplate(menu.Children)
-                           }
-                       </AntMenuItemGroup>
-                   }
-               }
-           </Template>;
-
-
-    protected override async Task OnInitializedAsync()
+    public void ChangeLanguage(string language)
     {
-        var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-        MenuItems = await HttpClient.GetJsonAsync<MenuItem[]>(new Uri(baseUrl,"_content/AntBlazor.Docs/menu.json").ToString());
-        var defaultUrl = MenuItems.FirstOrDefault(x => x.Default);
-        if (defaultUrl!=null)
-        {
-            NavigationManager.NavigateTo(defaultUrl.Url);
-        }
-
-        await base.OnInitializedAsync();
-    }
-
-    public class MenuItem
-    {
-        public string Title { get; set; }
-
-        public string Type { get; set; }
-
-        public string Url { get; set; }
-
-        public string Prefix { get; set; }
-
-        public bool Open { get; set; }
-
-        public string Icon { get; set; }
-
-        public bool Default { get; set; }
-
-        public MenuItem[] Children { get; set; }
+        var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
+        NavigationManager.NavigateTo($"{language}/{newUrl}");
     }
 }

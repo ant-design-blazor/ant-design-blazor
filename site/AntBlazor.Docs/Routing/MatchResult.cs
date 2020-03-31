@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace AntBlazor.Docs.Routing
+﻿namespace AntBlazor.Docs.Routing
 {
     public class MatchResult
     {

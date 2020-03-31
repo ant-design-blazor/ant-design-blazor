@@ -14,9 +14,11 @@ An enterprise-class UI components based on Ant Design and Blazor.
 [![AntBlazor](https://img.shields.io/nuget/v/AntBlazor.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
 [![AntBlazor](https://img.shields.io/nuget/dt/AntBlazor.svg?style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
 [![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/blob/master/LICENSE)
+[![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/antblazor/shared_invite/zt-cw1enker-xVw3s93cTf4uhY2lRGRyRw)
+[![Ding Talk Group](https://img.shields.io/badge/DingTalk-AntBlazor-blue.svg?style=flat-square&logo=data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pg0KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGNsYXNzPSJpY29uIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiBmaWxsPSIjZmZmZmZmIj4NCiAgPHBhdGggZD0iTTU3My43IDI1Mi41QzQyMi41IDE5Ny40IDIwMS4zIDk2LjcgMjAxLjMgOTYuN2MtMTUuNy00LjEtMTcuOSAxMS4xLTE3LjkgMTEuMS01IDYxLjEgMzMuNiAxNjAuNSA1My42IDE4Mi44IDE5LjkgMjIuMyAzMTkuMSAxMTMuNyAzMTkuMSAxMTMuN1MzMjYgMzU3LjkgMjcwLjUgMzQxLjljLTU1LjYtMTYtMzcuOSAxNy44LTM3LjkgMTcuOCAxMS40IDYxLjcgNjQuOSAxMzEuOCAxMDcuMiAxMzguNCA0Mi4yIDYuNiAyMjAuMSA0IDIyMC4xIDRzLTM1LjUgNC4xLTkzLjIgMTEuOWMtNDIuNyA1LjgtOTcgMTIuNS0xMTEuMSAxNy44LTMzLjEgMTIuNSAyNCA2Mi42IDI0IDYyLjYgODQuNyA3Ni44IDEyOS43IDUwLjUgMTI5LjcgNTAuNSAzMy4zLTEwLjcgNjEuNC0xOC41IDg1LjItMjQuMkw1NjUgNzQzLjFoODQuNkw2MDMgOTI4bDIwNS4zLTI3MS45SDcwMC44bDIyLjMtMzguN2MuMy41LjQuOC40LjhTNzk5LjggNDk2LjEgODI5IDQzMy44bC42LTFoLS4xYzUtMTAuOCA4LjYtMTkuNyAxMC0yNS44IDE3LTcxLjMtMTE0LjUtOTkuNC0yNjUuOC0xNTQuNXoiLz4NCjwvc3ZnPg0K)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11)
 </div>
 
-[简体中文](README-zh_CN.md)
+English | [简体中文](README-zh_CN.md)
 
 ## ✨ Features
 
@@ -38,7 +40,7 @@ WebAssembly static hosting examples:
 ## 🖥 Environment Support
 
 - .NET Core 3.1
-- Blazor WebAssembly 3.2 Preview 2
+- Blazor WebAssembly 3.2 Preview 3
 - Supports two-way binding on the server side
 - Supports WebAssembly static file deployment
 - Support 4 major browsers engines, and Internet Explorer 11+ ([Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1) only)
@@ -62,11 +64,11 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 ## 📦 Installation Guide
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download) 3.1.102 or above
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 or later
 - Install Blazor WebAssembly Templates
 
   ```bash
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview2.20160.5
+  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview3.20168.3
   ```
 
 - Create Blazor WebAssembly Project
@@ -79,7 +81,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
   ```bash
   $ cd MyAntBlazorApp
-  $ dotnet add package AntBlazor --version 0.0.1-nightly-55111624
+  $ dotnet add package AntBlazor --version 0.1.0-*
   ```
 
 - Register the services
@@ -109,7 +111,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 ## 🔨 Local Development
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download) 3.1.102 or later.
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 or later.
 - Install Node.js (only for building style files and interoperable TypeScript files)
 - Clone to local development
 
@@ -122,7 +124,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 - Visit https://localhost:5001 in your supported browser and check [local development documentation](https://github.com/ElderJames/ant-design-blazor/wiki) for details.
   
-  > Visual Studio 2019 is recommended for development. Currently `AntBlazor.Docs.ServerApp` project is required to run for breakpoint debugging.
+  > Visual Studio 2019 is recommended for development. Currently `AntBlazor.Docs.Server` project is required to run for breakpoint debugging.
 
 ## 🔗 Links
 
@@ -144,7 +146,7 @@ If you would like to contribute, feel free to create a [Pull Request](https://gi
 If you encounter any problems in the process, feel free to ask for help via following channels. We also encourage experienced users to help newcomers.
 
 - [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/antblazor/shared_invite/zt-cw1enker-xVw3s93cTf4uhY2lRGRyRw) (Chinese & English)
-- [![Ding Talk Group](https://img.shields.io/badge/DingTalk-AntBlazor-blue.svg?style=flat-square)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) (Chinese)
+- [![Ding Talk Group](https://img.shields.io/badge/DingTalk-AntBlazor-blue.svg?style=flat-square&logo=data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pg0KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGNsYXNzPSJpY29uIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiBmaWxsPSIjZmZmZmZmIj4NCiAgPHBhdGggZD0iTTU3My43IDI1Mi41QzQyMi41IDE5Ny40IDIwMS4zIDk2LjcgMjAxLjMgOTYuN2MtMTUuNy00LjEtMTcuOSAxMS4xLTE3LjkgMTEuMS01IDYxLjEgMzMuNiAxNjAuNSA1My42IDE4Mi44IDE5LjkgMjIuMyAzMTkuMSAxMTMuNyAzMTkuMSAxMTMuN1MzMjYgMzU3LjkgMjcwLjUgMzQxLjljLTU1LjYtMTYtMzcuOSAxNy44LTM3LjkgMTcuOCAxMS40IDYxLjcgNjQuOSAxMzEuOCAxMDcuMiAxMzguNCA0Mi4yIDYuNiAyMjAuMSA0IDIyMC4xIDRzLTM1LjUgNC4xLTkzLjIgMTEuOWMtNDIuNyA1LjgtOTcgMTIuNS0xMTEuMSAxNy44LTMzLjEgMTIuNSAyNCA2Mi42IDI0IDYyLjYgODQuNyA3Ni44IDEyOS43IDUwLjUgMTI5LjcgNTAuNSAzMy4zLTEwLjcgNjEuNC0xOC41IDg1LjItMjQuMkw1NjUgNzQzLjFoODQuNkw2MDMgOTI4bDIwNS4zLTI3MS45SDcwMC44bDIyLjMtMzguN2MuMy41LjQuOC40LjhTNzk5LjggNDk2LjEgODI5IDQzMy44bC42LTFoLS4xYzUtMTAuOCA4LjYtMTkuNyAxMC0yNS44IDE3LTcxLjMtMTE0LjUtOTkuNC0yNjUuOC0xNTQuNXoiLz4NCjwvc3ZnPg0K)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) (Chinese)
 
 <details>
   <summary>Scan QR Code with DingTalk</summary>
