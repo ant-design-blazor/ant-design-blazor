@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AntBlazor.JsInterop;
+using Microsoft.AspNetCore.Components;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AntBlazor
@@ -10,17 +13,33 @@ namespace AntBlazor
         private ClassMapper _barClassMapper = new ClassMapper();
         private List<AntTabPane> _panes = new List<AntTabPane>();
         private AntTabPane _activePane;
+        private AntTabPane _renderedActivePane;
+        private ElementReference _activeTabBar;
+        private string _inkStyle;
+        private string _contentStyle;
 
         #region Parameters
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        private string _activeKey;
+
         /// <summary>
         /// Current <see cref="AntTabPane"/>'s <see cref="AntTabPane.Key"/>
         /// </summary>
         [Parameter]
-        public string ActiveKey { get; set; }
+        public string ActiveKey
+        {
+            get
+            {
+                return _activeKey;
+            }
+            set
+            {
+                _activeKey = value;
+            }
+        }
 
         /// <summary>
         /// Whether to change tabs with animation. Only works while <see cref="TabPosition"/> = <see cref="AntTabPosition.Top"/> or <see cref="AntTabPosition.Bottom"/>
@@ -118,7 +137,7 @@ namespace AntBlazor
         [Parameter]
         public bool Keyboard { get; set; } = true;
 
-        #endregion
+        #endregion Parameters
 
         public override Task SetParametersAsync(ParameterView parameters)
         {
@@ -148,11 +167,26 @@ namespace AntBlazor
             _barClassMapper.Clear()
                 .Add($"{PrefixCls}-bar")
                 .Add($"{PrefixCls}-{TabPosition}-bar");
-
         }
 
+        /// <summary>
+        /// Add <see cref="AntTabPane"/> to <see cref="AntTabs"/>
+        /// </summary>
+        /// <param name="tabPane">The AntTabPane to be added</param>
+        /// <exception cref="ArgumentNullException">Key is null</exception>
+        /// <exception cref="ArgumentException">An AntTabPane with the same key already exists</exception>
         internal void AddTabPane(AntTabPane tabPane)
         {
+            if (string.IsNullOrEmpty(tabPane.Key))
+            {
+                throw new ArgumentNullException("Key is null");
+            }
+
+            if (_panes.Select(p => p.Key).Contains(tabPane.Key))
+            {
+                throw new ArgumentException("An AntTabPane with the same key already exists");
+            }
+
             _panes.Add(tabPane);
             if (_activePane == null)
             {
@@ -161,15 +195,33 @@ namespace AntBlazor
             StateHasChanged();
         }
 
-        private void ActivatePane(AntTabPane tabPane)
+        private async void ActivatePane(AntTabPane tabPane)
         {
-            if (_activePane != null)
+            if (!tabPane.disabled)
             {
-                _activePane.IsActive = false;
+                if (_activePane != null)
+                {
+                    _activePane.IsActive = false;
+                }
+                tabPane.IsActive = true;
+                _activePane = tabPane;
+                StateHasChanged();
             }
-            tabPane.IsActive = true;
-            _activePane = tabPane;
-            StateHasChanged();
+        }
+
+        protected async override Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (_renderedActivePane != _activePane)
+            {
+                _renderedActivePane = _activePane;
+                // ink bar
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
+                _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
+                _contentStyle = $"margin-left: -{_panes.IndexOf(_activePane)}00%;";
+                StateHasChanged();
+            }
         }
     }
 }

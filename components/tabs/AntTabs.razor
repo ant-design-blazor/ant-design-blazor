@@ -15,22 +15,22 @@
                             {
                                 if (pane.IsActive)
                                 {
-                                    <div tabindex="0" class="ant-tabs-tab ant-tabs-tab-active" id="tab-@pane.Key" role="tab" aria-disabled="false" aria-selected="true" aria-controls="tabpane-@pane.Key">@pane.Tab</div>
+                                    <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.disabled" aria-selected="true" aria-controls="tabpane-@pane.Key">@pane.Tab</div>
                                 }
                                 else
                                 {
-                                    <div tabindex="-1" class="ant-tabs-tab" id="tab-@pane.Key" role="tab" aria-disabled="false" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)">@pane.Tab</div>
+                                    <div tabindex="-1" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.disabled" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)">@pane.Tab</div>
                                 }
                             }
                         </div>
-                        <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="width: 34px; display: block; transform: translate3d(0px, 0px, 0px);"></div>
+                        <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="@_inkStyle"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!--Tab content-->
-    <div class="ant-tabs-content ant-tabs-@TabPosition-content ant-tabs-content-animated" style="margin-left: 0%;">
+    <div class="ant-tabs-content ant-tabs-@TabPosition-content ant-tabs-content-animated" style="@_contentStyle">
         <CascadingValue Value="this">
             @ChildContent
         </CascadingValue>

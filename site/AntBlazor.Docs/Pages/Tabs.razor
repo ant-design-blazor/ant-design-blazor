@@ -15,27 +15,42 @@
 <h2>Examples</h2>
 <br />
 <DemoCard>
-    <Title>Basic usage</Title>
-    <Description>Basic usage example.</Description>
+    <Title>Basic</Title>
+    <Description>Default activate first tab.</Description>
     <Demo>
         <AntTabs DefaultActiveKey="1">
             <AntTabPane Key="1">
-                <Tab>tab 1</Tab>
-                <ChildContent>
-                    Content of Tab Pane 1
-                </ChildContent>
+                <Tab>Tab 1</Tab>
+                <ChildContent>Content of Tab Pane 1</ChildContent>
             </AntTabPane>
             <AntTabPane Key="2">
-                <Tab>tab 2</Tab>
-                <ChildContent>
-                    Content of Tab Pane 2
-                </ChildContent>
+                <Tab>Tab 2</Tab>
+                <ChildContent>Content of Tab Pane 2</ChildContent>
             </AntTabPane>
             <AntTabPane Key="3">
-                <Tab>tab 3</Tab>
-                <ChildContent>
-                    Content of Tab Pane 3
-                </ChildContent>
+                <Tab>Tab 3</Tab>
+                <ChildContent>Content of Tab Pane 3</ChildContent>
+            </AntTabPane>
+        </AntTabs>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Disabled</Title>
+    <Description>Disabled a tab.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1">
+            <AntTabPane Key="1">
+                <Tab>Tab 1</Tab>
+                <ChildContent>Tab 1</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="2" disabled>
+                <Tab>Tab 2</Tab>
+                <ChildContent>Tab 2</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="3">
+                <Tab>Tab 3</Tab>
+                <ChildContent>Tab 3</ChildContent>
             </AntTabPane>
         </AntTabs>
     </Demo>

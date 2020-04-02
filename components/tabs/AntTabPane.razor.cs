@@ -4,10 +4,12 @@ namespace AntBlazor
 {
     public partial class AntTabPane : AntDomComponentBase
     {
+        private const string PrefixCls = "ant-tabs-tab";
+        private AntTabs _parent;
+
+        internal ClassMapper ClassMapper = new ClassMapper();
         internal bool IsActive { get; set; }
 
-
-        private AntTabs _parent;
         [CascadingParameter]
         private AntTabs Parent
         {
@@ -45,5 +47,18 @@ namespace AntBlazor
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public bool disabled { get; set; }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            ClassMapper.Clear().
+                Add(PrefixCls)
+                .If($"{PrefixCls}-active", () => IsActive)
+                .If($"{PrefixCls}-disabled", () => disabled);
+        }
     }
 }
