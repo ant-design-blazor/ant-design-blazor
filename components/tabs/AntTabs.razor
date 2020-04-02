@@ -1,1 +1,38 @@
-﻿
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id">
+    <!--Tab bar-->
+    <div class="@_barClassMapper.Class" role="tablist">
+        <div class="ant-tabs-nav-container">
+            <span class="ant-tabs-tab-prev ant-tabs-tab-btn-disabled" unselectable="unselectable"><span class="ant-tabs-tab-prev-icon"><span class="anticon anticon-left ant-tabs-tab-prev-icon-target" role="img" aria-label="left"><svg xmlns="http://www.w3.org/2000/svg" class="" aria-hidden="true" fill="currentColor" viewBox="64 64 896 896" focusable="false" width="1em" height="1em" data-icon="left"><path d="M 724 218.3 V 141 c 0 -6.7 -7.7 -10.4 -12.9 -6.3 L 260.3 486.8 a 31.86 31.86 0 0 0 0 50.3 l 450.8 352.1 c 5.3 4.1 12.9 0.4 12.9 -6.3 v -77.3 c 0 -4.9 -2.3 -9.6 -6.1 -12.6 l -360 -281 l 360 -281.1 c 3.8 -3 6.1 -7.7 6.1 -12.6 Z" /></svg></span></span></span>
+            <span class="ant-tabs-tab-next ant-tabs-tab-btn-disabled" unselectable="unselectable"><span class="ant-tabs-tab-next-icon"><span class="anticon anticon-right ant-tabs-tab-next-icon-target" role="img" aria-label="right"><svg xmlns="http://www.w3.org/2000/svg" class="" aria-hidden="true" fill="currentColor" viewBox="64 64 896 896" focusable="false" width="1em" height="1em" data-icon="right"><path d="M 765.7 486.8 L 314.9 134.7 A 7.97 7.97 0 0 0 302 141 v 77.3 c 0 4.9 2.3 9.6 6.1 12.6 l 360 281.1 l -360 281.1 c -3.9 3 -6.1 7.7 -6.1 12.6 V 883 c 0 6.7 7.7 10.4 12.9 6.3 l 450.8 -352.1 a 31.96 31.96 0 0 0 0 -50.4 Z" /></svg></span></span></span>
+            <div class="ant-tabs-nav-wrap">
+                <div class="ant-tabs-nav-scroll">
+                    <div class="ant-tabs-nav ant-tabs-nav-animated">
+                        <div>
+                            @foreach (var pane in _panes)
+                            {
+                                if (pane.IsActive)
+                                {
+                                    <div tabindex="0" class="ant-tabs-tab ant-tabs-tab-active" id="tab-@pane.Key" role="tab" aria-disabled="false" aria-selected="true" aria-controls="tabpane-@pane.Key">@pane.Tab</div>
+                                }
+                                else
+                                {
+                                    <div tabindex="-1" class="ant-tabs-tab" id="tab-@pane.Key" role="tab" aria-disabled="false" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)">@pane.Tab</div>
+                                }
+                            }
+                        </div>
+                        <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="width: 34px; display: block; transform: translate3d(0px, 0px, 0px);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Tab content-->
+    <div class="ant-tabs-content ant-tabs-@TabPosition-content ant-tabs-content-animated" style="margin-left: 0%;">
+        <CascadingValue Value="this">
+            @ChildContent
+        </CascadingValue>
+    </div>
+</div>

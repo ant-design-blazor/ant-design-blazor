@@ -120,6 +120,11 @@
             "url": "tag"
           },
           {
+            "title": "Tabs",
+            "type": "menuItem",
+            "url": "tabs"
+          },
+          {
             "title": "Timeline",
             "type": "menuItem",
             "url": "timeline"

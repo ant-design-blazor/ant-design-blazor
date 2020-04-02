@@ -1,14 +1,30 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public class AntTabPane : AntComponentBase
+    public partial class AntTabPane : AntDomComponentBase
     {
+        internal bool IsActive { get; set; }
+
+
+        private AntTabs _parent;
+        [CascadingParameter]
+        private AntTabs Parent
+        {
+            get
+            {
+                return _parent;
+            }
+            set
+            {
+                if (_parent == null)
+                {
+                    _parent = value;
+                    _parent.AddTabPane(this);
+                }
+            }
+        }
+
         /// <summary>
         /// Forced render of content in tabs, not lazy render after clicking on tabs
         /// </summary>
@@ -26,5 +42,8 @@ namespace AntBlazor
         /// </summary>
         [Parameter]
         public RenderFragment Tab { get; set; }
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
     }
 }

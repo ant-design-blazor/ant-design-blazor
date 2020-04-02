@@ -1,0 +1,42 @@
+﻿<AntTitle level="1">Tabs</AntTitle>
+<AntText>Tabs make it easy to switch between different views.</AntText>
+<AntTitle level="2">When To Use</AntTitle>
+<AntParagraph>
+    <Markdown markdown="@paragraph"></Markdown>
+</AntParagraph>
+
+@code{
+    private string paragraph = @"Ant Design has 3 types of Tabs for different situations.
+* Card Tabs: for managing too many closeable views.
+* Normal Tabs: for functional aspects of a page.
+* <a href='/radio'>RadioButton</a>: for secondary tabs.";
+}
+<br />
+<h2>Examples</h2>
+<br />
+<DemoCard>
+    <Title>Basic usage</Title>
+    <Description>Basic usage example.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1">
+            <AntTabPane Key="1">
+                <Tab>tab 1</Tab>
+                <ChildContent>
+                    Content of Tab Pane 1
+                </ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="2">
+                <Tab>tab 2</Tab>
+                <ChildContent>
+                    Content of Tab Pane 2
+                </ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="3">
+                <Tab>tab 3</Tab>
+                <ChildContent>
+                    Content of Tab Pane 3
+                </ChildContent>
+            </AntTabPane>
+        </AntTabs>
+    </Demo>
+</DemoCard>
