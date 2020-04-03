@@ -140,6 +140,16 @@ WebAssembly 静态托管页面示例
 
 如果你希望参与贡献，欢迎 [Pull Request](https://github.com/ElderJames/ant-design-blazor/pulls)，或给我们 [报告 Bug](https://github.com/ElderJames/ant-design-blazor/issues/new) 。
 
+## 💕 支持本项目
+
+本项目以 MIT 协议开源，为了能得到够更好的且可持续的发展，我们期望获得更多的支持者，我们将把所得款项用于社区活动和推广。你可以通过如下任何一种方式支持我们:
+
+- [OpenCollective](https://opencollective.com/ant-design-blazor)
+- [微信](https://yangshunjie.com/images/qrcode/wepay.jpg)
+- [支付宝](https://yangshunjie.com/images/qrcode/alipay.jpg)
+
+我们会把详细的捐赠记录登记在 [捐赠者名单](https://github.com/ElderJames/ant-design-blazor/issues/62)。
+
 ## ❓ 社区互助
 
 如果您在使用的过程中碰到问题，可以通过以下途径寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
