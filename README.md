@@ -141,6 +141,16 @@ Check out this [issue](https://github.com/ElderJames/ant-design-blazor/issues/21
 
 If you would like to contribute, feel free to create a [Pull Request](https://github.com/ElderJames/ant-design-blazor/pulls), or give us [Bug Report](https://github.com/ElderJames/ant-design-blazor/issues/new).
 
+## 💕 Donation
+
+This project is an MIT-licensed open source project. In order to achieve better and sustainable development of the project, we expect to gain more backers. We will use the proceeds for community operations and promotion. You can support us in any of the following ways:
+
+- [OpenCollective](https://opencollective.com/ant-design-blazor)
+- [Wechat](https://yangshunjie.com/images/qrcode/wepay.jpg)
+- [Alipay](https://yangshunjie.com/images/qrcode/alipay.jpg)
+
+We will put the detailed donation records on the [backer list](https://github.com/ElderJames/ant-design-blazor/issues/62).
+
 ## ❓ Community Support
 
 If you encounter any problems in the process, feel free to ask for help via following channels. We also encourage experienced users to help newcomers.
