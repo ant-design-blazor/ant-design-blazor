@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Text.Unicode;
+using AntBlazor.Docs.Build.CLI.Utils;
 using AntBlazor.Docs.Build.Extensions;
 using Microsoft.Extensions.CommandLineUtils;
 
@@ -41,59 +46,115 @@ namespace AntBlazor.Docs.Build.Command
 
                 var demoDirectory = Path.Combine(Directory.GetCurrentDirectory(), source);
 
-                var json = new DemoFileItem(new DirectoryInfo(demoDirectory)).ToJson();
-                Console.WriteLine(json);
-
-                var configFilePath = Path.Combine(Directory.GetCurrentDirectory(), output, "demo.json");
-
-                if (File.Exists(configFilePath))
-                {
-                    File.Delete(configFilePath);
-                }
-
-                File.WriteAllText(configFilePath, json);
-
-                Console.WriteLine("Generate demo file to {0}", configFilePath);
+                GenerateFiles(demoDirectory, output);
 
                 return 0;
             });
         }
-    }
 
-    public class DemoFileItem
-    {
-        public string Title { get; set; }
-
-        public bool IsFolder { get; set; }
-
-        public string Key { get; set; }
-
-        public IEnumerable<DemoFileItem> Children { get; set; }
-
-        public DemoFileItem(FileSystemInfo fsi)
+        public void GenerateFiles(string demoDirectory, string output)
         {
-            Title = fsi.Name;
-
-            if (fsi.Attributes == FileAttributes.Directory)
+            var demoDirectoryInfo = new DirectoryInfo(demoDirectory);
+            if (demoDirectoryInfo.Attributes != FileAttributes.Directory)
             {
-                IsFolder = true;
-                Children = from FileSystemInfo f in (fsi as DirectoryInfo)?.GetFileSystemInfos()
-                           select new DemoFileItem(f);
+                Console.WriteLine("{0} is not a directory", demoDirectory);
+                return;
             }
-            else
-            {
-                IsFolder = false;
-            }
-            Key = Title.Replace(" ", "").ToLower();
-        }
 
-        public string ToJson()
-        {
-            return JsonSerializer.Serialize(this, new JsonSerializerOptions()
+            Dictionary<string, Component> ComponentList = new Dictionary<string, Component>();
+
+            foreach (var component in demoDirectoryInfo.GetFileSystemInfos())
+            {
+                if (component is DirectoryInfo componentDirectory)
+                {
+                    var componentName = component.Name;
+                    var docDir = componentDirectory.GetFileSystemInfos("doc")[0];
+                    var demoDir = componentDirectory.GetFileSystemInfos("demo")[0];
+
+                    foreach (var docItem in (docDir as DirectoryInfo).GetFileSystemInfos())
+                    {
+                        var language = docItem.Name.Replace("doc_", "").Replace($"{docItem.Extension}", "");
+                        var content = File.ReadAllText(docItem.FullName);
+                        var docData = DocParser.ParseDoc(content);
+
+                        ComponentList.Add(language, new Component()
+                        {
+                            Name = docData.Meta["title"],
+                            Type = docData.Meta["type"],
+                            Doc = docData.Content,
+                        });
+                    }
+
+                    foreach (var demo in (demoDir as DirectoryInfo).GetFileSystemInfos().GroupBy(x => x.Name.Replace(x.Extension, "")))
+                    {
+                        var showCaseFiles = demo.ToList();
+                        var razorFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".razor");
+                        var descriptionFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".md");
+                        var code = razorFile != null ? File.ReadAllText(razorFile.FullName) : null;
+                        var descriptionContent = descriptionFile != null ? DocParser.ParseDescription(File.ReadAllText(descriptionFile.FullName)) : default;
+
+                        foreach (var title in descriptionContent.Meta.Title)
+                        {
+                            var list = ComponentList[title.Key].DemoList ??= new List<DemoItem>();
+                            list.Add(new DemoItem()
+                            {
+                                Title = title.Value,
+                                Order = descriptionContent.Meta.Order,
+                                Code = code,
+                                Description = descriptionContent.Descriptions[title.Key],
+                                Type = $"{demoDirectoryInfo.Name}.{component.Name}.{demoDir.Name}.{razorFile.Name.Replace(razorFile.Extension, "")}"
+                            });
+                        }
+                    }
+                }
+            }
+
+            var dic = ComponentList.GroupBy(x => x.Key)
+                .ToDictionary(x => x.Key,
+                    x => x.Select(o => o.Value));
+
+            var json = JsonSerializer.Serialize(dic, new JsonSerializerOptions()
             {
                 WriteIndented = true,
-                IgnoreNullValues = true
+                IgnoreNullValues = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             });
+
+            var configFilePath = Path.Combine(Directory.GetCurrentDirectory(), output, "demo.json");
+            Console.WriteLine(json);
+
+            if (File.Exists(configFilePath))
+            {
+                File.Delete(configFilePath);
+            }
+
+            File.WriteAllText(configFilePath, json);
+
+            Console.WriteLine("Generate demo file to {0}", configFilePath);
         }
+    }
+
+    public class Component
+    {
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
+        public string Doc { get; set; }
+
+        public List<DemoItem> DemoList { get; set; }
+    }
+
+    public class DemoItem
+    {
+        public int Order { get; set; }
+
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+        public string Code { get; set; }
+
+        public string Type { get; set; }
     }
 }
