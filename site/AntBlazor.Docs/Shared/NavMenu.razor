@@ -1,4 +1,4 @@
-﻿@using AntBlazor.Docs.Localization
+﻿@using AntBlazor.Docs.Services
 
 <div class="sidebar-logo">
     <a href="https://github.com/ant-design-blazor/ant-design-blazor" target="_blank">
@@ -19,7 +19,10 @@
     [Parameter] 
     public bool IsCollapsed { get; set; }
 
-    MenuItem[] MenuItems = { };
+    [Parameter]
+    public bool isCollapsed { get; set; }
+
+    MenuItem[] MenuItems = {};
 
     static readonly RenderFragment<(MenuItem[] items, ILanguageService languageService,int level)> menuItemTemplate = context =>
         @<Template>
@@ -58,8 +61,6 @@
             }
         </Template>;
 
-    string CurrentLanguage => LanguageService.CurrentCulture.Name;
-
     protected override async Task OnInitializedAsync()
     {
         var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
@@ -77,23 +78,4 @@
         StateHasChanged();
         await base.OnInitializedAsync();
     }
-
-    public class MenuItem
-    {
-        public string Title { get; set; }
-
-        public string Type { get; set; }
-
-        public string Url { get; set; }
-
-        public string Prefix { get; set; }
-
-        public bool Open { get; set; }
-
-        public string Icon { get; set; }
-
-        public bool Default { get; set; }
-
-        public MenuItem[] Children { get; set; }
-    }
-    }
+}

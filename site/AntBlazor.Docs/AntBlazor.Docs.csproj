@@ -28,6 +28,10 @@
     <EmbeddedResource Include="Resources\*.yml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\Shared\DemoComponent.cs" Link="Services\DemoComponent.cs" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
@@ -49,7 +53,7 @@
 
   <Target Name="DebugRunGulp" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug'">
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet build $(CLIProjectDir)" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) demo2json $(ProjectDir)Demos $(ProjectDir)wwwroot" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) demo2json $(ProjectDir)Demos $(ProjectDir)wwwroot/meta" />
   </Target>
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
