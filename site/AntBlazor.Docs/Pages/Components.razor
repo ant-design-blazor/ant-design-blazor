@@ -1,0 +1,32 @@
+﻿@page "/components/{name}"
+@using AntBlazor.Docs.Services
+
+
+@if (DemoComponent != null)
+{
+    <h3>@DemoComponent.Name</h3>
+    @((MarkupString)DemoComponent.Doc)
+
+    @foreach (var demo in DemoComponent.DemoList)
+    {
+        <CodeBox Demo="demo"></CodeBox>
+    }
+}
+
+
+@inject DemoService DemoService
+
+@code {
+
+    [Parameter]
+    public string Name { get; set; }
+
+    protected DemoComponent DemoComponent;
+
+    protected override async Task OnInitializedAsync()
+    {
+        DemoComponent =await DemoService.GetComponentAsync(Name);
+    }
+
+}
+

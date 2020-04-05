@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Text.Unicode;
 using AntBlazor.Docs.Build.CLI.Utils;
 using AntBlazor.Docs.Build.Extensions;
 using Microsoft.Extensions.CommandLineUtils;
@@ -61,7 +58,7 @@ namespace AntBlazor.Docs.Build.Command
                 return;
             }
 
-            Dictionary<string, Component> ComponentList = new Dictionary<string, Component>();
+            Dictionary<string, DemoComponent> ComponentList = new Dictionary<string, DemoComponent>();
 
             foreach (var component in demoDirectoryInfo.GetFileSystemInfos())
             {
@@ -77,7 +74,7 @@ namespace AntBlazor.Docs.Build.Command
                         var content = File.ReadAllText(docItem.FullName);
                         var docData = DocParser.ParseDoc(content);
 
-                        ComponentList.Add(language, new Component()
+                        ComponentList.Add(language, new DemoComponent()
                         {
                             Name = docData.Meta["title"],
                             Type = docData.Meta["type"],
@@ -109,52 +106,33 @@ namespace AntBlazor.Docs.Build.Command
                 }
             }
 
-            var dic = ComponentList.GroupBy(x => x.Key)
-                .ToDictionary(x => x.Key,
-                    x => x.Select(o => o.Value));
-
-            var json = JsonSerializer.Serialize(dic, new JsonSerializerOptions()
+            foreach (var componentDic in ComponentList.GroupBy(x => x.Key))
             {
-                WriteIndented = true,
-                IgnoreNullValues = true,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-            });
+                var components = componentDic.Select(x => x.Value);
+                var json = JsonSerializer.Serialize(components, new JsonSerializerOptions()
+                {
+                    WriteIndented = true,
+                    IgnoreNullValues = true,
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                });
 
-            var configFilePath = Path.Combine(Directory.GetCurrentDirectory(), output, "demo.json");
-            Console.WriteLine(json);
+                var configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
+                if (!Directory.Exists(configFileDirectory))
+                {
+                    Directory.CreateDirectory(configFileDirectory);
+                }
 
-            if (File.Exists(configFilePath))
-            {
-                File.Delete(configFilePath);
+                var configFilePath = Path.Combine(configFileDirectory, $"demo_{componentDic.Key}.json");
+                Console.WriteLine(json);
+
+                if (File.Exists(configFilePath))
+                {
+                    File.Delete(configFilePath);
+                }
+
+                File.WriteAllText(configFilePath, json);
+                Console.WriteLine("Generate demo file to {0}", configFilePath);
             }
-
-            File.WriteAllText(configFilePath, json);
-
-            Console.WriteLine("Generate demo file to {0}", configFilePath);
         }
-    }
-
-    public class Component
-    {
-        public string Name { get; set; }
-
-        public string Type { get; set; }
-
-        public string Doc { get; set; }
-
-        public List<DemoItem> DemoList { get; set; }
-    }
-
-    public class DemoItem
-    {
-        public int Order { get; set; }
-
-        public string Title { get; set; }
-
-        public string Description { get; set; }
-
-        public string Code { get; set; }
-
-        public string Type { get; set; }
     }
 }

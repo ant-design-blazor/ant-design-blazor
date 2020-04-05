@@ -10,10 +10,10 @@ namespace AntBlazor.Docs.Localization
 
         public Resources(string languageContent)
         {
-            initialize(languageContent);
+            Initialize(languageContent);
         }
 
-        private void initialize(string languageContent)
+        private void Initialize(string languageContent)
         {
             keyValues = new Deserializer().Deserialize<Dictionary<string, string>>(languageContent).Select(k => new { Key = k.Key.ToLower(), Value = k.Value }).ToDictionary(t => t.Key, t => t.Value);
         }
