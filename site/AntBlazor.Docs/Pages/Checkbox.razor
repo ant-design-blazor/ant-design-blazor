@@ -24,13 +24,13 @@
     <Description>Communicated with other components.</Description>
     <Demo>
         <div style="margin-bottom: 20px">
-            <AntCheckbox checked="@isChecked" disabled="@disabled" checkedChange="@(()=>ToggleChecked())">
+            <AntCheckbox checked="@isChecked" disabled="@disabled" checkedChange="@ToggleChecked">
                 @($"{(isChecked ? "Check" : "Uncheck")}-{(disabled ? "Disable" : "Enable")}")
             </AntCheckbox>
         </div>
         <br />
-        <AntButton type="@AntButtonType.Primary" size="small" @onclick="@(()=>ToggleChecked())">@(isChecked ? "Check" : "Uncheck")</AntButton>
-        <AntButton type="@AntButtonType.Primary" size="small" @onclick="@(()=>ToggleDisable())">@(disabled ? "Disable" : "Enable")</AntButton>
+        <AntButton type="@AntButtonType.Primary" size="small" @onclick="@ToggleChecked">@(isChecked ? "Check" : "Uncheck")</AntButton>
+        <AntButton type="@AntButtonType.Primary" size="small" @onclick="@ToggleDisable">@(disabled ? "Disable" : "Enable")</AntButton>
     </Demo>
 </DemoCard>
 @code{

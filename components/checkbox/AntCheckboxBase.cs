@@ -69,12 +69,6 @@ namespace AntBlazor
                 .If($"{prefixName}-indeterminate", () => indeterminate);
         }
 
-        protected async Task hostClick(MouseEventArgs args)
-        {
-            await innerCheckedChange(this.@checked);
-
-        }
-
         protected async Task inputCheckedChange(ChangeEventArgs args)
         {
             await innerCheckedChange(Convert.ToBoolean(args.Value));
@@ -88,7 +82,6 @@ namespace AntBlazor
                 onChange?.Invoke(this.@checked);
                 await this.checkedChange.InvokeAsync(this.@checked);
                 CheckboxGroup?.OnCheckboxChange(this);
-
             }
         }
 
