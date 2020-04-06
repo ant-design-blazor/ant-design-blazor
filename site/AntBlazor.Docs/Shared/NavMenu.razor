@@ -1,0 +1,98 @@
+﻿@using AntBlazor.Docs.Localization
+
+<div class="sidebar-logo">
+    <a href="https://github.com/ElderJames/ant-design-blazor" target="_blank">
+        <img src="https://raw.githubusercontent.com/ElderJames/ant-design-blazor/master/logo.svg?sanitize=true" alt="logo">
+        <h1>Ant Design Blazor</h1>
+    </a>
+</div>
+<AntMenu theme="dark" mode="AntDirectionVHIType.inline" inlineCollapsed="isCollapsed">
+    @menuItemTemplate((MenuItems,LanguageService,1))
+</AntMenu>
+
+
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject ILanguageService LanguageService
+
+@code {
+    [Parameter] public bool isCollapsed { get; set; }
+
+    MenuItem[] MenuItems = { };
+
+    static readonly RenderFragment<(MenuItem[] items, ILanguageService languageService,int level)> menuItemTemplate = context =>
+        @<Template>
+            @foreach (var menu in context.items)
+            {
+                if (menu.Type == "menuItem")
+                {
+                    <AntMenuItem matchRouter>
+                        <AntNavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All" Default="@menu.Default">
+                            <span>@menu.Title</span>
+                            @if (context.level > 1 && context.languageService.CurrentCulture.Name != "en-US")
+                            {
+                                <span class="chinese"> @context.languageService.Resources[menu.Title]</span>
+                            }
+                        </AntNavLink>
+                    </AntMenuItem>
+                }
+                else if (menu.Type == "subMenu")
+                {
+                    <AntSubMenu open="@menu.Open" title="@context.languageService.Resources[menu.Title]" icon="@menu.Icon">
+                        @if (menu.Children.Any())
+                        {
+                            @menuItemTemplate((menu.Children,context.languageService,context.level + 1))
+                        }
+                    </AntSubMenu>
+                }
+                else if (menu.Type == "itemGroup")
+                {
+                    <AntMenuItemGroup title="@context.languageService.Resources[menu.Title]">
+                        @if (menu.Children.Any())
+                        {
+                            @menuItemTemplate((menu.Children, context.languageService,context.level + 1))
+                        }
+                    </AntMenuItemGroup>
+                }
+            }
+        </Template>;
+
+    string CurrentLanguage => LanguageService.CurrentCulture.Name;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
+        MenuItems = await HttpClient.GetFromJsonAsync<MenuItem[]>(new Uri(baseUrl, "_content/AntBlazor.Docs/menu.json").ToString());
+
+        LanguageService.LanguageChanged += (_, args) =>
+        {
+            InvokeAsync(StateHasChanged);
+        };
+
+        NavigationManager.LocationChanged += (_, args) =>
+        {
+            StateHasChanged();
+        };
+        StateHasChanged();
+        await base.OnInitializedAsync();
+    }
+
+    public class MenuItem
+    {
+        public string Title { get; set; }
+
+        public string Type { get; set; }
+
+        public string Url { get; set; }
+
+        public string Prefix { get; set; }
+
+        public bool Open { get; set; }
+
+        public string Icon { get; set; }
+
+        public bool Default { get; set; }
+
+        public MenuItem[] Children { get; set; }
+    }
+    }

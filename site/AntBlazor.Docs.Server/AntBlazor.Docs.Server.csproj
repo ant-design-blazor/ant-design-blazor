@@ -9,6 +9,10 @@
     <ProjectReference Include="..\AntBlazor.Docs\AntBlazor.Docs.csproj" />
   </ItemGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' And '$(SolutionDir)'==''">
+    <SolutionDir>../../</SolutionDir>
+  </PropertyGroup>
+
   <ItemGroup>
     <DocFiles Include="$(SolutionDir)docs\**\*.*"></DocFiles>
   </ItemGroup>

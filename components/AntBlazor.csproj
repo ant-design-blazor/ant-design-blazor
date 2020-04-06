@@ -5,19 +5,14 @@
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
     <RazorLangVersion>3.0</RazorLangVersion>
-    <VersionPrefix>0.0.1</VersionPrefix>
-    <VersionSuffix></VersionSuffix>
     <Description>Ant Design components for Blazor and Razor Components</Description>
     <PackageProjectUrl>https://github.com/elderjames/ant-design-blazor</PackageProjectUrl>
     <RepositoryUrl>https://github.com/elderjames/ant-design-blazor</RepositoryUrl>
-    <PackageTags>blazor,mat,antd,design,razor,components</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>blazor,ant-design,antd,design,razor,components</PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>James Yeung</Copyright>
-    <PackageReleaseNotes></PackageReleaseNotes>
-    <PackageLicenseExpression></PackageLicenseExpression>
     <Authors>James Yeung</Authors>
     <PackageIcon>logo.png</PackageIcon>
   </PropertyGroup>
@@ -28,7 +23,7 @@
 
   <ItemGroup>
     <!-- The nuget package icon -->
-    <None Include="logo.png" Pack="true" PackagePath=""/>
+    <None Include="logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
