@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
@@ -8,7 +10,9 @@ namespace AntBlazor
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        public Action<object> onChange;
+        [Parameter] public List<AntCheckbox> CheckboxItems { get; set; } = new List<AntCheckbox>();
+
+        [Parameter] public EventCallback<object> OnChange { get; set; }
 
         public Action onTouched;
 
@@ -23,9 +27,24 @@ namespace AntBlazor
             ClassMapper.Add("ant-checkbox-group");
         }
 
-        public void onOptionChange()
+        public async void onOptionChange(bool change)
         {
-            this.onChange?.Invoke(this.options);
+            await this.OnChange.InvokeAsync(this.options);
+            StateHasChanged();
+        }
+
+        internal async Task OnCheckboxChange(AntCheckboxBase checkboxBase)
+        {
+            if (checkboxBase is AntCheckbox checkbox)
+            {
+                int index = CheckboxItems.IndexOf(checkbox);
+                if (options[index] != null)
+                {
+                    options[index].@checked = checkbox.@checked;
+                }
+            }
+            
+            StateHasChanged();
         }
     }
 }
