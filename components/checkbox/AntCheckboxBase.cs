@@ -50,6 +50,15 @@ namespace AntBlazor
             base.OnParametersSet();
         }
 
+        protected override async Task OnInitializedAsync()
+        {
+            if (this is AntCheckbox checkbox)
+            {
+                CheckboxGroup?.CheckboxItems.Add(checkbox);
+            }
+            await base.OnInitializedAsync();
+        }
+
         protected void setClass()
         {
             var prefixName = "ant-checkbox";
@@ -63,6 +72,7 @@ namespace AntBlazor
         protected async Task hostClick(MouseEventArgs args)
         {
             await innerCheckedChange(this.@checked);
+
         }
 
         protected async Task inputCheckedChange(ChangeEventArgs args)
@@ -77,10 +87,8 @@ namespace AntBlazor
                 this.@checked = @checked;
                 onChange?.Invoke(this.@checked);
                 await this.checkedChange.InvokeAsync(this.@checked);
-                if (this.CheckboxGroup != null)
-                {
-                    // this.CheckboxGroup.onChange();
-                }
+                CheckboxGroup?.OnCheckboxChange(this);
+
             }
         }
 
