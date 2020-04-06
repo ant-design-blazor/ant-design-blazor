@@ -15,6 +15,7 @@ namespace AntBlazor.Docs.WasmHost
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+            .UseAutofac();
     }
 }

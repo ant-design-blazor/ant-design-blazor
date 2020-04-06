@@ -9,7 +9,12 @@
     <ProjectReference Include="..\AntBlazor.Docs\AntBlazor.Docs.csproj" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' And '$(SolutionDir)'==''">
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.Autofac" Version="2.3.0" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic" Version="2.3.0" />
+  </ItemGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' And '$(SolutionDir)'==''">
     <SolutionDir>../../</SolutionDir>
   </PropertyGroup>
 
