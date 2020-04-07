@@ -2,7 +2,7 @@
 @using Type = System.Type
 @inherits ComponentBase
 
-<div class="code-box">
+<div class="code-box" id="components-@ComponentName.ToLower()-demo-@Demo.Title.ToLower()">
     <section class="code-box-demo">
         @ShowCaseContent
     </section>
@@ -41,6 +41,10 @@
 </div>
 
 @code {
+
+    [Parameter]
+    public string ComponentName { get; set; }
+
     [Parameter]
     public DemoItem Demo { get; set; }
 

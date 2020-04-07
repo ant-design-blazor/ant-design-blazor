@@ -11,11 +11,12 @@ namespace AntBlazor.Docs.Services
 {
     public class DemoService
     {
-        private static IDictionary<string, IDictionary<string, DemoComponent>> ComponentCache;
+        private static IDictionary<string, IDictionary<string, DemoComponent>> _componentCache;
 
         private readonly ILanguageService _languageService;
         private readonly HttpClient _httpClient;
         private readonly NavigationManager _navigationManager;
+
         private string CurrentLanguage => _languageService.CurrentCulture.Name;
 
         public DemoService(ILanguageService languageService, HttpClient httpClient, NavigationManager navigationManager)
@@ -27,14 +28,14 @@ namespace AntBlazor.Docs.Services
 
         private async Task InitializeAsync()
         {
-            ComponentCache ??= new Dictionary<string, IDictionary<string, DemoComponent>>();
-            if (!ComponentCache.ContainsKey(CurrentLanguage))
+            _componentCache ??= new Dictionary<string, IDictionary<string, DemoComponent>>();
+            if (!_componentCache.ContainsKey(CurrentLanguage))
             {
                 var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
                 var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/demo_{CurrentLanguage}.json").ToString());
                 if (components.Any())
                 {
-                    ComponentCache.Add(CurrentLanguage, components.ToDictionary(x => x.Name, x => x));
+                    _componentCache.Add(CurrentLanguage, components.ToDictionary(x => x.Name, x => x));
                 }
             }
         }
@@ -42,7 +43,7 @@ namespace AntBlazor.Docs.Services
         public async Task<DemoComponent> GetComponentAsync(string componentName)
         {
             await InitializeAsync();
-            return ComponentCache[CurrentLanguage][componentName];
+            return _componentCache[CurrentLanguage][componentName];
         }
 
         //public MenuItem[] GetMenuAsync()
