@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using AntBlazor.Docs.Highlight;
 using AntBlazor.Docs.Localization;
 using AntBlazor.Docs.Routing;
 using AntBlazor.Docs.Services;
@@ -13,6 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<RouteManager>();
             services.AddScoped<DemoService>();
             services.AddSingleton<ILanguageService>(new InAssemblyLanguageService(Assembly.GetExecutingAssembly()));
+            services.AddScoped<IPrismHighlighter, PrismHighlighter>();
             return services;
         }
     }

@@ -1,5 +1,4 @@
-﻿@using AntBlazor.Docs.Demos.Button.demo
-@using Type = System.Type
+﻿@using AntBlazor.Docs.Highlight
 @inherits ComponentBase
 
 <div class="code-box" id="components-@ComponentName.ToLower()-demo-@Demo.Title.ToLower()">
@@ -33,12 +32,14 @@
         <div class="highlight">
             <pre class="language-jsx">
                 <code>
-@Demo.Code
+@sourceCode
                     </code>
                 </pre>
         </div>
     </section>
 </div>
+
+@inject IPrismHighlighter Highlighter
 
 @code {
 
@@ -48,11 +49,18 @@
     [Parameter]
     public DemoItem Demo { get; set; }
 
+    protected MarkupString sourceCode { get; set; }
+
     RenderFragment ShowCaseContent => (builder) =>
     {
         var showCase = Type.GetType($"AntBlazor.Docs.{Demo.Type}");
         builder.OpenComponent(0, showCase);
         builder.CloseComponent();
     };
+
+    protected override async Task OnInitializedAsync()
+    {
+        sourceCode = await Highlighter.HighlightAsync(Demo.Code, "html");
+    }
 
 }
