@@ -28,7 +28,6 @@ namespace AntBlazor
         private int _navIndex;
         private int _navTotal;
         private int _navSection;
-        private bool _navRendered;
 
         #region Parameters
 
@@ -263,10 +262,13 @@ namespace AntBlazor
                 StateHasChanged();
             }
 
-            // Prev/Next icon, show icon if scroll div's width less than tab bars' total width
-            _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-            _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-            RefreshNavIcon();
+            if (firstRender)
+            {
+                // Prev/Next icon, show icon if scroll div's width less than tab bars' total width
+                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+                RefreshNavIcon();
+            }
         }
 
         private async void OnPrevClicked()
@@ -278,12 +280,14 @@ namespace AntBlazor
                     await OnPrevClick.InvokeAsync(null);
                 }
 
+                // get the old offset to the left, and _navIndex != 0 because prev will be disabled
+                int left = _navIndex * _navSection;
                 _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
                 _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-                // BUG: return to 0 when resize the window to a very small scale
+                // calculate the current _navIndex after users resize the browser, and _navIndex > 0 guaranteed since left > 0
+                _navIndex = (int)Math.Ceiling(1.0 * left / _navSection);
                 int offset = --_navIndex * _navSection;
                 _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
-                _navRendered = false;
                 RefreshNavIcon();
             }
         }
@@ -297,52 +301,50 @@ namespace AntBlazor
                     await OnNextClick.InvokeAsync(null);
                 }
 
+                // get the old offset to the left
+                int left = _navIndex * _navSection;
                 _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
                 _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-                int offset = ++_navIndex * _navSection;
+                // calculate the current _navIndex after users resize the browser
+                _navIndex = left / _navSection;
+                int offset = Math.Min(++_navIndex * _navSection, _navTotal / _navSection * _navSection);
                 _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
-                _navRendered = false;
                 RefreshNavIcon();
             }
         }
 
         private void RefreshNavIcon()
         {
-            if (!_navRendered)
+            if (_navTotal > _navSection)
             {
-                if (_navTotal > _navSection)
+                if (_navIndex == 0)
                 {
-                    if (_navIndex == 0)
-                    {
-                        // reach the first tab
-                        _prevIconEnabled = false;
-                    }
-                    else
-                    {
-                        _prevIconEnabled = true;
-                    }
-
-                    if ((_navIndex + 1) * _navSection > _navTotal)
-                    {
-                        // reach the last section
-                        _nextIconEnabled = false;
-                    }
-                    else
-                    {
-                        _nextIconEnabled = true;
-                    }
+                    // reach the first tab
+                    _prevIconEnabled = false;
                 }
                 else
                 {
-                    // hide icon
-                    _prevIconEnabled = null;
-                    _nextIconEnabled = null;
+                    _prevIconEnabled = true;
                 }
 
-                StateHasChanged();
+                if ((_navIndex + 1) * _navSection > _navTotal)
+                {
+                    // reach the last section
+                    _nextIconEnabled = false;
+                }
+                else
+                {
+                    _nextIconEnabled = true;
+                }
+            }
+            else
+            {
+                // hide icon
+                _prevIconEnabled = null;
+                _nextIconEnabled = null;
             }
 
-            _navRendered = true;
+            StateHasChanged();
         }
     }
 }
