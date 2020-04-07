@@ -11,12 +11,24 @@ namespace AntBlazor
     {
         private const string PrefixCls = "ant-tabs";
         private ClassMapper _barClassMapper = new ClassMapper();
+        private ClassMapper _prevClassMapper = new ClassMapper();
+        private ClassMapper _nextClassMapper = new ClassMapper();
+        private ClassMapper _navClassMapper = new ClassMapper();
         private List<AntTabPane> _panes = new List<AntTabPane>();
         private AntTabPane _activePane;
         private AntTabPane _renderedActivePane;
         private ElementReference _activeTabBar;
+        private ElementReference _scrollTabBar;
+        private ElementReference _tabBars;
         private string _inkStyle;
+        private string _navStyle;
         private string _contentStyle;
+        private bool? _prevIconEnabled;
+        private bool? _nextIconEnabled;
+        private int _navIndex;
+        private int _navTotal;
+        private int _navSection;
+        private bool _navRendered;
 
         #region Parameters
 
@@ -37,7 +49,11 @@ namespace AntBlazor
             }
             set
             {
-                _activeKey = value;
+                if (_activeKey != value)
+                {
+                    _activeKey = value;
+                    ActivatePane(_panes.Single(p => p.Key == _activeKey));
+                }
             }
         }
 
@@ -117,13 +133,13 @@ namespace AntBlazor
         /// Callback executed when next button is clicked
         /// </summary>
         [Parameter]
-        public EventCallback<object> OnNextClick { get; set; }
+        public EventCallback OnNextClick { get; set; }
 
         /// <summary>
         /// Callback executed when prev button is clicked
         /// </summary>
         [Parameter]
-        public EventCallback<object> OnPrevClick { get; set; }
+        public EventCallback OnPrevClick { get; set; }
 
         /// <summary>
         /// Callback executed when tab is clicked
@@ -167,6 +183,24 @@ namespace AntBlazor
             _barClassMapper.Clear()
                 .Add($"{PrefixCls}-bar")
                 .Add($"{PrefixCls}-{TabPosition}-bar");
+
+            _prevClassMapper.Clear()
+                .Add($"{PrefixCls}-tab-prev")
+                .If($"{PrefixCls}-tab-btn-disabled", () => !_prevIconEnabled.HasValue || !_prevIconEnabled.Value)
+                .If($"{PrefixCls}-tab-arrow-show", () => _prevIconEnabled.HasValue);
+
+            _nextClassMapper.Clear()
+                .Add($"{PrefixCls}-tab-next")
+                .If($"{PrefixCls}-tab-btn-disabled", () => !_nextIconEnabled.HasValue || !_nextIconEnabled.Value)
+                .If($"{PrefixCls}-tab-arrow-show", () => _nextIconEnabled.HasValue);
+
+            _navClassMapper.Clear()
+                .Add($"{PrefixCls}-nav-container")
+                .If($"{PrefixCls}-nav-container-scrolling", () => _prevIconEnabled.HasValue || _nextIconEnabled.HasValue);
+
+            _navStyle = "transform: translate3d(0px, 0px, 0px);";
+            _inkStyle = "width: 0px; display: block; transform: translate3d(0px, 0px, 0px);";
+            _contentStyle = "margin-left: 0;";
         }
 
         /// <summary>
@@ -188,11 +222,10 @@ namespace AntBlazor
             }
 
             _panes.Add(tabPane);
-            if (_activePane == null)
+            if (tabPane.Key == DefaultActiveKey)
             {
                 ActivatePane(tabPane);
             }
-            StateHasChanged();
         }
 
         private async void ActivatePane(AntTabPane tabPane)
@@ -205,6 +238,7 @@ namespace AntBlazor
                 }
                 tabPane.IsActive = true;
                 _activePane = tabPane;
+                ActiveKey = _activePane.Key;
                 StateHasChanged();
             }
         }
@@ -213,6 +247,12 @@ namespace AntBlazor
         {
             await base.OnAfterRenderAsync(firstRender);
 
+            if (_activePane == null)
+            {
+                throw new ArgumentNullException($"One of {nameof(ActiveKey)} and {nameof(DefaultActiveKey)} should be set");
+            }
+
+            // animate Active Ink
             if (_renderedActivePane != _activePane)
             {
                 _renderedActivePane = _activePane;
@@ -222,6 +262,87 @@ namespace AntBlazor
                 _contentStyle = $"margin-left: -{_panes.IndexOf(_activePane)}00%;";
                 StateHasChanged();
             }
+
+            // Prev/Next icon, show icon if scroll div's width less than tab bars' total width
+            _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+            _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            RefreshNavIcon();
+        }
+
+        private async void OnPrevClicked()
+        {
+            if (_prevIconEnabled.HasValue && _prevIconEnabled.Value)
+            {
+                if (OnPrevClick.HasDelegate)
+                {
+                    await OnPrevClick.InvokeAsync(null);
+                }
+
+                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+                // BUG: return to 0 when resize the window to a very small scale
+                int offset = --_navIndex * _navSection;
+                _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+                _navRendered = false;
+                RefreshNavIcon();
+            }
+        }
+
+        private async void OnNextClicked()
+        {
+            if (_nextIconEnabled.HasValue && _nextIconEnabled.Value)
+            {
+                if (OnNextClick.HasDelegate)
+                {
+                    await OnNextClick.InvokeAsync(null);
+                }
+
+                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+                int offset = ++_navIndex * _navSection;
+                _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+                _navRendered = false;
+                RefreshNavIcon();
+            }
+        }
+
+        private void RefreshNavIcon()
+        {
+            if (!_navRendered)
+            {
+                if (_navTotal > _navSection)
+                {
+                    if (_navIndex == 0)
+                    {
+                        // reach the first tab
+                        _prevIconEnabled = false;
+                    }
+                    else
+                    {
+                        _prevIconEnabled = true;
+                    }
+
+                    if ((_navIndex + 1) * _navSection > _navTotal)
+                    {
+                        // reach the last section
+                        _nextIconEnabled = false;
+                    }
+                    else
+                    {
+                        _nextIconEnabled = true;
+                    }
+                }
+                else
+                {
+                    // hide icon
+                    _prevIconEnabled = null;
+                    _nextIconEnabled = null;
+                }
+
+                StateHasChanged();
+            }
+
+            _navRendered = true;
         }
     }
 }
