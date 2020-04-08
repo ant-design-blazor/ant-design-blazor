@@ -10,6 +10,7 @@ namespace AntBlazor
     public partial class AntTabs : AntDomComponentBase
     {
         private const string PrefixCls = "ant-tabs";
+        private bool IsHorizontal { get => TabPosition == AntTabPosition.Top || TabPosition == AntTabPosition.Bottom; }
         private ClassMapper _barClassMapper = new ClassMapper();
         private ClassMapper _prevClassMapper = new ClassMapper();
         private ClassMapper _nextClassMapper = new ClassMapper();
@@ -28,6 +29,7 @@ namespace AntBlazor
         private int _navIndex;
         private int _navTotal;
         private int _navSection;
+        private bool _needRefresh;
 
         #region Parameters
 
@@ -157,12 +159,17 @@ namespace AntBlazor
         public override Task SetParametersAsync(ParameterView parameters)
         {
             string type = parameters.GetValueOrDefault<string>(nameof(Type));
-
             if (type == AntTabType.Card)
             {
                 // according to ant design documents,
                 // Animated default to false when type="card"
                 Animated = false;
+            }
+
+            string position = parameters.GetValueOrDefault<string>(nameof(TabPosition));
+            if (!string.IsNullOrEmpty(position))
+            {
+                _needRefresh = true;
             }
 
             return base.SetParametersAsync(parameters);
@@ -199,7 +206,7 @@ namespace AntBlazor
 
             _navStyle = "transform: translate3d(0px, 0px, 0px);";
             _inkStyle = "width: 0px; display: block; transform: translate3d(0px, 0px, 0px);";
-            _contentStyle = "margin-left: 0;";
+            _contentStyle = "margin-" + (IsHorizontal ? "left" : "top") + ": 0;";
         }
 
         /// <summary>
@@ -251,23 +258,35 @@ namespace AntBlazor
                 throw new ArgumentNullException($"One of {nameof(ActiveKey)} and {nameof(DefaultActiveKey)} should be set");
             }
 
-            // animate Active Ink
-            if (_renderedActivePane != _activePane)
-            {
-                _renderedActivePane = _activePane;
-                // ink bar
-                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
-                _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
-                _contentStyle = $"margin-left: -{_panes.IndexOf(_activePane)}00%;";
-                StateHasChanged();
-            }
+            await TryRenderInk();
 
-            if (firstRender)
+            await TryRenderNavIcon(firstRender);
+
+            _needRefresh = false;
+        }
+
+        private async Task TryRenderNavIcon(bool firstRender)
+        {
+            if (firstRender || _needRefresh)
             {
                 // Prev/Next icon, show icon if scroll div's width less than tab bars' total width
                 _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
                 _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
                 RefreshNavIcon();
+            }
+        }
+
+        private async Task TryRenderInk()
+        {
+            // animate Active Ink
+            if (_renderedActivePane != _activePane || _needRefresh)
+            {
+                _renderedActivePane = _activePane;
+                // ink bar
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
+                _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
+                _contentStyle = "margin-" + (IsHorizontal ? "left" : "top") + $": -{_panes.IndexOf(_activePane)}00%;";
+                StateHasChanged();
             }
         }
 
@@ -345,6 +364,11 @@ namespace AntBlazor
             }
 
             StateHasChanged();
+        }
+
+        protected override bool ShouldRender()
+        {
+            return base.ShouldRender() || _needRefresh || _renderedActivePane != _activePane;
         }
     }
 }
