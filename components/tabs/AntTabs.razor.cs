@@ -260,76 +260,67 @@ namespace AntBlazor
 
             await TryRenderInk();
 
-            await TryRenderNavIcon(firstRender);
-
+            await TryRenderNavIcon();
             _needRefresh = false;
         }
 
-        private async Task TryRenderNavIcon(bool firstRender)
+        private async Task TryRenderNavIcon()
         {
-            if (firstRender || _needRefresh)
-            {
-                // Prev/Next icon, show icon if scroll div's width less than tab bars' total width
-                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-                RefreshNavIcon();
-            }
+            // Prev/Next icon, show icon if scroll div's width less than tab bars' total width
+            _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+            _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            RefreshNavIcon();
         }
 
         private async Task TryRenderInk()
         {
             // animate Active Ink
-            if (_renderedActivePane != _activePane || _needRefresh)
-            {
-                _renderedActivePane = _activePane;
-                // ink bar
-                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
-                _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
-                _contentStyle = "margin-" + (IsHorizontal ? "left" : "top") + $": -{_panes.IndexOf(_activePane)}00%;";
-                StateHasChanged();
-            }
+            // ink bar
+            Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
+            _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
+            _contentStyle = "margin-" + (IsHorizontal ? "left" : "top") + $": -{_panes.IndexOf(_activePane)}00%;";
+            StateHasChanged();
+            _renderedActivePane = _activePane;
         }
 
         private async void OnPrevClicked()
         {
-            if (_prevIconEnabled.HasValue && _prevIconEnabled.Value)
+            _needRefresh = true;
+            if (OnPrevClick.HasDelegate)
             {
-                if (OnPrevClick.HasDelegate)
-                {
-                    await OnPrevClick.InvokeAsync(null);
-                }
-
-                // get the old offset to the left, and _navIndex != 0 because prev will be disabled
-                int left = _navIndex * _navSection;
-                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-                // calculate the current _navIndex after users resize the browser, and _navIndex > 0 guaranteed since left > 0
-                _navIndex = (int)Math.Ceiling(1.0 * left / _navSection);
-                int offset = --_navIndex * _navSection;
-                _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
-                RefreshNavIcon();
+                await OnPrevClick.InvokeAsync(null);
             }
+
+            // get the old offset to the left, and _navIndex != 0 because prev will be disabled
+            int left = _navIndex * _navSection;
+            _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+            _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            // calculate the current _navIndex after users resize the browser, and _navIndex > 0 guaranteed since left > 0
+            _navIndex = (int)Math.Ceiling(1.0 * left / _navSection);
+            int offset = --_navIndex * _navSection;
+            _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+            RefreshNavIcon();
+            _needRefresh = false;
         }
 
         private async void OnNextClicked()
         {
-            if (_nextIconEnabled.HasValue && _nextIconEnabled.Value)
+            _needRefresh = true;
+            if (OnNextClick.HasDelegate)
             {
-                if (OnNextClick.HasDelegate)
-                {
-                    await OnNextClick.InvokeAsync(null);
-                }
-
-                // get the old offset to the left
-                int left = _navIndex * _navSection;
-                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-                // calculate the current _navIndex after users resize the browser
-                _navIndex = left / _navSection;
-                int offset = Math.Min(++_navIndex * _navSection, _navTotal / _navSection * _navSection);
-                _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
-                RefreshNavIcon();
+                await OnNextClick.InvokeAsync(null);
             }
+
+            // get the old offset to the left
+            int left = _navIndex * _navSection;
+            _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+            _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            // calculate the current _navIndex after users resize the browser
+            _navIndex = left / _navSection;
+            int offset = Math.Min(++_navIndex * _navSection, _navTotal / _navSection * _navSection);
+            _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+            RefreshNavIcon();
+            _needRefresh = false;
         }
 
         private void RefreshNavIcon()
@@ -338,7 +329,7 @@ namespace AntBlazor
             {
                 if (_navIndex == 0)
                 {
-                    // reach the first tab
+                    // reach the first section
                     _prevIconEnabled = false;
                 }
                 else
@@ -368,7 +359,7 @@ namespace AntBlazor
 
         protected override bool ShouldRender()
         {
-            return base.ShouldRender() || _needRefresh || _renderedActivePane != _activePane;
+            return _needRefresh || _renderedActivePane != _activePane;
         }
     }
 }
