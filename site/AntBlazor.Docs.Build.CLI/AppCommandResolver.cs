@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.CommandLineUtils;
 
-namespace AntBlazor.Docs.Build
+namespace AntBlazor.Docs.Build.CLI
 {
     public class AppCommandResolver : IAppCommandResolver
     {

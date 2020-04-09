@@ -35,7 +35,7 @@ namespace AntBlazor.Docs.Services
                 var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/demo_{CurrentLanguage}.json").ToString());
                 if (components.Any())
                 {
-                    _componentCache.Add(CurrentLanguage, components.ToDictionary(x => x.Name, x => x));
+                    _componentCache.Add(CurrentLanguage, components.ToDictionary(x => x.Title, x => x));
                 }
             }
         }

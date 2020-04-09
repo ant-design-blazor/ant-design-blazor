@@ -4,7 +4,9 @@ namespace AntBlazor.Docs
 {
     public class DemoComponent
     {
-        public string Name { get; set; }
+        public string Title { get; set; }
+
+        public string SubTitle { get; set; }
 
         public string Type { get; set; }
 

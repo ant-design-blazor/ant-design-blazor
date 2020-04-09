@@ -12,7 +12,7 @@ namespace AntBlazor.Docs.Build.CLI.Utils
 {
     public class DocParser
     {
-        public static (Dictionary<string, string> Meta, string Content) ParseDoc(string input)
+        public static (Dictionary<string, string> Meta, string Content) ParseDemoDoc(string input)
         {
             var pipeline = new MarkdownPipelineBuilder()
                 .UseYamlFrontMatter()
@@ -92,6 +92,29 @@ namespace AntBlazor.Docs.Build.CLI.Utils
             }
 
             return (meta, new Dictionary<string, string>() { ["zh-CN"] = zhPart, ["en-US"] = enPart });
+        }
+
+        public static Dictionary<string, string> ParseHeader(string input)
+        {
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseYamlFrontMatter()
+                .Build();
+
+            StringWriter writer = new StringWriter();
+            var renderer = new HtmlRenderer(writer);
+            pipeline.Setup(renderer);
+
+            MarkdownDocument document = Markdown.Parse(input, pipeline);
+            var yamlBlock = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
+
+            Dictionary<string, string> meta = null;
+            if (yamlBlock != null)
+            {
+                string yaml = input.Substring(yamlBlock.Span.Start, yamlBlock.Span.Length).Trim('-');
+                meta = new Deserializer().Deserialize<Dictionary<string, string>>(yaml);
+            }
+
+            return meta;
         }
     }
 

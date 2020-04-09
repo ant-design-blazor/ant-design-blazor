@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using Microsoft.Extensions.CommandLineUtils;
 
-namespace AntBlazor.Docs.Build.Extensions
+namespace AntBlazor.Docs.Build.CLI.Extensions
 {
     internal static class CommandLineApplicationExtensions
     {

@@ -2,7 +2,8 @@
   "profiles": {
     "AntBlazor.Docs.Build.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "demo2json ../../../../AntBlazor.Docs/Demos ./"
+      //"commandLineArgs": "demo2json ../../../../AntBlazor.Docs/Demos ./"
+      "commandLineArgs": "menu2json ../../../../AntBlazor.Docs/Demos ../../../../../docs ./"
     }
   }
 }

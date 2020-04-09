@@ -1,7 +1,7 @@
-using AntBlazor.Docs.Build.Extensions;
+using AntBlazor.Docs.Build.CLI.Extensions;
 using Microsoft.Extensions.CommandLineUtils;
 
-namespace AntBlazor.Docs.Build
+namespace AntBlazor.Docs.Build.CLI
 {
     public class CommandLineApplicationFactory
     {

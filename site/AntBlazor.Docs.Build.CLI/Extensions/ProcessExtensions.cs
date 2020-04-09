@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace AntBlazor.Docs.Build.Extensions
+namespace AntBlazor.Docs.Build.CLI.Extensions
 {
     public static class ProcessExtensions
     {

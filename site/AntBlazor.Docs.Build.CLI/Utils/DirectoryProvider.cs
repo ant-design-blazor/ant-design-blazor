@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace AntBlazor.Docs.Build.Utils
+namespace AntBlazor.Docs.Build.CLI.Utils
 {
     public class DirectoryProvider
     {

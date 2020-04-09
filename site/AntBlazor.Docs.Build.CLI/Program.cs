@@ -1,10 +1,10 @@
 ﻿using System;
-using AntBlazor.Docs.Build.Command;
-using AntBlazor.Docs.Build.Utils;
+using AntBlazor.Docs.Build.CLI.Command;
+using AntBlazor.Docs.Build.CLI.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AntBlazor.Docs.Build
+namespace AntBlazor.Docs.Build.CLI
 {
     internal class Program
     {
@@ -44,6 +44,7 @@ namespace AntBlazor.Docs.Build
             services.AddSingleton<DirectoryProvider>();
             services.AddSingleton<ShellProcessFactory>();
             services.AddSingleton<IAppCommand, GenerateDemoJsonCommand>();
+            services.AddSingleton<IAppCommand, GenerateMenuJsonCommand>();
             return services.BuildServiceProvider();
         }
     }

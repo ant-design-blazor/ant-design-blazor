@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using AntBlazor.Docs.Build.CLI.Extensions;
 using AntBlazor.Docs.Build.CLI.Utils;
-using AntBlazor.Docs.Build.Extensions;
 using Microsoft.Extensions.CommandLineUtils;
 
-namespace AntBlazor.Docs.Build.Command
+namespace AntBlazor.Docs.Build.CLI.Command
 {
     public class GenerateDemoJsonCommand : IAppCommand
     {
@@ -58,25 +58,25 @@ namespace AntBlazor.Docs.Build.Command
                 return;
             }
 
-            Dictionary<string, DemoComponent> ComponentList = new Dictionary<string, DemoComponent>();
+            Dictionary<string, DemoComponent> componentList = new Dictionary<string, DemoComponent>();
 
             foreach (var component in demoDirectoryInfo.GetFileSystemInfos())
             {
                 if (component is DirectoryInfo componentDirectory)
                 {
-                    var componentName = component.Name;
                     var docDir = componentDirectory.GetFileSystemInfos("doc")[0];
                     var demoDir = componentDirectory.GetFileSystemInfos("demo")[0];
 
                     foreach (var docItem in (docDir as DirectoryInfo).GetFileSystemInfos())
                     {
-                        var language = docItem.Name.Replace("doc_", "").Replace($"{docItem.Extension}", "");
+                        var language = docItem.Name.Replace("doc_", "").Replace(docItem.Extension, "");
                         var content = File.ReadAllText(docItem.FullName);
-                        var docData = DocParser.ParseDoc(content);
+                        var docData = DocParser.ParseDemoDoc(content);
 
-                        ComponentList.Add(language, new DemoComponent()
+                        componentList.Add(language, new DemoComponent()
                         {
-                            Name = docData.Meta["title"],
+                            Title = docData.Meta["title"],
+                            SubTitle = docData.Meta.TryGetValue("subtitle", out var subtitle) ? subtitle : null,
                             Type = docData.Meta["type"],
                             Doc = docData.Content,
                         });
@@ -92,7 +92,7 @@ namespace AntBlazor.Docs.Build.Command
 
                         foreach (var title in descriptionContent.Meta.Title)
                         {
-                            var list = ComponentList[title.Key].DemoList ??= new List<DemoItem>();
+                            var list = componentList[title.Key].DemoList ??= new List<DemoItem>();
                             list.Add(new DemoItem()
                             {
                                 Title = title.Value,
@@ -106,7 +106,7 @@ namespace AntBlazor.Docs.Build.Command
                 }
             }
 
-            foreach (var componentDic in ComponentList.GroupBy(x => x.Key))
+            foreach (var componentDic in componentList.GroupBy(x => x.Key))
             {
                 var components = componentDic.Select(x => x.Value);
                 var json = JsonSerializer.Serialize(components, new JsonSerializerOptions()

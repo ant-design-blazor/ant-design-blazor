@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Compile Include="..\Shared\DemoComponent.cs" Link="Services\DemoComponent.cs" />
+    <Compile Include="..\Shared\MenuItem.cs" Link="Services\MenuItem.cs" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
@@ -54,6 +55,7 @@
   <Target Name="DebugRunGulp" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug'">
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet build $(CLIProjectDir)" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) demo2json $(ProjectDir)Demos $(ProjectDir)wwwroot/meta" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) menu2json $(ProjectDir)Demos docs $(ProjectDir)wwwroot/meta" />
   </Target>
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">

@@ -1,4 +1,4 @@
-namespace AntBlazor.Docs.Build.Utils
+namespace AntBlazor.Docs.Build.CLI.Utils
 {
     public class ShellProcessFactory
     {
