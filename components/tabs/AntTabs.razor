@@ -1,7 +1,7 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id">
+<div class="@ClassMapper.Class" style="height: 220px; @Style" @attributes="Attributes" id="@Id">
     <!--Tab bar-->
     <div tabindex="-1" class="@_barClassMapper.Class" role="tablist">
         <div class="@_navClassMapper.Class">
@@ -15,8 +15,8 @@
                     <AntIcon class="ant-tabs-tab-next-icon-target" type="@(TabPosition == AntTabPosition.Top || TabPosition == AntTabPosition.Bottom?"right":"down")" />
                 </span>
             </span>
-            <div class="ant-tabs-nav-wrap">
-                <div class="ant-tabs-nav-scroll" @ref="_scrollTabBar">
+            <div class="ant-tabs-nav-wrap" @ref="_scrollTabBar">
+                <div class="ant-tabs-nav-scroll">
                     <div class="ant-tabs-nav ant-tabs-nav-animated" style="@_navStyle">
                         <div @ref="_tabBars">
                             @foreach (var pane in _panes)

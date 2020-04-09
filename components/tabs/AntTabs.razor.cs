@@ -170,6 +170,7 @@ namespace AntBlazor
             if (!string.IsNullOrEmpty(position))
             {
                 _needRefresh = true;
+                _renderedActivePane = null;
             }
 
             return base.SetParametersAsync(parameters);
@@ -266,21 +267,43 @@ namespace AntBlazor
 
         private async Task TryRenderNavIcon()
         {
-            // Prev/Next icon, show icon if scroll div's width less than tab bars' total width
-            _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-            _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-            RefreshNavIcon();
+            if (_needRefresh)
+            {
+                if (IsHorizontal)
+                {
+                    // Prev/Next icon, show icon if scroll div's width less than tab bars' total width
+                    _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+                    _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+                }
+                else
+                {
+                    _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
+                    _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
+                }
+                RefreshNavIcon();
+            }
         }
 
         private async Task TryRenderInk()
         {
-            // animate Active Ink
-            // ink bar
-            Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
-            _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
-            _contentStyle = "margin-" + (IsHorizontal ? "left" : "top") + $": -{_panes.IndexOf(_activePane)}00%;";
-            StateHasChanged();
-            _renderedActivePane = _activePane;
+            if (_renderedActivePane != _activePane)
+            {
+                // animate Active Ink
+                // ink bar
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
+                if (IsHorizontal)
+                {
+                    _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
+                    _contentStyle = "margin-left: -{_panes.IndexOf(_activePane)}00%;";
+                }
+                else
+                {
+                    _inkStyle = $"height: {element.clientHeight}px; display: block; transform: translate3d(0px, {element.offsetTop}px, 0px);";
+                    _contentStyle = "margin-top: -{_panes.IndexOf(_activePane)}00%;";
+                }
+                StateHasChanged();
+                _renderedActivePane = _activePane;
+            }
         }
 
         private async void OnPrevClicked()
@@ -298,13 +321,21 @@ namespace AntBlazor
             // calculate the current _navIndex after users resize the browser, and _navIndex > 0 guaranteed since left > 0
             _navIndex = (int)Math.Ceiling(1.0 * left / _navSection);
             int offset = --_navIndex * _navSection;
-            _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+            if (IsHorizontal)
+            {
+                _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+            }
+            else
+            {
+                _navStyle = $"transform: translate3d(0px, -{offset}px, 0px);";
+            }
             RefreshNavIcon();
             _needRefresh = false;
         }
 
         private async void OnNextClicked()
         {
+            // BUG: when vertical
             _needRefresh = true;
             if (OnNextClick.HasDelegate)
             {
@@ -318,7 +349,14 @@ namespace AntBlazor
             // calculate the current _navIndex after users resize the browser
             _navIndex = left / _navSection;
             int offset = Math.Min(++_navIndex * _navSection, _navTotal / _navSection * _navSection);
-            _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+            if (IsHorizontal)
+            {
+                _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+            }
+            else
+            {
+                _navStyle = $"transform: translate3d(0px, -{offset}px, 0px);";
+            }
             RefreshNavIcon();
             _needRefresh = false;
         }
