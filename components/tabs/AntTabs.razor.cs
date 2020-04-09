@@ -171,6 +171,7 @@ namespace AntBlazor
             {
                 _needRefresh = true;
                 _renderedActivePane = null;
+                _navIndex = 0;
             }
 
             return base.SetParametersAsync(parameters);
@@ -288,18 +289,19 @@ namespace AntBlazor
         {
             if (_renderedActivePane != _activePane)
             {
+                // TODO: slide to activated tab
                 // animate Active Ink
                 // ink bar
                 Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
                 if (IsHorizontal)
                 {
                     _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
-                    _contentStyle = "margin-left: -{_panes.IndexOf(_activePane)}00%;";
+                    _contentStyle = $"margin-left: -{_panes.IndexOf(_activePane)}00%;";
                 }
                 else
                 {
                     _inkStyle = $"height: {element.clientHeight}px; display: block; transform: translate3d(0px, {element.offsetTop}px, 0px);";
-                    _contentStyle = "margin-top: -{_panes.IndexOf(_activePane)}00%;";
+                    _contentStyle = $"margin-top: -{_panes.IndexOf(_activePane)}00%;";
                 }
                 StateHasChanged();
                 _renderedActivePane = _activePane;
@@ -316,8 +318,16 @@ namespace AntBlazor
 
             // get the old offset to the left, and _navIndex != 0 because prev will be disabled
             int left = _navIndex * _navSection;
-            _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-            _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            if (IsHorizontal)
+            {
+                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            }
+            else
+            {
+                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
+                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
+            }
             // calculate the current _navIndex after users resize the browser, and _navIndex > 0 guaranteed since left > 0
             _navIndex = (int)Math.Ceiling(1.0 * left / _navSection);
             int offset = --_navIndex * _navSection;
@@ -344,8 +354,16 @@ namespace AntBlazor
 
             // get the old offset to the left
             int left = _navIndex * _navSection;
-            _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-            _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            if (IsHorizontal)
+            {
+                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            }
+            else
+            {
+                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
+                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
+            }
             // calculate the current _navIndex after users resize the browser
             _navIndex = left / _navSection;
             int offset = Math.Min(++_navIndex * _navSection, _navTotal / _navSection * _navSection);

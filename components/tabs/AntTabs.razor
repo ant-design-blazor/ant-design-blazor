@@ -2,6 +2,13 @@
 @inherits AntDomComponentBase
 
 <div class="@ClassMapper.Class" style="height: 220px; @Style" @attributes="Attributes" id="@Id">
+    <!---->
+    @if (TabBarExtraContent != null)
+    {
+        <div class="ant-tabs-extra-content" style="float: right;">
+            @TabBarExtraContent
+        </div>
+    }
     <!--Tab bar-->
     <div tabindex="-1" class="@_barClassMapper.Class" role="tablist">
         <div class="@_navClassMapper.Class">

@@ -206,3 +206,29 @@
     </AntTabPane>;
 };
 }
+
+<DemoCard>
+    <Title>Extra content</Title>
+    <Description>You can add extra actions to the right of Tabs.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1">
+            <TabBarExtraContent>
+                <AntButton>Extra Action</AntButton>
+            </TabBarExtraContent>
+            <ChildContent>
+                <AntTabPane Key="1">
+                    <Tab>Tab 1</Tab>
+                    <ChildContent>Content of Tab Pane 1</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="2">
+                    <Tab>Tab 2</Tab>
+                    <ChildContent>Content of Tab Pane 2</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="3">
+                    <Tab>Tab 3</Tab>
+                    <ChildContent>Content of Tab Pane 3</ChildContent>
+                </AntTabPane>
+            </ChildContent>
+        </AntTabs>
+    </Demo>
+</DemoCard>
