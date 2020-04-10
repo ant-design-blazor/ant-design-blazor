@@ -74,6 +74,11 @@
         "type": "itemGroup",
         "children": [
           {
+            "title": "Checkbox",
+            "type": "menuItem",
+            "url": "checkbox"
+          },
+          {
             "title": "Switch",
             "type": "menuItem",
             "url": "switch"
