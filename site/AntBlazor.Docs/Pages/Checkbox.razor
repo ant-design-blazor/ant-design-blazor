@@ -1,0 +1,160 @@
+﻿<AntTitle level="1">Checkbox</AntTitle>
+<AntText>Checkbox component.</AntText>
+<AntTitle level="2">When To Use</AntTitle>
+<AntParagraph>
+    <ul>
+        <li>Used for selecting multiple values from several options.</li>
+        <li>If you use only one checkbox, it is the same as using Switch to toggle between two states. The difference is that Switch will trigger the state change directly, but Checkbox just marks the state as changed and this needs to be submitted.</li>
+    </ul>
+</AntParagraph>
+<br />
+<h2>Examples</h2>
+<br />
+<DemoCard>
+    <Title>Basic</Title>
+    <Description>Basic usage of checkbox.</Description>
+    <Demo>
+        <AntCheckbox>Checkbox</AntCheckbox>
+    </Demo>
+</DemoCard>
+<br />
+
+<DemoCard>
+    <Title>Controlled Checkbox</Title>
+    <Description>Communicated with other components.</Description>
+    <Demo>
+        <div style="margin-bottom: 20px">
+            <AntCheckbox checked="@isChecked" disabled="@disabled" checkedChange="@ToggleChecked">
+                @($"{(isChecked ? "Check" : "Uncheck")}-{(disabled ? "Disable" : "Enable")}")
+            </AntCheckbox>
+        </div>
+        <br />
+        <AntButton type="@AntButtonType.Primary" size="small" @onclick="@ToggleChecked">@(isChecked ? "Check" : "Uncheck")</AntButton>
+        <AntButton type="@AntButtonType.Primary" size="small" @onclick="@ToggleDisable">@(disabled ? "Disable" : "Enable")</AntButton>
+    </Demo>
+</DemoCard>
+@code{
+    bool isChecked = true;
+    bool disabled = false;
+    void ToggleChecked()
+    {
+        isChecked = !isChecked;
+    }
+    void ToggleDisable()
+    {
+        disabled = !disabled;
+    }
+}
+<br />
+
+<DemoCard>
+    <Title>Check all</Title>
+    <Description>
+        <AntParagraph>The <AntText code>indeterminate</AntText> property can help you to achieve a 'check all' effect.</AntParagraph>
+    </Description>
+    <Demo>
+        <AntCheckbox indeterminate="@indeterminate" checked="@checkAll" checkedChange="@CheckAllChanged">Check all</AntCheckbox>
+        <AntDivider />
+        <AntCheckboxGroup options="@ckeckAllOptions" OnChange="@OnChanged"></AntCheckboxGroup>
+    </Demo>
+</DemoCard>
+@code{
+
+    static CheckBoxOption[] ckeckAllOptions = new CheckBoxOption[]{
+        new CheckBoxOption{ label="Apple",value="Apple" ,@checked=true},
+        new CheckBoxOption{ label="Pear", value="Pear" },
+        new CheckBoxOption{ label="Orange", value="Orange",@checked=true },
+    };
+
+    void CheckAllChanged()
+    {
+        bool allChecked = checkAll;
+        ckeckAllOptions.ForEach(o => o.@checked = !allChecked);
+    }
+
+    void OnChanged()
+    {
+
+    }
+
+    bool indeterminate => ckeckAllOptions.Count(o => o.@checked) > 0 && ckeckAllOptions.Count(o => o.@checked) < ckeckAllOptions.Count();
+
+    bool checkAll => ckeckAllOptions.All(o => o.@checked);
+
+}
+<br />
+
+<DemoCard>
+    <Title>Disabled</Title>
+    <Description>Disabled checkbox.</Description>
+    <Demo>
+        <div>
+            <AntCheckbox disabled="true"></AntCheckbox>
+            <br />
+            <AntCheckbox checked="true" disabled="true"></AntCheckbox>
+        </div>
+    </Demo>
+</DemoCard>
+<br />
+
+<DemoCard>
+    <Title>Checkbox Group</Title>
+    <Description>Generate a group of checkboxes from an array.</Description>
+    <Demo>
+        <AntCheckboxGroup options="plainOptions" @bind-Value="@checkValue1"></AntCheckboxGroup>
+        <br />
+        <AntCheckboxGroup options="options"  @bind-Value="@checkValue2"></AntCheckboxGroup>
+        <br />
+        <AntCheckboxGroup options="optionsWithDisabled" disabled="true"  @bind-Value="@checkValue1"></AntCheckboxGroup>
+    </Demo>
+</DemoCard>
+@code{
+
+    CheckBoxOption[] plainOptions = new CheckBoxOption[]{
+        new CheckBoxOption{ label="Apple",value="Apple" },
+        new CheckBoxOption{ label="Pear", value="Pear"},
+        new CheckBoxOption{ label="Orange", value="Orange" },
+    };
+    CheckBoxOption[] options = new CheckBoxOption[]{
+        new CheckBoxOption{ label="Apple",value="Apple" },
+        new CheckBoxOption{ label="Pear", value="Pear"},
+        new CheckBoxOption{ label="Orange", value="Orange" },
+    };
+
+    CheckBoxOption[] optionsWithDisabled = new CheckBoxOption[] {
+        new CheckBoxOption{ label ="Apple", value="Apple" },
+        new CheckBoxOption{ label = "Pear", value="Pear" },
+        new CheckBoxOption{  label = "Orange",value= "Orange", disabled = false },
+
+    };
+
+    string[] checkValue1 = {"Apple"};
+    string[] checkValue2 = {"Pear"};
+}
+<br />
+
+<DemoCard>
+    <Title>Use with Grid</Title>
+    <Description>We can use Checkbox and Grid in Checkbox.Group, to implement complex layout.</Description>
+    <Demo>
+        <AntCheckboxGroup>
+            <AntRow>
+                <AntCol span="8">
+                    <AntCheckbox>A</AntCheckbox>
+                </AntCol>
+                <AntCol span="8">
+                    <AntCheckbox>B</AntCheckbox>
+                </AntCol>
+                <AntCol span="8">
+                    <AntCheckbox>C</AntCheckbox>
+                </AntCol>
+                <AntCol span="8">
+                    <AntCheckbox>D</AntCheckbox>
+                </AntCol>
+                <AntCol span="8">
+                    <AntCheckbox>E</AntCheckbox>
+                </AntCol>
+            </AntRow>
+        </AntCheckboxGroup>
+    </Demo>
+</DemoCard>

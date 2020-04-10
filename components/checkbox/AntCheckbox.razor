@@ -1,12 +1,12 @@
 ﻿@namespace AntBlazor
 @inherits AntCheckboxBase
 
-<label class="ant-checkbox-wrapper" @onclick="hostClick" style="@Style" @attributes="Attributes" Id="@Id" @ref="Ref">
+<label class="ant-checkbox-wrapper" style="@Style" @attributes="Attributes" Id="@Id" @ref="Ref">
     <span class="@ClassMapper.Class" style="">
         <input @ref="inputElement"
                value="@(value)"
                checked="@(@checked)"
-               disabled="@disabled"
+               disabled="@(disabled)"
                @onchange="@inputCheckedChange"
                @attributes="@inputAttributes"
                type="checkbox"
