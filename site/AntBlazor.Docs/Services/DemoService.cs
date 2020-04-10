@@ -11,7 +11,8 @@ namespace AntBlazor.Docs.Services
 {
     public class DemoService
     {
-        private static IDictionary<string, IDictionary<string, DemoComponent>> _componentCache;
+        private static ConcurrentCache<string, ValueTask<IDictionary<string, DemoComponent>>> _componentCache;
+        private static ConcurrentCache<string, ValueTask<MenuItem[]>> _menuCache;
 
         private readonly ILanguageService _languageService;
         private readonly HttpClient _httpClient;
@@ -28,26 +29,39 @@ namespace AntBlazor.Docs.Services
 
         private async Task InitializeAsync()
         {
-            _componentCache ??= new Dictionary<string, IDictionary<string, DemoComponent>>();
-            if (!_componentCache.ContainsKey(CurrentLanguage))
+            _componentCache ??= new ConcurrentCache<string, ValueTask<IDictionary<string, DemoComponent>>>();
+            await _componentCache.GetOrAdd(CurrentLanguage, async (currentLanguage) =>
             {
                 var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
-                var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/demo_{CurrentLanguage}.json").ToString());
-                if (components.Any())
-                {
-                    _componentCache.Add(CurrentLanguage, components.ToDictionary(x => x.Title, x => x));
-                }
-            }
+                var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(
+                    new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/demo_{CurrentLanguage}.json").ToString());
+                
+                return components.ToDictionary(x => x.Title.ToLower(), x => x);
+            });
+
+            _menuCache ??= new ConcurrentCache<string, ValueTask<MenuItem[]>>();
+            await _menuCache.GetOrAdd(CurrentLanguage, async (currentLanguage) =>
+            {
+                var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
+                var menuItems = await _httpClient.GetFromJsonAsync<MenuItem[]>(
+                    new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/menu_{CurrentLanguage}.json").ToString());
+                
+                return menuItems;
+            });
         }
 
         public async Task<DemoComponent> GetComponentAsync(string componentName)
         {
             await InitializeAsync();
-            return _componentCache[CurrentLanguage][componentName];
+            return _componentCache.TryGetValue(CurrentLanguage, out var component)
+                ? (await component)[componentName]
+                : null;
         }
 
-        //public MenuItem[] GetMenuAsync()
-        //{
-        //}
+        public async Task<MenuItem[]> GetMenuAsync()
+        {
+            await InitializeAsync();
+            return _menuCache.TryGetValue(CurrentLanguage, out var menuItems) ? await menuItems : Array.Empty<MenuItem>();
+        }
     }
 }
