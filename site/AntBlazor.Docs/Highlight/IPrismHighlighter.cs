@@ -5,6 +5,8 @@ namespace AntBlazor.Docs.Highlight
 {
     public interface IPrismHighlighter
     {
-        Task<MarkupString> HighlightAsync(string code, string language);
+        ValueTask<MarkupString> HighlightAsync(string code, string language);
+
+        Task HighlightAllAsync();
     }
 }

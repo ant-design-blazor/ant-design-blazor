@@ -6,18 +6,23 @@ namespace AntBlazor.Docs.Highlight
 {
     public class PrismHighlighter : IPrismHighlighter
     {
-        private IJSRuntime JSRuntime { get; }
+        private readonly IJSRuntime jsRuntime;
 
         public PrismHighlighter(IJSRuntime jsRuntime)
         {
-            JSRuntime = jsRuntime;
+            this.jsRuntime = jsRuntime;
         }
 
-        public async Task<MarkupString> HighlightAsync(string code, string language)
+        public async ValueTask<MarkupString> HighlightAsync(string code, string language)
         {
-            string hilighted = await JSRuntime.InvokeAsync<string>("antBlazor.Prism.highlight", code, language);
+            string highlighted = await jsRuntime.InvokeAsync<string>("antBlazor.Prism.highlight", code, language);
 
-            return new MarkupString(hilighted);
+            return new MarkupString(highlighted);
+        }
+
+        public async Task HighlightAllAsync()
+        {
+            await jsRuntime.InvokeVoidAsync("antBlazor.Prism.highlightAll");
         }
     }
 }

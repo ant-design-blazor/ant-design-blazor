@@ -1,8 +1,14 @@
-﻿@using System.Net
+﻿@using System.IO
+@using System.Net
+@using AntBlazor.Docs.Highlight
 @using Markdig
+@using Markdig.Extensions.Yaml
+@using Markdig.Syntax
+
 @inherits ComponentBase
 @inject HtmlRenderService HtmlRenderService
 @inject HttpClient HttpClient
+@inject IPrismHighlighter PrismHighlighter
 
 @((MarkupString)html)
 
@@ -33,10 +39,28 @@
         if (!string.IsNullOrEmpty(MarkdownText))
         {
             MarkdownText = MarkdownText.Trim(' ', '\r', '\n');
-            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-            html = Markdig.Markdown.ToHtml(MarkdownText, pipeline);
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseYamlFrontMatter()
+                .UsePipeTables()
+                .Build();
+
+            StringWriter writer = new StringWriter();
+            var renderer = new Markdig.Renderers.HtmlRenderer(writer);
+            pipeline.Setup(renderer);
+
+            MarkdownDocument document = Markdig.Markdown.Parse(markdown, pipeline);
+            document.Descendants<YamlFrontMatterBlock>();
+
+            renderer.Render(document);
+            writer.Flush();
+            html = writer.ToString();
+
         }
-        await base.OnParametersSetAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await PrismHighlighter.HighlightAllAsync();
     }
 
 }
