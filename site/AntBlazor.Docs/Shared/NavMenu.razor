@@ -22,44 +22,44 @@
     [Parameter]
     public bool isCollapsed { get; set; }
 
-    MenuItem[] MenuItems { get; set; } = { };
+    MenuItem[] MenuItems { get; set; } = {};
 
     static readonly RenderFragment<(MenuItem[] items, ILanguageService languageService, int level)> menuItemTemplate = context =>
-    @<Template>
-        @foreach (var menu in context.items)
-        {
-            if (menu.Type == "menuItem")
+        @<Template>
+            @foreach (var menu in context.items)
             {
-                <AntMenuItem matchRouter>
-                    <AntNavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All" Default="@menu.Default">
-                        <span>@menu.Title</span>
-                        @if (context.level > 1 && context.languageService.CurrentCulture.Name != "en-US")
+                if (menu.Type == "menuItem")
+                {
+                    <AntMenuItem matchRouter>
+                        <AntNavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All">
+                            <span>@menu.Title</span>
+                            @if (menu.SubTitle != null)
+                            {
+                                <span class="chinese">@menu.SubTitle</span>
+                            }
+                        </AntNavLink>
+                    </AntMenuItem>
+                }
+                else if (menu.Type == "subMenu")
+                {
+                    <AntSubMenu open="true" title="@context.languageService.Resources[menu.Title]">
+                        @if (menu.Children.Any())
                         {
-                            <span class="chinese"> @context.languageService.Resources[menu.Title]</span>
+                            @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
                         }
-                    </AntNavLink>
-                </AntMenuItem>
+                    </AntSubMenu>
+                }
+                else if (menu.Type == "itemGroup")
+                {
+                    <AntMenuItemGroup title="@context.languageService.Resources[menu.Title]">
+                        @if (menu.Children.Any())
+                        {
+                            @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
+                        }
+                    </AntMenuItemGroup>
+                }
             }
-            else if (menu.Type == "subMenu")
-            {
-                <AntSubMenu open="true" title="@context.languageService.Resources[menu.Title]" icon="@menu.Icon">
-                    @if (menu.Children.Any())
-                    {
-                        @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
-                    }
-                </AntSubMenu>
-            }
-            else if (menu.Type == "itemGroup")
-            {
-                <AntMenuItemGroup title="@context.languageService.Resources[menu.Title]">
-                    @if (menu.Children.Any())
-                    {
-                        @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
-                    }
-                </AntMenuItemGroup>
-            }
-        }
-    </Template>;
+        </Template>;
 
 
     protected override async Task OnInitializedAsync()

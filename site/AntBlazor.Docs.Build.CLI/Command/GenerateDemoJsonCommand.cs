@@ -58,55 +58,68 @@ namespace AntBlazor.Docs.Build.CLI.Command
                 return;
             }
 
-            Dictionary<string, DemoComponent> componentList = new Dictionary<string, DemoComponent>();
+            IList<Dictionary<string, DemoComponent>> componentList = null;
 
             foreach (var component in demoDirectoryInfo.GetFileSystemInfos())
             {
-                if (component is DirectoryInfo componentDirectory)
+                if (!(component is DirectoryInfo componentDirectory)) continue;
+
+                var docDir = componentDirectory.GetFileSystemInfos("doc")[0];
+                var demoDir = componentDirectory.GetFileSystemInfos("demo")[0];
+
+                Dictionary<string, DemoComponent> componentDic = new Dictionary<string, DemoComponent>();
+
+                foreach (var docItem in (docDir as DirectoryInfo).GetFileSystemInfos())
                 {
-                    var docDir = componentDirectory.GetFileSystemInfos("doc")[0];
-                    var demoDir = componentDirectory.GetFileSystemInfos("demo")[0];
+                    var language = docItem.Name.Replace("index.", "").Replace(docItem.Extension, "");
+                    var content = File.ReadAllText(docItem.FullName);
+                    var docData = DocParser.ParseDemoDoc(content);
 
-                    foreach (var docItem in (docDir as DirectoryInfo).GetFileSystemInfos())
+                    componentDic.Add(language, new DemoComponent()
                     {
-                        var language = docItem.Name.Replace("doc_", "").Replace(docItem.Extension, "");
-                        var content = File.ReadAllText(docItem.FullName);
-                        var docData = DocParser.ParseDemoDoc(content);
+                        Title = docData.Meta["title"],
+                        SubTitle = docData.Meta.TryGetValue("subtitle", out var subtitle) ? subtitle : null,
+                        Type = docData.Meta["type"],
+                        Doc = docData.Content
+                    });
+                }
 
-                        componentList.Add(language, new DemoComponent()
+                foreach (var demo in (demoDir as DirectoryInfo).GetFileSystemInfos().GroupBy(x => x.Name.Replace(x.Extension, "").ToLower()))
+                {
+                    var showCaseFiles = demo.ToList();
+                    var razorFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".razor");
+                    var descriptionFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".md");
+                    var code = razorFile != null ? File.ReadAllText(razorFile.FullName) : null;
+                    var descriptionContent = descriptionFile != null ? DocParser.ParseDescription(File.ReadAllText(descriptionFile.FullName)) : default;
+
+                    foreach (var title in descriptionContent.Meta.Title)
+                    {
+                        var language = title.Key;
+                        var list = componentDic[language].DemoList ??= new List<DemoItem>();
+
+                        list.Add(new DemoItem()
                         {
-                            Title = docData.Meta["title"],
-                            SubTitle = docData.Meta.TryGetValue("subtitle", out var subtitle) ? subtitle : null,
-                            Type = docData.Meta["type"],
-                            Doc = docData.Content,
+                            Title = title.Value,
+                            Order = descriptionContent.Meta.Order,
+                            Code = code,
+                            Description = descriptionContent.Descriptions[title.Key],
+                            Name = demo.Key,
+                            Type = $"{demoDirectoryInfo.Name}.{component.Name}.{demoDir.Name}.{razorFile.Name.Replace(razorFile.Extension, "")}"
                         });
                     }
-
-                    foreach (var demo in (demoDir as DirectoryInfo).GetFileSystemInfos().GroupBy(x => x.Name.Replace(x.Extension, "")))
-                    {
-                        var showCaseFiles = demo.ToList();
-                        var razorFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".razor");
-                        var descriptionFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".md");
-                        var code = razorFile != null ? File.ReadAllText(razorFile.FullName) : null;
-                        var descriptionContent = descriptionFile != null ? DocParser.ParseDescription(File.ReadAllText(descriptionFile.FullName)) : default;
-
-                        foreach (var title in descriptionContent.Meta.Title)
-                        {
-                            var list = componentList[title.Key].DemoList ??= new List<DemoItem>();
-                            list.Add(new DemoItem()
-                            {
-                                Title = title.Value,
-                                Order = descriptionContent.Meta.Order,
-                                Code = code,
-                                Description = descriptionContent.Descriptions[title.Key],
-                                Type = $"{demoDirectoryInfo.Name}.{component.Name}.{demoDir.Name}.{razorFile.Name.Replace(razorFile.Extension, "")}"
-                            });
-                        }
-                    }
                 }
+
+                componentList ??= new List<Dictionary<string, DemoComponent>>();
+                componentList.Add(componentDic);
             }
 
-            foreach (var componentDic in componentList.GroupBy(x => x.Key))
+            if (componentList == null)
+                return;
+
+            var componentI18N = componentList
+                .SelectMany(x => x).GroupBy(x => x.Key);
+
+            foreach (var componentDic in componentI18N)
             {
                 var components = componentDic.Select(x => x.Value);
                 var json = JsonSerializer.Serialize(components, new JsonSerializerOptions()
@@ -122,7 +135,7 @@ namespace AntBlazor.Docs.Build.CLI.Command
                     Directory.CreateDirectory(configFileDirectory);
                 }
 
-                var configFilePath = Path.Combine(configFileDirectory, $"demo_{componentDic.Key}.json");
+                var configFilePath = Path.Combine(configFileDirectory, $"demo.{componentDic.Key}.json");
                 Console.WriteLine(json);
 
                 if (File.Exists(configFilePath))

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using AntBlazor.Docs.Build.CLI.Extensions;
-using AntBlazor.Docs.Build.CLI.Shared;
 using AntBlazor.Docs.Build.CLI.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 
@@ -79,9 +77,9 @@ namespace AntBlazor.Docs.Build.CLI.Command
                 return;
             }
 
-            Dictionary<string, DemoComponent> componentList = new Dictionary<string, DemoComponent>();
+            IList<Dictionary<string, DemoComponent>> componentList = null;
 
-            Dictionary<string, MenuItem> menuList = new Dictionary<string, MenuItem>();
+            IList<Dictionary<string, MenuItem>> menuList = null;
 
             var sortMap = new Dictionary<string, int>()
             {
@@ -104,34 +102,47 @@ namespace AntBlazor.Docs.Build.CLI.Command
 
             foreach (var component in demoDirectoryInfo.GetFileSystemInfos())
             {
-                if (component is DirectoryInfo componentDirectory)
+                if (!(component is DirectoryInfo componentDirectory))
+                    continue;
+
+                var componentDic = new Dictionary<string, DemoComponent>();
+
+                var docDir = componentDirectory.GetFileSystemInfos("doc")[0];
+
+                foreach (var docItem in (docDir as DirectoryInfo).GetFileSystemInfos())
                 {
-                    var docDir = componentDirectory.GetFileSystemInfos("doc")[0];
+                    var language = docItem.Name.Replace("index.", "").Replace(docItem.Extension, "");
+                    var content = File.ReadAllText(docItem.FullName);
+                    var docData = DocParser.ParseDemoDoc(content);
 
-                    foreach (var docItem in (docDir as DirectoryInfo).GetFileSystemInfos())
+                    componentDic.Add(language, new DemoComponent()
                     {
-                        var language = docItem.Name.Replace("doc_", "").Replace(docItem.Extension, "");
-                        var content = File.ReadAllText(docItem.FullName);
-                        var docData = DocParser.ParseDemoDoc(content);
-
-                        componentList.Add(language, new DemoComponent()
-                        {
-                            Title = docData.Meta["title"],
-                            SubTitle = docData.Meta.TryGetValue("subtitle", out var subtitle) ? subtitle : null,
-                            Type = docData.Meta["type"],
-                            Doc = docData.Content,
-                        });
-                    }
+                        Title = docData.Meta["title"],
+                        SubTitle = docData.Meta.TryGetValue("subtitle", out var subtitle) ? subtitle : null,
+                        Type = docData.Meta["type"],
+                        Doc = docData.Content,
+                    });
                 }
+
+                componentList ??= new List<Dictionary<string, DemoComponent>>();
+                componentList.Add(componentDic);
             }
 
-            var componentMenu = new Dictionary<string, MenuItem>();
+            if (componentList == null)
+                return;
 
-            foreach (var group in componentList.GroupBy(x => x.Value.Type))
+            var componentMenuList = new List<Dictionary<string, MenuItem>>();
+
+            var componentI18N = componentList
+                .SelectMany(x => x);
+
+            foreach (var group in componentI18N.GroupBy(x => x.Value.Type))
             {
+                var menu = new Dictionary<string, MenuItem>();
+
                 foreach (var component in group.GroupBy(x => x.Key))
                 {
-                    componentMenu.Add(component.Key, new MenuItem()
+                    menu.Add(component.Key, new MenuItem()
                     {
                         Order = sortMap[group.Key],
                         Title = group.Key,
@@ -145,6 +156,8 @@ namespace AntBlazor.Docs.Build.CLI.Command
                         }).ToArray()
                     });
                 }
+
+                componentMenuList.Add(menu);
             }
 
             foreach (var docItem in docsDirectoryInfo.GetFileSystemInfos())
@@ -152,32 +165,51 @@ namespace AntBlazor.Docs.Build.CLI.Command
                 if (docItem.Extension != ".md")
                     continue;
 
-                var segments = docItem.Name.Split('_');
-                if (segments.Length != 2)
+                var segments = docItem.Name.Split('.');
+                if (segments.Length != 3)
                     continue;
 
-                var language = segments[1].Replace(docItem.Extension, "");
+                var language = segments[1];
                 var content = File.ReadAllText(docItem.FullName);
                 var docData = DocParser.ParseHeader(content);
 
-                menuList.Add(language, new MenuItem()
+                menuList ??= new List<Dictionary<string, MenuItem>>();
+                menuList.Add(new Dictionary<string, MenuItem>()
                 {
-                    Order = int.TryParse(docData["order"], out var order) ? order : 0,
-                    Title = docData["title"],
-                    Url = $"docs/{segments[0]}",
-                    Type = "menuItem"
+                    [language] = new MenuItem()
+                    {
+                        Order = int.TryParse(docData["order"], out var order) ? order : 0,
+                        Title = docData["title"],
+                        Url = $"docs/{segments[0]}",
+                        Type = "menuItem"
+                    }
                 });
             }
 
-            foreach (var menuGroup in menuList.GroupBy(x => x.Key))
+            if (menuList == null)
+                return;
+
+            var menuI18N = menuList
+                .SelectMany(x => x).GroupBy(x => x.Key);
+
+            var componentMenuI18N = componentMenuList
+                .SelectMany(x => x).GroupBy(x => x.Key);
+
+            foreach (var menuGroup in menuI18N)
             {
-                var menu = menuGroup.Select(x => x.Value).ToList();
+                var menu = menuGroup.Select(x => x.Value).OrderBy(x => x.Order).ToList();
+
+                var components = componentMenuI18N.Where(x => x.Key == menuGroup.Key)
+                    .SelectMany(x => x)
+                    .Select(x => x.Value)
+                    .OrderBy(x => x.Order);
 
                 menu.Add(new MenuItem()
                 {
+                    Order = 999,
                     Title = menuGroup.Key == "zh-CN" ? "组件" : "Components",
                     Type = "subMenu",
-                    Children = componentMenu.Where(x => x.Key == menuGroup.Key).Select(x => x.Value).ToArray()
+                    Children = components.ToArray()
                 });
 
                 var json = JsonSerializer.Serialize(menu, new JsonSerializerOptions()
@@ -193,7 +225,7 @@ namespace AntBlazor.Docs.Build.CLI.Command
                     Directory.CreateDirectory(configFileDirectory);
                 }
 
-                var configFilePath = Path.Combine(configFileDirectory, $"menu_{menuGroup.Key}.json");
+                var configFilePath = Path.Combine(configFileDirectory, $"menu.{menuGroup.Key}.json");
                 Console.WriteLine(json);
 
                 if (File.Exists(configFilePath))

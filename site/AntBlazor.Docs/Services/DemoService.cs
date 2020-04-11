@@ -34,8 +34,8 @@ namespace AntBlazor.Docs.Services
             {
                 var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
                 var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(
-                    new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/demo_{CurrentLanguage}.json").ToString());
-                
+                    new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/demo.{CurrentLanguage}.json").ToString());
+
                 return components.ToDictionary(x => x.Title.ToLower(), x => x);
             });
 
@@ -44,8 +44,8 @@ namespace AntBlazor.Docs.Services
             {
                 var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
                 var menuItems = await _httpClient.GetFromJsonAsync<MenuItem[]>(
-                    new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/menu_{CurrentLanguage}.json").ToString());
-                
+                    new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/menu.{CurrentLanguage}.json").ToString());
+
                 return menuItems;
             });
         }

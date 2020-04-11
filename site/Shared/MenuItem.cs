@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AntBlazor.Docs.Services
+﻿namespace AntBlazor.Docs
 {
     public class MenuItem
     {
+        public int Order { get; set; }
+
         public string Title { get; set; }
+
+        public string SubTitle { get; set; }
 
         public string Type { get; set; }
 
         public string Url { get; set; }
-
-        public string Prefix { get; set; }
-
-        public bool Open { get; set; }
-
-        public string Icon { get; set; }
-
-        public bool Default { get; set; }
 
         public MenuItem[] Children { get; set; }
     }

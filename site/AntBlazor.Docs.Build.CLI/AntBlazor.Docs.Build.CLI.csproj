@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Compile Include="..\Shared\DemoComponent.cs" Link="Shared\DemoComponent.cs" />
+    <Compile Include="..\Shared\MenuItem.cs" Link="Shared\MenuItem.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,5 +16,4 @@
     <PackageReference Include="YamlDotnet" Version="8.1.0" />
     <PackageReference Include="Markdig" Version="0.18.3" />
   </ItemGroup>
-  
 </Project>
