@@ -1,14 +1,14 @@
 ﻿---
 order: 0
 title:
-  zh-CN: 基本
-  en-US: Basic
+  zh-CN: 按钮类型
+  en-US: Type
 ---
 
 ## zh-CN
 
-最简单的用法。
+按钮有四种类型：主按钮、次按钮、虚线按钮和链接按钮。主按钮在同一个操作区域最多出现一次。
 
 ## en-US
 
-The simplest use.
+There are `primary` button, `default` button, `dashed` button and `link` button in antd.

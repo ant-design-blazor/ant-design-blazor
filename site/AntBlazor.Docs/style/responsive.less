@@ -1,3 +1,5 @@
+@import '../../../components/style/themes/default.less';
+
 .nav-phone-icon {
   position: absolute;
   top: 25px;
@@ -85,6 +87,11 @@
   .prev-next-nav {
     width: ~'calc(100% - 32px)';
     margin-left: 16px;
+
+    .ant-row-rtl & {
+      margin-right: 16px;
+      margin-left: 64px;
+    }
   }
 
   .drawer {

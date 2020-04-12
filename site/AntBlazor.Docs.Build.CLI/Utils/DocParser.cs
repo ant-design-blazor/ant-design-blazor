@@ -125,5 +125,7 @@ namespace AntBlazor.Docs.Build.CLI.Utils
         public Dictionary<string, string> Iframe { get; set; }
 
         public Dictionary<string, string> Title { get; set; }
+
+        public bool Debug { get; set; }
     }
 }
