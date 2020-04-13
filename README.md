@@ -10,7 +10,7 @@
 
 An enterprise-class UI components based on Ant Design and Blazor.
 
-![](https://img.shields.io/github/workflow/status/elderjames/ant-design-blazor/Publish%20Docs?style=flat-square)
+[![Financial Contributors on Open Collective](https://opencollective.com/ant-design-blazor/all/badge.svg?label=financial+contributors)](https://opencollective.com/ant-design-blazor) ![](https://img.shields.io/github/workflow/status/elderjames/ant-design-blazor/Publish%20Docs?style=flat-square)
 [![AntBlazor](https://img.shields.io/nuget/v/AntBlazor.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
 [![AntBlazor](https://img.shields.io/nuget/dt/AntBlazor.svg?style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
 [![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/blob/master/LICENSE)
@@ -163,6 +163,36 @@ If you encounter any problems in the process, feel free to ask for help via foll
   <img src="./docs/assets/dingtalk.jpg" width="300">
 </details>
 
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/ElderJames/ant-design-blazor/graphs/contributors"><img src="https://opencollective.com/ant-design-blazor/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/ant-design-blazor/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/ant-design-blazor"><img src="https://opencollective.com/ant-design-blazor/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/ant-design-blazor/contribute)]
+
+<a href="https://opencollective.com/ant-design-blazor/organization/0/website"><img src="https://opencollective.com/ant-design-blazor/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/ant-design-blazor/organization/1/website"><img src="https://opencollective.com/ant-design-blazor/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/ant-design-blazor/organization/2/website"><img src="https://opencollective.com/ant-design-blazor/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/ant-design-blazor/organization/3/website"><img src="https://opencollective.com/ant-design-blazor/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/ant-design-blazor/organization/4/website"><img src="https://opencollective.com/ant-design-blazor/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/ant-design-blazor/organization/5/website"><img src="https://opencollective.com/ant-design-blazor/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/ant-design-blazor/organization/6/website"><img src="https://opencollective.com/ant-design-blazor/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/ant-design-blazor/organization/7/website"><img src="https://opencollective.com/ant-design-blazor/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/ant-design-blazor/organization/8/website"><img src="https://opencollective.com/ant-design-blazor/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/ant-design-blazor/organization/9/website"><img src="https://opencollective.com/ant-design-blazor/organization/9/avatar.svg"></a>
 
 ## ☀️ License
 
