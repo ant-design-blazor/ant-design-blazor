@@ -29,6 +29,7 @@
     "dependencies": {},
     "devDependencies": {
         "@babel/core": "^7.8.7",
+        "@commitlint/cli": "^8.1.0",
         "@types/es6-promise": "^3.3.0",
         "babel-core": "^6.26.3",
         "babel-preset-es2015": "^6.24.1",
@@ -48,8 +49,7 @@
     },
     "husky": {
         "hooks": {
-            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-            "pre-commit": "lint-staged"
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
         }
     }
 }
