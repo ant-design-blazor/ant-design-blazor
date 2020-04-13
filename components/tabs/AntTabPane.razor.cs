@@ -11,7 +11,7 @@ namespace AntBlazor
         internal bool IsActive { get; set; }
 
         [CascadingParameter]
-        private AntTabs Parent
+        internal AntTabs Parent
         {
             get
             {

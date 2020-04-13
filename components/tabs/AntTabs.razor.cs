@@ -1,5 +1,6 @@
 ﻿using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -154,10 +155,15 @@ namespace AntBlazor
         [Parameter]
         public bool Keyboard { get; set; } = true;
 
+        [Parameter]
+        public Func<AntTabPane> CreateTabPane { get; set; }
+
         #endregion Parameters
 
         public override Task SetParametersAsync(ParameterView parameters)
         {
+            _needRefresh = true;
+            _renderedActivePane = null;
             string type = parameters.GetValueOrDefault<string>(nameof(Type));
             if (type == AntTabType.Card)
             {
@@ -169,8 +175,6 @@ namespace AntBlazor
             string position = parameters.GetValueOrDefault<string>(nameof(TabPosition));
             if (!string.IsNullOrEmpty(position))
             {
-                _needRefresh = true;
-                _renderedActivePane = null;
                 _navIndex = 0;
             }
 
@@ -181,16 +185,34 @@ namespace AntBlazor
         {
             base.OnParametersSet();
 
+            if (Type == AntTabType.EditableCard && !HideAdd)
+            {
+                TabBarExtraContent = (b) =>
+                {
+                    b.OpenComponent<AntIcon>(0);
+                    b.AddAttribute(1, "Type", "plus");
+                    b.AddAttribute(2, "class", $"{PrefixCls}-new-tab");
+                    b.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, AddTabPane));
+                    b.CloseComponent();
+                };
+            }
+
             ClassMapper.Clear()
                 .Add(PrefixCls)
                 .Add($"{PrefixCls}-{TabPosition}")
                 .Add($"{PrefixCls}-{Type}")
+                .If($"{PrefixCls}-large", () => Size == AntTabSize.Large)
+                .If($"{PrefixCls}-small", () => Size == AntTabSize.Small)
                 .If($"{PrefixCls}-{AntTabType.Card}", () => Type == AntTabType.EditableCard)
                 .If($"{PrefixCls}-no-animation", () => !Animated);
 
             _barClassMapper.Clear()
                 .Add($"{PrefixCls}-bar")
-                .Add($"{PrefixCls}-{TabPosition}-bar");
+                .Add($"{PrefixCls}-{TabPosition}-bar")
+                .Add($"{PrefixCls}-{Type}-bar")
+                .If($"{PrefixCls}-{AntTabType.Card}-bar", () => Type == AntTabType.EditableCard)
+                .If($"{PrefixCls}-large-bar", () => Size == AntTabSize.Large)
+                .If($"{PrefixCls}-small-bar", () => Size == AntTabSize.Small);
 
             _prevClassMapper.Clear()
                 .Add($"{PrefixCls}-tab-prev")
@@ -233,6 +255,24 @@ namespace AntBlazor
             if (tabPane.Key == DefaultActiveKey)
             {
                 ActivatePane(tabPane);
+            }
+        }
+
+        public void AddTabPane(MouseEventArgs args)
+        {
+            if (CreateTabPane != null)
+            {
+                _needRefresh = true;
+                AntTabPane pane = CreateTabPane();
+                Dictionary<string, object> properties = new Dictionary<string, object>();
+                properties[nameof(AntTabPane.Parent)] = this;
+                properties[nameof(AntTabPane.ForceRender)] = pane.ForceRender;
+                properties[nameof(AntTabPane.Key)] = pane.Key;
+                properties[nameof(AntTabPane.Tab)] = pane.Tab;
+                properties[nameof(AntTabPane.ChildContent)] = pane.ChildContent;
+                properties[nameof(AntTabPane.disabled)] = pane.disabled;
+                pane.SetParametersAsync(ParameterView.FromDictionary(properties));
+                pane.Parent = this;
             }
         }
 

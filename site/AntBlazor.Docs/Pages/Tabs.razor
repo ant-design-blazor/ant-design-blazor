@@ -86,7 +86,7 @@
                 <AntRadio RadioButton Value="@AntTabPosition.Top">Horizontal</AntRadio>
                 <AntRadio RadioButton Value="@AntTabPosition.Left">Vertical</AntRadio>
             </AntRadioGroup>
-            <AntTabs DefaultActiveKey="1" TabPosition="@mode">
+            <AntTabs DefaultActiveKey="1" TabPosition="@mode" Style="height: 220px;">
                 <AntTabPane Key="1">
                     <Tab>Tab 1</Tab>
                     <ChildContent>Content of Tab Pane 1</ChildContent>
@@ -232,3 +232,141 @@
         </AntTabs>
     </Demo>
 </DemoCard>
+
+<DemoCard>
+    <Title>Size</Title>
+    <Description>Large size tabs are usually used in page header, and small size could be used in Modal.</Description>
+    <Demo>
+        <div>
+            <AntRadioGroup @bind-Value="size" Style="margin-bottom: 16px;">
+                <AntRadio RadioButton Value="@AntTabSize.Small">Small</AntRadio>
+                <AntRadio RadioButton Value="@AntTabSize.Default">Default</AntRadio>
+                <AntRadio RadioButton Value="@AntTabSize.Large">Large</AntRadio>
+            </AntRadioGroup>
+
+            <AntTabs DefaultActiveKey="1" Size="@size" Style="margin-bottom: 32px">
+                <AntTabPane Key="1">
+                    <Tab>Tab 1</Tab>
+                    <ChildContent>Content of Tab Pane 1</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="2">
+                    <Tab>Tab 2</Tab>
+                    <ChildContent>Content of Tab Pane 2</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="3">
+                    <Tab>Tab 3</Tab>
+                    <ChildContent>Content of Tab Pane 3</ChildContent>
+                </AntTabPane>
+            </AntTabs>
+
+            <AntTabs DefaultActiveKey="1" Type="@AntTabType.Card" Size="@size">
+                <AntTabPane Key="1">
+                    <Tab>Tab 1</Tab>
+                    <ChildContent>Content of Tab Pane 1</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="2">
+                    <Tab>Tab 2</Tab>
+                    <ChildContent>Content of Tab Pane 2</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="3">
+                    <Tab>Tab 3</Tab>
+                    <ChildContent>Content of Tab Pane 3</ChildContent>
+                </AntTabPane>
+            </AntTabs>
+        </div>
+    </Demo>
+</DemoCard>
+
+@code{
+    private string size = AntTabSize.Default;
+}
+
+<DemoCard>
+    <Title>Position</Title>
+    <Description>Tab's position: left, right, top or bottom.</Description>
+    <Demo>
+        <div>
+            <AntRadioGroup @bind-Value="position" Style="margin-bottom: 16px;">
+                <AntRadio RadioButton Value="@AntTabPosition.Top">Top</AntRadio>
+                <AntRadio RadioButton Value="@AntTabPosition.Left">Left</AntRadio>
+                <AntRadio RadioButton Value="@AntTabPosition.Bottom">Bottom</AntRadio>
+                <AntRadio RadioButton Value="@AntTabPosition.Right">Right</AntRadio>
+            </AntRadioGroup>
+            <AntTabs DefaultActiveKey="1" TabPosition="@position">
+                <AntTabPane Key="1">
+                    <Tab>Tab 1</Tab>
+                    <ChildContent>Content of Tab Pane 1</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="2">
+                    <Tab>Tab 2</Tab>
+                    <ChildContent>Content of Tab Pane 2</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="3">
+                    <Tab>Tab 3</Tab>
+                    <ChildContent>Content of Tab Pane 3</ChildContent>
+                </AntTabPane>
+            </AntTabs>
+        </div>
+    </Demo>
+</DemoCard>
+
+@code{
+    private string position = AntTabPosition.Top;
+}
+
+<DemoCard>
+    <Title>Card type tab</Title>
+    <Description>Another type of Tabs, which doesn't support vertical mode.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1" Type="@AntTabType.Card">
+            <AntTabPane Key="1">
+                <Tab>Tab 1</Tab>
+                <ChildContent>Content of Tab Pane 1</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="2">
+                <Tab>Tab 2</Tab>
+                <ChildContent>Content of Tab Pane 2</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="3">
+                <Tab>Tab 3</Tab>
+                <ChildContent>Content of Tab Pane 3</ChildContent>
+            </AntTabPane>
+        </AntTabs>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Add & close tab</Title>
+    <Description>Only card type Tabs support adding & closable. +Use <code>closable={false}</code> to disable close.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1" Type="@AntTabType.EditableCard" CreateTabPane="@Create">
+            <AntTabPane Key="1">
+                <Tab>Tab 1</Tab>
+                <ChildContent>Content of Tab Pane 1</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="2">
+                <Tab>Tab 2</Tab>
+                <ChildContent>Content of Tab Pane 2</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="3">
+                <Tab>Tab 3</Tab>
+                <ChildContent>Content of Tab Pane 3</ChildContent>
+            </AntTabPane>
+        </AntTabs>
+    </Demo>
+</DemoCard>
+
+@code{
+    private static int addedIndex = 3;
+    private Func<AntTabPane>
+        Create = () =>
+        {
+            addedIndex++;
+            return new AntTabPane()
+            {
+                Key = addedIndex.ToString(),
+                ChildContent = (b) => { b.AddContent(0, $"Content of Tab Pane {addedIndex}"); },
+                Tab = (b) => { b.AddContent(0, $"Tab {addedIndex}"); }
+            };
+        };
+}
