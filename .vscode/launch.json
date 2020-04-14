@@ -19,13 +19,22 @@
         },
         {
             "name": ".NET Core Debug Blazor Web Assembly in Chrome",
-            "type": "pwa-msedge",
+            "type": "pwa-chrome",
             "request": "launch",
             "timeout": 30000,
             // If you have changed the default port / launch URL make sure to update the expectation below
             "url": "https://localhost:5001",
             "webRoot": "${workspaceFolder}/site/AntDesign.Docs.Wasm",
             "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
+        },
+        {
+            "name": ".NET Core Debug Blazor Web Assembly in Edge",
+            "type": "msedge",
+            "request": "launch",
+            "timeout": 300000,
+            // If you have changed the default port / launch URL make sure to update the expectation below
+            "url": "http://localhost:5000",
+            "webRoot": "${workspaceFolder}/site/AntBlazor.Docs.Wasm",
         }
     ]
 }

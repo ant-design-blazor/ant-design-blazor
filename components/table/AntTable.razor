@@ -1,0 +1,30 @@
+@namespace AntBlazor
+@inherits AntDomComponentBase
+@typeparam TData
+
+<CascadingValue Value="@this" TValue="IAntTable">
+    <div class="ant-table">
+        <div class="ant-table-container">
+            <div class="ant-table-content">
+                <table style="table-layout: auto;">
+                    <colgroup></colgroup>
+                    <thead class="ant-table-thead">
+                        <tr>
+                            <CascadingValue Value="@(new AntColumn.IsRenderingHeadWrapper(true))">
+                                @ChildContent(default)
+                            </CascadingValue>
+                        </tr>
+                    </thead>
+                    <tbody class="ant-table-tbody">
+                        @foreach (var data in DataSource)
+                        {
+                            <tr class="ant-table-row ant-table-row-level-0">
+                                @ChildContent(data)
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</CascadingValue>

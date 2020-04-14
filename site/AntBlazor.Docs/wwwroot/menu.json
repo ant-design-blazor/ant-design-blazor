@@ -193,6 +193,11 @@
             "title": "Timeline",
             "type": "menuItem",
             "url": "timeline"
+          },
+          {
+            "title": "Table",
+            "type": "menuItem",
+            "url": "table"
           }
         ]
       },
