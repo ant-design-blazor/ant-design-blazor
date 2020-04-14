@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using AntBlazor.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -12,5 +13,8 @@ namespace AntBlazor
 
         [Parameter]
         public RenderFragment<TData> ChildContent { get; set; }
+
+        [Parameter]
+        public RowSelection<TData> RowSelection { get; set; }
     }
 }
