@@ -16,7 +16,6 @@ namespace AntBlazor
         private ClassMapper _prevClassMapper = new ClassMapper();
         private ClassMapper _nextClassMapper = new ClassMapper();
         private ClassMapper _navClassMapper = new ClassMapper();
-        private List<AntTabPane> _panes = new List<AntTabPane>();
         private AntTabPane _activePane;
         private AntTabPane _renderedActivePane;
         private ElementReference _activeTabBar;
@@ -31,6 +30,7 @@ namespace AntBlazor
         private int _navTotal;
         private int _navSection;
         private bool _needRefresh;
+        internal List<AntTabPane> Panes = new List<AntTabPane>();
 
         #region Parameters
 
@@ -54,7 +54,7 @@ namespace AntBlazor
                 if (_activeKey != value)
                 {
                     _activeKey = value;
-                    ActivatePane(_panes.Single(p => p.Key == _activeKey));
+                    ActivatePane(Panes.Single(p => p.Key == _activeKey));
                 }
             }
         }
@@ -246,12 +246,12 @@ namespace AntBlazor
                 throw new ArgumentNullException("Key is null");
             }
 
-            if (_panes.Select(p => p.Key).Contains(tabPane.Key))
+            if (Panes.Select(p => p.Key).Contains(tabPane.Key))
             {
                 throw new ArgumentException("An AntTabPane with the same key already exists");
             }
 
-            _panes.Add(tabPane);
+            Panes.Add(tabPane);
             if (tabPane.Key == DefaultActiveKey)
             {
                 ActivatePane(tabPane);
@@ -262,7 +262,6 @@ namespace AntBlazor
         {
             if (CreateTabPane != null)
             {
-                _needRefresh = true;
                 AntTabPane pane = CreateTabPane();
                 Dictionary<string, object> properties = new Dictionary<string, object>();
                 properties[nameof(AntTabPane.Parent)] = this;
@@ -273,6 +272,7 @@ namespace AntBlazor
                 properties[nameof(AntTabPane.disabled)] = pane.disabled;
                 pane.SetParametersAsync(ParameterView.FromDictionary(properties));
                 pane.Parent = this;
+                ActivatePane(pane);
             }
         }
 
@@ -336,12 +336,12 @@ namespace AntBlazor
                 if (IsHorizontal)
                 {
                     _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
-                    _contentStyle = $"margin-left: -{_panes.IndexOf(_activePane)}00%;";
+                    _contentStyle = $"margin-left: -{Panes.IndexOf(_activePane)}00%;";
                 }
                 else
                 {
                     _inkStyle = $"height: {element.clientHeight}px; display: block; transform: translate3d(0px, {element.offsetTop}px, 0px);";
-                    _contentStyle = $"margin-top: -{_panes.IndexOf(_activePane)}00%;";
+                    _contentStyle = $"margin-top: -{Panes.IndexOf(_activePane)}00%;";
                 }
                 StateHasChanged();
                 _renderedActivePane = _activePane;

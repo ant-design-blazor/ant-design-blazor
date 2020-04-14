@@ -362,11 +362,12 @@
         Create = () =>
         {
             addedIndex++;
+            int temp = addedIndex;
             return new AntTabPane()
             {
-                Key = addedIndex.ToString(),
-                ChildContent = (b) => { b.AddContent(0, $"Content of Tab Pane {addedIndex}"); },
-                Tab = (b) => { b.AddContent(0, $"Tab {addedIndex}"); }
+                Key = temp.ToString(),
+                ChildContent = (b) => { b.AddContent(0, $"Content of Tab Pane {temp}"); },
+                Tab = (b) => { b.AddContent(0, $"Tab {temp}"); }
             };
         };
 }

@@ -1,11 +1,2 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
-
-@if (IsActive)
-{
-    <div role="tabpanel" aria-hidden="false" tabindex="0" class="ant-tabs-tabpane ant-tabs-tabpane-active" style="visibility: visible;">@ChildContent</div>
-}
-else
-{
-    <div role="tabpanel" aria-hidden="true" tabindex="-1" class="ant-tabs-tabpane ant-tabs-tabpane-inactive" style="visibility: hidden;">@ChildContent</div>
-}

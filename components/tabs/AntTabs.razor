@@ -1,5 +1,8 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
+<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
 
 <div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id">
     <!---->
@@ -29,7 +32,7 @@
                     <div class="ant-tabs-nav-scroll">
                         <div class="ant-tabs-nav ant-tabs-nav-animated" style="@_navStyle">
                             <div @ref="_tabBars">
-                                @foreach (var pane in _panes)
+                                @foreach (var pane in Panes)
                                 {
                                     if (pane.IsActive)
                                     {
@@ -50,9 +53,18 @@
     }
     <!--Tab content-->
     <div class="ant-tabs-content ant-tabs-@TabPosition-content ant-tabs-@Type-content ant-tabs-content-animated" style="@_contentStyle">
-        <CascadingValue Value="this">
-            @ChildContent
-        </CascadingValue>
+        @foreach (var pane in Panes)
+        {
+            @if (pane.IsActive)
+            {
+                <div role="tabpanel" aria-hidden="false" tabindex="0" class="ant-tabs-tabpane ant-tabs-tabpane-active" style="visibility: visible;">@pane.ChildContent</div>
+            }
+            else
+            {
+                <div role="tabpanel" aria-hidden="true" tabindex="-1" class="ant-tabs-tabpane ant-tabs-tabpane-inactive" style="visibility: hidden;">@pane.ChildContent</div>
+            }
+
+        }
     </div>
     @if (TabPosition == AntTabPosition.Bottom)
     {
@@ -73,7 +85,7 @@
                     <div class="ant-tabs-nav-scroll">
                         <div class="ant-tabs-nav ant-tabs-nav-animated" style="@_navStyle">
                             <div @ref="_tabBars">
-                                @foreach (var pane in _panes)
+                                @foreach (var pane in Panes)
                                 {
                                     if (pane.IsActive)
                                     {
