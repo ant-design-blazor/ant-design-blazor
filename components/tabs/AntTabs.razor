@@ -36,11 +36,35 @@
                                 {
                                     if (pane.IsActive)
                                     {
-                                        <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.disabled" aria-selected="true" aria-controls="tabpane-@pane.Key">@pane.Tab</div>
+                                        <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.disabled" aria-selected="true" aria-controls="tabpane-@pane.Key">
+                                            @if (Type == AntTabType.EditableCard)
+                                            {
+                                                <div>
+                                                    @pane.Tab
+                                                    <AntIcon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(e, pane)" />
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                @pane.Tab
+                                            }
+                                        </div>
                                     }
                                     else
                                     {
-                                        <div tabindex="-1" class="ant-tabs-tab" id="tab-@pane.Key" role="tab" aria-disabled="@pane.disabled" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)">@pane.Tab</div>
+                                        <div tabindex="-1" class="ant-tabs-tab" id="tab-@pane.Key" role="tab" aria-disabled="@pane.disabled" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)">
+                                            @if (Type == AntTabType.EditableCard)
+                                            {
+                                                <div>
+                                                    @pane.Tab
+                                                    <AntIcon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(e, pane)" />
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                @pane.Tab
+                                            }
+                                        </div>
                                     }
                                 }
                             </div>
@@ -89,11 +113,35 @@
                                 {
                                     if (pane.IsActive)
                                     {
-                                        <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.disabled" aria-selected="true" aria-controls="tabpane-@pane.Key">@pane.Tab</div>
+                                        <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.disabled" aria-selected="true" aria-controls="tabpane-@pane.Key">
+                                            @if (Type == AntTabType.EditableCard)
+                                            {
+                                                <div>
+                                                    @pane.Tab
+                                                    <AntIcon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(e, pane)" />
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                @pane.Tab
+                                            }
+                                        </div>
                                     }
                                     else
                                     {
-                                        <div tabindex="-1" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.disabled" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)">@pane.Tab</div>
+                                        <div tabindex="-1" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.disabled" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)">
+                                            @if (Type == AntTabType.EditableCard)
+                                            {
+                                                <div>
+                                                    @pane.Tab
+                                                    <AntIcon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(e, pane)" />
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                @pane.Tab
+                                            }
+                                        </div>
                                     }
                                 }
                             </div>
