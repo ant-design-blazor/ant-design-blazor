@@ -24,11 +24,11 @@ namespace AntBlazor
         Fr,
     }
 
-    public struct CssSizeLength
+    public readonly struct CssSizeLength
     {
-        private int _value;
+        private readonly int _value;
 
-        private CssSizeLengthUnit _unit;
+        private readonly CssSizeLengthUnit _unit;
 
         public override string ToString() => _value.ToString() + _unit switch
         {
