@@ -269,7 +269,7 @@ namespace AntBlazor
                 properties[nameof(AntTabPane.Key)] = pane.Key;
                 properties[nameof(AntTabPane.Tab)] = pane.Tab;
                 properties[nameof(AntTabPane.ChildContent)] = pane.ChildContent;
-                properties[nameof(AntTabPane.disabled)] = pane.disabled;
+                properties[nameof(AntTabPane.Disabled)] = pane.Disabled;
                 pane.SetParametersAsync(ParameterView.FromDictionary(properties));
                 pane.Parent = this;
                 ActivatePane(pane);
@@ -288,7 +288,7 @@ namespace AntBlazor
 
         private async void ActivatePane(AntTabPane tabPane)
         {
-            if (!tabPane.disabled && Panes.Contains(tabPane))
+            if (!tabPane.Disabled && Panes.Contains(tabPane))
             {
                 if (_activePane != null)
                 {
