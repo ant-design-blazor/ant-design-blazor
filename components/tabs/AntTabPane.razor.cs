@@ -11,7 +11,7 @@ namespace AntBlazor
         internal bool IsActive { get; set; }
 
         [CascadingParameter]
-        private AntTabs Parent
+        internal AntTabs Parent
         {
             get
             {
@@ -49,7 +49,10 @@ namespace AntBlazor
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public bool disabled { get; set; }
+        public bool Disabled { get; set; }
+
+        [Parameter]
+        public bool Closable { get; set; }
 
         protected override void OnParametersSet()
         {
@@ -58,7 +61,7 @@ namespace AntBlazor
             ClassMapper.Clear().
                 Add(PrefixCls)
                 .If($"{PrefixCls}-active", () => IsActive)
-                .If($"{PrefixCls}-disabled", () => disabled);
+                .If($"{PrefixCls}-disabled", () => Disabled);
         }
     }
 }

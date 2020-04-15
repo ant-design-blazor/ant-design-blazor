@@ -1,5 +1,6 @@
 ﻿using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,26 @@ namespace AntBlazor
     public partial class AntTabs : AntDomComponentBase
     {
         private const string PrefixCls = "ant-tabs";
+        private bool IsHorizontal { get => TabPosition == AntTabPosition.Top || TabPosition == AntTabPosition.Bottom; }
         private ClassMapper _barClassMapper = new ClassMapper();
-        private List<AntTabPane> _panes = new List<AntTabPane>();
+        private ClassMapper _prevClassMapper = new ClassMapper();
+        private ClassMapper _nextClassMapper = new ClassMapper();
+        private ClassMapper _navClassMapper = new ClassMapper();
         private AntTabPane _activePane;
         private AntTabPane _renderedActivePane;
         private ElementReference _activeTabBar;
+        private ElementReference _scrollTabBar;
+        private ElementReference _tabBars;
         private string _inkStyle;
+        private string _navStyle;
         private string _contentStyle;
+        private bool? _prevIconEnabled;
+        private bool? _nextIconEnabled;
+        private int _navIndex;
+        private int _navTotal;
+        private int _navSection;
+        private bool _needRefresh;
+        internal List<AntTabPane> Panes = new List<AntTabPane>();
 
         #region Parameters
 
@@ -37,7 +51,11 @@ namespace AntBlazor
             }
             set
             {
-                _activeKey = value;
+                if (_activeKey != value)
+                {
+                    _activeKey = value;
+                    ActivatePane(Panes.Single(p => p.Key == _activeKey));
+                }
             }
         }
 
@@ -117,13 +135,13 @@ namespace AntBlazor
         /// Callback executed when next button is clicked
         /// </summary>
         [Parameter]
-        public EventCallback<object> OnNextClick { get; set; }
+        public EventCallback OnNextClick { get; set; }
 
         /// <summary>
         /// Callback executed when prev button is clicked
         /// </summary>
         [Parameter]
-        public EventCallback<object> OnPrevClick { get; set; }
+        public EventCallback OnPrevClick { get; set; }
 
         /// <summary>
         /// Callback executed when tab is clicked
@@ -137,17 +155,27 @@ namespace AntBlazor
         [Parameter]
         public bool Keyboard { get; set; } = true;
 
+        [Parameter]
+        public Func<AntTabPane> CreateTabPane { get; set; }
+
         #endregion Parameters
 
         public override Task SetParametersAsync(ParameterView parameters)
         {
+            _needRefresh = true;
+            _renderedActivePane = null;
             string type = parameters.GetValueOrDefault<string>(nameof(Type));
-
             if (type == AntTabType.Card)
             {
                 // according to ant design documents,
                 // Animated default to false when type="card"
                 Animated = false;
+            }
+
+            string position = parameters.GetValueOrDefault<string>(nameof(TabPosition));
+            if (!string.IsNullOrEmpty(position))
+            {
+                _navIndex = 0;
             }
 
             return base.SetParametersAsync(parameters);
@@ -157,16 +185,52 @@ namespace AntBlazor
         {
             base.OnParametersSet();
 
+            if (Type == AntTabType.EditableCard && !HideAdd)
+            {
+                TabBarExtraContent = (b) =>
+                {
+                    b.OpenComponent<AntIcon>(0);
+                    b.AddAttribute(1, "Type", "plus");
+                    b.AddAttribute(2, "class", $"{PrefixCls}-new-tab");
+                    b.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, AddTabPane));
+                    b.CloseComponent();
+                };
+            }
+
             ClassMapper.Clear()
                 .Add(PrefixCls)
                 .Add($"{PrefixCls}-{TabPosition}")
                 .Add($"{PrefixCls}-{Type}")
+                .If($"{PrefixCls}-large", () => Size == AntTabSize.Large)
+                .If($"{PrefixCls}-small", () => Size == AntTabSize.Small)
                 .If($"{PrefixCls}-{AntTabType.Card}", () => Type == AntTabType.EditableCard)
                 .If($"{PrefixCls}-no-animation", () => !Animated);
 
             _barClassMapper.Clear()
                 .Add($"{PrefixCls}-bar")
-                .Add($"{PrefixCls}-{TabPosition}-bar");
+                .Add($"{PrefixCls}-{TabPosition}-bar")
+                .Add($"{PrefixCls}-{Type}-bar")
+                .If($"{PrefixCls}-{AntTabType.Card}-bar", () => Type == AntTabType.EditableCard)
+                .If($"{PrefixCls}-large-bar", () => Size == AntTabSize.Large)
+                .If($"{PrefixCls}-small-bar", () => Size == AntTabSize.Small);
+
+            _prevClassMapper.Clear()
+                .Add($"{PrefixCls}-tab-prev")
+                .If($"{PrefixCls}-tab-btn-disabled", () => !_prevIconEnabled.HasValue || !_prevIconEnabled.Value)
+                .If($"{PrefixCls}-tab-arrow-show", () => _prevIconEnabled.HasValue);
+
+            _nextClassMapper.Clear()
+                .Add($"{PrefixCls}-tab-next")
+                .If($"{PrefixCls}-tab-btn-disabled", () => !_nextIconEnabled.HasValue || !_nextIconEnabled.Value)
+                .If($"{PrefixCls}-tab-arrow-show", () => _nextIconEnabled.HasValue);
+
+            _navClassMapper.Clear()
+                .Add($"{PrefixCls}-nav-container")
+                .If($"{PrefixCls}-nav-container-scrolling", () => _prevIconEnabled.HasValue || _nextIconEnabled.HasValue);
+
+            _navStyle = "transform: translate3d(0px, 0px, 0px);";
+            _inkStyle = "width: 0px; display: block; transform: translate3d(0px, 0px, 0px);";
+            _contentStyle = "margin-" + (IsHorizontal ? "left" : "top") + ": 0;";
         }
 
         /// <summary>
@@ -182,22 +246,49 @@ namespace AntBlazor
                 throw new ArgumentNullException("Key is null");
             }
 
-            if (_panes.Select(p => p.Key).Contains(tabPane.Key))
+            if (Panes.Select(p => p.Key).Contains(tabPane.Key))
             {
                 throw new ArgumentException("An AntTabPane with the same key already exists");
             }
 
-            _panes.Add(tabPane);
-            if (_activePane == null)
+            Panes.Add(tabPane);
+            if (tabPane.Key == DefaultActiveKey)
             {
                 ActivatePane(tabPane);
             }
-            StateHasChanged();
+        }
+
+        public void AddTabPane(MouseEventArgs args)
+        {
+            if (CreateTabPane != null)
+            {
+                AntTabPane pane = CreateTabPane();
+                Dictionary<string, object> properties = new Dictionary<string, object>();
+                properties[nameof(AntTabPane.Parent)] = this;
+                properties[nameof(AntTabPane.ForceRender)] = pane.ForceRender;
+                properties[nameof(AntTabPane.Key)] = pane.Key;
+                properties[nameof(AntTabPane.Tab)] = pane.Tab;
+                properties[nameof(AntTabPane.ChildContent)] = pane.ChildContent;
+                properties[nameof(AntTabPane.Disabled)] = pane.Disabled;
+                pane.SetParametersAsync(ParameterView.FromDictionary(properties));
+                pane.Parent = this;
+                ActivatePane(pane);
+            }
+        }
+
+        public void RemoveTabPane(AntTabPane pane)
+        {
+            _needRefresh = true;
+            Panes.Remove(pane);
+            if (pane.IsActive && Panes.Count > 0)
+            {
+                ActivatePane(Panes[0]);
+            }
         }
 
         private async void ActivatePane(AntTabPane tabPane)
         {
-            if (!tabPane.disabled)
+            if (!tabPane.Disabled && Panes.Contains(tabPane))
             {
                 if (_activePane != null)
                 {
@@ -205,6 +296,7 @@ namespace AntBlazor
                 }
                 tabPane.IsActive = true;
                 _activePane = tabPane;
+                ActiveKey = _activePane.Key;
                 StateHasChanged();
             }
         }
@@ -213,15 +305,167 @@ namespace AntBlazor
         {
             await base.OnAfterRenderAsync(firstRender);
 
+            if (_activePane == null)
+            {
+                throw new ArgumentNullException($"One of {nameof(ActiveKey)} and {nameof(DefaultActiveKey)} should be set");
+            }
+
+            await TryRenderInk();
+
+            await TryRenderNavIcon();
+            _needRefresh = false;
+        }
+
+        private async Task TryRenderNavIcon()
+        {
+            if (_needRefresh)
+            {
+                if (IsHorizontal)
+                {
+                    // Prev/Next icon, show icon if scroll div's width less than tab bars' total width
+                    _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+                    _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+                }
+                else
+                {
+                    _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
+                    _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
+                }
+                RefreshNavIcon();
+            }
+        }
+
+        private async Task TryRenderInk()
+        {
             if (_renderedActivePane != _activePane)
             {
-                _renderedActivePane = _activePane;
+                // TODO: slide to activated tab
+                // animate Active Ink
                 // ink bar
                 Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
-                _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
-                _contentStyle = $"margin-left: -{_panes.IndexOf(_activePane)}00%;";
+                if (IsHorizontal)
+                {
+                    _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
+                    _contentStyle = $"margin-left: -{Panes.IndexOf(_activePane)}00%;";
+                }
+                else
+                {
+                    _inkStyle = $"height: {element.clientHeight}px; display: block; transform: translate3d(0px, {element.offsetTop}px, 0px);";
+                    _contentStyle = $"margin-top: -{Panes.IndexOf(_activePane)}00%;";
+                }
                 StateHasChanged();
+                _renderedActivePane = _activePane;
             }
+        }
+
+        private async void OnPrevClicked()
+        {
+            _needRefresh = true;
+            if (OnPrevClick.HasDelegate)
+            {
+                await OnPrevClick.InvokeAsync(null);
+            }
+
+            // get the old offset to the left, and _navIndex != 0 because prev will be disabled
+            int left = _navIndex * _navSection;
+            if (IsHorizontal)
+            {
+                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            }
+            else
+            {
+                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
+                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
+            }
+            // calculate the current _navIndex after users resize the browser, and _navIndex > 0 guaranteed since left > 0
+            _navIndex = (int)Math.Ceiling(1.0 * left / _navSection);
+            int offset = --_navIndex * _navSection;
+            if (IsHorizontal)
+            {
+                _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+            }
+            else
+            {
+                _navStyle = $"transform: translate3d(0px, -{offset}px, 0px);";
+            }
+            RefreshNavIcon();
+            _needRefresh = false;
+        }
+
+        private async void OnNextClicked()
+        {
+            // BUG: when vertical
+            _needRefresh = true;
+            if (OnNextClick.HasDelegate)
+            {
+                await OnNextClick.InvokeAsync(null);
+            }
+
+            // get the old offset to the left
+            int left = _navIndex * _navSection;
+            if (IsHorizontal)
+            {
+                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            }
+            else
+            {
+                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
+                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
+            }
+            // calculate the current _navIndex after users resize the browser
+            _navIndex = left / _navSection;
+            int offset = Math.Min(++_navIndex * _navSection, _navTotal / _navSection * _navSection);
+            if (IsHorizontal)
+            {
+                _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+            }
+            else
+            {
+                _navStyle = $"transform: translate3d(0px, -{offset}px, 0px);";
+            }
+            RefreshNavIcon();
+            _needRefresh = false;
+        }
+
+        private void RefreshNavIcon()
+        {
+            if (_navTotal > _navSection)
+            {
+                if (_navIndex == 0)
+                {
+                    // reach the first section
+                    _prevIconEnabled = false;
+                }
+                else
+                {
+                    _prevIconEnabled = true;
+                }
+
+                if ((_navIndex + 1) * _navSection > _navTotal)
+                {
+                    // reach the last section
+                    _nextIconEnabled = false;
+                }
+                else
+                {
+                    _nextIconEnabled = true;
+                }
+            }
+            else
+            {
+                // hide icon
+                _prevIconEnabled = null;
+                _nextIconEnabled = null;
+            }
+
+            StateHasChanged();
+        }
+
+        protected override bool ShouldRender()
+        {
+            return _needRefresh || _renderedActivePane != _activePane;
         }
     }
 }
