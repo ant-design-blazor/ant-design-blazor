@@ -36,15 +36,15 @@
 </DemoCard>
 
 <DemoCard>
-    <Title>Icon</Title>
-    <Description>The Tab with Icon.</Description>
+    <Title>Disabled</Title>
+    <Description>Disabled a tab.</Description>
     <Demo>
         <AntTabs DefaultActiveKey="1">
             <AntTabPane Key="1">
                 <Tab>Tab 1</Tab>
                 <ChildContent>Tab 1</ChildContent>
             </AntTabPane>
-            <AntTabPane Key="2" disabled>
+            <AntTabPane Key="2" Disabled>
                 <Tab>Tab 2</Tab>
                 <ChildContent>Tab 2</ChildContent>
             </AntTabPane>
@@ -57,8 +57,8 @@
 </DemoCard>
 
 <DemoCard>
-    <Title>Disabled</Title>
-    <Description>Disabled a tab.</Description>
+    <Title>Icon</Title>
+    <Description>The Tab with Icon.</Description>
     <Demo>
         <AntTabs DefaultActiveKey="1">
             <AntTabPane Key="1">
@@ -348,7 +348,7 @@
                 <Tab>Tab 2</Tab>
                 <ChildContent>Content of Tab Pane 2</ChildContent>
             </AntTabPane>
-            <AntTabPane Key="3">
+            <AntTabPane Key="3" Closable="false">
                 <Tab>Tab 3</Tab>
                 <ChildContent>Content of Tab Pane 3</ChildContent>
             </AntTabPane>
@@ -372,33 +372,125 @@
         };
 }
 
+<style>
+    [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-content,
+    .card-container > .ant-tabs-card > .ant-tabs-content {
+        height: 120px;
+        margin-top: -16px;
+    }
+
+        [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane,
+        .card-container > .ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane {
+            background: #fff;
+            padding: 16px;
+        }
+
+    [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-bar,
+    .card-container > .ant-tabs-card > .ant-tabs-bar {
+        border-color: #fff;
+    }
+
+        [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab,
+        .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
+            border-color: transparent;
+            background: transparent;
+        }
+
+        [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active,
+        .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
+            border-color: #fff;
+            background: #fff;
+        }
+    }
+</style>
+
 <DemoCard>
+    <Title>Container of card type Tab</Title>
+    <Description>Should be used at the top of container, needs to override styles.</Description>
     <Demo>
-        <AntTabs Type="card">
-            <AntTabPane Key="1">
-                <Tab>Tab Title 1</Tab>
-                <ChildContent>
-                    <p>Content of Tab Pane 1</p>
-                    <p>Content of Tab Pane 1</p>
-                    <p>Content of Tab Pane 1</p>
-                </ChildContent>
-            </AntTabPane>
-            <AntTabPane Key="2">
-                <Tab>Tab Title 21</Tab>
-                <ChildContent>
-                    <p>Content of Tab Pane 2</p>
-                    <p>Content of Tab Pane 2</p>
-                    <p>Content of Tab Pane 2</p>
-                </ChildContent>
-            </AntTabPane>
-            <AntTabPane Key="3">
-                <Tab>Tab Title 3</Tab>
-                <ChildContent>
-                    <p>Content of Tab Pane 3</p>
-                    <p>Content of Tab Pane 3</p>
-                    <p>Content of Tab Pane 3</p>
-                </ChildContent>
-            </AntTabPane>
-        </AntTabs>
+        <div class="card-container">
+            <AntTabs DefaultActiveKey="1" Type="@AntTabType.Card">
+                <AntTabPane Key="1">
+                    <Tab>Tab Title 1</Tab>
+                    <ChildContent>
+                        <p>Content of Tab Pane 1</p>
+                        <p>Content of Tab Pane 1</p>
+                        <p>Content of Tab Pane 1</p>
+                    </ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="2">
+                    <Tab>Tab Title 2</Tab>
+                    <ChildContent>
+                        <p>Content of Tab Pane 2</p>
+                        <p>Content of Tab Pane 2</p>
+                        <p>Content of Tab Pane 2</p>
+                    </ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="3">
+                    <Tab>Tab Title 3</Tab>
+                    <ChildContent>
+                        <p>Content of Tab Pane 3</p>
+                        <p>Content of Tab Pane 3</p>
+                        <p>Content of Tab Pane 3</p>
+                    </ChildContent>
+                </AntTabPane>
+            </AntTabs>
+        </div>
     </Demo>
 </DemoCard>
+
+<DemoCard>
+    <Title>Customized trigger of new tab</Title>
+    <Description>Hide default plus icon, and bind event for customized trigger.</Description>
+    <Demo>
+        <div>
+            <div style="margin-bottom: 16px;">
+                <AntButton @onclick="(e)=>Add()">ADD</AntButton>
+            </div>
+            <AntTabs DefaultActiveKey="1" Type="@AntTabType.EditableCard" HideAdd>
+                @foreach (var temp in _panes)
+                {
+                    AntTabPane pane = temp;
+                    <AntTabPane Key="@pane.Key">
+                        <Tab>@pane.Tab</Tab>
+                        <ChildContent>@pane.ChildContent</ChildContent>
+                    </AntTabPane>
+                }
+            </AntTabs>
+        </div>
+    </Demo>
+</DemoCard>
+
+@code{
+    private List<AntTabPane>
+        _panes = new List<AntTabPane>
+            ();
+    private static int btnIndex = 1;
+    private void Add()
+    {
+        int index = ++btnIndex;
+        _panes.Add(new AntTabPane()
+        {
+            Key = index.ToString(),
+            Tab = (b) => b.AddContent(0, $"Tab {index}"),
+            ChildContent = (b) => b.AddContent(0, $"Content of Tab Pane {index}"),
+        });
+
+        StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        for (int i = 0; i < btnIndex + 1; i++)
+        {
+            int index = i;
+            _panes.Add(new AntTabPane()
+            {
+                Key = index.ToString(),
+                Tab = (b) => b.AddContent(0, $"Tab {index}"),
+                ChildContent = (b) => b.AddContent(0, $"Content of Tab Pane {index}"),
+            });
+        }
+    }
+}

@@ -276,7 +276,7 @@ namespace AntBlazor
             }
         }
 
-        public void RemoveTabPane(MouseEventArgs args, AntTabPane pane)
+        public void RemoveTabPane(AntTabPane pane)
         {
             _needRefresh = true;
             Panes.Remove(pane);
@@ -284,11 +284,6 @@ namespace AntBlazor
             {
                 ActivatePane(Panes[0]);
             }
-        }
-
-        public void RemoveTabPane()
-        {
-
         }
 
         private async void ActivatePane(AntTabPane tabPane)
