@@ -7,15 +7,15 @@ namespace AntBlazor
 {
     public partial class AntTextArea : AntInput
     {
+        private const uint DEFAULT_MIN_ROWS = 1;
         /// <summary>
         /// scrollHeight of 1 row
         /// </summary>
         private double _rowHeight;
 
         /// <summary>
-        /// total height = row * _rowHeight + _offsetHeight
+        /// total height = row * <see cref="_rowHeight" /> + <see cref="_offsetHeight" />
         /// </summary>
-
         private double _offsetHeight;
 
         private string _hiddenWidth;
@@ -25,7 +25,7 @@ namespace AntBlazor
         [Parameter]
         public bool AutoSize { get; set; }
 
-        private uint _minRows = 1;
+        private uint _minRows = DEFAULT_MIN_ROWS;
         [Parameter]
         public uint MinRows
         {
@@ -35,14 +35,14 @@ namespace AntBlazor
             }
             set
             {
-                if (value >= 1 && value <= MaxRows)
+                if (value >= DEFAULT_MIN_ROWS && value <= MaxRows)
                 {
                     _minRows = value;
                     AutoSize = true;
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException(nameof(MinRows));
+                    throw new ArgumentOutOfRangeException(nameof(MinRows), $"Please enter a value between {DEFAULT_MIN_ROWS} and {MaxRows}");
                 }
             }
         }
@@ -57,14 +57,14 @@ namespace AntBlazor
             }
             set
             {
-                if (value <= uint.MaxValue && value >= MinRows)
+                if (value >= MinRows)
                 {
                     _maxRows = value;
                     AutoSize = true;
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException(nameof(MinRows));
+                    throw new ArgumentOutOfRangeException(nameof(MinRows), $"Please enter a value between {MinRows} and {uint.MaxValue}");
                 }
             }
         }
@@ -120,7 +120,6 @@ namespace AntBlazor
             {
                 Style = $"height: {rows * _rowHeight + _offsetHeight}px;overflow-y: hidden;";
             }
-            rows = Math.Min((uint)MaxRows, rows);
         }
 
         protected async Task OnResizeAsync()
