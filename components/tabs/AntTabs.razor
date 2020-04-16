@@ -1,4 +1,4 @@
-﻿@namespace AntBlazor
+@namespace AntBlazor
 @inherits AntDomComponentBase
 <CascadingValue Value="this">
     @ChildContent
@@ -36,7 +36,13 @@
                                 {
                                     if (pane.IsActive)
                                     {
-                                        <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.Disabled" aria-selected="true" aria-controls="tabpane-@pane.Key">
+                                        <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab"
+                                             aria-disabled="@pane.Disabled" aria-selected="true" aria-controls="tabpane-@pane.Key"
+                                             draggable="@Draggable.ToString()"
+                                             @ondragover:preventDefault
+                                             ondragover="event.preventDefault();"
+                                             @ondragstart="(e)=>HandleDragStart(e, pane)"
+                                             @ondrop="(e)=>HandleDrop(e, pane)">
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
                                                 <div>
@@ -52,7 +58,13 @@
                                     }
                                     else
                                     {
-                                        <div tabindex="-1" class="ant-tabs-tab" id="tab-@pane.Key" role="tab" aria-disabled="@pane.Disabled" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)" @onclick:stopPropagation>
+                                        <div tabindex="-1" class="ant-tabs-tab" id="tab-@pane.Key" role="tab"
+                                             aria-disabled="@pane.Disabled" aria-selected="false" aria-controls="tabpane-@pane.Key"
+                                             @onclick="(e)=>ActivatePane(pane)" @onclick:stopPropagation
+                                             draggable="@Draggable.ToString()"
+                                             ondragover="event.preventDefault();"
+                                             @ondragstart="(e)=>HandleDragStart(e, pane)"
+                                             @ondrop="(e)=>HandleDrop(e, pane)">
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
                                                 <div>
@@ -113,7 +125,13 @@
                                 {
                                     if (pane.IsActive)
                                     {
-                                        <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.Disabled" aria-selected="true" aria-controls="tabpane-@pane.Key">
+                                        <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab"
+                                             aria-disabled="@pane.Disabled" aria-selected="true" aria-controls="tabpane-@pane.Key"
+                                             draggable="@Draggable.ToString()"
+                                             @ondragover:preventDefault
+                                             ondragover="event.preventDefault();"
+                                             @ondragstart="(e)=>HandleDragStart(e, pane)"
+                                             @ondrop="(e)=>HandleDrop(e, pane)">
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
                                                 <div>
@@ -129,7 +147,13 @@
                                     }
                                     else
                                     {
-                                        <div tabindex="-1" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.Disabled" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)" @onclick:stopPropagation>
+                                        <div tabindex="-1" class="ant-tabs-tab" id="tab-@pane.Key" role="tab"
+                                             aria-disabled="@pane.Disabled" aria-selected="false" aria-controls="tabpane-@pane.Key"
+                                             @onclick="(e)=>ActivatePane(pane)" @onclick:stopPropagation
+                                             draggable="@Draggable.ToString()"
+                                             ondragover="event.preventDefault();"
+                                             @ondragstart="(e)=>HandleDragStart(e, pane)"
+                                             @ondrop="(e)=>HandleDrop(e, pane)">
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
                                                 <div>

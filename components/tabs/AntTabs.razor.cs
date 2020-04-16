@@ -1,4 +1,4 @@
-﻿using AntBlazor.JsInterop;
+using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
@@ -157,6 +157,9 @@ namespace AntBlazor
 
         [Parameter]
         public Func<AntTabPane> CreateTabPane { get; set; }
+
+        [Parameter]
+        public bool Draggable { get; set; }
 
         #endregion Parameters
 
@@ -467,5 +470,35 @@ namespace AntBlazor
         {
             return _needRefresh || _renderedActivePane != _activePane;
         }
+
+        #region DRAG & DROP
+
+        private AntTabPane _draggingPane;
+
+        private void HandleDragStart(DragEventArgs args, AntTabPane pane)
+        {
+            if (Draggable)
+            {
+                args.DataTransfer.DropEffect = "move";
+                args.DataTransfer.EffectAllowed = "move";
+                _draggingPane = pane;
+            }
+        }
+
+        private void HandleDrop(DragEventArgs args, AntTabPane pane)
+        {
+            if (Draggable && _draggingPane != null)
+            {
+                int newIndex = Panes.IndexOf(pane);
+                Panes.Remove(_draggingPane);
+                Panes.Insert(newIndex, _draggingPane);
+                _draggingPane = null;
+                _needRefresh = true;
+                _renderedActivePane = null;
+                StateHasChanged();
+            }
+        }
+
+        #endregion
     }
 }
