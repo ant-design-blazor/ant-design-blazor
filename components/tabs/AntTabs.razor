@@ -39,10 +39,11 @@
                                         <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.Disabled" aria-selected="true" aria-controls="tabpane-@pane.Key">
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
-                                                <div @onclick="(e)=>RemoveTabPane(pane)" @onclick:stopPropagation>
+                                                <div>
                                                     @pane.Tab
-                                                    <AntIcon class="ant-tabs-close-x" type="close" />
-                                                </div> }
+                                                    <AntIcon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
+                                                </div>
+                                            }
                                             else
                                             {
                                                 @pane.Tab
@@ -51,13 +52,14 @@
                                     }
                                     else
                                     {
-                                        <div tabindex="-1" class="ant-tabs-tab" id="tab-@pane.Key" role="tab" aria-disabled="@pane.Disabled" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)">
+                                        <div tabindex="-1" class="ant-tabs-tab" id="tab-@pane.Key" role="tab" aria-disabled="@pane.Disabled" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)" @onclick:stopPropagation>
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
-                                                <div @onclick="(e)=>RemoveTabPane(pane)" @onclick:stopPropagation>
+                                                <div>
                                                     @pane.Tab
-                                                    <AntIcon class="ant-tabs-close-x" type="close" />
-                                                </div> }
+                                                    <AntIcon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
+                                                </div>
+                                            }
                                             else
                                             {
                                                 @pane.Tab
@@ -114,9 +116,9 @@
                                         <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.Disabled" aria-selected="true" aria-controls="tabpane-@pane.Key">
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
-                                                <div @onclick="(e)=>RemoveTabPane(pane)" @onclick:stopPropagation>
+                                                <div>
                                                     @pane.Tab
-                                                    <AntIcon class="ant-tabs-close-x" type="close" />
+                                                    <AntIcon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
                                                 </div>
                                             }
                                             else
@@ -127,13 +129,14 @@
                                     }
                                     else
                                     {
-                                        <div tabindex="-1" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.Disabled" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)">
+                                        <div tabindex="-1" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab" aria-disabled="@pane.Disabled" aria-selected="false" aria-controls="tabpane-@pane.Key" @onclick="(e)=>ActivatePane(pane)" @onclick:stopPropagation>
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
-                                                <div @onclick="(e)=>RemoveTabPane(pane)" @onclick:stopPropagation>
+                                                <div>
                                                     @pane.Tab
-                                                    <AntIcon class="ant-tabs-close-x" type="close" />
-                                                </div> }
+                                                    <AntIcon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
+                                                </div>
+                                            }
                                             else
                                             {
                                                 @pane.Tab
