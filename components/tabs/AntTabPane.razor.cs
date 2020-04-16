@@ -52,7 +52,7 @@ namespace AntBlazor
         public bool Disabled { get; set; }
 
         [Parameter]
-        public bool Closable { get; set; }
+        public bool Closable { get; set; } = true;
 
         protected override void OnParametersSet()
         {
