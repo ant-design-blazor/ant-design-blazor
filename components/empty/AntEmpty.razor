@@ -3,16 +3,16 @@
 @inherits AntEmptyBase
 
 <div class="@ClassMapper.Class" @ref="@Ref" style="@Style" @attributes="Attributes" Id="@Id">
-    <div class="@(PrefixCls)-image" style="@ImageStyle">
-        @if (Image.IsT0 && !string.IsNullOrEmpty(Image.AsT0))
+    <div class="@(prefixCls)-image" style="@imageStyle">
+        @if (image.IsT0 && !string.IsNullOrEmpty(image.AsT0))
         {
-            Description.TryPickT0(out string des, out _);
+            description.TryPickT0(out string des, out _);
             string alt = !string.IsNullOrEmpty(des) ? des : "empty";
-            <img alt="@alt" src="@Image.AsT0" />
+            <img alt="@alt" src="@image.AsT0" />
         }
-        else if (Image.IsT1 && Image.AsT1 != null)
+        else if (image.IsT1 && image.AsT1 != null)
         {
-            @Image.AsT1
+            @image.AsT1
         }
         else
         {
@@ -20,15 +20,15 @@
         }
     </div>
 
-    @if (Description.IsT0 && !string.IsNullOrEmpty(Description.AsT0))
+    @if (description.IsT0 && !string.IsNullOrEmpty(description.AsT0))
     {
-        <p class="@(PrefixCls)-description">@Description.AsT0</p>
+        <p class="@(prefixCls)-description">@description.AsT0</p>
     }
-    @if (Description.IsT2 && Description.AsT2 != null)
+    @if (description.IsT2 && description.AsT2 != null)
     {
-        <p class="@(PrefixCls)-description">@Description.AsT2</p>
+        <p class="@(prefixCls)-description">@description.AsT2</p>
     }
-    <div class="@(PrefixCls)-footer">
+    <div class="@(prefixCls)-footer">
         @ChildContent
     </div>
 </div>
