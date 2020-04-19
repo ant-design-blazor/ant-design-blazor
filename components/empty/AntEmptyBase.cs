@@ -9,6 +9,10 @@ namespace AntBlazor
     public class AntEmptyBase : AntDomComponentBase
     {
         [Parameter] public string prefixCls { get; set; } = "ant-empty";
+        /// <summary>
+        /// "ltr"|"rtl"
+        /// </summary>
+        [Parameter] public string direction { get; set; } = "ltr";
         [Parameter] public string imageStyle { get; set; }
         [Parameter] public RenderFragment ChildContent { get; set; }
 
@@ -23,7 +27,7 @@ namespace AntBlazor
             this.ClassMapper.Clear()
                 .Add(prefixCls)
                 .If($"{prefixCls}-normal", () => image.IsT1 && image.AsT1 == AntEmpty.PRESENTED_IMAGE_SIMPLE)
-               //.If($"{prefixCls}-rtl", () => direction == "rlt") -- TODO
+                .If($"{prefixCls}-{direction}", () => direction.IsIn("ltr", "rlt"))
                ;
         }
 
