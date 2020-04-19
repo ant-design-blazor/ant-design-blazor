@@ -8,26 +8,26 @@ namespace AntBlazor
 {
     public class AntEmptyBase : AntDomComponentBase
     {
-        [Parameter] public string prefixCls { get; set; } = "ant-empty";
+        [Parameter] public string PrefixCls { get; set; } = "ant-empty";
         /// <summary>
         /// "ltr"|"rtl"
         /// </summary>
-        [Parameter] public string direction { get; set; } = "ltr";
-        [Parameter] public string imageStyle { get; set; }
+        [Parameter] public string Direction { get; set; } = "ltr";
+        [Parameter] public string ImageStyle { get; set; }
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public OneOf<string, bool, RenderFragment> description { get; set; } = "暂无数据";
+        public OneOf<string, bool, RenderFragment> Description { get; set; } = "暂无数据";
 
         [Parameter]
-        public OneOf<string, RenderFragment> image { get; set; } = AntEmpty.PRESENTED_IMAGE_DEFAULT;
+        public OneOf<string, RenderFragment> Image { get; set; } = AntEmpty.PRESENTED_IMAGE_DEFAULT;
 
         protected void SetClass()
         {
             this.ClassMapper.Clear()
-                .Add(prefixCls)
-                .If($"{prefixCls}-normal", () => image.IsT1 && image.AsT1 == AntEmpty.PRESENTED_IMAGE_SIMPLE)
-                .If($"{prefixCls}-{direction}", () => direction.IsIn("ltr", "rlt"))
+                .Add(PrefixCls)
+                .If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == AntEmpty.PRESENTED_IMAGE_SIMPLE)
+                .If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                ;
         }
 
