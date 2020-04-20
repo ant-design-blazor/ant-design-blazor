@@ -120,6 +120,11 @@
             "url": "card"
           },
           {
+            "title": "Empty",
+            "type": "menuItem",
+            "url": "empty"
+          },
+          {
             "title": "Tag",
             "type": "menuItem",
             "url": "tag"

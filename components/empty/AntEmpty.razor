@@ -1,0 +1,41 @@
+﻿@namespace AntBlazor
+@using System
+@inherits AntEmptyBase
+
+<div class="@ClassMapper.Class" @ref="@Ref" style="@Style" @attributes="Attributes" Id="@Id">
+    <div class="@(PrefixCls)-image" style="@ImageStyle">
+        @if (Image.IsT0 && !string.IsNullOrEmpty(Image.AsT0))
+        {
+            Description.TryPickT0(out string des, out _);
+            string alt = !string.IsNullOrEmpty(des) ? des : "empty";
+            <img alt="@alt" src="@Image.AsT0" />
+        }
+        else if (Image.IsT1 && Image.AsT1 != null)
+        {
+            @Image.AsT1
+        }
+        else
+        {
+            @PRESENTED_IMAGE_DEFAULT
+        }
+    </div>
+
+    @if (Description.IsT0 && !string.IsNullOrEmpty(Description.AsT0))
+    {
+        <p class="@(PrefixCls)-description">@Description.AsT0</p>
+    }
+    @if (Description.IsT2 && Description.AsT2 != null)
+    {
+        <p class="@(PrefixCls)-description">@Description.AsT2</p>
+    }
+    <div class="@(PrefixCls)-footer">
+        @ChildContent
+    </div>
+</div>
+
+@code
+{
+    public static RenderFragment PRESENTED_IMAGE_DEFAULT =@<AntEmptyDefaultImg />;
+
+    public static RenderFragment PRESENTED_IMAGE_SIMPLE = @<AntEmptySimpleImg />;
+}
