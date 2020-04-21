@@ -5,12 +5,16 @@ using System.Text;
 
 namespace AntBlazor
 {
-    public class AntDatePickerBase : AntDomComponentBase
+    public partial class AntDatePicker : AntDomComponentBase
     {
-        [Parameter] public string PrefixCls { get; set; } = "ant-picker";
-        [Parameter] public string Picker { get; set; } = AntDatePickerType.Date;
+        [Parameter] 
+        public string PrefixCls { get; set; } = "ant-picker";
 
-        protected DateTime CurrentSelectDate { get; set; } = DateTime.Now;
+        [Parameter] 
+        public string Picker { get; set; } = AntDatePickerType.Date;
+
+        public DateTime CurrentDate { get; set; } = DateTime.Now;
+        public DateTime CurrentSelectDate { get; set; } = DateTime.Now;
 
         protected override void OnInitialized()
         {
@@ -35,9 +39,16 @@ namespace AntBlazor
                ;
         }
 
-        protected void OnSelectDay(DateTime selectedDate)
+        protected void OnSelect(DateTime date)
         {
-            CurrentSelectDate = selectedDate;
+            CurrentSelectDate = date;
+
+            StateHasChanged();
+        }
+
+        public void ChangeDate(DateTime date)
+        {
+            CurrentSelectDate = date;
 
             StateHasChanged();
         }

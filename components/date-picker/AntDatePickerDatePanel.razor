@@ -1,0 +1,71 @@
+﻿@namespace AntBlazor
+@using System.Globalization;
+
+<div class="@(DatePicker.PrefixCls)-date-panel">
+    <AntDatePickerHeader>
+        <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-year-btn">
+            @(DatePicker.CurrentSelectDate.Year)年
+        </button>
+        <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-month-btn">
+            @(DatePicker.CurrentSelectDate.Month)月
+        </button>
+    </AntDatePickerHeader>
+    <div class="@(DatePicker.PrefixCls)-body">
+        <table class="@(DatePicker.PrefixCls)-content">
+            <thead>
+                <tr>
+                    <th>一</th>
+                    <th>二</th>
+                    <th>三</th>
+                    <th>四</th>
+                    <th>五</th>
+                    <th>六</th>
+                    <th>日</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var calendar = CultureInfo.InvariantCulture.Calendar;
+
+                    DateTime monthFirstDayDate = new DateTime(DatePicker.CurrentSelectDate.Year, DatePicker.CurrentSelectDate.Month, 1);
+                    //DateTime monthLastDayDate = monthFirstDayDate.AddMonths(1).AddDays(-1);
+
+                    DayOfWeek monthFirstDayOfWeek = calendar.GetDayOfWeek(monthFirstDayDate);
+                    //DayOfWeek monthLastDayOfWeek = calendar.GetDayOfWeek(monthLastDayDate);
+
+                    int diffDay = 1 - (int)monthFirstDayOfWeek;
+                    DateTime viewDate = monthFirstDayDate.AddDays(diffDay);
+                }
+                @for (int weekIndex = 1; weekIndex <= 6; weekIndex++)
+                {
+                    <tr>
+                        @for (int dayOfWeek = 0; dayOfWeek <= 6; dayOfWeek++)
+                        {
+                            var currentViewDate = viewDate;
+
+                            string inViewClass = currentViewDate.Month == DatePicker.CurrentSelectDate.Month ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
+                            string todayClass = currentViewDate.Date == DatePicker.CurrentDate.Date ? $"{DatePicker.PrefixCls}-cell-today" : "";
+                            string selectedClass = currentViewDate == DatePicker.CurrentSelectDate ? $"{DatePicker.PrefixCls}-cell-selected" : "";
+
+                            <td title="@(currentViewDate.ToString("yyyy-MM-dd"))"
+                                class="ant-picker-cell @(inViewClass) @(todayClass) @selectedClass">
+                                <div class="ant-picker-cell-inner" @onclick="e => OnSelect.InvokeAsync(currentViewDate)">@viewDate.Day</div>
+                            </td>
+
+                            viewDate = currentViewDate.AddDays(1);
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<AntDatePickerFooter />
+
+@code {
+    [CascadingParameter]
+    public AntDatePicker DatePicker { get; set; }
+
+    [Parameter]
+    public EventCallback<DateTime> OnSelect { get; set; }
+}
