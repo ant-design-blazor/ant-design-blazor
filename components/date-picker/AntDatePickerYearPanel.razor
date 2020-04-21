@@ -3,7 +3,7 @@
 
 <div class="@(DatePicker.PrefixCls)-year-panel">
     @{
-        int startYear = DatePicker.CurrentSelectDate.Year / 10 * 10 - 1;
+        int startYear = DatePicker.CurrentShowDate.Year / 10 * 10 - 1;
     }
     <AntDatePickerHeader SuperChangeDateInterval="10"
                          ShowPrevBtn="@false"
