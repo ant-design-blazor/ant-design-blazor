@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AntBlazor
 {
-    internal class AntDatePickerPanelBase : AntDomComponentBase
+    public class AntDatePickerPanelBase : AntDomComponentBase
     {
         [CascadingParameter]
         public AntDatePicker DatePicker { get; set; }
@@ -13,44 +13,78 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<DateTime> OnSelect { get; set; }
 
+        /// <summary>
+        /// 测试期间用：是否在选择日期后自动关闭
+        /// </summary>
+        [Parameter]
+        public bool AutoClose { get; set; } = false;
+
+        protected bool IsClose { get; set; } = false;
 
         protected void OnSelectDate(DateTime date)
         {
             OnSelect.InvokeAsync(date);
+
+            OnSelected();
         }
 
         protected void OnSelectYear(DateTime date)
         {
-            DateTime selectDate = new DateTime(
-                date.Year,
-                DatePicker.CurrentSelectDate.Month,
-                DatePicker.CurrentSelectDate.Day
-            );
+            OnSelect.InvokeAsync(CombineNewShowDate(year: date.Year));
 
-            OnSelect.InvokeAsync(selectDate);
+            OnSelected();
         }
 
         protected void OnSelectMonth(DateTime date)
         {
-            DateTime selectDate = new DateTime(
-                DatePicker.CurrentSelectDate.Year,
-                date.Month,
-                DatePicker.CurrentSelectDate.Day
-            );
+            OnSelect.InvokeAsync(CombineNewShowDate(month: date.Month));
 
-            OnSelect.InvokeAsync(selectDate);
+            OnSelected();
         }
 
         protected void OnSelectDay(DateTime date)
         {
-            DateTime selectDate = new DateTime(
-                DatePicker.CurrentSelectDate.Year,
-                DatePicker.CurrentSelectDate.Month,
-                date.Day
-            );
+            OnSelect.InvokeAsync(CombineNewShowDate(day: date.Day));
 
-            OnSelect.InvokeAsync(selectDate);
+            OnSelected();
         }
 
+        protected void OnSelectShowYear(DateTime date)
+        {
+            DatePicker.ChangeShowDate(CombineNewShowDate(year: date.Year));
+
+            OnSelected();
+        }
+
+        protected void OnSelectShowMonth(DateTime date)
+        {
+            DatePicker.ChangeShowDate(CombineNewShowDate(month: date.Month));
+
+            OnSelected();
+        }
+
+        protected void OnSelectShowDay(DateTime date)
+        {
+            DatePicker.ChangeShowDate(CombineNewShowDate(day: date.Day));
+
+            OnSelected();
+        }
+
+        private DateTime CombineNewShowDate(int? year = null, int? month = null, int? day = null)
+        {
+            return new DateTime(
+                year ?? DatePicker.CurrentShowDate.Year,
+                month ?? DatePicker.CurrentShowDate.Month,
+                day ?? DatePicker.CurrentShowDate.Day
+            );
+        }
+
+        private void OnSelected()
+        {
+            if (AutoClose)
+            {
+                IsClose = true;
+            }
+        }
     }
 }
