@@ -2,11 +2,11 @@
 @using System.Globalization;
 
 <div class="@(DatePicker.PrefixCls)-month-panel">
-    <AntDatePickerHeader SuperChangeDateInterval="10"
+    <AntDatePickerHeader SuperChangeDateInterval="1"
                          ShowPrevBtn="@false"
                          ShowNextBtn="@false">
         <button type="button" class="@(DatePicker.PrefixCls)-decade-btn">
-            @DatePicker.CurrentSelectDate.Year
+            @DatePicker.CurrentShowDate.Year
         </button>
     </AntDatePickerHeader>
     <div class="@(DatePicker.PrefixCls)-body">
@@ -15,7 +15,7 @@
                 @{
                     var calendar = CultureInfo.InvariantCulture.Calendar;
 
-                    DateTime viewDate = new DateTime(DatePicker.CurrentSelectDate.Year, 1, 1);
+                    DateTime viewDate = new DateTime(DatePicker.CurrentShowDate.Year, 1, 1);
 
                     int monthIndex = 0;
                     const int MAX_ROW = 4;
@@ -39,12 +39,12 @@
                                 todayClass = $"{DatePicker.PrefixCls}-cell-today";
                             }
 
-                            string selectedClass =  "";
+                            string selectedClass = "";
 
                             if (currentViewDate.Year == DatePicker.CurrentSelectDate.Year
                                 && currentViewDate.Month == DatePicker.CurrentSelectDate.Month)
                             {
-                                selectedClass =  $"{DatePicker.PrefixCls}-cell-selected";
+                                selectedClass = $"{DatePicker.PrefixCls}-cell-selected";
                             }
 
                             <td title="@(currentViewDate.Year)"

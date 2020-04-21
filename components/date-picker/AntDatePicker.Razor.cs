@@ -14,6 +14,7 @@ namespace AntBlazor
         public string Picker { get; set; } = AntDatePickerType.Date;
 
         public DateTime CurrentDate { get; set; } = DateTime.Now;
+        public DateTime CurrentShowDate { get; set; } = DateTime.Now;
         public DateTime CurrentSelectDate { get; set; } = DateTime.Now;
 
         protected override void OnInitialized()
@@ -46,9 +47,9 @@ namespace AntBlazor
             StateHasChanged();
         }
 
-        public void ChangeDate(DateTime date)
+        public void ChangeShowDate(DateTime date)
         {
-            CurrentSelectDate = date;
+            CurrentShowDate = date;
 
             StateHasChanged();
         }

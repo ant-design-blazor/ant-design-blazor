@@ -3,13 +3,13 @@
 <div class="@(DatePicker.PrefixCls)-header">
     @if (ShowSuperPrevBtn)
     {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-prev-btn" @onclick="e => DatePicker.ChangeDate(DatePicker.CurrentSelectDate.AddYears(-SuperChangeDateInterval))">
+        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-prev-btn" @onclick="e => DatePicker.ChangeShowDate(DatePicker.CurrentShowDate.AddYears(-SuperChangeDateInterval))">
             <span class="@(DatePicker.PrefixCls)-super-prev-icon"></span>
         </button>
     }
     @if (ShowPrevBtn)
     {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-prev-btn" @onclick="e => DatePicker.ChangeDate(DatePicker.CurrentSelectDate.AddMonths(-ChangeDateInterval))">
+        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-prev-btn" @onclick="e => DatePicker.ChangeShowDate(DatePicker.CurrentShowDate.AddMonths(-ChangeDateInterval))">
             <span class="@(DatePicker.PrefixCls)-prev-icon"></span>
         </button>
     }
@@ -20,13 +20,13 @@
 
     @if (ShowNextBtn)
     {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-next-btn" @onclick="e => DatePicker.ChangeDate(DatePicker.CurrentSelectDate.AddMonths(ChangeDateInterval))">
+        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-next-btn" @onclick="e => DatePicker.ChangeShowDate(DatePicker.CurrentShowDate.AddMonths(ChangeDateInterval))">
             <span class="@(DatePicker.PrefixCls)-next-icon"></span>
         </button>
     }
     @if (ShowSuperNextBtn)
     {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-next-btn" @onclick="e => DatePicker.ChangeDate(DatePicker.CurrentSelectDate.AddYears(SuperChangeDateInterval))">
+        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-next-btn" @onclick="e => DatePicker.ChangeShowDate(DatePicker.CurrentShowDate.AddYears(SuperChangeDateInterval))">
             <span class="@(DatePicker.PrefixCls)-super-next-icon"></span>
         </button>
     }
