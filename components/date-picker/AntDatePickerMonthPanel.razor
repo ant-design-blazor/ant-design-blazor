@@ -1,11 +1,12 @@
 ﻿@namespace AntBlazor
+@inherits AntDatePickerPanelBase
 @using System.Globalization;
 
 <div class="@(DatePicker.PrefixCls)-month-panel">
     <AntDatePickerHeader SuperChangeDateInterval="1"
                          ShowPrevBtn="@false"
                          ShowNextBtn="@false">
-        <button type="button" class="@(DatePicker.PrefixCls)-decade-btn">
+        <button type="button" class="@(DatePicker.PrefixCls)-decade-btn" @onclick="ShowYearPanel">
             @DatePicker.CurrentShowDate.Year
         </button>
     </AntDatePickerHeader>
@@ -32,7 +33,6 @@
                             var currentViewDate = viewDate;
 
                             string todayClass = "";
-
                             if (currentViewDate.Year == DatePicker.CurrentDate.Year
                                 && currentViewDate.Month == DatePicker.CurrentDate.Month)
                             {
@@ -40,7 +40,6 @@
                             }
 
                             string selectedClass = "";
-
                             if (currentViewDate.Year == DatePicker.CurrentSelectDate.Year
                                 && currentViewDate.Month == DatePicker.CurrentSelectDate.Month)
                             {
@@ -49,7 +48,10 @@
 
                             <td title="@(currentViewDate.Year)"
                                 class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
-                                <div class="@(DatePicker.PrefixCls)-cell-inner" @onclick="e => OnSelect.InvokeAsync(currentViewDate)">@(viewDate.Month)月</div>
+                                <div class="@(DatePicker.PrefixCls)-cell-inner"
+                                     @onclick="e => OnSelectMonth(currentViewDate)">
+                                    @(viewDate.Month)月
+                                </div>
                             </td>
 
                             viewDate = currentViewDate.AddMonths(1);
@@ -63,10 +65,18 @@
     </div>
 </div>
 
-@code {
-    [CascadingParameter]
-    public AntDatePicker DatePicker { get; set; }
+@if (IsShowYearPanel)
+{
+    <AntDatePickerYearPanel OnSelect="OnSelectYear" />
+}
 
-    [Parameter]
-    public EventCallback<DateTime> OnSelect { get; set; }
+@code {
+    private bool IsShowYearPanel = false;
+
+    private void ShowYearPanel(MouseEventArgs e)
+    {
+        IsShowYearPanel = true;
+
+        StateHasChanged();
+    }
 }
