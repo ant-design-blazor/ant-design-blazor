@@ -13,6 +13,7 @@ DataEntry: Data Entry
 Checkbox: Checkbox
 Switch: Switch
 Input: Input
+DatePicker: DatePicker
 InputNumber: InputNumber
 Radio: Radio
 DataDisplay: Data Display
@@ -20,6 +21,7 @@ Avatar: Avatar
 Badge: Badge
 Card: Card
 Empty: Empty
+ToolTip: ToolTip
 Tag: Tag
 Timeline: Timeline
 Feedback: Feedback
