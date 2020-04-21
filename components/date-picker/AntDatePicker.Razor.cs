@@ -43,6 +43,7 @@ namespace AntBlazor
         protected void OnSelect(DateTime date)
         {
             CurrentSelectDate = date;
+            CurrentShowDate = date;
 
             StateHasChanged();
         }
