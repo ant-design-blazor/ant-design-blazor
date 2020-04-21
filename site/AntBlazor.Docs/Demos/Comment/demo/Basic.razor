@@ -1,0 +1,49 @@
+﻿<Comment Actions="@(new []{likeAction,dislikeAction,replyAction})"
+         Author="@("Han Solo")"
+         Avatar="@(@"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png")"
+         Content="@("We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.")"
+         Datetime="dateTime">
+</Comment>
+
+@code
+{
+    bool like = false;
+    bool dislike = false;
+
+    RenderFragment likeAction=>
+        @<span>
+            <Tooltip Title="@("Like")">
+                <AntIcon Type="like" Theme="@(like ? "fill" : "outline")" OnClick="SetLike" />
+            </Tooltip>
+            <span>@(like ? 1 : 0)</span>
+        </span>;
+
+    RenderFragment dislikeAction=>
+        @<span>
+            <Tooltip Title="@("Dislike")">
+                <AntIcon Type="dislike" Theme="@(dislike ? "fill" : "outline")" OnClick="SetDislike" />
+            </Tooltip>
+            <span>@(dislike ? 1:0)</span>
+        </span>;
+
+    RenderFragment replyAction =@<span>Reply to</span>;
+
+    RenderFragment dateTime =
+        @<Tooltip Title="@(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))">
+            <span>
+                @(MomentHelper.FromNow(DateTime.Now))
+            </span>
+        </Tooltip>;
+
+    void SetLike()
+    {
+        like = true;
+        dislike = false;
+    }
+
+    void SetDislike()
+    {
+        like = false;
+        dislike = true;
+    }
+}

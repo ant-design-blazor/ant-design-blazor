@@ -1,0 +1,74 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this">
+    <div class="@ClassMapper.Class" style="@Style" id="@Id">
+        <div class="ant-comment-inner">
+            @if (Avatar.Value != null && Content.Value != null)
+            {
+                <div class="ant-comment-avatar">
+                    @if (Avatar.IsT0)
+                    {
+                        <AntAvatar Src="@Avatar.AsT0" />
+                    }
+                    else
+                    {
+                        @Avatar.AsT1
+                    }
+                </div>
+                <div class="ant-comment-content">
+                    <div class="ant-comment-content-author">
+                        @if (Author.Value != null)
+                        {
+                            <span class="ant-comment-content-author-name">
+                                @if (Author.IsT0)
+                                {
+                                    <a>@Author.AsT0</a>
+                                }
+                                else
+                                {
+                                    @Author.AsT1
+                                }
+                            </span>
+                        }
+                        @if (Datetime.Value != null)
+                        {
+                            <span class="ant-comment-content-author-time">
+                                @if (Datetime.IsT0)
+                                {
+                                    <span>@Datetime.AsT0</span>
+                                }
+                                else
+                                {
+                                    @Datetime.AsT1
+                                }
+                            </span>
+                        }
+                    </div>
+                    <div class="ant-comment-content-detail">
+                        @if (Content.IsT0)
+                        {
+                            <p>@Content.AsT0</p>
+                        }
+                        else
+                        {
+                            @Content.AsT1
+                        }
+                    </div>
+                    @if (Actions.Count > 0)
+                    {
+                        <ul class="ant-comment-actions">
+                            @foreach (RenderFragment action in Actions)
+                            {
+                                <li>@action</li>
+                            }
+                        </ul>
+                    }
+                </div>
+            }
+        </div>
+        <div class="ant-comment-nested">
+            @ChildContent
+        </div>
+    </div>
+</CascadingValue>

@@ -1,0 +1,69 @@
+﻿<div>
+    @if (datas.Count > 0)
+    {
+        <AntList DataSource="datas" TItem="Data" Header="header">
+            <Item Context="item">
+                <Comment Avatar="item.Author" Author="item.Author" Datetime="item.Datetime"></Comment>
+            </Item>
+        </AntList>
+    }
+    <Comment Avatar="@(@"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png")" Content="@(GetEditor(@onSubmit))"></Comment>
+</div>
+
+
+@code{
+    List<Data> datas=new List<Data>();
+    RenderFragment replyAction =@<span>Reply to</span>;
+
+    RenderFragment header =>
+        @<template>
+            @if (datas.Any())
+            {
+                <span>
+                    @($"{datas.Count} {(datas.Count > 1 ? "replies" : "reply")}")
+                </span>
+            }
+        </template>;
+
+    async void onSubmit()
+    {
+        submitting = true;
+
+        await Task.Delay(1000);
+        this.datas.Add(new Data()
+        {
+            Author = "Han Solo",
+            Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+            Content = value,
+            Datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+        });
+        submitting = false;
+        value = "";
+        await InvokeAsync(StateHasChanged);
+    }
+
+    bool submitting=false;
+    string value=string.Empty;
+
+    //TODO::Form
+    RenderFragment GetEditor(Action onSubmit)
+    {
+        return
+            @<div>
+                <TextArea MinRows="4" @bind-Value="@value" />
+                <br/>
+                <br/>
+                <AntButton Loading="@submitting" OnClick="onSubmit " type="primary">
+                    Add Comment
+                </AntButton>
+            </div>;
+    }
+
+    class Data
+    {
+        public string Author { get; set; }
+        public string Avatar { get; set; }
+        public string Content { get; set; }
+        public string Datetime;
+    }
+}

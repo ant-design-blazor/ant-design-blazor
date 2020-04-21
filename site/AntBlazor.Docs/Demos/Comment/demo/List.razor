@@ -1,0 +1,58 @@
+﻿<AntList DataSource="@datas" TItem="Data" Header="header">
+    <Item Context="item">
+        <Comment Actions="item.Actions" Avatar="item.Author" Author="item.Author" Datetime="item.Datetime"></Comment>
+    </Item>
+</AntList>
+
+@code{
+
+    List<Data> datas => new List<Data>()
+    {
+        new Data()
+        {
+            Author = "Han Solo",
+            Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+            Content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+            Datetime = @<Tooltip Title="@(DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss"))">
+                               <span>
+                                   @(MomentHelper.FromNow(DateTime.Now.AddDays(-1)))
+                               </span>
+                            </Tooltip>,
+                Actions = new List<RenderFragment>() {replyAction}
+            },
+            new Data()
+            {
+                Author = "Han Solo",
+                Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+                Content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+                Datetime = @<Tooltip Title="@(DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd HH:mm:ss"))">
+                               <span>
+                                   @(MomentHelper.FromNow(DateTime.Now.AddDays(-2)))
+                               </span>
+                            </Tooltip>,
+                Actions = new List<RenderFragment>() {replyAction}
+            }
+        };
+
+    RenderFragment replyAction =@<span>Reply to</span>;
+
+    RenderFragment header =>
+        @<template>
+            @if (datas.Any())
+            {
+                <span>
+                    @($"{datas.Count} {(datas.Count > 1 ? "replies" : "reply")}")
+                </span>
+            }
+        </template>;
+
+    class Data
+    {
+        public string Author { get; set; }
+        public string Avatar { get; set; }
+        public string Content { get; set; }
+        public List<RenderFragment> Actions;
+        public RenderFragment Datetime;
+    }
+}
+
