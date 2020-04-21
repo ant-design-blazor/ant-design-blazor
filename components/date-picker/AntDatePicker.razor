@@ -8,16 +8,17 @@
      Id="@Id">
     <div class="ant-picker-panel-container">
         <div tabindex="-1" class="ant-picker-panel">
+            Picker:@Picker
             <CascadingValue Value=@this>
                 @if (Picker == AntDatePickerType.Date)
                 {
-                    <AntDatePickerDatePanel OnSelect="@ChangeDate" />
+                    <AntDatePickerDatePanel OnSelect="OnSelect" />
                 }
                 @if (Picker == AntDatePickerType.Year)
                 {
-                    @*<AntDatePickerYearPanel OnSelect="@OnSelectDay" />*@
+                    <AntDatePickerYearPanel OnSelect="OnSelect" />
                 }
             </CascadingValue>
         </div>
-    </div>;
+    </div>
 </div>
