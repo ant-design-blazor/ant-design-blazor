@@ -39,7 +39,7 @@ namespace AntBlazor.Docs.Build.CLI.Utils
             return (meta, html);
         }
 
-        public static (DescriptionYaml Meta, Dictionary<string, string> Descriptions) ParseDescription(string input)
+        public static (DescriptionYaml Meta, string Style, Dictionary<string, string> Descriptions) ParseDescription(string input)
         {
             var pipeline = new MarkdownPipelineBuilder()
                 .UseYamlFrontMatter()
@@ -58,9 +58,11 @@ namespace AntBlazor.Docs.Build.CLI.Utils
             }
 
             var isAfterENHeading = false;
+            var isStyleBlock = false;
 
             var zhPart = "";
             var enPart = "";
+            var stylePart = "";
 
             for (int i = yamlBlock?.Line ?? 0; i < document.Count; i++)
             {
@@ -73,17 +75,26 @@ namespace AntBlazor.Docs.Build.CLI.Utils
                     isAfterENHeading = true;
                 }
 
+                if (block is HtmlBlock htmlBlock && htmlBlock.Type == HtmlBlockType.ScriptPreOrStyle)
+                {
+                    isStyleBlock = true;
+                }
+
                 if (block is HeadingBlock h && h.Level == 2)
                     continue;
 
-                using StringWriter writer2 = new StringWriter();
-                var renderer2 = new HtmlRenderer(writer2);
+                using StringWriter writer = new StringWriter();
+                var renderer = new HtmlRenderer(writer);
 
-                var blockHtml = renderer2.Render(block);
+                var blockHtml = renderer.Render(block);
 
                 if (!isAfterENHeading)
                 {
                     zhPart += blockHtml;
+                }
+                else if (isStyleBlock)
+                {
+                    stylePart += blockHtml;
                 }
                 else
                 {
@@ -91,7 +102,8 @@ namespace AntBlazor.Docs.Build.CLI.Utils
                 }
             }
 
-            return (meta, new Dictionary<string, string>() { ["zh-CN"] = zhPart, ["en-US"] = enPart });
+            stylePart = stylePart.Replace("<style>", "").Replace("</style>", "");
+            return (meta, stylePart, new Dictionary<string, string>() { ["zh-CN"] = zhPart, ["en-US"] = enPart });
         }
 
         public static Dictionary<string, string> ParseHeader(string input)

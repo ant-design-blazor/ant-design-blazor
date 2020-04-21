@@ -1,7 +1,7 @@
-﻿@using AntBlazor.Docs.Highlight
+﻿@using System.Reflection
 @inherits ComponentBase
 
-<div class="code-box" id="components-@ComponentName.ToLower()-demo-@Demo.Name">
+<div class="code-box" id="@DemoId">
     <section class="code-box-demo">
         @ShowCaseContent
     </section>
@@ -30,9 +30,12 @@
     </section>
     <section class="highlight-wrapper @(codeExpand?"highlight-wrapper-expand":"")">
         <div class="highlight">
-<HighlightedCode Code="@Demo.Code" Language="html"></HighlightedCode>
+            <HighlightedCode Code="@Demo.Code" Language="html"></HighlightedCode>
         </div>
     </section>
+    <Style ScopeId="@DemoId">
+        @Demo.Style
+    </Style>
 </div>
 
 
@@ -46,9 +49,12 @@
 
     private bool codeExpand { get; set; }
 
+    protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
+
+
     RenderFragment ShowCaseContent => (builder) =>
     {
-        var showCase = Type.GetType($"AntBlazor.Docs.{Demo.Type}");
+        var showCase = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Demo.Type}");
         builder.OpenComponent(0, showCase);
         builder.CloseComponent();
     };
