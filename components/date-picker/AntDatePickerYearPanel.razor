@@ -2,7 +2,7 @@
 @inherits AntDatePickerPanelBase
 @using System.Globalization;
 
-<div class="@(DatePicker.PrefixCls)-year-panel">
+<div class="@(DatePicker.PrefixCls)-year-panel" hidden="@IsClose">
     @{
         int startYear = DatePicker.CurrentShowDate.Year / 10 * 10 - 1;
     }
@@ -41,7 +41,7 @@
 
                             <td title="@(currentViewDate.Year)"
                                 class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
-                                <div class="@(DatePicker.PrefixCls)-cell-inner" 
+                                <div class="@(DatePicker.PrefixCls)-cell-inner"
                                      @onclick="e => OnSelectYear(currentViewDate)">
                                     @viewDate.Year
                                 </div>

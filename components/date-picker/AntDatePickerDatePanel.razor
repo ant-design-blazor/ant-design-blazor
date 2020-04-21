@@ -2,7 +2,7 @@
 @inherits AntDatePickerPanelBase
 @using System.Globalization;
 
-<div class="@(DatePicker.PrefixCls)-date-panel">
+<div class="@(DatePicker.PrefixCls)-date-panel" hidden="@IsClose">
     <AntDatePickerHeader>
         <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-year-btn">
             @(DatePicker.CurrentShowDate.Year)年
