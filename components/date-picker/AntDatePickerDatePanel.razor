@@ -1,4 +1,4 @@
-﻿@namespace AntBlazor
+﻿@namespace AntBlazor.Internal
 @inherits AntDatePickerPanelBase
 @using System.Globalization;
 
@@ -50,9 +50,9 @@
 
                             <td title="@(currentViewDate.ToString("yyyy-MM-dd"))"
                                 class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
-                                <div class="@(DatePicker.PrefixCls)-cell-inner" 
+                                <div class="@(DatePicker.PrefixCls)-cell-inner"
                                      @onclick="e => OnSelectDate(currentViewDate)">
-                                @viewDate.Day
+                                    @viewDate.Day
                                 </div>
                             </td>
 
