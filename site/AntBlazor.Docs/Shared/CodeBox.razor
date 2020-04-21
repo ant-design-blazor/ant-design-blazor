@@ -33,9 +33,7 @@
             <HighlightedCode Code="@Demo.Code" Language="html"></HighlightedCode>
         </div>
     </section>
-    <Style ScopeId="@DemoId">
-        @Demo.Style
-    </Style>
+    @((MarkupString)$"<style>{Demo.Style}</style>")
 </div>
 
 

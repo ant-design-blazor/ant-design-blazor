@@ -137,6 +137,9 @@ namespace AntBlazor.Docs.Utils
 
         public string AddScopeIdToString(string scopeId)
         {
+            if (string.IsNullOrEmpty(scopeId))
+                return this.ToString();
+
             StringBuilder sb = new StringBuilder(this.StyleSheet.Length);
             foreach (var item in this)
             {
