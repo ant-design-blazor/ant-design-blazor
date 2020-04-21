@@ -1,0 +1,53 @@
+﻿@namespace AntBlazor
+@using System.Globalization;
+
+<div class="@(DatePicker.PrefixCls)-year-panel">
+    <AntDatePickerHeader>
+        <button type="button" class="@(DatePicker.PrefixCls)-decade-btn">
+            @(DatePicker.CurrentDate.Year)-@(DatePicker.CurrentDate.Year + @PER_VIEW_YEAR_COUNT)
+        </button>
+    </AntDatePickerHeader>
+    <div class="@(DatePicker.PrefixCls)-body">
+        <table class="@(DatePicker.PrefixCls)-content">
+            <tbody>
+                @{
+                    var calendar = CultureInfo.InvariantCulture.Calendar;
+
+                    DateTime viewDate = new DateTime(DatePicker.CurrentSelectDate.Year, 1, 1);
+                }
+
+                @for (int yearIndex = 0; yearIndex <= PER_VIEW_YEAR_COUNT; yearIndex++)
+                {
+
+                    <tr>
+                        @for (int line = 0; line < 3; line++)
+                        {
+                            var currentViewDate = viewDate;
+
+                            string inViewClass = yearIndex != 0 && yearIndex != PER_VIEW_YEAR_COUNT ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
+                            string todayClass = currentViewDate.Year == DatePicker.CurrentDate.Year ? $"{DatePicker.PrefixCls}-cell-today" : "";
+                            string selectedClass = currentViewDate.Year == DatePicker.CurrentSelectDate.Year ? $"{DatePicker.PrefixCls}-cell-selected" : "";
+
+                            <td title="@(currentViewDate.Year)"
+                                class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
+                                <div class="@(DatePicker.PrefixCls)-cell-inner" @onclick="e => OnSelect.InvokeAsync(currentViewDate)">@viewDate.Year</div>
+                            </td>
+
+                            viewDate = currentViewDate.AddYears(1);
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    public AntDatePicker DatePicker { get; set; }
+
+    [Parameter]
+    public EventCallback<DateTime> OnSelect { get; set; }
+
+    private const int PER_VIEW_YEAR_COUNT = 9;
+}

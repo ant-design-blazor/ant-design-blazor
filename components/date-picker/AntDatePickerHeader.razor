@@ -1,0 +1,50 @@
+﻿@namespace AntBlazor
+
+    <div class="@(DatePicker.PrefixCls)-header">
+        @if (ShowSuperPrevBtn)
+        {
+            <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-prev-btn" @onclick="e => DatePicker.ChangeDate(DatePicker.CurrentSelectDate.AddYears(-1))">
+                <span class="@(DatePicker.PrefixCls)-super-prev-icon"></span>
+            </button>
+        }
+        @if (ShowPrevBtn)
+        {
+            <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-prev-btn" @onclick="e => DatePicker.ChangeDate(DatePicker.CurrentSelectDate.AddMonths(-1))">
+                <span class="@(DatePicker.PrefixCls)-prev-icon"></span>
+            </button>
+        }
+
+        <div class="@(DatePicker.PrefixCls)-header-view">
+            @ChildContent
+        </div>
+
+        @if (ShowNextBtn)
+        {
+            <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-next-btn" @onclick="e => DatePicker.ChangeDate(DatePicker.CurrentSelectDate.AddMonths(1))">
+                <span class="@(DatePicker.PrefixCls)-next-icon"></span>
+            </button>
+        }
+        @if (ShowSuperNextBtn)
+        {
+            <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-next-btn" @onclick="e => DatePicker.ChangeDate(DatePicker.CurrentSelectDate.AddYears(1))">
+                <span class="@(DatePicker.PrefixCls)-super-next-icon"></span>
+            </button>
+        }
+    </div>
+
+@code {
+    [CascadingParameter]
+    public AntDatePicker DatePicker { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public bool ShowSuperPrevBtn { get; set; } = true;
+    [Parameter]
+    public bool ShowPrevBtn { get; set; } = true;
+    [Parameter]
+    public bool ShowNextBtn { get; set; } = true;
+    [Parameter]
+    public bool ShowSuperNextBtn { get; set; } = true;
+}
