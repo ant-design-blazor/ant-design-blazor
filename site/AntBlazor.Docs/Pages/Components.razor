@@ -39,8 +39,9 @@
             </section>
             <AntRow Style="margin-left: -8px; margin-right: -8px;">
                 @{
-                    var leftList = DemoComponent.DemoList.Where((_, i) => i % 2 != 0);
-                    var rightList = DemoComponent.DemoList.Where((_, i) => i % 2 == 0);
+                    var demos = DemoComponent.DemoList.OrderBy(x => x.Order);
+                    var leftList = demos.Where((_, i) => i % 2 == 0);
+                    var rightList = demos.Where((_, i) => i % 2 != 0);
                 }
                 <AntCol span="12" class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                     @foreach (var demo in leftList)

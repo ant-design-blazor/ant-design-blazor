@@ -53,12 +53,12 @@
             var renderer = new Markdig.Renderers.HtmlRenderer(writer);
             pipeline.Setup(renderer);
 
-            MarkdownDocument document = Markdig.Markdown.Parse(markdown, pipeline);
+            MarkdownDocument document = Markdig.Markdown.Parse(MarkdownText, pipeline);
             var yamlBlock= document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
 
             if (yamlBlock != null)
             {
-                string yaml = markdown.Substring(yamlBlock.Span.Start, yamlBlock.Span.Length).Trim('-');
+                string yaml = MarkdownText.Substring(yamlBlock.Span.Start, yamlBlock.Span.Length).Trim('-');
                 var meta = new Deserializer().Deserialize<Dictionary<string, string>>(yaml);
 
                 title = meta["title"];

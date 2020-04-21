@@ -36,6 +36,9 @@ namespace AntBlazor
         public bool Disabled { get; set; }
 
         [Parameter]
+        public bool Danger { get; set; }
+
+        [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
@@ -63,6 +66,7 @@ namespace AntBlazor
             ClassMapper.Clear()
                 .Add("ant-btn")
                 .If($"{prefixName}-{this.Type}", () => !string.IsNullOrEmpty(Type))
+                 .If($"{prefixName}-danger", () => Danger)
                 .If($"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
                 .If($"{prefixName}-{sizeMap[this.Size]}", () => sizeMap.ContainsKey(Size))
                 .If($"{prefixName}-loading", () => Loading)

@@ -69,12 +69,6 @@ namespace AntBlazor
             await base.OnInitializedAsync();
         }
 
-        protected override async Task OnParametersSetAsync()
-        {
-            //await this.setGutterStyle();
-            await base.OnParametersSetAsync();
-        }
-
         private async Task SetGutterStyle()
         {
             string breakPoint = null;
