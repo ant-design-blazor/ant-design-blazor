@@ -33,6 +33,9 @@ namespace AntBlazor
         [Parameter] 
         public bool Disabled { get; set; } = false;
 
+        [Parameter] 
+        public bool Bordered { get; set; } = true;
+
         public bool IsClose { get; set; } = true;
 
         public DateTime CurrentDate { get; private set; } = DateTime.Now;
@@ -60,6 +63,7 @@ namespace AntBlazor
         {
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
+                .If($"{PrefixCls}-borderless", () => Bordered == false)
                //.If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == AntEmpty.PRESENTED_IMAGE_SIMPLE)
                //.If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                ;
