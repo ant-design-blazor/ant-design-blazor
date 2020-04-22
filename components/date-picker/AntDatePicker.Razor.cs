@@ -64,6 +64,7 @@ namespace AntBlazor
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-borderless", () => Bordered == false)
+                .If($"{PrefixCls}-disabled", () => Disabled == true)
                //.If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == AntEmpty.PRESENTED_IMAGE_SIMPLE)
                //.If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                ;

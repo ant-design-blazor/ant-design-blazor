@@ -1,11 +1,42 @@
 ﻿<AntTitle level="1">DatePicker 日期选择框</AntTitle>
-
+<AntText>输入或选择日期的控件。</AntText>
+<AntTitle level="2">何时使用</AntTitle>
+<AntParagraph>当用户需要输入一个日期，可以点击标准输入框，弹出日期面板进行选择。</AntParagraph>
+<br />
+<h2>演示</h2>
+<br />
 <DemoCard>
+    <Title>基本</Title>
+    <Description>最简单的用法，在浮层中可以选择或者输入日期。</Description>
     <Demo>
-        @AntDatePickerType.Date <br /><AntDatePicker Picker="@AntDatePickerType.Date" /> <br />
-        @AntDatePickerType.Week <br /><AntDatePicker Picker="@AntDatePickerType.Week" /> <br />
-        @AntDatePickerType.Month <br /><AntDatePicker Picker="@AntDatePickerType.Month" /> <br />
-        @AntDatePickerType.Quarter <br /><AntDatePicker Picker="@AntDatePickerType.Quarter" /> <br />
-        @AntDatePickerType.Year <br /><AntDatePicker Picker="@AntDatePickerType.Year" /> <br />
+        <AntDatePicker Picker="@AntDatePickerType.Date" /> <br />
+        <AntDatePicker Picker="@AntDatePickerType.Week" /> <br />
+        <AntDatePicker Picker="@AntDatePickerType.Month" /> <br />
+        <AntDatePicker Picker="@AntDatePickerType.Quarter" /> <br />
+        <AntDatePicker Picker="@AntDatePickerType.Year" /> <br />
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>禁用</Title>
+    <Description>选择框的不可用状态。你也可以通过数组单独禁用 RangePicker 的其中一项。</Description>
+    <Demo>
+        <AntDatePicker Disabled="@true" Picker="@AntDatePickerType.Date" /> <br />
+        <AntDatePicker Disabled="@true" Picker="@AntDatePickerType.Week" /> <br />
+        <AntDatePicker Disabled="@true" Picker="@AntDatePickerType.Month" /> <br />
+        <AntDatePicker Disabled="@true" Picker="@AntDatePickerType.Quarter" /> <br />
+        <AntDatePicker Disabled="@true" Picker="@AntDatePickerType.Year" /> <br />
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>无边框</Title>
+    <Description>无边框样式。</Description>
+    <Demo>
+        <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Date" /> <br />
+        <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Week" /> <br />
+        <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Month" /> <br />
+        <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Quarter" /> <br />
+        <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Year" /> <br />
     </Demo>
 </DemoCard>
