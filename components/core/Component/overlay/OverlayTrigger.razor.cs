@@ -103,6 +103,30 @@ namespace AntBlazor.Internal
             }
         }
 
+        protected virtual async Task OnTriggerFocusIn()
+        {
+            _mouseInTrigger = true;
+
+            if (_overlay != null && IsContainTrigger(TriggerType.Focus))
+            {
+                _overlay.PreventHide(true);
+
+                await Show();
+            }
+        }
+
+        protected virtual async Task OnTriggerFocusOut()
+        {
+            _mouseInTrigger = false;
+
+            if (_overlay != null && IsContainTrigger(TriggerType.Focus))
+            {
+                _overlay.PreventHide(_mouseInOverlay);
+
+                await Hide();
+            }
+        }
+
         protected virtual void OnOverlayMouseEnter()
         {
             _mouseInOverlay = true;
@@ -214,12 +238,12 @@ namespace AntBlazor.Internal
             return $"{PrefixCls}-hidden";
         }
 
-        public async Task Show(int? overlayLeft = null, int? overlayTop = null)
+        public virtual async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
             await _overlay.Show(overlayLeft, overlayTop);
         }
 
-        public async Task Hide()
+        public virtual async Task Hide()
         {
             await _overlay.Hide();
         }

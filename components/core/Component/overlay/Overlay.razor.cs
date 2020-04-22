@@ -22,25 +22,25 @@ namespace AntBlazor.Internal
         [Parameter]
         public EventCallback OnOverlayMouseLeave { get; set; }
 
-        private bool _hasAddOverlayToBody = false;
+        protected bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
         private bool _isChildOverlayShow = false;
         private bool _mouseInOverlay = false;
 
         private bool _isOverlayFirstRender = true;
-        private bool _isWaitForOverlayFirstRender = false;
+        protected bool _isWaitForOverlayFirstRender = false;
 
         private bool _preVisible = false;
-        private bool _isOverlayShow = false;
+        protected bool _isOverlayShow = false;
         private bool _isOverlayHiding = false;
 
-        private int? _overlayLeft = null;
-        private int? _overlayTop = null;
+        protected int? _overlayLeft = null;
+        protected int? _overlayTop = null;
 
-        private string _dropdownStyle = "";
-        private string _overlayCls = "";
+        protected string _dropdownStyle = "";
+        protected string _overlayCls = "";
 
-        private const int OVERLAY_OFFSET = 4;
+        protected const int OVERLAY_OFFSET = 4;
 
         protected override async Task OnParametersSetAsync()
         {
@@ -209,7 +209,7 @@ namespace AntBlazor.Internal
             }
         }
 
-        private int GetOverlayTop(Element trigger, Element overlay, Element containerElement)
+        protected virtual int GetOverlayTop(Element trigger, Element overlay, Element containerElement)
         {
             int top = 0;
 
@@ -243,7 +243,7 @@ namespace AntBlazor.Internal
             return top;
         }
 
-        private int GetOverlayLeft(Element trigger, Element overlay, Element containerElement)
+        protected virtual int GetOverlayLeft(Element trigger, Element overlay, Element containerElement)
         {
             int left = 0;
             int triggerLeft = trigger.absoluteLeft - containerElement.absoluteLeft;

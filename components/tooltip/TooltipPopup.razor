@@ -1,5 +1,5 @@
-﻿@namespace AntBlazor.Internal
-@inherits AntDomComponentBase
+﻿@namespace AntBlazor
+@inherits AntBlazor.Internal.Overlay
 
 @if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender)
 {
@@ -17,14 +17,13 @@
     }
 
     <div class="@(Trigger.PrefixCls) @(Trigger.OverlayClassName) @(Trigger.GetPlacementClass()) @overlayCls"
-         style="display: inline-flex; position: absolute; @display @Trigger.OverlayStyle @_dropdownStyle"
+         style="position: absolute; @display @Trigger.OverlayStyle @_dropdownStyle"
          @ref="Ref"
          @onmouseenter="OnOverlayMouseEnter"
          @onmouseleave="OnOverlayMouseLeave">
-        <CascadingValue Value="Trigger" Name="ParentTrigger">
-            <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
-                @Trigger.Overlay
-            </CascadingValue>
-        </CascadingValue>
+        <div class="ant-tooltip-content">
+            <div class="ant-tooltip-arrow"></div>
+            <div class="ant-tooltip-inner" role="tooltip">@Title</div>
+        </div>
     </div>
 }
