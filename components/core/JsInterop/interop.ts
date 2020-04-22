@@ -28,7 +28,16 @@ export function getBoundingClientRect(element) {
 
 export function addDomEventListener(element, eventName, invoker) {
   let callback = args => {
-    invoker.invokeMethodAsync('Invoke', args);
+    const obj = {};
+    for (let k in args) {
+      obj[k] = args[k];
+    }
+    let json = JSON.stringify(obj, (k, v) => {
+      if (v instanceof Node) return 'Node';
+      if (v instanceof Window) return 'Window';
+      return v;
+    }, ' ');
+    invoker.invokeMethodAsync('Invoke', json);
   };
 
   if (element == 'window') {
