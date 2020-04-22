@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.JSInterop;
 
 namespace AntBlazor.JsInterop
@@ -15,15 +16,33 @@ namespace AntBlazor.JsInterop
             _jsRuntime = jsRuntime;
         }
 
-        public void AddEventListener<T>(string dom, string eventName, Action<T> callback)
+        private void AddEventListenerInternal<T>(string dom, string eventName, Action<T> callback)
         {
             if (!domEventListeners.ContainsKey($"{dom}-{eventName}"))
             {
                 _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
-                 {
-                     callback?.Invoke(p);
-                 })));
+                {
+                    callback?.Invoke(p);
+                })));
             }
+        }
+
+        public void AddEventListener(string dom, string eventName, Action<JsonElement> callback)
+        {
+            AddEventListenerInternal<string>(dom, eventName, (e) =>
+            {
+                JsonElement jsonElement = JsonDocument.Parse(e).RootElement;
+                callback(jsonElement);
+            });
+        }
+
+        public void AddEventListener<T>(string dom, string eventName, Action<T> callback)
+        {
+            AddEventListenerInternal<string>(dom, eventName, (e) =>
+            {
+                T obj = JsonSerializer.Deserialize<T>(e);
+                callback(obj);
+            });
         }
     }
 
