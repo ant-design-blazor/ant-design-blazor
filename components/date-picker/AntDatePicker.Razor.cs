@@ -10,12 +10,37 @@ namespace AntBlazor
         [Parameter] 
         public string PrefixCls { get; set; } = "ant-picker";
 
+        private string _picker = AntDatePickerType.Date;
         [Parameter] 
-        public string Picker { get; set; } = AntDatePickerType.Date;
+        public string Picker { 
+            get {
+                return _picker;
+            } 
+            
+            set {
+                PrePicker = _picker;
 
-        public DateTime CurrentDate { get; set; } = DateTime.Now;
-        public DateTime CurrentShowDate { get; set; } = DateTime.Now;
-        public DateTime CurrentSelectDate { get; set; } = DateTime.Now;
+                _picker = value;
+
+                // note first picker type
+                if(InitPicker == null)
+                {
+                    InitPicker = value;
+                }
+            } 
+        }
+
+        [Parameter] 
+        public bool Disabled { get; set; } = false;
+
+        public bool IsClose { get; set; } = true;
+
+        public DateTime CurrentDate { get; private set; } = DateTime.Now;
+        public DateTime CurrentShowDate { get; private set; } = DateTime.Now;
+        public DateTime CurrentSelectDate { get; private set; } = DateTime.Now;
+
+        private string InitPicker { get; set; } = null;
+        private string PrePicker { get; set; } = null;
 
         protected override void OnInitialized()
         {
@@ -42,8 +67,17 @@ namespace AntBlazor
 
         protected void OnSelect(DateTime date)
         {
-            CurrentSelectDate = date;
-            CurrentShowDate = date;
+            // InitPicker is the finally value
+            if (Picker == InitPicker)
+            {
+                CurrentSelectDate = date;
+                IsClose = true;
+            }
+            else
+            {
+                Picker = PrePicker;
+                CurrentShowDate = date;
+            }
 
             StateHasChanged();
         }
