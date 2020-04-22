@@ -18,32 +18,51 @@ namespace AntBlazor
             } 
             
             set {
-                PrePicker = _picker;
+                prePicker = _picker;
 
                 _picker = value;
 
-                // note first picker type
-                if(InitPicker == null)
+                if(initPicker == null)
                 {
-                    InitPicker = value;
+                    // note first picker type
+                    initPicker = value;
+
+                    // set default placeholder
+                    Placeholder = initPicker switch
+                    {
+                        AntDatePickerType.Date => AntDatePickerPlaceholder.Date,
+                        AntDatePickerType.Week => AntDatePickerPlaceholder.Date,
+                        AntDatePickerType.Month => AntDatePickerPlaceholder.Date,
+                        AntDatePickerType.Quarter => AntDatePickerPlaceholder.Date,
+                        AntDatePickerType.Year => AntDatePickerPlaceholder.Date,
+                    };
                 }
             } 
         }
 
         [Parameter] 
         public bool Disabled { get; set; } = false;
-
-        [Parameter] 
+        [Parameter]
         public bool Bordered { get; set; } = true;
-
-        public bool IsClose { get; set; } = true;
+        [Parameter]
+        public bool AutoFocus { get; set; } = false;
+        [Parameter]
+        public bool Open { get; set; } = false;
+        [Parameter]
+        public bool AllowClear { get; set; } = true; // TODO
+        [Parameter]
+        public string Placeholder { get; set; }
+        [Parameter]
+        public string PopupStyle { get; set; }
 
         public DateTime CurrentDate { get; private set; } = DateTime.Now;
         public DateTime CurrentShowDate { get; private set; } = DateTime.Now;
-        public DateTime CurrentSelectDate { get; private set; } = DateTime.Now;
+        public DateTime CurrentSelectDate { get; private set; }
 
-        private string InitPicker { get; set; } = null;
-        private string PrePicker { get; set; } = null;
+        private string initPicker = null;
+        private string prePicker = null;
+        private bool hadSelectValue = false;
+        private bool isClose = true;
 
         protected override void OnInitialized()
         {
@@ -65,6 +84,7 @@ namespace AntBlazor
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-borderless", () => Bordered == false)
                 .If($"{PrefixCls}-disabled", () => Disabled == true)
+                //.If($"{PrefixCls}-focused", () => AutoFocus == true)
                //.If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == AntEmpty.PRESENTED_IMAGE_SIMPLE)
                //.If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                ;
@@ -73,14 +93,17 @@ namespace AntBlazor
         protected void OnSelect(DateTime date)
         {
             // InitPicker is the finally value
-            if (Picker == InitPicker)
+            if (Picker == initPicker)
             {
                 CurrentSelectDate = date;
-                IsClose = true;
+                hadSelectValue = true;
+
+                isClose = true;
+                Open = false;
             }
             else
             {
-                Picker = PrePicker;
+                Picker = prePicker;
                 CurrentShowDate = date;
             }
 
