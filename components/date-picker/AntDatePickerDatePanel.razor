@@ -2,20 +2,16 @@
 @inherits AntDatePickerPanelBase
 @using System.Globalization;
 
-<div class="@(DatePicker.PrefixCls)-@(DatePicker.Picker)-panel" hidden="@IsClose">
-    <AntDatePickerHeader>
-        <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-year-btn">
-            @(DatePicker.CurrentShowDate.Year)年
-        </button>
-        <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-month-btn">
-            @(DatePicker.CurrentShowDate.Month)月
-        </button>
-    </AntDatePickerHeader>
+<div class="@(DatePicker.PrefixCls)-@(DatePicker.Picker)-panel">
+    <AntDatePickerHeader />
     <div class="@(DatePicker.PrefixCls)-body">
         <table class="@(DatePicker.PrefixCls)-content">
             <thead>
                 <tr>
-                    <th></th>
+                    @if (IsWeek)
+                    {
+                        <th></th>
+                    }
                     <th>一</th>
                     <th>二</th>
                     <th>三</th>
@@ -37,36 +33,36 @@
                 }
                 @for (int weekIndex = 1; weekIndex <= 6; weekIndex++)
                 {
-                    string selectedRowClass = IsWeek && IsSameWeak(viewDate, DatePicker.CurrentSelectDate) ? $"{DatePicker.PrefixCls}-week-panel-row-selected" : "";
+                    string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, DatePicker.CurrentSelectDate) ? $"{DatePicker.PrefixCls}-week-panel-row-selected" : "";
                     string rowClass = IsWeek ? $"{DatePicker.PrefixCls}-week-panel-row" : "";
-             
-                <tr class="@(rowClass) @(selectedRowClass)">
-                    @if (IsWeek)
-                    {
-                        <td class="@(DatePicker.PrefixCls)-cell @(DatePicker.PrefixCls)-cell-weak">
-                            @GetWeekOfYear(viewDate)
-                        </td>
-                    }
 
-                    @for (int dayOfWeek = 0; dayOfWeek <= 6; dayOfWeek++)
-                    {
-                        var currentViewDate = viewDate;
+                    <tr class="@(rowClass) @(selectedRowClass)">
+                        @if (IsWeek)
+                        {
+                            <td class="@(DatePicker.PrefixCls)-cell @(DatePicker.PrefixCls)-cell-weak">
+                                @DateHelper.GetWeekOfYear(viewDate)
+                            </td>
+                        }
 
-                        string inViewClass = IsSameMonth(currentViewDate, DatePicker.CurrentShowDate) ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
-                        string todayClass = IsSameDate(currentViewDate, DatePicker.CurrentDate) ? $"{DatePicker.PrefixCls}-cell-today" : "";
-                        string selectedClass = !IsWeek && IsSameDate(currentViewDate, DatePicker.CurrentSelectDate) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
+                        @for (int dayOfWeek = 0; dayOfWeek <= 6; dayOfWeek++)
+                        {
+                            var currentViewDate = viewDate;
 
-                        <td title="@(currentViewDate.ToString("yyyy-MM-dd"))"
-                            class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
-                            <div class="@(DatePicker.PrefixCls)-cell-inner"
-                                 @onclick="e => OnSelectDate(currentViewDate)">
-                                @viewDate.Day
-                            </div>
-                        </td>
+                            string inViewClass = DateHelper.IsSameMonth(currentViewDate, DatePicker.CurrentShowDate) ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
+                            string todayClass = DateHelper.IsSameDay(currentViewDate, DatePicker.CurrentDate) ? $"{DatePicker.PrefixCls}-cell-today" : "";
+                            string selectedClass = !IsWeek && DateHelper.IsSameDate(currentViewDate, DatePicker.CurrentSelectDate) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
 
-                        viewDate = currentViewDate.AddDays(1);
-                    }
-                </tr>
+                            <td title="@(currentViewDate.ToString("yyyy-MM-dd"))"
+                                class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
+                                <div class="@(DatePicker.PrefixCls)-cell-inner"
+                                     @onclick="e => OnSelectDate(currentViewDate)">
+                                    @viewDate.Day
+                                </div>
+                            </td>
+
+                            viewDate = currentViewDate.AddDays(1);
+                        }
+                    </tr>
                 }
             </tbody>
         </table>

@@ -2,23 +2,15 @@
 @inherits AntDatePickerPanelBase
 @using System.Globalization;
 
-<div class="@(DatePicker.PrefixCls)-year-panel" hidden="@IsClose">
-    @{
-        int startYear = DatePicker.CurrentShowDate.Year / 10 * 10 - 1;
-    }
-    <AntDatePickerHeader SuperChangeDateInterval="10"
-                         ShowPrevBtn="@false"
-                         ShowNextBtn="@false">
-        <button type="button" class="@(DatePicker.PrefixCls)-decade-btn">
-            @(startYear + 1)-@(startYear + 1 + @PER_VIEW_YEAR_COUNT)
-        </button>
-    </AntDatePickerHeader>
+<div class="@(DatePicker.PrefixCls)-@(DatePicker.Picker)-panel">
+    <AntDatePickerHeader SuperChangeDateInterval="10" />
     <div class="@(DatePicker.PrefixCls)-body">
         <table class="@(DatePicker.PrefixCls)-content">
             <tbody>
                 @{
                     var calendar = CultureInfo.InvariantCulture.Calendar;
 
+                    int startYear = DatePicker.CurrentShowDate.Year / 10 * 10 - 1;
                     DateTime viewDate = new DateTime(startYear, 1, 1);
 
                     int yearIndex = 0;
@@ -36,8 +28,8 @@
                             var currentViewDate = viewDate;
 
                             string inViewClass = yearIndex != FIRST_YEAR_INDEX && yearIndex != LAST_YEAR_INDEX ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
-                            string todayClass = currentViewDate.Year == DatePicker.CurrentDate.Year ? $"{DatePicker.PrefixCls}-cell-today" : "";
-                            string selectedClass = currentViewDate.Year == DatePicker.CurrentSelectDate.Year ? $"{DatePicker.PrefixCls}-cell-selected" : "";
+                            string todayClass = DateHelper.IsSameYear(currentViewDate, DatePicker.CurrentDate) ? $"{DatePicker.PrefixCls}-cell-today" : "";
+                            string selectedClass = DateHelper.IsSameYear(currentViewDate, DatePicker.CurrentSelectDate) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
 
                             <td title="@(currentViewDate.Year)"
                                 class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
@@ -57,7 +49,3 @@
         </table>
     </div>
 </div>
-
-@code {
-    private const int PER_VIEW_YEAR_COUNT = 9;
-}
