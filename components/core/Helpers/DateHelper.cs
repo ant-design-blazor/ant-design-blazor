@@ -35,7 +35,8 @@ namespace AntBlazor
 
         public static bool IsSameQuarter(DateTime date, DateTime compareDate)
         {
-            return GetDayOfQuarter(date) == GetDayOfQuarter(compareDate);
+            return IsSameYear(date, compareDate) 
+                && GetDayOfQuarter(date) == GetDayOfQuarter(compareDate);
         }
 
         public static string GetDayOfQuarter(DateTime date)

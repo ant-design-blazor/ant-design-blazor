@@ -14,7 +14,8 @@
     }
 
     <div class="@(DatePicker.PrefixCls)-header-view">
-        @if (DatePicker.Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Month, AntDatePickerType.Week))
+        @if (DatePicker.Picker.IsIn(
+             AntDatePickerType.Date, AntDatePickerType.Month, AntDatePickerType.Quarter, AntDatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-year-btn" @onclick="e => PopUpPicker(AntDatePickerType.Year)">
                 @(DatePicker.CurrentShowDate.Year)年
