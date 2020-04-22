@@ -25,12 +25,14 @@ namespace AntBlazor
 
         public static bool IsSameDay(DateTime date, DateTime compareDate)
         {
-            return calendar.GetDayOfYear(date) == calendar.GetDayOfYear(compareDate);
+            return IsSameYear(date, compareDate)
+                && calendar.GetDayOfYear(date) == calendar.GetDayOfYear(compareDate);
         }
 
         public static bool IsSameWeak(DateTime date, DateTime compareDate)
         {
-            return GetWeekOfYear(date) == GetWeekOfYear(compareDate);
+            return IsSameYear(date, compareDate) 
+                && GetWeekOfYear(date) == GetWeekOfYear(compareDate);
         }
 
         public static bool IsSameQuarter(DateTime date, DateTime compareDate)
