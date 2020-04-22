@@ -1,13 +1,12 @@
 ﻿@namespace AntBlazor.Internal
+@inherits AntDatePickerPanelBase
 
 <div class="@(DatePicker.PrefixCls)-header">
-    @if (ShowSuperPrevBtn)
-    {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-prev-btn" @onclick="e => DatePicker.ChangeShowDate(DatePicker.CurrentShowDate.AddYears(-SuperChangeDateInterval))">
-            <span class="@(DatePicker.PrefixCls)-super-prev-icon"></span>
-        </button>
-    }
-    @if (ShowPrevBtn)
+    <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-prev-btn" @onclick="e => DatePicker.ChangeShowDate(DatePicker.CurrentShowDate.AddYears(-SuperChangeDateInterval))">
+        <span class="@(DatePicker.PrefixCls)-super-prev-icon"></span>
+    </button>
+
+    @if (DatePicker.Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Week))
     {
         <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-prev-btn" @onclick="e => DatePicker.ChangeShowDate(DatePicker.CurrentShowDate.AddMonths(-ChangeDateInterval))">
             <span class="@(DatePicker.PrefixCls)-prev-icon"></span>
@@ -15,41 +14,51 @@
     }
 
     <div class="@(DatePicker.PrefixCls)-header-view">
-        @ChildContent
+        @if (DatePicker.Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Month, AntDatePickerType.Week))
+        {
+            <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-year-btn" @onclick="e => PopUpPicker(AntDatePickerType.Year)">
+                @(DatePicker.CurrentShowDate.Year)年
+            </button>
+        }
+        @if (DatePicker.Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Week))
+        {
+            <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-month-btn" @onclick="e => PopUpPicker(AntDatePickerType.Month)">
+                @(DatePicker.CurrentShowDate.Month)月
+            </button>
+        }
+        @if (DatePicker.Picker.IsIn(AntDatePickerType.Year))
+        {
+            int startYear = DatePicker.CurrentShowDate.Year / 10 * 10;
+
+            <button type="button" class="@(DatePicker.PrefixCls)-decade-btn">
+                @(startYear)-@(startYear + 9)
+            </button>
+        }
     </div>
 
-    @if (ShowNextBtn)
+    @if (DatePicker.Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Week))
     {
         <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-next-btn" @onclick="e => DatePicker.ChangeShowDate(DatePicker.CurrentShowDate.AddMonths(ChangeDateInterval))">
             <span class="@(DatePicker.PrefixCls)-next-icon"></span>
         </button>
     }
-    @if (ShowSuperNextBtn)
-    {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-next-btn" @onclick="e => DatePicker.ChangeShowDate(DatePicker.CurrentShowDate.AddYears(SuperChangeDateInterval))">
-            <span class="@(DatePicker.PrefixCls)-super-next-icon"></span>
-        </button>
-    }
+
+    <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-next-btn" @onclick="e => DatePicker.ChangeShowDate(DatePicker.CurrentShowDate.AddYears(SuperChangeDateInterval))">
+        <span class="@(DatePicker.PrefixCls)-super-next-icon"></span>
+    </button>
 </div>
 
 @code {
-    [CascadingParameter]
-    public AntDatePicker DatePicker { get; set; }
-
     [Parameter]
     public RenderFragment ChildContent { get; set; }
-
-    [Parameter]
-    public bool ShowSuperPrevBtn { get; set; } = true;
-    [Parameter]
-    public bool ShowPrevBtn { get; set; } = true;
-    [Parameter]
-    public bool ShowNextBtn { get; set; } = true;
-    [Parameter]
-    public bool ShowSuperNextBtn { get; set; } = true;
 
     [Parameter]
     public int SuperChangeDateInterval { get; set; } = 1;
     [Parameter]
     public int ChangeDateInterval { get; set; } = 1;
+
+    private void ShowYearPanel(MouseEventArgs e)
+    {
+        PopUpPicker(AntDatePickerType.Year);
+    }
 }

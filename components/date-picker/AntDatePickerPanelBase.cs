@@ -14,14 +14,6 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<DateTime> OnSelect { get; set; }
 
-        /// <summary>
-        /// 测试期间用：是否在选择日期后自动关闭
-        /// </summary>
-        [Parameter]
-        public bool AutoClose { get; set; } = false;
-
-        protected bool IsClose { get; set; } = false;
-
         protected Calendar calendar = CultureInfo.InvariantCulture.Calendar;
 
         protected void OnSelectDate(DateTime date)
@@ -34,6 +26,13 @@ namespace AntBlazor
         protected void OnSelectYear(DateTime date)
         {
             OnSelect.InvokeAsync(CombineNewShowDate(year: date.Year));
+
+            OnSelected();
+        }
+
+        protected void OnSelectQuarter(DateTime date)
+        {
+            OnSelect.InvokeAsync(CombineNewShowDate(month: date.Month));
 
             OnSelected();
         }
@@ -82,43 +81,15 @@ namespace AntBlazor
             );
         }
 
-        protected bool IsSameDate(DateTime date, DateTime compareDate)
-        {
-            return date == compareDate;
-        }
 
-        protected bool IsSameYear(DateTime date, DateTime compareDate)
+        public void PopUpPicker(string type)
         {
-            return date.Year == compareDate.Year;
-        }
-
-        protected bool IsSameMonth(DateTime date, DateTime compareDate)
-        {
-            return IsSameYear(date, compareDate)
-                && date.Month == compareDate.Month;
-        }
-
-        protected bool IsSameDay(DateTime date, DateTime compareDate)
-        {
-            return calendar.GetDayOfYear(date) == calendar.GetDayOfYear(compareDate);
-        }
-
-        protected bool IsSameWeak(DateTime date, DateTime compareDate)
-        {
-            return GetWeekOfYear(date) == GetWeekOfYear(compareDate);
-        }
-
-        protected int GetWeekOfYear(DateTime date)
-        {
-            return calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            DatePicker.ChangePickerType(type);
         }
 
         private void OnSelected()
         {
-            if (AutoClose)
-            {
-                IsClose = true;
-            }
+           
         }
     }
 }
