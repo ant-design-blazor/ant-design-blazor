@@ -8,7 +8,7 @@
      @attributes="Attributes"
      Id="@Id">
     <div class="@(PrefixCls)-input">
-        <input value="@CurrentSelectDate" placeholder="请选择日期" @onclick="e => IsClose = !IsClose">
+        <input disabled="@Disabled" value="@CurrentSelectDate" placeholder="请选择日期" @onclick="e => IsClose = !IsClose">
         <span class="@(PrefixCls)-suffix">
             <span role="img" aria-label="calendar" class="anticon anticon-calendar">
                 <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="calendar" width="1em" height="1em" fill="currentColor" aria-hidden="true">
