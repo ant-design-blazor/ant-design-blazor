@@ -1,16 +1,16 @@
-﻿@namespace AntBlazor
-@inherits AntSiderBase
+@namespace AntBlazor
+@inherits AntDomComponentBase
 
-<aside class="@ClassMapper.Class" @ref="Ref" style="@style @Style" @attributes="Attributes" Id="@Id">
+<aside class="@ClassMapper.Class" @ref="Ref" style="@Style @base.Style" id="@Id">
     <div class="ant-layout-sider-children">
         @ChildContent
     </div>
     @if (isZeroTrigger)
     {
-        <span class="ant-layout-sider-zero-width-trigger" @onclick="toggleCollapse">
-            @if (zeroTrigger != null)
+        <span class="ant-layout-sider-zero-width-trigger" @onclick="ToggleCollapse">
+            @if (ZeroTrigger != null)
             {
-                @zeroTrigger
+                @ZeroTrigger
             }
             else
             {
@@ -22,8 +22,8 @@
     @if (isSiderTrigger)
     {
         <div class="ant-layout-sider-trigger"
-             @onclick="toggleCollapse"
-             style="width: @widthSetting">
+             @onclick="ToggleCollapse"
+             style="width: @WidthSetting">
             @siderTrigger
         </div>
     }
@@ -31,21 +31,21 @@
 
 @code {
 
-    bool isZeroTrigger => this.collapsible && this.siderTrigger != null && this.collapsedWidth == 0 && ((this.breakpoint != null && this.below) || this.breakpoint == null);
+    bool isZeroTrigger => this.Collapsible && this.siderTrigger != null && this.CollapsedWidth == 0 && ((this.Breakpoint != null && this.Below) || this.Breakpoint == null);
 
-    bool isSiderTrigger => this.collapsible && this.siderTrigger != null && this.collapsedWidth != 0;
+    bool isSiderTrigger => this.Collapsible && this.siderTrigger != null && this.CollapsedWidth != 0;
 
-    RenderFragment siderTrigger => trigger ?? defaultTrigger(this);
+    RenderFragment siderTrigger => Trigger ?? defaultTrigger(this);
 
     public RenderFragment<AntSider> defaultTrigger = (sider) =>
     @<Template>
-        @if (!sider.reverseArrow)
+        @if (!sider.ReverseArrow)
         {
-            <AntIcon type="@(sider.collapsed ? "right" : "left")"></AntIcon>
+            <AntIcon type="@(sider.Collapsed ? "right" : "left")"></AntIcon>
         }
         else
         {
-            <AntIcon type="@(sider.collapsed ? "left" : "right")"></AntIcon>
+            <AntIcon type="@(sider.Collapsed ? "left" : "right")"></AntIcon>
         }
     </Template>;
 

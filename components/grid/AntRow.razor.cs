@@ -9,32 +9,37 @@ namespace AntBlazor
 {
     using GutterType = OneOf<int, Dictionary<string, int>, (int, int)>;
 
-    public class AntRowBase : AntDomComponentBase
+    public partial class AntRow : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        [Parameter] public string type { get; set; }
+        [Parameter]
+        public string Type { get; set; }
 
         /// <summary>
         /// 'top' | 'middle' | 'bottom'
         /// </summary>
-        [Parameter] public string align { get; set; }
+        [Parameter]
+        public string Align { get; set; }
 
         /// <summary>
         /// 'start' | 'end' | 'center' | 'space-around' | 'space-between'
         /// </summary>
-        [Parameter] public string justify { get; set; }
+        [Parameter]
+        public string Justify { get; set; }
 
-        [Parameter] public GutterType gutter { get; set; }
+        [Parameter]
+        public GutterType Gutter { get; set; }
 
-        [Inject] public DomEventService domEventService { get; set; }
+        [Inject]
+        public DomEventService DomEventService { get; set; }
 
-        protected string gutterStyle { get; set; }
+        private string GutterStyle { get; set; }
 
-        public IList<AntCol> Cols { get; set; } = new List<AntCol>();
+        public IList<AntCol> Cols { get; } = new List<AntCol>();
 
-        public static Hashtable gridResponsiveMap = new Hashtable()
+        private static Hashtable s_gridResponsiveMap = new Hashtable()
         {
             [nameof(BreakpointEnum.xs)] = "(max-width: 575px)",
             [nameof(BreakpointEnum.sm)] = "(max-width: 576px)",
@@ -48,18 +53,18 @@ namespace AntBlazor
         {
             var prefixCls = "ant-row";
             ClassMapper.Add(prefixCls)
-                .If($"{prefixCls}-top", () => align == "top")
-                .If($"{prefixCls}-middle", () => align == "middle")
-                .If($"{prefixCls}-bottom", () => align == "bottom")
-                .If($"{prefixCls}-start", () => justify == "start")
-                .If($"{prefixCls}-end", () => justify == "end")
-                .If($"{prefixCls}-center", () => justify == "center")
-                .If($"{prefixCls}-space-around", () => justify == "space-around")
-                .If($"{prefixCls}-space-between", () => justify == "space-between")
+                .If($"{prefixCls}-top", () => Align == "top")
+                .If($"{prefixCls}-middle", () => Align == "middle")
+                .If($"{prefixCls}-bottom", () => Align == "bottom")
+                .If($"{prefixCls}-start", () => Justify == "start")
+                .If($"{prefixCls}-end", () => Justify == "end")
+                .If($"{prefixCls}-center", () => Justify == "center")
+                .If($"{prefixCls}-space-around", () => Justify == "space-around")
+                .If($"{prefixCls}-space-between", () => Justify == "space-between")
                 ;
 
-            await this.setGutterStyle();
-            domEventService.AddEventListener<object>("window", "resize", async _ => await this.setGutterStyle());
+            await this.SetGutterStyle();
+            DomEventService.AddEventListener<object>("window", "resize", async _ => await this.SetGutterStyle());
 
             await base.OnInitializedAsync();
         }
@@ -70,38 +75,39 @@ namespace AntBlazor
             await base.OnParametersSetAsync();
         }
 
-        private async Task setGutterStyle()
+        private async Task SetGutterStyle()
         {
             string breakPoint = null;
 
             await typeof(BreakpointEnum).GetEnumNames().ForEachAsync(async bp =>
             {
-                if (await JsInvokeAsync<bool>(JSInteropConstants.matchMedia, gridResponsiveMap[bp]))
+                if (await JsInvokeAsync<bool>(JSInteropConstants.matchMedia, s_gridResponsiveMap[bp]))
                 {
                     breakPoint = bp;
                 }
             });
-            var gutter = this.getGutter(breakPoint);
+
+            var gutter = this.GetGutter(breakPoint);
             Cols.ForEach(x => x.RowGutterChanged(gutter));
 
-            gutterStyle = "";
+            GutterStyle = "";
             if (gutter.horizontalGutter > 0)
             {
-                gutterStyle = $"margin-left: -{gutter.horizontalGutter / 2}px;margin-right: -{gutter.horizontalGutter / 2}px;";
+                GutterStyle = $"margin-left: -{gutter.horizontalGutter / 2}px;margin-right: -{gutter.horizontalGutter / 2}px;";
             }
             if (gutter.verticalGutter > 0)
             {
-                gutterStyle += $"margin-top: -{gutter.verticalGutter / 2}px;margin-bottom: -{gutter.verticalGutter / 2}px;";
+                GutterStyle += $"margin-top: -{gutter.verticalGutter / 2}px;margin-bottom: -{gutter.verticalGutter / 2}px;";
             }
 
             InvokeStateHasChanged();
         }
 
-        private (int horizontalGutter, int verticalGutter) getGutter(string breakPoint)
+        private (int horizontalGutter, int verticalGutter) GetGutter(string breakPoint)
         {
             GutterType gutter = 0;
-            if (this.gutter.Value != null)
-                gutter = this.gutter;
+            if (this.Gutter.Value != null)
+                gutter = this.Gutter;
 
             return gutter.Match(
                 num => (num, 0),

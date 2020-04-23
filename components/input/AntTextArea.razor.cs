@@ -128,7 +128,7 @@ namespace AntBlazor
 
         private async Task CalculateRowHeightAsync()
         {
-            Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, inputEl);
+            Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, InputEl);
             element.ToString();
             _hiddenWidth = $"width: {element.offsetWidth}px;";
 

@@ -7,57 +7,78 @@ namespace AntBlazor
     /// <summary>
     /// Alert component for feedback.
     /// </summary>
-    public class AntAlertBase : AntDomComponentBase
+    public partial class AntAlert : AntDomComponentBase
     {
         /// <summary>
-        /// Called when close animation is finished	
+        /// Called when close animation is finished
         /// </summary>
-        [Parameter] public EventCallback<MouseEventArgs> AfterClose { get; set; }
+        [Parameter]
+        public EventCallback<MouseEventArgs> AfterClose { get; set; }
+
         /// <summary>
         /// Whether to show as banner
         /// </summary>
-        [Parameter] public bool Banner { get; set; } = false;
+        [Parameter]
+        public bool Banner { get; set; } = false;
+
         /// <summary>
-        /// Whether Alert can be closed	
+        /// Whether Alert can be closed
         /// </summary>
-        [Parameter] public bool Closable { get; set; } = false;
+        [Parameter]
+        public bool Closable { get; set; } = false;
+
         /// <summary>
-        /// Close text to show	
+        /// Close text to show
         /// </summary>
-        [Parameter] public string CloseText { get; set; }
+        [Parameter]
+        public string CloseText { get; set; }
+
         /// <summary>
-        /// Additional content of Alert	
+        /// Additional content of Alert
         /// </summary>
-        [Parameter] public string Description { get; set; }
+        [Parameter]
+        public string Description { get; set; }
+
         /// <summary>
-        /// Custom icon, effective when showIcon is true	
+        /// Custom icon, effective when showIcon is true
         /// </summary>
-        [Parameter] public string Icon { get; set; }
+        [Parameter]
+        public string Icon { get; set; }
+
         /// <summary>
         /// Content of Aler
         /// </summary>
-        [Parameter] public string Message { get; set; }
+        [Parameter]
+        public string Message { get; set; }
+
         /// <summary>
         /// Whether to show icon.
         /// </summary>
-        [Parameter] public bool ShowIcon { get; set; }
+        [Parameter]
+        public bool ShowIcon { get; set; }
+
         /// <summary>
-        /// Type of Alert styles, options: success, info, warning, error	
+        /// Type of Alert styles, options: success, info, warning, error
         /// </summary>
-        [Parameter] public string Type { get; set; } = AntAlertType.Default;
+        [Parameter]
+        public string Type { get; set; } = AntAlertType.Default;
+
         /// <summary>
         /// Callback when Alert is closed.
         /// </summary>
-        [Parameter] public EventCallback<MouseEventArgs> OnClose { get; set; }
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnClose { get; set; }
+
         /// <summary>
         /// Additional Content
         /// </summary>
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// Icon to show.
         /// </summary>
-        protected string iconType => !string.IsNullOrEmpty(Icon) ? Icon 
+        protected string IconType => !string.IsNullOrEmpty(Icon) ? Icon
                         : Type == AntAlertType.Success ? "check-circle"
                         : Type == AntAlertType.Info ? "info-circle"
                         : Type == AntAlertType.Warning ? "exclamation-circle"
@@ -66,11 +87,13 @@ namespace AntBlazor
         /// <summary>
         /// Indicator if the component is closed or not.
         /// </summary>
-        protected bool isClosed = false;
+        protected bool _isClosed = false;
+
         /// <summary>
         /// Just before we close the component we set this indicator to show a closing animation.
         /// </summary>
-        protected bool isClosing = false;
+        protected bool _isClosing = false;
+
         /// <summary>
         /// Sets the default classes.
         /// </summary>
@@ -84,7 +107,7 @@ namespace AntBlazor
                 .If($"{prefixName}-closable", () => Closable)
                 .If($"{prefixName}-banner", () => Banner)
                 .If($"{prefixName}-with-description", () => !string.IsNullOrEmpty(Description))
-                .If($"{prefixName}-slide-up-leave", () => isClosing)
+                .If($"{prefixName}-slide-up-leave", () => _isClosing)
                 ;
         }
 
@@ -106,6 +129,7 @@ namespace AntBlazor
             CheckBannerMode();
             SetClassMap();
         }
+
         private void CheckBannerMode()
         {
             if (Banner && string.IsNullOrEmpty(Type))
@@ -121,15 +145,16 @@ namespace AntBlazor
         /// <returns></returns>
         protected async Task OnCloseHandler(MouseEventArgs args)
         {
-            isClosing = true;
+            _isClosing = true;
             if (OnClose.HasDelegate)
             {
                 await OnClose.InvokeAsync(args);
             }
             await Task.Delay(300);
-            isClosed = true;
+            _isClosed = true;
             await AfterCloseHandler(args);
         }
+
         /// <summary>
         /// Handles the after close callback.
         /// </summary>
@@ -143,5 +168,4 @@ namespace AntBlazor
             }
         }
     }
-
 }

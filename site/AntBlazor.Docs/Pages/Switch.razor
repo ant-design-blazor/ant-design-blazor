@@ -9,7 +9,7 @@
         @(@"最简单的用法。")
     </Description>
     <Demo>
-        <AntSwitch checked="switchValue"></AntSwitch>
+        <AntSwitch Checked="switchValue"></AntSwitch>
     </Demo>
 </DemoCard>
 
@@ -19,10 +19,10 @@
         @(@"Switch 失效状态。")
     </Description>
     <Demo>
-        <AntSwitch checked="switchValue2" disabled="isDisabled2"></AntSwitch>
+        <AntSwitch Checked="switchValue2" Disabled="isDisabled2"></AntSwitch>
         <br />
         <br />
-        <AntButton type="primary" @onclick="(_)=>isDisabled2 = !isDisabled2">Toggle disabled</AntButton>
+        <AntButton Type="primary" @onclick="(_)=>isDisabled2 = !isDisabled2">Toggle disabled</AntButton>
     </Demo>
 </DemoCard>
 
@@ -34,17 +34,17 @@
         @(@"带有文字和图标。")
     </Description>
     <Demo>
-        <AntSwitch checked="true">
+        <AntSwitch Checked="true">
             <CheckedChildren>开</CheckedChildren>
             <UnCheckedChildren>关</UnCheckedChildren>
         </AntSwitch>
         <br />
-        <AntSwitch checked="false">
+        <AntSwitch Checked="false">
             <CheckedChildren>1</CheckedChildren>
             <UnCheckedChildren>0</UnCheckedChildren>
         </AntSwitch>
         <br />
-        <AntSwitch checked="true" CheckedChildren="checkedChildren" UnCheckedChildren="unCheckedChildren">
+        <AntSwitch Checked="true" CheckedChildren="checkedChildren" UnCheckedChildren="unCheckedChildren">
         </AntSwitch>
     </Demo>
 </DemoCard>
@@ -55,9 +55,9 @@
         `size="small"`表示小号开关。
     </Description>
     <Demo>
-        <AntSwitch checked="true"></AntSwitch>
+        <AntSwitch Checked="true"></AntSwitch>
         <br />
-        <AntSwitch size="small" checked="true"></AntSwitch>
+        <AntSwitch Size="small" Checked="true"></AntSwitch>
     </Demo>
 </DemoCard>
 
@@ -67,8 +67,8 @@
     bool switchValue2 = false;
     bool isDisabled2 = true;
 
-    RenderFragment checkedChildren = @<AntIcon type="check"></AntIcon>;
+    RenderFragment checkedChildren = @<AntIcon Type="check"></AntIcon>;
 
-    RenderFragment unCheckedChildren = @<AntIcon type="close"></AntIcon>;
+    RenderFragment unCheckedChildren = @<AntIcon Type="close"></AntIcon>;
 
 }

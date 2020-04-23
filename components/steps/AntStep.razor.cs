@@ -8,21 +8,23 @@ using System.Text;
 
 namespace AntBlazor
 {
-    public class AntStepBase : AntDomComponentBase
+    public partial class AntStep : AntDomComponentBase
     {
         private string _status = "wait";
         private bool _isCustomStatus;
         private int _groupCurrent;
 
-        protected Dictionary<string, object> ContainerAttributes = new Dictionary<string, object>();
+        protected Dictionary<string, object> _containerAttributes = new Dictionary<string, object>();
 
         internal bool Clickable { get; set; }
         internal bool Last { get; set; }
         internal bool ShowProcessDot { get; set; }
         internal string GroupStatus { get; set; } = string.Empty;
-        internal int GroupCurrentIndex {
+        internal int GroupCurrentIndex
+        {
             get => _groupCurrent;
-            set {
+            set
+            {
                 _groupCurrent = value;
                 if (!_isCustomStatus)
                 {
@@ -35,12 +37,18 @@ namespace AntBlazor
         internal RenderFragment? ProgressDot { get; set; }
         internal string Direction { get; set; } = "horizontal";
 
-        [CascadingParameter] AntStepsBase Parent { get; set; }
-        
-        [Parameter] public string Icon { get; set; }
-        [Parameter] public string Status {
+        [CascadingParameter]
+        public AntSteps Parent { get; set; }
+
+        [Parameter]
+        public string Icon { get; set; }
+
+        [Parameter]
+        public string Status
+        {
             get => _status;
-            set {
+            set
+            {
                 _status = value;
                 _isCustomStatus = true;
                 SetClassMap();
@@ -51,22 +59,22 @@ namespace AntBlazor
         [Parameter] public string Description { get; set; } = string.Empty;
         [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
         [Parameter] public bool Disabled { get; set; }
-        
+
 
         protected override void OnInitialized()
         {
-            Parent.Children.Add(this);
-            this.Index = Parent.Children.Count - 1;
+            Parent._children.Add(this);
+            this.Index = Parent._children.Count - 1;
             SetClassMap();
             if (Clickable && !Disabled)
             {
-                ContainerAttributes["role"] = "button";
+                _containerAttributes["role"] = "button";
             }
         }
 
         public override void Dispose()
         {
-            Parent.Children.Remove(this);
+            Parent._children.Remove(this);
             Parent.ResetChildrenSteps();
             base.Dispose();
         }
@@ -83,10 +91,10 @@ namespace AntBlazor
             ClassMapper.Clear()
                 .Add(prefixName)
                 .If($"{prefixName}-{Status}", () => !string.IsNullOrEmpty(Status))
-                .If($"{prefixName}-active", () => Parent.Current==Index)
+                .If($"{prefixName}-active", () => Parent.Current == Index)
                 .If($"{prefixName}-disabled", () => Disabled)
                 .If($"{prefixName}-custom", () => !string.IsNullOrEmpty(Icon))
-                .If($"ant-steps-next-error", () => GroupStatus=="error" && Parent.Current==Index+1)
+                .If($"ant-steps-next-error", () => GroupStatus == "error" && Parent.Current == Index + 1)
                 ;
         }
 

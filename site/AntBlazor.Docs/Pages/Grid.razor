@@ -12,26 +12,26 @@
     </Description>
     <Demo>
         <AntRow>
-            <AntCol span="12">col-12</AntCol>
-            <AntCol span="12">col-12</AntCol>
+            <AntCol Span="12">col-12</AntCol>
+            <AntCol Span="12">col-12</AntCol>
         </AntRow>
         <AntRow>
-            <AntCol span="8">col-8</AntCol>
-            <AntCol span="8">col-8</AntCol>
-            <AntCol span="8">col-8</AntCol>
+            <AntCol Span="8">col-8</AntCol>
+            <AntCol Span="8">col-8</AntCol>
+            <AntCol Span="8">col-8</AntCol>
         </AntRow>
         <AntRow>
-            <AntCol span="6">col-6</AntCol>
-            <AntCol span="6">col-6</AntCol>
-            <AntCol span="6">col-6</AntCol>
-            <AntCol span="6">col-6</AntCol>
+            <AntCol Span="6">col-6</AntCol>
+            <AntCol Span="6">col-6</AntCol>
+            <AntCol Span="6">col-6</AntCol>
+            <AntCol Span="6">col-6</AntCol>
         </AntRow>
     </Demo>
 </DemoCard>
 
 
 
-<DemoCard id="grid-demo-gutter">
+<DemoCard id="grid-demo-Gutter">
     <Title>区块间隔</Title>
     <Description>
         @(@"
@@ -41,42 +41,42 @@
 ")
     </Description>
     <Demo>
-        <div class="gutter-example">
-            <AntRow gutter="16">
-                <AntCol class="gutter-row" span="6">
-                    <div class="gutter-box">col-6</div>
+        <div class="Gutter-example">
+            <AntRow Gutter="16">
+                <AntCol class="Gutter-row" Span="6">
+                    <div class="Gutter-box">col-6</div>
                 </AntCol>
-                <AntCol class="gutter-row" span="6">
-                    <div class="gutter-box">col-6</div>
+                <AntCol class="Gutter-row" Span="6">
+                    <div class="Gutter-box">col-6</div>
                 </AntCol>
-                <AntCol class="gutter-row" span="6">
-                    <div class="gutter-box">col-6</div>
+                <AntCol class="Gutter-row" Span="6">
+                    <div class="Gutter-box">col-6</div>
                 </AntCol>
-                <AntCol class="gutter-row" span="6">
-                    <div class="gutter-box">col-6</div>
+                <AntCol class="Gutter-row" Span="6">
+                    <div class="Gutter-box">col-6</div>
                 </AntCol>
             </AntRow>
         </div>
-        <div class="gutter-example">
-            <AntRow gutter="gutter">
-                <AntCol class="gutter-row" span="6">
-                    <div class="gutter-box">col-6</div>
+        <div class="Gutter-example">
+            <AntRow Gutter="Gutter">
+                <AntCol class="Gutter-row" Span="6">
+                    <div class="Gutter-box">col-6</div>
                 </AntCol>
-                <AntCol class="gutter-row" span="6">
-                    <div class="gutter-box">col-6</div>
+                <AntCol class="Gutter-row" Span="6">
+                    <div class="Gutter-box">col-6</div>
                 </AntCol>
-                <AntCol class="gutter-row" span="6">
-                    <div class="gutter-box">col-6</div>
+                <AntCol class="Gutter-row" Span="6">
+                    <div class="Gutter-box">col-6</div>
                 </AntCol>
-                <AntCol class="gutter-row" span="6">
-                    <div class="gutter-box">col-6</div>
+                <AntCol class="Gutter-row" Span="6">
+                    <div class="Gutter-box">col-6</div>
                 </AntCol>
             </AntRow>
         </div>
     </Demo>
     <Styles>
         <style>
-            .gutter-box {
+            .Gutter-box {
                 background: #00a0e9;
                 padding: 5px 0;
             }
@@ -86,7 +86,7 @@
 
 @code
 {
-    Dictionary<string, int> gutter = new Dictionary<string, int>()
+    Dictionary<string, int> Gutter = new Dictionary<string, int>()
     {
         ["xs"] = 8,
         ["sm"] = 16,
@@ -108,23 +108,23 @@
     </Description>
     <Demo>
         <AntRow>
-            <AntCol span="8">
+            <AntCol Span="8">
                 col-8
             </AntCol>
-            <AntCol span="8" offset="8">
+            <AntCol Span="8" Offset="8">
                 col-8
             </AntCol>
         </AntRow>
         <AntRow>
-            <AntCol span="6" offset="6">
+            <AntCol Span="6" Offset="6">
                 col-6 col-offset-6
             </AntCol>
-            <AntCol span="6" offset="6">
+            <AntCol Span="6" Offset="6">
                 col-6 col-offset-6
             </AntCol>
         </AntRow>
         <AntRow>
-            <AntCol span="12" offset="6">
+            <AntCol Span="12" Offset="6">
                 col-12 col-offset-6
             </AntCol>
         </AntRow>
@@ -142,11 +142,11 @@
     </Description>
     <Demo>
         <AntRow>
-            <AntCol span="18" push="6">
-                col-18 col-push-6
+            <AntCol Span="18" Push="6">
+                col-18 col-Push-6
             </AntCol>
-            <AntCol span="6" pull="18">
-                col-6 col-pull-18
+            <AntCol Span="6" Pull="18">
+                col-6 col-Pull-18
             </AntCol>
         </AntRow>
     </Demo>
@@ -163,40 +163,40 @@
     </Description>
     <Demo>
         <div id="flex-demo">
-            <p>sub-element align left</p>
-            <AntRow justify="start">
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
+            <p>sub-element Align left</p>
+            <AntRow Justify="start">
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
             </AntRow>
-            <p>sub-element align center</p>
-            <AntRow justify="center">
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
+            <p>sub-element Align center</p>
+            <AntRow Justify="center">
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
             </AntRow>
-            <p>sub-element align right</p>
-            <AntRow justify="end">
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
+            <p>sub-element Align right</p>
+            <AntRow Justify="end">
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
             </AntRow>
             <p>sub-element monospaced arrangement</p>
-            <AntRow justify="space-between">
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
+            <AntRow Justify="space-between">
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
             </AntRow>
-            <p>sub-element align full</p>
-            <AntRow justify="space-around">
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
-                <AntCol span="4">col-4</AntCol>
+            <p>sub-element Align full</p>
+            <AntRow Justify="space-around">
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
+                <AntCol Span="4">col-4</AntCol>
             </AntRow>
         </div>
     </Demo>
@@ -209,7 +209,7 @@
     </Styles>
 </DemoCard>
 
-<DemoCard id="grid-demo-flex-align">
+<DemoCard id="grid-demo-flex-Align">
     <Title>Flex 对齐</Title>
     <Description>
         @(@"
@@ -219,58 +219,58 @@
     <Demo>
         <div>
             <p>Align Top</p>
-            <AntRow justify="center" align="top">
-                <AntCol span="4"><p class="height-100">col-4</p></AntCol>
-                <AntCol span="4"><p class="height-50">col-4</p></AntCol>
-                <AntCol span="4"><p class="height-120">col-4</p></AntCol>
-                <AntCol span="4"><p class="height-80">col-4</p></AntCol>
+            <AntRow Justify="center" Align="top">
+                <AntCol Span="4"><p class="height-100">col-4</p></AntCol>
+                <AntCol Span="4"><p class="height-50">col-4</p></AntCol>
+                <AntCol Span="4"><p class="height-120">col-4</p></AntCol>
+                <AntCol Span="4"><p class="height-80">col-4</p></AntCol>
             </AntRow>
             <p>Align Center</p>
-            <AntRow justify="space-around" align="middle">
-                <AntCol span="4"><p class="height-100">col-4</p></AntCol>
-                <AntCol span="4"><p class="height-50">col-4</p></AntCol>
-                <AntCol span="4"><p class="height-120">col-4</p></AntCol>
-                <AntCol span="4"><p class="height-80">col-4</p></AntCol>
+            <AntRow Justify="space-around" Align="middle">
+                <AntCol Span="4"><p class="height-100">col-4</p></AntCol>
+                <AntCol Span="4"><p class="height-50">col-4</p></AntCol>
+                <AntCol Span="4"><p class="height-120">col-4</p></AntCol>
+                <AntCol Span="4"><p class="height-80">col-4</p></AntCol>
             </AntRow>
             <p>Align Bottom</p>
-            <AntRow justify="space-between" align="bottom">
-                <AntCol span="4"><p class="height-100">col-4</p></AntCol>
-                <AntCol span="4"><p class="height-50">col-4</p></AntCol>
-                <AntCol span="4"><p class="height-120">col-4</p></AntCol>
-                <AntCol span="4"><p class="height-80">col-4</p></AntCol>
+            <AntRow Justify="space-between" Align="bottom">
+                <AntCol Span="4"><p class="height-100">col-4</p></AntCol>
+                <AntCol Span="4"><p class="height-50">col-4</p></AntCol>
+                <AntCol Span="4"><p class="height-120">col-4</p></AntCol>
+                <AntCol Span="4"><p class="height-80">col-4</p></AntCol>
             </AntRow>
         </div>
     </Demo>
 </DemoCard>
 
-<DemoCard id="grid-demo-flex-order">
+<DemoCard id="grid-demo-flex-Order">
     <Title>Flex排序</Title>
     <Description>
         @(@"
-通过 `order` 来改变元素的排序。
+通过 `Order` 来改变元素的排序。
 ")
     </Description>
     <Demo>
-        <div id="grid-demo-flex-order">
+        <div id="grid-demo-flex-Order">
             <AntRow>
-                <AntCol span="6" order="4">
-                    1 col-order-4
+                <AntCol Span="6" Order="4">
+                    1 col-Order-4
                 </AntCol>
-                <AntCol span="6" order="3">
-                    2 col-order-3
+                <AntCol Span="6" Order="3">
+                    2 col-Order-3
                 </AntCol>
-                <AntCol span="6" order="2">
-                    3 col-order-2
+                <AntCol Span="6" Order="2">
+                    3 col-Order-2
                 </AntCol>
-                <AntCol span="6" order="1">
-                    4 col-order-1
+                <AntCol Span="6" Order="1">
+                    4 col-Order-1
                 </AntCol>
             </AntRow>
         </div>
     </Demo>
     <Styles>
         <style>
-            #grid-demo-flex-order .ant-row {
+            #grid-demo-flex-Order .ant-row {
                 background-color: rgba(128, 128, 128, 0.08);
             }
         </style>
@@ -286,13 +286,13 @@
     </Description>
     <Demo>
         <AntRow>
-            <AntCol xs="2" sm="4" md="6" lg="8" xl="10">
+            <AntCol Xs="2" Sm="4" Md="6" Lg="8" Xl="10">
                 Col
             </AntCol>
-            <AntCol xs="20" sm="16" md="12" lg="8" xl="4">
+            <AntCol Xs="20" Sm="16" Md="12" Lg="8" Xl="4">
                 Col
             </AntCol>
-            <AntCol xs="2" sm="4" md="6" lg="8" xl="10">
+            <AntCol Xs="2" Sm="4" Md="6" Lg="8" Xl="10">
                 Col
             </AntCol>
         </AntRow>

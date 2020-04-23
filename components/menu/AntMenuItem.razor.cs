@@ -4,25 +4,25 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public class AntMenuItemBase : AntDomComponentBase
+    public partial class AntMenuItem : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public bool disabled { get; set; } = false;
+        public bool Disabled { get; set; } = false;
 
         [Parameter]
-        public bool selected { get; set; } = false;
+        public bool Selected { get; set; } = false;
 
         [Parameter]
-        public int? paddingLeft { get; set; }
+        public int? PaddingLeft { get; set; }
 
         [Parameter]
-        public bool matchRouterExact { get; set; } = false;
+        public bool MatchRouterExact { get; set; } = false;
 
         [Parameter]
-        public bool matchRouter { get; set; } = false;
+        public bool MatchRouter { get; set; } = false;
 
         [CascadingParameter]
         public AntMenu Menu { get; set; }
@@ -30,20 +30,20 @@ namespace AntBlazor
         [CascadingParameter]
         public AntSubMenu SubMenu { get; set; }
 
-        private int originalPadding;
+        private int _originalPadding;
 
         private void SetClassMap()
         {
-            string prefixName = Menu.isInDropDown ? "ant-dropdown-menu-item" : "ant-menu-item";
+            string prefixName = Menu.IsInDropDown ? "ant-dropdown-menu-item" : "ant-menu-item";
             ClassMapper.Clear()
                 .Add(prefixName)
-                .If($"{prefixName}-selected", () => selected)
-                .If($"{prefixName}-disabled", () => disabled);
+                .If($"{prefixName}-selected", () => Selected)
+                .If($"{prefixName}-disabled", () => Disabled);
         }
 
         internal void SelectedChanged(bool value)
         {
-            this.selected = value;
+            this.Selected = value;
         }
 
         protected override void OnInitialized()
@@ -51,30 +51,26 @@ namespace AntBlazor
             base.OnInitialized();
             if (this is AntMenuItem item)
             {
-                Menu?.MenuItems.Add(item);
+                Menu?._menuItems.Add(item);
                 SubMenu?.Items.Add(item);
             }
 
-            if (Attributes?.TryGetValue("style", out var style) == true)
-            {
-            }
-
             int? padding = null;
-            if (Menu.mode == AntDirectionVHIType.inline)
+            if (Menu.Mode == AntDirectionVHIType.inline)
             {
-                if (paddingLeft != null)
+                if (PaddingLeft != null)
                 {
-                    padding = paddingLeft;
+                    padding = PaddingLeft;
                 }
                 else
                 {
                     int level = SubMenu?.Level + 1 ?? 1;
-                    padding = level * this.Menu.inlineIndent;
+                    padding = level * this.Menu.InlineIndent;
                 }
             }
             else
             {
-                padding = originalPadding;
+                padding = _originalPadding;
             }
 
             if (padding != null)

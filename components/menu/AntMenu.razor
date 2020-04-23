@@ -1,12 +1,8 @@
-﻿@namespace AntBlazor
-@inherits AntMenuBase
+@namespace AntBlazor
+@inherits AntDomComponentBase
 
 <CascadingValue Value="this">
-    <ul ant-menu class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
+    <ul class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
         @ChildContent
     </ul>
 </CascadingValue>
-
-@code {
-
-}

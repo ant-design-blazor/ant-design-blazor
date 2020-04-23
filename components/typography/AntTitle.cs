@@ -9,7 +9,7 @@ namespace AntBlazor
     public class AntTitle : AntTypographyBase
     {
         [Parameter]
-        public int level { get; set; } = 1;
+        public int Level { get; set; } = 1;
 
         protected override void OnInitialized()
         {
@@ -22,8 +22,8 @@ namespace AntBlazor
             string prefixName = "ant-typography";
             ClassMapper.Clear()
                 .Add("ant-typography")
-                .If($"{prefixName}-{type}", () => !string.IsNullOrEmpty(type))
-                .If($"{prefixName}-disabled", () => disabled);
+                .If($"{prefixName}-{Type}", () => !string.IsNullOrEmpty(Type))
+                .If($"{prefixName}-disabled", () => Disabled);
         }
 
         protected override void OnParametersSet()
@@ -35,18 +35,18 @@ namespace AntBlazor
         {
             base.BuildRenderTree(builder);
             // According to Ant-Design 4.0, Fallback to 1 if level is invalid.
-            int localLevel = level < 1 || level > 4 ? 1 : level;
+            int localLevel = Level < 1 || Level > 4 ? 1 : Level;
 
             builder.OpenElement(0, "h" + localLevel);
             builder.AddAttribute(1, "class", this.ClassMapper.Class);
-            if (mark) builder.OpenElement(2, "mark");
-            if (delete) builder.OpenElement(3, "del");
-            if (underline) builder.OpenElement(4, "u");
+            if (Mark) builder.OpenElement(2, "mark");
+            if (Delete) builder.OpenElement(3, "del");
+            if (Underline) builder.OpenElement(4, "u");
             builder.AddContent(5, ChildContent);
-            if (underline) builder.CloseElement();
-            if (delete) builder.CloseElement();
-            if (mark) builder.CloseElement();
-            if (copyable)
+            if (Underline) builder.CloseElement();
+            if (Delete) builder.CloseElement();
+            if (Mark) builder.CloseElement();
+            if (Copyable)
             {
                 builder.OpenElement(6, "a");
                 builder.AddAttribute(7, "onclick", (Action)(async () => await Copy()));

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -11,11 +11,11 @@ namespace AntBlazor
         [Parameter]
         public ForwardRef RefBack { get; set; }
 
-        private readonly Queue<Func<Task>> afterRenderCallQuene = new Queue<Func<Task>>();
+        private readonly Queue<Func<Task>> _afterRenderCallQuene = new Queue<Func<Task>>();
 
         protected void CallAfterRender(Func<Task> action)
         {
-            afterRenderCallQuene.Enqueue(action);
+            _afterRenderCallQuene.Enqueue(action);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -26,10 +26,10 @@ namespace AntBlazor
                 await OnFirstAfterRenderAsync();
             }
 
-            if (afterRenderCallQuene.Count > 0)
+            if (_afterRenderCallQuene.Count > 0)
             {
-                var actions = afterRenderCallQuene.ToArray();
-                afterRenderCallQuene.Clear();
+                var actions = _afterRenderCallQuene.ToArray();
+                _afterRenderCallQuene.Clear();
 
                 foreach (var action in actions)
                 {
