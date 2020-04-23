@@ -6,19 +6,19 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public class AntCheckboxGroupBase : AntDomComponentBase
+    public partial class AntCheckboxGroup : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter] public IList<AntCheckbox> CheckboxItems { get; set; } = new List<AntCheckbox>();
 
-        [Parameter] public EventCallback<object> OnChange { get; set; }
+        [Parameter] public EventCallback<string[]> ValueChanged { get; set; }
 
-        public Action onTouched;
+        public Action _onTouched;
 
         [Parameter]
-        public CheckBoxOption[] options { get; set; } = Array.Empty<CheckBoxOption>();
+        public CheckBoxOption[] Options { get; set; } = Array.Empty<CheckBoxOption>();
 
         [Parameter]
         public IList<string> Value { get; set; } = Array.Empty<string>();
@@ -27,36 +27,35 @@ namespace AntBlazor
         {
             foreach (var item in Value)
             {
-                options.Where(o => o.value == item).ForEach(o => o.@checked = true);
+                Options.Where(o => o.Value == item).ForEach(o => o.Checked = true);
             }
-            await base.OnParametersSetAsync();
         }
 
         [Parameter]
-        public bool disabled { get; set; }
+        public bool Disabled { get; set; }
 
-        public AntCheckboxGroupBase()
+        public AntCheckboxGroup()
         {
             ClassMapper.Add("ant-checkbox-group");
         }
 
-        public async void onOptionChange(bool change)
+        public async void OnOptionChange(bool change)
         {
-            await this.OnChange.InvokeAsync(this.options);
+            await this.ValueChanged.InvokeAsync(this.Options.Where(x => x.Checked).Select(x => x.Value).ToArray());
             StateHasChanged();
         }
 
-        internal async Task OnCheckboxChange(AntCheckboxBase checkboxBase)
+        internal async Task OnCheckboxChange(AntCheckbox checkboxBase)
         {
             if (checkboxBase is AntCheckbox checkbox)
             {
                 int index = CheckboxItems.IndexOf(checkbox);
-                if (options[index] != null)
+                if (Options[index] != null)
                 {
-                    options[index].@checked = checkbox.@checked;
+                    Options[index].Checked = checkbox.Checked;
                 }
             }
-            
+
             StateHasChanged();
         }
     }

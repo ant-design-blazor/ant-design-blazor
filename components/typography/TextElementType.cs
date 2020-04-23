@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AntBlazor.typography
+namespace AntBlazor
 {
     public static class TextElementType
     {

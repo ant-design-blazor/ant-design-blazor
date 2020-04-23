@@ -1,103 +1,13 @@
-﻿@namespace AntBlazor
-@using System.Text.RegularExpressions
+@namespace AntBlazor
 @inherits AntDomComponentBase
 
-@if (!closed)
+@if (!_closed)
 {
-    <div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" @ref="Ref">
+    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
         @ChildContent
-        @if (mode == "closeable")
+        @if (Mode == "closeable")
         {
-            <AntIcon type="close" tabindex="-1" @onclick="closeTag" />
+            <AntIcon Type="close" TabIndex="-1" @onclick="CloseTag" />
         }
     </div>
-}
-
-@code {
-
-[Parameter] public RenderFragment ChildContent { get; set; }
-
-/// <summary>
-///  'default' | 'closeable' | 'checkable'
-/// </summary>
-[Parameter]
-public string mode { get; set; } = "default";
-
-[Parameter]
-public string color { get; set; }
-
-[Parameter]
-public bool closable { get; set; }
-
-[Parameter]
-public bool visible { get; set; } = true;
-
-[Parameter]
-public bool @checked { get; set; }
-
-[Parameter]
-public bool noAnimation { get; set; }
-
-[Parameter]
-public EventCallback afterClose { get; set; }
-
-[Parameter]
-public EventCallback<MouseEventArgs> onClose { get; set; }
-
-[Parameter]
-public EventCallback<bool> checkedChange { get; set; }
-
-bool presetColor = false;
-bool closed = false;
-
-
-protected override Task OnInitializedAsync()
-{
-        this.updateClassMap();
-        return base.OnInitializedAsync();
-}
-
-protected override void OnParametersSet()
-{
-        this.updateClassMap();
-        base.OnParametersSet();
-}
-
-private bool isPresetColor(string color)
-{
-        if (string.IsNullOrEmpty(color))
-        {
-            return false;
-        }
-
-        return Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime)(-inverse)?$");
-}
-
-private void updateClassMap()
-{
-        this.presetColor = this.isPresetColor(this.color);
-        string prefix = "ant-tag";
-        this.ClassMapper.Clear().Add(prefix)
-            .If($"{prefix}-has-color", () => !string.IsNullOrEmpty(color) && !presetColor)
-            .If($"{prefix}-${color}", () => presetColor)
-            .If($"{prefix}-checkable", () => mode == "checkable")
-            .If($"{prefix}-checkable-checked", () => @checked)
-            ;
-}
-
-private async Task updateCheckedStatus()
-{
-        if (mode == "checkable")
-        {
-            this.@checked = !this.@checked;
-            await this.checkedChange.InvokeAsync(this.@checked);
-            this.updateClassMap();
-        }
-}
-
-private async Task closeTag(MouseEventArgs e)
-{
-        await this.onClose.InvokeAsync(e);
-        this.closed = true;
-}
 }

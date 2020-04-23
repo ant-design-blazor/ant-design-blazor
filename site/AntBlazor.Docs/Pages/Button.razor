@@ -1,7 +1,7 @@
 ﻿
-<AntTitle level="1">Button 按钮</AntTitle>
+<AntTitle Level="1">Button 按钮</AntTitle>
 <AntText>按钮用于开始一个即时操作</AntText>
-<AntTitle level="2">何时使用</AntTitle>
+<AntTitle Level="2">何时使用</AntTitle>
 <AntParagraph>标记了一个（或封装一组）操作命令，响应用户点击行为，触发相应的业务逻辑。</AntParagraph>
 <AntParagraph>在 Ant Design 中，我们有四种按钮。</AntParagraph>
 <AntParagraph>
@@ -28,30 +28,30 @@
     <Title>按钮类型 Type</Title>
     <Description>按钮有四种类型：主按钮、次按钮、虚线按钮和链接按钮。主按钮在同一个操作区域最多出现一次。</Description>
     <Demo>
-        <AntButton type="@AntButtonType.Primary">Primary</AntButton>
+        <AntButton Type="@AntButtonType.Primary">Primary</AntButton>
         <AntButton>Default</AntButton>
-        <AntButton type="@AntButtonType.Dashed">Dashed</AntButton>
-        <AntButton type="@AntButtonType.Danger">Danger</AntButton>
-        <AntButton type="@AntButtonType.Link">Link</AntButton>
+        <AntButton Type="@AntButtonType.Dashed">Dashed</AntButton>
+        <AntButton Type="@AntButtonType.Danger">Danger</AntButton>
+        <AntButton Type="@AntButtonType.Link">Link</AntButton>
     </Demo>
 </DemoCard>
 <br />
 <DemoCard>
     <Title>图标按钮 Icon</Title>
     <Description>
-        <AntParagraph>当需要在<AntText code>Button</AntText>内嵌入 <AntText code>Icon</AntText> 时，可以设置 <AntText code>icon</AntText> 属性，或者直接在 <AntText code>Button</AntText> 内使用 <AntText code>Icon</AntText> 组件。</AntParagraph>
-        <AntParagraph>如果想控制 <AntText code>Icon</AntText> 具体的位置，只能直接使用 <AntText code>Icon</AntText> 组件，而非 <AntText code>icon</AntText> 属性。</AntParagraph>
+        <AntParagraph>当需要在<AntText Code>Button</AntText>内嵌入 <AntText Code>Icon</AntText> 时，可以设置 <AntText Code>Icon</AntText> 属性，或者直接在 <AntText Code>Button</AntText> 内使用 <AntText Code>Icon</AntText> 组件。</AntParagraph>
+        <AntParagraph>如果想控制 <AntText Code>Icon</AntText> 具体的位置，只能直接使用 <AntText Code>Icon</AntText> 组件，而非 <AntText Code>Icon</AntText> 属性。</AntParagraph>
     </Description>
     <Demo>
-        <AntButton type="primary" shape="circle" icon="search" />
-        <AntButton type="primary" icon="search">Search</AntButton>
-        <AntButton shape="circle" icon="search" />
-        <AntButton icon="search">Search</AntButton>
+        <AntButton Type="primary" Shape="circle" Icon="search" />
+        <AntButton Type="primary" Icon="search">Search</AntButton>
+        <AntButton Shape="circle" Icon="search" />
+        <AntButton Icon="search">Search</AntButton>
         <br />
-        <AntButton shape="circle" icon="search" />
-        <AntButton icon="search">Search</AntButton>
-        <AntButton type="dashed" shape="circle" icon="search" />
-        <AntButton type="dashed" icon="search">Search</AntButton>
+        <AntButton Shape="circle" Icon="search" />
+        <AntButton Icon="search">Search</AntButton>
+        <AntButton Type="dashed" Shape="circle" Icon="search" />
+        <AntButton Type="dashed" Icon="search">Search</AntButton>
     </Demo>
 </DemoCard>
 <br />
@@ -59,17 +59,17 @@
     <Title>按钮尺寸 Size</Title>
     <Description>
         <AntParagraph>按钮有大、中、小三种尺寸。</AntParagraph>
-        <AntParagraph>通过设置 <AntText code>size</AntText> 为 <AntText code>large</AntText> <AntText code>small</AntText> 分别把按钮设为大、小尺寸。若不设置 <AntText code>size</AntText>，则尺寸为中。</AntParagraph>
+        <AntParagraph>通过设置 <AntText Code>size</AntText> 为 <AntText Code>large</AntText> <AntText Code>small</AntText> 分别把按钮设为大、小尺寸。若不设置 <AntText Code>size</AntText>，则尺寸为中。</AntParagraph>
     </Description>
     <Demo>
         <div>
-            <AntButton Size="@AntButtonSize.Small" Type="@(size.Equals(AntButtonSize.Small) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Small))">
+            <AntButton Size="@AntButtonSize.Small" Type="@(size.Equals(AntButtonSize.Small) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> Onclick(AntButtonSize.Small))">
                 Small
             </AntButton>
-            <AntButton Type="@(size.Equals(AntButtonSize.Default) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Default))">
+            <AntButton Type="@(size.Equals(AntButtonSize.Default) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> Onclick(AntButtonSize.Default))">
                 Default
             </AntButton>
-            <AntButton Size="@AntButtonSize.Large" Type="@(size.Equals(AntButtonSize.Large) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Large))">
+            <AntButton Size="@AntButtonSize.Large" Type="@(size.Equals(AntButtonSize.Large) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> Onclick(AntButtonSize.Large))">
                 Large
             </AntButton>
         </div>
@@ -86,7 +86,7 @@
 
 @code {
     string size = AntButtonSize.Default;
-    void OnClick(string s)
+    void Onclick(string s)
     {
         size = s;
     }
@@ -95,40 +95,40 @@
 <br />
 <DemoCard>
     <Title>加载中状态 Loading</Title>
-    <Description>添加 <AntText code>loading</AntText> 属性即可让按钮处于加载状态，最后两个按钮演示点击后进入加载状态。</Description>
+    <Description>添加 <AntText Code>Loading</AntText> 属性即可让按钮处于加载状态，最后两个按钮演示点击后进入加载状态。</Description>
     <Demo>
-        <AntButton type="primary" loading>
+        <AntButton Type="primary" Loading>
             Loading
         </AntButton>
-        <AntButton type="primary" size="small" loading>
+        <AntButton Type="primary" size="small" Loading>
             Loading
         </AntButton>
         <br />
-        <AntButton type="primary" loading=@(loading) onclick="()=> enterLoading()">
+        <AntButton Type="primary" Loading=@(Loading) Onclick="(_)=> enterLoading()">
             Click me!
         </AntButton>
-        <AntButton type="primary"
-                   icon="poweroff"
-                   loading="iconLoading"
-                   onclick="()=>enterIconLoading()">
+        <AntButton Type="primary"
+                   Icon="poweroff"
+                   Loading="IconLoading"
+                   Onclick="()=>enterIconLoading()">
             Click me!
         </AntButton>
         <br />
-        <AntButton shape="circle" loading />
-        <AntButton type="primary" shape="circle" loading />
+        <AntButton Shape="circle" Loading />
+        <AntButton Type="primary" Shape="circle" Loading />
     </Demo>
 </DemoCard>
 
 @code{
-    private bool loading = false;
+    private bool Loading = false;
     void enterLoading()
     {
-        loading = !loading;
+        Loading = !Loading;
     }
-    private bool iconLoading = false;
+    private bool IconLoading = false;
     void enterIconLoading()
     {
-        iconLoading = !iconLoading;
+        IconLoading = !IconLoading;
     }
 }
 
@@ -136,13 +136,13 @@
 
 <DemoCard>
     <Title>Block 按钮</Title>
-    <Description><AntText code>block</AntText> 属性将使按钮适合其父宽度。</Description>
+    <Description><AntText Code>block</AntText> 属性将使按钮适合其父宽度。</Description>
     <Demo>
-        <AntButton type="primary" block> Primary </AntButton>
+        <AntButton Type="primary" block> Primary </AntButton>
         <AntButton block>Default</AntButton>
-        <AntButton type="dashed" block> Dashed </AntButton>
-        <AntButton type="danger" block> Danger </AntButton>
-        <AntButton type="link" block> Link </AntButton>
+        <AntButton Type="dashed" block> Dashed </AntButton>
+        <AntButton Type="danger" block> Danger </AntButton>
+        <AntButton Type="link" block> Link </AntButton>
     </Demo>
 </DemoCard>
 <br />
@@ -151,11 +151,11 @@
     <Description>幽灵按钮将按钮的内容反色，背景变为透明，常用在有色背景上。</Description>
     <Demo>
         <div style="background-color: rgb(190,200,200); padding: 26px 16px 16px;">
-            <AntButton type="primary" ghost>Primary</AntButton>
-            <AntButton ghost>Default</AntButton>
-            <AntButton type="dashed" ghost>Dashed</AntButton>
-            <AntButton type="danger" ghost>danger</AntButton>
-            <AntButton type="link" ghost>link</AntButton>
+            <AntButton Type="primary" Ghost>Primary</AntButton>
+            <AntButton Ghost>Default</AntButton>
+            <AntButton Type="dashed" Ghost>Dashed</AntButton>
+            <AntButton Type="danger" Ghost>danger</AntButton>
+            <AntButton Type="link" Ghost>link</AntButton>
         </div>
     </Demo>
 </DemoCard>
@@ -164,29 +164,29 @@
 
 <DemoCard>
     <Title>不可用状态 Disabled</Title>
-    <Description>添加 <AntText code>disabled</AntText> 属性即可让按钮处于不可用状态，同时按钮样式也会改变。</Description>
+    <Description>添加 <AntText Code>Disabled</AntText> 属性即可让按钮处于不可用状态，同时按钮样式也会改变。</Description>
     <Demo>
-        <AntButton type="primary">Primary</AntButton>
-        <AntButton type="primary" disabled>
-            Primary(disabled)
+        <AntButton Type="primary">Primary</AntButton>
+        <AntButton Type="primary" Disabled>
+            Primary(Disabled)
         </AntButton>
         <br />
         <AntButton>Default</AntButton>
-        <AntButton disabled>Default(disabled)</AntButton>
+        <AntButton Disabled>Default(Disabled)</AntButton>
         <br />
-        <AntButton type="dashed">Dashed</AntButton>
-        <AntButton type="dashed" disabled>
-            Dashed(disabled)
+        <AntButton Type="dashed">Dashed</AntButton>
+        <AntButton Type="dashed" Disabled>
+            Dashed(Disabled)
         </AntButton>
         <br />
-        <AntButton type="link">Link</AntButton>
-        <AntButton type="link" disabled>
-            Link(disabled)
+        <AntButton Type="link">Link</AntButton>
+        <AntButton Type="link" Disabled>
+            Link(Disabled)
         </AntButton>
         <div style="padding:8px; background:rgb(190, 200, 200); width:400px ">
-            <AntButton ghost>Ghost</AntButton>
-            <AntButton ghost disabled>
-                Ghost(disabled)
+            <AntButton Ghost>Ghost</AntButton>
+            <AntButton Ghost Disabled>
+                Ghost(Disabled)
             </AntButton>
         </div>
     </Demo>

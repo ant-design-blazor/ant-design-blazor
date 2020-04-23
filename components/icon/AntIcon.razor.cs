@@ -4,72 +4,79 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntBlazor
 {
-    public class AntIconBase : AntDomComponentBase
+    public partial class AntIcon : AntDomComponentBase
     {
         [Parameter]
-        public bool spin { get; set; }
+        public bool Spin { get; set; }
 
         [Parameter]
-        public int rotate { get; set; } = 0;
+        public OneOf<int, string> Rotate { get; set; } = 0;
 
         [Parameter]
-        public string type { get; set; }
+        public string Type { get; set; }
+
+        /// <summary>
+        /// 'fill' | 'outline' | 'twotone';
+        /// </summary>
+        [Parameter]
+        public string Theme { get; set; } = AntIconThemeType.Outline;
 
         [Parameter]
-        public string theme { get; set; } = AntIconThemeType.Outline; //'fill' | 'outline' | 'twotone';
+        public string TwotoneColor { get; set; }
 
         [Parameter]
-        public string twotoneColor { get; set; }
+        public string IconFont { get; set; }
 
         [Parameter]
-        public string iconFont { get; set; }
+        public string Width { get; set; } = "1em";
 
         [Parameter]
-        public string width { get; set; } = "1em";
+        public string Height { get; set; } = "1em";
 
         [Parameter]
-        public string height { get; set; } = "1em";
+        public string Fill { get; set; } = "currentColor";
 
         [Parameter]
-        public string fill { get; set; } = "currentColor";
+        public string TabIndex { get; set; }
 
         [CascadingParameter]
         public AntButton Button { get; set; }
 
         [Parameter]
-        public EventCallback<MouseEventArgs> onclick { get; set; }
+        public EventCallback<MouseEventArgs> Onclick { get; set; }
 
         [Inject]
-        private HttpClient httpClient { get; set; }
+        private HttpClient HttpClient { get; set; }
 
         [Inject]
         private NavigationManager NavigationManager { get; set; }
 
-        private static readonly ConcurrentDictionary<string, string> SvgCache = new ConcurrentDictionary<string, string>();
+        private static readonly ConcurrentDictionary<string, string> _svgCache = new ConcurrentDictionary<string, string>();
 
-        protected string SvgImg { get; set; }
+        private string SvgImg { get; set; }
         private string SvgStyle { get; set; }
         private string _iconSvg;
 
-        private Uri baseUrl;
+        private Uri _baseUrl;
 
-        public void setClassSet()
+        public void SetClassSet()
         {
             string prefixName = "anticon";
             ClassMapper.Add(prefixName)
-                .If($"{prefixName}-spin", () => spin || this.type == "loading");
+                .If($"{prefixName}-spin", () => Spin || this.Type == "loading");
 
-            SvgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\"";
+            SvgStyle = $"focusable=\"false\" width=\"{Width}\" height=\"{Height}\" fill=\"{Fill}\"";
         }
 
         protected override async Task OnInitializedAsync()
         {
-            this.setClassSet();
+            this.SetClassSet();
 
-            baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
+            _baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
 
             if (this is AntIcon icon)
             {
@@ -89,15 +96,14 @@ namespace AntBlazor
         {
             try
             {
-                if (SvgCache.TryGetValue($"{theme}-{type}", out var svg))
+                if (_svgCache.TryGetValue($"{Theme}-{Type}", out var svg))
                 {
                     _iconSvg = svg;
                 }
                 else
                 {
-                    _iconSvg = await httpClient.GetStringAsync(new Uri(baseUrl,
-                        $"_content/AntBlazor/icons/{theme.ToLower()}/{type.ToLower()}.svg"));
-                    SvgCache.TryAdd($"{theme}-{type}", _iconSvg);
+                    _iconSvg = await HttpClient.GetStringAsync(new Uri(_baseUrl, $"_content/AntBlazor/icons/{Theme.ToLower()}/{Type.ToLower()}.svg"));
+                    _svgCache.TryAdd($"{Theme}-{Type}", _iconSvg);
                 }
 
                 SvgImg = _iconSvg.Insert(_iconSvg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {SvgStyle} ");
@@ -112,9 +118,9 @@ namespace AntBlazor
 
         public async Task OnClick(MouseEventArgs args)
         {
-            if (onclick.HasDelegate)
+            if (Onclick.HasDelegate)
             {
-                await onclick.InvokeAsync(args);
+                await Onclick.InvokeAsync(args);
             }
         }
     }

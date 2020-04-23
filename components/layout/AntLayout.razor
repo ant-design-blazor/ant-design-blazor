@@ -1,9 +1,9 @@
-﻿@namespace AntBlazor
+@namespace AntBlazor
 @inherits AntDomComponentBase
 
 
 <CascadingValue Value="this">
-    <section class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
+    <section class="@ClassMapper.Class" style="@Style" id="@Id">
         @ChildContent
     </section>
 </CascadingValue>
@@ -14,7 +14,7 @@
     public RenderFragment ChildContent { get; set; }
 
     [Parameter]
-    public bool hasSider { get; set; }
+    public bool HasSider { get; set; }
 
 
     protected override void OnInitialized()
@@ -22,7 +22,7 @@
         base.OnInitialized();
         ClassMapper
             .Add("ant-layout")
-            .If("ant-layout-has-sider", () => hasSider);
+            .If("ant-layout-has-sider", () => HasSider);
     }
 
 }

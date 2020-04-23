@@ -1,7 +1,8 @@
-﻿@namespace AntBlazor
-@inherits AntCardBase
+@namespace AntBlazor
+@inherits AntDomComponentBase
+
 <CascadingValue Value="this">
-    <div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
+    <div class="@ClassMapper.Class" style="@Style" id="@Id">
         @if (Title != null || Extra != null || AntCardTab != null)
         {
             <div class="ant-card-head">
@@ -34,8 +35,8 @@
             </div>
         }
 
-        <div class="ant-card-body" style="@bodyStyle">
-            @if (!loading)
+        <div class="ant-card-body" style="@BodyStyle">
+            @if (!Loading)
             {
                 @Body
                 @ChildContent
