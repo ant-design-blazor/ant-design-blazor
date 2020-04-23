@@ -18,9 +18,6 @@
     [Parameter] 
     public bool IsCollapsed { get; set; }
 
-    [Parameter]
-    public bool isCollapsed { get; set; }
-
     MenuItem[] MenuItems { get; set; } = {};
 
     static readonly RenderFragment<(MenuItem[] items, ILanguageService languageService, int level)> menuItemTemplate = context =>
@@ -29,7 +26,7 @@
             {
                 if (menu.Type == "menuItem")
                 {
-                    <AntMenuItem matchRouter>
+                    <AntMenuItem MatchRouter>
                         <AntNavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All">
                             <span>@menu.Title</span>
                             @if (menu.SubTitle != null)
@@ -41,7 +38,7 @@
                 }
                 else if (menu.Type == "subMenu")
                 {
-                    <AntSubMenu open="true" title="@context.languageService.Resources[menu.Title]">
+                    <AntSubMenu Open title="@context.languageService.Resources[menu.Title]">
                         @if (menu.Children.Any())
                         {
                             @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
@@ -50,7 +47,7 @@
                 }
                 else if (menu.Type == "itemGroup")
                 {
-                    <AntMenuItemGroup title="@context.languageService.Resources[menu.Title]">
+                    <AntMenuItemGroup Title="@context.languageService.Resources[menu.Title]">
                         @if (menu.Children.Any())
                         {
                             @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
