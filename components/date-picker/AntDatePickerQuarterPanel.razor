@@ -26,7 +26,7 @@
 
                         string inViewClass = $"{DatePicker.PrefixCls}-cell-in-view";
                         string todayClass = DateHelper.IsSameQuarter(currentViewDate, DatePicker.CurrentDate) ? $"{DatePicker.PrefixCls}-cell-today" : "";
-                        string selectedClass = DateHelper.IsSameQuarter(currentViewDate, DatePicker.CurrentSelectDate) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
+                        string selectedClass = DateHelper.IsSameQuarter(currentViewDate, DatePicker.Value) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
 
                         <td title="@(currentViewDate.Year)"
                             class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
