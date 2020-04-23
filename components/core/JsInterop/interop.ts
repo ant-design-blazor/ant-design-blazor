@@ -1,4 +1,4 @@
-﻿export function getDom(element) {
+export function getDom(element) {
   if (!element) {
     element = document.body;
   } else if (typeof element === 'string') {
@@ -44,7 +44,7 @@ export function addDomEventListener(element, eventName, invoker) {
     window.addEventListener(eventName, callback);
   } else {
     let dom = getDom(element);
-    (document.querySelector(dom) as HTMLElement).addEventListener(eventName, callback);
+    (dom as HTMLElement).addEventListener(eventName, callback);
   }
 }
 

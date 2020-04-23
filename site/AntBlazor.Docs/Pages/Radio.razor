@@ -1,6 +1,6 @@
-﻿<AntTitle level="1">Radio</AntTitle>
+﻿<AntTitle Level="1">Radio</AntTitle>
 <AntText>Radio.</AntText>
-<AntTitle level="2">When to use</AntTitle>
+<AntTitle Level="2">When to use</AntTitle>
 <AntParagraph>
     <ul>
         <li>Used to select a single state from multiple options.</li>
@@ -20,25 +20,25 @@
 <br />
 
 <DemoCard>
-    <Title>disabled</Title>
+    <Title>Disabled</Title>
     <Description>Radio unavailable.</Description>
     <Demo>
-        <AntRadio checked disabled="@disabled">
+        <AntRadio Checked Disabled="@Disabled">
             Disabled
         </AntRadio>
         <br />
-        <AntRadio disabled="@disabled">
+        <AntRadio Disabled="@Disabled">
             Disabled
         </AntRadio>
         <div style="margin-top: 20px">
-            <AntButton type="primary" onclick="_=>disabled=!disabled">Toggle disabled</AntButton>
+            <AntButton Type="primary" Onclick="_=>Disabled=!Disabled">Toggle Disabled</AntButton>
         </div>
     </Demo>
 </DemoCard>
 
 @code
     {
-    bool disabled = true;
+    bool Disabled = true;
 }
 <DemoCard>
     <Title>Radio Group</Title>
@@ -124,17 +124,17 @@
         <br />
         <AntRadioGroup @bind-Value="radioValue3">
             <AntRadio RadioButton Value="A">Hangzhou</AntRadio>
-            <AntRadio RadioButton Value="B" disabled>Shanghai</AntRadio>
+            <AntRadio RadioButton Value="B" Disabled>Shanghai</AntRadio>
             <AntRadio RadioButton Value="C">Beijing</AntRadio>
             <AntRadio RadioButton Value="D">Chengdu</AntRadio>
         </AntRadioGroup>
         <br />
         <br />
         <AntRadioGroup @bind-Value="radioValue3">
-            <AntRadio RadioButton Value="A" disabled>Hangzhou</AntRadio>
-            <AntRadio RadioButton Value="B" disabled>Shanghai</AntRadio>
-            <AntRadio RadioButton Value="C" disabled>Beijing</AntRadio>
-            <AntRadio RadioButton Value="D" disabled>Chengdu</AntRadio>
+            <AntRadio RadioButton Value="A" Disabled>Hangzhou</AntRadio>
+            <AntRadio RadioButton Value="B" Disabled>Shanghai</AntRadio>
+            <AntRadio RadioButton Value="C" Disabled>Beijing</AntRadio>
+            <AntRadio RadioButton Value="D" Disabled>Chengdu</AntRadio>
         </AntRadioGroup>
     </Demo>
 </DemoCard>

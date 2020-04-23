@@ -1,23 +1,23 @@
-﻿@namespace AntBlazor
-@inherits AntSubMenuBase
+@namespace AntBlazor
+@inherits AntDomComponentBase
 
     <CascadingValue Value=this>
-        <li Ant-submenu class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
+        <li class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
             <div class="@TitleDivClass.Class" style="@titleStyle"
                  @onmouseover="()=>SetMouseEnterState(true)"
                  @onmouseout="()=>SetMouseEnterState(false)"
                  @onclick="()=> ClickSubMenuTitle()">
-                @if (icon != null)
+                @if (Icon != null)
                 {
-                    <AntIcon type="@icon"></AntIcon>
+                    <AntIcon Type="@Icon"></AntIcon>
                 }
      
-                <span>@((MarkupString)title)</span>
+                <span>@((MarkupString)Title)</span>
 
-                @if (Menu.isInDropDown)
+                @if (Menu.IsInDropDown)
                 {
                     <span class="ant-dropdown-menu-submenu-arrow">
-                        <AntIcon type="right" class="anticon-right ant-dropdown-menu-submenu-arrow-icon"></AntIcon>
+                        <AntIcon Type="right" Class="anticon-right ant-dropdown-menu-submenu-arrow-icon"></AntIcon>
                     </span>
                 }
                 else
@@ -25,24 +25,24 @@
                     <i class="ant-menu-submenu-arrow"></i>
                 }
             </div>
-            @if (Menu.mode == AntDirectionVHIType.inline)
+            @if (Menu.Mode == AntDirectionVHIType.inline)
             {
-                <ul class="@menuClassName ant-menu ant-menu-inline ant-menu-sub" style="transition: height 0.5s; @submenuStyle">
+                <ul class="@MenuClassName ant-menu ant-menu-inline ant-menu-sub" style="transition: height 0.5s; @submenuStyle">
                     @ChildContent
                 </ul>
             }
         </li>
 
-            @if (open && Menu.mode != AntDirectionVHIType.inline)
+            @if (Open && Menu.Mode != AntDirectionVHIType.inline)
             {
                 <div style="position: absolute; top: 0px; left: 0px; width: 100%;">
                 <div class="ant-menu-submenu ant-menu-submenu-popup @PopupClassMapper.Class"
-                     style="left:@(element.offsetLeft+element.clientWidth+10)px; top:@(element.offsetTop)px; @(isMouseHover?"":"display: none;")"
+                     style="left:@(_element.offsetLeft+_element.clientWidth+10)px; top:@(_element.offsetTop)px; @(IsMouseHover?"":"display: none;")"
                      @onmouseout="()=>SetMouseEnterState(false)"
                      @onmouseover="()=>SetMouseEnterState(true)"
                      @onmouseout:stopPropagation
                      @onmouseover:stopPropagation>
-                    <ul class="@menuClassName @PopupUlClassMapper.Class ant-menu-submenu-content" style="@(isMouseHover?"":"display: none;")">
+                    <ul class="@MenuClassName @PopupUlClassMapper.Class ant-menu-submenu-content" style="@(IsMouseHover?"":"display: none;")">
                         @ChildContent
                     </ul>
                 </div>
@@ -53,8 +53,8 @@
 
 @code {
 
-    string titleStyle => Menu.mode == AntDirectionVHIType.inline ?
-        $"padding-left:{(paddingLeft ?? Level * Menu.inlineIndent)}px" : "";
+    string titleStyle => Menu.Mode == AntDirectionVHIType.inline ?
+        $"padding-left:{(PaddingLeft ?? Level * Menu.InlineIndent)}px" : "";
 
-    string submenuStyle => open ? "" : "height: 0px; overflow: hidden;";
+    string submenuStyle => Open ? "" : "height: 0px; overflow: hidden;";
 }

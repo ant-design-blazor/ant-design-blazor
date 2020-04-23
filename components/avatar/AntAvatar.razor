@@ -1,19 +1,19 @@
-﻿@namespace AntBlazor
-@inherits AntAvatarBase
+@namespace AntBlazor
+@inherits AntDomComponentBase
 
-<span class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id" @ref="Ref">
-    @if (!string.IsNullOrEmpty(icon) && hasIcon)
+<span class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+    @if (!string.IsNullOrEmpty(Icon) && _hasIcon)
     {
-        <AntIcon type="@icon" />
+        <AntIcon type="@Icon" />
     }
-    @if (!string.IsNullOrEmpty(src) && hasSrc)
+    @if (!string.IsNullOrEmpty(Src) && _hasSrc)
     {
-        <img src="@src" srcset="@srcSet" alt="@alt" @onerror="ImgError" />
+        <img src="@Src" srcset="@SrcSet" alt="@Alt" @onerror="ImgError" />
     }
-    @if (!string.IsNullOrEmpty(text) && hasText)
+    @if (!string.IsNullOrEmpty(Text) && _hasText)
     {
-        <span class="ant-avatar-string" @ref="textEl" style="@textStyles">
-            @text
+        <span class="ant-avatar-string" @ref="TextEl" style="@_textStyles">
+            @Text
         </span>
     }
 </span>

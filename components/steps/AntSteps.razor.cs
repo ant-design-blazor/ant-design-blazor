@@ -5,23 +5,28 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public class AntStepsBase:AntDomComponentBase
+    public partial class AntSteps : AntDomComponentBase
     {
         private bool _showProgressDot;
         private RenderFragment _progressDot;
         public EventHandler Handler { get; }
 
-        internal List<AntStepBase> Children = new List<AntStepBase>();
+        internal List<AntStep> _children = new List<AntStep>();
         [Parameter] public int Current { get; set; }
-        [Parameter] public RenderFragment ProgressDot {
+        [Parameter]
+        public RenderFragment ProgressDot
+        {
             get => _progressDot;
-            set {
+            set
+            {
                 _progressDot = value;
-                _showProgressDot = value!=null;
+                _showProgressDot = value != null;
                 ResetChildrenSteps();
-            }    
+            }
         }
-        [Parameter] public bool ShowProgressDot {
+        [Parameter]
+        public bool ShowProgressDot
+        {
             get => _showProgressDot;
             set => _showProgressDot = value;
         }
@@ -37,30 +42,30 @@ namespace AntBlazor
 
         public override void Dispose()
         {
-            foreach(AntStepBase step in Children)
+            foreach (var step in _children)
             {
                 step.Dispose();
             }
-            Children.Clear();
+            _children.Clear();
             base.Dispose();
         }
 
         internal void ResetChildrenSteps()
         {
-            for(int i = 0; i< Children.Count; i++)
+            for (int i = 0; i < _children.Count; i++)
             {
-                Children[i].GroupStatus = this.Status;
-                Children[i].ShowProcessDot = this._showProgressDot;
+                _children[i].GroupStatus = this.Status;
+                _children[i].ShowProcessDot = this._showProgressDot;
                 //if (this.ProgressDot !=null )
                 //{
                 //    Children[i].ProgressDot = this.ProgressDot;
                 //}
-                Children[i].Clickable = OnChange!=null; //TODO: Develop event emitter
-                Children[i].Direction = this.Direction;
-                Children[i].Index = i + this.StartIndex;
-                Children[i].GroupCurrentIndex = this.Current;
-                Children[i].Last = Children.Count == i + 1;
-                Children[i].MarkForCheck();
+                _children[i].Clickable = OnChange != null; //TODO: Develop event emitter
+                _children[i].Direction = this.Direction;
+                _children[i].Index = i + this.StartIndex;
+                _children[i].GroupCurrentIndex = this.Current;
+                _children[i].Last = _children.Count == i + 1;
+                _children[i].MarkForCheck();
             }
         }
 
@@ -79,7 +84,7 @@ namespace AntBlazor
             {
                 ResetChildrenSteps();
             });
-            
+
         }
 
         protected void SetClassMap()
@@ -89,8 +94,8 @@ namespace AntBlazor
                 .Add(prefixName)
                 .Add(ClassName)
                 .If($"{prefixName}-{Direction}", () => !string.IsNullOrEmpty(Direction))
-                .If($"{prefixName}-label-horizontal", ()=>Direction=="horizontal")
-                .If($"{prefixName}-label-vertical", () => (_showProgressDot || LabelPlacement=="vertical") && Direction=="horizontal" )
+                .If($"{prefixName}-label-horizontal", () => Direction == "horizontal")
+                .If($"{prefixName}-label-vertical", () => (_showProgressDot || LabelPlacement == "vertical") && Direction == "horizontal")
                 .If($"{prefixName}-dot", () => _showProgressDot)
                 .If($"{prefixName}-small", () => Size == "small")
                 .If($"{prefixName}-navigation", () => Type == "navigation")

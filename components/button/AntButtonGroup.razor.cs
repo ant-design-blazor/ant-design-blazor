@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public class AntButtonGroupBase : AntDomComponentBase
+    public partial class AntButtonGroup : AntDomComponentBase
     {
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         private string _size;
 
         [Parameter]
-        public string size
+        public string Size
         {
             get => _size;
             set
@@ -20,15 +20,15 @@ namespace AntBlazor
             }
         }
 
-        public IList<AntButton> Buttons = new List<AntButton>();
+        public IList<AntButton> _buttons = new List<AntButton>();
 
-        internal bool isInDropdown = false;
+        internal bool _isInDropdown = false;
 
         public void SetClassMap()
         {
             var prefixName = "ant-btn-group";
             ClassMapper.Clear().Add(prefixName)
-                .If("ant-dropdown-button", () => isInDropdown)
+                .If("ant-dropdown-button", () => _isInDropdown)
                 .If($"{prefixName}-lg", () => this._size == "large")
                 .If($"{prefixName}-sm", () => this._size == "small");
         }

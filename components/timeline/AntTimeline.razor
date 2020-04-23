@@ -1,15 +1,15 @@
-﻿@namespace AntBlazor
-@inherits AntTimelineBase
+@namespace AntBlazor
+@inherits AntDomComponentBase
 
 <CascadingValue Value="this">
-    <ul class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
+    <ul class="@ClassMapper.Class" style="@Style" id="@Id">
         @ChildContent
 
-        @foreach (var item in displayItems)
+        @foreach (var item in DisplayItems)
         {
-            <li class="@item.Class" @ref="item.Ref" style="@item.Style" @attributes="item.Attributes" Id="@item.Id">
+            <li class="@item.ItemClass" @ref="item.Ref" style="@item.Style" id="@item.Id">
                 <div class="ant-timeline-item-tail"></div>
-                <div class="@item.HeadClassMapper.Class" style="@item.headStyle">
+                <div class="@item._headClassMapper.Class" style="@item.HeadStyle">
                     @if (item.Dot != null)
                     {
                         @item.Dot
@@ -25,6 +25,6 @@
 
 @code{
 
-  protected override RenderFragment LoadingDot => @<AntIcon type="loading"></AntIcon>;
+  private RenderFragment _loadingDot = @<AntIcon type="loading"></AntIcon>;
 
 }

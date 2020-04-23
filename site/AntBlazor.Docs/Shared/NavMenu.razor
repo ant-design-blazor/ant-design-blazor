@@ -6,7 +6,7 @@
         <h1>Ant Design Blazor</h1>
     </a>
 </div>
-<AntMenu theme="dark" mode="AntDirectionVHIType.inline" inlineCollapsed="isCollapsed">
+<AntMenu Theme="dark" Mode="AntDirectionVHIType.inline" InlineCollapsed="IsCollapsed">
     @menuItemTemplate((MenuItems,LanguageService,1))
 </AntMenu>
 
@@ -16,7 +16,8 @@
 @inject ILanguageService LanguageService
 
 @code {
-    [Parameter] public bool isCollapsed { get; set; }
+    [Parameter] 
+    public bool IsCollapsed { get; set; }
 
     MenuItem[] MenuItems = { };
 
@@ -26,8 +27,8 @@
             {
                 if (menu.Type == "menuItem")
                 {
-                    <AntMenuItem matchRouter>
-                        <AntNavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All" Default="@menu.Default">
+                    <AntMenuItem MatchRouter>
+                        <AntNavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All">
                             <span>@menu.Title</span>
                             @if (context.level > 1 && context.languageService.CurrentCulture.Name != "en-US")
                             {
@@ -38,7 +39,7 @@
                 }
                 else if (menu.Type == "subMenu")
                 {
-                    <AntSubMenu open="@menu.Open" title="@context.languageService.Resources[menu.Title]" icon="@menu.Icon">
+                    <AntSubMenu Open="@menu.Open" Title="@context.languageService.Resources[menu.Title]" Icon="@menu.Icon">
                         @if (menu.Children.Any())
                         {
                             @menuItemTemplate((menu.Children,context.languageService,context.level + 1))
@@ -47,7 +48,7 @@
                 }
                 else if (menu.Type == "itemGroup")
                 {
-                    <AntMenuItemGroup title="@context.languageService.Resources[menu.Title]">
+                    <AntMenuItemGroup Title="@context.languageService.Resources[menu.Title]">
                         @if (menu.Children.Any())
                         {
                             @menuItemTemplate((menu.Children, context.languageService,context.level + 1))

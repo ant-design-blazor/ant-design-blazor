@@ -1,23 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntBlazor
 {
-    public class AntRadioBase : AntDomComponentBase
+    public partial class AntRadio : AntDomComponentBase
     {
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
-        [Parameter] public string Value { get; set; }
+        [Parameter]
+        public string Value { get; set; }
 
-        // [Parameter] public bool Disabled { get; set; } = false;
+        [Parameter]
+        public bool AutoFocus { get; set; } = false;
 
-        [Parameter] public bool AutoFocus { get; set; } = false;
+        [Parameter]
+        public bool RadioButton { get; set; }
 
-        [Parameter] public bool RadioButton { get; set; }
+        [Parameter]
+        public bool Checked { get; set; }
+
+        [Parameter]
+        public bool Disabled { get; set; }
 
         [CascadingParameter] public AntRadioGroup RadioGroup { get; set; }
 
@@ -27,21 +33,17 @@ namespace AntBlazor
 
         protected ClassMapper InnerClassMapper { get; set; } = new ClassMapper();
 
-        protected ElementReference inputRef { get; set; }
+        protected ElementReference InputRef { get; set; }
 
-        private Action onChange;
+        private Action _onChange;
 
-        private Action onTouched;
+        private Action _onTouched;
 
-        protected bool isChecked => _checked ?? (this.Attributes.TryGetValue("checked", out var val)
-            ? bool.TryParse(val.ToString(), out bool _disabled) ? _disabled : true : false);
+        protected bool IsChecked => _checked ?? this.Checked;
 
-        protected bool? _checked { get; set; }
+        private bool? _checked;
 
-        internal string name { get; set; } = null;
-
-        protected bool disabled => this.Attributes.TryGetValue("disabled", out var val)
-            ? bool.TryParse(val.ToString(), out bool _disabled) ? _disabled : true : false;
+        internal string _name;
 
         protected void SetClass()
         {
@@ -49,18 +51,18 @@ namespace AntBlazor
             ClassMapper.Clear()
                 .If($"{prefixCls}-wrapper", () => !RadioButton)
                 .If($"{prefixCls}-button-wrapper", () => RadioButton)
-                .If($"{prefixCls}-wrapper-checked", () => isChecked && !RadioButton)
-                .If($"{prefixCls}-button-wrapper-checked", () => isChecked && RadioButton)
-                .If($"{prefixCls}-wrapper-disabled", () => disabled && !RadioButton)
-                .If($"{prefixCls}-button-wrapper-disabled", () => disabled && RadioButton);
+                .If($"{prefixCls}-wrapper-checked", () => IsChecked && !RadioButton)
+                .If($"{prefixCls}-button-wrapper-checked", () => IsChecked && RadioButton)
+                .If($"{prefixCls}-wrapper-disabled", () => Disabled && !RadioButton)
+                .If($"{prefixCls}-button-wrapper-disabled", () => Disabled && RadioButton);
 
             RadioClassMapper.Clear()
                 .If(prefixCls, () => !RadioButton)
-                .If($"{prefixCls}-checked", () => isChecked && !RadioButton)
-                .If($"{prefixCls}-disabled", () => disabled && !RadioButton)
+                .If($"{prefixCls}-checked", () => IsChecked && !RadioButton)
+                .If($"{prefixCls}-disabled", () => Disabled && !RadioButton)
                 .If($"{prefixCls}-button", () => RadioButton)
-                .If($"{prefixCls}-button-checked", () => isChecked && RadioButton)
-                .If($"{prefixCls}-button-disabled", () => disabled && RadioButton);
+                .If($"{prefixCls}-button-checked", () => IsChecked && RadioButton)
+                .If($"{prefixCls}-button-disabled", () => Disabled && RadioButton);
 
             InputClassMapper.Clear()
                 .If($"{prefixCls}-input", () => !RadioButton)
@@ -93,7 +95,7 @@ namespace AntBlazor
 
         internal async Task Select()
         {
-            if (!disabled && !isChecked)
+            if (!Disabled && !IsChecked)
             {
                 this._checked = true;
             }
@@ -106,7 +108,7 @@ namespace AntBlazor
 
         internal async Task UnSelect()
         {
-            if (this.isChecked)
+            if (this.IsChecked)
             {
                 this._checked = false;
             }
@@ -120,12 +122,12 @@ namespace AntBlazor
 
         protected async Task Focus()
         {
-            await JsInvokeAsync(JSInteropConstants.focus, this.inputRef);
+            await JsInvokeAsync(JSInteropConstants.focus, this.InputRef);
         }
 
         protected async Task Blur()
         {
-            await JsInvokeAsync(JSInteropConstants.blur, this.inputRef);
+            await JsInvokeAsync(JSInteropConstants.blur, this.InputRef);
         }
     }
 }

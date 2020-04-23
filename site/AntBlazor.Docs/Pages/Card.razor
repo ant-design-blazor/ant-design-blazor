@@ -1,6 +1,6 @@
 ﻿
 <h3>Actions Card</h3>
-<AntCard bordered Actions="new[] { actionSetting,actionEdit,actionEllipsis}" avatar="avatarTemplate">
+<AntCard Bordered Actions="new[] { actionSetting, actionEdit, actionEllipsis }">
     <Title>Card</Title>
     <Extra>
         <a>More</a>
@@ -11,18 +11,18 @@
 </AntCard>
 
 <h3>Loading Card</h3>
-<AntCard bordered Actions="new[] { actionSetting,actionEdit,actionEllipsis}" loading>
+<AntCard Bordered Actions="new[] { actionSetting, actionEdit, actionEllipsis }" Loading>
     <Title>Card</Title>
     <Extra>
         <a>More</a>
     </Extra>
     <Body>
-    Loading Card
+        Loading Card
     </Body>
 </AntCard>
 
 <h3>Meta Card</h3>
-<AntCard style="width:300px;" bordered Cover="coverTemplate" Actions="new[] { actionSetting,actionEdit,actionEllipsis}">
+<AntCard Style="width:300px;" Bordered Cover="coverTemplate" Actions="new[] { actionSetting, actionEdit, actionEllipsis }">
     <AntCardMeta Avatar="avatarTemplate">
         <Title>Meta Card</Title>
         <Description>This is the description</Description>
@@ -31,24 +31,14 @@
 
 @code
 {
-    private RenderFragment actionSetting =
-    @<Template>
-        <AntIcon type="setting" />
-    </Template>;
+    private RenderFragment actionSetting =@<Template><AntIcon Type="setting" /></Template>;
 
-private RenderFragment actionEdit =
-@<Template>
-    <AntIcon type="edit" />
-</Template>;
+    private RenderFragment actionEdit =@<Template><AntIcon Type="edit" /></Template>;
 
-private RenderFragment actionEllipsis =
-@<Template>
-    <AntIcon type="ellipsis" />
-</Template>;
+    private RenderFragment actionEllipsis =@<Template><AntIcon Type="ellipsis" /></Template>;
 
-private RenderFragment avatarTemplate =
-@<AntAvatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></AntAvatar>;
+    private RenderFragment avatarTemplate = @<AntAvatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></AntAvatar>;
 
-    private RenderFragment coverTemplate = @<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"/>;
+    private RenderFragment coverTemplate = @<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />;
 
 }

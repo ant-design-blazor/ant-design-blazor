@@ -2,17 +2,17 @@
 @inherits AntDomComponentBase
 
 <button type="button" role="switch"
-        aria-checked="@isChecked"
-        disabled="@disabled"
+        aria-checked="@_isChecked"
+        disabled="@Disabled"
         class="@ClassMapper.Class"
         style="@Style"
         @onclick="@OnClickHandler">
-    @if (loading)
+    @if (Loading)
     {
         <AntIcon type="loading" Class="@($"{prefixCls}-loading-icon")" />
     }
     <span class="@($"{prefixCls}-inner")">
-        @(isChecked ? CheckedChildren : UnCheckedChildren)
+        @(_isChecked ? CheckedChildren : UnCheckedChildren)
     </span>
 </button>
 
@@ -24,32 +24,32 @@
     {
         ClassMapper.Clear()
             .Add(prefixCls)
-            .If($"{prefixCls}-checked", () => isChecked)
-            .If($"{prefixCls}-disabled", () => disabled || loading)
-            .If($"{prefixCls}-loading", () => loading)
-            .If($"{prefixCls}-small", () => size.Equals("small"))
+            .If($"{prefixCls}-checked", () => _isChecked)
+            .If($"{prefixCls}-disabled", () => Disabled || Loading)
+            .If($"{prefixCls}-loading", () => Loading)
+            .If($"{prefixCls}-small", () => Size.Equals("small"))
             ;
 
 
         return base.OnParametersSetAsync();
     }
 
-    private bool isChecked = false;
+    private bool _isChecked = false;
 
     [Parameter]
-    public bool @checked { get; set; }
+    public bool Checked { get; set; }
 
     [Parameter]
-    public bool disabled { get; set; }
+    public bool Disabled { get; set; }
 
     [Parameter]
-    public bool loading { get; set; }
+    public bool Loading { get; set; }
 
     [Parameter]
-    public bool control { get; set; }
+    public bool Control { get; set; }
 
     [Parameter]
-    public string size { get; set; } = "default";
+    public string Size { get; set; } = "default";
 
 
     [Parameter]
@@ -64,23 +64,24 @@
 
     protected override void OnInitialized()
     {
-        this.isChecked = @checked;
+        this._isChecked = Checked;
         base.OnInitialized();
     }
 
     protected void OnClickHandler(MouseEventArgs ev)
     {
-        if (!disabled && !loading&&!control)
+        if (!Disabled && !Loading && !Control)
         {
-            this.updateValue(!this.isChecked);
+            this.updateValue(!this._isChecked);
         }
     }
 
     private void updateValue(bool value)
     {
-        if (this.isChecked != value) {
-            this.isChecked = value;
-            this.OnChange.InvokeAsync(this.isChecked);
+        if (this._isChecked != value)
+        {
+            this._isChecked = value;
+            this.OnChange.InvokeAsync(this._isChecked);
         }
     }
 
