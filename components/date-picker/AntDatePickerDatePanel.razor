@@ -33,7 +33,7 @@
                 }
                 @for (int weekIndex = 1; weekIndex <= 6; weekIndex++)
                 {
-                    string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, DatePicker.CurrentSelectDate) ? $"{DatePicker.PrefixCls}-week-panel-row-selected" : "";
+                    string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, DatePicker.Value) ? $"{DatePicker.PrefixCls}-week-panel-row-selected" : "";
                     string rowClass = IsWeek ? $"{DatePicker.PrefixCls}-week-panel-row" : "";
 
                     <tr class="@(rowClass) @(selectedRowClass)">
@@ -50,13 +50,20 @@
 
                             string inViewClass = DateHelper.IsSameMonth(currentViewDate, DatePicker.CurrentShowDate) ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
                             string todayClass = DateHelper.IsSameDay(currentViewDate, DatePicker.CurrentDate) ? $"{DatePicker.PrefixCls}-cell-today" : "";
-                            string selectedClass = !IsWeek && DateHelper.IsSameDate(currentViewDate, DatePicker.CurrentSelectDate) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
+                            string selectedClass = !IsWeek && DateHelper.IsSameDate(currentViewDate, DatePicker.Value) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
 
                             <td title="@(currentViewDate.ToString("yyyy-MM-dd"))"
                                 class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
                                 <div class="@(DatePicker.PrefixCls)-cell-inner"
                                      @onclick="e => OnSelectDate(currentViewDate)">
-                                    @viewDate.Day
+                                    @if (DatePicker.DateRender != null)
+                                    {
+                                        @(DatePicker.DateRender(currentViewDate, DatePicker.CurrentDate))
+                                    }
+                                    else
+                                    {
+                                        @(viewDate.Day)
+                                    }
                                 </div>
                             </td>
 

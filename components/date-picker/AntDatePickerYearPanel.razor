@@ -29,7 +29,7 @@
 
                             string inViewClass = yearIndex != FIRST_YEAR_INDEX && yearIndex != LAST_YEAR_INDEX ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
                             string todayClass = DateHelper.IsSameYear(currentViewDate, DatePicker.CurrentDate) ? $"{DatePicker.PrefixCls}-cell-today" : "";
-                            string selectedClass = DateHelper.IsSameYear(currentViewDate, DatePicker.CurrentSelectDate) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
+                            string selectedClass = DateHelper.IsSameYear(currentViewDate, DatePicker.Value) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
 
                             <td title="@(currentViewDate.Year)"
                                 class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
