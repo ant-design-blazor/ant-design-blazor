@@ -18,12 +18,18 @@
                         {
                             var currentColDate = ViewStartDate;
 
-                            string inViewClass = IsInView(currentColDate) ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
-                            string todayClass = IsToday(currentColDate) ? $"{DatePicker.PrefixCls}-cell-today" : "";
-                            string selectedClass = IsSelected(currentColDate) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
+                            string inViewCls = IsInView(currentColDate) ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
+                            string todayCls = IsToday(currentColDate) ? $"{DatePicker.PrefixCls}-cell-today" : "";
+                            string selectedCls = IsSelected(currentColDate) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
+                            string disabledCls = "";
+
+                            if(DatePicker.DisabledDate != null && DatePicker.DisabledDate(currentColDate))
+                            {
+                                disabledCls = $"{DatePicker.PrefixCls}-cell-disabled";
+                            }
 
                             <td title="@GetColTitle?.Invoke(currentColDate)"
-                                class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
+                                class="@(DatePicker.PrefixCls)-cell @(inViewCls) @(todayCls) @selectedCls @disabledCls">
                                 <div class="@(DatePicker.PrefixCls)-cell-inner"
                                      @onclick="e => OnValueSelect(currentColDate)">
                                     @if (DatePicker.DateRender != null)
