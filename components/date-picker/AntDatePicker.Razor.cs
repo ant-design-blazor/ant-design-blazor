@@ -31,10 +31,10 @@ namespace AntBlazor
                     Placeholder = initPicker switch
                     {
                         AntDatePickerType.Date => AntDatePickerPlaceholder.Date,
-                        AntDatePickerType.Week => AntDatePickerPlaceholder.Date,
-                        AntDatePickerType.Month => AntDatePickerPlaceholder.Date,
-                        AntDatePickerType.Quarter => AntDatePickerPlaceholder.Date,
-                        AntDatePickerType.Year => AntDatePickerPlaceholder.Date,
+                        AntDatePickerType.Week => AntDatePickerPlaceholder.Week,
+                        AntDatePickerType.Month => AntDatePickerPlaceholder.Month,
+                        AntDatePickerType.Quarter => AntDatePickerPlaceholder.Quarter,
+                        AntDatePickerType.Year => AntDatePickerPlaceholder.Year,
                     };
                 }
             } 
@@ -49,15 +49,38 @@ namespace AntBlazor
         [Parameter]
         public bool Open { get; set; } = false;
         [Parameter]
+        public bool InputReadOnly { get; set; } = false;
+        [Parameter]
         public bool AllowClear { get; set; } = true; // TODO
         [Parameter]
         public string Placeholder { get; set; }
         [Parameter]
         public string PopupStyle { get; set; }
+        [Parameter]
+        public string ClassName { get; set; }
+        [Parameter]
+        public string DropdownClassName { get; set; }
+        [Parameter]
+        public string Size { get; set; } = AntDatePickerSize.Middle;
+        [Parameter]
+        public string Format { get; set; } = "yyyy-MM-dd";
+        [Parameter]
+        public DateTime? DefaultValue { get; set; } = null;
+        [Parameter]
+        public RenderFragment SuffixIcon { get; set; }
+        [Parameter]
+        public Action<bool> OnOpenChange { get; set; }
+        [Parameter]
+        public Action<DateTime, string> OnPanelChange { get; set; }
+        [Parameter]
+        public Action<DateTime, string> OnChange { get; set; }
+        [Parameter]
+        public Func<DateTime, DateTime, RenderFragment> DateRender { get; set; }
+        [Parameter]
+        public DateTime Value { get; set; }
 
         public DateTime CurrentDate { get; private set; } = DateTime.Now;
         public DateTime CurrentShowDate { get; private set; } = DateTime.Now;
-        public DateTime CurrentSelectDate { get; private set; }
 
         private string initPicker = null;
         private string prePicker = null;
@@ -84,7 +107,8 @@ namespace AntBlazor
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-borderless", () => Bordered == false)
                 .If($"{PrefixCls}-disabled", () => Disabled == true)
-                //.If($"{PrefixCls}-focused", () => AutoFocus == true)
+                .If($"{ClassName}", () => !string.IsNullOrEmpty(ClassName))
+               //.If($"{PrefixCls}-focused", () => AutoFocus == true)
                //.If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == AntEmpty.PRESENTED_IMAGE_SIMPLE)
                //.If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                ;
@@ -95,24 +119,51 @@ namespace AntBlazor
             // InitPicker is the finally value
             if (Picker == initPicker)
             {
-                CurrentSelectDate = date;
+                Value = date;
+
+                OnChange?.Invoke(date, date.ToString(Format));
+
                 hadSelectValue = true;
 
                 isClose = true;
-                Open = false;
+
+                StateHasChanged();
             }
             else
             {
                 Picker = prePicker;
-                CurrentShowDate = date;
+
+                ChangeShowDate(date);
+            }
+        }
+
+        protected string GetValue()
+        {
+            if (hadSelectValue)
+            {
+                return Value.ToString(Format);
             }
 
-            StateHasChanged();
+            if (DefaultValue != null)
+            {
+                return ((DateTime)DefaultValue).ToString(Format);
+            }
+
+            return "";
+        }
+
+        protected void OpenOrClose()
+        {
+            isClose = !isClose;
+
+            OnOpenChange?.Invoke(!isClose);
         }
 
         public void ChangeShowDate(DateTime date)
         {
             CurrentShowDate = date;
+
+            OnPanelChange?.Invoke(CurrentShowDate, Picker);
 
             StateHasChanged();
         }
@@ -120,6 +171,8 @@ namespace AntBlazor
         public void ChangePickerType(string type)
         {
             Picker = type;
+
+            OnPanelChange?.Invoke(CurrentShowDate, Picker);
 
             StateHasChanged();
         }
