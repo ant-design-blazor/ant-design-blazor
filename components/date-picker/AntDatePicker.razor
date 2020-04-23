@@ -5,13 +5,12 @@
 <div class="@ClassMapper.Class"
      @ref="@Ref"
      style="@Style"
-     @attributes="Attributes"
      Id="@Id">
     <div class="@(PrefixCls)-input">
         <input style="height:@Size"
                disabled="@Disabled"
                @onfocusout="e => AutoFocus = false"
-               value="@GetValue()"
+               value="@GetInputValue()"
                placeholder="@Placeholder"
                readonly="@InputReadOnly"
                @onclick="e => OpenOrClose()">
@@ -33,10 +32,9 @@
 </div>
 <div class="@(PrefixCls)-dropdown @(DropdownClassName) @(PrefixCls)-dropdown-placement-bottomLeft"
      style="@PopupStyle"
-     hidden="@(!Open && isClose)">
+     hidden="@(!Open && _isClose)">
     <div class="@(PrefixCls)-panel-container">
         <div tabindex="-1" class="@(PrefixCls)-panel">
-            Picker:@Picker PrePicker:@prePicker InitPicker:@initPicker
             <CascadingValue Value=@this>
                 @if (Picker == AntDatePickerType.Date)
                 {

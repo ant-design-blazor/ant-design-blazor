@@ -52,21 +52,21 @@ namespace AntBlazor
 
         protected void OnSelectShowYear(DateTime date)
         {
-            DatePicker.ChangeShowDate(CombineNewShowDate(year: date.Year));
+            DatePicker.ChangePickerValue(CombineNewShowDate(year: date.Year));
 
             OnSelected();
         }
 
         protected void OnSelectShowMonth(DateTime date)
         {
-            DatePicker.ChangeShowDate(CombineNewShowDate(month: date.Month));
+            DatePicker.ChangePickerValue(CombineNewShowDate(month: date.Month));
 
             OnSelected();
         }
 
         protected void OnSelectShowDay(DateTime date)
         {
-            DatePicker.ChangeShowDate(CombineNewShowDate(day: date.Day));
+            DatePicker.ChangePickerValue(CombineNewShowDate(day: date.Day));
 
             OnSelected();
         }
@@ -74,9 +74,9 @@ namespace AntBlazor
         protected DateTime CombineNewShowDate(int? year = null, int? month = null, int? day = null)
         {
             return new DateTime(
-                year ?? DatePicker.CurrentShowDate.Year,
-                month ?? DatePicker.CurrentShowDate.Month,
-                day ?? DatePicker.CurrentShowDate.Day
+                year ?? DatePicker.PickerValue.Year,
+                month ?? DatePicker.PickerValue.Month,
+                day ?? DatePicker.PickerValue.Day
             );
         }
 
