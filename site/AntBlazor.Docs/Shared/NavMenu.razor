@@ -6,7 +6,7 @@
         <h1>Ant Design Blazor</h1>
     </a>
 </div>
-<AntMenu Theme="dark" Mode="AntDirectionVHIType.inline" InlineCollapsed="isCollapsed">
+<AntMenu Theme="dark" Mode="AntDirectionVHIType.inline" InlineCollapsed="IsCollapsed">
     @menuItemTemplate((MenuItems,LanguageService,1))
 </AntMenu>
 
@@ -16,7 +16,8 @@
 @inject ILanguageService LanguageService
 
 @code {
-    [Parameter] public bool isCollapsed { get; set; }
+    [Parameter] 
+    public bool IsCollapsed { get; set; }
 
     MenuItem[] MenuItems = { };
 

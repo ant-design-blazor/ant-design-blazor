@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
@@ -8,12 +11,25 @@ namespace AntBlazor
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        public Action<object> _onChange;
+        [Parameter] public IList<AntCheckbox> CheckboxItems { get; set; } = new List<AntCheckbox>();
+
+        [Parameter] public EventCallback<string[]> ValueChanged { get; set; }
 
         public Action _onTouched;
 
         [Parameter]
         public CheckBoxOption[] Options { get; set; } = Array.Empty<CheckBoxOption>();
+
+        [Parameter]
+        public IList<string> Value { get; set; } = Array.Empty<string>();
+
+        protected override async Task OnParametersSetAsync()
+        {
+            foreach (var item in Value)
+            {
+                Options.Where(o => o.Value == item).ForEach(o => o.Checked = true);
+            }
+        }
 
         [Parameter]
         public bool Disabled { get; set; }
@@ -23,9 +39,24 @@ namespace AntBlazor
             ClassMapper.Add("ant-checkbox-group");
         }
 
-        public void OnOptionChange()
+        public async void OnOptionChange(bool change)
         {
-            this._onChange?.Invoke(this.Options);
+            await this.ValueChanged.InvokeAsync(this.Options.Where(x => x.Checked).Select(x => x.Value).ToArray());
+            StateHasChanged();
+        }
+
+        internal async Task OnCheckboxChange(AntCheckbox checkboxBase)
+        {
+            if (checkboxBase is AntCheckbox checkbox)
+            {
+                int index = CheckboxItems.IndexOf(checkbox);
+                if (Options[index] != null)
+                {
+                    Options[index].Checked = checkbox.Checked;
+                }
+            }
+
+            StateHasChanged();
         }
     }
 }

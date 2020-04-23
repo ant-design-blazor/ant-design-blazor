@@ -4,7 +4,7 @@
     @ChildContent
 </CascadingValue>
 
-<div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id">
+<div class="@ClassMapper.Class" style="@Style" id="@Id">
     <!---->
     @if (TabBarExtraContent != null)
     {
@@ -36,7 +36,7 @@
                                 {
                                     if (pane.IsActive)
                                     {
-                                        <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab"
+                                        <div @ref="_activeTabBar" tabindex="0" class="@pane._classMapper.Class" id="tab-@pane.Key" role="tab"
                                              aria-disabled="@pane.Disabled" aria-selected="true" aria-controls="tabpane-@pane.Key"
                                              draggable="@Draggable.ToString()"
                                              @ondragover:preventDefault
@@ -125,7 +125,7 @@
                                 {
                                     if (pane.IsActive)
                                     {
-                                        <div @ref="_activeTabBar" tabindex="0" class="@pane.ClassMapper.Class" id="tab-@pane.Key" role="tab"
+                                        <div @ref="_activeTabBar" tabindex="0" class="@pane._classMapper.Class" id="tab-@pane.Key" role="tab"
                                              aria-disabled="@pane.Disabled" aria-selected="true" aria-controls="tabpane-@pane.Key"
                                              draggable="@Draggable.ToString()"
                                              @ondragover:preventDefault

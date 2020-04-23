@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.ExceptionServices;
@@ -12,12 +12,12 @@ namespace AntBlazor
 {
     public class HtmlRenderer : Renderer
     {
-        private static readonly HashSet<string> s_selfClosingElements = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        private static readonly HashSet<string> _selfClosingElements = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"
         };
 
-        private static readonly Task s_canceledRenderTask = Task.FromCanceled(new CancellationToken(canceled: true));
+        private static readonly Task _canceledRenderTask = Task.FromCanceled(new CancellationToken(canceled: true));
 
         private readonly Func<string, string> _htmlEncoder;
 
@@ -44,7 +44,7 @@ namespace AntBlazor
             // the contract that OnAfterRender should only be called when the display has successfully been updated
             // and the application is interactive. (Element and component references are populated and JavaScript interop
             // is available).
-            return s_canceledRenderTask;
+            return _canceledRenderTask;
         }
 
         public async Task<ComponentRenderedText> RenderComponentAsync(IComponent component, ParameterView initialParameters)
@@ -189,7 +189,7 @@ namespace AntBlazor
             }
             else
             {
-                if (s_selfClosingElements.Contains(frame.ElementName))
+                if (_selfClosingElements.Contains(frame.ElementName))
                 {
                     result.Add(" />");
                 }

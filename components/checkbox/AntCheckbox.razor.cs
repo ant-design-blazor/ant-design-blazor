@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntBlazor
 {
-    public partial class AntCheckbox : AntDomComponentBase
+    public partial class AntCheckbox: AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -15,9 +14,9 @@ namespace AntBlazor
 
         protected Func<object> _onTouched;
 
-        private ElementReference _inputElement;
+        protected ElementReference _inputElement;
 
-        private ElementReference _contentElement;
+        protected ElementReference _contentElement;
 
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
@@ -50,6 +49,14 @@ namespace AntBlazor
             base.OnParametersSet();
         }
 
+        protected override async Task OnInitializedAsync()
+        {
+            if (this is AntCheckbox checkbox)
+            {
+                CheckboxGroup?.CheckboxItems.Add(checkbox);
+            }
+        }
+
         protected void SetClass()
         {
             var prefixName = "ant-checkbox";
@@ -58,11 +65,6 @@ namespace AntBlazor
                 .If($"{prefixName}-checked", () => Checked && !Indeterminate)
                 .If($"{prefixName}-disabled", () => Disabled)
                 .If($"{prefixName}-indeterminate", () => Indeterminate);
-        }
-
-        protected async Task HostClick(MouseEventArgs args)
-        {
-            await InnerCheckedChange(this.Checked);
         }
 
         protected async Task InputCheckedChange(ChangeEventArgs args)
@@ -77,10 +79,7 @@ namespace AntBlazor
                 this.Checked = @checked;
                 _onChange?.Invoke(this.Checked);
                 await this.CheckedChange.InvokeAsync(this.Checked);
-                if (this.CheckboxGroup != null)
-                {
-                    // this.CheckboxGroup.onChange();
-                }
+                CheckboxGroup?.OnCheckboxChange(this);
             }
         }
 

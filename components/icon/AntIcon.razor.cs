@@ -55,7 +55,7 @@ namespace AntBlazor
         [Inject]
         private NavigationManager NavigationManager { get; set; }
 
-        private static readonly ConcurrentDictionary<string, string> s_svgCache = new ConcurrentDictionary<string, string>();
+        private static readonly ConcurrentDictionary<string, string> _svgCache = new ConcurrentDictionary<string, string>();
 
         private string SvgImg { get; set; }
         private string SvgStyle { get; set; }
@@ -96,14 +96,14 @@ namespace AntBlazor
         {
             try
             {
-                if (s_svgCache.TryGetValue($"{Theme}-{Type}", out var svg))
+                if (_svgCache.TryGetValue($"{Theme}-{Type}", out var svg))
                 {
                     _iconSvg = svg;
                 }
                 else
                 {
                     _iconSvg = await HttpClient.GetStringAsync(new Uri(_baseUrl, $"_content/AntBlazor/icons/{Theme.ToLower()}/{Type.ToLower()}.svg"));
-                    s_svgCache.TryAdd($"{Theme}-{Type}", _iconSvg);
+                    _svgCache.TryAdd($"{Theme}-{Type}", _iconSvg);
                 }
 
                 SvgImg = _iconSvg.Insert(_iconSvg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {SvgStyle} ");

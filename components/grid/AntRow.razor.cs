@@ -39,7 +39,7 @@ namespace AntBlazor
 
         public IList<AntCol> Cols { get; } = new List<AntCol>();
 
-        private static Hashtable s_gridResponsiveMap = new Hashtable()
+        private static Hashtable _gridResponsiveMap = new Hashtable()
         {
             [nameof(BreakpointEnum.xs)] = "(max-width: 575px)",
             [nameof(BreakpointEnum.sm)] = "(max-width: 576px)",
@@ -81,7 +81,7 @@ namespace AntBlazor
 
             await typeof(BreakpointEnum).GetEnumNames().ForEachAsync(async bp =>
             {
-                if (await JsInvokeAsync<bool>(JSInteropConstants.matchMedia, s_gridResponsiveMap[bp]))
+                if (await JsInvokeAsync<bool>(JSInteropConstants.matchMedia, _gridResponsiveMap[bp]))
                 {
                     breakPoint = bp;
                 }
