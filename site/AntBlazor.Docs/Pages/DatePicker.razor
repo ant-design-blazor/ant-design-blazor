@@ -1,4 +1,24 @@
-﻿<AntTitle level="1">DatePicker 日期选择框</AntTitle>
+﻿<br />
+----- 开发期间的测试
+<br />
+<AntDatePicker Picker="@AntDatePickerType.Date"
+               AutoFocus="@true"
+               PopupStyle="color: red"
+               Placeholder="这是多个属性测试"
+               DefaultValue="@(new DateTime(2000, 1, 1))"
+               DateRender="CustomRender"
+               SuffixIcon="SuffixIconRender"
+               OnPanelChange="(date, mode) => Console.WriteLine(date)"
+               OnOpenChange="(open) => Console.WriteLine(open)"
+               InputReadOnly="@true"
+               Open="@false" />
+@code {
+    private RenderFragment SuffixIconRender =@<AntIcon type="user" />;
+}
+
+<AntMonthPicker />
+
+<AntTitle level="1">DatePicker 日期选择框</AntTitle>
 <AntText>输入或选择日期的控件。</AntText>
 <AntTitle level="2">何时使用</AntTitle>
 <AntParagraph>当用户需要输入一个日期，可以点击标准输入框，弹出日期面板进行选择。</AntParagraph>
@@ -22,12 +42,37 @@
     <Description>选择框的不可用状态。你也可以通过数组单独禁用 RangePicker 的其中一项。</Description>
     <Demo>
         <AntDatePicker Disabled="@true" Picker="@AntDatePickerType.Date" /> <br />
-        <AntDatePicker Disabled="@true" Picker="@AntDatePickerType.Week" /> <br />
-        <AntDatePicker Disabled="@true" Picker="@AntDatePickerType.Month" /> <br />
-        <AntDatePicker Disabled="@true" Picker="@AntDatePickerType.Quarter" /> <br />
-        <AntDatePicker Disabled="@true" Picker="@AntDatePickerType.Year" /> <br />
+        <br />
     </Demo>
 </DemoCard>
+<br />
+<DemoCard>
+    <Title>日期格式</Title>
+    <Description>使用 <AntText code>Format</AntText> 可以自定义日期显示格式。</Description>
+    <Demo>
+        <AntDatePicker DefaultValue="new DateTime(2015, 1, 1)" Picker="@AntDatePickerType.Date" Format="yyyy/MM/dd" /> <br />
+        <AntDatePicker DefaultValue="new DateTime(2015, 1, 1)" Picker="@AntDatePickerType.Date" Format="yyyy/MM" /> <br />
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>定制日期单元格</Title>
+    <Description>使用 <AntText code>DateRender</AntText> 可以自定义日期单元格的内容和样式。</Description>
+    <Demo>
+        <AntDatePicker Picker="@AntDatePickerType.Date" DateRender="CustomRender" /> <br />
+    </Demo>
+</DemoCard>
+
+@code{
+    private Func<DateTime, DateTime, RenderFragment> CustomRender = (currentViewDate, today) =>
+        {
+            if (currentViewDate.Day == 2)
+            {
+                return@<span>二</span>;
+}
+return @<span>@(currentViewDate.Day)</span>;
+};
+}
 <br />
 <DemoCard>
     <Title>无边框</Title>
@@ -39,4 +84,22 @@
         <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Quarter" /> <br />
         <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Year" /> <br />
     </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>API</Title>
+    <Description>
+        <li>已实现DatePicker组件：支持date、year、month、quarter、week模式</li>
+        <li>已实现：MonthPicker、RangePicker、WeekPicker、YearPicker、QuarterPicker（对应DatePicker的各种模式）</li>
+        <li>
+            已实现的通用属性：Disabled、Bordered、AutoFocus、Open、InputReadOnly、Placeholder、
+            PopupStyle、ClassName、DropdownClassName、Size、Format、DefaultValue、OnOpenChange、
+            OnPanelChange、OnChange、DateRender、Value、SuffixIcon
+        </li>
+        <li>
+            未实现的通用属性：AllowClear、DisabledDate、GetPopupContainer、Locale、
+            Mode、Style、DisabledDate
+        </li>
+        <li>未实现的功能：输入面板未使用Input输入框</li>
+    </Description>
 </DemoCard>
