@@ -1,0 +1,64 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDatePickerPanelBase
+@using System.Globalization;
+
+@{
+    var calendar = CultureInfo.InvariantCulture.Calendar;
+
+    DateTime monthFirstDayDate = new DateTime(DatePicker.CurrentShowDate.Year, DatePicker.CurrentShowDate.Month, 1);
+    DayOfWeek monthFirstDayOfWeek = calendar.GetDayOfWeek(monthFirstDayDate);
+
+    int diffDay = 1 - (int)monthFirstDayOfWeek;
+    DateTime startDate = monthFirstDayDate.AddDays(diffDay);
+}
+<AntDatePickerTemplate MaxRow="6"
+                       MaxCol="7"
+                       ViewStartDate="startDate"
+                       ShowFooter="@true"
+                       GetRowClass="GetRowClass"
+                       IsInView="date => DateHelper.IsSameMonth(date, DatePicker.CurrentShowDate)"
+                       IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
+                       IsSelected="date => !IsWeek && DateHelper.IsSameDate(date, DatePicker.Value)"
+                       GetColTitle='date => date.ToString("yyyy-MM-dd")'
+                       OnValueSelect="date => OnSelectDate(date)"
+                       GetNextColValue="date => date.AddDays(1)">
+    <RenderTableHeader>
+        <tr>
+            @if (IsWeek)
+            {
+                <th></th>
+            }
+            <th>一</th>
+            <th>二</th>
+            <th>三</th>
+            <th>四</th>
+            <th>五</th>
+            <th>六</th>
+            <th>日</th>
+        </tr>
+    </RenderTableHeader>
+    <RenderFisrtCol>
+        @if (IsWeek)
+        {
+            <td class="@(DatePicker.PrefixCls)-cell @(DatePicker.PrefixCls)-cell-weak">
+                @DateHelper.GetWeekOfYear(startDate)
+            </td>
+        }
+    </RenderFisrtCol>
+    <RenderColValue Context="currentColDate">
+        @currentColDate.Day
+    </RenderColValue>
+</AntDatePickerTemplate>
+
+@code {
+    [Parameter]
+    public bool IsWeek { get; set; } = false;
+
+    private string GetRowClass(DateTime viewDate)
+    {
+        string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, DatePicker.Value) ? $"{DatePicker.PrefixCls}-week-panel-row-selected" : "";
+        string rowClass = IsWeek ? $"{DatePicker.PrefixCls}-week-panel-row" : "";
+
+        return $"{rowClass} {selectedRowClass}";
+    }
+}

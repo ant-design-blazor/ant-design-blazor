@@ -1,0 +1,103 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDatePickerPanelBase
+
+<div class="@(DatePicker.PrefixCls)-@(DatePicker.Picker)-panel">
+    <AntDatePickerHeader SuperChangeDateInterval="SuperChangeDateInterval" ChangeDateInterval="ChangeDateInterval" />
+    <div class="@(DatePicker.PrefixCls)-body">
+        <table class="@(DatePicker.PrefixCls)-content">
+            <thead>
+                @RenderTableHeader
+            </thead>
+            <tbody>
+                @for (int row = 1; row <= MaxRow; row++)
+                {
+                    <tr class="@(GetRowClass?.Invoke(ViewStartDate))">
+                        @RenderFisrtCol
+
+                        @for (int col = 1; col <= MaxCol; col++)
+                        {
+                            var currentColDate = ViewStartDate;
+
+                            string inViewClass = IsInView(currentColDate) ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
+                            string todayClass = IsToday(currentColDate) ? $"{DatePicker.PrefixCls}-cell-today" : "";
+                            string selectedClass = IsSelected(currentColDate) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
+
+                            <td title="@GetColTitle?.Invoke(currentColDate)"
+                                class="@(DatePicker.PrefixCls)-cell @(inViewClass) @(todayClass) @selectedClass">
+                                <div class="@(DatePicker.PrefixCls)-cell-inner"
+                                     @onclick="e => OnValueSelect(currentColDate)">
+                                    @if (DatePicker.DateRender != null)
+                                    {
+                                        @(DatePicker.DateRender(currentColDate, DatePicker.CurrentDate))
+                                    }
+                                    else
+                                    {
+                                        @RenderColValue(currentColDate)
+                                    }
+                                </div>
+                            </td>
+
+                            ViewStartDate = @GetNextColValue(currentColDate);
+                        }
+
+                        @RenderLastCol
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (ShowFooter)
+{
+    <AntDatePickerFooter />
+}
+
+@code {
+    [Parameter]
+    public RenderFragment RenderTableHeader { get; set; }
+
+    [Parameter]
+    public RenderFragment RenderFisrtCol { get; set; }
+
+    [Parameter]
+    public RenderFragment<DateTime> RenderColValue { get; set; }
+
+    [Parameter]
+    public RenderFragment RenderLastCol { get; set; }
+
+    [Parameter]
+    public DateTime ViewStartDate { get; set; }
+
+    [Parameter]
+    public Func<DateTime, string> GetColTitle { get; set; }
+
+    [Parameter]
+    public Func<DateTime, string> GetRowClass { get; set; }
+
+    [Parameter]
+    public Func<DateTime, DateTime> GetNextColValue { get; set; }
+
+    [Parameter]
+    public Func<DateTime, bool> IsInView { get; set; }
+    [Parameter]
+    public Func<DateTime, bool> IsToday { get; set; }
+    [Parameter]
+    public Func<DateTime, bool> IsSelected { get; set; }
+
+    [Parameter]
+    public Action<DateTime> OnValueSelect { get; set; }
+
+    [Parameter]
+    public bool ShowFooter { get; set; } = false;
+
+    [Parameter]
+    public int MaxRow { get; set; } = 0;
+    [Parameter]
+    public int MaxCol { get; set; } = 0;
+
+    [Parameter]
+    public int SuperChangeDateInterval { get; set; } = 1;
+    [Parameter]
+    public int ChangeDateInterval { get; set; } = 1;
+}
