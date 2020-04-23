@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using Microsoft.JSInterop;
@@ -7,7 +7,7 @@ namespace AntBlazor.JsInterop
 {
     public class DomEventService
     {
-        private Dictionary<string, Func<object>> domEventListeners = new Dictionary<string, Func<object>>();
+        private Dictionary<string, Func<object>> _domEventListeners = new Dictionary<string, Func<object>>();
 
         private readonly IJSRuntime _jsRuntime;
 
@@ -18,7 +18,7 @@ namespace AntBlazor.JsInterop
 
         private void AddEventListenerInternal<T>(string dom, string eventName, Action<T> callback)
         {
-            if (!domEventListeners.ContainsKey($"{dom}-{eventName}"))
+            if (!_domEventListeners.ContainsKey($"{dom}-{eventName}"))
             {
                 _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
                 {
@@ -48,17 +48,17 @@ namespace AntBlazor.JsInterop
 
     public class Invoker<T>
     {
-        private Action<T> action;
+        private Action<T> _action;
 
         public Invoker(Action<T> invoker)
         {
-            this.action = invoker;
+            this._action = invoker;
         }
 
         [JSInvokable]
         public void Invoke(T param)
         {
-            action.Invoke(param);
+            _action.Invoke(param);
         }
     }
 }

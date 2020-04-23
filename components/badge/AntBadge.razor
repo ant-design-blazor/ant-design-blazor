@@ -1,38 +1,38 @@
-﻿@namespace AntBlazor
-@inherits AntBadgeBase
+@namespace AntBlazor
+@inherits AntDomComponentBase
 
-    <span class="@ClassMapper.Class" @attributes="Attributes" Id="@Id">
+<span class="@ClassMapper.Class" style="@Style" @ref="Ref" Id="@Id">
 
-        @if (ChildContent != null)
+    @if (ChildContent != null)
+    {
+        @ChildContent
+        @if ((Count == 0 && ShowZero) || Count > 0)
         {
-            @ChildContent
-            @if ((Count == 0 && ShowZero) || Count > 0)
-            {
-                <sup class="@($"ant-badge-count {@class}")" style="@Style" title="@DisplayCount">@DisplayCount</sup>
-            }
-            @if (Dot && Count != 0 || (Dot && ShowZero))
-            {
-                <sup class="ant-scroll-number ant-badge-dot" style="@Style"></sup>
-            }
+            <sup class="@($"ant-badge-count {Class}")" style="@Style" title="@DisplayCount">@DisplayCount</sup>
         }
-        else
+        @if (Dot && Count != 0 || (Dot && ShowZero))
         {
-            @if (!string.IsNullOrEmpty(Status))
-            {
-                <span class="@($"ant-badge-status-dot ant-badge-status-{Status}")"></span>
-            }
-            @if (!string.IsNullOrEmpty(Color))
-            {
-                <span class="@($"ant-badge-status-dot ant-badge-status-{Color}")"></span>
-            }
-            @if (!string.IsNullOrEmpty(Text))
-            {
-                <span class="ant-badge-status-text">@Text</span>
-            }
-            @if ((Count == 0 && ShowZero) || Count > 0)
-            {
-                <sup class="@($"ant-scroll-number ant-badge-count ant-badge-multiple-words {@class}")" style="@Style" title="@DisplayCount">@DisplayCount</sup>
-            }
-
+            <sup class="ant-scroll-number ant-badge-dot" style="@Style"></sup>
         }
-    </span>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(Status))
+        {
+            <span class="@($"ant-badge-status-dot ant-badge-status-{Status}")"></span>
+        }
+        @if (!string.IsNullOrEmpty(Color))
+        {
+            <span class="@($"ant-badge-status-dot ant-badge-status-{Color}")"></span>
+        }
+        @if (!string.IsNullOrEmpty(Text))
+        {
+            <span class="ant-badge-status-text">@Text</span>
+        }
+        @if ((Count == 0 && ShowZero) || Count > 0)
+        {
+            <sup class="@($"ant-scroll-number ant-badge-count ant-badge-multiple-words {Class}")" style="@Style" title="@DisplayCount">@DisplayCount</sup>
+        }
+
+    }
+</span>

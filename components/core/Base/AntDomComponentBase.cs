@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
     public abstract class AntDomComponentBase : AntComponentBase
     {
         [Parameter]
-        public string Id { get; set; } = IdGeneratorHelper.Generate("antBlazor_id_");
+        public string Id { get; set; } = IdGeneratorHelper.Generate("ant-blazor-");
 
-        [Parameter(CaptureUnmatchedValues = true)]
-        public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
+        //[Parameter(CaptureUnmatchedValues = true)]
+        //public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
 
         private ElementReference _ref;
 
@@ -35,15 +33,15 @@ namespace AntBlazor
         protected AntDomComponentBase()
         {
             ClassMapper
-                .Get(() => this.@class)
+                .Get(() => this.Class)
                 .Get(() => this.AntTheme?.GetClass());
         }
 
         /// <summary>
-        /// Specifies one or more classnames for an DOM element.
+        /// Specifies one or more class names for an DOM element.
         /// </summary>
         [Parameter]
-        public string @class
+        public string Class
         {
             get => _class;
             set

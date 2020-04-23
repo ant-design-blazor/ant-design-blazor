@@ -7,7 +7,8 @@ namespace AntBlazor
         private const string PrefixCls = "ant-tabs-tab";
         private AntTabs _parent;
 
-        internal ClassMapper ClassMapper = new ClassMapper();
+        internal ClassMapper _classMapper = new ClassMapper();
+
         internal bool IsActive { get; set; }
 
         [CascadingParameter]
@@ -58,7 +59,7 @@ namespace AntBlazor
         {
             base.OnParametersSet();
 
-            ClassMapper.Clear().
+            _classMapper.Clear().
                 Add(PrefixCls)
                 .If($"{PrefixCls}-active", () => IsActive)
                 .If($"{PrefixCls}-disabled", () => Disabled);

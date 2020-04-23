@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
@@ -10,7 +11,10 @@ namespace AntBlazor
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public string size { get; set; }
+        public string Size { get; set; }
+
+        [Parameter(CaptureUnmatchedValues = true)]
+        public Dictionary<string, object> Attributes { get; set; }
 
         protected override void OnInitialized()
         {
@@ -18,8 +22,8 @@ namespace AntBlazor
 
             ClassMapper.Clear()
                 .Add(PrefixCls)
-                .If($"{PrefixCls}-lg", () => size == AntInputSize.Large)
-                .If($"{PrefixCls}-sm", () => size == AntInputSize.Small)
+                .If($"{PrefixCls}-lg", () => Size == AntInputSize.Large)
+                .If($"{PrefixCls}-sm", () => Size == AntInputSize.Small)
                 .If($"{PrefixCls}-compact", () => Attributes != null && Attributes.ContainsKey("compact"));
         }
     }

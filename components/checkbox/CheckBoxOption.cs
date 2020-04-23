@@ -7,10 +7,12 @@ namespace AntBlazor
 {
     public class CheckBoxOption
     {
-        public string label { get; set; }
+        public string Label { get; set; }
 
-        public string value { get; set; }
-        public bool @checked { get; set; }
-        public bool disabled { get; set; }
+        public string Value { get; set; }
+
+        public bool Checked { get; set; }
+
+        public bool Disabled { get; set; }
     }
 }

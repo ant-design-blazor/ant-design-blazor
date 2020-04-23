@@ -109,7 +109,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
   <AntButton type="primary">Hello World!</AntButton>
   ```
 
-## 🔨 Local Development
+## ⌨️ Local Development
 
 - Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 or later.
 - Install Node.js (only for building style files and interoperable TypeScript files)
@@ -141,6 +141,12 @@ Check out this [issue](https://github.com/ElderJames/ant-design-blazor/issues/21
 
 If you would like to contribute, feel free to create a [Pull Request](https://github.com/ElderJames/ant-design-blazor/pulls), or give us [Bug Report](https://github.com/ElderJames/ant-design-blazor/issues/new).
 
+### Contributors
+
+This project exists thanks to all the people who contribute.
+
+<a href=" "><img src="https://opencollective.com/ant-design-blazor/contributors.svg?width=890&button=false"/></a>
+
 ## 💕 Donation
 
 This project is an MIT-licensed open source project. In order to achieve better and sustainable development of the project, we expect to gain more backers. We will use the proceeds for community operations and promotion. You can support us in any of the following ways:
@@ -162,7 +168,6 @@ If you encounter any problems in the process, feel free to ask for help via foll
   <summary>Scan QR Code with DingTalk</summary>
   <img src="./docs/assets/dingtalk.jpg" width="300">
 </details>
-
 
 ## ☀️ License
 

@@ -1,8 +1,7 @@
 ﻿@namespace AntBlazor
-@using System
-@inherits AntEmptyBase
+@inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" @ref="@Ref" style="@Style" @attributes="Attributes" Id="@Id">
+<div class="@ClassMapper.Class" @ref="@Ref" style="@Style" id="@Id">
     <div class="@(PrefixCls)-image" style="@ImageStyle">
         @if (Image.IsT0 && !string.IsNullOrEmpty(Image.AsT0))
         {

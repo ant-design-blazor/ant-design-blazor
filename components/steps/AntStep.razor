@@ -1,9 +1,9 @@
-﻿@namespace AntBlazor
-@inherits AntStepBase
+@namespace AntBlazor
+@inherits AntDomComponentBase
 
 
-    <div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
-        <div class="ant-steps-item-container" @onclick="@OnClick" tabindex="@GetTabIndex()" @attributes="@ContainerAttributes">
+    <div class="@ClassMapper.Class" style="@Style"id="@Id">
+        <div class="ant-steps-item-container" @onclick="@OnClick" tabindex="@GetTabIndex()" @attributes="@_containerAttributes">
             @if (!Last)
             {
                 <div class="ant-steps-item-tail"></div>
