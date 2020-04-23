@@ -145,7 +145,7 @@ If you would like to contribute, feel free to create a [Pull Request](https://gi
 
 This project exists thanks to all the people who contribute.
 
-<a href=" "><img src="https://opencollective.com/ant-design-blazor/contributors.svg?width=890&button=false"/></a>
+<a href="https://github.com/ElderJames/ant-design-blazor/graphs/contributors"><img src="https://opencollective.com/ant-design-blazor/contributors.svg?width=890&button=false"/></a>
 
 ## 💕 Donation
 
