@@ -51,15 +51,7 @@
 
 @code {
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
-
-    [Parameter]
     public int SuperChangeDateInterval { get; set; } = 1;
     [Parameter]
     public int ChangeDateInterval { get; set; } = 1;
-
-    private void ShowYearPanel(MouseEventArgs e)
-    {
-        PopUpPicker(AntDatePickerType.Year);
-    }
 }

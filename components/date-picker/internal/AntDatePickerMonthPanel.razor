@@ -1,0 +1,27 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDatePickerPanelBase
+@using System.Globalization;
+
+@{
+    var calendar = CultureInfo.InvariantCulture.Calendar;
+
+    DateTime startDate = new DateTime(DatePicker.CurrentShowDate.Year, 1, 1);
+
+    const int MAX_ROW = 4;
+    const int MAX_COL = 3;
+
+    string inViewClass = $"{DatePicker.PrefixCls}-cell-in-view";
+}
+<AntDatePickerTemplate MaxRow="MAX_ROW"
+                       MaxCol="MAX_COL"
+                       ViewStartDate="startDate"
+                       IsInView="date => true"
+                       IsToday="date => DateHelper.IsSameMonth(date, DatePicker.CurrentDate)"
+                       IsSelected="date => DateHelper.IsSameMonth(date, DatePicker.Value)"
+                       GetColTitle='date => date.ToString("yyyy")'
+                       OnValueSelect="date => OnSelectMonth(date)"
+                       GetNextColValue="date => date.AddMonths(1)">
+    <RenderColValue Context="currentColDate">
+        @(currentColDate.Month)月
+    </RenderColValue>
+</AntDatePickerTemplate>

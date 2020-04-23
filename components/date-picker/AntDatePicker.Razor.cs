@@ -35,6 +35,7 @@ namespace AntBlazor
                         AntDatePickerType.Month => AntDatePickerPlaceholder.Month,
                         AntDatePickerType.Quarter => AntDatePickerPlaceholder.Quarter,
                         AntDatePickerType.Year => AntDatePickerPlaceholder.Year,
+                        _ => "",
                     };
                 }
             } 
@@ -63,7 +64,7 @@ namespace AntBlazor
         [Parameter]
         public string Size { get; set; } = AntDatePickerSize.Middle;
         [Parameter]
-        public string Format { get; set; } = "yyyy-MM-dd";
+        public string Format { get; set; }
         [Parameter]
         public DateTime? DefaultValue { get; set; } = null;
         [Parameter]
@@ -74,6 +75,8 @@ namespace AntBlazor
         public Action<DateTime, string> OnPanelChange { get; set; }
         [Parameter]
         public Action<DateTime, string> OnChange { get; set; }
+        [Parameter]
+        public Action<DateTime, string> DisabledDate { get; set; } = null;
         [Parameter]
         public Func<DateTime, DateTime, RenderFragment> DateRender { get; set; }
         [Parameter]
@@ -139,17 +142,38 @@ namespace AntBlazor
 
         protected string GetValue()
         {
+            DateTime value;
+
             if (hadSelectValue)
             {
-                return Value.ToString(Format);
+                value = Value;
             }
-
-            if (DefaultValue != null)
+            else if (DefaultValue != null)
             {
-                return ((DateTime)DefaultValue).ToString(Format);
+                value = (DateTime)DefaultValue;
+            }
+            else
+            {
+                return "";
             }
 
-            return "";
+
+            if (!string.IsNullOrEmpty(Format))
+            {
+                return value.ToString(Format);
+            }
+
+            string formatValue = Picker switch
+            {
+                AntDatePickerType.Date => value.ToString("yyyy-MM-dd"),
+                AntDatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}周",
+                AntDatePickerType.Month => value.ToString("yyyy-MM"),
+                AntDatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
+                AntDatePickerType.Year => value.ToString("yyyy"),
+                _ => value.ToString("yyyy-MM-dd"),
+            };
+
+            return formatValue;
         }
 
         protected void OpenOrClose()
