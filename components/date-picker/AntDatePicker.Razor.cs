@@ -18,17 +18,17 @@ namespace AntBlazor
             } 
             
             set {
-                prePicker = _picker;
+                _prePicker = _picker;
 
                 _picker = value;
 
-                if(initPicker == null)
+                if(_initPicker == null)
                 {
                     // note first picker type
-                    initPicker = value;
+                    _initPicker = value;
 
                     // set default placeholder
-                    Placeholder = initPicker switch
+                    Placeholder = _initPicker switch
                     {
                         AntDatePickerType.Date => AntDatePickerPlaceholder.Date,
                         AntDatePickerType.Week => AntDatePickerPlaceholder.Week,
@@ -85,10 +85,10 @@ namespace AntBlazor
         public DateTime CurrentDate { get; private set; } = DateTime.Now;
         public DateTime CurrentShowDate { get; private set; } = DateTime.Now;
 
-        private string initPicker = null;
-        private string prePicker = null;
-        private bool hadSelectValue = false;
-        private bool isClose = true;
+        private string _initPicker = null;
+        private string _prePicker = null;
+        private bool _hadSelectValue = false;
+        private bool _isClose = true;
 
         protected override void OnInitialized()
         {
@@ -120,31 +120,31 @@ namespace AntBlazor
         protected void OnSelect(DateTime date)
         {
             // InitPicker is the finally value
-            if (Picker == initPicker)
+            if (Picker == _initPicker)
             {
                 Value = date;
 
                 OnChange?.Invoke(date, date.ToString(Format));
 
-                hadSelectValue = true;
+                _hadSelectValue = true;
 
-                isClose = true;
+                _isClose = true;
 
                 StateHasChanged();
             }
             else
             {
-                Picker = prePicker;
+                Picker = _prePicker;
 
                 ChangeShowDate(date);
             }
         }
 
-        protected string GetValue()
+        protected string GetInputValue()
         {
             DateTime value;
 
-            if (hadSelectValue)
+            if (_hadSelectValue)
             {
                 value = Value;
             }
@@ -160,9 +160,11 @@ namespace AntBlazor
 
             if (!string.IsNullOrEmpty(Format))
             {
+                // TODO：Locale
                 return value.ToString(Format);
             }
 
+            // TODO：Locale
             string formatValue = Picker switch
             {
                 AntDatePickerType.Date => value.ToString("yyyy-MM-dd"),
@@ -178,9 +180,9 @@ namespace AntBlazor
 
         protected void OpenOrClose()
         {
-            isClose = !isClose;
+            _isClose = !_isClose;
 
-            OnOpenChange?.Invoke(!isClose);
+            OnOpenChange?.Invoke(!_isClose);
         }
 
         public void ChangeShowDate(DateTime date)

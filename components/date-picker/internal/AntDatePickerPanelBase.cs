@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Microsoft.AspNetCore.Components;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 
 namespace AntBlazor
 {
@@ -13,8 +14,6 @@ namespace AntBlazor
 
         [Parameter]
         public EventCallback<DateTime> OnSelect { get; set; }
-
-        protected Calendar calendar = CultureInfo.InvariantCulture.Calendar;
 
         protected void OnSelectDate(DateTime date)
         {
