@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Routing;
@@ -38,6 +39,9 @@ namespace AntBlazor
         /// </summary>
         [Parameter]
         public NavLinkMatch Match { get; set; }
+
+        [Parameter(CaptureUnmatchedValues = true)]
+        public Dictionary<string, object> Attributes { get; set; }
 
         [CascadingParameter]
         public AntMenuItem MenuItem { get; set; }

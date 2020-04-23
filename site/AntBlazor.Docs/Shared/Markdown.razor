@@ -8,9 +8,9 @@
 
 @code {
 
-    [Parameter] public string docUrl { get; set; }
+    [Parameter] public string DocUrl { get; set; }
 
-    [Parameter] public string markdown { get; set; }
+    [Parameter] public string MarkdownText { get; set; }
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
@@ -19,22 +19,22 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        if (!string.IsNullOrEmpty(docUrl))
+        if (!string.IsNullOrEmpty(DocUrl))
         {
-            markdown = await this.HttpClient.GetStringAsync(docUrl);
+            MarkdownText = await this.HttpClient.GetStringAsync(DocUrl);
         }
 
         if (ChildContent != null)
         {
-            markdown = await HtmlRenderService.RenderAsync(ChildContent);
-            markdown = WebUtility.HtmlDecode(markdown);
+            MarkdownText = await HtmlRenderService.RenderAsync(ChildContent);
+            MarkdownText = WebUtility.HtmlDecode(MarkdownText);
         }
 
-        if (!string.IsNullOrEmpty(markdown))
+        if (!string.IsNullOrEmpty(MarkdownText))
         {
-            markdown = markdown.Trim(' ', '\r', '\n');
+            MarkdownText = MarkdownText.Trim(' ', '\r', '\n');
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-            html = Markdig.Markdown.ToHtml(markdown, pipeline);
+            html = Markdig.Markdown.ToHtml(MarkdownText, pipeline);
         }
         await base.OnParametersSetAsync();
     }

@@ -1,30 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntBlazor
 {
-    public class AntBreadcrumbBase : AntDomComponentBase
+    public partial class AntBreadcrumb : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        [Parameter] public bool autoGenerate { get; set; } = false;
+        [Parameter]
+        public bool AutoGenerate { get; set; } = false;
 
-        [Parameter] public string separator { get; set; } = "/";
+        [Parameter]
+        public string Separator { get; set; } = "/";
 
-        [Parameter] public string routeLabel { get; set; } = "breadcrumb";
+        [Parameter]
+        public string RouteLabel { get; set; } = "breadcrumb";
 
         [Inject]
-        public NavigationManager navigationManager { get; set; }
+        public NavigationManager NavigationManager { get; set; }
 
         protected BreadcrumbOption[] _breadcrumbs = { };
 
-        protected void navigate(string url, MouseEventArgs e)
+        protected void Navigate(string url, MouseEventArgs e)
         {
-            navigationManager.NavigateTo(url);
+            NavigationManager.NavigateTo(url);
         }
 
         protected override void OnInitialized()
@@ -34,7 +35,7 @@ namespace AntBlazor
             base.OnInitialized();
         }
 
-        private void registerRouterChange()
+        private void RegisterRouterChange()
         {
         }
     }

@@ -1,7 +1,7 @@
 ﻿
-<AntTitle level="1">Input</AntTitle>
+<AntTitle Level="1">Input</AntTitle>
 <AntText>Input用于输入文字123</AntText>
-<AntTitle level="2">何时使用</AntTitle>
+<AntTitle Level="2">何时使用</AntTitle>
 <AntParagraph>xxxxxxx。</AntParagraph>
 <AntParagraph>在 Ant Design 中，xxxxxxx。</AntParagraph>
 <br />
@@ -11,8 +11,8 @@
     <Title>Basic usage</Title>
     <Description>Basic usage example.</Description>
     <Demo>
-        <AntInput defaultValue="test onchange" onChange="(e) => TestOnChnage(e)"></AntInput>
-        <AntInput defaultValue="test onpressenter" onPressEnter="(e) => TestOnEnter(e)"></AntInput><input onkeypress="" onchange="" oninput="" />
+        <AntInput DefaultValue="test onchange" OnChange="(e) => TestOnChnage(e)"></AntInput>
+        <AntInput DefaultValue="test onpressenter" OnPressEnter="(e) => TestOnEnter(e)"></AntInput><input onkeypress="" onchange="" oninput="" />
     </Demo>
 </DemoCard>
 @code
@@ -32,13 +32,13 @@
     <Title>Basic usage</Title>
     <Description>Basic usage example.</Description>
     <Demo>
-        <AntButton onclick="(e)=>Click(e)">Change addOnAfter</AntButton>
-        <AntInput addOnAfter="@addOn">
+        <AntButton Onclick="(e)=>Click(e)">Change addOnAfter</AntButton>
+        <AntInput AddOnAfter="@addOn">
             123
         </AntInput>
-        <AntInput placeholder="basic usage"></AntInput>
-        <AntInput placeholder="allwoClear" allowClear></AntInput>
-        <AntInput placeholder="disabled" disabled></AntInput>
+        <AntInput Placeholder="basic usage"></AntInput>
+        <AntInput Placeholder="allwoClear" AllowClear></AntInput>
+        <AntInput Placeholder="disabled" Disabled></AntInput>
     </Demo>
 </DemoCard>
 @code{
@@ -60,23 +60,23 @@
             }
         </style>
         <span class="example-input">
-            <AntInput placeholder="large size" defaultValue="123" size="@AntInputSize.Large">
-                <prefix>
-                    <AntIcon type="user" />
-                </prefix>
+            <AntInput Placeholder="large size" DefaultValue="123" Size="@AntInputSize.Large">
+                <Prefix>
+                    <AntIcon Type="user" />
+                </Prefix>
             </AntInput>
-            <AntInput placeholder="default size">
-                <prefix>
-                    <AntIcon type="user" />
-                </prefix>
+            <AntInput Placeholder="default size">
+                <Prefix>
+                    <AntIcon Type="user" />
+                </Prefix>
             </AntInput>
-            <AntInput placeholder="small size" size="@AntInputSize.Small">
-                <prefix>
-                    <AntIcon type="user" />
-                </prefix>
+            <AntInput Placeholder="small size" Size="@AntInputSize.Small">
+                <Prefix>
+                    <AntIcon Type="user" />
+                </Prefix>
             </AntInput>
             @*<AntInputPassword @bind="password" placeholder="large Password" size="@AntInputSize.Large" onPressEnter="(e)=>Submit(e)" />*@
-            <AntInputPassword @bind-Value="@_password" placeholder="large Password" size="@AntInputSize.Large" onPressEnter="(e)=>Submit(e)" />
+            <AntInputPassword @bind-Value="@_password" Placeholder="large Password" Size="@AntInputSize.Large" OnPressEnter="(e)=>Submit(e)" />
         </span>
     </Demo>
 </DemoCard>
@@ -93,9 +93,9 @@
     <Description>For multi-line input.</Description>
     <Demo>
         <div>
-            <AntTextArea defaultValue="hello world!" AutoSize="true"></AntTextArea>
+            <AntTextArea DefaultValue="hello world!" AutoSize="true"></AntTextArea>
             <AntTextArea MinRows="2" MaxRows="6"></AntTextArea>
-            <AntTextArea defaultValue="onResize" MinRows="3" MaxRows="5"></AntTextArea>
+            <AntTextArea DefaultValue="onResize" MinRows="3" MaxRows="5"></AntTextArea>
         </div>
     </Demo>
 </DemoCard>
@@ -105,15 +105,15 @@
     <Description>Using pre & post tabs example.</Description>
     <Demo>
         <div>
-            <AntInput defaultValue="mysite">
-                <addOnBefore>https://</addOnBefore>
-                <addOnAfter>.com</addOnAfter>
+            <AntInput DefaultValue="mysite">
+                <AddOnBefore>https://</AddOnBefore>
+                <AddOnAfter>.com</AddOnAfter>
             </AntInput>
-            <AntInput defaultValue="mysite">
-                <addOnAfter><AntIcon type="setting"></AntIcon></addOnAfter>
+            <AntInput DefaultValue="mysite">
+                <AddOnAfter><AntIcon type="setting"></AntIcon></AddOnAfter>
             </AntInput>
-            <AntInput defaultValue="mysite">
-                <addOnBefore>https://</addOnBefore>
+            <AntInput DefaultValue="mysite">
+                <AddOnBefore>https://</AddOnBefore>
             </AntInput>
         </div>
     </Demo>
@@ -124,9 +124,9 @@
     <Description>Example of creating a search box by grouping a standard input with a search button.</Description>
     <Demo>
         <div>
-            <AntSearch placeholder="input search text" size="@AntInputSize.Small" />
-            <AntSearch placeholder="input search text" onChange="(e)=>Handle(e)" enterButton />
-            <AntSearch placeholder="input search text" size="@AntInputSize.Large" enterButton="Search" />
+            <AntSearch Placeholder="input search text" Size="@AntInputSize.Small" />
+            <AntSearch Placeholder="input search text" OnChange="(e)=>Handle(e)" EnterButton="true" />
+            <AntSearch Placeholder="input search text" Size="@AntInputSize.Large" EnterButton="@("Search")" />
         </div>
     </Demo>
 </DemoCard>
@@ -146,19 +146,19 @@
         Note: You don't need <code>Col</code> to control the width in the <code>compact</code> mode.
     </Description>
     <Demo>
-        <AntInputGroup size="@AntInputSize.Large">
-            <AntInput defaultValue="0571" />
-            <AntInput defaultValue="26888888" />
+        <AntInputGroup Size="@AntInputSize.Large">
+            <AntInput DefaultValue="0571" />
+            <AntInput DefaultValue="26888888" />
         </AntInputGroup>
         <br />
-        <AntInputGroup compact>
-            <AntInput defaultValue="0571" Style="width: 20%;" />
-            <AntInput defaultValue="26888888" Style="width: 30%;" />
+        <AntInputGroup Compact>
+            <AntInput DefaultValue="0571" Style="width: 20%;" />
+            <AntInput DefaultValue="26888888" Style="width: 30%;" />
         </AntInputGroup>
         <br />
-        <AntInputGroup compact>
-            <AntInput defaultValue="0571" Style="width: 20%;" />
-            <AntSearch defaultValue="26888888" Style="width: 30%;" />
+        <AntInputGroup Compact>
+            <AntInput DefaultValue="0571" Style="width: 20%;" />
+            <AntSearch DefaultValue="26888888" Style="width: 30%;" />
         </AntInputGroup>
     </Demo>
 </DemoCard>

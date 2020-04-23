@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using OneOf;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AntBlazor
 {
@@ -10,13 +7,16 @@ namespace AntBlazor
     {
         [Parameter] 
         public string PrefixCls { get; set; } = "ant-empty";
+
         /// <summary>
         /// "ltr"|"rtl"
         /// </summary>
         [Parameter] 
         public string Direction { get; set; } = "ltr";
+
         [Parameter] 
         public string ImageStyle { get; set; }
+
         [Parameter] 
         public RenderFragment ChildContent { get; set; }
 
@@ -38,15 +38,11 @@ namespace AntBlazor
         protected override void OnInitialized()
         {
             this.SetClass();
-
-            base.OnInitialized();
         }
 
         protected override void OnParametersSet()
         {
             this.SetClass();
-
-            base.OnParametersSet();
         }
     }
 }

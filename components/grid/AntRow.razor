@@ -1,8 +1,8 @@
-﻿@namespace AntBlazor
-@inherits AntRowBase
+@namespace AntBlazor
+@inherits AntDomComponentBase
 
 <CascadingValue Value="this">
-    <div class="@ClassMapper.Class" style="@gutterStyle @Style" @attributes="Attributes" Id="@Id">
+    <div class="@ClassMapper.Class" style="@GutterStyle @Style" id="@Id">
         @ChildContent
     </div>
 </CascadingValue>

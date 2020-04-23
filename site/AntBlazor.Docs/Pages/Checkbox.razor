@@ -1,6 +1,6 @@
-﻿<AntTitle level="1">Checkbox</AntTitle>
+﻿<AntTitle Level="1">Checkbox</AntTitle>
 <AntText>Checkbox component.</AntText>
-<AntTitle level="2">When To Use</AntTitle>
+<AntTitle Level="2">When To Use</AntTitle>
 <AntParagraph>
     <ul>
         <li>Used for selecting multiple values from several options.</li>
@@ -24,13 +24,13 @@
     <Description>Communicated with other components.</Description>
     <Demo>
         <div style="margin-bottom: 20px">
-            <AntCheckbox checked="@isChecked" disabled="@disabled" checkedChange="@ToggleChecked">
+            <AntCheckbox Checked="@isChecked" Disabled="@disabled" CheckedChange="@ToggleChecked">
                 @($"{(isChecked ? "Check" : "Uncheck")}-{(disabled ? "Disable" : "Enable")}")
             </AntCheckbox>
         </div>
         <br />
-        <AntButton type="@AntButtonType.Primary" size="small" @onclick="@ToggleChecked">@(isChecked ? "Check" : "Uncheck")</AntButton>
-        <AntButton type="@AntButtonType.Primary" size="small" @onclick="@ToggleDisable">@(disabled ? "Disable" : "Enable")</AntButton>
+        <AntButton Type="@AntButtonType.Primary" Size="small" @onclick="@ToggleChecked">@(isChecked ? "Check" : "Uncheck")</AntButton>
+        <AntButton Type="@AntButtonType.Primary" Size="small" @onclick="@ToggleDisable">@(disabled ? "Disable" : "Enable")</AntButton>
     </Demo>
 </DemoCard>
 @code{
@@ -50,26 +50,26 @@
 <DemoCard>
     <Title>Check all</Title>
     <Description>
-        <AntParagraph>The <AntText code>indeterminate</AntText> property can help you to achieve a 'check all' effect.</AntParagraph>
+        <AntParagraph>The <AntText Code>indeterminate</AntText> property can help you to achieve a 'check all' effect.</AntParagraph>
     </Description>
     <Demo>
-        <AntCheckbox indeterminate="@indeterminate" checked="@checkAll" checkedChange="@CheckAllChanged">Check all</AntCheckbox>
+        <AntCheckbox Indeterminate="@indeterminate" Checked="@checkAll" CheckedChange="@CheckAllChanged">Check all</AntCheckbox>
         <AntDivider />
-        <AntCheckboxGroup options="@ckeckAllOptions" OnChange="@OnChanged"></AntCheckboxGroup>
+        <AntCheckboxGroup Options="@ckeckAllOptions" ValueChanged="@OnChanged"></AntCheckboxGroup>
     </Demo>
 </DemoCard>
 @code{
 
     static CheckBoxOption[] ckeckAllOptions = new CheckBoxOption[]{
-        new CheckBoxOption{ label="Apple",value="Apple" ,@checked=true},
-        new CheckBoxOption{ label="Pear", value="Pear" },
-        new CheckBoxOption{ label="Orange", value="Orange",@checked=true },
+        new CheckBoxOption{ Label="Apple",Value="Apple" ,Checked=true},
+        new CheckBoxOption{ Label="Pear", Value="Pear" },
+        new CheckBoxOption{ Label="Orange", Value="Orange",Checked=true },
     };
 
     void CheckAllChanged()
     {
         bool allChecked = checkAll;
-        ckeckAllOptions.ForEach(o => o.@checked = !allChecked);
+        ckeckAllOptions.ForEach(o => o.Checked = !allChecked);
     }
 
     void OnChanged()
@@ -77,9 +77,9 @@
 
     }
 
-    bool indeterminate => ckeckAllOptions.Count(o => o.@checked) > 0 && ckeckAllOptions.Count(o => o.@checked) < ckeckAllOptions.Count();
+    bool indeterminate => ckeckAllOptions.Count(o => o.Checked) > 0 && ckeckAllOptions.Count(o => o.Checked) < ckeckAllOptions.Count();
 
-    bool checkAll => ckeckAllOptions.All(o => o.@checked);
+    bool checkAll => ckeckAllOptions.All(o => o.Checked);
 
 }
 <br />
@@ -89,9 +89,9 @@
     <Description>Disabled checkbox.</Description>
     <Demo>
         <div>
-            <AntCheckbox disabled="true"></AntCheckbox>
+            <AntCheckbox Disabled></AntCheckbox>
             <br />
-            <AntCheckbox checked="true" disabled="true"></AntCheckbox>
+            <AntCheckbox Checked Disabled></AntCheckbox>
         </div>
     </Demo>
 </DemoCard>
@@ -101,35 +101,35 @@
     <Title>Checkbox Group</Title>
     <Description>Generate a group of checkboxes from an array.</Description>
     <Demo>
-        <AntCheckboxGroup options="plainOptions" @bind-Value="@checkValue1"></AntCheckboxGroup>
+        <AntCheckboxGroup Options="plainOptions" @bind-Value="@checkValue1"></AntCheckboxGroup>
         <br />
-        <AntCheckboxGroup options="options"  @bind-Value="@checkValue2"></AntCheckboxGroup>
+        <AntCheckboxGroup Options="options" @bind-Value="@checkValue2"></AntCheckboxGroup>
         <br />
-        <AntCheckboxGroup options="optionsWithDisabled" disabled="true"  @bind-Value="@checkValue1"></AntCheckboxGroup>
+        <AntCheckboxGroup Options="optionsWithDisabled" Disabled @bind-Value="@checkValue1"></AntCheckboxGroup>
     </Demo>
 </DemoCard>
 @code{
 
     CheckBoxOption[] plainOptions = new CheckBoxOption[]{
-        new CheckBoxOption{ label="Apple",value="Apple" },
-        new CheckBoxOption{ label="Pear", value="Pear"},
-        new CheckBoxOption{ label="Orange", value="Orange" },
+        new CheckBoxOption{ Label="Apple",Value="Apple" },
+        new CheckBoxOption{Label="Pear", Value="Pear"},
+        new CheckBoxOption{ Label="Orange", Value="Orange" },
     };
     CheckBoxOption[] options = new CheckBoxOption[]{
-        new CheckBoxOption{ label="Apple",value="Apple" },
-        new CheckBoxOption{ label="Pear", value="Pear"},
-        new CheckBoxOption{ label="Orange", value="Orange" },
+        new CheckBoxOption{ Label="Apple",Value="Apple" },
+        new CheckBoxOption{ Label="Pear", Value="Pear"},
+        new CheckBoxOption{ Label="Orange", Value="Orange" },
     };
 
     CheckBoxOption[] optionsWithDisabled = new CheckBoxOption[] {
-        new CheckBoxOption{ label ="Apple", value="Apple" },
-        new CheckBoxOption{ label = "Pear", value="Pear" },
-        new CheckBoxOption{  label = "Orange",value= "Orange", disabled = false },
+        new CheckBoxOption{ Label ="Apple", Value="Apple" },
+        new CheckBoxOption{ Label = "Pear", Value="Pear" },
+        new CheckBoxOption{  Label = "Orange",Value= "Orange", Disabled = false },
 
     };
 
-    string[] checkValue1 = {"Apple"};
-    string[] checkValue2 = {"Pear"};
+    string[] checkValue1 = { "Apple" };
+    string[] checkValue2 = { "Pear" };
 }
 <br />
 
@@ -139,19 +139,19 @@
     <Demo>
         <AntCheckboxGroup>
             <AntRow>
-                <AntCol span="8">
+                <AntCol Span="8">
                     <AntCheckbox>A</AntCheckbox>
                 </AntCol>
-                <AntCol span="8">
+                <AntCol Span="8">
                     <AntCheckbox>B</AntCheckbox>
                 </AntCol>
-                <AntCol span="8">
+                <AntCol Span="8">
                     <AntCheckbox>C</AntCheckbox>
                 </AntCol>
-                <AntCol span="8">
+                <AntCol Span="8">
                     <AntCheckbox>D</AntCheckbox>
                 </AntCol>
-                <AntCol span="8">
+                <AntCol Span="8">
                     <AntCheckbox>E</AntCheckbox>
                 </AntCol>
             </AntRow>

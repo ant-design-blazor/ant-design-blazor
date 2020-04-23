@@ -1,9 +1,9 @@
-﻿@namespace AntBlazor
+@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<li class="@ClassMapper.Class" @ref="Ref" style="@Style" @attributes="Attributes" Id="@Id">
+<li class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
     <div class="@titleClassMapper.Class">
-        @title
+        @Title
     </div>
     @ChildContent
 </li>
@@ -14,7 +14,7 @@
     public RenderFragment ChildContent { get; set; }
 
     [Parameter]
-    public string title { get; set; }
+    public string Title { get; set; }
 
 
     [CascadingParameter]
@@ -26,13 +26,13 @@
     {
         base.OnInitialized();
         this.titleClassMapper
-            .If("ant-dropdown-menu-item-group-title", () => !Menu.isInDropDown)
-            .If("ant-menu-item-group-title", () => !Menu.isInDropDown)
+            .If("ant-dropdown-menu-item-group-title", () => !Menu.IsInDropDown)
+            .If("ant-menu-item-group-title", () => !Menu.IsInDropDown)
             ;
 
         this.ClassMapper
-            .If("ant-dropdown-menu-item-group", () => Menu.isInDropDown)
-            .If("ant-menu-item-group", () => !Menu.isInDropDown);
+            .If("ant-dropdown-menu-item-group", () => Menu.IsInDropDown)
+            .If("ant-menu-item-group", () => !Menu.IsInDropDown);
     }
 
 }
