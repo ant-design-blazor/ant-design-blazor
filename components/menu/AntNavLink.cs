@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntBlazor
 {
-    public class AntNavLink : AntDomComponentBase, IDisposable
+    public class AntNavLink : AntDomComponentBase
     {
         private const string DefaultActiveClass = "active";
 
         private bool _isActive;
-        public string _hrefAbsolute;
+        private string _hrefAbsolute;
         private string _class;
 
         internal string Href => _hrefAbsolute;
@@ -66,10 +67,10 @@ namespace AntBlazor
         protected override void OnParametersSet()
         {
             // Update computed state
-            var href = (string)null;
-            if (Attributes != null && Attributes.TryGetValue("href", out var obj))
+            string href = (string)null;
+            if (Attributes != null && Attributes.TryGetValue("href", out object obj))
             {
-                href = Convert.ToString(obj);
+                href = Convert.ToString(obj, CultureInfo.CurrentCulture);
             }
 
             _hrefAbsolute = href == null ? null : NavigationManger.ToAbsoluteUri(href).AbsoluteUri;
@@ -78,7 +79,7 @@ namespace AntBlazor
             _class = (string)null;
             if (Attributes != null && Attributes.TryGetValue("class", out obj))
             {
-                _class = Convert.ToString(obj);
+                _class = Convert.ToString(obj, CultureInfo.CurrentCulture);
             }
 
             UpdateCssClass();
@@ -86,11 +87,11 @@ namespace AntBlazor
         }
 
         /// <inheritdoc />
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             // To avoid leaking memory, it's important to detach any event handlers in Dispose()
             NavigationManger.LocationChanged -= OnLocationChanged;
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         private void UpdateCssClass()
@@ -102,7 +103,7 @@ namespace AntBlazor
         {
             // We could just re-render always, but for this component we know the
             // only relevant state change is to the _isActive property.
-            var shouldBeActiveNow = ShouldMatch(args.Location);
+            bool shouldBeActiveNow = ShouldMatch(args.Location);
             if (shouldBeActiveNow != _isActive)
             {
                 _isActive = shouldBeActiveNow;
@@ -157,22 +158,25 @@ namespace AntBlazor
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            builder.OpenElement(0, "a");
+            if (builder != null)
+            {
+                builder.OpenElement(0, "a");
 
-            builder.AddMultipleAttributes(1, Attributes);
-            builder.AddAttribute(2, "class", CssClass);
-            builder.AddContent(3, ChildContent);
+                builder.AddMultipleAttributes(1, Attributes);
+                builder.AddAttribute(2, "class", CssClass);
+                builder.AddContent(3, ChildContent);
 
-            builder.CloseElement();
+                builder.CloseElement();
+            }
         }
 
-        private string CombineWithSpace(string str1, string str2)
+        private static string CombineWithSpace(string str1, string str2)
             => str1 == null ? str2
             : (str2 == null ? str1 : $"{str1} {str2}");
 
         private static bool IsStrictlyPrefixWithSeparator(string value, string prefix)
         {
-            var prefixLength = prefix.Length;
+            int prefixLength = prefix.Length;
             if (value.Length > prefixLength)
             {
                 return value.StartsWith(prefix, StringComparison.Ordinal)

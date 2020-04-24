@@ -32,7 +32,7 @@
                     <div class="ant-tabs-nav-scroll">
                         <div class="ant-tabs-nav ant-tabs-nav-animated" style="@_navStyle">
                             <div @ref="_tabBars">
-                                @foreach (var pane in Panes)
+                                @foreach (var pane in _panes)
                                 {
                                     if (pane.IsActive)
                                     {
@@ -42,7 +42,7 @@
                                              @ondragover:preventDefault
                                              ondragover="event.preventDefault();"
                                              @ondragstart="(e)=>HandleDragStart(e, pane)"
-                                             @ondrop="(e)=>HandleDrop(e, pane)">
+                                             @ondrop="(e)=>HandleDrop(pane)">
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
                                                 <div>
@@ -64,7 +64,7 @@
                                              draggable="@Draggable.ToString()"
                                              ondragover="event.preventDefault();"
                                              @ondragstart="(e)=>HandleDragStart(e, pane)"
-                                             @ondrop="(e)=>HandleDrop(e, pane)">
+                                             @ondrop="(e)=>HandleDrop(pane)">
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
                                                 <div>
@@ -89,7 +89,7 @@
     }
     <!--Tab content-->
     <div class="ant-tabs-content ant-tabs-@TabPosition-content ant-tabs-@Type-content ant-tabs-content-animated" style="@_contentStyle">
-        @foreach (var pane in Panes)
+        @foreach (var pane in _panes)
         {
             @if (pane.IsActive)
             {
@@ -121,7 +121,7 @@
                     <div class="ant-tabs-nav-scroll">
                         <div class="ant-tabs-nav ant-tabs-nav-animated" style="@_navStyle">
                             <div @ref="_tabBars">
-                                @foreach (var pane in Panes)
+                                @foreach (var pane in _panes)
                                 {
                                     if (pane.IsActive)
                                     {
@@ -131,7 +131,7 @@
                                              @ondragover:preventDefault
                                              ondragover="event.preventDefault();"
                                              @ondragstart="(e)=>HandleDragStart(e, pane)"
-                                             @ondrop="(e)=>HandleDrop(e, pane)">
+                                             @ondrop="(e)=>HandleDrop(pane)">
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
                                                 <div>
@@ -153,7 +153,7 @@
                                              draggable="@Draggable.ToString()"
                                              ondragover="event.preventDefault();"
                                              @ondragstart="(e)=>HandleDragStart(e, pane)"
-                                             @ondrop="(e)=>HandleDrop(e, pane)">
+                                             @ondrop="(e)=>HandleDrop(pane)">
                                             @if (Type == AntTabType.EditableCard && pane.Closable)
                                             {
                                                 <div>

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntBlazor
 {
-    public readonly struct ComponentRenderedText
+    public class ComponentRenderedText
     {
         public ComponentRenderedText(int componentId, IEnumerable<string> tokens)
         {

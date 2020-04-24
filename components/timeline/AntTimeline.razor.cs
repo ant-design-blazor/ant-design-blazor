@@ -26,12 +26,11 @@ namespace AntBlazor
             get
             {
                 if (this.Pending == null) return null;
-                var item = new AntTimelineItem()
-                {
-                    ChildContent = !_isPendingBoolean ? Pending : null,
-                    Dot = PendingDot ?? LoadingDot,
-                    Class = "ant-timeline-item-pending"
-                };
+                var item = new AntTimelineItem(
+                    childContent: !_isPendingBoolean ? Pending : null,
+                    dot: PendingDot ?? LoadingDot,
+                    @class: "ant-timeline-item-pending"
+                );
 
                 item.SetClassMap();
                 return item;
@@ -62,7 +61,7 @@ namespace AntBlazor
             }
         }
 
-        private bool _isPendingBoolean;
+        private readonly bool _isPendingBoolean = false;
 
         protected override void OnInitialized()
         {

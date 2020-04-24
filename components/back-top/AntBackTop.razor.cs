@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Threading.Tasks;
 
@@ -15,7 +15,7 @@ namespace AntBlazor
 
         protected ClassMapper BackTopIconClassMapper { get; set; } = new ClassMapper();
 
-        protected async Task OnClick(MouseEventArgs args)
+        protected async Task OnClick()
         {
             await JsInvokeAsync(JSInteropConstants.backTop, "BodyContainer");
         }

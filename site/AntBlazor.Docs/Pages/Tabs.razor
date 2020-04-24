@@ -197,14 +197,11 @@
 @code{
     private string mode = AntTabPosition.Top;
 
-    RenderFragment<int>
-    template = (i) =>
-    {
-        return@<AntTabPane Key="@i.ToString()">
-        <Tab>Tab @i</Tab>
-        <ChildContent>Content of Tab Pane @i</ChildContent>
-    </AntTabPane>;
-};
+    RenderFragment<int> template = (i) => @<AntTabPane Key="@i.ToString()">
+                                              <Tab>Tab @i</Tab>
+                                              <ChildContent>Content of Tab Pane @i</ChildContent>
+                                          </AntTabPane>;
+
 }
 
 <DemoCard>
@@ -358,17 +355,15 @@
 
 @code{
     private static int addedIndex = 3;
-    private Func<AntTabPane>
-        Create = () =>
+    private readonly Func<AntTabPane> Create = () =>
         {
             addedIndex++;
             int temp = addedIndex;
-            return new AntTabPane()
-            {
-                Key = temp.ToString(),
-                ChildContent = (b) => { b.AddContent(0, $"Content of Tab Pane {temp}"); },
-                Tab = (b) => { b.AddContent(0, $"Tab {temp}"); }
-            };
+            return new AntTabPane (
+                key: temp.ToString(),
+                childContent: (b) => { b.AddContent(0, $"Content of Tab Pane {temp}"); },
+                tab: (b) => { b.AddContent(0, $"Tab {temp}"); }
+            );
         };
 }
 
@@ -401,7 +396,7 @@
             border-color: #fff;
             background: #fff;
         }
-    }
+    
 </style>
 
 <DemoCard>
@@ -469,12 +464,11 @@
     private void Add()
     {
         int index = ++btnIndex;
-        _panes.Add(new AntTabPane()
-        {
-            Key = index.ToString(),
-            Tab = (b) => b.AddContent(0, $"Tab {index}"),
-            ChildContent = (b) => b.AddContent(0, $"Content of Tab Pane {index}"),
-        });
+        _panes.Add(new AntTabPane(
+            key: index.ToString(),
+            tab : (b) => b.AddContent(0, $"Tab {index}"),
+            childContent : (b) => b.AddContent(0, $"Content of Tab Pane {index}")
+        ));
 
         StateHasChanged();
     }
@@ -485,12 +479,11 @@
         for (int i = 0; i < btnIndex + 1; i++)
         {
             int index = i;
-            _panes.Add(new AntTabPane()
-            {
-                Key = index.ToString(),
-                Tab = (b) => b.AddContent(0, $"Tab {index}"),
-                ChildContent = (b) => b.AddContent(0, $"Content of Tab Pane {index}"),
-            });
+            _panes.Add(new AntTabPane(
+                key: index.ToString(),
+                tab: (b) => b.AddContent(0, $"Tab {index}"),
+                childContent: (b) => b.AddContent(0, $"Content of Tab Pane {index}")
+            ));
         }
     }
 }

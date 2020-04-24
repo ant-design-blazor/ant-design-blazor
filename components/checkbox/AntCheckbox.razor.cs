@@ -5,18 +5,13 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public partial class AntCheckbox: AntDomComponentBase
+    public partial class AntCheckbox : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        protected Action<bool> _onChange;
-
-        protected Func<object> _onTouched;
-
-        protected ElementReference _inputElement;
-
-        protected ElementReference _contentElement;
+        private ElementReference _inputElement;
+        private ElementReference _contentElement;
 
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
@@ -41,15 +36,13 @@ namespace AntBlazor
 
         protected Dictionary<string, object> InputAttributes { get; set; }
 
-        protected string _contentStyles = "";
-
         protected override void OnParametersSet()
         {
             SetClass();
             base.OnParametersSet();
         }
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             if (this is AntCheckbox checkbox)
             {
@@ -59,7 +52,7 @@ namespace AntBlazor
 
         protected void SetClass()
         {
-            var prefixName = "ant-checkbox";
+            string prefixName = "ant-checkbox";
             ClassMapper.Clear()
                 .Add(prefixName)
                 .If($"{prefixName}-checked", () => Checked && !Indeterminate)
@@ -69,7 +62,10 @@ namespace AntBlazor
 
         protected async Task InputCheckedChange(ChangeEventArgs args)
         {
-            await InnerCheckedChange(Convert.ToBoolean(args.Value));
+            if (args != null && args.Value is bool value)
+            {
+                await InnerCheckedChange(value);
+            }
         }
 
         protected async Task InnerCheckedChange(bool @checked)
@@ -77,7 +73,6 @@ namespace AntBlazor
             if (!this.Disabled)
             {
                 this.Checked = @checked;
-                _onChange?.Invoke(this.Checked);
                 await this.CheckedChange.InvokeAsync(this.Checked);
                 CheckboxGroup?.OnCheckboxChange(this);
             }

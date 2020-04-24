@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace AntBlazor
@@ -16,6 +17,7 @@ namespace AntBlazor
         public Func<string, double> Parser { get; set; }
 
         private double _step = 1;
+
         [Parameter]
         public double Step
         {
@@ -28,7 +30,7 @@ namespace AntBlazor
                 _step = value;
                 if (string.IsNullOrEmpty(_format))
                 {
-                    _format = string.Join('.', _step.ToString().Split('.').Select(n => new string('0', n.Length)));
+                    _format = string.Join('.', _step.ToString(CultureInfo.InvariantCulture).Split('.').Select(n => new string('0', n.Length)));
                 }
             }
         }
@@ -94,7 +96,7 @@ namespace AntBlazor
             }
             else
             {
-                double.TryParse(args.Value.ToString(), out num);
+                _ = double.TryParse(args.Value.ToString(), out num);
             }
 
             if (num >= Min && num <= Max)
@@ -105,7 +107,7 @@ namespace AntBlazor
 
         private string GetIconClass(string direction)
         {
-            string cls = string.Empty;
+            string cls;
             if (direction == "up")
             {
                 cls = $"ant-input-number-handler ant-input-number-handler-up " + (Value >= Max ? "ant-input-number-handler-up-disabled" : string.Empty);
@@ -125,7 +127,7 @@ namespace AntBlazor
                 return Formatter(Value);
             }
 
-            return Value.ToString(_format);
+            return Value.ToString(_format, CultureInfo.InvariantCulture);
         }
     }
 }

@@ -11,6 +11,17 @@ namespace AntBlazor
 
         internal bool IsActive { get; set; }
 
+        public AntTabPane()
+        {
+        }
+
+        public AntTabPane(string key, RenderFragment tab, RenderFragment childContent)
+        {
+            this.Key = key;
+            this.Tab = tab;
+            this.ChildContent = childContent;
+        }
+
         [CascadingParameter]
         internal AntTabs Parent
         {

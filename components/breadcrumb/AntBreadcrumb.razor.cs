@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntBlazor
 {
@@ -21,9 +21,9 @@ namespace AntBlazor
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
-        protected BreadcrumbOption[] _breadcrumbs = { };
+        private readonly BreadcrumbOption[] _breadcrumbs = Array.Empty<BreadcrumbOption>();
 
-        protected void Navigate(string url, MouseEventArgs e)
+        private void Navigate(string url)
         {
             NavigationManager.NavigateTo(url);
         }
@@ -40,12 +40,12 @@ namespace AntBlazor
         }
     }
 
-    public struct BreadcrumbOption
+    public class BreadcrumbOption
     {
         public string Label { get; set; }
 
         public Dictionary<string, object> Params { get; set; }
 
-        public string Url { get; set; }
+        public Uri Url { get; set; }
     }
 }

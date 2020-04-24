@@ -50,7 +50,6 @@ namespace AntBlazor
         protected string IconStyle { get; set; }
 
         private readonly bool _isInDropdown = false;
-        private bool _iconOnly = false;
 
         protected void SetClassMap()
         {

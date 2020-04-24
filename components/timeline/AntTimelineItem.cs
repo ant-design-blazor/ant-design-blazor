@@ -29,6 +29,18 @@ namespace AntBlazor
 
         private readonly string[] _defaultColors = new[] { "blue", "red", "green", "gray" };
 
+        public AntTimelineItem()
+        {
+
+        }
+
+        internal AntTimelineItem(RenderFragment childContent, RenderFragment dot, string @class)
+        {
+            this.ChildContent = childContent;
+            this.Dot = dot;
+            this.Class = @class;
+        }
+
         protected override void OnInitialized()
         {
             ParentTimeline.AddItem(this);
