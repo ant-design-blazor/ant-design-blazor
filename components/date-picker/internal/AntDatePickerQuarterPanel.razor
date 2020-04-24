@@ -5,20 +5,23 @@
 @{
     var calendar = CultureInfo.InvariantCulture.Calendar;
 
-    DateTime startDate = new DateTime(DatePicker.PickerValue.Year, 1, 1);
+    DateTime startDate = new DateTime(PickerValue.Year, 1, 1);
 
     const int MAX_ROW = 1;
     const int MAX_COL = 4;
 }
-<AntDatePickerTemplate MaxRow="MAX_ROW"
-                       MaxCol="MAX_COL"
-                       ViewStartDate="startDate"
-                       IsInView="date => true"
-                       IsToday="date => DateHelper.IsSameQuarter(date, DatePicker.CurrentDate)"
-                       IsSelected="date => DateHelper.IsSameQuarter(date, DatePicker.Value)"
-                       GetColTitle='date => date.ToString("yyyy")'
-                       OnValueSelect="date => OnSelectQuarter(date)"
-                       GetNextColValue="date => date.AddMonths(3)">
+<AntDatePickerTemplate 
+    PickerIndex="@PickerIndex"
+    MaxRow="MAX_ROW"
+    MaxCol="MAX_COL"
+    ViewStartDate="startDate"
+    IsInView="date => true"
+    IsToday="date => DateHelper.IsSameQuarter(date, DatePicker.CurrentDate)"
+    IsSelected="date => DateHelper.IsSameQuarter(date, Value)"
+    GetColTitle='date => date.ToString("yyyy")'
+    OnValueSelect="date => OnSelectQuarter(date)"
+    GetNextColValue="date => date.AddMonths(3)"
+    IsRange="DatePicker.IsRange">
     <RenderColValue Context="currentColDate">
         @DateHelper.GetDayOfQuarter(currentColDate)
     </RenderColValue>

@@ -5,23 +5,28 @@
 @{
     var calendar = CultureInfo.InvariantCulture.Calendar;
 
-    DateTime monthFirstDayDate = new DateTime(DatePicker.PickerValue.Year, DatePicker.PickerValue.Month, 1);
+    DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1);
     DayOfWeek monthFirstDayOfWeek = calendar.GetDayOfWeek(monthFirstDayDate);
 
     int diffDay = 1 - (int)monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
-<AntDatePickerTemplate MaxRow="6"
-                       MaxCol="7"
-                       ViewStartDate="startDate"
-                       ShowFooter="@true"
-                       GetRowClass="GetRowClass"
-                       IsInView="date => DateHelper.IsSameMonth(date, DatePicker.PickerValue)"
-                       IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
-                       IsSelected="date => !IsWeek && DateHelper.IsSameDate(date, DatePicker.Value)"
-                       GetColTitle='date => date.ToString("yyyy-MM-dd")'
-                       OnValueSelect="date => OnSelectDate(date)"
-                       GetNextColValue="date => date.AddDays(1)">
+
+<AntDatePickerTemplate 
+    PickerIndex="@PickerIndex"
+    MaxRow="6"
+    MaxCol="7"
+    ViewStartDate="startDate"
+    ShowFooter="@true"
+    GetRowClass="GetRowClass"
+    IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
+    IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
+    IsSelected="date => !IsWeek && DateHelper.IsSameDate(date, Value)"
+    GetColTitle='date => date.ToString("yyyy-MM-dd")'
+    OnRowSelect="OnRowSelect"
+    OnValueSelect="OnValueSelect"
+    GetNextColValue="date => date.AddDays(1)"
+    IsRange="DatePicker.IsRange">
     <RenderTableHeader>
         <tr>
             @if (IsWeek)
@@ -41,7 +46,7 @@
         @if (IsWeek)
         {
             <td class="@(DatePicker.PrefixCls)-cell @(DatePicker.PrefixCls)-cell-weak">
-                @DateHelper.GetWeekOfYear(startDate)
+                @DateHelper.GetWeekOfYear(context)
             </td>
         }
     </RenderFisrtCol>
@@ -56,9 +61,25 @@
 
     private string GetRowClass(DateTime viewDate)
     {
-        string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, DatePicker.Value) ? $"{DatePicker.PrefixCls}-week-panel-row-selected" : "";
+        string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, Value) ? $"{DatePicker.PrefixCls}-week-panel-row-selected" : "";
         string rowClass = IsWeek ? $"{DatePicker.PrefixCls}-week-panel-row" : "";
 
         return $"{rowClass} {selectedRowClass}";
+    }
+
+    private void OnRowSelect(DateTime viewDate)
+    {
+        if (IsWeek)
+        {
+            OnSelectDate(viewDate);
+        }
+    }
+
+    private void OnValueSelect(DateTime viewDate)
+    {
+        if (!IsWeek)
+        {
+            OnSelectDate(viewDate);
+        }
     }
 }

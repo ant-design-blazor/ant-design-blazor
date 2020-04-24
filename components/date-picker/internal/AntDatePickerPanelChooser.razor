@@ -1,0 +1,43 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDomComponentBase
+@using AntBlazor.Internal;
+
+<CascadingValue Value=@DatePicker>
+    @if (Pickers[0] == AntDatePickerType.Date || (IsRange && Pickers[1] == AntDatePickerType.Date))
+    {
+        <AntDatePickerDatePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+    }
+    else if (Pickers[0] == AntDatePickerType.Quarter || (IsRange && Pickers[1] == AntDatePickerType.Quarter))
+    {
+        <AntDatePickerQuarterPanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+    }
+    else if (Pickers[0] == AntDatePickerType.Week || (IsRange && Pickers[1] == AntDatePickerType.Week))
+    {
+        <AntDatePickerDatePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" IsWeek="@true" />
+    }
+    else if (Pickers[0] == AntDatePickerType.Month || (IsRange && Pickers[1] == AntDatePickerType.Month))
+    {
+        <AntDatePickerMonthPanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+    }
+    else if (Pickers[0] == AntDatePickerType.Year || (IsRange && Pickers[1] == AntDatePickerType.Year))
+    {
+        <AntDatePickerYearPanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+    }
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public AntDatePicker DatePicker { get; set; }
+
+    [Parameter]
+    public Action<DateTime, int> OnSelect { get; set; }
+
+    [Parameter]
+    public string[] Pickers { get; set; }
+
+    [Parameter]
+    public bool IsRange { get; set; } = false;
+
+    [Parameter]
+    public int PickerIndex { get; set; } = 0;
+}
