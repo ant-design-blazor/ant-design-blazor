@@ -35,10 +35,6 @@ namespace AntBlazor
 
         protected ElementReference InputRef { get; set; }
 
-        private Action _onChange;
-
-        private Action _onTouched;
-
         protected bool IsChecked => _checked ?? this.Checked;
 
         private bool? _checked;
@@ -115,7 +111,7 @@ namespace AntBlazor
             await Task.CompletedTask;
         }
 
-        public async Task OnClick(MouseEventArgs e)
+        public async Task OnClick()
         {
             await Select();
         }

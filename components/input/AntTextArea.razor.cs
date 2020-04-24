@@ -8,6 +8,7 @@ namespace AntBlazor
     public partial class AntTextArea : AntInput
     {
         private const uint DEFAULT_MIN_ROWS = 1;
+
         /// <summary>
         /// scrollHeight of 1 row
         /// </summary>
@@ -26,6 +27,7 @@ namespace AntBlazor
         public bool AutoSize { get; set; }
 
         private uint _minRows = DEFAULT_MIN_ROWS;
+
         [Parameter]
         public uint MinRows
         {
@@ -48,6 +50,7 @@ namespace AntBlazor
         }
 
         private uint _maxRows = uint.MaxValue;
+
         [Parameter]
         public uint MaxRows
         {
@@ -64,18 +67,13 @@ namespace AntBlazor
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException(nameof(MinRows), $"Please enter a value between {MinRows} and {uint.MaxValue}");
+                    throw new ArgumentOutOfRangeException($"Please enter a value between {MinRows} and {uint.MaxValue}");
                 }
             }
         }
 
         [Parameter]
         public EventCallback<object> OnResize { get; set; }
-
-        protected override async void OnInitialized()
-        {
-            base.OnInitialized();
-        }
 
         protected async override Task OnFirstAfterRenderAsync()
         {
@@ -92,7 +90,7 @@ namespace AntBlazor
             // do not call base method to avoid lost focus
             //base.OnInputAsync(args);
 
-            Value = args.Value.ToString();
+            Value = args?.Value.ToString();
 
             if (AutoSize)
             {
@@ -120,10 +118,6 @@ namespace AntBlazor
             {
                 Style = $"height: {rows * _rowHeight + _offsetHeight}px;overflow-y: hidden;";
             }
-        }
-
-        protected async Task OnResizeAsync()
-        {
         }
 
         private async Task CalculateRowHeightAsync()

@@ -13,7 +13,6 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<EventArgs> OnSearch { get; set; }
 
-
         [Parameter]
         public OneOf<bool, string> EnterButton { get; set; }
 
@@ -30,7 +29,7 @@ namespace AntBlazor
                     builder.OpenComponent<AntIcon>(35);
                     builder.AddAttribute(36, "class", $"{PrefixCls}-search-icon");
                     builder.AddAttribute(37, "type", "search");
-                    builder.AddAttribute(38, "onclick", _callbackFactory.Create<MouseEventArgs>(this, Search));
+                    builder.AddAttribute(38, "onclick", CallbackFactory.Create<MouseEventArgs>(this, Search));
                     builder.CloseComponent();
                 });
             }
@@ -51,7 +50,6 @@ namespace AntBlazor
                         EventCallback<MouseEventArgs> e = new EventCallbackFactory().Create(this, Search);
                         builder.AddAttribute(_sequence++, "onclick", e);
                     }
-
 
                     EnterButton.Switch(boolean =>
                     {
@@ -78,16 +76,16 @@ namespace AntBlazor
 
             if (Size == AntInputSize.Large)
             {
-                _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search-large");
+                GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-large");
             }
             else if (Size == AntInputSize.Small)
             {
-                _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search-small");
+                GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-small");
             }
 
-            _affixWrapperClass = string.Join(" ", _affixWrapperClass, $"{PrefixCls}-search");
-            _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search");
-            _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search-enter-button");
+            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-search");
+            GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search");
+            GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-enter-button");
         }
 
         private async void Search(MouseEventArgs args)

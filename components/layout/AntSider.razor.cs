@@ -10,7 +10,7 @@ namespace AntBlazor
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        [Parameter] 
+        [Parameter]
         public string Width { get; set; } = "200";
 
         /// <summary>
@@ -49,14 +49,14 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<bool> OnCollapsedChange { get; set; }
 
-        [Inject] 
+        [Inject]
         private DomEventService DomEventService { get; set; }
 
         protected string WidthSetting => this.Collapsed ? $"{this.CollapsedWidth}px" : StyleHelper.ToCssPixel(Width);
 
         private string FlexSetting => $"0 0 {WidthSetting}";
 
-        private string Style =>
+        private string InternalStyle =>
             $@"flex:{FlexSetting};
                max-width:{WidthSetting};
                min-width:{WidthSetting};

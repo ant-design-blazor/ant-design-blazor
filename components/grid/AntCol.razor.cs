@@ -84,7 +84,7 @@ namespace AntBlazor
 
         private void SetHostClassMap()
         {
-            string prefixCls = "ant-col";
+            var prefixCls = "ant-col";
             this.ClassMapper.Clear()
                 .Add(prefixCls)
                 .If($"{prefixCls}-{this.Span.Value}", () => this.Span.Value != null)
@@ -98,7 +98,8 @@ namespace AntBlazor
             var properties = GetType().GetProperties();
             foreach (var sizeName in listOfSizeInputName)
             {
-                var property = properties.FirstOrDefault(f => f.Name.Equals(sizeName));
+                var property =
+                    properties.FirstOrDefault(f => f.Name.Equals(sizeName, StringComparison.OrdinalIgnoreCase));
                 if (property == null)
                     continue;
 
@@ -153,14 +154,14 @@ namespace AntBlazor
             base.OnParametersSet();
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             if (this is AntCol col)
             {
                 this.Row?.Cols.Remove(col);
             }
 
-            base.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
