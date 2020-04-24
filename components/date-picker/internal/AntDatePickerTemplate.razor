@@ -1,29 +1,37 @@
 ﻿@namespace AntBlazor.Internal
 @inherits AntDatePickerPanelBase
 
-<div class="@(DatePicker.PrefixCls)-@(DatePicker.Picker)-panel">
-    <AntDatePickerHeader SuperChangeDateInterval="SuperChangeDateInterval" ChangeDateInterval="ChangeDateInterval" />
+picker:@Picker
+<div class="@(DatePicker.PrefixCls)-@(Picker)-panel">
+    <AntDatePickerHeader SuperChangeDateInterval="@SuperChangeDateInterval"
+                         ChangeDateInterval="@ChangeDateInterval"
+                         PickerIndex="@PickerIndex"
+                         IsRange="@IsRange" />
     <div class="@(DatePicker.PrefixCls)-body">
         <table class="@(DatePicker.PrefixCls)-content">
             <thead>
                 @RenderTableHeader
             </thead>
             <tbody>
+                @{ var startDate = ViewStartDate; }
                 @for (int row = 1; row <= MaxRow; row++)
                 {
-                    <tr class="@(GetRowClass?.Invoke(ViewStartDate))">
-                        @RenderFisrtCol
+                    var startColDate = startDate;
+                    <tr class="@(GetRowClass?.Invoke(startColDate))"
+                        @onclick="e => OnRowSelect?.Invoke(startColDate)">
+
+                        @RenderFisrtCol?.Invoke(startColDate)
 
                         @for (int col = 1; col <= MaxCol; col++)
                         {
-                            var currentColDate = ViewStartDate;
+                            var currentColDate = startDate;
 
                             string inViewCls = IsInView(currentColDate) ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
                             string todayCls = IsToday(currentColDate) ? $"{DatePicker.PrefixCls}-cell-today" : "";
                             string selectedCls = IsSelected(currentColDate) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
                             string disabledCls = "";
 
-                            if(DatePicker.DisabledDate != null && DatePicker.DisabledDate(currentColDate))
+                            if (DatePicker.DisabledDate != null && DatePicker.DisabledDate(currentColDate))
                             {
                                 disabledCls = $"{DatePicker.PrefixCls}-cell-disabled";
                             }
@@ -31,7 +39,7 @@
                             <td title="@GetColTitle?.Invoke(currentColDate)"
                                 class="@(DatePicker.PrefixCls)-cell @(inViewCls) @(todayCls) @selectedCls @disabledCls">
                                 <div class="@(DatePicker.PrefixCls)-cell-inner"
-                                     @onclick="e => OnValueSelect(currentColDate)">
+                                     @onclick="e => OnValueSelect?.Invoke(currentColDate)">
                                     @if (DatePicker.DateRender != null)
                                     {
                                         @(DatePicker.DateRender(currentColDate, DatePicker.CurrentDate))
@@ -43,10 +51,11 @@
                                 </div>
                             </td>
 
-                            ViewStartDate = @GetNextColValue(currentColDate);
+                            startDate = @GetNextColValue(currentColDate);
                         }
 
-                        @RenderLastCol
+                        @{ var endColDate = startDate;}
+                        @RenderLastCol?.Invoke(endColDate)
                     </tr>
                 }
             </tbody>
@@ -56,7 +65,7 @@
 
 @if (ShowFooter)
 {
-    <AntDatePickerFooter />
+    <AntDatePickerFooter PickerIndex="@PickerIndex" />
 }
 
 @code {
@@ -64,13 +73,13 @@
     public RenderFragment RenderTableHeader { get; set; }
 
     [Parameter]
-    public RenderFragment RenderFisrtCol { get; set; }
+    public RenderFragment<DateTime> RenderFisrtCol { get; set; }
 
     [Parameter]
     public RenderFragment<DateTime> RenderColValue { get; set; }
 
     [Parameter]
-    public RenderFragment RenderLastCol { get; set; }
+    public RenderFragment<DateTime> RenderLastCol { get; set; }
 
     [Parameter]
     public DateTime ViewStartDate { get; set; }
@@ -86,10 +95,15 @@
 
     [Parameter]
     public Func<DateTime, bool> IsInView { get; set; }
+
     [Parameter]
     public Func<DateTime, bool> IsToday { get; set; }
+
     [Parameter]
     public Func<DateTime, bool> IsSelected { get; set; }
+
+    [Parameter]
+    public Action<DateTime> OnRowSelect { get; set; }
 
     [Parameter]
     public Action<DateTime> OnValueSelect { get; set; }
@@ -99,11 +113,16 @@
 
     [Parameter]
     public int MaxRow { get; set; } = 0;
+
     [Parameter]
     public int MaxCol { get; set; } = 0;
 
     [Parameter]
+    public bool IsRange { get; set; } = false;
+
+    [Parameter]
     public int SuperChangeDateInterval { get; set; } = 1;
+
     [Parameter]
     public int ChangeDateInterval { get; set; } = 1;
 }

@@ -1,11 +1,6 @@
 ﻿@namespace AntBlazor.Internal
+@inherits AntDatePickerPanelBase
 
 <div class="@(DatePicker.PrefixCls)-footer">
-    <a class="@(DatePicker.PrefixCls)-today-btn" @onclick="e => DatePicker.ChangePickerValue(DateTime.Now)">今天</a>
+    <a class="@(DatePicker.PrefixCls)-today-btn" @onclick="e => ChangePickerValue(DateTime.Now)">今天</a>
 </div>
-
-@code {
-    [CascadingParameter]
-    public AntDatePicker DatePicker { get; set; }
-
-}

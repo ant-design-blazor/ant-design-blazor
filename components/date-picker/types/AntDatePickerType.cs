@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntBlazor
 {
-    public class AntDatePickerType
+    public static class AntDatePickerType
     {
         public const string Date = "date";
         public const string Week = "week";
