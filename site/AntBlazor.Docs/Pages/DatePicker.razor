@@ -1,26 +1,35 @@
-﻿<br />
------ 开发期间的测试
+﻿
+<DemoCard>
+    <Title>开发期间的测试</Title>
+    <Demo>
+        <AntDatePicker Picker="@AntDatePickerType.Date"
+                       AutoFocus="@true"
+                       PopupStyle="color: red"
+                       Placeholder='"这是多个属性测试"'
+                       DefaultValue="@(new DateTime(2000, 1, 1))"
+                       DefaultPickerValue="@(new DateTime(2099, 1, 1))"
+                       DateRender="CustomRender"
+                       SuffixIcon="SuffixIconRender"
+                       OnPanelChange="(date, mode) => Console.WriteLine(date)"
+                       OnOpenChange="(open) => Console.WriteLine(open)"
+                       InputReadOnly="@true"
+                       DisabledDate="date => date.Day == 4"
+                       Style="height: 90px"
+                       Open="@false" />
+        @code {
+            private RenderFragment SuffixIconRender =@<AntIcon Type="user" />;
+        }
+
+        <br />
+        <br />
+        <AntRangePicker />
+    </Demo>
+</DemoCard>
+
 <br />
-<AntDatePicker Picker="@AntDatePickerType.Date"
-               AutoFocus="@true"
-               PopupStyle="color: red"
-               Placeholder="这是多个属性测试"
-               DefaultValue="@(new DateTime(2000, 1, 1))"
-               DefaultPickerValue="@(new DateTime(2099, 1, 1))"
-               DateRender="CustomRender"
-               SuffixIcon="SuffixIconRender"
-               OnPanelChange="(date, mode) => Console.WriteLine(date)"
-               OnOpenChange="(open) => Console.WriteLine(open)"
-               InputReadOnly="@true"
-               DisabledDate="date => date.Day == 4"
-               Style="height: 90px"
-               Open="@false" />
-@code {
-    private RenderFragment SuffixIconRender =@<AntIcon Type="user" />;
-}
-
-<AntMonthPicker />
-
+<br />
+<br />
+<br />
 <AntTitle Level="1">DatePicker 日期选择框</AntTitle>
 <AntText>输入或选择日期的控件。</AntText>
 <AntTitle Level="2">何时使用</AntTitle>
@@ -94,7 +103,7 @@ return @<span>@(currentViewDate.Day)</span>;
     <Description>
         <li>已实现DatePicker组件：支持date、year、month、quarter、week模式</li>
         <li>已实现：MonthPicker、RangePicker、WeekPicker、YearPicker、QuarterPicker（对应DatePicker的各种模式）</li>
-        <li>未实现的功能：输入面板未使用Input输入框、RangePicker组件</li>
+        <li>未实现的功能：输入面板未使用Input输入框、RangePicker组件、年份范围选择面板</li>
         <li>
             未实现的通用属性：AllowClear、GetPopupContainer、Locale、Mode
         </li>

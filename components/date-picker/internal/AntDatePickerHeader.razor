@@ -15,7 +15,7 @@
 
     <div class="@(DatePicker.PrefixCls)-header-view">
         @if (Picker.IsIn(
-         AntDatePickerType.Date, AntDatePickerType.Month, AntDatePickerType.Quarter, AntDatePickerType.Week))
+      AntDatePickerType.Date, AntDatePickerType.Month, AntDatePickerType.Quarter, AntDatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-year-btn" @onclick="e => PopUpPicker(AntDatePickerType.Year)">
                 @(PickerValue.Year)年
@@ -31,8 +31,16 @@
         {
             int startYear = PickerValue.Year / 10 * 10;
 
-            <button type="button" class="@(DatePicker.PrefixCls)-decade-btn">
+            <button type="button" class="@(DatePicker.PrefixCls)-decade-btn" @onclick="e => PopUpPicker(AntDatePickerType.Decade)">
                 @(startYear)-@(startYear + 9)
+            </button>
+        }
+        @if (Picker.IsIn(AntDatePickerType.Decade))
+        {
+            int startYear = PickerValue.Year / 100 * 100;
+
+            <button type="button" class="@(DatePicker.PrefixCls)-decade-btn">
+                @(startYear)-@(startYear + 99)
             </button>
         }
     </div>
