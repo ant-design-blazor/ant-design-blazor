@@ -23,6 +23,10 @@
     {
         <AntDatePickerYearPanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
     }
+    else if (Pickers[0] == AntDatePickerType.Decade || (IsRange && Pickers[1] == AntDatePickerType.Decade))
+    {
+        <AntDatePickerDecadePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+    }
 </CascadingValue>
 
 @code {

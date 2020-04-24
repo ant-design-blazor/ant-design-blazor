@@ -11,5 +11,6 @@ namespace AntBlazor
         public const string Month = "month";
         public const string Quarter = "quarter";
         public const string Year = "year";
+        internal const string Decade = "decade";
     }
 }
