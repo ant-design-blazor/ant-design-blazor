@@ -87,17 +87,17 @@ namespace AntBlazor
         /// <summary>
         /// Indicator if the component is closed or not.
         /// </summary>
-        protected bool _isClosed = false;
+        private bool _isClosed = false;
 
         /// <summary>
         /// Just before we close the component we set this indicator to show a closing animation.
         /// </summary>
-        protected bool _isClosing = false;
+        private bool _isClosing = false;
 
         /// <summary>
         /// Sets the default classes.
         /// </summary>
-        protected void SetClassMap()
+        private void SetClassMap()
         {
             string prefixName = "ant-alert";
             ClassMapper.Clear()

@@ -20,13 +20,11 @@ namespace AntBlazor
             }
         }
 
-        public IList<AntButton> _buttons = new List<AntButton>();
+        private readonly bool _isInDropdown = false;
 
-        internal bool _isInDropdown = false;
-
-        public void SetClassMap()
+        private void SetClassMap()
         {
-            var prefixName = "ant-btn-group";
+            string prefixName = "ant-btn-group";
             ClassMapper.Clear().Add(prefixName)
                 .If("ant-dropdown-button", () => _isInDropdown)
                 .If($"{prefixName}-lg", () => this._size == "large")

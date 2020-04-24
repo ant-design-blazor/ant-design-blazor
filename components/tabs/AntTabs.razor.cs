@@ -1,4 +1,4 @@
-using AntBlazor.JsInterop;
+﻿using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
@@ -30,7 +30,7 @@ namespace AntBlazor
         private int _navTotal;
         private int _navSection;
         private bool _needRefresh;
-        internal List<AntTabPane> Panes = new List<AntTabPane>();
+        internal List<AntTabPane> _panes = new List<AntTabPane>();
 
         #region Parameters
 
@@ -54,7 +54,7 @@ namespace AntBlazor
                 if (_activeKey != value)
                 {
                     _activeKey = value;
-                    ActivatePane(Panes.Single(p => p.Key == _activeKey));
+                    ActivatePane(_panes.Single(p => p.Key == _activeKey));
                 }
             }
         }
@@ -246,15 +246,15 @@ namespace AntBlazor
         {
             if (string.IsNullOrEmpty(tabPane.Key))
             {
-                throw new ArgumentNullException("Key is null");
+                throw new ArgumentNullException(nameof(tabPane), "Key is null");
             }
 
-            if (Panes.Select(p => p.Key).Contains(tabPane.Key))
+            if (_panes.Select(p => p.Key).Contains(tabPane.Key))
             {
                 throw new ArgumentException("An AntTabPane with the same key already exists");
             }
 
-            Panes.Add(tabPane);
+            _panes.Add(tabPane);
             if (tabPane.Key == DefaultActiveKey)
             {
                 ActivatePane(tabPane);
@@ -266,13 +266,15 @@ namespace AntBlazor
             if (CreateTabPane != null)
             {
                 AntTabPane pane = CreateTabPane();
-                Dictionary<string, object> properties = new Dictionary<string, object>();
-                properties[nameof(AntTabPane.Parent)] = this;
-                properties[nameof(AntTabPane.ForceRender)] = pane.ForceRender;
-                properties[nameof(AntTabPane.Key)] = pane.Key;
-                properties[nameof(AntTabPane.Tab)] = pane.Tab;
-                properties[nameof(AntTabPane.ChildContent)] = pane.ChildContent;
-                properties[nameof(AntTabPane.Disabled)] = pane.Disabled;
+                Dictionary<string, object> properties = new Dictionary<string, object>
+                {
+                    [nameof(AntTabPane.Parent)] = this,
+                    [nameof(AntTabPane.ForceRender)] = pane.ForceRender,
+                    [nameof(AntTabPane.Key)] = pane.Key,
+                    [nameof(AntTabPane.Tab)] = pane.Tab,
+                    [nameof(AntTabPane.ChildContent)] = pane.ChildContent,
+                    [nameof(AntTabPane.Disabled)] = pane.Disabled
+                };
                 pane.SetParametersAsync(ParameterView.FromDictionary(properties));
                 pane.Parent = this;
                 ActivatePane(pane);
@@ -282,16 +284,16 @@ namespace AntBlazor
         public void RemoveTabPane(AntTabPane pane)
         {
             _needRefresh = true;
-            Panes.Remove(pane);
-            if (pane.IsActive && Panes.Count > 0)
+            _panes.Remove(pane);
+            if (pane != null && pane.IsActive && _panes.Count > 0)
             {
-                ActivatePane(Panes[0]);
+                ActivatePane(_panes[0]);
             }
         }
 
-        private async void ActivatePane(AntTabPane tabPane)
+        private void ActivatePane(AntTabPane tabPane)
         {
-            if (!tabPane.Disabled && Panes.Contains(tabPane))
+            if (!tabPane.Disabled && _panes.Contains(tabPane))
             {
                 if (_activePane != null)
                 {
@@ -349,12 +351,12 @@ namespace AntBlazor
                 if (IsHorizontal)
                 {
                     _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
-                    _contentStyle = $"margin-left: -{Panes.IndexOf(_activePane)}00%;";
+                    _contentStyle = $"margin-left: -{_panes.IndexOf(_activePane)}00%;";
                 }
                 else
                 {
                     _inkStyle = $"height: {element.clientHeight}px; display: block; transform: translate3d(0px, {element.offsetTop}px, 0px);";
-                    _contentStyle = $"margin-top: -{Panes.IndexOf(_activePane)}00%;";
+                    _contentStyle = $"margin-top: -{_panes.IndexOf(_activePane)}00%;";
                 }
                 StateHasChanged();
                 _renderedActivePane = _activePane;
@@ -485,13 +487,13 @@ namespace AntBlazor
             }
         }
 
-        private void HandleDrop(DragEventArgs args, AntTabPane pane)
+        private void HandleDrop(AntTabPane pane)
         {
             if (Draggable && _draggingPane != null)
             {
-                int newIndex = Panes.IndexOf(pane);
-                Panes.Remove(_draggingPane);
-                Panes.Insert(newIndex, _draggingPane);
+                int newIndex = _panes.IndexOf(pane);
+                _panes.Remove(_draggingPane);
+                _panes.Insert(newIndex, _draggingPane);
                 _draggingPane = null;
                 _needRefresh = true;
                 _renderedActivePane = null;
@@ -499,6 +501,6 @@ namespace AntBlazor
             }
         }
 
-        #endregion
+        #endregion DRAG & DROP
     }
 }

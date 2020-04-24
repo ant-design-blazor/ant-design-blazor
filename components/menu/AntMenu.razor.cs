@@ -31,11 +31,11 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<AntMenuItem> Click { get; set; }
 
-        public IList<AntMenuItem> _menuItems = new List<AntMenuItem>();
+        internal readonly IList<AntMenuItem> MenuItems = new List<AntMenuItem>();
 
-        public IList<AntSubMenu> _subMenus = new List<AntSubMenu>();
+        internal readonly IList<AntSubMenu> SubMenus = new List<AntSubMenu>();
 
-        public IList<AntSubMenu> _openedSubMenus = new List<AntSubMenu>();
+        private IList<AntSubMenu> _openedSubMenus = new List<AntSubMenu>();
 
         public bool IsInDropDown { get; set; }
 
@@ -51,7 +51,7 @@ namespace AntBlazor
 
         private void SetClassMap()
         {
-            string prefixName = IsInDropDown ? "ant-dropdown-menu" : "ant-menu";
+            var prefixName = IsInDropDown ? "ant-dropdown-menu" : "ant-menu";
             ClassMapper.Add(prefixName)
                 .Add($"{prefixName}-root")
                 .Add($"{prefixName}-{Theme}")
@@ -67,12 +67,12 @@ namespace AntBlazor
 
         private async Task UpdateInLineCollapse()
         {
-            if (_menuItems.Any())
+            if (MenuItems.Any())
             {
                 if (InlineCollapsed)
                 {
-                    _openedSubMenus = this._subMenus.Where(x => x.Open).ToList();
-                    foreach (var antSubMenu in this._subMenus)
+                    _openedSubMenus = this.SubMenus.Where(x => x.Open).ToList();
+                    foreach (var antSubMenu in this.SubMenus)
                     {
                         await antSubMenu.SetOpenState(false);
                     }

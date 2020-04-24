@@ -34,33 +34,37 @@ namespace AntBlazor
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            base.BuildRenderTree(builder);
-            // According to Ant-Design 4.0, Fallback to 1 if level is invalid.
-
-            builder.OpenElement(0, "span");
-            builder.AddAttribute(1, "class", this.ClassMapper.Class);
-            if (Mark) builder.OpenElement(2, "mark");
-            if (Delete) builder.OpenElement(3, "del");
-            if (Underline) builder.OpenElement(4, "u");
-            if (Code) builder.OpenElement(5, "code");
-            if (Strong) builder.OpenElement(6, "strong");
-            builder.AddContent(6, ChildContent);
-            if (Strong) builder.CloseElement();
-            if (Code) builder.CloseElement();
-            if (Underline) builder.CloseElement();
-            if (Delete) builder.CloseElement();
-            if (Mark) builder.CloseElement();
-            if (Copyable)
+            if (builder != null)
             {
-                builder.OpenElement(7, "a");
-                builder.AddAttribute(8, "onclick", (Action)(async () => await Copy()));
-                builder.OpenComponent<AntIcon>(9);
-                builder.AddAttribute(10, "type", "copy");
-                builder.AddAttribute(11, "theme", AntIconThemeType.Outline);
-                builder.CloseComponent();
+                base.BuildRenderTree(builder);
+                // According to Ant-Design 4.0, Fallback to 1 if level is invalid.
+
+                builder.OpenElement(0, "span");
+                builder.AddAttribute(1, "class", this.ClassMapper.Class);
+                if (Mark) builder.OpenElement(2, "mark");
+                if (Delete) builder.OpenElement(3, "del");
+                if (Underline) builder.OpenElement(4, "u");
+                if (Code) builder.OpenElement(5, "code");
+                if (Strong) builder.OpenElement(6, "strong");
+                builder.AddContent(6, ChildContent);
+                if (Strong) builder.CloseElement();
+                if (Code) builder.CloseElement();
+                if (Underline) builder.CloseElement();
+                if (Delete) builder.CloseElement();
+                if (Mark) builder.CloseElement();
+                if (Copyable)
+                {
+                    builder.OpenElement(7, "a");
+                    builder.AddAttribute(8, "onclick", (Action)(async () => await Copy()));
+                    builder.OpenComponent<AntIcon>(9);
+                    builder.AddAttribute(10, "type", "copy");
+                    builder.AddAttribute(11, "theme", AntIconThemeType.Outline);
+                    builder.CloseComponent();
+                    builder.CloseElement();
+                }
+
                 builder.CloseElement();
             }
-            builder.CloseElement();
         }
     }
 }

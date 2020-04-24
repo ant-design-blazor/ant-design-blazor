@@ -1,7 +1,7 @@
 @namespace AntBlazor
 @inherits AntDomComponentBase
 
-<label @onclick="OnClick" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+<label @onclick="_=>OnClick()" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
     <span class="@RadioClassMapper.Class">
         <input type="radio"
                autofocus="@AutoFocus"

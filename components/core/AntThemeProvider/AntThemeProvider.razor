@@ -1,9 +1,0 @@
-﻿@namespace AntBlazor
-@using Microsoft.AspNetCore.Components
-@inherits BaseMatThemeProvider;
-
-@((MarkupString)Theme?.GetStyleTag())
-
-<CascadingValue Value="@Theme">
-    @ChildContent
-</CascadingValue>
