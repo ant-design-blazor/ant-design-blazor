@@ -2,34 +2,34 @@
 @inherits AntDatePickerPanelBase
 
 <div class="@(DatePicker.PrefixCls)-header">
-    <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-prev-btn" @onclick="e => DatePicker.ChangePickerValue(DatePicker.PickerValue.AddYears(-SuperChangeDateInterval))">
+    <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-prev-btn" @onclick="e => ChangePickerYearValue(-SuperChangeDateInterval)">
         <span class="@(DatePicker.PrefixCls)-super-prev-icon"></span>
     </button>
 
-    @if (DatePicker.Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Week))
+    @if (Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Week))
     {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-prev-btn" @onclick="e => DatePicker.ChangePickerValue(DatePicker.PickerValue.AddMonths(-ChangeDateInterval))">
+        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-prev-btn" @onclick="e => ChangePickerMonthValue(-ChangeDateInterval)">
             <span class="@(DatePicker.PrefixCls)-prev-icon"></span>
         </button>
     }
 
     <div class="@(DatePicker.PrefixCls)-header-view">
-        @if (DatePicker.Picker.IsIn(
-             AntDatePickerType.Date, AntDatePickerType.Month, AntDatePickerType.Quarter, AntDatePickerType.Week))
+        @if (Picker.IsIn(
+         AntDatePickerType.Date, AntDatePickerType.Month, AntDatePickerType.Quarter, AntDatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-year-btn" @onclick="e => PopUpPicker(AntDatePickerType.Year)">
-                @(DatePicker.PickerValue.Year)年
+                @(PickerValue.Year)年
             </button>
         }
-        @if (DatePicker.Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Week))
+        @if (Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-month-btn" @onclick="e => PopUpPicker(AntDatePickerType.Month)">
-                @(DatePicker.PickerValue.Month)月
+                @(PickerValue.Month)月
             </button>
         }
-        @if (DatePicker.Picker.IsIn(AntDatePickerType.Year))
+        @if (Picker.IsIn(AntDatePickerType.Year))
         {
-            int startYear = DatePicker.PickerValue.Year / 10 * 10;
+            int startYear = PickerValue.Year / 10 * 10;
 
             <button type="button" class="@(DatePicker.PrefixCls)-decade-btn">
                 @(startYear)-@(startYear + 9)
@@ -37,14 +37,14 @@
         }
     </div>
 
-    @if (DatePicker.Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Week))
+    @if (Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Week))
     {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-next-btn" @onclick="e => DatePicker.ChangePickerValue(DatePicker.PickerValue.AddMonths(ChangeDateInterval))">
+        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-next-btn" @onclick="e => ChangePickerMonthValue(ChangeDateInterval)">
             <span class="@(DatePicker.PrefixCls)-next-icon"></span>
         </button>
     }
 
-    <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-next-btn" @onclick="e => DatePicker.ChangePickerValue(DatePicker.PickerValue.AddYears(SuperChangeDateInterval))">
+    <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-next-btn" @onclick="e => ChangePickerYearValue(SuperChangeDateInterval)">
         <span class="@(DatePicker.PrefixCls)-super-next-icon"></span>
     </button>
 </div>
@@ -54,4 +54,6 @@
     public int SuperChangeDateInterval { get; set; } = 1;
     [Parameter]
     public int ChangeDateInterval { get; set; } = 1;
+    [Parameter]
+    public bool IsRange { get; set; } = false;
 }

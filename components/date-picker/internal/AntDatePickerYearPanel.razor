@@ -5,7 +5,7 @@
 @{
     var calendar = CultureInfo.InvariantCulture.Calendar;
 
-    int startYear = DatePicker.PickerValue.Year / 10 * 10 - 1;
+    int startYear = PickerValue.Year / 10 * 10 - 1;
     DateTime startDate = new DateTime(startYear, 1, 1);
 
     int yearIndex = 0;
@@ -14,16 +14,19 @@
     const int FIRST_YEAR_INDEX = 0;
     const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL;
 }
-<AntDatePickerTemplate MaxRow="MAX_ROW"
-                       MaxCol="MAX_COL"
-                       SuperChangeDateInterval="10"
-                       ViewStartDate="startDate"
-                       IsInView="date => yearIndex != FIRST_YEAR_INDEX && yearIndex != LAST_YEAR_INDEX"
-                       IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
-                       IsSelected="date => DateHelper.IsSameYear(date, DatePicker.Value)"
-                       GetColTitle='date => date.ToString("yyyy")'
-                       OnValueSelect="date => OnSelectYear(date)"
-                       GetNextColValue="date => date.AddYears(1)">
+<AntDatePickerTemplate 
+    PickerIndex="@PickerIndex"
+    SuperChangeDateInterval="10"
+    MaxRow="MAX_ROW"
+    MaxCol="MAX_COL"
+    ViewStartDate="startDate"
+    IsInView="date => yearIndex != FIRST_YEAR_INDEX && yearIndex != LAST_YEAR_INDEX"
+    IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
+    IsSelected="date => DateHelper.IsSameYear(date, Value)"
+    GetColTitle='date => date.ToString("yyyy")'
+    OnValueSelect="date => OnSelectYear(date)"
+    GetNextColValue="date => date.AddYears(1)"
+    IsRange="DatePicker.IsRange">
     <RenderColValue Context="currentColDate">
         @{yearIndex++;}
         @currentColDate.Year
