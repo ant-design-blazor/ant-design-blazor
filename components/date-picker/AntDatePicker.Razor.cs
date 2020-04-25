@@ -12,7 +12,6 @@ namespace AntBlazor
         [Parameter]
         public string PrefixCls { get; set; } = "ant-picker";
 
-        private readonly string[] _pickers = new string[] { AntDatePickerType.Date, AntDatePickerType.Date };
         private string _picker;
         private bool _isSetPicker = false;
 
@@ -24,9 +23,6 @@ namespace AntBlazor
             {
                 _isSetPicker = true;
                 _picker = value;
-
-                _pickers[0] = value;
-                _pickers[1] = value;
 
                 NoteInitPicker(value, 0);
                 NoteInitPicker(value, 1);
@@ -50,6 +46,29 @@ namespace AntBlazor
 
         [Parameter]
         public bool ShowToday { get; set; } = true;
+
+        public bool IsShowTime { get; private set; } = false;
+        public string ShowTimeFormat { get; private set; } = "hh:mm:ss";
+        private OneOf<bool, string> _showTime = null;
+
+        [Parameter]
+        public OneOf<bool, string> ShowTime 
+        {
+            get => _showTime;
+            set
+            {
+                _showTime = value;
+
+                value.Switch(booleanValue =>
+                {
+                    IsShowTime = booleanValue;
+                }, strValue =>
+                {
+                    IsShowTime = true;
+                    ShowTimeFormat = strValue;
+                });
+            }
+        }
 
         [Parameter]
         public bool AllowClear { get; set; } = true; // TODO
@@ -338,7 +357,7 @@ namespace AntBlazor
             // TODO：Locale
             string formatValue = _pickerStatus[index]._initPicker switch
             {
-                AntDatePickerType.Date => value.ToString("yyyy-MM-dd"),
+                AntDatePickerType.Date => value.ToString(IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd"),
                 AntDatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}周",
                 AntDatePickerType.Month => value.ToString("yyyy-MM"),
                 AntDatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
@@ -363,6 +382,8 @@ namespace AntBlazor
             _needRefresh = !_isClose;
 
             OnOpenChange?.Invoke(!_isClose);
+
+            StateHasChanged();
         }
 
         protected void TryClose()
@@ -375,6 +396,8 @@ namespace AntBlazor
             AutoFocus = false;
             _isClose = true;
             _needRefresh = true;
+
+            StateHasChanged();
         }
 
         protected async Task OnSelect(DateTime date)
@@ -388,14 +411,14 @@ namespace AntBlazor
             }
 
             // InitPicker is the finally value
-            if (_pickers[index] == _pickerStatus[index]._initPicker)
+            if (_picker == _pickerStatus[index]._initPicker)
             {
                 ChangeValue(date, index);
 
                 OnChange?.Invoke(date, GetInputValue(index));
 
                 // auto focus the other input
-                if (IsRange)
+                if (IsRange && !IsShowTime)
                 {
                     if (index == 0 && !_pickerStatus[1]._hadSelectValue && !_inputEnd.IsOnFocused)
                     {
@@ -409,35 +432,16 @@ namespace AntBlazor
             }
             else
             {
-                _pickers[index] = _pickerStatus[index]._prePickerStack.Pop();
+                _picker = _pickerStatus[index]._prePickerStack.Pop();
 
                 if (IsRange)
                 {
                     int otherIndex = index == 0 ? 1 : 0;
-                    _pickers[otherIndex] = _pickerStatus[otherIndex]._prePickerStack.Pop();
+                    _picker = _pickerStatus[otherIndex]._prePickerStack.Pop();
                 }
             }
 
             ChangePickerValue(date, index);
-        }
-
-        private void ChangeValue(DateTime date, int index = 0)
-        {
-            _values[index] = date;
-
-            _pickerStatus[index]._hadSelectValue = true;
-
-            if (IsRange)
-            {
-                if (_pickerStatus[0]._hadSelectValue && _pickerStatus[1]._hadSelectValue)
-                {
-                    _isClose = true;
-                }
-            }
-            else
-            {
-                _isClose = true;
-            }
         }
 
         private void NoteInitPicker(string picker, int index = 0)
@@ -449,6 +453,30 @@ namespace AntBlazor
 
                 // set default placeholder
                 _placeholders[index] = AntDatePickerPlaceholder.GetPlaceholderByType(_pickerStatus[index]._initPicker);
+            }
+        }
+
+        public void Close()
+        {
+            TryClose();
+        }
+
+        public void ChangeValue(DateTime date, int index = 0)
+        {
+            _values[index] = date;
+
+            _pickerStatus[index]._hadSelectValue = true;
+
+            if (IsRange && !IsShowTime)
+            {
+                if (_pickerStatus[0]._hadSelectValue && _pickerStatus[1]._hadSelectValue)
+                {
+                    _isClose = true;
+                }
+            }
+            else if (!IsShowTime)
+            {
+                _isClose = true;
             }
         }
 
@@ -492,14 +520,19 @@ namespace AntBlazor
             }
         }
 
-        /// <summary>
-        /// Get picker by picker index
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public string GetIndexPicker(int index)
+        public int GetOnFocusPickerIndex()
         {
-            return _pickers[index];
+            if (_inputStart != null && _inputStart.IsOnFocused)
+            {
+                return 0;
+            }
+
+            if (_inputEnd != null && _inputEnd.IsOnFocused)
+            {
+                return 1;
+            }
+
+            return 0;
         }
 
         /// <summary>
@@ -540,25 +573,25 @@ namespace AntBlazor
                 }
             }
 
-            OnPanelChange?.Invoke(_pickerValues[index], _pickers[index]);
+            OnPanelChange?.Invoke(_pickerValues[index], _picker);
 
             StateHasChanged();
         }
 
         public void ChangePickerType(string type, int index = 0)
         {
-            _pickerStatus[index]._prePickerStack.Push(_pickers[index]);
-            _pickers[index] = type;
+            _pickerStatus[index]._prePickerStack.Push(_picker);
+            _picker = type;
 
             if (IsRange)
             {
                 int otherIndex = index == 0 ? 1 : 0;
 
-                _pickerStatus[otherIndex]._prePickerStack.Push(_pickers[otherIndex]);
-                _pickers[otherIndex] = type;
+                _pickerStatus[otherIndex]._prePickerStack.Push(_picker);
+                _picker = type;
             }
 
-            OnPanelChange?.Invoke(_pickerValues[index], _pickers[index]);
+            OnPanelChange?.Invoke(_pickerValues[index], _picker);
 
             StateHasChanged();
         }

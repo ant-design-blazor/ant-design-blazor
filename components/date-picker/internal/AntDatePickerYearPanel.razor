@@ -16,7 +16,6 @@
 }
 <AntDatePickerTemplate 
     PickerIndex="@PickerIndex"
-    SuperChangeDateInterval="10"
     MaxRow="MAX_ROW"
     MaxCol="MAX_COL"
     ViewStartDate="startDate"
@@ -25,8 +24,13 @@
     IsSelected="date => DateHelper.IsSameYear(date, Value)"
     GetColTitle='date => date.ToString("yyyy")'
     OnValueSelect="date => OnSelectYear(date)"
-    GetNextColValue="date => date.AddYears(1)"
-    IsRange="DatePicker.IsRange">
+    GetNextColValue="date => date.AddYears(1)">
+    <RenderPickerHeader>
+        <AntDatePickerHeader SuperChangeDateInterval="10"
+                             PickerIndex="@PickerIndex"
+                             ShowPreChange="@false"
+                             ShowNextChange="@false" />
+    </RenderPickerHeader>
     <RenderColValue Context="currentColDate">
         @{yearIndex++;}
         @currentColDate.Year

@@ -20,8 +20,12 @@
     IsSelected="date => DateHelper.IsSameQuarter(date, Value)"
     GetColTitle='date => date.ToString("yyyy")'
     OnValueSelect="date => OnSelectQuarter(date)"
-    GetNextColValue="date => date.AddMonths(3)"
-    IsRange="DatePicker.IsRange">
+    GetNextColValue="date => date.AddMonths(3)">
+    <RenderPickerHeader>
+        <AntDatePickerHeader PickerIndex="@PickerIndex"
+                             ShowPreChange="@false"
+                             ShowNextChange="@false"  />
+    </RenderPickerHeader>
     <RenderColValue Context="currentColDate">
         @DateHelper.GetDayOfQuarter(currentColDate)
     </RenderColValue>
