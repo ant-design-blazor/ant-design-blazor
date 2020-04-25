@@ -49,6 +49,9 @@ namespace AntBlazor
         public bool InputReadOnly { get; set; } = false;
 
         [Parameter]
+        public bool ShowToday { get; set; } = true;
+
+        [Parameter]
         public bool AllowClear { get; set; } = true; // TODO
 
         private string[] _placeholders = new string[] { "", "" };
@@ -147,6 +150,10 @@ namespace AntBlazor
         [Parameter]
         public Func<DateTime, DateTime, RenderFragment> DateRender { get; set; }
 
+        // TODO: need locale
+        [Parameter]
+        public Func<DateTime, RenderFragment> MonthCellRender { get; set; }
+
         private readonly DateTime[] _values = new DateTime[2];
         private OneOf<DateTime, DateTime[]> _value;
 
@@ -204,11 +211,11 @@ namespace AntBlazor
                 {
                     DisabledDate = (date) =>
                     {
-                        if (_hadSelectValues[0] && _inputEnd.IsOnFocused)
+                        if (_pickerStatus[0]._hadSelectValue && _inputEnd.IsOnFocused)
                         {
                             return date.CompareTo(_values[0]) < 0;
                         }
-                        if (_hadSelectValues[1] && _inputStart.IsOnFocused)
+                        if (_pickerStatus[1]._hadSelectValue && _inputStart.IsOnFocused)
                         {
                             return date.CompareTo(_values[1]) > 0;
                         }
@@ -224,9 +231,11 @@ namespace AntBlazor
 
         private string _activeBarStyle = "";
 
-        private string[] _initPickers = new string[2];
-        private string[] _prePickers = new string[2];
-        private bool[] _hadSelectValues = new bool[] { false, false };
+        private AntDatePickerStatus[] _pickerStatus
+            = new AntDatePickerStatus[] { new AntDatePickerStatus(), new AntDatePickerStatus() };
+        //private string[] _initPickers = new string[2];
+        //private string[] _prePickers = new string[2];
+        //private bool[] _hadSelectValues = new bool[] { false, false };
         private bool _isClose = true;
         private bool _needRefresh;
 
@@ -304,7 +313,7 @@ namespace AntBlazor
         {
             DateTime value;
 
-            if (_hadSelectValues[index])
+            if (_pickerStatus[index]._hadSelectValue)
             {
                 value = _values[index];
             }
@@ -324,7 +333,7 @@ namespace AntBlazor
             }
 
             // TODO：Locale
-            string formatValue = _pickers[index] switch
+            string formatValue = _pickerStatus[index]._initPicker switch
             {
                 AntDatePickerType.Date => value.ToString("yyyy-MM-dd"),
                 AntDatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}周",
@@ -376,7 +385,7 @@ namespace AntBlazor
             }
 
             // InitPicker is the finally value
-            if (_pickers[index] == _initPickers[index])
+            if (_pickers[index] == _pickerStatus[index]._initPicker)
             {
                 ChangeValue(date, index);
 
@@ -385,11 +394,11 @@ namespace AntBlazor
                 // auto focus the other input
                 if (IsRange)
                 {
-                    if (index == 0 && !_hadSelectValues[1] && !_inputEnd.IsOnFocused)
+                    if (index == 0 && !_pickerStatus[1]._hadSelectValue && !_inputEnd.IsOnFocused)
                     {
                         await Focus(1).ConfigureAwait(false);
                     }
-                    if (index == 1 && !_hadSelectValues[0] && !_inputStart.IsOnFocused)
+                    if (index == 1 && !_pickerStatus[0]._hadSelectValue && !_inputStart.IsOnFocused)
                     {
                         await Focus(0).ConfigureAwait(false);
                     }
@@ -397,12 +406,12 @@ namespace AntBlazor
             }
             else
             {
-                _pickers[index] = _prePickers[index];
+                _pickers[index] = _pickerStatus[index]._prePickerStack.Pop();
 
                 if (IsRange)
                 {
                     int otherIndex = index == 0 ? 1 : 0;
-                    _pickers[otherIndex] = _prePickers[otherIndex];
+                    _pickers[otherIndex] = _pickerStatus[otherIndex]._prePickerStack.Pop();
                 }
             }
 
@@ -413,11 +422,11 @@ namespace AntBlazor
         {
             _values[index] = date;
 
-            _hadSelectValues[index] = true;
+            _pickerStatus[index]._hadSelectValue = true;
 
             if (IsRange)
             {
-                if (_hadSelectValues[0] && _hadSelectValues[1])
+                if (_pickerStatus[0]._hadSelectValue && _pickerStatus[1]._hadSelectValue)
                 {
                     _isClose = true;
                 }
@@ -430,13 +439,13 @@ namespace AntBlazor
 
         private void NoteInitPicker(string picker, int index = 0)
         {
-            if (string.IsNullOrEmpty(_initPickers[index]))
+            if (string.IsNullOrEmpty(_pickerStatus[index]._initPicker))
             {
                 // note first picker type
-                _initPickers[index] = picker;
+                _pickerStatus[index]._initPicker = picker;
 
                 // set default placeholder
-                _placeholders[index] = AntDatePickerPlaceholder.GetPlaceholderByType(_initPickers[index]);
+                _placeholders[index] = AntDatePickerPlaceholder.GetPlaceholderByType(_pickerStatus[index]._initPicker);
             }
         }
 
@@ -535,14 +544,14 @@ namespace AntBlazor
 
         public void ChangePickerType(string type, int index = 0)
         {
-            _prePickers[index] = _pickers[index];
+            _pickerStatus[index]._prePickerStack.Push(_pickers[index]);
             _pickers[index] = type;
 
             if (IsRange)
             {
                 int otherIndex = index == 0 ? 1 : 0;
 
-                _prePickers[otherIndex] = _pickers[otherIndex];
+                _pickerStatus[otherIndex]._prePickerStack.Push(_pickers[otherIndex]);
                 _pickers[otherIndex] = type;
             }
 

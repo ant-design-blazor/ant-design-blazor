@@ -1,7 +1,6 @@
 ﻿@namespace AntBlazor.Internal
 @inherits AntDatePickerPanelBase
 
-picker:@Picker
 <div class="@(DatePicker.PrefixCls)-@(Picker)-panel">
     <AntDatePickerHeader SuperChangeDateInterval="@SuperChangeDateInterval"
                          ChangeDateInterval="@ChangeDateInterval"
@@ -40,9 +39,13 @@ picker:@Picker
                                 class="@(DatePicker.PrefixCls)-cell @(inViewCls) @(todayCls) @selectedCls @disabledCls">
                                 <div class="@(DatePicker.PrefixCls)-cell-inner"
                                      @onclick="e => OnValueSelect?.Invoke(currentColDate)">
-                                    @if (DatePicker.DateRender != null)
+                                    @if (Picker == AntDatePickerType.Date && DatePicker.DateRender != null)
                                     {
                                         @(DatePicker.DateRender(currentColDate, DatePicker.CurrentDate))
+                                    }
+                                    else if (Picker == AntDatePickerType.Month && DatePicker.MonthCellRender != null)
+                                    {
+                                        @(DatePicker.MonthCellRender(currentColDate))
                                     }
                                     else
                                     {
