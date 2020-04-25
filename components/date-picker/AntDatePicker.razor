@@ -52,17 +52,17 @@
         {
             <div class="@(PrefixCls)-panels">
                 <div class="@(PrefixCls)-panel">
-                    <AntDatePickerPanelChooser DatePicker="@this" PickerIndex="0" IsRange="@true" Pickers="@_pickers" OnSelect="async (date, index) => await OnSelect(date)" />
+                    <AntDatePickerPanelChooser DatePicker="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelect(date)" />
                 </div>
                 <div class="@(PrefixCls)-panel">
-                    <AntDatePickerPanelChooser DatePicker="@this" PickerIndex="1" IsRange="@true" Pickers="@_pickers" OnSelect="async (date, index) => await OnSelect(date)" />
+                    <AntDatePickerPanelChooser DatePicker="@this" PickerIndex="1" OnSelect="async (date, index) => await OnSelect(date)" />
                 </div>
             </div>
         }
         else
         {
             <div class="@(PrefixCls)-panel">
-                <AntDatePickerPanelChooser DatePicker="@this" Pickers="@_pickers" OnSelect="async (date, index) => await OnSelect(date)" />
+                <AntDatePickerPanelChooser DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)" />
             </div>
         }
     </div>

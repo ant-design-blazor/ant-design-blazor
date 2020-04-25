@@ -2,10 +2,7 @@
 @inherits AntDatePickerPanelBase
 
 <div class="@(DatePicker.PrefixCls)-@(Picker)-panel">
-    <AntDatePickerHeader SuperChangeDateInterval="@SuperChangeDateInterval"
-                         ChangeDateInterval="@ChangeDateInterval"
-                         PickerIndex="@PickerIndex"
-                         IsRange="@IsRange" />
+    @RenderPickerHeader
     <div class="@(DatePicker.PrefixCls)-body">
         <table class="@(DatePicker.PrefixCls)-content">
             <thead>
@@ -66,23 +63,10 @@
     </div>
 </div>
 
-@if (DatePicker.RenderExtraFooter != null)
-{
-    <div class="@(DatePicker.PrefixCls)-footer">
-        <div class="@(DatePicker.PrefixCls)-footer-extra">
-            @DatePicker.RenderExtraFooter
-        </div>
-    </div>
-}
-
-@if (ShowFooter)
-{
-    <div class="@(DatePicker.PrefixCls)-footer">
-        <a class="@(DatePicker.PrefixCls)-today-btn" @onclick="e => ChangePickerValue(DateTime.Now)">今天</a>
-    </div>
-}
-
 @code {
+    [Parameter]
+    public RenderFragment RenderPickerHeader { get; set; }
+
     [Parameter]
     public RenderFragment RenderTableHeader { get; set; }
 
@@ -130,13 +114,4 @@
 
     [Parameter]
     public int MaxCol { get; set; } = 0;
-
-    [Parameter]
-    public bool IsRange { get; set; } = false;
-
-    [Parameter]
-    public int SuperChangeDateInterval { get; set; } = 1;
-
-    [Parameter]
-    public int ChangeDateInterval { get; set; } = 1;
 }
