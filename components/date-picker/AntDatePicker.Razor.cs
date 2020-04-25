@@ -136,6 +136,9 @@ namespace AntBlazor
         public RenderFragment SuffixIcon { get; set; }
 
         [Parameter]
+        public RenderFragment RenderExtraFooter { get; set; }
+
+        [Parameter]
         public Action<bool> OnOpenChange { get; set; }
 
         [Parameter]
