@@ -66,9 +66,20 @@
     </div>
 </div>
 
+@if (DatePicker.RenderExtraFooter != null)
+{
+    <div class="@(DatePicker.PrefixCls)-footer">
+        <div class="@(DatePicker.PrefixCls)-footer-extra">
+            @DatePicker.RenderExtraFooter
+        </div>
+    </div>
+}
+
 @if (ShowFooter)
 {
-    <AntDatePickerFooter PickerIndex="@PickerIndex" />
+    <div class="@(DatePicker.PrefixCls)-footer">
+        <a class="@(DatePicker.PrefixCls)-today-btn" @onclick="e => ChangePickerValue(DateTime.Now)">今天</a>
+    </div>
 }
 
 @code {
