@@ -2,25 +2,25 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using AntBlazor.Internal;
 using Microsoft.AspNetCore.Components;
 using System;
 
 namespace AntBlazor
 {
-    public class AntDatePickerPanelBase : AntDomComponentBase
+    public class AntDatePickerPanelBase : AntPickerPanelBase
     {
         [CascadingParameter]
         public AntDatePicker DatePicker { get; set; }
 
-        [Parameter]
-        public Action<DateTime, int> OnSelect { get; set; }
-
-        [Parameter]
-        public int PickerIndex { get; set; } = 0;
+        protected void OnSelectTime(DateTime date)
+        {
+            OnSelect?.Invoke(date, PickerIndex);
+        }
 
         protected void OnSelectDate(DateTime date)
         {
-            OnSelect?.Invoke(date, PickerIndex);
+            OnSelect?.Invoke(CombineNewShowDate(year: date.Year, month: date.Month, day: date.Day), PickerIndex);
         }
 
         protected void OnSelectYear(DateTime date)
@@ -43,6 +43,21 @@ namespace AntBlazor
             OnSelect?.Invoke(CombineNewShowDate(day: date.Day), PickerIndex);
         }
 
+        protected void OnSelectHour(DateTime date)
+        {
+            OnSelect?.Invoke(CombineNewShowDate(hour: date.Hour), PickerIndex);
+        }
+
+        protected void OnSelectMinute(DateTime date)
+        {
+            OnSelect?.Invoke(CombineNewShowDate(minute: date.Minute), PickerIndex);
+        }
+
+        protected void OnSelectSecond(DateTime date)
+        {
+            OnSelect?.Invoke(CombineNewShowDate(second: date.Second), PickerIndex);
+        }
+
         protected void OnSelectShowYear(DateTime date)
         {
             DatePicker.ChangePickerValue(CombineNewShowDate(year: date.Year), PickerIndex);
@@ -58,12 +73,21 @@ namespace AntBlazor
             DatePicker.ChangePickerValue(CombineNewShowDate(day: date.Day), PickerIndex);
         }
 
-        protected DateTime CombineNewShowDate(int? year = null, int? month = null, int? day = null)
+        protected DateTime CombineNewShowDate(
+            int? year = null,
+            int? month = null,
+            int? day = null,
+            int? hour = null,
+            int? minute = null,
+            int? second = null)
         {
             return new DateTime(
                 year ?? PickerValue.Year,
                 month ?? PickerValue.Month,
-                day ?? PickerValue.Day
+                day ?? PickerValue.Day,
+                hour ?? PickerValue.Hour,
+                minute ?? PickerValue.Minute,
+                second ?? PickerValue.Second
             );
         }
 
@@ -82,7 +106,12 @@ namespace AntBlazor
             DatePicker.ChangePickerValue(date, PickerIndex);
         }
 
-        protected string Picker { get => DatePicker.GetIndexPicker(PickerIndex); }
+        protected void ChangeValue(DateTime date)
+        {
+            DatePicker.ChangeValue(date, PickerIndex);
+        }
+
+        protected string Picker { get => DatePicker.Picker; }
 
         protected DateTime PickerValue { get => DatePicker.GetIndexPickerValue(PickerIndex); }
 

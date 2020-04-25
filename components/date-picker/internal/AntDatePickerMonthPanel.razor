@@ -22,8 +22,10 @@
     IsSelected="date => DateHelper.IsSameMonth(date, Value)"
     GetColTitle='date => date.ToString("yyyy")'
     OnValueSelect="date => OnSelectMonth(date)"
-    GetNextColValue="date => date.AddMonths(1)"
-    IsRange="DatePicker.IsRange">
+    GetNextColValue="date => date.AddMonths(1)">
+    <RenderPickerHeader>
+        <AntDatePickerHeader PickerIndex="@PickerIndex" />
+    </RenderPickerHeader>
     <RenderColValue Context="currentColDate">
         @(currentColDate.Month)月
     </RenderColValue>
