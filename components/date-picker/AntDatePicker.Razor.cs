@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AntBlazor.Internal;
 using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using System.Collections.Generic;
 using OneOf;
 
 namespace AntBlazor
@@ -269,9 +269,8 @@ namespace AntBlazor
 
         private AntDatePickerStatus[] _pickerStatus
             = new AntDatePickerStatus[] { new AntDatePickerStatus(), new AntDatePickerStatus() };
-        //private string[] _initPickers = new string[2];
-        //private string[] _prePickers = new string[2];
-        //private bool[] _hadSelectValues = new bool[] { false, false };
+
+        private Stack<string> _prePickerStack = new Stack<string>();
         private bool _isClose = true;
         private bool _needRefresh;
 
@@ -437,23 +436,19 @@ namespace AntBlazor
                 {
                     if (index == 0 && !_pickerStatus[1]._hadSelectValue && !_inputEnd.IsOnFocused)
                     {
+                        await Blur(0).ConfigureAwait(false);
                         await Focus(1).ConfigureAwait(false);
                     }
                     if (index == 1 && !_pickerStatus[0]._hadSelectValue && !_inputStart.IsOnFocused)
                     {
+                        await Blur(1).ConfigureAwait(false);
                         await Focus(0).ConfigureAwait(false);
                     }
                 }
             }
             else
             {
-                _picker = _pickerStatus[index]._prePickerStack.Pop();
-
-                if (IsRange)
-                {
-                    int otherIndex = index == 0 ? 1 : 0;
-                    _picker = _pickerStatus[otherIndex]._prePickerStack.Pop();
-                }
+                _picker = _prePickerStack.Pop();
             }
 
             ChangePickerValue(date, index);
@@ -628,16 +623,8 @@ namespace AntBlazor
 
         public void ChangePickerType(string type, int index = 0)
         {
-            _pickerStatus[index]._prePickerStack.Push(_picker);
+            _prePickerStack.Push(_picker);
             _picker = type;
-
-            if (IsRange)
-            {
-                int otherIndex = index == 0 ? 1 : 0;
-
-                _pickerStatus[otherIndex]._prePickerStack.Push(_picker);
-                _picker = type;
-            }
 
             OnPanelChange?.Invoke(_pickerValues[index], _picker);
 
