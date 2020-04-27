@@ -52,7 +52,7 @@ jobs:
               env:
                   SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
               with:
-                  source-repo: "git@github.com:ElderJames/ant-design-blazor.git"
+                  source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
                   destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
 
             - name: Reload Gitee Pages 😆

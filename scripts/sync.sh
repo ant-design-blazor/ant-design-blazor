@@ -1,7 +1,7 @@
 #!/bin/bash
 
 git clone https://github.com/ant-design/ant-design.git
-git clone https://github.com/ElderJames/ant-design-blazor.git
+git clone https://github.com/ant-design-blazor/ant-design-blazor.git
 cd ant-design
 LAST_VERSION=$(git describe --abbrev=0 --tags | sed 's/* //'  )
 echo "Last Version of ant-design: ${LAST_VERSION}"
@@ -33,4 +33,4 @@ curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
 cat>PR<<EOF
 chore: sync ant-design v${LAST_VERSION}
 EOF
-bin/hub pull-request -F PR -b ElderJames:master -h ElderJames:${BRANCH_NAME} -a ElderJames
+bin/hub pull-request -F PR -b ant-design-blazor:master -h ElderJames:${BRANCH_NAME} -a ElderJames
