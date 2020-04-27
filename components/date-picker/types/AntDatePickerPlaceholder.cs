@@ -11,6 +11,7 @@ namespace AntBlazor
         public const string Month = "请选择月份";
         public const string Quarter = "请选择季度";
         public const string Year = "请选择年份";
+        public const string Time = "请选择时间";
 
         public static string GetPlaceholderByType(string pickerType)
         {
@@ -21,6 +22,7 @@ namespace AntBlazor
                 AntDatePickerType.Month => AntDatePickerPlaceholder.Month,
                 AntDatePickerType.Quarter => AntDatePickerPlaceholder.Quarter,
                 AntDatePickerType.Year => AntDatePickerPlaceholder.Year,
+                AntDatePickerType.Time => AntDatePickerPlaceholder.Time,
                 _ => "",
             };
 
