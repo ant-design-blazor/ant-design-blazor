@@ -134,10 +134,14 @@
     </div>
 }
 
-@if (DatePicker.ShowToday && !DatePicker.IsShowTime)
+@if (DatePicker.ShowToday && !DatePicker.IsRange
+    && !DatePicker.IsShowTime && Picker != AntDatePickerType.Time)
 {
     <div class="@(DatePicker.PrefixCls)-footer">
-        <a class="@(DatePicker.PrefixCls)-today-btn" @onclick="e => ChangePickerValue(DateTime.Now)">今天</a>
+        <a class="@(DatePicker.PrefixCls)-today-btn" 
+           @onclick="e => { OnSelectDate(DateTime.Now); DatePicker.Close(); }">
+            今天
+        </a>
     </div>
 }
 
