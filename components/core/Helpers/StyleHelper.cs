@@ -1,6 +1,6 @@
 ﻿namespace AntBlazor
 {
-    public class StyleHelper
+    public static class StyleHelper
     {
         //fix the user set 100% or xxxVH etc..
         public static string ToCssPixel(string value) => int.TryParse(value, out var _) ? $"{value}px" : value;

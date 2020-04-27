@@ -49,14 +49,12 @@ namespace AntBlazor
         protected ClassMapper PopupUlClassMapper { get; } = new ClassMapper();
 
         private string _placement = "rightTop";
-        private int _triggerWidth;
-        private string _expandState = "collapsed";
-        private string[] _overlayPositions = new[] { "" };
+
         private bool _isChildMenuSelected = false;
         protected bool IsMouseHover { get; set; } = false;
         private bool _hasOpened;
 
-        protected Element _element = new Element();
+        private Element _element = new Element();
 
         private void SetClassMap()
         {
@@ -77,7 +75,7 @@ namespace AntBlazor
         {
             if (this is AntSubMenu subMenu)
             {
-                this.Menu?._subMenus.Add(subMenu);
+                this.Menu?.SubMenus.Add(subMenu);
             }
 
             this.Level = this.ParentSubMenu?.Level + 1 ?? 1;

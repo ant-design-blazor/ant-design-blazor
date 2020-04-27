@@ -10,8 +10,7 @@ namespace AntBlazor
 {
     public partial class AntTag : AntDomComponentBase
     {
-
-        [Parameter] 
+        [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
@@ -44,9 +43,8 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
 
-        bool _presetColor = false;
-        bool _closed = false;
-
+        private bool _presetColor;
+        private bool _closed;
 
         protected override Task OnInitializedAsync()
         {
@@ -60,7 +58,7 @@ namespace AntBlazor
             base.OnParametersSet();
         }
 
-        private bool IsPresetColor(string color)
+        private static bool IsPresetColor(string color)
         {
             if (string.IsNullOrEmpty(color))
             {
@@ -72,7 +70,7 @@ namespace AntBlazor
 
         private void UpdateClassMap()
         {
-            this._presetColor = this.IsPresetColor(this.Color);
+            this._presetColor = IsPresetColor(this.Color);
             string prefix = "ant-tag";
             this.ClassMapper.Clear().Add(prefix)
                 .If($"{prefix}-has-color", () => !string.IsNullOrEmpty(Color) && !_presetColor)

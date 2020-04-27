@@ -13,6 +13,7 @@ namespace AntBlazor
 
         internal List<AntStep> _children = new List<AntStep>();
         [Parameter] public int Current { get; set; }
+
         [Parameter]
         public RenderFragment ProgressDot
         {
@@ -24,12 +25,14 @@ namespace AntBlazor
                 ResetChildrenSteps();
             }
         }
+
         [Parameter]
         public bool ShowProgressDot
         {
             get => _showProgressDot;
             set => _showProgressDot = value;
         }
+
         [Parameter] public string Direction { get; set; } = "horizontal";
         [Parameter] public string LabelPlacement { get; set; } = "horizontal";
         [Parameter] public string Type { get; set; } = "default";
@@ -40,14 +43,14 @@ namespace AntBlazor
         [Parameter] public string ClassName { get; set; }
         [Parameter] public Action<int> OnChange { get; set; }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            foreach (var step in _children)
+            foreach (AntStep step in _children)
             {
                 step.Dispose();
             }
             _children.Clear();
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         internal void ResetChildrenSteps()
@@ -65,7 +68,7 @@ namespace AntBlazor
                 _children[i].Index = i + this.StartIndex;
                 _children[i].GroupCurrentIndex = this.Current;
                 _children[i].Last = _children.Count == i + 1;
-                _children[i].MarkForCheck();
+                AntStep.MarkForCheck();
             }
         }
 
@@ -84,7 +87,6 @@ namespace AntBlazor
             {
                 ResetChildrenSteps();
             });
-
         }
 
         protected void SetClassMap()
@@ -100,6 +102,10 @@ namespace AntBlazor
                 .If($"{prefixName}-small", () => Size == "small")
                 .If($"{prefixName}-navigation", () => Type == "navigation")
                 ;
+        }
+
+        internal void MarkForCheck()
+        {
         }
     }
 }

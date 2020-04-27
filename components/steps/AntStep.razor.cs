@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System;
 using System.Collections.Generic;
-using System.Text;
-
-#nullable enable
 
 namespace AntBlazor
 {
@@ -14,12 +10,13 @@ namespace AntBlazor
         private bool _isCustomStatus;
         private int _groupCurrent;
 
-        protected Dictionary<string, object> _containerAttributes = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _containerAttributes = new Dictionary<string, object>();
 
         internal bool Clickable { get; set; }
         internal bool Last { get; set; }
         internal bool ShowProcessDot { get; set; }
         internal string GroupStatus { get; set; } = string.Empty;
+
         internal int GroupCurrentIndex
         {
             get => _groupCurrent;
@@ -33,8 +30,9 @@ namespace AntBlazor
                 SetClassMap();
             }
         }
+
         internal int Index { get; set; }
-        internal RenderFragment? ProgressDot { get; set; }
+        internal RenderFragment ProgressDot { get; set; }
         internal string Direction { get; set; } = "horizontal";
 
         [CascadingParameter]
@@ -54,12 +52,12 @@ namespace AntBlazor
                 SetClassMap();
             }
         }
+
         [Parameter] public string Title { get; set; } = string.Empty;
         [Parameter] public string Subtitle { get; set; } = string.Empty;
         [Parameter] public string Description { get; set; } = string.Empty;
         [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
         [Parameter] public bool Disabled { get; set; }
-
 
         protected override void OnInitialized()
         {
@@ -72,11 +70,11 @@ namespace AntBlazor
             }
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             Parent._children.Remove(this);
             Parent.ResetChildrenSteps();
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         internal int? GetTabIndex()
@@ -104,9 +102,8 @@ namespace AntBlazor
             SetClassMap();
         }
 
-        internal void MarkForCheck()
+        internal static void MarkForCheck()
         {
-
         }
     }
 }

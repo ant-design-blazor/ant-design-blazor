@@ -23,13 +23,13 @@
 
 ## ✨ 特性
 
-- 提炼自企业级中后台产品的交互语言和视觉风格。
-- 开箱即用的高质量 Razor 组件，可在多种托管方式共享。
-- 支持基于 WebAssembly 的客户端和基于 SignalR 的服务端UI事件交互。
-- 支持渐进式 Web 应用（PWA）
-- 使用 C# 构建，多范式静态语言带来高效的开发体验。
-- 基于 .NET Standard 2.1，可直接引用丰富的 .NET 类库。
-- 可与已有的 ASP.NET Core MVC、Razor Pages 项目无缝集成。
+- 🌈 提炼自企业级中后台产品的交互语言和视觉风格。
+- 📦 开箱即用的高质量 Razor 组件，可在多种托管方式共享。
+- 💕 支持基于 WebAssembly 的客户端和基于 SignalR 的服务端UI事件交互。
+- 🎨 支持渐进式 Web 应用（PWA）
+- 🛡 使用 C# 构建，多范式静态语言带来高效的开发体验。
+- ⚙️ 基于 .NET Standard 2.1，可直接引用丰富的 .NET 类库。
+- 🎁 可与已有的 ASP.NET Core MVC、Razor Pages 项目无缝集成。
 
 ## 🌈 在线示例
 
@@ -38,7 +38,7 @@
 ## 🖥 支持环境
 
 - .NET Core 3.1
-- Blazor WebAssembly 3.2 preievew 3
+- Blazor WebAssembly 3.2 preievew 5
 - 支持服务端双向绑定
 - 支持 WebAssembly 静态文件部署
 - 主流4款现代浏览器，以及 Internet Explorer 11+ （使用 [Blazor Server](https://angular.io/guide/browser-support)）
@@ -65,7 +65,7 @@
 - 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
 - 安装 Blazor WebAssembly 模板
   ```
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview3.20168.3
+  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview4.20210.8
   ```   
 - 创建 Blazor WebAssembly 项目
   ```

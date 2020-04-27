@@ -30,7 +30,7 @@ namespace AntBlazor
         [CascadingParameter]
         public AntSubMenu SubMenu { get; set; }
 
-        private int _originalPadding;
+        private readonly int _originalPadding = 0;
 
         private void SetClassMap()
         {
@@ -51,11 +51,11 @@ namespace AntBlazor
             base.OnInitialized();
             if (this is AntMenuItem item)
             {
-                Menu?._menuItems.Add(item);
+                Menu?.MenuItems.Add(item);
                 SubMenu?.Items.Add(item);
             }
 
-            int? padding = null;
+            int? padding;
             if (Menu.Mode == AntDirectionVHIType.inline)
             {
                 if (PaddingLeft != null)

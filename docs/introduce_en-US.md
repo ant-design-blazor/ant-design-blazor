@@ -23,13 +23,13 @@ Following the Ant Design specification, we developed a Blazor Components library
 
 ## ✨ Features
 
-- Enterprise-class UI interactive language and visual style.
-- Out-of-the-box, high-quality Razor components that can be shared in a variety of hosting models.
-- Supports WebAssembly-based client-side and SignalR-based server-side UI event interaction.
-- Supports Progressive Web Applications (PWA).
-- Build with C#, a multi-paradigm static language for an efficient development experience.
-- NET Standard 2.1 based, with direct reference to the rich .NET ecosystem.
-- Seamless integration with existing ASP.NET Core MVC and Razor Pages projects.
+- 🌈 Enterprise-class UI interactive language and visual style.
+- 📦 Out-of-the-box, high-quality Razor components that can be shared in a variety of hosting models.
+- 💕 Supports WebAssembly-based client-side and SignalR-based server-side UI event interaction.
+- 🎨 Supports Progressive Web Applications (PWA).
+- 🛡 Build with C#, a multi-paradigm static language for an efficient development experience.
+- ⚙️ NET Standard 2.1 based, with direct reference to the rich .NET ecosystem.
+- 🎁 Seamless integration with existing ASP.NET Core MVC and Razor Pages projects.
 
 ## 🌈 Online Examples
 
@@ -41,7 +41,7 @@ WebAssembly static hosting examples:
 ## 🖥 Environment Support
 
 - .NET Core 3.1
-- Blazor WebAssembly 3.2 Preview 3
+- Blazor WebAssembly 3.2 Preview 5
 - Supports two-way binding on the server side
 - Supports WebAssembly static file deployment
 - Support 4 major browsers engines, and Internet Explorer 11+ ([Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1) only)
@@ -69,7 +69,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 - Install Blazor WebAssembly Templates
 
   ```bash
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview3.20168.3
+  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview4.20210.8
   ```
 
 - Create Blazor WebAssembly Project

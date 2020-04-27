@@ -27,7 +27,7 @@ namespace AntBlazor
                 .If($"{PrefixCls}-password-large", () => Size == AntInputSize.Large)
                 .If($"{PrefixCls}-password-small", () => Size == AntInputSize.Small);
 
-            _affixWrapperClass = string.Join(" ", _affixWrapperClass, $"{PrefixCls}-password");
+            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-password");
 
             if (VisibilityToggle)
             {
@@ -39,7 +39,7 @@ namespace AntBlazor
                     builder.OpenComponent<AntIcon>(i++);
                     builder.AddAttribute(i++, "class", $"{PrefixCls}-password-icon");
                     builder.AddAttribute(i++, "type", _eyeIcon);
-                    builder.AddAttribute(i++, "onclick", _callbackFactory.Create(this, ToggleVisibility));
+                    builder.AddAttribute(i++, "onclick", CallbackFactory.Create(this, ToggleVisibility));
                     builder.CloseComponent();
                     builder.CloseElement();
                 });

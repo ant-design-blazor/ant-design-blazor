@@ -136,7 +136,7 @@ namespace AntBlazor
         {
             ref var frame = ref frames.Array[position];
             var childFrames = GetCurrentRenderTreeFrames(frame.ComponentId);
-            RenderFrames(context, childFrames, 0, childFrames.Count);
+            _ = RenderFrames(context, childFrames, 0, childFrames.Count);
             return position + frame.ComponentSubtreeLength;
         }
 

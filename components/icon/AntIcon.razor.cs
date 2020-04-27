@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -92,31 +93,31 @@ namespace AntBlazor
             await base.OnParametersSetAsync();
         }
 
-        protected async Task SetupSvgImg()
+        private async Task SetupSvgImg()
         {
-            try
+            if (_svgCache.TryGetValue($"{Theme}-{Type}", out string svg))
             {
-                if (_svgCache.TryGetValue($"{Theme}-{Type}", out var svg))
+                _iconSvg = svg;
+            }
+            else
+            {
+                HttpResponseMessage res = await HttpClient.GetAsync(new Uri(_baseUrl, $"_content/AntBlazor/icons/{Theme.ToLower(CultureInfo.CurrentCulture)}/{Type.ToLower(CultureInfo.CurrentCulture)}.svg"));
+                if (res.IsSuccessStatusCode)
                 {
-                    _iconSvg = svg;
-                }
-                else
-                {
-                    _iconSvg = await HttpClient.GetStringAsync(new Uri(_baseUrl, $"_content/AntBlazor/icons/{Theme.ToLower()}/{Type.ToLower()}.svg"));
+                    _iconSvg = await res.Content.ReadAsStringAsync();
                     _svgCache.TryAdd($"{Theme}-{Type}", _iconSvg);
                 }
-
-                SvgImg = _iconSvg.Insert(_iconSvg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {SvgStyle} ");
             }
-            catch
+
+            if (!string.IsNullOrEmpty(_iconSvg))
             {
-                // ignored
+                SvgImg = _iconSvg.Insert(_iconSvg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {SvgStyle} ");
             }
 
             StateHasChanged();
         }
 
-        public async Task OnClick(MouseEventArgs args)
+        private async Task OnClick(MouseEventArgs args)
         {
             if (Onclick.HasDelegate)
             {

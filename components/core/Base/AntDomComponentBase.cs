@@ -25,16 +25,12 @@ namespace AntBlazor
             }
         }
 
-        [CascadingParameter]
-        public AntTheme AntTheme { get; set; }
-
         protected ClassMapper ClassMapper { get; } = new ClassMapper();
 
         protected AntDomComponentBase()
         {
             ClassMapper
-                .Get(() => this.Class)
-                .Get(() => this.AntTheme?.GetClass());
+                .Get(() => this.Class);
         }
 
         /// <summary>

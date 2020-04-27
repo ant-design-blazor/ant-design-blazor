@@ -105,8 +105,6 @@ namespace AntBlazor
 
         private bool PlacementChanging { get; set; } = false;
 
-        private int _placementChangeTimeoutId = -1;
-
         private string OffsetTransform
         {
             get
