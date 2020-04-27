@@ -89,6 +89,11 @@
             "url": "datePicker"
           },
           {
+            "title": "TimePicker",
+            "type": "menuItem",
+            "url": "timePicker"
+          },
+          {
             "title": "Input",
             "type": "menuItem",
             "url": "input"

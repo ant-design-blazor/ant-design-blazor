@@ -47,5 +47,10 @@ namespace AntBlazor.Internal
         {
             return DatePicker.Picker == AntDatePickerType.Decade;
         }
+
+        private bool IsShowTimePanel()
+        {
+            return DatePicker.Picker == AntDatePickerType.Time;
+        }
     }
 }

@@ -14,6 +14,7 @@ Checkbox: Checkbox
 Switch: Switch
 Input: Input
 DatePicker: DatePicker
+TimePicker: TimePicker
 InputNumber: InputNumber
 Radio: Radio
 DataDisplay: Data Display

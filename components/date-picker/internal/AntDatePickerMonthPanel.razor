@@ -24,7 +24,11 @@
     OnValueSelect="date => OnSelectMonth(date)"
     GetNextColValue="date => date.AddMonths(1)">
     <RenderPickerHeader>
-        <AntDatePickerHeader PickerIndex="@PickerIndex" />
+        <AntDatePickerHeader PickerIndex="@PickerIndex"
+                             ShowNextChange="@false"
+                             ShowPreChange="@false"
+                             ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
+                             ShowSuperNextChange="@(!(DatePicker.IsRange && PickerIndex == 0))"/>
     </RenderPickerHeader>
     <RenderColValue Context="currentColDate">
         @(currentColDate.Month)月

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AntBlazor
+﻿namespace AntBlazor
 {
     public static class AntDatePickerType
     {
@@ -12,5 +8,6 @@ namespace AntBlazor
         public const string Quarter = "quarter";
         public const string Year = "year";
         internal const string Decade = "decade";
+        public const string Time = "time";
     }
 }
