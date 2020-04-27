@@ -6,8 +6,8 @@
     <IsPackable>true</IsPackable>
     <RazorLangVersion>3.0</RazorLangVersion>
     <Description>Ant Design components for Blazor and Razor Components</Description>
-    <PackageProjectUrl>https://github.com/elderjames/ant-design-blazor</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/elderjames/ant-design-blazor</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ant-design-blazor/ant-design-blazor</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ant-design-blazor/ant-design-blazor</RepositoryUrl>
     <PackageTags>blazor,ant-design,antd,design,razor,components</PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
