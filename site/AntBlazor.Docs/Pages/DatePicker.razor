@@ -1,6 +1,4 @@
-﻿@DateTime.Now
-
-<AntTitle Level="1">DatePicker 日期选择框</AntTitle>
+﻿<AntTitle Level="1">DatePicker 日期选择框</AntTitle>
 <AntText>输入或选择日期的控件。</AntText>
 <AntTitle Level="2">何时使用</AntTitle>
 <AntParagraph>当用户需要输入一个日期，可以点击标准输入框，弹出日期面板进行选择。</AntParagraph>
@@ -50,7 +48,7 @@
     <Description>增加选择时间功能，当 <AntText Code>ShowTime</AntText> 为一个对象时，其属性会传递给内建的 <AntText Code>TimePicker</AntText>。</Description>
     <Demo>
         <AntDatePicker Picker="@AntDatePickerType.Date" ShowTime="@true" /> <br />
-        <AntRangePicker Picker="@AntDatePickerType.Date" ShowTime='@("hh:mm")' /> <br />
+        <AntRangePicker Picker="@AntDatePickerType.Date" ShowTime='@("HH:mm")' /> <br />
     </Demo>
 </DemoCard>
 <DemoCard>
@@ -153,6 +151,9 @@ return @<span>@(currentViewDate.Day)</span>;
         </li>
         <li>
             未实现的RangePicker属性：allowEmpty、ranges、separator、onCalendarChange
+        </li>
+        <li>
+            未实现的功能：RangePicker的操作模式和Ant Design不完全一致
         </li>
     </Description>
 </DemoCard>

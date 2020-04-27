@@ -50,7 +50,7 @@ namespace AntBlazor
         public bool ShowToday { get; set; } = true;
 
         public bool IsShowTime { get; private set; } = false;
-        public string ShowTimeFormat { get; private set; } = "hh:mm:ss";
+        public string ShowTimeFormat { get; private set; } = "HH:mm:ss";
         private OneOf<bool, string> _showTime = null;
 
         [Parameter]
@@ -465,7 +465,6 @@ namespace AntBlazor
             {
                 return;
             }
-            Console.WriteLine($"change:{args.Value.ToString()}");
 
             if (DateTime.TryParse(args.Value.ToString(), out DateTime changeValue))
             {
@@ -514,16 +513,16 @@ namespace AntBlazor
 
             _pickerStatus[index]._hadSelectValue = true;
 
-            if (IsRange && !IsShowTime && !(Picker == AntDatePickerType.Time))
+            if (IsRange && !IsShowTime && Picker != AntDatePickerType.Time)
             {
                 if (_pickerStatus[0]._hadSelectValue && _pickerStatus[1]._hadSelectValue)
                 {
-                    _isClose = true;
+                    Close();
                 }
             }
-            else if (!IsShowTime && !(Picker == AntDatePickerType.Time))
+            else if (!IsShowTime && Picker != AntDatePickerType.Time)
             {
-                _isClose = true;
+                Close();
             }
         }
 
@@ -544,6 +543,7 @@ namespace AntBlazor
             {
                 input.IsOnFocused = true;
                 await JsInvokeAsync(JSInteropConstants.focus, input.Ref).ConfigureAwait(false);
+                _needRefresh = true;
             }
         }
 
@@ -564,6 +564,7 @@ namespace AntBlazor
             {
                 input.IsOnFocused = false;
                 await JsInvokeAsync(JSInteropConstants.blur, input.Ref).ConfigureAwait(false);
+                _needRefresh = true;
             }
         }
 
