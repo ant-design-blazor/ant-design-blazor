@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using AntBlazor.Internal;
 using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntBlazor
@@ -24,8 +26,8 @@ namespace AntBlazor
                 _isSetPicker = true;
                 _picker = value;
 
-                NoteInitPicker(value, 0);
-                NoteInitPicker(value, 1);
+                InitPicker(value, 0);
+                InitPicker(value, 1);
             }
         }
 
@@ -52,7 +54,7 @@ namespace AntBlazor
         private OneOf<bool, string> _showTime = null;
 
         [Parameter]
-        public OneOf<bool, string> ShowTime 
+        public OneOf<bool, string> ShowTime
         {
             get => _showTime;
             set
@@ -104,7 +106,7 @@ namespace AntBlazor
         public string DropdownClassName { get; set; }
 
         [Parameter]
-        public string Size { get; set; } = AntDatePickerSize.Middle;
+        public string Size { get; set; } = AntDatePickerSize.Default;
 
         [Parameter]
         public string Format { get; set; }
@@ -170,6 +172,18 @@ namespace AntBlazor
         public Func<DateTime, bool> DisabledDate { get; set; } = null;
 
         [Parameter]
+        public Func<DateTime, int[]> DisabledHours { get; set; } = null;
+
+        [Parameter]
+        public Func<DateTime, int[]> DisabledMinutes { get; set; } = null;
+
+        [Parameter]
+        public Func<DateTime, int[]> DisabledSeconds { get; set; } = null;
+
+        [Parameter]
+        public Func<DateTime, AntDatePickerDisabledTime> DisabledTime { get; set; } = null;
+
+        [Parameter]
         public Func<DateTime, DateTime, RenderFragment> DateRender { get; set; }
 
         // TODO: need locale
@@ -199,7 +213,7 @@ namespace AntBlazor
 
         public DateTime CurrentDate { get; private set; } = DateTime.Now;
 
-        private readonly DateTime[] _pickerValues = new DateTime[] { DateTime.Now, DateTime.Now.AddMonths(1) };
+        private readonly DateTime[] _pickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
         private OneOf<DateTime, DateTime[]> _pickerValue;
 
         [Parameter]
@@ -351,21 +365,22 @@ namespace AntBlazor
             if (!string.IsNullOrEmpty(Format))
             {
                 // TODO：Locale
-                return value.ToString(Format);
+                return value.ToString(Format, CultureInfo.CurrentCulture);
             }
 
             // TODO：Locale
-            string formatValue = _pickerStatus[index]._initPicker switch
+            string formater = _pickerStatus[index]._initPicker switch
             {
-                AntDatePickerType.Date => value.ToString(IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd"),
+                AntDatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
                 AntDatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}周",
-                AntDatePickerType.Month => value.ToString("yyyy-MM"),
+                AntDatePickerType.Month => "yyyy-MM",
                 AntDatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
-                AntDatePickerType.Year => value.ToString("yyyy"),
-                _ => value.ToString("yyyy-MM-dd"),
+                AntDatePickerType.Year => "yyyy",
+                AntDatePickerType.Time => "HH:mm:dd",
+                _ => "yyyy-MM-dd",
             };
 
-            return formatValue;
+            return value.ToString(formater, CultureInfo.CurrentCulture);
         }
 
         protected void TryOpen()
@@ -418,7 +433,7 @@ namespace AntBlazor
                 OnChange?.Invoke(date, GetInputValue(index));
 
                 // auto focus the other input
-                if (IsRange && !IsShowTime)
+                if (IsRange && (!IsShowTime || Picker == AntDatePickerType.Time))
                 {
                     if (index == 0 && !_pickerStatus[1]._hadSelectValue && !_inputEnd.IsOnFocused)
                     {
@@ -444,7 +459,24 @@ namespace AntBlazor
             ChangePickerValue(date, index);
         }
 
-        private void NoteInitPicker(string picker, int index = 0)
+        protected void OnInput(ChangeEventArgs args, int index = 0)
+        {
+            if (args == null)
+            {
+                return;
+            }
+            Console.WriteLine($"change:{args.Value.ToString()}");
+
+            if (DateTime.TryParse(args.Value.ToString(), out DateTime changeValue))
+            {
+                _values[index] = changeValue;
+                _pickerValues[index] = changeValue;
+
+                StateHasChanged();
+            }
+        }
+   
+        private void InitPicker(string picker, int index = 0)
         {
             if (string.IsNullOrEmpty(_pickerStatus[index]._initPicker))
             {
@@ -453,6 +485,21 @@ namespace AntBlazor
 
                 // set default placeholder
                 _placeholders[index] = AntDatePickerPlaceholder.GetPlaceholderByType(_pickerStatus[index]._initPicker);
+
+                if (IsRange && index != 0)
+                {
+                    var now = DateTime.Now;
+                    _pickerValues[index] = picker switch
+                    {
+                        AntDatePickerType.Date => now.AddMonths(1),
+                        AntDatePickerType.Week => now.AddMonths(1),
+                        AntDatePickerType.Month => now.AddYears(1),
+                        AntDatePickerType.Decade => now.AddYears(1),
+                        AntDatePickerType.Quarter => now.AddYears(1),
+                        AntDatePickerType.Year => now.AddYears(10),
+                        _ => now,
+                    };
+                }
             }
         }
 
@@ -467,14 +514,14 @@ namespace AntBlazor
 
             _pickerStatus[index]._hadSelectValue = true;
 
-            if (IsRange && !IsShowTime)
+            if (IsRange && !IsShowTime && !(Picker == AntDatePickerType.Time))
             {
                 if (_pickerStatus[0]._hadSelectValue && _pickerStatus[1]._hadSelectValue)
                 {
                     _isClose = true;
                 }
             }
-            else if (!IsShowTime)
+            else if (!IsShowTime && !(Picker == AntDatePickerType.Time))
             {
                 _isClose = true;
             }

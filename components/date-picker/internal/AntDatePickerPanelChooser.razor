@@ -33,4 +33,8 @@
     {
         <AntDatePickerDecadePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
     }
+    else if (IsShowTimePanel())
+    {
+        <AntDatePickerDatetimePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+    }
 </CascadingValue>

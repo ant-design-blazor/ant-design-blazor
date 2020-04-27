@@ -27,7 +27,9 @@
         <AntDatePickerHeader SuperChangeDateInterval="100"
                              PickerIndex="@PickerIndex" 
                              ShowPreChange="@false"
-                             ShowNextChange="@false" />
+                             ShowNextChange="@false"
+                             ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
+                             ShowSuperNextChange="@(!(DatePicker.IsRange && PickerIndex == 0))" />
     </RenderPickerHeader>
     <RenderColValue Context="currentColDate">
         @{yearIndex++;}

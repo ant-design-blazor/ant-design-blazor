@@ -27,19 +27,23 @@
                             Value="@GetInputValue(1)"
                             Placeholder="@_placeholders[1]"
                             ReadOnly="@InputReadOnly"
+                            ShowTime="@(Picker == AntDatePickerType.Time)"
                             Onclick="e => { _needRefresh = true; TryOpen(); _inputStart.IsOnFocused = false; _inputEnd.IsOnFocused = true; }" />
 
         <div class="@(PrefixCls)-active-bar" style="@_activeBarStyle"></div>
     }
     else
     {
-        <AntDatePickerInput PrefixCls="@PrefixCls"
+        <AntDatePickerInput @ref="_inputStart"
+                            PrefixCls="@PrefixCls"
                             Size="@Size"
                             Disabled="@Disabled"
                             Value="@GetInputValue(0)"
                             Placeholder="@_placeholders[0]"
                             ReadOnly="@InputReadOnly"
                             AutoFocus="@AutoFocus"
+                            OnInput="e => OnInput(e, 0)"
+                            ShowTime="@(Picker == AntDatePickerType.Time)"
                             Onclick="e => TryOpen()" />
     }
 </div>
