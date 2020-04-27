@@ -630,12 +630,5 @@ namespace AntBlazor
 
             StateHasChanged();
         }
-
-        public void ChangePickerType(string type)
-        {
-            Picker = type;
-
-            StateHasChanged();
-        }
     }
 }
