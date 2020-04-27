@@ -160,7 +160,7 @@ namespace AntBlazor
         public RenderFragment RenderExtraFooter { get; set; }
 
         [Parameter]
-        public Action<bool> OnOpenChange { get; set; }
+        public EventCallback<bool> OnOpenChange { get; set; }
 
         [Parameter]
         public Action<DateTime, string> OnPanelChange { get; set; }
@@ -396,7 +396,7 @@ namespace AntBlazor
 
             _needRefresh = !_isClose;
 
-            OnOpenChange?.Invoke(!_isClose);
+            OnOpenChange.InvokeAsync(!_isClose);
 
             StateHasChanged();
         }
@@ -488,7 +488,7 @@ namespace AntBlazor
 
                 if (IsRange && index != 0)
                 {
-                    var now = DateTime.Now;
+                    DateTime now = DateTime.Now;
                     _pickerValues[index] = picker switch
                     {
                         AntDatePickerType.Date => now.AddMonths(1),
