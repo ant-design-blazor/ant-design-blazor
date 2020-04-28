@@ -14,7 +14,10 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v1
+            - name: Checkout 🛎️
+              uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
 
             - name: Setup .NET Core
               uses: actions/setup-dotnet@v1
@@ -38,6 +41,14 @@ jobs:
                   ACCESS_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
                   BRANCH: gh-pages
                   FOLDER: cargo/wwwroot
+
+            - name: Deploy to Github.io 🚀
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  personal_token: ${{ secrets.GH_PUSH_TOKEN }}
+                  external_repository: ant-design-blazor/ant-design-blazor.github.io
+                  publish_branch: master
+                  publish_dir: ./cargo/wwwroot
 
             - name: Package Nightly Nuget 📦
               run: |
