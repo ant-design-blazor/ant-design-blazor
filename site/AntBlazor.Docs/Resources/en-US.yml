@@ -12,6 +12,8 @@ Steps: Steps
 DataEntry: Data Entry
 Checkbox: Checkbox
 Switch: Switch
+DatePicker: DatePicker
+TimePicker: TimePicker
 Input: Input
 InputNumber: InputNumber
 Radio: Radio

@@ -23,6 +23,17 @@
 
   <ItemGroup>
     <!-- The nuget package icon -->
+    <None Include="date-picker\internal\AntDatePickerDatePanel.razor" />
+    <None Include="date-picker\internal\AntDatePickerDatetimePanel.razor" />
+    <None Include="date-picker\internal\AntDatePickerDecadePanel.razor" />
+    <None Include="date-picker\internal\AntDatePickerFooter.razor" />
+    <None Include="date-picker\internal\AntDatePickerHeader.razor" />
+    <None Include="date-picker\internal\AntDatePickerInput.razor" />
+    <None Include="date-picker\internal\AntDatePickerMonthPanel.razor" />
+    <None Include="date-picker\internal\AntDatePickerPanelChooser.razor" />
+    <None Include="date-picker\internal\AntDatePickerQuarterPanel.razor" />
+    <None Include="date-picker\internal\AntDatePickerTemplate.razor" />
+    <None Include="date-picker\internal\AntDatePickerYearPanel.razor" />
     <None Include="logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
