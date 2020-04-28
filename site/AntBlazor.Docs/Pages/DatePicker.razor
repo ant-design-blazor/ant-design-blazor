@@ -1,0 +1,159 @@
+﻿<AntTitle Level="1">DatePicker 日期选择框</AntTitle>
+<AntText>输入或选择日期的控件。</AntText>
+<AntTitle Level="2">何时使用</AntTitle>
+<AntParagraph>当用户需要输入一个日期，可以点击标准输入框，弹出日期面板进行选择。</AntParagraph>
+<br />
+<h2>演示</h2>
+<br />
+<DemoCard>
+    <Title>基本</Title>
+    <Description>最简单的用法，在浮层中可以选择或者输入日期。</Description>
+    <Demo>
+        <AntDatePicker Picker="@AntDatePickerType.Date" /> <br />
+        <AntDatePicker Picker="@AntDatePickerType.Week" /> <br />
+        <AntDatePicker Picker="@AntDatePickerType.Month" /> <br />
+        <AntDatePicker Picker="@AntDatePickerType.Quarter" /> <br />
+        <AntDatePicker Picker="@AntDatePickerType.Year" /> <br />
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>范围选择器</Title>
+    <Description>通过设置 <AntText Code>Picker</AntText> 属性，指定范围选择器类型。</Description>
+    <Demo>
+        <AntRangePicker Picker="@AntDatePickerType.Date" /> <br />
+        <AntRangePicker Picker="@AntDatePickerType.Week" /> <br />
+        <AntRangePicker Picker="@AntDatePickerType.Month" /> <br />
+        <AntRangePicker Picker="@AntDatePickerType.Quarter" /> <br />
+        <AntRangePicker Picker="@AntDatePickerType.Year" /> <br />
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>禁用</Title>
+    <Description>选择框的不可用状态。你也可以通过数组单独禁用 RangePicker 的其中一项。</Description>
+    <Demo>
+        <AntDatePicker Disabled="@true" Picker="@AntDatePickerType.Date" /> <br />
+        <br />
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>日期格式</Title>
+    <Description>使用 <AntText Code>Format</AntText> 可以自定义日期显示格式。</Description>
+    <Demo>
+        <AntDatePicker DefaultValue="new DateTime(2015, 1, 1)" Picker="@AntDatePickerType.Date" Format="yyyy/MM/dd" /> <br />
+        <AntDatePicker DefaultValue="new DateTime(2015, 1, 1)" Picker="@AntDatePickerType.Date" Format="yyyy/MM" /> <br />
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>日期时间选择</Title>
+    <Description>增加选择时间功能，当 <AntText Code>ShowTime</AntText> 为一个对象时，其属性会传递给内建的 <AntText Code>TimePicker</AntText>。</Description>
+    <Demo>
+        <AntDatePicker Picker="@AntDatePickerType.Date" ShowTime="@true" /> <br />
+        <AntRangePicker Picker="@AntDatePickerType.Date" ShowTime='@("HH:mm")' /> <br />
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>不可选择日期和时间</Title>
+    <Description>可用 <AntText Code>DisabledDate</AntText> 和 <AntText Code>DisabledTime</AntText> 分别禁止选择部分日期和时间，其中 <AntText Code>DisabledTime</AntText> 需要和 <AntText Code>ShowTime</AntText> 一起使用。</Description>
+    <Demo>
+        <AntDatePicker Picker="@AntDatePickerType.Date"
+                       ShowTime="@true"
+                       DisabledDate="date => date.Day < 20"
+                       DisabledTime="date => GetDisabledTime(date)" />
+        <br />
+        <AntDatePicker Picker="@AntDatePickerType.Month"
+                       DisabledDate="date => date.Month < 5" />
+        <br />
+        <AntRangePicker Picker="@AntDatePickerType.Date"
+                        DisabledDate="date => date.Month < 5 && date.Day < 27" />
+        <br />
+        <AntRangePicker Picker="@AntDatePickerType.Date"
+                        ShowTime='@true'
+                        DisabledDate="date => date.Month < 5 && date.Day < 27" />
+    </Demo>
+</DemoCard>
+@code {
+    private AntDatePickerDisabledTime GetDisabledTime(DateTime date)
+    {
+        int[] timeRange = new int[60];
+        for (int i = 0; i < timeRange.Length; i++)
+        {
+            timeRange[i] = i;
+        }
+
+        return new AntDatePickerDisabledTime(timeRange[4..15], timeRange[20..55], timeRange[3..19]);
+    }
+}
+<DemoCard>
+    <Title>定制日期单元格</Title>
+    <Description>使用 <AntText Code>DateRender</AntText> 可以自定义日期单元格的内容和样式。</Description>
+    <Demo>
+        <AntDatePicker Picker="@AntDatePickerType.Date" DateRender="CustomRender" /> <br />
+    </Demo>
+</DemoCard>
+@code{
+    private Func<DateTime, DateTime, RenderFragment> CustomRender = (currentViewDate, today) =>
+    {
+        if (currentViewDate.Day == 2)
+        {
+            return@<span>二</span>;
+}
+return @<span>@(currentViewDate.Day)</span>;
+};
+}
+<DemoCard>
+    <Title>额外的页脚</Title>
+    <Description>在浮层中加入额外的页脚，以满足某些定制信息的需求。</Description>
+    <Demo>
+        <AntDatePicker Picker="@AntDatePickerType.Date" ShowTime="@true" RenderExtraFooter="extraFooter" /> <br />
+        <AntRangePicker Picker="@AntDatePickerType.Date" RenderExtraFooter="extraFooter" /> <br />
+    </Demo>
+</DemoCard>
+@code {
+    private RenderFragment extraFooter =@<span>ExtraFooter</span>;
+}
+<DemoCard>
+    <Title>三种大小</Title>
+    <Description>三种大小的输入框，若不设置，则为 <AntText Code>Default</AntText>。</Description>
+    <Demo>
+        <AntRadioGroup @bind-Value="@datePickerSize">
+            <AntRadio RadioButton Value="@AntDatePickerSize.Large">Large</AntRadio>
+            <AntRadio RadioButton Value="@AntDatePickerSize.Default">Default</AntRadio>
+            <AntRadio RadioButton Value="@AntDatePickerSize.Small">Small</AntRadio>
+        </AntRadioGroup>
+        <br />
+        <AntDatePicker Picker="@AntDatePickerType.Date" Size="@datePickerSize" /> <br />
+    </Demo>
+</DemoCard>
+@code {
+    private string datePickerSize = AntDatePickerSize.Default;
+}
+<DemoCard>
+    <Title>无边框</Title>
+    <Description>无边框样式。</Description>
+    <Demo>
+        <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Date" /> <br />
+        <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Week" /> <br />
+        <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Month" /> <br />
+        <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Quarter" /> <br />
+        <AntDatePicker Bordered="@false" Picker="@AntDatePickerType.Year" /> <br />
+    </Demo>
+</DemoCard>
+<DemoCard>
+    <Title>API</Title>
+    <Description>
+        <li>已实现DatePicker组件：支持date、decade、year、month、quarter、week模式</li>
+        <li>已实现：MonthPicker、RangePicker、WeekPicker、YearPicker、QuarterPicker（对应DatePicker的各种模式）</li>
+        <li>
+            未实现的通用属性：AllowClear、GetPopupContainer、Locale、Mode(Mode为3.0妥协的功能，不打算支持)
+        </li>
+        <li>
+            未实现的DatePicker属性：showTime.defaultValue、onOk
+        </li>
+        <li>
+            未实现的RangePicker属性：allowEmpty、ranges、separator、onCalendarChange
+        </li>
+        <li>
+            未实现的功能：RangePicker的操作模式和Ant Design不完全一致
+        </li>
+    </Description>
+</DemoCard>
