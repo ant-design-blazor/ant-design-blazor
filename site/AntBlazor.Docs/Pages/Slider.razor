@@ -1,0 +1,125 @@
+﻿<AntTitle Level="1">Slider</AntTitle>
+<AntText>A Slider component for displaying current value and intervals in range.</AntText>
+<AntTitle Level="2">When To Use</AntTitle>
+<AntParagraph>To input a value in a range.</AntParagraph>
+<br />
+<h2>Examples</h2>
+<br />
+<DemoCard>
+    <Title>Basic</Title>
+    <Description>Basic slider. When <code>range</code> is <code>true</code>, display as dual thumb mode. When <code>disable</code> is <code>true</code>, the slider will not be interactable.</Description>
+    <Demo>
+        <AntSlider DefaultValue="30" Disabled="@disabled" />
+        <AntSlider DefaultValue="new double[] { 20, 50 }" Disabled="@disabled" />
+        Disabled: <AntSwitch size="small" checked="@disabled" OnChange="(e)=>OnSwitch(e)" />
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Slider with InputNumber</Title>
+    <Description>Synchronize with <a href="/inputnumber">InputNumber</a> component.</Description>
+    <Demo>
+        <div>
+            <AntRow>
+                <AntCol Span="12">
+                    <AntSlider Min="1" Max="20" DefaultValue="@inputValue1" />
+                </AntCol>
+                <AntCol Span="4">
+                    <AntInputNumber Min="1" Max="20" Style="margin:0 16px;" Value="@inputValue1" ValueChanged="(e)=>UpdateValue1(e)" />
+                </AntCol>
+            </AntRow>
+            <AntRow>
+                <AntCol Span="12">
+                    <AntSlider Min="0" Max="1" Step="0.01" DefaultValue="@inputValue2" />
+                </AntCol>
+                <AntCol Span="4">
+                    <AntInputNumber Min="0" Max="1" Step="0.01" Style="margin:0 16px;" Value="@inputValue2" ValueChanged="(e)=>UpdateValue2(e)" />
+                </AntCol>
+            </AntRow>
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Slider with icon</Title>
+    <Description>You can add an icon beside the slider to make it meaningful.</Description>
+    <Demo>
+        <div>
+            <AntIcon Style="display: inline-block" type="Frown" theme="outline" />
+            <AntSlider Style="display: inline-block; width: 300px;" Min="0" Max="20" DefaultValue="0" />
+            <AntIcon Style="display: inline-block" type="Smile" theme="outline" />
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Event</Title>
+    <Description>The <code>onChange</code> callback function will fire when the user changes the slider's value. The <code>onAfterChange</code> callback function will fire when <code>onmouseup</code> fired.</Description>
+    <Demo>
+        <AntSlider DefaultValue="30" OnChange="(e)=>OnChange1(e)" OnAfterChange="(o,e)=>OnAfterChange1(o,e)" />
+        <AntSlider Step="10" DefaultValue="new double[] { 20, 50 }" OnChange="(e)=>OnChange2(e)" OnAfterChange="(o,e)=>OnAfterChange2(o,e)" />
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Vertical</Title>
+    <Description>The vertical Slider.</Description>
+    <Demo>
+        <div>
+            <div style="height: 300px; margin-left: 70px; display: inline-block;">
+                <AntSlider Vertical DefaultValue="30" />
+            </div>
+            <div style="height: 300px; margin-left: 70px; display: inline-block;">
+                <AntSlider Vertical Step="10" DefaultValue="new double[] { 20, 50 }" />
+            </div>
+            <div style="height: 300px; margin-left: 70px; display: inline-block;">
+                <AntSlider Vertical Marks="@marks1" DefaultValue="new double[] { 26, 37 }" />
+            </div>
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Graduated slider</Title>
+    <Description>Using <code>Marks</code> property to mark a graduated slider. use <code>Value</code> or <code>DefaultValue</code> to specify the position of thumb. When <code>Included</code> is false, means that different thumbs are coordinative. when <code>Step</code> is null, user can only slide the thumbs onto marks.</Description>
+    <Demo>
+        <div>
+            <h4>included=true</h4>
+            <AntSlider Marks="@marks1" DefaultValue="37" />
+            <AntSlider Marks="@marks1" DefaultValue="new double[] { 26, 37 }" />
+
+            <h4>included=false</h4>
+            <AntSlider Marks="@marks1" Included="false" DefaultValue="37" />
+
+            <h4>marks & step</h4>
+            <AntSlider Marks="@marks1" Step="10" DefaultValue="37" />
+
+            <h4>step=null</h4>
+            <AntSlider Marks="@marks1" Step="null" DefaultValue="37" />
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Reverse</Title>
+    <Description>Using <code>Reverse</code> to render slider reversely.</Description>
+    <Demo>
+        <div>
+            <AntSlider Reverse="@reversed" DefaultValue="30" />
+            <AntSlider Reverse="@reversed" DefaultValue="new double[] { 20, 50 }" />
+            Reversed: <AntSwitch size="small" checked="@reversed" OnChange="(e)=>OnSwitchReverse(e)" />
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Reverse</Title>
+    <Description>Using <code>Reverse</code> to render slider reversely.</Description>
+    <Demo>
+        <div>
+            <AntSlider Reverse="@reversed" Value="30" />
+            @*<AntSlider Reverse="@reversed" Value="[20, 50]" />*@
+            Reversed: <AntSwitch size="small" checked="@reversed" OnChange="(e)=>OnSwitchReverse(e)" />
+        </div>
+    </Demo>
+</DemoCard>

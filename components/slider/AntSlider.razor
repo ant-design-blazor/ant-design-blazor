@@ -1,0 +1,43 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="_slider"
+     @onmousedown="(e)=>OnMouseDown()" @onclick="(e)=>OnClick(e)">
+    <div class="ant-slider-rail">
+    </div>
+    @if (Included)
+    {
+        <div class="ant-slider-track @(Range?"ant-slider-track-1":string.Empty)" style="@_trackStyle">
+        </div>
+    }
+    <div class="ant-slider-step">
+        @if (Marks != null)
+        {
+            @foreach (AntSliderMark mark in Marks)
+            {
+                <span class="ant-slider-dot @IsActiveMark(mark.Key)" style=@($"{(Vertical?"bottom":"left")}: {SetMarkPosition(mark.Key)};")></span>
+            }
+        }
+    </div>
+    @if (Range)
+    {
+        <div tabindex="0" class="ant-slider-handle ant-slider-handle-1" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_leftHandleStyle" @ref="_leftHandle">
+        </div>
+        <div tabindex="0" class="ant-slider-handle ant-slider-handle-2" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="_rightHandle">
+        </div>
+    }
+    else
+    {
+        <div tabindex="0" class="ant-slider-handle" role="slider" aria-disabled="false" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="_rightHandle">
+        </div>
+    }
+    <div class="ant-slider-mark">
+        @if (Marks != null)
+        {
+            @foreach (AntSliderMark mark in Marks)
+            {
+                <span class="ant-slider-mark-text ant-slider-mark-text-active" style=@($"{(Vertical?"bottom":"left")}: {SetMarkPosition(mark.Key)}; {(Vertical?"margin-bottom: -50%;":"transform: translateX(-50%);")}" + mark.Style)>@mark.Value</span>
+            }
+        }
+    </div>
+</div>
