@@ -107,6 +107,11 @@
             "title": "Radio",
             "type": "menuItem",
             "url": "radio"
+          },
+          {
+            "title": "Slider",
+            "type": "menuItem",
+            "url": "slider"
           }
         ]
       },
