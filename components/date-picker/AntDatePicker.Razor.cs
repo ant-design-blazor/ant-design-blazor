@@ -317,20 +317,18 @@ namespace AntBlazor
 
         protected async override Task OnAfterRenderAsync(bool firstRender)
         {
-            await base.OnAfterRenderAsync(firstRender).ConfigureAwait(false);
+            await base.OnAfterRenderAsync(firstRender);
 
             if (_needRefresh && IsRange)
             {
                 if (_inputStart.IsOnFocused)
                 {
-                    Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputStart.Ref)
-                        .ConfigureAwait(false);
+                    Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputStart.Ref);
                     _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d(0px, 0px, 0px);";
                 }
                 else if (_inputEnd.IsOnFocused)
                 {
-                    Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputStart.Ref)
-                        .ConfigureAwait(false);
+                    Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputStart.Ref);
                     _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d({element.clientWidth + 16}px, 0px, 0px);";
                 }
                 else
@@ -436,13 +434,13 @@ namespace AntBlazor
                 {
                     if (index == 0 && !_pickerStatus[1]._hadSelectValue && !_inputEnd.IsOnFocused)
                     {
-                        await Blur(0).ConfigureAwait(false);
-                        await Focus(1).ConfigureAwait(false);
+                        await Blur(0);
+                        await Focus(1);
                     }
                     if (index == 1 && !_pickerStatus[0]._hadSelectValue && !_inputStart.IsOnFocused)
                     {
-                        await Blur(1).ConfigureAwait(false);
-                        await Focus(0).ConfigureAwait(false);
+                        await Blur(1);
+                        await Focus(0);
                     }
                 }
             }
@@ -469,7 +467,7 @@ namespace AntBlazor
                 StateHasChanged();
             }
         }
-   
+
         private void InitPicker(string picker, int index = 0)
         {
             if (string.IsNullOrEmpty(_pickerStatus[index]._initPicker))
@@ -537,7 +535,7 @@ namespace AntBlazor
             if (input != null)
             {
                 input.IsOnFocused = true;
-                await JsInvokeAsync(JSInteropConstants.focus, input.Ref).ConfigureAwait(false);
+                await JsInvokeAsync(JSInteropConstants.focus, input.Ref);
                 _needRefresh = true;
             }
         }
@@ -558,7 +556,7 @@ namespace AntBlazor
             if (input != null)
             {
                 input.IsOnFocused = false;
-                await JsInvokeAsync(JSInteropConstants.blur, input.Ref).ConfigureAwait(false);
+                await JsInvokeAsync(JSInteropConstants.blur, input.Ref);
                 _needRefresh = true;
             }
         }
