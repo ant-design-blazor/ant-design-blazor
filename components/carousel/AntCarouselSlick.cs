@@ -63,13 +63,13 @@ namespace AntBlazor
         internal void Activate()
         {
             Active = true;
-            StateHasChanged();
+            //StateHasChanged();
         }
 
         internal void Deactivate()
         {
             Active = false;
-            StateHasChanged();
+            //StateHasChanged();
         }
     }
 }
