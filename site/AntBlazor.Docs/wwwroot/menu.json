@@ -130,6 +130,11 @@
             "url": "badge"
           },
           {
+            "title": "Carousel",
+            "type": "menuItem",
+            "url": "carousel"
+          },
+          {
             "title": "Card",
             "type": "menuItem",
             "url": "card"

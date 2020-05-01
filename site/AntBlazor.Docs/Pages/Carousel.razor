@@ -1,0 +1,55 @@
+﻿<AntTitle Level="1">Carousel</AntTitle>
+<AntText>A carousel component. Scales with its container.</AntText>
+<AntTitle Level="2">When To Use</AntTitle>
+<AntParagraph>
+    <Markdown MarkdownText="@_paragraph"></Markdown>
+</AntParagraph>
+
+<br />
+<h2>Examples</h2>
+<br />
+
+<AntRow Style="margin-left: -8px; margin-right: -8px;">
+    <style>
+        .AntCol {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+    </style>
+    <AntCol Span="12">
+        <DemoCard>
+            <Title>Basic</Title>
+            <Description>Basic usage.</Description>
+            <Demo>
+                <style>
+                    /* For demo */
+                    .ant-carousel .slick-slide {
+                        text-align: center;
+                        height: 160px;
+                        line-height: 160px;
+                        background: #364d79;
+                        overflow: hidden;
+                    }
+
+                        .ant-carousel .slick-slide h3 {
+                            color: #fff;
+                        }
+                </style>
+                <AntCarousel>
+                    <AntCarouselSlick>
+                        <h3>1</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>2</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>3</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>4</h3>
+                    </AntCarouselSlick>
+                </AntCarousel>
+            </Demo>
+        </DemoCard>
+    </AntCol>
+</AntRow>
