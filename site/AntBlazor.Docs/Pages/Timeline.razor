@@ -1,27 +1,27 @@
 ﻿
 <h3>Timeline</h3>
 
-<AntTimeline mode="alternate" >
+<AntTimeline Mode="alternate" >
     <AntTimelineItem>Create a services site 2015-09-01</AntTimelineItem>
-    <AntTimelineItem color="green">Solve initial network problems 2015-09-01</AntTimelineItem>
+    <AntTimelineItem Color="green">Solve initial network problems 2015-09-01</AntTimelineItem>
     <AntTimelineItem Dot="dotTemplate">
         Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
         quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
     </AntTimelineItem>
-    <AntTimelineItem color="red">Network problems being solved 2015-09-01</AntTimelineItem>
+    <AntTimelineItem Color="red">Network problems being solved 2015-09-01</AntTimelineItem>
     <AntTimelineItem>Create a services site 2015-09-01</AntTimelineItem>
     <AntTimelineItem Dot="dotTemplate">Technical testing 2015-09-01</AntTimelineItem>
 </AntTimeline>
 
 
 <br><br>
-<AntTimeline Pending="pending" reverse="reverse">
+<AntTimeline Pending="pending" Reverse="reverse">
     <AntTimelineItem>1.Create a services site 2015-09-01</AntTimelineItem>
     <AntTimelineItem>2.Solve initial network problems 2015-09-01</AntTimelineItem>
     <AntTimelineItem>3.Technical testing 2015-09-01</AntTimelineItem>
 </AntTimeline>
 
-<AntButton style="margin-top: 16px" type="primary" onclick="toggleReverse">Toggle Reverse</AntButton>
+<AntButton Style="margin-top: 16px" Type="primary" Onclick="toggleReverse">Toggle Reverse</AntButton>
 
 
 @code {
@@ -29,19 +29,19 @@
 
     RenderFragment dotTemplate =
     @<Template>
-        <AntIcon type="clock-circle" style="font-size: 16px;" />
+        <AntIcon Type="clock-circle" Style="font-size: 16px;" />
     </Template>;
 
-RenderFragment pending =
+    RenderFragment pending =
 @<Template>
     Recording...
 </Template>;
 
 
-bool reverse = false;
+        bool reverse = false;
 
-void toggleReverse()
-{
-this.reverse = !this.reverse;
-}
-}
+        void toggleReverse()
+        {
+            this.reverse = !this.reverse;
+        }
+    }

@@ -1,4 +1,4 @@
-﻿export function getDom(element) {
+export function getDom(element) {
   if (!element) {
     element = document.body;
   } else if (typeof element === 'string') {
@@ -28,14 +28,23 @@ export function getBoundingClientRect(element) {
 
 export function addDomEventListener(element, eventName, invoker) {
   let callback = args => {
-    invoker.invokeMethodAsync('Invoke', args);
+    const obj = {};
+    for (let k in args) {
+      obj[k] = args[k];
+    }
+    let json = JSON.stringify(obj, (k, v) => {
+      if (v instanceof Node) return 'Node';
+      if (v instanceof Window) return 'Window';
+      return v;
+    }, ' ');
+    invoker.invokeMethodAsync('Invoke', json);
   };
 
   if (element == 'window') {
     window.addEventListener(eventName, callback);
   } else {
     let dom = getDom(element);
-    (document.querySelector(dom) as HTMLElement).addEventListener(eventName, callback);
+    (dom as HTMLElement).addEventListener(eventName, callback);
   }
 }
 

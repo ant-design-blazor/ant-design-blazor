@@ -1,0 +1,510 @@
+﻿<AntTitle Level="1">Tabs</AntTitle>
+<AntText>Tabs make it easy to switch between different views.</AntText>
+<AntTitle Level="2">When To Use</AntTitle>
+<AntParagraph>
+    <Markdown MarkdownText="@paragraph"></Markdown>
+</AntParagraph>
+
+@code{
+    private string paragraph = @"Ant Design has 3 types of Tabs for different situations.
+* Card Tabs: for managing too many closeable views.
+* Normal Tabs: for functional aspects of a page.
+* <a href='/radio'>RadioButton</a>: for secondary tabs.";
+}
+<br />
+<h2>Examples</h2>
+<br />
+<DemoCard>
+    <Title>Basic</Title>
+    <Description>Default activate first tab.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1">
+            <AntTabPane Key="1">
+                <Tab>Tab 1</Tab>
+                <ChildContent>Content of Tab Pane 1</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="2">
+                <Tab>Tab 2</Tab>
+                <ChildContent>Content of Tab Pane 2</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="3">
+                <Tab>Tab 3</Tab>
+                <ChildContent>Content of Tab Pane 3</ChildContent>
+            </AntTabPane>
+        </AntTabs>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Disabled</Title>
+    <Description>Disabled a tab.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1">
+            <AntTabPane Key="1">
+                <Tab>Tab 1</Tab>
+                <ChildContent>Tab 1</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="2" Disabled>
+                <Tab>Tab 2</Tab>
+                <ChildContent>Tab 2</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="3">
+                <Tab>Tab 3</Tab>
+                <ChildContent>Tab 3</ChildContent>
+            </AntTabPane>
+        </AntTabs>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Icon</Title>
+    <Description>The Tab with Icon.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1">
+            <AntTabPane Key="1">
+                <Tab>
+                    <span><AntIcon Type="android" />Tab 1</span>
+                </Tab>
+                <ChildContent>Tab 1</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="2">
+                <Tab>
+                    <span><AntIcon Type="apple" />Tab 2</span>
+                </Tab>
+                <ChildContent>Tab 2</ChildContent>
+            </AntTabPane>
+        </AntTabs>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Slide</Title>
+    <Description>In order to fit in more tabs, they can slide left and right (or up and down).</Description>
+    <Demo>
+        <div>
+            <AntRadioGroup @bind-Value="mode" Style="margin-bottom: 8px;">
+                <AntRadio RadioButton Value="@AntTabPosition.Top">Horizontal</AntRadio>
+                <AntRadio RadioButton Value="@AntTabPosition.Left">Vertical</AntRadio>
+            </AntRadioGroup>
+            <AntTabs DefaultActiveKey="1" TabPosition="@mode" Style="height: 220px;">
+                <AntTabPane Key="1">
+                    <Tab>Tab 1</Tab>
+                    <ChildContent>Content of Tab Pane 1</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="2">
+                    <Tab>Tab 2</Tab>
+                    <ChildContent>Content of Tab Pane 2</ChildContent>
+                </AntTabPane><AntTabPane Key="3">
+                    <Tab>Tab 3</Tab>
+                    <ChildContent>Content of Tab Pane 3</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="4">
+                    <Tab>Tab 4</Tab>
+                    <ChildContent>Content of Tab Pane 4</ChildContent>
+                </AntTabPane><AntTabPane Key="5">
+                    <Tab>Tab 5</Tab>
+                    <ChildContent>Content of Tab Pane 5</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="6">
+                    <Tab>Tab 6</Tab>
+                    <ChildContent>Content of Tab Pane 6</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="7">
+                    <Tab>Tab 7</Tab>
+                    <ChildContent>Content of Tab Pane 7</ChildContent>
+                </AntTabPane><AntTabPane Key="8">
+                    <Tab>Tab 8</Tab>
+                    <ChildContent>Content of Tab Pane 8</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="9">
+                    <Tab>Tab 9</Tab>
+                    <ChildContent>Content of Tab Pane 9</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="10">
+                    <Tab>Tab 10</Tab>
+                    <ChildContent>Content of Tab Pane 10</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="11">
+                    <Tab>Tab 11</Tab>
+                    <ChildContent>Content of Tab Pane 11</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="12">
+                    <Tab>Tab 12</Tab>
+                    <ChildContent>Content of Tab Pane 12</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="13">
+                    <Tab>Tab 13</Tab>
+                    <ChildContent>Content of Tab Pane 13</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="14">
+                    <Tab>Tab 14</Tab>
+                    <ChildContent>Content of Tab Pane 14</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="15">
+                    <Tab>Tab 15</Tab>
+                    <ChildContent>Content of Tab Pane 15</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="16">
+                    <Tab>Tab 16</Tab>
+                    <ChildContent>Content of Tab Pane 16</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="17">
+                    <Tab>Tab 17</Tab>
+                    <ChildContent>Content of Tab Pane 17</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="18">
+                    <Tab>Tab 18</Tab>
+                    <ChildContent>Content of Tab Pane 18</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="19">
+                    <Tab>Tab 19</Tab>
+                    <ChildContent>Content of Tab Pane 19</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="20">
+                    <Tab>Tab 20</Tab>
+                    <ChildContent>Content of Tab Pane 20</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="21">
+                    <Tab>Tab 21</Tab>
+                    <ChildContent>Content of Tab Pane 21</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="22">
+                    <Tab>Tab 22</Tab>
+                    <ChildContent>Content of Tab Pane 22</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="23">
+                    <Tab>Tab 23</Tab>
+                    <ChildContent>Content of Tab Pane 23</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="24">
+                    <Tab>Tab 24</Tab>
+                    <ChildContent>Content of Tab Pane 24</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="25">
+                    <Tab>Tab 25</Tab>
+                    <ChildContent>Content of Tab Pane 25</ChildContent>
+                </AntTabPane>
+
+                @{
+                    Enumerable.Range(1, 29).Select<int, RenderFragment>
+                        (i => { return template(i); }).Aggregate((r1, r2) => r1 + r2);
+                }
+            </AntTabs>
+        </div>
+    </Demo>
+</DemoCard>
+
+@code{
+    private string mode = AntTabPosition.Top;
+
+    RenderFragment<int> template = (i) => @<AntTabPane Key="@i.ToString()">
+                                              <Tab>Tab @i</Tab>
+                                              <ChildContent>Content of Tab Pane @i</ChildContent>
+                                          </AntTabPane>;
+
+}
+
+<DemoCard>
+    <Title>Extra content</Title>
+    <Description>You can add extra actions to the right of Tabs.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1">
+            <TabBarExtraContent>
+                <AntButton>Extra Action</AntButton>
+            </TabBarExtraContent>
+            <ChildContent>
+                <AntTabPane Key="1">
+                    <Tab>Tab 1</Tab>
+                    <ChildContent>Content of Tab Pane 1</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="2">
+                    <Tab>Tab 2</Tab>
+                    <ChildContent>Content of Tab Pane 2</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="3">
+                    <Tab>Tab 3</Tab>
+                    <ChildContent>Content of Tab Pane 3</ChildContent>
+                </AntTabPane>
+            </ChildContent>
+        </AntTabs>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Size</Title>
+    <Description>Large size tabs are usually used in page header, and small size could be used in Modal.</Description>
+    <Demo>
+        <div>
+            <AntRadioGroup @bind-Value="size" Style="margin-bottom: 16px;">
+                <AntRadio RadioButton Value="@AntTabSize.Small">Small</AntRadio>
+                <AntRadio RadioButton Value="@AntTabSize.Default">Default</AntRadio>
+                <AntRadio RadioButton Value="@AntTabSize.Large">Large</AntRadio>
+            </AntRadioGroup>
+
+            <AntTabs DefaultActiveKey="1" Size="@size" Style="margin-bottom: 32px">
+                <AntTabPane Key="1">
+                    <Tab>Tab 1</Tab>
+                    <ChildContent>Content of Tab Pane 1</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="2">
+                    <Tab>Tab 2</Tab>
+                    <ChildContent>Content of Tab Pane 2</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="3">
+                    <Tab>Tab 3</Tab>
+                    <ChildContent>Content of Tab Pane 3</ChildContent>
+                </AntTabPane>
+            </AntTabs>
+
+            <AntTabs DefaultActiveKey="1" Type="@AntTabType.Card" Size="@size">
+                <AntTabPane Key="1">
+                    <Tab>Tab 1</Tab>
+                    <ChildContent>Content of Tab Pane 1</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="2">
+                    <Tab>Tab 2</Tab>
+                    <ChildContent>Content of Tab Pane 2</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="3">
+                    <Tab>Tab 3</Tab>
+                    <ChildContent>Content of Tab Pane 3</ChildContent>
+                </AntTabPane>
+            </AntTabs>
+        </div>
+    </Demo>
+</DemoCard>
+
+@code{
+    private string size = AntTabSize.Default;
+}
+
+<DemoCard>
+    <Title>Position</Title>
+    <Description>Tab's position: left, right, top or bottom.</Description>
+    <Demo>
+        <div>
+            <AntRadioGroup @bind-Value="position" Style="margin-bottom: 16px;">
+                <AntRadio RadioButton Value="@AntTabPosition.Top">Top</AntRadio>
+                <AntRadio RadioButton Value="@AntTabPosition.Left">Left</AntRadio>
+                <AntRadio RadioButton Value="@AntTabPosition.Bottom">Bottom</AntRadio>
+                <AntRadio RadioButton Value="@AntTabPosition.Right">Right</AntRadio>
+            </AntRadioGroup>
+            <AntTabs DefaultActiveKey="1" TabPosition="@position">
+                <AntTabPane Key="1">
+                    <Tab>Tab 1</Tab>
+                    <ChildContent>Content of Tab Pane 1</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="2">
+                    <Tab>Tab 2</Tab>
+                    <ChildContent>Content of Tab Pane 2</ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="3">
+                    <Tab>Tab 3</Tab>
+                    <ChildContent>Content of Tab Pane 3</ChildContent>
+                </AntTabPane>
+            </AntTabs>
+        </div>
+    </Demo>
+</DemoCard>
+
+@code{
+    private string position = AntTabPosition.Top;
+}
+
+<DemoCard>
+    <Title>Card type tab</Title>
+    <Description>Another type of Tabs, which doesn't support vertical mode.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1" Type="@AntTabType.Card">
+            <AntTabPane Key="1">
+                <Tab>Tab 1</Tab>
+                <ChildContent>Content of Tab Pane 1</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="2">
+                <Tab>Tab 2</Tab>
+                <ChildContent>Content of Tab Pane 2</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="3">
+                <Tab>Tab 3</Tab>
+                <ChildContent>Content of Tab Pane 3</ChildContent>
+            </AntTabPane>
+        </AntTabs>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Add & close tab</Title>
+    <Description>Only card type Tabs support adding & closable. +Use <code>closable={false}</code> to disable close.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1" Type="@AntTabType.EditableCard" CreateTabPane="@Create">
+            <AntTabPane Key="1">
+                <Tab>Tab 1</Tab>
+                <ChildContent>Content of Tab Pane 1</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="2">
+                <Tab>Tab 2</Tab>
+                <ChildContent>Content of Tab Pane 2</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="3" Closable="false">
+                <Tab>Tab 3</Tab>
+                <ChildContent>Content of Tab Pane 3</ChildContent>
+            </AntTabPane>
+        </AntTabs>
+    </Demo>
+</DemoCard>
+
+@code{
+    private static int addedIndex = 3;
+    private readonly Func<AntTabPane> Create = () =>
+        {
+            addedIndex++;
+            int temp = addedIndex;
+            return new AntTabPane (
+                key: temp.ToString(),
+                childContent: (b) => { b.AddContent(0, $"Content of Tab Pane {temp}"); },
+                tab: (b) => { b.AddContent(0, $"Tab {temp}"); }
+            );
+        };
+}
+
+<style>
+    [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-content,
+    .card-container > .ant-tabs-card > .ant-tabs-content {
+        height: 120px;
+        margin-top: -16px;
+    }
+
+        [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane,
+        .card-container > .ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane {
+            background: #fff;
+            padding: 16px;
+        }
+
+    [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-bar,
+    .card-container > .ant-tabs-card > .ant-tabs-bar {
+        border-color: #fff;
+    }
+
+        [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab,
+        .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
+            border-color: transparent;
+            background: transparent;
+        }
+
+        [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active,
+        .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
+            border-color: #fff;
+            background: #fff;
+        }
+    
+</style>
+
+<DemoCard>
+    <Title>Container of card type Tab</Title>
+    <Description>Should be used at the top of container, needs to override styles.</Description>
+    <Demo>
+        <div class="card-container">
+            <AntTabs DefaultActiveKey="1" Type="@AntTabType.Card">
+                <AntTabPane Key="1">
+                    <Tab>Tab Title 1</Tab>
+                    <ChildContent>
+                        <p>Content of Tab Pane 1</p>
+                        <p>Content of Tab Pane 1</p>
+                        <p>Content of Tab Pane 1</p>
+                    </ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="2">
+                    <Tab>Tab Title 2</Tab>
+                    <ChildContent>
+                        <p>Content of Tab Pane 2</p>
+                        <p>Content of Tab Pane 2</p>
+                        <p>Content of Tab Pane 2</p>
+                    </ChildContent>
+                </AntTabPane>
+                <AntTabPane Key="3">
+                    <Tab>Tab Title 3</Tab>
+                    <ChildContent>
+                        <p>Content of Tab Pane 3</p>
+                        <p>Content of Tab Pane 3</p>
+                        <p>Content of Tab Pane 3</p>
+                    </ChildContent>
+                </AntTabPane>
+            </AntTabs>
+        </div>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Customized trigger of new tab</Title>
+    <Description>Hide default plus icon, and bind event for customized trigger.</Description>
+    <Demo>
+        <div>
+            <div style="margin-bottom: 16px;">
+                <AntButton @onclick="(e)=>Add()">ADD</AntButton>
+            </div>
+            <AntTabs DefaultActiveKey="1" Type="@AntTabType.EditableCard" HideAdd>
+                @foreach (var temp in _panes)
+                {
+                    AntTabPane pane = temp;
+                    <AntTabPane Key="@pane.Key">
+                        <Tab>@pane.Tab</Tab>
+                        <ChildContent>@pane.ChildContent</ChildContent>
+                    </AntTabPane>
+                }
+            </AntTabs>
+        </div>
+    </Demo>
+</DemoCard>
+
+@code{
+    private List<AntTabPane>
+        _panes = new List<AntTabPane>
+            ();
+    private static int btnIndex = 1;
+    private void Add()
+    {
+        int index = ++btnIndex;
+        _panes.Add(new AntTabPane(
+            key: index.ToString(),
+            tab : (b) => b.AddContent(0, $"Tab {index}"),
+            childContent : (b) => b.AddContent(0, $"Content of Tab Pane {index}")
+        ));
+
+        StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        for (int i = 0; i < btnIndex + 1; i++)
+        {
+            int index = i;
+            _panes.Add(new AntTabPane(
+                key: index.ToString(),
+                tab: (b) => b.AddContent(0, $"Tab {index}"),
+                childContent: (b) => b.AddContent(0, $"Content of Tab Pane {index}")
+            ));
+        }
+    }
+}
+
+<DemoCard>
+    <Title>Draggable Tabs</Title>
+    <Description>Use <code>Draggable</code> to make tabs draggable.</Description>
+    <Demo>
+        <AntTabs DefaultActiveKey="1" Draggable>
+            <AntTabPane Key="1">
+                <Tab>Tab 1</Tab>
+                <ChildContent>Tab 1</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="2" Disabled>
+                <Tab>Tab 2</Tab>
+                <ChildContent>Tab 2</ChildContent>
+            </AntTabPane>
+            <AntTabPane Key="3">
+                <Tab>Tab 3</Tab>
+                <ChildContent>Tab 3</ChildContent>
+            </AntTabPane>
+        </AntTabs>
+    </Demo>
+</DemoCard>

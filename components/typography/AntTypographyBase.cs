@@ -1,8 +1,5 @@
-﻿using AntBlazor.typography;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AntBlazor
@@ -10,82 +7,97 @@ namespace AntBlazor
     public abstract class AntTypographyBase : AntDomComponentBase
     {
         [Inject]
-        public HtmlRenderService _service { get; set; }
+        public HtmlRenderService Service { get; set; }
+
         [Parameter]
-        public bool copyable { get; set; } = false;
+        public bool Copyable { get; set; } = false;
         [Parameter]
-        public TypographyCopyableConfig copyConfig { get; set; }
+        public TypographyCopyableConfig CopyConfig { get; set; }
+
         [Parameter]
-        public bool delete { get; set; } = false;
+        public bool Delete { get; set; } = false;
+
         [Parameter]
-        public bool disabled { get; set; } = false;
+        public bool Disabled { get; set; } = false;
+
         [Parameter]
-        public bool editable { get; set; } = false;
+        public bool Editable { get; set; } = false;
+
         [Parameter]
-        public TypographyEditableConfig editConfig { get; set; }
+        public TypographyEditableConfig EditConfig { get; set; }
+
         [Parameter]
-        public bool ellipsis { get; set; } = false;
+        public bool Ellipsis { get; set; } = false;
+
         [Parameter]
-        public TypographyEllipsisConfig ellipsisConfig {get;set;}
+        public TypographyEllipsisConfig EllipsisConfig { get; set; }
+
         [Parameter]
-        public bool mark { get; set; } = false;
+        public bool Mark { get; set; } = false;
+
         [Parameter]
-        public bool underline { get; set; } = false;
+        public bool Underline { get; set; } = false;
+
         [Parameter]
-        public bool strong { get; set; } = false;
+        public bool Strong { get; set; } = false;
+
         [Parameter]
-        public Action onChange { get; set; }
-        
+        public Action OnChange { get; set; }
+
         [Parameter]
-        public string type { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         public async Task Copy()
         {
-            if (!copyable)
+            if (!Copyable)
             {
                 return;
             }
-            else if (copyConfig is null)
+            else if (CopyConfig is null)
             {
-                await this.JsInvokeAsync<object>(JSInteropConstants.copy, await _service.RenderAsync(ChildContent));
+                await this.JsInvokeAsync<object>(JSInteropConstants.copy, await Service.RenderAsync(ChildContent));
             }
-            else if (copyConfig.onCopy is null)
+            else if (CopyConfig.OnCopy is null)
             {
-                if (string.IsNullOrEmpty(copyConfig.text))
+                if (string.IsNullOrEmpty(CopyConfig.Text))
                 {
-                    await this.JsInvokeAsync<object>(JSInteropConstants.copy, await _service.RenderAsync(ChildContent));
+                    await this.JsInvokeAsync<object>(JSInteropConstants.copy, await Service.RenderAsync(ChildContent));
                 }
                 else
                 {
-                    await this.JsInvokeAsync<object>(JSInteropConstants.copy, copyConfig.text);
+                    await this.JsInvokeAsync<object>(JSInteropConstants.copy, CopyConfig.Text);
                 }
             }
             else
             {
-                copyConfig.onCopy.Invoke();
+                CopyConfig.OnCopy.Invoke();
             }
         }
     }
 
     public class TypographyCopyableConfig
     {
-        public string text { get; set; } = string.Empty;
-        public Action onCopy { get; set; } = null;
+        public string Text { get; set; } = string.Empty;
+
+        public Action OnCopy { get; set; } = null;
     }
 
     public class TypographyEditableConfig
     {
-        public Action onStart { get; set; }
-        public Action<string> onChange { get; set; }
+        public Action OnStart { get; set; }
+
+        public Action<string> OnChange { get; set; }
     }
 
     public class TypographyEllipsisConfig
     {
-        public string suffix { get; set; } = "...";
-        public int rows { get; set; }
-        public Action onExpand { get; set; }
+        public string Suffix { get; set; } = "...";
+
+        public int Rows { get; set; }
+
+        public Action OnExpand { get; set; }
     }
 }

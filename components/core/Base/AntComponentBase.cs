@@ -6,16 +6,16 @@ using Microsoft.JSInterop;
 
 namespace AntBlazor
 {
-    public abstract class AntComponentBase : ComponentBase, IAntComponentBase, IDisposable
+    public abstract class AntComponentBase : ComponentBase, IDisposable
     {
         [Parameter]
         public ForwardRef RefBack { get; set; }
 
-        private readonly Queue<Func<Task>> afterRenderCallQuene = new Queue<Func<Task>>();
+        private readonly Queue<Func<Task>> _afterRenderCallQuene = new Queue<Func<Task>>();
 
         protected void CallAfterRender(Func<Task> action)
         {
-            afterRenderCallQuene.Enqueue(action);
+            _afterRenderCallQuene.Enqueue(action);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -26,14 +26,14 @@ namespace AntBlazor
                 await OnFirstAfterRenderAsync();
             }
 
-            if (afterRenderCallQuene.Count > 0)
+            if (_afterRenderCallQuene.Count > 0)
             {
-                var actions = afterRenderCallQuene.ToArray();
-                afterRenderCallQuene.Clear();
+                var actions = _afterRenderCallQuene.ToArray();
+                _afterRenderCallQuene.Clear();
 
                 foreach (var action in actions)
                 {
-                    if (Disposed)
+                    if (IsDisposed)
                     {
                         return;
                     }
@@ -52,18 +52,11 @@ namespace AntBlazor
         {
         }
 
-        public virtual void Dispose()
-        {
-            Disposed = true;
-        }
-
-        protected bool Disposed { get; private set; }
-
         protected void InvokeStateHasChanged()
         {
             InvokeAsync(() =>
             {
-                if (!Disposed)
+                if (!IsDisposed)
                 {
                     StateHasChanged();
                 }
@@ -99,20 +92,25 @@ namespace AntBlazor
             }
         }
 
-        #region Hack to fix https://github.com/aspnet/AspNetCore/issues/11159
+        protected bool IsDisposed { get; private set; }
 
-        public static object CreateDotNetObjectRefSyncObj = new object();
-
-        protected DotNetObjectReference<T> CreateDotNetObjectRef<T>(T value) where T : class
+        protected virtual void Dispose(bool disposing)
         {
-            return DotNetObjectReference.Create(value);
+            if (IsDisposed) return;
+
+            IsDisposed = true;
         }
 
-        protected void DisposeDotNetObjectRef<T>(DotNetObjectReference<T> value) where T : class
+        public void Dispose()
         {
-            value?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        #endregion Hack to fix https://github.com/aspnet/AspNetCore/issues/11159
+        ~AntComponentBase()
+        {
+            // Finalizer calls Dispose(false)
+            Dispose(false);
+        }
     }
 }

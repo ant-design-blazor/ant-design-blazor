@@ -1,0 +1,62 @@
+﻿<AntTitle Level="1">Empty 空状态</AntTitle>
+<AntText>空状态时的展示占位图。</AntText>
+<AntTitle Level="2">何时使用</AntTitle>
+
+<AntParagraph>
+    <ul>
+        <li>当目前没有数据时，用于显式的用户提示。</li>
+        <li>初始化场景时的引导创建流程。</li>
+    </ul>
+</AntParagraph>
+<br />
+<h2>代码演示</h2>
+<br />
+<DemoCard>
+    <Title>基本</Title>
+    <Description>简单的展示。</Description>
+    <Demo>
+        <AntEmpty />
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>选择图片</Title>
+    <Description>可以通过设置 <AntText code>image</AntText> 为 <AntText code>Empty.PRESENTED_IMAGE_SIMPLE</AntText> 选择另一种风格的图片。</Description>
+    <Demo>
+        <AntEmpty Image="AntEmpty.PRESENTED_IMAGE_SIMPLE" />
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>自定义</Title>
+    <Description>自定义图片链接、图片大小、描述、附属内容。</Description>
+    <Demo>
+        <AntEmpty Image='"https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"'
+                  ImageStyle='@("height: 60px")'
+                  Description="customDescription">
+            <AntButton type="@AntButtonType.Primary">Create Now</AntButton>
+        </AntEmpty>
+    </Demo>
+</DemoCard>
+<br />
+@code {
+    private RenderFragment customDescription =@<span>Customize <a href="#API">Description</a></span>;
+}
+
+<DemoCard>
+    <Title>全局化配置</Title>
+    <Description>自定义全局组件的 Empty 样式。</Description>
+    <Demo>
+        TODO：缺少ConfigProvider全局化组件、Select组件、
+        TreeSelect组件、Transfer组件、Cascader组件、Table组件、List组件
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>无描述</Title>
+    <Description>无描述展示。</Description>
+    <Demo>
+        <AntEmpty Description="@false" />
+    </Demo>
+</DemoCard>
+<br />

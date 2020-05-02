@@ -10,7 +10,10 @@ Breadcrumb: 面包屑
 Menu: 导航菜单
 Steps: 步骤条
 DataEntry: 数据录入
+Checkbox: 多选框
 Switch: 开关
+DatePicker: 日期选择框
+TimePicker: 时间选择框
 Input: 输入框
 InputNumber: 数字输入框
 Radio: 单选框
@@ -18,6 +21,7 @@ DataDisplay: 数据展示
 Avatar: 头像
 Badge: 徽标数
 Card: 卡片
+Empty: 空状态
 Tag: 标签
 Timeline: 时间轴
 Feedback: 反馈
@@ -26,3 +30,4 @@ Drawer: 抽屉
 Other: 其他
 Divider: 分割线
 BackTop: 回到顶部
+Tabs: 标签页

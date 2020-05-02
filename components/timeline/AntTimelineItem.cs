@@ -3,60 +3,74 @@ using System.Linq;
 
 namespace AntBlazor
 {
-    public class AntTimelineItem : AntDomComponentBase
+    public partial class AntTimelineItem : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        [Parameter] public RenderFragment Dot { get; set; }
+        [Parameter]
+        public RenderFragment Dot { get; set; }
 
-        [Parameter] public string color { get; set; } = "blue";
+        [Parameter]
+        public string Color { get; set; } = "blue";
 
         [CascadingParameter] public AntTimeline ParentTimeline { get; set; }
 
-        internal ClassMapper HeadClassMapper = new ClassMapper();
+        internal ClassMapper _headClassMapper = new ClassMapper();
 
-        internal bool isLast { get; set; } = false;
+        internal bool IsLast { get; set; } = false;
 
         //'left' | 'alternate' | 'right'
-        internal string position { get; set; } = "";
+        internal string Position { get; set; } = "";
 
-        internal string headStyle { get; set; } = "";
+        internal string HeadStyle { get; set; } = "";
 
-        internal string Class => ClassMapper.Class;
+        internal string ItemClass => ClassMapper.Class;
 
-        private readonly string[] defaultColors = new[] { "blue", "red", "green", "gray" };
+        private readonly string[] _defaultColors = new[] { "blue", "red", "green", "gray" };
+
+        public AntTimelineItem()
+        {
+
+        }
+
+        internal AntTimelineItem(RenderFragment childContent, RenderFragment dot, string @class)
+        {
+            this.ChildContent = childContent;
+            this.Dot = dot;
+            this.Class = @class;
+        }
 
         protected override void OnInitialized()
         {
             ParentTimeline.AddItem(this);
-            this.tryUpdateCustomColor();
+            this.TryUpdateCustomColor();
             base.OnInitialized();
         }
 
         protected override void OnParametersSet()
         {
-            this.setClassMap();
-            this.tryUpdateCustomColor();
+            this.SetClassMap();
+            this.TryUpdateCustomColor();
             base.OnParametersSet();
         }
 
-        private void tryUpdateCustomColor()
+        private void TryUpdateCustomColor()
         {
-            headStyle = !defaultColors.Contains(color) ? $"border-color:{color}" : "";
+            HeadStyle = !_defaultColors.Contains(Color) ? $"border-color:{Color}" : "";
         }
 
-        internal void setClassMap()
+        internal void SetClassMap()
         {
             var prefix = "ant-timeline-item";
             ClassMapper.Clear().Add(prefix)
-                .If($"{prefix}-right", () => position == "right")
-                .If($"{prefix}-left", () => position == "left")
-                .If($"{prefix}-last", () => isLast);
+                .If($"{prefix}-right", () => Position == "right")
+                .If($"{prefix}-left", () => Position == "left")
+                .If($"{prefix}-last", () => IsLast);
 
             var headPrefix = "ant-timeline-item-head";
-            HeadClassMapper.Clear().Add(headPrefix)
-                .If($"{headPrefix}-{color}", () => defaultColors.Contains(color))
+            _headClassMapper.Clear().Add(headPrefix)
+                .If($"{headPrefix}-{Color}", () => _defaultColors.Contains(Color))
                 .If($"{headPrefix}-custom", () => Dot != null);
         }
     }

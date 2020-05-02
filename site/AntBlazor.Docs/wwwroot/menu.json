@@ -74,9 +74,24 @@
         "type": "itemGroup",
         "children": [
           {
+            "title": "Checkbox",
+            "type": "menuItem",
+            "url": "checkbox"
+          },
+          {
             "title": "Switch",
             "type": "menuItem",
             "url": "switch"
+          },
+          {
+            "title": "DatePicker",
+            "type": "menuItem",
+            "url": "datePicker"
+          },
+          {
+            "title": "TimePicker",
+            "type": "menuItem",
+            "url": "timePicker"
           },
           {
             "title": "Input",
@@ -92,6 +107,11 @@
             "title": "Radio",
             "type": "menuItem",
             "url": "radio"
+          },
+          {
+            "title": "Slider",
+            "type": "menuItem",
+            "url": "slider"
           }
         ]
       },
@@ -115,9 +135,19 @@
             "url": "card"
           },
           {
+            "title": "Empty",
+            "type": "menuItem",
+            "url": "empty"
+          },
+          {
             "title": "Tag",
             "type": "menuItem",
             "url": "tag"
+          },
+          {
+            "title": "Tabs",
+            "type": "menuItem",
+            "url": "tabs"
           },
           {
             "title": "Timeline",

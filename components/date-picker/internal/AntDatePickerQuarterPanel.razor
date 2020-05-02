@@ -1,0 +1,34 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDatePickerPanelBase
+@using System.Globalization;
+
+@{
+    var calendar = CultureInfo.InvariantCulture.Calendar;
+
+    DateTime startDate = new DateTime(PickerValue.Year, 1, 1);
+
+    const int MAX_ROW = 1;
+    const int MAX_COL = 4;
+}
+<AntDatePickerTemplate 
+    PickerIndex="@PickerIndex"
+    MaxRow="MAX_ROW"
+    MaxCol="MAX_COL"
+    ViewStartDate="startDate"
+    IsInView="date => true"
+    IsToday="date => DateHelper.IsSameQuarter(date, DatePicker.CurrentDate)"
+    IsSelected="date => DateHelper.IsSameQuarter(date, Value)"
+    GetColTitle='date => date.ToString("yyyy")'
+    OnValueSelect="date => OnSelectQuarter(date)"
+    GetNextColValue="date => date.AddMonths(3)">
+    <RenderPickerHeader>
+        <AntDatePickerHeader PickerIndex="@PickerIndex"
+                             ShowPreChange="@false"
+                             ShowNextChange="@false"
+                             ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
+                             ShowSuperNextChange="@(!(DatePicker.IsRange && PickerIndex == 0))" />
+    </RenderPickerHeader>
+    <RenderColValue Context="currentColDate">
+        @DateHelper.GetDayOfQuarter(currentColDate)
+    </RenderColValue>
+</AntDatePickerTemplate>

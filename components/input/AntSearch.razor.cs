@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 using System;
 using System.Threading.Tasks;
 
@@ -10,7 +11,10 @@ namespace AntBlazor
         private bool _isSearching;
 
         [Parameter]
-        public EventCallback<EventArgs> onSearch { get; set; }
+        public EventCallback<EventArgs> OnSearch { get; set; }
+
+        [Parameter]
+        public OneOf<bool, string> EnterButton { get; set; }
 
         private int _sequence = 0;
 
@@ -18,25 +22,25 @@ namespace AntBlazor
         {
             base.OnInitialized();
 
-            if (Attributes == null || !Attributes.ContainsKey("enterButton"))
+            if (EnterButton.Value == null)
             {
-                suffix = new RenderFragment((builder) =>
+                Suffix = new RenderFragment((builder) =>
                 {
                     builder.OpenComponent<AntIcon>(35);
                     builder.AddAttribute(36, "class", $"{PrefixCls}-search-icon");
                     builder.AddAttribute(37, "type", "search");
-                    builder.AddAttribute(38, "onclick", _callbackFactory.Create<MouseEventArgs>(this, Search));
+                    builder.AddAttribute(38, "onclick", CallbackFactory.Create<MouseEventArgs>(this, Search));
                     builder.CloseComponent();
                 });
             }
             else
             {
-                addOnAfter = new RenderFragment((builder) =>
+                AddOnAfter = new RenderFragment((builder) =>
                 {
                     builder.OpenComponent<AntButton>(_sequence++);
                     builder.AddAttribute(_sequence++, "class", $"{PrefixCls}-search-button");
                     builder.AddAttribute(_sequence++, "type", "primary");
-                    builder.AddAttribute(_sequence++, "size", size);
+                    builder.AddAttribute(_sequence++, "size", Size);
                     if (_isSearching)
                     {
                         builder.AddAttribute(_sequence++, "loading", true);
@@ -47,17 +51,19 @@ namespace AntBlazor
                         builder.AddAttribute(_sequence++, "onclick", e);
                     }
 
-                    if (Attributes["enterButton"].ToString() == true.ToString()) // show search icon button
+                    EnterButton.Switch(boolean =>
                     {
-                        builder.AddAttribute(_sequence++, "icon", "search");
-                    }
-                    else // show search content button
+                        if (boolean)
+                        {
+                            builder.AddAttribute(_sequence++, "icon", "search");
+                        }
+                    }, str =>
                     {
                         builder.AddAttribute(_sequence++, "ChildContent", new RenderFragment((b) =>
                         {
-                            b.AddContent(_sequence++, Attributes["enterButton"].ToString());
+                            b.AddContent(_sequence++, str);
                         }));
-                    }
+                    });
 
                     builder.CloseComponent();
                 });
@@ -68,27 +74,27 @@ namespace AntBlazor
         {
             base.SetClasses();
 
-            if (size == AntInputSize.Large)
+            if (Size == AntInputSize.Large)
             {
-                _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search-large");
+                GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-large");
             }
-            else if (size == AntInputSize.Small)
+            else if (Size == AntInputSize.Small)
             {
-                _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search-small");
+                GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-small");
             }
 
-            _affixWrapperClass = string.Join(" ", _affixWrapperClass, $"{PrefixCls}-search");
-            _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search");
-            _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-search-enter-button");
+            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-search");
+            GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search");
+            GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-enter-button");
         }
 
         private async void Search(MouseEventArgs args)
         {
             _isSearching = true;
             StateHasChanged();
-            if (onSearch.HasDelegate)
+            if (OnSearch.HasDelegate)
             {
-                await onSearch.InvokeAsync(EventArgs.Empty);
+                await OnSearch.InvokeAsync(EventArgs.Empty);
             }
             await Task.Delay(TimeSpan.FromSeconds(10));
             _isSearching = false;

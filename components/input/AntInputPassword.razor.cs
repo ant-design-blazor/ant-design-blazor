@@ -9,13 +9,13 @@ namespace AntBlazor
         private string _eyeIcon;
 
         [Parameter]
-        public bool visibilityToggle { get; set; } = true;
+        public bool VisibilityToggle { get; set; } = true;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            type = "password";
+            Type = "password";
             ToggleVisibility(new MouseEventArgs());
         }
 
@@ -24,14 +24,14 @@ namespace AntBlazor
             base.SetClasses();
             //ant-input-password-large ant-input-affix-wrapper ant-input-affix-wrapper-lg
             ClassMapper
-                .If($"{PrefixCls}-password-large", () => size == AntInputSize.Large)
-                .If($"{PrefixCls}-password-small", () => size == AntInputSize.Small);
+                .If($"{PrefixCls}-password-large", () => Size == AntInputSize.Large)
+                .If($"{PrefixCls}-password-small", () => Size == AntInputSize.Small);
 
-            _affixWrapperClass = string.Join(" ", _affixWrapperClass, $"{PrefixCls}-password");
+            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-password");
 
-            if (visibilityToggle)
+            if (VisibilityToggle)
             {
-                suffix = new RenderFragment((builder) =>
+                Suffix = new RenderFragment((builder) =>
                 {
                     int i = 0;
                     builder.OpenElement(i++, "span");
@@ -39,7 +39,7 @@ namespace AntBlazor
                     builder.OpenComponent<AntIcon>(i++);
                     builder.AddAttribute(i++, "class", $"{PrefixCls}-password-icon");
                     builder.AddAttribute(i++, "type", _eyeIcon);
-                    builder.AddAttribute(i++, "onclick", _callbackFactory.Create(this, ToggleVisibility));
+                    builder.AddAttribute(i++, "onclick", CallbackFactory.Create(this, ToggleVisibility));
                     builder.CloseComponent();
                     builder.CloseElement();
                 });
@@ -48,17 +48,17 @@ namespace AntBlazor
 
         private void ToggleVisibility(MouseEventArgs args)
         {
-            if (visibilityToggle)
+            if (VisibilityToggle)
             {
                 if (_visible)
                 {
                     _eyeIcon = "eye";
-                    type = "text";
+                    Type = "text";
                 }
                 else
                 {
                     _eyeIcon = "eye-invisible";
-                    type = "password";
+                    Type = "password";
                 }
 
                 _visible = !_visible;

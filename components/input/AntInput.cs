@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AntBlazor
@@ -12,57 +13,69 @@ namespace AntBlazor
     {
         protected const string PrefixCls = "ant-input";
 
-        protected int _renderSequence = 0;
-        protected bool _allowClear;
-        protected string _affixWrapperClass = $"{PrefixCls}-affix-wrapper";
-        protected string _groupWrapperClass = $"{PrefixCls}-group-wrapper";
-        protected string _clearIconClass;
-        protected EventCallbackFactory _callbackFactory = new EventCallbackFactory();
-        protected ElementReference inputEl { get; set; }
+        private bool _allowClear;
+        protected string AffixWrapperClass { get; set; } = $"{PrefixCls}-affix-wrapper";
+        protected string GroupWrapperClass { get; set; } = $"{PrefixCls}-group-wrapper";
+
+        //protected string ClearIconClass { get; set; }
+        protected static readonly EventCallbackFactory CallbackFactory = new EventCallbackFactory();
+
+        protected ElementReference InputEl { get; set; }
 
         [Parameter]
-        public string type { get; set; } = "text";
+        public string Type { get; set; } = "text";
 
         [Parameter]
-        public RenderFragment addOnBefore { get; set; }
+        public RenderFragment AddOnBefore { get; set; }
 
         [Parameter]
-        public RenderFragment addOnAfter { get; set; }
+        public RenderFragment AddOnAfter { get; set; }
 
         [Parameter]
-        public string size { get; set; } = AntInputSize.Default;
+        public string Size { get; set; } = AntInputSize.Default;
 
         [Parameter]
-        public string placeholder { get; set; }
+        public string Placeholder { get; set; }
 
         [Parameter]
-        public string defaultValue { get; set; }
+        public string DefaultValue { get; set; }
 
         [Parameter]
-        public int maxLength { get; set; } = -1;
+        public int MaxLength { get; set; } = -1;
 
         [Parameter]
-        public RenderFragment prefix { get; set; }
+        public bool Disabled { get; set; }
 
         [Parameter]
-        public RenderFragment suffix { get; set; }
+        public bool AllowClear { get; set; }
 
         [Parameter]
-        public EventCallback<ChangeEventArgs> onChange { get; set; }
+        public RenderFragment Prefix { get; set; }
 
         [Parameter]
-        public EventCallback<KeyboardEventArgs> onPressEnter { get; set; }
+        public RenderFragment Suffix { get; set; }
 
         [Parameter]
-        public EventCallback<ChangeEventArgs> onInput { get; set; }
+        public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public EventCallback<ChangeEventArgs> OnChange { get; set; }
+
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
+
+        [Parameter]
+        public EventCallback<ChangeEventArgs> OnInput { get; set; }
+
+        public Dictionary<string, object> Attributes { get; set; }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (!string.IsNullOrEmpty(defaultValue) && string.IsNullOrEmpty(Value))
+            if (!string.IsNullOrEmpty(DefaultValue) && string.IsNullOrEmpty(Value))
             {
-                Value = defaultValue;
+                Value = DefaultValue;
             }
 
             SetClasses();
@@ -71,46 +84,46 @@ namespace AntBlazor
         protected virtual void SetClasses()
         {
             ClassMapper.Clear()
-                .If($"{PrefixCls}", () => type != "number")
-                .If($"{PrefixCls}-lg", () => size == AntInputSize.Large)
-                .If($"{PrefixCls}-sm", () => size == AntInputSize.Small);
+                .If($"{PrefixCls}", () => Type != "number")
+                .If($"{PrefixCls}-lg", () => Size == AntInputSize.Large)
+                .If($"{PrefixCls}-sm", () => Size == AntInputSize.Small);
 
             if (Attributes is null)
             {
-                Attributes = new System.Collections.Generic.Dictionary<string, object>();
+                Attributes = new Dictionary<string, object>();
             }
 
-            _affixWrapperClass = $"{PrefixCls}-affix-wrapper";
-            _groupWrapperClass = $"{PrefixCls}-group-wrapper";
+            AffixWrapperClass = $"{PrefixCls}-affix-wrapper";
+            GroupWrapperClass = $"{PrefixCls}-group-wrapper";
 
-            if (maxLength >= 0)
+            if (MaxLength >= 0)
             {
-                Attributes?.Add("maxlength", maxLength);
+                Attributes?.Add("maxlength", MaxLength);
             }
 
-            if (Attributes.ContainsKey("disabled"))
+            if (Disabled)
             {
                 // TODO: disable element
-                _affixWrapperClass = string.Join(" ", _affixWrapperClass, $"{PrefixCls}-affix-wrapper-disabled");
+                AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-disabled");
                 ClassMapper.Add($"{PrefixCls}-disabled");
             }
 
-            if (Attributes.ContainsKey("allowClear"))
+            if (AllowClear)
             {
                 _allowClear = true;
-                _clearIconClass = $"{PrefixCls}-clear-icon";
+                //ClearIconClass = $"{PrefixCls}-clear-icon";
                 ToggleClearBtn();
             }
 
-            if (size == AntInputSize.Large)
+            if (Size == AntInputSize.Large)
             {
-                _affixWrapperClass = string.Join(" ", _affixWrapperClass, $"{PrefixCls}-affix-wrapper-lg");
-                _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-group-wrapper-lg");
+                AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-lg");
+                GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-group-wrapper-lg");
             }
-            else if (size == AntInputSize.Small)
+            else if (Size == AntInputSize.Small)
             {
-                _affixWrapperClass = string.Join(" ", _affixWrapperClass, $"{PrefixCls}-affix-wrapper-sm");
-                _groupWrapperClass = string.Join(" ", _groupWrapperClass, $"{PrefixCls}-group-wrapper-sm");
+                AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-sm");
+                GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-group-wrapper-sm");
             }
         }
 
@@ -121,30 +134,25 @@ namespace AntBlazor
             SetClasses();
         }
 
-        public override Task SetParametersAsync(ParameterView parameters)
-        {
-            return base.SetParametersAsync(parameters);
-        }
-
         protected async Task OnChangeAsync(ChangeEventArgs args)
         {
-            if (onChange.HasDelegate)
+            if (OnChange.HasDelegate)
             {
-                await onChange.InvokeAsync(args);
+                await OnChange.InvokeAsync(args);
             }
         }
 
         protected async Task OnPressEnterAsync(KeyboardEventArgs args)
         {
-            if (args.Key == "Enter" && onPressEnter.HasDelegate)
+            if (args != null && args.Key == "Enter" && OnPressEnter.HasDelegate)
             {
-                await onPressEnter.InvokeAsync(args);
+                await OnPressEnter.InvokeAsync(args);
             }
         }
 
         private void ToggleClearBtn()
         {
-            suffix = new RenderFragment((builder) =>
+            Suffix = (builder) =>
             {
                 builder.OpenComponent<AntIcon>(31);
                 builder.AddAttribute(32, "type", "close-circle");
@@ -156,14 +164,13 @@ namespace AntBlazor
                 {
                     builder.AddAttribute(33, "style", "visibility: visible;");
                 }
-                builder.AddAttribute(34, "onclick", _callbackFactory.Create<MouseEventArgs>(this, (args) =>
+                builder.AddAttribute(34, "onclick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
                 {
                     Value = string.Empty;
                     ToggleClearBtn();
                 }));
                 builder.CloseComponent();
-            });
-
+            };
         }
 
         /// <summary>
@@ -171,124 +178,127 @@ namespace AntBlazor
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        protected async virtual void OnInputAsync(ChangeEventArgs args)
+        protected virtual async void OnInputAsync(ChangeEventArgs args)
         {
-            bool flag = true;
-            if (!string.IsNullOrEmpty(Value) && !string.IsNullOrEmpty(args.Value.ToString()))
-            {
-                flag = false;
-            }
+            bool flag = !(!string.IsNullOrEmpty(Value) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
+
             // AntInputComponentBase.Value will be empty, use args.Value
-            Value = args.Value.ToString();
+            Value = args?.Value.ToString();
             if (_allowClear && flag)
             {
                 ToggleClearBtn();
             }
 
-            if (onInput.HasDelegate)
+            if (OnInput.HasDelegate)
             {
-                await onInput.InvokeAsync(args);
+                await OnInput.InvokeAsync(args);
             }
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            base.BuildRenderTree(builder);
-
-            string container = "input";
-
-            if (addOnBefore != null || addOnAfter != null)
+            if (builder != null)
             {
-                container = "groupWrapper";
-                builder.OpenElement(0, "span");
-                builder.AddAttribute(1, "class", _groupWrapperClass);
-                builder.AddAttribute(2, "style", Style);
-                builder.OpenElement(3, "span");
-                builder.AddAttribute(4, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
-            }
+                base.BuildRenderTree(builder);
 
-            if (addOnBefore != null)
-            {
-                // addOnBefore
-                builder.OpenElement(5, "span");
-                builder.AddAttribute(6, "class", $"{PrefixCls}-group-addon");
-                builder.AddContent(7, addOnBefore);
-                builder.CloseElement();
-            }
+                string container = "input";
 
-            if (prefix != null || suffix != null)
-            {
-                builder.OpenElement(8, "span");
-                builder.AddAttribute(9, "class", _affixWrapperClass);
+                if (AddOnBefore != null || AddOnAfter != null)
+                {
+                    container = "groupWrapper";
+                    builder.OpenElement(0, "span");
+                    builder.AddAttribute(1, "class", GroupWrapperClass);
+                    builder.AddAttribute(2, "style", Style);
+                    builder.OpenElement(3, "span");
+                    builder.AddAttribute(4, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
+                }
+
+                if (AddOnBefore != null)
+                {
+                    // addOnBefore
+                    builder.OpenElement(5, "span");
+                    builder.AddAttribute(6, "class", $"{PrefixCls}-group-addon");
+                    builder.AddContent(7, AddOnBefore);
+                    builder.CloseElement();
+                }
+
+                if (Prefix != null || Suffix != null)
+                {
+                    builder.OpenElement(8, "span");
+                    builder.AddAttribute(9, "class", AffixWrapperClass);
+                    if (container == "input")
+                    {
+                        container = "affixWrapper";
+                        builder.AddAttribute(10, "style", Style);
+                    }
+                }
+
+                if (Prefix != null)
+                {
+                    // prefix
+                    builder.OpenElement(11, "span");
+                    builder.AddAttribute(12, "class", $"{PrefixCls}-prefix");
+                    builder.AddContent(13, Prefix);
+                    builder.CloseElement();
+                }
+
+                // input
+                builder.OpenElement(14, "input");
+                builder.AddAttribute(15, "class", ClassMapper.Class);
                 if (container == "input")
                 {
-                    container = "affixWrapper";
-                    builder.AddAttribute(10, "style", Style);
+                    builder.AddAttribute(16, "style", Style);
                 }
-            }
 
-            if (prefix != null)
-            {
-                // prefix
-                builder.OpenElement(11, "span");
-                builder.AddAttribute(12, "class", $"{PrefixCls}-prefix");
-                builder.AddContent(13, prefix);
-                builder.CloseElement();
-            }
-
-            // input
-            builder.OpenElement(14, "input");
-            builder.AddAttribute(15, "class", ClassMapper.Class);
-            if (container == "input")
-            {
-                builder.AddAttribute(16, "style", Style);
-            }
-            if (Attributes != null)
-            {
-                foreach (var pair in Attributes)
+                if (Attributes != null)
                 {
-                    builder.AddAttribute(17, pair.Key, pair.Value);
+                    foreach (KeyValuePair<string, object> pair in Attributes)
+                    {
+                        builder.AddAttribute(17, pair.Key, pair.Value);
+                    }
                 }
-            }
-            builder.AddAttribute(18, "Id", Id);
-            if (type != "number")
-            {
-                builder.AddAttribute(19, "type", type);
-            }
-            builder.AddAttribute(20, "placeholder", placeholder);
-            builder.AddAttribute(21, "value", Value);
-            builder.AddAttribute(22, "onchange", _callbackFactory.Create(this, OnChangeAsync));
-            builder.AddAttribute(23, "onkeypress", _callbackFactory.Create(this, OnPressEnterAsync));
-            builder.AddAttribute(24, "oninput", _callbackFactory.Create(this, OnInputAsync));
-            builder.CloseElement();
 
-            if (suffix != null)
-            {
-                // suffix
-                builder.OpenElement(25, "span");
-                builder.AddAttribute(26, "class", $"{PrefixCls}-suffix");
-                builder.AddContent(27, suffix);
-                builder.CloseElement();
-            }
+                builder.AddAttribute(18, "Id", Id);
+                if (Type != "number")
+                {
+                    builder.AddAttribute(19, "type", Type);
+                }
 
-            if (prefix != null || suffix != null)
-            {
+                builder.AddAttribute(20, "placeholder", Placeholder);
+                builder.AddAttribute(21, "value", Value);
+                builder.AddAttribute(22, "onchange", CallbackFactory.Create(this, OnChangeAsync));
+                builder.AddAttribute(23, "onkeypress", CallbackFactory.Create(this, OnPressEnterAsync));
+                builder.AddAttribute(24, "oninput", CallbackFactory.Create(this, OnInputAsync));
                 builder.CloseElement();
-            }
 
-            if (addOnAfter != null)
-            {
-                // addOnAfter
-                builder.OpenElement(28, "span");
-                builder.AddAttribute(29, "class", $"{PrefixCls}-group-addon");
-                builder.AddContent(30, addOnAfter);
-                builder.CloseElement();
-            }
+                if (Suffix != null)
+                {
+                    // suffix
+                    builder.OpenElement(25, "span");
+                    builder.AddAttribute(26, "class", $"{PrefixCls}-suffix");
+                    builder.AddContent(27, Suffix);
+                    builder.CloseElement();
+                }
 
-            if (addOnBefore != null || addOnAfter != null)
-            {
-                builder.CloseElement();
-                builder.CloseElement();
+                if (Prefix != null || Suffix != null)
+                {
+                    builder.CloseElement();
+                }
+
+                if (AddOnAfter != null)
+                {
+                    // addOnAfter
+                    builder.OpenElement(28, "span");
+                    builder.AddAttribute(29, "class", $"{PrefixCls}-group-addon");
+                    builder.AddContent(30, AddOnAfter);
+                    builder.CloseElement();
+                }
+
+                if (AddOnBefore != null || AddOnAfter != null)
+                {
+                    builder.CloseElement();
+                    builder.CloseElement();
+                }
             }
         }
     }

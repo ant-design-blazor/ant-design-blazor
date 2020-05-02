@@ -1,33 +1,33 @@
-﻿@using AntBlazor.Docs.Localization
+@using AntBlazor.Docs.Localization
 @inherits LayoutComponentBase
 
-<AntLayout class="app-layout" hasSider>
-    <AntSider class="menu-sidebar"
-              collapsible
-              breakpoint="lg"
-              collapsed="isCollapsed"
-              collapsedWidth="0"
-              width="256px"
-              onCollapsedChange="(collapsed)=>isCollapsed = collapsed">
-        <NavMenu isCollapsed="isCollapsed"></NavMenu>
+<AntLayout Class="app-layout" HasSider>
+    <AntSider Class="menu-sidebar"
+              Collapsible
+              Breakpoint="lg"
+              Collapsed="isCollapsed"
+              CollapsedWidth="0"
+              Width="256px"
+              OnCollapsedChange="(collapsed)=>isCollapsed = collapsed">
+        <NavMenu IsCollapsed="isCollapsed"></NavMenu>
     </AntSider>
     <AntLayout id="BodyContainer">
         <AntHeader>
             <div class="app-header">
                 <span class="header-trigger" @onclick="()=>isCollapsed = !isCollapsed">
-                    <AntIcon class="trigger" type="@(isCollapsed ? "menu-unfold" : "menu-fold")"></AntIcon>
+                    <AntIcon Class="trigger" Type="@(isCollapsed ? "menu-unfold" : "menu-fold")"></AntIcon>
                 </span>
                 <span class="header-buttons">
                     @if (CurrentLanguage != "en-US")
                     {
-                        <AntButton size="small" onclick="@(_ => ChangeLanguage("en-US"))">English</AntButton>
+                        <AntButton Size="small" Onclick="@(_ => ChangeLanguage("en-US"))">English</AntButton>
                     }
                     else
                     {
-                        <AntButton size="small" onclick="@(_ => ChangeLanguage("zh-CN"))">简体中文</AntButton>
+                        <AntButton Size="small" Onclick="@(_ => ChangeLanguage("zh-CN"))">简体中文</AntButton>
                     }
-                    <a class="github-stars" href="https://github.com/ElderJames/ant-design-blazor">
-                        <img alt="GitHub stars" src="https://img.shields.io/github/stars/ElderJames/ant-design-blazor?style=social">
+                    <a class="github-stars" href="https://github.com/ant-design-blazor/ant-design-blazor">
+                        <img alt="GitHub stars" src="https://img.shields.io/github/stars/ant-design-blazor/ant-design-blazor?style=social">
                     </a>
                 </span>
             </div>

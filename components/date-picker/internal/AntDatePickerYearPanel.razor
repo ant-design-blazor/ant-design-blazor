@@ -1,0 +1,40 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDatePickerPanelBase
+@using System.Globalization;
+
+@{
+    var calendar = CultureInfo.InvariantCulture.Calendar;
+
+    int startYear = PickerValue.Year / 10 * 10 - 1;
+    DateTime startDate = new DateTime(startYear, 1, 1);
+
+    int yearIndex = 0;
+    const int MAX_ROW = 4;
+    const int MAX_COL = 3;
+    const int FIRST_YEAR_INDEX = 0;
+    const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL;
+}
+<AntDatePickerTemplate 
+    PickerIndex="@PickerIndex"
+    MaxRow="MAX_ROW"
+    MaxCol="MAX_COL"
+    ViewStartDate="startDate"
+    IsInView="date => yearIndex != FIRST_YEAR_INDEX && yearIndex != LAST_YEAR_INDEX"
+    IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
+    IsSelected="date => DateHelper.IsSameYear(date, Value)"
+    GetColTitle='date => date.ToString("yyyy")'
+    OnValueSelect="date => OnSelectYear(date)"
+    GetNextColValue="date => date.AddYears(1)">
+    <RenderPickerHeader>
+        <AntDatePickerHeader SuperChangeDateInterval="10"
+                             PickerIndex="@PickerIndex"
+                             ShowPreChange="@false"
+                             ShowNextChange="@false"
+                             ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
+                             ShowSuperNextChange="@(!(DatePicker.IsRange && PickerIndex == 0))" />
+    </RenderPickerHeader>
+    <RenderColValue Context="currentColDate">
+        @{yearIndex++;}
+        @currentColDate.Year
+    </RenderColValue>
+</AntDatePickerTemplate>

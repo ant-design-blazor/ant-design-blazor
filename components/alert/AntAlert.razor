@@ -1,13 +1,13 @@
-﻿@namespace AntBlazor
-@inherits AntAlertBase
+@namespace AntBlazor
+@inherits AntDomComponentBase
 
-@if (!isClosed)
+@if (!_isClosed)
 {
-    <div class="@ClassMapper.Class" style="@Style" @attributes="Attributes" Id="@Id">
+    <div class="@ClassMapper.Class" style="@Style" Id="@Id">
         @if (ShowIcon)
         {
-            <span role="img" aria-label="@iconType" class="@($"anticon anticon-{iconType} ant-alert-icon")">
-                <AntIcon type="@iconType" fill="currentColor"/>
+            <span role="img" aria-label="@IconType" class="@($"anticon anticon-{IconType} ant-alert-icon")">
+                <AntIcon type="@IconType" fill="currentColor"/>
             </span>
         }
         @if (!string.IsNullOrEmpty(Message))

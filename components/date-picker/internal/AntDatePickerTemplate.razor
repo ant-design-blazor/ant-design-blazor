@@ -1,0 +1,117 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDatePickerPanelBase
+
+<div class="@(DatePicker.PrefixCls)-@(Picker)-panel">
+    @RenderPickerHeader
+    <div class="@(DatePicker.PrefixCls)-body">
+        <table class="@(DatePicker.PrefixCls)-content">
+            <thead>
+                @RenderTableHeader
+            </thead>
+            <tbody>
+                @{ var startDate = ViewStartDate; }
+                @for (int row = 1; row <= MaxRow; row++)
+                {
+                    var startColDate = startDate;
+                    <tr class="@(GetRowClass?.Invoke(startColDate))"
+                        @onclick="e => OnRowSelect?.Invoke(startColDate)">
+
+                        @RenderFisrtCol?.Invoke(startColDate)
+
+                        @for (int col = 1; col <= MaxCol; col++)
+                        {
+                            var currentColDate = startDate;
+
+                            string inViewCls = IsInView(currentColDate) ? $"{DatePicker.PrefixCls}-cell-in-view" : "";
+                            string todayCls = IsToday(currentColDate) ? $"{DatePicker.PrefixCls}-cell-today" : "";
+                            string selectedCls = IsSelected(currentColDate) ? $"{DatePicker.PrefixCls}-cell-selected" : "";
+                            string disabledCls = "";
+
+                            if (DatePicker.DisabledDate != null && DatePicker.DisabledDate(currentColDate))
+                            {
+                                disabledCls = $"{DatePicker.PrefixCls}-cell-disabled";
+                            }
+
+                            <td title="@GetColTitle?.Invoke(currentColDate)"
+                                class="@(DatePicker.PrefixCls)-cell @(inViewCls) @(todayCls) @selectedCls @disabledCls">
+                                <div class="@(DatePicker.PrefixCls)-cell-inner"
+                                     @onclick="e => OnValueSelect?.Invoke(currentColDate)">
+                                    @if (Picker == AntDatePickerType.Date && DatePicker.DateRender != null)
+                                    {
+                                        @(DatePicker.DateRender(currentColDate, DatePicker.CurrentDate))
+                                    }
+                                    else if (Picker == AntDatePickerType.Month && DatePicker.MonthCellRender != null)
+                                    {
+                                        @(DatePicker.MonthCellRender(currentColDate))
+                                    }
+                                    else
+                                    {
+                                        @RenderColValue(currentColDate)
+                                    }
+                                </div>
+                            </td>
+
+                            startDate = @GetNextColValue(currentColDate);
+                        }
+
+                        @{ var endColDate = startDate;}
+                        @RenderLastCol?.Invoke(endColDate)
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment RenderPickerHeader { get; set; }
+
+    [Parameter]
+    public RenderFragment RenderTableHeader { get; set; }
+
+    [Parameter]
+    public RenderFragment<DateTime> RenderFisrtCol { get; set; }
+
+    [Parameter]
+    public RenderFragment<DateTime> RenderColValue { get; set; }
+
+    [Parameter]
+    public RenderFragment<DateTime> RenderLastCol { get; set; }
+
+    [Parameter]
+    public DateTime ViewStartDate { get; set; }
+
+    [Parameter]
+    public Func<DateTime, string> GetColTitle { get; set; }
+
+    [Parameter]
+    public Func<DateTime, string> GetRowClass { get; set; }
+
+    [Parameter]
+    public Func<DateTime, DateTime> GetNextColValue { get; set; }
+
+    [Parameter]
+    public Func<DateTime, bool> IsInView { get; set; }
+
+    [Parameter]
+    public Func<DateTime, bool> IsToday { get; set; }
+
+    [Parameter]
+    public Func<DateTime, bool> IsSelected { get; set; }
+
+    [Parameter]
+    public Action<DateTime> OnRowSelect { get; set; }
+
+    [Parameter]
+    public Action<DateTime> OnValueSelect { get; set; }
+
+    [Parameter]
+    public bool ShowFooter { get; set; } = false;
+
+    [Parameter]
+    public int MaxRow { get; set; } = 0;
+
+    [Parameter]
+    public int MaxCol { get; set; } = 0;
+}

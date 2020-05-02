@@ -1,32 +1,32 @@
-﻿@namespace AntBlazor
-@inherits AntDrawerBase
+@namespace AntBlazor
+@inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" @ref="@Ref" style="@drawerStyle @Style" @attributes="Attributes" Id="@Id">
-    @if (mask)
+<div class="@ClassMapper.Class" @ref="@Ref" style="@DrawerStyle @Style" id="@Id">
+    @if (Mask)
     {
-        <div class="ant-drawer-mask" @onclick="_=>maskClick()" style="@maskStyle"></div>
+        <div class="ant-drawer-mask" @onclick="_=>MaskClick()" style="@MaskStyle"></div>
     }
-    <div class="ant-drawer-content-wrapper @wrapClassName " style="@wrapperStyle">
+    <div class="ant-drawer-content-wrapper @WrapClassName " style="@WrapperStyle">
         <div class="ant-drawer-content">
-            <div class="ant-drawer-wrapper-body" style="@(isLeftOrRight?"height:100%":"")">
-                @if (_title.Value != null || closable)
+            <div class="ant-drawer-wrapper-body" style="@(IsLeftOrRight?"height:100%":"")">
+                @if (_title.Value != null || Closable)
                 {
 
                     <div class="@TitleClassMapper.Class">
                         @if (_title.Value != null)
                         {
                             <div class="ant-drawer-title">
-                                @if (titleTemplate != null)
+                                @if (TitleTemplate != null)
                                 {
-                                    @titleTemplate
+                                    @TitleTemplate
                                 }
-                                @if (string.IsNullOrEmpty(titleString))
+                                @if (string.IsNullOrEmpty(TitleString))
                                 {
-                                    @((MarkupString)titleString)
+                                    @((MarkupString)TitleString)
                                 }
                             </div>
                         }
-                        @if (closable)
+                        @if (Closable)
                         {
                             <button onclick="_=>closeClick()" aria-label="Close" class="ant-drawer-close">
                                 <AntIcon type="close"></AntIcon>
@@ -34,11 +34,10 @@
                         }
                     </div>
                 }
-                <div class="ant-drawer-body" style="@bodyStyle">
-                    @*<ng-template cdkPortalOutlet></ng-template>*@
+                <div class="ant-drawer-body" style="@BodyStyle">
                     @if (ContentTemplate != null)
                     {
-                        @ContentString
+                        @ContentTemplate
                     }
                     @if (string.IsNullOrEmpty(ContentString))
                     {
