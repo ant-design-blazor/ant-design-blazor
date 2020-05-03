@@ -1,0 +1,26 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this">
+    <div class="@ClassMapper.Class" style="@Style" Id="@Id">
+
+        @if (Header != null)
+        {
+            <div class="@_prefixName-header">
+                @Header
+            </div>
+        }
+
+        <div class="ant-list-items">
+            @ChildContent
+        </div>
+
+        @if (Footer != null)
+        {
+            <div class="@_prefixName-footer">
+                @Footer
+            </div>
+        }
+
+    </div>
+</CascadingValue>
