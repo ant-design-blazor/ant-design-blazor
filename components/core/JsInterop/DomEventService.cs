@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using Microsoft.JSInterop;
@@ -27,6 +27,17 @@ namespace AntBlazor.JsInterop
             }
         }
 
+        private void AddEventListenerToFirstChildInternal<T>(string dom, string eventName, Action<T> callback)
+        {
+            if (!_domEventListeners.ContainsKey($"{dom}-{eventName}"))
+            {
+                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListenerToFirstChild, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
+                {
+                    callback?.Invoke(p);
+                })));
+            }
+        }
+
         public void AddEventListener(string dom, string eventName, Action<JsonElement> callback)
         {
             AddEventListenerInternal<string>(dom, eventName, (e) =>
@@ -39,6 +50,24 @@ namespace AntBlazor.JsInterop
         public void AddEventListener<T>(string dom, string eventName, Action<T> callback)
         {
             AddEventListenerInternal<string>(dom, eventName, (e) =>
+            {
+                T obj = JsonSerializer.Deserialize<T>(e);
+                callback(obj);
+            });
+        }
+
+        public void AddEventListenerToFirstChild(string dom, string eventName, Action<JsonElement> callback)
+        {
+            AddEventListenerToFirstChildInternal<string>(dom, eventName, (e) =>
+            {
+                JsonElement jsonElement = JsonDocument.Parse(e).RootElement;
+                callback(jsonElement);
+            });
+        }
+
+        public void AddEventListenerToFirstChild<T>(string dom, string eventName, Action<T> callback)
+        {
+            AddEventListenerToFirstChildInternal<string>(dom, eventName, (e) =>
             {
                 T obj = JsonSerializer.Deserialize<T>(e);
                 callback(obj);
