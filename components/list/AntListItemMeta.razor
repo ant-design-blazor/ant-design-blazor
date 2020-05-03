@@ -1,0 +1,34 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style">
+    <div class="ant-list-item-meta-avatar">
+        <AntAvatar src="@Avatar"></AntAvatar>
+    </div>
+    <div class="ant-list-item-meta-content">
+        <div>
+            <h4 class="ant-list-item-meta-title">
+                @Title
+            </h4>
+        </div>
+        <div class="ant-list-item-meta-description">
+            @Description
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter] public RenderFragment Title { get; set; }
+
+    //[Parameter] public OneOf.OneOf<string, RenderFragment> Avatar { get; set; }
+    [Parameter] public string Avatar { get; set; }
+
+    [Parameter] public string Description { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ClassMapper.Add("ant-list-item-meta");
+    }
+}

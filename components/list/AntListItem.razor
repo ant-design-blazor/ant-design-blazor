@@ -1,0 +1,24 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style" Id="@Id">
+    @if (Extra != null)
+    {
+        <div class="@_prefixName-item-extra-wrap">
+            <div class="@_prefixName-item-main">
+                {metaContent}
+                {content}
+                {actionsContent}
+            </div>
+            <div class="@_prefixName-item-extra">@Extra</div>
+        </div>
+    }
+    @if (Actions != null)
+    {
+        @Actions
+    }
+
+    @ChildContent
+
+</div>
+
