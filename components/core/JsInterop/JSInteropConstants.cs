@@ -24,5 +24,15 @@ namespace AntBlazor
 
         public static string blur => $"{FUNC_PREFIX}blur";
         public static string backTop => $"{FUNC_PREFIX}BackTop";
+
+        public static string getFirstChildDomInfo => $"{FUNC_PREFIX}getFirstChildDomInfo";
+
+        public static string addClsToFirstChild => $"{FUNC_PREFIX}addClsToFirstChild";
+
+        public static string addDomEventListenerToFirstChild => $"{FUNC_PREFIX}addDomEventListenerToFirstChild";
+
+        public static string addElementToBody => $"{FUNC_PREFIX}addElementToBody";
+
+        public static string delElementFromBody => $"{FUNC_PREFIX}delElementFromBody";
     }
 }

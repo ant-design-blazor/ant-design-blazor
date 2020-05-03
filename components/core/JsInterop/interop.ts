@@ -18,6 +18,9 @@ export function getDomInfo(element) {
     if (typeof item === 'string' || (typeof item === 'number' && !isNaN(item))) result[key] = item;
   }
 
+  result["absoluteTop"] = getAbsoluteTop(dom);
+  result["absoluteLeft"] = getAbsoluteLeft(dom);
+
   return result;
 }
 
@@ -102,6 +105,50 @@ export function log(text) {
 }
 
 export function BackTop(element) {
-    let dom = document.getElementById("BodyContainer");
-    dom.scrollTo(0, 0);
+  let dom = document.getElementById("BodyContainer");
+  dom.scrollTo(0, 0);
+}
+
+export function getFirstChildDomInfo(element) {
+  var dom = getDom(element);
+  return getDomInfo(dom.firstElementChild);
+}
+
+export function addClsToFirstChild(element, className) {
+  var dom = getDom(element);
+  if (dom.firstElementChild) {
+    dom.firstElementChild.classList.add(className);
+  }
+}
+
+export function addDomEventListenerToFirstChild(element, eventName, invoker) {
+  var dom = getDom(element);
+
+  if (dom.firstElementChild) {
+    addDomEventListener(dom.firstElementChild, eventName, invoker);
+  }
+}
+
+export function getAbsoluteTop(e) {
+  var offset = e.offsetTop;
+  if (e.offsetParent != null) {
+    offset += getAbsoluteTop(e.offsetParent);
+  }
+  return offset;
+}
+
+export function getAbsoluteLeft(e) {
+  var offset = e.offsetLeft;
+  if (e.offsetParent != null) {
+    offset += getAbsoluteLeft(e.offsetParent);
+  }
+  return offset;
+} 
+
+export function addElementToBody(element) {
+  document.body.appendChild(element);
+}
+
+export function delElementFromBody(element) {
+  document.body.removeChild(element);
 }
