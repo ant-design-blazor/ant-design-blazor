@@ -140,6 +140,11 @@
             "url": "empty"
           },
           {
+            "title": "List",
+            "type": "menuItem",
+            "url": "list"
+          },
+          {
             "title": "Tag",
             "type": "menuItem",
             "url": "tag"
