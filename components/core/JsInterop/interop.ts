@@ -46,8 +46,8 @@ export function addDomEventListener(element, eventName, invoker) {
   if (element == 'window') {
     window.addEventListener(eventName, callback);
   } else {
-      let dom = getDom(element);
-      (dom as HTMLElement).addEventListener(eventName, callback);
+    let dom = getDom(element);
+    (dom as HTMLElement).addEventListener(eventName, callback);
   }
 }
 
@@ -105,50 +105,50 @@ export function log(text) {
 }
 
 export function BackTop(element) {
-    let dom = document.getElementById("BodyContainer");
-    dom.scrollTo(0, 0);
+  let dom = document.getElementById("BodyContainer");
+  dom.scrollTo(0, 0);
 }
 
 export function getFirstChildDomInfo(element) {
-    var dom = getDom(element);
-    return getDomInfo(dom.firstElementChild);
+  var dom = getDom(element);
+  return getDomInfo(dom.firstElementChild);
 }
 
 export function addClsToFirstChild(element, className) {
-    var dom = getDom(element);
-    if (dom.firstElementChild) {
-        dom.firstElementChild.classList.add(className);
-    }
+  var dom = getDom(element);
+  if (dom.firstElementChild) {
+    dom.firstElementChild.classList.add(className);
+  }
 }
 
 export function addDomEventListenerToFirstChild(element, eventName, invoker) {
-    var dom = getDom(element);
+  var dom = getDom(element);
 
-    if (dom.firstElementChild) {
-        addDomEventListener(dom.firstElementChild, eventName, invoker);
-    }
+  if (dom.firstElementChild) {
+    addDomEventListener(dom.firstElementChild, eventName, invoker);
+  }
 }
 
 export function getAbsoluteTop(e) {
-    var offset = e.offsetTop;
-    if (e.offsetParent != null) {
-        offset += getAbsoluteTop(e.offsetParent);
-    }
-    return offset;
+  var offset = e.offsetTop;
+  if (e.offsetParent != null) {
+    offset += getAbsoluteTop(e.offsetParent);
+  }
+  return offset;
 }
 
 export function getAbsoluteLeft(e) {
-    var offset = e.offsetLeft;
-    if (e.offsetParent != null) {
-        offset += getAbsoluteLeft(e.offsetParent);
-    }
-    return offset;
+  var offset = e.offsetLeft;
+  if (e.offsetParent != null) {
+    offset += getAbsoluteLeft(e.offsetParent);
+  }
+  return offset;
 } 
 
 export function addElementToBody(element) {
-    document.body.appendChild(element);
+  document.body.appendChild(element);
 }
 
 export function delElementFromBody(element) {
-    document.body.removeChild(element);
+  document.body.removeChild(element);
 }
