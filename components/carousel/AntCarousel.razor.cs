@@ -17,7 +17,6 @@ namespace AntBlazor
         private ElementReference _ref;
         private int _slickWidth = -1;
         private int _totalWidth = -1;
-        private bool _renderAgain;
         private List<AntCarouselSlick> _slicks = new List<AntCarouselSlick>();
         private AntCarouselSlick _activeSlick;
 
@@ -26,6 +25,12 @@ namespace AntBlazor
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// The position of the dots, which can be one of Top, Bottom, Left or Right.
+        /// </summary>
+        [Parameter]
+        public AntCarouselDotPosition DotPosition { get; set; } = AntCarouselDotPosition.Bottom;
+
         #endregion Parameters
 
         protected async override Task OnFirstAfterRenderAsync()
@@ -33,27 +38,12 @@ namespace AntBlazor
             await base.OnFirstAfterRenderAsync();
 
             DomRect carouselRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ref);
+            Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _ref);
             _slickWidth = (int)carouselRect.width;
             _totalWidth = _slickWidth * (_slicks.Count * 2 + 1);
-            //transition: -webkit-transform 500ms ease 0s
             _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px); transition: -webkit-transform 500ms ease 0s;";
             _slickStyle = $"outline: none; width: {_slickWidth}px;";
             _slickClonedStyle = $"width: {_slickWidth}px;";
-            //_renderAgain = true;
-            //StateHasChanged();
-        }
-
-        protected async override Task OnAfterRenderAsync(bool firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);
-
-            //if (!firstRender && _renderAgain)
-            //{
-            //    _renderAgain = false;
-            //    int count = _slicks.IndexOf(_activeSlick) + 1;
-            //    _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth * count}px, 0px, 0px);";
-            //    StateHasChanged();
-            //}
         }
 
         internal void AddSlick(AntCarouselSlick slick)
@@ -82,10 +72,8 @@ namespace AntBlazor
 
             if (_slickWidth > 0)
             {
-                _renderAgain = true;
                 int count = _slicks.IndexOf(_activeSlick) + 1;
-                _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth * count - 1}px, 0px, 0px);";
-                StateHasChanged();
+                _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth * count - 1}px, 0px, 0px); transition: -webkit-transform 500ms ease 0s;";
             }
         }
     }
