@@ -52,4 +52,34 @@
             </Demo>
         </DemoCard>
     </AntCol>
+    <AntCol Span="12">
+        <DemoCard>
+            <Title>Position</Title>
+            <Description>There are 4 position options available.</Description>
+            <Demo>
+                <div>
+                    <AntRadioGroup @bind-Value="_position" Style="margin-bottom: 8px;">
+                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Top.ToString()">Top</AntRadio>
+                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Bottom.ToString()">Bottom</AntRadio>
+                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Left.ToString()">Left</AntRadio>
+                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Right.ToString()">Right</AntRadio>
+                    </AntRadioGroup>
+                    <AntCarousel DotPosition="@_position">
+                        <AntCarouselSlick>
+                            <h3>1</h3>
+                        </AntCarouselSlick>
+                        <AntCarouselSlick>
+                            <h3>2</h3>
+                        </AntCarouselSlick>
+                        <AntCarouselSlick>
+                            <h3>3</h3>
+                        </AntCarouselSlick>
+                        <AntCarouselSlick>
+                            <h3>4</h3>
+                        </AntCarouselSlick>
+                    </AntCarousel>
+                </div>
+            </Demo>
+        </DemoCard>
+    </AntCol>
 </AntRow>

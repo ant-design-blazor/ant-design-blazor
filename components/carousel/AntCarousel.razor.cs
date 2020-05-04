@@ -11,6 +11,7 @@ namespace AntBlazor
 {
     public partial class AntCarousel : AntDomComponentBase
     {
+        private const string PrefixCls = "ant-carousel";
         private string _trackStyle;
         private string _slickStyle;
         private string _slickClonedStyle;
@@ -29,9 +30,17 @@ namespace AntBlazor
         /// The position of the dots, which can be one of Top, Bottom, Left or Right.
         /// </summary>
         [Parameter]
-        public AntCarouselDotPosition DotPosition { get; set; } = AntCarouselDotPosition.Bottom;
+        public string DotPosition { get; set; } = AntCarouselDotPosition.Bottom;
 
         #endregion Parameters
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            ClassMapper.Clear()
+                .Add(PrefixCls)
+                .If($"{PrefixCls}-vertical", () => DotPosition == AntCarouselDotPosition.Left || DotPosition == AntCarouselDotPosition.Right);
+        }
 
         protected async override Task OnFirstAfterRenderAsync()
         {

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public enum AntCarouselDotPosition
+    public static class AntCarouselDotPosition
     {
-        Top,
-        Bottom,
-        Left,
-        Right
+        public const string Top = "Top";
+        public const string Bottom = "Bottom";
+        public const string Left = "Left";
+        public const string Right = "Right";
     }
 }

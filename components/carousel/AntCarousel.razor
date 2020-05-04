@@ -5,7 +5,7 @@
     @ChildContent
 </CascadingValue>
 
-<div class="ant-carousel" @ref="_ref">
+<div class="@ClassMapper.Class" @ref="_ref" id="@Id">
     <div class="slick-slider slick-initialized" dir="ltr">
         <div class="slick-list">
             <div class="slick-track" style="@_trackStyle">
@@ -43,7 +43,7 @@
                 }
             </div>
         </div>
-        <ul class="@($"slick-dots slick-dots-{DotPosition.ToString().ToLower()}") style="display: block;">
+        <ul class="@($"slick-dots slick-dots-{DotPosition.ToString().ToLower()}")" style="display: block;">
             @for (int i = 0; i < _slicks.Count; i++)
             {
                 int index = i;
