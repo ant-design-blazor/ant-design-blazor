@@ -71,5 +71,17 @@ namespace AntBlazor
             Active = false;
             //StateHasChanged();
         }
+
+        internal string GetStyle(int index, int width, string effect)
+        {
+            if (effect == AntCarouselEffect.Fade)
+            {
+                return $"outline: none; width: {width}px; position: relative; left: {-width * index}px; opacity: {(Active ? 1 : 0)}; transition: opacity 500ms ease 0s, visibility 500ms ease 0s;";
+            }
+            else
+            {
+                return $"outline: none; width: {width}px;";
+            }
+        }
     }
 }

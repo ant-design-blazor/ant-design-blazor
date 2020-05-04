@@ -9,7 +9,7 @@
     <div class="slick-slider slick-initialized" dir="ltr">
         <div class="slick-list">
             <div class="slick-track" style="@_trackStyle">
-                @if (_slicks.Count > 0)
+                @if (_slicks.Count > 0 && Effect == AntCarouselEffect.ScrollX)
                 {
                     <div data-index="-1" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@_slickClonedStyle">
                         <div>
@@ -22,7 +22,7 @@
                 @for (int i = 0; i < _slicks.Count; i++)
                 {
                     int index = i;
-                    <div data-index="@index" class="@_slicks[index].Class" tabindex="-1" aria-hidden="@((!_slicks[index].Active).ToString())" style="@_slickStyle">
+                    <div data-index="@index" class="@_slicks[index].Class" tabindex="-1" aria-hidden="@((!_slicks[index].Active).ToString())" style="@_slicks[index].GetStyle(index, _slickWidth, Effect)">
                         <div>
                             <div tabindex="-1" style="width: 100%; display: inline-block;">
                                 @_slicks[index].ChildContent
@@ -30,16 +30,19 @@
                         </div>
                     </div>
                 }
-                @for (int i = 0; i < _slicks.Count; i++)
+                @if (Effect == AntCarouselEffect.ScrollX)
                 {
-                    int index = i;
-                    <div data-index="@(i+_slicks.Count)" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@_slickClonedStyle">
-                        <div>
-                            <div tabindex="-1" style="width: 100%; display: inline-block;">
-                                @_slicks[index].ChildContent
+                    for (int i = 0; i < _slicks.Count; i++)
+                    {
+                        int index = i;
+                        <div data-index="@(i+_slicks.Count)" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@_slickClonedStyle">
+                            <div>
+                                <div tabindex="-1" style="width: 100%; display: inline-block;">
+                                    @_slicks[index].ChildContent
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
             </div>
         </div>
