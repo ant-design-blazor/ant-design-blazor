@@ -5,9 +5,9 @@
     @ChildContent
 </CascadingValue>
 
-<div class="@ClassMapper.Class" @ref="_ref" id="@Id">
+<div class="@ClassMapper.Class" id="@Id">
     <div class="slick-slider slick-initialized" dir="ltr">
-        <div class="slick-list">
+        <div class="slick-list" @ref="_ref" >
             <div class="slick-track" style="@_trackStyle">
                 @if (_slicks.Count > 0 && Effect == AntCarouselEffect.ScrollX)
                 {
@@ -51,7 +51,7 @@
             {
                 int index = i;
                 <li class="@(_slicks[index].Active?"slick-active":string.Empty)">
-                    <button @onclick="(e)=>Activate(_slicks[index])">@(index + 1)</button>
+                    <button @onclick="(e)=>Activate(index)">@(index + 1)</button>
                 </li>
             }
         </ul>

@@ -67,22 +67,28 @@ namespace AntBlazor
                 .If($"{PrefixCls}-vertical", () => DotPosition == AntCarouselDotPosition.Left || DotPosition == AntCarouselDotPosition.Right);
         }
 
-        protected async override Task OnFirstAfterRenderAsync()
-        {
-            await base.OnFirstAfterRenderAsync();
 
-            DomRect carouselRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ref);
-            _slickWidth = (int)carouselRect.width;
-            _totalWidth = _slickWidth * (_slicks.Count * 2 + 1);
-            if (Effect == AntCarouselEffect.ScrollX)
+        protected async override Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            DomRect listRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ref);
+            if (_slickWidth != (int)listRect.width)
             {
-                _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px); transition: -webkit-transform 500ms ease 0s;";
+                _slickWidth = (int)listRect.width;
+                _totalWidth = _slickWidth * (_slicks.Count * 2 + 1);
+                if (Effect == AntCarouselEffect.ScrollX)
+                {
+                    _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px); transition: -webkit-transform 500ms ease 0s;";
+                }
+                else
+                {
+                    _trackStyle = $"width: {_totalWidth}px; opacity: 1;";
+                }
+                _slickClonedStyle = $"width: {_slickWidth}px;";
+
+                StateHasChanged();
             }
-            else
-            {
-                _trackStyle = $"width: {_totalWidth}px; opacity: 1;";
-            }
-            _slickClonedStyle = $"width: {_slickWidth}px;";
         }
 
         internal void AddSlick(AntCarouselSlick slick)
@@ -90,12 +96,24 @@ namespace AntBlazor
             _slicks.Add(slick);
             if (_activeSlick == null)
             {
-                Activate(slick);
+                Activate(0);
             }
         }
 
-        private void Activate(AntCarouselSlick slick)
+        private int Activate(int index, string transition = " transition: -webkit-transform 500ms ease 0s;")
         {
+
+            if (Effect == AntCarouselEffect.ScrollX)
+            {
+                _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth * (index + 1)}px, 0px, 0px);{transition}";
+            }
+
+            if (index == _slicks.Count)
+            {
+                index = 0;
+            }
+
+            AntCarouselSlick slick = _slicks[index];
             _slicks.ForEach(s =>
             {
                 if (s == slick)
@@ -109,25 +127,25 @@ namespace AntBlazor
                 }
             });
 
-            int count = _slicks.IndexOf(_activeSlick) + 1;
-            if (Effect == AntCarouselEffect.ScrollX)
-            {
-                _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth * count}px, 0px, 0px); transition: -webkit-transform 500ms ease 0s;";
-            }
+            return index;
         }
 
         private async void AutoplaySlick(object state)
         {
             int newIndex = _slicks.IndexOf(_activeSlick) + 1;
-            if (newIndex == _slicks.Count)
-            {
-                newIndex = 0;
-            }
 
-            Activate(_slicks[newIndex]);
+            int realIndex = Activate(newIndex);
 
             // The current thread is not associated with the Dispatcher.
             // Use InvokeAsync() to switch execution to the Dispatcher when triggering rendering or component state
+            await InvokeAsync(() => StateHasChanged());
+
+            if (realIndex == 0 && Effect == AntCarouselEffect.ScrollX)
+            {
+                Thread.Sleep((int)Autoplay.TotalMilliseconds / 2);
+                _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px);";
+            }
+
             await InvokeAsync(() => StateHasChanged());
         }
     }
