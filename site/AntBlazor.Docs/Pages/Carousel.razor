@@ -1,0 +1,125 @@
+﻿<AntTitle Level="1">Carousel</AntTitle>
+<AntText>A carousel component. Scales with its container.</AntText>
+<AntTitle Level="2">When To Use</AntTitle>
+<AntParagraph>
+    <Markdown MarkdownText="@_paragraph"></Markdown>
+</AntParagraph>
+
+<br />
+<h2>Examples</h2>
+<br />
+
+<AntRow Style="margin-left: -8px; margin-right: -8px;">
+    <style>
+        .AntCol {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+    </style>
+    <AntCol Span="12">
+        <DemoCard>
+            <Title>Basic</Title>
+            <Description>Basic usage.</Description>
+            <Demo>
+                <style>
+                    /* For demo */
+                    .ant-carousel .slick-slide {
+                        text-align: center;
+                        height: 160px;
+                        line-height: 160px;
+                        background: #364d79;
+                        overflow: hidden;
+                    }
+
+                        .ant-carousel .slick-slide h3 {
+                            color: #fff;
+                        }
+                </style>
+                <AntCarousel>
+                    <AntCarouselSlick>
+                        <h3>1</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>2</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>3</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>4</h3>
+                    </AntCarouselSlick>
+                </AntCarousel>
+            </Demo>
+        </DemoCard>
+        <DemoCard>
+            <Title>Scroll automatically</Title>
+            <Description>Timing of scrolling to the next card/picture.</Description>
+            <Demo>
+                <AntCarousel Autoplay="TimeSpan.FromSeconds(2)">
+                    <AntCarouselSlick>
+                        <h3>1</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>2</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>3</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>4</h3>
+                    </AntCarouselSlick>
+                </AntCarousel>
+            </Demo>
+        </DemoCard>
+    </AntCol>
+    <AntCol Span="12">
+        <DemoCard>
+            <Title>Position</Title>
+            <Description>There are 4 position options available.</Description>
+            <Demo>
+                <div>
+                    <AntRadioGroup @bind-Value="_position" Style="margin-bottom: 8px;">
+                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Top.ToString()">Top</AntRadio>
+                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Bottom.ToString()">Bottom</AntRadio>
+                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Left.ToString()">Left</AntRadio>
+                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Right.ToString()">Right</AntRadio>
+                    </AntRadioGroup>
+                    <AntCarousel DotPosition="@_position">
+                        <AntCarouselSlick>
+                            <h3>1</h3>
+                        </AntCarouselSlick>
+                        <AntCarouselSlick>
+                            <h3>2</h3>
+                        </AntCarouselSlick>
+                        <AntCarouselSlick>
+                            <h3>3</h3>
+                        </AntCarouselSlick>
+                        <AntCarouselSlick>
+                            <h3>4</h3>
+                        </AntCarouselSlick>
+                    </AntCarousel>
+                </div>
+            </Demo>
+        </DemoCard>
+        <DemoCard>
+            <Title>Fade in</Title>
+            <Description>Slides use fade for transition.</Description>
+            <Demo>
+                <AntCarousel Effect="@AntCarouselEffect.Fade">
+                    <AntCarouselSlick>
+                        <h3>1</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>2</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>3</h3>
+                    </AntCarouselSlick>
+                    <AntCarouselSlick>
+                        <h3>4</h3>
+                    </AntCarouselSlick>
+                </AntCarousel>
+            </Demo>
+        </DemoCard>
+    </AntCol>
+</AntRow>
