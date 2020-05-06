@@ -1,0 +1,59 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
+
+<div class="@ClassMapper.Class" id="@Id">
+    <div class="slick-slider slick-initialized" dir="ltr">
+        <div class="slick-list" @ref="_ref" >
+            <div class="slick-track" style="@_trackStyle">
+                @if (_slicks.Count > 0 && Effect == AntCarouselEffect.ScrollX)
+                {
+                    <div data-index="-1" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@_slickClonedStyle">
+                        <div>
+                            <div tabindex="-1" style="width: 100%; display: inline-block;">
+                                @_slicks.Last().ChildContent
+                            </div>
+                        </div>
+                    </div>
+                }
+                @for (int i = 0; i < _slicks.Count; i++)
+                {
+                    int index = i;
+                    <div data-index="@index" class="@_slicks[index].Class" tabindex="-1" aria-hidden="@((!_slicks[index].Active).ToString())" style="@_slicks[index].GetStyle(index, _slickWidth, Effect)">
+                        <div>
+                            <div tabindex="-1" style="width: 100%; display: inline-block;">
+                                @_slicks[index].ChildContent
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Effect == AntCarouselEffect.ScrollX)
+                {
+                    for (int i = 0; i < _slicks.Count; i++)
+                    {
+                        int index = i;
+                        <div data-index="@(i+_slicks.Count)" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@_slickClonedStyle">
+                            <div>
+                                <div tabindex="-1" style="width: 100%; display: inline-block;">
+                                    @_slicks[index].ChildContent
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <ul class="@($"slick-dots slick-dots-{DotPosition.ToString().ToLower()}")" style="display: block;">
+            @for (int i = 0; i < _slicks.Count; i++)
+            {
+                int index = i;
+                <li class="@(_slicks[index].Active?"slick-active":string.Empty)">
+                    <button @onclick="(e)=>Activate(index)">@(index + 1)</button>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
