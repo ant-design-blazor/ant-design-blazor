@@ -40,7 +40,7 @@ WebAssembly static hosting examples:
 ## 🖥 Environment Support
 
 - .NET Core 3.1
-- Blazor WebAssembly 3.2 Preview 5
+- Blazor WebAssembly 3.2 RC 1
 - Supports two-way binding on the server side
 - Supports WebAssembly static file deployment
 - Support 4 major browsers engines, and Internet Explorer 11+ ([Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1) only)
@@ -68,7 +68,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 - Install Blazor WebAssembly Templates
 
   ```bash
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview5.20216.8
+  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-rc1.20223.4
   ```
 
 - Create Blazor WebAssembly Project
