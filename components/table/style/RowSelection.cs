@@ -14,11 +14,11 @@ namespace AntBlazor
 
     public sealed class RowSelection<TData>
     {
-        public const string DEFAULT_COLUMN_WIDTH = "40px";
+        public const string DEFAULTCOLUMNWIDTH = "40px";
 
         public RowSelectionType Type { get; set; }
 
-        public CssSizeLength ColumnWidth { get; set; } = DEFAULT_COLUMN_WIDTH;
+        public CssSizeLength ColumnWidth { get; set; } = DEFAULTCOLUMNWIDTH;
 
         public bool Fixed { get; set; } = false;
 
@@ -30,17 +30,17 @@ namespace AntBlazor
 
         public IList<TData> SelectedRows { get; } = new List<TData>();
 
-        public IList<(RenderFragment text, Func<TData> onSelect)> Selections = new List<(RenderFragment, Func<TData>)>();
+        public IList<(RenderFragment text, Func<TData> onSelect)> Selections { get; set; } = new List<(RenderFragment, Func<TData>)>();
 
         public RowSelection(RowSelectionType type)
         {
             Type = type;
         }
 
-        public static implicit operator RowSelection<TData>(string value) => value.ToLowerInvariant() switch
+        public static implicit operator RowSelection<TData>(string value) => value?.ToUpperInvariant() switch
         {
-            "checkbox" => new RowSelection<TData>(RowSelectionType.CheckBox),
-            "radio" => new RowSelection<TData>(RowSelectionType.Radio),
+            "CHECKBOX" => new RowSelection<TData>(RowSelectionType.CheckBox),
+            "RADIO" => new RowSelection<TData>(RowSelectionType.Radio),
             _ => new RowSelection<TData>(RowSelectionType.None)
         };
 

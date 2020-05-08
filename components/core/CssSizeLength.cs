@@ -24,13 +24,13 @@ namespace AntBlazor
         Fr,
     }
 
-    public readonly struct CssSizeLength
+    public readonly struct CssSizeLength : IEquatable<CssSizeLength>
     {
         private readonly int _value;
 
         private readonly CssSizeLengthUnit _unit;
 
-        public override string ToString() => _value.ToString() + _unit switch
+        public override string ToString() => _value.ToString(CultureInfo.InvariantCulture) + _unit switch
         {
             CssSizeLengthUnit.Percent => "%",
             _ => Enum.GetName(typeof(CssSizeLengthUnit), _unit).ToLowerInvariant()
@@ -46,7 +46,7 @@ namespace AntBlazor
 
         public CssSizeLength(string value)
         {
-            value = value.ToLowerInvariant();
+            value = value?.ToLowerInvariant() ?? throw new ArgumentNullException(nameof(value));
 
             var index = value
                 .Select((c, i) => ((char c, int i)?)(c, i))
@@ -76,5 +76,15 @@ namespace AntBlazor
         public static implicit operator CssSizeLength(int value) => new CssSizeLength(value);
 
         public static implicit operator CssSizeLength(string value) => new CssSizeLength(value);
+
+        public override bool Equals(object obj) => obj is CssSizeLength other && Equals(other);
+
+        public override int GetHashCode() => unchecked(_value.GetHashCode() + _unit.GetHashCode());
+
+        public static bool operator ==(CssSizeLength left, CssSizeLength right) => left.Equals(right);
+
+        public static bool operator !=(CssSizeLength left, CssSizeLength right) => !(left == right);
+
+        public bool Equals(CssSizeLength other) => other._value == _value && other._unit == _unit;
     }
 }
