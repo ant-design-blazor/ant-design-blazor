@@ -37,7 +37,7 @@
 ## 🖥 支持环境
 
 - .NET Core 3.1
-- Blazor WebAssembly 3.2 preievew 5
+- Blazor WebAssembly 3.2 RC 1
 - 支持服务端双向绑定
 - 支持 WebAssembly 静态文件部署
 - 主流 4 款现代浏览器，以及 Internet Explorer 11+ （使用 [Blazor Server](https://angular.io/guide/browser-support)）
@@ -64,7 +64,7 @@
 - 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
 - 安装 Blazor WebAssembly 模板
   ```
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview5.20216.8
+  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-rc1.20223.4
   ```
 - 创建 Blazor WebAssembly 项目
   ```
