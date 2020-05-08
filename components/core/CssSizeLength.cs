@@ -67,7 +67,7 @@ namespace AntBlazor
                 return;
             }
 
-            if (!Enum.TryParse(value.Substring(index).Trim(), out _unit))
+            if (!Enum.TryParse(value.Substring(index).Trim(), ignoreCase: true, out _unit))
             {
                 throw new FormatException();
             }
