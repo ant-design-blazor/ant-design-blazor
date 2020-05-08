@@ -1,0 +1,10 @@
+﻿<span id="github-btn" class="github-btn">
+    <a class="gh-btn" href="@($"//github.com/{_org}/{_repo}")" target="_blank">
+        <span class="gh-ico" aria-hidden="true"></span>
+        <span class="gh-text">Star</span>
+    </a>
+    @if (_starCount > 0)
+    {
+        <a class="gh-count" target="_blank" href="@($"//github.com/{_org}/{_repo}/stargazers")" style="display: block;">@_starCount</a>
+    }
+</span>

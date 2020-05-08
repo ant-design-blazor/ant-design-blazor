@@ -52,7 +52,7 @@
     <CLIPath>$(CLIProjectDir)/bin/Debug/netcoreapp3.1/AntBlazor.Docs.Build.CLI.dll</CLIPath>
   </PropertyGroup>
 
-  <Target Name="DebugRunGulp" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug'">
+  <Target Name="RunCli" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug'">
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet build $(CLIProjectDir)" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) demo2json $(ProjectDir)Demos $(ProjectDir)wwwroot/meta" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) menu2json $(ProjectDir)Demos docs $(ProjectDir)wwwroot/meta" />

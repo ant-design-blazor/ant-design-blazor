@@ -48,7 +48,7 @@ namespace AntBlazor
 
         public IList<AntIcon> Icons { get; set; } = new List<AntIcon>();
 
-        public AntNavLink Link { get; set; }
+        //public AntNavLink Link { get; set; }
 
         protected string IconStyle { get; set; }
 
@@ -80,10 +80,10 @@ namespace AntBlazor
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            if (Link != null && string.IsNullOrEmpty(this.Type))
-            {
-                this.Type = AntButtonType.Link;
-            }
+            //if (Link != null && string.IsNullOrEmpty(this.Type))
+            //{
+            //    this.Type = AntButtonType.Link;
+            //}
             SetClassMap();
         }
 
@@ -104,10 +104,10 @@ namespace AntBlazor
 
         protected async Task OnClick(MouseEventArgs args)
         {
-            if (Link != null)
-            {
-                NavigationManger.NavigateTo(Link.Href);
-            }
+            //if (Link != null)
+            //{
+            //    NavigationManger.NavigateTo(Link.Href);
+            //}
 
             if (Onclick.HasDelegate)
             {

@@ -20,20 +20,20 @@ namespace AntBlazor.Docs.Build.CLI.Command
             command.Description = "Generate json file for menu";
             command.HelpOption();
 
-            var demoDirArgument = command.Argument(
+            CommandArgument demoDirArgument = command.Argument(
                 "demoDir", "[Required] The directory of docs files.");
 
-            var docsDirArgument = command.Argument(
+            CommandArgument docsDirArgument = command.Argument(
                 "docsDir", "[Required] The directory of docs files.");
 
-            var outputArgument = command.Argument(
+            CommandArgument outputArgument = command.Argument(
                 "output", "[Required] The directory where the json file to output");
 
             command.OnExecute(() =>
             {
-                var demoDir = demoDirArgument.Value;
-                var docsDir = docsDirArgument.Value;
-                var output = outputArgument.Value;
+                string demoDir = demoDirArgument.Value;
+                string docsDir = docsDirArgument.Value;
+                string output = outputArgument.Value;
 
                 if (string.IsNullOrEmpty(demoDir) || !Directory.Exists(demoDir))
                 {
@@ -52,8 +52,8 @@ namespace AntBlazor.Docs.Build.CLI.Command
                     output = "./";
                 }
 
-                var demoDirectory = Path.Combine(Directory.GetCurrentDirectory(), demoDir);
-                var docsDirectory = Path.Combine(Directory.GetCurrentDirectory(), docsDir);
+                string demoDirectory = Path.Combine(Directory.GetCurrentDirectory(), demoDir);
+                string docsDirectory = Path.Combine(Directory.GetCurrentDirectory(), docsDir);
 
                 GenerateFiles(demoDirectory, docsDirectory, output);
 
@@ -61,16 +61,16 @@ namespace AntBlazor.Docs.Build.CLI.Command
             });
         }
 
-        public void GenerateFiles(string demoDirectory, string docsDirectory, string output)
+        private void GenerateFiles(string demoDirectory, string docsDirectory, string output)
         {
-            var demoDirectoryInfo = new DirectoryInfo(demoDirectory);
+            DirectoryInfo demoDirectoryInfo = new DirectoryInfo(demoDirectory);
             if (demoDirectoryInfo.Attributes != FileAttributes.Directory)
             {
                 Console.WriteLine("{0} is not a directory", demoDirectory);
                 return;
             }
 
-            var docsDirectoryInfo = new DirectoryInfo(docsDirectory);
+            DirectoryInfo docsDirectoryInfo = new DirectoryInfo(docsDirectory);
             if (docsDirectoryInfo.Attributes != FileAttributes.Directory)
             {
                 Console.WriteLine("{0} is not a directory", docsDirectory);
@@ -81,7 +81,7 @@ namespace AntBlazor.Docs.Build.CLI.Command
 
             IList<Dictionary<string, MenuItem>> menuList = null;
 
-            var sortMap = new Dictionary<string, int>()
+            Dictionary<string, int> sortMap = new Dictionary<string, int>()
             {
                 ["General"] = 0,
                 ["通用"] = 0,
@@ -100,25 +100,25 @@ namespace AntBlazor.Docs.Build.CLI.Command
                 ["其他"] = 7
             };
 
-            foreach (var component in demoDirectoryInfo.GetFileSystemInfos())
+            foreach (FileSystemInfo component in demoDirectoryInfo.GetFileSystemInfos())
             {
                 if (!(component is DirectoryInfo componentDirectory))
                     continue;
 
-                var componentDic = new Dictionary<string, DemoComponent>();
+                Dictionary<string, DemoComponent> componentDic = new Dictionary<string, DemoComponent>();
 
-                var docDir = componentDirectory.GetFileSystemInfos("doc")[0];
+                FileSystemInfo docDir = componentDirectory.GetFileSystemInfos("doc")[0];
 
-                foreach (var docItem in (docDir as DirectoryInfo).GetFileSystemInfos())
+                foreach (FileSystemInfo docItem in (docDir as DirectoryInfo).GetFileSystemInfos())
                 {
-                    var language = docItem.Name.Replace("index.", "").Replace(docItem.Extension, "");
-                    var content = File.ReadAllText(docItem.FullName);
-                    var docData = DocParser.ParseDemoDoc(content);
+                    string language = docItem.Name.Replace("index.", "").Replace(docItem.Extension, "");
+                    string content = File.ReadAllText(docItem.FullName);
+                    (Dictionary<string, string> Meta, string Content) docData = DocParser.ParseDemoDoc(content);
 
                     componentDic.Add(language, new DemoComponent()
                     {
                         Title = docData.Meta["title"],
-                        SubTitle = docData.Meta.TryGetValue("subtitle", out var subtitle) ? subtitle : null,
+                        SubTitle = docData.Meta.TryGetValue("subtitle", out string subtitle) ? subtitle : null,
                         Type = docData.Meta["type"],
                         Doc = docData.Content,
                     });
@@ -131,16 +131,16 @@ namespace AntBlazor.Docs.Build.CLI.Command
             if (componentList == null)
                 return;
 
-            var componentMenuList = new List<Dictionary<string, MenuItem>>();
+            List<Dictionary<string, MenuItem>> componentMenuList = new List<Dictionary<string, MenuItem>>();
 
-            var componentI18N = componentList
+            IEnumerable<KeyValuePair<string, DemoComponent>> componentI18N = componentList
                 .SelectMany(x => x);
 
-            foreach (var group in componentI18N.GroupBy(x => x.Value.Type))
+            foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> group in componentI18N.GroupBy(x => x.Value.Type))
             {
-                var menu = new Dictionary<string, MenuItem>();
+                Dictionary<string, MenuItem> menu = new Dictionary<string, MenuItem>();
 
-                foreach (var component in group.GroupBy(x => x.Key))
+                foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> component in group.GroupBy(x => x.Key))
                 {
                     menu.Add(component.Key, new MenuItem()
                     {
@@ -160,25 +160,25 @@ namespace AntBlazor.Docs.Build.CLI.Command
                 componentMenuList.Add(menu);
             }
 
-            foreach (var docItem in docsDirectoryInfo.GetFileSystemInfos())
+            foreach (FileSystemInfo docItem in docsDirectoryInfo.GetFileSystemInfos())
             {
                 if (docItem.Extension != ".md")
                     continue;
 
-                var segments = docItem.Name.Split('.');
+                string[] segments = docItem.Name.Split('.');
                 if (segments.Length != 3)
                     continue;
 
-                var language = segments[1];
-                var content = File.ReadAllText(docItem.FullName);
-                var docData = DocParser.ParseHeader(content);
+                string language = segments[1];
+                string content = File.ReadAllText(docItem.FullName);
+                Dictionary<string, string> docData = DocParser.ParseHeader(content);
 
                 menuList ??= new List<Dictionary<string, MenuItem>>();
                 menuList.Add(new Dictionary<string, MenuItem>()
                 {
                     [language] = new MenuItem()
                     {
-                        Order = int.TryParse(docData["order"], out var order) ? order : 0,
+                        Order = int.TryParse(docData["order"], out int order) ? order : 0,
                         Title = docData["title"],
                         Url = $"docs/{segments[0]}",
                         Type = "menuItem"
@@ -189,17 +189,26 @@ namespace AntBlazor.Docs.Build.CLI.Command
             if (menuList == null)
                 return;
 
-            var menuI18N = menuList
+            IEnumerable<IGrouping<string, KeyValuePair<string, MenuItem>>> menuI18N = menuList
                 .SelectMany(x => x).GroupBy(x => x.Key);
 
-            var componentMenuI18N = componentMenuList
+            IEnumerable<IGrouping<string, KeyValuePair<string, MenuItem>>> componentMenuI18N = componentMenuList
                 .SelectMany(x => x).GroupBy(x => x.Key);
 
-            foreach (var menuGroup in menuI18N)
+            foreach (IGrouping<string, KeyValuePair<string, MenuItem>> menuGroup in menuI18N)
             {
-                var menu = menuGroup.Select(x => x.Value).OrderBy(x => x.Order).ToList();
+                List<MenuItem> menu = new List<MenuItem>
+                {
+                    new MenuItem()
+                    {
+                        Order = 0,
+                        Title = menuGroup.Key == "zh-CN" ? "文档" : "Docs",
+                        Type = "subMenu",
+                        Children = menuGroup.Select(x => x.Value).OrderBy(x => x.Order).ToArray()
+                    }
+                };
 
-                var components = componentMenuI18N.Where(x => x.Key == menuGroup.Key)
+                IOrderedEnumerable<MenuItem> components = componentMenuI18N.Where(x => x.Key == menuGroup.Key)
                     .SelectMany(x => x)
                     .Select(x => x.Value)
                     .OrderBy(x => x.Order);
@@ -212,20 +221,20 @@ namespace AntBlazor.Docs.Build.CLI.Command
                     Children = components.ToArray()
                 });
 
-                var json = JsonSerializer.Serialize(menu, new JsonSerializerOptions()
+                string json = JsonSerializer.Serialize(menu, new JsonSerializerOptions()
                 {
                     WriteIndented = true,
                     IgnoreNullValues = true,
                     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
                 });
 
-                var configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
+                string configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
                 if (!Directory.Exists(configFileDirectory))
                 {
                     Directory.CreateDirectory(configFileDirectory);
                 }
 
-                var configFilePath = Path.Combine(configFileDirectory, $"menu.{menuGroup.Key}.json");
+                string configFilePath = Path.Combine(configFileDirectory, $"menu.{menuGroup.Key}.json");
                 Console.WriteLine(json);
 
                 if (File.Exists(configFilePath))

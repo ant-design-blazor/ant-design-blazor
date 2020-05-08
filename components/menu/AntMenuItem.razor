@@ -1,8 +1,6 @@
-@namespace AntBlazor
+﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<CascadingValue Value=this>
-    <li class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id" @onclick="()=> Menu.Click.InvokeAsync(this)">
-        @ChildContent
-    </li>
-</CascadingValue>
+<li class="@ClassMapper.Class" role="menuitem" style="@Style" @onclick="HandleOnClick" @key="Key">
+    @ChildContent
+</li>

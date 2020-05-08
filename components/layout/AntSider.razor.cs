@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Threading.Tasks;
 using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -56,6 +57,8 @@ namespace AntBlazor
 
         private string FlexSetting => $"0 0 {WidthSetting}";
 
+        public event Action<bool> OnCollapsed;
+
         private string InternalStyle =>
             $@"flex:{FlexSetting};
                max-width:{WidthSetting};
@@ -86,6 +89,8 @@ namespace AntBlazor
 
         protected override async Task OnInitializedAsync()
         {
+            Layout?.SetSider(this);
+
             DomEventService.AddEventListener<object>("window", "resize", async _ => await WatchMatchMedia());
             await base.OnInitializedAsync();
         }
@@ -100,6 +105,7 @@ namespace AntBlazor
         {
             this.Collapsed = !this.Collapsed;
             await OnCollapsedChange.InvokeAsync(Collapsed);
+            OnCollapsed?.Invoke(this.Collapsed);
         }
 
         public async Task WatchMatchMedia()
@@ -107,10 +113,11 @@ namespace AntBlazor
             if (string.IsNullOrEmpty(Breakpoint))
                 return;
 
-            var matchBelow = await JsInvokeAsync<bool>(JSInteropConstants.matchMedia, $"(max-width: {_dimensionMap[Breakpoint]})");
+            bool matchBelow = await JsInvokeAsync<bool>(JSInteropConstants.matchMedia, $"(max-width: {_dimensionMap[Breakpoint]})");
             this.Below = matchBelow;
             this.Collapsed = matchBelow;
             await this.OnCollapsedChange.InvokeAsync(matchBelow);
+            OnCollapsed?.Invoke(this.Collapsed);
         }
     }
 }

@@ -1,60 +1,16 @@
-@namespace AntBlazor
+﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-    <CascadingValue Value=this>
-        <li class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
-            <div class="@TitleDivClass.Class" style="@titleStyle"
-                 @onmouseover="()=>SetMouseEnterState(true)"
-                 @onmouseout="()=>SetMouseEnterState(false)"
-                 @onclick="()=> ClickSubMenuTitle()">
-                @if (Icon != null)
-                {
-                    <AntIcon Type="@Icon"></AntIcon>
-                }
-     
-                <span>@((MarkupString)Title)</span>
-
-                @if (Menu.IsInDropDown)
-                {
-                    <span class="ant-dropdown-menu-submenu-arrow">
-                        <AntIcon Type="right" Class="anticon-right ant-dropdown-menu-submenu-arrow-icon"></AntIcon>
-                    </span>
-                }
-                else
-                {
-                    <i class="ant-menu-submenu-arrow"></i>
-                }
-            </div>
-            @if (Menu.Mode == AntDirectionVHIType.inline)
-            {
-                <ul class="@MenuClassName ant-menu ant-menu-inline ant-menu-sub" style="transition: height 0.5s; @submenuStyle">
-                    @ChildContent
-                </ul>
-            }
-        </li>
-
-            @if (Open && Menu.Mode != AntDirectionVHIType.inline)
-            {
-                <div style="position: absolute; top: 0px; left: 0px; width: 100%;">
-                <div class="ant-menu-submenu ant-menu-submenu-popup @PopupClassMapper.Class"
-                     style="left:@(_element.offsetLeft+_element.clientWidth+10)px; top:@(_element.offsetTop)px; @(IsMouseHover?"":"display: none;")"
-                     @onmouseout="()=>SetMouseEnterState(false)"
-                     @onmouseover="()=>SetMouseEnterState(true)"
-                     @onmouseout:stopPropagation
-                     @onmouseover:stopPropagation>
-                    <ul class="@MenuClassName @PopupUlClassMapper.Class ant-menu-submenu-content" style="@(IsMouseHover?"":"display: none;")">
-                        @ChildContent
-                    </ul>
-                </div>
-            </div>
-        }
-    </CascadingValue>
-
-
-@code {
-
-    string titleStyle => Menu.Mode == AntDirectionVHIType.inline ?
-        $"padding-left:{(PaddingLeft ?? Level * Menu.InlineIndent)}px" : "";
-
-    string submenuStyle => Open ? "" : "height: 0px; overflow: hidden;";
-}
+<li class="@ClassMapper.Class" role="menuitem" @key="Key" @onmouseover="HandleMouseOver" @onmouseout="HandleMouseOut" style="position:relative;@Style">
+    <div class="ant-menu-submenu-title" role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
+        <span>
+            @Title.Value
+        </span>
+        <i class="ant-menu-submenu-arrow"></i>
+    </div>
+    <ul direction="ltr" class="@SubMenuMapper.Class" role="menu" aria-expanded="@IsOpen">
+        <CascadingValue Value="this">
+            @Children
+        </CascadingValue>
+    </ul>
+</li>

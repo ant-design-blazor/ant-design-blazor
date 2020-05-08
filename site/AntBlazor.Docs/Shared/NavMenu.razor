@@ -1,77 +1,52 @@
-﻿@using AntBlazor.Docs.Services
-
-<div class="sidebar-logo">
-    <a href="https://github.com/ant-design-blazor/ant-design-blazor" target="_blank">
-        <img src="https://raw.githubusercontent.com/ant-design-blazor/ant-design-blazor/master/logo.svg?sanitize=true" alt="logo">
-        <h1>Ant Design Blazor</h1>
-    </a>
-</div>
-<AntMenu Theme="dark" Mode="AntDirectionVHIType.inline" InlineCollapsed="IsCollapsed">
+﻿<AntMenu Class="aside-container menu-site" Theme="AntMenuTheme.Light" Mode="AntMenuMode.Inline">
     @menuItemTemplate((MenuItems, LanguageService, 1))
 </AntMenu>
 
-@inject NavigationManager NavigationManager
-@inject DemoService DemoService
+
 @inject ILanguageService LanguageService
 
 @code {
-    [Parameter] 
+
+    [Parameter]
     public bool IsCollapsed { get; set; }
 
-    MenuItem[] MenuItems { get; set; } = {};
+    [Parameter]
+    public MenuItem[] MenuItems { get; set; } = { };
 
     static readonly RenderFragment<(MenuItem[] items, ILanguageService languageService, int level)> menuItemTemplate = context =>
-        @<Template>
-            @foreach (var menu in context.items)
+    @<Template>
+        @foreach (var menu in context.items)
+        {
+            if (menu.Type == "menuItem")
             {
-                if (menu.Type == "menuItem")
-                {
-                    <AntMenuItem MatchRouter>
-                        <AntNavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All">
-                            <span>@menu.Title</span>
-                            @if (menu.SubTitle != null)
-                            {
-                                <span class="chinese">@menu.SubTitle</span>
-                            }
-                        </AntNavLink>
-                    </AntMenuItem>
-                }
-                else if (menu.Type == "subMenu")
-                {
-                    <AntSubMenu Open title="@context.languageService.Resources[menu.Title]">
-                        @if (menu.Children.Any())
-                        {
-                            @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
-                        }
-                    </AntSubMenu>
-                }
-                else if (menu.Type == "itemGroup")
-                {
-                    <AntMenuItemGroup Title="@context.languageService.Resources[menu.Title]">
-                        @if (menu.Children.Any())
-                        {
-                            @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
-                        }
-                    </AntMenuItemGroup>
-                }
+                <AntMenuItem>
+                    <NavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All">
+                    <span>@menu.Title</span>
+                    @if (menu.SubTitle != null)
+                    {
+                        <span class="chinese">@menu.SubTitle</span>
+                    }
+                    </NavLink>
+                </AntMenuItem>
             }
-        </Template>;
-
-    protected override async Task OnInitializedAsync()
-    {
-        MenuItems = await DemoService.GetMenuAsync();
-        StateHasChanged();
-
-        LanguageService.LanguageChanged += async (_, args) =>
-        {
-            MenuItems = await DemoService.GetMenuAsync();
-            await InvokeAsync(StateHasChanged);
-        };
-
-        NavigationManager.LocationChanged += (_, args) =>
-        {
-            StateHasChanged();
-        };
-    }
-
+            else if (menu.Type == "subMenu")
+            {
+                <AntSubMenu Title="@(context.languageService.Resources[menu.Title])">
+                    @if (menu.Children.Any())
+                    {
+                        @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
+                    }
+                </AntSubMenu>
+            }
+            else if (menu.Type == "itemGroup")
+            {
+                <AntMenuItemGroup Title="@context.languageService.Resources[menu.Title]">
+                    @if (menu.Children.Any())
+                    {
+                        @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
+                    }
+                </AntMenuItemGroup>
+            }
+        }
+    </Template>;
 }

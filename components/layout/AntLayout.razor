@@ -13,8 +13,7 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-    [Parameter]
-    public bool HasSider { get; set; }
+    private bool _hasSider;
 
 
     protected override void OnInitialized()
@@ -22,7 +21,13 @@
         base.OnInitialized();
         ClassMapper
             .Add("ant-layout")
-            .If("ant-layout-has-sider", () => HasSider);
+            .If("ant-layout-has-sider", () => _hasSider);
+    }
+
+    internal void SetSider(AntSider sider)
+    {
+        _hasSider = true;
+        InvokeStateHasChanged();
     }
 
 }

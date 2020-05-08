@@ -1,141 +1,103 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using OneOf;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AntBlazor.JsInterop;
-using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
     public partial class AntSubMenu : AntDomComponentBase
     {
-        public int Level { get; set; } = 1;
+        private const string PrefixCls = "ant-menu-submenu";
 
         [CascadingParameter]
-        protected AntMenu Menu { get; set; }
-
-        internal IList<AntMenuItem> Items { get; set; } = new List<AntMenuItem>();
+        public AntMenu RootMenu { get; set; }
 
         [CascadingParameter]
-        protected AntSubMenu ParentSubMenu { get; set; }
+        public AntSubMenu Parent { get; set; }
 
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public OneOf<string, RenderFragment> Title { get; set; }
 
         [Parameter]
-        public string MenuClassName { get; set; }
+        public RenderFragment Children { get; set; }
 
         [Parameter]
-        public int? PaddingLeft { get; set; }
+        public string Key { get; set; }
 
         [Parameter]
-        public string Title { get; set; }
+        public EventCallback<MouseEventArgs> OnTitleClicked { get; set; }
 
-        [Parameter]
-        public string Icon { get; set; }
+        private ClassMapper SubMenuMapper { get; } = new ClassMapper();
 
-        [Parameter]
-        public bool Open { get; set; } = false;
+        public bool IsOpen { get; private set; }
 
-        [Parameter]
-        public bool Disabled { get; set; } = false;
-
-        [Parameter]
-        public EventCallback<bool> OpenChange { get; set; }
-
-        protected ClassMapper TitleDivClass { get; } = new ClassMapper();
-
-        protected ClassMapper PopupClassMapper { get; } = new ClassMapper();
-
-        protected ClassMapper PopupUlClassMapper { get; } = new ClassMapper();
-
-        private string _placement = "rightTop";
-
-        private bool _isChildMenuSelected = false;
-        protected bool IsMouseHover { get; set; } = false;
-        private bool _hasOpened;
-
-        private Element _element = new Element();
-
-        private void SetClassMap()
+        private void SetClass()
         {
-            this._isChildMenuSelected = this.Items.Any(x => x.Selected);
+            ClassMapper.Add(PrefixCls)
+                .Add($"{PrefixCls}-{RootMenu.InternalMode}")
+                .If($"{PrefixCls}-open", () => IsOpen);
 
-            string prefixName = Menu.IsInDropDown ? "ant-dropdown-menu-submenu" : "ant-menu-submenu";
-            ClassMapper.Clear()
-                .Add(prefixName)
-                .If($"{prefixName}-disabled", () => Disabled)
-                .If($"{prefixName}-open", () => this.Open)
-                .If($"{prefixName}-selected", () => _isChildMenuSelected)
-                .Add($"{prefixName}-{Menu.Mode}")
-                .If($"{prefixName}-active", () => IsMouseHover && !Disabled)
-                ;
+            SubMenuMapper.Add("ant-menu")
+                .Add("ant-menu-sub")
+                .Add($"ant-menu-{(RootMenu.InternalMode == AntMenuMode.Horizontal ? AntMenuMode.Vertical : RootMenu.InternalMode)}")
+                .If($"ant-menu-submenu-popup", () => RootMenu.InternalMode != AntMenuMode.Inline)
+                .If($"ant-menu-hidden", () => !IsOpen);
+        }
+
+        private async Task HandleOnTitleClick(MouseEventArgs args)
+        {
+            RootMenu.SelectSubmenu(this);
+            if (OnTitleClicked.HasDelegate)
+                await OnTitleClicked.InvokeAsync(args);
+        }
+
+        private void HandleMouseOver(MouseEventArgs args)
+        {
+            if (RootMenu.InternalMode == AntMenuMode.Inline)
+                return;
+
+            IsOpen = true;
+        }
+
+        private void HandleMouseOut(MouseEventArgs args)
+        {
+            if (RootMenu.InternalMode == AntMenuMode.Inline)
+                return;
+
+            IsOpen = false;
+        }
+
+        public async Task Collapse()
+        {
+            await Task.Delay(300);
+            IsOpen = false;
+            StateHasChanged();
         }
 
         protected override void OnInitialized()
         {
-            if (this is AntSubMenu subMenu)
-            {
-                this.Menu?.SubMenus.Add(subMenu);
-            }
+            //if (string.IsNullOrWhiteSpace(Key))
+            //    throw new ArgumentException($"Parameter {nameof(Key)} is required for a {nameof(AntSubMenu)}");
 
-            this.Level = this.ParentSubMenu?.Level + 1 ?? 1;
-
-            this._hasOpened = Open;
-            this.SetClassMap();
-            base.OnInitialized();
-
-            PopupClassMapper.Clear()
-                .If("ant-menu-light", () => Menu.Theme == "light")
-                .If("ant-menu-dark", () => Menu.Theme == "dark")
-                .If("ant-menu-submenu-placement-bottomLeft", () => Menu.Mode == AntDirectionVHIType.horizontal)
-                .If("ant-menu-submenu-placement-rightTop",
-                    () => Menu.Mode == AntDirectionVHIType.vertical && _placement == "rightTop")
-                .If("ant-menu-submenu-placement-leftTop",
-                    () => Menu.Mode == AntDirectionVHIType.vertical && _placement == "leftTop")
-                ;
-
-            PopupUlClassMapper.Clear()
-                .If("ant-dropdown-menu", () => Menu.IsInDropDown)
-                .If("ant-menu", () => !Menu.IsInDropDown)
-                .If("ant-dropdown-menu-vertical", () => Menu.IsInDropDown)
-                .If("ant-menu-vertical", () => !Menu.IsInDropDown)
-                .If("ant-dropdown-menu-sub", () => Menu.IsInDropDown)
-                .If("ant-menu-sub", () => !Menu.IsInDropDown)
-                ;
-
-            TitleDivClass
-                .If("ant-dropdown-menu-submenu-title", () => Menu.IsInDropDown)
-                .If("ant-menu-submenu-title", () => !Menu.IsInDropDown)
-                ;
+            RootMenu.Submenus.Add(this);
+            if (RootMenu.DefaultOpenSubMenus.Contains(Key))
+                IsOpen = true;
         }
 
-        protected async Task SetMouseEnterState(bool value)
+        public void Close()
         {
-            if (IsMouseHover != value)
-            {
-                this.IsMouseHover = value;
-                this.SetClassMap();
-
-                this._element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Ref);
-            }
+            IsOpen = false;
         }
 
-        protected async Task ClickSubMenuTitle()
+        public void Open()
         {
-            if (Menu.Mode == AntDirectionVHIType.inline && !Menu.IsInDropDown && !this.Disabled)
+            IsOpen = true;
+            if (Parent != null)
             {
-                this.Open = !this.Open;
-                await OpenChange.InvokeAsync(this.Open);
-                this.SetClassMap();
+                Parent.Open();
             }
-        }
-
-        public async Task SetOpenState(bool value)
-        {
-            this.Open = value;
-            this._hasOpened = value;
-            await OpenChange.InvokeAsync(this.Open);
-            StateHasChanged();
         }
     }
 }
