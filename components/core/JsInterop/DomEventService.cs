@@ -16,7 +16,7 @@ namespace AntBlazor.JsInterop
             _jsRuntime = jsRuntime;
         }
 
-        private void AddEventListenerInternal<T>(string dom, string eventName, Action<T> callback)
+        private void AddEventListenerInternal<T>(object dom, string eventName, Action<T> callback)
         {
             if (!_domEventListeners.ContainsKey($"{dom}-{eventName}"))
             {
@@ -27,7 +27,7 @@ namespace AntBlazor.JsInterop
             }
         }
 
-        private void AddEventListenerToFirstChildInternal<T>(string dom, string eventName, Action<T> callback)
+        private void AddEventListenerToFirstChildInternal<T>(object dom, string eventName, Action<T> callback)
         {
             if (!_domEventListeners.ContainsKey($"{dom}-{eventName}"))
             {
@@ -38,7 +38,7 @@ namespace AntBlazor.JsInterop
             }
         }
 
-        public void AddEventListener(string dom, string eventName, Action<JsonElement> callback)
+        public void AddEventListener(object dom, string eventName, Action<JsonElement> callback)
         {
             AddEventListenerInternal<string>(dom, eventName, (e) =>
             {
@@ -47,7 +47,7 @@ namespace AntBlazor.JsInterop
             });
         }
 
-        public void AddEventListener<T>(string dom, string eventName, Action<T> callback)
+        public void AddEventListener<T>(object dom, string eventName, Action<T> callback)
         {
             AddEventListenerInternal<string>(dom, eventName, (e) =>
             {
@@ -56,7 +56,7 @@ namespace AntBlazor.JsInterop
             });
         }
 
-        public void AddEventListenerToFirstChild(string dom, string eventName, Action<JsonElement> callback)
+        public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback)
         {
             AddEventListenerToFirstChildInternal<string>(dom, eventName, (e) =>
             {
@@ -65,7 +65,7 @@ namespace AntBlazor.JsInterop
             });
         }
 
-        public void AddEventListenerToFirstChild<T>(string dom, string eventName, Action<T> callback)
+        public void AddEventListenerToFirstChild<T>(object dom, string eventName, Action<T> callback)
         {
             AddEventListenerToFirstChildInternal<string>(dom, eventName, (e) =>
             {

@@ -53,6 +53,11 @@
         "type": "itemGroup",
         "children": [
           {
+            "title": "Affix",
+            "type": "menuItem",
+            "url": "affix"
+          },
+          {
             "title": "Breadcrumb",
             "type": "menuItem",
             "url": "breadcrumb"
