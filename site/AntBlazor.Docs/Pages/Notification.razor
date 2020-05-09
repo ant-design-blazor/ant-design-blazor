@@ -385,32 +385,32 @@
         <AntButton Type="@AntButtonType.Primary"
                    Onclick="@(async () =>
                               {
-                                  await Notice.Open(new AntNotificationConfig()
+                                  var config = new AntNotificationConfig()
                                   {
                                       Message = "title",
                                       Description = "event test.",
-                                      Duration = 10,
-                                      OnClick = async () =>
+                                      Duration = 10
+                                  };
+                                  config.OnClick += async () =>
+                                  {
+                                      await Notice.Success(new AntNotificationConfig()
                                       {
-                                          await Notice.Success(new AntNotificationConfig()
-                                          {
-                                              Placement = AntNotificationPlacement.TopLeft,
-                                              Message = "OnClick",
-                                              Description = "OnClick event",
+                                          Placement = AntNotificationPlacement.TopLeft,
+                                          Message = "OnClick",
+                                          Description = "OnClick event",
 
-                                          });
-                                      },
-                                      OnClose = async () =>
+                                      });
+                                  };
+                                  config.OnClose += async () =>
+                                  {
+                                      await Notice.Success(new AntNotificationConfig()
                                       {
-                                          await Notice.Success(new AntNotificationConfig()
-                                          {
-                                              Placement = AntNotificationPlacement.TopLeft,
-                                              Message = "OnClose",
-                                              Description = "OnClose event",
-                                          });
-                                      }
-
-                                  });
+                                          Placement = AntNotificationPlacement.TopLeft,
+                                          Message = "OnClose",
+                                          Description = "OnClose event",
+                                      });
+                                  };
+                                  await Notice.Open(config);
                               })">
             OnClick and OnClose event
         </AntButton>

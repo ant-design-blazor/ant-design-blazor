@@ -41,7 +41,7 @@ namespace AntBlazor
             if (_configDict.TryGetValue(key, out AntNotificationConfig config))
             {
                 _configDict.Remove(key);
-                config.OnClose?.Invoke();
+                config.InvokeOnClose();
             }
             return Task.CompletedTask;
         }
@@ -51,7 +51,7 @@ namespace AntBlazor
         {
             if (_configDict.TryGetValue(key, out AntNotificationConfig config))
             {
-                config.OnClick?.Invoke();
+                config.InvokeOnClick();
             }
             return Task.CompletedTask;
         }
@@ -143,24 +143,14 @@ namespace AntBlazor
             {
                 _defaultCloseIcon = defaultConfig.CloseIcon;
             }
-            //TODO
-            //StateHasChanged();
         }
 
         private AntNotificationConfig ExtendConfig(AntNotificationConfig config)
         {
-            if (config.Placement == null)
-            {
-                config.Placement = _defaultPlacement;
-            }
-            if (config.Duration == null)
-            {
-                config.Duration = _defaultDuration;
-            }
-            if (config.CloseIcon == null)
-            {
-                config.CloseIcon = _defaultCloseIcon;
-            }
+            config.Placement ??= _defaultPlacement;
+            config.Duration ??= _defaultDuration;
+            config.CloseIcon ??= _defaultCloseIcon;
+
             if (string.IsNullOrWhiteSpace(config.Key))
             {
                 config.Key = Guid.NewGuid().ToString();
@@ -247,22 +237,23 @@ namespace AntBlazor
         /// <param name="config"></param>
         public async Task Open([NotNull]AntNotificationConfig config)
         {
-            if (config != null)
+            if (config == null)
             {
-                await CheckInit();
-
-                config = ExtendConfig(config);
-                Debug.Assert(config.Placement != null);
-                string container = await GetContainer(config.Placement.Value);
-                string notificationHtmlStr = await CreateNotificationItem(config);
-                
-                await _jsRuntime.InvokeVoidAsync(JSInteropConstants.addNotification,
-                        notificationHtmlStr,
-                    container, config.Key, config.Duration);
-
-                _configDict.Add(config.Key, config);
-
+                return;
             }
+
+            await CheckInit();
+
+            config = ExtendConfig(config);
+            Debug.Assert(config.Placement != null);
+            string container = await GetContainer(config.Placement.Value);
+            string notificationHtmlStr = await CreateNotificationItem(config);
+
+            await _jsRuntime.InvokeVoidAsync(JSInteropConstants.addNotification,
+                notificationHtmlStr,
+                container, config.Key, config.Duration);
+
+            _configDict.Add(config.Key, config);
         }
         
         #region Api

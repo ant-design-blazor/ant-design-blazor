@@ -43,7 +43,7 @@ namespace AntBlazor
 
         private void OnClick()
         {
-            Config.OnClick?.Invoke();
+            Config.InvokeOnClick();
         }
     }
 }

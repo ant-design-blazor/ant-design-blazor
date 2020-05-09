@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Dynamic;
 using System.Text;
 using Microsoft.AspNetCore.Components;
 
@@ -58,12 +59,24 @@ namespace AntBlazor
         /// <summary>
         /// 当通知关闭时触发	
         /// </summary>
-        public Action OnClose { get; set; } = null;
+        public event Action OnClose;
+
+        internal void InvokeOnClose()
+        {
+            OnClose?.Invoke();
+        }
+
 
         /// <summary>
         /// 点击通知时触发的回调函数	
         /// </summary>
-        public Action OnClick { get; set; } = null;
+        public event Action OnClick;
+
+        internal void InvokeOnClick()
+        {
+            OnClick?.Invoke();
+        }
+
 
         /// <summary>
         /// 自定义内联样式	

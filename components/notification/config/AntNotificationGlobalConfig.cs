@@ -13,12 +13,12 @@ namespace AntBlazor
         /// <summary>
         /// 消息从底部弹出时，距离底部的位置，单位像素。
         /// </summary>
-        public int? Bottom { get; set; } = null;
+        public double? Bottom { get; set; } = null;
 
         /// <summary>
         /// 消息从顶部弹出时，距离顶部的位置，单位像素。	
         /// </summary>
-        public int? Top { get; set; } = null;
+        public double? Top { get; set; } = null;
 
         /// <summary>
         /// 是否开启 RTL 模式	
