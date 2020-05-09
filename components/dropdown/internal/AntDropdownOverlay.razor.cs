@@ -179,7 +179,6 @@ namespace AntBlazor.Internal
             int triggerTop = trigger.absoluteTop - containerElement.absoluteTop;
             int triggerHeight = trigger.clientHeight != 0 ? trigger.clientHeight : trigger.offsetHeight;
 
-            Console.WriteLine($"overlay.clientHeight:{overlay.clientHeight}");
             // contextMenu
             if (_overlayTop != null)
             {
