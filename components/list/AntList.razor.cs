@@ -19,7 +19,7 @@ namespace AntBlazor
 
         [Parameter] public IEnumerable<object> DataSource { get; set; }
 
-        [Parameter] public AntDirectionVHType ItemLayout { get; set; } = AntDirectionVHType.horizontal;
+        [Parameter] public AntDirectionVHType ItemLayout { get; set; } = AntDirectionVHType.Horizontal;
 
         [Parameter] public bool Loading { get; set; } = false;
 
@@ -57,9 +57,11 @@ namespace AntBlazor
                 case "large":
                     sizeCls = "lg";
                     break;
+
                 case "small":
                     sizeCls = "sm";
                     break;
+
                 default:
                     break;
             }
@@ -70,7 +72,7 @@ namespace AntBlazor
                 .Add($"{_prefixName}-split")
                 .Add($"{_prefixName}-bordered")
                 .If($"{_prefixName}-{sizeCls}", () => !string.IsNullOrEmpty(sizeCls))
-                .If($"{_prefixName}-vertical", () => ItemLayout == AntDirectionVHType.vertical)
+                .If($"{_prefixName}-vertical", () => ItemLayout == AntDirectionVHType.Vertical)
                 .If($"{_prefixName}-loading", () => (Loading))
                 .If($"{_prefixName}-grid", () => true)
                 .If($"{_prefixName}-something-after-last-item", () => false);

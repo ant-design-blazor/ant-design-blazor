@@ -27,6 +27,9 @@ namespace AntBlazor
         public string Key { get; set; }
 
         [Parameter]
+        public bool Disabled { get; set; }
+
+        [Parameter]
         public EventCallback<MouseEventArgs> OnTitleClicked { get; set; }
 
         private ClassMapper SubMenuMapper { get; } = new ClassMapper();
@@ -43,6 +46,7 @@ namespace AntBlazor
                 .Add("ant-menu-sub")
                 .Add($"ant-menu-{(RootMenu.InternalMode == AntMenuMode.Horizontal ? AntMenuMode.Vertical : RootMenu.InternalMode)}")
                 .If($"ant-menu-submenu-popup", () => RootMenu.InternalMode != AntMenuMode.Inline)
+                .If($"ant-menu-disabled", () => Disabled)
                 .If($"ant-menu-hidden", () => !IsOpen);
         }
 

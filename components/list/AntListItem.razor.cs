@@ -16,13 +16,13 @@ namespace AntBlazor
         // todo: list
         [Parameter] public string Actions { get; set; }
 
-        [Parameter] public AntDirectionVHIType ItemLayout { get; set; } = AntDirectionVHIType.horizontal;
+        [Parameter] public AntDirectionVHIType ItemLayout { get; set; } = AntDirectionVHIType.Horizontal;
 
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         public bool IsVerticalAndExtra()
         {
-            return this.ItemLayout == AntDirectionVHIType.vertical && this.Extra != null;
+            return this.ItemLayout == AntDirectionVHIType.Vertical && this.Extra != null;
         }
 
         protected override void OnInitialized()
