@@ -34,5 +34,9 @@ namespace AntBlazor
         public static string addElementToBody => $"{FUNC_PREFIX}addElementToBody";
 
         public static string delElementFromBody => $"{FUNC_PREFIX}delElementFromBody";
+
+        public static string addElementTo => $"{FUNC_PREFIX}addElementTo";
+
+        public static string delElementFrom => $"{FUNC_PREFIX}delElementFrom";
     }
 }
