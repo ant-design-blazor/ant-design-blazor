@@ -63,6 +63,11 @@
             "url": "menu"
           },
           {
+            "title": "Dropdown",
+            "type": "menuItem",
+            "url": "dropdown"
+          },
+          {
             "title": "Steps",
             "type": "menuItem",
             "url": "step"

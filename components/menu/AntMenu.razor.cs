@@ -7,6 +7,9 @@ namespace AntBlazor
 {
     public partial class AntMenu : AntDomComponentBase
     {
+        [CascadingParameter(Name = nameof(PrefixCls))]
+        public string PrefixCls { get; set; } = "ant-menu";
+
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -51,12 +54,11 @@ namespace AntBlazor
 
         private void SetClassMap()
         {
-            var prefixName = IsInDropDown ? "ant-dropdown-menu" : "ant-menu";
-            ClassMapper.Add(prefixName)
-                .Add($"{prefixName}-root")
-                .Add($"{prefixName}-{Theme}")
-                .Add($"{prefixName}-{Mode}")
-                .If($"{prefixName}-inline-collapsed", () => InlineCollapsed);
+            ClassMapper.Add(PrefixCls)
+                .Add($"{PrefixCls}-root")
+                .Add($"{PrefixCls}-{Theme}")
+                .Add($"{PrefixCls}-{Mode}")
+                .If($"{PrefixCls}-inline-collapsed", () => InlineCollapsed);
         }
 
         protected override async Task OnParametersSetAsync()
