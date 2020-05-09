@@ -88,7 +88,7 @@
         </div>
     </div>
 
-    <a tabindex="0" class="ant-notification-notice-close" @onclick="Close">
+    <a tabindex="0" class="ant-notification-notice-close" @onclick="Close" @onclick:preventDefault @onclick:stopPropagation >
         <span class="ant-notification-close-x">
             <span role="img" aria-label="close" class="anticon anticon-close ant-notification-close-icon">
                 @Config.CloseIcon

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using AntBlazor.core.JsInterop.EventArg;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntBlazor
 {
@@ -35,7 +37,7 @@ namespace AntBlazor
             return Config.AnimationClass;
         }
 
-        private async Task Close()
+        private async Task Close(MouseEventArgs e)
         {
             if (OnClose.HasDelegate)
             {

@@ -141,12 +141,11 @@ namespace AntBlazor
 
         private Task RemoveChild(AntNotificationConfig option)
         {
-            //avoid use do click and option.KeepTime toggle twice
-            if (string.IsNullOrEmpty(option.ClassName))
+            if (option.AnimationClass == AnimationType.Enter)
             {
                 option.AnimationClass = AnimationType.Leave;
-                StateHasChanged();
                 option.OnClose?.Invoke();
+                StateHasChanged();
                 RemoveFromList(option);
             }
 
