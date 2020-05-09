@@ -34,7 +34,7 @@ namespace AntBlazor
 
         private void SetClassMap()
         {
-            string prefixName = Menu.IsInDropDown ? "ant-dropdown-menu-item" : "ant-menu-item";
+            string prefixName = $"{Menu.PrefixCls}-item";
             ClassMapper.Clear()
                 .Add(prefixName)
                 .If($"{prefixName}-selected", () => Selected)
@@ -55,7 +55,7 @@ namespace AntBlazor
                 SubMenu?.Items.Add(item);
             }
 
-            int? padding;
+            int? padding = null;
             if (Menu.Mode == AntDirectionVHIType.inline)
             {
                 if (PaddingLeft != null)
@@ -67,10 +67,6 @@ namespace AntBlazor
                     int level = SubMenu?.Level + 1 ?? 1;
                     padding = level * this.Menu.InlineIndent;
                 }
-            }
-            else
-            {
-                padding = _originalPadding;
             }
 
             if (padding != null)
