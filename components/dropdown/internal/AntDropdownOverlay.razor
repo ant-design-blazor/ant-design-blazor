@@ -1,0 +1,29 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDomComponentBase
+@using AntBlazor.core.Internal
+
+@if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender)
+{
+    string display = Dropdown.Visible ? "" : "visibility: hidden;";
+    string overlayCls;
+
+    if (!Dropdown.Visible && !_isWaitForOverlayFirstRender)
+    {
+        overlayCls = $"{Dropdown.PrefixCls}-hidden";
+        display = "";
+    }
+    else
+    {
+        overlayCls = _overlayCls;
+    }
+
+    <div class="@(Dropdown.PrefixCls) @(Dropdown.OverlayClassName) @(Dropdown.PrefixCls)-placement-@(Dropdown.Placement.Name) @overlayCls"
+         style="width: fit-content; position: absolute; @display @Dropdown.OverlayStyle @_dropdownStyle"
+         @ref="Ref"
+         @onmouseenter="OnOverlayMouseEnter"
+         @onmouseleave="OnOverlayMouseLeave">
+        <CascadingValue Value="@($"{Dropdown.PrefixCls}-menu")" Name="PrefixCls">
+            @Dropdown.Overlay
+        </CascadingValue>
+    </div>
+}

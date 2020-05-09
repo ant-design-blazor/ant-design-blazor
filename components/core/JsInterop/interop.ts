@@ -12,11 +12,18 @@ export function getDomInfo(element) {
 
   var dom = getDom(element);
 
-  for (var key in dom) {
-    var item = dom[key];
-    if (!item) continue;
-    if (typeof item === 'string' || (typeof item === 'number' && !isNaN(item))) result[key] = item;
-  }
+  result["offsetTop"] = dom.offsetTop || 0;
+  result["offsetLeft"] = dom.offsetLeft || 0;
+  result["offsetWidth"] = dom.offsetWidth || 0;
+  result["offsetHeight"] = dom.offsetHeight || 0;
+  result["scrollHeight"] = dom.scrollHeight || 0;
+  result["scrollWidth"] = dom.scrollWidth || 0;
+  result["scrollLeft"] = dom.scrollLeft || 0;
+  result["scrollTop"] = dom.scrollTop || 0;
+  result["clientTop"] = dom.clientTop || 0;
+  result["clientLeft"] = dom.clientLeft || 0;
+  result["clientHeight"] = dom.clientHeight || 0;
+  result["clientWidth"] = dom.clientWidth || 0;
 
   result["absoluteTop"] = getAbsoluteTop(dom);
   result["absoluteLeft"] = getAbsoluteLeft(dom);
@@ -151,4 +158,12 @@ export function addElementToBody(element) {
 
 export function delElementFromBody(element) {
   document.body.removeChild(element);
+}
+
+export function addElementTo(addElement, elementSelector) {
+  getDom(elementSelector).appendChild(addElement);
+}
+
+export function delElementFrom(delElement, elementSelector) {
+  getDom(elementSelector).removeChild(delElement);
 }
