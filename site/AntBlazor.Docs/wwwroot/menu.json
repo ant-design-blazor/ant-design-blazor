@@ -193,6 +193,17 @@
         ]
       },
       {
+        "title": "Message",
+        "type": "itemGroup",
+        "children": [
+          {
+            "title": "Notification",
+            "type": "menuItem",
+            "url": "notification"
+          }
+        ]
+      },
+      {
         "title": "Other",
         "type": "itemGroup",
         "children": [

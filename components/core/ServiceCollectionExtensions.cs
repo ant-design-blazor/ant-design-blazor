@@ -16,6 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped(sp => new HtmlRenderService(new HtmlRenderer(sp, sp.GetRequiredService<ILoggerFactory>(),
                         s => HtmlEncoder.Default.Encode(s)))
             );
+            services.TryAddSingleton<AntNotificationService>();
 
             return services;
         }
