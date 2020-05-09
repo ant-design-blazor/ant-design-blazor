@@ -13,6 +13,8 @@ namespace AntBlazor
     {
         private const string PrefixCls = "ant-affix";
         private bool _affixed;
+        private bool _rendered;
+        private bool _listened;
         private bool Affixed
         {
             get => _affixed;
@@ -55,7 +57,7 @@ namespace AntBlazor
         /// Specifies the scrollable area DOM node
         /// </summary>
         [Parameter]
-        public object Target { get; set; }
+        public ElementReference Target { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -70,13 +72,40 @@ namespace AntBlazor
             base.OnInitialized();
 
             SetClasses();
-            DomEventService.AddEventListener("#BodyContainer", "scroll", OnScroll);
-            DomEventService.AddEventListener("window", "resize", OnWindowResize);
+            //DomEventService.AddEventListener("#BodyContainer", "scroll", OnScroll);
+            //DomEventService.AddEventListener("window", "resize", OnWindowResize);
+        }
+
+        protected async override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (_rendered)
+            {
+                if (_listened)
+                {
+
+                    await RenderAffixAsync();
+                }
+                else
+                {
+                    DomEventService.AddEventListener("#BodyContainer", "scroll", OnScroll);
+                    DomEventService.AddEventListener("#BodyContainer", "resize", OnWindowResize);
+                    if (!string.IsNullOrEmpty(Target.Id))
+                    {
+                        DomEventService.AddEventListener(Target, "scroll", OnScroll);
+                        DomEventService.AddEventListener(Target, "resize", OnWindowResize);
+                    }
+
+                    _listened = true;
+                }
+            }
         }
 
         protected async override Task OnFirstAfterRenderAsync()
         {
             await base.OnFirstAfterRenderAsync();
+            _rendered = true;
 
             DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _childRef);
             _hiddenStyle = $"width: {domRect.width}px; height: {domRect.height}px;";
@@ -84,12 +113,12 @@ namespace AntBlazor
 
         private async void OnScroll(JsonElement obj)
         {
-            await RenderAffix();
+            await RenderAffixAsync();
         }
 
         private async void OnWindowResize(JsonElement obj)
         {
-            await RenderAffix();
+            await RenderAffixAsync();
         }
 
         private void SetClasses()
@@ -98,16 +127,26 @@ namespace AntBlazor
                 .If(PrefixCls, () => _affixed);
         }
 
-        private async Task RenderAffix()
+        private async Task RenderAffixAsync()
         {
             DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ref);
-            DomRect containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#BodyContainer");
+            DomRect bodyContainerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#BodyContainer");
+            DomRect containerRect;
+            if (string.IsNullOrEmpty(Target.Id))
+            {
+                containerRect = bodyContainerRect;
+            }
+            else
+            {
+                containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, Target);
+            }
             // become affixed
             if (OffsetBottom.HasValue)
             {
-                if (domRect.bottom > containerRect.height)
+                // domRect.bottom / domRect.top have the identical value here.
+                if (domRect.top > containerRect.height + containerRect.top)
                 {
-                    _affixStyle = _hiddenStyle + $"bottom: {OffsetBottom}px; position: fixed;";
+                    _affixStyle = _hiddenStyle + $"bottom: { bodyContainerRect.height - containerRect.bottom + OffsetBottom}px; position: fixed;";
                     Affixed = true;
                 }
                 else
@@ -118,9 +157,9 @@ namespace AntBlazor
             }
             else if (OffsetTop.HasValue)
             {
-                if (domRect.top < OffsetTop)
+                if (domRect.top < containerRect.top)
                 {
-                    _affixStyle = _hiddenStyle + $"top: {OffsetTop}px; position: fixed;";
+                    _affixStyle = _hiddenStyle + $"top: {containerRect.top + OffsetTop}px; position: fixed;";
                     Affixed = true;
                 }
                 else
@@ -130,6 +169,7 @@ namespace AntBlazor
                 }
             }
 
+            StateHasChanged();
         }
     }
 }
