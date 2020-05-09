@@ -15,6 +15,7 @@ namespace AntBlazor
         private bool _affixed;
         private bool _rendered;
         private bool _listened;
+
         private bool Affixed
         {
             get => _affixed;
@@ -31,6 +32,7 @@ namespace AntBlazor
                 }
             }
         }
+
         private ElementReference _ref;
         private ElementReference _childRef;
         private string _hiddenStyle;
@@ -65,7 +67,7 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<bool> OnChange { get; set; }
 
-        #endregion
+        #endregion Parameters
 
         protected override void OnInitialized()
         {
@@ -84,7 +86,6 @@ namespace AntBlazor
             {
                 if (_listened)
                 {
-
                     await RenderAffixAsync();
                 }
                 else
