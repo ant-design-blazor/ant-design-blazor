@@ -4,6 +4,8 @@
 
 
 @inject ILanguageService LanguageService
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
 
 @code {
 
@@ -11,42 +13,64 @@
     public bool IsCollapsed { get; set; }
 
     [Parameter]
-    public MenuItem[] MenuItems { get; set; } = { };
+    public MenuItem[] MenuItems { get; set; } = {};
 
     static readonly RenderFragment<(MenuItem[] items, ILanguageService languageService, int level)> menuItemTemplate = context =>
-    @<Template>
-        @foreach (var menu in context.items)
+        @<Template>
+            @foreach (var menu in context.items)
+            {
+                if (menu.Type == "menuItem")
+                {
+                    <AntMenuItem>
+                        <AntNavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All">
+                            <span>@menu.Title</span>
+                            @if (menu.SubTitle != null)
+                            {
+                                <span class="chinese">@menu.SubTitle</span>
+                            }
+                            else if (context.level > 1 && context.languageService.CurrentCulture.Name == "zh-CN")
+                            {
+                                <span class="chinese">@(context.languageService.Resources[menu.Title])</span>
+                            }
+                        </AntNavLink>
+                    </AntMenuItem>
+                }
+                else if (menu.Type == "subMenu")
+                {
+                    <AntSubMenu Title="@(context.languageService.Resources[menu.Title])">
+                        @if (menu.Children.Any())
+                        {
+                            @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
+                        }
+                    </AntSubMenu>
+                }
+                else if (menu.Type == "itemGroup")
+                {
+                    <AntMenuItemGroup Title="@context.languageService.Resources[menu.Title]">
+                        @if (menu.Children.Any())
+                        {
+                            @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
+                        }
+                    </AntMenuItemGroup>
+                }
+            }
+        </Template>;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
+        MenuItems = await HttpClient.GetFromJsonAsync<MenuItem[]>(new Uri(baseUrl, "_content/AntBlazor.Docs/menu.json").ToString());
+
+        LanguageService.LanguageChanged += (_, args) =>
         {
-            if (menu.Type == "menuItem")
-            {
-                <AntMenuItem>
-                    <NavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All">
-                    <span>@menu.Title</span>
-                    @if (menu.SubTitle != null)
-                    {
-                        <span class="chinese">@menu.SubTitle</span>
-                    }
-                    </NavLink>
-                </AntMenuItem>
-            }
-            else if (menu.Type == "subMenu")
-            {
-                <AntSubMenu Title="@(context.languageService.Resources[menu.Title])">
-                    @if (menu.Children.Any())
-                    {
-                        @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
-                    }
-                </AntSubMenu>
-            }
-            else if (menu.Type == "itemGroup")
-            {
-                <AntMenuItemGroup Title="@context.languageService.Resources[menu.Title]">
-                    @if (menu.Children.Any())
-                    {
-                        @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
-                    }
-                </AntMenuItemGroup>
-            }
-        }
-    </Template>;
+            InvokeAsync(StateHasChanged);
+        };
+
+        NavigationManager.LocationChanged += (_, args) =>
+        {
+            StateHasChanged();
+        };
+        StateHasChanged();
+        await base.OnInitializedAsync();
+    }
 }

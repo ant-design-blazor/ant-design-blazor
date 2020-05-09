@@ -1,6 +1,8 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<li class="@ClassMapper.Class" role="menuitem" style="@Style" @onclick="HandleOnClick" @key="Key">
-    @ChildContent
-</li>
+<CascadingValue Value="this">
+    <li class="@ClassMapper.Class" role="menuitem" style="@Style" @onclick="HandleOnClick" @key="Key">
+        @ChildContent
+    </li>
+</CascadingValue>

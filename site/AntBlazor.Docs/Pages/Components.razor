@@ -1,14 +1,14 @@
 ﻿@page "/components/{name}"
-@using AntBlazor.Docs.Services
+@page "/components"
 
 <section class="main-container main-container-component">
     <article>
-        @if (DemoComponent != null)
+        @if (_demoComponent != null)
         {
             <section class="markdown">
                 <h1>
-                    @DemoComponent.Title
-                    <span class="subtitle">@DemoComponent.SubTitle</span>
+                    @_demoComponent.Title
+                    <span class="subtitle">@_demoComponent.SubTitle</span>
                     <span class="widget"></span>
                     <a class="edit-button" rel="noopener noreferrer" target="_blank">
                         <i nz-icon="" nztype="edit" class="anticon anticon-edit">
@@ -17,7 +17,7 @@
                     </a>
                 </h1>
                 <section class="markdown">
-                    @((MarkupString) DemoComponent.Doc)
+                    @((MarkupString) _demoComponent.Doc)
                 </section>
 
                 <h2 data-scrollama-index="1">
@@ -39,56 +39,24 @@
             </section>
             <AntRow Style="margin-left: -8px; margin-right: -8px;">
                 @{
-                    var demos = DemoComponent.DemoList.OrderBy(x => x.Order);
+                    var demos = _demoComponent.DemoList.OrderBy(x => x.Order);
                     var leftList = demos.Where((_, i) => i % 2 == 0);
                     var rightList = demos.Where((_, i) => i % 2 != 0);
                 }
                 <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                     @foreach (var demo in leftList)
                     {
-                        <CodeBox Demo="demo" ComponentName="@DemoComponent.Title"></CodeBox>
+                        <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
                     }
                 </AntCol>
                 <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                     @foreach (var demo in rightList)
                     {
-                        <CodeBox Demo="demo" ComponentName="@DemoComponent.Title"></CodeBox>
+                        <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
                     }
                 </AntCol>
             </AntRow>
         }
     </article>
 </section>
-
-@inject DemoService DemoService
-@inject ILanguageService LanguageService
-@inject NavigationManager NavigationManager
-
-@code {
-
-    [Parameter]
-    public string Name { get; set; }
-
-    protected DemoComponent DemoComponent;
-
-    protected override void OnInitialized()
-    {
-        LanguageService.LanguageChanged += async (sender, args) =>
-        {
-            DemoComponent = await DemoService.GetComponentAsync(Name);
-            await InvokeAsync(StateHasChanged);
-        };
-
-        NavigationManager.LocationChanged += (_, args) =>
-        {
-            StateHasChanged();
-        };
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        DemoComponent = await DemoService.GetComponentAsync(Name);
-    }
-
-}
 

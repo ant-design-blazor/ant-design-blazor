@@ -31,13 +31,8 @@ namespace AntBlazor
             SetClass();
 
             base.OnInitialized();
-            //if (string.IsNullOrWhiteSpace(Key))
-            //    throw new ArgumentException($"Parameter {nameof(Key)} is required for a {nameof(AntMenuItem)}");
 
             RootMenu.MenuItems.Add(this);
-
-            if (RootMenu.DefaultSelectedItems.Contains(Key))
-                Select();
         }
 
         public async Task HandleOnClick(MouseEventArgs args)

@@ -28,12 +28,6 @@ namespace AntBlazor
         public EventCallback<AntMenuItem> OnMenuItemClicked { get; set; }
 
         [Parameter]
-        public IEnumerable<string> DefaultOpenSubMenus { get; set; } = new List<string>();
-
-        [Parameter]
-        public IEnumerable<string> DefaultSelectedItems { get; set; } = new List<string>();
-
-        [Parameter]
         public bool Accordion { get; set; }
 
         [Parameter]
@@ -56,19 +50,13 @@ namespace AntBlazor
                 menuitem.Deselect();
             }
 
-            if (item.IsSelected)
-            {
-                item.Deselect();
-            }
-            else
+            if (!item.IsSelected)
             {
                 item.Select();
             }
 
             if (OnMenuItemClicked.HasDelegate)
                 OnMenuItemClicked.InvokeAsync(item);
-
-            StateHasChanged();
         }
 
         public void SelectSubmenu(AntSubMenu menu)

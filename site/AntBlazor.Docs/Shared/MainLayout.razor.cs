@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AntBlazor.Docs.Localization;
@@ -7,13 +8,13 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor.Docs.Shared
 {
-    public partial class MainLayout
+    public partial class MainLayout : IDisposable
     {
         private bool _isCollapsed = true;
 
         private string CurrentLanguage => LanguageService.CurrentCulture.Name;
 
-        private string _currentSubmenu = "文档";
+        private string _currentSubmenuUrl;
 
         private MenuItem[] MenuItems { get; set; } = { };
 
@@ -30,15 +31,10 @@ namespace AntBlazor.Docs.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            await GetCurrentMenuItems();
-            StateHasChanged();
-            ChangeMenuItem(this.MenuItems[0].Title);
+            //await GetCurrentMenuItems();
+            //StateHasChanged();
 
-            LanguageService.LanguageChanged += async (_, args) =>
-            {
-                await GetCurrentMenuItems();
-                await InvokeAsync(StateHasChanged);
-            };
+            LanguageService.LanguageChanged += OnLanguageChanged;
 
             NavigationManager.LocationChanged += (_, args) =>
             {
@@ -48,14 +44,25 @@ namespace AntBlazor.Docs.Shared
 
         private async ValueTask GetCurrentMenuItems()
         {
+            var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            var originalUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
+
+            var shouldNavigate = this._currentSubmenuUrl == null && string.IsNullOrEmpty(originalUrl);
+
             MenuItems = await DemoService.GetMenuAsync();
+            this._currentSubmenuUrl ??= string.IsNullOrEmpty(originalUrl) ? this.MenuItems[0].Url : originalUrl.Split('/')[0];
+            SiderMenuItems = MenuItems.FirstOrDefault(x => x.Url == this._currentSubmenuUrl)?.Children ?? Array.Empty<MenuItem>();
+
+            if (shouldNavigate)
+            {
+                NavigationManager.NavigateTo($"{CurrentLanguage}/{this._currentSubmenuUrl}");
+            }
         }
 
-        private void ChangeMenuItem(string title)
+        private async ValueTask ChangeMenuItem(string url)
         {
-            this._currentSubmenu = title;
-            SiderMenuItems = MenuItems.FirstOrDefault(x => x.Title == title)?.Children ?? Array.Empty<MenuItem>();
-            StateHasChanged();
+            this._currentSubmenuUrl = url;
+            await GetCurrentMenuItems();
         }
 
         private void ChangeLanguage(string language)
@@ -63,6 +70,17 @@ namespace AntBlazor.Docs.Shared
             var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
             NavigationManager.NavigateTo($"{language}/{newUrl}");
+        }
+
+        private async void OnLanguageChanged(object sender, CultureInfo args)
+        {
+            await GetCurrentMenuItems();
+            await InvokeAsync(StateHasChanged);
+        }
+
+        public void Dispose()
+        {
+            LanguageService.LanguageChanged -= OnLanguageChanged;
         }
     }
 }

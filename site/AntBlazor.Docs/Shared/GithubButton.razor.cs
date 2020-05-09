@@ -19,8 +19,15 @@ namespace AntBlazor.Docs.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            var res = await HttpClient.GetFromJsonAsync<GithubResponse>($"https://api.github.com/repos/{this._org}/{this._repo}");
-            this._starCount = res.StargazersCount;
+            try
+            {
+                var res = await HttpClient.GetFromJsonAsync<GithubResponse>(
+                    $"https://api.github.com/repos/{this._org}/{this._repo}");
+                this._starCount = res.StargazersCount;
+            }
+            catch
+            {
+            }
         }
 
         private class GithubResponse

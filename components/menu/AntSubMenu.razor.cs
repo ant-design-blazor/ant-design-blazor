@@ -21,7 +21,7 @@ namespace AntBlazor
         public OneOf<string, RenderFragment> Title { get; set; }
 
         [Parameter]
-        public RenderFragment Children { get; set; }
+        public RenderFragment ChildContent { get; set; }
 
         [Parameter]
         public string Key { get; set; }
@@ -78,12 +78,7 @@ namespace AntBlazor
 
         protected override void OnInitialized()
         {
-            //if (string.IsNullOrWhiteSpace(Key))
-            //    throw new ArgumentException($"Parameter {nameof(Key)} is required for a {nameof(AntSubMenu)}");
-
             RootMenu.Submenus.Add(this);
-            if (RootMenu.DefaultOpenSubMenus.Contains(Key))
-                IsOpen = true;
         }
 
         public void Close()

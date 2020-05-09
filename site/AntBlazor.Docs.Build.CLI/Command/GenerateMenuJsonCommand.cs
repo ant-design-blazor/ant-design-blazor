@@ -197,6 +197,7 @@ namespace AntBlazor.Docs.Build.CLI.Command
 
             foreach (IGrouping<string, KeyValuePair<string, MenuItem>> menuGroup in menuI18N)
             {
+                var children = menuGroup.Select(x => x.Value).OrderBy(x => x.Order).ToArray();
                 List<MenuItem> menu = new List<MenuItem>
                 {
                     new MenuItem()
@@ -204,20 +205,23 @@ namespace AntBlazor.Docs.Build.CLI.Command
                         Order = 0,
                         Title = menuGroup.Key == "zh-CN" ? "文档" : "Docs",
                         Type = "subMenu",
-                        Children = menuGroup.Select(x => x.Value).OrderBy(x => x.Order).ToArray()
+                        Url = "docs",
+                        Children = children
                     }
                 };
 
-                IOrderedEnumerable<MenuItem> components = componentMenuI18N.Where(x => x.Key == menuGroup.Key)
+                var components = componentMenuI18N.Where(x => x.Key == menuGroup.Key)
                     .SelectMany(x => x)
                     .Select(x => x.Value)
-                    .OrderBy(x => x.Order);
+                    .OrderBy(x => x.Order)
+                    .ToArray();
 
                 menu.Add(new MenuItem()
                 {
                     Order = 999,
                     Title = menuGroup.Key == "zh-CN" ? "组件" : "Components",
                     Type = "subMenu",
+                    Url = "components",
                     Children = components.ToArray()
                 });
 
