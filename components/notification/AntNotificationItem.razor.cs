@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using AntBlazor.core.JsInterop.EventArg;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -14,13 +13,13 @@ namespace AntBlazor
         public AntNotificationConfig Config { get; set; }
 
         [Parameter]
-        public EventCallback<AntNotificationConfig> OnClose { get; set; }
+        public Func<AntNotificationConfig, Task> OnClose { get; set; }
 
         private string GetIconClassName()
         {
             if (Config.NotificationType != AntNotificationType.None
                 || Config.Icon != null
-                )
+            )
             {
                 return "ant-notification-notice-with-icon";
             }
@@ -37,12 +36,9 @@ namespace AntBlazor
             return Config.AnimationClass;
         }
 
-        private async Task Close(MouseEventArgs e)
+        private void Close(MouseEventArgs e)
         {
-            if (OnClose.HasDelegate)
-            {
-                await OnClose.InvokeAsync(Config);
-            }
+            OnClose?.Invoke(Config);
         }
 
         private void OnClick()

@@ -1,52 +1,9 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-@{
-    if (_topRightNoticeItems.Count > 0)
-    {
-        <div class="ant-notification ant-notification-topRight @(_isRtl? "ant-notification-rtl":"")" style="right: 0px; top: @(_top)px; bottom: auto;">
-            <span>
-                @foreach (var option in _topRightNoticeItems)
-                {
-                    <AntNotificationItem Config="option" @key="option" OnClose="RemoveChild" />
-                }
-            </span>
-        </div>
-    }
 
-    if (_topLeftNoticeItems.Count > 0)
-    {
-        <div class="ant-notification ant-notification-topLeft @(_isRtl? "ant-notification-rtl":"")" style="left: 0px; top: @(_top)px; bottom: auto;">
-            <span>
-                @foreach (var option in _topLeftNoticeItems)
-                {
-                    <AntNotificationItem Config="option" @key="option" OnClose="RemoveChild" />
-                }
-            </span>
-        </div>
-    }
-
-    if (_bottomLeftNoticeItems.Count > 0)
-    {
-        <div class="ant-notification ant-notification-bottomLeft @(_isRtl? "ant-notification-rtl":"")" style="left: 0px; top:auto; bottom: @(_bottom)px;">
-            <span>
-                @foreach (var option in _bottomLeftNoticeItems)
-                {
-                    <AntNotificationItem Config="option" @key="option" OnClose="RemoveChild" />
-                }
-            </span>
-        </div>
-    }
-
-    if (_bottomRightNoticeItems.Count > 0)
-    {
-        <div class="ant-notification ant-notification-bottomRight @(_isRtl? "ant-notification-rtl":"")" style="right: 0px; top:auto; bottom: @(_bottom)px;">
-            <span>
-                @foreach (var option in _bottomRightNoticeItems)
-                {
-                    <AntNotificationItem Config="option" @key="option" OnClose="RemoveChild" />
-                }
-            </span>
-        </div>
-    }
-}
+<div class="@GetClassName()" style="@GetStyle()">
+    <span>
+        
+    </span>
+</div>

@@ -1,6 +1,7 @@
 ﻿@namespace AntBlazor
 
-<div class="ant-notification-notice ant-notification-notice-closable @GetClassName()"
+<div id="@Config.Key"
+     class="ant-notification-notice ant-notification-notice-closable @GetClassName()"
      style="@Config.Style"
      @onclick="OnClick">
 
@@ -64,7 +65,7 @@
                     }
                 }
             </div>
-            
+
             <div class="ant-notification-notice-description">
                 @if (Config.Description != null)
                 {
@@ -78,7 +79,7 @@
                     }
                 }
             </div>
-            
+
             @if (Config.Btn != null)
             {
                 <span class="ant-notification-notice-btn">
@@ -88,7 +89,7 @@
         </div>
     </div>
 
-    <a tabindex="0" class="ant-notification-notice-close" @onclick="Close" @onclick:preventDefault @onclick:stopPropagation >
+    <a tabindex="0" class="ant-notification-notice-close" @onclick="Close" @onclick:preventDefault @onclick:stopPropagation>
         <span class="ant-notification-close-x">
             <span role="img" aria-label="close" class="anticon anticon-close ant-notification-close-icon">
                 @Config.CloseIcon

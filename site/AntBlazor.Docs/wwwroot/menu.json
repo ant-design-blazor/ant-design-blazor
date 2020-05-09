@@ -189,13 +189,7 @@
             "title": "Drawer",
             "type": "menuItem",
             "url": "drawer"
-          }
-        ]
-      },
-      {
-        "title": "Message",
-        "type": "itemGroup",
-        "children": [
+          },
           {
             "title": "Notification",
             "type": "menuItem",

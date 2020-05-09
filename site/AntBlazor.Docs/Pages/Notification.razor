@@ -5,10 +5,7 @@
     <AntText>
         <ul>
             <li>
-                在MainLayout组件中放置通知容器：<mark>&lt;AntNotification /&gt;</mark>
-            </li>
-            <li>
-                使用页面注入服务：<mark>@@inject AntNotificationService Notice</mark>
+                只需要在页面注入服务：<mark>@@inject AntNotificationService Notice</mark>
             </li>
         </ul>
     </AntText>
@@ -159,8 +156,7 @@
 <DemoCard>
     <Title>自定义按钮</Title>
     <Description>
-        图标可以被自定义。目前只接受html字符串。
-
+        自定义关闭通知提醒框的按钮。
         ```c#
         string key = $"open{DateTime.Now}";
 
@@ -182,8 +178,7 @@
             {
                 builder.OpenComponent&lt;AntButton&gt;(0);
                 builder.AddAttribute(1, "Type", AntButtonType.Primary);
-                builder.AddAttribute(2, "Onclick", OnBtnClick);
-                builder.AddAttribute(3, "ChildContent", (RenderFragment) ((b) => { b.AddContent(0, "confirm"); }));
+                builder.AddAttribute(2, "ChildContent", (RenderFragment) ((b) => { b.AddContent(0, "confirm"); }));
                 builder.CloseComponent();
             }
         });
@@ -200,13 +195,6 @@
                                       Console.WriteLine($"closing {key}");
                                       Notice.Close(key);
                                   }
-
-                                  EventCallback<MouseEventArgs> OnBtnClick =
-                                      new EventCallback<MouseEventArgs>(this, (Action) OnBtnClickFunc);
-                                  try
-                                  {
-
-                                  
                                   await Notice.Open(new AntNotificationConfig()
                                   {
                                       Message = "title",
@@ -216,16 +204,10 @@
                                       {
                                           builder.OpenComponent<AntButton>(0);
                                           builder.AddAttribute(1, "Type", AntButtonType.Primary);
-                                          builder.AddAttribute(2, "Onclick", OnBtnClick);
-                                          builder.AddAttribute(3, "ChildContent", (RenderFragment) ((b) => { b.AddContent(0, "confirm"); }));
+                                          builder.AddAttribute(2, "ChildContent", (RenderFragment) ((b) => { b.AddContent(0, "confirm"); }));
                                           builder.CloseComponent();
                                       }
                                   });
-                                      }
-                                  catch (Exception e)
-                                  {
-                                      Console.WriteLine(e);
-                                  }
                               })">
             custom button
         </AntButton>

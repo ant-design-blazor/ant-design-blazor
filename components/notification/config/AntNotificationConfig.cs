@@ -63,7 +63,6 @@ namespace AntBlazor
         /// <summary>
         /// 点击通知时触发的回调函数	
         /// </summary>
-
         public Action OnClick { get; set; } = null;
 
         /// <summary>
