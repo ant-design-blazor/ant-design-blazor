@@ -5,7 +5,7 @@
 var rename = require('gulp-rename');
 
 gulp.task("default", function () {
-  return gulp.src('styles.less')
+  return gulp.src('style/index.less')
     .pipe(less({ javascriptEnabled: true }))
     .pipe(cleanCss({ compatibility: 'ie8' }))
     .pipe(rename('docs.css'))

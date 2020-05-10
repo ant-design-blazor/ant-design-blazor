@@ -7,29 +7,29 @@ namespace AntBlazor
 {
     public enum AntDirectionVHIType
     {
-        vertical,
-        horizontal,
-        inline
+        Vertical,
+        Horizontal,
+        Inline
     }
 
     public enum AntDirectionVHType
     {
-        vertical,
-        horizontal
+        Vertical,
+        Horizontal
     }
 
     public enum AntFourDirectionType
     {
-        top,
-        bottom,
-        left,
-        right
+        Top,
+        Bottom,
+        Left,
+        Right
     }
 
     public enum AntAlignType
     {
-        top,
-        middle,
-        bottom
+        Top,
+        Middle,
+        Bottom
     }
 }

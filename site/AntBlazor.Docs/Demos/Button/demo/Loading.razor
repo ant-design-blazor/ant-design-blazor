@@ -1,0 +1,52 @@
+﻿@using System.Timers
+
+<div>
+    <AntButton Type="primary" Loading>
+        Loading
+    </AntButton>
+    <AntButton Type="primary" Size="small" Loading>
+        Loading
+    </AntButton>
+    <br />
+    <AntButton Type="primary" Loading="loading" Onclick=enterLoading>
+        Click me!
+    </AntButton>
+    <AntButton
+        Type="primary"
+        Icon="poweroff"
+    Loading="iconLoading"
+    Onclick="enterIconLoading"
+    >
+    Click me!
+    </AntButton>
+</div>
+
+@code
+{
+    bool loading = false;
+    bool iconLoading = false;
+
+    private void enterLoading()
+    {
+        loading = true;
+        var timer = new Timer(8000);
+        timer.Elapsed += (_, args) =>
+        {
+            loading = false;
+            InvokeAsync(StateHasChanged);
+        };
+        timer.Start();
+    }
+
+    private void enterIconLoading()
+    {
+        iconLoading = true;
+        var timer = new Timer(8000);
+        timer.Elapsed += (_, args) =>
+        {
+            iconLoading = false;
+            InvokeAsync(StateHasChanged);
+        };
+        timer.Start();
+    }
+}

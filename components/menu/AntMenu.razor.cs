@@ -1,96 +1,148 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Components;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
     public partial class AntMenu : AntDomComponentBase
     {
-        [CascadingParameter(Name = nameof(PrefixCls))]
-        public string PrefixCls { get; set; } = "ant-menu";
+        private const string PrefixCls = "ant-menu";
+
+        [CascadingParameter]
+        public AntSider Parent { get; set; }
+
+        [Parameter]
+        public AntMenuTheme Theme { get; set; } = AntMenuTheme.Light;
+
+        [Parameter]
+        public AntMenuMode Mode { get; set; } = AntMenuMode.Inline;
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public int InlineIndent { get; set; } = 24;
+        public EventCallback<AntSubMenu> OnSubmenuClicked { get; set; }
 
         [Parameter]
-        public string Theme { get; set; } = "light";//'light' | 'dark' = 'light';
+        public EventCallback<AntMenuItem> OnMenuItemClicked { get; set; }
 
         [Parameter]
-        public AntDirectionVHIType Mode { get; set; } = AntDirectionVHIType.vertical;
+        public bool Accordion { get; set; }
 
         [Parameter]
-        public bool InDropDown { get; set; } = false;
+        public bool Selectable { get; set; } = true;
 
         [Parameter]
-        public bool InlineCollapsed { get; set; } = false;
+        public bool Collapsed { get; set; }
 
-        [Parameter]
-        public bool Selectable { get; set; }
+        private AntMenuMode _initialMode;
+        internal AntMenuMode InternalMode { get; private set; }
+        private bool _collapsed;
 
-        [Parameter]
-        public EventCallback<AntMenuItem> Click { get; set; }
+        public List<AntSubMenu> Submenus { get; set; } = new List<AntSubMenu>();
+        public List<AntMenuItem> MenuItems { get; set; } = new List<AntMenuItem>();
 
-        internal readonly IList<AntMenuItem> MenuItems = new List<AntMenuItem>();
-
-        internal readonly IList<AntSubMenu> SubMenus = new List<AntSubMenu>();
-
-        private IList<AntSubMenu> _openedSubMenus = new List<AntSubMenu>();
-
-        public bool IsInDropDown { get; set; }
-
-        private AntDirectionVHIType _cacheMode;
-
-        protected override void OnInitialized()
+        public void SelectItem(AntMenuItem item)
         {
-            base.OnInitialized();
-            SetClassMap();
-            IsInDropDown = InDropDown;
-            _cacheMode = Mode;
+            foreach (AntMenuItem menuitem in MenuItems.Where(x => x != item))
+            {
+                menuitem.Deselect();
+            }
+
+            if (!item.IsSelected)
+            {
+                item.Select();
+            }
+
+            if (OnMenuItemClicked.HasDelegate)
+                OnMenuItemClicked.InvokeAsync(item);
         }
 
-        private void SetClassMap()
+        public void SelectSubmenu(AntSubMenu menu)
+        {
+            if (Accordion)
+            {
+                foreach (AntSubMenu item in Submenus.Where(x => x != menu && x != menu.Parent))
+                {
+                    item.Close();
+                }
+            }
+
+            if (menu.IsOpen)
+            {
+                menu.Close();
+            }
+            else
+            {
+                menu.Open();
+            }
+
+            if (OnSubmenuClicked.HasDelegate)
+                OnSubmenuClicked.InvokeAsync(menu);
+
+            StateHasChanged();
+        }
+
+        private void SetClass()
         {
             ClassMapper.Add(PrefixCls)
                 .Add($"{PrefixCls}-root")
                 .Add($"{PrefixCls}-{Theme}")
-                .Add($"{PrefixCls}-{Mode}")
-                .If($"{PrefixCls}-inline-collapsed", () => InlineCollapsed);
+                .Add($"{PrefixCls}-{InternalMode}")
+                .If($"{PrefixCls}-inline-collapsed", () => _collapsed)
+                .If($"{PrefixCls}-unselectable", () => !Selectable);
         }
 
-        protected override async Task OnParametersSetAsync()
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            if (InternalMode != AntMenuMode.Inline && _collapsed)
+                throw new ArgumentException($"{nameof(AntMenu)} in the {Mode} mode cannot be {nameof(Collapsed)}");
+
+            _initialMode = Mode;
+            InternalMode = Mode;
+            if (Parent != null)
+            {
+                Parent.OnCollapsed += Update;
+            }
+
+            SetClass();
+        }
+
+        protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            await UpdateInLineCollapse();
+            if (Parent == null)
+            {
+                this._collapsed = Collapsed;
+            }
+            Update(_collapsed);
         }
 
-        private async Task UpdateInLineCollapse()
+        public void Update(bool collapsed)
         {
-            if (MenuItems.Any())
+            this._collapsed = collapsed;
+            if (collapsed)
             {
-                if (InlineCollapsed)
+                InternalMode = AntMenuMode.Vertical;
+                foreach (AntSubMenu item in Submenus)
                 {
-                    _openedSubMenus = this.SubMenus.Where(x => x.Open).ToList();
-                    foreach (var antSubMenu in this.SubMenus)
-                    {
-                        await antSubMenu.SetOpenState(false);
-                    }
+                    item.Close();
+                }
+            }
+            else
+            {
+                InternalMode = _initialMode;
+            }
+        }
 
-                    this.Mode = AntDirectionVHIType.vertical;
-                }
-                else
-                {
-                    foreach (var subMenu in _openedSubMenus)
-                    {
-                        await subMenu.SetOpenState(false);
-                    }
-                    _openedSubMenus.Clear();
-                    this.Mode = this._cacheMode;
-                }
-                StateHasChanged();
+        public void Dispose()
+        {
+            if (Parent != null)
+            {
+                Parent.OnCollapsed -= Update;
             }
         }
     }

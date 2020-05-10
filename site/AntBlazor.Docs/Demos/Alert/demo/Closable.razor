@@ -1,0 +1,17 @@
+﻿<AntAlert Type="@AntAlertType.Warning"
+          Message="Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text"
+          Closable
+          OnClose="LogSomething" />
+
+<AntAlert Type="@AntAlertType.Error"
+          Message="Error Text"
+          Description="Error Description Error Description Error Description Error Description Error Description Error Description"
+          Closable
+          OnClose="LogSomething" />
+
+@code{
+    private void LogSomething()
+    {
+        Console.WriteLine("Logging Something...");
+    }
+}

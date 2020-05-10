@@ -10,6 +10,9 @@ namespace AntBlazor
     public partial class AntAvatar : AntDomComponentBase
     {
         [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
         public string Shape { get; set; } = null;
 
         [Parameter]

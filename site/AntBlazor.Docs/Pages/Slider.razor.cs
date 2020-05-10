@@ -10,25 +10,25 @@ namespace AntBlazor.Docs.Pages
 {
     public partial class Slider
     {
-        private int inputValue1 = 1;
+        private int _inputValue1 = 1;
 
         private void UpdateValue1(double value)
         {
-            inputValue1 = (int)value;
+            _inputValue1 = (int)value;
         }
 
-        private double inputValue2 = 0;
+        private double _inputValue2 = 0;
 
         private void UpdateValue2(double value)
         {
-            inputValue2 = value;
+            _inputValue2 = value;
         }
 
-        private bool disabled;
+        private bool _disabled;
 
         private void OnSwitch(bool args)
         {
-            disabled = args;
+            _disabled = args;
         }
 
         private void OnChange1(double args)
@@ -47,7 +47,7 @@ namespace AntBlazor.Docs.Pages
         {
         }
 
-        private AntSliderMark[] marks1 = new AntSliderMark[]
+        private AntSliderMark[] _marks1 =
         {
             new AntSliderMark(0, "0℃"),
             new AntSliderMark(26, "26℃"),
@@ -59,11 +59,11 @@ namespace AntBlazor.Docs.Pages
             }, "color: #f50;")
         };
 
-        private bool reversed = true;
+        private bool _reversed = true;
 
         private void OnSwitchReverse(bool args)
         {
-            reversed = args;
+            _reversed = args;
         }
     }
 }
