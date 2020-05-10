@@ -31,8 +31,8 @@ namespace AntBlazor.Docs.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            //await GetCurrentMenuItems();
-            //StateHasChanged();
+            await GetCurrentMenuItems();
+            StateHasChanged();
 
             LanguageService.LanguageChanged += OnLanguageChanged;
 
