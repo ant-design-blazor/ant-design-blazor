@@ -23,6 +23,9 @@ namespace AntBlazor.Internal
         private bool _isOverlayFirstRender = true;
         private bool _isWaitForOverlayFirstRender = false;
 
+        private bool _preVisible = false;
+        private bool _isOverlayShow = false;
+
         private int? _overlayLeft = null;
         private int? _overlayTop = null;
 
@@ -30,6 +33,21 @@ namespace AntBlazor.Internal
         private string _overlayCls = "";
 
         private const int OVERLAY_TOP_OFFSET = 4;
+
+        protected override async Task OnParametersSetAsync()
+        {
+            if (!_isOverlayShow && Dropdown.Visible && !_preVisible)
+            {
+                await Show(_overlayLeft, _overlayTop);
+            }
+            else if (_isOverlayShow && !Dropdown.Visible && _preVisible)
+            {
+                await Hide();
+            }
+
+            _preVisible = Dropdown.Visible;
+            await base.OnParametersSetAsync();
+        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -41,29 +59,18 @@ namespace AntBlazor.Internal
                 {
                     await JsInvokeAsync(JSInteropConstants.addClsToFirstChild, Ref, $"disabled");
                 }
-
-                if (Dropdown.Visible)
-                {
-                    await Show(_overlayLeft, _overlayTop);
-
-                    _overlayLeft = null;
-                    _overlayTop = null;
-                }
             }
-            else
+
+            if (_isWaitForOverlayFirstRender && _isOverlayFirstRender)
             {
-                if (_isWaitForOverlayFirstRender && _isOverlayFirstRender)
-                {
-                    _isOverlayFirstRender = false;
+                _isOverlayFirstRender = false;
 
-                    await Show(_overlayLeft, _overlayTop);
+                await Show(_overlayLeft, _overlayTop);
 
-                    _isWaitForOverlayFirstRender = false;
-                    _overlayLeft = null;
-                    _overlayTop = null;
-                }
+                _isWaitForOverlayFirstRender = false;
+                _overlayLeft = null;
+                _overlayTop = null;
             }
-
             await base.OnAfterRenderAsync(firstRender);
         }
 
@@ -86,7 +93,7 @@ namespace AntBlazor.Internal
 
         public async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
-            if (Dropdown.Visible || Dropdown.Disabled)
+            if (_isOverlayShow || Dropdown.Disabled)
             {
                 return;
             }
@@ -102,7 +109,7 @@ namespace AntBlazor.Internal
                 return;
             }
 
-            Dropdown.Visible = true;
+            _isOverlayShow = true;
 
             await AddOverlayToBody();
 
@@ -124,7 +131,7 @@ namespace AntBlazor.Internal
 
         public async Task Hide(bool force = false)
         {
-            if (!Dropdown.Visible)
+            if (!_isOverlayShow)
             {
                 return;
             }
@@ -147,7 +154,7 @@ namespace AntBlazor.Internal
 
             // wait for leave animation
             await Task.Delay(200);
-            Dropdown.Visible = false;
+            _isOverlayShow = false;
 
             StateHasChanged();
         }
@@ -159,7 +166,7 @@ namespace AntBlazor.Internal
 
         public bool IsPopup()
         {
-            return Dropdown.Visible;
+            return _isOverlayShow;
         }
 
         private async Task AddOverlayToBody()

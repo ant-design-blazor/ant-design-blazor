@@ -215,5 +215,15 @@ namespace AntBlazor
 
             return false;
         }
+
+        public async Task Show()
+        {
+            await _antDropdownOverlay.Show();
+        }
+
+        public async Task Hide()
+        {
+            await _antDropdownOverlay.Hide();
+        }
     }
 }
