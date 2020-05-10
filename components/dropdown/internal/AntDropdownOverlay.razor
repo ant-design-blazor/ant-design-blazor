@@ -4,10 +4,10 @@
 
 @if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender)
 {
-    string display = Dropdown.Visible ? "" : "visibility: hidden;";
+    string display = _isOverlayShow ? "" : "visibility: hidden;";
     string overlayCls;
 
-    if (!Dropdown.Visible && !_isWaitForOverlayFirstRender)
+    if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
     {
         overlayCls = $"{Dropdown.PrefixCls}-hidden";
         display = "";

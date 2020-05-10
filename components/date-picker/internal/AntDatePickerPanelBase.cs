@@ -115,7 +115,7 @@ namespace AntBlazor
 
         protected DateTime PickerValue { get => DatePicker.GetIndexPickerValue(PickerIndex); }
 
-        protected DateTime Value { get => DatePicker.GetIndexValue(PickerIndex); }
+        protected DateTime Value { get => DatePicker.GetIndexValue(PickerIndex) ?? DateTime.Now; }
 
         public void PopUpPicker(string type)
         {

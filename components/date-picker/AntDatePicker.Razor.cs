@@ -32,6 +32,9 @@ namespace AntBlazor
         }
 
         [Parameter]
+        public string PopupContainerSelector { get; set; }
+
+        [Parameter]
         public bool Disabled { get; set; } = false;
 
         [Parameter]
@@ -41,8 +44,7 @@ namespace AntBlazor
         public bool AutoFocus { get; set; } = false;
 
         [Parameter]
-        public bool Open { get; set; } = false;
-
+        public bool Open { get; set; }
         [Parameter]
         public bool InputReadOnly { get; set; } = false;
 
@@ -264,6 +266,7 @@ namespace AntBlazor
 
         private AntDatePickerInput _inputStart;
         private AntDatePickerInput _inputEnd;
+        private AntDropdown _dropDown;
 
         private string _activeBarStyle = "";
 
@@ -344,20 +347,14 @@ namespace AntBlazor
 
         protected string GetInputValue(int index = 0)
         {
-            DateTime value;
+            DateTime? tryGetValue = GetIndexValue(index);
 
-            if (_pickerStatus[index]._hadSelectValue)
-            {
-                value = _values[index];
-            }
-            else if (_defaultValues[index] != null)
-            {
-                value = (DateTime)_defaultValues[index];
-            }
-            else
+            if (tryGetValue == null)
             {
                 return "";
             }
+
+            DateTime value = (DateTime)tryGetValue;
 
             if (!string.IsNullOrEmpty(Format))
             {
@@ -380,36 +377,16 @@ namespace AntBlazor
             return value.ToString(formater, CultureInfo.CurrentCulture);
         }
 
-        protected void TryOpen()
+        private void ChangeFocusTarget(bool inputStartFocus, bool inputEndFocus)
         {
-            if (!_isClose)
+            if (!IsRange)
             {
                 return;
             }
 
-            _isClose = !_isClose;
-
-            AutoFocus = !_isClose;
-
-            _needRefresh = !_isClose;
-
-            OnOpenChange.InvokeAsync(!_isClose);
-
-            StateHasChanged();
-        }
-
-        protected void TryClose()
-        {
-            if (_isClose)
-            {
-                return;
-            }
-
-            AutoFocus = false;
-            _isClose = true;
             _needRefresh = true;
-
-            StateHasChanged();
+            _inputStart.IsOnFocused = inputStartFocus;
+            _inputEnd.IsOnFocused = inputEndFocus;
         }
 
         protected async Task OnSelect(DateTime date)
@@ -497,7 +474,7 @@ namespace AntBlazor
 
         public void Close()
         {
-            TryClose();
+            _dropDown.Hide();
         }
 
         public void ChangeValue(DateTime date, int index = 0)
@@ -591,9 +568,20 @@ namespace AntBlazor
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public DateTime GetIndexValue(int index)
+        public DateTime? GetIndexValue(int index)
         {
-            return _values[index];
+            if (_pickerStatus[index]._hadSelectValue)
+            {
+                return _values[index];
+            }
+            else if (_defaultValues[index] != null)
+            {
+                return (DateTime)_defaultValues[index];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void ChangePickerValue(DateTime date, int index = 0)
