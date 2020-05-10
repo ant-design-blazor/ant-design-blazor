@@ -1,0 +1,32 @@
+﻿@using System.Net
+@using AntBlazor.Docs.Utils
+@inherits ComponentBase
+@inject HtmlRenderService HtmlRenderService
+
+@((MarkupString)$"<style>{Styles}</style>")
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string ScopeId { get; set; }
+
+    protected string Styles { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ChildContent != null)
+        {
+            var text = await HtmlRenderService.RenderAsync(ChildContent);
+            var style = WebUtility.HtmlDecode(text)?.Replace("<style>", "").Replace("</style>", "");
+            if (!string.IsNullOrEmpty(style))
+            {
+                var parser = new CSSParser(style);
+                Styles = parser.AddScopeIdToString(ScopeId);
+            }
+        }
+    }
+
+}

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\DemoComponent.cs" Link="Shared\DemoComponent.cs" />
+    <Compile Include="..\Shared\MenuItem.cs" Link="Shared\MenuItem.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
+    <PackageReference Include="YamlDotnet" Version="8.1.0" />
+    <PackageReference Include="Markdig" Version="0.18.3" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,35 @@
+﻿<div>
+    <AntRadioGroup @bind-Value="@size">
+        <AntRadio RadioButton Value="large">Large</AntRadio>
+        <AntRadio RadioButton Value="default">Default</AntRadio>
+        <AntRadio RadioButton Value="small">Small</AntRadio>
+    </AntRadioGroup>
+    <br />
+    <br />
+    <AntButton Type="primary" Size=@size>
+        Primary
+    </AntButton>
+    <AntButton Size="@size">Default</AntButton>
+    <AntButton Type="dashed" Size=@size>
+        Dashed
+    </AntButton>
+    <br />
+    <AntButton Type="link" Size=@size>
+        Link
+    </AntButton>
+    <br />
+    <AntButton Type="primary" Icon="download" Size=@size />
+    <AntButton Type="primary" Shape="circle" Icon="download" Size=@size />
+    <AntButton Type="primary" Shape="round" Icon="download" Size=@size />
+    <AntButton Type="primary" Shape="round" Icon="download" Size=@size>
+    Download
+    </AntButton>
+    <AntButton Type="primary" Icon="download" Size=@size>
+    Download
+    </AntButton>
+</div>
+
+@code
+{
+    string size = "large";
+}

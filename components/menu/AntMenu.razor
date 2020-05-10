@@ -1,8 +1,8 @@
-@namespace AntBlazor
+﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this">
-    <ul class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
+    <ul class="@ClassMapper.Class" style="@Style" id="@Id" direction="ltr" role="menu">
         @ChildContent
     </ul>
 </CascadingValue>

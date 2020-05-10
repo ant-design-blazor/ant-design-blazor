@@ -1,38 +1,21 @@
-@namespace AntBlazor
+﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<li class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
-    <div class="@titleClassMapper.Class">
-        @Title
+<li class="ant-menu-item-group" style="@Style" >
+    <div class="ant-menu-item-group-title">
+        @if (Title.Value != null)
+        {
+            @if (Title.IsT0)
+            {
+                @Title.AsT0
+            }
+            else if (Title.IsT1)
+            {
+                @Title.AsT1
+            }
+        }
     </div>
-    @ChildContent
+    <ul class="ant-menu-item-group-list">
+        @ChildContent
+    </ul>
 </li>
-
-@code {
-
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
-
-    [Parameter]
-    public string Title { get; set; }
-
-
-    [CascadingParameter]
-    public AntMenu Menu { get; set; }
-
-    private readonly ClassMapper titleClassMapper = new ClassMapper();
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        this.titleClassMapper
-            .If("ant-dropdown-menu-item-group-title", () => !Menu.IsInDropDown)
-            .If("ant-menu-item-group-title", () => !Menu.IsInDropDown)
-            ;
-
-        this.ClassMapper
-            .If("ant-dropdown-menu-item-group", () => Menu.IsInDropDown)
-            .If("ant-menu-item-group", () => !Menu.IsInDropDown);
-    }
-
-}

@@ -27,6 +27,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="$(SolutionDir)scripts\gh-pages\**" LinkBase="gh-pages" />
+  </ItemGroup>
+
+  <ItemGroup>
     <DocFiles Include="$(SolutionDir)docs\**\*.*" />
   </ItemGroup>
 

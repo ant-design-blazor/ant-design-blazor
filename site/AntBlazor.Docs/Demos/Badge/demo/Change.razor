@@ -1,0 +1,45 @@
+﻿<div>
+    <div>
+        <AntBadge Count="@count">
+            <a href="#" class="head-example" />
+        </AntBadge>
+        <AntButtonGroup>
+            <AntButton @onclick="_=>decline()">
+                <AntIcon Type="minus"></AntIcon>
+            </AntButton>
+            <AntButton @onclick="_=>increase()">
+                <AntIcon Type="plus"></AntIcon>
+            </AntButton>
+        </AntButtonGroup>
+    </div>
+    <div style="margin-top: 10px">
+        <AntBadge Dot="@show">
+            <a href="#" class="head-example" />
+        </AntBadge>
+        <AntSwitch OnChange="onChange" Checked="@show" />
+    </div>
+</div>
+
+@code {
+    int count = 5;
+    bool show = true;
+
+    void increase()
+    {
+        count++;
+    }
+
+    void decline()
+    {
+        count--;
+        if (count < 0)
+        {
+            count = 0;
+        }
+    }
+
+    void onChange(bool show)
+    {
+        this.show = show;
+    }
+}
