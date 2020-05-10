@@ -55,6 +55,9 @@ namespace AntBlazor
         [Parameter]
         public uint? OffsetTop { get; set; } = 0;
 
+        [Parameter]
+        public string ContainerSelector { get; set; } = "#BodyContainer";
+
         /// <summary>
         /// Specifies the scrollable area DOM node
         /// </summary>
@@ -90,8 +93,8 @@ namespace AntBlazor
                 }
                 else
                 {
-                    DomEventService.AddEventListener("#BodyContainer", "scroll", OnScroll);
-                    DomEventService.AddEventListener("#BodyContainer", "resize", OnWindowResize);
+                    DomEventService.AddEventListener(ContainerSelector, "scroll", OnScroll);
+                    DomEventService.AddEventListener(ContainerSelector, "resize", OnWindowResize);
                     if (!string.IsNullOrEmpty(Target.Id))
                     {
                         DomEventService.AddEventListener(Target, "scroll", OnScroll);
@@ -131,7 +134,7 @@ namespace AntBlazor
         private async Task RenderAffixAsync()
         {
             DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ref);
-            DomRect bodyContainerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#BodyContainer");
+            DomRect bodyContainerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, ContainerSelector);
             DomRect containerRect;
             if (string.IsNullOrEmpty(Target.Id))
             {
