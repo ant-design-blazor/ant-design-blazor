@@ -1,0 +1,28 @@
+﻿<div>
+    <AntAvatar Style="@($"background-color: {color}; vertical-align: middle;")" Size="large">
+        @user
+    </AntAvatar>
+    <AntButton
+        Size="small"
+        Style="margin:0 16px; vertical-align: middle;"
+        Onclick="_=>changeUser()"
+    >
+        Change
+    </AntButton>
+</div>
+
+@code
+{
+    private static string[] userList = {"U", "Lucy", "Tom", "Edward"};
+    private static string[] colorList = {"#f56a00", "#7265e6", "#ffbf00", "#00a2ae"};
+
+    private string user { get; set; } = userList[0];
+    private string color { get; set; } = colorList[0];
+
+    private void changeUser()
+    {
+        var index = Array.IndexOf(userList, user);
+        user = index < userList.Length - 1 ? userList[index + 1] : userList[0];
+        color = index < colorList.Length - 1 ? colorList[index + 1] : colorList[0];
+    }
+}

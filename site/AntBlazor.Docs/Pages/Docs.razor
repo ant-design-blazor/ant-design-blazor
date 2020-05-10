@@ -1,12 +1,17 @@
 ﻿@page "/docs/{fileName}"
-@using AntBlazor.Docs.Localization
+@page "/docs"
+
+@using AntBlazor.Docs.Services
 
 @inject NavigationManager NavigationManager
 @inject ILanguageService LanguageService
+@inject DemoService DemoService
 
-<article class="markdown">
-    <Markdown docUrl="@docUrl"></Markdown>
-</article>
+<MainContent>
+    <article class="markdown">
+        <Markdown docUrl="@docUrl"></Markdown>
+    </article>
+</MainContent>
 
 @code {
 
@@ -14,21 +19,32 @@
 
     string docUrl { get; set; }
 
-    protected override void OnInitialized()
-    {
-        SetDocUrl();
-        NavigationManager.LocationChanged += (_, args) => SetDocUrl();
+    string currentLanguage => LanguageService.CurrentCulture.Name;
 
-        base.OnInitialized();
+    protected override async Task OnInitializedAsync()
+    {
+        await SetDocUrl();
+        NavigationManager.LocationChanged += async (_, args) => await SetDocUrl();
     }
 
-    protected void SetDocUrl()
+    private async ValueTask SetDocUrl()
     {
         if (!string.IsNullOrEmpty(fileName))
         {
             var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-            docUrl = new Uri(baseUrl, $"docs/{fileName}_{LanguageService.CurrentCulture.Name}.md").ToString();
+            docUrl = new Uri(baseUrl, $"docs/{fileName}.{currentLanguage}.md").ToString();
             StateHasChanged();
+        }
+        else
+        {
+            var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
+            var menus = await DemoService.GetMenuAsync();
+            var current = menus.FirstOrDefault(x => x.Url == newUrl);
+            if (current != null)
+            {
+                NavigationManager.NavigateTo($"{currentLanguage}/{current.Children[0].Url}");
+            }
         }
     }
 

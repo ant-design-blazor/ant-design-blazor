@@ -9,9 +9,9 @@
     <Title>Basic</Title>
     <Description>Basic slider. When <code>range</code> is <code>true</code>, display as dual thumb mode. When <code>disable</code> is <code>true</code>, the slider will not be interactable.</Description>
     <Demo>
-        <AntSlider DefaultValue="30" Disabled="@disabled" />
-        <AntSlider DefaultValue="new double[] { 20, 50 }" Disabled="@disabled" />
-        Disabled: <AntSwitch size="small" checked="@disabled" OnChange="(e)=>OnSwitch(e)" />
+        <AntSlider DefaultValue="30" _disabled="@_disabled" />
+        <AntSlider DefaultValue="new double[] { 20, 50 }" _disabled="@_disabled" />
+        _disabled: <AntSwitch size="small" checked="@_disabled" OnChange="(e)=>OnSwitch(e)" />
     </Demo>
 </DemoCard>
 
@@ -22,18 +22,18 @@
         <div>
             <AntRow>
                 <AntCol Span="12">
-                    <AntSlider Min="1" Max="20" DefaultValue="@inputValue1" />
+                    <AntSlider Min="1" Max="20" DefaultValue="@_inputValue1" />
                 </AntCol>
                 <AntCol Span="4">
-                    <AntInputNumber Min="1" Max="20" Style="margin:0 16px;" Value="@inputValue1" ValueChanged="(e)=>UpdateValue1(e)" />
+                    <AntInputNumber Min="1" Max="20" Style="margin:0 16px;" Value="@_inputValue1" ValueChanged="(e)=>UpdateValue1(e)" />
                 </AntCol>
             </AntRow>
             <AntRow>
                 <AntCol Span="12">
-                    <AntSlider Min="0" Max="1" Step="0.01" DefaultValue="@inputValue2" />
+                    <AntSlider Min="0" Max="1" Step="0.01" DefaultValue="@_inputValue2" />
                 </AntCol>
                 <AntCol Span="4">
-                    <AntInputNumber Min="0" Max="1" Step="0.01" Style="margin:0 16px;" Value="@inputValue2" ValueChanged="(e)=>UpdateValue2(e)" />
+                    <AntInputNumber Min="0" Max="1" Step="0.01" Style="margin:0 16px;" Value="@_inputValue2" ValueChanged="(e)=>UpdateValue2(e)" />
                 </AntCol>
             </AntRow>
         </div>
@@ -73,7 +73,7 @@
                 <AntSlider Vertical Step="10" DefaultValue="new double[] { 20, 50 }" />
             </div>
             <div style="height: 300px; margin-left: 70px; display: inline-block;">
-                <AntSlider Vertical Marks="@marks1" DefaultValue="new double[] { 26, 37 }" />
+                <AntSlider Vertical Marks="@_marks1" DefaultValue="new double[] { 26, 37 }" />
             </div>
         </div>
     </Demo>
@@ -85,17 +85,17 @@
     <Demo>
         <div>
             <h4>included=true</h4>
-            <AntSlider Marks="@marks1" DefaultValue="37" />
-            <AntSlider Marks="@marks1" DefaultValue="new double[] { 26, 37 }" />
+            <AntSlider Marks="@_marks1" DefaultValue="37" />
+            <AntSlider Marks="@_marks1" DefaultValue="new double[] { 26, 37 }" />
 
             <h4>included=false</h4>
-            <AntSlider Marks="@marks1" Included="false" DefaultValue="37" />
+            <AntSlider Marks="@_marks1" Included="false" DefaultValue="37" />
 
             <h4>marks & step</h4>
-            <AntSlider Marks="@marks1" Step="10" DefaultValue="37" />
+            <AntSlider Marks="@_marks1" Step="10" DefaultValue="37" />
 
             <h4>step=null</h4>
-            <AntSlider Marks="@marks1" Step="null" DefaultValue="37" />
+            <AntSlider Marks="@_marks1" Step="null" DefaultValue="37" />
         </div>
     </Demo>
 </DemoCard>
@@ -105,9 +105,9 @@
     <Description>Using <code>Reverse</code> to render slider reversely.</Description>
     <Demo>
         <div>
-            <AntSlider Reverse="@reversed" DefaultValue="30" />
-            <AntSlider Reverse="@reversed" DefaultValue="new double[] { 20, 50 }" />
-            Reversed: <AntSwitch size="small" checked="@reversed" OnChange="(e)=>OnSwitchReverse(e)" />
+            <AntSlider Reverse="@_reversed" DefaultValue="30" />
+            <AntSlider Reverse="@_reversed" DefaultValue="new double[] { 20, 50 }" />
+            _reversed: <AntSwitch size="small" checked="@_reversed" OnChange="(e)=>OnSwitchReverse(e)" />
         </div>
     </Demo>
 </DemoCard>
@@ -117,9 +117,9 @@
     <Description>Using <code>Reverse</code> to render slider reversely.</Description>
     <Demo>
         <div>
-            <AntSlider Reverse="@reversed" Value="30" />
-            @*<AntSlider Reverse="@reversed" Value="[20, 50]" />*@
-            Reversed: <AntSwitch size="small" checked="@reversed" OnChange="(e)=>OnSwitchReverse(e)" />
+            <AntSlider Reverse="@_reversed" Value="30" />
+            @*<AntSlider Reverse="@_reversed" Value="[20, 50]" />*@
+            _reversed: <AntSwitch size="small" checked="@_reversed" OnChange="(e)=>OnSwitchReverse(e)" />
         </div>
     </Demo>
 </DemoCard>

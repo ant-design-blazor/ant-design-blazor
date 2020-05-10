@@ -1,8 +1,17 @@
-﻿@using System.Net
+﻿@using System.IO
+@using System.Net
+@using AntBlazor.Docs.Highlight
 @using Markdig
+@using Markdig.Extensions.Yaml
+@using Markdig.Syntax
+@using YamlDotNet.Serialization
+
 @inherits ComponentBase
 @inject HtmlRenderService HtmlRenderService
 @inject HttpClient HttpClient
+@inject IPrismHighlighter PrismHighlighter
+
+<h1>@title</h1>
 
 @((MarkupString)html)
 
@@ -15,7 +24,9 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-    string html = "";
+    string html { get; set; }
+
+    string title { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -33,10 +44,36 @@
         if (!string.IsNullOrEmpty(MarkdownText))
         {
             MarkdownText = MarkdownText.Trim(' ', '\r', '\n');
-            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-            html = Markdig.Markdown.ToHtml(MarkdownText, pipeline);
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseYamlFrontMatter()
+                .UsePipeTables()
+                .Build();
+
+            StringWriter writer = new StringWriter();
+            var renderer = new Markdig.Renderers.HtmlRenderer(writer);
+            pipeline.Setup(renderer);
+
+            MarkdownDocument document = Markdig.Markdown.Parse(MarkdownText, pipeline);
+            var yamlBlock= document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
+
+            if (yamlBlock != null)
+            {
+                string yaml = MarkdownText.Substring(yamlBlock.Span.Start, yamlBlock.Span.Length).Trim('-');
+                var meta = new Deserializer().Deserialize<Dictionary<string, string>>(yaml);
+
+                title = meta["title"];
+            }
+
+            renderer.Render(document);
+            writer.Flush();
+            html = writer.ToString();
+
         }
-        await base.OnParametersSetAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await PrismHighlighter.HighlightAllAsync();
     }
 
 }

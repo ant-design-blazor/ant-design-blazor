@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using OneOf;
 using System;
 
 namespace AntBlazor
@@ -14,11 +15,11 @@ namespace AntBlazor
         [Parameter]
         public string Color { get; set; }
 
+
         /// <summary>
         /// Number to show in badge
         /// </summary>
-        [Parameter]
-        public int? Count { get; set; }
+        [Parameter] public OneOf<int?, RenderFragment> Count { get; set; }
 
         /// <summary>
         /// Whether to display a red dot instead of count
@@ -26,11 +27,13 @@ namespace AntBlazor
         [Parameter]
         public bool Dot { get; set; } = false;
 
+
         /// <summary>
         /// Set offset of the badge dot, like[x, y]
         /// </summary>
         [Parameter]
         public Tuple<int, int> Offset { get; set; }
+
 
         /// <summary>
         /// Max count to show
@@ -44,11 +47,13 @@ namespace AntBlazor
         [Parameter]
         public bool ShowZero { get; set; } = false;
 
+
         /// <summary>
         /// Set Badge as a status dot
         /// </summary>
         [Parameter]
         public string Status { get; set; }
+
 
         /// <summary>
         /// If status is set, text sets the display text of the status dot
@@ -56,17 +61,20 @@ namespace AntBlazor
         [Parameter]
         public string Text { get; set; }
 
+
         /// <summary>
         /// Text to show when hovering over the badge
         /// </summary>
         [Parameter]
         public string Title { get; set; }
 
+
         /// <summary>
         /// Wrapping this item.
         /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
+
 
         /// <summary>
         /// Sets the default CSS classes.
@@ -84,9 +92,14 @@ namespace AntBlazor
         /// <summary>
         /// Shows the Count and takes into account the OverFlowCount.
         /// </summary>
-        protected string DisplayCount => Count > OverflowCount ? $"{OverflowCount}+"
-                                        : Count == 0 && !ShowZero ? string.Empty
-                                        : Count.ToString();
+        protected string DisplayCount => CountNumber > OverflowCount ? $"{OverflowCount}+"
+                                        : CountNumber == 0 && !ShowZero ? string.Empty
+                                        : CountNumber.ToString();
+
+        protected int? CountNumber { get; set; }
+
+        protected RenderFragment CountTemplate { get; set; }
+
 
         /// <summary>
         /// Startup code
@@ -96,6 +109,7 @@ namespace AntBlazor
             base.OnInitialized();
             if (!string.IsNullOrEmpty(Color) && !string.IsNullOrEmpty(Status))
                 throw new ArgumentException($"You cannot provide a {nameof(Status)} and a {nameof(Color)}, choose one.");
+
             SetClassMap();
         }
 
@@ -106,6 +120,40 @@ namespace AntBlazor
         {
             base.OnParametersSet();
             SetClassMap();
+
+            Count.Switch(_count =>
+            {
+                this.CountNumber = _count;
+            }, _template =>
+            {
+                this.CountTemplate = _template;
+            });
         }
+
+        private string[] badgePresetColors =
+        {
+            "pink",
+            "red",
+            "yellow",
+            "orange",
+            "cyan",
+            "green",
+            "blue",
+            "purple",
+            "geekblue",
+            "magenta",
+            "volcano",
+            "gold",
+            "lime"
+        };
+
+        private string[] badgeStatusTypes =
+        {
+            "success",
+            "processing",
+            "default",
+            "error",
+            "warning"
+        };
     }
 }

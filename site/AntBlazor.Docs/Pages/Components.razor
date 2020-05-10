@@ -1,0 +1,62 @@
+﻿@page "/components/{name}"
+@page "/components"
+
+<section class="main-container main-container-component">
+    <article>
+        @if (_demoComponent != null)
+        {
+            <section class="markdown">
+                <h1>
+                    @_demoComponent.Title
+                    <span class="subtitle">@_demoComponent.SubTitle</span>
+                    <span class="widget"></span>
+                    <a class="edit-button" rel="noopener noreferrer" target="_blank">
+                        <i nz-icon="" nztype="edit" class="anticon anticon-edit">
+                            <svg viewBox="64 64 896 896" fill="currentColor" width="1em" height="1em" data-icon="edit" aria-hidden="true"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path></svg>
+                        </i>
+                    </a>
+                </h1>
+                <section class="markdown">
+                    @((MarkupString) _demoComponent.Doc)
+                </section>
+
+                <h2 data-scrollama-index="1">
+                    @LanguageService.Resources["Examples"]
+                    <span class="all-code-box-controls">
+                        <span role="img" aria-label="code" tabindex="-1" class="anticon anticon-code code-box-expand-trigger">
+                            <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="code" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                                <path d="M516 673c0 4.4 3.4 8 7.5 8h185c4.1 0 7.5-3.6 7.5-8v-48c0-4.4-3.4-8-7.5-8h-185c-4.1 0-7.5 3.6-7.5 8v48zm-194.9 6.1l192-161c3.8-3.2 3.8-9.1 0-12.3l-192-160.9A7.95 7.95 0 00308 351v62.7c0 2.4 1 4.6 2.9 6.1L420.7 512l-109.8 92.2a8.1 8.1 0 00-2.9 6.1V673c0 6.8 7.9 10.5 13.1 6.1zM880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zm-40 728H184V184h656v656z"></path>
+                            </svg>
+                        </span>
+                        <span role="img" aria-label="bug" tabindex="-1" class="anticon anticon-bug code-box-expand-trigger">
+                            <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="bug" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                                <path d="M304 280h56c4.4 0 8-3.6 8-8 0-28.3 5.9-53.2 17.1-73.5 10.6-19.4 26-34.8 45.4-45.4C450.9 142 475.7 136 504 136h16c28.3 0 53.2 5.9 73.5 17.1 19.4 10.6 34.8 26 45.4 45.4C650 218.9 656 243.7 656 272c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8 0-40-8.8-76.7-25.9-108.1a184.31 184.31 0 00-74-74C596.7 72.8 560 64 520 64h-16c-40 0-76.7 8.8-108.1 25.9a184.31 184.31 0 00-74 74C304.8 195.3 296 232 296 272c0 4.4 3.6 8 8 8z"></path>
+                                <path d="M940 512H792V412c76.8 0 139-62.2 139-139 0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8a63 63 0 01-63 63H232a63 63 0 01-63-63c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8 0 76.8 62.2 139 139 139v100H84c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h148v96c0 6.5.2 13 .7 19.3C164.1 728.6 116 796.7 116 876c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8 0-44.2 23.9-82.9 59.6-103.7a273 273 0 0022.7 49c24.3 41.5 59 76.2 100.5 100.5S460.5 960 512 960s99.8-13.9 141.3-38.2a281.38 281.38 0 00123.2-149.5A120 120 0 01836 876c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8 0-79.3-48.1-147.4-116.7-176.7.4-6.4.7-12.8.7-19.3v-96h148c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM716 680c0 36.8-9.7 72-27.8 102.9-17.7 30.3-43 55.6-73.3 73.3C584 874.3 548.8 884 512 884s-72-9.7-102.9-27.8c-30.3-17.7-55.6-43-73.3-73.3A202.75 202.75 0 01308 680V412h408v268z"></path>
+                            </svg>
+                        </span>
+                    </span>
+                </h2>
+            </section>
+            <AntRow Style="margin-left: -8px; margin-right: -8px;">
+                @{
+                    var demos = _demoComponent.DemoList.OrderBy(x => x.Order);
+                    var leftList = demos.Where((_, i) => i % 2 == 0);
+                    var rightList = demos.Where((_, i) => i % 2 != 0);
+                }
+                <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                    @foreach (var demo in leftList)
+                    {
+                        <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
+                    }
+                </AntCol>
+                <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                    @foreach (var demo in rightList)
+                    {
+                        <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
+                    }
+                </AntCol>
+            </AntRow>
+        }
+    </article>
+</section>
+

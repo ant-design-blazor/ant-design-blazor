@@ -9,7 +9,6 @@
     <base href="/" />
     <link rel="icon" href="logo.png" type="image/x-icon">
     <link href="_content/AntBlazor.Docs/css/docs.css" rel="stylesheet">
-    <!--<link href="manifest.json" rel="manifest" />-->
 </head>
 
 <body>
@@ -199,7 +198,17 @@
     </app>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/AntBlazor/js/ant-design-blazor.js"></script>
-    <!--<script>navigator.serviceWorker.register('service-worker.js');</script>-->
+    <script src="_content/AntBlazor.Docs/js/prism.js"></script>
+    <script>
+        window.antBlazor.Prism = {};
+        window.antBlazor.Prism.highlight = function (code, language) {
+            return Prism.highlight(code, Prism.languages[language], language);
+        }
+
+        window.antBlazor.Prism.highlightAll = function () {
+            Prism.highlightAll();
+        }
+    </script>
 </body>
 
 </html>
