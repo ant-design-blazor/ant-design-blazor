@@ -56,4 +56,9 @@
         builder.OpenComponent(0, showCase);
         builder.CloseComponent();
     };
+
+    protected override void OnParametersSet()
+    {
+        codeExpand = false;
+    }
 }
