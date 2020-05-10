@@ -189,6 +189,11 @@
             "title": "Drawer",
             "type": "menuItem",
             "url": "drawer"
+          },
+          {
+            "title": "Notification",
+            "type": "menuItem",
+            "url": "notification"
           }
         ]
       },

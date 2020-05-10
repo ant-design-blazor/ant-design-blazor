@@ -1,0 +1,509 @@
+﻿@inject AntNotificationService Notice
+
+<AntParagraph>
+    <AntTitle>使用方法</AntTitle>
+    <AntText>
+        <ul>
+            <li>
+                只需要在页面注入服务：<mark>@@inject AntNotificationService Notice</mark>
+            </li>
+        </ul>
+    </AntText>
+</AntParagraph>
+
+<DemoCard>
+    <Title>Basic</Title>
+    <Description>
+        最简单的用法，4.5 秒后自动关闭。
+        
+        ```c#
+        await Notice.Open(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "This is the content of the notification. This is the content of the notification. This is the content of the notification."
+        });
+        ```
+    </Description>
+    <Demo>
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () =>
+                              {
+                                  await Notice.Open(new AntNotificationConfig()
+                                  {
+                                      Message = "title",
+                                      Description = "This is the content of the notification. This is the content of the notification. This is the content of the notification."
+                                  });
+                              })">
+            Open the notification box
+        </AntButton>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Basic</Title>
+    <Description>
+        自定义通知框自动关闭的延时，默认4.5s。取消自动关闭只要将该值设为0或null。
+        
+        ```c#
+        await Notice.Open(new AntNotificationConfig()
+        {
+            Message = "title",
+            Duration = 0,
+            Description = "content"
+        });
+        ```
+    </Description>
+    <Demo>
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () =>
+                              {
+                                  await Notice.Open(new AntNotificationConfig()
+                                  {
+                                      Message = "title",
+                                      Duration = 0,
+                                      Description = "This notification box will not close automatically"
+                                  });
+                              })">
+            Open the notification box
+        </AntButton>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>带有图标的通知提醒框</Title>
+    <Description>
+        通知提醒框左侧有图标。
+
+        ```c#
+        await Notice.Open(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "notification with icon",
+            NotificationType = AntNotificationType.Info
+        });
+
+        await Notice.Open(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "notification with icon",
+            NotificationType = AntNotificationType.Success
+        });
+
+        await Notice.Open(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "notification with icon",
+            NotificationType = AntNotificationType.Warning
+        });
+
+        await Notice.Open(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "notification with icon",
+            NotificationType = AntNotificationType.Error
+        });
+        ```
+
+        或者
+
+        ```c#
+        await Notice.Info(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "notification with icon"
+        });
+        await Notice.Success(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "notification with icon"
+        });
+        await Notice.Warning(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "notification with icon"
+        });
+        await Notice.Error(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "notification with icon"
+        });
+        ```
+
+    </Description>
+    <Demo>
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () => { await NoticeWithIcon(AntNotificationType.Info); })">
+            info
+        </AntButton>
+
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () => { await NoticeWithIcon(AntNotificationType.Success); })">
+            success
+        </AntButton>
+
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () => { await NoticeWithIcon(AntNotificationType.Warning); })">
+            warning
+        </AntButton>
+
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () => { await NoticeWithIcon(AntNotificationType.Error); })">
+            error
+        </AntButton>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>自定义按钮</Title>
+    <Description>
+        自定义关闭通知提醒框的按钮。
+        ```c#
+        string key = $"open{DateTime.Now}";
+
+        void OnBtnClickFunc()
+        {
+            Console.WriteLine($"closing {key}");
+            Notice.Close(key);
+        }
+
+        EventCallback&lt;MouseEventArgs&gt; OnBtnClick =
+        new EventCallback&lt;MouseEventArgs&gt;(this, (Action) OnBtnClickFunc);
+
+        await Notice.Open(new AntNotificationConfig()
+        {
+            Message = "title",
+            Key = key,
+            Description = "notification content",
+            Btn = (builder) =>
+            {
+                builder.OpenComponent&lt;AntButton&gt;(0);
+                builder.AddAttribute(1, "Type", AntButtonType.Primary);
+                builder.AddAttribute(2, "ChildContent", (RenderFragment) ((b) => { b.AddContent(0, "confirm"); }));
+                builder.CloseComponent();
+            }
+        });
+        ```
+    </Description>
+    <Demo>
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () =>
+                              {
+                                  string key = $"open{DateTime.Now}";
+
+                                  void OnBtnClickFunc()
+                                  {
+                                      Console.WriteLine($"closing {key}");
+                                      Notice.Close(key);
+                                  }
+                                  await Notice.Open(new AntNotificationConfig()
+                                  {
+                                      Message = "title",
+                                      Key = key,
+                                      Description = "notification content",
+                                      Btn = (builder) =>
+                                      {
+                                          builder.OpenComponent<AntButton>(0);
+                                          builder.AddAttribute(1, "Type", AntButtonType.Primary);
+                                          builder.AddAttribute(2, "ChildContent", (RenderFragment) ((b) => { b.AddContent(0, "confirm"); }));
+                                          builder.CloseComponent();
+                                      }
+                                  });
+                              })">
+            custom button
+        </AntButton>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>自定义图标</Title>
+    <Description>
+        图标可以被自定义。
+
+        ```c#
+        await Notice.Open(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "notification content",
+            Icon = (builder) =>
+            {
+                builder.OpenComponent&lt;AntIcon&gt;(0);
+                builder.AddAttribute(1, "Type", "smile");
+                builder.AddAttribute(2, "Theme", "outline");
+                builder.AddAttribute(3, "Style", "color:#108ee9;");
+                builder.CloseComponent();
+            }
+        });
+        ```
+    </Description>
+    <Demo>
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () =>
+                              {
+                                  await Notice.Open(new AntNotificationConfig()
+                                  {
+                                      Message = "title",
+                                      Description = "notification content",
+                                      Icon = (builder) =>
+                                      {
+                                          builder.OpenComponent<AntIcon>(0);
+                                          builder.AddAttribute(1, "Type", "smile");
+                                          builder.AddAttribute(2, "Theme", "outline");
+                                          builder.AddAttribute(3, "Style", "color:#108ee9;");
+                                          builder.CloseComponent();
+                                      }
+                                  });
+                              })">
+            custom icon
+        </AntButton>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>位置</Title>
+    <Description>
+        通知从右上角、右下角、左下角、左上角弹出。
+
+        ```c#
+        await Notice.Open(new AntNotificationConfig()
+        {
+        Message = "title",
+        Description = "notification content",
+        Placement = AntNotificationPlacement.TopLeft
+        });
+        await Notice.Open(new AntNotificationConfig()
+        {
+        Message = "title",
+        Description = "notification content",
+        Placement = AntNotificationPlacement.TopRight
+        });
+        await Notice.Open(new AntNotificationConfig()
+        {
+        Message = "title",
+        Description = "notification content",
+        Placement = AntNotificationPlacement.BottomLeft
+        });
+        await Notice.Open(new AntNotificationConfig()
+        {
+        Message = "title",
+        Description = "notification content",
+        Placement = AntNotificationPlacement.BottomRight
+        });
+        ```
+    </Description>
+    <Demo>
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () =>
+                              {
+                                  await Notice.Open(new AntNotificationConfig()
+                                  {
+                                      Message = "title",
+                                      Description = "notification content",
+                                      Placement = AntNotificationPlacement.TopLeft
+                                  });
+                              })">
+            <AntIcon type="Radius-Upleft" Theme="Outline"></AntIcon>
+            TopLeft
+        </AntButton>
+
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () =>
+                              {
+                                  await Notice.Open(new AntNotificationConfig()
+                                  {
+                                      Message = "title",
+                                      Description = "notification content",
+                                      Placement = AntNotificationPlacement.TopRight
+                                  });
+                              })">
+            <AntIcon type="Radius-Upright" Theme="Outline"></AntIcon>
+            TopRight
+        </AntButton>
+
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () =>
+                              {
+                                  await Notice.Open(new AntNotificationConfig()
+                                  {
+                                      Message = "title",
+                                      Description = "notification content",
+                                      Placement = AntNotificationPlacement.BottomLeft
+                                  });
+                              })">
+            <AntIcon type="Radius-Bottomleft" Theme="Outline"></AntIcon>
+            BottomLeft
+        </AntButton>
+
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () =>
+                              {
+                                  await Notice.Open(new AntNotificationConfig()
+                                  {
+                                      Message = "title",
+                                      Description = "notification content",
+                                      Placement = AntNotificationPlacement.BottomRight
+                                  });
+                              })">
+            <AntIcon type="Radius-Bottomright" Theme="Outline"></AntIcon>
+            BottomRight
+        </AntButton>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>事件</Title>
+    <Description>
+        通过OnClick和OnClose指定 点击通知时触发的回调函数 和 当通知关闭时触发的回调函数
+
+        ```c#
+        await Notice.Open(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "event test",
+            Duration = 10,
+            OnClick = async () =>
+                {
+                    await Notice.Success(new AntNotificationConfig()
+                    {
+                        Placement = AntNotificationPlacement.TopLeft,
+                        Message = "OnClick",
+                        Description = "OnClick event",
+                    });
+                },
+            OnClose = async () =>
+                {
+                    await Notice.Success(new AntNotificationConfig()
+                    {
+                        Placement = AntNotificationPlacement.TopLeft,
+                        Message = "OnClose",
+                        Description = "OnClose event",
+                    });
+            }
+        });
+        ```
+    </Description>
+    <Demo>
+        <AntButton Type="@AntButtonType.Primary"
+                   Onclick="@(async () =>
+                              {
+                                  var config = new AntNotificationConfig()
+                                  {
+                                      Message = "title",
+                                      Description = "event test.",
+                                      Duration = 10
+                                  };
+                                  config.OnClick += async () =>
+                                  {
+                                      await Notice.Success(new AntNotificationConfig()
+                                      {
+                                          Placement = AntNotificationPlacement.TopLeft,
+                                          Message = "OnClick",
+                                          Description = "OnClick event",
+
+                                      });
+                                  };
+                                  config.OnClose += async () =>
+                                  {
+                                      await Notice.Success(new AntNotificationConfig()
+                                      {
+                                          Placement = AntNotificationPlacement.TopLeft,
+                                          Message = "OnClose",
+                                          Description = "OnClose event",
+                                      });
+                                  };
+                                  await Notice.Open(config);
+                              })">
+            OnClick and OnClose event
+        </AntButton>
+    </Demo>
+</DemoCard>
+
+
+<AntParagraph>
+    <AntTitle>Api</AntTitle>
+    <AntText>
+        <ul>
+            <li>
+                <code>AntNotificationService.Open(config:AntNotificationConfig)</code>
+            </li>
+            <li>
+                <code>AntNotificationService.Info(config:AntNotificationConfig)</code>
+            </li>
+            <li>
+                <code>AntNotificationService.Success(config:AntNotificationConfig)</code>
+            </li>
+            <li>
+                <code>AntNotificationService.Warning(config:AntNotificationConfig)</code>
+            </li>
+            <li>
+                <code>AntNotificationService.Warn(config:AntNotificationConfig)</code>
+            </li>
+            <li>
+                <code>AntNotificationService.Error(config:AntNotificationConfig)</code>
+            </li>
+            <li>
+                <code>AntNotificationService.Close(key:string)</code>
+            </li>
+            <li>
+                <code>AntNotificationService.Destroy()</code>
+            </li>
+        </ul>
+
+        <p>config:AntNotificationConfig 参数如下：</p>
+        <Markdown>
+            | 参数        | 说明                                                         | 类型                      | 默认值                              |
+            | ----------- | ------------------------------------------------------------ | ------------------------- | ----------------------------------- |
+            | Btn         | 自定义关闭按钮                                               | RenderFragment            | null                                |
+            | ClassName   | 自定义 CSS class                                             | string                    | null                                |
+            | CloseIcon   | 自定义关闭图标                                               | RenderFragment            | null                                |
+            | Description | 通知提醒内容，必选                                           | string\|RenderFragment    | -                                   |
+            | duration    | 默认 4.5 秒后自动关闭，配置为 null或者0 则不自动关闭         | double?                   | 4.5                                 |
+            | Icon        | 自定义图标                                                   | RenderFragment            | null                                |
+            | Key         | 当前通知唯一标志                                             | string                    | null                                |
+            | message     | 通知提醒标题，必选                                           | string\|RenderFragment    | -                                   |
+            | OnClose     | 当通知关闭时触发                                             | Action                    | null                                |
+            | OnClick     | 点击通知时触发的回调函数                                     | Action                    | null                                |
+            | Placement   | 弹出位置，可选 `AntNotificationPlacement.TopLeft` `AntNotificationPlacement.TopRight` `AntNotificationPlacement.BottomLeft` `AntNotificationPlacement.BottomRight` | AntNotificationPlacement? | `AntNotificationPlacement.TopRight` |
+            | Style       | 自定义内联样式                                               | string                    | null                                |
+        </Markdown>
+
+        <p>还提供了一个全局配置方法，在调用前提前配置，全局一次生效。</p>
+        <ul>
+            <li><code>AntNotificationService.Config(config:AntNotificationGlobalConfig)</code></li>
+        </ul>
+        <Markdown>
+
+            ```c#
+            AntNotificationService.Config({
+                Placement: 'bottomRight',
+                Bottom: 50,
+                Top: 50,
+                Duration: 3,
+                Rtl: true
+            });
+            ```
+        </Markdown>
+        <Markdown>
+            | 参数      | 说明                                                         | 类型                       | 默认值                            |
+            | :-------- | :----------------------------------------------------------- | :------------------------- | :-------------------------------- |
+            | Bottom    | 消息从底部弹出时，距离底部的位置，单位像素。                 | double?                    | 24                                |
+            | Top       | 消息从顶部弹出时，距离顶部的位置，单位像素。                 | double?                    | 24                                |
+            | CloseIcon | 自定义关闭图标                                               | RenderFragment             | -                                 |
+            | Duration  | 默认自动关闭延时，单位秒。                                   | double?                    | 4.5                               |
+            | Placement | 弹出位置，可选 `topLeft` `topRight` `bottomLeft` `bottomRight` | AntNotificationPlacement？ | AntNotificationPlacement.TopRight |
+            | Rtl       | 是否开启 RTL 模式                                            | bool                       | `false`                           |
+        </Markdown>
+    </AntText>
+</AntParagraph>
+
+@code{
+
+    private async Task NoticeWithIcon(AntNotificationType type)
+    {
+        await Notice.Open(new AntNotificationConfig()
+        {
+            Message = "title",
+            Description = "notification with icon",
+            NotificationType = type
+        });
+    }
+}
