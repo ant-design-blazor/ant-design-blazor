@@ -27,7 +27,7 @@ title: Ant Design of Blazor
 
 - 🌈 提炼自企业级中后台产品的交互语言和视觉风格。
 - 📦 开箱即用的高质量 Razor 组件，可在多种托管方式共享。
-- 💕 支持基于 WebAssembly 的客户端和基于 SignalR 的服务端UI事件交互。
+- 💕 支持基于 WebAssembly 的客户端和基于 SignalR 的服务端 UI 事件交互。
 - 🎨 支持渐进式 Web 应用（PWA）
 - 🛡 使用 C# 构建，多范式静态语言带来高效的开发体验。
 - ⚙️ 基于 .NET Standard 2.1，可直接引用丰富的 .NET 类库。
@@ -40,17 +40,17 @@ title: Ant Design of Blazor
 ## 🖥 支持环境
 
 - .NET Core 3.1
-- Blazor WebAssembly 3.2 preievew 5
+- Blazor WebAssembly 3.2 rc 1
 - 支持服务端双向绑定
 - 支持 WebAssembly 静态文件部署
-- 主流4款现代浏览器，以及 Internet Explorer 11+ （使用 [Blazor Server](https://angular.io/guide/browser-support)）
+- 主流 4 款现代浏览器，以及 Internet Explorer 11+ （使用 [Blazor Server](https://angular.io/guide/browser-support)）
 - 可直接运行在 [Electron](http://electron.atom.io/) 等基于 Web 标准的环境上
 
 | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br> Edge / IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Electron |
-| :---------: | :---------: | :---------: | :---------: | :---------: | :---------: |
-| Edge 16 / IE 11† | 522 | 57 | 11 | 44 | Chromium 57
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                                                                                 Edge 16 / IE 11†                                                                                                 |                                                                                                        522                                                                                                        |                                                                                                      57                                                                                                       |                                                                                                      11                                                                                                       |                                                                                                    44                                                                                                     |                                                                                                      Chromium 57                                                                                                      |
 
-> 由于 [WebAssembly](https://webassembly.org) 的缘故，Blazor WebAssembly 不支持 IE 浏览器，但 Blazor Server 支持 IE 11†。 [官网说明](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1) 
+> 由于 [WebAssembly](https://webassembly.org) 的缘故，Blazor WebAssembly 不支持 IE 浏览器，但 Blazor Server 支持 IE 11†。 [官网说明](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1)
 
 ## 💿 当前版本
 
@@ -60,15 +60,15 @@ title: Ant Design of Blazor
 
 ## 🎨 设计规范
 
-与 Ant Design 设计规范定期同步，你可以在线查看[同步日志](https://github.com/ElderJames/ant-design-blazor/actions?query=workflow%3A%22Style+sync+Bot%22)。
+与 Ant Design 设计规范定期同步，你可以在线查看[同步日志](https://github.com/ant-design-blazor/ant-design-blazor/actions?query=workflow%3A%22Style+sync+Bot%22)。
 
 ## 📦 安装
 
 - 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
 - 安装 Blazor WebAssembly 模板
   ```
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-preview4.20210.8
-  ```   
+  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-rc1.20223.4
+  ```
 - 创建 Blazor WebAssembly 项目
   ```
   $ dotnet new blazorwasm -o MyAntBlazorApp
@@ -101,14 +101,16 @@ title: Ant Design of Blazor
 - 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
+
   ```
-  $ git clone git@github.com:ElderJames/ant-design-blazor.git
+  $ git clone git@github.com:ant-design-blazor/ant-design-blazor.git
   $ cd ant-design-blazor
   $ npm install
   $ npm start
   ```
-  打开浏览器访问 https://localhost:5001 ，详情参考[本地开发文档](https://github.com/ElderJames/ant-design-blazor/wiki)。
-  
+
+  打开浏览器访问 https://localhost:5001 ，详情参考[本地开发文档](https://github.com/ant-design-blazor/ant-design-blazor/wiki)。
+
   > 推荐使用 Visual Studio 2019 开发，目前需运行 `AntBlazor.Docs.ClientApp` 项目才能进行断点调试。
 
 ## 🔗 链接
@@ -118,14 +120,13 @@ title: Ant Design of Blazor
 
 ## 🗺 开发路线
 
-查看 [这个 issue](https://github.com/ElderJames/ant-design-blazor/issues/21) 来了解我们 2020 年的开发计划。
+查看 [这个 issue](https://github.com/ant-design-blazor/ant-design-blazor/issues/21) 来了解我们 2020 年的开发计划。
 
 ## 🤝 如何贡献
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/pulls)
 
-
-如果你希望参与贡献，欢迎 [Pull Request](https://github.com/ElderJames/ant-design-blazor/pulls)，或给我们 [报告 Bug](https://github.com/ElderJames/ant-design-blazor/issues/new) 。
+如果你希望参与贡献，欢迎 [Pull Request](https://github.com/ant-design-blazor/ant-design-blazor/pulls)，或给我们 [报告 Bug](https://github.com/ant-design-blazor/ant-design-blazor/issues/new) 。
 
 ## ❓ 社区互助
 
@@ -135,4 +136,4 @@ title: Ant Design of Blazor
 
 ## ☀️ 授权协议
 
-[![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ElderJames/ant-design-blazor/blob/master/LICENSE)
+[![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/LICENSE)
