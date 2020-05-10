@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace AntBlazor
@@ -38,5 +39,16 @@ namespace AntBlazor
         public static string addElementTo => $"{FUNC_PREFIX}addElementTo";
 
         public static string delElementFrom => $"{FUNC_PREFIX}delElementFrom";
+
+
+        public static string initNotification => $"{FUNC_PREFIX}initNotification";
+
+        public static string createNotificationContaner => $"{FUNC_PREFIX}createNotificationContainer";
+        
+        public static string addNotification => $"{FUNC_PREFIX}addNotification";
+        
+        public static string removeNotification => $"{FUNC_PREFIX}removeNotification";
+
+        public static string destroyNotification => $"{FUNC_PREFIX}destroyNotification";
     }
 }

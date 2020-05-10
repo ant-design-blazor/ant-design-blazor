@@ -1,0 +1,99 @@
+﻿@namespace AntBlazor
+
+<div id="@Config.Key"
+     class="ant-notification-notice ant-notification-notice-closable @GetClassName()"
+     style="@Config.Style"
+     @onclick="OnClick">
+
+    <div class="ant-notification-notice-content">
+        <div class="@GetIconClassName()">
+            @if (Config.Icon != null)
+            {
+                <span class="ant-notification-notice-icon">
+                    @Config.Icon
+                </span>
+            }
+            else if (Config.NotificationType != AntNotificationType.None)
+            {
+                switch (Config.NotificationType)
+                {
+                    case AntNotificationType.Success:
+                        {
+                            <span role="img" aria-label="check-circle" class="anticon anticon-check-circle ant-notification-notice-icon ant-notification-notice-icon-success">
+                                <AntIcon Type="check-circle" Theme="outline"></AntIcon>
+                            </span>
+
+                            break;
+                        }
+                    case AntNotificationType.Warning:
+                        {
+                            <span role="img" aria-label="exclamation-circle" class="anticon anticon-exclamation-circle ant-notification-notice-icon ant-notification-notice-icon-warning">
+                                <AntIcon Type="exclamation-circle" Theme="outline"></AntIcon>
+                            </span>
+
+                            break;
+                        }
+                    case AntNotificationType.Error:
+                        {
+                            <span role="img" aria-label="close-circle" class="anticon anticon-close-circle ant-notification-notice-icon ant-notification-notice-icon-error">
+                                <AntIcon Type="close-circle" Theme="outline"></AntIcon>
+                            </span>
+
+                            break;
+                        }
+                    case AntNotificationType.Info:
+                        {
+                            <span role="img" aria-label="info-circle" class="anticon anticon-info-circle ant-notification-notice-icon ant-notification-notice-icon-info">
+                                <AntIcon Type="info-circle" Theme="outline"></AntIcon>
+                            </span>
+
+                            break;
+                        }
+                }
+            }
+
+            <div class="ant-notification-notice-message">
+                @if (Config.Message != null)
+                {
+                    if (Config.Message is string msg)
+                    {
+                        @((MarkupString)(msg))
+                    }
+                    else if (Config.Message is RenderFragment renderFragment)
+                    {
+                        @renderFragment
+                    }
+                }
+            </div>
+
+            <div class="ant-notification-notice-description">
+                @if (Config.Description != null)
+                {
+                    if (Config.Description is string description)
+                    {
+                        @((MarkupString)(description))
+                    }
+                    else if (Config.Message is RenderFragment renderFragment)
+                    {
+                        @renderFragment
+                    }
+                }
+            </div>
+
+            @if (Config.Btn != null)
+            {
+                <span class="ant-notification-notice-btn">
+                    @Config.Btn
+                </span>
+            }
+        </div>
+    </div>
+
+    <a tabindex="0" class="ant-notification-notice-close" @onclick="Close" @onclick:preventDefault @onclick:stopPropagation>
+        <span class="ant-notification-close-x">
+            <span role="img" aria-label="close" class="anticon anticon-close ant-notification-close-icon">
+                @Config.CloseIcon
+            </span>
+        </span>
+    </a>
+</div>
