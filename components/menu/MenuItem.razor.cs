@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public partial class AntMenuItem : AntDomComponentBase
+    public partial class MenuItem : AntDomComponentBase
     {
-        [CascadingParameter] public AntMenu RootMenu { get; set; }
-        [CascadingParameter] public AntSubMenu ParentMenu { get; set; }
+        [CascadingParameter] public Menu RootMenu { get; set; }
+        [CascadingParameter] public SubMenu ParentMenu { get; set; }
         [Parameter] public RenderFragment ChildContent { get; set; }
         [Parameter] public string Key { get; set; }
         [Parameter] public bool Disabled { get; set; }
@@ -48,7 +48,7 @@ namespace AntBlazor
             if (ParentMenu == null)
                 return;
 
-            if (RootMenu.Mode != AntMenuMode.Inline)
+            if (RootMenu.Mode != MenuMode.Inline)
             {
                 await ParentMenu?.Collapse();
             }

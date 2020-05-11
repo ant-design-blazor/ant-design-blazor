@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntBlazor
 {
-    public class AntNavLink : AntDomComponentBase
+    public class MenuLink : AntDomComponentBase
     {
         private const string DefaultActiveClass = "active";
         private bool _isActive;
@@ -44,10 +44,10 @@ namespace AntBlazor
         public Dictionary<string, object> Attributes { get; set; }
 
         [CascadingParameter]
-        public AntMenuItem MenuItem { get; set; }
+        public MenuItem MenuItem { get; set; }
 
         [CascadingParameter]
-        public AntMenu Menu { get; set; }
+        public Menu Menu { get; set; }
 
         [CascadingParameter]
         public AntButton Button { get; set; }

@@ -1,6 +1,6 @@
-﻿<AntMenu Class="aside-container menu-site" Theme="AntMenuTheme.Light" Mode="AntMenuMode.Inline">
+﻿<Menu Class="aside-container menu-site" Theme="MenuTheme.Light" Mode="MenuMode.Inline">
     @menuItemTemplate((MenuItems, LanguageService, 1))
-</AntMenu>
+</Menu>
 
 
 @inject ILanguageService LanguageService
@@ -13,16 +13,16 @@
     public bool IsCollapsed { get; set; }
 
     [Parameter]
-    public MenuItem[] MenuItems { get; set; } = {};
+    public DemoMenuItem[] MenuItems { get; set; } = {};
 
-    static readonly RenderFragment<(MenuItem[] items, ILanguageService languageService, int level)> menuItemTemplate = context =>
+    static readonly RenderFragment<(DemoMenuItem[] items, ILanguageService languageService, int level)> menuItemTemplate = context =>
         @<Template>
             @foreach (var menu in context.items)
             {
                 if (menu.Type == "menuItem")
                 {
-                    <AntMenuItem>
-                        <AntNavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All">
+                    <MenuItem>
+                        <MenuLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All">
                             <span>@menu.Title</span>
                             @if (menu.SubTitle != null)
                             {
@@ -32,26 +32,26 @@
                             {
                                 <span class="chinese">@(context.languageService.Resources[menu.Title])</span>
                             }
-                        </AntNavLink>
-                    </AntMenuItem>
+                        </MenuLink>
+                    </MenuItem>
                 }
                 else if (menu.Type == "subMenu")
                 {
-                    <AntSubMenu Title="@(context.languageService.Resources[menu.Title])">
+                    <SubMenu Title="@(context.languageService.Resources[menu.Title])">
                         @if (menu.Children.Any())
                         {
                             @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
                         }
-                    </AntSubMenu>
+                    </SubMenu>
                 }
                 else if (menu.Type == "itemGroup")
                 {
-                    <AntMenuItemGroup Title="@context.languageService.Resources[menu.Title]">
+                    <MenuItemGroup Title="@context.languageService.Resources[menu.Title]">
                         @if (menu.Children.Any())
                         {
                             @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
                         }
-                    </AntMenuItemGroup>
+                    </MenuItemGroup>
                 }
             }
         </Template>;

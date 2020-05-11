@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace AntBlazor
 {
-    public partial class AntMenu : AntDomComponentBase
+    public partial class Menu : AntDomComponentBase
     {
         private const string PrefixCls = "ant-menu";
 
@@ -13,19 +13,19 @@ namespace AntBlazor
         public AntSider Parent { get; set; }
 
         [Parameter]
-        public AntMenuTheme Theme { get; set; } = AntMenuTheme.Light;
+        public MenuTheme Theme { get; set; } = MenuTheme.Light;
 
         [Parameter]
-        public AntMenuMode Mode { get; set; } = AntMenuMode.Inline;
+        public MenuMode Mode { get; set; } = MenuMode.Inline;
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public EventCallback<AntSubMenu> OnSubmenuClicked { get; set; }
+        public EventCallback<SubMenu> OnSubmenuClicked { get; set; }
 
         [Parameter]
-        public EventCallback<AntMenuItem> OnMenuItemClicked { get; set; }
+        public EventCallback<MenuItem> OnMenuItemClicked { get; set; }
 
         [Parameter]
         public bool Accordion { get; set; }
@@ -36,16 +36,16 @@ namespace AntBlazor
         [Parameter]
         public bool Collapsed { get; set; }
 
-        private AntMenuMode _initialMode;
-        internal AntMenuMode InternalMode { get; private set; }
+        private MenuMode _initialMode;
+        internal MenuMode InternalMode { get; private set; }
         private bool _collapsed;
 
-        public List<AntSubMenu> Submenus { get; set; } = new List<AntSubMenu>();
-        public List<AntMenuItem> MenuItems { get; set; } = new List<AntMenuItem>();
+        public List<SubMenu> Submenus { get; set; } = new List<SubMenu>();
+        public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
 
-        public void SelectItem(AntMenuItem item)
+        public void SelectItem(MenuItem item)
         {
-            foreach (AntMenuItem menuitem in MenuItems.Where(x => x != item))
+            foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
             {
                 menuitem.Deselect();
             }
@@ -59,11 +59,11 @@ namespace AntBlazor
                 OnMenuItemClicked.InvokeAsync(item);
         }
 
-        public void SelectSubmenu(AntSubMenu menu)
+        public void SelectSubmenu(SubMenu menu)
         {
             if (Accordion)
             {
-                foreach (AntSubMenu item in Submenus.Where(x => x != menu && x != menu.Parent))
+                foreach (SubMenu item in Submenus.Where(x => x != menu && x != menu.Parent))
                 {
                     item.Close();
                 }
@@ -98,8 +98,8 @@ namespace AntBlazor
         {
             base.OnInitialized();
 
-            if (InternalMode != AntMenuMode.Inline && _collapsed)
-                throw new ArgumentException($"{nameof(AntMenu)} in the {Mode} mode cannot be {nameof(Collapsed)}");
+            if (InternalMode != MenuMode.Inline && _collapsed)
+                throw new ArgumentException($"{nameof(Menu)} in the {Mode} mode cannot be {nameof(Collapsed)}");
 
             _initialMode = Mode;
             InternalMode = Mode;
@@ -126,8 +126,8 @@ namespace AntBlazor
             this._collapsed = collapsed;
             if (collapsed)
             {
-                InternalMode = AntMenuMode.Vertical;
-                foreach (AntSubMenu item in Submenus)
+                InternalMode = MenuMode.Vertical;
+                foreach (SubMenu item in Submenus)
                 {
                     item.Close();
                 }

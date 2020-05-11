@@ -21,16 +21,16 @@
                     </span>
                 </div>
 
-                <AntMenu Mode="AntMenuMode.Horizontal" Id="nav" Class="menu-site">
+                <Menu Mode="MenuMode.Horizontal" Id="nav" Class="menu-site">
                     @foreach (var item in MenuItems)
                     {
-                        <AntMenuItem Class="ant-menu-item-only-child" Key="@item.Url" OnClicked="async _=> await ChangeMenuItem(item.Url)">
-                            <AntNavLink href="@($"{CurrentLanguage}/{item.Url}")" Match="NavLinkMatch.Prefix">
+                        <MenuItem Class="ant-menu-item-only-child" Key="@item.Url" OnClicked="async _=> await ChangeMenuItem(item.Url)">
+                            <MenuLink href="@($"{CurrentLanguage}/{item.Url}")" Match="NavLinkMatch.Prefix">
                                 <span>@item.Title</span>
-                            </AntNavLink>
-                        </AntMenuItem>
+                            </MenuLink>
+                        </MenuItem>
                     }
-                </AntMenu>
+                </Menu>
 
                 @*<div class="ant-select version ant-select-sm ant-select-single ant-select-show-arrow">
                         <div class="ant-select-selector">
