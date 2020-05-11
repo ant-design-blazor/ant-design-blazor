@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <Compile Include="..\Shared\DemoComponent.cs" Link="Services\DemoComponent.cs" />
-    <Compile Include="..\Shared\MenuItem.cs" Link="Services\MenuItem.cs" />
+    <Compile Include="..\Shared\DemoMenuItem.cs" Link="Services\DemoMenuItem.cs" />
   </ItemGroup>
 
   <ItemGroup>

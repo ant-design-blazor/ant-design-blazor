@@ -20,17 +20,19 @@
                         </span>
                     </span>
                 </div>
-                @*<AntMenu Mode="AntMenuMode.Horizontal" Id="nav" Class="menu-site">
-                        @foreach (var item in MenuItems)
-                        {
-                            <AntMenuItem Class="ant-menu-item-only-child" Key="@item.Url" OnClicked="async _=> await ChangeMenuItem(item.Url)">
-                                <AntNavLink href="@($"{CurrentLanguage}/{item.Url}")" Match="NavLinkMatch.Prefix">
-                                    <span>@item.Title</span>
-                                </AntNavLink>
-                            </AntMenuItem>
-                        }
-                    </AntMenu>*@
-                @*<div class="ant-select version ant-select-sm ant-select-single ant-select-show-arrow">
+
+                @*<Menu Mode="MenuMode.Horizontal" Id="nav" Class="menu-site">
+                    @foreach (var item in MenuItems)
+                    {
+                        <MenuItem Class="ant-menu-item-only-child" Key="@item.Url" OnClicked="async _=> await ChangeMenuItem(item.Url)">
+                            <MenuLink href="@($"{CurrentLanguage}/{item.Url}")" Match="NavLinkMatch.Prefix">
+                                <span>@item.Title</span>
+                            </MenuLink>
+                        </MenuItem>
+                    }
+                </Menu>
+
+                <div class="ant-select version ant-select-sm ant-select-single ant-select-show-arrow">
                         <div class="ant-select-selector">
                             <span class="ant-select-selection-search"><input autocomplete="off" class="ant-select-selection-search-input" role="combobox" aria-haspopup="listbox" aria-owns="rc_select_0_list" aria-autocomplete="list" aria-controls="rc_select_0_list" aria-activedescendant="rc_select_0_list_0" readonly="" value="" style="opacity: 0;" id="rc_select_0"></span><span class="ant-select-selection-item">4.2.0</span>
                         </div>
