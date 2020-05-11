@@ -1,48 +1,46 @@
-﻿@using AntBlazor.Docs.Localization
-
-<div class="sidebar-logo">
-    <a href="https://github.com/ant-design-blazor/ant-design-blazor" target="_blank">
-        <img src="https://raw.githubusercontent.com/ant-design-blazor/ant-design-blazor/master/logo.svg?sanitize=true" alt="logo">
-        <h1>Ant Design Blazor</h1>
-    </a>
-</div>
-<AntMenu Theme="dark" Mode="AntDirectionVHIType.inline" InlineCollapsed="IsCollapsed">
-    @menuItemTemplate((MenuItems,LanguageService,1))
+﻿<AntMenu Class="aside-container menu-site" Theme="AntMenuTheme.Light" Mode="AntMenuMode.Inline">
+    @menuItemTemplate((MenuItems, LanguageService, 1))
 </AntMenu>
 
 
-@inject HttpClient HttpClient
-@inject NavigationManager NavigationManager
 @inject ILanguageService LanguageService
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
 
 @code {
-    [Parameter] 
+
+    [Parameter]
     public bool IsCollapsed { get; set; }
 
-    MenuItem[] MenuItems = { };
+    [Parameter]
+    public MenuItem[] MenuItems { get; set; } = {};
 
-    static readonly RenderFragment<(MenuItem[] items, ILanguageService languageService,int level)> menuItemTemplate = context =>
+    static readonly RenderFragment<(MenuItem[] items, ILanguageService languageService, int level)> menuItemTemplate = context =>
         @<Template>
             @foreach (var menu in context.items)
             {
                 if (menu.Type == "menuItem")
                 {
-                    <AntMenuItem MatchRouter>
+                    <AntMenuItem>
                         <AntNavLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All">
                             <span>@menu.Title</span>
-                            @if (context.level > 1 && context.languageService.CurrentCulture.Name != "en-US")
+                            @if (menu.SubTitle != null)
                             {
-                                <span class="chinese"> @context.languageService.Resources[menu.Title]</span>
+                                <span class="chinese">@menu.SubTitle</span>
+                            }
+                            else if (context.level > 1 && context.languageService.CurrentCulture.Name == "zh-CN")
+                            {
+                                <span class="chinese">@(context.languageService.Resources[menu.Title])</span>
                             }
                         </AntNavLink>
                     </AntMenuItem>
                 }
                 else if (menu.Type == "subMenu")
                 {
-                    <AntSubMenu Open="@menu.Open" Title="@context.languageService.Resources[menu.Title]" Icon="@menu.Icon">
+                    <AntSubMenu Title="@(context.languageService.Resources[menu.Title])">
                         @if (menu.Children.Any())
                         {
-                            @menuItemTemplate((menu.Children,context.languageService,context.level + 1))
+                            @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
                         }
                     </AntSubMenu>
                 }
@@ -51,14 +49,12 @@
                     <AntMenuItemGroup Title="@context.languageService.Resources[menu.Title]">
                         @if (menu.Children.Any())
                         {
-                            @menuItemTemplate((menu.Children, context.languageService,context.level + 1))
+                            @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
                         }
                     </AntMenuItemGroup>
                 }
             }
         </Template>;
-
-    string CurrentLanguage => LanguageService.CurrentCulture.Name;
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,23 +73,4 @@
         StateHasChanged();
         await base.OnInitializedAsync();
     }
-
-    public class MenuItem
-    {
-        public string Title { get; set; }
-
-        public string Type { get; set; }
-
-        public string Url { get; set; }
-
-        public string Prefix { get; set; }
-
-        public bool Open { get; set; }
-
-        public string Icon { get; set; }
-
-        public bool Default { get; set; }
-
-        public MenuItem[] Children { get; set; }
-    }
-    }
+}

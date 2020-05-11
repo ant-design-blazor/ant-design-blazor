@@ -1,84 +1,67 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
     public partial class AntMenuItem : AntDomComponentBase
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [CascadingParameter] public AntMenu RootMenu { get; set; }
+        [CascadingParameter] public AntSubMenu ParentMenu { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter] public string Key { get; set; }
+        [Parameter] public bool Disabled { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> OnClicked { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; } = false;
+        public bool IsSelected { get; private set; }
 
-        [Parameter]
-        public bool Selected { get; set; } = false;
-
-        [Parameter]
-        public int? PaddingLeft { get; set; }
-
-        [Parameter]
-        public bool MatchRouterExact { get; set; } = false;
-
-        [Parameter]
-        public bool MatchRouter { get; set; } = false;
-
-        [CascadingParameter]
-        public AntMenu Menu { get; set; }
-
-        [CascadingParameter]
-        public AntSubMenu SubMenu { get; set; }
-
-        private readonly int _originalPadding = 0;
-
-        private void SetClassMap()
+        private void SetClass()
         {
-            string prefixName = Menu.IsInDropDown ? "ant-dropdown-menu-item" : "ant-menu-item";
-            ClassMapper.Clear()
-                .Add(prefixName)
-                .If($"{prefixName}-selected", () => Selected)
-                .If($"{prefixName}-disabled", () => Disabled);
-        }
+            string prefixCls = "ant-menu-item";
 
-        internal void SelectedChanged(bool value)
-        {
-            this.Selected = value;
+            ClassMapper.Add(prefixCls)
+                .If($"{prefixCls}-selected", () => IsSelected)
+                .If($"{prefixCls}-disabled", () => Disabled);
         }
 
         protected override void OnInitialized()
         {
+            SetClass();
+
             base.OnInitialized();
-            if (this is AntMenuItem item)
-            {
-                Menu?.MenuItems.Add(item);
-                SubMenu?.Items.Add(item);
-            }
 
-            int? padding;
-            if (Menu.Mode == AntDirectionVHIType.inline)
-            {
-                if (PaddingLeft != null)
-                {
-                    padding = PaddingLeft;
-                }
-                else
-                {
-                    int level = SubMenu?.Level + 1 ?? 1;
-                    padding = level * this.Menu.InlineIndent;
-                }
-            }
-            else
-            {
-                padding = _originalPadding;
-            }
+            RootMenu.MenuItems.Add(this);
+        }
 
-            if (padding != null)
-            {
-                Style += $"padding-left:{padding}px;";
-            }
+        public async Task HandleOnClick(MouseEventArgs args)
+        {
+            if (!RootMenu.Selectable)
+                return;
 
-            SetClassMap();
+            RootMenu.SelectItem(this);
+
+            if (OnClicked.HasDelegate)
+                await OnClicked.InvokeAsync(args);
+
+            if (ParentMenu == null)
+                return;
+
+            if (RootMenu.Mode != AntMenuMode.Inline)
+            {
+                await ParentMenu?.Collapse();
+            }
+        }
+
+        public void Select()
+        {
+            IsSelected = true;
+        }
+
+        public void Deselect()
+        {
+            IsSelected = false;
         }
     }
 }

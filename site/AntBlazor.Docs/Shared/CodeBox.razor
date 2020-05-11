@@ -1,0 +1,59 @@
+﻿@using System.Reflection
+@inherits ComponentBase
+
+<div class="code-box" id="@DemoId">
+    <section class="code-box-demo">
+        @ShowCaseContent
+    </section>
+    <section class="code-box-meta markdown">
+        <div class="code-box-title">
+            @Demo.Title
+        </div>
+        <div class="code-box-description">
+            @((MarkupString)Demo.Description)
+        </div>
+        <div class="code-box-actions">
+            @*<form action="//riddle.alibaba-inc.com/riddles/define" method="POST" target="_blank"><input type="hidden" name="data" value="{&quot;title&quot;:&quot;基本 - Ant Design Demo&quot;,&quot;js&quot;:&quot;import { Statistic, Row, Col, Button } from 'antd';\n\nReactDOM.render(\n  <Row gutter={16}>\n    <Col span={12}>\n      <Statistic title=\&quot;Active Users\&quot; value={112893} />\n    </Col>\n    <Col span={12}>\n      <Statistic title=\&quot;Account Balance (CNY)\&quot; value={112893} precision={2} />\n      <Button style={{ marginTop: 16 }} type=\&quot;primary\&quot;>\n        Recharge\n      </Button>\n    </Col>\n  </Row>,\n  mountNode,\n);&quot;,&quot;css&quot;:&quot;@import 'antd/dist/antd.css';\n\n&quot;}"><input type="submit" class="code-box-riddle" value="Create New Riddle with Prefilled Data"></form>
+                <form action="https://codesandbox.io/api/v1/sandboxes/define" method="POST" target="_blank"><input type="hidden" name="parameters" value="N4IgZglgNgpgziAXKADgQwMYGs0HMYB0AVnAPYB2SoGFALjObVSOWgLYxIiBf6oDTmABAFp-AQUb8AIvAi5ykmG1IgANCABuMAE5wIFLgEYCABmMqQbNBEqIQVgCYwAHsQSqHKBg_IYI8ZmkY7LgAWAkMjMwABANpBBx1ZAHoIGnIEGyg0ejgmVU0YTCYbAD19ADYwgCZTPIKMWLtSNi5Siv1qiNrCwTgMTQgUWnSQYoBmYzCQAF83GDUpD3IvHz9kEFoATw9e_sGW8YAOAkrp1R2BoeYctE0ikHzu88G4fmvbswAjAFdoIJsH-o9PoXF7fX5mbJ3AGxJ5DfiQoSCBhqAC8JEazVUMCIMHqXGhQN2cOxuKYMxAH00pAA7nAtHAoBAckgANogAB8JkqAFIzORSLR-A40EFVPzBb5-AAeFH8fT6PkC_ikFAAfTYVgg_DQUCgIAAulNyfYnAQMHB0tQ6Aw7qdbEtTSRmKl6IwuBA2ChSLd-AAlOqCsBUtj8ADk0NDAG4ADrkD1en3-woSADyAFl-EGmmGCRio7H497BaGYnZEnYmbREqWzRb83HPUWwwRkg7nOa4PXCz7gPwAMq0LKVlLKP000cAYVIUFHACEvrRaBR-FNM8Gw6X67Gk_VU2mCPkHZoABSx_jS300_i4Bf0TQo4DlKbss_n6VTqCvdDkB_tZ-vt9pQHIcchSeEIFoWAUWjEARHqCANH4ABVOltBg_g1B1L4YF_doDgATlGVdEhfOQ3ylRIP1IwCpQ_L8Al_Sp_zImjgNoYcMHAyCcJguCaC-cRZx1AIMBgfhjwnAA5ABNABKdDMKgbDcMqAiiP4FB8h8HQKAfJj-BIgDyPnRdlxyDYoOAXsLE0XArAAFRVRA5TKFdV02DxoJATSPRuDYYOowC339DAAAsbnwIzzwokyl3IQLoso6dAooy9qXZZRX0aDAvg4RgCHwWgAFFYDy2hZw2ABJOxj1DF1LHILRQ1kzLyFkyM7RNZxQtoNg9TWF0bS4KUAEJUwnezpIABSK_ger60ipXmz9MnIXAvIYALXyWgo7AS6UOEHfgwpuOlaC8hcwEEA4tpYg6YCO1gOC8tRfGpBNaHQwbGC86kIDsWhQpRBxXtEwQ_oB0LR01didSBHUcP0Uc4FC_pyCwQQl0ESBzv5W6aMOtB-Cenj1lChQYEEGgoG9L7rR-mCAGIjBZ1n8elRJyZFFKPlIOwNn2qUKzUfh_q8-qrC0dDzKgmD0DsCs1ucypghQRx0MMu6pVhdlMM0fhFAE2hJL5sTZWy3KbQKh6SopxgKuq2qJcazRmsjCide2xJef5xbOd6qB2WmI0gA"><input type="submit" class="code-box-codesandbox" value="Create New Sandbox with Prefilled Data"></form>
+                <form action="https://codepen.io/pen/define" method="POST" target="_blank">
+                    <input type="hidden" name="data" value="{&quot;title&quot;:&quot;基本 - Ant Design Demo&quot;,&quot;html&quot;:&quot;<!DOCTYPE html>\n<html lang=\&quot;en\&quot;>\n  <head>\n    <meta charset=\&quot;utf-8\&quot;>\n    <meta name=\&quot;viewport\&quot; content=\&quot;width=device-width, initial-scale=1, shrink-to-fit=no\&quot;>\n    <meta name=\&quot;theme-color\&quot; content=\&quot;#000000\&quot;>\n  </head>\n  <body>\n    <div id=\&quot;container\&quot; style=\&quot;padding: 24px\&quot; />\n    <script>var mountNode = document.getElementById('container');</script>\n  </body>\n</html>&quot;,&quot;js&quot;:&quot;const {  Statistic, Row, Col, Button  } = antd;\n\nReactDOM.render(\n  <Row gutter={16}>\n    <Col span={12}>\n      <Statistic title=\&quot;Active Users\&quot; value={112893} />\n    </Col>\n    <Col span={12}>\n      <Statistic title=\&quot;Account Balance (CNY)\&quot; value={112893} precision={2} />\n      <Button style={{ marginTop: 16 }} type=\&quot;primary\&quot;>\n        Recharge\n      </Button>\n    </Col>\n  </Row>,\n  mountNode,\n);&quot;,&quot;css&quot;:&quot;@import 'antd/dist/antd.css';\n\n&quot;,&quot;editors&quot;:&quot;001&quot;,&quot;css_external&quot;:&quot;https://unpkg.com/antd@4.1.0/dist/antd.css&quot;,&quot;js_external&quot;:&quot;https://unpkg.com/react@16.x/umd/react.development.js;https://unpkg.com/react-dom@16.x/umd/react-dom.development.js;https://unpkg.com/moment/min/moment-with-locales.js;https://unpkg.com/antd@4.1.0/dist/antd-with-locales.js;https://unpkg.com/@ant-design/icons/dist/index.umd.js;https://unpkg.com/react-router-dom/umd/react-router-dom.min.js;https://unpkg.com/react-router@3.x/umd/ReactRouter.min.js&quot;,&quot;js_pre_processor&quot;:&quot;typescript&quot;}"><input type="submit" class="code-box-codepen" value="Create New Pen with Prefilled Data">
+                </form>*@
+            <span class="code-box-code-action">
+                <span role="img" aria-label="thunderbolt" class="anticon anticon-thunderbolt"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="thunderbolt" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M848 359.3H627.7L825.8 109c4.1-5.3.4-13-6.3-13H436c-2.8 0-5.5 1.5-6.9 4L170 547.5c-3.1 5.3.7 12 6.9 12h174.4l-89.4 357.6c-1.9 7.8 7.5 13.3 13.3 7.7L853.5 373c5.2-4.9 1.7-13.7-5.5-13.7zM378.2 732.5l60.3-241H281.1l189.6-327.4h224.6L487 427.4h211L378.2 732.5z"></path></svg></span>
+            </span>
+            <span role="img" aria-label="snippets" tabindex="-1" class="anticon anticon-snippets code-box-code-copy"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="snippets" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"></path></svg></span>
+            <span class="code-expand-icon" @onclick="_=>codeExpand=!codeExpand">
+                <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(codeExpand?"code-expand-icon-hide":"code-expand-icon-show")">
+                <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="@(!codeExpand?"code-expand-icon-hide":"code-expand-icon-show")">
+            </span>
+        </div>
+    </section>
+    <section class="highlight-wrapper @(codeExpand?"highlight-wrapper-expand":"")">
+        <div class="highlight">
+            <HighlightedCode Code="@Demo.Code" Language="html"></HighlightedCode>
+        </div>
+    </section>
+    @((MarkupString)$"<style>{Demo.Style}</style>")
+</div>
+
+
+@code {
+
+    [Parameter]
+    public string ComponentName { get; set; }
+
+    [Parameter]
+    public DemoItem Demo { get; set; }
+
+    private bool codeExpand { get; set; }
+
+    protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
+
+
+    RenderFragment ShowCaseContent => (builder) =>
+    {
+        var showCase = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Demo.Type}");
+        builder.OpenComponent(0, showCase);
+        builder.CloseComponent();
+    };
+}

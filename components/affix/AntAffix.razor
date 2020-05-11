@@ -1,0 +1,24 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+<!--affixed-->
+@*<div @ref="_ref">
+        <div aria-hidden="true" style="width: 618.3px; height: 32px;">
+        </div>
+        <div class="ant-affix" style="top: 120px; width: 618.3px; height: 32px; position: fixed;">
+            <button class="ant-btn" type="button">
+                <span>120px to affix top</span>
+            </button>
+        </div>
+    </div>*@
+
+<!--not affixed-->
+<div @ref="_ref">
+    @if (_affixed)
+    {
+        <div aria-hidden="true" style="@_hiddenStyle">
+        </div>
+    }
+    <div class="@ClassMapper.Class" @ref="_childRef" style="@_affixStyle">
+        @ChildContent
+    </div>
+</div>

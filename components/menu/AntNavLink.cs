@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Routing;
@@ -10,11 +11,9 @@ namespace AntBlazor
     public class AntNavLink : AntDomComponentBase
     {
         private const string DefaultActiveClass = "active";
-
         private bool _isActive;
         private string _hrefAbsolute;
         private string _class;
-
         internal string Href => _hrefAbsolute;
 
         /// <summary>
@@ -48,6 +47,9 @@ namespace AntBlazor
         public AntMenuItem MenuItem { get; set; }
 
         [CascadingParameter]
+        public AntMenu Menu { get; set; }
+
+        [CascadingParameter]
         public AntButton Button { get; set; }
 
         [Inject] private NavigationManager NavigationManger { get; set; }
@@ -57,10 +59,10 @@ namespace AntBlazor
         {
             // We'll consider re-rendering on each location change
             NavigationManger.LocationChanged += OnLocationChanged;
-            if (Button != null)
-            {
-                Button.Link = this;
-            }
+            //if (Button != null)
+            //{
+            //    Button.Link = this;
+            //}
         }
 
         /// <inheritdoc />
@@ -72,18 +74,18 @@ namespace AntBlazor
             {
                 href = Convert.ToString(obj, CultureInfo.CurrentCulture);
             }
-
             _hrefAbsolute = href == null ? null : NavigationManger.ToAbsoluteUri(href).AbsoluteUri;
             _isActive = ShouldMatch(NavigationManger.Uri);
-
             _class = (string)null;
             if (Attributes != null && Attributes.TryGetValue("class", out obj))
             {
                 _class = Convert.ToString(obj, CultureInfo.CurrentCulture);
             }
-
             UpdateCssClass();
-            MenuItem?.SelectedChanged(_isActive);
+            if (MenuItem != null && _isActive)
+            {
+                Menu?.SelectItem(MenuItem);
+            }
         }
 
         /// <inheritdoc />
@@ -108,7 +110,10 @@ namespace AntBlazor
             {
                 _isActive = shouldBeActiveNow;
                 UpdateCssClass();
-                MenuItem?.SelectedChanged(_isActive);
+                if (MenuItem != null && _isActive)
+                {
+                    Menu?.SelectItem(MenuItem);
+                }
                 StateHasChanged();
             }
         }
@@ -119,13 +124,11 @@ namespace AntBlazor
             {
                 return true;
             }
-
             if (Match == NavLinkMatch.Prefix
-                && IsStrictlyPrefixWithSeparator(currentUriAbsolute, _hrefAbsolute))
+            && IsStrictlyPrefixWithSeparator(currentUriAbsolute, _hrefAbsolute))
             {
                 return true;
             }
-
             return false;
         }
 
@@ -135,7 +138,6 @@ namespace AntBlazor
             {
                 return true;
             }
-
             if (currentUriAbsolute.Length == _hrefAbsolute.Length - 1)
             {
                 // Special case: highlight links to http://host/path/ even if you're
@@ -147,12 +149,11 @@ namespace AntBlazor
                 // for http://host/vdir as they do for host://host/vdir/ as it's no
                 // good to display a blank page in that case.
                 if (_hrefAbsolute[^1] == '/'
-                    && _hrefAbsolute.StartsWith(currentUriAbsolute, StringComparison.Ordinal))
+                && _hrefAbsolute.StartsWith(currentUriAbsolute, StringComparison.Ordinal))
                 {
                     return true;
                 }
             }
-
             return false;
         }
 
@@ -161,18 +162,16 @@ namespace AntBlazor
             if (builder != null)
             {
                 builder.OpenElement(0, "a");
-
                 builder.AddMultipleAttributes(1, Attributes);
                 builder.AddAttribute(2, "class", CssClass);
                 builder.AddContent(3, ChildContent);
-
                 builder.CloseElement();
             }
         }
 
         private static string CombineWithSpace(string str1, string str2)
-            => str1 == null ? str2
-            : (str2 == null ? str1 : $"{str1} {str2}");
+        => str1 == null ? str2
+        : (str2 == null ? str1 : $"{str1} {str2}");
 
         private static bool IsStrictlyPrefixWithSeparator(string value, string prefix)
         {
@@ -180,15 +179,15 @@ namespace AntBlazor
             if (value.Length > prefixLength)
             {
                 return value.StartsWith(prefix, StringComparison.Ordinal)
-                    && (
-                        // Only match when there's a separator character either at the end of the
-                        // prefix or right after it.
-                        // Example: "/abc" is treated as a prefix of "/abc/def" but not "/abcdef"
-                        // Example: "/abc/" is treated as a prefix of "/abc/def" but not "/abcdef"
-                        prefixLength == 0
-                        || !char.IsLetterOrDigit(prefix[prefixLength - 1])
-                        || !char.IsLetterOrDigit(value[prefixLength])
-                    );
+                && (
+                // Only match when there's a separator character either at the end of the
+                // prefix or right after it.
+                // Example: "/abc" is treated as a prefix of "/abc/def" but not "/abcdef"
+                // Example: "/abc/" is treated as a prefix of "/abc/def" but not "/abcdef"
+                prefixLength == 0
+                || !char.IsLetterOrDigit(prefix[prefixLength - 1])
+                || !char.IsLetterOrDigit(value[prefixLength])
+                );
             }
             else
             {

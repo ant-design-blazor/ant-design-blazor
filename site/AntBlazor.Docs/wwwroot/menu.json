@@ -53,6 +53,11 @@
         "type": "itemGroup",
         "children": [
           {
+            "title": "Affix",
+            "type": "menuItem",
+            "url": "affix"
+          },
+          {
             "title": "Breadcrumb",
             "type": "menuItem",
             "url": "breadcrumb"
@@ -61,6 +66,11 @@
             "title": "Menu",
             "type": "menuItem",
             "url": "menu"
+          },
+          {
+            "title": "Dropdown",
+            "type": "menuItem",
+            "url": "dropdown"
           },
           {
             "title": "Steps",
@@ -130,6 +140,11 @@
             "url": "badge"
           },
           {
+            "title": "Carousel",
+            "type": "menuItem",
+            "url": "carousel"
+          },
+          {
             "title": "Card",
             "type": "menuItem",
             "url": "card"
@@ -138,6 +153,11 @@
             "title": "Empty",
             "type": "menuItem",
             "url": "empty"
+          },
+          {
+            "title": "List",
+            "type": "menuItem",
+            "url": "list"
           },
           {
             "title": "Tag",
@@ -169,6 +189,11 @@
             "title": "Drawer",
             "type": "menuItem",
             "url": "drawer"
+          },
+          {
+            "title": "Notification",
+            "type": "menuItem",
+            "url": "notification"
           }
         ]
       },

@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.18.3" />
     <PackageReference Include="YamlDotnet" Version="8.1.0" />
-    <PackageReference Include="System.Net.Http.Json" Version="3.2.0-preview3.20175.8" />
+    <PackageReference Include="System.Net.Http.Json" Version="3.2.0-rc1.20217.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +28,11 @@
     <EmbeddedResource Include="Resources\*.yml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\Shared\DemoComponent.cs" Link="Services\DemoComponent.cs" />
+    <Compile Include="..\Shared\MenuItem.cs" Link="Services\MenuItem.cs" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
@@ -40,6 +45,17 @@
 
   <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:docs" />
+  </Target>
+
+  <PropertyGroup>
+    <CLIProjectDir>$(SolutionDir)site/AntBlazor.Docs.Build.CLI</CLIProjectDir>
+    <CLIPath>$(CLIProjectDir)/bin/Debug/netcoreapp3.1/AntBlazor.Docs.Build.CLI.dll</CLIPath>
+  </PropertyGroup>
+
+  <Target Name="RunCli" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug'">
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet build $(CLIProjectDir)" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) demo2json $(ProjectDir)Demos $(ProjectDir)wwwroot/meta" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) menu2json $(ProjectDir)Demos docs $(ProjectDir)wwwroot/meta" />
   </Target>
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">

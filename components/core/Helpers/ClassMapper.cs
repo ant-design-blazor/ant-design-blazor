@@ -12,7 +12,7 @@ namespace AntBlazor
 
         public string AsString()
         {
-            return string.Join(" ", map.Where(i => i.Value()).Select(i => i.Key()));
+            return string.Join(" ", _map.Where(i => i.Value()).Select(i => i.Key()));
         }
 
         public override string ToString()
@@ -20,37 +20,37 @@ namespace AntBlazor
             return AsString();
         }
 
-        private Dictionary<Func<string>, Func<bool>> map = new Dictionary<Func<string>, Func<bool>>();
+        private readonly Dictionary<Func<string>, Func<bool>> _map = new Dictionary<Func<string>, Func<bool>>();
 
         public ClassMapper Add(string name)
         {
-            map.Add(() => name, () => true);
+            _map.Add(() => name, () => true);
             return this;
         }
 
         public ClassMapper Get(Func<string> funcName)
         {
-            map.Add(funcName, () => true);
+            _map.Add(funcName, () => true);
             return this;
         }
 
         public ClassMapper GetIf(Func<string> funcName, Func<bool> func)
         {
-            map.Add(funcName, func);
+            _map.Add(funcName, func);
             return this;
         }
 
         public ClassMapper If(string name, Func<bool> func)
         {
-            map.Add(() => name, func);
+            _map.Add(() => name, func);
             return this;
         }
 
         public ClassMapper Clear()
         {
-            map.Clear();
+            _map.Clear();
 
-            map.Add(() => OriginalClass, () => !string.IsNullOrEmpty(OriginalClass));
+            _map.Add(() => OriginalClass, () => !string.IsNullOrEmpty(OriginalClass));
 
             return this;
         }
