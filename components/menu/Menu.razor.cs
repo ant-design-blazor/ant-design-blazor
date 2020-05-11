@@ -43,13 +43,13 @@ namespace AntBlazor
         public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
 
         [Parameter]
-        protected string[] OpenKeys { get; set; }
+        public IEnumerable<string> OpenKeys { get; set; } = new List<string>();
 
         [Parameter]
-        protected EventCallback<string[]> OpenKeysChanged { get; set; }
+        public EventCallback<string[]> OpenKeysChanged { get; set; }
 
         [Parameter]
-        protected EventCallback<string[]> OnOpenChange { get; set; }
+        public EventCallback<string[]> OnOpenChange { get; set; }
 
         private MenuMode _initialMode;
         internal MenuMode InternalMode { get; private set; }

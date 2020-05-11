@@ -26,7 +26,7 @@
     </Description>
     <Demo>
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () =>
+                   OnClick="@(async () =>
                               {
                                   await Notice.Open(new AntNotificationConfig()
                                   {
@@ -55,7 +55,7 @@
     </Description>
     <Demo>
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () =>
+                   OnClick="@(async () =>
                               {
                                   await Notice.Open(new AntNotificationConfig()
                                   {
@@ -132,22 +132,22 @@
     </Description>
     <Demo>
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () => { await NoticeWithIcon(AntNotificationType.Info); })">
+                   OnClick="@(async () => { await NoticeWithIcon(AntNotificationType.Info); })">
             info
         </AntButton>
 
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () => { await NoticeWithIcon(AntNotificationType.Success); })">
+                   OnClick="@(async () => { await NoticeWithIcon(AntNotificationType.Success); })">
             success
         </AntButton>
 
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () => { await NoticeWithIcon(AntNotificationType.Warning); })">
+                   OnClick="@(async () => { await NoticeWithIcon(AntNotificationType.Warning); })">
             warning
         </AntButton>
 
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () => { await NoticeWithIcon(AntNotificationType.Error); })">
+                   OnClick="@(async () => { await NoticeWithIcon(AntNotificationType.Error); })">
             error
         </AntButton>
     </Demo>
@@ -186,7 +186,7 @@
     </Description>
     <Demo>
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () =>
+                   OnClick="@(async () =>
                               {
                                   string key = $"open{DateTime.Now}";
 
@@ -237,7 +237,7 @@
     </Description>
     <Demo>
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () =>
+                   OnClick="@(async () =>
                               {
                                   await Notice.Open(new AntNotificationConfig()
                                   {
@@ -292,7 +292,7 @@
     </Description>
     <Demo>
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () =>
+                   OnClick="@(async () =>
                               {
                                   await Notice.Open(new AntNotificationConfig()
                                   {
@@ -301,12 +301,12 @@
                                       Placement = AntNotificationPlacement.TopLeft
                                   });
                               })">
-            <AntIcon type="Radius-Upleft" Theme="Outline"></AntIcon>
+            <AntIcon Type="Radius-Upleft" Theme="Outline"></AntIcon>
             TopLeft
         </AntButton>
 
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () =>
+                   OnClick="@(async () =>
                               {
                                   await Notice.Open(new AntNotificationConfig()
                                   {
@@ -315,12 +315,12 @@
                                       Placement = AntNotificationPlacement.TopRight
                                   });
                               })">
-            <AntIcon type="Radius-Upright" Theme="Outline"></AntIcon>
+            <AntIcon Type="Radius-Upright" Theme="Outline"></AntIcon>
             TopRight
         </AntButton>
 
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () =>
+                   OnClick="@(async () =>
                               {
                                   await Notice.Open(new AntNotificationConfig()
                                   {
@@ -329,12 +329,12 @@
                                       Placement = AntNotificationPlacement.BottomLeft
                                   });
                               })">
-            <AntIcon type="Radius-Bottomleft" Theme="Outline"></AntIcon>
+            <AntIcon Type="Radius-Bottomleft" Theme="Outline"></AntIcon>
             BottomLeft
         </AntButton>
 
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () =>
+                   OnClick="@(async () =>
                               {
                                   await Notice.Open(new AntNotificationConfig()
                                   {
@@ -343,7 +343,7 @@
                                       Placement = AntNotificationPlacement.BottomRight
                                   });
                               })">
-            <AntIcon type="Radius-Bottomright" Theme="Outline"></AntIcon>
+            <AntIcon Type="Radius-Bottomright" Theme="Outline"></AntIcon>
             BottomRight
         </AntButton>
     </Demo>
@@ -383,7 +383,7 @@
     </Description>
     <Demo>
         <AntButton Type="@AntButtonType.Primary"
-                   Onclick="@(async () =>
+                   OnClick="@(async () =>
                               {
                                   var config = new AntNotificationConfig()
                                   {
