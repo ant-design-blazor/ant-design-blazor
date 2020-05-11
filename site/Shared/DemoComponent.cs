@@ -12,6 +12,8 @@ namespace AntBlazor.Docs
 
         public string Doc { get; set; }
 
+        public int? Cols { get; set; }
+
         public List<DemoItem> DemoList { get; set; }
     }
 

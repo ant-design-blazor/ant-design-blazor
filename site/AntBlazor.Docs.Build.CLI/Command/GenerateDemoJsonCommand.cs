@@ -80,11 +80,12 @@ namespace AntBlazor.Docs.Build.CLI.Command
                         Title = docData.Meta["title"],
                         SubTitle = docData.Meta.TryGetValue("subtitle", out string subtitle) ? subtitle : null,
                         Type = docData.Meta["type"],
-                        Doc = docData.Content
+                        Doc = docData.Content,
+                        Cols = docData.Meta.TryGetValue("cols", out string cols) ? int.Parse(cols) : (int?)null,
                     });
                 }
 
-                foreach (IGrouping<string, FileSystemInfo> demo in (demoDir as DirectoryInfo).GetFileSystemInfos().GroupBy(x => x.Name.Replace(x.Extension, "").ToLower()))
+                foreach (IGrouping<string, FileSystemInfo> demo in (demoDir as DirectoryInfo).GetFileSystemInfos().GroupBy(x => x.Name.Replace(x.Extension, "").Replace("-", "").ToLower()))
                 {
                     List<FileSystemInfo> showCaseFiles = demo.ToList();
                     FileSystemInfo razorFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".razor");
