@@ -3,8 +3,18 @@ export function getDom(element) {
         element = document.body;
     } else if (typeof element === 'string') {
         element = document.querySelector(element);
+    } else {
+        element = null;
     }
     return element;
+}
+
+export function getDoms(element: string) {
+    if (typeof element === "string") {
+        return document.querySelectorAll(element);
+    } else {
+        return new NodeList();
+    }
 }
 
 export function getDomInfo(element) {
@@ -169,61 +179,216 @@ export function delElementFrom(delElement, elementSelector) {
     getDom(elementSelector).removeChild(delElement);
 }
 
-/************ Notification start ************/
-function getNotificationService() {
-    return (<any>window).notificationService;
-}
-
+/**
+ * 将html字符串转为element
+ * @param html
+ */
 function htmlToElement(html) {
     var template = document.createElement('template');
     html = html.trim();
     template.innerHTML = html;
-    return template.content.firstChild;
+    let node = template.content.firstChild;
+    return node;
 }
 
-function removeEnterClass(element) {
-    let newClassName = element.getAttribute("class").split(" ").map((item) => {
+/**
+ * 将html追加到selector的末尾
+ * @param html  string(css选择器) | Node
+ * @param containerSelector string(css选择器) | HTMLElement
+ */
+export function appendHtml(html: string | Node,
+    containerSelector: string | HTMLElement = null) {
+    console.log("appendHtml,containerSelector", containerSelector);
+    let element: Node;
+    if (typeof (html) === "string") {
+        element = htmlToElement(html);
+    }
+    else {
+        element = html;
+    }
+    let dom: HTMLElement;
+    if (containerSelector) {
+        if (typeof (containerSelector) === "string") {
+            dom = getDom(containerSelector);
+        } else {
+            dom = containerSelector;
+        }
+    } else {
+        dom = document.body;
+    }
+   
+    if (dom) {
+        dom.appendChild(element);
+    }
+}
+
+/**
+ * 将selector从DOM中移出
+ * @param selector string(css选择器) | Element | NodeList
+ */
+export function removeElement(selector: string | Element | NodeList) {
+    if (selector instanceof Element) {
+        selector.parentNode.removeChild(selector);
+    } else {
+        let elements: NodeList;
+        if (typeof selector === "string") {
+            elements = getDoms(selector);
+        } else {
+            elements = selector;
+        }
+        if (elements) {
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].parentNode.removeChild(elements[i]);
+            }
+        }
+    }
+}
+
+/**
+ * 清空selector中元素
+ * @param selector string(css选择器) | Element | NodeList
+ */
+export function emptyElement(selector: string | Element | NodeList) {
+    if (selector instanceof Element) {
+        selector.innerHTML = "";
+    }
+    let elements: NodeList;
+
+    if (typeof selector === "string") {
+        elements = getDoms(selector);
+    } else if (selector instanceof NodeList){
+        elements = selector;
+    }
+    if (elements) {
+        for (var i = 0; i < elements.length; i++) {
+            if (elements[i] instanceof Element) {
+                (<Element>elements[i]).innerHTML = "";
+            }
+        }
+    }
+}
+
+/**
+ * 获取selector的class列表
+ * @param selector string(css选择器) | Element
+ * @return class name array
+ */
+export function getClass(selector: string | Element) {
+    let element: Element;
+    if (typeof selector === "string") {
+        element = getDom(selector);
+    } else {
+        element = selector;
+    }
+    let classNameArr = element.getAttribute("class").split(" ").map((item) => {
         return item.trim();
-    }).filter(item => {
-        return item !== "ant-notification-fade-enter" && item !== "ant-notification-fade-enter-active";
-    }).join(" ");
-    element.setAttribute("class", newClassName);
+    });
+    return classNameArr;
 }
 
-function removeNotificationHandler(id, element) {
+/**
+ * 从selector中的class中移出className
+ * @param selector string(css选择器) | Element
+ * @param className string(class name) | Array<string>(class name array)
+ */
+export function removeClass(selector: string | Element,
+    className: string | Array<string>) {
+    let element: Element;
+    if (typeof selector === "string") {
+        element = getDom(selector);
+    } else {
+        element = selector;
+    }
+
+    let classNameArr = getClass(element);
+    if (typeof className === "string") {
+        classNameArr = classNameArr.filter((item: string) => {
+            return item !== className;
+        });
+    } else {
+        classNameArr = classNameArr.filter((item: string) => {
+            return !className.includes(item);
+        });
+    }
+    let newClassName = classNameArr.join(" ");
+    element.setAttribute("class", newClassName);
+    return element;
+}
+
+/**
+ * 向js端注册C#类的实例引用
+ * @param instance
+ * @param instanceName
+ */
+export function initCsInstance(instance: any, instanceName: string) {
+    let csInstance = (<any>window).antBlazor.interop.csInstance;
+    if (!csInstance) {
+        csInstance = {};
+        (<any>window).antBlazor.interop.csInstance = csInstance;
+    }
+    csInstance[instanceName] = instance;
+}
+
+/**
+ * 删除js端注册的C#类的实例引用
+ * @param instanceName
+ */
+export function delCsInstance(instanceName: string) {
+    let csInstance = (<any>window).antBlazor.interop.csInstance;
+    if (csInstance) {
+        delete (<any>window).antBlazor.interop.csInstance[instanceName];
+    }
+}
+
+/**
+ * 获取js端注册的C#类的实例引用
+ * @param instanceName
+ */
+export function getCsInstance(instanceName:string) {
+    return (<any>window).antBlazor.interop.csInstance[instanceName];
+}
+
+/************ Notification start ************/
+
+function getNotificationService() {
+    return getCsInstance("notification");
+}
+
+
+/**
+ * 移除通知提示框
+ * @param id
+ * @param element
+ */
+export function removeNotification(id:string, element: Element) {
     if (!element) {
         element = document.querySelector("#" + id);
     }
+    removeClass(element, ["ant-notification-fade-enter", "ant-notification-fade-enter-active"]);
     element.className += " ant-notification-fade-leave ant-notification-fade-leave-active";
     window.setTimeout(() => {
-        element.parentNode.removeChild(element);
+        removeElement(element);
     }, 500);
     getNotificationService().invokeMethodAsync("NotificationClose", id);
 }
 
-export function initNotification(notificationService) {
-    (<any>window).notificationService = notificationService;
-}
 
-export function createNotificationContainer(htmlStr) {
-    let element = htmlToElement(htmlStr);
-    document.body.appendChild(element);
-}
-
+/**
+ * 添加通知提示框
+ * @param htmlStr
+ * @param elementSelector
+ * @param id
+ * @param duration
+ */
 export function addNotification(htmlStr, elementSelector, id, duration) {
-    let container = getDom(elementSelector);
-    let spanContainer = container.children[0];
-    let element = htmlToElement(htmlStr);
-    spanContainer.appendChild(element);
-
-    window.setTimeout(() => {
-        removeEnterClass(element);
-    }, 500);
+    let spanContainer = getDom(elementSelector).children[0];
+    let element = <HTMLElement>htmlToElement(htmlStr);
+    appendHtml(element, spanContainer);
 
     let timeout;
     if (duration && duration > 0) {
         timeout = window.setTimeout(() => {
-            removeNotificationHandler(id, element);
+            removeNotification(id, element);
         }, duration * 1000);
     }
 
@@ -236,7 +401,7 @@ export function addNotification(htmlStr, elementSelector, id, duration) {
         btn.addEventListener("click",
             e => {
                 window.clearTimeout(timeout);
-                removeNotificationHandler(id, element);
+                removeNotification(id, element);
                 e.preventDefault();
                 e.stopPropagation();
             });
@@ -246,24 +411,10 @@ export function addNotification(htmlStr, elementSelector, id, duration) {
         .addEventListener("click",
             e => {
                 window.clearTimeout(timeout);
-                removeNotificationHandler(id, element);
+                removeNotification(id, element);
                 e.preventDefault();
                 e.stopPropagation();
             });
 }
-
-export function removeNotification(id) {
-    let element = document.querySelector("#" + id);
-    removeNotificationHandler(id, element);
-}
-
-export function destroyNotification() {
-    let allContainer = document.querySelectorAll(".ant-notification");
-    for (let i = allContainer.length - 1; i > -1; i--) {
-        let container = allContainer[i];
-        container.parentNode.removeChild(container);
-    }
-}
-
 
 /************ Notification end ************/

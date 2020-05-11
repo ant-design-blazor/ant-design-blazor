@@ -157,17 +157,9 @@
     <Title>自定义按钮</Title>
     <Description>
         自定义关闭通知提醒框的按钮。
+
         ```c#
         string key = $"open{DateTime.Now}";
-
-        void OnBtnClickFunc()
-        {
-            Console.WriteLine($"closing {key}");
-            Notice.Close(key);
-        }
-
-        EventCallback&lt;MouseEventArgs&gt; OnBtnClick =
-        new EventCallback&lt;MouseEventArgs&gt;(this, (Action) OnBtnClickFunc);
 
         await Notice.Open(new AntNotificationConfig()
         {
@@ -190,11 +182,6 @@
                               {
                                   string key = $"open{DateTime.Now}";
 
-                                  void OnBtnClickFunc()
-                                  {
-                                      Console.WriteLine($"closing {key}");
-                                      Notice.Close(key);
-                                  }
                                   await Notice.Open(new AntNotificationConfig()
                                   {
                                       Message = "title",
@@ -266,27 +253,27 @@
         ```c#
         await Notice.Open(new AntNotificationConfig()
         {
-        Message = "title",
-        Description = "notification content",
-        Placement = AntNotificationPlacement.TopLeft
+            Message = "title",
+            Description = "notification content",
+            Placement = AntNotificationPlacement.TopLeft
         });
         await Notice.Open(new AntNotificationConfig()
         {
-        Message = "title",
-        Description = "notification content",
-        Placement = AntNotificationPlacement.TopRight
+            Message = "title",
+            Description = "notification content",
+            Placement = AntNotificationPlacement.TopRight
         });
         await Notice.Open(new AntNotificationConfig()
         {
-        Message = "title",
-        Description = "notification content",
-        Placement = AntNotificationPlacement.BottomLeft
+            Message = "title",
+            Description = "notification content",
+            Placement = AntNotificationPlacement.BottomLeft
         });
         await Notice.Open(new AntNotificationConfig()
         {
-        Message = "title",
-        Description = "notification content",
-        Placement = AntNotificationPlacement.BottomRight
+            Message = "title",
+            Description = "notification content",
+            Placement = AntNotificationPlacement.BottomRight
         });
         ```
     </Description>
@@ -355,30 +342,32 @@
         通过OnClick和OnClose指定 点击通知时触发的回调函数 和 当通知关闭时触发的回调函数
 
         ```c#
-        await Notice.Open(new AntNotificationConfig()
+        var config = new AntNotificationConfig()
         {
             Message = "title",
-            Description = "event test",
-            Duration = 10,
-            OnClick = async () =>
-                {
-                    await Notice.Success(new AntNotificationConfig()
-                    {
-                        Placement = AntNotificationPlacement.TopLeft,
-                        Message = "OnClick",
-                        Description = "OnClick event",
-                    });
-                },
-            OnClose = async () =>
-                {
-                    await Notice.Success(new AntNotificationConfig()
-                    {
-                        Placement = AntNotificationPlacement.TopLeft,
-                        Message = "OnClose",
-                        Description = "OnClose event",
-                    });
-            }
-        });
+            Description = "event test.",
+            Duration = 10
+        };
+        config.OnClick += async () =>
+        {
+            await Notice.Success(new AntNotificationConfig()
+            {
+                Placement = AntNotificationPlacement.TopLeft,
+                Message = "OnClick",
+                Description = "OnClick event",
+
+            });
+        };
+        config.OnClose += async () =>
+        {
+            await Notice.Success(new AntNotificationConfig()
+            {
+                Placement = AntNotificationPlacement.TopLeft,
+                Message = "OnClose",
+                Description = "OnClose event",
+            });
+        };
+        await Notice.Open(config);
         ```
     </Description>
     <Demo>
@@ -470,8 +459,8 @@
         <ul>
             <li><code>AntNotificationService.Config(config:AntNotificationGlobalConfig)</code></li>
         </ul>
-        <Markdown>
 
+        <Markdown>
             ```c#
             AntNotificationService.Config({
                 Placement: 'bottomRight',
@@ -482,6 +471,7 @@
             });
             ```
         </Markdown>
+
         <Markdown>
             | 参数      | 说明                                                         | 类型                       | 默认值                            |
             | :-------- | :----------------------------------------------------------- | :------------------------- | :-------------------------------- |

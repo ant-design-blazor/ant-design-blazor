@@ -40,15 +40,18 @@ namespace AntBlazor
 
         public static string delElementFrom => $"{FUNC_PREFIX}delElementFrom";
 
+        public static string initCsInstance => $"{FUNC_PREFIX}initCsInstance";
 
-        public static string initNotification => $"{FUNC_PREFIX}initNotification";
+        public static string delCsInstance => $"{FUNC_PREFIX}delCsInstance";
 
-        public static string createNotificationContaner => $"{FUNC_PREFIX}createNotificationContainer";
-        
+
+
+        public static string appendHtml => $"{FUNC_PREFIX}appendHtml";
+
+        public static string removeElement=> $"{FUNC_PREFIX}removeElement";
+
         public static string addNotification => $"{FUNC_PREFIX}addNotification";
         
         public static string removeNotification => $"{FUNC_PREFIX}removeNotification";
-
-        public static string destroyNotification => $"{FUNC_PREFIX}destroyNotification";
     }
 }

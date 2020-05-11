@@ -16,7 +16,7 @@ namespace AntBlazor
     /// <summary>
     /// AntNotification Service
     /// </summary>
-    public class AntNotificationService
+    public class AntNotificationService:IDisposable
     {
         public AntNotificationService(IJSRuntime jsRuntime,
             HtmlRenderService htmlRender)
@@ -24,6 +24,9 @@ namespace AntBlazor
             _jsRuntime = jsRuntime;
             _htmlRenderer = htmlRender;
         }
+
+        private bool _isInit = false;
+        private bool _isDisposed = true;
 
         #region DI
 
@@ -58,10 +61,53 @@ namespace AntBlazor
 
         #endregion
 
+        #region InvokeJS
+        private const string JsInstanceName = "notification";
+        private const string NotificationContainerCls = "ant-notification";
+
+        private async Task JsInitInstanceAsync()
+        {
+            _isDisposed = false;
+            await _jsRuntime.InitCsInstance(DotNetObjectReference.Create(this), JsInstanceName);
+        }
+
+        private async Task JsDelInstanceAsync()
+        {
+            await _jsRuntime.DelCsInstance(JsInstanceName);
+        }
+
+        private async Task CreateContainerAsync(string htmlStr)
+        {
+            await _jsRuntime.AppendHtml(htmlStr);
+        }
+
+        private async Task AddNotificationAsync(string notificationHtmlStr,
+            string container, string key, double? seconds)
+        {
+            await _jsRuntime.InvokeVoidAsync(JSInteropConstants.addNotification,
+                notificationHtmlStr,
+                container, key, seconds);
+        }
+
+        private async Task CloseAsync(string key)
+        {
+            await _jsRuntime.InvokeVoidAsync(JSInteropConstants.removeNotification, key);
+        }
+
+        private async Task DestroyAsync()
+        {
+            Dispose(true);
+            _configDict = null;
+            _containerDict.Clear();
+            await _jsRuntime.RemoveElement("."+ NotificationContainerCls);
+            await JsDelInstanceAsync();
+            GC.SuppressFinalize(this);
+        }
+        
+        #endregion
+
         #region Init Checker
-
-        private bool _isInit = false;
-
+        
         /// <summary>
         /// 初始化检查
         /// </summary>
@@ -70,8 +116,7 @@ namespace AntBlazor
         {
             if (!_isInit)
             {
-                await _jsRuntime.InvokeVoidAsync(JSInteropConstants.initNotification,
-                    DotNetObjectReference.Create(this));
+                await JsInitInstanceAsync();
             }
         }
 
@@ -91,7 +136,7 @@ namespace AntBlazor
 
 
         #endregion
-        
+
         #region GlobalConfig
 
         private double _top = 24;
@@ -199,14 +244,14 @@ namespace AntBlazor
                     builder.CloseComponent();
                 };
                 string htmlStr = await RenderAsync(renderFragment);
+                await CreateContainerAsync(htmlStr);
 
-                await _jsRuntime.InvokeVoidAsync(JSInteropConstants.createNotificationContaner, htmlStr);
                 string placementStr = placement.ToString();
                 placementStr = placementStr[0] == 'T'
                     ? "t" + placementStr.Substring(1)
                     : "b" + placementStr.Substring(1);
                 string className = ".ant-notification.ant-notification-" + placementStr;
-                
+
                 _containerDict.Add(placement, className);
             }
             return _containerDict[placement];
@@ -244,20 +289,23 @@ namespace AntBlazor
 
             await CheckInit();
 
+            if (_isDisposed)
+            {
+                throw new ObjectDisposedException("AntNotificationService had disposed");
+            }
+            
             config = ExtendConfig(config);
             Debug.Assert(config.Placement != null);
             string container = await GetContainer(config.Placement.Value);
             string notificationHtmlStr = await CreateNotificationItem(config);
 
-            await _jsRuntime.InvokeVoidAsync(JSInteropConstants.addNotification,
-                notificationHtmlStr,
+            await AddNotificationAsync(notificationHtmlStr,
                 container, config.Key, config.Duration);
-
             _configDict.Add(config.Key, config);
         }
-        
+
         #region Api
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -327,7 +375,7 @@ namespace AntBlazor
         /// <returns></returns>
         public async Task Close(string key)
         {
-            await _jsRuntime.InvokeVoidAsync(JSInteropConstants.removeNotification, key);
+            await CloseAsync(key);
         }
 
         /// <summary>
@@ -335,11 +383,24 @@ namespace AntBlazor
         /// </summary>
         public async Task Destroy()
         {
-            _containerDict.Clear();
-            await _jsRuntime.InvokeVoidAsync(JSInteropConstants.destroyNotification);
+            await DestroyAsync();
         }
 
         #endregion
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_isDisposed)
+            {
+                return;
+            }
+            _isDisposed = true;
+        }
+
+        public void Dispose()
+        {
+            Destroy();
+        }
     }
 
 }
