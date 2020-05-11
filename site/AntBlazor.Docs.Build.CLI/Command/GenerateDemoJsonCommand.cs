@@ -85,7 +85,11 @@ namespace AntBlazor.Docs.Build.CLI.Command
                     });
                 }
 
-                foreach (IGrouping<string, FileSystemInfo> demo in (demoDir as DirectoryInfo).GetFileSystemInfos().GroupBy(x => x.Name.Replace(x.Extension, "").Replace("-", "").ToLower()))
+                foreach (IGrouping<string, FileSystemInfo> demo in (demoDir as DirectoryInfo).GetFileSystemInfos().GroupBy(x => x.Name
+                    .Replace(x.Extension, "")
+                    .Replace("-", "")
+                    .Replace("Demo", "")
+                    .ToLower()))
                 {
                     List<FileSystemInfo> showCaseFiles = demo.ToList();
                     FileSystemInfo razorFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".razor");

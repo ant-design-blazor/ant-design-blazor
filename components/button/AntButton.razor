@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this">
-    <button class="@ClassMapper.Class" style="@Style" id="@Id" @onclick="OnClick" disabled="@(Disabled)">
+    <button class="@ClassMapper.Class" style="@Style" id="@Id" @onclick="HandleOnClick" disabled="@Disabled">
         @if (Loading)
         {
             <AntIcon Type="loading"></AntIcon>

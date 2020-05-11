@@ -19,7 +19,7 @@ namespace AntBlazor.Docs
 
     public class DemoItem
     {
-        public int Order { get; set; }
+        public decimal Order { get; set; }
 
         public string Name { get; set; }
 
