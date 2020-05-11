@@ -12,11 +12,12 @@ namespace AntBlazor
     public partial class AntAffix : AntDomComponentBase
     {
         private const string PrefixCls = "ant-affix";
-        private const string ContainerSelector = "window";
+        private const string RootScollSelector = "window";
         private const string RootRectSelector = "app";
         private bool _affixed;
         private bool _rendered;
-        private bool _listened;
+        private bool _rootListened;
+        private bool _targetListened;
 
         private bool Affixed
         {
@@ -78,13 +79,17 @@ namespace AntBlazor
             SetClasses();
         }
 
-        protected async override void OnParametersSet()
+        public async override Task SetParametersAsync(ParameterView parameters)
         {
-            base.OnParametersSet();
+            await base.SetParametersAsync(parameters);
 
-            if (_rendered && _listened)
+            if (!_targetListened && !string.IsNullOrEmpty(Target.Id))
             {
+                DomEventService.AddEventListener(Target, "scroll", OnScroll);
+                DomEventService.AddEventListener(Target, "resize", OnWindowResize);
+
                 await RenderAffixAsync();
+                _targetListened = true;
             }
         }
 
@@ -96,21 +101,15 @@ namespace AntBlazor
             DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _childRef);
             _hiddenStyle = $"width: {domRect.width}px; height: {domRect.height}px;";
 
-            if (_listened)
+            if (_rootListened)
             {
                 await RenderAffixAsync();
             }
             else
             {
-                DomEventService.AddEventListener(ContainerSelector, "scroll", OnScroll);
-                DomEventService.AddEventListener(ContainerSelector, "resize", OnWindowResize);
-                if (!string.IsNullOrEmpty(Target.Id))
-                {
-                    DomEventService.AddEventListener(Target, "scroll", OnScroll);
-                    DomEventService.AddEventListener(Target, "resize", OnWindowResize);
-                }
-
-                _listened = true;
+                DomEventService.AddEventListener(RootScollSelector, "scroll", OnScroll);
+                DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize);
+                _rootListened = true;
             }
         }
 
