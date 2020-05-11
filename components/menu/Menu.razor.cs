@@ -36,8 +36,20 @@ namespace AntBlazor
         [Parameter]
         public bool Collapsed { get; set; }
 
-        [Parameter] public IEnumerable<string> DefaultSelectedKeys { get; set; } = new List<string>();
-        [Parameter] public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
+        [Parameter]
+        public IEnumerable<string> DefaultSelectedKeys { get; set; } = new List<string>();
+
+        [Parameter]
+        public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
+
+        [Parameter]
+        public string[] OpenKeys { get; set; }
+
+        [Parameter]
+        public EventCallback<string[]> OpenKeysChanged { get; set; }
+
+        [Parameter]
+        public EventCallback<string[]> OnOpenChange { get; set; }
 
         private MenuMode _initialMode;
         internal MenuMode InternalMode { get; private set; }

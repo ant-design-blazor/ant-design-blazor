@@ -37,12 +37,16 @@ namespace AntBlazor
 
         private void SetClass()
         {
-            ClassMapper.Add(PrefixCls)
+            ClassMapper
+                .Clear()
+                .Add(PrefixCls)
                 .Add($"{PrefixCls}-{RootMenu.InternalMode}")
                 .If($"{PrefixCls}-disabled", () => Disabled)
                 .If($"{PrefixCls}-open", () => IsOpen);
 
-            SubMenuMapper.Add("ant-menu")
+            SubMenuMapper
+                .Clear()
+                .Add("ant-menu")
                 .Add("ant-menu-sub")
                 .Add($"ant-menu-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
                 .If($"ant-menu-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
@@ -88,6 +92,12 @@ namespace AntBlazor
 
             if (RootMenu.DefaultOpenKeys.Contains(Key))
                 IsOpen = true;
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            SetClass();
         }
 
         public void Close()

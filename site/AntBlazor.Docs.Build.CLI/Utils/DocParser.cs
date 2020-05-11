@@ -167,7 +167,7 @@ namespace AntBlazor.Docs.Build.CLI.Utils
 
     public class DescriptionYaml
     {
-        public int Order { get; set; }
+        public decimal Order { get; set; }
 
         public int? Iframe { get; set; }
 

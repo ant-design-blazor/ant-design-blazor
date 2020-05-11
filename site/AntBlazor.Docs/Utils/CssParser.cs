@@ -42,9 +42,9 @@ namespace AntBlazor.Docs.Utils
             this.Read(cascadingStyleSheet);
         }
 
-        public void ReadCSSFile(string Path)
+        public void ReadCSSFile(string path)
         {
-            this.StyleSheet = File.ReadAllText(Path);
+            this.StyleSheet = File.ReadAllText(path);
             this.Read(StyleSheet);
         }
 

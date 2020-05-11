@@ -91,6 +91,7 @@ namespace AntBlazor.Docs.Build.CLI.Command
                         .Replace(x.Extension, "")
                         .Replace("-", "")
                         .Replace("_", "")
+                        .Replace("Demo", "")
                         .ToLower()))
                 {
                     List<FileSystemInfo> showCaseFiles = demo.ToList();

@@ -15,7 +15,7 @@
     <ProjectReference Include="..\..\components\AntBlazor.csproj" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' And '$(SolutionDir)'==''">
+  <PropertyGroup Condition=" '$(SolutionDir)'==''">
     <SolutionDir>../../</SolutionDir>
   </PropertyGroup>
 
@@ -58,7 +58,7 @@
   </Target>
 
   <PropertyGroup>
-    <CLIProjectDir>$(SolutionDir)site/AntBlazor.Docs.Build.CLI</CLIProjectDir>
+    <CLIProjectDir>site/AntBlazor.Docs.Build.CLI</CLIProjectDir>
     <CLIPath>$(CLIProjectDir)/bin/Debug/netcoreapp3.1/AntBlazor.Docs.Build.CLI.dll</CLIPath>
   </PropertyGroup>
 
