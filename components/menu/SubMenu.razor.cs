@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 using System.Threading.Tasks;
@@ -80,8 +81,13 @@ namespace AntBlazor
 
         protected override void OnInitialized()
         {
-            RootMenu.Submenus.Add(this);
+            base.OnInitialized();
             SetClass();
+
+            RootMenu.Submenus.Add(this);
+
+            if (RootMenu.DefaultOpenKeys.Contains(Key))
+                IsOpen = true;
         }
 
         public void Close()

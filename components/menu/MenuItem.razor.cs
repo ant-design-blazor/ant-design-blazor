@@ -28,11 +28,14 @@ namespace AntBlazor
 
         protected override void OnInitialized()
         {
-            SetClass();
-
             base.OnInitialized();
 
+            SetClass();
+
             RootMenu.MenuItems.Add(this);
+
+            if (RootMenu.DefaultSelectedKeys.Contains(Key))
+                Select();
         }
 
         public async Task HandleOnClick(MouseEventArgs args)

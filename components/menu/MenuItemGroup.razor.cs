@@ -17,5 +17,8 @@ namespace AntBlazor
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public string Key { get; set; }
     }
 }
