@@ -1,4 +1,5 @@
 ﻿@namespace AntBlazor
+@using OneOf;
 @inherits AntDomComponentBase
 
 <button type="button" role="switch"
@@ -12,7 +13,28 @@
         <AntIcon type="loading" Class="@($"{prefixCls}-loading-icon")" />
     }
     <span class="@($"{prefixCls}-inner")">
-        @(_isChecked ? CheckedChildren : UnCheckedChildren)
+        @if (_isChecked)
+        {
+            if (CheckedChildren.IsT0)
+            {
+                @(CheckedChildren.AsT0)
+            }
+            else
+            {
+                @(CheckedChildren.AsT1)
+            }
+        }
+        else
+        {
+            if (UnCheckedChildren.IsT0)
+            {
+                @(UnCheckedChildren.AsT0)
+            }
+            else
+            {
+                @(UnCheckedChildren.AsT1)
+            }
+        }
     </span>
 </button>
 
@@ -56,10 +78,10 @@
     public EventCallback<bool> OnChange { get; set; }
 
     [Parameter]
-    public RenderFragment CheckedChildren { get; set; }
+    public OneOf<string,RenderFragment> CheckedChildren { get; set; }
 
     [Parameter]
-    public RenderFragment UnCheckedChildren { get; set; }
+    public OneOf<string,RenderFragment> UnCheckedChildren { get; set; }
 
 
     protected override void OnInitialized()
