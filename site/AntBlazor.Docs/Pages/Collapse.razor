@@ -1,0 +1,49 @@
+﻿<AntTitle Level="1">Collapse折叠面板</AntTitle>
+<AntText>可以折叠/展开的内容区域。</AntText>
+<AntTitle Level="2">何时使用</AntTitle>
+<AntParagraph>
+    <ul>
+        <li>对复杂区域进行分组和隐藏，保持页面的整洁。</li>
+        <li><code>手风琴</code>是一种特殊的折叠面板，只允许单个内容区域展开。</li>
+    </ul>
+</AntParagraph>
+
+<br />
+<h2>演示</h2>
+<br />
+<DemoCard>
+    <Title>折叠面板</Title>
+    <Description>可以同时展开多个面板，这个例子默认展开了第一个。</Description>
+    <Demo>
+        <AntCollapse>
+            @foreach (var item in panels)
+            {
+                <AntCollapsePanel Header=@item.Name>
+                    <p style="margin:0;">
+                        A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many
+                        households across the world.
+                    </p>
+                </AntCollapsePanel>
+            }
+        </AntCollapse>
+
+    </Demo>
+</DemoCard>
+<br />
+
+@code
+{
+    public class BasicPanelAttribute
+    {
+        public bool Active { get; set; }
+        public string Name { get; set; }
+        public bool Disabled { get; set; }
+    }
+    @*实现 Active 展开 收缩 状态关联*@
+    List<BasicPanelAttribute> panels = new List<BasicPanelAttribute>()
+{
+        new BasicPanelAttribute(){ Active = true, Name = "This is panel header 1", Disabled = false},
+        new BasicPanelAttribute(){ Active = false, Name = "This is panel header 2", Disabled = false},
+        new BasicPanelAttribute(){ Active = false, Name = "This is panel header 3", Disabled = true},
+    };
+}

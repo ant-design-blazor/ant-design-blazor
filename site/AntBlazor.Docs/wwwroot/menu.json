@@ -145,6 +145,11 @@
             "url": "carousel"
           },
           {
+            "title": "Collapse",
+            "type": "menuItem",
+            "url": "collapse"
+          },
+          {
             "title": "Card",
             "type": "menuItem",
             "url": "card"

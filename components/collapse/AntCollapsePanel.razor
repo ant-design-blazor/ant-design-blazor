@@ -1,0 +1,63 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+@* ToDo: 实现nzActive [attr.aria-expanded]="nzActive" *@
+<div role="tab" class="@HeadClassMapper.Class" @onclick="ClickHeader">
+    @* ToDo: 实现Icon调用 *@
+    @Header
+</div>
+@*实现 collapseMotion 展开 收缩 动画*@
+<div class="@ContentClassMapper.Class" style="@GetStyle()">
+    <div class="@ContentBoxClassMapper.Class">
+        @ChildContent
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public string Header { get; set; }
+    [Parameter]
+    public bool ShowArrow { get; set; }
+    [Parameter]
+    public bool HadExpended { get; set; } = false;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    public bool Active { get; set; }
+
+    protected ClassMapper HeadClassMapper { get; set; } = new ClassMapper();
+    protected ClassMapper ContentClassMapper { get; set; } = new ClassMapper();
+    protected ClassMapper ContentBoxClassMapper { get; set; } = new ClassMapper();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        string prefixCls = "ant-collapse";
+
+        HeadClassMapper.Add($"{prefixCls}-header");//添加默认样式
+
+        ContentClassMapper.Add($"{prefixCls}-content")
+            .If($"{prefixCls}-content-active", () => Active);//根据条件 添加样式
+        ContentBoxClassMapper.Add($"{prefixCls}-content-box");
+
+
+        await base.OnInitializedAsync();
+    }
+    /// <summary>
+    /// 使用变量实现折叠状态
+    /// </summary>
+    /// <param name="e"></param>
+    public void ClickHeader(MouseEventArgs e)
+    {
+        HadExpended = !HadExpended;
+    }
+    /// <summary>
+    /// 获取当前折叠状态的style
+    /// </summary>
+    /// <returns></returns>
+    internal string GetStyle()
+    {
+        return HadExpended ? $"height: 0px; overflow: hidden; border-top-width: 0px;" : "";
+    }
+}
