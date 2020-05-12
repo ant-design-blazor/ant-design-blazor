@@ -1,21 +1,20 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public partial class AntSubMenu : AntDomComponentBase
+    public partial class SubMenu : AntDomComponentBase
     {
         private const string PrefixCls = "ant-menu-submenu";
 
         [CascadingParameter]
-        public AntMenu RootMenu { get; set; }
+        public Menu RootMenu { get; set; }
 
         [CascadingParameter]
-        public AntSubMenu Parent { get; set; }
+        public SubMenu Parent { get; set; }
 
         [Parameter]
         public OneOf<string, RenderFragment> Title { get; set; }
@@ -24,7 +23,11 @@ namespace AntBlazor
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public string Key { get; set; }
+        public string Key
+        {
+            get => _key ?? Id;
+            set => _key = value;
+        }
 
         [Parameter]
         public bool Disabled { get; set; }
@@ -36,17 +39,23 @@ namespace AntBlazor
 
         public bool IsOpen { get; private set; }
 
+        private string _key;
+
         private void SetClass()
         {
-            ClassMapper.Add(PrefixCls)
+            ClassMapper
+                .Clear()
+                .Add(PrefixCls)
                 .Add($"{PrefixCls}-{RootMenu.InternalMode}")
+                .If($"{PrefixCls}-disabled", () => Disabled)
                 .If($"{PrefixCls}-open", () => IsOpen);
 
-            SubMenuMapper.Add("ant-menu")
+            SubMenuMapper
+                .Clear()
+                .Add("ant-menu")
                 .Add("ant-menu-sub")
-                .Add($"ant-menu-{(RootMenu.InternalMode == AntMenuMode.Horizontal ? AntMenuMode.Vertical : RootMenu.InternalMode)}")
-                .If($"ant-menu-submenu-popup", () => RootMenu.InternalMode != AntMenuMode.Inline)
-                .If($"ant-menu-disabled", () => Disabled)
+                .Add($"ant-menu-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
+                .If($"ant-menu-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
                 .If($"ant-menu-hidden", () => !IsOpen);
         }
 
@@ -59,7 +68,7 @@ namespace AntBlazor
 
         private void HandleMouseOver(MouseEventArgs args)
         {
-            if (RootMenu.InternalMode == AntMenuMode.Inline)
+            if (RootMenu.InternalMode == MenuMode.Inline)
                 return;
 
             IsOpen = true;
@@ -67,7 +76,7 @@ namespace AntBlazor
 
         private void HandleMouseOut(MouseEventArgs args)
         {
-            if (RootMenu.InternalMode == AntMenuMode.Inline)
+            if (RootMenu.InternalMode == MenuMode.Inline)
                 return;
 
             IsOpen = false;
@@ -82,7 +91,22 @@ namespace AntBlazor
 
         protected override void OnInitialized()
         {
+            base.OnInitialized();
+            SetClass();
+
             RootMenu.Submenus.Add(this);
+
+            if (RootMenu.DefaultOpenKeys.Contains(Key))
+                IsOpen = true;
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            SetClass();
+
+            if (RootMenu.OpenKeys.Contains(Key))
+                IsOpen = true;
         }
 
         public void Close()

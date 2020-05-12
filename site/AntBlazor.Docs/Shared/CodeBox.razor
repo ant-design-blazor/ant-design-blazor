@@ -3,7 +3,16 @@
 
 <div class="code-box" id="@DemoId">
     <section class="code-box-demo">
-        @ShowCaseContent
+        @if (Demo.Iframe > 0)
+        {
+            <MockBrowser Height="@Demo.Iframe.Value" WithUrl>
+                @ShowCaseContent
+            </MockBrowser>
+        }
+        else
+        {
+            @ShowCaseContent
+        }
     </section>
     <section class="code-box-meta markdown">
         <div class="code-box-title">
@@ -56,4 +65,9 @@
         builder.OpenComponent(0, showCase);
         builder.CloseComponent();
     };
+
+    protected override void OnParametersSet()
+    {
+        codeExpand = false;
+    }
 }

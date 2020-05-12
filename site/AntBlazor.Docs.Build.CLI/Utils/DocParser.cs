@@ -59,10 +59,12 @@ namespace AntBlazor.Docs.Build.CLI.Utils
 
             var isAfterENHeading = false;
             var isStyleBlock = false;
+            var isCodeBlock = false;
 
             var zhPart = "";
             var enPart = "";
             var stylePart = "";
+            var jsxPart = "";
 
             for (int i = yamlBlock?.Line ?? 0; i < document.Count; i++)
             {
@@ -73,6 +75,11 @@ namespace AntBlazor.Docs.Build.CLI.Utils
                 if (block is HeadingBlock heading && heading.Level == 2 && heading.Inline.FirstChild.ToString() == "en-US")
                 {
                     isAfterENHeading = true;
+                }
+
+                if (block is CodeBlock codeBlock)
+                {
+                    isCodeBlock = true;
                 }
 
                 if (block is HtmlBlock htmlBlock && htmlBlock.Type == HtmlBlockType.ScriptPreOrStyle)
@@ -95,6 +102,10 @@ namespace AntBlazor.Docs.Build.CLI.Utils
                 else if (isStyleBlock)
                 {
                     stylePart += blockHtml;
+                }
+                else if (isCodeBlock)
+                {
+                    jsxPart += blockHtml;
                 }
                 else
                 {
@@ -132,9 +143,9 @@ namespace AntBlazor.Docs.Build.CLI.Utils
 
     public class DescriptionYaml
     {
-        public int Order { get; set; }
+        public decimal Order { get; set; }
 
-        public Dictionary<string, string> Iframe { get; set; }
+        public int? Iframe { get; set; }
 
         public Dictionary<string, string> Title { get; set; }
 

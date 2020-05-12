@@ -12,7 +12,7 @@ namespace AntBlazor.Docs.Services
     public class DemoService
     {
         private static ConcurrentCache<string, ValueTask<IDictionary<string, DemoComponent>>> _componentCache;
-        private static ConcurrentCache<string, ValueTask<MenuItem[]>> _menuCache;
+        private static ConcurrentCache<string, ValueTask<DemoMenuItem[]>> _menuCache;
 
         private readonly ILanguageService _languageService;
         private readonly HttpClient _httpClient;
@@ -39,11 +39,11 @@ namespace AntBlazor.Docs.Services
                 return components.ToDictionary(x => x.Title.ToLower(), x => x);
             });
 
-            _menuCache ??= new ConcurrentCache<string, ValueTask<MenuItem[]>>();
+            _menuCache ??= new ConcurrentCache<string, ValueTask<DemoMenuItem[]>>();
             await _menuCache.GetOrAdd(CurrentLanguage, async (currentLanguage) =>
             {
                 var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
-                var menuItems = await _httpClient.GetFromJsonAsync<MenuItem[]>(
+                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(
                     new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/menu.{CurrentLanguage}.json").ToString());
 
                 return menuItems;
@@ -54,14 +54,14 @@ namespace AntBlazor.Docs.Services
         {
             await InitializeAsync();
             return _componentCache.TryGetValue(CurrentLanguage, out var component)
-                ? (await component)[componentName]
+                ? (await component)[componentName.ToLower()]
                 : null;
         }
 
-        public async Task<MenuItem[]> GetMenuAsync()
+        public async Task<DemoMenuItem[]> GetMenuAsync()
         {
             await InitializeAsync();
-            return _menuCache.TryGetValue(CurrentLanguage, out var menuItems) ? await menuItems : Array.Empty<MenuItem>();
+            return _menuCache.TryGetValue(CurrentLanguage, out var menuItems) ? await menuItems : Array.Empty<DemoMenuItem>();
         }
     }
 }

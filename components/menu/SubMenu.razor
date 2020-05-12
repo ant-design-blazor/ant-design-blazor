@@ -1,0 +1,42 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<li class="@ClassMapper.Class" role="menuitem" @key="Key" @onmouseover="HandleMouseOver" @onmouseout="HandleMouseOut" style="position:relative;@Style">
+    <div class="ant-menu-submenu-title" role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
+
+        @if (Title.IsT0)
+        {
+            <span>@Title.AsT0</span>
+        }
+        else
+        {
+            @Title.AsT1
+        }
+
+        <i class="ant-menu-submenu-arrow"></i>
+    </div>
+    <ul direction="ltr" class="@SubMenuMapper.Class" role="menu" aria-expanded="@IsOpen">
+        <CascadingValue Value="this">
+            @ChildContent
+        </CascadingValue>
+    </ul>
+</li>
+
+<style>
+
+    .ant-menu-vertical.ant-menu-sub,
+    .ant-menu-vertical.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active), .ant-menu-vertical-left.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active), .ant-menu-vertical-right.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active) {
+        overflow: initial;
+    }
+
+    .ant-menu.ant-menu-sub.ant-menu-vertical.ant-menu-submenu-popup {
+        top: 0;
+        left: 100%;
+    }
+
+    .ant-menu-submenu.ant-menu-submenu-horizontal > .ant-menu.ant-menu-sub.ant-menu-vertical.ant-menu-submenu-popup {
+        top: 50px;
+        left: initial;
+        min-width: 100%
+    }
+</style>

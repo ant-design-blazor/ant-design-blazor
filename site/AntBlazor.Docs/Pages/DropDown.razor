@@ -87,7 +87,7 @@
     <Demo>
         <AntDropdown PopupContainerSelector="#components-3">
             <Overlay>
-                <AntMenu>
+                <Menu>
                     <AntMenuItem @key="0">
                         <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
                             1st menu item
@@ -102,7 +102,7 @@
                     <AntMenuItem @key="3" disabled>
                         3rd menu item（disabled）
                     </AntMenuItem>
-                </AntMenu>
+                </Menu>
             </Overlay>
             <ChildContent>
                 <a class="ant-dropdown-link" @onclick:preventDefault>
@@ -119,11 +119,11 @@
     <Demo>
         <AntDropdown PopupContainerSelector="#components-4">
             <Overlay>
-                <AntMenu>
+                <Menu>
                     <AntMenuItem @key="1">1st menu item</AntMenuItem>
                     <AntMenuItem @key="2">2nd memu item</AntMenuItem>
                     <AntMenuItem @key="3">3rd menu item</AntMenuItem>
-                </AntMenu>
+                </Menu>
             </Overlay>
             <ChildContent>
                 <a class="ant-dropdown-link" @onclick:preventDefault>
@@ -157,20 +157,20 @@
     <Demo>
         <AntDropdown PopupContainerSelector="#components-6">
             <Overlay>
-                <AntMenu>
-                    <AntMenuItemGroup Title=@("Group title")>
-                        <AntMenuItem>1st menu item</AntMenuItem>
-                        <AntMenuItem>2nd menu item</AntMenuItem>
-                    </AntMenuItemGroup>
-                    <AntSubMenu Title=@("sub menu")>
-                        <AntMenuItem>3rd menu item</AntMenuItem>
-                        <AntMenuItem>4th menu item</AntMenuItem>
-                    </AntSubMenu>
-                    <AntSubMenu Title=@("disabled sub menu") Disabled>
-                        <AntMenuItem>5d menu item</AntMenuItem>
-                        <AntMenuItem>6th menu item</AntMenuItem>
-                    </AntSubMenu>
-                </AntMenu>
+                <Menu>
+                    <MenuItemGroup Title=@("Group title")>
+                        <MenuItem>1st menu item</MenuItem>
+                        <MenuItem>2nd menu item</MenuItem>
+                    </MenuItemGroup>
+                    <SubMenu Title=@("sub menu")>
+                        <MenuItem>3rd menu item</MenuItem>
+                        <MenuItem>4th menu item</MenuItem>
+                    </SubMenu>
+                    <SubMenu Title=@("disabled sub menu") Disabled>
+                        <MenuItem>5d menu item</MenuItem>
+                        <MenuItem>6th menu item</MenuItem>
+                    </SubMenu>
+                </Menu>
             </Overlay>
             <ChildContent>
                 <a class="ant-dropdown-link" @onclick:preventDefault>
@@ -251,11 +251,11 @@
     <Demo>
         <AntDropdown PopupContainerSelector="#components-9" OnVisibleChange="OnVisibleChange" Visible="_visible">
             <Overlay>
-                <AntMenu Click="HandleMenuClick">
-                    <AntMenuItem Id="1">Clicking me will not close the menu.</AntMenuItem>
-                    <AntMenuItem Id="2">Clicking me will not close the menu also.</AntMenuItem>
-                    <AntMenuItem Id="3">Clicking me will close the menu.</AntMenuItem>
-                </AntMenu>
+                <Menu Click="HandleMenuClick">
+                    <MenuItem Id="1">Clicking me will not close the menu.</MenuItem>
+                    <MenuItem Id="2">Clicking me will not close the menu also.</MenuItem>
+                    <MenuItem Id="3">Clicking me will close the menu.</MenuItem>
+                </Menu>
             </Overlay>
             <ChildContent>
                 <a class="ant-dropdown-link" @onclick:preventDefault>
@@ -328,29 +328,29 @@
 
 @code
 {
-    private RenderFragment _overlayMenu =@<AntMenu>
-        <AntMenuItem>
+    private RenderFragment _overlayMenu =@<Menu>
+        <MenuItem>
             <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
                 1st menu item
             </a>
-        </AntMenuItem>
-        <AntMenuItem>
+        </MenuItem>
+        <MenuItem>
             <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
                 2nd menu item
             </a>
-        </AntMenuItem>
-        <AntMenuItem>
+        </MenuItem>
+        <MenuItem>
             <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
                 3rd menu item
             </a>
-        </AntMenuItem>
-    </AntMenu>;
+        </MenuItem>
+    </Menu>;
 
     private string _popupContainerSelector = "";
 
     private bool _visible = false;
 
-    private void HandleMenuClick(AntMenuItem item)
+    private void HandleMenuClick(MenuItem item)
     {
         if (item.Id == "3")
         {

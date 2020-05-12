@@ -1,6 +1,6 @@
 ﻿namespace AntBlazor.Docs
 {
-    public class MenuItem
+    public class DemoMenuItem
     {
         public int Order { get; set; }
 
@@ -12,6 +12,6 @@
 
         public string Url { get; set; }
 
-        public MenuItem[] Children { get; set; }
+        public DemoMenuItem[] Children { get; set; }
     }
 }

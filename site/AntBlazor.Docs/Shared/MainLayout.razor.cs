@@ -16,9 +16,9 @@ namespace AntBlazor.Docs.Shared
 
         private string _currentSubmenuUrl;
 
-        private MenuItem[] MenuItems { get; set; } = { };
+        private DemoMenuItem[] MenuItems { get; set; } = { };
 
-        private MenuItem[] SiderMenuItems { get; set; } = { };
+        private DemoMenuItem[] SiderMenuItems { get; set; } = { };
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -31,8 +31,8 @@ namespace AntBlazor.Docs.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            //await GetCurrentMenuItems();
-            //StateHasChanged();
+            await GetCurrentMenuItems();
+            StateHasChanged();
 
             LanguageService.LanguageChanged += OnLanguageChanged;
 
@@ -51,7 +51,7 @@ namespace AntBlazor.Docs.Shared
 
             MenuItems = await DemoService.GetMenuAsync();
             this._currentSubmenuUrl ??= string.IsNullOrEmpty(originalUrl) ? this.MenuItems[0].Url : originalUrl.Split('/')[0];
-            SiderMenuItems = MenuItems.FirstOrDefault(x => x.Url == this._currentSubmenuUrl)?.Children ?? Array.Empty<MenuItem>();
+            SiderMenuItems = MenuItems.FirstOrDefault(x => x.Url == this._currentSubmenuUrl)?.Children ?? Array.Empty<DemoMenuItem>();
 
             if (shouldNavigate)
             {

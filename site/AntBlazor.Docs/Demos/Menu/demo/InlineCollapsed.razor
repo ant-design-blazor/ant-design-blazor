@@ -1,0 +1,67 @@
+﻿<div style="width: 256;">
+    <AntButton Type="primary" OnClick="ToggleCollapsed" Style="margin-bottom: 16px">
+        @if (collapsed)
+        {
+            <AntIcon  Type="menu-unfold" Theme="outline"></AntIcon>
+        }
+        else
+        {
+            <AntIcon  Type="menu-fold" Theme="outline"></AntIcon>
+        }
+    </AntButton>
+    <Menu
+        DefaultSelectedKeys=@(new[]{"1"})
+        DefaultOpenKeys=@(new[]{"sub1"})
+        Mode=MenuMode.Inline
+        Theme=MenuTheme.Dark
+        Collapsed=collapsed
+    >
+        <MenuItem Key="1">
+            <AntIcon Type="pie-chart" Theme="outline"></AntIcon>
+            <span>Option 1</span>
+        </MenuItem>
+        <MenuItem Key="2">
+            <AntIcon Type="desktop" Theme="outline"></AntIcon>
+            <span>Option 2</span>
+        </MenuItem>
+        <MenuItem Key="3">
+            <AntIcon Type="contaainer" Theme="outline"></AntIcon>
+            <span>Option 3</span>
+        </MenuItem>
+        <SubMenu Key="sub1" Title=sub1Title >
+        <MenuItem Key="5">Option 5</MenuItem>
+        <MenuItem Key="6">Option 6</MenuItem>
+        <MenuItem Key="7">Option 7</MenuItem>
+        <MenuItem Key="8">Option 8</MenuItem>
+        </SubMenu>
+        <SubMenu Key="sub2" Title=sub2Title>
+        <MenuItem Key="9">Option 9</MenuItem>
+        <MenuItem Key="10">Option 10</MenuItem>
+        <SubMenu Key="sub3" Title=@("Submenu")>
+            <MenuItem Key="11">Option 11</MenuItem>
+            <MenuItem Key="12">Option 12</MenuItem>
+        </SubMenu>
+        </SubMenu>
+    </Menu>
+</div>
+
+@code {
+    bool collapsed = false;
+
+    RenderFragment sub1Title =
+        @<span>
+            <AntIcon Type="mail" Theme="outline"></AntIcon>
+            <span>Navigation One</span>
+        </span>;
+
+    RenderFragment sub2Title =
+        @<span>
+            <AntIcon Type="appstore" Theme="outline"></AntIcon>
+            <span>Navigation Two</span>
+        </span>;
+
+    void ToggleCollapsed()
+    {
+        collapsed = !collapsed;
+    }
+}

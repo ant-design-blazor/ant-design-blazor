@@ -3,7 +3,7 @@ using OneOf;
 
 namespace AntBlazor
 {
-    public partial class AntMenuItemGroup : AntDomComponentBase
+    public partial class MenuItemGroup : AntDomComponentBase
     {
         private static string _prefixCls = "ant-menu-item-group";
 
@@ -17,5 +17,8 @@ namespace AntBlazor
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public string Key { get; set; }
     }
 }
