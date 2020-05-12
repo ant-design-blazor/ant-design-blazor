@@ -1,12 +1,12 @@
 ﻿<div>
     <AntSwitch OnChange=changeMode /> Change Mode
-    <AntDivider Class="ant-divider" Style="margin: 0 1em;"></AntDivider>
+    <div class="ant-divider ant-divider-vertical" role="separator"></div>
     <AntSwitch OnChange=changeTheme/> Change Style
     <br />
     <br />
     <Menu Style=" width: 256px ;"
-          DefaultSelectedKeys="@(new[]{"1"})"
-          DefaultOpenKeys="@(new[]{"sub1"})"
+          DefaultSelectedKeys=@(new[]{"1"})
+          DefaultOpenKeys=@(new[]{"sub1"})
           Mode=this.mode
           Theme=this.theme>
         <MenuItem Key="1">
@@ -20,7 +20,7 @@
         <SubMenu Key="sub1" Title=sub1Title>
             <MenuItem Key="3">Option 3</MenuItem>
             <MenuItem Key="4">Option 4</MenuItem>
-            <SubMenu Key="sub1-2" Title="@("Submenu")">
+            <SubMenu Key="sub1-2" Title=@("Submenu")>
                 <MenuItem Key="5">Option 5</MenuItem>
                 <MenuItem Key="6">Option 6</MenuItem>
             </SubMenu>

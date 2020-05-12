@@ -59,9 +59,23 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<string[]> OnOpenChange { get; set; }
 
+        [Parameter]
+        public string[] SelectedKeys
+        {
+            get => _selectedKeys ?? Array.Empty<string>();
+            set
+            {
+                _selectedKeys = value;
+            }
+        }
+
+        [Parameter]
+        public EventCallback<string[]> SelectedKeysChanged { get; set; }
+
         internal MenuMode InternalMode { get; private set; }
         private bool _collapsed;
         private string[] _openKeys;
+        private string[] _selectedKeys;
 
         public List<SubMenu> Submenus { get; set; } = new List<SubMenu>();
         public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
@@ -80,6 +94,10 @@ namespace AntBlazor
 
             if (OnMenuItemClicked.HasDelegate)
                 OnMenuItemClicked.InvokeAsync(item);
+
+            _selectedKeys = MenuItems.Where(x => x.IsSelected).Select(x => x.Key).ToArray();
+            if (SelectedKeysChanged.HasDelegate)
+                SelectedKeysChanged.InvokeAsync(_selectedKeys);
         }
 
         public void SelectSubmenu(SubMenu menu)

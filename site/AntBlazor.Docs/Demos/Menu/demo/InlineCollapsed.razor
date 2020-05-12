@@ -12,9 +12,9 @@
     <Menu
         DefaultSelectedKeys=@(new[]{"1"})
         DefaultOpenKeys=@(new[]{"sub1"})
-        Mode="MenuMode.Inline"
-        Theme="MenuTheme.Dark"
-        Collapsed="@collapsed"
+        Mode=MenuMode.Inline
+        Theme=MenuTheme.Dark
+        Collapsed=collapsed
     >
         <MenuItem Key="1">
             <AntIcon Type="pie-chart" Theme="outline"></AntIcon>
@@ -37,7 +37,7 @@
         <SubMenu Key="sub2" Title=sub2Title>
         <MenuItem Key="9">Option 9</MenuItem>
         <MenuItem Key="10">Option 10</MenuItem>
-        <SubMenu Key="sub3" Title="@("Submenu")">
+        <SubMenu Key="sub3" Title=@("Submenu")>
             <MenuItem Key="11">Option 11</MenuItem>
             <MenuItem Key="12">Option 12</MenuItem>
         </SubMenu>

@@ -1,6 +1,6 @@
 ﻿<Menu Mode="MenuMode.Inline"
-      OpenKeys="this.openKeys"
-      OnOpenChange="this.onOpenChange"
+      OpenKeys=this.openKeys
+      OnOpenChange=this.onOpenChange
       Style="width:256px ;">
     <SubMenu Key="sub1" Title=sub1Title>
         <MenuItem Key="1">Option 1</MenuItem>
@@ -11,7 +11,7 @@
     <SubMenu Key="sub2" Title=sub2Title>
         <MenuItem Key="5">Option 5</MenuItem>
         <MenuItem Key="6">Option 6</MenuItem>
-        <SubMenu Key="sub3" Title="@("Submenu")">
+        <SubMenu Key="sub3" Title=@("Submenu")>
             <MenuItem Key="7">Option 7</MenuItem>
             <MenuItem Key="8">Option 8</MenuItem>
         </SubMenu>

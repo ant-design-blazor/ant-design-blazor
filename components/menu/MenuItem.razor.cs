@@ -8,14 +8,30 @@ namespace AntBlazor
 {
     public partial class MenuItem : AntDomComponentBase
     {
-        [CascadingParameter] public Menu RootMenu { get; set; }
-        [CascadingParameter] public SubMenu ParentMenu { get; set; }
-        [Parameter] public RenderFragment ChildContent { get; set; }
-        [Parameter] public string Key { get; set; }
-        [Parameter] public bool Disabled { get; set; }
-        [Parameter] public EventCallback<MouseEventArgs> OnClicked { get; set; }
+        [CascadingParameter]
+        public Menu RootMenu { get; set; }
+
+        [CascadingParameter]
+        public SubMenu ParentMenu { get; set; }
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public string Key
+        {
+            get => _key ?? Id;
+            set => _key = value;
+        }
+
+        [Parameter]
+        public bool Disabled { get; set; }
+
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnClicked { get; set; }
 
         public bool IsSelected { get; private set; }
+        private string _key;
 
         private void SetClass()
         {
@@ -35,6 +51,14 @@ namespace AntBlazor
             RootMenu.MenuItems.Add(this);
 
             if (RootMenu.DefaultSelectedKeys.Contains(Key))
+                Select();
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (RootMenu.SelectedKeys.Contains(Key))
                 Select();
         }
 
