@@ -51,8 +51,10 @@ namespace AntBlazor.Docs.Services
         {
             get
             {
-                if (dictionary.ContainsKey(key))
-                    return dictionary[key].Value;
+                if (dictionary.TryGetValue(key, out var lazy))
+                {
+                    return lazy.Value;
+                }
 
                 return default(TValue);
             }
