@@ -82,7 +82,7 @@ namespace AntBlazor
                 _class = Convert.ToString(obj, CultureInfo.CurrentCulture);
             }
             UpdateCssClass();
-            if (MenuItem != null && _isActive)
+            if (MenuItem != null && _isActive && !MenuItem.IsSelected)
             {
                 Menu?.SelectItem(MenuItem);
             }
@@ -110,10 +110,19 @@ namespace AntBlazor
             {
                 _isActive = shouldBeActiveNow;
                 UpdateCssClass();
-                if (MenuItem != null && _isActive)
+                if (MenuItem != null)
                 {
-                    Menu?.SelectItem(MenuItem);
+                    if (_isActive)
+                    {
+                        MenuItem.Select();
+                        Menu.SelectItem(MenuItem);
+                    }
+                    else
+                    {
+                        MenuItem.Deselect();
+                    }
                 }
+
                 StateHasChanged();
             }
         }
@@ -134,7 +143,7 @@ namespace AntBlazor
 
         private bool EqualsHrefExactlyOrIfTrailingSlashAdded(string currentUriAbsolute)
         {
-            if (string.Equals(currentUriAbsolute, _hrefAbsolute, StringComparison.Ordinal))
+            if (string.Equals(currentUriAbsolute, _hrefAbsolute, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
@@ -149,7 +158,7 @@ namespace AntBlazor
                 // for http://host/vdir as they do for host://host/vdir/ as it's no
                 // good to display a blank page in that case.
                 if (_hrefAbsolute[^1] == '/'
-                && _hrefAbsolute.StartsWith(currentUriAbsolute, StringComparison.Ordinal))
+                && _hrefAbsolute.StartsWith(currentUriAbsolute, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
@@ -178,7 +187,7 @@ namespace AntBlazor
             int prefixLength = prefix.Length;
             if (value.Length > prefixLength)
             {
-                return value.StartsWith(prefix, StringComparison.Ordinal)
+                return value.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
                 && (
                 // Only match when there's a separator character either at the end of the
                 // prefix or right after it.
