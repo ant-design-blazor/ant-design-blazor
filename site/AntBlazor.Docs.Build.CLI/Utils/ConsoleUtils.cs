@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace AntBlazor.Docs.Build.CLI.Utils
 {
@@ -10,10 +10,6 @@ namespace AntBlazor.Docs.Build.CLI.Utils
             Console.ForegroundColor = foregroundColor;
             Console.WriteLine(message);
             Console.ForegroundColor = currentForegroundColor;
-        }
-
-        public static void WriteWelcome()
-        {
         }
     }
 }
