@@ -34,7 +34,7 @@ namespace AntBlazor
         public bool Selectable { get; set; } = true;
 
         [Parameter]
-        public bool Collapsed { get; set; }
+        public bool InlineCollapsed { get; set; }
 
         [Parameter]
         public IEnumerable<string> DefaultSelectedKeys { get; set; } = new List<string>();
@@ -91,6 +91,12 @@ namespace AntBlazor
             {
                 item.Select();
             }
+            else
+            {
+                item.Deselect();
+            }
+
+            StateHasChanged();
 
             if (OnMenuItemClicked.HasDelegate)
                 OnMenuItemClicked.InvokeAsync(item);
@@ -145,7 +151,7 @@ namespace AntBlazor
             base.OnInitialized();
 
             if (InternalMode != MenuMode.Inline && _collapsed)
-                throw new ArgumentException($"{nameof(Menu)} in the {Mode} mode cannot be {nameof(Collapsed)}");
+                throw new ArgumentException($"{nameof(Menu)} in the {Mode} mode cannot be {nameof(InlineCollapsed)}");
 
             InternalMode = Mode;
             if (Parent != null)
@@ -161,7 +167,7 @@ namespace AntBlazor
             base.OnParametersSet();
             if (Parent == null)
             {
-                this._collapsed = Collapsed;
+                this._collapsed = InlineCollapsed;
             }
             Update(_collapsed);
             SetClass();
