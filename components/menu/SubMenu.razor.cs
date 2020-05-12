@@ -23,7 +23,11 @@ namespace AntBlazor
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public string Key { get; set; }
+        public string Key
+        {
+            get => _key ?? Id;
+            set => _key = value;
+        }
 
         [Parameter]
         public bool Disabled { get; set; }
@@ -34,6 +38,8 @@ namespace AntBlazor
         private ClassMapper SubMenuMapper { get; } = new ClassMapper();
 
         public bool IsOpen { get; private set; }
+
+        private string _key;
 
         private void SetClass()
         {
@@ -98,6 +104,9 @@ namespace AntBlazor
         {
             base.OnParametersSet();
             SetClass();
+
+            if (RootMenu.OpenKeys.Contains(Key))
+                IsOpen = true;
         }
 
         public void Close()

@@ -43,7 +43,15 @@ namespace AntBlazor
         public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
 
         [Parameter]
-        public string[] OpenKeys { get; set; }
+        public string[] OpenKeys
+        {
+            get => _openKeys ?? Array.Empty<string>();
+            set
+            {
+                _openKeys = value;
+                HandleOpenKeySet();
+            }
+        }
 
         [Parameter]
         public EventCallback<string[]> OpenKeysChanged { get; set; }
@@ -54,6 +62,7 @@ namespace AntBlazor
         private MenuMode _initialMode;
         internal MenuMode InternalMode { get; private set; }
         private bool _collapsed;
+        private string[] _openKeys;
 
         public List<SubMenu> Submenus { get; set; } = new List<SubMenu>();
         public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
@@ -106,6 +115,9 @@ namespace AntBlazor
             if (OnSubmenuClicked.HasDelegate)
                 OnSubmenuClicked.InvokeAsync(menu);
 
+            var openKeys = Submenus.Where(x => x.IsOpen).Select(x => x.Key).ToArray();
+            HandleOpenChange(openKeys);
+
             StateHasChanged();
         }
 
@@ -156,11 +168,39 @@ namespace AntBlazor
                 {
                     item.Close();
                 }
+
+                HandleOpenChange(Array.Empty<string>());
             }
             else
             {
                 InternalMode = _initialMode;
             }
+        }
+
+        private void HandleOpenChange(string[] openKeys)
+        {
+            this._openKeys = openKeys;
+
+            if (OnOpenChange.HasDelegate)
+                OnOpenChange.InvokeAsync(openKeys);
+
+            if (OpenKeysChanged.HasDelegate)
+                OpenKeysChanged.InvokeAsync(openKeys);
+        }
+
+        private void HandleOpenKeySet()
+        {
+            foreach (SubMenu item in Submenus.Where(x => x.Key.IsIn(this.OpenKeys)))
+            {
+                item.Open();
+            }
+
+            foreach (SubMenu item in Submenus.Where(x => !x.Key.IsIn(this.OpenKeys)))
+            {
+                item.Close();
+            }
+
+            StateHasChanged();
         }
 
         protected override void Dispose(bool disposing)
