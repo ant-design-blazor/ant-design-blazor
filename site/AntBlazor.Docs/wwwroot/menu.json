@@ -198,7 +198,12 @@
           {
             "title": "Notification",
             "type": "menuItem",
-            "url": "components/notification"
+            "url": "notification"
+          },
+          {
+            "title": "Progress",
+            "type": "menuItem",
+            "url": "components/progress"
           },
           {
             "title": "Result",
