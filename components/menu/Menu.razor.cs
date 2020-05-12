@@ -59,7 +59,6 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<string[]> OnOpenChange { get; set; }
 
-        private MenuMode _initialMode;
         internal MenuMode InternalMode { get; private set; }
         private bool _collapsed;
         private string[] _openKeys;
@@ -113,7 +112,9 @@ namespace AntBlazor
 
         private void SetClass()
         {
-            ClassMapper.Add(PrefixCls)
+            ClassMapper
+                .Clear()
+                .Add(PrefixCls)
                 .Add($"{PrefixCls}-root")
                 .Add($"{PrefixCls}-{Theme}")
                 .Add($"{PrefixCls}-{InternalMode}")
@@ -128,7 +129,6 @@ namespace AntBlazor
             if (InternalMode != MenuMode.Inline && _collapsed)
                 throw new ArgumentException($"{nameof(Menu)} in the {Mode} mode cannot be {nameof(Collapsed)}");
 
-            _initialMode = Mode;
             InternalMode = Mode;
             if (Parent != null)
             {
@@ -146,6 +146,7 @@ namespace AntBlazor
                 this._collapsed = Collapsed;
             }
             Update(_collapsed);
+            SetClass();
         }
 
         public void Update(bool collapsed)
@@ -163,7 +164,7 @@ namespace AntBlazor
             }
             else
             {
-                InternalMode = _initialMode;
+                InternalMode = Mode;
             }
         }
 
