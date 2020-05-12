@@ -64,14 +64,14 @@ namespace AntBlazor.Docs.Build.CLI.Command
         private void GenerateFiles(string demoDirectory, string docsDirectory, string output)
         {
             DirectoryInfo demoDirectoryInfo = new DirectoryInfo(demoDirectory);
-            if (demoDirectoryInfo.Attributes != FileAttributes.Directory)
+            if (!demoDirectoryInfo.Exists)
             {
                 Console.WriteLine("{0} is not a directory", demoDirectory);
                 return;
             }
 
             DirectoryInfo docsDirectoryInfo = new DirectoryInfo(docsDirectory);
-            if (docsDirectoryInfo.Attributes != FileAttributes.Directory)
+            if (!docsDirectoryInfo.Exists)
             {
                 Console.WriteLine("{0} is not a directory", docsDirectory);
                 return;
