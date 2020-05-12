@@ -40,10 +40,10 @@ namespace AntBlazor
 
         public static string delElementFrom => $"{FUNC_PREFIX}delElementFrom";
 
+
         public static string initCsInstance => $"{FUNC_PREFIX}initCsInstance";
 
         public static string delCsInstance => $"{FUNC_PREFIX}delCsInstance";
-
 
 
         public static string appendHtml => $"{FUNC_PREFIX}appendHtml";
@@ -51,7 +51,7 @@ namespace AntBlazor
         public static string removeElement=> $"{FUNC_PREFIX}removeElement";
 
         public static string addNotification => $"{FUNC_PREFIX}addNotification";
-        
+
         public static string removeNotification => $"{FUNC_PREFIX}removeNotification";
     }
 }

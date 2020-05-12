@@ -1,19 +1,54 @@
-export function getDom(element) {
+export {initCsInstance, delCsInstance} from "./modules/csInstance";
+export * from "./modules/notification";
+
+
+export function getDom(element, parent = null) {
     if (!element) {
         element = document.body;
-    } else if (typeof element === 'string') {
-        element = document.querySelector(element);
+    }
+    if (element instanceof Node) {
+        return element;
+    }
+    
+    if (typeof element === 'string') {
+        let parentElement;
+        if (!parent) {
+            parentElement = document;
+        } else {
+            if (typeof parent === "string") {
+                parentElement = document.querySelector(element);
+            } else if (parent instanceof Node) {
+                parentElement = parent;
+            } else {
+                parentElement = document;
+            }
+        }
+
+        element = parentElement.querySelector(element);
     } else {
         element = null;
     }
     return element;
 }
 
-export function getDoms(element: string) {
-    if (typeof element === "string") {
-        return document.querySelectorAll(element);
+export function getDoms(element: string | Array<Element>, parent:string|Element = null) {
+    let parentElement: Element | Document;
+    if (parent) {
+        if (parent instanceof Element) {
+            parentElement = parent;
+        } else {
+            parentElement = getDom(parent);
+        }
     } else {
-        return new NodeList();
+        parentElement = document;
+    }
+
+    if (typeof element === "string") {
+        return Array.from(parentElement.querySelectorAll(element));
+    } else if (element instanceof Array) {
+        return element;
+    } else {
+        return [];
     }
 }
 
@@ -180,10 +215,10 @@ export function delElementFrom(delElement, elementSelector) {
 }
 
 /**
- * 将html字符串转为element
- * @param html
+ * Convert html string to a node
+ * @param html {string} closing the HTML fragment
  */
-function htmlToElement(html) {
+export function htmlToElement(html:string) {
     var template = document.createElement('template');
     html = html.trim();
     template.innerHTML = html;
@@ -192,13 +227,12 @@ function htmlToElement(html) {
 }
 
 /**
- * 将html追加到selector的末尾
- * @param html  string(css选择器) | Node
- * @param containerSelector string(css选择器) | HTMLElement
+ * Append the HTML to the end of the selector
+ * @param html {string | Node} HTML string or node that to be append
+ * @param containerSelector {string | Element} parent element that should be append
  */
 export function appendHtml(html: string | Node,
-    containerSelector: string | HTMLElement = null) {
-    console.log("appendHtml,containerSelector", containerSelector);
+    containerSelector: string | Element = null) {
     let element: Node;
     if (typeof (html) === "string") {
         element = htmlToElement(html);
@@ -206,7 +240,7 @@ export function appendHtml(html: string | Node,
     else {
         element = html;
     }
-    let dom: HTMLElement;
+    let dom: Element;
     if (containerSelector) {
         if (typeof (containerSelector) === "string") {
             dom = getDom(containerSelector);
@@ -223,18 +257,20 @@ export function appendHtml(html: string | Node,
 }
 
 /**
- * 将selector从DOM中移出
- * @param selector string(css选择器) | Element | NodeList
+ * Removing the selector from the DOM
+ * @param selector {string | Element | Array<Node> | NodeList}
  */
-export function removeElement(selector: string | Element | NodeList) {
-    if (selector instanceof Element) {
+export function removeElement(selector: string | Node | Array<Node> | NodeList) {
+    if (selector instanceof Node) {
         selector.parentNode.removeChild(selector);
     } else {
-        let elements: NodeList;
+        let elements: Array<Node>;
         if (typeof selector === "string") {
             elements = getDoms(selector);
-        } else {
+        } else if (selector instanceof Array){
             elements = selector;
+        }else if (selector instanceof NodeList) {
+            elements = Array.from(selector);
         }
         if (elements) {
             for (var i = 0; i < elements.length; i++) {
@@ -245,18 +281,22 @@ export function removeElement(selector: string | Element | NodeList) {
 }
 
 /**
- * 清空selector中元素
- * @param selector string(css选择器) | Element | NodeList
+ * Empty the elements in the selector
+ * @param selector {string | Element | Array<Element> | NodeList}
+ * @return {string | Element | Array<Element> | NodeList} Element or elements that have been emptied of content
  */
-export function emptyElement(selector: string | Element | NodeList) {
+export function emptyElement(selector: string | Element | Array<Element> | NodeList) {
     if (selector instanceof Element) {
         selector.innerHTML = "";
+        return selector;
     }
-    let elements: NodeList;
+    let elements: Array<Node>;
 
     if (typeof selector === "string") {
         elements = getDoms(selector);
     } else if (selector instanceof NodeList){
+        elements = Array.from(selector);
+    } else if (selector instanceof Array) {
         elements = selector;
     }
     if (elements) {
@@ -266,11 +306,12 @@ export function emptyElement(selector: string | Element | NodeList) {
             }
         }
     }
+    return elements;
 }
 
 /**
- * 获取selector的class列表
- * @param selector string(css选择器) | Element
+ * Get the selector's class array
+ * @param selector {string | Element}
  * @return class name array
  */
 export function getClass(selector: string | Element) {
@@ -287,9 +328,9 @@ export function getClass(selector: string | Element) {
 }
 
 /**
- * 从selector中的class中移出className
- * @param selector string(css选择器) | Element
- * @param className string(class name) | Array<string>(class name array)
+ * Remove className from the class in the selector
+ * @param selector {string | Element} element to be manipulated, css selector or element
+ * @param className {string | Array<string>} class name or class name array
  */
 export function removeClass(selector: string | Element,
     className: string | Array<string>) {
@@ -316,105 +357,25 @@ export function removeClass(selector: string | Element,
 }
 
 /**
- * 向js端注册C#类的实例引用
- * @param instance
- * @param instanceName
+ * add className for the selector
+ * @param selector {string | Element} element to be manipulated, css selector or element
+ * @param className {string | Array<string>} class name or class name array
  */
-export function initCsInstance(instance: any, instanceName: string) {
-    let csInstance = (<any>window).antBlazor.interop.csInstance;
-    if (!csInstance) {
-        csInstance = {};
-        (<any>window).antBlazor.interop.csInstance = csInstance;
-    }
-    csInstance[instanceName] = instance;
-}
-
-/**
- * 删除js端注册的C#类的实例引用
- * @param instanceName
- */
-export function delCsInstance(instanceName: string) {
-    let csInstance = (<any>window).antBlazor.interop.csInstance;
-    if (csInstance) {
-        delete (<any>window).antBlazor.interop.csInstance[instanceName];
-    }
-}
-
-/**
- * 获取js端注册的C#类的实例引用
- * @param instanceName
- */
-export function getCsInstance(instanceName:string) {
-    return (<any>window).antBlazor.interop.csInstance[instanceName];
-}
-
-/************ Notification start ************/
-
-function getNotificationService() {
-    return getCsInstance("notification");
-}
-
-
-/**
- * 移除通知提示框
- * @param id
- * @param element
- */
-export function removeNotification(id:string, element: Element) {
-    if (!element) {
-        element = document.querySelector("#" + id);
-    }
-    removeClass(element, ["ant-notification-fade-enter", "ant-notification-fade-enter-active"]);
-    element.className += " ant-notification-fade-leave ant-notification-fade-leave-active";
-    window.setTimeout(() => {
-        removeElement(element);
-    }, 500);
-    getNotificationService().invokeMethodAsync("NotificationClose", id);
-}
-
-
-/**
- * 添加通知提示框
- * @param htmlStr
- * @param elementSelector
- * @param id
- * @param duration
- */
-export function addNotification(htmlStr, elementSelector, id, duration) {
-    let spanContainer = getDom(elementSelector).children[0];
-    let element = <HTMLElement>htmlToElement(htmlStr);
-    appendHtml(element, spanContainer);
-
-    let timeout;
-    if (duration && duration > 0) {
-        timeout = window.setTimeout(() => {
-            removeNotification(id, element);
-        }, duration * 1000);
+export function addClass(selector: string | Element,
+    className: string | Array<string>) {
+    let element: Element;
+    if (typeof selector === "string") {
+        element = getDom(selector);
+    } else {
+        element = selector;
     }
 
-    element.addEventListener("click",
-        () => {
-            getNotificationService().invokeMethodAsync("NotificationClick", id);
-        });
-    let btn = (<any>element).querySelector(".ant-notification-notice-btn");
-    if (btn) {
-        btn.addEventListener("click",
-            e => {
-                window.clearTimeout(timeout);
-                removeNotification(id, element);
-                e.preventDefault();
-                e.stopPropagation();
-            });
+    let addClassName: string;
+    if (typeof className === "string") {
+        addClassName = className;
+    } else {
+        addClassName = className.join(" ");
     }
-
-    (<any>element).querySelector(".ant-notification-notice-close")
-        .addEventListener("click",
-            e => {
-                window.clearTimeout(timeout);
-                removeNotification(id, element);
-                e.preventDefault();
-                e.stopPropagation();
-            });
+    element.className += " " + addClassName;
+    return element;
 }
-
-/************ Notification end ************/
