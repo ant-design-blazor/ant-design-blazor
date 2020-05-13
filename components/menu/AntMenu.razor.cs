@@ -45,6 +45,11 @@ namespace AntBlazor
 
         public void SelectItem(AntMenuItem item)
         {
+            if (item == null)
+            {
+                return;
+            }
+
             foreach (AntMenuItem menuitem in MenuItems.Where(x => x != item))
             {
                 menuitem.Deselect();
@@ -61,6 +66,11 @@ namespace AntBlazor
 
         public void SelectSubmenu(AntSubMenu menu)
         {
+            if (menu == null)
+            {
+                return;
+            }
+
             if (Accordion)
             {
                 foreach (AntSubMenu item in Submenus.Where(x => x != menu && x != menu.Parent))
@@ -138,12 +148,14 @@ namespace AntBlazor
             }
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
             if (Parent != null)
             {
                 Parent.OnCollapsed -= Update;
             }
+
+            base.Dispose(disposing);
         }
     }
 }

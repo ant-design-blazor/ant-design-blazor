@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntBlazor
 {
-    public class AntDatePickerSize
+    public static class AntDatePickerSize
     {
         public const string Large = "40px";
         public const string Default = "32px";

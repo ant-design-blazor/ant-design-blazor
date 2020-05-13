@@ -67,7 +67,6 @@ namespace AntBlazor
                 .If($"{PrefixCls}-vertical", () => DotPosition == AntCarouselDotPosition.Left || DotPosition == AntCarouselDotPosition.Right);
         }
 
-
         protected async override Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -102,7 +101,6 @@ namespace AntBlazor
 
         private int Activate(int index, string transition = " transition: -webkit-transform 500ms ease 0s;")
         {
-
             if (Effect == AntCarouselEffect.ScrollX)
             {
                 _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth * (index + 1)}px, 0px, 0px);{transition}";

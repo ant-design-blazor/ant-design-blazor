@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -272,7 +273,7 @@ namespace AntBlazor
         public Action<double> OnChange { get; set; }
 
         /// <summary>
-        /// Set Tooltip display position. Ref <seealso cref="Tooltip"/>
+        /// Set Tooltip display position. Ref Tooltip
         /// </summary>
         [Parameter]
         public string TooltipPlacement { get; set; }
@@ -335,7 +336,7 @@ namespace AntBlazor
                 throw new ArgumentOutOfRangeException(nameof(Step), "Must greater than 0.");
             }
 
-            if (Step != null && ((Max - Min) / Step) % 1 != 0)
+            if (Step != null && (Max - Min) / Step % 1 != 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(Step), $"Must be divided by ({Max} - {Min}).");
             }
@@ -367,13 +368,12 @@ namespace AntBlazor
             }
         }
 
-        private async Task CalculateValueAsync(double clickClient, bool right = true)
+        private async Task CalculateValueAsync(double clickClient)
         {
             _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _slider);
             double sliderOffset = (double)(Vertical ? _sliderDom.top : _sliderDom.left);
             double sliderLength = (double)(Vertical ? _sliderDom.height : _sliderDom.width);
-            double handleNewPosition = 0;
-
+            double handleNewPosition;
             if (_right)
             {
                 if (_rightHandleDom == null)
@@ -460,15 +460,15 @@ namespace AntBlazor
 
         private void SetStyle()
         {
-            _rightHandleStyle = string.Format(RightHandleStyleFormat, (RightValue / Max).ToString("p"));
+            _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, (RightValue / Max).ToString("p", CultureInfo.CurrentCulture));
             if (Range)
             {
-                _trackStyle = string.Format(TrackStyleFormat, (LeftValue / Max).ToString("p"), ((RightValue - LeftValue) / Max).ToString("p"));
-                _leftHandleStyle = string.Format(LeftHandleStyleFormat, (LeftValue / Max).ToString("p"));
+                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, (LeftValue / Max).ToString("p", CultureInfo.CurrentCulture), ((RightValue - LeftValue) / Max).ToString("p", CultureInfo.CurrentCulture));
+                _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, (LeftValue / Max).ToString("p", CultureInfo.CurrentCulture));
             }
             else
             {
-                _trackStyle = string.Format(TrackStyleFormat, "0%", (RightValue / Max).ToString("p"));
+                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, "0%", (RightValue / Max).ToString("p", CultureInfo.CurrentCulture));
             }
 
             StateHasChanged();
@@ -476,7 +476,7 @@ namespace AntBlazor
 
         private string SetMarkPosition(double key)
         {
-            return (key / Max).ToString("p");
+            return (key / Max).ToString("p", CultureInfo.CurrentCulture);
         }
 
         private string IsActiveMark(double key)
