@@ -8,10 +8,10 @@ using System;
 
 namespace AntBlazor
 {
-    public class AntDatePickerPanelBase : AntPickerPanelBase
+    public class DatePickerPanelBase : PickerPanelBase
     {
         [CascadingParameter]
-        public AntDatePicker DatePicker { get; set; }
+        public DatePicker DatePicker { get; set; }
 
         protected void OnSelectTime(DateTime date)
         {

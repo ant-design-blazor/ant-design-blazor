@@ -4,9 +4,9 @@ using System.Text;
 
 namespace AntBlazor.Internal
 {
-    public partial class AntDatePickerDatetimePanel : AntDatePickerPanelBase
+    public partial class DatePickerDatetimePanel : DatePickerPanelBase
     {
-        private AntDatePickerDisabledTime GetDisabledTime()
+        private DatePickerDisabledTime GetDisabledTime()
         {
             List<int> disabledHours = new List<int>();
             List<int> disabledMinutes = new List<int>();
@@ -25,7 +25,7 @@ namespace AntBlazor.Internal
                 disabledSeconds.AddRange(DatePicker.DisabledSeconds(Value));
             }
 
-            AntDatePickerDisabledTime userDisabledTime = DatePicker.DisabledTime?.Invoke(Value);
+            DatePickerDisabledTime userDisabledTime = DatePicker.DisabledTime?.Invoke(Value);
 
             if (userDisabledTime != null)
             {
@@ -43,7 +43,7 @@ namespace AntBlazor.Internal
                 }
             }
 
-            return new AntDatePickerDisabledTime(disabledHours.ToArray(), disabledMinutes.ToArray(), disabledSeconds.ToArray());
+            return new DatePickerDisabledTime(disabledHours.ToArray(), disabledMinutes.ToArray(), disabledSeconds.ToArray());
         }
     }
 }

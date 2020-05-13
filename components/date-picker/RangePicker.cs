@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public partial class AntRangePicker : AntDatePicker
+    public partial class RangePicker : DatePicker
     {
-        public AntRangePicker()
+        public RangePicker()
         {
             IsRange = true;
         }

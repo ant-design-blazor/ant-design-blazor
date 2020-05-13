@@ -1,5 +1,5 @@
 ﻿@namespace AntBlazor.Internal
-@inherits AntDatePickerPanelBase
+@inherits DatePickerPanelBase
 @using System.Globalization;
 
 @{
@@ -14,7 +14,7 @@
     const int FIRST_YEAR_INDEX = 0;
     const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL;
 }
-<AntDatePickerTemplate PickerIndex="@PickerIndex"
+<DatePickerTemplate PickerIndex="@PickerIndex"
                        MaxRow="MAX_ROW"
                        MaxCol="MAX_COL"
                        ViewStartDate="startDate"
@@ -24,7 +24,7 @@
                        OnValueSelect="date => OnSelectYear(date)"
                        GetNextColValue="date => date.AddYears(10)">
     <RenderPickerHeader>
-        <AntDatePickerHeader SuperChangeDateInterval="100"
+        <DatePickerHeader SuperChangeDateInterval="100"
                              PickerIndex="@PickerIndex" 
                              ShowPreChange="@false"
                              ShowNextChange="@false"
@@ -35,4 +35,4 @@
         @{yearIndex++;}
         @(currentColDate.Year)-@(currentColDate.Year + 9)
     </RenderColValue>
-</AntDatePickerTemplate>
+</DatePickerTemplate>

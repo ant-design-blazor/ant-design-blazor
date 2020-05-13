@@ -1,5 +1,5 @@
 ﻿@namespace AntBlazor.Internal
-@inherits AntDatePickerPanelBase
+@inherits DatePickerPanelBase
 
 <div class="@(DatePicker.PrefixCls)-@(Picker)-panel">
     @RenderPickerHeader
@@ -36,11 +36,11 @@
                                 class="@(DatePicker.PrefixCls)-cell @(inViewCls) @(todayCls) @selectedCls @disabledCls">
                                 <div class="@(DatePicker.PrefixCls)-cell-inner"
                                      @onclick="e => OnValueSelect?.Invoke(currentColDate)">
-                                    @if (Picker == AntDatePickerType.Date && DatePicker.DateRender != null)
+                                    @if (Picker == DatePickerType.Date && DatePicker.DateRender != null)
                                     {
                                         @(DatePicker.DateRender(currentColDate, DatePicker.CurrentDate))
                                     }
-                                    else if (Picker == AntDatePickerType.Month && DatePicker.MonthCellRender != null)
+                                    else if (Picker == DatePickerType.Month && DatePicker.MonthCellRender != null)
                                     {
                                         @(DatePicker.MonthCellRender(currentColDate))
                                     }

@@ -1,5 +1,5 @@
 ﻿@namespace AntBlazor.Internal
-@inherits AntDatePickerPanelBase
+@inherits DatePickerPanelBase
 
 <div class="@(DatePicker.PrefixCls)-header">
     @if (ShowSuperPreChange)
@@ -17,27 +17,27 @@
     }
 
     <div class="@(DatePicker.PrefixCls)-header-view">
-        @if (Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Month, AntDatePickerType.Quarter, AntDatePickerType.Week))
+        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
         {
-            <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-year-btn" @onclick="e => PopUpPicker(AntDatePickerType.Year)">
+            <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
                 @(PickerValue.Year)年
             </button>
         }
-        @if (Picker.IsIn(AntDatePickerType.Date, AntDatePickerType.Week))
+        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
         {
-            <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-month-btn" @onclick="e => PopUpPicker(AntDatePickerType.Month)">
+            <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
                 @(PickerValue.Month)月
             </button>
         }
-        @if (Picker.IsIn(AntDatePickerType.Year))
+        @if (Picker.IsIn(DatePickerType.Year))
         {
             int startYear = PickerValue.Year / 10 * 10;
 
-            <button type="button" class="@(DatePicker.PrefixCls)-decade-btn" @onclick="e => PopUpPicker(AntDatePickerType.Decade)">
+            <button type="button" class="@(DatePicker.PrefixCls)-decade-btn" @onclick="e => PopUpPicker(DatePickerType.Decade)">
                 @(startYear)-@(startYear + 9)
             </button>
         }
-        @if (Picker.IsIn(AntDatePickerType.Decade))
+        @if (Picker.IsIn(DatePickerType.Decade))
         {
             int startYear = PickerValue.Year / 100 * 100;
 

@@ -1,5 +1,5 @@
 ﻿@namespace AntBlazor.Internal
-@inherits AntDatePickerPanelBase
+@inherits DatePickerPanelBase
 @using System.Globalization;
 
 @{
@@ -10,7 +10,7 @@
     const int MAX_ROW = 1;
     const int MAX_COL = 4;
 }
-<AntDatePickerTemplate 
+<DatePickerTemplate 
     PickerIndex="@PickerIndex"
     MaxRow="MAX_ROW"
     MaxCol="MAX_COL"
@@ -22,7 +22,7 @@
     OnValueSelect="date => OnSelectQuarter(date)"
     GetNextColValue="date => date.AddMonths(3)">
     <RenderPickerHeader>
-        <AntDatePickerHeader PickerIndex="@PickerIndex"
+        <DatePickerHeader PickerIndex="@PickerIndex"
                              ShowPreChange="@false"
                              ShowNextChange="@false"
                              ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
@@ -31,4 +31,4 @@
     <RenderColValue Context="currentColDate">
         @DateHelper.GetDayOfQuarter(currentColDate)
     </RenderColValue>
-</AntDatePickerTemplate>
+</DatePickerTemplate>

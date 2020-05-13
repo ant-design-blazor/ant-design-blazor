@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntBlazor
 {
-    internal class AntDatePickerPlaceholder
+    internal class DatePickerPlaceholder
     {
         public const string Date = "请选择日期";
         public const string Week = "请选择周";
@@ -17,12 +17,12 @@ namespace AntBlazor
         {
             var placeholder = pickerType switch
             {
-                AntDatePickerType.Date => AntDatePickerPlaceholder.Date,
-                AntDatePickerType.Week => AntDatePickerPlaceholder.Week,
-                AntDatePickerType.Month => AntDatePickerPlaceholder.Month,
-                AntDatePickerType.Quarter => AntDatePickerPlaceholder.Quarter,
-                AntDatePickerType.Year => AntDatePickerPlaceholder.Year,
-                AntDatePickerType.Time => AntDatePickerPlaceholder.Time,
+                DatePickerType.Date => DatePickerPlaceholder.Date,
+                DatePickerType.Week => DatePickerPlaceholder.Week,
+                DatePickerType.Month => DatePickerPlaceholder.Month,
+                DatePickerType.Quarter => DatePickerPlaceholder.Quarter,
+                DatePickerType.Year => DatePickerPlaceholder.Year,
+                DatePickerType.Time => DatePickerPlaceholder.Time,
                 _ => "",
             };
 

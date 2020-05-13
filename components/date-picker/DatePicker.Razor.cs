@@ -9,7 +9,7 @@ using OneOf;
 
 namespace AntBlazor
 {
-    public partial class AntDatePicker : AntDomComponentBase
+    public partial class DatePicker : AntDomComponentBase
     {
         [Parameter]
         public string PrefixCls { get; set; } = "ant-picker";
@@ -108,7 +108,7 @@ namespace AntBlazor
         public string DropdownClassName { get; set; }
 
         [Parameter]
-        public string Size { get; set; } = AntDatePickerSize.Default;
+        public string Size { get; set; } = DatePickerSize.Default;
 
         [Parameter]
         public string Format { get; set; }
@@ -183,7 +183,7 @@ namespace AntBlazor
         public Func<DateTime, int[]> DisabledSeconds { get; set; } = null;
 
         [Parameter]
-        public Func<DateTime, AntDatePickerDisabledTime> DisabledTime { get; set; } = null;
+        public Func<DateTime, DatePickerDisabledTime> DisabledTime { get; set; } = null;
 
         [Parameter]
         public Func<DateTime, DateTime, RenderFragment> DateRender { get; set; }
@@ -264,14 +264,14 @@ namespace AntBlazor
             }
         }
 
-        private AntDatePickerInput _inputStart;
-        private AntDatePickerInput _inputEnd;
-        private AntDropdown _dropDown;
+        private DatePickerInput _inputStart;
+        private DatePickerInput _inputEnd;
+        private Dropdown _dropDown;
 
         private string _activeBarStyle = "";
 
-        private AntDatePickerStatus[] _pickerStatus
-            = new AntDatePickerStatus[] { new AntDatePickerStatus(), new AntDatePickerStatus() };
+        private DatePickerStatus[] _pickerStatus
+            = new DatePickerStatus[] { new DatePickerStatus(), new DatePickerStatus() };
 
         private Stack<string> _prePickerStack = new Stack<string>();
         private bool _isClose = true;
@@ -282,7 +282,7 @@ namespace AntBlazor
             // set default picker type
             if (_isSetPicker == false)
             {
-                Picker = AntDatePickerType.Date;
+                Picker = DatePickerType.Date;
             }
 
             this.SetClass();
@@ -313,7 +313,7 @@ namespace AntBlazor
                 .If($"{ClassName}", () => !string.IsNullOrEmpty(ClassName))
                 .If($"{PrefixCls}-range", () => IsRange == true)
                 .If($"{PrefixCls}-focused", () => AutoFocus == true)
-               //.If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == AntEmpty.PRESENTED_IMAGE_SIMPLE)
+               //.If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == Empty.PRESENTED_IMAGE_SIMPLE)
                //.If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                ;
         }
@@ -365,12 +365,12 @@ namespace AntBlazor
             // TODO：Locale
             string formater = _pickerStatus[index]._initPicker switch
             {
-                AntDatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
-                AntDatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}周",
-                AntDatePickerType.Month => "yyyy-MM",
-                AntDatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
-                AntDatePickerType.Year => "yyyy",
-                AntDatePickerType.Time => "HH:mm:dd",
+                DatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
+                DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}周",
+                DatePickerType.Month => "yyyy-MM",
+                DatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
+                DatePickerType.Year => "yyyy",
+                DatePickerType.Time => "HH:mm:dd",
                 _ => "yyyy-MM-dd",
             };
 
@@ -407,7 +407,7 @@ namespace AntBlazor
                 OnChange?.Invoke(date, GetInputValue(index));
 
                 // auto focus the other input
-                if (IsRange && (!IsShowTime || Picker == AntDatePickerType.Time))
+                if (IsRange && (!IsShowTime || Picker == DatePickerType.Time))
                 {
                     if (index == 0 && !_pickerStatus[1]._hadSelectValue && !_inputEnd.IsOnFocused)
                     {
@@ -453,19 +453,19 @@ namespace AntBlazor
                 _pickerStatus[index]._initPicker = picker;
 
                 // set default placeholder
-                _placeholders[index] = AntDatePickerPlaceholder.GetPlaceholderByType(_pickerStatus[index]._initPicker);
+                _placeholders[index] = DatePickerPlaceholder.GetPlaceholderByType(_pickerStatus[index]._initPicker);
 
                 if (IsRange && index != 0)
                 {
                     DateTime now = DateTime.Now;
                     _pickerValues[index] = picker switch
                     {
-                        AntDatePickerType.Date => now.AddMonths(1),
-                        AntDatePickerType.Week => now.AddMonths(1),
-                        AntDatePickerType.Month => now.AddYears(1),
-                        AntDatePickerType.Decade => now.AddYears(1),
-                        AntDatePickerType.Quarter => now.AddYears(1),
-                        AntDatePickerType.Year => now.AddYears(10),
+                        DatePickerType.Date => now.AddMonths(1),
+                        DatePickerType.Week => now.AddMonths(1),
+                        DatePickerType.Month => now.AddYears(1),
+                        DatePickerType.Decade => now.AddYears(1),
+                        DatePickerType.Quarter => now.AddYears(1),
+                        DatePickerType.Year => now.AddYears(10),
                         _ => now,
                     };
                 }
@@ -483,14 +483,14 @@ namespace AntBlazor
 
             _pickerStatus[index]._hadSelectValue = true;
 
-            if (IsRange && !IsShowTime && Picker != AntDatePickerType.Time)
+            if (IsRange && !IsShowTime && Picker != DatePickerType.Time)
             {
                 if (_pickerStatus[0]._hadSelectValue && _pickerStatus[1]._hadSelectValue)
                 {
                     Close();
                 }
             }
-            else if (!IsShowTime && Picker != AntDatePickerType.Time)
+            else if (!IsShowTime && Picker != DatePickerType.Time)
             {
                 Close();
             }
@@ -498,7 +498,7 @@ namespace AntBlazor
 
         public async Task Focus(int index = 0)
         {
-            AntDatePickerInput input = null;
+            DatePickerInput input = null;
 
             if (index == 0)
             {
@@ -519,7 +519,7 @@ namespace AntBlazor
 
         public async Task Blur(int index = 0)
         {
-            AntDatePickerInput input = null;
+            DatePickerInput input = null;
 
             if (index == 0)
             {

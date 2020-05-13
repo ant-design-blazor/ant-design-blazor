@@ -1,6 +1,6 @@
 ﻿namespace AntBlazor
 {
-    public static class AntDatePickerType
+    public static class DatePickerType
     {
         public const string Date = "date";
         public const string Week = "week";

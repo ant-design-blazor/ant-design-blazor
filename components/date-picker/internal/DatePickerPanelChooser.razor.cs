@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor.Internal
 {
-    public partial class AntDatePickerPanelChooser : AntDomComponentBase
+    public partial class DatePickerPanelChooser : AntDomComponentBase
     {
         [Parameter]
-        public AntDatePicker DatePicker { get; set; }
+        public DatePicker DatePicker { get; set; }
 
         [Parameter]
         public Action<DateTime, int> OnSelect { get; set; }
@@ -20,37 +20,37 @@ namespace AntBlazor.Internal
             {
                 return false;
             }
-            return DatePicker.Picker == AntDatePickerType.Date;
+            return DatePicker.Picker == DatePickerType.Date;
         }
 
         private bool IsShowQuarterPanel()
         {
-            return DatePicker.Picker == AntDatePickerType.Quarter;
+            return DatePicker.Picker == DatePickerType.Quarter;
         }
 
         private bool IsShowWeekPanel()
         {
-            return DatePicker.Picker == AntDatePickerType.Week;
+            return DatePicker.Picker == DatePickerType.Week;
         }
 
         private bool IsShowMonthPanel()
         {
-            return DatePicker.Picker == AntDatePickerType.Month;
+            return DatePicker.Picker == DatePickerType.Month;
         }
 
         private bool IsShowYearPanel()
         {
-            return DatePicker.Picker == AntDatePickerType.Year;
+            return DatePicker.Picker == DatePickerType.Year;
         }
 
         private bool IsShowDecadePanel()
         {
-            return DatePicker.Picker == AntDatePickerType.Decade;
+            return DatePicker.Picker == DatePickerType.Decade;
         }
 
         private bool IsShowTimePanel()
         {
-            return DatePicker.Picker == AntDatePickerType.Time;
+            return DatePicker.Picker == DatePickerType.Time;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿@namespace AntBlazor.Internal
-@inherits AntDatePickerPanelBase
+@inherits DatePickerPanelBase
 @using System.Globalization;
 
 @{
@@ -12,7 +12,7 @@
 
     string inViewClass = $"{DatePicker.PrefixCls}-cell-in-view";
 }
-<AntDatePickerTemplate 
+<DatePickerTemplate 
     PickerIndex="@PickerIndex"
     MaxRow="MAX_ROW"
     MaxCol="MAX_COL"
@@ -24,7 +24,7 @@
     OnValueSelect="date => OnSelectMonth(date)"
     GetNextColValue="date => date.AddMonths(1)">
     <RenderPickerHeader>
-        <AntDatePickerHeader PickerIndex="@PickerIndex"
+        <DatePickerHeader PickerIndex="@PickerIndex"
                              ShowNextChange="@false"
                              ShowPreChange="@false"
                              ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
@@ -33,4 +33,4 @@
     <RenderColValue Context="currentColDate">
         @(currentColDate.Month)月
     </RenderColValue>
-</AntDatePickerTemplate>
+</DatePickerTemplate>

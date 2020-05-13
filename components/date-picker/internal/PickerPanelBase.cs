@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor.Internal
 {
-    public class AntPickerPanelBase : AntDomComponentBase
+    public class PickerPanelBase : AntDomComponentBase
     {
         [Parameter]
         public Action<DateTime, int> OnSelect { get; set; }

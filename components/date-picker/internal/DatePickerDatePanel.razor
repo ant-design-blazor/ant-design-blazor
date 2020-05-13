@@ -1,5 +1,5 @@
 ﻿@namespace AntBlazor.Internal
-@inherits AntDatePickerPanelBase
+@inherits DatePickerPanelBase
 @using System.Globalization;
 
 @{
@@ -13,7 +13,7 @@
 }
 
 <div class='@(DatePicker.IsShowTime ? $"{DatePicker.PrefixCls}-datetime-panel" : "")'>
-    <AntDatePickerTemplate PickerIndex="@PickerIndex"
+    <DatePickerTemplate PickerIndex="@PickerIndex"
                            MaxRow="6"
                            MaxCol="7"
                            ViewStartDate="startDate"
@@ -27,7 +27,7 @@
                            OnValueSelect="OnValueSelect"
                            GetNextColValue="date => date.AddDays(1)">
         <RenderPickerHeader>
-            <AntDatePickerHeader PickerIndex="@PickerIndex"
+            <DatePickerHeader PickerIndex="@PickerIndex"
                                  ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
                                  ShowPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
                                  ShowNextChange="@(!(DatePicker.IsRange && PickerIndex == 0))"
@@ -59,7 +59,7 @@
         <RenderColValue Context="currentColDate">
             @currentColDate.Day
         </RenderColValue>
-    </AntDatePickerTemplate>
+    </DatePickerTemplate>
 
     @if (DatePicker.IsShowTime)
     {
@@ -135,7 +135,7 @@
 }
 
 @if (DatePicker.ShowToday && !DatePicker.IsRange
-    && !DatePicker.IsShowTime && Picker != AntDatePickerType.Time)
+    && !DatePicker.IsShowTime && Picker != DatePickerType.Time)
 {
     <div class="@(DatePicker.PrefixCls)-footer">
         <a class="@(DatePicker.PrefixCls)-today-btn" 
