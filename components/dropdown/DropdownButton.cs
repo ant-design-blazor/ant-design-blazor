@@ -2,7 +2,7 @@
 
 namespace AntBlazor
 {
-    public class AntDropdownButton : AntDropdown
+    public class DropdownButton : Dropdown
     {
         private string _icon = "ellipsis";
         [Parameter]
@@ -49,10 +49,10 @@ namespace AntBlazor
             }
         }
 
-        public AntDropdownButton()
+        public DropdownButton()
         {
             IsButton = true;
-            Trigger = new AntDropdownTrigger[] { AntDropdownTrigger.Click };
+            Trigger = new DropdownTrigger[] { DropdownTrigger.Click };
         }
     }
 }

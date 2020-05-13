@@ -1,6 +1,6 @@
 ﻿namespace AntBlazor
 {
-    public enum AntDropdownTrigger
+    public enum DropdownTrigger
     {
         Click,
         Hover,

@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor.Internal
 {
-    public partial class AntDropdownOverlay : AntDomComponentBase
+    public partial class DropdownOverlay : AntDomComponentBase
     {
         [CascadingParameter]
-        public AntDropdown Dropdown { get; set; }
+        public Dropdown Dropdown { get; set; }
 
         [Parameter]
         public EventCallback OnOverlayMouseEnter { get; set; }
@@ -74,23 +74,6 @@ namespace AntBlazor.Internal
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (_hasAddOverlayToBody)
-            {
-                if (!string.IsNullOrEmpty(Dropdown.PopupContainerSelector))
-                {
-                    JsInvokeAsync(JSInteropConstants.delElementFrom, Ref, Dropdown.PopupContainerSelector);
-                }
-                else
-                {
-                    JsInvokeAsync(JSInteropConstants.delElementFromBody, Ref);
-                }
-            }
-        }
-
         public async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
             if (_isOverlayShow || Dropdown.Disabled)
@@ -138,7 +121,7 @@ namespace AntBlazor.Internal
 
             await Task.Delay(100);
 
-            if (!force && !IsContainTrigger(AntDropdownTrigger.Click) && (_isPreventHide || _mouseInOverlay))
+            if (!force && !IsContainTrigger(DropdownTrigger.Click) && (_isPreventHide || _mouseInOverlay))
             {
                 return;
             }
@@ -193,12 +176,12 @@ namespace AntBlazor.Internal
                 triggerHeight = 0;
             }
 
-            if (Dropdown.Placement.SlideName == AntDropdownPlacement.BottomLeft.SlideName)
+            if (Dropdown.Placement.SlideName == DropdownPlacement.BottomLeft.SlideName)
             {
                 top = triggerTop + triggerHeight + OVERLAY_TOP_OFFSET;
             }
 
-            if (Dropdown.Placement.SlideName == AntDropdownPlacement.TopLeft.SlideName)
+            if (Dropdown.Placement.SlideName == DropdownPlacement.TopLeft.SlideName)
             {
                 top = triggerTop - overlay.clientHeight - OVERLAY_TOP_OFFSET;
             }
@@ -219,15 +202,15 @@ namespace AntBlazor.Internal
                 triggerWidth = 0;
             }
 
-            if (Dropdown.Placement.Name.IsIn(AntDropdownPlacement.BottomLeft.Name, AntDropdownPlacement.TopLeft.Name))
+            if (Dropdown.Placement.Name.IsIn(DropdownPlacement.BottomLeft.Name, DropdownPlacement.TopLeft.Name))
             {
                 left = triggerLeft;
             }
-            if (Dropdown.Placement.Name.IsIn(AntDropdownPlacement.BottomCenter.Name, AntDropdownPlacement.TopCenter.Name))
+            if (Dropdown.Placement.Name.IsIn(DropdownPlacement.BottomCenter.Name, DropdownPlacement.TopCenter.Name))
             {
                 left = triggerLeft + triggerWidth / 2 - overlay.clientWidth / 2;
             }
-            if (Dropdown.Placement.Name.IsIn(AntDropdownPlacement.BottomRight.Name, AntDropdownPlacement.TopRight.Name))
+            if (Dropdown.Placement.Name.IsIn(DropdownPlacement.BottomRight.Name, DropdownPlacement.TopRight.Name))
             {
                 left = triggerLeft + triggerWidth - overlay.clientWidth;
             }
@@ -235,9 +218,9 @@ namespace AntBlazor.Internal
             return left;
         }
 
-        private bool IsContainTrigger(AntDropdownTrigger triggerType)
+        private bool IsContainTrigger(DropdownTrigger triggerType)
         {
-            foreach (AntDropdownTrigger trigger in Dropdown.Trigger)
+            foreach (DropdownTrigger trigger in Dropdown.Trigger)
             {
                 if (trigger == triggerType)
                 {

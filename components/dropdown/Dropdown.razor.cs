@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntBlazor
 {
-    public partial class AntDropdown : AntDomComponentBase
+    public partial class Dropdown : AntDomComponentBase
     {
         [CascadingParameter]
         public string PrefixCls { get; set; } = "ant-dropdown";
@@ -26,7 +26,7 @@ namespace AntBlazor
         public bool IsButton { get; set; } = false;
 
         [Parameter]
-        public AntDropdownTrigger[] Trigger { get; set; } = new AntDropdownTrigger[] { AntDropdownTrigger.Hover };
+        public DropdownTrigger[] Trigger { get; set; } = new DropdownTrigger[] { DropdownTrigger.Hover };
 
         [Parameter]
         public string OverlayClassName { get; set; }
@@ -50,9 +50,9 @@ namespace AntBlazor
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public AntDropdownPlacement Placement { get; set; } = AntDropdownPlacement.BottomLeft;
+        public DropdownPlacement Placement { get; set; } = DropdownPlacement.BottomLeft;
 
-        private AntDropdownOverlay _antDropdownOverlay = null;
+        private DropdownOverlay _DropdownOverlay = null;
 
         private string _rightButtonIcon = "ellipsis";
         private string _buttonSize = AntSizeLDSType.Default;
@@ -113,11 +113,11 @@ namespace AntBlazor
         {
             _mouseInTrigger = true;
 
-            if (IsContainTrigger(AntDropdownTrigger.Hover))
+            if (IsContainTrigger(DropdownTrigger.Hover))
             {
-                _antDropdownOverlay.PreventHide(true);
+                _DropdownOverlay.PreventHide(true);
 
-                await _antDropdownOverlay.Show();
+                await _DropdownOverlay.Show();
             }
         }
 
@@ -125,11 +125,11 @@ namespace AntBlazor
         {
             _mouseInTrigger = false;
 
-            if (IsContainTrigger(AntDropdownTrigger.Hover))
+            if (IsContainTrigger(DropdownTrigger.Hover))
             {
-                _antDropdownOverlay.PreventHide(_mouseInOverlay);
+                _DropdownOverlay.PreventHide(_mouseInOverlay);
 
-                await _antDropdownOverlay.Hide();
+                await _DropdownOverlay.Hide();
             }
         }
 
@@ -137,9 +137,9 @@ namespace AntBlazor
         {
             _mouseInOverlay = true;
 
-            if (IsContainTrigger(AntDropdownTrigger.Hover))
+            if (IsContainTrigger(DropdownTrigger.Hover))
             {
-                _antDropdownOverlay.PreventHide(true);
+                _DropdownOverlay.PreventHide(true);
             }
         }
 
@@ -147,11 +147,11 @@ namespace AntBlazor
         {
             _mouseInOverlay = false;
 
-            if (IsContainTrigger(AntDropdownTrigger.Hover))
+            if (IsContainTrigger(DropdownTrigger.Hover))
             {
-                _antDropdownOverlay.PreventHide(_mouseInTrigger);
+                _DropdownOverlay.PreventHide(_mouseInTrigger);
 
-                await _antDropdownOverlay.Hide();
+                await _DropdownOverlay.Hide();
             }
         }
 
@@ -169,29 +169,29 @@ namespace AntBlazor
 
         private async Task OnTriggerClick()
         {
-            if (IsContainTrigger(AntDropdownTrigger.Click))
+            if (IsContainTrigger(DropdownTrigger.Click))
             {
-                if (_antDropdownOverlay.IsPopup())
+                if (_DropdownOverlay.IsPopup())
                 {
-                    await _antDropdownOverlay.Hide();
+                    await _DropdownOverlay.Hide();
                 }
                 else
                 {
-                    await _antDropdownOverlay.Show();
+                    await _DropdownOverlay.Show();
                 }
             }
         }
 
         private async Task OnTriggerContextmenu(MouseEventArgs args)
         {
-            if (IsContainTrigger(AntDropdownTrigger.ContextMenu))
+            if (IsContainTrigger(DropdownTrigger.ContextMenu))
             {
                 // TODO：MouseEventArgs will support offsetX/offsetY in the future
                 int offsetX = 10;
                 int offsetY = 10;
 
-                await _antDropdownOverlay.Hide();
-                await _antDropdownOverlay.Show(offsetX, offsetY);
+                await _DropdownOverlay.Hide();
+                await _DropdownOverlay.Show(offsetX, offsetY);
             }
         }
 
@@ -199,13 +199,13 @@ namespace AntBlazor
         {
             if (_mouseInOverlay == false && _mouseInTrigger == false)
             {
-                _antDropdownOverlay.Hide();
+                _DropdownOverlay.Hide();
             }
         }
 
-        private bool IsContainTrigger(AntDropdownTrigger triggerType)
+        private bool IsContainTrigger(DropdownTrigger triggerType)
         {
-            foreach (AntDropdownTrigger trigger in Trigger)
+            foreach (DropdownTrigger trigger in Trigger)
             {
                 if (trigger == triggerType)
                 {
@@ -218,12 +218,12 @@ namespace AntBlazor
 
         public async Task Show()
         {
-            await _antDropdownOverlay.Show();
+            await _DropdownOverlay.Show();
         }
 
         public async Task Hide()
         {
-            await _antDropdownOverlay.Hide();
+            await _DropdownOverlay.Hide();
         }
     }
 }
