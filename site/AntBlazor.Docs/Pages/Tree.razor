@@ -1,0 +1,63 @@
+﻿<AntTitle Level="1">Tree</AntTitle>
+<AntText>Tree test</AntText>
+<AntTitle Level="2">Tree test</AntTitle>
+<AntParagraph>
+    <Markdown MarkdownText="@paragraph"></Markdown>
+</AntParagraph>
+
+@code{
+    private string paragraph = @"Ant Design has 3 types of Tabs for different situations.
+* Card Tabs: for managing too many closeable views.
+* Normal Tabs: for functional aspects of a page.
+* <a href='/radio'>RadioButton</a>: for secondary tabs.";
+}
+<br />
+<h2>Examples</h2>
+<br />
+<DemoCard>
+    <Title>Basic</Title>
+    <Description>Default tree view.</Description>
+    <Demo>
+        <AntSwitch Checked="_checkable1" OnChange="(v)=>_checkable1=v" /> Checkable
+        <AntSwitch Checked="_showIcon1" OnChange="(v)=>_showIcon1=v" /> ShowIcon
+        <br />
+        <AntTree Checkable="_checkable1" ShowIcon="_showIcon1" IconType="home" Nodes="TreeNodes1"></AntTree>
+    </Demo>
+</DemoCard>
+@code{
+
+    bool _showIcon1 = true;
+    bool _checkable1 = true;
+
+    List<AntTreeNode>
+    _treenodes1;
+    public List<AntTreeNode>
+        TreeNodes1
+    {
+        get
+        {
+            if (_treenodes1 != null)
+                return _treenodes1;
+
+            List<AntTreeNode>
+                nodes = new List<AntTreeNode>
+                    ();
+
+            nodes.Add(new AntTreeNode()
+            {
+                Key = "0",
+                Text = "node0",
+                IsExpanded = true,
+                Nodes = new AntTreeNode[] {
+                    new AntTreeNode{ Text="node0-0"},
+                    new AntTreeNode{ Text="node0-1"},
+                    new AntTreeNode{ Text="node0-2"},
+                }
+            }); ;
+
+            _treenodes1 = nodes;
+            return _treenodes1;
+        }
+    }
+}
+
