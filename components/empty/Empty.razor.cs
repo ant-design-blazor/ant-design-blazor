@@ -3,7 +3,7 @@ using OneOf;
 
 namespace AntBlazor
 {
-    public partial class AntEmpty : AntDomComponentBase
+    public partial class Empty : AntDomComponentBase
     {
         [Parameter] 
         public string PrefixCls { get; set; } = "ant-empty";
@@ -24,13 +24,13 @@ namespace AntBlazor
         public OneOf<string, bool, RenderFragment> Description { get; set; } = "暂无数据";
 
         [Parameter]
-        public OneOf<string, RenderFragment> Image { get; set; } = AntEmpty.PRESENTED_IMAGE_DEFAULT;
+        public OneOf<string, RenderFragment> Image { get; set; } = Empty.PRESENTED_IMAGE_DEFAULT;
 
         protected void SetClass()
         {
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
-                .If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == AntEmpty.PRESENTED_IMAGE_SIMPLE)
+                .If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == Empty.PRESENTED_IMAGE_SIMPLE)
                 .If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                ;
         }
