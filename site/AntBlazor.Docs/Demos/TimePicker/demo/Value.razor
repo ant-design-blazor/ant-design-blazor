@@ -1,0 +1,11 @@
+﻿<TimePicker Value="_value" OnChange="OnChange" />
+
+@code
+{
+    private DateTime _value = DateTime.Now;
+
+    private void OnChange(DateTime value, string dateString)
+    {
+        _value = value;
+    }
+}
