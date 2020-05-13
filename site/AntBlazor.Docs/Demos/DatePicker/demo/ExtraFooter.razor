@@ -1,0 +1,13 @@
+﻿<DatePicker RenderExtraFooter="extraFooter" />
+<br />
+<DatePicker ShowTime="@true" RenderExtraFooter="extraFooter" />
+<br />
+<RangePicker RenderExtraFooter="extraFooter" />
+<br />
+<RangePicker ShowTime="@true" RenderExtraFooter="extraFooter" />
+<br />
+<DatePicker Picker="@DatePickerType.Month" RenderExtraFooter="extraFooter" />
+
+@code {
+    private RenderFragment extraFooter =@<span>extra footer</span>;
+}
