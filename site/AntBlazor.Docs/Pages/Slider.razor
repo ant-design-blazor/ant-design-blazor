@@ -9,9 +9,9 @@
     <Title>Basic</Title>
     <Description>Basic slider. When <code>range</code> is <code>true</code>, display as dual thumb mode. When <code>disable</code> is <code>true</code>, the slider will not be interactable.</Description>
     <Demo>
-        <AntSlider DefaultValue="30" _disabled="@_disabled" />
-        <AntSlider DefaultValue="new double[] { 20, 50 }" _disabled="@_disabled" />
-        _disabled: <AntSwitch size="small" checked="@_disabled" OnChange="(e)=>OnSwitch(e)" />
+        <AntSlider DefaultValue="30" Disabled="@_disabled" />
+        <AntSlider DefaultValue="new double[] { 20, 50 }" Disabled="@_disabled" />
+        _disabled: <AntSwitch Size="small" Checked="@_disabled" OnChange="(e)=>OnSwitch(e)" />
     </Demo>
 </DemoCard>
 
@@ -45,9 +45,9 @@
     <Description>You can add an icon beside the slider to make it meaningful.</Description>
     <Demo>
         <div>
-            <AntIcon Style="display: inline-block" type="Frown" theme="outline" />
+            <AntIcon Style="display: inline-block" Type="Frown" Theme="outline" />
             <AntSlider Style="display: inline-block; width: 300px;" Min="0" Max="20" DefaultValue="0" />
-            <AntIcon Style="display: inline-block" type="Smile" theme="outline" />
+            <AntIcon Style="display: inline-block" Type="Smile" Theme="outline" />
         </div>
     </Demo>
 </DemoCard>
@@ -107,7 +107,7 @@
         <div>
             <AntSlider Reverse="@_reversed" DefaultValue="30" />
             <AntSlider Reverse="@_reversed" DefaultValue="new double[] { 20, 50 }" />
-            _reversed: <AntSwitch size="small" checked="@_reversed" OnChange="(e)=>OnSwitchReverse(e)" />
+            _reversed: <AntSwitch Size="small" Checked="@_reversed" OnChange="(e)=>OnSwitchReverse(e)" />
         </div>
     </Demo>
 </DemoCard>
@@ -119,7 +119,7 @@
         <div>
             <AntSlider Reverse="@_reversed" Value="30" />
             @*<AntSlider Reverse="@_reversed" Value="[20, 50]" />*@
-            _reversed: <AntSwitch size="small" checked="@_reversed" OnChange="(e)=>OnSwitchReverse(e)" />
+            _reversed: <AntSwitch Size="small" Checked="@_reversed" OnChange="(e)=>OnSwitchReverse(e)" />
         </div>
     </Demo>
 </DemoCard>

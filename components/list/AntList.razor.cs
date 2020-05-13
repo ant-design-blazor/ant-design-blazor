@@ -9,7 +9,7 @@ namespace AntBlazor
 {
     public partial class AntList : AntDomComponentBase
     {
-        public string _prefixName = "ant-list";
+        private string _prefixName = "ant-list";
 
         [Parameter] public RenderFragment ChildContent { get; set; }
 

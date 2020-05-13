@@ -237,3 +237,9 @@ dotnet_diagnostic.CA2227.severity = none
 
 # CA1303: 请不要将文本作为本地化参数传递
 dotnet_diagnostic.CA1303.severity = none
+
+# CA2208: 正确实例化参数异常
+dotnet_diagnostic.CA2208.severity = none
+
+# CA1819: 属性不应返回数组
+dotnet_diagnostic.CA1819.severity = none

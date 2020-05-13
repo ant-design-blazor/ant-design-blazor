@@ -26,7 +26,7 @@ namespace AntBlazor
         public bool IsButton { get; set; } = false;
 
         [Parameter]
-        public AntDropdownTrigger[] Trigger { get; set; } = new AntDropdownTrigger[] { AntDropdownTrigger.Hover };
+        public AntDropdownTrigger[] Trigger { get; set; } = { AntDropdownTrigger.Hover };
 
         [Parameter]
         public string OverlayClassName { get; set; }
@@ -63,7 +63,6 @@ namespace AntBlazor
 
         private RenderFragment _leftButton;
         private RenderFragment _rightButton;
-
 
         [Inject]
         private DomEventService DomEventService { get; set; }

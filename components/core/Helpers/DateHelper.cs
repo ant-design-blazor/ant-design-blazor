@@ -3,9 +3,9 @@ using System.Globalization;
 
 namespace AntBlazor
 {
-    public class DateHelper
+    public static class DateHelper
     {
-        private static Calendar calendar = CultureInfo.InvariantCulture.Calendar;
+        private static readonly Calendar _calendar = CultureInfo.InvariantCulture.Calendar;
 
         public static bool IsSameDate(DateTime date, DateTime compareDate)
         {
@@ -26,18 +26,18 @@ namespace AntBlazor
         public static bool IsSameDay(DateTime date, DateTime compareDate)
         {
             return IsSameYear(date, compareDate)
-                && calendar.GetDayOfYear(date) == calendar.GetDayOfYear(compareDate);
+                && _calendar.GetDayOfYear(date) == _calendar.GetDayOfYear(compareDate);
         }
 
         public static bool IsSameWeak(DateTime date, DateTime compareDate)
         {
-            return IsSameYear(date, compareDate) 
+            return IsSameYear(date, compareDate)
                 && GetWeekOfYear(date) == GetWeekOfYear(compareDate);
         }
 
         public static bool IsSameQuarter(DateTime date, DateTime compareDate)
         {
-            return IsSameYear(date, compareDate) 
+            return IsSameYear(date, compareDate)
                 && GetDayOfQuarter(date) == GetDayOfQuarter(compareDate);
         }
 
@@ -51,7 +51,7 @@ namespace AntBlazor
 
         public static int GetWeekOfYear(DateTime date)
         {
-            return calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            return _calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
         }
     }
 }
