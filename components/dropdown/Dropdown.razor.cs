@@ -113,7 +113,7 @@ namespace AntBlazor
         {
             _mouseInTrigger = true;
 
-            if (IsContainTrigger(DropdownTrigger.Hover))
+            if (_DropdownOverlay != null && IsContainTrigger(DropdownTrigger.Hover))
             {
                 _DropdownOverlay.PreventHide(true);
 
@@ -125,7 +125,7 @@ namespace AntBlazor
         {
             _mouseInTrigger = false;
 
-            if (IsContainTrigger(DropdownTrigger.Hover))
+            if (_DropdownOverlay != null && IsContainTrigger(DropdownTrigger.Hover))
             {
                 _DropdownOverlay.PreventHide(_mouseInOverlay);
 
@@ -137,7 +137,7 @@ namespace AntBlazor
         {
             _mouseInOverlay = true;
 
-            if (IsContainTrigger(DropdownTrigger.Hover))
+            if (_DropdownOverlay != null && IsContainTrigger(DropdownTrigger.Hover))
             {
                 _DropdownOverlay.PreventHide(true);
             }
@@ -147,7 +147,7 @@ namespace AntBlazor
         {
             _mouseInOverlay = false;
 
-            if (IsContainTrigger(DropdownTrigger.Hover))
+            if (_DropdownOverlay != null && IsContainTrigger(DropdownTrigger.Hover))
             {
                 _DropdownOverlay.PreventHide(_mouseInTrigger);
 
@@ -224,6 +224,11 @@ namespace AntBlazor
         public async Task Hide()
         {
             await _DropdownOverlay.Hide();
+        }
+
+        public DropdownOverlay GetOverlay()
+        {
+            return _DropdownOverlay;
         }
     }
 }

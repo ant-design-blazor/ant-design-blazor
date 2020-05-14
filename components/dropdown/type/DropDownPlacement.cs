@@ -2,6 +2,9 @@
 {
     public class DropdownPlacement
     {
+        public static readonly DropdownPlacement Left = new DropdownPlacement("left", "down");
+        public static readonly DropdownPlacement Right = new DropdownPlacement("right", "down");
+
         public static readonly DropdownPlacement BottomLeft = new DropdownPlacement("bottomLeft", "down");
         public static readonly DropdownPlacement BottomCenter = new DropdownPlacement("bottomCenter", "down");
         public static readonly DropdownPlacement BottomRight = new DropdownPlacement("bottomRight", "down");

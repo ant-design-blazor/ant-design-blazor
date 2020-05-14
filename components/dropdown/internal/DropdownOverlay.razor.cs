@@ -7,7 +7,7 @@ namespace AntBlazor.Internal
 {
     public partial class DropdownOverlay : AntDomComponentBase
     {
-        [CascadingParameter]
+        [CascadingParameter(Name = "Dropdown")]
         public Dropdown Dropdown { get; set; }
 
         [Parameter]
@@ -18,6 +18,7 @@ namespace AntBlazor.Internal
 
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
+        private bool _isChildDropdownShow = false;
         private bool _mouseInOverlay = false;
 
         private bool _isOverlayFirstRender = true;
@@ -74,6 +75,16 @@ namespace AntBlazor.Internal
             await base.OnAfterRenderAsync(firstRender);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (_hasAddOverlayToBody)
+            {
+                JsInvokeAsync(JSInteropConstants.delElementFrom, Ref, Dropdown.PopupContainerSelector);
+            }
+
+            base.Dispose(disposing);
+        }
+
         public async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
             if (_isOverlayShow || Dropdown.Disabled)
@@ -121,7 +132,7 @@ namespace AntBlazor.Internal
 
             await Task.Delay(100);
 
-            if (!force && !IsContainTrigger(DropdownTrigger.Click) && (_isPreventHide || _mouseInOverlay))
+            if (!force && !IsContainTrigger(DropdownTrigger.Click) && (_isPreventHide || _mouseInOverlay || _isChildDropdownShow))
             {
                 return;
             }
@@ -145,6 +156,11 @@ namespace AntBlazor.Internal
         public void PreventHide(bool prevent)
         {
             _isPreventHide = prevent;
+        }
+
+        public void UpdateChildState(bool isChildDropdownShow)
+        {
+            _isChildDropdownShow = isChildDropdownShow;
         }
 
         public bool IsPopup()
@@ -176,12 +192,19 @@ namespace AntBlazor.Internal
                 triggerHeight = 0;
             }
 
-            if (Dropdown.Placement.SlideName == DropdownPlacement.BottomLeft.SlideName)
+            if (Dropdown.Placement.Name.IsIn(DropdownPlacement.Left.Name, DropdownPlacement.Right.Name))
+            {
+                top = triggerTop;
+            }
+            else if (Dropdown.Placement.Name == DropdownPlacement.Right.Name)
             {
                 top = triggerTop + triggerHeight + OVERLAY_TOP_OFFSET;
             }
-
-            if (Dropdown.Placement.SlideName == DropdownPlacement.TopLeft.SlideName)
+            else if (Dropdown.Placement.SlideName == DropdownPlacement.BottomLeft.SlideName)
+            {
+                top = triggerTop + triggerHeight + OVERLAY_TOP_OFFSET;
+            }
+            else if (Dropdown.Placement.SlideName == DropdownPlacement.TopLeft.SlideName)
             {
                 top = triggerTop - overlay.clientHeight - OVERLAY_TOP_OFFSET;
             }
@@ -202,15 +225,23 @@ namespace AntBlazor.Internal
                 triggerWidth = 0;
             }
 
-            if (Dropdown.Placement.Name.IsIn(DropdownPlacement.BottomLeft.Name, DropdownPlacement.TopLeft.Name))
+            if (Dropdown.Placement.Name == DropdownPlacement.Left.Name)
+            {
+                left = triggerLeft - triggerWidth;
+            }
+            else if(Dropdown.Placement.Name == DropdownPlacement.Right.Name)
+            {
+                left = triggerLeft + triggerWidth;
+            }
+            else if (Dropdown.Placement.Name.IsIn(DropdownPlacement.BottomLeft.Name, DropdownPlacement.TopLeft.Name))
             {
                 left = triggerLeft;
             }
-            if (Dropdown.Placement.Name.IsIn(DropdownPlacement.BottomCenter.Name, DropdownPlacement.TopCenter.Name))
+            else if (Dropdown.Placement.Name.IsIn(DropdownPlacement.BottomCenter.Name, DropdownPlacement.TopCenter.Name))
             {
                 left = triggerLeft + triggerWidth / 2 - overlay.clientWidth / 2;
             }
-            if (Dropdown.Placement.Name.IsIn(DropdownPlacement.BottomRight.Name, DropdownPlacement.TopRight.Name))
+            else if (Dropdown.Placement.Name.IsIn(DropdownPlacement.BottomRight.Name, DropdownPlacement.TopRight.Name))
             {
                 left = triggerLeft + triggerWidth - overlay.clientWidth;
             }
