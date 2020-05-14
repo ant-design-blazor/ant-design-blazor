@@ -17,7 +17,7 @@
                     </a>
                 </h1>
                 <section class="markdown">
-                    @((MarkupString) _demoComponent.Doc)
+                    @((MarkupString) _demoComponent.Desc)
                 </section>
 
                 <h2 data-scrollama-index="1">
@@ -40,22 +40,42 @@
             <AntRow Style="margin-left: -8px; margin-right: -8px;">
                 @{
                     var demos = _demoComponent.DemoList.OrderBy(x => x.Order);
+                }
+                @if (_demoComponent.Cols.HasValue && _demoComponent.Cols == 1)
+                {
+                    foreach (var demo in demos)
+                    {
+                        <AntCol Span="24" Class="code-boxes-col-1-1" Style="padding-left: 8px; padding-right: 8px;">
+                            <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
+                        </AntCol>
+                    }
+                }
+                else
+                {
                     var leftList = demos.Where((_, i) => i % 2 == 0);
                     var rightList = demos.Where((_, i) => i % 2 != 0);
+
+                    <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                        @foreach (var demo in leftList)
+                        {
+                            <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
+                        }
+                    </AntCol>
+                    <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                        @foreach (var demo in rightList)
+                        {
+                            <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
+                        }
+                    </AntCol>
                 }
-                <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
-                    @foreach (var demo in leftList)
-                    {
-                        <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
-                    }
-                </AntCol>
-                <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
-                    @foreach (var demo in rightList)
-                    {
-                        <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
-                    }
-                </AntCol>
+
             </AntRow>
+            <section class="markdown api-container">
+                @*<h2 id="API" data-scrollama-index="10">
+                    <span>API</span><a href="#API" class="anchor">#</a>
+                </h2>*@
+                @((MarkupString) _demoComponent.ApiDoc)
+            </section>
         }
     </article>
 </section>

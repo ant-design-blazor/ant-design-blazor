@@ -194,6 +194,11 @@
             "title": "Notification",
             "type": "menuItem",
             "url": "notification"
+          },
+          {
+            "title": "Result",
+            "type": "menuItem",
+            "url": "components/result"
           }
         ]
       },

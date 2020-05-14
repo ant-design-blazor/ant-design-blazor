@@ -73,18 +73,25 @@ namespace AntBlazor.Docs.Build.CLI.Command
                 {
                     string language = docItem.Name.Replace("index.", "").Replace(docItem.Extension, "");
                     string content = File.ReadAllText(docItem.FullName);
-                    (Dictionary<string, string> Meta, string Content) docData = DocParser.ParseDemoDoc(content);
+                    (Dictionary<string, string> Meta, string desc, string apiDoc) docData = DocParser.ParseDemoDoc(content);
 
                     componentDic.Add(language, new DemoComponent()
                     {
                         Title = docData.Meta["title"],
                         SubTitle = docData.Meta.TryGetValue("subtitle", out string subtitle) ? subtitle : null,
                         Type = docData.Meta["type"],
-                        Doc = docData.Content
+                        Desc = docData.desc,
+                        ApiDoc = docData.apiDoc,
+                        Cols = docData.Meta.TryGetValue("cols", out var cols) ? int.Parse(cols) : (int?)null,
                     });
                 }
 
-                foreach (IGrouping<string, FileSystemInfo> demo in (demoDir as DirectoryInfo).GetFileSystemInfos().GroupBy(x => x.Name.Replace(x.Extension, "").ToLower()))
+                foreach (IGrouping<string, FileSystemInfo> demo in (demoDir as DirectoryInfo).GetFileSystemInfos()
+                    .GroupBy(x => x.Name
+                        .Replace(x.Extension, "")
+                        .Replace("-", "")
+                        .Replace("_", "")
+                        .ToLower()))
                 {
                     List<FileSystemInfo> showCaseFiles = demo.ToList();
                     FileSystemInfo razorFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".razor");
