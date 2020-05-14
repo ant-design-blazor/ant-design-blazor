@@ -226,7 +226,7 @@ namespace AntBlazor
             await _DropdownOverlay.Hide();
         }
 
-        public DropdownOverlay GetOverlay()
+        public DropdownOverlay GetDropdownOverlay()
         {
             return _DropdownOverlay;
         }
