@@ -21,7 +21,7 @@ namespace AntBlazor
                 || Config.Icon != null
             )
             {
-                return "ant-notification-notice-with-icon";
+                return $"{ClassPrefix}-notice-with-icon";
             }
 
             return "";

@@ -182,6 +182,14 @@
                               {
                                   string key = $"open{DateTime.Now}";
 
+                                  async Task OnBtnClickFunc()
+                                  {
+                                      Console.WriteLine($"closing {key}");
+                                      await Notice.Close(key);
+                                  }
+
+                                  EventCallback<MouseEventArgs> onBtnClick = new EventCallback<MouseEventArgs>(this, ( Func<Task>)OnBtnClickFunc);
+
                                   await Notice.Open(new AntNotificationConfig()
                                   {
                                       Message = "title",
@@ -191,7 +199,8 @@
                                       {
                                           builder.OpenComponent<AntButton>(0);
                                           builder.AddAttribute(1, "Type", AntButtonType.Primary);
-                                          builder.AddAttribute(2, "ChildContent", (RenderFragment) ((b) => { b.AddContent(0, "confirm"); }));
+                                          builder.AddAttribute(2, "OnClick", onBtnClick);
+                                          builder.AddAttribute(3, "ChildContent", (RenderFragment) ((b) => { b.AddContent(0, "confirm"); }));
                                           builder.CloseComponent();
                                       }
                                   });
@@ -332,6 +341,35 @@
                               })">
             <AntIcon Type="Radius-Bottomright" Theme="Outline"></AntIcon>
             BottomRight
+        </AntButton>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>消息更新</Title>
+    <Description>
+        通过OnClick和OnClose指定 点击通知时触发的回调函数 和 当通知关闭时触发的回调函数
+
+        
+    </Description>
+    <Demo>
+        <AntButton Type="@AntButtonType.Primary"
+                   OnClick="@(async () =>
+                              {
+                                  var config = new AntNotificationConfig()
+                                  {
+                                      Message = "Notification title",
+                                      Description = "Notification content.",
+                                      Key = "update"
+                                  };
+                                  var task = Notice.Open(config);
+                                  await Task.Delay(1000);
+                                  config.Message = "new title";
+                                  config.Description = "new content";
+                                  await Notice.Open(config);
+                                  await task;
+                              })">
+            update
         </AntButton>
     </Demo>
 </DemoCard>

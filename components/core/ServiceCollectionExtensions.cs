@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         s => HtmlEncoder.Default.Encode(s)))
             );
 
-            services.TryAddScoped<AntNotificationService>();
+            services.TryAddSingleton<AntNotificationService>();
 
             return services;
         }

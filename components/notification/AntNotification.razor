@@ -1,9 +1,18 @@
 ﻿@namespace AntBlazor
-@inherits AntDomComponentBase
+@inherits AntNotificationBase
 
-
-<div class="@GetClassName()" style="@GetStyle()">
-    <span>
-        
-    </span>
-</div>
+@foreach (var configKv in _configDict)
+{
+    var placement = configKv.Key;
+    var configs = configKv.Value;
+    var className = GetClassName(placement);
+    var style = GetStyle(placement);
+    <div @key="configs" class="@className" style="@style">
+        <span>
+            @foreach (var itemConfig in configs)
+            {
+                <AntNotificationItem @key="itemConfig" Config="itemConfig" OnClose="RemoveItem" />
+            }
+        </span>
+    </div>
+}
