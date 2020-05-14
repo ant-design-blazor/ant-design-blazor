@@ -10,7 +10,11 @@ namespace AntBlazor.Docs
 
         public string Type { get; set; }
 
-        public string Doc { get; set; }
+        public string Desc { get; set; }
+
+        public string ApiDoc { get; set; }
+
+        public int? Cols { get; set; }
 
         public List<DemoItem> DemoList { get; set; }
     }

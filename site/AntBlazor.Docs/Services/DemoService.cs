@@ -54,7 +54,7 @@ namespace AntBlazor.Docs.Services
         {
             await InitializeAsync();
             return _componentCache.TryGetValue(CurrentLanguage, out var component)
-                ? (await component)[componentName]
+                ? (await component)[componentName.ToLower()]
                 : null;
         }
 

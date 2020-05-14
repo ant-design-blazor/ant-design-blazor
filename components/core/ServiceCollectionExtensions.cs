@@ -4,7 +4,6 @@ using AntBlazor;
 using AntBlazor.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -18,6 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         s => HtmlEncoder.Default.Encode(s)))
             );
 
+            services.TryAddScoped<IconService>();
             services.TryAddScoped<AntNotificationService>();
 
             return services;

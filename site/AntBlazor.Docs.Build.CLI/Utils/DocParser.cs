@@ -12,31 +12,55 @@ namespace AntBlazor.Docs.Build.CLI.Utils
 {
     public class DocParser
     {
-        public static (Dictionary<string, string> Meta, string Content) ParseDemoDoc(string input)
+        public static (Dictionary<string, string> Meta, string Desc, string ApiDoc) ParseDemoDoc(string input)
         {
             var pipeline = new MarkdownPipelineBuilder()
                 .UseYamlFrontMatter()
+                .UsePipeTables()
                 .Build();
 
-            StringWriter writer = new StringWriter();
-            var renderer = new HtmlRenderer(writer);
-            pipeline.Setup(renderer);
-
-            MarkdownDocument document = Markdown.Parse(input, pipeline);
+            var document = Markdown.Parse(input, pipeline);
             var yamlBlock = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
 
             Dictionary<string, string> meta = null;
             if (yamlBlock != null)
             {
-                string yaml = input.Substring(yamlBlock.Span.Start, yamlBlock.Span.Length).Trim('-');
+                var yaml = input.Substring(yamlBlock.Span.Start, yamlBlock.Span.Length).Trim('-');
                 meta = new Deserializer().Deserialize<Dictionary<string, string>>(yaml);
             }
 
-            renderer.Render(document);
-            writer.Flush();
-            string html = writer.ToString();
+            var isAfterApi = false;
+            var descPart = "";
+            var apiPart = "";
 
-            return (meta, html);
+            for (var i = yamlBlock?.Line ?? 0; i < document.Count; i++)
+            {
+                var block = document[i];
+                if (block is YamlFrontMatterBlock)
+                    continue;
+
+                if (block is HeadingBlock heading && heading.Level == 2 && heading.Inline.FirstChild.ToString() == "API")
+                {
+                    isAfterApi = true;
+                }
+
+                using var writer = new StringWriter();
+                var renderer = new HtmlRenderer(writer);
+                pipeline.Setup(renderer);
+
+                var blockHtml = renderer.Render(block);
+
+                if (!isAfterApi)
+                {
+                    descPart += blockHtml;
+                }
+                else
+                {
+                    apiPart += blockHtml;
+                }
+            }
+
+            return (meta, descPart, apiPart);
         }
 
         public static (DescriptionYaml Meta, string Style, Dictionary<string, string> Descriptions) ParseDescription(string input)
@@ -45,26 +69,28 @@ namespace AntBlazor.Docs.Build.CLI.Utils
                 .UseYamlFrontMatter()
                 .Build();
 
-            MarkdownDocument document = Markdown.Parse(input, pipeline);
+            var document = Markdown.Parse(input, pipeline);
             var yamlBlock = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
 
             DescriptionYaml meta = null;
             if (yamlBlock != null)
             {
-                string yaml = input.Substring(yamlBlock.Span.Start, yamlBlock.Span.Length).Trim('-');
+                var yaml = input.Substring(yamlBlock.Span.Start, yamlBlock.Span.Length).Trim('-');
                 meta = Deserializer.FromValueDeserializer(new DeserializerBuilder()
                         .WithNamingConvention(CamelCaseNamingConvention.Instance).BuildValueDeserializer())
                     .Deserialize<DescriptionYaml>(yaml);
             }
 
-            var isAfterENHeading = false;
+            var isAfterEnHeading = false;
             var isStyleBlock = false;
+            var isCodeBlock = false;
 
             var zhPart = "";
             var enPart = "";
             var stylePart = "";
+            var codePart = "";
 
-            for (int i = yamlBlock?.Line ?? 0; i < document.Count; i++)
+            for (var i = yamlBlock?.Line ?? 0; i < document.Count; i++)
             {
                 var block = document[i];
                 if (block is YamlFrontMatterBlock)
@@ -72,7 +98,12 @@ namespace AntBlazor.Docs.Build.CLI.Utils
 
                 if (block is HeadingBlock heading && heading.Level == 2 && heading.Inline.FirstChild.ToString() == "en-US")
                 {
-                    isAfterENHeading = true;
+                    isAfterEnHeading = true;
+                }
+
+                if (block is CodeBlock codeBlock)
+                {
+                    isCodeBlock = true;
                 }
 
                 if (block is HtmlBlock htmlBlock && htmlBlock.Type == HtmlBlockType.ScriptPreOrStyle)
@@ -83,18 +114,22 @@ namespace AntBlazor.Docs.Build.CLI.Utils
                 if (block is HeadingBlock h && h.Level == 2)
                     continue;
 
-                using StringWriter writer = new StringWriter();
+                using var writer = new StringWriter();
                 var renderer = new HtmlRenderer(writer);
 
                 var blockHtml = renderer.Render(block);
 
-                if (!isAfterENHeading)
+                if (!isAfterEnHeading)
                 {
                     zhPart += blockHtml;
                 }
                 else if (isStyleBlock)
                 {
                     stylePart += blockHtml;
+                }
+                else if (isCodeBlock)
+                {
+                    codePart += blockHtml;
                 }
                 else
                 {
@@ -112,17 +147,17 @@ namespace AntBlazor.Docs.Build.CLI.Utils
                 .UseYamlFrontMatter()
                 .Build();
 
-            StringWriter writer = new StringWriter();
+            var writer = new StringWriter();
             var renderer = new HtmlRenderer(writer);
             pipeline.Setup(renderer);
 
-            MarkdownDocument document = Markdown.Parse(input, pipeline);
+            var document = Markdown.Parse(input, pipeline);
             var yamlBlock = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
 
             Dictionary<string, string> meta = null;
             if (yamlBlock != null)
             {
-                string yaml = input.Substring(yamlBlock.Span.Start, yamlBlock.Span.Length).Trim('-');
+                var yaml = input.Substring(yamlBlock.Span.Start, yamlBlock.Span.Length).Trim('-');
                 meta = new Deserializer().Deserialize<Dictionary<string, string>>(yaml);
             }
 
