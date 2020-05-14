@@ -113,14 +113,15 @@ namespace AntBlazor.Docs.Build.CLI.Command
                 {
                     string language = docItem.Name.Replace("index.", "").Replace(docItem.Extension, "");
                     string content = File.ReadAllText(docItem.FullName);
-                    (Dictionary<string, string> Meta, string Content) docData = DocParser.ParseDemoDoc(content);
+                    (Dictionary<string, string> Meta, string Desc, string ApiDoc) docData = DocParser.ParseDemoDoc(content);
 
                     componentDic.Add(language, new DemoComponent()
                     {
                         Title = docData.Meta["title"],
                         SubTitle = docData.Meta.TryGetValue("subtitle", out string subtitle) ? subtitle : null,
                         Type = docData.Meta["type"],
-                        Doc = docData.Content,
+                        Desc = docData.Desc,
+                        ApiDoc = docData.ApiDoc,
                     });
                 }
 
