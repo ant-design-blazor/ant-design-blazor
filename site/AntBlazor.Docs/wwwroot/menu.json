@@ -199,6 +199,11 @@
             "title": "Result",
             "type": "menuItem",
             "url": "components/result"
+          },
+          {
+            "title": "Spin",
+            "type": "menuItem",
+            "url": "components/spin"
           }
         ]
       },

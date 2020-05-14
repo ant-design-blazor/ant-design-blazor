@@ -1,0 +1,36 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+@{
+    RenderFragment defaultTemplate =
+    @<span class="ant-spin-dot ant-spin-dot-spin">
+        <i class="ant-spin-dot-item"></i>
+        <i class="ant-spin-dot-item"></i>
+        <i class="ant-spin-dot-item"></i>
+        <i class="ant-spin-dot-item"></i>
+    </span>;
+}
+@if (_isLoading)
+{
+    <div class="@ClassMapper.Class">
+        @if (Indicator != null)
+        {
+            @Indicator
+        }
+        else
+        {
+            @defaultTemplate
+        }
+        @if (Tip != null)
+        {
+            <div class="ant-spin-text">@Tip</div>
+        }
+    </div>
+}
+@if (!Simple)
+{
+    <div class="ant-spin-container @ContainerClass">
+        @ChildContent
+    </div>
+}
+
