@@ -1,8 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
-using System.Threading.Tasks;
 
 namespace AntBlazor
 {
@@ -41,6 +42,8 @@ namespace AntBlazor
 
         private string _key;
 
+        private Dropdown _dropdown;
+
         private void SetClass()
         {
             ClassMapper
@@ -48,7 +51,8 @@ namespace AntBlazor
                 .Add(PrefixCls)
                 .Add($"{PrefixCls}-{RootMenu.InternalMode}")
                 .If($"{PrefixCls}-disabled", () => Disabled)
-                .If($"{PrefixCls}-open", () => IsOpen);
+                .If($"{PrefixCls}-open", () => RootMenu.InternalMode == MenuMode.Inline && IsOpen)
+                ;
 
             SubMenuMapper
                 .Clear()
@@ -56,7 +60,8 @@ namespace AntBlazor
                 .Add("ant-menu-sub")
                 .Add($"ant-menu-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
                 .If($"ant-menu-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
-                .If($"ant-menu-hidden", () => !IsOpen);
+                .If($"ant-menu-hidden", () => RootMenu.InternalMode == MenuMode.Inline && !IsOpen)
+                ;
         }
 
         private async Task HandleOnTitleClick(MouseEventArgs args)
@@ -64,22 +69,6 @@ namespace AntBlazor
             RootMenu.SelectSubmenu(this);
             if (OnTitleClicked.HasDelegate)
                 await OnTitleClicked.InvokeAsync(args);
-        }
-
-        private void HandleMouseOver(MouseEventArgs args)
-        {
-            if (RootMenu.InternalMode == MenuMode.Inline)
-                return;
-
-            IsOpen = true;
-        }
-
-        private void HandleMouseOut(MouseEventArgs args)
-        {
-            if (RootMenu.InternalMode == MenuMode.Inline)
-                return;
-
-            IsOpen = false;
         }
 
         public async Task Collapse()
@@ -116,10 +105,47 @@ namespace AntBlazor
 
         public void Open()
         {
+            if (Disabled)
+            {
+                return;
+            }
+
             IsOpen = true;
             if (Parent != null)
             {
                 Parent.Open();
+            }
+        }
+
+        public Dropdown GetDropdown()
+        {
+            return _dropdown;
+        }
+
+        private async Task OnDropdownVisibleChange(bool visible)
+        {
+            await UpdateParentOverlayState(visible);
+        }
+
+        private async Task UpdateParentOverlayState(bool visible)
+        {
+            if (Parent == null)
+            {
+                return;
+            }
+
+            Dropdown parentDropdown = Parent.GetDropdown();
+
+            if (parentDropdown == null)
+            {
+                return;
+            }
+
+            parentDropdown.GetOverlay().UpdateChildState(visible);
+
+            if (!visible)
+            {
+                await parentDropdown.Hide();
             }
         }
     }
