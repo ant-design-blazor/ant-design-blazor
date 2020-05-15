@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntBlazor
 {
-    public enum AntNotificationPlacement
+    public enum NotificationPlacement
     {
         TopLeft = 0,
         TopRight = 1,

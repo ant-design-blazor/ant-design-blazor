@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public class AntNotificationConfig
+    public class NotificationConfig
     {
         /// <summary>
         /// 控制出现与消失的动画
@@ -86,12 +86,12 @@ namespace AntBlazor
         /// <summary>
         /// 弹出位置
         /// </summary>
-        public AntNotificationPlacement? Placement { get; set; } = null;
+        public NotificationPlacement? Placement { get; set; } = null;
 
         /// <summary>
         /// 通知提醒框左侧的图标类型
         /// </summary>
-        public AntNotificationType NotificationType { get; set; } = AntNotificationType.None;
+        public NotificationType NotificationType { get; set; } = NotificationType.None;
 
     }
 }

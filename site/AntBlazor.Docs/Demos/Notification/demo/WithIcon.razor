@@ -1,0 +1,50 @@
+﻿@inject NotificationService _notice
+
+<AntButton Onclick="@OnSuccessClick">
+    success
+</AntButton>   
+
+ <AntButton Onclick="@OnInfoClick">
+    info
+</AntButton>
+
+<AntButton Onclick="@OnWarningClick">
+    warning
+</AntButton>
+
+<AntButton Onclick="@OnErrorClick">
+    error
+</AntButton>
+
+@code{
+    private async Task NoticeWithIcon(NotificationType type)
+    {
+        await _notice.Open(new NotificationConfig()
+        {
+            Message = "Notification Title",
+            Description = "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+            NotificationType = type
+        });
+    }
+
+    private async Task OnSuccessClick()
+    {
+        await NoticeWithIcon(NotificationType.Success);
+    }
+
+    private async Task OnInfoClick()
+    {
+        await NoticeWithIcon(NotificationType.Info);
+    }
+
+    private async Task OnWarningClick()
+    {
+        await NoticeWithIcon(NotificationType.Warning);
+    }
+
+    private async Task OnErrorClick()
+    {
+        await NoticeWithIcon(NotificationType.Error);
+    }
+
+}
