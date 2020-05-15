@@ -38,7 +38,7 @@ namespace AntBlazor
             return iconImg;
         }
 
-        public async ValueTask<string> GetIconSvg(string type, string theme, string width = "1em", string height = "1em", string fill = "currentColor", bool spin = false)
+        public async ValueTask<string> GetIconSvg(string type, string theme, string width = "1em", string height = "1em", string fill = "currentColor")
         {
             var svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\"";
 
