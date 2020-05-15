@@ -1,0 +1,28 @@
+﻿
+<AntSlider Value=size OnChange="v=>setSize(v.AsT0)" />
+<br />
+<br />
+<Space Size="@($"{size}")">
+    <SpaceItem>
+        <AntButton Type="primary">Primary</AntButton>
+    </SpaceItem>
+    <SpaceItem>
+        <AntButton>Default</AntButton>
+    </SpaceItem>
+    <SpaceItem>
+        <AntButton Type="dashed">Dashed</AntButton>
+    </SpaceItem>
+    <SpaceItem>
+        <AntButton Type="link">Link</AntButton>
+    </SpaceItem>
+</Space>
+
+@code{
+    double size = 8;
+
+    void setSize(double value)
+    {
+        size = value;
+        StateHasChanged();
+    }
+}

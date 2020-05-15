@@ -10,7 +10,7 @@
     <Description>Basic slider. When <code>range</code> is <code>true</code>, display as dual thumb mode. When <code>disable</code> is <code>true</code>, the slider will not be interactable.</Description>
     <Demo>
         <AntSlider DefaultValue="30" Disabled="@_disabled" />
-        <AntSlider DefaultValue="new double[] { 20, 50 }" Disabled="@_disabled" />
+        <AntSlider DefaultValue="(20, 50)" Disabled="@_disabled" />
         _disabled: <AntSwitch Size="small" Checked="@_disabled" OnChange="(e)=>OnSwitch(e)" />
     </Demo>
 </DemoCard>
@@ -56,8 +56,8 @@
     <Title>Event</Title>
     <Description>The <code>onChange</code> callback function will fire when the user changes the slider's value. The <code>onAfterChange</code> callback function will fire when <code>onmouseup</code> fired.</Description>
     <Demo>
-        <AntSlider DefaultValue="30" OnChange="(e)=>OnChange1(e)" OnAfterChange="(o,e)=>OnAfterChange1(o,e)" />
-        <AntSlider Step="10" DefaultValue="new double[] { 20, 50 }" OnChange="(e)=>OnChange2(e)" OnAfterChange="(o,e)=>OnAfterChange2(o,e)" />
+        <AntSlider DefaultValue="30" OnChange="(e)=>OnChange1(e.AsT0)" OnAfterChange="(vlaue)=>OnAfterChange1()" />
+        <AntSlider Step="10" DefaultValue="( 20, 50 )" OnChange="(e)=>OnChange2(e.AsT0)" OnAfterChange="(vlaue)=>OnAfterChange2()" />
     </Demo>
 </DemoCard>
 
@@ -70,10 +70,10 @@
                 <AntSlider Vertical DefaultValue="30" />
             </div>
             <div style="height: 300px; margin-left: 70px; display: inline-block;">
-                <AntSlider Vertical Step="10" DefaultValue="new double[] { 20, 50 }" />
+                <AntSlider Vertical Step="10" DefaultValue="(20, 50 )" />
             </div>
             <div style="height: 300px; margin-left: 70px; display: inline-block;">
-                <AntSlider Vertical Marks="@_marks1" DefaultValue="new double[] { 26, 37 }" />
+                <AntSlider Vertical Marks="@_marks1" DefaultValue="(26, 37 )" />
             </div>
         </div>
     </Demo>
@@ -86,7 +86,7 @@
         <div>
             <h4>included=true</h4>
             <AntSlider Marks="@_marks1" DefaultValue="37" />
-            <AntSlider Marks="@_marks1" DefaultValue="new double[] { 26, 37 }" />
+            <AntSlider Marks="@_marks1" DefaultValue="(26, 37)" />
 
             <h4>included=false</h4>
             <AntSlider Marks="@_marks1" Included="false" DefaultValue="37" />
@@ -106,7 +106,7 @@
     <Demo>
         <div>
             <AntSlider Reverse="@_reversed" DefaultValue="30" />
-            <AntSlider Reverse="@_reversed" DefaultValue="new double[] { 20, 50 }" />
+            <AntSlider Reverse="@_reversed" DefaultValue="(20, 50)" />
             _reversed: <AntSwitch Size="small" Checked="@_reversed" OnChange="(e)=>OnSwitchReverse(e)" />
         </div>
     </Demo>
