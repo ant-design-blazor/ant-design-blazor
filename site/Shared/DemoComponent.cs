@@ -34,5 +34,7 @@ namespace AntBlazor.Docs
         public string Type { get; set; }
 
         public string Style { get; set; }
+
+        public bool Debug { get; set; }
     }
 }

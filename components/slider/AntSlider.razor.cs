@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
+    using SliderValueType = OneOf<double, (double, double)>;
+
     public partial class AntSlider : AntDomComponentBase
     {
         private const string PreFixCls = "ant-slider";
@@ -122,7 +124,7 @@ namespace AntBlazor
         /// The default value of slider. When <see cref="Range"/> is false, use number, otherwise, use [number, number]
         /// </summary>
         [Parameter]
-        public OneOf<double, IEnumerable<double>> DefaultValue { get; set; } = 0;
+        public SliderValueType DefaultValue { get; set; } = 0;
 
         /// <summary>
         /// If true, the slider will not be interactable
@@ -224,13 +226,13 @@ namespace AntBlazor
         /// The value of slider. When range is false, use number, otherwise, use [number, number]
         /// </summary>
         [Parameter]
-        public OneOf.OneOf<double, IEnumerable<double>> Value
+        public SliderValueType Value
         {
             get
             {
                 if (Range)
                 {
-                    return new double[] { LeftValue, RightValue };
+                    return (LeftValue, RightValue);
                 }
                 else
                 {
@@ -242,14 +244,10 @@ namespace AntBlazor
                 value.Switch(d => RightValue = d, l =>
                 {
                     Range = true;
-                    if (l == null || l.Count() != 2)
-                    {
-                        throw new ArgumentException($"{nameof(Value)} is not in the correct format, expect 'number' or '[number, number]'");
-                    }
 
-                    double[] values = l.ToArray();
-                    LeftValue = values[0];
-                    RightValue = values[1];
+                    var values = l;
+                    LeftValue = values.Item1;
+                    RightValue = values.Item2;
                 });
             }
         }
@@ -264,13 +262,13 @@ namespace AntBlazor
         /// Fire when onmouseup is fired.
         /// </summary>
         [Parameter]
-        public EventHandler<MouseEventArgs> OnAfterChange { get; set; }
+        public EventCallback<SliderValueType> OnAfterChange { get; set; }
 
         /// <summary>
         /// Callback function that is fired when the user changes the slider's value.
         /// </summary>
         [Parameter]
-        public Action<double> OnChange { get; set; }
+        public Action<SliderValueType> OnChange { get; set; }
 
         /// <summary>
         /// Set Tooltip display position. Ref Tooltip
@@ -307,7 +305,7 @@ namespace AntBlazor
             var dict = parameters.ToDictionary();
             if (dict.ContainsKey(nameof(DefaultValue)) && !dict.ContainsKey(nameof(Value)))
             {
-                Value = parameters.GetValueOrDefault(nameof(DefaultValue), OneOf<double, IEnumerable<double>>.FromT0(0));
+                Value = parameters.GetValueOrDefault(nameof(DefaultValue), SliderValueType.FromT0(0));
             }
         }
 
@@ -352,12 +350,15 @@ namespace AntBlazor
             if (_mouseDown)
             {
                 await CalculateValueAsync(jsonElement.GetProperty(Vertical ? "clientY" : "clientX").GetDouble());
+
+                OnChange?.Invoke(RightValue);
             }
         }
 
         private void OnMouseUp(JsonElement jsonElement)
         {
             _mouseDown = false;
+            OnAfterChange.InvokeAsync(RightValue);
         }
 
         private async void OnClick(MouseEventArgs args)

@@ -1,0 +1,9 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+
+<CascadingValue Value="this">
+    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="@Ref">
+        @ChildContent
+    </div>
+</CascadingValue>
