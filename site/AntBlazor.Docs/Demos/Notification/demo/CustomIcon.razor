@@ -9,7 +9,7 @@
     private async Task OnClick()
     {
         RenderFragment customIcon = @<AntIcon Type="smile" Theme="outline" Style="color:#108ee9;"></AntIcon>;
-        await _notice.Open(new NotificationConfig()
+        _notice.Open(new NotificationConfig()
         {
             Message = "Notification Title",
             Description = "This is the content of the notification. This is the content of the notification. This is the content of the notification.",

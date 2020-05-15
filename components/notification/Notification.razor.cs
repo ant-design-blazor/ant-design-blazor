@@ -10,9 +10,28 @@ namespace AntBlazor
 {
     public partial class Notification
     {
-        public Notification()
+        [Inject]
+        private NotificationService NotificationService { get; set; }
+
+        protected override void OnInitialized()
         {
-            Instance = this;
+            if (NotificationService != null)
+            {
+                NotificationService.OnNotice += NotificationService_OnNotice;
+                NotificationService.OnClose += NotificationService_OnClose;
+                NotificationService.OnDestroy += Destroy;
+            }
+        }
+
+
+        private async void NotificationService_OnClose(string e)
+        {
+            await CloseAsync(e);
+        }
+
+        private async void NotificationService_OnNotice(NotificationConfig e)
+        {
+            await NotifyAsync(e);
         }
 
         internal static Notification Instance { get; private set; }
@@ -121,8 +140,12 @@ namespace AntBlazor
         #endregion
 
 
-        internal async Task NotifyAsync(NotificationConfig option)
+        public async Task NotifyAsync(NotificationConfig option)
         {
+            if (option == null)
+            {
+                return;
+            }
             option = ExtendConfig(option);
 
             Debug.Assert(option.Placement != null, "option.Placement != null");
