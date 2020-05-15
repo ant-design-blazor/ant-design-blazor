@@ -1,36 +1,53 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-@{
-    RenderFragment defaultTemplate =
-    @<span class="ant-spin-dot ant-spin-dot-spin">
-        <i class="ant-spin-dot-item"></i>
-        <i class="ant-spin-dot-item"></i>
-        <i class="ant-spin-dot-item"></i>
-        <i class="ant-spin-dot-item"></i>
-    </span>;
-}
-@if (_isLoading)
+@if (Simple)
 {
-    <div class="@ClassMapper.Class">
-        @if (Indicator != null)
-        {
-            @Indicator
-        }
-        else
-        {
-            @defaultTemplate
-        }
-        @if (Tip != null)
-        {
-            <div class="ant-spin-text">@Tip</div>
-        }
-    </div>
+    @simpleTemplate(this)
 }
-@if (!Simple)
+else
 {
-    <div class="ant-spin-container @ContainerClass">
-        @ChildContent
+    <div class="@WrapperClassMapper.Class">
+        <div>
+            @simpleTemplate(this)
+        </div>
     </div>
 }
 
+@code{
+    RenderFragment defaultTemplate =
+        @<span class="ant-spin-dot ant-spin-dot-spin">
+            <i class="ant-spin-dot-item"></i>
+            <i class="ant-spin-dot-item"></i>
+            <i class="ant-spin-dot-item"></i>
+            <i class="ant-spin-dot-item"></i>
+        </span>;
+
+    RenderFragment<Spin> simpleTemplate = spin=>
+        @<Template>
+            @if (spin._isLoading)
+            {
+                <div class="@spin.ClassMapper.Class" id="@spin.Id" style="@spin.Style" @ref="Ref">
+                    @if (spin.Indicator != null)
+                    {
+                        @spin.Indicator
+                    }
+                    else
+                    {
+                        @spin.defaultTemplate
+                    }
+                    @if (spin.Tip != null)
+                    {
+                        <div class="ant-spin-text">@spin.Tip</div>
+                    }
+                </div>
+            }
+
+            @if (!spin.Simple)
+            {
+                <div class="ant-spin-container @spin.ContainerClass">
+                    @spin.ChildContent
+                </div>
+            }
+        </Template>;
+}

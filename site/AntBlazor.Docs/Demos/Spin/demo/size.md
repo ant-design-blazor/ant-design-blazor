@@ -28,6 +28,7 @@ ReactDOM.render(
 
 <style>
 .ant-spin.ant-spin-spinning {
+  display: inline-block;
   margin-right: 16px;
 }
 </style>

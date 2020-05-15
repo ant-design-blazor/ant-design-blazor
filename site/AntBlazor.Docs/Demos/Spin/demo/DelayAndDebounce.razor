@@ -1,5 +1,19 @@
-﻿<h3>DelayAndDebounce</h3>
+﻿<div>
+    <Spin Spinning=loading Delay=500>
+        <AntAlert
+            Message="Alert message title"
+            Description="Further details about the context of this alert."
+            Type="info"
+        />
+    </Spin>
+    <div style="margin-top: 16px">
+        Loading state：
+        <AntSwitch Checked=loading OnChange=toggle />
+    </div>
+</div>
 
 @code {
+    bool loading = false;
 
+    void toggle(bool value) => loading = value;
 }
