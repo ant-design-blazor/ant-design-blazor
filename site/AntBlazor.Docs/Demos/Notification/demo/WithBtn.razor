@@ -12,7 +12,7 @@
         RenderFragment btn = @<AntButton Type="@AntButtonType.Primary" Onclick="() => { _notice.Close(key); }">
                                 confirm
                             </AntButton>;
-        _notice.Open(new NotificationConfig()
+        await _notice.Open(new NotificationConfig()
         {
             Message = "Notification Title",
             Key = key,
