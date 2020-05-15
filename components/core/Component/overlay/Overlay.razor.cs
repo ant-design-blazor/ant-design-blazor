@@ -10,6 +10,9 @@ namespace AntBlazor.Internal
         public OverlayTrigger Trigger { get; set; }
 
         [Parameter]
+        public string OverlayChildPrefixCls { get; set; } = "";
+
+        [Parameter]
         public EventCallback OnOverlayMouseEnter { get; set; }
 
         [Parameter]
@@ -115,7 +118,7 @@ namespace AntBlazor.Internal
 
             _dropdownStyle = $"left: {left}px;top: {top}px;";
 
-            _overlayCls = $"slide-{Trigger.Placement.SlideName}-enter slide-{Trigger.Placement.SlideName}-enter-active slide-{Trigger.Placement.SlideName}";
+            _overlayCls = Trigger.OverlayEnterCls;
 
             await Trigger.OnVisibleChange.InvokeAsync(true);
 
@@ -139,7 +142,7 @@ namespace AntBlazor.Internal
             _isOverlayFirstRender = true;
             _isWaitForOverlayFirstRender = false;
 
-            _overlayCls = $"slide-{Trigger.Placement.SlideName}-leave slide-{Trigger.Placement.SlideName}-leave-active slide-{Trigger.Placement.SlideName}";
+            _overlayCls = Trigger.OverlayLeaveCls;
 
             await Trigger.OnVisibleChange.InvokeAsync(false);
 
@@ -157,6 +160,11 @@ namespace AntBlazor.Internal
             _isPreventHide = prevent;
         }
 
+        /// <summary>
+        /// set if there any child overlay show or hide
+        /// overlay would not hide if any child is showing
+        /// </summary>
+        /// <param name="isChildDropdownShow"></param>
         public void UpdateChildState(bool isChildDropdownShow)
         {
             _isChildDropdownShow = isChildDropdownShow;

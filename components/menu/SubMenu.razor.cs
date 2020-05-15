@@ -141,7 +141,7 @@ namespace AntBlazor
                 return;
             }
 
-            parentDropdown.GetDropdownOverlay().UpdateChildState(visible);
+            parentDropdown.GetOverlayComponent().UpdateChildState(visible);
 
             if (!visible)
             {

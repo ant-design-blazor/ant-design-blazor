@@ -27,10 +27,13 @@ namespace AntBlazor.Internal
         public bool Visible { get; set; } = false;
 
         [Parameter]
-        public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
+        public bool IsButton { get; set; } = false;
 
         [Parameter]
-        public Placement Placement { get; set; } = Placement.BottomLeft;
+        public DropdownTrigger[] Trigger { get; set; } = new DropdownTrigger[] { DropdownTrigger.Hover };
+
+        [Parameter]
+        public DropdownPlacement Placement { get; set; } = DropdownPlacement.BottomLeft;
 
         [Parameter]
         public EventCallback<bool> OnVisibleChange { get; set; }
@@ -38,13 +41,19 @@ namespace AntBlazor.Internal
         [Parameter]
         public RenderFragment Overlay { get; set; }
 
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnClick { get; set; }
+
         [Inject]
         private DomEventService DomEventService { get; set; }
 
         private bool _mouseInTrigger = false;
         private bool _mouseInOverlay = false;
 
-        private Overlay _overlay = null;
+        protected Overlay _overlay = null;
 
         protected override void OnInitialized()
         {
@@ -53,7 +62,7 @@ namespace AntBlazor.Internal
             DomEventService.AddEventListener("app", "mouseup", OnMouseUp);
         }
 
-        private async Task OnTriggerMouseEnter()
+        protected virtual async Task OnTriggerMouseEnter()
         {
             _mouseInTrigger = true;
 
@@ -65,7 +74,7 @@ namespace AntBlazor.Internal
             }
         }
 
-        private async Task OnTriggerMouseLeave()
+        protected virtual async Task OnTriggerMouseLeave()
         {
             _mouseInTrigger = false;
 
@@ -77,7 +86,7 @@ namespace AntBlazor.Internal
             }
         }
 
-        private void OnOverlayMouseEnter()
+        protected virtual void OnOverlayMouseEnter()
         {
             _mouseInOverlay = true;
 
@@ -87,7 +96,7 @@ namespace AntBlazor.Internal
             }
         }
 
-        private async Task OnOverlayMouseLeave()
+        protected virtual async Task OnOverlayMouseLeave()
         {
             _mouseInOverlay = false;
 
@@ -99,19 +108,19 @@ namespace AntBlazor.Internal
             }
         }
 
-        private async Task OnClickDiv(MouseEventArgs args)
+        protected virtual async Task OnClickDiv(MouseEventArgs args)
         {
-            //if (!IsButton)
-            //{
-            //    await OnTriggerClick();
-            //}
-            //else
-            //{
-            //    await OnClick.InvokeAsync(args);
-            //}
+            if (!IsButton)
+            {
+                await OnTriggerClick();
+            }
+            else
+            {
+                await OnClick.InvokeAsync(args);
+            }
         }
 
-        private async Task OnTriggerClick()
+        protected virtual async Task OnTriggerClick()
         {
             if (IsContainTrigger(TriggerType.Click))
             {
@@ -126,7 +135,7 @@ namespace AntBlazor.Internal
             }
         }
 
-        private async Task OnTriggerContextmenu(MouseEventArgs args)
+        protected virtual async Task OnTriggerContextmenu(MouseEventArgs args)
         {
             if (IsContainTrigger(TriggerType.ContextMenu))
             {
@@ -139,7 +148,7 @@ namespace AntBlazor.Internal
             }
         }
 
-        private void OnMouseUp(JsonElement element)
+        protected virtual void OnMouseUp(JsonElement element)
         {
             if (_mouseInOverlay == false && _mouseInTrigger == false)
             {
@@ -147,7 +156,7 @@ namespace AntBlazor.Internal
             }
         }
 
-        private bool IsContainTrigger(TriggerType triggerType)
+        protected virtual bool IsContainTrigger(TriggerType triggerType)
         {
             foreach (TriggerType trigger in Trigger)
             {
@@ -160,6 +169,21 @@ namespace AntBlazor.Internal
             return false;
         }
 
+        protected virtual string GetPlacementClass()
+        {
+            return $"{PrefixCls}-placement-{Placement.Name}";
+        }
+
+        protected virtual string GetOverlayEnterClass()
+        {
+            return $"slide-{Placement.SlideName}-enter slide-{Placement.SlideName}-enter-active slide-{Placement.SlideName}";
+        }
+
+        protected virtual string GetOverlayLeaveClass()
+        {
+            return $"slide-{Placement.SlideName}-leave slide-{Placement.SlideName}-leave-active slide-{Placement.SlideName}";
+        }
+
         public async Task Show()
         {
             await _overlay.Show();
@@ -170,9 +194,14 @@ namespace AntBlazor.Internal
             await _overlay.Hide();
         }
 
-        public Overlay GetDropdownOverlay()
+        public Overlay GetOverlayComponent()
         {
             return _overlay;
         }
+
+        public string PlacementCls { get { return GetPlacementClass(); } }
+        public string OverlayEnterCls { get { return GetOverlayEnterClass(); } }
+        public string OverlayLeaveCls { get { return GetOverlayLeaveClass(); } }
+
     }
 }

@@ -17,12 +17,12 @@
         overlayCls = _overlayCls;
     }
 
-    <div class="@(Trigger.PrefixCls) @(Trigger.OverlayClassName) @(Trigger.PrefixCls)-placement-@(Trigger.Placement.Name) @overlayCls"
+    <div class="@(Trigger.PrefixCls) @(Trigger.OverlayClassName) @(Trigger.PlacementCls) @overlayCls"
          style="width: fit-content; position: absolute; @display @Trigger.OverlayStyle @_dropdownStyle"
          @ref="Ref"
          @onmouseenter="OnOverlayMouseEnter"
          @onmouseleave="OnOverlayMouseLeave">
-        <CascadingValue Value="@($"{Trigger.PrefixCls}-menu")" Name="PrefixCls">
+        <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
             @Trigger.Overlay
         </CascadingValue>
     </div>
