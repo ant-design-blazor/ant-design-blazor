@@ -112,6 +112,7 @@ namespace AntBlazor.Docs.Build.CLI.Command
                             Description = descriptionContent.Descriptions[title.Key],
                             Name = demo.Key,
                             Style = descriptionContent.Style,
+                            Debug = descriptionContent.Meta.Debug,
                             Type = $"{demoDirectoryInfo.Name}.{component.Name}.{demoDir.Name}.{razorFile.Name.Replace(razorFile.Extension, "")}"
                         });
                     }

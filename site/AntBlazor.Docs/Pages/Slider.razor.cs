@@ -35,7 +35,7 @@ namespace AntBlazor.Docs.Pages
         {
         }
 
-        private void OnAfterChange1(object o, MouseEventArgs args)
+        private void OnAfterChange1()
         {
         }
 
@@ -43,7 +43,7 @@ namespace AntBlazor.Docs.Pages
         {
         }
 
-        private void OnAfterChange2(object o, MouseEventArgs args)
+        private void OnAfterChange2()
         {
         }
 
