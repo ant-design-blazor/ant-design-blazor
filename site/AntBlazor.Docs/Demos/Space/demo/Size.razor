@@ -1,0 +1,30 @@
+﻿<AntRadioGroup @bind-Value=@size OnChange="e=> setSize(e)">
+    <AntRadio Value="small">Small</AntRadio>
+    <AntRadio Value="middle">Middle</AntRadio>
+    <AntRadio Value="large">Large</AntRadio>
+</AntRadioGroup>
+<br />
+<br />
+<Space Size=@size>
+    <SpaceItem>
+        <AntButton Type="primary">Primary</AntButton>
+    </SpaceItem>
+    <SpaceItem>
+        <AntButton>Default</AntButton>
+    </SpaceItem>
+    <SpaceItem>
+        <AntButton Type="dashed">Dashed</AntButton>
+    </SpaceItem>
+    <SpaceItem>
+        <AntButton Type="link">Link</AntButton>
+    </SpaceItem>
+</Space>
+
+@code {
+    string size = "small";
+    void setSize(string value)
+    {
+        size = value;
+        StateHasChanged();
+    }
+}
