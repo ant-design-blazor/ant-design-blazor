@@ -1,4 +1,5 @@
 ﻿@using System.Reflection
+@using AntBlazor.JsInterop
 @inherits ComponentBase
 
 <div class="code-box" id="@DemoId">
@@ -21,7 +22,11 @@
             <span class="code-box-code-action">
                 <span role="img" aria-label="thunderbolt" class="anticon anticon-thunderbolt"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="thunderbolt" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M848 359.3H627.7L825.8 109c4.1-5.3.4-13-6.3-13H436c-2.8 0-5.5 1.5-6.9 4L170 547.5c-3.1 5.3.7 12 6.9 12h174.4l-89.4 357.6c-1.9 7.8 7.5 13.3 13.3 7.7L853.5 373c5.2-4.9 1.7-13.7-5.5-13.7zM378.2 732.5l60.3-241H281.1l189.6-327.4h224.6L487 427.4h211L378.2 732.5z"></path></svg></span>
             </span>
-            <span role="img" aria-label="snippets" tabindex="-1" class="anticon anticon-snippets code-box-code-copy"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="snippets" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"></path></svg></span>
+            <span role="img" aria-label="snippets" tabindex="-1" class="anticon anticon-snippets code-box-code-copy" @onclick="@(async _=>await Copy())">
+                <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="snippets" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                    <path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"></path>
+                </svg>
+            </span>
             <span class="code-expand-icon" @onclick="_=>codeExpand=!codeExpand">
                 <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(codeExpand?"code-expand-icon-hide":"code-expand-icon-show")">
                 <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="@(!codeExpand?"code-expand-icon-hide":"code-expand-icon-show")">
@@ -33,13 +38,16 @@
             <HighlightedCode Code="@Demo.Code" Language="html"></HighlightedCode>
         </div>
     </section>
-    <Style ScopeId=@DemoId >
+    <Style ScopeId=@DemoId>
         @Demo.Style
     </Style>
 </div>
 
+@inject InteropService InteropService
 
 @code {
+
+
 
     [Parameter]
     public string ComponentName { get; set; }
@@ -58,4 +66,10 @@
         builder.OpenComponent(0, showCase);
         builder.CloseComponent();
     };
+
+    async ValueTask Copy()
+    {
+        await InteropService.Copy(Demo.Code);
+        Console.WriteLine("copy successful!");
+    }
 }
