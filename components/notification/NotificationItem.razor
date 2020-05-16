@@ -1,49 +1,50 @@
 ﻿@namespace AntBlazor
+@inherits NotificationBase
 
 <div id="@Config.Key"
-     class="ant-notification-notice ant-notification-notice-closable @GetClassName()"
+     class="@(ClassPrefix)-notice @(ClassPrefix)-notice-closable @GetClassName()"
      style="@Config.Style"
      @onclick="OnClick">
 
-    <div class="ant-notification-notice-content">
+    <div class="@(ClassPrefix)-notice-content">
         <div class="@GetIconClassName()">
             @if (Config.Icon != null)
             {
-                <span class="ant-notification-notice-icon">
+                <span class="@(ClassPrefix)-notice-icon">
                     @Config.Icon
                 </span>
             }
-            else if (Config.NotificationType != AntNotificationType.None)
+            else if (Config.NotificationType != NotificationType.None)
             {
                 switch (Config.NotificationType)
                 {
-                    case AntNotificationType.Success:
+                    case NotificationType.Success:
                         {
-                            <span role="img" aria-label="check-circle" class="anticon anticon-check-circle ant-notification-notice-icon ant-notification-notice-icon-success">
+                            <span role="img" aria-label="check-circle" class="anticon anticon-check-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-success">
                                 <AntIcon Type="check-circle" Theme="outline"></AntIcon>
                             </span>
 
                             break;
                         }
-                    case AntNotificationType.Warning:
+                    case NotificationType.Warning:
                         {
-                            <span role="img" aria-label="exclamation-circle" class="anticon anticon-exclamation-circle ant-notification-notice-icon ant-notification-notice-icon-warning">
+                            <span role="img" aria-label="exclamation-circle" class="anticon anticon-exclamation-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-warning">
                                 <AntIcon Type="exclamation-circle" Theme="outline"></AntIcon>
                             </span>
 
                             break;
                         }
-                    case AntNotificationType.Error:
+                    case NotificationType.Error:
                         {
-                            <span role="img" aria-label="close-circle" class="anticon anticon-close-circle ant-notification-notice-icon ant-notification-notice-icon-error">
+                            <span role="img" aria-label="close-circle" class="anticon anticon-close-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-error">
                                 <AntIcon Type="close-circle" Theme="outline"></AntIcon>
                             </span>
 
                             break;
                         }
-                    case AntNotificationType.Info:
+                    case NotificationType.Info:
                         {
-                            <span role="img" aria-label="info-circle" class="anticon anticon-info-circle ant-notification-notice-icon ant-notification-notice-icon-info">
+                            <span role="img" aria-label="info-circle" class="anticon anticon-info-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-info">
                                 <AntIcon Type="info-circle" Theme="outline"></AntIcon>
                             </span>
 
@@ -52,7 +53,7 @@
                 }
             }
 
-            <div class="ant-notification-notice-message">
+            <div class="@(ClassPrefix)-notice-message">
                 @if (Config.Message != null)
                 {
                     if (Config.Message is string msg)
@@ -66,7 +67,7 @@
                 }
             </div>
 
-            <div class="ant-notification-notice-description">
+            <div class="@(ClassPrefix)-notice-description">
                 @if (Config.Description != null)
                 {
                     if (Config.Description is string description)
@@ -82,16 +83,16 @@
 
             @if (Config.Btn != null)
             {
-                <span class="ant-notification-notice-btn">
+                <span class="@(ClassPrefix)-notice-btn">
                     @Config.Btn
                 </span>
             }
         </div>
     </div>
 
-    <a tabindex="0" class="ant-notification-notice-close" @onclick="Close" @onclick:preventDefault @onclick:stopPropagation>
-        <span class="ant-notification-close-x">
-            <span role="img" aria-label="close" class="anticon anticon-close ant-notification-close-icon">
+    <a tabindex="0" class="@(ClassPrefix)-notice-close" @onclick="Close" @onclick:preventDefault @onclick:stopPropagation>
+        <span class="@(ClassPrefix)-close-x">
+            <span role="img" aria-label="close" class="anticon anticon-close @(ClassPrefix)-close-icon">
                 @Config.CloseIcon
             </span>
         </span>

@@ -7,21 +7,21 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntBlazor
 {
-    public partial class AntNotificationItem
+    public partial class NotificationItem
     {
         [Parameter]
-        public AntNotificationConfig Config { get; set; }
+        public NotificationConfig Config { get; set; }
 
         [Parameter]
-        public Func<AntNotificationConfig, Task> OnClose { get; set; }
+        public Func<NotificationConfig, Task> OnClose { get; set; }
 
         private string GetIconClassName()
         {
-            if (Config.NotificationType != AntNotificationType.None
+            if (Config.NotificationType != NotificationType.None
                 || Config.Icon != null
             )
             {
-                return "ant-notification-notice-with-icon";
+                return $"{ClassPrefix}-notice-with-icon";
             }
 
             return "";

@@ -198,7 +198,7 @@
           {
             "title": "Notification",
             "type": "menuItem",
-            "url": "notification"
+            "url": "components/notification"
           },
           {
             "title": "Result",

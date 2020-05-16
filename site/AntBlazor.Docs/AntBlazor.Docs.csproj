@@ -33,6 +33,16 @@
     <Compile Include="..\Shared\MenuItem.cs" Link="Services\MenuItem.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Demos\Notification\demo\Basic.razor" />
+    <None Include="Demos\Notification\demo\CustomIcon.razor" />
+    <None Include="Demos\Notification\demo\Duration.razor" />
+    <None Include="Demos\Notification\demo\Placement.razor" />
+    <None Include="Demos\Notification\demo\Update.razor" />
+    <None Include="Demos\Notification\demo\WithBtn.razor" />
+    <None Include="Demos\Notification\demo\WithIcon.razor" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">

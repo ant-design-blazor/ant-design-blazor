@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntBlazor
 {
-    public enum AntNotificationType
+    public enum NotificationType
     {
         None = 0,
         Info = 1,
