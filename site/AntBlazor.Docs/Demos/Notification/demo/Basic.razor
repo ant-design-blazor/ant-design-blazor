@@ -1,0 +1,17 @@
+﻿@inject NotificationService _notice
+
+
+<AntButton Type="@AntButtonType.Primary" Onclick="@OnClick">
+    Open the notification box
+</AntButton>
+
+@code{
+    private async Task OnClick()
+    {
+        _notice.Open(new NotificationConfig()
+        {
+            Message = "title",
+            Description = "This is the content of the notification. This is the content of the notification. This is the content of the notification."
+        });
+    }
+}
