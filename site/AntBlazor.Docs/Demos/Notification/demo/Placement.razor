@@ -1,0 +1,59 @@
+﻿@inject NotificationService _notice
+
+<div>
+    <AntButton Type="@AntButtonType.Primary" Onclick="@OnTopLeftClick">
+        <AntIcon Type="Radius-Upleft" Theme="Outline"></AntIcon>
+        TopLeft
+    </AntButton>
+
+    <AntButton Type="@AntButtonType.Primary" Onclick="@OnTopRightClick">
+        <AntIcon Type="Radius-Upright" Theme="Outline"></AntIcon>
+        TopRight
+    </AntButton>
+</div>
+
+<br/>
+
+<div>
+    <AntButton Type="@AntButtonType.Primary" Onclick="@OnBottomLeftClick">
+        <AntIcon Type="Radius-Bottomleft" Theme="Outline"></AntIcon>
+        BottomLeft
+    </AntButton>
+
+    <AntButton Type="@AntButtonType.Primary" Onclick="@OnBottomRightClick">
+        <AntIcon Type="Radius-Bottomright" Theme="Outline"></AntIcon>
+        BottomRight
+    </AntButton>
+</div>
+
+@code {
+    private async Task OpenWithPlacement(NotificationPlacement placement)
+    {
+        _notice.Open(new NotificationConfig()
+        {
+            Message = $"Notification {placement}",
+            Description = "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+            Placement = placement
+        });
+    }
+
+    private async Task OnTopLeftClick()
+    {
+        await OpenWithPlacement(NotificationPlacement.TopLeft);
+    }
+
+    private async Task OnTopRightClick()
+    {
+        await OpenWithPlacement(NotificationPlacement.TopRight);
+    }
+
+    private async Task OnBottomLeftClick()
+    {
+        await OpenWithPlacement(NotificationPlacement.BottomLeft);
+    }
+
+    private async Task OnBottomRightClick()
+    {
+        await OpenWithPlacement(NotificationPlacement.BottomRight);
+    }
+}

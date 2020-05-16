@@ -1,0 +1,23 @@
+﻿@inject NotificationService _notice
+
+<AntButton Type="@AntButtonType.Primary" Onclick="@OnClick">
+    custom button
+</AntButton>
+
+@code{
+
+    private async Task OnClick()
+    {
+        string key = $"open{DateTime.Now}";
+        RenderFragment btn = @<AntButton Type="@AntButtonType.Primary" Onclick="() => { _notice.Close(key); }">
+                                confirm
+                            </AntButton>;
+        _notice.Open(new NotificationConfig()
+        {
+            Message = "Notification Title",
+            Key = key,
+            Description = "A function will be be called after the notification is closed (automatically after the \"duration\" time of manually).",
+            Btn = btn 
+        });
+    }
+}

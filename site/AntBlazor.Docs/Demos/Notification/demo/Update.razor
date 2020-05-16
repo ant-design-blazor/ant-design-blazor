@@ -1,0 +1,25 @@
+﻿@inject NotificationService _notice
+
+    <AntButton Type="@AntButtonType.Primary" Onclick="@OnClick">
+        Open the notification box
+    </AntButton>
+
+@code{
+    private async Task OnClick()
+    {
+        string key = $"open{DateTime.Now}";
+        _notice.Open(new NotificationConfig()
+        {
+            Message = "Notification Title",
+            Key = key,
+            Description = "description.",
+        });
+        await Task.Delay(1000);
+        _notice.Open(new NotificationConfig()
+        {
+            Message = "New Title",
+            Key = key,
+            Description = "New description.",
+        });
+    }
+}
