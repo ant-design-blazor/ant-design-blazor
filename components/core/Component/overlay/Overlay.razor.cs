@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
 
@@ -28,6 +29,7 @@ namespace AntBlazor.Internal
 
         private bool _preVisible = false;
         private bool _isOverlayShow = false;
+        private bool _isOverlayHiding = false;
 
         private int? _overlayLeft = null;
         private int? _overlayTop = null;
@@ -35,7 +37,7 @@ namespace AntBlazor.Internal
         private string _dropdownStyle = "";
         private string _overlayCls = "";
 
-        private const int OVERLAY_TOP_OFFSET = 4;
+        private const int OVERLAY_OFFSET = 4;
 
         protected override async Task OnParametersSetAsync()
         {
@@ -106,6 +108,7 @@ namespace AntBlazor.Internal
             }
 
             _isOverlayShow = true;
+            _isOverlayHiding = false;
 
             await AddOverlayToBody();
 
@@ -118,7 +121,7 @@ namespace AntBlazor.Internal
 
             _dropdownStyle = $"left: {left}px;top: {top}px;";
 
-            _overlayCls = Trigger.OverlayEnterCls;
+            _overlayCls = Trigger.GetOverlayEnterClass();
 
             await Trigger.OnVisibleChange.InvokeAsync(true);
 
@@ -141,16 +144,20 @@ namespace AntBlazor.Internal
 
             _isOverlayFirstRender = true;
             _isWaitForOverlayFirstRender = false;
+            _isOverlayHiding = true;
 
-            _overlayCls = Trigger.OverlayLeaveCls;
+            _overlayCls = Trigger.GetOverlayLeaveClass();
 
-            await Trigger.OnVisibleChange.InvokeAsync(false);
+            await Trigger.OnOverlayHiding.InvokeAsync(true);
 
             StateHasChanged();
 
             // wait for leave animation
             await Task.Delay(200);
             _isOverlayShow = false;
+            _isOverlayHiding = false;
+
+            await Trigger.OnVisibleChange.InvokeAsync(false);
 
             StateHasChanged();
         }
@@ -173,6 +180,16 @@ namespace AntBlazor.Internal
         public bool IsPopup()
         {
             return _isOverlayShow;
+        }
+
+        /// <summary>
+        /// when overlay is complete hide, IsPopup return true
+        /// when overlay is hiding(playing hide animation), IsPopup return false, IsHiding return true.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsHiding()
+        {
+            return _isOverlayHiding;
         }
 
         private async Task AddOverlayToBody()
@@ -199,21 +216,21 @@ namespace AntBlazor.Internal
                 triggerHeight = 0;
             }
 
-            if (Trigger.Placement.Name.IsIn(DropdownPlacement.Left.Name, DropdownPlacement.Right.Name))
+            if (Trigger.Placement.Name.IsIn(PlacementType.Left.Name, PlacementType.Right.Name))
             {
-                top = triggerTop;
+                top = triggerTop + OVERLAY_OFFSET;
             }
-            else if (Trigger.Placement.Name == DropdownPlacement.Right.Name)
+            else if (Trigger.Placement.Name == PlacementType.Right.Name)
             {
-                top = triggerTop + triggerHeight + OVERLAY_TOP_OFFSET;
+                top = triggerTop + triggerHeight + OVERLAY_OFFSET;
             }
-            else if (Trigger.Placement.SlideName == DropdownPlacement.BottomLeft.SlideName)
+            else if (Trigger.Placement.SlideName == PlacementType.BottomLeft.SlideName)
             {
-                top = triggerTop + triggerHeight + OVERLAY_TOP_OFFSET;
+                top = triggerTop + triggerHeight + OVERLAY_OFFSET;
             }
-            else if (Trigger.Placement.SlideName == DropdownPlacement.TopLeft.SlideName)
+            else if (Trigger.Placement.SlideName == PlacementType.TopLeft.SlideName)
             {
-                top = triggerTop - overlay.clientHeight - OVERLAY_TOP_OFFSET;
+                top = triggerTop - overlay.clientHeight - OVERLAY_OFFSET;
             }
 
             return top;
@@ -232,23 +249,23 @@ namespace AntBlazor.Internal
                 triggerWidth = 0;
             }
 
-            if (Trigger.Placement.Name == DropdownPlacement.Left.Name)
+            if (Trigger.Placement.Name == PlacementType.Left.Name)
             {
-                left = triggerLeft - triggerWidth;
+                left = triggerLeft - triggerWidth - OVERLAY_OFFSET;
             }
-            else if (Trigger.Placement.Name == DropdownPlacement.Right.Name)
+            else if (Trigger.Placement.Name == PlacementType.Right.Name)
             {
-                left = triggerLeft + triggerWidth;
+                left = triggerLeft + triggerWidth + OVERLAY_OFFSET;
             }
-            else if (Trigger.Placement.Name.IsIn(DropdownPlacement.BottomLeft.Name, DropdownPlacement.TopLeft.Name))
+            else if (Trigger.Placement.Name.IsIn(PlacementType.BottomLeft.Name, PlacementType.TopLeft.Name))
             {
                 left = triggerLeft;
             }
-            else if (Trigger.Placement.Name.IsIn(DropdownPlacement.BottomCenter.Name, DropdownPlacement.TopCenter.Name))
+            else if (Trigger.Placement.Name.IsIn(PlacementType.BottomCenter.Name, PlacementType.TopCenter.Name))
             {
                 left = triggerLeft + triggerWidth / 2 - overlay.clientWidth / 2;
             }
-            else if (Trigger.Placement.Name.IsIn(DropdownPlacement.BottomRight.Name, DropdownPlacement.TopRight.Name))
+            else if (Trigger.Placement.Name.IsIn(PlacementType.BottomRight.Name, PlacementType.TopRight.Name))
             {
                 left = triggerLeft + triggerWidth - overlay.clientWidth;
             }

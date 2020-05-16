@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntBlazor.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -8,11 +9,23 @@ namespace AntBlazor.Internal
 {
     public partial class OverlayTrigger : AntDomComponentBase
     {
-        [CascadingParameter]
+        [CascadingParameter(Name = "PrefixCls")]
         public string PrefixCls { get; set; } = "ant-dropdown";
 
         [Parameter]
         public string PopupContainerSelector { get; set; }
+
+        [Parameter]
+        public string PlacementCls { get; set; }
+
+        [Parameter]
+        public string OverlayEnterCls { get; set; }
+
+        [Parameter]
+        public string OverlayLeaveCls { get; set; }
+
+        [Parameter]
+        public string OverlayHiddenCls { get; set; }
 
         [Parameter]
         public string OverlayClassName { get; set; }
@@ -33,10 +46,13 @@ namespace AntBlazor.Internal
         public DropdownTrigger[] Trigger { get; set; } = new DropdownTrigger[] { DropdownTrigger.Hover };
 
         [Parameter]
-        public DropdownPlacement Placement { get; set; } = DropdownPlacement.BottomLeft;
+        public PlacementType Placement { get; set; } = PlacementType.BottomLeft;
 
         [Parameter]
         public EventCallback<bool> OnVisibleChange { get; set; }
+
+        [Parameter]
+        public EventCallback<bool> OnOverlayHiding { get; set; }
 
         [Parameter]
         public RenderFragment Overlay { get; set; }
@@ -70,7 +86,7 @@ namespace AntBlazor.Internal
             {
                 _overlay.PreventHide(true);
 
-                await _overlay.Show();
+                await Show();
             }
         }
 
@@ -82,7 +98,7 @@ namespace AntBlazor.Internal
             {
                 _overlay.PreventHide(_mouseInOverlay);
 
-                await _overlay.Hide();
+                await Hide();
             }
         }
 
@@ -104,7 +120,7 @@ namespace AntBlazor.Internal
             {
                 _overlay.PreventHide(_mouseInTrigger);
 
-                await _overlay.Hide();
+                await Hide();
             }
         }
 
@@ -126,11 +142,11 @@ namespace AntBlazor.Internal
             {
                 if (_overlay.IsPopup())
                 {
-                    await _overlay.Hide();
+                    await Hide();
                 }
                 else
                 {
-                    await _overlay.Show();
+                    await Show();
                 }
             }
         }
@@ -143,8 +159,8 @@ namespace AntBlazor.Internal
                 int offsetX = 10;
                 int offsetY = 10;
 
-                await _overlay.Hide();
-                await _overlay.Show(offsetX, offsetY);
+                await Hide();
+                await Show(offsetX, offsetY);
             }
         }
 
@@ -152,7 +168,7 @@ namespace AntBlazor.Internal
         {
             if (_mouseInOverlay == false && _mouseInTrigger == false)
             {
-                _overlay.Hide();
+                Hide();
             }
         }
 
@@ -169,24 +185,45 @@ namespace AntBlazor.Internal
             return false;
         }
 
-        protected virtual string GetPlacementClass()
+        public string GetPlacementClass()
         {
+            if (!string.IsNullOrEmpty(PlacementCls))
+            {
+                return PlacementCls;
+            }
             return $"{PrefixCls}-placement-{Placement.Name}";
         }
 
-        protected virtual string GetOverlayEnterClass()
+        public string GetOverlayEnterClass()
         {
+            if (!string.IsNullOrEmpty(OverlayEnterCls))
+            {
+                return OverlayEnterCls;
+            }
             return $"slide-{Placement.SlideName}-enter slide-{Placement.SlideName}-enter-active slide-{Placement.SlideName}";
         }
 
-        protected virtual string GetOverlayLeaveClass()
+        public string GetOverlayLeaveClass()
         {
+            if (!string.IsNullOrEmpty(OverlayLeaveCls))
+            {
+                return OverlayLeaveCls;
+            }
             return $"slide-{Placement.SlideName}-leave slide-{Placement.SlideName}-leave-active slide-{Placement.SlideName}";
         }
 
-        public async Task Show()
+        public string GetOverlayHiddenClass()
         {
-            await _overlay.Show();
+            if (!string.IsNullOrEmpty(OverlayHiddenCls))
+            {
+                return OverlayHiddenCls;
+            }
+            return $"{PrefixCls}-hidden";
+        }
+
+        public async Task Show(int? overlayLeft = null, int? overlayTop = null)
+        {
+            await _overlay.Show(overlayLeft, overlayTop);
         }
 
         public async Task Hide()
@@ -198,10 +235,5 @@ namespace AntBlazor.Internal
         {
             return _overlay;
         }
-
-        public string PlacementCls { get { return GetPlacementClass(); } }
-        public string OverlayEnterCls { get { return GetOverlayEnterClass(); } }
-        public string OverlayLeaveCls { get { return GetOverlayLeaveClass(); } }
-
     }
 }

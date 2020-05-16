@@ -7,7 +7,8 @@ namespace AntBlazor
 {
     public partial class Menu : AntDomComponentBase
     {
-        private const string PrefixCls = "ant-menu";
+        [CascadingParameter(Name = "PrefixCls")]
+        public string PrefixCls { get; set; } = "ant-menu";
 
         [CascadingParameter]
         public AntSider Parent { get; set; }
@@ -16,7 +17,7 @@ namespace AntBlazor
         public MenuTheme Theme { get; set; } = MenuTheme.Light;
 
         [Parameter]
-        public MenuMode Mode { get; set; } = MenuMode.Inline;
+        public MenuMode Mode { get; set; } = MenuMode.Vertical;
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }

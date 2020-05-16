@@ -1,5 +1,6 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
+@using AntBlazor.Internal
 
 @if (RootMenu.InternalMode == MenuMode.Inline)
 {
@@ -26,34 +27,45 @@
 }
 else
 {
-    <Dropdown @ref="_dropdown"
-              Disabled="Disabled"
-              Placement="@DropdownPlacement.Right"
-              OnVisibleChange="OnDropdownVisibleChange">
-        <Overlay>
-            <ul direction="ltr" class="@SubMenuMapper.Class">
-                <CascadingValue Value="this">
-                    @ChildContent
-                </CascadingValue>
-            </ul>
-        </Overlay>
-        <ChildContent>
-            <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="position:relative;@Style">
-                <div class="ant-menu-submenu-title" role="button" @onclick="HandleOnTitleClick">
-                    @if (Title.IsT0)
-                    {
-                        <span>@Title.AsT0</span>
-                    }
-                    else
-                    {
-                        @Title.AsT1
-                    }
+    string placementName = RootMenu.Mode == MenuMode.Horizontal ? "bottomLeft" : "rightTop";
+    string prefixCls = $"{RootMenu.PrefixCls}-submenu";
 
-                    <i class="ant-menu-submenu-arrow"></i>
-                </div>
-            </li>
-        </ChildContent>
-    </Dropdown>
+    <CascadingValue Value="prefixCls" Name="PrefixCls">
+        <OverlayTrigger @ref="_overlayTrigger"
+                        Style="width: 100%;"
+                        Disabled="Disabled"
+                        Placement="@(RootMenu.Mode == MenuMode.Horizontal ? PlacementType.BottomLeft : PlacementType.Right)"
+                        OnVisibleChange="OnOverlayVisibleChange"
+                        OnOverlayHiding="OnOverlayHiding"
+                        PlacementCls="@($"{prefixCls}-placement-{placementName} {prefixCls}-popup")"
+                        OverlayEnterCls="@($"{prefixCls}-{RootMenu.Theme} ")"
+                        OverlayLeaveCls="@($"{prefixCls}-{RootMenu.Theme} ")"
+                        OverlayHiddenCls="ant-menu-hidden">
+            <ChildContent>
+                <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="position:relative;@Style">
+                    <div class="@(prefixCls)-title" role="button" @onclick="HandleOnTitleClick">
+                        @if (Title.IsT0)
+                        {
+                            <span>@Title.AsT0</span>
+                        }
+                        else
+                        {
+                            @Title.AsT1
+                        }
+
+                        <i class="@(prefixCls)-arrow"></i>
+                    </div>
+                </li>
+            </ChildContent>
+            <Overlay>
+                <ul direction="ltr" class="@(SubMenuMapper.Class)" role="menu">
+                    <CascadingValue Value="this">
+                        @ChildContent
+                    </CascadingValue>
+                </ul>
+            </Overlay>
+        </OverlayTrigger>
+    </CascadingValue>
 }
 
 <style>

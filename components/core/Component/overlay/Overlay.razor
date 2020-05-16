@@ -9,7 +9,7 @@
 
     if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
     {
-        overlayCls = $"{Trigger.PrefixCls}-hidden";
+        overlayCls = Trigger.GetOverlayHiddenClass();
         display = "";
     }
     else
@@ -17,7 +17,7 @@
         overlayCls = _overlayCls;
     }
 
-    <div class="@(Trigger.PrefixCls) @(Trigger.OverlayClassName) @(Trigger.PlacementCls) @overlayCls"
+    <div class="@(Trigger.PrefixCls) @(Trigger.OverlayClassName) @(Trigger.GetPlacementClass()) @overlayCls"
          style="width: fit-content; position: absolute; @display @Trigger.OverlayStyle @_dropdownStyle"
          @ref="Ref"
          @onmouseenter="OnOverlayMouseEnter"

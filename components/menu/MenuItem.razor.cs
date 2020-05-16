@@ -35,7 +35,7 @@ namespace AntBlazor
 
         private void SetClass()
         {
-            string prefixCls = "ant-menu-item";
+            string prefixCls = $"{RootMenu.PrefixCls}-item";
 
             ClassMapper.Add(prefixCls)
                 .If($"{prefixCls}-selected", () => IsSelected)
