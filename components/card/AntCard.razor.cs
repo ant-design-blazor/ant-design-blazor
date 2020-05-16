@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntBlazor
 {
@@ -36,7 +37,7 @@ namespace AntBlazor
         public string Size { get; set; }
 
         [Parameter]
-        public RenderFragment Title { get; set; }
+        public OneOf<string, RenderFragment> Title { get; set; }
 
         [Parameter]
         public RenderFragment Extra { get; set; }
