@@ -20,7 +20,7 @@
                                 {
                                     @TitleTemplate
                                 }
-                                @if (string.IsNullOrEmpty(TitleString))
+                                @if (!string.IsNullOrEmpty(TitleString))
                                 {
                                     @((MarkupString)TitleString)
                                 }
@@ -28,7 +28,7 @@
                         }
                         @if (Closable)
                         {
-                            <button onclick="_=>closeClick()" aria-label="Close" class="ant-drawer-close">
+                            <button @onclick="_=>CloseClick()" aria-label="Close" class="ant-drawer-close">
                                 <AntIcon type="close"></AntIcon>
                             </button>
                         }
