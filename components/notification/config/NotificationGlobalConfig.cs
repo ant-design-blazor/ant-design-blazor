@@ -8,7 +8,7 @@ namespace AntBlazor
     /// <summary>
     /// AntNotification全局配置
     /// </summary>
-    public class AntNotificationGlobalConfig
+    public class NotificationGlobalConfig
     {
         /// <summary>
         /// 消息从底部弹出时，距离底部的位置，单位像素。
@@ -38,6 +38,6 @@ namespace AntBlazor
         /// <summary>
         /// 弹出位置
         /// </summary>
-        public AntNotificationPlacement? Placement { get; set; } = null;
+        public NotificationPlacement? Placement { get; set; } = null;
     }
 }

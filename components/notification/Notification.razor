@@ -1,0 +1,18 @@
+﻿@namespace AntBlazor
+@inherits NotificationBase
+
+@foreach (var configKv in _configDict)
+{
+    var placement = configKv.Key;
+    var configs = configKv.Value;
+    var className = GetClassName(placement);
+    var style = GetStyle(placement);
+    <div @key="placement" class="@className" style="@style">
+        <span>
+            @foreach (var itemConfig in configs)
+            {
+                <NotificationItem @key="itemConfig" Config="itemConfig" OnClose="RemoveItem" />
+            }
+        </span>
+    </div>
+}
