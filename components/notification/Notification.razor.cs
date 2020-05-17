@@ -17,21 +17,11 @@ namespace AntBlazor
         {
             if (NotificationService != null)
             {
-                NotificationService.OnNotice += NotificationService_OnNotice;
-                NotificationService.OnClose += NotificationService_OnClose;
-                NotificationService.OnDestroy += Destroy;
+                NotificationService.OnNoticing += NotifyAsync;
+                NotificationService.OnClosing += CloseAsync;
+                NotificationService.OnDestroying += Destroying;
+                NotificationService.OnConfiging += Config;
             }
-        }
-
-
-        private async void NotificationService_OnClose(string e)
-        {
-            await CloseAsync(e);
-        }
-
-        private async void NotificationService_OnNotice(NotificationConfig e)
-        {
-            await NotifyAsync(e);
         }
 
         internal static Notification Instance { get; private set; }
@@ -187,15 +177,17 @@ namespace AntBlazor
             }
         }
 
-        private Task RemoveItem(NotificationConfig option)
+        private async Task RemoveItem(NotificationConfig option)
         {
             //avoid user do click and option.Duration toggle twice
             if (option.AnimationClass == AnimationType.Enter)
             {
                 option.AnimationClass = AnimationType.Leave;
                 StateHasChanged();
+
                 option.InvokeOnClose();
 
+                await Task.Delay(500);
                 Debug.Assert(option.Placement != null, "option.Placement != null");
                 if (_configDict.TryGetValue(option.Placement.Value, out var configList))
                 {
@@ -211,10 +203,10 @@ namespace AntBlazor
                 //StateHasChanged();
             }
 
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         }
 
-        internal void Destroy()
+        internal void Destroying()
         {
             _configDict.Clear();
             _configKeyDict.Clear();

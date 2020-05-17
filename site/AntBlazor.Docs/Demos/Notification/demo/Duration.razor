@@ -7,7 +7,7 @@
 @code{
     private async Task OnClick()
     {
-        _notice.Open(new NotificationConfig()
+        await _notice.Open(new NotificationConfig()
         {
             Message = "title",
             Duration = 0,

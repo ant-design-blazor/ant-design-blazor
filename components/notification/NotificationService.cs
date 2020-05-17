@@ -9,21 +9,32 @@ namespace AntBlazor
     /// </summary>
     public class NotificationService
     {
-        internal event Action<NotificationConfig> OnNotice;
-        internal event Action<string> OnClose;
-        internal event Action OnDestroy;
+        internal event Action<NotificationGlobalConfig> OnConfiging;
+        internal event Func<NotificationConfig, Task> OnNoticing;
+        internal event Func<string, Task> OnClosing;
+        internal event Action OnDestroying;
+
+        public void Config(NotificationGlobalConfig config)
+        {
+            OnConfiging?.Invoke(config);
+        }
+
 
         /// <summary>
         /// Open a notification box
         /// </summary>
         /// <param name="config"></param>
-        public void Open([NotNull]NotificationConfig config)
+        public async Task Open([NotNull]NotificationConfig config)
         {
             if (config == null)
             {
-                return;
+                throw new ArgumentNullException(nameof(config));
             }
-            OnNotice?.Invoke(config);
+            var task = OnNoticing?.Invoke(config);
+            if (task != null)
+            {
+                await task;
+            }
         }
 
         #region Api
@@ -32,12 +43,12 @@ namespace AntBlazor
         /// 
         /// </summary>
         /// <param name="config"></param>
-        public void Success(NotificationConfig config)
+        public async Task Success(NotificationConfig config)
         {
             if (config != null)
             {
                 config.NotificationType = NotificationType.Success;
-                Open(config);
+                await Open(config);
             }
         }
 
@@ -45,12 +56,12 @@ namespace AntBlazor
         /// 
         /// </summary>
         /// <param name="config"></param>
-        public void Error(NotificationConfig config)
+        public async Task Error(NotificationConfig config)
         {
             if (config != null)
             {
                 config.NotificationType = NotificationType.Error;
-                Open(config);
+                await Open(config);
             }
         }
 
@@ -58,26 +69,25 @@ namespace AntBlazor
         /// 
         /// </summary>
         /// <param name="config"></param>
-        public void Info(NotificationConfig config)
+        public async Task Info(NotificationConfig config)
         {
             if (config != null)
             {
                 config.NotificationType = NotificationType.Info;
-                Open(config);
+                await Open(config);
             }
         }
-
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="config"></param>
-        public void Warning(NotificationConfig config)
+        public async Task Warning(NotificationConfig config)
         {
             if (config != null)
             {
                 config.NotificationType = NotificationType.Warning;
-                Open(config);
+                await Open(config);
             }
         }
 
@@ -85,9 +95,9 @@ namespace AntBlazor
         /// 
         /// </summary>
         /// <param name="config"></param>
-        public void Warn(NotificationConfig config)
+        public async Task Warn(NotificationConfig config)
         {
-            Warning(config);
+            await Warning(config);
         }
 
         /// <summary>
@@ -95,9 +105,10 @@ namespace AntBlazor
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public void Close(string key)
+        public async Task Close(string key)
         {
-            OnClose?.Invoke(key);
+            var task = OnClosing?.Invoke(key);
+            if (task != null) await task;
         }
 
         /// <summary>
@@ -105,7 +116,7 @@ namespace AntBlazor
         /// </summary>
         public void Destroy()
         {
-            OnDestroy?.Invoke();
+            OnDestroying?.Invoke();
         }
 
         #endregion

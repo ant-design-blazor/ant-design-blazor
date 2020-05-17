@@ -34,7 +34,7 @@ config 参数如下：
 | ClassName   | 自定义 CSS class                                             | string                    | null                                |
 | CloseIcon   | 自定义关闭图标                                               | RenderFragment            | null                                |
 | Description | 通知提醒内容，必选                                           | string\|RenderFragment    | -                                   |
-| Duration    | 默认 4.5 秒后自动关闭，配置为 null或者0 则不自动关闭         | double?                   | 4.5                                 |
+| Duration    | 默认 4.5 秒后自动关闭，配置为 null 或者 0 则不自动关闭         | double?                   | 4.5                                 |
 | Icon        | 自定义图标                                                   | RenderFragment            | null                                |
 | Key         | 当前通知唯一标志                                             | string                    | null                                |
 | Message     | 通知提醒标题，必选                                           | string\|RenderFragment    | -                                   |
