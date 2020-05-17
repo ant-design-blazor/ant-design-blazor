@@ -1,6 +1,6 @@
 ﻿<div>
-    <AntButton Icon="plus" Type="primary" @onclick="_=>open3()">Open</AntButton>
-    <AntDrawer Closable="true" Width="720" Visible="visible3" Title='("Submit from in Drawer")' OnClose="_=>close3()">
+    <AntButton Icon="plus" Type="primary" @onclick="_=>open()">New account</AntButton>
+    <AntDrawer Closable="true" Width="720" Visible="visible" Title='("Submit from in Drawer")' OnClose="_=>close()">
         <Template style="height:90%">
             <AntRow Gutter="16">
                 <AntCol Span="12">
@@ -52,15 +52,15 @@
 
 
 @code{
-    bool visible3 = false;
+    bool visible = false;
 
-    void open3()
+    void open()
     {
-        this.visible3 = true;
+        this.visible = true;
     }
 
-    void close3()
+    void close()
     {
-        this.visible3 = false;
+        this.visible = false;
     }
 }
