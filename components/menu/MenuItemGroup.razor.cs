@@ -5,11 +5,12 @@ namespace AntBlazor
 {
     public partial class MenuItemGroup : AntDomComponentBase
     {
-        private static string _prefixCls = "ant-menu-item-group";
+        [CascadingParameter]
+        public Menu RootMenu { get; set; }
 
         protected override void OnInitialized()
         {
-            ClassMapper.Add(_prefixCls);
+            ClassMapper.Add($"{RootMenu.PrefixCls}-item-group");
         }
 
         [Parameter]

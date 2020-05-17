@@ -1,8 +1,8 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<li class="ant-menu-item-group" style="@Style" @key="Key">
-    <div class="ant-menu-item-group-title">
+<li class="@(RootMenu.PrefixCls)-item-group" style="@Style" @key="Key">
+    <div class="@(RootMenu.PrefixCls)-item-group-title">
         @if (Title.Value != null)
         {
             @if (Title.IsT0)
@@ -15,7 +15,7 @@
             }
         }
     </div>
-    <ul class="ant-menu-item-group-list">
+    <ul class="@(RootMenu.PrefixCls)-item-group-list">
         @ChildContent
     </ul>
 </li>
