@@ -1,5 +1,5 @@
 ﻿---
-order: 8
+order: 4
 title:
   zh-CN: 渲染在当前DOM
   en-US: Render in current dom

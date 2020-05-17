@@ -1,5 +1,5 @@
 ﻿---
-order: 4
+order: 8
 title:
   zh-CN: 信息预览抽屉
   en-US: Preview Drawer
