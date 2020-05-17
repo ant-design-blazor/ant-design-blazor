@@ -143,7 +143,14 @@ namespace AntBlazor.Docs.Utils
             StringBuilder sb = new StringBuilder(this.StyleSheet.Length);
             foreach (var item in this)
             {
-                sb.Append($"#{scopeId} {item.Key} {{");
+                if (item.Key.IndexOf($"#{scopeId}") >= 0)
+                {
+                    sb.Append($"{item.Key} {{");
+                }
+                else
+                {
+                    sb.Append($"#{scopeId} {item.Key} {{");
+                }
                 foreach (var property in item.Value)
                 {
                     sb.Append($"{property.Key}:{property.Value};");

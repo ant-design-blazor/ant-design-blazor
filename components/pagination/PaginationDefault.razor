@@ -1,0 +1,41 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+@if (_showTotal != null)
+{
+    <li class="ant-pagination-total-text">
+        @_showTotal(new PaginationTotalContext { Implicit = Total, Range = _ranges })
+    </li>
+}
+
+@foreach (var page in _listOfPageItem)
+{
+    <PaginationItem
+        Type=@(page.Type)
+        Index=page.Index
+        Disabled=page.Disabled
+        Active=@(PageIndex == page.Index)
+        GotoIndex=JumpPage
+        DiffIndex=JumpDiff
+     />
+}
+
+
+
+@*<div nz-pagination-options
+         *ngIf="showQuickJumper || showSizeChanger"
+         [total]="total"
+         [locale]="locale"
+         [disabled]="disabled"
+         [nzSize]="nzSize"
+         [showSizeChanger]="showSizeChanger"
+         [showQuickJumper]="showQuickJumper"
+         [pageIndex]="pageIndex"
+         [pageSize]="pageSize"
+         [pageSizeOptions]="pageSizeOptions"
+         (pageIndexChange)="onPageIndexChange($event)"
+         (pageSizeChange)="onPageSizeChange($event)"></div>*@
+
+@code {
+
+}
