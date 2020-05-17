@@ -8,14 +8,14 @@
     private async Task OnClick()
     {
         string key = $"open{DateTime.Now}";
-        _notice.Open(new NotificationConfig()
+        var task = _notice.Open(new NotificationConfig()
         {
             Message = "Notification Title",
             Key = key,
             Description = "description.",
         });
         await Task.Delay(1000);
-        _notice.Open(new NotificationConfig()
+        await _notice.Open(new NotificationConfig()
         {
             Message = "New Title",
             Key = key,

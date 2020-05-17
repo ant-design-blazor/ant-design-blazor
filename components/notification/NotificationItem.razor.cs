@@ -36,9 +36,13 @@ namespace AntBlazor
             return Config.AnimationClass;
         }
 
-        private void Close(MouseEventArgs e)
+        private async Task Close(MouseEventArgs e)
         {
-            OnClose?.Invoke(Config);
+            var task = OnClose?.Invoke(Config);
+            if (task != null)
+            {
+                await task;
+            }
         }
 
         private void OnClick()
