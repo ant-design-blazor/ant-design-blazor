@@ -33,10 +33,10 @@ The properties of config are as follows:
 | ClassName   | Customized CSS class                                       | string                    | null                                |
 | CloseIcon   | custom close icon                                        | RenderFragment            | null                                |
 | Description | The content of notification box (required)                                      | string\|RenderFragment    | -                                   |
-| duration    | Time in seconds before Notification is closed. When set to 0 or null, it will never be closed automatically         | double?                   | 4.5                                 |
+| Duration    | Time in seconds before Notification is closed. When set to 0 or null, it will never be closed automatically         | double?                   | 4.5                                 |
 | Icon        | Customized icon                                              | RenderFragment            | null                                |
 | Key         | The unique identifier of the Notification                                         | string                    | null                                |
-| message     | The title of notification box (required)                                  | string\|RenderFragment    | -                                   |
+| Message     | The title of notification box (required)                                  | string\|RenderFragment    | -                                   |
 | OnClose     | Trigger when notification closed                                        | event Action                    | null                                |
 | OnClick     | Specify a function that will be called when the notification is clicked                         |  event Action                    | null                                |
 | Placement   | Position of Notification, can be one of `NotificationPlacement.TopLeft` `NotificationPlacement.TopRight` `NotificationPlacement.BottomLeft` `NotificationPlacement.BottomRight` | NotificationPlacement? | `NotificationPlacement.TopRight` |
