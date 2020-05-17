@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntBlazor.JsInterop;
@@ -174,15 +175,7 @@ namespace AntBlazor.Internal
 
         protected virtual bool IsContainTrigger(TriggerType triggerType)
         {
-            foreach (TriggerType trigger in Trigger)
-            {
-                if (trigger == triggerType)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return Trigger.Contains(triggerType);
         }
 
         public virtual string GetPlacementClass()

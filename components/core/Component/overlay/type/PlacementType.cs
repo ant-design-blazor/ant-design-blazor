@@ -1,24 +1,24 @@
-﻿namespace AntBlazor
+﻿using Ardalis.SmartEnum;
+
+namespace AntBlazor
 {
-    public class PlacementType
+    public sealed class PlacementType : SmartEnum<PlacementType>
     {
-        public static readonly PlacementType Left = new PlacementType("left", "down");
-        public static readonly PlacementType Right = new PlacementType("right", "down");
+        public static readonly PlacementType Left = new PlacementType("left", "down", 0);
+        public static readonly PlacementType Right = new PlacementType("right", "down", 1);
 
-        public static readonly PlacementType BottomLeft = new PlacementType("bottomLeft", "down");
-        public static readonly PlacementType BottomCenter = new PlacementType("bottomCenter", "down");
-        public static readonly PlacementType BottomRight = new PlacementType("bottomRight", "down");
+        public static readonly PlacementType BottomLeft = new PlacementType("bottomLeft", "down", 2);
+        public static readonly PlacementType BottomCenter = new PlacementType("bottomCenter", "down", 3);
+        public static readonly PlacementType BottomRight = new PlacementType("bottomRight", "down", 4);
 
-        public static readonly PlacementType TopLeft = new PlacementType("topLeft", "up");
-        public static readonly PlacementType TopCenter = new PlacementType("topCenter", "up");
-        public static readonly PlacementType TopRight = new PlacementType("topRight", "up");
+        public static readonly PlacementType TopLeft = new PlacementType("topLeft", "up", 5);
+        public static readonly PlacementType TopCenter = new PlacementType("topCenter", "up", 6);
+        public static readonly PlacementType TopRight = new PlacementType("topRight", "up", 7);
 
-        public string Name { get; private set; }
         public string SlideName { get; private set; }
 
-        public PlacementType(string name, string slideName)
+        public PlacementType(string name, string slideName, int value) : base(name, value)
         {
-            Name = name;
             SlideName = slideName;
         }
     }
