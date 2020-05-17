@@ -8,15 +8,11 @@
                                          Description="Progresser XTech">
                             <Title>
                                 @item.Title
-                            </Title>                            
-                      
+                            </Title> 
                         </AntListItemMeta>
-
-                        <AntButton Type="@AntButtonType.Link" Onclick="(e)=>open(e, item.Title)">View Profile</AntButton>
-
+                        <AntButton Type="@AntButtonType.Link" Onclick="_=>open()">View Profile</AntButton>
                     </AntListItem>
                 }
-
             </ChildContent>
         </AntList>
 
@@ -106,9 +102,7 @@
                         C / C + +, data structures, software engineering, operating systems, computer networks, databases, compiler theory, computer architecture, Microcomputer Principle and Interface Technology, Computer English, Java, ASP, etc.
                     </AntText>
                 </AntCol>
-
             </AntRow>
-
             <AntDivider ></AntDivider>
             <AntText Strong="true">Contacts</AntText>
             <AntRow></AntRow>
@@ -138,27 +132,24 @@
 </div>
 
    @code{
-
        public class ListDataSource
        {
            public string Title { get; set; }
-       };
+       }
+       List<ListDataSource> datasource = new List<ListDataSource>()
+       {
+            new ListDataSource(){Title="Henry"},
+            new ListDataSource(){Title="Henry"}
+        };
 
-       List<ListDataSource> datasource = new List<ListDataSource>() {
-        new ListDataSource(){Title="Henry"},
-        new ListDataSource(){Title="Henry"}
-    };
        bool visible = false;
 
-
-       void open(MouseEventArgs arg, string Title)
+       void open()
        {
            this.visible = true;
        }
-
        void close()
        {
            this.visible = false;
        }
-
 }
