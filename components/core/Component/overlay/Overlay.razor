@@ -22,8 +22,10 @@
          @ref="Ref"
          @onmouseenter="OnOverlayMouseEnter"
          @onmouseleave="OnOverlayMouseLeave">
-        <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
-            @Trigger.Overlay
+        <CascadingValue Value="Trigger" Name="ParentTrigger">
+            <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
+                @Trigger.Overlay
+            </CascadingValue>
         </CascadingValue>
     </div>
 }

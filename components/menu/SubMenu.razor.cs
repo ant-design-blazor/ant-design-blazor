@@ -133,41 +133,17 @@ namespace AntBlazor
             return _overlayTrigger;
         }
 
-        private async Task OnOverlayVisibleChange(bool visible)
+        private void OnOverlayVisibleChange(bool visible)
         {
             if (visible)
             {
                 SetClass();
-                await UpdateParentOverlayState(visible);
             }
         }
 
-        private async Task OnOverlayHiding(bool hiding)
+        private void OnOverlayHiding(bool hiding)
         {
             SetClass();
-            await UpdateParentOverlayState(false);
-        }
-
-        private async Task UpdateParentOverlayState(bool visible)
-        {
-            if (Parent == null)
-            {
-                return;
-            }
-
-            OverlayTrigger parentTrigger = Parent.GetOverlayTrigger();
-
-            if (parentTrigger == null)
-            {
-                return;
-            }
-
-            parentTrigger.GetOverlayComponent().UpdateChildState(visible);
-
-            if (!visible)
-            {
-                await parentTrigger.Hide();
-            }
         }
     }
 }

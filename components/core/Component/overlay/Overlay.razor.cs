@@ -10,6 +10,9 @@ namespace AntBlazor.Internal
         [CascadingParameter(Name = "Trigger")]
         public OverlayTrigger Trigger { get; set; }
 
+        [CascadingParameter(Name = "ParentTrigger")]
+        public OverlayTrigger ParentTrigger { get; set; }
+
         [Parameter]
         public string OverlayChildPrefixCls { get; set; } = "";
 
@@ -21,7 +24,7 @@ namespace AntBlazor.Internal
 
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
-        private bool _isChildDropdownShow = false;
+        private bool _isChildOverlayShow = false;
         private bool _mouseInOverlay = false;
 
         private bool _isOverlayFirstRender = true;
@@ -110,6 +113,8 @@ namespace AntBlazor.Internal
             _isOverlayShow = true;
             _isOverlayHiding = false;
 
+            await UpdateParentOverlayState(true);
+
             await AddOverlayToBody();
 
             Element trigger = await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Trigger.Ref);
@@ -137,7 +142,7 @@ namespace AntBlazor.Internal
 
             await Task.Delay(100);
 
-            if (!force && !IsContainTrigger(DropdownTrigger.Click) && (_isPreventHide || _mouseInOverlay || _isChildDropdownShow))
+            if (!force && !IsContainTrigger(DropdownTrigger.Click) && (_isPreventHide || _mouseInOverlay || _isChildOverlayShow))
             {
                 return;
             }
@@ -149,6 +154,8 @@ namespace AntBlazor.Internal
             _overlayCls = Trigger.GetOverlayLeaveClass();
 
             await Trigger.OnOverlayHiding.InvokeAsync(true);
+
+            await UpdateParentOverlayState(false);
 
             StateHasChanged();
 
@@ -171,10 +178,10 @@ namespace AntBlazor.Internal
         /// set if there any child overlay show or hide
         /// overlay would not hide if any child is showing
         /// </summary>
-        /// <param name="isChildDropdownShow"></param>
-        public void UpdateChildState(bool isChildDropdownShow)
+        /// <param name="isChildOverlayShow"></param>
+        public void UpdateChildState(bool isChildOverlayShow)
         {
-            _isChildDropdownShow = isChildDropdownShow;
+            _isChildOverlayShow = isChildOverlayShow;
         }
 
         public bool IsPopup()
@@ -285,5 +292,22 @@ namespace AntBlazor.Internal
 
             return false;
         }
+
+
+        private async Task UpdateParentOverlayState(bool visible)
+        {
+            if (ParentTrigger == null)
+            {
+                return;
+            }
+
+            ParentTrigger.GetOverlayComponent().UpdateChildState(visible);
+
+            if (!visible)
+            {
+                await ParentTrigger.Hide();
+            }
+        }
+
     }
 }
