@@ -35,6 +35,7 @@ else
     <CascadingValue Value="prefixCls" Name="PrefixCls">
         <OverlayTrigger @ref="_overlayTrigger"
                         Style="width: 100%;"
+                        Visible="IsOpen"
                         Disabled="Disabled"
                         Placement="@(RootMenu.Mode == MenuMode.Horizontal ? PlacementType.BottomLeft : PlacementType.Right)"
                         OnVisibleChange="OnOverlayVisibleChange"
