@@ -1,25 +1,24 @@
 ﻿<div>
-    <AntButton Type="primary" @onclick="_=>open1()">Open</AntButton>
-    <AntDrawer Closable="true" Visible="visible1" Placement="right" Title='("Basic Drawer")' OnClose="_=>close1()">
+    <AntButton Type="primary" @onclick="_=>open()">Open</AntButton>
+    <AntDrawer Closable="true" Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
     </AntDrawer>
-
-</div> 
-
+</div>
 
    @code{
-    bool visible1 = false;
 
-    void open1()
+    bool visible = false;
+
+    void open()
     {
-        this.visible1 = true;
+        this.visible = true;
     }
 
-    void close1()
+    void close()
     {
-        this.visible1 = false;
+        this.visible = false;
     }
 
 }

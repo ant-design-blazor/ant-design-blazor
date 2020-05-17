@@ -6,8 +6,8 @@
         <AntRadio Value="left">left</AntRadio>
     </AntRadioGroup>
 
-    <AntButton Type="primary" @onclick="_ => open2()">Open</AntButton>
-    <AntDrawer Closable="true" Visible="visible2" Placement="@placement" Title='("Drawer in different Placement")' OnClose="_ => close2()">
+    <AntButton Type="primary" @onclick="_ => open()">Open</AntButton>
+    <AntDrawer Closable="true" Visible="@visible" Placement="@placement" Title='("Drawer in different Placement")' OnClose="_ => close()">
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
@@ -15,16 +15,18 @@
 </div>  
 
 @code{
-    string placement = "right";
-    bool visible2 = false;
 
-    void open2()
+    string placement = "right";
+
+    bool visible = false;
+
+    void open()
     {
-        this.visible2 = true;
+        this.visible = true;
     }
 
-    void close2()
+    void close()
     {
-        this.visible2 = false;
+        this.visible = false;
     }
 }

@@ -229,15 +229,7 @@
 
 
 
-    public class ListDataSource
-    {
-        public string Title { get; set; }
-    };
 
-    List<ListDataSource> datasource = new List<ListDataSource>() {
-    new ListDataSource(){Title="Lily"},
-    new ListDataSource(){Title="Henry"}
-    };
 
 
 
@@ -321,6 +313,16 @@
 
 
     #region "demo5"
+
+    public class ListDataSource
+    {
+        public string Title { get; set; }
+    };
+
+    List<ListDataSource> datasource = new List<ListDataSource>() {
+    new ListDataSource(){Title="Lily"},
+    new ListDataSource(){Title="Henry"}
+    };
     bool visible5 = false;
 
 

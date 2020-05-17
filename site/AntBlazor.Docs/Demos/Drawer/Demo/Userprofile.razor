@@ -1,0 +1,103 @@
+﻿<div>
+        <AntList>
+            <ChildContent>
+                @foreach (var item in datasource)
+                {
+                    <AntListItem>
+                        <AntListItemMeta Avatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                         Description="A member of Ant Design blazor team">
+                            <Title>
+                                @item.Title
+                            </Title>                            
+                      
+                        </AntListItemMeta>
+
+                        <AntButton Type="@AntButtonType.Link" Onclick="(e)=>open(e, item.Title)">View Profile</AntButton>
+
+                    </AntListItem>
+                }
+
+            </ChildContent>
+        </AntList>
+
+        <AntDrawer Width="640" Closable="true" Visible="visible" Title='("User Profile")' OnClose="_=>close()">
+            <AntTitle Level="4">Personal</AntTitle>
+            <AntRow Gutter="12">
+                <AntCol Span="4">
+                    <AntText Strong="true">Full Name:</AntText>
+                </AntCol>
+                <AntCol Span="8">
+                    <AntText>Henry</AntText>
+                </AntCol>
+                <AntCol Span="4">
+                    <AntText Strong="true">Account:</AntText>
+                </AntCol>
+                <AntCol Span="8">
+                    <AntText>AntDesign@example.com</AntText>
+                </AntCol>
+            </AntRow>
+            <AntRow Gutter="12">
+                <AntCol Span="4">
+                    <AntText Strong="true">City:</AntText>
+                </AntCol>
+                <AntCol Span="8">
+                    <AntText>HangZhou</AntText>
+                </AntCol>
+                <AntCol Span="4">
+                    <AntText Strong="true">Country:</AntText>
+                </AntCol>
+                <AntCol Span="8">
+                    <AntText>China</AntText>
+                </AntCol>
+            </AntRow>
+            <AntRow Gutter="12">
+                <AntCol Span="4">
+                    <AntText Strong="true">Birthday:</AntText>
+                </AntCol>
+                <AntCol Span="8">
+                    <AntText>February 2,1900</AntText>
+                </AntCol>
+                <AntCol Span="4">
+                    <AntText Strong="true">Website:</AntText>
+                </AntCol>
+                <AntCol Span="8">
+                    <AntText>www.baidu.com</AntText>
+                </AntCol>
+
+
+            </AntRow>
+            <AntDivider></AntDivider>
+            <AntTitle Level="8">Company</AntTitle>
+            <AntRow>
+
+            </AntRow>
+            <AntDivider></AntDivider>
+            <AntTitle Level="4">Contacts</AntTitle>
+        </AntDrawer>   
+</div>
+
+   @code{
+
+       public class ListDataSource
+       {
+           public string Title { get; set; }
+       };
+
+       List<ListDataSource> datasource = new List<ListDataSource>() {
+        new ListDataSource(){Title="Henry"},
+        new ListDataSource(){Title="Henry"}
+    };
+       bool visible = false;
+
+
+       void open(MouseEventArgs arg, string Title)
+       {
+           this.visible = true;
+       }
+
+       void close()
+       {
+           this.visible = false;
+       }
+
+}
