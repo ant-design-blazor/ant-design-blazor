@@ -185,7 +185,7 @@ namespace AntBlazor.Internal
             return false;
         }
 
-        public string GetPlacementClass()
+        public virtual string GetPlacementClass()
         {
             if (!string.IsNullOrEmpty(PlacementCls))
             {
@@ -194,7 +194,7 @@ namespace AntBlazor.Internal
             return $"{PrefixCls}-placement-{Placement.Name}";
         }
 
-        public string GetOverlayEnterClass()
+        public virtual string GetOverlayEnterClass()
         {
             if (!string.IsNullOrEmpty(OverlayEnterCls))
             {
@@ -203,7 +203,7 @@ namespace AntBlazor.Internal
             return $"slide-{Placement.SlideName}-enter slide-{Placement.SlideName}-enter-active slide-{Placement.SlideName}";
         }
 
-        public string GetOverlayLeaveClass()
+        public virtual string GetOverlayLeaveClass()
         {
             if (!string.IsNullOrEmpty(OverlayLeaveCls))
             {
@@ -212,7 +212,7 @@ namespace AntBlazor.Internal
             return $"slide-{Placement.SlideName}-leave slide-{Placement.SlideName}-leave-active slide-{Placement.SlideName}";
         }
 
-        public string GetOverlayHiddenClass()
+        public virtual string GetOverlayHiddenClass()
         {
             if (!string.IsNullOrEmpty(OverlayHiddenCls))
             {
