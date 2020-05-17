@@ -50,7 +50,7 @@ namespace AntBlazor.Internal
             }
             else if (_isOverlayShow && !Trigger.Visible && _preVisible)
             {
-                await Hide();
+                await Hide(true);
             }
 
             _preVisible = Trigger.Visible;
@@ -142,7 +142,7 @@ namespace AntBlazor.Internal
 
             await Task.Delay(100);
 
-            if (!force && !IsContainTrigger(DropdownTrigger.Click) && (_isPreventHide || _mouseInOverlay || _isChildOverlayShow))
+            if (!force && !IsContainTrigger(TriggerType.Click) && (_isPreventHide || _mouseInOverlay || _isChildOverlayShow))
             {
                 return;
             }
@@ -280,9 +280,9 @@ namespace AntBlazor.Internal
             return left;
         }
 
-        private bool IsContainTrigger(DropdownTrigger triggerType)
+        private bool IsContainTrigger(TriggerType triggerType)
         {
-            foreach (DropdownTrigger trigger in Trigger.Trigger)
+            foreach (TriggerType trigger in Trigger.Trigger)
             {
                 if (trigger == triggerType)
                 {

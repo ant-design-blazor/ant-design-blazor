@@ -43,7 +43,7 @@ namespace AntBlazor.Internal
         public bool IsButton { get; set; } = false;
 
         [Parameter]
-        public DropdownTrigger[] Trigger { get; set; } = new DropdownTrigger[] { DropdownTrigger.Hover };
+        public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
 
         [Parameter]
         public PlacementType Placement { get; set; } = PlacementType.BottomLeft;
