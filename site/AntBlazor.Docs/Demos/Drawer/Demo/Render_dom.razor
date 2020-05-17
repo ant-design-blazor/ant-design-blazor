@@ -1,18 +1,18 @@
 ﻿<div>
-    <Template>
-        <div id="area" style="height:200px;overflow:hidden;position:relative;border:1px solid #ebedf0; border-radius:2px;padding:48px;text-align:center;background:#fafafa">
+    
+        <div  style="height:200px;overflow:hidden;position:relative;border:1px solid #ebedf0; border-radius:2px;padding:48px;text-align:center;background:#fafafa">
             Render in this
             <div style="margin-top: 16px">
                 <AntButton Type="primary" @onclick="_=>open()">Open</AntButton>
             </div>
-            <AntDrawer @ref="@antDrawer" Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
+            <AntDrawer Style="position:absolute"  Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
                 
                 <p>Some contents...</p>
                 <p>Some contents...</p>
                 <p>Some contents...</p>
             </AntDrawer>
         </div>
-    </Template>
+
 
 </div>
 
@@ -20,7 +20,7 @@
 
        bool visible = false;
  
-       AntDrawer antDrawer { get; set; }
+
 
        void open()
        {
