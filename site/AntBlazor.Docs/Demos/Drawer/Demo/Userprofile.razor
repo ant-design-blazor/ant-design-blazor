@@ -5,7 +5,7 @@
                 {
                     <AntListItem>
                         <AntListItemMeta Avatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                                         Description="A member of Ant Design blazor team">
+                                         Description="Progresser XTech">
                             <Title>
                                 @item.Title
                             </Title>                            
@@ -21,7 +21,8 @@
         </AntList>
 
         <AntDrawer Width="640" Closable="true" Visible="visible" Title='("User Profile")' OnClose="_=>close()">
-            <AntTitle Level="4">Personal</AntTitle>
+            <AntText Strong="true">Personal</AntText>
+            <AntRow></AntRow>
             <AntRow Gutter="12">
                 <AntCol Span="4">
                     <AntText Strong="true">Full Name:</AntText>
@@ -63,16 +64,76 @@
                 <AntCol Span="8">
                     <AntText>www.baidu.com</AntText>
                 </AntCol>
-
-
             </AntRow>
+
             <AntDivider></AntDivider>
-            <AntTitle Level="8">Company</AntTitle>
+            <AntText Strong="true">Company</AntText>
+            <AntRow></AntRow>
             <AntRow>
+                <AntCol Span="4">
+                    <AntText Strong="true">Position:</AntText>
+                </AntCol>
+                <AntCol Span="8">
+                    <AntText Strong="false">Programmer</AntText>
+                </AntCol>
+                <AntCol Span="6">
+                    <AntText Strong="true">Responsibilities:</AntText>
+                </AntCol>
+                <AntCol Span="6">
+                    <AntText Strong="false">Coding</AntText>
+                </AntCol>
+            </AntRow>
+            <AntRow>
+                <AntCol Span="4">
+                    <AntText Strong="true">Department:</AntText>
+                </AntCol>
+                <AntCol Span="8">
+                    <AntText Strong="false">XTech</AntText>
+                </AntCol>
+                <AntCol Span="4">
+                    <AntText Strong="true">Supervisor:</AntText>
+                </AntCol>
+                <AntCol Span="8">
+                    <AntText Strong="false">Lin</AntText>
+                </AntCol>
+            </AntRow>
+            <AntRow>
+                <AntCol Span="4">
+                    <AntText Strong="true">Skills:</AntText>
+                </AntCol>
+                <AntCol Span="20">
+                    <AntText Strong="false">
+                        C / C + +, data structures, software engineering, operating systems, computer networks, databases, compiler theory, computer architecture, Microcomputer Principle and Interface Technology, Computer English, Java, ASP, etc.
+                    </AntText>
+                </AntCol>
 
             </AntRow>
+
             <AntDivider></AntDivider>
-            <AntTitle Level="4">Contacts</AntTitle>
+            <AntText Strong="true">Contacts</AntText>
+            <AntRow></AntRow>
+            <AntRow>
+                <AntCol Span="4">
+                    <AntText Strong="true">Email:</AntText>
+                </AntCol>
+                <AntCol Span="8">
+                    <AntText Strong="false"> ant-design-Blazor@example.com</AntText>
+                </AntCol>
+                <AntCol Span="4">
+                    <AntText Strong="true">    Phone Number:     </AntText>
+                </AntCol>
+                <AntCol Span="8">
+                    <AntText Strong="false">+86 181 0000 0000 </AntText>
+                </AntCol>
+            </AntRow>
+            <AntRow>
+                <AntCol Span="4">
+                    <AntText Strong="true">Github:</AntText>
+                </AntCol>
+                <AntCol Span="20">
+                    <AntText Strong="false">https://ant-design-blazor.gitee.io/ </AntText>
+                </AntCol>
+            </AntRow>
         </AntDrawer>   
 </div>
 
