@@ -127,8 +127,7 @@ namespace AntBlazor
             return config;
         }
 
-        #endregion
-
+        #endregion GlobalConfig
 
         public async Task NotifyAsync(NotificationConfig option)
         {
@@ -153,7 +152,7 @@ namespace AntBlazor
                     {
                         oldConfig.Message = option.Message;
                         oldConfig.Description = option.Description;
-                        StateHasChanged();
+                        await InvokeAsync(StateHasChanged);
                         return;
                     }
                     canAdd = _configKeyDict.TryAdd(option.Key, option);
@@ -162,7 +161,7 @@ namespace AntBlazor
                 if (canAdd)
                 {
                     _configDict[placement].Add(option);
-                    StateHasChanged();
+                    await InvokeAsync(StateHasChanged);
                     await Remove(option);
                 }
             }

@@ -48,7 +48,7 @@ namespace AntBlazor
         public AntButton Button { get; set; }
 
         [Parameter]
-        public EventCallback<MouseEventArgs> Onclick { get; set; }
+        public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         [Inject]
         private HttpClient HttpClient { get; set; }
@@ -117,11 +117,11 @@ namespace AntBlazor
             StateHasChanged();
         }
 
-        private async Task OnClick(MouseEventArgs args)
+        private async Task HandleOnClick(MouseEventArgs args)
         {
-            if (Onclick.HasDelegate)
+            if (OnClick.HasDelegate)
             {
-                await Onclick.InvokeAsync(args);
+                await OnClick.InvokeAsync(args);
             }
         }
     }

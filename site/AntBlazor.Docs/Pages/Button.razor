@@ -63,13 +63,13 @@
     </Description>
     <Demo>
         <div>
-            <AntButton Size="@AntButtonSize.Small" Type="@(size.Equals(AntButtonSize.Small) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> Onclick(AntButtonSize.Small))">
+            <AntButton Size="@AntButtonSize.Small" Type="@(size.Equals(AntButtonSize.Small) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Small))">
                 Small
             </AntButton>
-            <AntButton Type="@(size.Equals(AntButtonSize.Default) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> Onclick(AntButtonSize.Default))">
+            <AntButton Type="@(size.Equals(AntButtonSize.Default) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Default))">
                 Default
             </AntButton>
-            <AntButton Size="@AntButtonSize.Large" Type="@(size.Equals(AntButtonSize.Large) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> Onclick(AntButtonSize.Large))">
+            <AntButton Size="@AntButtonSize.Large" Type="@(size.Equals(AntButtonSize.Large) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Large))">
                 Large
             </AntButton>
         </div>
@@ -86,7 +86,7 @@
 
 @code {
     string size = AntButtonSize.Default;
-    void Onclick(string s)
+    void OnClick(string s)
     {
         size = s;
     }
