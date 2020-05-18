@@ -1,6 +1,6 @@
 ﻿<div>
     <AntButton Icon="plus" Type="primary" @onclick="_=>open()">New account</AntButton>
-    <AntDrawer Closable="true" Width="720" Visible="visible" Title='("Submit from in Drawer")' OnClose="_=>close()">
+    <Drawer Closable="true" Width="720" Visible="visible" Title='("Submit from in Drawer")' OnClose="_=>close()">
         <Template style="height:90%">
             <AntRow Gutter="16">
                 <AntCol Span="12">
@@ -47,7 +47,7 @@
                 </AntCol>
             </AntRow>
         </Template>
-    </AntDrawer>
+    </Drawer>
 </div>
 
 

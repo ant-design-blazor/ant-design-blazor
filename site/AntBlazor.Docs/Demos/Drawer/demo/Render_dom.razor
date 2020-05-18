@@ -1,36 +1,33 @@
 ﻿<div>
-    
-        <div  style="height:200px;overflow:hidden;position:relative;border:1px solid #ebedf0; border-radius:2px;padding:48px;text-align:center;background:#fafafa">
-            Render in this
-            <div style="margin-top: 16px">
-                <AntButton Type="primary" @onclick="_=>open()">Open</AntButton>
-            </div>
-            <AntDrawer Style="position:absolute"  Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
-                
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-            </AntDrawer>
+    <div style="height:200px;overflow:hidden;position:relative;border:1px solid #ebedf0; border-radius:2px;padding:48px;text-align:center;background:#fafafa">
+        Render in this
+        <div style="margin-top: 16px">
+            <AntButton Type="primary" @onclick="_=>open()">Open</AntButton>
         </div>
+        <Drawer Style="position:absolute" Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
 
-
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+        </Drawer>
+    </div>
 </div>
 
-   @code{
+@code{
 
-       bool visible = false;
- 
+    bool visible = false;
 
 
-       void open()
-       {
-  
-           this.visible = true;
-       }
 
-       void close()
-       {
-           this.visible = false;
-       }
+    void open()
+    {
+
+        this.visible = true;
+    }
+
+    void close()
+    {
+        this.visible = false;
+    }
 
 }

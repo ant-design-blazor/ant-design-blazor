@@ -7,11 +7,11 @@
     </AntRadioGroup>
 
     <AntButton Type="primary" @onclick="_ => open()">Open</AntButton>
-    <AntDrawer Closable="true" Visible="@visible" Placement="@placement" Title='("Drawer in different Placement")' OnClose="_ => close()">
+    <Drawer Closable="true" Visible="@visible" Placement="@placement" Title='("Drawer in different Placement")' OnClose="_ => close()">
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
-    </AntDrawer>
+    </Drawer>
 </div>  
 
 @code{
