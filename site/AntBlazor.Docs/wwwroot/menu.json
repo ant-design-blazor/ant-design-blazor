@@ -70,12 +70,12 @@
           {
             "title": "Menu",
             "type": "menuItem",
-            "url": "menu"
+            "url": "components/menu"
           },
           {
             "title": "Dropdown",
             "type": "menuItem",
-            "url": "dropdown"
+            "url": "components/dropdown"
           },
           {
             "title": "Steps",

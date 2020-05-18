@@ -15,7 +15,7 @@
     <ProjectReference Include="..\..\components\AntBlazor.csproj" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' And '$(SolutionDir)'==''">
+  <PropertyGroup Condition=" '$(SolutionDir)'==''">
     <SolutionDir>../../</SolutionDir>
   </PropertyGroup>
 
@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <Compile Include="..\Shared\DemoComponent.cs" Link="Services\DemoComponent.cs" />
-    <Compile Include="..\Shared\MenuItem.cs" Link="Services\MenuItem.cs" />
+    <Compile Include="..\Shared\DemoMenuItem.cs" Link="Services\DemoMenuItem.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,7 +58,7 @@
   </Target>
 
   <PropertyGroup>
-    <CLIProjectDir>$(SolutionDir)site/AntBlazor.Docs.Build.CLI</CLIProjectDir>
+    <CLIProjectDir>site/AntBlazor.Docs.Build.CLI</CLIProjectDir>
     <CLIPath>$(CLIProjectDir)/bin/Debug/netcoreapp3.1/AntBlazor.Docs.Build.CLI.dll</CLIPath>
   </PropertyGroup>
 

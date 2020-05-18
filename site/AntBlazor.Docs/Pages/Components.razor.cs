@@ -29,8 +29,11 @@ namespace AntBlazor.Docs.Pages
         {
             LanguageService.LanguageChanged += async (sender, args) =>
             {
-                _demoComponent = await DemoService.GetComponentAsync(Name);
-                await InvokeAsync(StateHasChanged);
+                if (!string.IsNullOrEmpty(Name))
+                {
+                    _demoComponent = await DemoService.GetComponentAsync(Name);
+                    await InvokeAsync(StateHasChanged);
+                }
             };
 
             NavigationManager.LocationChanged += (_, args) =>

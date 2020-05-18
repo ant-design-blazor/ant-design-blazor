@@ -1,0 +1,23 @@
+﻿<Dropdown>
+    <Overlay>
+        <Menu>
+            <MenuItemGroup Title=@("Group title")>
+                <MenuItem>1st menu item</MenuItem>
+                <MenuItem>2nd menu item</MenuItem>
+            </MenuItemGroup>
+            <SubMenu Title=@("sub menu")>
+                <MenuItem>3rd menu item</MenuItem>
+                <MenuItem>4th menu item</MenuItem>
+            </SubMenu>
+            <SubMenu Title=@("disabled sub menu") Disabled>
+                <MenuItem>5d menu item</MenuItem>
+                <MenuItem>6th menu item</MenuItem>
+            </SubMenu>
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        <a class="ant-dropdown-link" @onclick:preventDefault>
+            Cascading menu <AntIcon Type="down" />
+        </a>
+    </ChildContent>
+</Dropdown>
