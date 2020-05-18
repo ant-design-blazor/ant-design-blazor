@@ -37,7 +37,7 @@ namespace AntBlazor
     public sealed class ProgressStrokeLinecap : SmartEnum<ProgressStrokeLinecap>
     {
         public static readonly ProgressStrokeLinecap Round = new ProgressStrokeLinecap(nameof(Round), 1);
-        public static readonly ProgressStrokeLinecap Square = new ProgressStrokeLinecap(nameof(Round), 2);
+        public static readonly ProgressStrokeLinecap Square = new ProgressStrokeLinecap(nameof(Square), 2);
 
         private ProgressStrokeLinecap(string name, int value) : base(name.ToLowerInvariant(), value) { }
     }

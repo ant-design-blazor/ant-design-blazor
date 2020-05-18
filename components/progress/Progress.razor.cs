@@ -150,6 +150,10 @@ namespace AntBlazor
             {
                 Status = ProgressStatus.Success;
             }
+            else
+            {
+                Status = ProgressStatus.Normal;
+            }
         }
 
         private void SetClasses()
@@ -157,7 +161,8 @@ namespace AntBlazor
             ClassMapper.Clear()
                 .Add(PrefixCls)
                 .Add($"{PrefixCls}-{Size.Name}")
-                .Add($"{PrefixCls}-{Type.Name}")
+                .If($"{PrefixCls}-{Type.Name}", () => Type != ProgressType.Dashboard)
+                .If($"{PrefixCls}-{ProgressType.Circle.Name}", () => Type == ProgressType.Dashboard)
                 .If($"{PrefixCls}-status-{Status.Name}", () => Status != null)
                 .If($"{PrefixCls}-show-info", () => ShowInfo);
         }
@@ -166,13 +171,22 @@ namespace AntBlazor
         {
             if (Type == ProgressType.Line)
             {
-                _bgStyle = $"width: {Percent}%; height: {(Size == ProgressSize.Default ? 8 : 6)}px;";
+                //width: 75%; height: 8px;
+                _bgStyle = $"{(StrokeLinecap == ProgressStrokeLinecap.Round ? string.Empty : "border-radius: 0px; ")}width: {Percent}%; height: {(Size == ProgressSize.Default ? 8 : 6)}px;";
             }
             else if (Type == ProgressType.Circle)
             {
                 _bgStyle = Size == ProgressSize.Default ? $"width: 120px; height: 120px; font-size: 24px;" : $"width: 80px; height: 80px; font-size: 18px;";
                 _circleTrailStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash}px, {CircleDash}px; stroke-dashoffset: 0px;";
                 _circlePathStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * Percent / 100}px, {CircleDash}px; stroke-dashoffset: 0px;";
+            }
+            else
+            {
+                _bgStyle = Size == ProgressSize.Default ? $"width: 120px; height: 120px; font-size: 24px;" : $"width: 80px; height: 80px; font-size: 18px;";
+                double circumference = CircleDash - GapDegree;
+                double dashoffset = -GapDegree / 2.0;
+                _circleTrailStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;";
+                _circlePathStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * Percent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;";
             }
         }
     }
