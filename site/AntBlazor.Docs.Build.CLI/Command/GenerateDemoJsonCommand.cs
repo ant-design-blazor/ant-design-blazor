@@ -108,6 +108,7 @@ namespace AntBlazor.Docs.Build.CLI.Command
                         {
                             Title = title.Value,
                             Order = descriptionContent.Meta.Order,
+                            Iframe = descriptionContent.Meta.Iframe,
                             Code = code,
                             Description = descriptionContent.Descriptions[title.Key],
                             Name = demo.Key,

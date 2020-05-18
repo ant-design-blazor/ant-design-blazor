@@ -35,6 +35,8 @@ namespace AntBlazor.Docs
 
         public string Style { get; set; }
 
+        public int? Iframe { get; set; }
+
         public bool Debug { get; set; }
     }
 }
