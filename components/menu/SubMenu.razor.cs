@@ -33,11 +33,12 @@ namespace AntBlazor
         public bool Disabled { get; set; }
 
         [Parameter]
+        public bool IsOpen { get; set; }
+
+        [Parameter]
         public EventCallback<MouseEventArgs> OnTitleClicked { get; set; }
 
         private ClassMapper SubMenuMapper { get; } = new ClassMapper();
-
-        public bool IsOpen { get; private set; }
 
         private string _key;
 

@@ -37,7 +37,7 @@
                 }
                 else if (menu.Type == "subMenu")
                 {
-                    <SubMenu Title="@(context.languageService.Resources[menu.Title])">
+                    <SubMenu Title="@(context.languageService.Resources[menu.Title])" IsOpen="true">
                         @if (menu.Children.Any())
                         {
                             @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
