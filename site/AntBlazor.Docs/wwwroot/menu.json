@@ -193,7 +193,7 @@
           {
             "title": "Drawer",
             "type": "menuItem",
-            "url": "drawer"
+            "url": "components/drawer"
           },
           {
             "title": "Notification",

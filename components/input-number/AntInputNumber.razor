@@ -3,8 +3,8 @@
 
 <div class="@ClassMapper.Class" style="@Style" id="@Id">
     <div class="ant-input-number-handler-wrap">
-        <AntIcon class="@GetIconClass("up")" Type="up" Onclick="Increase" />
-        <AntIcon class="@GetIconClass("down")" Type="down" Onclick="Decrease" />
+        <AntIcon class="@GetIconClass("up")" Type="up" OnClick="Increase" />
+        <AntIcon class="@GetIconClass("down")" Type="down" OnClick="Decrease" />
     </div>
     <div class="ant-input-number-input-wrap">
         <AntInput class="ant-input-number-input" Value="@DisplayValue()" Type="number" OnInput="(e)=>OnInput(e)"></AntInput>

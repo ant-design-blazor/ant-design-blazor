@@ -1,0 +1,66 @@
+﻿<div>
+    <AntButton Icon="plus" Type="primary" @onclick="_=>open()">New account</AntButton>
+    <Drawer Closable="true" Width="720" Visible="visible" Title='("Submit from in Drawer")' OnClose="_=>close()">
+        <Template style="height:90%">
+            <AntRow Gutter="16">
+                <AntCol Span="12">
+                    <AntText>Name</AntText>
+                    <AntInput Placeholder="Please enter user name"></AntInput>
+                </AntCol>
+                <AntCol Span="12">
+                    <AntText>Url</AntText>
+                    <AntInput Placeholder="please enter url">
+                        <AddOnBefore>Http://</AddOnBefore>
+                        <AddOnAfter>.Com</AddOnAfter>
+                    </AntInput>
+                </AntCol>
+            </AntRow>
+            <br />
+            <AntRow Gutter="16">
+                <AntCol Span="12">
+                    <AntText>Owner</AntText>
+                    <AntInput Placeholder="Please select a owner"></AntInput>
+                </AntCol>
+                <AntCol Span="12">
+                    <AntText>Type</AntText>
+                    <AntInput Placeholder="please enter url"></AntInput>
+                </AntCol>
+            </AntRow>
+            <br />
+
+            <AntRow>
+                <AntCol Span="24">
+                    <AntText>Description</AntText>
+                    <AntTextArea Placeholder="Please enter your description">
+
+                    </AntTextArea>
+                </AntCol>
+            </AntRow>
+            <br />
+            <AntRow>
+                <AntCol Span="18">
+
+                </AntCol>
+                <AntCol Span="6">
+                    <AntButton Type="default">Cancel</AntButton>
+                    <AntButton Type="primary">Submit</AntButton>
+                </AntCol>
+            </AntRow>
+        </Template>
+    </Drawer>
+</div>
+
+
+@code{
+    bool visible = false;
+
+    void open()
+    {
+        this.visible = true;
+    }
+
+    void close()
+    {
+        this.visible = false;
+    }
+}
