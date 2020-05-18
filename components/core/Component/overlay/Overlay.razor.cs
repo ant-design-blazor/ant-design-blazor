@@ -86,7 +86,6 @@ namespace AntBlazor.Internal
         {
             if (_hasAddOverlayToBody)
             {
-                // TODO: sometimes would throw exception
                 JsInvokeAsync(JSInteropConstants.delElementFrom, Ref, Trigger.PopupContainerSelector);
             }
 
