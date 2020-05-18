@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <Compile Include="..\Shared\DemoComponent.cs" Link="Shared\DemoComponent.cs" />
-    <Compile Include="..\Shared\MenuItem.cs" Link="Shared\MenuItem.cs" />
+    <Compile Include="..\Shared\DemoMenuItem.cs" Link="Shared\DemoMenuItem.cs" />
   </ItemGroup>
 
   <ItemGroup>

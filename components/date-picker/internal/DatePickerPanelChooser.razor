@@ -1,0 +1,40 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDomComponentBase
+
+<CascadingValue Value=@DatePicker>
+    @if (IsShowDatePanel())
+    {
+        @if (DatePicker.IsShowTime)
+        {
+            <DatePickerDatetimePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        }
+        else
+        {
+            <DatePickerDatePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        }
+    }
+    else if (IsShowQuarterPanel())
+    {
+        <DatePickerQuarterPanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+    }
+    else if (IsShowWeekPanel())
+    {
+        <DatePickerDatePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" IsWeek="@true" />
+    }
+    else if (IsShowMonthPanel())
+    {
+        <DatePickerMonthPanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+    }
+    else if (IsShowYearPanel())
+    {
+        <DatePickerYearPanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+    }
+    else if (IsShowDecadePanel())
+    {
+        <DatePickerDecadePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+    }
+    else if (IsShowTimePanel())
+    {
+        <DatePickerDatetimePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+    }
+</CascadingValue>

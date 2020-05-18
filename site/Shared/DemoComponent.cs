@@ -21,7 +21,7 @@ namespace AntBlazor.Docs
 
     public class DemoItem
     {
-        public int Order { get; set; }
+        public decimal Order { get; set; }
 
         public string Name { get; set; }
 
@@ -34,6 +34,8 @@ namespace AntBlazor.Docs
         public string Type { get; set; }
 
         public string Style { get; set; }
+
+        public int? Iframe { get; set; }
 
         public bool Debug { get; set; }
     }

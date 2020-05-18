@@ -91,6 +91,7 @@ namespace AntBlazor.Docs.Build.CLI.Command
                         .Replace(x.Extension, "")
                         .Replace("-", "")
                         .Replace("_", "")
+                        .Replace("Demo", "")
                         .ToLower()))
                 {
                     List<FileSystemInfo> showCaseFiles = demo.ToList();
@@ -108,6 +109,7 @@ namespace AntBlazor.Docs.Build.CLI.Command
                         {
                             Title = title.Value,
                             Order = descriptionContent.Meta.Order,
+                            Iframe = descriptionContent.Meta.Iframe,
                             Code = code,
                             Description = descriptionContent.Descriptions[title.Key],
                             Name = demo.Key,
