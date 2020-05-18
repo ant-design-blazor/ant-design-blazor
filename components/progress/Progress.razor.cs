@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ardalis.SmartEnum;
 using Microsoft.AspNetCore.Components;
+using OneOf.Types;
 
 namespace AntBlazor
 {
@@ -13,8 +14,10 @@ namespace AntBlazor
         private const string PrefixCls = "ant-progress";
         private const double CircleDash = 295.31;
         private string _bgStyle;
+        private string _bgSuccessStyle;
         private string _circleTrailStyle;
         private string _circlePathStyle;
+        private string _circleSuccessStyle;
 
         #region Parameters
 
@@ -171,14 +174,25 @@ namespace AntBlazor
         {
             if (Type == ProgressType.Line)
             {
-                //width: 75%; height: 8px;
                 _bgStyle = $"{(StrokeLinecap == ProgressStrokeLinecap.Round ? string.Empty : "border-radius: 0px; ")}width: {Percent}%; height: {(Size == ProgressSize.Default ? 8 : 6)}px;";
+                if (SuccessPercent != 0)
+                {
+                    _bgSuccessStyle = $"width: {SuccessPercent}%; height: {(Size == ProgressSize.Default ? 8 : 6)}px;";
+                }
             }
             else if (Type == ProgressType.Circle)
             {
                 _bgStyle = Size == ProgressSize.Default ? $"width: 120px; height: 120px; font-size: 24px;" : $"width: 80px; height: 80px; font-size: 18px;";
                 _circleTrailStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash}px, {CircleDash}px; stroke-dashoffset: 0px;";
-                _circlePathStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * Percent / 100}px, {CircleDash}px; stroke-dashoffset: 0px;";
+                if (SuccessPercent == 0)
+                {
+                    _circlePathStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * Percent / 100}px, {CircleDash}px; stroke-dashoffset: 0px;";
+                }
+                else
+                {
+                    _circlePathStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * (Percent - SuccessPercent) / 100}px, {CircleDash}px; stroke-dashoffset: 0px;";
+                    _circleSuccessStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * SuccessPercent / 100}px, {CircleDash}px; stroke-dashoffset: {-CircleDash * SuccessPercent / 100}px;";
+                }
             }
             else
             {
@@ -186,7 +200,15 @@ namespace AntBlazor
                 double circumference = CircleDash - GapDegree;
                 double dashoffset = -GapDegree / 2.0;
                 _circleTrailStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;";
-                _circlePathStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * Percent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;";
+                if (SuccessPercent == 0)
+                {
+                    _circlePathStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * Percent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;";
+                }
+                else
+                {
+                    _circlePathStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * (Percent - SuccessPercent) / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;";
+                    _circleSuccessStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * SuccessPercent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset - circumference * SuccessPercent / 100}px;";
+                }
             }
         }
     }
