@@ -1,6 +1,5 @@
 ﻿@namespace AntBlazor.Internal
 @inherits AntDomComponentBase
-@using AntBlazor.core.Internal
 
 @if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender)
 {
@@ -9,7 +8,7 @@
 
     if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
     {
-        overlayCls = $"{Dropdown.PrefixCls}-hidden";
+        overlayCls = Trigger.GetOverlayHiddenClass();
         display = "";
     }
     else
@@ -17,13 +16,15 @@
         overlayCls = _overlayCls;
     }
 
-    <div class="@(Dropdown.PrefixCls) @(Dropdown.OverlayClassName) @(Dropdown.PrefixCls)-placement-@(Dropdown.Placement.Name) @overlayCls"
-         style="width: fit-content; position: absolute; @display @Dropdown.OverlayStyle @_dropdownStyle"
+    <div class="@(Trigger.PrefixCls) @(Trigger.OverlayClassName) @(Trigger.GetPlacementClass()) @overlayCls"
+         style="width: fit-content; position: absolute; @display @Trigger.OverlayStyle @_dropdownStyle"
          @ref="Ref"
          @onmouseenter="OnOverlayMouseEnter"
          @onmouseleave="OnOverlayMouseLeave">
-        <CascadingValue Value="@($"{Dropdown.PrefixCls}-menu")" Name="PrefixCls">
-            @Dropdown.Overlay
+        <CascadingValue Value="Trigger" Name="ParentTrigger">
+            <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
+                @Trigger.Overlay
+            </CascadingValue>
         </CascadingValue>
     </div>
 }

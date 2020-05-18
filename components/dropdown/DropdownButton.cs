@@ -52,7 +52,7 @@ namespace AntBlazor
         public DropdownButton()
         {
             IsButton = true;
-            Trigger = new DropdownTrigger[] { DropdownTrigger.Click };
+            Trigger = new TriggerType[] { TriggerType.Click };
         }
     }
 }

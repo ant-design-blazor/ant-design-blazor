@@ -1,7 +1,6 @@
 ﻿@namespace AntBlazor
-@inherits AntDomComponentBase
+@inherits OverlayTrigger
 @using AntBlazor.Internal
-@using AntBlazor.core.Internal
 
 <div class="@ClassMapper.Class"
      style="width: fit-content; @Style"
@@ -31,8 +30,9 @@
     }
 </div>
 
-<CascadingValue Value="this">
-    <DropdownOverlay @ref="_DropdownOverlay"
-                        OnOverlayMouseEnter="OnOverlayMouseEnter"
-                        OnOverlayMouseLeave="OnOverlayMouseLeave" />
+<CascadingValue Value="this" Name="Trigger">
+    <Overlay @ref="_overlay"
+             OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
+             OnOverlayMouseEnter="OnOverlayMouseEnter"
+             OnOverlayMouseLeave="OnOverlayMouseLeave" />
 </CascadingValue>

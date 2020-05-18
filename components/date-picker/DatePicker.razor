@@ -8,7 +8,7 @@
                     Disabled="Disabled"
                     PopupContainerSelector="@PopupContainerSelector"
                     OnVisibleChange="visible => AutoFocus = visible"
-                    Trigger="new DropdownTrigger[] { DropdownTrigger.Click }">
+                    Trigger="new TriggerType[] { TriggerType.Click }">
         <Overlay>
             <div class="@(PrefixCls)-panel-container">
                 @if (IsRange)

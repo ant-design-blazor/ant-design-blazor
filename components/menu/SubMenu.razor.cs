@@ -1,15 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using AntBlazor.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
-using System.Threading.Tasks;
 
 namespace AntBlazor
 {
     public partial class SubMenu : AntDomComponentBase
     {
-        private const string PrefixCls = "ant-menu-submenu";
-
         [CascadingParameter]
         public Menu RootMenu { get; set; }
 
@@ -41,22 +41,38 @@ namespace AntBlazor
 
         private string _key;
 
+        private OverlayTrigger _overlayTrigger;
+
         private void SetClass()
         {
+            string prefixCls = $"{RootMenu.PrefixCls}-submenu";
+
             ClassMapper
-                .Clear()
-                .Add(PrefixCls)
-                .Add($"{PrefixCls}-{RootMenu.InternalMode}")
-                .If($"{PrefixCls}-disabled", () => Disabled)
-                .If($"{PrefixCls}-open", () => IsOpen);
+                    .Clear()
+                    .Add(prefixCls)
+                    .Add($"{prefixCls}-{RootMenu.InternalMode}")
+                    .If($"{prefixCls}-disabled", () => Disabled)
+                    .If($"{prefixCls}-open", () => RootMenu.InternalMode == MenuMode.Inline && IsOpen)
+                    ;
 
             SubMenuMapper
                 .Clear()
                 .Add("ant-menu")
                 .Add("ant-menu-sub")
                 .Add($"ant-menu-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
-                .If($"ant-menu-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
-                .If($"ant-menu-hidden", () => !IsOpen);
+                //.If($"ant-menu-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
+                .If($"ant-menu-hidden", () => RootMenu.InternalMode == MenuMode.Inline && !IsOpen)
+                ;
+
+            if (_overlayTrigger != null)
+            {
+                Overlay overlay = _overlayTrigger.GetOverlayComponent();
+
+                SubMenuMapper
+                    .If($"ant-menu-hidden", () => overlay.IsHiding() == false && overlay.IsPopup() == false)
+                    .If($"zoom-big zoom-big-enter zoom-big-enter-active", () => overlay.IsPopup() && !overlay.IsHiding())
+                    .If($"zoom-big zoom-big-leave zoom-big-leave-active", () => overlay.IsHiding());
+            }
         }
 
         private async Task HandleOnTitleClick(MouseEventArgs args)
@@ -64,22 +80,6 @@ namespace AntBlazor
             RootMenu.SelectSubmenu(this);
             if (OnTitleClicked.HasDelegate)
                 await OnTitleClicked.InvokeAsync(args);
-        }
-
-        private void HandleMouseOver(MouseEventArgs args)
-        {
-            if (RootMenu.InternalMode == MenuMode.Inline)
-                return;
-
-            IsOpen = true;
-        }
-
-        private void HandleMouseOut(MouseEventArgs args)
-        {
-            if (RootMenu.InternalMode == MenuMode.Inline)
-                return;
-
-            IsOpen = false;
         }
 
         public async Task Collapse()
@@ -116,11 +116,34 @@ namespace AntBlazor
 
         public void Open()
         {
+            if (Disabled)
+            {
+                return;
+            }
+
             IsOpen = true;
             if (Parent != null)
             {
                 Parent.Open();
             }
+        }
+
+        public OverlayTrigger GetOverlayTrigger()
+        {
+            return _overlayTrigger;
+        }
+
+        private void OnOverlayVisibleChange(bool visible)
+        {
+            if (visible)
+            {
+                SetClass();
+            }
+        }
+
+        private void OnOverlayHiding(bool hiding)
+        {
+            SetClass();
         }
     }
 }
