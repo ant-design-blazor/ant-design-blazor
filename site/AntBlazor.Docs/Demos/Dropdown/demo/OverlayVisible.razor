@@ -1,0 +1,32 @@
+﻿<Dropdown OnVisibleChange="OnVisibleChange" Visible="_visible">
+    <Overlay>
+        <Menu OnMenuItemClicked="HandleMenuClick">
+            <MenuItem Id="1">Clicking me will not close the menu.</MenuItem>
+            <MenuItem Id="2">Clicking me will not close the menu also.</MenuItem>
+            <MenuItem Id="3">Clicking me will close the menu.</MenuItem>
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        <a class="ant-dropdown-link" @onclick:preventDefault>
+            Hover me <AntIcon Type="down" />
+        </a>
+    </ChildContent>
+</Dropdown>
+
+@code
+{
+    private bool _visible = false;
+
+    private void HandleMenuClick(MenuItem item)
+    {
+        if (item.Id == "3")
+        {
+            _visible = false;
+        }
+    }
+
+    private void OnVisibleChange(bool visible)
+    {
+        _visible = visible;
+    }
+}

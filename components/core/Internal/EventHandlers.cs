@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace AntBlazor.core.Internal
+namespace AntBlazor
 {
     [EventHandler("onmouseleave", typeof(MouseEventArgs))]
     [EventHandler("onmouseenter", typeof(MouseEventArgs))]

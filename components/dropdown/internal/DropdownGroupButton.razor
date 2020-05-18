@@ -1,0 +1,25 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDomComponentBase
+
+<AntButtonGroup Class="ant-dropdown-button">
+    @if (Dropdown.ButtonsRender != null)
+    {
+        @Dropdown.ButtonsRender(LeftButton, RightButton)
+    }
+    else
+    {
+        @LeftButton
+        @RightButton
+    }
+</AntButtonGroup>
+
+@code {
+    [CascadingParameter]
+    public Dropdown Dropdown { get; set; }
+
+    [Parameter]
+    public RenderFragment LeftButton { get; set; }
+
+    [Parameter]
+    public RenderFragment RightButton { get; set; }
+}

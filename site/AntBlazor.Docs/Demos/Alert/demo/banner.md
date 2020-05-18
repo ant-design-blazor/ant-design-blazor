@@ -1,7 +1,6 @@
 ---
 order: 6
-iframe:
-  height: 220
+iframe: 250
 title:
   zh-CN: 顶部公告
   en-US: Banner
