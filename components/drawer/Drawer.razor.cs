@@ -5,7 +5,7 @@ using OneOf;
 
 namespace AntBlazor
 {
-    public partial class AntDrawer : AntDomComponentBase
+    public partial class Drawer : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -189,7 +189,6 @@ namespace AntBlazor
 
             base.OnInitialized();
         }
-
 
         protected override void OnParametersSet()
         {

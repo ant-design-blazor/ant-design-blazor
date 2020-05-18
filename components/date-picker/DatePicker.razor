@@ -43,7 +43,7 @@
                                     Placeholder="@_placeholders[0]"
                                     ReadOnly="@InputReadOnly"
                                     AutoFocus="@AutoFocus"
-                                    Onclick="e => { ChangeFocusTarget(true, false); }"
+                                    OnClick="e => { ChangeFocusTarget(true, false); }"
                                     OnInput="e => OnInput(e, 0)"
                                     ShowTime="@(Picker == DatePickerType.Time)" />
 
@@ -59,7 +59,7 @@
                                         Placeholder="@_placeholders[1]"
                                         ReadOnly="@InputReadOnly"
                                         AutoFocus="@AutoFocus"
-                                        Onclick="e => { ChangeFocusTarget(false, true); }"
+                                        OnClick="e => { ChangeFocusTarget(false, true); }"
                                         OnInput="e => OnInput(e, 0)"
                                         ShowTime="@(Picker == DatePickerType.Time)" />
 

@@ -3,7 +3,7 @@
 
 <div class="@(PrefixCls)-input">
     <input @ref="Ref"
-           @onclick="Onclick"
+           @onclick="OnClick"
            @onkeyup='OnKeyUp'
            @oninput='OnInput'
            value="@Value"
@@ -79,7 +79,7 @@
     public RenderFragment SuffixIcon { get; set; }
 
     [Parameter]
-    public EventCallback Onclick { get; set; }
+    public EventCallback OnClick { get; set; }
 
     [Parameter]
     public EventCallback Onfocus { get; set; }
