@@ -178,6 +178,16 @@ namespace AntBlazor.Internal
             return Trigger.Contains(triggerType);
         }
 
+        protected virtual async Task OverlayVisibleChange(bool visible)
+        {
+            await OnVisibleChange.InvokeAsync(visible);
+        }
+
+        protected virtual async Task OverlayHiding(bool visible)
+        {
+            await OnOverlayHiding.InvokeAsync(visible);
+        }
+
         public virtual string GetPlacementClass()
         {
             if (!string.IsNullOrEmpty(PlacementCls))
@@ -227,6 +237,11 @@ namespace AntBlazor.Internal
         public Overlay GetOverlayComponent()
         {
             return _overlay;
+        }
+
+        public async Task<Element> GetTriggerDomInfo()
+        {
+            return await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Ref);
         }
     }
 }

@@ -86,6 +86,7 @@ namespace AntBlazor.Internal
         {
             if (_hasAddOverlayToBody)
             {
+                // TODO: sometimes would throw exception
                 JsInvokeAsync(JSInteropConstants.delElementFrom, Ref, Trigger.PopupContainerSelector);
             }
 
@@ -293,7 +294,6 @@ namespace AntBlazor.Internal
             return false;
         }
 
-
         private async Task UpdateParentOverlayState(bool visible)
         {
             if (ParentTrigger == null)
@@ -309,5 +309,32 @@ namespace AntBlazor.Internal
             }
         }
 
+        private string GetOverlayCls()
+        {
+            string overlayCls;
+
+            if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
+            {
+                overlayCls = Trigger.GetOverlayHiddenClass();
+            }
+            else
+            {
+                overlayCls = _overlayCls;
+            }
+
+            return overlayCls;
+        }
+
+        private string GetDisplayStyle()
+        {
+            string display = _isOverlayShow ? "" : "visibility: hidden;";
+
+            if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
+            {
+                display = "";
+            }
+
+            return display;
+        }
     }
 }

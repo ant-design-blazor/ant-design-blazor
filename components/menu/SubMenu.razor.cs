@@ -42,6 +42,7 @@ namespace AntBlazor
 
         private string _key;
 
+        private string _popupMinWidthStyle = "";
         private OverlayTrigger _overlayTrigger;
 
         private void SetClass()
@@ -58,19 +59,19 @@ namespace AntBlazor
 
             SubMenuMapper
                 .Clear()
-                .Add("ant-menu")
-                .Add("ant-menu-sub")
-                .Add($"ant-menu-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
-                //.If($"ant-menu-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
-                .If($"ant-menu-hidden", () => RootMenu.InternalMode == MenuMode.Inline && !IsOpen)
+                .Add(RootMenu.PrefixCls)
+                .Add($"{RootMenu.PrefixCls}-sub")
+                .Add($"{RootMenu.PrefixCls}-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
+                //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
+                .If($"{RootMenu.PrefixCls}-hidden", () => RootMenu.InternalMode == MenuMode.Inline && !IsOpen)
                 ;
 
-            if (_overlayTrigger != null)
+            if (RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
             {
                 Overlay overlay = _overlayTrigger.GetOverlayComponent();
 
                 SubMenuMapper
-                    .If($"ant-menu-hidden", () => overlay.IsHiding() == false && overlay.IsPopup() == false)
+                    .If($"{RootMenu.PrefixCls}-hidden", () => overlay.IsHiding() == false && overlay.IsPopup() == false)
                     .If($"zoom-big zoom-big-enter zoom-big-enter-active", () => overlay.IsPopup() && !overlay.IsHiding())
                     .If($"zoom-big zoom-big-leave zoom-big-leave-active", () => overlay.IsHiding());
             }
@@ -108,6 +109,17 @@ namespace AntBlazor
 
             if (RootMenu.OpenKeys.Contains(Key))
                 IsOpen = true;
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
+            {
+                var domInfo = await _overlayTrigger.GetTriggerDomInfo();
+                _popupMinWidthStyle = $"min-width: {domInfo.clientWidth}px";
+            }
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         public void Close()
