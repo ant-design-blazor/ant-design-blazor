@@ -1,8 +1,8 @@
 ﻿<div>
-    <AntButton  Type="primary" Onclick="_=>open()">Open</AntButton>
+    <AntButton  Type="primary" OnClick="_=>open()">Open</AntButton>
 
     <AntDrawer Width="@wdFirstLayer" Closable="true" Visible="visible1" Title='("Multi-level drawer")' OnClose="_=>close()">
-        <AntButton Type="primary" Onclick="_=>ShowDrawer()">Two-level Drawer</AntButton>
+        <AntButton Type="primary" OnClick="_=>ShowDrawer()">Two-level Drawer</AntButton>
         <AntDrawer Width="260" Closable="true" Visible="visible2" Title='("two-level drawer")' OnClose="_=>CloseDrawer()">
             <AntButton Type="primary">This is two-level drawer</AntButton>
         </AntDrawer>

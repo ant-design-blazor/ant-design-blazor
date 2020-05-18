@@ -9,7 +9,7 @@
     private async Task OnClick()
     {
         string key = $"open{DateTime.Now}";
-        RenderFragment btn = @<AntButton Type="@AntButtonType.Primary" Onclick="() => { _notice.Close(key); }">
+        RenderFragment btn = @<AntButton Type="@AntButtonType.Primary" OnClick="() => { _notice.Close(key); }">
                                 confirm
                             </AntButton>;
         await _notice.Open(new NotificationConfig()
