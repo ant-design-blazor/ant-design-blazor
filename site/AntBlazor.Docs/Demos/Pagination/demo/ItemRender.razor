@@ -1,0 +1,19 @@
+﻿<Pagination Total="500" ItemRender=itemRender />
+
+@code {
+
+    RenderFragment<PaginationItemRenderContext> itemRender = ctx =>
+        @<Template>
+            @if (ctx.Type == "prev") {
+                <a>Previous</a>
+            }
+            else if (ctx.Type == "next") {
+                <a>Next</a>
+            }
+            else
+            {
+                @ctx.DefaultRender(ctx)
+            }
+        </Template>;
+
+}

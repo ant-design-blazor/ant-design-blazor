@@ -3,18 +3,8 @@
 
 @if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender)
 {
-    string display = _isOverlayShow ? "" : "visibility: hidden;";
-    string overlayCls;
-
-    if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
-    {
-        overlayCls = Trigger.GetOverlayHiddenClass();
-        display = "";
-    }
-    else
-    {
-        overlayCls = _overlayCls;
-    }
+    string display = GetDisplayStyle();
+    string overlayCls = GetOverlayCls();
 
     <div class="@(Trigger.PrefixCls) @(Trigger.OverlayClassName) @(Trigger.GetPlacementClass()) @overlayCls"
          style="display: inline-flex; position: absolute; @display @Trigger.OverlayStyle @_dropdownStyle"
