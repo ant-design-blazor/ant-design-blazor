@@ -137,13 +137,11 @@ namespace AntBlazor
 
         public void Close()
         {
-            Console.WriteLine("Close");
             IsOpen = false;
         }
 
         public void Open()
         {
-            Console.WriteLine("Open");
             if (Disabled)
             {
                 return;
