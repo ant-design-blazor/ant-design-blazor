@@ -32,7 +32,7 @@
 else
 {
     string placementName = RootMenu.Mode == MenuMode.Horizontal ? "bottomLeft" : "rightTop";
-    @IsOpen
+
     <CascadingValue Value="this" Name="SubMenu">
         <SubMenuTrigger @ref="_overlayTrigger"
                         TriggerClass="@ClassMapper.Class"
