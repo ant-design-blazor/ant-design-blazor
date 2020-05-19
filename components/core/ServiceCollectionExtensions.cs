@@ -19,7 +19,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddScoped<IconService>();
             services.TryAddScoped<InteropService>();
-            services.TryAddSingleton<NotificationService>();
+            services.TryAddScoped<NotificationService>();
+            services.TryAddScoped<MessageService>();
 
             return services;
         }

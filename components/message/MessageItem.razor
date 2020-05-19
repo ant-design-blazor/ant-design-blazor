@@ -1,0 +1,50 @@
+﻿@namespace AntBlazor
+@inherits MessageBase
+
+<div class="@PrefixCls-notice @Config.AnimationClass">
+    <div class="@PrefixCls-notice-content">
+        <div class="@PrefixCls-custom-content @GetClassName()">
+            @{
+                switch (Config.Type)
+                {
+                    case MessageType.Success:
+                        {
+                            <AntIcon Type="check-circle" Theme="fill" Class="anticon anticon-check-circle" ></AntIcon>
+
+                            break;
+                        }
+                    case MessageType.Warning:
+                        {
+                            <AntIcon Type="exclamation-circle" Theme="fill" Class="anticon anticon-exclamation-circle"></AntIcon>
+                            break;
+                        }
+                    case MessageType.Error:
+                        {
+                            <AntIcon Type="close-circle" Theme="fill"  Class="anticon anticon-close-circle"></AntIcon>
+                            break;
+                        }
+                    case MessageType.Info:
+                        {
+                            <AntIcon Type="info-circle" Theme="fill" Class="anticon anticon-info-circle"></AntIcon>
+                            break;
+                        }
+                    default:
+                        {
+                            <AntIcon Type="loading" Theme="outline" Class="anticon anticon-loading"></AntIcon>
+                            break;
+                        }
+                }
+            }
+        <span>
+            @if (Config.Content.IsT0)
+            {
+                @Config.Content.AsT0;
+            }
+            else
+            {
+                @Config.Content.AsT1;
+            }
+        </span>
+        </div>
+    </div>
+</div>
