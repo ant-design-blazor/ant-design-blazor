@@ -86,7 +86,11 @@ namespace AntBlazor.Internal
         {
             if (_hasAddOverlayToBody)
             {
-                JsInvokeAsync(JSInteropConstants.delElementFrom, Ref, Trigger.PopupContainerSelector);
+                _ = InvokeAsync(async () =>
+                {
+                    await Task.Delay(100);
+                    await JsInvokeAsync(JSInteropConstants.delElementFrom, Ref, Trigger.PopupContainerSelector);
+                });
             }
 
             base.Dispose(disposing);
