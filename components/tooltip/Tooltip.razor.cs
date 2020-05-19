@@ -66,13 +66,13 @@ namespace AntBlazor
             await base.Show(overlayLeft, overlayTop);
         }
 
-        public override async Task Hide()
+        public override async Task Hide(bool force = false)
         {
             if (Trigger.Contains(TriggerType.Hover))
             {
                 await Task.Delay((int)(MouseLeaveDelay * 1000));
             }
-            await base.Hide();
+            await base.Hide(force);
         }
     }
 }
