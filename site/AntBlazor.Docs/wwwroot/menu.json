@@ -196,6 +196,11 @@
             "url": "components/drawer"
           },
           {
+            "title": "Message",
+            "type": "menuItem",
+            "url": "components/message"
+          },
+          {
             "title": "Notification",
             "type": "menuItem",
             "url": "components/notification"
