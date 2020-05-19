@@ -73,6 +73,11 @@
             "url": "components/menu"
           },
           {
+            "title": "Pagination",
+            "type": "menuItem",
+            "url": "components/pagination"
+          },
+          {
             "title": "Dropdown",
             "type": "menuItem",
             "url": "components/dropdown"
@@ -203,7 +208,12 @@
           {
             "title": "Notification",
             "type": "menuItem",
-            "url": "components/notification"
+            "url": "notification"
+          },
+          {
+            "title": "Progress",
+            "type": "menuItem",
+            "url": "components/progress"
           },
           {
             "title": "Result",

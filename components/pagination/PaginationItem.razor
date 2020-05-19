@@ -1,0 +1,58 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<li class="@ClassMapper.Class" style="@Style" @ref="Ref" title="@_title" id="@Id" @onclick="ClickItem" @key="Key">
+    @if (_itemRender != null)
+    {
+        @_itemRender(ItemRenderContext)
+    }
+    else
+    {
+        @_renderItemTemplate(ItemRenderContext)
+    }
+</li>
+
+@code {
+
+    private readonly RenderFragment<PaginationItemRenderContext> _renderItemTemplate = (context) =>
+        @<Template>
+            @{
+            var type = context.Type;
+            var page = context.Page;
+            }
+
+            @if (type == "page")
+            {
+                <a>@(page)</a>
+
+            }
+            else
+            {
+                <a class="ant-pagination-item-link">
+                    @switch (type)
+                    {
+                        case "prev":
+                            <AntIcon Type="left"></AntIcon>
+                            break;
+                        case "next":
+                            <AntIcon Type="right"></AntIcon>
+                            break;
+                        default:
+                            <div class="ant-pagination-item-container">
+                                @if (type == "prev_5")
+                                {
+                                    <AntIcon Type="double-left" Class="ant-pagination-item-link-icon"></AntIcon>
+                                }
+                                else if (type == "next_5")
+                                {
+                                    <AntIcon Type="double-right" Class="ant-pagination-item-link-icon"></AntIcon>
+                                }
+                                <span class="ant-pagination-item-ellipsis">•••</span>
+                            </div>
+                            break;
+                    }
+                </a>
+            }
+        </Template>;
+
+}
