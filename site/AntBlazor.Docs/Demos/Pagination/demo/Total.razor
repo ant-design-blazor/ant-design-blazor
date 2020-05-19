@@ -1,0 +1,20 @@
+﻿<div>
+    <Pagination
+        Total="85"
+        ShowTotal=showTotal
+        PageSize="20"
+        DefaultCurrent="1"
+    />
+    <br />
+    <Pagination
+        Total="85"
+        ShowTotal=showTotal2
+        PageSize="20"
+        DefaultCurrent="1"
+    />
+</div>
+
+@code{
+    Func<PaginationTotalContext, string> showTotal =  ctx => $"Total {ctx.Total} items";
+    Func<PaginationTotalContext, string> showTotal2 =  ctx => $"{ctx.Range.Item1}-{ctx.Range.Item2} of {ctx.Total} items";
+}
