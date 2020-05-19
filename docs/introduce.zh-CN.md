@@ -40,7 +40,7 @@ title: Ant Design of Blazor
 ## 🖥 支持环境
 
 - .NET Core 3.1
-- Blazor WebAssembly 3.2 rc 1
+- Blazor WebAssembly 3.2 正式版
 - 支持服务端双向绑定
 - 支持 WebAssembly 静态文件部署
 - 主流 4 款现代浏览器，以及 Internet Explorer 11+ （使用 [Blazor Server](https://angular.io/guide/browser-support)）
@@ -64,41 +64,49 @@ title: Ant Design of Blazor
 
 ## 📦 安装
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
-- 安装 Blazor WebAssembly 模板
-  ```
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-rc1.20223.4
-  ```
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 以上版本
+
 - 创建 Blazor WebAssembly 项目
+
   ```
   $ dotnet new blazorwasm -o MyAntBlazorApp
   ```
+
 - 进入应用的项目文件夹，安装 Nuget 包引用
+
   ```bash
   $ cd MyAntBlazorApp
   $ dotnet add package AntBlazor --version 0.1.0-*
   ```
+
 - 在项目中注册:
+
   ```
   services.AddAntBlazor();
   ```
+
 - 在 `wwwroot/index.html`(WebAssembly) 或 `Pages/_Host.razor`(Server) 中引入静态文件:
+
   ```
     <link href="_content/AntBlazor/css/ant-design-blazor.css" rel="stylesheet">
     <script src="_content/AntBlazor/js/ant-design-blazor.js"></script>
   ```
+
 - 在 `_Imports.razor` 中加入命名空间
+
   ```
   @using AntBlazor
   ```
+
 - 最后就可以在`.razor`组件中引用啦！
+
   ```
-  <AntButton type="primary">Hello World!</AntButton>
+  <AntButton Type="primary">Hello World!</AntButton>
   ```
 
 ## 🔨 本地开发
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
 
@@ -111,7 +119,7 @@ title: Ant Design of Blazor
 
   打开浏览器访问 https://localhost:5001 ，详情参考[本地开发文档](https://github.com/ant-design-blazor/ant-design-blazor/wiki)。
 
-  > 推荐使用 Visual Studio 2019 开发，目前需运行 `AntBlazor.Docs.ClientApp` 项目才能进行断点调试。
+  > 推荐使用 Visual Studio 2019 开发。
 
 ## 🔗 链接
 
