@@ -15,9 +15,10 @@
         };
         _message.Loading(config);
 
+        await Task.Delay(2000);
+
         config.Content = "Loaded";
         config.Duration = 2;
-        await Task.Delay(2000);
         await _message.Success(config);
     }
 }

@@ -142,8 +142,12 @@ namespace AntBlazor
                 InvokeAsync(StateHasChanged);
                 config.InvokeOnClose();
 
-                _configDict.Remove(config.Key);
-                _configs.Remove(config);
+                Task.Delay(500)
+                    .ContinueWith((result) =>
+                    {
+                        _configDict.Remove(config.Key);
+                        _configs.Remove(config);
+                    }, TaskScheduler.Current);
 
                 //when next message item fade out or add new message item, item will toggle StateHasChanged
                 //StateHasChanged();
