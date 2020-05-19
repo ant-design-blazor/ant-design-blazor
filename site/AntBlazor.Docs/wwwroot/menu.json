@@ -116,7 +116,7 @@
           {
             "title": "Input",
             "type": "menuItem",
-            "url": "components/input"
+            "url": "input"
           },
           {
             "title": "InputNumber",
