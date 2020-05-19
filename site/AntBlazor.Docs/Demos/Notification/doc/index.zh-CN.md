@@ -53,5 +53,5 @@ config 参数如下：
 | Top       | 消息从顶部弹出时，距离顶部的位置，单位像素。                 | double?                    | 24                                |
 | CloseIcon | 自定义关闭图标                                               | RenderFragment             | -                                 |
 | Duration  | 默认自动关闭延时，单位秒。                                   | double?                    | 4.5                               |
-| Placement | 弹出位置，可选 `topLeft` `topRight` `bottomLeft` `bottomRight` | NotificationPlacement？ | NotificationPlacement.TopRight |
+| Placement | 弹出位置，可选 `NotificationPlacement.TopLeft` `NotificationPlacement.TopRight` `NotificationPlacement.BottomLeft` `NotificationPlacement.BottomRight` | NotificationPlacement? | NotificationPlacement.TopRight |
 | Rtl       | 是否开启 RTL 模式                                            | bool                       | `false`                           |
