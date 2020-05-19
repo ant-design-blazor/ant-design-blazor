@@ -1,0 +1,19 @@
+﻿@inject MessageService _message
+
+    <AntButton Type="default" OnClick="OnClick">
+        Display a loading indicator
+    </AntButton>
+
+@code{
+    private async Task OnClick()
+    {
+        var cofig = new MessageConfig()
+        {
+            Content = "Action in progress..",
+            Duration = 0
+        };
+        var task =  _message.Loading(cofig);
+        await Task.Delay(2000);
+        task.Start();
+    }
+}
