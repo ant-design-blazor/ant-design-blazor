@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ardalis.SmartEnum;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 using OneOf.Types;
 
 namespace AntBlazor
@@ -18,6 +19,7 @@ namespace AntBlazor
         private string _circleTrailStyle;
         private string _circlePathStyle;
         private string _circleSuccessStyle;
+        private bool _format = false;
 
         #region Parameters
 
@@ -94,7 +96,7 @@ namespace AntBlazor
         /// color of circular progress, render linear-gradient when passing an object
         /// </summary>
         [Parameter]
-        public Dictionary<int, string> StrokeColor { get; set; }
+        public OneOf<string, Dictionary<int, string>> StrokeColor { get; set; }
 
         /// <summary>
         /// the total step count
@@ -157,6 +159,8 @@ namespace AntBlazor
             {
                 Status = ProgressStatus.Normal;
             }
+
+            _format = dict.ContainsKey(nameof(Format));
         }
 
         private void SetClasses()
@@ -167,7 +171,8 @@ namespace AntBlazor
                 .If($"{PrefixCls}-{Type.Name}", () => Type != ProgressType.Dashboard)
                 .If($"{PrefixCls}-{ProgressType.Circle.Name}", () => Type == ProgressType.Dashboard)
                 .If($"{PrefixCls}-status-{Status.Name}", () => Status != null)
-                .If($"{PrefixCls}-show-info", () => ShowInfo);
+                .If($"{PrefixCls}-show-info", () => ShowInfo)
+                .If($"{PrefixCls}-steps", () => Steps > 0);
         }
 
         private void SetStyle()
@@ -219,12 +224,12 @@ namespace AntBlazor
             // width: 99.9%; height: 8px; background-image: linear-gradient(to right, rgb(16, 142, 233) 0%, rgb(135, 208, 104) 100%);
             // width: 99.9%; height: 8px; background-image: linear-gradient(to right, rgb(16, 142, 233), rgb(135, 208, 104));
             // '0%': '#108ee9', '100%': '#87d068',
-            if (StrokeColor != null)
+            if (StrokeColor.IsT1)
             {
                 try
                 {
                     StringBuilder gradientBuilder = new StringBuilder(" background-image: linear-gradient(to right,");
-                    foreach (var pair in StrokeColor)
+                    foreach (var pair in StrokeColor.AsT1)
                     {
                         if (pair.Key < 0 || pair.Key > 100)
                         {
@@ -236,6 +241,10 @@ namespace AntBlazor
                     style += gradientBuilder.ToString().TrimEnd(',') + ");";
                 }
                 catch { }
+            }
+            else if (StrokeColor.IsT0)
+            {
+
             }
 
             return style;

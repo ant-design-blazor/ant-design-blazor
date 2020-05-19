@@ -4,23 +4,59 @@
 <div class="@ClassMapper.Class" style="@Style" id="@Id">
     @if (Type == ProgressType.Line)
     {
-        <div class="ant-progress-outer">
-            <div class="ant-progress-inner">
-                <div class="ant-progress-bg" style="@_bgStyle">
-                </div>
-                @if (SuccessPercent != 0)
-                {
-                    <div class="ant-progress-success-bg" style="@_bgSuccessStyle">
+        @if (Steps == 0)
+        {
+            <div class="ant-progress-outer">
+                <div class="ant-progress-inner">
+                    <div class="ant-progress-bg" style="@_bgStyle">
                     </div>
+                    @if (SuccessPercent != 0)
+                    {
+                        <div class="ant-progress-success-bg" style="@_bgSuccessStyle">
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="ant-progress-steps-outer">
+                @for (int i = 0; i < Steps; i++)
+                {
+                    int index = i;
+                    if (Percent >= 100 / Steps * (index + 1))
+                    {
+                        <div class="ant-progress-steps-item" style="width: @(Size == ProgressSize.Default?"14":"2")px; height: 8px; background-color: @(ToRGB(StrokeColor.AsT0));"></div>
+                    }
+                    else
+                    {
+                        <div class="ant-progress-steps-item" style="width: @(Size == ProgressSize.Default?"14":"2")px; height: 8px;"></div>
+                    }
+                }
+                @if (Status == ProgressStatus.Success)
+                {
+                    <span class="ant-progress-text">
+                        <AntIcon Type="check-circle" Theme="@AntIconThemeType.Fill" />
+                    </span>
+                }
+                else if (Status == ProgressStatus.Exception)
+                {
+                    <span class="ant-progress-text">
+                        <AntIcon Type="close-circle" Theme="@AntIconThemeType.Fill" />
+                    </span>
+                }
+                else
+                {
+                    <span title="@Format(Percent)" class="ant-progress-text">@Format(Percent)</span>
                 }
             </div>
-        </div>
+        }
     }
     else if (Type == ProgressType.Circle)
     {
-        <div class="@(StrokeColor!= null?"ant-progress-inner ant-progress-circle-gradient": "ant-progress-inner")" style="@_bgStyle">
+        <div class="@(StrokeColor.IsT1?"ant-progress-inner ant-progress-circle-gradient": "ant-progress-inner")" style="@_bgStyle">
             <svg xmlns="http://www.w3.org/2000/svg" class="ant-progress-circle" viewBox="0 0 100 100">
-                @if (StrokeColor != null)
+                @if (StrokeColor.IsT1)
                 {
                     <defs>
                         <linearGradient id="ant-progress-gradient-@Id" x1="100%" y1="0%" x2="0%" y2="0%">
@@ -34,15 +70,15 @@
                 {
                     <path class="ant-progress-circle-path" style="@_circleSuccessStyle" opacity="1" fill-opacity="0" stroke="" stroke-linecap="@StrokeLinecap.Name" stroke-width="6" d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" />
                 }
-                <path class="ant-progress-circle-path" style="@_circlePathStyle" opacity="1" fill-opacity="0" stroke="@(StrokeColor != null?$"url(#ant-progress-gradient-{Id})":string.Empty)" stroke-linecap="@StrokeLinecap.Name" stroke-width="6" d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" />
+                <path class="ant-progress-circle-path" style="@_circlePathStyle" opacity="1" fill-opacity="0" stroke="@(StrokeColor.IsT1?$"url(#ant-progress-gradient-{Id})":string.Empty)" stroke-linecap="@StrokeLinecap.Name" stroke-width="6" d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" />
             </svg>
-            @if (Status == ProgressStatus.Success)
+            @if (Status == ProgressStatus.Success && !_format)
             {
                 <span class="ant-progress-text">
                     <AntIcon Type="check-circle" Theme="@AntIconThemeType.Fill" />
                 </span>
             }
-            else if (Status == ProgressStatus.Exception)
+            else if (Status == ProgressStatus.Exception && !_format)
             {
                 <span class="ant-progress-text">
                     <AntIcon Type="close-circle" Theme="@AntIconThemeType.Fill" />
@@ -65,13 +101,13 @@
                 }
                 <path class="ant-progress-circle-path" style="@_circlePathStyle" opacity="1" fill-opacity="0" stroke="" stroke-linecap="@StrokeLinecap.Name" stroke-width="6" d="M 50 50 m 0 47 a 47 47 0 1 1 0 -94 a 47 47 0 1 1 0 94" />
             </svg>
-            @if (Status == ProgressStatus.Success)
+            @if (Status == ProgressStatus.Success && !_format)
             {
                 <span class="ant-progress-text">
                     <AntIcon Type="check-circle" Theme="@AntIconThemeType.Fill" />
                 </span>
             }
-            else if (Status == ProgressStatus.Exception)
+            else if (Status == ProgressStatus.Exception && !_format)
             {
                 <span class="ant-progress-text">
                     <AntIcon Type="close-circle" Theme="@AntIconThemeType.Fill" />
@@ -84,7 +120,7 @@
         </div>
     }
 
-    @if (ShowInfo && Type == ProgressType.Line)
+    @if (ShowInfo && Type == ProgressType.Line && Steps == 0)
     {
         if (Status == ProgressStatus.Success)
         {
