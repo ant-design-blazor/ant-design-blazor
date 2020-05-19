@@ -1,0 +1,11 @@
+﻿<Pagination @bind-Current="@current" OnChange=onChange Total="50" />
+
+@code {
+    int current = 3;
+
+    void onChange(int page)
+    {
+        Console.WriteLine(page);
+        current = page;
+    }
+}
