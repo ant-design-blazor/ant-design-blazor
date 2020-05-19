@@ -1,0 +1,16 @@
+﻿<div>
+    <AntSearch Placeholder="input search text" Size="@AntInputSize.Small" />
+    <div style="margin: 24px 0" />
+    <AntSearch Placeholder="input search text" OnChange="(e)=>Handle(e)" EnterButton="true" />
+    <div style="margin: 24px 0" />
+    <AntSearch Placeholder="input search text" Size="@AntInputSize.Large" EnterButton="@("Search")" />
+</div>
+
+    @code{
+        private void Handle(ChangeEventArgs args)
+        {
+            Console.WriteLine("123");
+            System.Diagnostics.Debug.WriteLine("456");
+        }
+    }
+

@@ -1,0 +1,28 @@
+﻿<div>
+    <AntInput Placeholder="large size" DefaultValue="123" Size="@AntInputSize.Large">
+        <Prefix>
+            <AntIcon Type="user" />
+        </Prefix>
+    </AntInput>
+    <div style="margin: 24px 0" />
+    <AntInput Placeholder="default size">
+        <Prefix>
+            <AntIcon Type="user" />
+        </Prefix>
+    </AntInput>
+    <div style="margin: 24px 0" />
+    <AntInput Placeholder="small size" Size="@AntInputSize.Small">
+        <Prefix>
+            <AntIcon Type="user" />
+        </Prefix>
+    </AntInput>
+    <div style="margin: 24px 0" />
+    <AntInputPassword @bind-Value="@_password" Placeholder="large Password" Size="@AntInputSize.Large" OnPressEnter="(e)=>Submit(e)" />
+</div>
+@code{
+    private string _password;
+    private void Submit(KeyboardEventArgs args)
+    {
+        Console.WriteLine($"password: {_password}");
+    }
+}
