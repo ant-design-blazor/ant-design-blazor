@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ardalis.SmartEnum;
 using Microsoft.AspNetCore.Components;
 using OneOf;
-using OneOf.Types;
 
 namespace AntBlazor
 {
@@ -109,7 +106,7 @@ namespace AntBlazor
         /// to set the canvas width of the dashboard progress, unit: px
         /// </summary>
         [Parameter]
-        public int Width { get; set; }
+        public int Width { get; set; } = 120;
 
         /// <summary>
         /// the gap degree of half circle, 0 ~ 295
@@ -127,7 +124,8 @@ namespace AntBlazor
 
         public async override Task SetParametersAsync(ParameterView parameters)
         {
-            SetDefaultValues(parameters.ToDictionary());
+            IReadOnlyDictionary<string, object> dict = parameters.ToDictionary();
+            SetDefaultValues(dict);
             await base.SetParametersAsync(parameters);
 
             SetClasses();
@@ -147,7 +145,6 @@ namespace AntBlazor
             }
             else // Type is Circle or Dashboard
             {
-                Width = 132;
                 StrokeWidth = 6;
             }
 
@@ -187,7 +184,7 @@ namespace AntBlazor
             }
             else if (Type == ProgressType.Circle)
             {
-                _bgStyle = Size == ProgressSize.Default ? $"width: 120px; height: 120px; font-size: 24px;" : $"width: 80px; height: 80px; font-size: 18px;";
+                _bgStyle = Size == ProgressSize.Default ? $"width: {Width}px; height: {Width}px; font-size: 24px;" : $"width: 80px; height: 80px; font-size: 18px;";
                 _circleTrailStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash}px, {CircleDash}px; stroke-dashoffset: 0px;";
                 if (SuccessPercent == 0)
                 {
