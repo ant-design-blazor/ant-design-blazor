@@ -73,6 +73,11 @@
             "url": "components/menu"
           },
           {
+            "title": "Pagination",
+            "type": "menuItem",
+            "url": "components/pagination"
+          },
+          {
             "title": "Dropdown",
             "type": "menuItem",
             "url": "components/dropdown"
