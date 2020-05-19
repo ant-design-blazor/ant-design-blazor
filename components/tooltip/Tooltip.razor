@@ -1,0 +1,23 @@
+﻿@namespace AntBlazor
+@inherits OverlayTrigger
+
+@using AntBlazor.Internal
+
+<div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-flex; @Style"
+     @onclick="OnClickDiv"
+     @onmouseenter="OnTriggerMouseEnter"
+     @onmouseleave="OnTriggerMouseLeave"
+     @oncontextmenu="OnTriggerContextmenu"
+     @onfocusin="OnTriggerFocusIn"
+     @onfocusout="OnTriggerFocusOut"
+     @oncontextmenu:preventDefault>
+    @ChildContent
+</div>
+
+<CascadingValue Value="@this" Name="Trigger">
+    <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
+        <CascadingValue Value="@Title" Name="Title">
+            <TooltipPopup @ref="@_overlay" />
+        </CascadingValue>
+    </CascadingValue>
+</CascadingValue>
