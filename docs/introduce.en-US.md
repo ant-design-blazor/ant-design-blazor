@@ -43,7 +43,7 @@ WebAssembly static hosting examples:
 ## 🖥 Environment Support
 
 - .NET Core 3.1
-- Blazor WebAssembly 3.2 RC 1
+- Blazor WebAssembly 3.2 Release
 - Supports two-way binding on the server side
 - Supports WebAssembly static file deployment
 - Support 4 major browsers engines, and Internet Explorer 11+ ([Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1) only)
@@ -67,12 +67,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 ## 📦 Installation Guide
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 or later
-- Install Blazor WebAssembly Templates
-
-  ```bash
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-rc1.20223.4
-  ```
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300  or later
 
 - Create Blazor WebAssembly Project
 
@@ -109,12 +104,12 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 - Finally, it can be referenced in the `.razor' component!
 
   ```html
-  <AntButton type="primary">Hello World!</AntButton>
+  <AntButton Type="primary">Hello World!</AntButton>
   ```
 
 ## 🔨 Local Development
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download) 3.1.102 or later.
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download) 3.1.300 or later.
 - Install Node.js (only for building style files and interoperable TypeScript files)
 - Clone to local development
 
@@ -127,7 +122,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 - Visit https://localhost:5001 in your supported browser and check [local development documentation](https://github.com/ant-design-blazor/ant-design-blazor/wiki) for details.
 
-  > Visual Studio 2019 is recommended for development. Currently `AntBlazor.Docs.Server` project is required to run for breakpoint debugging.
+  > Visual Studio 2019 is recommended for development.
 
 ## 🔗 Links
 
