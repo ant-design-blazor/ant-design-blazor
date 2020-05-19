@@ -19,7 +19,7 @@
 {
     <div class="ant-pagination-options-quick-jumper">
        跳转到第
-        <input disabled="@Disabled" @onkeyup="JumpToPageViaInput"/>
+        <input disabled="@Disabled" @bind="_inputValue" @onkeyup="JumpToPageViaInput"/>
        页
     </div>
 }

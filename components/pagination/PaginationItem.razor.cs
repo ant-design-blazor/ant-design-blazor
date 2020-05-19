@@ -29,12 +29,17 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<int> GotoIndex { get; set; }
 
+        [Parameter]
+        public EventCallback<int> OnClick { get; set; }
+
         [CascadingParameter]
         public Pagination Pagination { get; set; }
 
         private RenderFragment<PaginationItemRenderContext> _itemRender;
 
-        private PaginationItemRenderContext ItemRenderContext => new PaginationItemRenderContext() { Implicit = Type, Page = Index };
+        private PaginationItemRenderContext ItemRenderContext => new PaginationItemRenderContext() { Type = Type, Page = Index, DefaultRender = _renderItemTemplate };
+
+        private string Key => $"{Type}-{Index}";
 
         private string _title;
 
@@ -63,8 +68,45 @@ namespace AntBlazor
             base.OnInitialized();
         }
 
+        protected override void OnParametersSet()
+        {
+            _title = this.Type switch
+            {
+                "page" => $"{this.Index}",
+                "next" => "下一页",
+                "prev" => "上一页",
+                "prev_5" => "向前5页",
+                "next_5" => "向后5页",
+                _ => ""
+            };
+
+            base.OnParametersSet();
+        }
+
         private void ClickItem(MouseEventArgs args)
         {
+            if (Disabled)
+                return;
+
+            if (Type == "page")
+            {
+                this.GotoIndex.InvokeAsync(this.Index);
+                this.OnClick.InvokeAsync(this.Index);
+            }
+            else
+            {
+                var index = Type switch
+                {
+                    "next" => 1,
+                    "prev" => -1,
+                    "prev_5" => -5,
+                    "next_5" => 5,
+                    _ => 0
+                };
+
+                this.DiffIndex.InvokeAsync(index);
+                this.OnClick.InvokeAsync(index);
+            }
         }
     }
 }

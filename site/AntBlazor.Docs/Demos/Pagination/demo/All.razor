@@ -1,5 +1,12 @@
-﻿<h3>All</h3>
+﻿<div>
+    <Pagination
+        Total="85"
+        ShowSizeChanger
+        ShowQuickJumper
+        ShowTotal=@showTotal
+    />
+</div>
 
-@code {
-
+@code{
+    Func<PaginationTotalContext, string> showTotal =  ctx => $"Total {ctx.Total} items";
 }

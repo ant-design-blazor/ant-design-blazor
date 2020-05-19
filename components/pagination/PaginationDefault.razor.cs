@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntBlazor
 {
@@ -41,15 +42,20 @@ namespace AntBlazor
         [CascadingParameter]
         public Pagination Pagination { get; set; }
 
-        private RenderFragment<PaginationTotalContext> _showTotal;
+        private OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>> _showTotal;
 
         private (int, int) _ranges = (0, 0);
 
         private IEnumerable<PaginationItem> _listOfPageItem = Enumerable.Empty<PaginationItem>();
 
+        private PaginationTotalContext TotalContext => new PaginationTotalContext { Total = Total, Range = _ranges };
+
         protected override void OnInitialized()
         {
-            this._showTotal = Pagination?.ShowTotal;
+            if (Pagination != null)
+            {
+                this._showTotal = Pagination.ShowTotal;
+            }
 
             base.OnInitialized();
         }
@@ -60,6 +66,26 @@ namespace AntBlazor
             this.BuildIndexes();
 
             base.OnParametersSet();
+        }
+
+        private void JumpPage(int index)
+        {
+            this.OnPageIndexChange(index);
+        }
+
+        private void JumpDiff(int diff)
+        {
+            this.JumpPage(this.PageIndex + diff);
+        }
+
+        private void OnPageIndexChange(int index)
+        {
+            this.PageIndexChange.InvokeAsync(index);
+        }
+
+        private void OnPageSizeChange(int size)
+        {
+            this.PageSizeChange.InvokeAsync(size);
         }
 
         private void BuildIndexes()
@@ -84,7 +110,7 @@ namespace AntBlazor
 
             IEnumerable<PaginationItem> GeneratePage(int start, int end)
             {
-                return Enumerable.Range(start, end).Select(x => new PaginationItem() { Index = x, Type = "page" });
+                return Enumerable.Range(start, end - start + 1).Select(x => new PaginationItem() { Index = x, Type = "page" });
             }
 
             if (lastIndex <= 9)
@@ -119,14 +145,6 @@ namespace AntBlazor
 
                 return ConcatWithPrevNext(GenerateRangeItem(pageIndex, lastIndex));
             }
-        }
-
-        private void JumpPage(int index)
-        {
-        }
-
-        private void JumpDiff(int diff)
-        {
         }
     }
 }

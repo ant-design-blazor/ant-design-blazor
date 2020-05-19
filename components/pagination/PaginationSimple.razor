@@ -1,24 +1,19 @@
 ﻿@namespace AntBlazor
-@inherits AntDomComponentBase
 
 <PaginationItem 
-    title="上一页"
     Disabled="_isFirstIndex"
-    @onclick="_=>PrePage()"
+    OnClick="_=>PrePage()"
     Type="prev"
-    ItemRender="_itemRender"
     />
 
 <li title="@(PageIndex + '/' + _lastIndex)" class="ant-pagination-simple-pager">
-    <input disabled="@Disabled" @bind="@PageIndex" @onkeyup="JumpToPageViaInput" size="3" />
+    <input disabled="@Disabled" @bind="@_inputValue" @onkeyup="JumpToPageViaInput" size="3" />
     <span class="ant-pagination-slash">/</span>
     @_lastIndex
 </li>
 
 <PaginationItem 
-    title="下一页"
     Disabled="_isLastIndex"
-    @onclick="_=>NextPage()"
+    OnClick="_=>NextPage()"
     Type="next"
-    ItemRender="_itemRender"
 />

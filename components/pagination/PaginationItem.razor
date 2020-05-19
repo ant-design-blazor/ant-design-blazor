@@ -1,7 +1,7 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<li class="@ClassMapper.Class" style="@Style" @ref="Ref" title="@_title" id="@Id" @onclick="ClickItem">
+<li class="@ClassMapper.Class" style="@Style" @ref="Ref" title="@_title" id="@Id" @onclick="ClickItem" @key="Key">
     @if (_itemRender != null)
     {
         @_itemRender(ItemRenderContext)
@@ -17,7 +17,7 @@
     private readonly RenderFragment<PaginationItemRenderContext> _renderItemTemplate = (context) =>
         @<Template>
             @{
-            var type = context.Implicit;
+            var type = context.Type;
             var page = context.Page;
             }
 

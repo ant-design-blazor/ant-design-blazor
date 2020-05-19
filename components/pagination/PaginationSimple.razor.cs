@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntBlazor
 {
-    public partial class PaginationSimple : AntDomComponentBase
+    public partial class PaginationSimple
     {
         [Parameter]
         public bool Disabled { get; set; } = false;
@@ -29,23 +26,25 @@ namespace AntBlazor
         [CascadingParameter]
         public Pagination Pagination { get; set; }
 
-        private RenderFragment<PaginationItemRenderContext> _itemRender;
+        private string _inputValue;
 
         private int _lastIndex = 0;
         private bool _isFirstIndex = false;
         private bool _isLastIndex = false;
 
-        protected override void OnInitialized()
+        protected override void OnParametersSet()
         {
-            base.OnInitialized();
-
-            _itemRender = Pagination?.ItemRender;
+            this.UpdateBindingValue();
+            base.OnParametersSet();
         }
 
         public void JumpToPageViaInput(KeyboardEventArgs e)
         {
             if (e.Key == "Enter")
             {
+                var index = int.TryParse(_inputValue, out var value) && value > 0 ? value : this.PageIndex;
+                PageIndexChange.InvokeAsync(index);
+                _inputValue = $"{index}";
             }
         }
 
@@ -61,14 +60,15 @@ namespace AntBlazor
 
         private void OnPageIndexChange(int index)
         {
-            //this.pageIndexChange.next(index);
+            this.PageIndexChange.InvokeAsync(index);
         }
 
         private void UpdateBindingValue()
         {
-            //this.lastIndex = Math.ceil(this.total / this.pageSize);
-            //this.isFirstIndex = this.pageIndex === 1;
-            //this.isLastIndex = this.pageIndex === this.lastIndex;
+            this._lastIndex = (this.Total - 1) / this.PageSize + 1;
+            this._inputValue = $"{this.PageIndex}";
+            this._isFirstIndex = this.PageIndex == 1;
+            this._isLastIndex = this.PageIndex == this._lastIndex;
         }
     }
 }

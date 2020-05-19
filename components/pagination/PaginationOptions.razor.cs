@@ -33,6 +33,8 @@ namespace AntBlazor
 
         [Parameter] public EventCallback<int> PageSizeChange { get; set; }
 
+        private string _inputValue;
+
         private (int value, string label)[] _listOfPageSizeOption = Array.Empty<(int, string)>();
 
         private void OnPageSizeChange(int size)
@@ -47,17 +49,10 @@ namespace AntBlazor
         {
             if (e.Key == "Enter")
             {
+                var index = int.TryParse(_inputValue, out var value) && value > 0 ? value : this.PageIndex;
+                PageIndexChange.InvokeAsync(index);
+                _inputValue = "";
             }
-            //private const target = $event.target as HTMLInputElement;
-            //private const index = toNumber(target.value, this.PageIndex);
-
-            //    this.pageIndexChange.next(index);
-            //target.value = '';
-        }
-
-        private int TrackByOption(int _, (int value, string label) option)
-        {
-            return option.value;
         }
     }
 }

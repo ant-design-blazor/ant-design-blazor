@@ -1,5 +1,10 @@
-﻿<h3>Mini</h3>
+﻿<div>
+    <Pagination Size="small" Total="50" />
+    <Pagination Size="small" Total="50" ShowSizeChanger ShowQuickJumper />
+    <Pagination Size="small" Total="50" ShowTotal=showTotal />
+</div>
 
-@code {
-
+@code
+{
+    Func<PaginationTotalContext, string> showTotal =  ctx => $"Total {ctx.Total} items";
 }
