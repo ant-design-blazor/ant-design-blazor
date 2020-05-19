@@ -1,0 +1,29 @@
+﻿<div>
+    <Progress Percent=_percent Type=ProgressType.Circle />
+    <AntButtonGroup>
+        <AntButton OnClick=Decline Icon=Minus />
+        <AntButton OnClick=Increase Icon=Plus />
+    </AntButtonGroup>
+</div>
+
+@code{
+    private int _percent = 0;
+
+    private void Decline()
+    {
+        _percent -= 10;
+        if (_percent < 0)
+        {
+            _percent = 0;
+        }
+    }
+
+    private void Increase()
+    {
+        _percent += 10;
+        if (_percent > 100)
+        {
+            _percent = 100;
+        }
+    }
+}
