@@ -37,13 +37,13 @@ namespace AntBlazor
         /// template function of the content
         /// </summary>
         [Parameter]
-        public Func<int, string> Format { get; set; } = (i) => i + "%";
+        public Func<double, string> Format { get; set; } = (i) => i + "%";
 
         /// <summary>
         /// to set the completion percentage
         /// </summary>
         [Parameter]
-        public int Percent { get; set; }
+        public double Percent { get; set; }
 
         /// <summary>
         /// whether to display the progress value and the status icon
@@ -73,7 +73,7 @@ namespace AntBlazor
         /// segmented success percent
         /// </summary>
         [Parameter]
-        public int SuccessPercent { get; set; }
+        public double SuccessPercent { get; set; }
 
         /// <summary>
         /// color of unfilled part
@@ -94,7 +94,7 @@ namespace AntBlazor
         /// color of circular progress, render linear-gradient when passing an object
         /// </summary>
         [Parameter]
-        public string StrokeColor { get; set; }
+        public Dictionary<int, string> StrokeColor { get; set; }
 
         /// <summary>
         /// the total step count
@@ -149,7 +149,7 @@ namespace AntBlazor
                 StrokeWidth = 6;
             }
 
-            if (dict.TryGetValue(nameof(Percent), out object percent) && (int)percent == 100)
+            if (dict.TryGetValue(nameof(Percent), out object percent) && (double)percent == 100)
             {
                 Status = ProgressStatus.Success;
             }
@@ -174,7 +174,7 @@ namespace AntBlazor
         {
             if (Type == ProgressType.Line)
             {
-                _bgStyle = $"{(StrokeLinecap == ProgressStrokeLinecap.Round ? string.Empty : "border-radius: 0px; ")}width: {Percent}%; height: {(Size == ProgressSize.Default ? 8 : 6)}px;";
+                _bgStyle = GetLineBGStyle();
                 if (SuccessPercent != 0)
                 {
                     _bgSuccessStyle = $"width: {SuccessPercent}%; height: {(Size == ProgressSize.Default ? 8 : 6)}px;";
@@ -210,6 +210,58 @@ namespace AntBlazor
                     _circleSuccessStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * SuccessPercent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset - circumference * SuccessPercent / 100}px;";
                 }
             }
+        }
+
+        private string GetLineBGStyle()
+        {
+            string style = $"{(StrokeLinecap == ProgressStrokeLinecap.Round ? string.Empty : "border-radius: 0px; ")}width: {Percent}%; height: {(Size == ProgressSize.Default ? 8 : 6)}px;";
+
+            // width: 99.9%; height: 8px; background-image: linear-gradient(to right, rgb(16, 142, 233) 0%, rgb(135, 208, 104) 100%);
+            // width: 99.9%; height: 8px; background-image: linear-gradient(to right, rgb(16, 142, 233), rgb(135, 208, 104));
+            // '0%': '#108ee9', '100%': '#87d068',
+            if (StrokeColor != null)
+            {
+                try
+                {
+                    StringBuilder gradientBuilder = new StringBuilder(" background-image: linear-gradient(to right,");
+                    foreach (var pair in StrokeColor)
+                    {
+                        if (pair.Key < 0 || pair.Key > 100)
+                        {
+                            throw new ArgumentOutOfRangeException(nameof(StrokeColor) + "'s key must be between 0 - 100.");
+                        }
+
+                        gradientBuilder.Append(" " + ToRGB(pair.Value) + ",");
+                    }
+                    style += gradientBuilder.ToString().TrimEnd(',') + ");";
+                }
+                catch { }
+            }
+
+            return style;
+        }
+
+        private string GetCircleBGStyle()
+        {
+            throw new NotImplementedException();
+        }
+
+        private string ToRGB(string color)
+        {
+            string rgb = "rgb(";
+            if (!color.StartsWith('#') && color.Length == 7)
+            {
+                throw new ArgumentOutOfRangeException(nameof(StrokeColor) + "'s value must be like \"#ffffff\"");
+            }
+
+            color = color.TrimStart('#');
+            for (int i = 0; i < 3; i++)
+            {
+                int num = Convert.ToInt32(color.Substring(i * 2, 2), 16);
+                rgb += num + ", ";
+            }
+
+            return rgb.TrimEnd(' ', ',') + ")";
         }
     }
 }
