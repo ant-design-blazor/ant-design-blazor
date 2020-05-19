@@ -1,0 +1,52 @@
+﻿<div class="demo">
+    <div style="margin-left: @($"{ButtonWidth}px"); white-space: nowrap;">
+        <Tooltip Placement="@PlacementType.TopLeft" title="@Text">
+            <AntButton>TL</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.TopCenter" title="@Text">
+            <AntButton>Top</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.TopRight" title="@Text">
+            <AntButton>TR</AntButton>
+        </Tooltip>
+    </div>
+    <div style="width: @($"{ButtonWidth}px"); float: left;">
+        <Tooltip Placement="@PlacementType.LeftTop" title="@Text" >
+            <AntButton>LT</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.Left" title="@Text">
+            <AntButton>Left</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.LeftBottom" title="@Text">
+            <AntButton>LB</AntButton>
+        </Tooltip>
+    </div>
+    <div style="width: @($"{ButtonWidth}px"); margin-left: @($"{ButtonWidth * 4 + 24}px");">
+        <Tooltip Placement="@PlacementType.RightTop" title="@Text">
+            <AntButton>RT</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.Right" title="@Text">
+            <AntButton>Right</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.RightBottom" title="@Text">
+            <AntButton>RB</AntButton>
+        </Tooltip>
+    </div>
+    <div style="margin-left: @($"{ButtonWidth}px"); clear: both; white-space: nowrap;">
+        <Tooltip Placement="@PlacementType.BottomLeft" title="@Text">
+            <AntButton>BL</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.BottomCenter" title="@Text">
+            <AntButton>Bottom</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.BottomRight" title="@Text">
+            <AntButton>BR</AntButton>
+        </Tooltip>
+    </div>
+</div>
+
+@code
+{
+    public string Text = "prompt text";
+    const int ButtonWidth = 70;
+}

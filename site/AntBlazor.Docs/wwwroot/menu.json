@@ -170,6 +170,11 @@
             "url": "list"
           },
           {
+            "title": "Tooltip",
+            "type": "menuItem",
+            "url": "components/tooltip"
+          },
+          {
             "title": "Tag",
             "type": "menuItem",
             "url": "tag"
