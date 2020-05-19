@@ -84,11 +84,13 @@ namespace AntBlazor
         public void Select()
         {
             IsSelected = true;
+            ParentMenu?.Select();
         }
 
         public void Deselect()
         {
             IsSelected = false;
+            ParentMenu?.Deselect();
         }
     }
 }

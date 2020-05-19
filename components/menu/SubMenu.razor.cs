@@ -40,6 +40,8 @@ namespace AntBlazor
 
         private ClassMapper SubMenuMapper { get; } = new ClassMapper();
 
+        private bool _isSelected;
+
         private string _key;
 
         private string _popupMinWidthStyle = "";
@@ -54,6 +56,7 @@ namespace AntBlazor
                     .Add(prefixCls)
                     .Add($"{prefixCls}-{RootMenu.InternalMode}")
                     .If($"{prefixCls}-disabled", () => Disabled)
+                    .If($"{prefixCls}-selected", () => _isSelected)
                     .If($"{prefixCls}-open", () => RootMenu.InternalMode == MenuMode.Inline && IsOpen)
                     ;
 
@@ -61,6 +64,7 @@ namespace AntBlazor
                 .Clear()
                 .Add(RootMenu.PrefixCls)
                 .Add($"{RootMenu.PrefixCls}-sub")
+                .Add($"{RootMenu.PrefixCls}-{RootMenu.Theme}")
                 .Add($"{RootMenu.PrefixCls}-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
                 //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
                 .If($"{RootMenu.PrefixCls}-hidden", () => RootMenu.InternalMode == MenuMode.Inline && !IsOpen)
@@ -170,6 +174,18 @@ namespace AntBlazor
         private void OnOverlayHiding(bool hiding)
         {
             SetClass();
+        }
+
+        public void Select()
+        {
+            Parent?.Select();
+            _isSelected = true;
+        }
+
+        public void Deselect()
+        {
+            Parent?.Deselect();
+            _isSelected = false;
         }
     }
 }
