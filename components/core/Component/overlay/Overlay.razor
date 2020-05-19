@@ -7,7 +7,7 @@
     string overlayCls = GetOverlayCls();
 
     <div class="@(Trigger.PrefixCls) @(Trigger.OverlayClassName) @(Trigger.GetPlacementClass()) @overlayCls"
-         style="width: fit-content; position: absolute; @display @Trigger.OverlayStyle @_dropdownStyle"
+         style="display: inline-flex; position: absolute; @display @Trigger.OverlayStyle @_dropdownStyle"
          @ref="Ref"
          @onmouseenter="OnOverlayMouseEnter"
          @onmouseleave="OnOverlayMouseLeave">
