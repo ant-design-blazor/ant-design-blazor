@@ -40,8 +40,11 @@ namespace AntBlazor
 
         private ClassMapper SubMenuMapper { get; } = new ClassMapper();
 
+        private bool _isSelected;
+
         private string _key;
 
+        private string _popupMinWidthStyle = "";
         private OverlayTrigger _overlayTrigger;
 
         private void SetClass()
@@ -53,26 +56,34 @@ namespace AntBlazor
                     .Add(prefixCls)
                     .Add($"{prefixCls}-{RootMenu.InternalMode}")
                     .If($"{prefixCls}-disabled", () => Disabled)
+                    .If($"{prefixCls}-selected", () => _isSelected)
                     .If($"{prefixCls}-open", () => RootMenu.InternalMode == MenuMode.Inline && IsOpen)
                     ;
 
             SubMenuMapper
                 .Clear()
-                .Add("ant-menu")
-                .Add("ant-menu-sub")
-                .Add($"ant-menu-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
-                //.If($"ant-menu-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
-                .If($"ant-menu-hidden", () => RootMenu.InternalMode == MenuMode.Inline && !IsOpen)
+                .Add(RootMenu.PrefixCls)
+                .Add($"{RootMenu.PrefixCls}-sub")
+                .Add($"{RootMenu.PrefixCls}-{RootMenu.Theme}")
+                .Add($"{RootMenu.PrefixCls}-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
+                //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
+                .If($"{RootMenu.PrefixCls}-hidden", () => RootMenu.InternalMode == MenuMode.Inline && !IsOpen)
                 ;
 
-            if (_overlayTrigger != null)
+            if (RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
             {
                 Overlay overlay = _overlayTrigger.GetOverlayComponent();
 
+                ClassMapper
+                    .If($"{prefixCls}-selected", () => overlay.IsPopup());
+
                 SubMenuMapper
-                    .If($"ant-menu-hidden", () => overlay.IsHiding() == false && overlay.IsPopup() == false)
-                    .If($"zoom-big zoom-big-enter zoom-big-enter-active", () => overlay.IsPopup() && !overlay.IsHiding())
-                    .If($"zoom-big zoom-big-leave zoom-big-leave-active", () => overlay.IsHiding());
+                    .If($"{RootMenu.PrefixCls}-hidden", () => overlay.IsHiding() == false && overlay.IsPopup() == false)
+                    .If($"zoom-big zoom-big-enter zoom-big-enter-active", () => RootMenu.Mode == MenuMode.Vertical && overlay.IsPopup() && !overlay.IsHiding())
+                    .If($"zoom-big zoom-big-leave zoom-big-leave-active", () => RootMenu.Mode == MenuMode.Vertical && overlay.IsHiding())
+                    .If($"slide-up slide-up-enter slide-up-enter-active", () => RootMenu.Mode == MenuMode.Horizontal && overlay.IsPopup() && !overlay.IsHiding())
+                    .If($"slide-up slide-up-leave slide-up-leave-active", () => RootMenu.Mode == MenuMode.Horizontal && overlay.IsHiding())
+                    ;
             }
         }
 
@@ -85,7 +96,14 @@ namespace AntBlazor
 
         public async Task Collapse()
         {
-            await Task.Delay(300);
+            if (RootMenu.InternalMode == MenuMode.Inline)
+            {
+                await Task.Delay(300);
+            }
+            else
+            {
+                await _overlayTrigger.Hide(true);
+            }
             IsOpen = false;
             StateHasChanged();
         }
@@ -108,6 +126,17 @@ namespace AntBlazor
 
             if (RootMenu.OpenKeys.Contains(Key))
                 IsOpen = true;
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
+            {
+                var domInfo = await _overlayTrigger.GetTriggerDomInfo();
+                _popupMinWidthStyle = $"min-width: {domInfo.clientWidth}px";
+            }
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         public void Close()
@@ -145,6 +174,18 @@ namespace AntBlazor
         private void OnOverlayHiding(bool hiding)
         {
             SetClass();
+        }
+
+        public void Select()
+        {
+            Parent?.Select();
+            _isSelected = true;
+        }
+
+        public void Deselect()
+        {
+            Parent?.Deselect();
+            _isSelected = false;
         }
     }
 }
