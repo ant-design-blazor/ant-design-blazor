@@ -9,7 +9,7 @@ namespace AntBlazor
     /// <summary>
     ///
     /// </summary>
-    public class AntInput : AntInputComponentBase<string>
+    public class Input : AntInputComponentBase<string>
     {
         protected const string PrefixCls = "ant-input";
 
@@ -32,7 +32,7 @@ namespace AntBlazor
         public RenderFragment AddOnAfter { get; set; }
 
         [Parameter]
-        public string Size { get; set; } = AntInputSize.Default;
+        public string Size { get; set; } = InputSize.Default;
 
         [Parameter]
         public string Placeholder { get; set; }
@@ -85,8 +85,8 @@ namespace AntBlazor
         {
             ClassMapper.Clear()
                 .If($"{PrefixCls}", () => Type != "number")
-                .If($"{PrefixCls}-lg", () => Size == AntInputSize.Large)
-                .If($"{PrefixCls}-sm", () => Size == AntInputSize.Small);
+                .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
+                .If($"{PrefixCls}-sm", () => Size == InputSize.Small);
 
             if (Attributes is null)
             {
@@ -115,12 +115,12 @@ namespace AntBlazor
                 ToggleClearBtn();
             }
 
-            if (Size == AntInputSize.Large)
+            if (Size == InputSize.Large)
             {
                 AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-lg");
                 GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-group-wrapper-lg");
             }
-            else if (Size == AntInputSize.Small)
+            else if (Size == InputSize.Small)
             {
                 AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-sm");
                 GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-group-wrapper-sm");
