@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public partial class AntSearch : AntInput
+    public partial class Search : Input
     {
         private bool _isSearching;
 
@@ -29,7 +29,7 @@ namespace AntBlazor
                     builder.OpenComponent<AntIcon>(35);
                     builder.AddAttribute(36, "class", $"{PrefixCls}-search-icon");
                     builder.AddAttribute(37, "type", "search");
-                    builder.AddAttribute(38, "onclick", CallbackFactory.Create<MouseEventArgs>(this, Search));
+                    builder.AddAttribute(38, "onclick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                     builder.CloseComponent();
                 });
             }
@@ -47,7 +47,7 @@ namespace AntBlazor
                     }
                     else
                     {
-                        EventCallback<MouseEventArgs> e = new EventCallbackFactory().Create(this, Search);
+                        var e = new EventCallbackFactory().Create(this, HandleSearch);
                         builder.AddAttribute(_sequence++, "onclick", e);
                     }
 
@@ -74,11 +74,11 @@ namespace AntBlazor
         {
             base.SetClasses();
 
-            if (Size == AntInputSize.Large)
+            if (Size == InputSize.Large)
             {
                 GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-large");
             }
-            else if (Size == AntInputSize.Small)
+            else if (Size == InputSize.Small)
             {
                 GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-small");
             }
@@ -88,7 +88,7 @@ namespace AntBlazor
             GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-enter-button");
         }
 
-        private async void Search(MouseEventArgs args)
+        private async void HandleSearch(MouseEventArgs args)
         {
             _isSearching = true;
             StateHasChanged();
