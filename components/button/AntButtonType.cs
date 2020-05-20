@@ -10,7 +10,6 @@ namespace AntBlazor
         public const string Default = "default";
         public const string Primary = "primary";
         public const string Dashed = "dashed";
-        public const string Danger = "danger";
         public const string Link = "link";
     }
 }
