@@ -1,4 +1,6 @@
-﻿@using System.Text.RegularExpressions
+﻿@page "/inputnumber"
+
+@using System.Text.RegularExpressions
 
 <AntTitle Level="1">InputNumber</AntTitle>
 <AntText>Enter a number within certain range with the mouse or keyboard.</AntText>
@@ -11,7 +13,7 @@
     <Title>Basic usage</Title>
     <Description>Basic usage example.</Description>
     <Demo>
-        <AntInputNumber></AntInputNumber>
+        <AntBlazor.InputNumber></AntBlazor.InputNumber>
     </Demo>
 </DemoCard>
 
@@ -26,9 +28,9 @@
             }
         </style>
         <span class="example-input">
-            <AntInputNumber DefaultValue="3" Size="@AntInputSize.Large"></AntInputNumber>
-            <AntInputNumber DefaultValue="3"></AntInputNumber>
-            <AntInputNumber DefaultValue="3" Size="@AntInputSize.Small"></AntInputNumber>
+            <AntBlazor.InputNumber DefaultValue="3" Size="@InputSize.Large"></AntBlazor.InputNumber>
+            <AntBlazor.InputNumber DefaultValue="3"></AntBlazor.InputNumber>
+            <AntBlazor.InputNumber DefaultValue="3" Size="@InputSize.Small"></AntBlazor.InputNumber>
         </span>
     </Demo>
 </DemoCard>
@@ -38,7 +40,7 @@
     <Description>Click the button to toggle between available and disabled states.</Description>
     <Demo>
         <div>
-            <AntInputNumber DefaultValue="3" Disabled="@disabled"></AntInputNumber>
+            <AntBlazor.InputNumber DefaultValue="3" Disabled="@disabled"></AntBlazor.InputNumber>
             <div style="margin: 20px 0px 20px 0px;">
                 <AntButton Type="@AntButtonType.Primary" OnClick="(e)=> ToggleDisable()">Toggle disabled</AntButton>
             </div>
@@ -59,7 +61,7 @@
     <Title>Decimals</Title>
     <Description>A numeric-only input box whose values can be increased or decreased using a decimal step. The number of decimals (also known as precision) is determined by the step prop.</Description>
     <Demo>
-        <AntInputNumber Step="0.25" Min="-1" Max="5"></AntInputNumber>
+        <AntBlazor.InputNumber Step="0.25" Min="-1" Max="5"></AntBlazor.InputNumber>
     </Demo>
 </DemoCard>
 
@@ -67,8 +69,8 @@
     <Title>Formatter</Title>
     <Description>Display value within it's situation with formatter.</Description>
     <Demo>
-        <AntInputNumber Formatter="Format1" Parser="Parse1" DefaultValue="1000"></AntInputNumber>
-        <AntInputNumber Formatter="Format2" Parser="Parse2" DefaultValue="100" Min="0" Max="100"></AntInputNumber>
+        <AntBlazor.InputNumber Formatter="Format1" Parser="Parse1" DefaultValue="1000"></AntBlazor.InputNumber>
+        <AntBlazor.InputNumber Formatter="Format2" Parser="Parse2" DefaultValue="100" Min="0" Max="100"></AntBlazor.InputNumber>
     </Demo>
 </DemoCard>
 

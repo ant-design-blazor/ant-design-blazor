@@ -1,26 +1,26 @@
 ﻿<div>
-    <AntInput Placeholder="large size" DefaultValue="123" Size="@AntInputSize.Large">
+    <Input Placeholder="large size" DefaultValue="123" Size="@InputSize.Large">
         <Prefix>
             <AntIcon Type="user" />
         </Prefix>
-    </AntInput>
+    </Input>
     <br />
     <br />
-    <AntInput Placeholder="default size">
+    <Input Placeholder="default size">
         <Prefix>
             <AntIcon Type="user" />
         </Prefix>
-    </AntInput>
+    </Input>
     <br />
     <br />
-    <AntInput Placeholder="small size" Size="@AntInputSize.Small">
+    <Input Placeholder="small size" Size="@InputSize.Small">
         <Prefix>
             <AntIcon Type="user" />
         </Prefix>
-    </AntInput>
+    </Input>
     <br />
     <br />
-    <AntInputPassword @bind-Value="@_password" Placeholder="large Password" Size="@AntInputSize.Large" OnPressEnter="(e)=>Submit(e)" />
+    <InputPassword @bind-Value="@_password" Placeholder="large Password" Size="@InputSize.Large" OnPressEnter="(e)=>Submit(e)" />
 </div>
 @code{
     private string _password;

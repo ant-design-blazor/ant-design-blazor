@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public partial class AntTextArea : AntInput
+    public partial class TextArea : Input
     {
         private const uint DEFAULT_MIN_ROWS = 1;
 

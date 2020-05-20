@@ -20,7 +20,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | AddOnAfter            | The label text displayed after (on the right side of) the input field.           | RenderFragment         |
 | ChildContent            | Child content           | RenderFragment         |-       |
 | Size |The size of the input box. Note: in the context of a form, the `large` size is used. Available: `large` `default` `small`       | string        | -         |
-| Placeholder              | 提供可描述输入字段预期值的提示信息        | string        | -        |
+| Placeholder              | 鎻愪緵鍙弿杩拌緭鍏ュ瓧娈甸鏈熷�肩殑鎻愮ず淇℃伅        | string        | -        |
 | DefaultValue |  	The initial input content                              | string        | -         |
 | MaxLength |  	 	max length       | int         |
 | Disabled | Whether the input is disabled.                               | string        | -         |
