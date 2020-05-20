@@ -66,7 +66,7 @@ namespace AntBlazor
             ClassMapper.Clear()
                 .Add("ant-btn")
                 .If($"{prefixName}-{this.Type}", () => !string.IsNullOrEmpty(Type))
-                 .If($"{prefixName}-danger", () => Danger)
+                 .If($"{prefixName}-dangerous", () => Danger)
                 .If($"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
                 .If($"{prefixName}-{sizeMap[this.Size]}", () => sizeMap.ContainsKey(Size))
                 .If($"{prefixName}-loading", () => Loading)
