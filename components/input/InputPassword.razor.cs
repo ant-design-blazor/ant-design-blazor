@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntBlazor
 {
-    public partial class AntInputPassword : AntInput
+    public partial class InputPassword : Input
     {
         private bool _visible = false;
         private string _eyeIcon;
@@ -24,8 +24,8 @@ namespace AntBlazor
             base.SetClasses();
             //ant-input-password-large ant-input-affix-wrapper ant-input-affix-wrapper-lg
             ClassMapper
-                .If($"{PrefixCls}-password-large", () => Size == AntInputSize.Large)
-                .If($"{PrefixCls}-password-small", () => Size == AntInputSize.Small);
+                .If($"{PrefixCls}-password-large", () => Size == InputSize.Large)
+                .If($"{PrefixCls}-password-small", () => Size == InputSize.Small);
 
             AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-password");
 

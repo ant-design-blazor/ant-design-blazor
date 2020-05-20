@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public partial class AntInputGroup : AntDomComponentBase
+    public partial class InputGroup : AntDomComponentBase
     {
         protected const string PrefixCls = "ant-input-group";
 
@@ -22,8 +22,8 @@ namespace AntBlazor
 
             ClassMapper.Clear()
                 .Add(PrefixCls)
-                .If($"{PrefixCls}-lg", () => Size == AntInputSize.Large)
-                .If($"{PrefixCls}-sm", () => Size == AntInputSize.Small)
+                .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
+                .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-compact", () => Attributes != null && Attributes.ContainsKey("compact"));
         }
     }

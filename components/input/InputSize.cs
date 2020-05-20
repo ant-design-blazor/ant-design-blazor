@@ -1,6 +1,6 @@
 ﻿namespace AntBlazor
 {
-    public static class AntInputSize
+    public static class InputSize
     {
         public const string Default = "default";
         public const string Large = "large";

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace AntBlazor
 {
-    public partial class AntInputNumber : AntInputComponentBase<double>
+    public partial class InputNumber : AntInputComponentBase<double>
     {
         private string _format;
         protected const string PrefixCls = "ant-input-number";
@@ -45,7 +45,7 @@ namespace AntBlazor
         public double Min { get; set; } = double.NegativeInfinity;
 
         [Parameter]
-        public string Size { get; set; } = AntInputSize.Default;
+        public string Size { get; set; } = InputSize.Default;
 
         [Parameter]
         public bool Disabled { get; set; }
@@ -64,8 +64,8 @@ namespace AntBlazor
         {
             ClassMapper.Clear()
                 .Add(PrefixCls)
-                .If($"{PrefixCls}-lg", () => Size == AntInputSize.Large)
-                .If($"{PrefixCls}-sm", () => Size == AntInputSize.Small)
+                .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
+                .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-disabled", () => this.Disabled);
         }
 
