@@ -96,7 +96,7 @@
           {
             "title": "Checkbox",
             "type": "menuItem",
-            "url": "checkbox"
+            "url": "components/checkbox"
           },
           {
             "title": "Switch",
