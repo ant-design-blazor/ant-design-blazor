@@ -1,0 +1,82 @@
+﻿<Layout>
+    <Header Class="header">
+        <div class="logo" />
+        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Horizontal" DefaultSelectedKeys=@(new []{"2"})>
+            <MenuItem Key="1">nav 1</MenuItem>
+            <MenuItem Key="2">nav 2</MenuItem>
+            <MenuItem Key="3">nav 3</MenuItem>
+        </Menu>
+    </Header>
+    <Layout>
+        <Sider Width="200" Class="site-layout-background">
+            <Menu Mode="MenuMode.Inline"
+                  DefaultSelectedKeys=@(new[] {"1"})
+                  DefaultOpenKeys=@(new[] {"sub1"})
+                  Style="height: 100%; border-right: 0;">
+                @{
+                    RenderFragment sub1Title =
+                        @<span>
+                            <AntIcon Type="user" Theme="outline"/>
+                            subnav 1
+                        </span>;
+                }
+                <SubMenu Key="sub1" Title=sub1Title>
+                    <MenuItem Key="1">option1</MenuItem>
+                    <MenuItem Key="2">option2</MenuItem>
+                    <MenuItem Key="3">option3</MenuItem>
+                    <MenuItem Key="4">option4</MenuItem>
+                </SubMenu>
+                @{
+                    RenderFragment sub2Title =
+                        @<span>
+                            <AntIcon Type="laptop" Theme="outline"/>
+                            subnav 2
+                        </span>;
+                }
+                <SubMenu Key="sub2" Title=sub2Title>
+                    <MenuItem Key="5">option5</MenuItem>
+                    <MenuItem Key="6">option6</MenuItem>
+                    <MenuItem Key="7">option7</MenuItem>
+                    <MenuItem Key="8">option8</MenuItem>
+                </SubMenu>
+                @{
+                    RenderFragment sub3Title =
+                        @<span>
+                            <AntIcon Type="notification" Theme="outline"/>
+                            subnav 3
+                        </span>;
+                }
+                <SubMenu Key="sub3"  Title=sub3Title >
+                <MenuItem Key="9">option9</MenuItem>
+                <MenuItem Key="10">option10</MenuItem>
+                <MenuItem Key="11">option11</MenuItem>
+                <MenuItem Key="12">option12</MenuItem>
+                </SubMenu>
+            </Menu>
+        </Sider>
+        <Layout Style=" padding: 0 24px 24px;">
+            <Breadcrumb Style="margin: 16px 0;">
+                <BreadcrumbItem>Home</BreadcrumbItem>
+                <BreadcrumbItem>List</BreadcrumbItem>
+                <BreadcrumbItem>App</BreadcrumbItem>
+            </Breadcrumb>
+            <Content Class="site-layout-background" Style=" padding: 24px; margin: 0; min-height: 280px;">
+                Content
+            </Content>
+        </Layout>
+    </Layout>
+</Layout>
+
+<style>
+    #components-layout-demo-top-side-2 .logo {
+        width: 120px;
+        height: 31px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px 28px 16px 0;
+        float: left;
+    }
+
+    .site-layout-background {
+        background: #fff;
+    }
+</style>

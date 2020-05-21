@@ -2,18 +2,17 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this">
-    <span class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
         @ChildContent
         @if (AutoGenerate)
         {
             foreach (var breadcrumb in _breadcrumbs)
             {
-                <AntBreadcrumbItem>
+                <BreadcrumbItem>
                     <a href="@breadcrumb.Url" @onclick="(e)=>Navigate(breadcrumb.Url.ToString())">@breadcrumb.Label</a>
-                </AntBreadcrumbItem>
+                </BreadcrumbItem>
             }
-
         }
-    </span>
+    </div>
 </CascadingValue>
 

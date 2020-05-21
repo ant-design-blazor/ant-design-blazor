@@ -1,0 +1,35 @@
+﻿@page "/Breadcrumb"
+
+<h3>Breadcrumb</h3>
+
+<h4>simple</h4>
+<Breadcrumb>
+    <BreadcrumbItem>
+        Home
+    </BreadcrumbItem>
+    <BreadcrumbItem>
+        <a>Application List</a>
+    </BreadcrumbItem>
+    <BreadcrumbItem>
+        An Application
+    </BreadcrumbItem>
+</Breadcrumb>
+
+<br/>
+<h4>icon</h4>
+
+<Breadcrumb>
+    <BreadcrumbItem>
+        <AntIcon Type="home"></AntIcon>
+    </BreadcrumbItem>
+    <BreadcrumbItem>
+        <a><AntIcon Type="user"></AntIcon><span>Application List</span></a>
+    </BreadcrumbItem>
+    <BreadcrumbItem>
+        Application
+    </BreadcrumbItem>
+</Breadcrumb>
+
+@code {
+
+}
