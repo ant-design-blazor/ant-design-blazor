@@ -38,7 +38,7 @@ else
                         TriggerClass="@ClassMapper.Class"
                         Visible="IsOpen"
                         Disabled="Disabled"
-                        Placement="@(RootMenu.Mode == MenuMode.Horizontal ? PlacementType.BottomLeft : PlacementType.Right)"
+                        Placement="@(RootMenu.Mode == MenuMode.Horizontal ? PlacementType.BottomLeft : PlacementType.RightTop)"
                         OnVisibleChange="OnOverlayVisibleChange"
                         OnOverlayHiding="OnOverlayHiding"
                         PlacementCls="@($"{prefixCls}-placement-{placementName} {prefixCls}-popup")"
