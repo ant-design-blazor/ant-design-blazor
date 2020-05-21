@@ -1,26 +1,66 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
+@typeparam TItem
 
-<CascadingValue Value="this">
-    <div class="@ClassMapper.Class" style="@Style" Id="@Id">
+<div class="@ClassMapper.Class" style="@Style" Id="@Id">
 
-        @if (Header != null)
-        {
-            <div class="@_prefixName-header">
-                @Header
-            </div>
-        }
-
-        <div class="ant-list-items">
-            @ChildContent
+    @if (Header != null)
+    {
+        <div class="@PrefixName-header">
+            @Header
         </div>
+    }
 
-        @if (Footer != null)
+    @if (DataSource != null && DataSource.Any())
+    {
+        <Spin Spinning="Loading">
+            @childrenContent(this)
+        </Spin>
+    }
+    else
+    {
+        <div style="min-height:53px" />
+    }
+
+    @if (Footer != null)
+    {
+        <div class="@PrefixName-footer">
+            @Footer
+        </div>
+    }
+    @if (LoadMore != null)
+    {
+        @LoadMore
+    }
+</div>
+
+@code{
+
+
+    RenderFragment<AntList<TItem>> childrenContent = content =>
+    @<Template>
+        @if (content.Grid != null)
         {
-            <div class="@_prefixName-footer">
-                @Footer
-            </div>
+            <AntRow Gutter="content.Grid.Gutter">
+                @foreach (var item in content.DataSource)
+                {
+                    <AntListItem>
+                        @content.Item(item)
+                    </AntListItem>
+                }
+            </AntRow>
+        }
+        else
+        {
+            <ul class="ant-list-items">
+                @foreach (var item in content.DataSource)
+                {
+                    <AntListItem>
+                        @content.Item(item)
+                    </AntListItem>
+                }
+            </ul>
         }
 
-    </div>
-</CascadingValue>
+    </Template>;
+}

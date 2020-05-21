@@ -1,0 +1,103 @@
+﻿@inject HttpClient HttpClient
+
+<AntList Class="demo-loadmore-list" DataSource="@Data" ItemLayout="AntDirectionVHType.Horizontal" Loading="@InitLoading">
+    <Item Context="item">
+        <AntListItemMeta Avatar="avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
+            <Title>
+                <a href="https://ant.design">@item.Name.Last</a>
+            </Title>
+        </AntListItemMeta>
+        <div>content</div>
+    </Item>
+    <LoadMore>
+        @if (!InitLoading && !Loading)
+        {
+            <div class="demo-loadmore-btn-content ">
+                <AntButton OnClick="OnLoadMore">loading more</AntButton>
+            </div>
+        }
+    </LoadMore>
+</AntList>
+
+<style>
+
+    .demo-loadmore-list {
+        min-height: 350px;
+    }
+
+    .demo-loadmore-btn-content {
+        text-align: center;
+        margin-top: 12px;
+        height: 32px;
+        line-height: 32px;
+    }
+</style>
+
+@code {
+
+    RenderFragment avatar = @<AntAvatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></AntAvatar>;
+
+    public int count = 3;
+
+    public string FakeDataUrl { get { return $"https://randomuser.me/api/?results={count}&inc=name,gender,email,nat&noinfo"; } }
+
+    public List<DataModel> Data { get; set; }
+
+    public bool InitLoading { get; set; } = true;
+
+    public bool Loading { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Data = await GetData();
+        InitLoading = false;
+        await base.OnInitializedAsync();
+    }
+
+    public async Task OnLoadMore()
+    {
+        Loading = true;
+        var res = await GetData();
+        Data.AddRange(res);
+        Loading = false;
+    }
+
+    public async Task<List<DataModel>> GetData()
+    {
+        try
+        {
+            var res = await HttpClient.GetFromJsonAsync<Response>(FakeDataUrl);
+            return res.Results;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return new List<DataModel>();
+        }
+    }
+
+    public class Response
+    {
+        public List<DataModel> Results { get; set; }
+    }
+
+    public class DataModel
+    {
+        public string Gender { get; set; }
+
+        public Name Name { get; set; }
+
+        public string Email { get; set; }
+
+        public string Nat { get; set; }
+    }
+
+    public class Name
+    {
+        public string Title { get; set; }
+
+        public string First { get; set; }
+
+        public string Last { get; set; }
+    }
+}

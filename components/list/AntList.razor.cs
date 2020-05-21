@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using OneOf;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,23 +8,36 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public partial class AntList : AntDomComponentBase
+    using GutterType = OneOf<int, Dictionary<string, int>, (int, int)>;
+    public class ListGridType
     {
-        private string _prefixName = "ant-list";
+        public int Gutter { get; set; }
+        public int Column { get; set; }
+        public int Xs { get; set; }
+        public int Sm { get; set; }
+        public int Md { get; set; }
+        public int Lg { get; set; }
+        public int Xl { get; set; }
+        public int Xxl { get; set; }
+    }
 
-        [Parameter] public RenderFragment ChildContent { get; set; }
+    public partial class AntList<TItem> : AntDomComponentBase
+    {
+        public string PrefixName { get; set; } = "ant-list";
+
+        [Parameter] public RenderFragment<TItem> Item { get; set; }
+
+        [Parameter] public IEnumerable<TItem> DataSource { get; set; }
 
         [Parameter] public RenderFragment Header { get; set; }
 
         [Parameter] public RenderFragment Footer { get; set; }
 
-        [Parameter] public IEnumerable<object> DataSource { get; set; }
+        [Parameter] public RenderFragment LoadMore { get; set; }
 
         [Parameter] public AntDirectionVHType ItemLayout { get; set; } = AntDirectionVHType.Horizontal;
 
         [Parameter] public bool Loading { get; set; } = false;
-
-        [Parameter] public string LoadMore { get; set; }
 
         [Parameter] public string NoResult { get; set; }
 
@@ -34,6 +48,16 @@ namespace AntBlazor
         [Parameter] public bool Split { get; set; } = true;
 
         [Parameter] public string ClassName { get; set; }
+
+        [Parameter] public ListGridType Grid { get; set; }
+
+        private bool IsSomethingAfterLastItem
+        {
+            get
+            {
+                return LoadMore != null || Footer != null || !string.IsNullOrEmpty(Pagination);
+            }
+        }
 
         protected override void OnParametersSet()
         {
@@ -67,15 +91,17 @@ namespace AntBlazor
             }
 
             ClassMapper.Clear()
-                .Add(_prefixName)
+                .Add(PrefixName)
                 .Add(ClassName)
-                .Add($"{_prefixName}-split")
-                .Add($"{_prefixName}-bordered")
-                .If($"{_prefixName}-{sizeCls}", () => !string.IsNullOrEmpty(sizeCls))
-                .If($"{_prefixName}-vertical", () => ItemLayout == AntDirectionVHType.Vertical)
-                .If($"{_prefixName}-loading", () => (Loading))
-                .If($"{_prefixName}-grid", () => true)
-                .If($"{_prefixName}-something-after-last-item", () => false);
+                .If($"{PrefixName}-split", () => Split)
+                .Add($"{PrefixName}-bordered")
+                .If($"{PrefixName}-{sizeCls}", () => !string.IsNullOrEmpty(sizeCls))
+                .If($"{PrefixName}-vertical", () => ItemLayout == AntDirectionVHType.Vertical)
+                .If($"{PrefixName}-loading", () => (Loading))
+                .If($"{PrefixName}-grid", () => Grid != null)
+                .If($"{PrefixName}-something-after-last-item", () => IsSomethingAfterLastItem);
+
         }
+
     }
 }
