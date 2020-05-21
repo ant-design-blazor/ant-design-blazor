@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor.Internal
 {
-    public partial class Overlay : AntDomComponentBase
+    public sealed partial class Overlay : AntDomComponentBase
     {
         [CascadingParameter(Name = "Trigger")]
         public OverlayTrigger Trigger { get; set; }
@@ -53,9 +53,9 @@ namespace AntBlazor.Internal
 
         private const int OVERLAY_OFFSET = 4;
 
-        private const int ARROW_WIDTH = 5;
-        private const int HORIZONTAL_ARROW_SHIFT = 16;
-        private const int VERTICAL_ARROW_SHIFT = 8;
+        private const int ARROW_SIZE = 13;
+        private const int HORIZONTAL_ARROW_SHIFT = 13;
+        private const int VERTICAL_ARROW_SHIFT = 5;
 
         protected override async Task OnParametersSetAsync()
         {
@@ -228,7 +228,7 @@ namespace AntBlazor.Internal
             }
         }
 
-        protected virtual int GetOverlayTop(Element trigger, Element overlay, Element containerElement)
+        private int GetOverlayTop(Element trigger, Element overlay, Element containerElement)
         {
             int top = 0;
 
@@ -248,21 +248,27 @@ namespace AntBlazor.Internal
             }
             else if (Trigger.Placement.IsIn(PlacementType.LeftTop, PlacementType.RightTop))
             {
-                top = ArrowPointAtCenter ?
-                      triggerTop - (VERTICAL_ARROW_SHIFT + ARROW_WIDTH) :
-                      triggerTop;
+                top = triggerTop;
+
+                if (ArrowPointAtCenter)
+                {
+                    top += -VERTICAL_ARROW_SHIFT - ARROW_SIZE / 2 + triggerHeight / 2;
+                }
             }
             else if (Trigger.Placement.IsIn(PlacementType.LeftBottom, PlacementType.RightBottom))
             {
-                top = ArrowPointAtCenter ?
-                      triggerTop - overlay.clientHeight + triggerHeight + (VERTICAL_ARROW_SHIFT + ARROW_WIDTH) :
-                      triggerTop - overlay.clientHeight + triggerHeight;
+                top = triggerTop - overlay.clientHeight + triggerHeight;
+
+                if (ArrowPointAtCenter)
+                {
+                    top += VERTICAL_ARROW_SHIFT + ARROW_SIZE / 2 - triggerHeight / 2;
+                }
             }
-            else if (Trigger.Placement.IsIn(PlacementType.BottomLeft, PlacementType.BottomCenter, PlacementType.BottomRight))
+            else if (Trigger.Placement.IsIn(PlacementType.BottomLeft, PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.BottomRight))
             {
                 top = triggerTop + triggerHeight + OVERLAY_OFFSET;
             }
-            else if (Trigger.Placement.IsIn(PlacementType.TopLeft, PlacementType.TopCenter, PlacementType.TopRight))
+            else if (Trigger.Placement.IsIn(PlacementType.TopLeft, PlacementType.TopCenter, PlacementType.Top, PlacementType.TopRight))
             {
                 top = triggerTop - overlay.clientHeight - OVERLAY_OFFSET;
             }
@@ -270,7 +276,7 @@ namespace AntBlazor.Internal
             return top;
         }
 
-        protected virtual int GetOverlayLeft(Element trigger, Element overlay, Element containerElement)
+        private int GetOverlayLeft(Element trigger, Element overlay, Element containerElement)
         {
             int left = 0;
             int triggerLeft = trigger.absoluteLeft - containerElement.absoluteLeft;
@@ -293,19 +299,25 @@ namespace AntBlazor.Internal
             }
             else if (Trigger.Placement.IsIn(PlacementType.BottomLeft, PlacementType.TopLeft))
             {
-                left = ArrowPointAtCenter ?
-                       triggerLeft + triggerWidth / 2 - (HORIZONTAL_ARROW_SHIFT + ARROW_WIDTH) :
-                       triggerLeft;
+                left = triggerLeft;
+
+                if (ArrowPointAtCenter)
+                {
+                    left += -HORIZONTAL_ARROW_SHIFT - ARROW_SIZE / 2 + triggerWidth / 2;
+                }
             }
-            else if (Trigger.Placement.IsIn(PlacementType.BottomCenter, PlacementType.TopCenter))
+            else if (Trigger.Placement.IsIn(PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.TopCenter, PlacementType.Top))
             {
-                left = ArrowPointAtCenter ?
-                       triggerLeft + triggerWidth / 2 - overlay.clientWidth + (HORIZONTAL_ARROW_SHIFT + ARROW_WIDTH) :
-                       triggerLeft + triggerWidth / 2 - overlay.clientWidth / 2;
+                left = triggerLeft + triggerWidth / 2 - overlay.clientWidth / 2;
             }
             else if (Trigger.Placement.IsIn(PlacementType.BottomRight, PlacementType.TopRight))
             {
                 left = triggerLeft + triggerWidth - overlay.clientWidth;
+
+                if (ArrowPointAtCenter)
+                {
+                    left += HORIZONTAL_ARROW_SHIFT + ARROW_SIZE / 2 - triggerWidth / 2;
+                }
             }
 
             return left;
@@ -313,76 +325,7 @@ namespace AntBlazor.Internal
 
         private string GetTransformOrigin()
         {
-            string x = "";
-            string y = "";
-
-            if (Trigger.Placement.Equals(PlacementType.LeftTop))
-            {
-                x = "100%";
-                y = "33%";
-            }
-            else if (Trigger.Placement.Equals(PlacementType.Left))
-            {
-                x = "100%";
-                y = "50%";
-            }
-            else if (Trigger.Placement.Equals(PlacementType.LeftBottom))
-            {
-                x = "100%";
-                y = "66%";
-            }
-            else if (Trigger.Placement.Equals(PlacementType.RightTop))
-            {
-                x = "0%";
-                y = "33%";
-            }
-            else if (Trigger.Placement.Equals(PlacementType.Right))
-            {
-                x = "0%";
-                y = "50%";
-            }
-            else if (Trigger.Placement.Equals(PlacementType.RightBottom))
-            {
-                x = "0%";
-                y = "66%";
-            }
-            else if (Trigger.Placement.Equals(PlacementType.TopLeft))
-            {
-                x = "33%";
-                y = "100%";
-            }
-            else if (Trigger.Placement.Equals(PlacementType.TopCenter))
-            {
-                x = "50%";
-                y = "100%";
-            }
-            else if (Trigger.Placement.Equals(PlacementType.TopRight))
-            {
-                x = "66%";
-                y = "100%";
-            }
-            else if (Trigger.Placement.Equals(PlacementType.BottomLeft))
-            {
-                x = "33%";
-                y = "100%";
-            }
-            else if (Trigger.Placement.Equals(PlacementType.TopCenter))
-            {
-                x = "50%";
-                y = "100%";
-            }
-            else if (Trigger.Placement.Equals(PlacementType.TopRight))
-            {
-                x = "66%";
-                y = "100%";
-            }
-
-            if (string.IsNullOrEmpty(x) && string.IsNullOrEmpty(y))
-            {
-                return "";
-            }
-
-            return $"transform-origin: {x} {y}";
+            return $"transform-origin: {Trigger.Placement.TranformOrigin}";
         }
 
         private bool IsContainTrigger(TriggerType triggerType)
@@ -413,7 +356,7 @@ namespace AntBlazor.Internal
             }
         }
 
-        protected string GetOverlayCls()
+        private string GetOverlayCls()
         {
             string overlayCls;
 

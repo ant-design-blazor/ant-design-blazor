@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using AntBlazor.Internal;
 using OneOf;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace AntBlazor
 {
@@ -9,10 +11,19 @@ namespace AntBlazor
         [Parameter]
         public OneOf<string, RenderFragment> Title { get; set; } = string.Empty;
 
+        [Parameter]
+        public bool ArrowPointAtCenter { get; set; } = false;
+
+        [Parameter]
+        public double MouseEnterDelay { get; set; } = 0.1;
+
+        [Parameter]
+        public double MouseLeaveDelay { get; set; } = 0.1;
+
         public Tooltip()
         {
             PrefixCls = "ant-tooltip";
-            Placement = PlacementType.TopCenter;
+            Placement = PlacementType.Top;
         }
 
         public override string GetOverlayEnterClass()
@@ -25,25 +36,24 @@ namespace AntBlazor
             return "zoom-big-fast-leave zoom-big-fast-leave-active zoom-big-fast";
         }
 
-        public override string GetPlacementClass()
+        public override async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
-            if (!string.IsNullOrEmpty(PlacementCls))
+            if (Trigger.Contains(TriggerType.Hover))
             {
-                return PlacementCls;
+                await Task.Delay((int)(MouseEnterDelay * 1000));
             }
 
-            if (PlacementType.TopCenter.Equals(Placement))
+            await base.Show(overlayLeft, overlayTop);
+        }
+
+        public override async Task Hide(bool force = false)
+        {
+            if (Trigger.Contains(TriggerType.Hover))
             {
-                return $"{PrefixCls}-placement-top";
+                await Task.Delay((int)(MouseLeaveDelay * 1000));
             }
-            else if (PlacementType.BottomCenter.Equals(Placement))
-            {
-                return $"{PrefixCls}-placement-bottom";
-            }
-            else
-            {
-                return $"{PrefixCls}-placement-{Placement.Name}";
-            }
+
+            await base.Hide(force);
         }
 
     }
