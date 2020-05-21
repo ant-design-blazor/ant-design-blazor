@@ -4,12 +4,16 @@
 <main class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
     @ChildContent
 </main>
+
 @code {
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-    public AntContent()
+    protected override void OnInitialized()
     {
         ClassMapper.Add("ant-layout-content");
+
+        base.OnInitialized();
     }
+
 }

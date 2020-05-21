@@ -44,7 +44,7 @@
           {
             "title": "Layout",
             "type": "menuItem",
-            "url": "layout"
+            "url": "components/layout"
           },
           {
             "title": "Space",
