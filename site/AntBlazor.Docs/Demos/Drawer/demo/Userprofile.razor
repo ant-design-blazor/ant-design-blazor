@@ -1,10 +1,7 @@
 ﻿<div>
-        <AntList>
-            <ChildContent>
-                @foreach (var item in datasource)
-                {
-                    <AntListItem>
-                        <AntListItemMeta Avatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+        <AntList DataSource="datasource">
+                    <Item Context="item">
+                        <AntListItemMeta Avatar=@("https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png")
                                          Description="Progresser XTech">
                             <Title>
                                 @item.Title
@@ -13,11 +10,7 @@
                         </AntListItemMeta>
 
                         <AntButton Type="@AntButtonType.Link" OnClick="(e)=>open(e, item.Title)">View Profile</AntButton>
-
-                    </AntListItem>
-                }
-
-            </ChildContent>
+                    </Item>
         </AntList>
 
         <Drawer Width="640" Closable="true" Visible="visible" Title='("User Profile")' OnClose="_=>close()">

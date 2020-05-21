@@ -167,7 +167,7 @@
           {
             "title": "List",
             "type": "menuItem",
-            "url": "list"
+            "url": "components/list"
           },
           {
             "title": "Tooltip",

@@ -1,0 +1,41 @@
+﻿<AntDivider Orientation="left">Default Size</AntDivider>
+
+<AntList DataSource="@data">
+    <Header>Header</Header>
+    <Item Context="item">
+        <span><mark>[ITEM]</mark></span>@item
+    </Item>
+    <Footer>Footer</Footer>
+</AntList>
+
+<AntDivider Orientation="left">Small Size</AntDivider>
+
+<AntList DataSource="@data" Size="small">
+    <Header>Header</Header>
+    <Item Context="item">
+        <span><mark>[ITEM]</mark></span>@item
+    </Item>
+    <Footer>Footer</Footer>
+</AntList>
+
+<AntDivider Orientation="left">Large Size</AntDivider>
+
+<AntList DataSource="@data" Size="large">
+    <Header>Header</Header>
+    <Item Context="item">
+        <span><mark>[ITEM]</mark></span>@item
+    </Item>
+    <Footer>Footer</Footer>
+</AntList>
+
+@code{
+
+    public List<string> data = new List<string>
+    {
+        "Racing car sprays burning fuel into crowd.",
+        "Japanese princess to wed commoner.",
+        "Australian walks 100km after outback crash.",
+        "Man charged over missing wedding girl.",
+        "Los Angeles battles huge wildfires."
+    };
+}
