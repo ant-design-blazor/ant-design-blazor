@@ -1,7 +1,7 @@
 @namespace AntBlazor
 @inherits AntDomComponentBase
 
-<span class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+<span>
 
     @if (Overlay != null)
     {
@@ -9,7 +9,7 @@
             <span class="ant-breadcrumb-link">
                 @ChildContent
             </span>
-            <AntIcon type="down"></AntIcon>
+            <AntIcon Type="down"></AntIcon>
         </span>
     }
     else
@@ -19,7 +19,7 @@
         </span>
     }
 
-    @if (BreadCrumb.Separator != null)
+    @if (BreadCrumb?.Separator != null)
     {
         <span class="ant-breadcrumb-separator">
             @BreadCrumb.Separator
@@ -37,12 +37,5 @@
     public object Overlay { get; set; }
 
     [CascadingParameter]
-    public AntBreadcrumb BreadCrumb { get; set; }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        ClassMapper.Add("ant-blazor-breadcrumb-item");
-    }
-
+    public Breadcrumb BreadCrumb { get; set; }
 }

@@ -1,11 +1,11 @@
 @namespace AntBlazor
 @inherits AntDomComponentBase
 
-<aside class="@ClassMapper.Class" @ref="Ref" style="@Style @base.Style" id="@Id">
+<aside class="@ClassMapper.Class" @ref="Ref" style="@InternalStyle @Style" id="@Id">
     <div class="ant-layout-sider-children">
         @ChildContent
     </div>
-    @if (isZeroTrigger)
+    @if (IsZeroTrigger)
     {
         <span class="ant-layout-sider-zero-width-trigger" @onclick="ToggleCollapse">
             @if (ZeroTrigger != null)
@@ -19,25 +19,21 @@
         </span>
     }
 
-    @if (isSiderTrigger)
+    @if (IsSiderTrigger)
     {
         <div class="ant-layout-sider-trigger"
              @onclick="ToggleCollapse"
              style="width: @WidthSetting">
-            @siderTrigger
+            @SiderTrigger
         </div>
     }
 </aside>
 
 @code {
 
-    bool isZeroTrigger => this.Collapsible && this.siderTrigger != null && this.CollapsedWidth == 0 && ((this.Breakpoint != null && this.Below) || this.Breakpoint == null);
+   
 
-    bool isSiderTrigger => this.Collapsible && this.siderTrigger != null && this.CollapsedWidth != 0;
-
-    RenderFragment siderTrigger => Trigger ?? defaultTrigger(this);
-
-    public RenderFragment<AntSider> defaultTrigger = (sider) =>
+    public RenderFragment<Sider> defaultTrigger = (sider) =>
     @<Template>
         @if (!sider.ReverseArrow)
         {

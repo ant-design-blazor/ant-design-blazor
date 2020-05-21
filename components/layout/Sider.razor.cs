@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public partial class AntSider : AntDomComponentBase
+    public partial class Sider : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -45,10 +45,13 @@ namespace AntBlazor
         public RenderFragment Trigger { get; set; }
 
         [CascadingParameter]
-        public AntLayout Layout { get; set; }
+        public Layout Layout { get; set; }
 
         [Parameter]
-        public EventCallback<bool> OnCollapsedChange { get; set; }
+        public EventCallback<bool> OnCollapse { get; set; }
+
+        [Parameter]
+        public EventCallback<bool> OnBreakpoint { get; set; }
 
         [Inject]
         private DomEventService DomEventService { get; set; }
@@ -68,7 +71,7 @@ namespace AntBlazor
 
         private bool Below { get; set; }
 
-        private Hashtable _dimensionMap = new Hashtable()
+        private readonly Hashtable _dimensionMap = new Hashtable()
         {
             ["xs"] = "480px",
             ["sm"] = "576px",
@@ -78,19 +81,27 @@ namespace AntBlazor
             ["xxl"] = "1600px"
         };
 
-        public AntSider()
+        bool IsZeroTrigger => this.Collapsible && this.SiderTrigger != null && this.CollapsedWidth == 0 && ((this.Breakpoint != null && this.Below) || this.Breakpoint == null);
+
+        bool IsSiderTrigger => this.Collapsible && this.SiderTrigger != null && this.CollapsedWidth != 0;
+
+        RenderFragment SiderTrigger => Trigger ?? defaultTrigger(this);
+
+        private void SetClass()
         {
-            ClassMapper.Add("ant-layout-sider")
-                .If("ant-layout-sider-zero-width", () => Collapsed && CollapsedWidth == 0)
-                .If("ant-layout-sider-light", () => Theme == "light")
-                .If("ant-layout-sider-collapsed", () => Collapsed)
+            var prefixCls = "ant-layout-sider";
+            ClassMapper.Add(prefixCls)
+                .If($"{prefixCls}-zero-width", () => Collapsed && CollapsedWidth == 0)
+                .If($"{prefixCls}-light", () => Theme == "light")
+                .If($"{prefixCls}-collapsed", () => Collapsed)
+                .If($"{prefixCls}-has-trigger", () => IsSiderTrigger)
                 ;
         }
 
         protected override async Task OnInitializedAsync()
         {
-            Layout?.SetSider(this);
-
+            Layout?.HasSider();
+            SetClass();
             DomEventService.AddEventListener<object>("window", "resize", async _ => await WatchMatchMedia());
             await base.OnInitializedAsync();
         }
@@ -104,7 +115,7 @@ namespace AntBlazor
         public async Task ToggleCollapse()
         {
             this.Collapsed = !this.Collapsed;
-            await OnCollapsedChange.InvokeAsync(Collapsed);
+            await OnCollapse.InvokeAsync(Collapsed);
             OnCollapsed?.Invoke(this.Collapsed);
         }
 
@@ -116,8 +127,9 @@ namespace AntBlazor
             bool matchBelow = await JsInvokeAsync<bool>(JSInteropConstants.matchMedia, $"(max-width: {_dimensionMap[Breakpoint]})");
             this.Below = matchBelow;
             this.Collapsed = matchBelow;
-            await this.OnCollapsedChange.InvokeAsync(matchBelow);
+            await this.OnCollapse.InvokeAsync(matchBelow);
             OnCollapsed?.Invoke(this.Collapsed);
+            await OnBreakpoint.InvokeAsync(matchBelow);
         }
     }
 }

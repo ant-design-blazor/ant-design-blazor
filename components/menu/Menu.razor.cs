@@ -11,7 +11,7 @@ namespace AntBlazor
         public string PrefixCls { get; set; } = "ant-menu";
 
         [CascadingParameter]
-        public AntSider Parent { get; set; }
+        public Sider Parent { get; set; }
 
         [Parameter]
         public MenuTheme Theme { get; set; } = MenuTheme.Light;

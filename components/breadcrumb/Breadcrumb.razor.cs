@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public partial class AntBreadcrumb : AntDomComponentBase
+    public partial class Breadcrumb : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
