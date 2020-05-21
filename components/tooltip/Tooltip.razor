@@ -14,10 +14,27 @@
     @ChildContent
 </div>
 
-<CascadingValue Value="@this" Name="Trigger">
+<CascadingValue Value="this" Name="Trigger">
     <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
-        <CascadingValue Value="@Title" Name="Title">
-            <TooltipPopup @ref="@_overlay" />
-        </CascadingValue>
+        <Overlay @ref="_overlay"
+                 HideMillisecondsDelay="10"
+                 WaitForHideAnimMilliseconds="100"
+                 OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
+                 OnOverlayMouseEnter="OnOverlayMouseEnter"
+                 OnOverlayMouseLeave="OnOverlayMouseLeave">
+            <div class="ant-tooltip-content">
+                <div class="ant-tooltip-arrow"></div>
+                <div class="ant-tooltip-inner" role="tooltip">
+                    @if(Title.IsT0)
+                    {
+                        @Title.AsT0;
+                    }
+                    else
+                    {
+                        @Title.AsT1;
+                    }
+                </div>
+            </div>
+        </Overlay>
     </CascadingValue>
 </CascadingValue>
