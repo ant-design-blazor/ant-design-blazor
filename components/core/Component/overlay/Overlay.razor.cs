@@ -372,7 +372,7 @@ namespace AntBlazor.Internal
             return overlayCls;
         }
 
-        protected string GetDisplayStyle()
+        private string GetDisplayStyle()
         {
             string display = _isOverlayShow ? "display: inline-flex;" : "visibility: hidden;";
 
