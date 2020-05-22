@@ -106,12 +106,12 @@
           {
             "title": "DatePicker",
             "type": "menuItem",
-            "url": "datePicker"
+            "url": "components/datePicker"
           },
           {
             "title": "TimePicker",
             "type": "menuItem",
-            "url": "timePicker"
+            "url": "components/timePicker"
           },
           {
             "title": "Input",

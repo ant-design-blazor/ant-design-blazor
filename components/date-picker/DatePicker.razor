@@ -3,8 +3,9 @@
 @using AntBlazor.Internal;
 
 <CascadingValue Value='$"{PrefixCls}-dropdown"' Name="PrefixCls">
-    <Dropdown @ref="_dropDown"
+    <OverlayTrigger @ref="_dropDown"
                     Visible="Open"
+                    IsButton="@true"
                     Disabled="Disabled"
                     PopupContainerSelector="@PopupContainerSelector"
                     OnVisibleChange="visible => AutoFocus = visible"
@@ -43,7 +44,7 @@
                                     Placeholder="@_placeholders[0]"
                                     ReadOnly="@InputReadOnly"
                                     AutoFocus="@AutoFocus"
-                                    OnClick="e => { ChangeFocusTarget(true, false); }"
+                                    OnClick="async e => { await _dropDown.Show(); ChangeFocusTarget(true, false); }"
                                     OnInput="e => OnInput(e, 0)"
                                     ShowTime="@(Picker == DatePickerType.Time)" />
 
@@ -59,7 +60,7 @@
                                         Placeholder="@_placeholders[1]"
                                         ReadOnly="@InputReadOnly"
                                         AutoFocus="@AutoFocus"
-                                        OnClick="e => { ChangeFocusTarget(false, true); }"
+                                        OnClick="async e => { await _dropDown.Show(); ChangeFocusTarget(false, true); }"
                                         OnInput="e => OnInput(e, 0)"
                                         ShowTime="@(Picker == DatePickerType.Time)" />
 
@@ -67,5 +68,5 @@
                 }
             </div>
         </ChildContent>
-    </Dropdown>
+    </OverlayTrigger>
 </CascadingValue>
