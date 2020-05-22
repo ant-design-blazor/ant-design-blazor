@@ -1,0 +1,10 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" aria-selected="@IsSelected"
+     @onclick="OnSelectOptionClick" @onclick:stopPropagation="true"
+     @onmouseenter="OnSelectOptionMouseEnter"
+     @onmouseleave="OnSelectOptionMouseLeave">
+    <div class=" @(ClassPrefix)-content">@ChildContent</div>
+    <span class="ant-select-item-option-state" unselectable="on" aria-hidden="true" style="user-select: none;"></span>
+</div>
