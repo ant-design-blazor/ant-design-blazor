@@ -33,6 +33,28 @@
     <Compile Include="..\Shared\DemoMenuItem.cs" Link="Services\DemoMenuItem.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Demos\Select\demo\AutomaticTokenization.razor" />
+    <None Include="Demos\Select\demo\Basic.razor" />
+    <None Include="Demos\Select\demo\BigData.razor" />
+    <None Include="Demos\Select\demo\Bordered.razor" />
+    <None Include="Demos\Select\demo\Coordinate.razor" />
+    <None Include="Demos\Select\demo\CustomDropdownMenu.razor" />
+    <None Include="Demos\Select\demo\CustomTagRender.razor" />
+    <None Include="Demos\Select\demo\Debug.razor" />
+    <None Include="Demos\Select\demo\HideSelected.razor" />
+    <None Include="Demos\Select\demo\LabelInValue.razor" />
+    <None Include="Demos\Select\demo\Multiple.razor" />
+    <None Include="Demos\Select\demo\Optgroup.razor" />
+    <None Include="Demos\Select\demo\OptionLabelProp.razor" />
+    <None Include="Demos\Select\demo\Search.razor" />
+    <None Include="Demos\Select\demo\SearchBox.razor" />
+    <None Include="Demos\Select\demo\SelectUsers.razor" />
+    <None Include="Demos\Select\demo\Size.razor" />
+    <None Include="Demos\Select\demo\Suffix.razor" />
+    <None Include="Demos\Select\demo\Tags.razor" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
