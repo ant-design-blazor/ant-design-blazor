@@ -144,6 +144,11 @@
             "url": "components/radio"
           },
           {
+            "title": "Select",
+            "type": "menuItem",
+            "url": "components/select"
+          },
+          {
             "title": "Slider",
             "type": "menuItem",
             "url": "components/slider"
