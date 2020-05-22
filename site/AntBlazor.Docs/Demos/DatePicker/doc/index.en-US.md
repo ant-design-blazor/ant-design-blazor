@@ -12,7 +12,7 @@ By clicking the input box, you can select a date from a popup calendar.
 
 ## API
 
-There are five kinds of picker:
+There are six kinds of picker:
 
 - DatePicker
 - MonthPicker

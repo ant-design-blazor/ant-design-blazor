@@ -13,7 +13,7 @@ subtitle: 日期选择框
 
 ## API
 
-日期类组件包括以下五种形式。
+日期类组件包括以下六种形式。
 
 - DatePicker
 - MonthPicker
