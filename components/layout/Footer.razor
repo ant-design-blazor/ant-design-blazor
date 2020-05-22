@@ -1,0 +1,19 @@
+@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<footer class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
+    @ChildContent
+</footer>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        ClassMapper.Add("ant-layout-footer");
+
+        base.OnInitialized();
+    }
+}

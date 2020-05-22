@@ -1,0 +1,41 @@
+@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<span>
+
+    @if (Overlay != null)
+    {
+        <span class="ant-breadcrumb-overlay-link" nz-dropdown [nzDropdownMenu]="nzOverlay">
+            <span class="ant-breadcrumb-link">
+                @ChildContent
+            </span>
+            <AntIcon Type="down"></AntIcon>
+        </span>
+    }
+    else
+    {
+        <span class="ant-breadcrumb-link">
+            @ChildContent
+        </span>
+    }
+
+    @if (BreadCrumb?.Separator != null)
+    {
+        <span class="ant-breadcrumb-separator">
+            @BreadCrumb.Separator
+        </span>
+    }
+
+</span>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public object Overlay { get; set; }
+
+    [CascadingParameter]
+    public Breadcrumb BreadCrumb { get; set; }
+}

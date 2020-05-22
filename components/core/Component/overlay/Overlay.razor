@@ -1,0 +1,27 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDomComponentBase
+
+@if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender)
+{
+    string display = GetDisplayStyle();
+    string overlayCls = GetOverlayCls();
+
+    <div class="@(Trigger.PrefixCls) @(Trigger.OverlayClassName) @(Trigger.GetPlacementClass()) @overlayCls"
+         style="position: absolute; @display @Trigger.OverlayStyle @_overlayStyle"
+         @ref="Ref"
+         @onmouseenter="OnOverlayMouseEnter"
+         @onmouseleave="OnOverlayMouseLeave">
+        <CascadingValue Value="Trigger" Name="ParentTrigger">
+            <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
+                @if (ChildContent != null)
+                {
+                    @ChildContent
+                }
+                else
+                {
+                    @Trigger.Overlay
+                }
+            </CascadingValue>
+        </CascadingValue>
+    </div>
+}

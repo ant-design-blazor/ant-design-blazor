@@ -1,0 +1,18 @@
+﻿<div>
+    <Search Placeholder="input search text" Size="@InputSize.Small" />
+    <br />
+    <br />
+    <Search Placeholder="input search text" OnChange="(e)=>Handle(e)" EnterButton="true" />
+    <br />
+    <br />
+    <Search Placeholder="input search text" Size="@InputSize.Large" EnterButton="@("Search")" />
+</div>
+
+    @code{
+        private void Handle(ChangeEventArgs args)
+        {
+            Console.WriteLine("123");
+            System.Diagnostics.Debug.WriteLine("456");
+        }
+    }
+

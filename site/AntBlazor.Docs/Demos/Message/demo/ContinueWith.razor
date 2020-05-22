@@ -1,0 +1,20 @@
+﻿@inject MessageService _message
+
+<AntButton Type="default" OnClick="OnClick">
+    Display normal message
+</AntButton>
+
+@code{
+    private async Task OnClick()
+    {
+        await _message.Loading("Action in progress..", 2.5)
+            .ContinueWith((result) =>
+            {
+                _message.Info("Loading finished", 2.5)
+                .ContinueWith((result) =>
+                {
+                    _message.Info("Loading finished is finished", 2.5);
+                });
+            });
+    }
+}

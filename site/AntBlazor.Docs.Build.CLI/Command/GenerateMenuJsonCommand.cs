@@ -79,7 +79,7 @@ namespace AntBlazor.Docs.Build.CLI.Command
 
             IList<Dictionary<string, DemoComponent>> componentList = null;
 
-            IList<Dictionary<string, MenuItem>> menuList = null;
+            IList<Dictionary<string, DemoMenuItem>> menuList = null;
 
             Dictionary<string, int> sortMap = new Dictionary<string, int>()
             {
@@ -132,23 +132,23 @@ namespace AntBlazor.Docs.Build.CLI.Command
             if (componentList == null)
                 return;
 
-            List<Dictionary<string, MenuItem>> componentMenuList = new List<Dictionary<string, MenuItem>>();
+            List<Dictionary<string, DemoMenuItem>> componentMenuList = new List<Dictionary<string, DemoMenuItem>>();
 
             IEnumerable<KeyValuePair<string, DemoComponent>> componentI18N = componentList
                 .SelectMany(x => x);
 
             foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> group in componentI18N.GroupBy(x => x.Value.Type))
             {
-                Dictionary<string, MenuItem> menu = new Dictionary<string, MenuItem>();
+                Dictionary<string, DemoMenuItem> menu = new Dictionary<string, DemoMenuItem>();
 
                 foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> component in group.GroupBy(x => x.Key))
                 {
-                    menu.Add(component.Key, new MenuItem()
+                    menu.Add(component.Key, new DemoMenuItem()
                     {
                         Order = sortMap[group.Key],
                         Title = group.Key,
                         Type = "itemGroup",
-                        Children = group.Select(x => new MenuItem()
+                        Children = group.Select(x => new DemoMenuItem()
                         {
                             Title = x.Value.Title,
                             SubTitle = x.Value.SubTitle,
@@ -174,10 +174,10 @@ namespace AntBlazor.Docs.Build.CLI.Command
                 string content = File.ReadAllText(docItem.FullName);
                 Dictionary<string, string> docData = DocParser.ParseHeader(content);
 
-                menuList ??= new List<Dictionary<string, MenuItem>>();
-                menuList.Add(new Dictionary<string, MenuItem>()
+                menuList ??= new List<Dictionary<string, DemoMenuItem>>();
+                menuList.Add(new Dictionary<string, DemoMenuItem>()
                 {
-                    [language] = new MenuItem()
+                    [language] = new DemoMenuItem()
                     {
                         Order = int.TryParse(docData["order"], out int order) ? order : 0,
                         Title = docData["title"],
@@ -190,18 +190,18 @@ namespace AntBlazor.Docs.Build.CLI.Command
             if (menuList == null)
                 return;
 
-            IEnumerable<IGrouping<string, KeyValuePair<string, MenuItem>>> menuI18N = menuList
+            IEnumerable<IGrouping<string, KeyValuePair<string, DemoMenuItem>>> menuI18N = menuList
                 .SelectMany(x => x).GroupBy(x => x.Key);
 
-            IEnumerable<IGrouping<string, KeyValuePair<string, MenuItem>>> componentMenuI18N = componentMenuList
+            IEnumerable<IGrouping<string, KeyValuePair<string, DemoMenuItem>>> componentMenuI18N = componentMenuList
                 .SelectMany(x => x).GroupBy(x => x.Key);
 
-            foreach (IGrouping<string, KeyValuePair<string, MenuItem>> menuGroup in menuI18N)
+            foreach (IGrouping<string, KeyValuePair<string, DemoMenuItem>> menuGroup in menuI18N)
             {
                 var children = menuGroup.Select(x => x.Value).OrderBy(x => x.Order).ToArray();
-                List<MenuItem> menu = new List<MenuItem>
+                List<DemoMenuItem> menu = new List<DemoMenuItem>
                 {
-                    new MenuItem()
+                    new DemoMenuItem()
                     {
                         Order = 0,
                         Title = menuGroup.Key == "zh-CN" ? "文档" : "Docs",
@@ -217,7 +217,7 @@ namespace AntBlazor.Docs.Build.CLI.Command
                     .OrderBy(x => x.Order)
                     .ToArray();
 
-                menu.Add(new MenuItem()
+                menu.Add(new DemoMenuItem()
                 {
                     Order = 999,
                     Title = menuGroup.Key == "zh-CN" ? "组件" : "Components",

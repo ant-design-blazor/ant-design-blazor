@@ -42,7 +42,7 @@ namespace AntBlazor
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public EventCallback<MouseEventArgs> Onclick { get; set; }
+        public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         [Inject] private NavigationManager NavigationManger { get; set; }
 
@@ -66,7 +66,7 @@ namespace AntBlazor
             ClassMapper.Clear()
                 .Add("ant-btn")
                 .If($"{prefixName}-{this.Type}", () => !string.IsNullOrEmpty(Type))
-                 .If($"{prefixName}-danger", () => Danger)
+                 .If($"{prefixName}-dangerous", () => Danger)
                 .If($"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
                 .If($"{prefixName}-{sizeMap[this.Size]}", () => sizeMap.ContainsKey(Size))
                 .If($"{prefixName}-loading", () => Loading)
@@ -102,16 +102,11 @@ namespace AntBlazor
             IconStyle = $"display:{(vlaue ? "none" : "inline-block")}";
         }
 
-        protected async Task OnClick(MouseEventArgs args)
+        protected async Task HandleOnClick(MouseEventArgs args)
         {
-            //if (Link != null)
-            //{
-            //    NavigationManger.NavigateTo(Link.Href);
-            //}
-
-            if (Onclick.HasDelegate)
+            if (OnClick.HasDelegate)
             {
-                await Onclick.InvokeAsync(args);
+                await OnClick.InvokeAsync(args);
             }
         }
     }

@@ -13,6 +13,8 @@ namespace AntBlazor
         [Inject]
         private NotificationService NotificationService { get; set; }
 
+        #region override
+
         protected override void OnInitialized()
         {
             if (NotificationService != null)
@@ -24,14 +26,23 @@ namespace AntBlazor
             }
         }
 
-        internal static Notification Instance { get; private set; }
+        protected override void Dispose(bool disposing)
+        {
+            NotificationService.OnNoticing -= NotifyAsync;
+            NotificationService.OnClosing -= CloseAsync;
+            NotificationService.OnDestroying -= Destroying;
+            NotificationService.OnConfiging -= Config;
+
+            base.Dispose(disposing);
+        }
+
+        #endregion
 
         private readonly ConcurrentDictionary<NotificationPlacement,
                 List<NotificationConfig>>
             _configDict = new ConcurrentDictionary<NotificationPlacement, List<NotificationConfig>>();
 
-        private readonly ConcurrentDictionary<string,
-                NotificationConfig>
+        private readonly ConcurrentDictionary<string, NotificationConfig>
             _configKeyDict = new ConcurrentDictionary<string, NotificationConfig>();
 
         private string GetClassName(NotificationPlacement placement)
@@ -84,7 +95,7 @@ namespace AntBlazor
         /// modify global config
         /// </summary>
         /// <param name="defaultConfig"></param>
-        public void Config(
+        private void Config(
             [NotNull]NotificationGlobalConfig defaultConfig)
         {
             if (defaultConfig == null)
@@ -127,10 +138,9 @@ namespace AntBlazor
             return config;
         }
 
-        #endregion
+        #endregion GlobalConfig
 
-
-        public async Task NotifyAsync(NotificationConfig option)
+        private async Task NotifyAsync(NotificationConfig option)
         {
             if (option == null)
             {
@@ -153,7 +163,7 @@ namespace AntBlazor
                     {
                         oldConfig.Message = option.Message;
                         oldConfig.Description = option.Description;
-                        StateHasChanged();
+                        await InvokeAsync(StateHasChanged);
                         return;
                     }
                     canAdd = _configKeyDict.TryAdd(option.Key, option);
@@ -162,7 +172,7 @@ namespace AntBlazor
                 if (canAdd)
                 {
                     _configDict[placement].Add(option);
-                    StateHasChanged();
+                    await InvokeAsync(StateHasChanged);
                     await Remove(option);
                 }
             }
@@ -206,13 +216,13 @@ namespace AntBlazor
             //return Task.CompletedTask;
         }
 
-        internal void Destroying()
+        private void Destroying()
         {
             _configDict.Clear();
             _configKeyDict.Clear();
         }
 
-        internal async Task CloseAsync(string key)
+        private async Task CloseAsync(string key)
         {
             if (_configKeyDict.TryGetValue(key, out var config))
             {

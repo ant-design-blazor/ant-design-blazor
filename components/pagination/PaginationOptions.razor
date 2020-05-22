@@ -1,0 +1,25 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+@*<nz-select
+    class="ant-pagination-options-size-changer"
+    *ngIf="showSizeChanger"
+    [nzDisabled]="disabled"
+    [nzSize]="nzSize"
+    [ngModel]="pageSize"
+    (ngModelChange)="onPageSizeChange($event)"
+>
+    <nz-option
+        *ngFor="let option of listOfPageSizeOption; trackBy: trackByOption"
+        [nzLabel]="option.label"
+        [nzValue]="option.value"
+    ></nz-option>
+</nz-select>*@
+@if (ShowQuickJumper)
+{
+    <div class="ant-pagination-options-quick-jumper">
+       跳转到第
+        <input disabled="@Disabled" @bind="_inputValue" @onkeyup="JumpToPageViaInput"/>
+       页
+    </div>
+}

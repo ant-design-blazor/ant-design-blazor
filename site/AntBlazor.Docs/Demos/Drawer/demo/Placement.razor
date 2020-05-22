@@ -1,0 +1,32 @@
+﻿<div>
+    <AntRadioGroup @bind-Value="placement">
+        <AntRadio Value="top">top</AntRadio>
+        <AntRadio Value="right">right</AntRadio>
+        <AntRadio Value="bottom">bottom</AntRadio>
+        <AntRadio Value="left">left</AntRadio>
+    </AntRadioGroup>
+
+    <AntButton Type="primary" @onclick="_ => open()">Open</AntButton>
+    <Drawer Closable="true" Visible="@visible" Placement="@placement" Title='("Drawer in different Placement")' OnClose="_ => close()">
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+    </Drawer>
+</div>  
+
+@code{
+
+    string placement = "right";
+
+    bool visible = false;
+
+    void open()
+    {
+        this.visible = true;
+    }
+
+    void close()
+    {
+        this.visible = false;
+    }
+}

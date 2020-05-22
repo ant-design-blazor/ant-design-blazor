@@ -1,0 +1,25 @@
+﻿@namespace AntBlazor.Internal
+@inherits OverlayTrigger
+
+@{
+    string prefixCls = $"{SubMenuComponent.RootMenu.PrefixCls}-submenu";
+}
+<li class="@TriggerClass"
+    role="menuitem"
+    style="position:relative;@SubMenuComponent.Style"
+    @key="SubMenuComponent.Key"
+    @ref="@Ref"
+    @onclick="OnClickDiv"
+    @onmouseenter="OnTriggerMouseEnter"
+    @onmouseleave="OnTriggerMouseLeave"
+    @oncontextmenu="OnTriggerContextmenu"
+    @oncontextmenu:preventDefault>
+    @ChildContent
+</li>
+
+<CascadingValue Value="this" Name="Trigger">
+    <Overlay @ref="_overlay"
+             OverlayChildPrefixCls="@($"{prefixCls}-menu")"
+             OnOverlayMouseEnter="OnOverlayMouseEnter"
+             OnOverlayMouseLeave="OnOverlayMouseLeave" />
+</CascadingValue>

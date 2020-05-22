@@ -1,0 +1,64 @@
+﻿<div>
+    <AntSwitch OnChange=changeMode /> Change Mode
+    <div class="ant-divider ant-divider-vertical" role="separator"></div>
+    <AntSwitch OnChange=changeTheme/> Change Style
+    <br />
+    <br />
+    <Menu Style=" width: 256px ;"
+          DefaultSelectedKeys=@(new[]{"1"})
+          DefaultOpenKeys=@(new[]{"sub1"})
+          Mode=this.mode
+          Theme=this.theme>
+        <MenuItem Key="1">
+            <AntIcon Type="mail" Theme="outline"></AntIcon>
+            Navigation One
+        </MenuItem>
+        <MenuItem Key="2">
+            <AntIcon Type="calendar" Theme="outline"></AntIcon>
+            Navigation Two
+        </MenuItem>
+        <SubMenu Key="sub1" Title=sub1Title>
+            <MenuItem Key="3">Option 3</MenuItem>
+            <MenuItem Key="4">Option 4</MenuItem>
+            <SubMenu Key="sub1-2" Title=@("Submenu")>
+                <MenuItem Key="5">Option 5</MenuItem>
+                <MenuItem Key="6">Option 6</MenuItem>
+            </SubMenu>
+        </SubMenu>
+        <SubMenu Key="sub2" Title=sub2Title>
+            <MenuItem Key="7">Option 7</MenuItem>
+            <MenuItem Key="8">Option 8</MenuItem>
+            <MenuItem Key="9">Option 9</MenuItem>
+            <MenuItem Key="10">Option 10</MenuItem>
+        </SubMenu>
+    </Menu>
+</div>
+
+@code {
+
+    RenderFragment sub1Title =
+        @<span>
+            <AntIcon Type="appstore" Theme="outline"></AntIcon>
+            <span>Navigation Three</span>
+        </span>;
+
+    RenderFragment sub2Title =
+        @<span>
+            <AntIcon Type="setting" Theme="outline"></AntIcon>
+            <span>Navigation Four</span>
+        </span>;
+
+    MenuMode mode = MenuMode.Inline;
+    MenuTheme theme = MenuTheme.Light;
+
+    void changeMode(bool value)
+    {
+        this.mode = value ? MenuMode.Vertical : MenuMode.Inline;
+    }
+
+    void changeTheme(bool value)
+    {
+        this.theme = value ? MenuTheme.Dark : MenuTheme.Light;
+    }
+
+}

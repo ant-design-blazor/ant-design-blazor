@@ -44,7 +44,7 @@
           {
             "title": "Layout",
             "type": "menuItem",
-            "url": "layout"
+            "url": "components/layout"
           },
           {
             "title": "Space",
@@ -70,12 +70,17 @@
           {
             "title": "Menu",
             "type": "menuItem",
-            "url": "menu"
+            "url": "components/menu"
+          },
+          {
+            "title": "Pagination",
+            "type": "menuItem",
+            "url": "components/pagination"
           },
           {
             "title": "Dropdown",
             "type": "menuItem",
-            "url": "dropdown"
+            "url": "components/dropdown"
           },
           {
             "title": "Steps",
@@ -101,17 +106,17 @@
           {
             "title": "DatePicker",
             "type": "menuItem",
-            "url": "datePicker"
+            "url": "components/datePicker"
           },
           {
             "title": "TimePicker",
             "type": "menuItem",
-            "url": "timePicker"
+            "url": "components/timePicker"
           },
           {
             "title": "Input",
             "type": "menuItem",
-            "url": "input"
+            "url": "components/input"
           },
           {
             "title": "InputNumber",
@@ -162,7 +167,12 @@
           {
             "title": "List",
             "type": "menuItem",
-            "url": "list"
+            "url": "components/list"
+          },
+          {
+            "title": "Tooltip",
+            "type": "menuItem",
+            "url": "components/tooltip"
           },
           {
             "title": "Tag",
@@ -193,12 +203,22 @@
           {
             "title": "Drawer",
             "type": "menuItem",
-            "url": "drawer"
+            "url": "components/drawer"
+          },
+          {
+            "title": "Message",
+            "type": "menuItem",
+            "url": "components/message"
           },
           {
             "title": "Notification",
             "type": "menuItem",
-            "url": "components/notification"
+            "url": "notification"
+          },
+          {
+            "title": "Progress",
+            "type": "menuItem",
+            "url": "components/progress"
           },
           {
             "title": "Result",

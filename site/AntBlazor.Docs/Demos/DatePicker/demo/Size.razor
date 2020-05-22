@@ -1,0 +1,17 @@
+﻿<AntRadioGroup @bind-Value="@datePickerSize">
+    <AntRadio RadioButton Value="@DatePickerSize.Large">Large</AntRadio>
+    <AntRadio RadioButton Value="@DatePickerSize.Default">Default</AntRadio>
+    <AntRadio RadioButton Value="@DatePickerSize.Small">Small</AntRadio>
+</AntRadioGroup>
+<br />
+<DatePicker Size="@datePickerSize" />
+<br />
+<DatePicker Picker="@DatePickerType.Month" Size="@datePickerSize" />
+<br />
+<RangePicker Size="@datePickerSize" />
+<br />
+<DatePicker Picker="@DatePickerType.Week" Size="@datePickerSize" />
+
+@code {
+    private string datePickerSize = DatePickerSize.Default;
+}

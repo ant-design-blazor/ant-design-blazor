@@ -1,0 +1,52 @@
+﻿<div class="demo">
+    <div style="margin-left: @($"{ButtonWidth}px"); white-space: nowrap;">
+        <Tooltip Placement="@PlacementType.TopLeft" Title="Text">
+            <AntButton>TL</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.Top" Title="Text">
+            <AntButton>Top</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.TopRight" Title="Text">
+            <AntButton>TR</AntButton>
+        </Tooltip>
+    </div>
+    <div style="width: @($"{ButtonWidth}px"); float: left;">
+        <Tooltip Placement="@PlacementType.LeftTop" Title="Text">
+            <AntButton>LT</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.Left" Title="Text">
+            <AntButton>Left</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.LeftBottom" Title="Text">
+            <AntButton>LB</AntButton>
+        </Tooltip>
+    </div>
+    <div style="width: @($"{ButtonWidth}px"); margin-left: @($"{ButtonWidth * 4 + 24}px");">
+        <Tooltip Placement="@PlacementType.RightTop" Title="Text">
+            <AntButton>RT</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.Right" Title="Text">
+            <AntButton>Right</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.RightBottom" Title="Text">
+            <AntButton>RB</AntButton>
+        </Tooltip>
+    </div>
+    <div style="margin-left: @($"{ButtonWidth}px"); clear: both; white-space: nowrap;">
+        <Tooltip Placement="@PlacementType.BottomLeft" Title="Text">
+            <AntButton>BL</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.Bottom" Title="Text">
+            <AntButton>Bottom</AntButton>
+        </Tooltip>
+        <Tooltip Placement="@PlacementType.BottomRight" Title="Text">
+            <AntButton>BR</AntButton>
+        </Tooltip>
+    </div>
+</div>
+
+@code
+{
+    public string Text = "prompt text";
+    const int ButtonWidth = 70;
+}

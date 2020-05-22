@@ -1,0 +1,32 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this">
+    <ul class="@ClassMapper.Class" style="@Style" @ref="Ref" id="@Id">
+        @if (Simple)
+            {
+                <PaginationSimple
+                    Disabled="Disabled"
+                    PageSize="PageSize"
+                    Total="Total"
+                    PageIndex="PageIndex"
+                    PageIndexChange="OnPageIndexChange"
+                />
+            }
+            else
+            {
+                <PaginationDefault
+                    Size="@Size"
+                    Disabled="Disabled"
+                    ShowSizeChanger="ShowSizeChanger"
+                    ShowQuickJumper="ShowQuickJumper"
+                    Total="Total"
+                    PageIndex="PageIndex"
+                    PageSize="PageSize"
+                    PageSizeOptions="PageSizeOptions"
+                    PageIndexChange="OnPageIndexChange"
+                    PageSizeChange="OnPageSizeChange"
+                />
+            }
+    </ul>
+</CascadingValue>

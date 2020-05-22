@@ -31,7 +31,6 @@
         <AntButton Type="@AntButtonType.Primary">Primary</AntButton>
         <AntButton>Default</AntButton>
         <AntButton Type="@AntButtonType.Dashed">Dashed</AntButton>
-        <AntButton Type="@AntButtonType.Danger">Danger</AntButton>
         <AntButton Type="@AntButtonType.Link">Link</AntButton>
     </Demo>
 </DemoCard>
@@ -63,13 +62,13 @@
     </Description>
     <Demo>
         <div>
-            <AntButton Size="@AntButtonSize.Small" Type="@(size.Equals(AntButtonSize.Small) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> Onclick(AntButtonSize.Small))">
+            <AntButton Size="@AntButtonSize.Small" Type="@(size.Equals(AntButtonSize.Small) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Small))">
                 Small
             </AntButton>
-            <AntButton Type="@(size.Equals(AntButtonSize.Default) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> Onclick(AntButtonSize.Default))">
+            <AntButton Type="@(size.Equals(AntButtonSize.Default) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Default))">
                 Default
             </AntButton>
-            <AntButton Size="@AntButtonSize.Large" Type="@(size.Equals(AntButtonSize.Large) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> Onclick(AntButtonSize.Large))">
+            <AntButton Size="@AntButtonSize.Large" Type="@(size.Equals(AntButtonSize.Large) ? AntButtonType.Primary : AntButtonType.Default)" @onclick="@(()=> OnClick(AntButtonSize.Large))">
                 Large
             </AntButton>
         </div>
@@ -78,7 +77,6 @@
             <AntButton Size="@size"> Default </AntButton>
             <AntButton Size="@size" Type="@AntButtonType.Primary">Primary</AntButton>
             <AntButton Size="@size" Type="@AntButtonType.Dashed">Dashed</AntButton>
-            <AntButton Size="@size" Type="@AntButtonType.Danger">Danger</AntButton>
             <AntButton Size="@size" Type="@AntButtonType.Link">Link</AntButton>
         </div>
     </Demo>
@@ -86,7 +84,7 @@
 
 @code {
     string size = AntButtonSize.Default;
-    void Onclick(string s)
+    void OnClick(string s)
     {
         size = s;
     }
@@ -104,13 +102,13 @@
             Loading
         </AntButton>
         <br />
-        <AntButton Type="primary" Loading=@(Loading) Onclick="(_)=> enterLoading()">
+        <AntButton Type="primary" Loading=@(Loading) OnClick="(_)=> enterLoading()">
             Click me!
         </AntButton>
         <AntButton Type="primary"
                    Icon="poweroff"
                    Loading="IconLoading"
-                   Onclick="()=>enterIconLoading()">
+                   OnClick="()=>enterIconLoading()">
             Click me!
         </AntButton>
         <br />

@@ -1,0 +1,23 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class"
+     style="display: inline-flex; @Style"
+     id="@Id"
+     @ref="@Ref"
+     @onclick="OnClickDiv"
+     @onmouseenter="OnTriggerMouseEnter"
+     @onmouseleave="OnTriggerMouseLeave"
+     @oncontextmenu="OnTriggerContextmenu"
+     @onfocusin="OnTriggerFocusIn"
+     @onfocusout="OnTriggerFocusOut"
+     @oncontextmenu:preventDefault>
+    @ChildContent
+</div>
+
+<CascadingValue Value="this" Name="Trigger">
+    <Overlay @ref="_overlay"
+             OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
+             OnOverlayMouseEnter="OnOverlayMouseEnter"
+             OnOverlayMouseLeave="OnOverlayMouseLeave" />
+</CascadingValue>
