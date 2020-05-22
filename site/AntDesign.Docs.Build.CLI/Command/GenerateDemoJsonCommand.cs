@@ -52,7 +52,7 @@ namespace AntDesign.Docs.Build.CLI.Command
         private void GenerateFiles(string demoDirectory, string output)
         {
             DirectoryInfo demoDirectoryInfo = new DirectoryInfo(demoDirectory);
-            if (demoDirectoryInfo.Attributes != FileAttributes.Directory)
+            if ((demoDirectoryInfo.Attributes & FileAttributes.Directory) == 0)
             {
                 Console.WriteLine("{0} is not a directory", demoDirectory);
                 return;
