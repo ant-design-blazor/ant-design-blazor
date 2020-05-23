@@ -15,7 +15,8 @@ Radio
 
 ## API
 
--Radio/Radio.Button
+Radio/Radio.Button
+
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
 | AutoFocus | get focus when component mounted                               | boolean        | -         |
@@ -24,7 +25,8 @@ Radio
 | Disabled |		Disable radio        | string        | -         |
 | Value              | 	According to value for comparison, to determine whether the selected        | string        | -        |
 
--RadioGroup
+RadioGroup
+
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
 | ButtonStyle            | style type of radio button          | `outline`,`solid`         |-       |

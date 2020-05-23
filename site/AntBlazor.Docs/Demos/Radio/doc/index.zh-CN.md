@@ -15,7 +15,8 @@ subtitle: 单选框
 
 
 ## API
--Radio/Radio.Button
+Radio/Radio.Button
+
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | AutoFocus | 自动获取焦点                               | boolean        | -         |
@@ -24,7 +25,8 @@ subtitle: 单选框
 | Disabled |	禁用 Radio        | string        | -         |
 | Value              | 根据 value 进行比较，判断是否选中        | string        | -        |
 
--RadioGroup
+RadioGroup
+
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | ButtonStyle            | RadioButton 的风格样式，目前有描边和填色两种风格          | `outline`,`solid`         |-       |
