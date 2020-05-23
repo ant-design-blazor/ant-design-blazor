@@ -162,7 +162,7 @@
           {
             "title": "Empty",
             "type": "menuItem",
-            "url": "empty"
+            "url": "components/empty"
           },
           {
             "title": "List",
