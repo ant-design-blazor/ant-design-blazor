@@ -1,0 +1,16 @@
+﻿<div>
+    <AntSlider DefaultValue="30" Value="@value" TipFormatter="tipFormatter"  />
+</div>
+
+@code{
+
+    private int value { get; set; }
+
+    string tipFormatter()
+    {
+        return $"{value}%";
+    }
+}
+
+
+

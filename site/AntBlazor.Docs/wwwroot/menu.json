@@ -131,7 +131,7 @@
           {
             "title": "Slider",
             "type": "menuItem",
-            "url": "slider"
+            "url": "components/slider"
           }
         ]
       },
