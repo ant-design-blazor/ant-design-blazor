@@ -1,0 +1,30 @@
+@using System.Text.RegularExpressions
+<div>
+    <AntBlazor.InputNumber Formatter="Format1" Parser="Parse1" DefaultValue="1000"></AntBlazor.InputNumber>
+    <AntBlazor.InputNumber Formatter="Format2" Parser="Parse2" DefaultValue="100" Min="0" Max="100"></AntBlazor.InputNumber>
+</div>
+
+
+@code{
+    private string Format1(double value)
+    {
+        return "$ " + value.ToString("n0");
+    }
+
+    private double Parse1(string value)
+    {
+        double val = double.Parse(Regex.Replace(value, @"\$\s?|(,*)", ""));
+
+        return val;
+    }
+
+    private string Format2(double value)
+    {
+        return value.ToString() + "%";
+    }
+
+    private double Parse2(string value)
+    {
+        return double.Parse(value.Replace("%", ""));
+    }
+}		

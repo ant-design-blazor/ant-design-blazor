@@ -96,7 +96,7 @@
           {
             "title": "Checkbox",
             "type": "menuItem",
-            "url": "checkbox"
+            "url": "components/checkbox"
           },
           {
             "title": "Switch",
@@ -121,12 +121,12 @@
           {
             "title": "InputNumber",
             "type": "menuItem",
-            "url": "inputnumber"
+            "url": "components/inputnumber"
           },
           {
             "title": "Radio",
             "type": "menuItem",
-            "url": "radio"
+            "url": "components/radio"
           },
           {
             "title": "Slider",

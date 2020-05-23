@@ -1,0 +1,20 @@
+  <div>
+    <AntCheckbox Checked="@isChecked" Disabled="@disabled" CheckedChange="@ToggleChecked">
+                @($"{(isChecked ? "Check" : "Uncheck")}-{(disabled ? "Disable" : "Enable")}")
+    </AntCheckbox>
+  </div>
+  
+  @code{
+    bool isChecked = true;
+    bool disabled = false;
+    void ToggleChecked()
+    {
+        isChecked = !isChecked;
+    }
+    void ToggleDisable()
+    {
+        disabled = !disabled;
+    }
+}
+
+  
