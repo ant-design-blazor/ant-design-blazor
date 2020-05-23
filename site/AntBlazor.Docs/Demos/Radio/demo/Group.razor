@@ -1,0 +1,17 @@
+<div>
+    <AntRadioGroup @bind-Value="@_value" >
+        <AntRadio Value="1">A</AntRadio>
+        <AntRadio Value="2">B</AntRadio>
+        <AntRadio Value="3">C</AntRadio>
+        <AntRadio Value="4">D</AntRadio>
+    </AntRadioGroup>
+</div>
+@code
+    {
+    void onChange(string value)
+    {
+
+    }
+
+    string _value = "1";
+}
