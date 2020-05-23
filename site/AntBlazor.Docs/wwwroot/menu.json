@@ -101,7 +101,7 @@
           {
             "title": "Switch",
             "type": "menuItem",
-            "url": "switch"
+            "url": "components/switch"
           },
           {
             "title": "DatePicker",

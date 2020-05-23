@@ -1,0 +1,21 @@
+﻿<div>
+    <AntSwitch Checked="switchValue2" Disabled="isDisabled2"></AntSwitch>
+    <br />
+    <br />
+    <AntButton Type="primary" @onclick="(_)=>isDisabled2 = !isDisabled2">Toggle disabled</AntButton>
+</div>
+
+
+@code{
+    bool switchValue = false;
+
+    bool switchValue2 = false;
+    bool isDisabled2 = true;
+
+    RenderFragment checkedChildren =@<AntIcon Type="check"></AntIcon>;
+
+    RenderFragment unCheckedChildren = @<AntIcon Type="close"></AntIcon>;
+
+}
+
+
