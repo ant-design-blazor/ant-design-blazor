@@ -25,7 +25,7 @@
                     <AntSlider Min="1" Max="20" DefaultValue="@_inputValue1" />
                 </AntCol>
                 <AntCol Span="4">
-                    <AntInputNumber Min="1" Max="20" Style="margin:0 16px;" Value="@_inputValue1" ValueChanged="(e)=>UpdateValue1(e)" />
+                    <AntBlazor.InputNumber Min="1" Max="20" Style="margin:0 16px;" Value="@_inputValue1" ValueChanged="(e)=>UpdateValue1(e)" />
                 </AntCol>
             </AntRow>
             <AntRow>
@@ -33,7 +33,7 @@
                     <AntSlider Min="0" Max="1" Step="0.01" DefaultValue="@_inputValue2" />
                 </AntCol>
                 <AntCol Span="4">
-                    <AntInputNumber Min="0" Max="1" Step="0.01" Style="margin:0 16px;" Value="@_inputValue2" ValueChanged="(e)=>UpdateValue2(e)" />
+                    <AntBlazor.InputNumber Min="0" Max="1" Step="0.01" Style="margin:0 16px;" Value="@_inputValue2" ValueChanged="(e)=>UpdateValue2(e)" />
                 </AntCol>
             </AntRow>
         </div>

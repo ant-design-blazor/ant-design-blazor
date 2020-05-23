@@ -126,7 +126,7 @@
           {
             "title": "Radio",
             "type": "menuItem",
-            "url": "radio"
+            "url": "components/radio"
           },
           {
             "title": "Slider",
