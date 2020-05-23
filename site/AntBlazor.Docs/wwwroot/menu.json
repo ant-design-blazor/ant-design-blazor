@@ -121,7 +121,7 @@
           {
             "title": "InputNumber",
             "type": "menuItem",
-            "url": "inputnumber"
+            "url": "components/inputnumber"
           },
           {
             "title": "Radio",

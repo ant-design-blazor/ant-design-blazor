@@ -1,0 +1,16 @@
+<div>
+<AntInputNumber DefaultValue="3" Disabled="@disabled"></AntInputNumber>
+ <div style="margin: 20px 0px 20px 0px;">
+                <AntButton Type="@AntButtonType.Primary" OnClick="(e)=> ToggleDisable()">Toggle disabled</AntButton>
+
+</div>
+   </div>
+
+@code{
+    private bool disabled = true;
+
+    private void ToggleDisable()
+    {
+        disabled = !disabled;
+    }
+}		
