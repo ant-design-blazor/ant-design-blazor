@@ -1,6 +1,6 @@
 ---
 category: Components
-type: DataEntry
+type: Data Entry
 title: Input
 ---
 
