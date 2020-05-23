@@ -1,10 +1,10 @@
-using AntBlazor.Internal;
+﻿using AntBlazor.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntBlazor
 {
-    public sealed partial class AntColumn
+    public sealed partial class Column
     {
         internal struct IsRenderingHeadWrapper
         {
@@ -14,7 +14,7 @@ namespace AntBlazor
         }
 
         [CascadingParameter]
-        internal IAntTable Target { get; set; }
+        internal ITable Target { get; set; }
 
         [CascadingParameter]
         internal IsRenderingHeadWrapper IsRenderingHead { get; set; }

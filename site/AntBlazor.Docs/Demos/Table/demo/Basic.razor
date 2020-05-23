@@ -1,0 +1,99 @@
+﻿<Table DataSource=@data Columns="@Columns"/>
+
+@code{
+
+    public class Data
+    {
+        public string Key { get; set; }
+
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Address { get; set; }
+
+        public string[] Tags { get; set; }
+    }
+
+    ColumnType[] Columns { get; } = {
+
+        new ColumnType<string>
+        {
+            Title = "Name",
+            DataIndex = "name",
+            Key = "name",
+            Render = text => @<a>@text</a>,
+        },
+        new ColumnType
+        {
+            Title = "Age",
+            DataIndex = "age",
+            Key = "age",
+        },
+        new ColumnType
+        {
+            Title = "Address",
+            DataIndex = "address",
+            Key = "address",
+        },
+        new ColumnType<string[]>
+        {
+            Title = "Tags",
+            DataIndex = "tags",
+            Key = "tags",
+            Render = ctx =>
+                @<span>
+                    @foreach (var tag in ctx.Value)
+                    {
+                        var color = tag.Length > 5 ? "geekblue" : "green";
+                        if (tag == "loser")
+                        {
+                            color = "volcano";
+                        }
+                        <AntTag Color=@color Key="@tag">
+                            @tag.ToUpper();
+                        </AntTag>
+                    }
+                </span>,
+        },
+        new ColumnType<string, Data>
+        {
+            Title = "Action",
+            Key = "action",
+            Render = ctx =>
+                @<span>
+                    <a style="margin-right: 16px">Invite @ctx.Record.Name}</a>
+                    <a>Delete</a>
+                </span>,
+        },
+    };
+
+    Data[] data =
+    {
+        new Data()
+        {
+            Key = "1",
+            Name = "John Brown",
+            Age = 32,
+            Address = "New York No. 1 Lake Park",
+            Tags = new[] {"nice", "developer"}
+        },
+        new Data()
+        {
+            Key = "1",
+            Name = "Jim Green",
+            Age = 42,
+            Address = "London No. 1 Lake Park",
+            Tags = new[] { "loser"}
+        },
+        new Data()
+        {
+            Key = "1",
+            Name = "Joe Black",
+            Age = 32,
+            Address = "Sidney No. 1 Lake Park",
+            Tags = new[] { "cool", "teacher" }
+        }
+    };
+
+}

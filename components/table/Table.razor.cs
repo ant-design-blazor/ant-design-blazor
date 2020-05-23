@@ -1,15 +1,16 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AntBlazor.Internal;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntBlazor
 {
-    public sealed partial class AntTable<TData> : IAntTable
+    public sealed partial class Table<TData> : ITable
     {
         [Parameter]
         public IList<TData> DataSource { get; set; }
+
+        [Parameter]
+        public IList<ColumnType> Columns { get; set; }
 
         [Parameter]
         public RenderFragment<TData> ChildContent { get; set; }

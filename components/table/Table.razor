@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @typeparam TData
 
-<CascadingValue Value="@this" TValue="Internal.IAntTable">
+<CascadingValue Value="@this" TValue="Internal.ITable">
     <div class="ant-table">
         <div class="ant-table-container">
             <div class="ant-table-content">
@@ -10,7 +10,7 @@
                     <colgroup></colgroup>
                     <thead class="ant-table-thead">
                         <tr>
-                            <CascadingValue Value="@(new AntColumn.IsRenderingHeadWrapper(true))">
+                            <CascadingValue Value="@(new Column.IsRenderingHeadWrapper(true))">
                                 @ChildContent(default)
                             </CascadingValue>
                         </tr>

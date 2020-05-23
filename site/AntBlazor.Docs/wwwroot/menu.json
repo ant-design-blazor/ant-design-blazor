@@ -197,7 +197,7 @@
           {
             "title": "Table",
             "type": "menuItem",
-            "url": "table"
+            "url": "components/table"
           }
         ]
       },
