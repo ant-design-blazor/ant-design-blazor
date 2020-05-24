@@ -1,0 +1,60 @@
+﻿<div>
+    <Transfer DataSource="dataSource"
+              Disabled="Disabled"
+              TargetKeys="targetKeys.ToArray()"
+              SelectedKeys="selectedKeys"
+              Titles="titles"
+              OnChange="OnChange"
+              OnScroll="OnScroll"
+              OnSelectChange="OnSelectChange"></Transfer>
+
+    <AntSwitch OnChange="OnSwitchChange"></AntSwitch>
+</div>
+
+@code {
+    private List<TransferItem> dataSource = new List<TransferItem>();
+    private List<string> targetKeys = new List<string>();
+    private string[] selectedKeys = { "1", "5", "12", "13" };
+    private string[] titles = { "Source", "Target" };
+    private bool Disabled = false;
+
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            dataSource.Add(new TransferItem { Title = $"Content{i}", Description = $"Content{i}-Description", Key = i.ToString(), Disabled = false });
+            if (i > 10)
+                targetKeys.Add(i.ToString());
+        }
+        base.OnInitialized();
+    }
+
+    private void OnSwitchChange(bool check)
+    {
+        Disabled = check;
+    }
+
+    private OneOf.OneOf<string, RenderFragment> Render(TransferItem item)
+    {
+        //return new RenderFragment(buildTree);
+        return $"{item.Title} - {item.Description}";
+    }
+
+    private void OnChange(TransferChangeArgs e)
+    {
+        Console.WriteLine(e.Direction);
+        Console.WriteLine($"MoveKeys:{string.Join(',', e.MoveKeys)}");
+        Console.WriteLine($"TargetKeys:{string.Join(',', e.TargetKeys)}");
+    }
+
+    private void OnScroll(TransferScrollArgs e)
+    {
+        Console.WriteLine(e.Direction);
+    }
+
+    private void OnSelectChange(TransferSelectChangeArgs e)
+    {
+        Console.WriteLine($"SourceSelectedKeys:{string.Join(',', e.SourceSelectedKeys)}");
+        Console.WriteLine($"TargetSelectedKeys:{string.Join(',', e.TargetSelectedKeys)}");
+    }
+}
