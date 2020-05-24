@@ -1,0 +1,16 @@
+﻿@namespace AntBlazor
+@inherits MessageBase
+
+@if (_configs.Count > 0)
+{
+    <div>
+        <div class="ant-message" style="top: @(_top)px;">
+            <span>
+                @foreach (var config in _configs)
+                {
+                    <MessageItem @key="config" Config="config"></MessageItem>
+                }
+            </span>
+        </div>
+    </div>
+}

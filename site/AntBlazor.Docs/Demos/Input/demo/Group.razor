@@ -1,0 +1,34 @@
+﻿<div>
+    <InputGroup Size="@InputSize.Large">
+        <AntRow Gutter="8">
+            <AntCol Span="5">
+                <Input DefaultValue="0571" />
+            </AntCol>
+            <AntCol Span="8">
+                <Input DefaultValue="26888888" />
+            </AntCol>
+        </AntRow>
+    </InputGroup>
+
+    <br />
+    <br />
+    <InputGroup Compact>
+        <Input DefaultValue="0571" Style="width: 20%;" />
+        <Input DefaultValue="26888888" Style="width: 30%;" />
+    </InputGroup>
+
+    <br />
+    <br />
+    <InputGroup Compact>
+        <Input DefaultValue="0571" Style="width: 20%;" />
+        <AntBlazor.Search DefaultValue="26888888" Style="width: 30%;" />
+    </InputGroup>
+
+    <br />
+    <br />
+
+    <InputGroup Compact>
+        <Input DefaultValue="0571" Style="width: 20%;" />
+        <DatePicker Size="@DatePickerSize.Small" Style="width: 100%"></DatePicker>
+    </InputGroup>
+</div>

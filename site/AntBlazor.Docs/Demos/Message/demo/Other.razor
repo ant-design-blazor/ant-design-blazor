@@ -1,0 +1,37 @@
+﻿@inject MessageService _message
+
+<Space>
+    <SpaceItem>
+        <AntButton Type="default" OnClick="Success">
+            Success
+        </AntButton>
+    </SpaceItem>
+    <SpaceItem>
+        <AntButton Type="default" OnClick="Error">
+            Error
+        </AntButton>
+    </SpaceItem>
+    <SpaceItem>
+        <AntButton Type="default" OnClick="Warning">
+            Warning
+        </AntButton>
+    </SpaceItem>
+</Space>
+
+@code{
+    private async Task Success()
+    {
+        await _message.Success("This is a success message");
+    }
+
+    private async Task Error()
+    {
+        await _message.Error("This is an error message");
+
+    }
+
+    private async Task Warning()
+    {
+        await _message.Warning("This is a warning message");
+    }
+}

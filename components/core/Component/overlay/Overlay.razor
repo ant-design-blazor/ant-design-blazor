@@ -3,27 +3,24 @@
 
 @if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender)
 {
-    string display = _isOverlayShow ? "" : "visibility: hidden;";
-    string overlayCls;
-
-    if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
-    {
-        overlayCls = Trigger.GetOverlayHiddenClass();
-        display = "";
-    }
-    else
-    {
-        overlayCls = _overlayCls;
-    }
+    string display = GetDisplayStyle();
+    string overlayCls = GetOverlayCls();
 
     <div class="@(Trigger.PrefixCls) @(Trigger.OverlayClassName) @(Trigger.GetPlacementClass()) @overlayCls"
-         style="width: fit-content; position: absolute; @display @Trigger.OverlayStyle @_dropdownStyle"
+         style="position: absolute; @display @Trigger.OverlayStyle @_overlayStyle"
          @ref="Ref"
          @onmouseenter="OnOverlayMouseEnter"
          @onmouseleave="OnOverlayMouseLeave">
         <CascadingValue Value="Trigger" Name="ParentTrigger">
             <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
-                @Trigger.Overlay
+                @if (ChildContent != null)
+                {
+                    @ChildContent
+                }
+                else
+                {
+                    @Trigger.Overlay
+                }
             </CascadingValue>
         </CascadingValue>
     </div>

@@ -1,0 +1,13 @@
+﻿@namespace AntBlazor
+@inherits Input
+<!--TODO: minheight, maxheight, onResize-->
+
+<textarea class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id" placeholder="@Placeholder" @bind="Value"
+          @ref="InputEl"
+          @oninput="OnInputAsync"
+          @onkeypress="OnPressEnterAsync" />
+
+@if (AutoSize)
+{
+    <textarea class="@ClassMapper.Class" style="position:absolute;z-index:-1; visibility: hidden;height: 0px;overflow-y:hidden; @_hiddenWidth" @ref="_hiddenEle">@Value</textarea>
+}

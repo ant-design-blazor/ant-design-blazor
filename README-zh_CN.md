@@ -41,7 +41,7 @@ WebAssembly 静态托管页面示例
 ## 🖥 支持环境
 
 - .NET Core 3.1。
-- Blazor WebAssembly 3.2 RC 1。
+- Blazor WebAssembly 3.2 正式版。
 - 支持服务端双向绑定。
 - 支持 WebAssembly 静态文件部署。
 - 主流 4 款现代浏览器，以及 Internet Explorer 11+（限 [Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1)）。
@@ -64,12 +64,7 @@ WebAssembly 静态托管页面示例
 
 ## 📦 安装
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
-- 安装 Blazor WebAssembly 模板
-
-  ```bash
-  $ dotnet new -i Microsoft.AspNetCore.Components.WebAssembly.Templates::3.2.0-rc1.20223.4
-  ```
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300   以上版本
 
 - 创建 Blazor WebAssembly 项目
 
@@ -111,7 +106,7 @@ WebAssembly 静态托管页面示例
 
 ## ⌨️ 本地开发
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.201 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
 
@@ -124,7 +119,7 @@ WebAssembly 静态托管页面示例
 
 - 打开浏览器访问 https://localhost:5001 ，详情参考[本地开发文档](https://github.com/ant-design-blazor/ant-design-blazor/wiki)。
 
-  > 推荐使用 Visual Studio 2019 开发，目前需运行 `AntBlazor.Docs.Server` 项目才能进行断点调试。
+  > 推荐使用 Visual Studio 2019 开发。
 
 ## 🔗 链接
 
@@ -161,7 +156,7 @@ WebAssembly 静态托管页面示例
 
 如果您在使用的过程中碰到问题，可以通过以下途径寻求帮助，同时我们也鼓励资深用户通过下面的途径给新人提供帮助。
 
-- [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/antblazor/shared_invite/zt-cw1enker-xVw3s93cTf4uhY2lRGRyRw) (中文/英文)
+- [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/antblazor/shared_invite/zt-etfaf1ww-AEHRU41B5YYKij7SlHqajA) (中文/英文)
 - [![钉钉群](https://img.shields.io/badge/钉钉-AntBlazor-blue.svg?style=flat-square&logo=data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pg0KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGNsYXNzPSJpY29uIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiBmaWxsPSIjZmZmZmZmIj4NCiAgPHBhdGggZD0iTTU3My43IDI1Mi41QzQyMi41IDE5Ny40IDIwMS4zIDk2LjcgMjAxLjMgOTYuN2MtMTUuNy00LjEtMTcuOSAxMS4xLTE3LjkgMTEuMS01IDYxLjEgMzMuNiAxNjAuNSA1My42IDE4Mi44IDE5LjkgMjIuMyAzMTkuMSAxMTMuNyAzMTkuMSAxMTMuN1MzMjYgMzU3LjkgMjcwLjUgMzQxLjljLTU1LjYtMTYtMzcuOSAxNy44LTM3LjkgMTcuOCAxMS40IDYxLjcgNjQuOSAxMzEuOCAxMDcuMiAxMzguNCA0Mi4yIDYuNiAyMjAuMSA0IDIyMC4xIDRzLTM1LjUgNC4xLTkzLjIgMTEuOWMtNDIuNyA1LjgtOTcgMTIuNS0xMTEuMSAxNy44LTMzLjEgMTIuNSAyNCA2Mi42IDI0IDYyLjYgODQuNyA3Ni44IDEyOS43IDUwLjUgMTI5LjcgNTAuNSAzMy4zLTEwLjcgNjEuNC0xOC41IDg1LjItMjQuMkw1NjUgNzQzLjFoODQuNkw2MDMgOTI4bDIwNS4zLTI3MS45SDcwMC44bDIyLjMtMzguN2MuMy41LjQuOC40LjhTNzk5LjggNDk2LjEgODI5IDQzMy44bC42LTFoLS4xYzUtMTAuOCA4LjYtMTkuNyAxMC0yNS44IDE3LTcxLjMtMTE0LjUtOTkuNC0yNjUuOC0xNTQuNXoiLz4NCjwvc3ZnPg0K)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) (中文)
 
 <details>

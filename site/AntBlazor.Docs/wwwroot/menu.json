@@ -44,7 +44,7 @@
           {
             "title": "Layout",
             "type": "menuItem",
-            "url": "layout"
+            "url": "components/layout"
           },
           {
             "title": "Space",
@@ -73,6 +73,11 @@
             "url": "components/menu"
           },
           {
+            "title": "Pagination",
+            "type": "menuItem",
+            "url": "components/pagination"
+          },
+          {
             "title": "Dropdown",
             "type": "menuItem",
             "url": "components/dropdown"
@@ -91,42 +96,42 @@
           {
             "title": "Checkbox",
             "type": "menuItem",
-            "url": "checkbox"
+            "url": "components/checkbox"
           },
           {
             "title": "Switch",
             "type": "menuItem",
-            "url": "switch"
+            "url": "components/switch"
           },
           {
             "title": "DatePicker",
             "type": "menuItem",
-            "url": "datePicker"
+            "url": "components/datePicker"
           },
           {
             "title": "TimePicker",
             "type": "menuItem",
-            "url": "timePicker"
+            "url": "components/timePicker"
           },
           {
             "title": "Input",
             "type": "menuItem",
-            "url": "input"
+            "url": "components/input"
           },
           {
             "title": "InputNumber",
             "type": "menuItem",
-            "url": "inputnumber"
+            "url": "components/inputnumber"
           },
           {
             "title": "Radio",
             "type": "menuItem",
-            "url": "radio"
+            "url": "components/radio"
           },
           {
             "title": "Slider",
             "type": "menuItem",
-            "url": "slider"
+            "url": "components/slider"
           }
         ]
       },
@@ -162,7 +167,12 @@
           {
             "title": "List",
             "type": "menuItem",
-            "url": "list"
+            "url": "components/list"
+          },
+          {
+            "title": "Tooltip",
+            "type": "menuItem",
+            "url": "components/tooltip"
           },
           {
             "title": "Tag",
@@ -196,9 +206,19 @@
             "url": "components/drawer"
           },
           {
+            "title": "Message",
+            "type": "menuItem",
+            "url": "components/message"
+          },
+          {
             "title": "Notification",
             "type": "menuItem",
-            "url": "components/notification"
+            "url": "notification"
+          },
+          {
+            "title": "Progress",
+            "type": "menuItem",
+            "url": "components/progress"
           },
           {
             "title": "Result",

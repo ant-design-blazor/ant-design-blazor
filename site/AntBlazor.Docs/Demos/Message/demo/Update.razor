@@ -1,0 +1,24 @@
+﻿@inject MessageService _message
+
+<AntButton Type="primary" OnClick="OnClick">
+    Display normal message
+</AntButton>
+
+@code{
+    private async Task OnClick()
+    {
+        string key = $"updatable-{DateTime.Now.Ticks}";
+        var config = new MessageConfig()
+        {
+            Content = "Loading...",
+            Key = key
+        };
+        _message.Loading(config);
+
+        await Task.Delay(2000);
+
+        config.Content = "Loaded";
+        config.Duration = 2;
+        await _message.Success(config);
+    }
+}

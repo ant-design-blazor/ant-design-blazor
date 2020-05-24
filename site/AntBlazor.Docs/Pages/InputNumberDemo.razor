@@ -1,0 +1,99 @@
+﻿@page "/inputnumber"
+
+@using System.Text.RegularExpressions
+
+<AntTitle Level="1">InputNumber</AntTitle>
+<AntText>Enter a number within certain range with the mouse or keyboard.</AntText>
+<AntTitle Level="2">When To Use</AntTitle>
+<AntParagraph>When a numeric value needs to be provided.</AntParagraph>
+<br />
+<h2>Examples</h2>
+<br />
+<DemoCard>
+    <Title>Basic usage</Title>
+    <Description>Basic usage example.</Description>
+    <Demo>
+        <AntBlazor.InputNumber></AntBlazor.InputNumber>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Sizes</Title>
+    <Description>There are three sizes available to a numeric input box. By default, the size is <code>32px</code>. The two additional sizes are <code>large</code> and <code>small</code> which means <code>40px</code> and <code>24px</code>, respectively.</Description>
+    <Demo>
+        <style>
+            .example-input > span {
+                width: 200px;
+                margin: 0 8px 8px 0;
+            }
+        </style>
+        <span class="example-input">
+            <AntBlazor.InputNumber DefaultValue="3" Size="@InputSize.Large"></AntBlazor.InputNumber>
+            <AntBlazor.InputNumber DefaultValue="3"></AntBlazor.InputNumber>
+            <AntBlazor.InputNumber DefaultValue="3" Size="@InputSize.Small"></AntBlazor.InputNumber>
+        </span>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Disabled</Title>
+    <Description>Click the button to toggle between available and disabled states.</Description>
+    <Demo>
+        <div>
+            <AntBlazor.InputNumber DefaultValue="3" Disabled="@disabled"></AntBlazor.InputNumber>
+            <div style="margin: 20px 0px 20px 0px;">
+                <AntButton Type="@AntButtonType.Primary" OnClick="(e)=> ToggleDisable()">Toggle disabled</AntButton>
+            </div>
+        </div>
+    </Demo>
+</DemoCard>
+
+@code{
+    private bool disabled = true;
+
+    private void ToggleDisable()
+    {
+        disabled = !disabled;
+    }
+}
+
+<DemoCard>
+    <Title>Decimals</Title>
+    <Description>A numeric-only input box whose values can be increased or decreased using a decimal step. The number of decimals (also known as precision) is determined by the step prop.</Description>
+    <Demo>
+        <AntBlazor.InputNumber Step="0.25" Min="-1" Max="5"></AntBlazor.InputNumber>
+    </Demo>
+</DemoCard>
+
+<DemoCard>
+    <Title>Formatter</Title>
+    <Description>Display value within it's situation with formatter.</Description>
+    <Demo>
+        <AntBlazor.InputNumber Formatter="Format1" Parser="Parse1" DefaultValue="1000"></AntBlazor.InputNumber>
+        <AntBlazor.InputNumber Formatter="Format2" Parser="Parse2" DefaultValue="100" Min="0" Max="100"></AntBlazor.InputNumber>
+    </Demo>
+</DemoCard>
+
+@code{
+    private string Format1(double value)
+    {
+        return "$ " + value.ToString("n0");
+    }
+
+    private double Parse1(string value)
+    {
+        double val = double.Parse(Regex.Replace(value, @"\$\s?|(,*)", ""));
+
+        return val;
+    }
+
+    private string Format2(double value)
+    {
+        return value.ToString() + "%";
+    }
+
+    private double Parse2(string value)
+    {
+        return double.Parse(value.Replace("%", ""));
+    }
+}

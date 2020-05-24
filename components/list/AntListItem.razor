@@ -1,24 +1,60 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" Id="@Id">
-    @if (Extra != null)
-    {
-        <div class="@_prefixName-item-extra-wrap">
-            <div class="@_prefixName-item-main">
-                {metaContent}
-                {content}
-                {actionsContent}
-            </div>
-            <div class="@_prefixName-item-extra">@Extra</div>
+@if (Grid == null)
+{
+    <li class="@ClassMapper.Class" style="@Style" Id="@Id">
+        @itemChildren(this)
+    </li>
+}
+else
+{
+    <AntCol Flex="1" Style="@ColStyle">
+        <div class="@ClassMapper.Class" style="@Style" Id="@Id">
+            @itemChildren(this)
         </div>
-    }
-    @if (Actions != null)
+    </AntCol>
+
+}
+@code{
+    RenderFragment<AntListItem> itemChildren = content =>
+    @<Template>
+        @if (content.ItemLayout == AntDirectionVHIType.Vertical && content.Extra != null)
+        {
+            <div class="@content.PrefixName-item-main">
+                @content.ChildContent
+                @content.actionsContent(content)
+            </div>
+            <div class="@content.PrefixName-item-extra">@content.Extra</div>
+        }
+        else
+        {
+            @content.ChildContent
+            @content.actionsContent(content)
+            @content.Extra
+        }
+    </Template>;
+
+RenderFragment<AntListItem> actionsContent = content =>
+@<Template>
+    @if (content.Actions != null && content.Actions.Count > 0)
     {
-        @Actions
+        <ul class="@content.PrefixName-item-action" key="actions">
+            @for (int i = 0; i < content.Actions.Count; i++)
+            {
+                <li key="@content.PrefixName-item-action-@i">
+                    @content.Actions[i]
+                    @if (i != (content.Actions.Count - 1))
+                    {
+                        <em class="@content.PrefixName-item-action-split" />
+                    }
+                </li>
+            }
+        </ul>
     }
-
-    @ChildContent
-
-</div>
-
+    else
+    {
+      
+    }
+</Template>;
+}

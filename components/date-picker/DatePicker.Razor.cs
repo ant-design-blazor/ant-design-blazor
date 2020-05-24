@@ -266,7 +266,7 @@ namespace AntBlazor
 
         private DatePickerInput _inputStart;
         private DatePickerInput _inputEnd;
-        private Dropdown _dropDown;
+        private OverlayTrigger _dropDown;
 
         private string _activeBarStyle = "";
 
@@ -308,6 +308,7 @@ namespace AntBlazor
         {
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
+                .Add($"{PrefixCls}-{Size}")
                 .If($"{PrefixCls}-borderless", () => Bordered == false)
                 .If($"{PrefixCls}-disabled", () => Disabled == true)
                 .If($"{ClassName}", () => !string.IsNullOrEmpty(ClassName))
@@ -336,7 +337,7 @@ namespace AntBlazor
                 }
                 else
                 {
-                    _activeBarStyle = "";
+                    _activeBarStyle = "display: none";
                 }
 
                 StateHasChanged();

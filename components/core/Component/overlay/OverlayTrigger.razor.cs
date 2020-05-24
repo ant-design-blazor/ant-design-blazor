@@ -103,6 +103,30 @@ namespace AntBlazor.Internal
             }
         }
 
+        protected virtual async Task OnTriggerFocusIn()
+        {
+            _mouseInTrigger = true;
+
+            if (_overlay != null && IsContainTrigger(TriggerType.Focus))
+            {
+                _overlay.PreventHide(true);
+
+                await Show();
+            }
+        }
+
+        protected virtual async Task OnTriggerFocusOut()
+        {
+            _mouseInTrigger = false;
+
+            if (_overlay != null && IsContainTrigger(TriggerType.Focus))
+            {
+                _overlay.PreventHide(_mouseInOverlay);
+
+                await Hide();
+            }
+        }
+
         protected virtual void OnOverlayMouseEnter()
         {
             _mouseInOverlay = true;
@@ -178,6 +202,16 @@ namespace AntBlazor.Internal
             return Trigger.Contains(triggerType);
         }
 
+        protected virtual async Task OverlayVisibleChange(bool visible)
+        {
+            await OnVisibleChange.InvokeAsync(visible);
+        }
+
+        protected virtual async Task OverlayHiding(bool visible)
+        {
+            await OnOverlayHiding.InvokeAsync(visible);
+        }
+
         public virtual string GetPlacementClass()
         {
             if (!string.IsNullOrEmpty(PlacementCls))
@@ -214,19 +248,24 @@ namespace AntBlazor.Internal
             return $"{PrefixCls}-hidden";
         }
 
-        public async Task Show(int? overlayLeft = null, int? overlayTop = null)
+        public virtual async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
             await _overlay.Show(overlayLeft, overlayTop);
         }
 
-        public async Task Hide()
+        public virtual async Task Hide(bool force = false)
         {
-            await _overlay.Hide();
+            await _overlay.Hide(force);
         }
 
         public Overlay GetOverlayComponent()
         {
             return _overlay;
+        }
+
+        public async Task<Element> GetTriggerDomInfo()
+        {
+            return await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Ref);
         }
     }
 }

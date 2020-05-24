@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor.Internal
 {
-    public partial class Overlay : AntDomComponentBase
+    public sealed partial class Overlay : AntDomComponentBase
     {
         [CascadingParameter(Name = "Trigger")]
         public OverlayTrigger Trigger { get; set; }
@@ -17,10 +17,21 @@ namespace AntBlazor.Internal
         public string OverlayChildPrefixCls { get; set; } = "";
 
         [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
         public EventCallback OnOverlayMouseEnter { get; set; }
 
         [Parameter]
         public EventCallback OnOverlayMouseLeave { get; set; }
+
+        [CascadingParameter(Name = "ArrowPointAtCenter")]
+        public bool ArrowPointAtCenter { get; set; }
+
+        [Parameter]
+        public int HideMillisecondsDelay { get; set; } = 100;
+        [Parameter]
+        public int WaitForHideAnimMilliseconds { get; set; } = 200;
 
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
@@ -37,10 +48,14 @@ namespace AntBlazor.Internal
         private int? _overlayLeft = null;
         private int? _overlayTop = null;
 
-        private string _dropdownStyle = "";
+        private string _overlayStyle = "";
         private string _overlayCls = "";
 
         private const int OVERLAY_OFFSET = 4;
+
+        private const int ARROW_SIZE = 13;
+        private const int HORIZONTAL_ARROW_SHIFT = 13;
+        private const int VERTICAL_ARROW_SHIFT = 5;
 
         protected override async Task OnParametersSetAsync()
         {
@@ -86,7 +101,11 @@ namespace AntBlazor.Internal
         {
             if (_hasAddOverlayToBody)
             {
-                JsInvokeAsync(JSInteropConstants.delElementFrom, Ref, Trigger.PopupContainerSelector);
+                _ = InvokeAsync(async () =>
+                {
+                    await Task.Delay(100);
+                    await JsInvokeAsync(JSInteropConstants.delElementFrom, Ref, Trigger.PopupContainerSelector);
+                });
             }
 
             base.Dispose(disposing);
@@ -124,7 +143,7 @@ namespace AntBlazor.Internal
             int left = GetOverlayLeft(trigger, overlayElement, containerElement);
             int top = GetOverlayTop(trigger, overlayElement, containerElement);
 
-            _dropdownStyle = $"left: {left}px;top: {top}px;";
+            _overlayStyle = $"left: {left}px;top: {top}px;{GetTransformOrigin()}";
 
             _overlayCls = Trigger.GetOverlayEnterClass();
 
@@ -140,7 +159,7 @@ namespace AntBlazor.Internal
                 return;
             }
 
-            await Task.Delay(100);
+            await Task.Delay(HideMillisecondsDelay);
 
             if (!force && !IsContainTrigger(TriggerType.Click) && (_isPreventHide || _mouseInOverlay || _isChildOverlayShow))
             {
@@ -160,7 +179,7 @@ namespace AntBlazor.Internal
             StateHasChanged();
 
             // wait for leave animation
-            await Task.Delay(200);
+            await Task.Delay(WaitForHideAnimMilliseconds);
             _isOverlayShow = false;
             _isOverlayHiding = false;
 
@@ -223,19 +242,33 @@ namespace AntBlazor.Internal
                 triggerHeight = 0;
             }
 
-            if (Trigger.Placement.Name.IsIn(PlacementType.Left.Name, PlacementType.Right.Name))
+            if (Trigger.Placement.IsIn(PlacementType.Left, PlacementType.Right))
             {
-                top = triggerTop + OVERLAY_OFFSET;
+                top = triggerTop + triggerHeight / 2 - overlay.clientHeight / 2;
             }
-            else if (Trigger.Placement.Name == PlacementType.Right.Name)
+            else if (Trigger.Placement.IsIn(PlacementType.LeftTop, PlacementType.RightTop))
+            {
+                top = triggerTop;
+
+                if (ArrowPointAtCenter)
+                {
+                    top += -VERTICAL_ARROW_SHIFT - ARROW_SIZE / 2 + triggerHeight / 2;
+                }
+            }
+            else if (Trigger.Placement.IsIn(PlacementType.LeftBottom, PlacementType.RightBottom))
+            {
+                top = triggerTop - overlay.clientHeight + triggerHeight;
+
+                if (ArrowPointAtCenter)
+                {
+                    top += VERTICAL_ARROW_SHIFT + ARROW_SIZE / 2 - triggerHeight / 2;
+                }
+            }
+            else if (Trigger.Placement.IsIn(PlacementType.BottomLeft, PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.BottomRight))
             {
                 top = triggerTop + triggerHeight + OVERLAY_OFFSET;
             }
-            else if (Trigger.Placement.SlideName == PlacementType.BottomLeft.SlideName)
-            {
-                top = triggerTop + triggerHeight + OVERLAY_OFFSET;
-            }
-            else if (Trigger.Placement.SlideName == PlacementType.TopLeft.SlideName)
+            else if (Trigger.Placement.IsIn(PlacementType.TopLeft, PlacementType.TopCenter, PlacementType.Top, PlacementType.TopRight))
             {
                 top = triggerTop - overlay.clientHeight - OVERLAY_OFFSET;
             }
@@ -256,28 +289,43 @@ namespace AntBlazor.Internal
                 triggerWidth = 0;
             }
 
-            if (Trigger.Placement.Name == PlacementType.Left.Name)
+            if (Trigger.Placement.IsIn(PlacementType.Left, PlacementType.LeftTop, PlacementType.LeftBottom))
             {
-                left = triggerLeft - triggerWidth - OVERLAY_OFFSET;
+                left = triggerLeft - overlay.clientWidth - OVERLAY_OFFSET;
             }
-            else if (Trigger.Placement.Name == PlacementType.Right.Name)
+            else if (Trigger.Placement.IsIn(PlacementType.Right, PlacementType.RightTop, PlacementType.RightBottom))
             {
                 left = triggerLeft + triggerWidth + OVERLAY_OFFSET;
             }
-            else if (Trigger.Placement.Name.IsIn(PlacementType.BottomLeft.Name, PlacementType.TopLeft.Name))
+            else if (Trigger.Placement.IsIn(PlacementType.BottomLeft, PlacementType.TopLeft))
             {
                 left = triggerLeft;
+
+                if (ArrowPointAtCenter)
+                {
+                    left += -HORIZONTAL_ARROW_SHIFT - ARROW_SIZE / 2 + triggerWidth / 2;
+                }
             }
-            else if (Trigger.Placement.Name.IsIn(PlacementType.BottomCenter.Name, PlacementType.TopCenter.Name))
+            else if (Trigger.Placement.IsIn(PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.TopCenter, PlacementType.Top))
             {
                 left = triggerLeft + triggerWidth / 2 - overlay.clientWidth / 2;
             }
-            else if (Trigger.Placement.Name.IsIn(PlacementType.BottomRight.Name, PlacementType.TopRight.Name))
+            else if (Trigger.Placement.IsIn(PlacementType.BottomRight, PlacementType.TopRight))
             {
                 left = triggerLeft + triggerWidth - overlay.clientWidth;
+
+                if (ArrowPointAtCenter)
+                {
+                    left += HORIZONTAL_ARROW_SHIFT + ARROW_SIZE / 2 - triggerWidth / 2;
+                }
             }
 
             return left;
+        }
+
+        private string GetTransformOrigin()
+        {
+            return $"transform-origin: {Trigger.Placement.TranformOrigin}";
         }
 
         private bool IsContainTrigger(TriggerType triggerType)
@@ -292,7 +340,6 @@ namespace AntBlazor.Internal
 
             return false;
         }
-
 
         private async Task UpdateParentOverlayState(bool visible)
         {
@@ -309,5 +356,32 @@ namespace AntBlazor.Internal
             }
         }
 
+        private string GetOverlayCls()
+        {
+            string overlayCls;
+
+            if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
+            {
+                overlayCls = Trigger.GetOverlayHiddenClass();
+            }
+            else
+            {
+                overlayCls = _overlayCls;
+            }
+
+            return overlayCls;
+        }
+
+        private string GetDisplayStyle()
+        {
+            string display = _isOverlayShow ? "display: inline-flex;" : "visibility: hidden;";
+
+            if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
+            {
+                display = "";
+            }
+
+            return display;
+        }
     }
 }
