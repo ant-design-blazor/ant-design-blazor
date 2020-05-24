@@ -1,10 +1,9 @@
 <div>
-<AntBlazor.InputNumber DefaultValue="3" Disabled="@disabled"></AntBlazor.InputNumber>
- <div style="margin: 20px 0px 20px 0px;">
-                <AntButton Type="@AntButtonType.Primary" OnClick="(e)=> ToggleDisable()">Toggle disabled</AntButton>
-
+    <AntBlazor.InputNumber DefaultValue="3" Disabled="@disabled" />
+    <div style="margin: 20px 0px 20px 0px;">
+        <AntButton Type="@AntButtonType.Primary" OnClick="(e)=> ToggleDisable()">Toggle disabled</AntButton>
+    </div>
 </div>
-   </div>
 
 @code{
     private bool disabled = true;
