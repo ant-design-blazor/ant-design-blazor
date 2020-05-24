@@ -23,7 +23,7 @@ Checkbox
 | Checked            | Specifies whether the checkbox is selected.           | boolean         |false|
 | Disabled            | Disable checkbox           | boolean         |false       |
 | Indeterminate |indeterminate checked state of checkbox       | boolean        | false         |
-| CheckedChange |  	The callback function that is triggered when the state changes.| function(e)|-     |
+| CheckedChange | The callback function that is triggered when the state changes| function(e)|-     |
 
 Checkbox Group
 
@@ -33,6 +33,6 @@ Checkbox Group
 | Disable | Disable all checkbox                               | boolean        | false         |
 | Options            |Specifies options         | CheckBoxOption[]         |-       |
 | Value | List of selected value     | IList<string>        | Array.Empty<string>()         |
-| ValueChanged |  	The callback function that is triggered when the state changes..| function(checkValue)|-     |
+| ValueChanged |  The callback function that is triggered when the state changes| function(checkValue)|-     |
 
 

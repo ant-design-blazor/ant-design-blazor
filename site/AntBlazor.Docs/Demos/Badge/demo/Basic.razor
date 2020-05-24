@@ -6,10 +6,21 @@
         <a href="#" class="head-example" />
     </AntBadge>
     @{
-        RenderFragment count = @<AntIcon Type="clock-circle" Fill="#f5222d"/>;
+        RenderFragment count = @<AntIcon Type="clock-circle" Fill="#f5222d" />;
     }
     <AntBadge Count="@(count)">
         <a href="#" class="head-example" />
     </AntBadge>
 </div>
 
+<style>
+        .head-example {
+            width: 42px;
+            height: 42px;
+            border-radius: 2px;
+            background: #eee;
+            display: inline-block;
+            vertical-align: middle;
+            margin:auto;
+        }
+    </style>

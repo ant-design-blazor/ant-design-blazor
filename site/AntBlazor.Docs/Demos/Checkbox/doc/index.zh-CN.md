@@ -22,7 +22,7 @@ Checkbox
 | Checked            | 	指定当前是否选中         | boolean         |false|
 | Disabled            | 失效状态         | boolean         |false       |
 | Indeterminate |设置 indeterminate 状态，只负责样式控制       | boolean        | false         |
-| CheckedChange |  	变化时回调函数.| function(e)|-     |
+| CheckedChange |  	变化时回调函数| function(e)|-     |
 
 Checkbox Group
 
@@ -32,4 +32,4 @@ Checkbox Group
 | Disable | 整组失效                             | boolean        | false         |
 | Options            |指定可选项         | CheckBoxOption[]         |-       |
 | Value |选中组的值列表     | IList<string>        | Array.Empty<string>()         |
-| ValueChanged |  	变化时回调函数.| function(e)|-     |
+| ValueChanged | 变化时回调函数| function(e)|-     |

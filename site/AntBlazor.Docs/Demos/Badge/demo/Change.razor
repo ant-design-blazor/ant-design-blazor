@@ -1,8 +1,9 @@
 ﻿<div>
     <div>
-        <AntBadge Count="@count">
+        <AntBadge Count="@count" Style="margin-right:30px">
             <a href="#" class="head-example" />
         </AntBadge>
+       
         <AntButtonGroup>
             <AntButton @onclick="_=>decline()">
                 <AntIcon Type="minus"></AntIcon>
@@ -13,7 +14,7 @@
         </AntButtonGroup>
     </div>
     <div style="margin-top: 10px">
-        <AntBadge Dot="@show">
+        <AntBadge Dot="@show" Style="margin-right:20px">
             <a href="#" class="head-example" />
         </AntBadge>
         <AntSwitch OnChange="onChange" Checked="@show" />
@@ -43,3 +44,4 @@
         this.show = show;
     }
 }
+
