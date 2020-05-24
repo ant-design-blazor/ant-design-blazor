@@ -1,7 +1,7 @@
   <div>
-    <AntCheckbox Checked="@isChecked" Disabled="@disabled" CheckedChange="@ToggleChecked">
+    <Checkbox Checked="@isChecked" Disabled="@disabled" CheckedChange="@ToggleChecked">
                 @($"{(isChecked ? "Check" : "Uncheck")}-{(disabled ? "Disable" : "Enable")}")
-    </AntCheckbox>
+    </Checkbox>
   </div>
   
   @code{

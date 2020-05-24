@@ -1,16 +1,16 @@
 <div>
-    <AntRadioGroup @bind-Value="@radioValue">
-        <AntRadio Style="@style" Value="A">Option A</AntRadio>
-        <AntRadio Style="@style" Value="B">Option B</AntRadio>
-        <AntRadio Style="@style" Value="C">Option C</AntRadio>
-        <AntRadio Style="@style" Value="M">
+    <RadioGroup @bind-Value="@radioValue">
+        <Radio Style="@style" Value="A">Option A</Radio>
+        <Radio Style="@style" Value="B">Option B</Radio>
+        <Radio Style="@style" Value="C">Option C</Radio>
+        <Radio Style="@style" Value="M">
             More...
             @if (radioValue == "M")
             {
                 <AntBlazor.Input type="text" />
             }
-        </AntRadio>
-    </AntRadioGroup>
+        </Radio>
+    </RadioGroup>
 </div>
 @code
     {

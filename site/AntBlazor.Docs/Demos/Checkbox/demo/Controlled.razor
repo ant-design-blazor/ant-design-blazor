@@ -1,16 +1,15 @@
 <div>
     <p style="margin-bottom: 20px">
-        <AntCheckbox Checked="@checkValue"  
+        <Checkbox Checked="@checkValue"  
                     Disabled="@disableValue" 
                     CheckedChange="CheckChanged">
         @label
-        </AntCheckbox>
+        </Checkbox>
     </p>     
         <p>
         <AntButton Type="primary" Size="small"  @onclick="@CheckClick">@checkTitle</AntButton>
         <AntButton Type="primary" Size="small"  @onclick="@DisableClick">@disableTitle</AntButton>
-      </p>    
- 
+      </p>     
   </div>
 
   @code{

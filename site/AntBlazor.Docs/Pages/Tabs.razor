@@ -82,10 +82,10 @@
     <Description>In order to fit in more tabs, they can slide left and right (or up and down).</Description>
     <Demo>
         <div>
-            <AntRadioGroup @bind-Value="mode" Style="margin-bottom: 8px;">
-                <AntRadio RadioButton Value="@AntTabPosition.Top">Horizontal</AntRadio>
-                <AntRadio RadioButton Value="@AntTabPosition.Left">Vertical</AntRadio>
-            </AntRadioGroup>
+            <RadioGroup @bind-Value="mode" Style="margin-bottom: 8px;">
+                <Radio RadioButton Value="@AntTabPosition.Top">Horizontal</Radio>
+                <Radio RadioButton Value="@AntTabPosition.Left">Vertical</Radio>
+            </RadioGroup>
             <AntTabs DefaultActiveKey="1" TabPosition="@mode" Style="height: 220px;">
                 <AntTabPane Key="1">
                     <Tab>Tab 1</Tab>
@@ -235,11 +235,11 @@
     <Description>Large size tabs are usually used in page header, and small size could be used in Modal.</Description>
     <Demo>
         <div>
-            <AntRadioGroup @bind-Value="size" Style="margin-bottom: 16px;">
-                <AntRadio RadioButton Value="@AntTabSize.Small">Small</AntRadio>
-                <AntRadio RadioButton Value="@AntTabSize.Default">Default</AntRadio>
-                <AntRadio RadioButton Value="@AntTabSize.Large">Large</AntRadio>
-            </AntRadioGroup>
+            <RadioGroup @bind-Value="size" Style="margin-bottom: 16px;">
+                <Radio RadioButton Value="@AntTabSize.Small">Small</Radio>
+                <Radio RadioButton Value="@AntTabSize.Default">Default</Radio>
+                <Radio RadioButton Value="@AntTabSize.Large">Large</Radio>
+            </RadioGroup>
 
             <AntTabs DefaultActiveKey="1" Size="@size" Style="margin-bottom: 32px">
                 <AntTabPane Key="1">
@@ -283,12 +283,12 @@
     <Description>Tab's position: left, right, top or bottom.</Description>
     <Demo>
         <div>
-            <AntRadioGroup @bind-Value="position" Style="margin-bottom: 16px;">
-                <AntRadio RadioButton Value="@AntTabPosition.Top">Top</AntRadio>
-                <AntRadio RadioButton Value="@AntTabPosition.Left">Left</AntRadio>
-                <AntRadio RadioButton Value="@AntTabPosition.Bottom">Bottom</AntRadio>
-                <AntRadio RadioButton Value="@AntTabPosition.Right">Right</AntRadio>
-            </AntRadioGroup>
+            <RadioGroup @bind-Value="position" Style="margin-bottom: 16px;">
+                <Radio RadioButton Value="@AntTabPosition.Top">Top</Radio>
+                <Radio RadioButton Value="@AntTabPosition.Left">Left</Radio>
+                <Radio RadioButton Value="@AntTabPosition.Bottom">Bottom</Radio>
+                <Radio RadioButton Value="@AntTabPosition.Right">Right</Radio>
+            </RadioGroup>
             <AntTabs DefaultActiveKey="1" TabPosition="@position">
                 <AntTabPane Key="1">
                     <Tab>Tab 1</Tab>

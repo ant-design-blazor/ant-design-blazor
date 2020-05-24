@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public partial class AntCheckboxGroup : AntDomComponentBase
+    public partial class CheckboxGroup : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public IList<AntCheckbox> CheckboxItems { get; set; } = new List<AntCheckbox>();
+        public IList<Checkbox> CheckboxItems { get; set; } = new List<Checkbox>();
 
         [Parameter]
         public EventCallback<string[]> ValueChanged { get; set; }
@@ -38,7 +38,7 @@ namespace AntBlazor
         [Parameter]
         public bool Disabled { get; set; }
 
-        public AntCheckboxGroup()
+        public CheckboxGroup()
         {
             ClassMapper.Add("ant-checkbox-group");
         }
@@ -49,9 +49,9 @@ namespace AntBlazor
             StateHasChanged();
         }
 
-        internal void OnCheckboxChange(AntCheckbox checkboxBase)
+        internal void OnCheckboxChange(Checkbox checkboxBase)
         {
-            if (checkboxBase is AntCheckbox checkbox)
+            if (checkboxBase is Checkbox checkbox)
             {
                 int index = CheckboxItems.IndexOf(checkbox);
                 if (Options[index] != null)

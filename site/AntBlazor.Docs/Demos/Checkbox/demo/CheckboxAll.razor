@@ -1,13 +1,9 @@
 <div>
-
-    <AntCheckbox Indeterminate="@indeterminate" Checked="@checkAll" CheckedChange="@CheckAllChanged">
+    <Checkbox Indeterminate="@indeterminate" Checked="@checkAll" CheckedChange="@CheckAllChanged">
     Check all
-    </AntCheckbox>
+    </Checkbox>
     <br />
-    <AntCheckboxGroup Options="@ckeckAllOptions" ValueChanged="@OnChanged">
-
-    </AntCheckboxGroup>
-
+    <AntBlazor.CheckboxGroup Options="@ckeckAllOptions" ValueChanged="@OnChanged"/>
 </div>
 
 @code{
