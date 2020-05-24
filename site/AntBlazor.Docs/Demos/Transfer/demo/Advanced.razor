@@ -22,6 +22,17 @@
     private bool Disabled = false;
     private string footer = "This is Footer";
 
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            dataSource.Add(new TransferItem { Title = $"Content{i}", Description = $"Content{i}-Description", Key = i.ToString(), Disabled = false });
+            if (i > 10)
+                targetKeys.Add(i.ToString());
+        }
+        base.OnInitialized();
+    }
+
     private OneOf.OneOf<string, RenderFragment> Render(TransferItem item)
     {
         //return new RenderFragment(buildTree);
@@ -45,5 +56,4 @@
         Console.WriteLine($"SourceSelectedKeys:{string.Join(',', e.SourceSelectedKeys)}");
         Console.WriteLine($"TargetSelectedKeys:{string.Join(',', e.TargetSelectedKeys)}");
     }
-}
 }

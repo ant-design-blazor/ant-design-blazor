@@ -101,7 +101,20 @@
                 @foreach (var item in _rightDataSource)
                 {
                     <li @key="item" class="ant-transfer-list-content-item ng-star-inserted @(item.Disabled||Disabled?DisabledClass:"")">
-                        <AntCheckbox Value="@item.Key" Checked="_targetSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState=>SelectItem(checkedState,TransferDirection.Right,item.Key))" Disabled="@(item.Disabled||Disabled)">@item.Title</AntCheckbox>
+                        <AntCheckbox Value="@item.Key" Checked="_targetSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState=>SelectItem(checkedState,TransferDirection.Right,item.Key))" Disabled="@(item.Disabled||Disabled)">
+                            @if (Render == null)
+                            {
+                                @item.Title
+                            }
+                            else
+                            {
+                                var _text = Render(item);
+                                @if (_text.IsT0)
+                                    @_text.AsT0
+                                else
+                                    @_text.AsT1
+                            }
+                        </AntCheckbox>
                     </li>
                 }
             </ul>

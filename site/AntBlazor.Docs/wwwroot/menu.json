@@ -136,7 +136,7 @@
           {
             "title": "Transfer",
             "type": "menuItem",
-            "url": "TransferDemo"
+            "url": "components/transfer"
           }
         ]
       },
