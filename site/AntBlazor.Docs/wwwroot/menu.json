@@ -96,12 +96,12 @@
           {
             "title": "Checkbox",
             "type": "menuItem",
-            "url": "checkbox"
+            "url": "components/checkbox"
           },
           {
             "title": "Switch",
             "type": "menuItem",
-            "url": "switch"
+            "url": "components/switch"
           },
           {
             "title": "DatePicker",
@@ -121,17 +121,17 @@
           {
             "title": "InputNumber",
             "type": "menuItem",
-            "url": "inputnumber"
+            "url": "components/inputnumber"
           },
           {
             "title": "Radio",
             "type": "menuItem",
-            "url": "radio"
+            "url": "components/radio"
           },
           {
             "title": "Slider",
             "type": "menuItem",
-            "url": "slider"
+            "url": "components/slider"
           }
         ]
       },

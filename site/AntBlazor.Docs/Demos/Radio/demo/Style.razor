@@ -1,0 +1,29 @@
+<div>
+    <AntRadioGroup @bind-Value="radioValue3">
+        <AntRadio RadioButton Value="A">Hangzhou</AntRadio>
+        <AntRadio RadioButton Value="B">Shanghai</AntRadio>
+        <AntRadio RadioButton Value="C">Beijing</AntRadio>
+        <AntRadio RadioButton Value="D">Chengdu</AntRadio>
+    </AntRadioGroup>
+    <br />
+    <br />
+    <AntRadioGroup @bind-Value="radioValue3">
+        <AntRadio RadioButton Value="A">Hangzhou</AntRadio>
+        <AntRadio RadioButton Value="B" Disabled>Shanghai</AntRadio>
+        <AntRadio RadioButton Value="C">Beijing</AntRadio>
+        <AntRadio RadioButton Value="D">Chengdu</AntRadio>
+    </AntRadioGroup>
+    <br />
+    <br />
+    <AntRadioGroup @bind-Value="radioValue3">
+        <AntRadio RadioButton Value="A" Disabled>Hangzhou</AntRadio>
+        <AntRadio RadioButton Value="B" Disabled>Shanghai</AntRadio>
+        <AntRadio RadioButton Value="C" Disabled>Beijing</AntRadio>
+        <AntRadio RadioButton Value="D" Disabled>Chengdu</AntRadio>
+    </AntRadioGroup>
+</div>
+
+@code
+{
+    string radioValue3 = "A";
+}

@@ -1,0 +1,47 @@
+<div>
+    <AntCheckboxGroup  Options="@plainOptions" @bind-Value="@checkValue1"  >
+    </AntCheckboxGroup>
+    <br />
+    <br />
+    <AntCheckboxGroup Options="@ckeckAllOptions"  @bind-Value="@checkValue2">
+    </AntCheckboxGroup>
+    <br />
+    <br />
+    <AntCheckboxGroup Options="@OptionsWithDisable"  @bind-Value="@checkValue1">
+    </AntCheckboxGroup>
+</div>
+@code{ 
+
+        string[] checkValue1 = { "Apple" };
+        string[] checkValue2 = { "Pear" };
+
+        CheckBoxOption[] plainOptions = new CheckBoxOption[]{
+        new CheckBoxOption{ Label="Apple",Value="Apple" },
+        new CheckBoxOption{ Label="Pear", Value="Pear" },
+        new CheckBoxOption{ Label="Orange", Value="Orange" },
+    };
+
+        CheckBoxOption[] ckeckAllOptions = new CheckBoxOption[]{
+        new CheckBoxOption{ Label="Apple",Value="Apple" },
+        new CheckBoxOption{ Label="Pear", Value="Pear" ,Checked=true},
+        new CheckBoxOption{ Label="Orange", Value="Orange" },
+    };
+
+        CheckBoxOption[] OptionsWithDisable = new CheckBoxOption[]{
+        new CheckBoxOption{ Label="Apple",Value="Apple" },
+        new CheckBoxOption{ Label="Pear", Value="Pear" },
+        new CheckBoxOption{ Label="Orange", Value="Orange", Disabled=true },
+    };
+
+    private bool checkAll { get; set; } = false;
+
+    void  groupValueChanged()
+    {
+        bool allChecked = checkAll;
+        plainOptions.ForEach(o => o.Checked = !allChecked);
+    }
+
+
+
+
+}

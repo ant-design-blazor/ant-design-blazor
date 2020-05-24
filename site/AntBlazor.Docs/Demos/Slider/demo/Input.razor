@@ -1,0 +1,42 @@
+﻿<div>
+    <AntRow>
+        <AntCol Span="12">
+            <AntSlider Min="1" Max="20" Value="@inputValue1" />
+        </AntCol>
+        <AntCol Span="4">
+            <AntBlazor.InputNumber Min="1" Max="20" Style="margin:0 16px;" Value="@inputValue1" ValueChanged="(e)=>UpdateValue1(e)" />
+        </AntCol>
+    </AntRow>
+    <AntRow>
+        <AntCol Span="12">
+            <AntSlider Min="0" Max="1" Step="0.01" Value="@inputValue2"  />
+        </AntCol>
+        <AntCol Span="4">
+            <AntBlazor.InputNumber Min="0" Max="10" Step="0.1" Style="margin:0 16px;" Value="@inputValue2" ValueChanged="(e)=>UpdateValue2(e)" />
+        </AntCol>
+    </AntRow>
+</div>
+
+
+@code{
+
+    private int inputValue1 = 1;
+
+    private void UpdateValue1(double value)
+    {
+        inputValue1 = (int)value;
+    }
+
+
+    private double inputValue2= 0.5;
+
+    private void UpdateValue2(double value)
+    {
+        inputValue2 =value;
+    }
+
+
+
+}
+
+
