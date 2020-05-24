@@ -30,7 +30,7 @@ RadioGroup
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
 | ButtonStyle            | style type of radio button          | `outline`,`solid`         |-       |
-| Disabled |	Disable all radio buttons      | string        | -         |
+| Disabled |Disable all radio buttons      | string        | -         |
 | Value              | Used for setting the currently selected value.        | string        | -        |
 | Name            | The name property of all input[type="radio"] children          | boolean         |-       |
 | Size |	size for radio button style       | string        | -         |

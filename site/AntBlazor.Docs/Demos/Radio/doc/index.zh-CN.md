@@ -30,7 +30,7 @@ RadioGroup
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | ButtonStyle            | RadioButton 的风格样式，目前有描边和填色两种风格          | `outline`,`solid`         |-       |
-| Disabled |	禁选所有子单选器       | string        | -         |
+| Disabled |禁选所有子单选器       | string        | -         |
 | Value              | 用于设置当前选中的值        | string        | -        |
 | Name            | RadioGroup 下所有 input[type="radio"] 的 name 属性          | string         |-       |
 | Size |	大小，只对按钮样式生效        | string        | -         |

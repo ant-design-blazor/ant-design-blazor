@@ -23,11 +23,11 @@ subtitle: 数字输入框
 | Formatter |指定输入框展示值的格式      | function(double,string)        | -         |
 | Max              | 最大值       | number        | -        |
 | Min |  	最小值                            | number        | -         |
-| Parser |  	指定从 `formatter` 里转换回数字的方式，和 `formatter` 搭配使用        | function(string, double)           |
+| Parser | 指定从 `formatter` 里转换回数字的方式，和 `formatter` 搭配使用        | function(string, double)           |
 | Size | 	输入框大小                            | `large` ,`middle`,`small`        | -        |
 | Step | 每次改变步数，可以为小数                            | double        | -         |
 | Value            |当前值 | string  | -         |
-| ValueChanged |  	输入框内容变化时的回调                     | function(double)        | -        |
+| ValueChanged | 输入框内容变化时的回调                     | function(double)        | -        |
 
 
 

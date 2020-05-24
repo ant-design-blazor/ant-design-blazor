@@ -21,9 +21,9 @@ subtitle: 开关
 | CheckedChildren            | 选中时的内容           | RenderFragment         |-       |
 | DefaultChecked |初始是否选中     | string        | -         |
 | Disabled              | 	是否禁用       | string        | -        |
-| Loading |  		加载中的开关                             | boolean        | -         |
-| Size |  	开关大小，可选值：default small       | string         |
+| Loading | 加载中的开关                             | boolean        | -         |
+| Size | 开关大小，可选值：default small       | string         |
 | UnCheckedChildren | 非选中时的内容                           | RenderFragment        | -         |
-| OnChange | 	变化时回调函数                            | function(e)        | -         |
+| OnChange |变化时回调函数                            | function(e)        | -         |
 
 
