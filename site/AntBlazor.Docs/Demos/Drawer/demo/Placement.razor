@@ -1,10 +1,10 @@
 ﻿<div>
-    <AntRadioGroup @bind-Value="placement">
-        <AntRadio Value="top">top</AntRadio>
-        <AntRadio Value="right">right</AntRadio>
-        <AntRadio Value="bottom">bottom</AntRadio>
-        <AntRadio Value="left">left</AntRadio>
-    </AntRadioGroup>
+    <AntBlazor.RadioGroup @bind-Value="placement">
+        <AntBlazor.Radio Value="top">top</AntBlazor.Radio>
+        <AntBlazor.Radio Value="right">right</AntBlazor.Radio>
+        <AntBlazor.Radio Value="bottom">bottom</AntBlazor.Radio>
+        <AntBlazor.Radio Value="left">left</AntBlazor.Radio>
+    </AntBlazor.RadioGroup>
 
     <AntButton Type="primary" @onclick="_ => open()">Open</AntButton>
     <Drawer Closable="true" Visible="@visible" Placement="@placement" Title='("Drawer in different Placement")' OnClose="_ => close()">

@@ -14,7 +14,7 @@
     <Title>Basic</Title>
     <Description>Basic usage of checkbox.</Description>
     <Demo>
-        <AntCheckbox>Checkbox</AntCheckbox>
+        <Checkbox>Checkbox</Checkbox>
     </Demo>
 </DemoCard>
 <br />
@@ -24,9 +24,9 @@
     <Description>Communicated with other components.</Description>
     <Demo>
         <div style="margin-bottom: 20px">
-            <AntCheckbox Checked="@isChecked" Disabled="@disabled" CheckedChange="@ToggleChecked">
+            <Checkbox Checked="@isChecked" Disabled="@disabled" CheckedChange="@ToggleChecked">
                 @($"{(isChecked ? "Check" : "Uncheck")}-{(disabled ? "Disable" : "Enable")}")
-            </AntCheckbox>
+            </Checkbox>
         </div>
         <br />
         <AntButton Type="@AntButtonType.Primary" Size="small" @onclick="@ToggleChecked">@(isChecked ? "Check" : "Uncheck")</AntButton>
@@ -53,9 +53,9 @@
         <AntParagraph>The <AntText Code>indeterminate</AntText> property can help you to achieve a 'check all' effect.</AntParagraph>
     </Description>
     <Demo>
-        <AntCheckbox Indeterminate="@indeterminate" Checked="@checkAll" CheckedChange="@CheckAllChanged">Check all</AntCheckbox>
+        <Checkbox Indeterminate="@indeterminate" Checked="@checkAll" CheckedChange="@CheckAllChanged">Check all</Checkbox>
         <AntDivider />
-        <AntCheckboxGroup Options="@ckeckAllOptions" ValueChanged="@OnChanged"></AntCheckboxGroup>
+        <CheckboxGroup Options="@ckeckAllOptions" ValueChanged="@OnChanged"></CheckboxGroup>
     </Demo>
 </DemoCard>
 @code{
@@ -89,9 +89,9 @@
     <Description>Disabled checkbox.</Description>
     <Demo>
         <div>
-            <AntCheckbox Disabled></AntCheckbox>
+            <Checkbox Disabled></Checkbox>
             <br />
-            <AntCheckbox Checked Disabled></AntCheckbox>
+            <Checkbox Checked Disabled></Checkbox>
         </div>
     </Demo>
 </DemoCard>
@@ -101,11 +101,11 @@
     <Title>Checkbox Group</Title>
     <Description>Generate a group of checkboxes from an array.</Description>
     <Demo>
-        <AntCheckboxGroup Options="plainOptions" @bind-Value="@checkValue1"></AntCheckboxGroup>
+        <CheckboxGroup Options="plainOptions" @bind-Value="@checkValue1"></CheckboxGroup>
         <br />
-        <AntCheckboxGroup Options="options" @bind-Value="@checkValue2"></AntCheckboxGroup>
+        <CheckboxGroup Options="options" @bind-Value="@checkValue2"></CheckboxGroup>
         <br />
-        <AntCheckboxGroup Options="optionsWithDisabled" Disabled @bind-Value="@checkValue1"></AntCheckboxGroup>
+        <CheckboxGroup Options="optionsWithDisabled" Disabled @bind-Value="@checkValue1"></CheckboxGroup>
     </Demo>
 </DemoCard>
 @code{
@@ -137,24 +137,24 @@
     <Title>Use with Grid</Title>
     <Description>We can use Checkbox and Grid in Checkbox.Group, to implement complex layout.</Description>
     <Demo>
-        <AntCheckboxGroup>
+        <CheckboxGroup>
             <AntRow>
                 <AntCol Span="8">
-                    <AntCheckbox>A</AntCheckbox>
+                    <Checkbox>A</Checkbox>
                 </AntCol>
                 <AntCol Span="8">
-                    <AntCheckbox>B</AntCheckbox>
+                    <Checkbox>B</Checkbox>
                 </AntCol>
                 <AntCol Span="8">
-                    <AntCheckbox>C</AntCheckbox>
+                    <Checkbox>C</Checkbox>
                 </AntCol>
                 <AntCol Span="8">
-                    <AntCheckbox>D</AntCheckbox>
+                    <Checkbox>D</Checkbox>
                 </AntCol>
                 <AntCol Span="8">
-                    <AntCheckbox>E</AntCheckbox>
+                    <Checkbox>E</Checkbox>
                 </AntCol>
             </AntRow>
-        </AntCheckboxGroup>
+        </CheckboxGroup>
     </Demo>
 </DemoCard>

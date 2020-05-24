@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntBlazor
 {
-    public partial class AntCheckbox : AntDomComponentBase
+    public partial class Checkbox : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -32,7 +32,7 @@ namespace AntBlazor
         public bool Checked { get; set; }
 
         [CascadingParameter]
-        public AntCheckboxGroup CheckboxGroup { get; set; }
+        public CheckboxGroup CheckboxGroup { get; set; }
 
         protected Dictionary<string, object> InputAttributes { get; set; }
 
@@ -44,7 +44,7 @@ namespace AntBlazor
 
         protected override void OnInitialized()
         {
-            if (this is AntCheckbox checkbox)
+            if (this is Checkbox checkbox)
             {
                 CheckboxGroup?.CheckboxItems.Add(checkbox);
             }

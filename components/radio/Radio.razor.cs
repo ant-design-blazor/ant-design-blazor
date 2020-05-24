@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntBlazor
 {
-    public partial class AntRadio : AntDomComponentBase
+    public partial class Radio : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -25,7 +25,7 @@ namespace AntBlazor
         [Parameter]
         public bool Disabled { get; set; }
 
-        [CascadingParameter] public AntRadioGroup RadioGroup { get; set; }
+        [CascadingParameter] public RadioGroup RadioGroup { get; set; }
 
         protected ClassMapper RadioClassMapper { get; set; } = new ClassMapper();
 
@@ -82,7 +82,7 @@ namespace AntBlazor
             {
                 await this.Focus();
             }
-            if (this is AntRadio radio)
+            if (this is Radio radio)
             {
                 RadioGroup?.AddRadio(radio);
             }
