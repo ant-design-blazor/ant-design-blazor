@@ -132,6 +132,11 @@
             "title": "Slider",
             "type": "menuItem",
             "url": "slider"
+          },
+          {
+            "title": "Transfer",
+            "type": "menuItem",
+            "url": "TransferDemo"
           }
         ]
       },
