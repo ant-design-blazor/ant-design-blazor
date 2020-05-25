@@ -1,5 +1,7 @@
 <div>
-    <AntBlazor.InputNumber Step="0.25" Min="-1" Max="5" />
+    <AntBlazor.InputNumber Step="0.25" Min="-1" Max="5" @bind-Value="myValue" />
 </div>
 
-	
+@code{
+    private double myValue { get; set; }
+}

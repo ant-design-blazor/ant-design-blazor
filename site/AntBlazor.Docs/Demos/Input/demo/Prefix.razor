@@ -1,13 +1,17 @@
 ﻿<div>
-    <AntBlazor.Input Placeholder="Prefix and Suffix" DefaultValue="123">
+    <AntBlazor.Input Placeholder="Prefix and Suffix" DefaultValue="123" @bind-Value="@txtValue" >
         <Prefix>
             <AntIcon Type="user" />
         </Prefix>
     </AntBlazor.Input>
     <br />
     <br />
-    <AntBlazor.Input Placeholder="default size">
+    <AntBlazor.Input Placeholder="default size" @bind-Value="@txtValue">
     <Prefix> ￥ </Prefix>
     <Suffix>RMB </Suffix>
     </AntBlazor.Input>
 </div>
+
+@code {
+    private string txtValue { get; set; }
+}
