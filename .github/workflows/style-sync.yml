@@ -7,6 +7,7 @@ on:
 jobs:
   style-sync:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
 
     steps:
       - name: Sync styles from ant-design
@@ -42,9 +43,9 @@ jobs:
           git config --global user.email 'shunjiey@hotmail.com'
           git add -A
           git commit -m "chore: sync ant-design v${LAST_VERSION}"
-          git push https://ElderJames:$GITHUB_TOKEN@github.com/ElderJames/ant-design-blazor.git ${BRANCH_NAME}
+          git push https://ElderJames:$GITHUB_TOKEN@github.com/ant-design-blazor/ant-design-blazor.git ${BRANCH_NAME}
           curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
           cat>PR<<EOF
           chore: sync ant-design v${LAST_VERSION}
           EOF
-          bin/hub pull-request -F PR -b ant-design-blazor:master -h ElderJames:${BRANCH_NAME} -a ElderJames
+          bin/hub pull-request -F PR -b ant-design-blazor:master -h ant-design-blazor:${BRANCH_NAME} -a ElderJames
