@@ -20,9 +20,9 @@
     private string[] titles = { "Source", "Target" };
     private string[] operations = { "to right", "to left" };
     private bool Disabled = false;
-    private string footer = "This is Footer";
+    private RenderFragment footer =@<AntButton Type="@AntButtonType.Default" Size="@AntButtonSize.Small" Style="float: right; margin: 5px;">reload</AntButton>;
 
-    protected override void OnInitialized()
+protected override void OnInitialized()
     {
         for (int i = 0; i < 20; i++)
         {

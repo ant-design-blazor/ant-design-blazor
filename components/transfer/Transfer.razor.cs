@@ -62,8 +62,6 @@ namespace AntBlazor
 
         private List<string> _targetKeys;
 
-        private AntCheckbox _leftCheckAll;
-        private AntCheckbox _rightCheckAll;
         private bool _leftCheckAllState = false;
         private bool _leftCheckAllIndeterminate = false;
         private bool _rightCheckAllState = false;
@@ -80,9 +78,6 @@ namespace AntBlazor
 
         private List<string> _sourceSelectedKeys;
         private List<string> _targetSelectedKeys;
-
-        private string _searchLeftText = string.Empty;
-        private string _searchRightText = string.Empty;
 
         protected override void OnInitialized()
         {
@@ -116,7 +111,7 @@ namespace AntBlazor
             CheckAllState();
         }
 
-        private void SelectItem(bool isCheck, string direction, string key)
+        private async Task SelectItem(bool isCheck, string direction, string key)
         {
             var holder = direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
             int index = Array.IndexOf(holder.ToArray(), key);
@@ -131,10 +126,13 @@ namespace AntBlazor
 
             MathTitleCount();
 
-            OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
+            if (OnSelectChange.HasDelegate)
+            {
+               await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
+            }
         }
 
-        private void SelectAll(bool isCheck, string direction)
+        private async Task SelectAll(bool isCheck, string direction)
         {
             var list = _leftDataSource;
             if (direction == TransferDirection.Right)
@@ -146,8 +144,10 @@ namespace AntBlazor
             HandleSelect(direction, holder);
 
             MathTitleCount();
-
-            OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
+            if (OnSelectChange.HasDelegate)
+            {
+               await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
+            }
         }
 
         private void HandleSelect(string direction, List<string> keys)
@@ -176,8 +176,10 @@ namespace AntBlazor
             HandleSelect(oppositeDirection, new List<string>());
 
             MathTitleCount();
-
-            await OnChange.InvokeAsync(new TransferChangeArgs(_targetKeys.ToArray(), direction, moveKeys.ToArray()));
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(new TransferChangeArgs(_targetKeys.ToArray(), direction, moveKeys.ToArray()));
+            }
         }
 
         private void CheckAllState()
@@ -191,15 +193,23 @@ namespace AntBlazor
 
         private async Task HandleScroll(string direction, EventArgs e)
         {
-            await OnScroll.InvokeAsync(new TransferScrollArgs(direction, e));
+            if (OnScroll.HasDelegate)
+            {
+                await OnScroll.InvokeAsync(new TransferScrollArgs(direction, e));
+            }
         }
 
-        private void HandleSearch(KeyboardEventArgs e, string direction)
+        private async Task HandleSearch(ChangeEventArgs e, string direction)
         {
             if (direction == TransferDirection.Left)
-                _leftDataSource = DataSource.Where(a => !TargetKeys.Contains(a.Key) && a.Title.Contains(_searchLeftText)).ToList();
+                _leftDataSource = DataSource.Where(a => !TargetKeys.Contains(a.Key) && a.Title.Contains(e.Value.ToString())).ToList();
             else
-                _rightDataSource = DataSource.Where(a => TargetKeys.Contains(a.Key) && a.Title.Contains(_searchRightText)).ToList();
+                _rightDataSource = DataSource.Where(a => TargetKeys.Contains(a.Key) && a.Title.Contains(e.Value.ToString())).ToList();
+
+            if (OnSearch.HasDelegate)
+            {
+                await OnSearch.InvokeAsync(new TransferSearchArgs(direction, e.Value.ToString()));
+            }
         }
     }
 }
