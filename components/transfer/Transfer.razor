@@ -6,11 +6,11 @@
         <div class="ant-transfer-list-header">
             @if (ShowSelectAll)
             {
-                <AntCheckbox @ref=" _leftCheckAll" Checked="_leftCheckAllState" Indeterminate="_sourceSelectedKeys.Count > 0" Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Left))">
+                <AntCheckbox @ref=" _leftCheckAll" Checked="_leftCheckAllState" Indeterminate="_leftCheckAllIndeterminate" Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Left))">
                 </AntCheckbox>
             }
             <span class="ant-transfer-list-header-selected">
-                <span>@_leftCountText 项</span>
+                <span>@_leftCountText items</span>
                 @if (Titles[0] != "")
                 {
                     <span class="ant-transfer-list-header-title ng-star-inserted">@Titles[0]</span>
@@ -72,10 +72,10 @@
         <div class="ant-transfer-list-header">
             @if (ShowSelectAll)
             {
-                <AntCheckbox @ref="_rightCheckAll" Checked="_rightCheckAllState" Indeterminate=" _targetSelectedKeys.Count > 0" Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Right))"></AntCheckbox>
+                <AntCheckbox @ref="_rightCheckAll" Checked="_rightCheckAllState" Indeterminate="_rightCheckAllIndeterminate " Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Right))"></AntCheckbox>
             }
             <span class="ant-transfer-list-header-selected">
-                <span>@_rightCountText 项</span>
+                <span>@_rightCountText items</span>
                 @if (Titles[1] != "")
                 {
                     <span class="ant-transfer-list-header-title ng-star-inserted">@Titles[1]</span>
@@ -111,8 +111,8 @@
                                 var _text = Render(item);
                                 @if (_text.IsT0)
                                     @_text.AsT0
-                                else
-                                    @_text.AsT1
+                                    else
+                                        @_text.AsT1
                             }
                         </AntCheckbox>
                     </li>

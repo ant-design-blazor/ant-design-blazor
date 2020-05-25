@@ -65,7 +65,9 @@ namespace AntBlazor
         private AntCheckbox _leftCheckAll;
         private AntCheckbox _rightCheckAll;
         private bool _leftCheckAllState = false;
+        private bool _leftCheckAllIndeterminate = false;
         private bool _rightCheckAllState = false;
+        private bool _rightCheckAllIndeterminate = false;
 
         private string _leftCountText = "";
         private string _rightCountText = "";
@@ -140,7 +142,7 @@ namespace AntBlazor
                 list = _rightDataSource;
             }
 
-            var holder = isCheck ? new List<string>(list.Count()) : list.Where(a => !a.Disabled).Select(a => a.Key).ToList();
+            var holder = isCheck ? list.Where(a => !a.Disabled).Select(a => a.Key).ToList() : new List<string>(list.Count());
             HandleSelect(direction, holder);
 
             MathTitleCount();
@@ -181,7 +183,10 @@ namespace AntBlazor
         private void CheckAllState()
         {
             _leftCheckAllState = _sourceSelectedKeys.Count == _leftDataSource.Where(a => !a.Disabled).Count();
+            _leftCheckAllIndeterminate = !_leftCheckAllState && _sourceSelectedKeys.Count > 0;
+
             _rightCheckAllState = _targetSelectedKeys.Count == _targetKeys.Count;
+            _rightCheckAllIndeterminate = !_rightCheckAllState && _targetSelectedKeys.Count > 0;
         }
 
         private async Task HandleScroll(string direction, EventArgs e)
@@ -189,7 +194,7 @@ namespace AntBlazor
             await OnScroll.InvokeAsync(new TransferScrollArgs(direction, e));
         }
 
-        private async Task HandleSearch(KeyboardEventArgs e, string direction)
+        private void HandleSearch(KeyboardEventArgs e, string direction)
         {
             if (direction == TransferDirection.Left)
                 _leftDataSource = DataSource.Where(a => !TargetKeys.Contains(a.Key) && a.Title.Contains(_searchLeftText)).ToList();
