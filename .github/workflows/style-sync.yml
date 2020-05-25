@@ -7,6 +7,7 @@ on:
 jobs:
   style-sync:
     runs-on: ubuntu-latest
+    if: github.repository == 'ElderJames/ant-design-blazor'
 
     steps:
       - name: Sync styles from ant-design
