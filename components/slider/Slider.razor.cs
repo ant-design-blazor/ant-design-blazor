@@ -13,7 +13,7 @@ namespace AntBlazor
 {
     using SliderValueType = OneOf<double, (double, double)>;
 
-    public partial class AntSlider : AntDomComponentBase
+    public partial class Slider : AntDomComponentBase
     {
         private const string PreFixCls = "ant-slider";
         private DomRect _sliderDom;
@@ -148,7 +148,7 @@ namespace AntBlazor
         /// Tick mark of Slider, type of key must be number, and must in closed interval [min, max], each mark can declare its own style
         /// </summary>
         [Parameter]
-        public AntSliderMark[] Marks { get; set; }
+        public SliderMark[] Marks { get; set; }
 
         /// <summary>
         /// The maximum value the slider can slide to

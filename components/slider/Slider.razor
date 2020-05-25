@@ -13,7 +13,7 @@
     <div class="ant-slider-step">
         @if (Marks != null)
         {
-            @foreach (AntSliderMark mark in Marks)
+            @foreach (SliderMark mark in Marks)
             {
                 <span class="ant-slider-dot @IsActiveMark(mark.Key)" style=@($"{(Vertical?"bottom":"left")}: {SetMarkPosition(mark.Key)};")></span>
             }
@@ -34,7 +34,7 @@
     <div class="ant-slider-mark">
         @if (Marks != null)
         {
-            @foreach (AntSliderMark mark in Marks)
+            @foreach (SliderMark mark in Marks)
             {
                 <span class="ant-slider-mark-text ant-slider-mark-text-active" style=@($"{(Vertical?"bottom":"left")}: {SetMarkPosition(mark.Key)}; {(Vertical?"margin-bottom: -50%;":"transform: translateX(-50%);")}" + mark.Style)>@mark.Value</span>
             }

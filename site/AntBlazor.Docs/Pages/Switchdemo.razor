@@ -9,7 +9,7 @@
         @(@"最简单的用法。")
     </Description>
     <Demo>
-        <AntSwitch Checked="switchValue"></AntSwitch>
+        <Switch Checked="switchValue"></Switch>
     </Demo>
 </DemoCard>
 
@@ -19,7 +19,7 @@
         @(@"Switch 失效状态。")
     </Description>
     <Demo>
-        <AntSwitch Checked="switchValue2" Disabled="isDisabled2"></AntSwitch>
+        <Switch Checked="switchValue2" Disabled="isDisabled2"></Switch>
         <br />
         <br />
         <AntButton Type="primary" @onclick="(_)=>isDisabled2 = !isDisabled2">Toggle disabled</AntButton>
@@ -34,18 +34,18 @@
         @(@"带有文字和图标。")
     </Description>
     <Demo>
-        <AntSwitch Checked="true">
+        <Switch Checked="true">
             <CheckedChildren>开</CheckedChildren>
             <UnCheckedChildren>关</UnCheckedChildren>
-        </AntSwitch>
+        </Switch>
         <br />
-        <AntSwitch Checked="false">
+        <Switch Checked="false">
             <CheckedChildren>1</CheckedChildren>
             <UnCheckedChildren>0</UnCheckedChildren>
-        </AntSwitch>
+        </Switch>
         <br />
-        <AntSwitch Checked="true" CheckedChildren="checkedChildren" UnCheckedChildren="unCheckedChildren">
-        </AntSwitch>
+        <Switch Checked="true" CheckedChildren="checkedChildren" UnCheckedChildren="unCheckedChildren">
+        </Switch>
     </Demo>
 </DemoCard>
 
@@ -55,9 +55,9 @@
         `size="small"`表示小号开关。
     </Description>
     <Demo>
-        <AntSwitch Checked="true"></AntSwitch>
+        <Switch Checked="true"></Switch>
         <br />
-        <AntSwitch Size="small" Checked="true"></AntSwitch>
+        <Switch Size="small" Checked="true"></Switch>
     </Demo>
 </DemoCard>
 
