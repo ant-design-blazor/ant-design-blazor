@@ -1,0 +1,49 @@
+name: Publish NuGet
+
+env:
+  NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
+
+on:
+  push:
+    tags:
+    - '*' 
+
+jobs:
+  publish-nuget:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.300
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
+
+      - name: Install dotnet tool
+        run: dotnet tool install -g dotnetCampus.TagToVersion
+
+      - name: Set tag to version  
+        run: dotnet TagToVersion -t ${{ github.ref }}
+
+      - name: Install npm
+        run: npm install
+
+      - name: Copy file
+        run: cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntBlazor.Docs.Wasm/wwwroot
+
+      - name: Build
+        run: dotnet build -c release
+
+      - name: Package
+        run: dotnet pack components/AntBlazor.csproj -c Release --no-build --no-restore 
+
+      - name: Publish to Nuget
+        run: dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
