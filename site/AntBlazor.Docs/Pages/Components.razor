@@ -46,7 +46,7 @@
                     foreach (var demo in demos)
                     {
                         <AntCol Span="24" Class="code-boxes-col-1-1" Style="padding-left: 8px; padding-right: 8px;">
-                            <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
+                            <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
                         </AntCol>
                     }
                 }
@@ -58,13 +58,13 @@
                     <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                         @foreach (var demo in leftList)
                         {
-                            <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
+                            <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
                         }
                     </AntCol>
                     <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                         @foreach (var demo in rightList)
                         {
-                            <CodeBox Demo="demo" ComponentName="@_demoComponent.Title"></CodeBox>
+                            <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
                         }
                     </AntCol>
                 }

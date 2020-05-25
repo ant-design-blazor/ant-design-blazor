@@ -1,23 +1,35 @@
 ﻿@using AntBlazor.Docs.Highlight
 
-<pre class="language-@Language">
-<code>
+    <pre class="language-@Language">
+        <code>
 @sourceCode
-</code>
-</pre>
+        </code>
+    </pre>
 
 @inject IPrismHighlighter Highlighter
 
 @code {
 
-    [Parameter] public string Code { get; set; }
+    [Parameter]
+    public string Code { get; set; }
 
-    [Parameter] public string Language { get; set; }
+    [Parameter]
+    public string Language { get; set; }
 
-    protected MarkupString sourceCode { get; set; }
+    [Parameter]
+    public bool CanLoad { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    MarkupString sourceCode { get; set; }
+
+    bool hasLoaded = false;
+
+    protected override async Task OnParametersSetAsync()
     {
-        sourceCode = await Highlighter.HighlightAsync(Code, Language);
+        if (CanLoad && !hasLoaded)
+        {
+            sourceCode = await Highlighter.HighlightAsync(Code, Language);
+            hasLoaded = true;
+        }
     }
+
 }
