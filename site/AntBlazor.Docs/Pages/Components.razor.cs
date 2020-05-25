@@ -36,11 +36,6 @@ namespace AntBlazor.Docs.Pages
                 }
             };
 
-            NavigationManager.LocationChanged += (_, args) =>
-            {
-                StateHasChanged();
-            };
-
             if (string.IsNullOrEmpty(Name))
             {
                 var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
