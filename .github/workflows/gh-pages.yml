@@ -7,10 +7,10 @@ env:
 on:
     push:
         branches:
-            - master
+            - 'ant-design-blazor/master'
 
 jobs:
-    build:
+    publish-and-deploy:
         runs-on: ubuntu-latest
 
         steps:
