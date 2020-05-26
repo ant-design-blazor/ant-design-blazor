@@ -132,6 +132,11 @@
             "title": "Slider",
             "type": "menuItem",
             "url": "slider"
+          },
+          {
+            "title": "Transfer",
+            "type": "menuItem",
+            "url": "components/transfer"
           }
         ]
       },
@@ -162,7 +167,7 @@
           {
             "title": "Empty",
             "type": "menuItem",
-            "url": "empty"
+            "url": "components/empty"
           },
           {
             "title": "List",
@@ -213,7 +218,7 @@
           {
             "title": "Notification",
             "type": "menuItem",
-            "url": "notification"
+            "url": "components/notification"
           },
           {
             "title": "Progress",
