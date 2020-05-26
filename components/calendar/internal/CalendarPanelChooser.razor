@@ -1,0 +1,62 @@
+﻿@namespace AntBlazor.Internal
+@inherits AntDomComponentBase
+
+@{
+    Action ClosePanel = () => {  };
+    Action<DateTime, int> ChangePickerValue = (date, index) => { Calendar.ChangeValue(date); };
+    Action<DateTime, int> ChangeValue = (date, index) => { Calendar.ChangeValue(date); };
+    Action<string, int> ChangePickerType = (type, index) => { Calendar.ChangePickerType(type, index); };
+    Func<int, DateTime> GetIndexPickerValue = (index) => Calendar.Value;
+    Func<int, DateTime?> GetIndexValue = (index) => Calendar.Value;
+
+    Dictionary<string, object> attributes =
+        new Dictionary<string, object>()
+        {
+            { "PrefixCls", "ant-picker" },
+            { "Picker", Calendar.Picker },
+            { "ClosePanel", ClosePanel },
+            { "ChangePickerValue", ChangePickerValue },
+            { "ChangeValue", ChangeValue },
+            { "ChangePickerType", ChangePickerType },
+            { "GetIndexPickerValue", GetIndexPickerValue },
+            { "GetIndexValue", GetIndexValue },
+            { "DisabledDate", Calendar.DisabledDate },
+            { "DateRender", Calendar.DateFullCellRender },
+            { "MonthCellRender", Calendar.MonthFullCellRender },
+            { "OnSelect", OnSelect },
+            { "PickerIndex", 0 },
+            { "IsCalendar", true },
+            { "IsShowHeader", false },
+        };
+
+    Dictionary<string, object> dateAttributes = new Dictionary<string, object>(attributes);
+    dateAttributes.Add("ShowToday", false);
+    dateAttributes.Add("IsShowTime", false);
+}
+
+<CascadingValue Value=@Calendar>
+    @if (IsShowDatePanel())
+    {
+        <DatePickerDatePanel @attributes="dateAttributes" />
+    }
+    else if (IsShowQuarterPanel())
+    {
+        <DatePickerQuarterPanel @attributes="attributes" />
+    }
+    else if (IsShowWeekPanel())
+    {
+        <DatePickerDatePanel @attributes="dateAttributes" IsWeek="@true" />
+    }
+    else if (IsShowMonthPanel())
+    {
+        <DatePickerMonthPanel @attributes="attributes" />
+    }
+    else if (IsShowYearPanel())
+    {
+        <DatePickerYearPanel @attributes="attributes" />
+    }
+    else if (IsShowDecadePanel())
+    {
+        <DatePickerDecadePanel @attributes="attributes" />
+    }
+</CascadingValue>

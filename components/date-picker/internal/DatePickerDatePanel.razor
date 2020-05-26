@@ -28,11 +28,18 @@
                            OnValueSelect="OnValueSelect"
                            GetNextColValue="date => date.AddDays(1)">
         <RenderPickerHeader>
-            <DatePickerHeader TValue="TValue" PickerIndex="@PickerIndex"
-                                 ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
-                                 ShowPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
-                                 ShowNextChange="@(!(DatePicker.IsRange && PickerIndex == 0))"
-                                 ShowSuperNextChange="@(!(DatePicker.IsRange && PickerIndex == 0))"/>
+            <DatePickerHeader TValue="TValue"
+                              PrefixCls="@PrefixCls"
+                              Picker="@Picker"
+                              PickerIndex="@PickerIndex"
+                              GetIndexPickerValue="GetIndexPickerValue"
+                              GetIndexValue="GetIndexValue"
+                              ChangePickerType="ChangePickerType"
+                              ChangePickerValue="ChangePickerValue"
+                              ShowSuperPreChange="@(!(IsRange && PickerIndex == 1))"
+                              ShowPreChange="@(!(IsRange && PickerIndex == 1))"
+                              ShowNextChange="@(!(IsRange && PickerIndex == 0))"
+                              ShowSuperNextChange="@(!(IsRange && PickerIndex == 0))"/>
         </RenderPickerHeader>
         <RenderTableHeader>
             <tr>
@@ -52,7 +59,7 @@
         <RenderFisrtCol>
             @if (IsWeek)
             {
-                <td class="@(DatePicker.PrefixCls)-cell @(DatePicker.PrefixCls)-cell-weak">
+                <td class="@(PrefixCls)-cell @(PrefixCls)-cell-weak">
                     @DateHelper.GetWeekOfYear(context)
                 </td>
             }
@@ -62,25 +69,25 @@
         </RenderColValue>
     </DatePickerTemplate>
 
-    @if (DatePicker.IsShowTime)
+    @if (IsShowTime)
     {
         var startTime = new DateTime(2020, 1, 1, 0, 0, 0);
 
-        <div class="@(DatePicker.PrefixCls)-time-panel">
-            <div class="@(DatePicker.PrefixCls)-header">
-                <div class="@(DatePicker.PrefixCls)-header-view">
+        <div class="@(PrefixCls)-time-panel">
+            <div class="@(PrefixCls)-header">
+                <div class="@(PrefixCls)-header-view">
                     @PickerValue.ToString("hh:mm:ss") <br />
                 </div>
             </div>
-            <div class="@(DatePicker.PrefixCls)-content">
-                <ul class="@(DatePicker.PrefixCls)-time-panel-column" style="position: relative;">
+            <div class="@(PrefixCls)-content">
+                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
                     @for (int hour = 0; hour < 24; hour++)
                     {
                         var viewTime = startTime;
-                        string isSelectedCls = viewTime.Hour == Value.Hour ? $"{DatePicker.PrefixCls}-time-panel-cell-selected" : "";
+                        string isSelectedCls = viewTime.Hour == Value.Hour ? $"{PrefixCls}-time-panel-cell-selected" : "";
 
-                        <li class="@(DatePicker.PrefixCls)-time-panel-cell @isSelectedCls">
-                            <div class="@(DatePicker.PrefixCls)-time-panel-cell-inner"
+                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls">
+                            <div class="@(PrefixCls)-time-panel-cell-inner"
                                  @onclick="e => OnSelectHour(viewTime)">
                                 @hour
                             </div>
@@ -89,14 +96,14 @@
                         startTime = startTime.AddHours(1);
                     }
                 </ul>
-                <ul class="@(DatePicker.PrefixCls)-time-panel-column" style="position: relative;">
+                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
                     @for (int minute = 0; minute < 60; minute++)
                     {
                         var viewTime = startTime;
-                        string isSelectedCls = viewTime.Minute == Value.Minute ? $"{DatePicker.PrefixCls}-time-panel-cell-selected" : "";
+                        string isSelectedCls = viewTime.Minute == Value.Minute ? $"{PrefixCls}-time-panel-cell-selected" : "";
 
-                        <li class="@(DatePicker.PrefixCls)-time-panel-cell @isSelectedCls">
-                            <div class="@(DatePicker.PrefixCls)-time-panel-cell-inner"
+                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls">
+                            <div class="@(PrefixCls)-time-panel-cell-inner"
                                  @onclick="e => OnSelectMinute(viewTime)">
                                 @minute
                             </div>
@@ -105,14 +112,14 @@
                         startTime = startTime.AddMinutes(1);
                     }
                 </ul>
-                <ul class="@(DatePicker.PrefixCls)-time-panel-column" style="position: relative;">
+                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
                     @for (int second = 0; second < 60; second++)
                     {
                         var viewTime = startTime;
-                        string isSelectedCls = viewTime.Second == Value.Second ? $"{DatePicker.PrefixCls}-time-panel-cell-selected" : "";
+                        string isSelectedCls = viewTime.Second == Value.Second ? $"{PrefixCls}-time-panel-cell-selected" : "";
 
-                        <li class="@(DatePicker.PrefixCls)-time-panel-cell @isSelectedCls">
-                            <div class="@(DatePicker.PrefixCls)-time-panel-cell-inner"
+                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls">
+                            <div class="@(PrefixCls)-time-panel-cell-inner"
                                  @onclick="e => OnSelectSecond(viewTime)">
                                 @second
                             </div>
@@ -126,33 +133,33 @@
     }
 </div>
 
-@if (DatePicker.RenderExtraFooter != null)
+@if (RenderExtraFooter != null)
 {
-    <div class="@(DatePicker.PrefixCls)-footer">
-        <div class="@(DatePicker.PrefixCls)-footer-extra">
-            @DatePicker.RenderExtraFooter
+    <div class="@(PrefixCls)-footer">
+        <div class="@(PrefixCls)-footer-extra">
+            @RenderExtraFooter
         </div>
     </div>
 }
 
-@if (DatePicker.ShowToday && !DatePicker.IsRange
-    && !DatePicker.IsShowTime && Picker != DatePickerType.Time)
+@if (ShowToday && !IsRange
+    && !IsShowTime && Picker != DatePickerType.Time)
 {
-    <div class="@(DatePicker.PrefixCls)-footer">
-        <a class="@(DatePicker.PrefixCls)-today-btn" 
-           @onclick="e => { OnSelectDate(DateTime.Now); DatePicker.Close(); }">
+    <div class="@(PrefixCls)-footer">
+        <a class="@(PrefixCls)-today-btn" 
+           @onclick="e => { OnSelectDate(DateTime.Now); Close(); }">
             今天
         </a>
     </div>
 }
 
-@if (DatePicker.IsShowTime)
+@if (IsShowTime)
 {
-    <div class="@(DatePicker.PrefixCls)-footer">
-        <ul class="@(DatePicker.PrefixCls)-ranges">
-            <li class="@(DatePicker.PrefixCls)-now">
-                <a class="@(DatePicker.PrefixCls)-now-btn"
-                   @onclick="e => { OnSelectTime(DateTime.Now); DatePicker.Close(); }">
+    <div class="@(PrefixCls)-footer">
+        <ul class="@(PrefixCls)-ranges">
+            <li class="@(PrefixCls)-now">
+                <a class="@(PrefixCls)-now-btn"
+                   @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
                     此刻
                 </a>
             </li>
@@ -170,10 +177,16 @@
     [Parameter]
     public bool IsWeek { get; set; } = false;
 
+    [Parameter]
+    public bool ShowToday { get; set; } = false;
+
+    [Parameter]
+    public bool IsShowTime { get; set; } = false;
+
     private string GetRowClass(DateTime viewDate)
     {
-        string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, Value) ? $"{DatePicker.PrefixCls}-week-panel-row-selected" : "";
-        string rowClass = IsWeek ? $"{DatePicker.PrefixCls}-week-panel-row" : "";
+        string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, Value) ? $"{PrefixCls}-week-panel-row-selected" : "";
+        string rowClass = IsWeek ? $"{PrefixCls}-week-panel-row" : "";
 
         return $"{rowClass} {selectedRowClass}";
     }

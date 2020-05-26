@@ -1,0 +1,16 @@
+﻿@namespace AntBlazor
+@inherits DatePickerBase
+@using AntBlazor.Internal
+
+<div class="@ClassMapper.Class"
+     style="@Style"
+     id="@Id"
+     @ref="@Ref">
+    <CascadingValue Value="this" Name="Calendar">
+        <CascadingValue Value="PrefixCls" Name="PrefixCls">
+            <CalendarHeader />
+        </CascadingValue>
+    </CascadingValue>
+
+    <CalendarPanelChooser Calendar="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelect(date)" />
+</div>

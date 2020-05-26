@@ -175,6 +175,11 @@
             "url": "card"
           },
           {
+            "title": "Calendar",
+            "type": "menuItem",
+            "url": "components/calendar"
+          },
+          {
             "title": "Empty",
             "type": "menuItem",
             "url": "components/empty"
