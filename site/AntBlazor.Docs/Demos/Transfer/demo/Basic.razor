@@ -14,7 +14,7 @@
 @code {
     private List<TransferItem> dataSource = new List<TransferItem>();
     private List<string> targetKeys = new List<string>();
-    private string[] selectedKeys = { "1", "5", "12", "13" };
+    private string[] selectedKeys = Array.Empty<string>();
     private string[] titles = { "Source", "Target" };
     private bool Disabled = false;
 
@@ -22,7 +22,14 @@
     {
         for (int i = 0; i < 20; i++)
         {
-            dataSource.Add(new TransferItem { Title = $"Content{i}", Description = $"Content{i}-Description", Key = i.ToString(), Disabled = false });
+            dataSource.Add(new TransferItem
+            {
+                Title = $"Content{i + 1}",
+                Description = $"description of content{i + 1}",
+                Key = i.ToString(),
+                Disabled = i % 3 < 1
+            });
+
             if (i > 10)
                 targetKeys.Add(i.ToString());
         }

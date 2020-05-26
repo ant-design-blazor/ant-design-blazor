@@ -128,7 +128,7 @@ namespace AntBlazor
 
             if (OnSelectChange.HasDelegate)
             {
-               await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
+                await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
             }
         }
 
@@ -146,7 +146,7 @@ namespace AntBlazor
             MathTitleCount();
             if (OnSelectChange.HasDelegate)
             {
-               await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
+                await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
             }
         }
 
