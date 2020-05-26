@@ -1,0 +1,68 @@
+﻿<div>
+    <Transfer DataSource="dataSource"
+              Disabled="Disabled"
+              TargetKeys="targetKeys.ToArray()"
+              SelectedKeys="selectedKeys"
+              Titles="titles"
+              OnChange="OnChange"
+              OnScroll="OnScroll"
+              OnSelectChange="OnSelectChange"
+              Render="Render"
+              Style="width:300px;height:300px;"></Transfer>
+</div>
+
+@code {
+    private List<TransferItem> dataSource = new List<TransferItem>();
+    private List<string> targetKeys = new List<string>();
+    private string[] selectedKeys = Array.Empty<string>();
+    private string[] titles = { "Source", "Target" };
+    private bool Disabled = false;
+
+    protected override void OnInitialized()
+    {
+        var random = new Random();
+        for (int i = 0; i < 20; i++)
+        {
+            var data = new TransferItem
+            {
+                Key = i.ToString(),
+                Title = $"Content{i + 1}",
+                Description = $"description of content{i + 1}",
+                ["Chosen"] = random.Next(0, 100) * 2 > 100
+            };
+
+            if (data["Chosen"] is bool _bool && _bool)
+            {
+                targetKeys.Add(data.Key);
+            }
+
+            dataSource.Add(data);
+        }
+        base.OnInitialized();
+    }
+
+
+    private OneOf.OneOf<string, RenderFragment> Render(TransferItem item)
+    {
+        //return new RenderFragment(buildTree);
+        return $"{item.Title} - {item.Description}";
+    }
+
+    private void OnChange(TransferChangeArgs e)
+    {
+        Console.WriteLine(e.Direction);
+        Console.WriteLine($"MoveKeys:{string.Join(',', e.MoveKeys)}");
+        Console.WriteLine($"TargetKeys:{string.Join(',', e.TargetKeys)}");
+    }
+
+    private void OnScroll(TransferScrollArgs e)
+    {
+        Console.WriteLine(e.Direction);
+    }
+
+    private void OnSelectChange(TransferSelectChangeArgs e)
+    {
+        Console.WriteLine($"SourceSelectedKeys:{string.Join(',', e.SourceSelectedKeys)}");
+        Console.WriteLine($"TargetSelectedKeys:{string.Join(',', e.TargetSelectedKeys)}");
+    }
+}

@@ -34,18 +34,12 @@
         @(@"带有文字和图标。")
     </Description>
     <Demo>
-        <AntSwitch Checked="true">
-            <CheckedChildren>开</CheckedChildren>
-            <UnCheckedChildren>关</UnCheckedChildren>
-        </AntSwitch>
+        <AntSwitch Checked="true" CheckedChildren="@("开")" UnCheckedChildren="@("关")" />
         <br />
-        <AntSwitch Checked="false">
-            <CheckedChildren>1</CheckedChildren>
-            <UnCheckedChildren>0</UnCheckedChildren>
-        </AntSwitch>
+        <AntSwitch Checked="false"  CheckedChildren="@("1")" UnCheckedChildren="@("0")" />
         <br />
-        <AntSwitch Checked="true" CheckedChildren="checkedChildren" UnCheckedChildren="unCheckedChildren">
-        </AntSwitch>
+        <AntSwitch Checked="true" CheckedChildren="checkedChildren" UnCheckedChildren="unCheckedChildren"/>
+        
     </Demo>
 </DemoCard>
 
