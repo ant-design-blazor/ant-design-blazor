@@ -1,0 +1,11 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<EditForm EditContext="@_editContext"
+          OnValidSubmit="HandleValidSubmit"
+          class="@ClassMapper.Class"
+          style="@Style"
+          id="@Id"
+          @ref="@Ref">
+    <CascadingValue Value="_editContext" Name="EditContext">@ChildContent</CascadingValue>
+</EditForm>

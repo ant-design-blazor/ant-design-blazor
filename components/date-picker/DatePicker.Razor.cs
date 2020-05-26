@@ -11,6 +11,12 @@ namespace AntDesign
 {
     public partial class DatePicker : AntDomComponentBase
     {
+        [CascadingParameter(Name = "Form")]
+        public Form Form { get; set; }
+
+        [CascadingParameter(Name = "FormItem")]
+        public FormItem FormItem { get; set; }
+
         [Parameter]
         public string PrefixCls { get; set; } = "ant-picker";
 
@@ -494,6 +500,21 @@ namespace AntDesign
             else if (!IsShowTime && Picker != DatePickerType.Time)
             {
                 Close();
+            }
+
+            if (FormItem != null)
+            {
+                if (IsRange)
+                {
+                    FormItem.TestSetValue(new DateTime[] {
+                        _values[0],
+                        _values[1]
+                    });
+                }
+                else
+                {
+                    FormItem.TestSetValue(_values[0]);
+                }
             }
         }
 

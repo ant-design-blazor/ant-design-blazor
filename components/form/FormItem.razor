@@ -1,0 +1,19 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<AntRow class="@ClassMapper.Class"
+        style="@Style"
+        id="@Id">
+    <AntCol class="ant-col-8 ant-form-item-label">
+        <label for="basic_username" class="ant-form-item-required" title="Username"> @(Label)</label>
+    </AntCol>
+    <AntCol class="ant-col-16 ant-form-item-control">
+        <div class="ant-form-item-control-input">
+            <div class="ant-form-item-control-input-content">
+                <CascadingValue Value="this" Name="FormItem">
+                    @ChildContent
+                </CascadingValue>
+            </div>
+        </div>
+    </AntCol>
+</AntRow>
