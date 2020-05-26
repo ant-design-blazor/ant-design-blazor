@@ -12,23 +12,26 @@
         string[] checkValue1 = { "Apple" };
         string[] checkValue2 = { "Pear" };
 
-        CheckBoxOption[] plainOptions = new CheckBoxOption[]{
+        CheckBoxOption[] plainOptions = new CheckBoxOption[]
+        {
         new CheckBoxOption{ Label="Apple",Value="Apple" },
         new CheckBoxOption{ Label="Pear", Value="Pear" },
         new CheckBoxOption{ Label="Orange", Value="Orange" },
-    };
+        };
 
-        CheckBoxOption[] ckeckAllOptions = new CheckBoxOption[]{
+        CheckBoxOption[] ckeckAllOptions = new CheckBoxOption[]
+        {
         new CheckBoxOption{ Label="Apple",Value="Apple" },
         new CheckBoxOption{ Label="Pear", Value="Pear" ,Checked=true},
         new CheckBoxOption{ Label="Orange", Value="Orange" },
-    };
+        };
 
-        CheckBoxOption[] OptionsWithDisable = new CheckBoxOption[]{
+        CheckBoxOption[] OptionsWithDisable = new CheckBoxOption[]
+        {
         new CheckBoxOption{ Label="Apple",Value="Apple" },
         new CheckBoxOption{ Label="Pear", Value="Pear" },
         new CheckBoxOption{ Label="Orange", Value="Orange", Disabled=true },
-    };
+        };
 
     private bool checkAll { get; set; } = false;
 

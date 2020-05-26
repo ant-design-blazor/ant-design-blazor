@@ -14,9 +14,10 @@
 
 </div>
 
-@code{
-    private SliderMark[] nMarks =
+@code
 {
+    private SliderMark[] nMarks =
+     {
             new SliderMark(0, "0℃"),
             new SliderMark(26, "26℃"),
             new SliderMark(37, "37℃"),
@@ -25,5 +26,5 @@
                 b.AddContent(1,"100℃");
                 b.CloseElement();
             }, "color: #f50;")
-        };
+     };
 }
