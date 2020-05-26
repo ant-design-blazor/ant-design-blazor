@@ -1,0 +1,19 @@
+<div>
+    <RadioGroup @bind-Value="@radioValue">
+        <Radio Style="@style" Value="A">Option A</Radio>
+        <Radio Style="@style" Value="B">Option B</Radio>
+        <Radio Style="@style" Value="C">Option C</Radio>
+        <Radio Style="@style" Value="M">
+            More...
+            @if (radioValue == "M")
+            {
+                <AntBlazor.Input type="text" />
+            }
+        </Radio>
+    </RadioGroup>
+</div>
+@code
+    {
+    string radioValue = "A";
+    string style = "display: block;height:30px;line-height:30px";
+}

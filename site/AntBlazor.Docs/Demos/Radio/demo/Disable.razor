@@ -1,0 +1,17 @@
+<div>
+    <Radio Checked Disabled="@Disabled">
+        Disabled
+    </Radio>
+    <br />
+    <Radio Disabled="@Disabled">
+        Disabled
+    </Radio>
+    <div style="margin-top: 20px">
+        <AntButton Type="primary" OnClick="_=>Disabled=!Disabled">Toggle Disabled</AntButton>
+    </div>
+</div>
+
+@code
+    {
+    bool Disabled = true;
+}

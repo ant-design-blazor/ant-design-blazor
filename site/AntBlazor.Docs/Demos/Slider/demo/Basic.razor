@@ -1,0 +1,15 @@
+﻿<div>
+    <Slider DefaultValue="30" Disabled="@Diabled"  />
+    <Slider DefaultValue="(20, 50)" Disabled="@Diabled" />
+    Diabled: <Switch Size="small" Checked="@Diabled" OnChange="(e)=>OnSwitch(e)" />
+</div>
+
+@code{
+
+    private bool Diabled;
+
+    private void OnSwitch(bool args)
+    {
+        Diabled = args;
+    }
+}
