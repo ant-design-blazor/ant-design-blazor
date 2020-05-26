@@ -32,4 +32,4 @@ A Slider component for displaying current value and intervals in range.
 | onChange |Callback function that is fired when the user changes the slider's value.                          | function(e)        | -         |
 | tooltipPlacement | 	Set Tooltip display position. Ref Tooltip.                          | string        | -         |
 | tooltipVisible |If true, Tooltip will show always, or it will not show anyway, even if dragging or hovering.                           | boolean        | -         |
-| getTooltipPopupContainer | The DOM container of the Tooltip, the default behavior is to create a div element in body.                         | Rendfragment        | -         |
+| getTooltipPopupContainer |The DOM container of the Tooltip, the default behavior is to create a div element in body.                         | Rendfragment        | -         |

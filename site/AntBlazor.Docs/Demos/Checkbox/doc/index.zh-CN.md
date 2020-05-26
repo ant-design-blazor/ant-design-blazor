@@ -32,4 +32,4 @@ Checkbox Group
 | Disable | 整组失效                             | boolean        | false         |
 | Options            |指定可选项         | CheckBoxOption[]         |-       |
 | Value |选中组的值列表     | IList<string>        | Array.Empty<string>()         |
-| ValueChanged | 变化时回调函数| function(e)|-     |
+| ValueChanged |变化时回调函数| function(e)|-     |

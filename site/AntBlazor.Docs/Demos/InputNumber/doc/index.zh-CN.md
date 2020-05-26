@@ -19,7 +19,7 @@ subtitle: 数字输入框
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | AutoFocus | 自动获取焦点                              | boolean        | -         |
 | DefaultValue            | 初始值           | number         |
-| Disabled            | 禁用           | boolean         |-       |
+| Disabled            |禁用           | boolean         |-       |
 | Formatter |指定输入框展示值的格式      | function(double,string)        | -         |
 | Max              | 最大值       | number        | -        |
 | Min |  	最小值                            | number        | -         |
@@ -27,7 +27,7 @@ subtitle: 数字输入框
 | Size | 	输入框大小                            | `large` ,`middle`,`small`        | -        |
 | Step | 每次改变步数，可以为小数                            | double        | -         |
 | Value            |当前值 | string  | -         |
-| ValueChanged | 输入框内容变化时的回调                     | function(double)        | -        |
+| ValueChanged |输入框内容变化时的回调                     | function(double)        | -        |
 
 
 

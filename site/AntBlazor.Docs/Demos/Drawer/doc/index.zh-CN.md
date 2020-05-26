@@ -19,10 +19,10 @@ subtitle: 抽屉
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | Title            | 标题         | string or slot | -         |
-| BodyStyle | 可用于设置 Drawer 内容部分的样式                               | object        | -         |
-| Closable            | 是否显示右上角的关闭按钮           | boolean | true         |
+| BodyStyle |可用于设置 Drawer 内容部分的样式                               | object        | -         |
+| Closable            |是否显示右上角的关闭按钮           | boolean | true         |
 | ChildContent |抽屉元素之间的子组件                                | object        | -         |
-| MaskClosable              | 点击蒙层是否允许关闭         | boolean        | true        |
+| MaskClosable              |点击蒙层是否允许关闭         | boolean        | true        |
 | MaskStyle | 遮罩样式                               | object        | -         |
 | Placement | 抽屉的方向,可选值为 `left` , `top`,`right`,`bottom`        | string  | `right`         |
 | WrapClassName | 对话框外层容器的类名                               | string        | -         |

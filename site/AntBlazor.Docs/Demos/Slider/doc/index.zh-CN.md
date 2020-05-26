@@ -33,7 +33,7 @@ subtitle: 滑动输入条
 | onChange | 	当 Slider 的值发生改变时，会触发 onChange 事件，并把改变后的值作为参数传入。                           | function(e)        | -         |
 | tooltipPlacement | 设置 Tooltip 展示位置。参考 Tooltip。                           | string        | -         |
 | tooltipVisible | 值为true时，Tooltip 将会始终显示；否则始终不显示，哪怕在拖拽及移入时。                           | boolean        | -         |
-| getTooltipPopupContainer | Tooltip 渲染父节点，默认渲染到 body 上。                           | Rendfragment        | -         |
+| getTooltipPopupContainer |Tooltip 渲染父节点，默认渲染到 body 上。                           | Rendfragment        | -         |
 
 
 
