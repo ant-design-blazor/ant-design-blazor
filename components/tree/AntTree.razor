@@ -1,0 +1,38 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+@{ BeginRender();}
+
+<div class="@ClassMapper.Class">
+    <div class="ant-tree-list-holder-inner" style="display:flex;flex-direction:column">
+
+        @if (ChildContent != null)
+        {
+            <CascadingValue Value="this">
+                <CascadingValue Value="(AntTreeNode)null">
+                    @ChildContent
+                </CascadingValue>
+            </CascadingValue>
+        }
+
+        @if (_itemlist != null)
+        {
+            if (Checkable)
+            {
+                foreach (AntTreeDataItem item in _itemlist)
+                {
+                    item?.UpdateCheckedStateRecursive(CascadingCheckState);
+                }
+            }
+            int totalcount = _itemlist.Count;
+            int index = 0;
+            foreach (AntTreeDataItem item in _itemlist)
+            {
+                @item?.RenderRecursive(this, 0, index++, totalcount);
+            }
+        }
+
+    </div>
+</div>
+
+

@@ -14,10 +14,12 @@ namespace AntBlazor
     {
         public AntTreeEventArgs() { }
         public AntTreeEventArgs(AntTree tree) { Tree = tree; }
-        public AntTreeEventArgs(AntTree tree, AntTreeNode node) { Tree = tree;Node = node; }
+        public AntTreeEventArgs(AntTree tree, AntTreeNode node) { Tree = tree; Node = node; }
+        public AntTreeEventArgs(AntTree tree, AntTreeDataItem item) { Tree = tree; Item = item; }
 
 
         public AntTree Tree { get; set; }
         public AntTreeNode Node { get; set; }
+        public AntTreeDataItem Item { get; set; }
     }
 }

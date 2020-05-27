@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AntBlazor
 {
-    public class AntTreeNode
+    public class AntTreeDataItem
     {
         //while AntDesign react use this way
         public string Key { get; set; }
@@ -23,9 +23,9 @@ namespace AntBlazor
 
         public string IconType { get; set; }
 
-        public RenderFragment<AntTreeNode> IconTemplate { get; set; }
+        public RenderFragment<AntTreeDataItem> IconTemplate { get; set; }
 
-        public RenderFragment<AntTreeNode> NodeTemplate { get; set; }
+        public RenderFragment<AntTreeDataItem> ItemTemplate { get; set; }
 
         public bool IsExpanded { get; set; }
 
@@ -36,49 +36,49 @@ namespace AntBlazor
         public bool IsDisabled { get; set; }
 
 
-        public bool HasChildNodes
+        public bool HasChildItems
         {
             get
             {
-                return _nodelist?.Count > 0;
+                return _itemlist?.Count > 0;
             }
         }
-        public int ChildNodeCount
+        public int ChildItemCount
         {
             get
             {
-                return _nodelist?.Count ?? 0;
-            }
-        }
-
-        List<AntTreeNode> _nodelist;
-        public List<AntTreeNode> NodeList
-        {
-            get
-            {
-                if (_nodelist == null) _nodelist = new List<AntTreeNode>();
-                return _nodelist;
+                return _itemlist?.Count ?? 0;
             }
         }
 
-        public IReadOnlyCollection<AntTreeNode> Nodes
+        List<AntTreeDataItem> _itemlist;
+        public List<AntTreeDataItem> ItemList
         {
             get
             {
-                if (_nodelist != null)
-                    return _nodelist;
-                return Array.Empty<AntTreeNode>();
+                if (_itemlist == null) _itemlist = new List<AntTreeDataItem>();
+                return _itemlist;
+            }
+        }
+
+        public IReadOnlyCollection<AntTreeDataItem> Items
+        {
+            get
+            {
+                if (_itemlist != null)
+                    return _itemlist;
+                return Array.Empty<AntTreeDataItem>();
             }
             set
             {
                 if (value == null || value.Count == 0)
                 {
-                    _nodelist = null;
+                    _itemlist = null;
                     return;
                 }
-                if (_nodelist == null) _nodelist = new List<AntTreeNode>();
-                else if (_nodelist.Count != 0) _nodelist.Clear();
-                _nodelist.AddRange(value);
+                if (_itemlist == null) _itemlist = new List<AntTreeDataItem>();
+                else if (_itemlist.Count != 0) _itemlist.Clear();
+                _itemlist.AddRange(value);
             }
         }
 
@@ -108,9 +108,9 @@ namespace AntBlazor
         public void DeselectAll()
         {
             IsSelected = false;
-            if (HasChildNodes)
-                foreach (var subnode in _nodelist)
-                    subnode?.DeselectAll();
+            if (HasChildItems)
+                foreach (var subitem in _itemlist)
+                    subitem?.DeselectAll();
         }
 
         public void SetCheckedAll(bool check)
@@ -118,10 +118,10 @@ namespace AntBlazor
             if (IsDisabled)
                 return;
             this.IsChecked = check;
-            if (HasChildNodes)
+            if (HasChildItems)
             {
-                foreach (var subnode in _nodelist)
-                    subnode?.SetCheckedAll(check);
+                foreach (var subitem in _itemlist)
+                    subitem?.SetCheckedAll(check);
             }
         }
 
@@ -130,61 +130,82 @@ namespace AntBlazor
         {
             get
             {
-                if (!HasChildNodes)
+                if (!HasChildItems)
                     return IsChecked;
                 return _checkstate;
             }
         }
 
-        internal void UpdateCheckedStateRecursive()
+        internal void UpdateCheckedStateRecursive(bool cascadingCheckState)
         {
-            if (!HasChildNodes)
+            if (!HasChildItems)
             {
                 _checkstate = IsChecked;
                 return;
             }
 
+            if (!cascadingCheckState)
+            {
+                _checkstate = IsChecked;
+                foreach (var subitem in _itemlist)
+                    subitem?.UpdateCheckedStateRecursive(cascadingCheckState);
+                return;
+            }
+
             int checkedCount = 0;
             int uncheckedCount = 0;
+            int nullCount = 0;
 
-            foreach (var subnode in _nodelist)
+            foreach (var subitem in _itemlist)
             {
-                subnode.UpdateCheckedStateRecursive();
+                if (subitem == null)
+                    continue;
 
-                bool? snc = subnode.CheckedState;
+                subitem.UpdateCheckedStateRecursive(cascadingCheckState);
+
+                if (subitem.IsDisabled)
+                    continue;
+
+                bool? snc = subitem.CheckedState;
                 if (snc == null)
                 {
-                    _checkstate = null;
-                    return;
+                    nullCount++;
                 }
-                if (snc == true)
+                else if (snc == true)
                 {
-                    if (uncheckedCount != 0)
-                    {
-                        _checkstate = null;
-                        return;
-                    }
                     checkedCount++;
                 }
-                if (snc == false)
+                else //if (snc == false)
                 {
-                    if (checkedCount != 0)
-                    {
-                        _checkstate = null;
-                        return;
-                    }
                     uncheckedCount++;
                 }
             }
 
-            Debug.Assert(checkedCount == 0 || uncheckedCount == 0);
-
-            if (checkedCount != 0)
-                _checkstate = true;
-            else if (uncheckedCount != 0)
-                _checkstate = false;
-            else
+            if (nullCount == 0 && checkedCount == 0 && uncheckedCount == 0)
+            {
                 _checkstate = IsChecked;
+                return;
+            }
+
+            if (nullCount != 0)
+                _checkstate = null;
+            else if (checkedCount != 0 && uncheckedCount != 0)
+                _checkstate = null;
+            else if (checkedCount != 0)
+                _checkstate = true;
+            else    // if (uncheckedCount != 0)
+                _checkstate = false;
+
+            IsChecked = _checkstate == true;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:check argument", Justification = "<Ignore>")]
+        internal RenderFragment RenderRecursive(AntTree ownerTree, int level, int index, int pcount)
+        {
+            return (builder) =>
+            {
+                RenderRecursive(builder, ownerTree, level, index, pcount);
+            };
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:check argument", Justification = "<Ignore>")]
@@ -192,7 +213,6 @@ namespace AntBlazor
         {
             //ant-tree-treenode ant-tree-treenode-switcher-open ant-tree-treenode-checkbox-checked ant-tree-treenode-selected
             var cssclass = "ant-tree-treenode ant-tree-treenode-switcher-" + (IsExpanded ? "open" : "close")
-                + (IsChecked ? " ant-tree-treenode-checkbox-checked" : "")
                 + (IsChecked ? " ant-tree-treenode-checkbox-checked" : "")
                 + (IsSelected ? " ant-tree-treenode-selected" : "")
                 + (IsDisabled ? " ant-tree-treenode-disabled" : "")
@@ -222,7 +242,7 @@ namespace AntBlazor
                 builder.CloseElement();
             }
 
-            if (HasChildNodes)
+            if (HasChildItems)
             {
                 builder.OpenElement(1, "span");
                 builder.AddAttribute(2, "class", "ant-tree-switcher ant-tree-switcher_" + (IsExpanded ? "open" : "close"));
@@ -246,7 +266,7 @@ namespace AntBlazor
                 if (cs == null) checkcls = "indeterminate";
                 else if (cs == true) checkcls = "checked";
                 else checkcls = "unchecked";
-                builder.AddAttribute(2, "class", "ant-tree-checkbox ant-tree-checkbox-" + checkcls);
+                builder.AddAttribute(2, "class", "ant-tree-checkbox" + (IsDisabled ? " ant-tree-checkbox-disabled" : "") + " ant-tree-checkbox-" + checkcls);
                 if (!IsDisabled)
                     builder.AddAttribute(3, "onclick", EventCallback.Factory.Create<MouseEventArgs>(ownerTree, async (me) =>
                     {
@@ -274,9 +294,9 @@ namespace AntBlazor
                          ownerTree.DeselectAll();
                          this.IsSelected = true;
                      }
-                     if (ownerTree.OnNodeSelected.HasDelegate)
+                     if (ownerTree.OnItemSelected.HasDelegate)
                      {
-                         await ownerTree.OnNodeSelected.InvokeAsync(new AntTreeEventArgs(ownerTree, this));
+                         await ownerTree.OnItemSelected.InvokeAsync(new AntTreeEventArgs(ownerTree, this));
                      }
                  }));
 
@@ -285,7 +305,7 @@ namespace AntBlazor
                 builder.OpenElement(1, "span");
                 builder.AddAttribute(2, "class", "ant-tree-iconEle ant-tree-icon__customize");
 
-                var template = this.IconTemplate ?? ownerTree.IconTemplate;
+                var template = this.IconTemplate ?? ownerTree.ItemIconTemplate;
                 if (template != null)
                 {
                     builder.AddContent(3, template(this));
@@ -305,12 +325,12 @@ namespace AntBlazor
                 builder.CloseElement();
             }
 
-            var nodetemplate = this.NodeTemplate ?? ownerTree.NodeTemplate;
-            if (nodetemplate != null)
+            var itemtemplate = this.ItemTemplate ?? ownerTree.ItemTemplate;
+            if (itemtemplate != null)
             {
                 builder.OpenElement(1, "span");
                 builder.AddAttribute(2, "class", "ant-tree-title");
-                builder.AddContent(3, nodetemplate(this));
+                builder.AddContent(3, itemtemplate(this));
                 builder.CloseElement();
             }
             else
@@ -324,7 +344,7 @@ namespace AntBlazor
             builder.CloseElement();
 
 
-            if (!HasChildNodes)
+            if (!HasChildItems)
                 return;
 
             int subindex = 0;
@@ -336,15 +356,15 @@ namespace AntBlazor
                 string clspart = (_expandedAnimateState == true ? "appear" : "leave");
                 builder.AddAttribute(2, "class", $"ant-tree-treenode-motion ant-motion-collapse ant-motion-collapse-{clspart} ant-motion-collapse-{clspart}-active");
 
-                //foreach (AntTreeNode node in _nodelist)
-                //    node?.RenderRecursive(builder, ownerTree, level + 1, subindex++, _nodelist.Count);
+                //foreach (AntTreeDataItem item in _itemlist)
+                //    item?.RenderRecursive(builder, ownerTree, level + 1, subindex++, _itemlist.Count);
 
                 builder.CloseElement();
             }
             else if (IsExpanded)
             {
-                foreach (AntTreeNode node in _nodelist)
-                    node?.RenderRecursive(builder, ownerTree, level + 1, subindex++, _nodelist.Count);
+                foreach (AntTreeDataItem item in _itemlist)
+                    item?.RenderRecursive(builder, ownerTree, level + 1, subindex++, _itemlist.Count);
             }
 
         }

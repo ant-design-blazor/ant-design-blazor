@@ -1,0 +1,100 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+@{ RendeBegin();}
+
+<div class="@ClassMapper.Class">
+
+    @if (ParentNode != null)
+    {
+        int level = this.CalcLevel();
+        <span class="ant-tree-indent" aria-hidden="true">
+            @for (int i = 0; i < level; i++)
+            {
+                string unitcls = "ant-tree-indent-unit";
+                if (i + 1 == level)
+                {
+                    //TODO:
+                    unitcls = "ant-tree-indent-unit"
+                        + (_indexOrParent == 0 ? " ant-tree-indent-unit-start" : "");
+                    //+ (index + 1 == pcount ? " ant-tree-indent-unit-end" : "");
+                }
+                <span class='@unitcls'></span>
+            }
+        </span>
+    }
+    @if (ChildContent != null)
+    {
+        string switchercls = "ant-tree-switcher ant-tree-switcher_" + (IsExpanded ? "open" : "close");
+        <span class="@switchercls" @onclick="ToggleExpandedWithAnimate">
+            <span role='img' aria-label='caret-down' class='anticon anticon-caret-down ant-tree-switcher-icon'><svg viewBox='0 0 1024 1024' focusable='false' class='' data-icon='caret-down' width='1em' height='1em' fill='currentColor' aria-hidden='true'><path d='M840.4 300H183.6c-19.7 0-30.7 20.8-18.5 35l328.4 380.8c9.4 10.9 27.5 10.9 37 0L858.9 335c12.2-14.2 1.2-35-18.5-35z'></path></svg></span>
+        </span>
+    }
+    else
+    {
+        <span class='ant-tree-switcher ant-tree-switcher-noop'></span>
+    }
+    @if (Tree.Checkable)
+    {
+        bool? cs = IsChecked; //TODO:CheckedState;
+        string checkcls;
+        if (cs == null) checkcls = "indeterminate";
+        else if (cs == true) checkcls = "checked";
+        else checkcls = "unchecked";
+        checkcls = "ant-tree-checkbox"+ (IsDisabled ? " ant-tree-checkbox-disabled" : "") + " ant-tree-checkbox-" + checkcls;
+        <span class="@checkcls" @onclick="ToggleCheckedState"><span class='ant-tree-checkbox-inner'></span></span>
+    }
+
+    @{
+        string wrappercls = "ant-tree-node-content-wrapper ant-tree-node-content-wrapper-normal" + (IsSelected ? " ant-tree-node-selected" : "");
+        var nodetemplate = this.NodeTemplate ?? Tree.NodeTemplate;
+
+    }
+
+    <span class="@wrappercls" @onclick="ToggleSelect">
+        @if (Tree.ShowIcon)
+        {
+            var template = this.IconTemplate ?? Tree.NodeIconTemplate;
+
+            <span class="ant-tree-iconEle ant-tree-icon__customize">
+                @if (template != null)
+                {
+                    @template(this)
+                }
+                else
+                {
+                    string iconType = this.IconType ?? Tree.IconType;
+                    if (!string.IsNullOrEmpty(iconType))
+                    {
+                        <AntIcon Type="@iconType" />
+                    }
+                }
+            </span>
+        }
+
+
+        <span class="ant-tree-title">
+            @if (nodetemplate != null)
+            {
+                @nodetemplate(this)
+            }
+            else
+            {
+                @this.Text
+            }
+        </span>
+
+
+    </span>
+
+</div>
+
+
+@if (ChildContent != null && IsExpanded)
+{
+    <CascadingValue Value="this">
+        @ChildContent
+    </CascadingValue>
+}
+
+
