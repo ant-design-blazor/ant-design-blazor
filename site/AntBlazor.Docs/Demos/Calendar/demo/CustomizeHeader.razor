@@ -71,7 +71,7 @@
                 </AntTitle>
                 <AntRow Gutter="8">
                     <AntCol>
-                        <AntRadioGroup size="small" OnChange="value => args.OnTypeChange.InvokeAsync(value)" @bind-Value="@args.Type">
+                        <AntRadioGroup size="small" OnChange="value => args.OnTypeChange.InvokeAsync(value)" Value="@args.Type">
                             <AntRadio RadioButton Value="@DatePickerType.Month">Month</AntRadio>
                             <AntRadio RadioButton Value="@DatePickerType.Year">Year</AntRadio>
                         </AntRadioGroup>
