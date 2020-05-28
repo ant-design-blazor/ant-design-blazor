@@ -43,9 +43,9 @@
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
   </Target>
 
-  <!--<Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
+  <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:docs" />
-  </Target>-->
+  </Target>
 
   <PropertyGroup>
     <CLIProjectDir>site/AntDesign.Docs.Build.CLI</CLIProjectDir>
