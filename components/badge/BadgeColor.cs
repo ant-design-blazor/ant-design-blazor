@@ -1,6 +1,6 @@
 ﻿namespace AntBlazor
 {
-    public static class AntBadgeColor
+    public static class BadgeColor
     {
         public const string Pink = "pink";
         public const string Red = "red";
