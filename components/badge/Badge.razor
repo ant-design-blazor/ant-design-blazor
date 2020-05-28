@@ -1,0 +1,64 @@
+@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<span class="@ClassMapper.Class" @ref="Ref" id="@Id">
+    @if (ChildContent != null)
+    {
+        @ChildContent
+    }
+
+    @if (HasStatusOrColor)
+    {
+        <span class="@($"ant-badge-status-dot {(StatusOrPresetColor!=null? $"ant-badge-status-{StatusOrPresetColor}":"")}")" style="@(PresetColor == null && string.IsNullOrWhiteSpace(Color)?$"background:{Color};":"") @Style"></span>
+
+        @if (!string.IsNullOrEmpty(Text))
+        {
+            <span class="ant-badge-status-text">@Text</span>
+        }
+    }
+    @if (CountTemplate != null)
+    {
+        <span role="img" class="ant-scroll-number-custom-component">@CountTemplate</span>
+    }
+    else
+    {
+
+        @if (!string.IsNullOrEmpty(Text))
+        {
+            <span class="ant-badge-status-text">@Text</span>
+        }
+        @if (CountTemplate != null)
+        {
+            @CountTemplate
+        }
+        else if (_showSup)
+        {
+            <sup class="@CountClassMapper.Class" style="@CountStyle @Style" title="@CountNumber">
+                @if (!Dot)
+                {
+                    @if (CountNumber <= OverflowCount)
+                    {
+                        @for (int i = 0; i < _maxNumberArray.Length; i++)
+                        {
+                            @if (_countArray.Length > i)
+                            {
+                                <span class="ant-scroll-number-only" style="transform: @($"translateY(-{_countArray[i] * 100}%)")">
+                                    @foreach (var p in _countSingleArray)
+                                    {
+                                        <p class="ant-scroll-number-only-unit @(p == _countArray[i] ? "current" : "")">
+                                            @p
+                                        </p>
+                                    }
+                                </span>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        @($"{OverflowCount}+")
+                    }
+                }
+            </sup>
+        }
+    }
+</span>

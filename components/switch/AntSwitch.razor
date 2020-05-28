@@ -2,41 +2,43 @@
 @using OneOf;
 @inherits AntDomComponentBase
 
-<button type="button" role="switch"
-        aria-checked="@_isChecked"
-        disabled="@Disabled"
-        class="@ClassMapper.Class"
-        style="@Style"
-        @onclick="@OnClickHandler">
-    @if (Loading)
-    {
-        <AntIcon type="loading" Class="@($"{prefixCls}-loading-icon")" />
-    }
-    <span class="@($"{prefixCls}-inner")">
-        @if (_isChecked)
+    <button type="button" role="switch"
+            aria-checked="@_isChecked"
+            disabled="@Disabled"
+            class="@ClassMapper.Class"
+            style="@Style"
+            ant-click-animating="true"
+            @onclick="@OnClickHandler">
+        @if (Loading)
         {
-            if (CheckedChildren.IsT0)
+            <AntIcon Type="loading" Class="@($"{prefixCls}-loading-icon")" />
+        }
+        <div class="@($"{prefixCls}-handle")"></div>
+        <span class="@($"{prefixCls}-inner")">
+            @if (_isChecked)
             {
-                @(CheckedChildren.AsT0)
+                if (CheckedChildren.IsT0)
+                {
+                    @(CheckedChildren.AsT0)
+                }
+                else
+                {
+                    @(CheckedChildren.AsT1)
+                }
             }
             else
             {
-                @(CheckedChildren.AsT1)
+                if (UnCheckedChildren.IsT0)
+                {
+                    @(UnCheckedChildren.AsT0)
+                }
+                else
+                {
+                    @(UnCheckedChildren.AsT1)
+                }
             }
-        }
-        else
-        {
-            if (UnCheckedChildren.IsT0)
-            {
-                @(UnCheckedChildren.AsT0)
-            }
-            else
-            {
-                @(UnCheckedChildren.AsT1)
-            }
-        }
-    </span>
-</button>
+        </span>
+    </button>
 
 @code {
 
