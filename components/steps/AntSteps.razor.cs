@@ -45,10 +45,11 @@ namespace AntBlazor
 
         protected override void Dispose(bool disposing)
         {
-            foreach (AntStep step in _children)
+            for (int i = 0; i < _children.Count; i++)
             {
-                step.Dispose();
+                _children[i].Dispose();
             }
+
             _children.Clear();
             base.Dispose(disposing);
         }

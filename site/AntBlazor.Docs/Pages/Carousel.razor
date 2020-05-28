@@ -78,12 +78,12 @@
             <Description>There are 4 position options available.</Description>
             <Demo>
                 <div>
-                    <AntRadioGroup @bind-Value="_position" Style="margin-bottom: 8px;">
-                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Top.ToString()">Top</AntRadio>
-                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Bottom.ToString()">Bottom</AntRadio>
-                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Left.ToString()">Left</AntRadio>
-                        <AntRadio RadioButton Value="@AntCarouselDotPosition.Right.ToString()">Right</AntRadio>
-                    </AntRadioGroup>
+                    <RadioGroup @bind-Value="_position" Style="margin-bottom: 8px;">
+                        <Radio RadioButton Value="@AntCarouselDotPosition.Top.ToString()">Top</Radio>
+                        <Radio RadioButton Value="@AntCarouselDotPosition.Bottom.ToString()">Bottom</Radio>
+                        <Radio RadioButton Value="@AntCarouselDotPosition.Left.ToString()">Left</Radio>
+                        <Radio RadioButton Value="@AntCarouselDotPosition.Right.ToString()">Right</Radio>
+                    </RadioGroup>
                     <AntCarousel DotPosition="@_position">
                         <AntCarouselSlick>
                             <h3>1</h3>

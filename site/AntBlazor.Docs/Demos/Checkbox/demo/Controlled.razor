@@ -1,0 +1,62 @@
+<div>
+    <p style="margin-bottom: 20px">
+        <Checkbox Checked="@checkValue"  
+                    Disabled="@disableValue" 
+                    CheckedChange="CheckChanged">
+        @label
+        </Checkbox>
+    </p>     
+        <p>
+        <AntButton Type="primary" Size="small"  @onclick="@CheckClick">@checkTitle</AntButton>
+        <AntButton Type="primary" Size="small"  @onclick="@DisableClick">@disableTitle</AntButton>
+      </p>     
+  </div>
+
+  @code{
+
+      private bool checkValue { get; set; } = false;
+      private bool disableValue { get; set; } = false;
+      private string label { get; set; } = "Check-Enable";
+      private string checkTitle { get; set; } = "Check";
+      private string disableTitle { get; set; } = "Enable";
+
+      void CheckChanged()
+      {
+          CheckClick();
+      }
+
+
+
+      void CheckClick()
+      {
+          if (checkValue)
+          {
+              checkTitle = "Check";
+              checkValue = false;
+          }
+          else
+          {
+              checkTitle = "Uncheck";
+              checkValue = true;
+          }
+
+          label = $"{checkTitle}-{disableTitle}";
+      }
+
+
+
+      void DisableClick()
+      {
+          if (disableValue)
+          {
+              disableTitle = "Enabled";
+              disableValue = false;
+          }
+          else
+          {
+              disableTitle = "Disabled";
+              disableValue = true;
+          }
+          label = $"{checkTitle}-{disableTitle}";
+      }
+  }

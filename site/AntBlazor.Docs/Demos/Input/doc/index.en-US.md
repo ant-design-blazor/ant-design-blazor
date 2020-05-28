@@ -28,6 +28,6 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | Prefix | The prefix icon for the Input.                           | RenderFragment        | -        |
 | Suffix | The suffix icon for the Input.                            | RenderFragment        | -         |
 | Type            |The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)         | string  | -         |
-| OnChange |  	callback when the content is change                                | function(e)        | 0         |
-| OnPressEnter | The callback function that is triggered when Enter key is pressed.                           | function(e)        | -         |
-| OnInput | callback when user input                              | function(e)        | -         |
+| OnChange |callback when the content is change                                | function(e)        | 0         |
+| OnPressEnter |The callback function that is triggered when Enter key is pressed.                           | function(e)        | -         |
+| OnInput |callback when user input                              | function(e)        | -         |
