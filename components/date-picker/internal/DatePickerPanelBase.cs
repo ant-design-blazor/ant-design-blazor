@@ -46,11 +46,29 @@ namespace AntDesign
         [Parameter]
         public Func<DateTime, bool> DisabledDate { get; set; } = null;
 
+        /// <summary>
+        /// for Calendar.DateFullCellRender、DatePicker.DateRender
+        /// </summary>
         [Parameter]
         public Func<DateTime, DateTime, RenderFragment> DateRender { get; set; }
 
+        /// <summary>
+        /// for Calendar.MonthFullCellRender、DatePicker.MonthCellRender
+        /// </summary>
         [Parameter]
         public Func<DateTime, RenderFragment> MonthCellRender { get; set; }
+
+        /// <summary>
+        /// for Calendar.DateCellRender
+        /// </summary>
+        [Parameter]
+        public Func<DateTime, RenderFragment> CalendarDateRender { get; set; }
+
+        /// <summary>
+        /// for Calendar.MonthCellRender
+        /// </summary>
+        [Parameter]
+        public Func<DateTime, RenderFragment> CalendarMonthCellRender { get; set; }
 
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
@@ -70,6 +88,8 @@ namespace AntDesign
                 { "DisabledDate", DisabledDate },
                 { "DateRender", DateRender },
                 { "MonthCellRender", MonthCellRender },
+                { "CalendarDateRender", CalendarDateRender },
+                { "CalendarMonthCellRender", CalendarMonthCellRender },
                 { "RenderExtraFooter", RenderExtraFooter },
                 { "IsRange", IsRange },
                 { "PickerIndex", PickerIndex },

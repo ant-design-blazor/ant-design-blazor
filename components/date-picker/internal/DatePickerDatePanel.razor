@@ -7,9 +7,15 @@
     var calendar = CultureInfo.InvariantCulture.Calendar;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
-    DayOfWeek monthFirstDayOfWeek = calendar.GetDayOfWeek(monthFirstDayDate);
+    int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
 
-    int diffDay = 1 - (int)monthFirstDayOfWeek;
+    // sunday should be 7
+    if (monthFirstDayOfWeek == 0)
+    {
+        monthFirstDayOfWeek = 7;
+    }
+
+    int diffDay = 1 - monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
 

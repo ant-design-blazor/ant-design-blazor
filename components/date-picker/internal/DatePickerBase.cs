@@ -535,7 +535,12 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        public void ChangePickerType(string type, int index = 0)
+        public void ChangePickerType(string type)
+        {
+            ChangePickerType(type, 0);
+        }
+
+        public virtual void ChangePickerType(string type, int index)
         {
             _prePickerStack.Push(_picker);
             _picker = type;

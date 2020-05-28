@@ -3,8 +3,8 @@
 
 @{
     Action ClosePanel = () => {  };
-    Action<DateTime, int> ChangePickerValue = (date, index) => { Calendar.ChangeValue(date); };
-    Action<DateTime, int> ChangeValue = (date, index) => { Calendar.ChangeValue(date); };
+    Action<DateTime, int> ChangePickerValue = async (date, index) => { await Calendar.ChangeValue(date); };
+    Action<DateTime, int> ChangeValue = async (date, index) => { await Calendar.ChangeValue(date); };
     Action<string, int> ChangePickerType = (type, index) => { Calendar.ChangePickerType(type, index); };
     Func<int, DateTime> GetIndexPickerValue = (index) => Calendar.Value;
     Func<int, DateTime?> GetIndexValue = (index) => Calendar.Value;
@@ -23,6 +23,8 @@
             { "DisabledDate", Calendar.DisabledDate },
             { "DateRender", Calendar.DateFullCellRender },
             { "MonthCellRender", Calendar.MonthFullCellRender },
+            { "CalendarDateRender", Calendar.DateCellRender },
+            { "CalendarMonthCellRender", Calendar.MonthCellRender },
             { "OnSelect", OnSelect },
             { "PickerIndex", 0 },
             { "IsCalendar", true },

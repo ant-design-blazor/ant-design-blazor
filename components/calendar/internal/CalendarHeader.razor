@@ -6,42 +6,54 @@
      style="@Style"
      id="@Id"
      @ref="@Ref">
-    <select class="@(PrefixCls)-year-select" @onchange="e => OnSelectYear(e)">
+    <select class="@(PrefixCls)-year-select" 
+            @onchange="async e => await OnSelectYear(e)">
         @{
-            DateTime yearDate = Calendar.Value.AddYears(-10);
-        }
-        @for (int i = 0; i < 20; i++)
-        {
-            if (yearDate.Year == Calendar.Value.Year)
+            int startYear = Calendar.Value.AddYears(-10).Year;
+            int endYear = Calendar.Value.AddYears(10).Year;
+
+            if (Calendar.ValidRange != null)
             {
-                <option class=@($"ant-select-item") selected="selected" value="@yearDate.Year">@(yearDate.Year)年</option>
+                startYear = Calendar.ValidRange[0].Year;
+                endYear = Calendar.ValidRange[1].Year;
+            }
+        }
+        @for (int year = startYear; year <= endYear; year++)
+        {
+            if (year == Calendar.Value.Year)
+            {
+                <option class=@($"ant-select-item") selected="selected" value="@year">@(year)年</option>
             }
             else
             {
-    <option class=@($"ant-select-item") value="@yearDate.Year">@(yearDate.Year)年</option>
+                <option class=@($"ant-select-item") value="@year">@(year)年</option>
             }
-
-            yearDate = yearDate.AddYears(1);
         }
     </select>
-    @if (Calendar.Mode == DatePickerType.Date)
+    @if (Calendar.Mode == DatePickerType.Month)
     {
-        <select class="@(PrefixCls)-month-select" @onchange="e => OnSelectMonth(e)">
+        <select class="@(PrefixCls)-month-select" @onchange="async e => await OnSelectMonth(e)">
         @{
-            DateTime monthDate = new DateTime(Calendar.Value.Year, 1, Calendar.Value.Day);
-        }
-        @for (int i = 0; i < 12; i++)
-        {
-            if (monthDate.Month == Calendar.Value.Month)
+            int startMonth = 1;
+            int endMonth = 12;
+
+            if (Calendar.ValidRange != null)
             {
-                <option class=@($"ant-select-item") selected="selected" value="@monthDate.Month">@(monthDate.Month)月</option>
+                startMonth = Calendar.Value.Year == Calendar.ValidRange[0].Year ? Calendar.ValidRange[0].Month : startMonth;
+                endMonth = Calendar.Value.Year == Calendar.ValidRange[1].Year ? Calendar.ValidRange[1].Month : endMonth;
+            }
+
+        }
+        @for (int month = startMonth; month <= endMonth; month++)
+        {
+            if (month == Calendar.Value.Month)
+            {
+                <option class=@($"ant-select-item") selected="selected" value="@month">@(month)月</option>
             }
             else
             {
-                <option class=@($"ant-select-item") value="@monthDate.Month">@(monthDate.Month)月</option>
+                <option class=@($"ant-select-item") value="@month">@(month)月</option>
             }
-
-            monthDate = monthDate.AddMonths(1);
         }
         </select>
     }
@@ -49,8 +61,8 @@
     <AntRadioGroup class="@($"{PrefixCls}-mode-switch")"
                    @bind-Value="Calendar.Mode"
                    OnChange="OnModeChange">
-      <AntRadio RadioButton value="@DatePickerType.Date">月</AntRadio>
-      <AntRadio RadioButton value="@DatePickerType.Month">年</AntRadio>
+      <AntRadio RadioButton Value="@DatePickerType.Month">月</AntRadio>
+      <AntRadio RadioButton Value="@DatePickerType.Year">年</AntRadio>
     </AntRadioGroup>
 </div>
 
@@ -62,22 +74,30 @@
     [CascadingParameter(Name = "Calendar")]
     public Calendar Calendar { get; set; }
 
+    private DateTime currentDate;
+    private bool hasChangeYear = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        currentDate = Calendar.Value;
+    }
+
     private void OnModeChange(string value)
     {
         Calendar.ChangePickerType(value);
     }
 
-    private void OnSelectYear(ChangeEventArgs args)
+    private async Task OnSelectYear(ChangeEventArgs args)
     {
         int year = Convert.ToInt32(args.Value);
-        Console.WriteLine($"OnSelectYear:{year}");
-        Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, year: year));
+        await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, year: year));
     }
 
-    private void OnSelectMonth(ChangeEventArgs args)
+    private async Task OnSelectMonth(ChangeEventArgs args)
     {
         int month = Convert.ToInt32(args.Value);
-        Console.WriteLine($"OnSelectMonth:{month}");
-        Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, month: month));
+        await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, month: month));
     }
 }

@@ -32,22 +32,18 @@ title: Calendar
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| dateCellRender | 自定义渲染日期单元格，返回内容会被追加到单元格 | function(date: moment): ReactNode | 无 |  |
-| dateFullCellRender | 自定义渲染日期单元格，返回内容覆盖单元格 | function(date: moment): ReactNode | 无 |  |
-| defaultValue | 默认展示的日期 | [moment](http://momentjs.com/) | 默认日期 |  |
-| disabledDate | 不可选择的日期 | (currentDate: moment) => boolean | 无 |  |
+| dateCellRender | 自定义渲染日期单元格，返回内容会被追加到单元格 | Func(DateTime) => RenderFragment | 无 |  |
+| dateFullCellRender | 自定义渲染日期单元格，返回内容覆盖单元格 | Func(DateTime) => RenderFragment | 无 |  |
+| defaultValue | 默认展示的日期 | DateTime | 默认日期 |  |
+| disabledDate | 不可选择的日期 | (DateTime) => boolean | 无 |  |
 | fullscreen | 是否全屏显示 | boolean | true |  |
-| locale | 国际化配置 | object | [默认配置](https://github.com/ant-design/ant-design/blob/master/components/date-picker/locale/example.json) |  |
-| mode | 初始模式，`month/year` | string | month |  |
-| monthCellRender | 自定义渲染月单元格，返回内容会被追加到单元格 | function(date: moment): ReactNode | 无 |  |
-| monthFullCellRender | 自定义渲染月单元格，返回内容覆盖单元格 | function(date: moment): ReactNode | 无 |  |
-| validRange | 设置可以显示的日期 | \[[moment](http://momentjs.com/), [moment](http://momentjs.com/)] | 无 |  |
-| value | 展示日期 | [moment](http://momentjs.com/) | 当前日期 |  |
-| onPanelChange | 日期面板变化回调 | function(date: moment, mode: string) | 无 |  |
-| onSelect | 点击选择日期回调 | function(date: moment） | 无 |  |
-| onChange | 日期变化回调 | function(date: moment） | 无 |  |
-| headerRender | 自定义头部内容 | function(object:{value: moment, type: string, onChange: f(), onTypeChange: f()}) | 无 |  |
-
-## FAQ
-
-- [如何在 Calendar 中使用自定义日期库（如 dayjs ）](/docs/react/replace-moment#Calendar)
+| locale(TODO) | 国际化配置 | object | [默认配置](https://github.com/ant-design/ant-design/blob/master/components/date-picker/locale/example.json) |  |
+| mode | 初始模式，`DatePickerType.Month/DatePickerType.Year` | DatePickerType | DatePickerType.Month |  |
+| monthCellRender | 自定义渲染月单元格，返回内容会被追加到单元格 | Func(DateTime) => RenderFragment | 无 |  |
+| monthFullCellRender | 自定义渲染月单元格，返回内容覆盖单元格 | Func(DateTime) => RenderFragment | 无 |  |
+| validRange | 设置可以显示的日期 | [DateTime, DateTime] | 无 |  |
+| value | 展示日期 | DateTime | 当前日期 |  |
+| onPanelChange | 日期面板变化回调 | Func(DateTime date, string mode) | 无 |  |
+| onSelect | 点击选择日期回调 | Func(DateTime） | 无 |  |
+| onChange | 日期变化回调 | Func(DateTime） | 无 |  |
+| headerRender | 自定义头部内容 | Func(CalendarHeaderRenderArgs) | 无 |  |

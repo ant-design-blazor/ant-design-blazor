@@ -59,7 +59,16 @@
                                                 @RenderColValue(currentColDate)
                                             }
                                         </div>
-                                        <div class="@(PrefixCls)-calendar-date-content"></div>
+                                        <div class="@(PrefixCls)-calendar-date-content">
+                                            @if (Picker == DatePickerType.Date && CalendarDateRender != null)
+                                            {
+                                                @(CalendarDateRender(currentColDate))
+                                            }
+                                            else if (Picker == DatePickerType.Month && CalendarMonthCellRender != null)
+                                            {
+                                                @(CalendarMonthCellRender(currentColDate))
+                                            }
+                                        </div>
                                     }
                                     else
                                     {
