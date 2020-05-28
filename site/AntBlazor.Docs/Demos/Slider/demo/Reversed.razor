@@ -1,0 +1,16 @@
+﻿<div>
+    <Slider Reverse="@reversed" DefaultValue="30" />
+    <Slider Reverse="@reversed" DefaultValue="(20, 50)" />
+    Reversed: <Switch Size="small" Checked="@reversed" OnChange="(e)=>OnSwitchReverse(e)" />
+</div>
+
+
+@code
+{
+    private bool reversed = true;
+
+    private void OnSwitchReverse(bool args)
+    {
+        reversed = args;
+    }
+}
