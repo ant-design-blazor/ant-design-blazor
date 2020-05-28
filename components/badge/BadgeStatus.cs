@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AntBlazor
 {
-    public static class AntBadgeStatus
+    public static class BadgeStatus
     {
         public const string Default = "default";
         public const string Success = "success";
