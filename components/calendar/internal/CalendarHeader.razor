@@ -59,7 +59,7 @@
     }
     
     <AntRadioGroup class="@($"{PrefixCls}-mode-switch")"
-                   @bind-Value="Calendar.Mode"
+                   Value="@Calendar.Mode"
                    OnChange="OnModeChange">
       <AntRadio RadioButton Value="@DatePickerType.Month">月</AntRadio>
       <AntRadio RadioButton Value="@DatePickerType.Year">年</AntRadio>
