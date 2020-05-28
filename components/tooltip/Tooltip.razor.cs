@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
-using AntBlazor.Internal;
+using AntDesign.Internal;
 using OneOf;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Tooltip : OverlayTrigger
     {

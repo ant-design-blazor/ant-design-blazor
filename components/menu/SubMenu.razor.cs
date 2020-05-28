@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AntBlazor.Internal;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class SubMenu : AntDomComponentBase
     {

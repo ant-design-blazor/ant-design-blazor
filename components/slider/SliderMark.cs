@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class SliderMark
     {

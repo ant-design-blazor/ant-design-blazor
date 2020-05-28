@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
-namespace AntBlazor.JsInterop
+namespace AntDesign.JsInterop
 {
     public class InteropService
     {

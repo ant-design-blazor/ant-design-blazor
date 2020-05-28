@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class SpaceItem : ComponentBase
     {

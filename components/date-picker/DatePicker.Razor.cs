@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using AntBlazor.Internal;
-using AntBlazor.JsInterop;
+using AntDesign.Internal;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class DatePicker : AntDomComponentBase
     {

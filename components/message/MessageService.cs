@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     /// <summary>
     /// Message Service

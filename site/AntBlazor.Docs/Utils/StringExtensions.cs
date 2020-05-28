@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AntBlazor.Docs.Utils
+namespace AntDesign.Docs.Utils
 {
     public static class StringExtensions
     {

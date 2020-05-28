@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AntBlazor.Docs.Routing
+namespace AntDesign.Docs.Routing
 {
     internal class TemplateParser
     {

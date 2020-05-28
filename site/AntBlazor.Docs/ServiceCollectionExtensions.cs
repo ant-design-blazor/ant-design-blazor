@@ -1,17 +1,17 @@
 ﻿using System.Reflection;
-using AntBlazor;
-using AntBlazor.Docs.Highlight;
-using AntBlazor.Docs.Localization;
-using AntBlazor.Docs.Routing;
-using AntBlazor.Docs.Services;
+using AntDesign;
+using AntDesign.Docs.Highlight;
+using AntDesign.Docs.Localization;
+using AntDesign.Docs.Routing;
+using AntDesign.Docs.Services;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddAntBlazorDocs(this IServiceCollection services)
+        public static IServiceCollection AddAntDesignDocs(this IServiceCollection services)
         {
-            services.AddAntBlazor();
+            services.AddAntDesign();
             services.AddSingleton<RouteManager>();
             services.AddScoped<DemoService>();
             services.AddSingleton<ILanguageService>(new InAssemblyLanguageService(Assembly.GetExecutingAssembly()));

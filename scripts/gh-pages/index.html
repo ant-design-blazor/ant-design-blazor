@@ -8,7 +8,7 @@
     <title>Ant Design of Blazor</title>
     <base href="/" />
     <link rel="icon" href="logo.png" type="image/x-icon">
-    <link href="_content/AntBlazor.Docs/css/docs.css" rel="stylesheet">
+    <link href="_content/AntDesign.Docs/css/docs.css" rel="stylesheet">
     <link href="manifest.json" rel="manifest" />
 </head>
 
@@ -26,7 +26,7 @@
                 }
 
                 #root {
-                    background-image: url("_content/AntBlazor.Docs/home_bg.png");
+                    background-image: url("_content/AntDesign.Docs/home_bg.png");
                     background-repeat: no-repeat;
                     background-size: 100% auto;
                 }
@@ -227,15 +227,15 @@
     <!-- End Single Page Apps for GitHub Pages -->
 
     <script src="_framework/blazor.webassembly.js"></script>
-    <script src="_content/AntBlazor/js/ant-design-blazor.js"></script>
-    <script src="_content/AntBlazor.Docs/js/prism.js"></script>
+    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+    <script src="_content/AntDesign.Docs/js/prism.js"></script>
     <script>
-        window.antBlazor.Prism = {};
-        window.antBlazor.Prism.highlight = function (code, language) {
+        window.AntDesign.Prism = {};
+        window.AntDesign.Prism.highlight = function (code, language) {
             return Prism.highlight(code, Prism.languages[language], language);
         }
 
-        window.antBlazor.Prism.highlightAll = function () {
+        window.AntDesign.Prism.highlightAll = function () {
             Prism.highlightAll();
         }
     </script>

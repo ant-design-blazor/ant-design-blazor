@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public abstract class AntTypographyBase : AntDomComponentBase
     {

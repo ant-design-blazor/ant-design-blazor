@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using AntBlazor.Docs.Localization;
+using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor.Docs.Routing
+namespace AntDesign.Docs.Routing
 {
     public class RouteManager
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public static class DateHelper
     {

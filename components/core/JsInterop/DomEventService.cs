@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Microsoft.JSInterop;
 
-namespace AntBlazor.JsInterop
+namespace AntDesign.JsInterop
 {
     public class DomEventService
     {

@@ -1,4 +1,4 @@
-﻿using AntBlazor.JsInterop;
+﻿using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     using SliderValueType = OneOf<double, (double, double)>;
 

@@ -343,7 +343,7 @@ package-lock.json
 /components/wwwroot/css/ant-design-blazor.css
 /components/wwwroot/js/ant-design-blazor.js
 /components/wwwroot/js/ant-design-blazor.js.map
-/site/AntBlazor.Docs/wwwroot/css/docs.css
+/site/AntDesign.Docs/wwwroot/css/docs.css
 /site/**/wwwroot/docs
-/components/AntBlazor.xml
-/site/AntBlazor.Docs/wwwroot/meta
+/components/AntDesign.xml
+/site/AntDesign.Docs/wwwroot/meta

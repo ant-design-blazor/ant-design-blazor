@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AntBlazor.Docs.Routing
+namespace AntDesign.Docs.Routing
 {
     public class Route
     {

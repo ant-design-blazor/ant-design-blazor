@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace AntBlazor.Docs.Localization
+namespace AntDesign.Docs.Localization
 {
     public class InAssemblyLanguageService : ILanguageService
     {

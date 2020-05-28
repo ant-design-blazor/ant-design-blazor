@@ -5,7 +5,7 @@ using System.Dynamic;
 using System.Text;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class NotificationConfig
     {

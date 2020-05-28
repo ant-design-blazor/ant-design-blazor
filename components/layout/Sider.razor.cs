@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Threading.Tasks;
-using AntBlazor.JsInterop;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Sider : AntDomComponentBase
     {

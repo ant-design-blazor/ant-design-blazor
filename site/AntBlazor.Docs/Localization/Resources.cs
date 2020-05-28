@@ -2,7 +2,7 @@
 using System.Linq;
 using YamlDotNet.Serialization;
 
-namespace AntBlazor.Docs.Localization
+namespace AntDesign.Docs.Localization
 {
     public class Resources
     {

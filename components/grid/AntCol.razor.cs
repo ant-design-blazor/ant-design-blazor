@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     using StringNumber = OneOf<string, int>;
 

@@ -5,10 +5,10 @@ using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using AntBlazor.JsInterop;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class AntCarousel : AntDomComponentBase
     {

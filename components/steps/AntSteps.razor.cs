@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class AntSteps : AntDomComponentBase
     {

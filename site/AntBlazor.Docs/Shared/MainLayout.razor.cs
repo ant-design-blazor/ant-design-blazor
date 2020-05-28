@@ -2,11 +2,11 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using AntBlazor.Docs.Localization;
-using AntBlazor.Docs.Services;
+using AntDesign.Docs.Localization;
+using AntDesign.Docs.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor.Docs.Shared
+namespace AntDesign.Docs.Shared
 {
     public partial class MainLayout : IDisposable
     {

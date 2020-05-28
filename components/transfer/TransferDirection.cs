@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text;
 using Ardalis.SmartEnum;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public static class TransferDirection
     {

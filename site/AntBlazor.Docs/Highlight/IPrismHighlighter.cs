@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor.Docs.Highlight
+namespace AntDesign.Docs.Highlight
 {
     public interface IPrismHighlighter
     {

@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     /// <summary>
     /// AntNotification Service

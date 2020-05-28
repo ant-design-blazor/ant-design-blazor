@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     /// <summary>
     /// Base class for any input control that optionally supports an <see cref="EditContext"/>.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace AntBlazor.Docs.Routing
+namespace AntDesign.Docs.Routing
 {
     internal class TemplateSegment
     {

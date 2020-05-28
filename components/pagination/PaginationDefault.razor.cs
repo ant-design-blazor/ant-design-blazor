@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class PaginationDefault : AntDomComponentBase
     {

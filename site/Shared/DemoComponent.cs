@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AntBlazor.Docs
+namespace AntDesign.Docs
 {
     public class DemoComponent
     {

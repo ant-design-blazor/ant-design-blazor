@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Ardalis.SmartEnum;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public sealed class AntMenuMode : SmartEnum<AntMenuMode>
     {

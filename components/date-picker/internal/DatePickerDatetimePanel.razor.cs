@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AntBlazor.Internal
+namespace AntDesign.Internal
 {
     public partial class DatePickerDatetimePanel : DatePickerPanelBase
     {
