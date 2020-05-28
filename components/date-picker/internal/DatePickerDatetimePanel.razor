@@ -67,11 +67,15 @@
         DatePickerDisabledTime disabledTime = GetDisabledTime();
     }
     <div class="@(PrefixCls)-time-panel">
-        <div class="@(PrefixCls)-header">
-            <div class="@(PrefixCls)-header-view">
-                @Value.ToString(timeFormat) <br />
+        @if(Picker == DatePickerType.Date)
+        {
+            <div class="@(PrefixCls)-header">
+                <div class="@(PrefixCls)-header-view">
+                    @Value.ToString(timeFormat) <br />
+                </div>
             </div>
-        </div>
+        }
+        
         <div class="@(PrefixCls)-content">
             @if (timeFormat.ToLower().Contains("hh"))
             {

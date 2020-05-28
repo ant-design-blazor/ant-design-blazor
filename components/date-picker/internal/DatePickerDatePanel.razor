@@ -74,69 +74,6 @@
             @currentColDate.Day
         </RenderColValue>
     </DatePickerTemplate>
-
-    @if (IsShowTime)
-    {
-        var startTime = new DateTime(2020, 1, 1, 0, 0, 0);
-
-        <div class="@(PrefixCls)-time-panel">
-            <div class="@(PrefixCls)-header">
-                <div class="@(PrefixCls)-header-view">
-                    @PickerValue.ToString("hh:mm:ss") <br />
-                </div>
-            </div>
-            <div class="@(PrefixCls)-content">
-                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
-                    @for (int hour = 0; hour < 24; hour++)
-                    {
-                        var viewTime = startTime;
-                        string isSelectedCls = viewTime.Hour == Value.Hour ? $"{PrefixCls}-time-panel-cell-selected" : "";
-
-                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls">
-                            <div class="@(PrefixCls)-time-panel-cell-inner"
-                                 @onclick="e => OnSelectHour(viewTime)">
-                                @hour
-                            </div>
-                        </li>
-
-                        startTime = startTime.AddHours(1);
-                    }
-                </ul>
-                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
-                    @for (int minute = 0; minute < 60; minute++)
-                    {
-                        var viewTime = startTime;
-                        string isSelectedCls = viewTime.Minute == Value.Minute ? $"{PrefixCls}-time-panel-cell-selected" : "";
-
-                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls">
-                            <div class="@(PrefixCls)-time-panel-cell-inner"
-                                 @onclick="e => OnSelectMinute(viewTime)">
-                                @minute
-                            </div>
-                        </li>
-
-                        startTime = startTime.AddMinutes(1);
-                    }
-                </ul>
-                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
-                    @for (int second = 0; second < 60; second++)
-                    {
-                        var viewTime = startTime;
-                        string isSelectedCls = viewTime.Second == Value.Second ? $"{PrefixCls}-time-panel-cell-selected" : "";
-
-                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls">
-                            <div class="@(PrefixCls)-time-panel-cell-inner"
-                                 @onclick="e => OnSelectSecond(viewTime)">
-                                @second
-                            </div>
-                        </li>
-
-                        startTime = startTime.AddSeconds(1);
-                    }
-                </ul>
-            </div>
-        </div>
-    }
 </div>
 
 @if (RenderExtraFooter != null)
