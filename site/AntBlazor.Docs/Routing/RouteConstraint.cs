@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Globalization;
 
-namespace AntBlazor.Docs.Routing
+namespace AntDesign.Docs.Routing
 {
     internal abstract class RouteConstraint
     {

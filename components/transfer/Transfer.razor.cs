@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Components.Web;
 using System.Linq;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Transfer : AntDomComponentBase
     {

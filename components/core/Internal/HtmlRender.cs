@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using Microsoft.Extensions.Logging;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class HtmlRenderer : Renderer
     {

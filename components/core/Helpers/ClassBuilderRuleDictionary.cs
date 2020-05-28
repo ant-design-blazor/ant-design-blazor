@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class ClassBuilderRuleDictionary<T, TK> : ClassBuilderRule<T>
     {

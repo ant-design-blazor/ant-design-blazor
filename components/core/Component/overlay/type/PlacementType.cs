@@ -1,6 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public sealed class PlacementType : SmartEnum<PlacementType>
     {

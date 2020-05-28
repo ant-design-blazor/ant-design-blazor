@@ -1,4 +1,4 @@
-﻿namespace AntBlazor.Docs
+﻿namespace AntDesign.Docs
 {
     public class DemoMenuItem
     {

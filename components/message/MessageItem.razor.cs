@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class MessageItem
     {

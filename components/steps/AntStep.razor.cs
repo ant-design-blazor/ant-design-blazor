@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using System.Collections.Generic;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class AntStep : AntDomComponentBase
     {

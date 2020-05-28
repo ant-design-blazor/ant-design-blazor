@@ -54,7 +54,7 @@ title: Ant Design of Blazor
 
 ## 💿 当前版本
 
-- 开发构建： [![AntBlazor](https://img.shields.io/nuget/v/AntBlazor.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
+- 开发构建： [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 
 - 0.1.0：基本实现组件后发布
 
@@ -69,33 +69,33 @@ title: Ant Design of Blazor
 - 创建 Blazor WebAssembly 项目
 
   ```
-  $ dotnet new blazorwasm -o MyAntBlazorApp
+  $ dotnet new blazorwasm -o MyAntDesignApp
   ```
 
 - 进入应用的项目文件夹，安装 Nuget 包引用
 
   ```bash
-  $ cd MyAntBlazorApp
-  $ dotnet add package AntBlazor --version 0.1.0-*
+  $ cd MyAntDesignApp
+  $ dotnet add package AntDesign --version 0.1.0-*
   ```
 
 - 在项目中注册:
 
   ```
-  services.AddAntBlazor();
+  services.AddAntDesign();
   ```
 
 - 在 `wwwroot/index.html`(WebAssembly) 或 `Pages/_Host.razor`(Server) 中引入静态文件:
 
   ```
-    <link href="_content/AntBlazor/css/ant-design-blazor.css" rel="stylesheet">
-    <script src="_content/AntBlazor/js/ant-design-blazor.js"></script>
+    <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
+    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
   ```
 
 - 在 `_Imports.razor` 中加入命名空间
 
   ```
-  @using AntBlazor
+  @using AntDesign
   ```
 
 - 最后就可以在`.razor`组件中引用啦！
@@ -144,4 +144,4 @@ title: Ant Design of Blazor
 
 ## ☀️ 授权协议
 
-[![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/LICENSE)
+[![AntDesign](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/LICENSE)

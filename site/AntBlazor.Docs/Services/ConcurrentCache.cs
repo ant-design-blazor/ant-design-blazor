@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace AntBlazor.Docs.Services
+namespace AntDesign.Docs.Services
 {
     public class ConcurrentCache<TKey, TValue>
     {

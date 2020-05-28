@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class TransferScrollArgs
     {

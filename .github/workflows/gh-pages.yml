@@ -1,74 +1,75 @@
 ﻿name: Publish Docs
 
 env:
-    Version: 0.1.0
-    NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
+  Version: 0.1.0
+  NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
 
 on:
-    push:
-        branches:
-            - 'ant-design-blazor/master'
+  push:
+    branches:
+      - "ant-design-blazor/master"
 
 jobs:
-    publish-and-deploy:
-        runs-on: ubuntu-latest
+  publish-and-deploy:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout 🛎️
-              uses: actions/checkout@v2
-              with:
-                  persist-credentials: false
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
 
-            - name: Setup .NET Core
-              uses: actions/setup-dotnet@v1
-              with:
-                  dotnet-version: 3.1.300
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.300
 
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: '10.x'
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
 
-            - name: Publish Docs 🎉
-              run: |
-                  npm install
-                  cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntBlazor.Docs.Wasm/wwwroot
-                  dotnet build
-                  dotnet publish -c Release -o cargo
+      - name: Publish Docs 🎉
+        run: |
+          npm install
+          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
+          dotnet build
+          dotnet publish -c Release -o cargo
 
-            - name: Deploy 🚀
-              uses: JamesIves/github-pages-deploy-action@releases/v3
-              with:
-                  ACCESS_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
-                  BRANCH: gh-pages
-                  FOLDER: cargo/wwwroot
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: cargo/wwwroot
 
-            - name: Deploy to Github.io 🚀
-              uses: peaceiris/actions-gh-pages@v3
-              with:
-                  personal_token: ${{ secrets.GH_PUSH_TOKEN }}
-                  external_repository: ant-design-blazor/ant-design-blazor.github.io
-                  publish_branch: master
-                  publish_dir: ./cargo/wwwroot
+      - name: Deploy to Github.io 🚀
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.GH_PUSH_TOKEN }}
+          external_repository: ant-design-blazor/ant-design-blazor.github.io
+          publish_branch: master
+          publish_dir: ./cargo/wwwroot
 
-            - name: Package Nightly Nuget 📦
-              run: |
-                  dotnet pack components/AntBlazor.csproj /p:PackageVersion=$Version-nightly-$GITHUB_RUN_ID -c Release -o pack-$GITHUB_RUN_ID --no-build --no-restore 
+      - name: Package Nightly Nuget 📦
+        run: |
+          SUFFIX=`date "+%y%m%d%H%M%S"`
+          dotnet pack components/AntDesign.csproj /p:PackageVersion=$Version-nightly-${SUFFIX} -c Release -o publish --no-build --no-restore
 
-            - name: Publish to Nuget ✔
-              run: |
-                  dotnet nuget push pack-$GITHUB_RUN_ID/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
+      - name: Publish to Nuget ✔
+        run: |
+          dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
 
-            - name: Sync to Gitee 💕
-              uses: wearerequired/git-mirror-action@master
-              env:
-                  SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-              with:
-                  source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
-                  destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
+      - name: Sync to Gitee 💕
+        uses: wearerequired/git-mirror-action@master
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        with:
+          source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
+          destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
 
-            - name: Reload Gitee Pages 😆
-              uses: mizuka-wu/gitee-pages-action@v1.0.0
-              with:
-                  repository: ant-design-blazor/ant-design-blazor
-                  cookie: ${{ secrets.GITEE_COOKIE }}
-                  branch: gh-pages
+      - name: Reload Gitee Pages 😆
+        uses: mizuka-wu/gitee-pages-action@v1.0.0
+        with:
+          repository: ant-design-blazor/ant-design-blazor
+          cookie: ${{ secrets.GITEE_COOKIE }}
+          branch: gh-pages

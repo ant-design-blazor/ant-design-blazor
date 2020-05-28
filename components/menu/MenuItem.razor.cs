@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class MenuItem : AntDomComponentBase
     {

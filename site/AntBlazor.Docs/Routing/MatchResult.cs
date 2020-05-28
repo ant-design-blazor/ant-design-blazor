@@ -1,4 +1,4 @@
-﻿namespace AntBlazor.Docs.Routing
+﻿namespace AntDesign.Docs.Routing
 {
     public class MatchResult
     {

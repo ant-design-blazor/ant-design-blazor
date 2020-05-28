@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace AntBlazor.Docs.Localization
+namespace AntDesign.Docs.Localization
 {
     public interface ILanguageService
     {

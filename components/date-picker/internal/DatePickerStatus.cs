@@ -1,5 +1,5 @@
 ﻿
-namespace AntBlazor.Internal
+namespace AntDesign.Internal
 {
     internal class DatePickerStatus
     {

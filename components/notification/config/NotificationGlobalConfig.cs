@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
     /// <summary>
     /// AntNotification全局配置

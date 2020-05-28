@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Menu : AntDomComponentBase
     {

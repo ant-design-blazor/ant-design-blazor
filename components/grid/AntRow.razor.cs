@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AntBlazor.JsInterop;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     using GutterType = OneOf<int, Dictionary<string, int>, (int, int)>;
 

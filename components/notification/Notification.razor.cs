@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Notification
     {

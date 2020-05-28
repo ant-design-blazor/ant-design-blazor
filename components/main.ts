@@ -1,9 +1,11 @@
-﻿import * as interop from './core/JsInterop/interop'
+﻿import * as interop from "./core/JsInterop/interop";
 
 declare global {
-  interface Window { antBlazor: any; }
+  interface Window {
+    AntDesign: any;
+  }
 }
 
-window.antBlazor = {
-  interop
-}
+window.AntDesign = {
+  interop,
+};

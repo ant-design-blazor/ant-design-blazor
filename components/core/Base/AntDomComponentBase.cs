@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public abstract class AntDomComponentBase : AntComponentBase
     {

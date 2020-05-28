@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     using GutterType = OneOf<int, Dictionary<string, int>, (int, int)>;
     public class ListGridType

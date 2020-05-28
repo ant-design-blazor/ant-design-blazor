@@ -1,0 +1,255 @@
+[
+  {
+    "Order": 0,
+    "Title": "文档",
+    "Type": "subMenu",
+    "Url": "docs",
+    "Children": [
+      {
+        "Order": 0,
+        "Title": "Ant Design of Blazor",
+        "Type": "menuItem",
+        "Url": "docs/introduce"
+      }
+    ]
+  },
+  {
+    "Order": 999,
+    "Title": "组件",
+    "Type": "subMenu",
+    "Url": "components",
+    "Children": [
+      {
+        "Order": 0,
+        "Title": "通用",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Button",
+            "SubTitle": "按钮",
+            "Type": "menuItem",
+            "Url": "components/button"
+          }
+        ]
+      },
+      {
+        "Order": 1,
+        "Title": "布局",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Layout",
+            "SubTitle": "布局",
+            "Type": "menuItem",
+            "Url": "components/layout"
+          },
+          {
+            "Order": 0,
+            "Title": "Space",
+            "SubTitle": "间距",
+            "Type": "menuItem",
+            "Url": "components/space"
+          }
+        ]
+      },
+      {
+        "Order": 2,
+        "Title": "导航",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Dropdown",
+            "SubTitle": "下拉菜单",
+            "Type": "menuItem",
+            "Url": "components/dropdown"
+          },
+          {
+            "Order": 0,
+            "Title": "Menu",
+            "SubTitle": "导航菜单",
+            "Type": "menuItem",
+            "Url": "components/menu"
+          },
+          {
+            "Order": 0,
+            "Title": "Pagination",
+            "SubTitle": "分页",
+            "Type": "menuItem",
+            "Url": "components/pagination"
+          }
+        ]
+      },
+      {
+        "Order": 3,
+        "Title": "数据录入",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Checkbox",
+            "SubTitle": "多选框",
+            "Type": "menuItem",
+            "Url": "components/checkbox"
+          },
+          {
+            "Order": 0,
+            "Title": "DatePicker",
+            "SubTitle": "日期选择框",
+            "Type": "menuItem",
+            "Url": "components/datepicker"
+          },
+          {
+            "Order": 0,
+            "Title": "Input",
+            "SubTitle": "输入框",
+            "Type": "menuItem",
+            "Url": "components/input"
+          },
+          {
+            "Order": 0,
+            "Title": "InputNumber",
+            "SubTitle": "数字输入框",
+            "Type": "menuItem",
+            "Url": "components/inputnumber"
+          },
+          {
+            "Order": 0,
+            "Title": "Radio",
+            "SubTitle": "单选框",
+            "Type": "menuItem",
+            "Url": "components/radio"
+          },
+          {
+            "Order": 0,
+            "Title": "Slider",
+            "SubTitle": "滑动输入条",
+            "Type": "menuItem",
+            "Url": "components/slider"
+          },
+          {
+            "Order": 0,
+            "Title": "Switch",
+            "SubTitle": "开关",
+            "Type": "menuItem",
+            "Url": "components/switch"
+          },
+          {
+            "Order": 0,
+            "Title": "TimePicker",
+            "SubTitle": "时间选择框",
+            "Type": "menuItem",
+            "Url": "components/timepicker"
+          },
+          {
+            "Order": 0,
+            "Title": "Transfer",
+            "SubTitle": "穿梭框",
+            "Type": "menuItem",
+            "Url": "components/transfer"
+          }
+        ]
+      },
+      {
+        "Order": 4,
+        "Title": "数据展示",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Avatar",
+            "SubTitle": "头像",
+            "Type": "menuItem",
+            "Url": "components/avatar"
+          },
+          {
+            "Order": 0,
+            "Title": "Badge",
+            "SubTitle": "徽标数",
+            "Type": "menuItem",
+            "Url": "components/badge"
+          },
+          {
+            "Order": 0,
+            "Title": "Empty",
+            "SubTitle": "空状态",
+            "Type": "menuItem",
+            "Url": "components/empty"
+          },
+          {
+            "Order": 0,
+            "Title": "List",
+            "SubTitle": "列表",
+            "Type": "menuItem",
+            "Url": "components/list"
+          },
+          {
+            "Order": 0,
+            "Title": "Tooltip",
+            "SubTitle": "文字提示",
+            "Type": "menuItem",
+            "Url": "components/tooltip"
+          }
+        ]
+      },
+      {
+        "Order": 5,
+        "Title": "反馈",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Alert",
+            "SubTitle": "警告提示",
+            "Type": "menuItem",
+            "Url": "components/alert"
+          },
+          {
+            "Order": 0,
+            "Title": "Drawer",
+            "SubTitle": "抽屉",
+            "Type": "menuItem",
+            "Url": "components/drawer"
+          },
+          {
+            "Order": 0,
+            "Title": "Message",
+            "SubTitle": "全局提示",
+            "Type": "menuItem",
+            "Url": "components/message"
+          },
+          {
+            "Order": 0,
+            "Title": "Notification",
+            "SubTitle": "通知提醒框",
+            "Type": "menuItem",
+            "Url": "components/notification"
+          },
+          {
+            "Order": 0,
+            "Title": "Progress",
+            "SubTitle": "进度条",
+            "Type": "menuItem",
+            "Url": "components/progress"
+          },
+          {
+            "Order": 0,
+            "Title": "Result",
+            "SubTitle": "结果",
+            "Type": "menuItem",
+            "Url": "components/result"
+          },
+          {
+            "Order": 0,
+            "Title": "Spin",
+            "SubTitle": "加载中",
+            "Type": "menuItem",
+            "Url": "components/spin"
+          }
+        ]
+      }
+    ]
+  }
+]

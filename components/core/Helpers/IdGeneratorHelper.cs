@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public static class IdGeneratorHelper
     {

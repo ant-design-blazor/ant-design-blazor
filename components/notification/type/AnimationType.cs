@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AntBlazor
+namespace AntDesign
 {
     internal static class AnimationType
     {

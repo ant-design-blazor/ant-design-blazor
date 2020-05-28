@@ -1,4 +1,4 @@
-﻿namespace AntBlazor
+﻿namespace AntDesign
 {
     public abstract class ClassBuilderRule<T>
     {

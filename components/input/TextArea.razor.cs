@@ -1,9 +1,9 @@
-﻿using AntBlazor.JsInterop;
+﻿using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class TextArea : Input
     {

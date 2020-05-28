@@ -5,7 +5,7 @@ using System.Text;
 using System.Timers;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Spin : AntDomComponentBase
     {

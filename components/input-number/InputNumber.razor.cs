@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class InputNumber : AntInputComponentBase<double>
     {

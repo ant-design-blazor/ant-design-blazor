@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class AntIcon : AntDomComponentBase
     {
@@ -101,7 +101,7 @@ namespace AntBlazor
             }
             else
             {
-                HttpResponseMessage res = await HttpClient.GetAsync(new Uri(_baseUrl, $"_content/AntBlazor/icons/{Theme.ToLower(CultureInfo.CurrentCulture)}/{Type.ToLower(CultureInfo.CurrentCulture)}.svg"));
+                HttpResponseMessage res = await HttpClient.GetAsync(new Uri(_baseUrl, $"_content/AntDesign/icons/{Theme.ToLower(CultureInfo.CurrentCulture)}/{Type.ToLower(CultureInfo.CurrentCulture)}.svg"));
                 if (res.IsSuccessStatusCode)
                 {
                     _iconSvg = await res.Content.ReadAsStringAsync();

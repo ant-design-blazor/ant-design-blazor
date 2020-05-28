@@ -4,10 +4,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using AntBlazor.Docs.Localization;
+using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor.Docs.Services
+namespace AntDesign.Docs.Services
 {
     public class DemoService
     {
@@ -34,7 +34,7 @@ namespace AntBlazor.Docs.Services
             {
                 var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
                 var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(
-                    new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/demo.{CurrentLanguage}.json").ToString());
+                    new Uri(baseUrl, $"_content/AntDesign.Docs/meta/demo.{CurrentLanguage}.json").ToString());
 
                 return components.ToDictionary(x => x.Title.ToLower(), x => x);
             });
@@ -44,7 +44,7 @@ namespace AntBlazor.Docs.Services
             {
                 var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
                 var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(
-                    new Uri(baseUrl, $"_content/AntBlazor.Docs/meta/menu.{CurrentLanguage}.json").ToString());
+                    new Uri(baseUrl, $"_content/AntDesign.Docs/meta/menu.{CurrentLanguage}.json").ToString());
 
                 return menuItems;
             });
