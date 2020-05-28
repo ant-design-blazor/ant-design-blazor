@@ -33,50 +33,6 @@
     <Compile Include="..\Shared\DemoMenuItem.cs" Link="Services\DemoMenuItem.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Demos\Checkbox\demo\Basic.razor" />
-    <None Include="Demos\Checkbox\demo\CheckboxAll.razor" />
-    <None Include="Demos\Checkbox\demo\Controlled.razor" />
-    <None Include="Demos\Checkbox\demo\Disable.razor" />
-    <None Include="Demos\Checkbox\demo\Group.razor" />
-    <None Include="Demos\Checkbox\demo\Layout.razor" />
-    <None Include="Demos\InputNumber\demo\Basic.razor" />
-    <None Include="Demos\InputNumber\demo\Decimal.razor" />
-    <None Include="Demos\InputNumber\demo\Disable.razor" />
-    <None Include="Demos\InputNumber\demo\Formatter.razor" />
-    <None Include="Demos\InputNumber\demo\Size.razor" />
-    <None Include="Demos\Input\demo\Addon.razor" />
-    <None Include="Demos\Input\demo\Area.razor" />
-    <None Include="Demos\Input\demo\Basic.razor" />
-    <None Include="Demos\Input\demo\Group.razor" />
-    <None Include="Demos\Input\demo\Prefix.razor" />
-    <None Include="Demos\Input\demo\Search1.razor" />
-    <None Include="Demos\Input\demo\Size.razor" />
-    <None Include="Demos\Radio\demo\Basic.razor" />
-    <None Include="Demos\Radio\demo\Button.razor" />
-    <None Include="Demos\Radio\demo\Disable.razor" />
-    <None Include="Demos\Radio\demo\Group.razor" />
-    <None Include="Demos\Radio\demo\Name.razor" />
-    <None Include="Demos\Radio\demo\Optional.razor" />
-    <None Include="Demos\Radio\demo\Size.razor" />
-    <None Include="Demos\Radio\demo\Style.razor" />
-    <None Include="Demos\Radio\demo\Vgroup.razor" />
-    <None Include="Demos\Slider\demo\Basic.razor" />
-    <None Include="Demos\Slider\demo\Customer.razor" />
-    <None Include="Demos\Slider\demo\Event.razor" />
-    <None Include="Demos\Slider\demo\Graduated.razor" />
-    <None Include="Demos\Slider\demo\Icon.razor" />
-    <None Include="Demos\Slider\demo\Input.razor" />
-    <None Include="Demos\Slider\demo\Reversed.razor" />
-    <None Include="Demos\Slider\demo\Tooltip.razor" />
-    <None Include="Demos\Slider\demo\Vslider.razor" />
-    <None Include="Demos\Switch\demo\Basic.razor" />
-    <None Include="Demos\Switch\demo\Disable.razor" />
-    <None Include="Demos\Switch\demo\Icon.razor" />
-    <None Include="Demos\Switch\demo\Loading.razor" />
-    <None Include="Demos\Switch\demo\Size.razor" />
-  </ItemGroup>
-
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">

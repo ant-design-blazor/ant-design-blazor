@@ -1,14 +1,17 @@
 ﻿@namespace AntBlazor
 @using OneOf;
+@using System.Timers
 @inherits AntDomComponentBase
 
     <button type="button" role="switch"
-            aria-checked="@_isChecked"
+            aria-checked="@(_isChecked?"true":"false")"
             disabled="@Disabled"
             class="@ClassMapper.Class"
             style="@Style"
-            ant-click-animating="true"
-            @onclick="@OnClickHandler">
+            ant-click-animating="@(clickAnimating?"true":"false")"
+            @onmouseover="HandleMouseOver"
+            @onmouseout="HandleMouseOut"
+            @onclick="HandleClick">
         @if (Loading)
         {
             <AntIcon Type="loading" Class="@($"{prefixCls}-loading-icon")" />
@@ -38,6 +41,16 @@
                 }
             }
         </span>
+
+        <!--animation-->
+        @if (_isChecked)
+        {
+            <div class="ant-click-animating-node"></div>
+        }
+        else
+        {
+            <div class="ant-click-animating-node"></div>
+        }
     </button>
 
 @code {
@@ -85,6 +98,7 @@
     [Parameter]
     public OneOf<string,RenderFragment> UnCheckedChildren { get; set; }
 
+    private bool clickAnimating = false;
 
     protected override void OnInitialized()
     {
@@ -92,15 +106,7 @@
         base.OnInitialized();
     }
 
-    protected void OnClickHandler(MouseEventArgs ev)
-    {
-        if (!Disabled && !Loading && !Control)
-        {
-            this.updateValue(!this._isChecked);
-        }
-    }
-
-    private void updateValue(bool value)
+    private void UpdateValue(bool value)
     {
         if (this._isChecked != value)
         {
@@ -109,4 +115,21 @@
         }
     }
 
+    private void HandleClick(MouseEventArgs ev)
+    {
+        if (!Disabled && !Loading && !Control)
+        {
+            this.UpdateValue(!this._isChecked);
+        }
+    }
+
+    private void HandleMouseOver(MouseEventArgs e)
+    {
+        clickAnimating = true;
+    }
+
+    private void HandleMouseOut(MouseEventArgs e)
+    {
+        clickAnimating = false;
+    }
 }
