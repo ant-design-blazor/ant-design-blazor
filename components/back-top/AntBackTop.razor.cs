@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class AntBackTop : AntDomComponentBase
     {

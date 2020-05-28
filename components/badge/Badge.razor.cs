@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     /// <summary>
     /// Small numerical value or status descriptor for UI elements.

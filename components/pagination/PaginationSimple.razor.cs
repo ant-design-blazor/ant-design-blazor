@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class PaginationSimple
     {

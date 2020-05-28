@@ -1,4 +1,4 @@
-﻿using AntBlazor.JsInterop;
+﻿using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class AntTabs : AntDomComponentBase
     {

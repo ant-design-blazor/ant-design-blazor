@@ -57,7 +57,7 @@ WebAssembly static hosting examples:
 
 ## 💿 Current Version
 
-- Development: [![AntBlazor](https://img.shields.io/nuget/v/AntBlazor.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntBlazor/)
+- Development: [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 
 - 0.1.0：will be released after basic implementation of components
 
@@ -67,38 +67,38 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 ## 📦 Installation Guide
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300  or later
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 or later
 
 - Create Blazor WebAssembly Project
 
   ```bash
-  $ dotnet new blazorwasm -o MyAntBlazorApp
+  $ dotnet new blazorwasm -o MyAntDesignApp
   ```
 
 - Go to the project folder of the application and install the Nuget package reference
 
   ```bash
-  $ cd MyAntBlazorApp
-  $ dotnet add package AntBlazor --version 0.1.0-*
+  $ cd MyAntDesignApp
+  $ dotnet add package AntDesign --version 0.1.0-*
   ```
 
 - Register the services
 
   ```csharp
-  services.AddAntBlazor();
+  services.AddAntDesign();
   ```
 
 - Link the static files in `wwwroot/index.html` (WebAssembly) or `Pages/_Host.razor` (Server)
 
   ```html
-  <link href="_content/AntBlazor/css/ant-design-blazor.css" rel="stylesheet" />
-  <script src="_content/AntBlazor/js/ant-design-blazor.js"></script>
+  <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
+  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
   ```
 
 - Add namespace in `_Imports.razor`
 
   ```csharp
-  @using AntBlazor
+  @using AntDesign
   ```
 
 - Finally, it can be referenced in the `.razor' component!
@@ -143,8 +143,8 @@ If you would like to contribute, feel free to create a [Pull Request](https://gi
 
 If you encounter any problems in the process, feel free to ask for help via following channels. We also encourage experienced users to help newcomers.
 
-- [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/antblazor/shared_invite/zt-cw1enker-xVw3s93cTf4uhY2lRGRyRw) (Chinese & English)
-- [![Ding Talk Group](https://img.shields.io/badge/DingTalk-AntBlazor-blue.svg?style=flat-square)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) (Chinese)
+- [![Slack Group](https://img.shields.io/badge/Slack-AntDesign-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/AntDesign/shared_invite/zt-cw1enker-xVw3s93cTf4uhY2lRGRyRw) (Chinese & English)
+- [![Ding Talk Group](https://img.shields.io/badge/DingTalk-AntDesign-blue.svg?style=flat-square)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) (Chinese)
 
 <details>
   <summary>Scan QR Code with DingTalk</summary>
@@ -153,4 +153,4 @@ If you encounter any problems in the process, feel free to ask for help via foll
 
 ## ☀️ License
 
-[![AntBlazor](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/LICENSE)
+[![AntDesign](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/LICENSE)

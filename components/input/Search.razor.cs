@@ -4,7 +4,7 @@ using OneOf;
 using System;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Search : Input
     {

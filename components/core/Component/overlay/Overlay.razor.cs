@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AntBlazor.JsInterop;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor.Internal
+namespace AntDesign.Internal
 {
     public sealed partial class Overlay : AntDomComponentBase
     {

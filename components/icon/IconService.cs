@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class IconService
     {
@@ -28,7 +28,7 @@ namespace AntBlazor
             }
             else
             {
-                var res = await _httpClient.GetAsync($"_content/AntBlazor/icons/{theme}/{type}.svg");
+                var res = await _httpClient.GetAsync($"_content/AntDesign/icons/{theme}/{type}.svg");
                 if (res.IsSuccessStatusCode)
                 {
                     iconImg = await res.Content.ReadAsStringAsync();

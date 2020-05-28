@@ -1,0 +1,35 @@
+﻿@page "/"
+@namespace AntDesign.Docs.Server.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ant Design of Blazor</title>
+    <base href="~/" />
+    <link rel="icon" href="logo.png" type="image/x-icon">
+    @*<link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">*@
+    <link href="_content/AntDesign.Docs/css/docs.css" rel="stylesheet">
+</head>
+<body>
+    <app>
+        @(await Html.RenderComponentAsync<App>(RenderMode.Server))
+    </app>
+
+    <script src="_framework/blazor.server.js"></script>
+    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+    <script src="_content/AntDesign.Docs/js/prism.js"></script>
+    <script>
+        window.AntDesign.Prism = {};
+        window.AntDesign.Prism.highlight = function (code, language) {
+            return Prism.highlight(code, Prism.languages[language], language);
+        }
+
+        window.AntDesign.Prism.highlightAll = function () {
+            Prism.highlightAll();
+        }
+    </script>
+</body>
+</html>

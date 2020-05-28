@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public static class AntCarouselEffect
     {

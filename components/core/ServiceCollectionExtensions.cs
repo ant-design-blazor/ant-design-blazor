@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Text.Encodings.Web;
-using AntBlazor;
-using AntBlazor.JsInterop;
+using AntDesign;
+using AntDesign.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -9,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddAntBlazor(this IServiceCollection services)
+        public static IServiceCollection AddAntDesign(this IServiceCollection services)
         {
             services.TryAddSingleton<HttpClient>();
             services.TryAddScoped<DomEventService>();

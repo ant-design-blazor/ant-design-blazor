@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace AntBlazor.Docs.Highlight
+namespace AntDesign.Docs.Highlight
 {
     public class PrismHighlighter : IPrismHighlighter
     {
@@ -15,14 +15,14 @@ namespace AntBlazor.Docs.Highlight
 
         public async ValueTask<MarkupString> HighlightAsync(string code, string language)
         {
-            string highlighted = await jsRuntime.InvokeAsync<string>("antBlazor.Prism.highlight", code, language);
+            string highlighted = await jsRuntime.InvokeAsync<string>("AntDesign.Prism.highlight", code, language);
 
             return new MarkupString(highlighted);
         }
 
         public async Task HighlightAllAsync()
         {
-            await jsRuntime.InvokeVoidAsync("antBlazor.Prism.highlightAll");
+            await jsRuntime.InvokeVoidAsync("AntDesign.Prism.highlightAll");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public sealed class TriggerType : SmartEnum<TriggerType>
     {

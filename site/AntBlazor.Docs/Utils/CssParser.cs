@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace AntBlazor.Docs.Utils
+namespace AntDesign.Docs.Utils
 {
     public class CSSParser : List<KeyValuePair<string, List<KeyValuePair<string, string>>>>
     {

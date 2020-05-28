@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AntBlazor.JsInterop;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace AntBlazor.Internal
+namespace AntDesign.Internal
 {
     public partial class OverlayTrigger : AntDomComponentBase
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor.Docs.Shared
+namespace AntDesign.Docs.Shared
 {
     public partial class MockBrowser
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public static class AntButtonShape
     {

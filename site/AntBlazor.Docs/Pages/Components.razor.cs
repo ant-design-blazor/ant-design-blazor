@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AntBlazor.Docs.Localization;
-using AntBlazor.Docs.Services;
+using AntDesign.Docs.Localization;
+using AntDesign.Docs.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor.Docs.Pages
+namespace AntDesign.Docs.Pages
 {
     public partial class Components
     {

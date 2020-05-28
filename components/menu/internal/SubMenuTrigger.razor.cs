@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace AntBlazor.Internal
+namespace AntDesign.Internal
 {
     public partial class SubMenuTrigger : OverlayTrigger
     {

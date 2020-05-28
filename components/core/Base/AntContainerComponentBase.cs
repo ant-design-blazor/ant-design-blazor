@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.CompilerServices;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public abstract class AntContainerComponentBase : AntDomComponentBase
     {

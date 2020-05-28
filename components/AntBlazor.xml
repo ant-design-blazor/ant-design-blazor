@@ -1,0 +1,904 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AntDesign</name>
+    </assembly>
+    <members>
+        <member name="P:AntDesign.AntAffix.OffsetBottom">
+            <summary>
+            Offset from the bottom of the viewport (in pixels)
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAffix.OffsetTop">
+            <summary>
+            Offset from the top of the viewport (in pixels)
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAffix.Target">
+            <summary>
+            Specifies the scrollable area DOM node
+            </summary>
+        </member>
+        <member name="T:AntDesign.AntAlert">
+            <summary>
+            Alert component for feedback.
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.AfterClose">
+            <summary>
+            Called when close animation is finished
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.Banner">
+            <summary>
+            Whether to show as banner
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.Closable">
+            <summary>
+            Whether Alert can be closed
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.CloseText">
+            <summary>
+            Close text to show
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.Description">
+            <summary>
+            Additional content of Alert
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.Icon">
+            <summary>
+            Custom icon, effective when showIcon is true
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.Message">
+            <summary>
+            Content of Aler
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.ShowIcon">
+            <summary>
+            Whether to show icon.
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.Type">
+            <summary>
+            Type of Alert styles, options: success, info, warning, error
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.OnClose">
+            <summary>
+            Callback when Alert is closed.
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.ChildContent">
+            <summary>
+            Additional Content
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntAlert.IconType">
+            <summary>
+            Icon to show.
+            </summary>
+        </member>
+        <member name="F:AntDesign.AntAlert._isClosed">
+            <summary>
+            Indicator if the component is closed or not.
+            </summary>
+        </member>
+        <member name="F:AntDesign.AntAlert._isClosing">
+            <summary>
+            Just before we close the component we set this indicator to show a closing animation.
+            </summary>
+        </member>
+        <member name="M:AntDesign.AntAlert.SetClassMap">
+            <summary>
+            Sets the default classes.
+            </summary>
+        </member>
+        <member name="M:AntDesign.AntAlert.OnParametersSet">
+            <summary>
+            Triggered each time a parameter is changed.
+            </summary>
+        </member>
+        <member name="M:AntDesign.AntAlert.OnInitialized">
+            <summary>
+            Start-up code.
+            </summary>
+        </member>
+        <member name="M:AntDesign.AntAlert.OnCloseHandler(Microsoft.AspNetCore.Components.Web.MouseEventArgs)">
+            <summary>
+            Handles the close callback.
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AntDesign.AntAlert.AfterCloseHandler(Microsoft.AspNetCore.Components.Web.MouseEventArgs)">
+            <summary>
+            Handles the after close callback.
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AntDesign.Badge">
+            <summary>
+            Small numerical value or status descriptor for UI elements.
+            </summary>
+        </member>
+        <member name="P:AntDesign.Badge.Color">
+            <summary>
+            Customize Badge dot color
+            </summary>
+        </member>
+        <member name="P:AntDesign.Badge.Count">
+            <summary>
+            Number to show in badge
+            </summary>
+        </member>
+        <member name="P:AntDesign.Badge.Dot">
+            <summary>
+            Whether to display a red dot instead of count
+            </summary>
+        </member>
+        <member name="P:AntDesign.Badge.Offset">
+            <summary>
+            Set offset of the badge dot, like[x, y]
+            </summary>
+        </member>
+        <member name="P:AntDesign.Badge.OverflowCount">
+            <summary>
+            Max count to show
+            </summary>
+        </member>
+        <member name="P:AntDesign.Badge.ShowZero">
+            <summary>
+            Whether to show badge when count is zero
+            </summary>
+        </member>
+        <member name="P:AntDesign.Badge.Status">
+            <summary>
+            Set Badge as a status dot
+            </summary>
+        </member>
+        <member name="P:AntDesign.Badge.Text">
+            <summary>
+            If status is set, text sets the display text of the status dot
+            </summary>
+        </member>
+        <member name="P:AntDesign.Badge.Title">
+            <summary>
+            Text to show when hovering over the badge
+            </summary>
+        </member>
+        <member name="P:AntDesign.Badge.ChildContent">
+            <summary>
+            Wrapping this item.
+            </summary>
+        </member>
+        <member name="M:AntDesign.Badge.SetClassMap">
+            <summary>
+            Sets the default CSS classes.
+            </summary>
+        </member>
+        <member name="M:AntDesign.Badge.OnInitialized">
+            <summary>
+            Startup code
+            </summary>
+        </member>
+        <member name="M:AntDesign.Badge.OnParametersSet">
+            <summary>
+            Runs every time a parameter is set.
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntCarousel.DotPosition">
+            <summary>
+            The position of the dots, which can be one of Top, Bottom, Left or Right, <see cref="T:AntDesign.AntCarouselDotPosition"/>
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntCarousel.Autoplay">
+            <summary>
+            Whether to scroll automatically
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntCarousel.Effect">
+            <summary>
+            Transition effect, <see cref="T:AntDesign.AntCarouselEffect"/>
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntDomComponentBase.Ref">
+            <summary>
+            Returned ElementRef reference for DOM element.
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntDomComponentBase.Class">
+            <summary>
+            Specifies one or more class names for an DOM element.
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntDomComponentBase.Style">
+            <summary>
+            Specifies an inline style for an DOM element.
+            </summary>
+        </member>
+        <member name="T:AntDesign.AntInputComponentBase`1">
+            <summary>
+            Base class for any input control that optionally supports an <see cref="P:AntDesign.AntInputComponentBase`1.EditContext"/>.
+            </summary>
+            <typeparam name="T">the natural type of the input's value</typeparam>
+        </member>
+        <member name="P:AntDesign.AntInputComponentBase`1.ValidationDisabled">
+            <summary>
+            When contained within an <see cref="P:AntDesign.AntInputComponentBase`1.EditContext"/> disables this control's
+            participation in validation checking.  This means that this control will not
+            reflect the validation state of the underlying data binding.
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntInputComponentBase`1.EditContext">
+            <summary>
+            Gets the associated <see cref="T:Microsoft.AspNetCore.Components.Forms.EditContext"/>.
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntInputComponentBase`1.FieldIdentifier">
+            <summary>
+            Gets the <see cref="P:AntDesign.AntInputComponentBase`1.FieldIdentifier"/> for the bound value.
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntInputComponentBase`1.FieldClass">
+            <summary>
+            Gets a string that indicates the status of the field being edited. This will include
+            some combination of "modified", "valid", or "invalid", depending on the status of the field.
+            </summary>
+        </member>
+        <member name="M:AntDesign.AntInputComponentBase`1.NotifyFieldChanged">
+            <summary>
+            Should be invoked by whenever a bound value is changed, such
+            as right after the value's corresponding <i>ValueChanged</i>
+            EventCallback is invoked.
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntInputComponentBase`1.ValueExpression">
+            <summary>
+            Gets or sets an expression that identifies the bound value.
+            </summary>
+        </member>
+        <member name="M:AntDesign.AntInputComponentBase`1.SetParametersAsync(Microsoft.AspNetCore.Components.ParameterView)">
+            <inheritdoc />
+        </member>
+        <member name="M:AntDesign.Internal.Overlay.UpdateChildState(System.Boolean)">
+            <summary>
+            set if there any child overlay show or hide
+            overlay would not hide if any child is showing
+            </summary>
+            <param name="isChildOverlayShow"></param>
+        </member>
+        <member name="M:AntDesign.Internal.Overlay.IsHiding">
+            <summary>
+            when overlay is complete hide, IsPopup return true
+            when overlay is hiding(playing hide animation), IsPopup return false, IsHiding return true.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AntDesign.HtmlRenderer.UpdateDisplayAsync(Microsoft.AspNetCore.Components.RenderTree.RenderBatch@)">
+            <inheritdoc />
+        </member>
+        <member name="M:AntDesign.HtmlRenderer.HandleException(System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:AntDesign.DatePicker.GetIndexPickerValue(System.Int32)">
+            <summary>
+            Get pickerValue by picker index
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AntDesign.DatePicker.GetIndexValue(System.Int32)">
+            <summary>
+            Get value by picker index
+            </summary>
+            <param name="index"></param>
+            <returns></returns>
+        </member>
+        <member name="P:AntDesign.Drawer.Placement">
+            <summary>
+            "left" | "right" | "top" | "bottom"
+            </summary>
+        </member>
+        <member name="P:AntDesign.Empty.Direction">
+            <summary>
+            "ltr"|"rtl"
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntRow.Align">
+            <summary>
+            'top' | 'middle' | 'bottom'
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntRow.Justify">
+            <summary>
+            'start' | 'end' | 'center' | 'space-around' | 'space-between'
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntIcon.Theme">
+            <summary>
+            'fill' | 'outline' | 'twotone';
+            </summary>
+        </member>
+        <member name="T:AntDesign.Input">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:AntDesign.Input.OnInputAsync(Microsoft.AspNetCore.Components.ChangeEventArgs)">
+            <summary>
+            Invoked when user add/remove content
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="F:AntDesign.TextArea._rowHeight">
+            <summary>
+            scrollHeight of 1 row
+            </summary>
+        </member>
+        <member name="F:AntDesign.TextArea._offsetHeight">
+            <summary>
+            total height = row * <see cref="F:AntDesign.TextArea._rowHeight" /> + <see cref="F:AntDesign.TextArea._offsetHeight" />
+            </summary>
+        </member>
+        <member name="P:AntDesign.Sider.Theme">
+            <summary>
+             'light' | 'dark'
+            </summary>
+        </member>
+        <member name="P:AntDesign.Sider.Breakpoint">
+            <summary>
+            "xs" | "sm" | "md" | "lg" | "xl" | "xxl"
+            </summary>
+        </member>
+        <member name="P:AntDesign.MenuLink.ActiveClass">
+            <summary>
+            Gets or sets the CSS class name applied to the NavLink when the
+            current route matches the NavLink href.
+            </summary>
+        </member>
+        <member name="P:AntDesign.MenuLink.CssClass">
+            <summary>
+            Gets or sets the computed CSS class based on whether or not the link is active.
+            </summary>
+        </member>
+        <member name="P:AntDesign.MenuLink.ChildContent">
+            <summary>
+            Gets or sets the child content of the component.
+            </summary>
+        </member>
+        <member name="P:AntDesign.MenuLink.Match">
+            <summary>
+            Gets or sets a value representing the URL matching behavior.
+            </summary>
+        </member>
+        <member name="M:AntDesign.MenuLink.OnInitialized">
+            <inheritdoc />
+        </member>
+        <member name="M:AntDesign.MenuLink.OnParametersSet">
+            <inheritdoc />
+        </member>
+        <member name="M:AntDesign.MenuLink.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="T:AntDesign.MessageBase">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:AntDesign.MessageService">
+            <summary>
+            Message Service
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.AnimationClass">
+            <summary>
+            控制出现与消失的动画
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.Btn">
+            <summary>
+            自定义关闭按钮
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.ClassName">
+            <summary>
+            自定义 CSS class
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.CloseIcon">
+            <summary>
+            自定义关闭图标
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.Message">
+            <summary>
+            通知提醒标题，必选，string 或者 RenderFragment
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.Description">
+            <summary>
+            通知提醒内容，必选，string 或者 RenderFragment
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.Duration">
+            <summary>
+            自动关闭的延时，单位为秒。默认 4.5 秒后自动关闭，配置为 null 则不自动关闭
+             </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.Icon">
+            <summary>
+            自定义图标	
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.Key">
+            <summary>
+            当前通知唯一标志		
+            </summary>
+        </member>
+        <member name="E:AntDesign.NotificationConfig.OnClose">
+            <summary>
+            当通知关闭时触发	
+            </summary>
+        </member>
+        <member name="E:AntDesign.NotificationConfig.OnClick">
+            <summary>
+            点击通知时触发的回调函数	
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.Style">
+            <summary>
+            自定义内联样式	
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.Placement">
+            <summary>
+            弹出位置
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationConfig.NotificationType">
+            <summary>
+            通知提醒框左侧的图标类型
+            </summary>
+        </member>
+        <member name="T:AntDesign.NotificationGlobalConfig">
+            <summary>
+            AntNotification全局配置
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationGlobalConfig.Bottom">
+            <summary>
+            消息从底部弹出时，距离底部的位置，单位像素。
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationGlobalConfig.Top">
+            <summary>
+            消息从顶部弹出时，距离顶部的位置，单位像素。	
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationGlobalConfig.Rtl">
+            <summary>
+            是否开启 RTL 模式	
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationGlobalConfig.CloseIcon">
+            <summary>
+            自定义关闭图标
+            </summary>
+        </member>
+        <member name="P:AntDesign.NotificationGlobalConfig.Duration">
+            <summary>
+            自动关闭的延时，单位为秒。默认 4.5 秒后自动关闭，配置为 null 则不自动关闭
+             </summary>
+        </member>
+        <member name="P:AntDesign.NotificationGlobalConfig.Placement">
+            <summary>
+            弹出位置
+            </summary>
+        </member>
+        <member name="M:AntDesign.Notification.Config(AntDesign.NotificationGlobalConfig)">
+            <summary>
+            modify global config
+            </summary>
+            <param name="defaultConfig"></param>
+        </member>
+        <member name="T:AntDesign.NotificationBase">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:AntDesign.NotificationService">
+            <summary>
+            AntNotification Service
+            </summary>
+        </member>
+        <member name="M:AntDesign.NotificationService.Open(AntDesign.NotificationConfig)">
+            <summary>
+            Open a notification box
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:AntDesign.NotificationService.Success(AntDesign.NotificationConfig)">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:AntDesign.NotificationService.Error(AntDesign.NotificationConfig)">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:AntDesign.NotificationService.Info(AntDesign.NotificationConfig)">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:AntDesign.NotificationService.Warning(AntDesign.NotificationConfig)">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:AntDesign.NotificationService.Warn(AntDesign.NotificationConfig)">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:AntDesign.NotificationService.Close(System.String)">
+            <summary>
+            close notification by key
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AntDesign.NotificationService.Destroy">
+            <summary>
+            destroy
+            </summary>
+        </member>
+        <member name="P:AntDesign.Pagination.Size">
+            <summary>
+            'default' | 'small'
+            </summary>
+        </member>
+        <member name="P:AntDesign.PaginationItemRenderContext.Type">
+            <summary>
+             'page' | 'prev' | 'next' | 'prev_5' | 'next_5'
+            </summary>
+        </member>
+        <member name="P:AntDesign.PaginationItem.Type">
+            <summary>
+            'page' | 'prev' | 'next' | 'prev_5' | 'next_5'
+            </summary>
+        </member>
+        <member name="P:AntDesign.PaginationOptions.Size">
+            <summary>
+            'default' | 'small' = 'default';
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.Size">
+            <summary>
+            progress size
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.Type">
+            <summary>
+            to set the type, options: line circle dashboard
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.Format">
+            <summary>
+            template function of the content
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.Percent">
+            <summary>
+            to set the completion percentage
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.ShowInfo">
+            <summary>
+            whether to display the progress value and the status icon
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.Status">
+            <summary>
+            to set the status of the Progress, options: success exception normal active(line only)
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.StrokeLinecap">
+            <summary>
+            to set the style of the progress linecap
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.Color">
+            <summary>
+            color of progress bar
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.SuccessPercent">
+            <summary>
+            segmented success percent
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.TrailColor">
+            <summary>
+            color of unfilled part
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.StrokeWidth">
+            <summary>
+            to set the width of the progress bar, unit: px
+            to set the width of the circular progress, unit: percentage of the canvas width
+            to set the width of the dashboard progress, unit: percentage of the canvas width
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.StrokeColor">
+            <summary>
+            color of progress bar, render linear-gradient when passing an object
+            color of circular progress, render linear-gradient when passing an object
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.Steps">
+            <summary>
+            the total step count
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.Width">
+            <summary>
+            to set the canvas width of the circular progress, unit: px
+            to set the canvas width of the dashboard progress, unit: px
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.GapDegree">
+            <summary>
+            the gap degree of half circle, 0 ~ 295
+            </summary>
+        </member>
+        <member name="P:AntDesign.Progress.GapPosition">
+            <summary>
+            the gap position, options: top bottom left right
+            </summary>
+        </member>
+        <member name="P:AntDesign.Result.Status">
+            <summary>
+            success | error | info | warning | 404 | 403 | 500
+            default: info
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.DefaultValue">
+            <summary>
+            The default value of slider. When <see cref="P:AntDesign.Slider.Range"/> is false, use number, otherwise, use [number, number]
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.Disabled">
+            <summary>
+            If true, the slider will not be interactable
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.Dots">
+            <summary>
+            Whether the thumb can drag over tick only
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.Included">
+            <summary>
+            Make effect when <see cref="P:AntDesign.Slider.Marks"/> not null, true means containment and false means coordinative
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.Marks">
+            <summary>
+            Tick mark of Slider, type of key must be number, and must in closed interval [min, max], each mark can declare its own style
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.Max">
+            <summary>
+            The maximum value the slider can slide to
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.Min">
+            <summary>
+            The minimum value the slider can slide to
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.Range">
+            <summary>
+            dual thumb mode
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.Reverse">
+            <summary>
+            reverse the component
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.Step">
+            <summary>
+            The granularity the slider can step through values. Must greater than 0, and be divided by (<see cref="P:AntDesign.Slider.Max"/> - <see cref="P:AntDesign.Slider.Min"/>) . When <see cref="P:AntDesign.Slider.Marks"/> no null, <see cref="P:AntDesign.Slider.Step"/> can be null.
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.TipFormatter">
+            <summary>
+            Slider will pass its value to tipFormatter, and display its value in Tooltip, and hide Tooltip when return value is null.
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.Value">
+            <summary>
+            The value of slider. When range is false, use number, otherwise, use [number, number]
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.Vertical">
+            <summary>
+            If true, the slider will be vertical.
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.OnAfterChange">
+            <summary>
+            Fire when onmouseup is fired.
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.OnChange">
+            <summary>
+            Callback function that is fired when the user changes the slider's value.
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.TooltipPlacement">
+            <summary>
+            Set Tooltip display position. Ref Tooltip
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.TooltipVisible">
+            <summary>
+            If true, Tooltip will show always, or it will not show anyway, even if dragging or hovering.
+            </summary>
+        </member>
+        <member name="P:AntDesign.Slider.GetTooltipPopupContainer">
+            <summary>
+            The DOM container of the Tooltip, the default behavior is to create a div element in body.
+            </summary>
+        </member>
+        <member name="P:AntDesign.Spin.Size">
+            <summary>
+            small | default | large
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabPane.ForceRender">
+            <summary>
+            Forced render of content in tabs, not lazy render after clicking on tabs
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabPane.Key">
+            <summary>
+            TabPane's key
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabPane.Tab">
+            <summary>
+            Show text in <see cref="T:AntDesign.AntTabPane"/>'s head
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.ActiveKey">
+            <summary>
+            Current <see cref="T:AntDesign.AntTabPane"/>'s <see cref="P:AntDesign.AntTabPane.Key"/>
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.Animated">
+            <summary>
+            Whether to change tabs with animation. Only works while <see cref="P:AntDesign.AntTabs.TabPosition"/> = <see cref="F:AntDesign.AntTabPosition.Top"/> or <see cref="F:AntDesign.AntTabPosition.Bottom"/>
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.RenderTabBar">
+            <summary>
+            Replace the TabBar
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.DefaultActiveKey">
+            <summary>
+            Initial active <see cref="T:AntDesign.AntTabPane"/>'s <see cref="P:AntDesign.AntTabPane.Key"/>, if <see cref="P:AntDesign.AntTabs.ActiveKey"/> is not set
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.HideAdd">
+            <summary>
+            Hide plus icon or not. Only works while <see cref="P:AntDesign.AntTabs.Type"/> = <see cref="F:AntDesign.AntTabType.EditableCard"/>
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.Size">
+            <summary>
+            Preset tab bar size
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.TabBarExtraContent">
+            <summary>
+            Extra content in tab bar
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.TabBarGutter">
+            <summary>
+            The gap between tabs
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.TabBarStyle">
+            <summary>
+            Tab bar style object
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.TabPosition">
+            <summary>
+            Position of tabs
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.Type">
+            <summary>
+            Basic style of tabs
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.OnChange">
+            <summary>
+            Callback executed when active tab is changed
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.OnEdit">
+            <summary>
+            Callback executed when tab is added or removed. Only works while <see cref="P:AntDesign.AntTabs.Type"/> = <see cref="F:AntDesign.AntTabType.EditableCard"/>
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.OnNextClick">
+            <summary>
+            Callback executed when next button is clicked
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.OnPrevClick">
+            <summary>
+            Callback executed when prev button is clicked
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.OnTabClick">
+            <summary>
+            Callback executed when tab is clicked
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTabs.Keyboard">
+            <summary>
+            Whether to turn on keyboard navigation
+            </summary>
+        </member>
+        <member name="M:AntDesign.AntTabs.AddTabPane(AntDesign.AntTabPane)">
+            <summary>
+            Add <see cref="T:AntDesign.AntTabPane"/> to <see cref="T:AntDesign.AntTabs"/>
+            </summary>
+            <param name="tabPane">The AntTabPane to be added</param>
+            <exception cref="T:System.ArgumentNullException">Key is null</exception>
+            <exception cref="T:System.ArgumentException">An AntTabPane with the same key already exists</exception>
+        </member>
+        <member name="P:AntDesign.AntTag.Mode">
+            <summary>
+             'default' | 'closeable' | 'checkable'
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntTimeline.Mode">
+            <summary>
+            'left' | 'alternate' | 'right'
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntDivider.Type">
+            <summary>
+             'horizontal' | 'vertical'
+            </summary>
+        </member>
+        <member name="P:AntDesign.AntDivider.Orientation">
+            <summary>
+            'left' | 'right' | 'center'
+            </summary>
+        </member>
+    </members>
+</doc>

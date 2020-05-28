@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RazorLangVersion>3.0</RazorLangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AntBlazor.Docs\AntDesign.Docs.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' And '$(SolutionDir)'==''">
+    <SolutionDir>../../</SolutionDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DocFiles Include="$(SolutionDir)docs\**\*.*"></DocFiles>
+  </ItemGroup>
+
+  <Target Name="CopyDocs" BeforeTargets="Build">
+    <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />
+  </Target>
+</Project>

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor.Docs.Pages
+namespace AntDesign.Docs.Pages
 {
     public partial class Affix
     {

@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Globalization;
 using System.Threading.Tasks;
-using AntBlazor.JsInterop;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class AntAvatar : AntDomComponentBase
     {

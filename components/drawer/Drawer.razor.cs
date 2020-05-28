@@ -3,7 +3,7 @@ using System.Timers;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Drawer : AntDomComponentBase
     {

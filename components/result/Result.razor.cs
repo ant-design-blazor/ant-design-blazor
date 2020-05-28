@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using System.Threading.Tasks;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Result : AntDomComponentBase
     {

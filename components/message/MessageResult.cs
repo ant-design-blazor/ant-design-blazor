@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
 
     public class MessageResult

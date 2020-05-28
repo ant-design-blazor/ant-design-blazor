@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     /// <summary>
     /// Alert component for feedback.

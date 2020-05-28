@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor.Docs.Shared
+namespace AntDesign.Docs.Shared
 {
     public partial class GithubButton
     {

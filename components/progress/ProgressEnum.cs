@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ardalis.SmartEnum;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public sealed class ProgressSize : SmartEnum<ProgressSize>
     {

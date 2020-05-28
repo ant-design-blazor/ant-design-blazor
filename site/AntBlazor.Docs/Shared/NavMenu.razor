@@ -59,7 +59,7 @@
     protected override async Task OnInitializedAsync()
     {
         var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-        MenuItems = await HttpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(baseUrl, "_content/AntBlazor.Docs/menu.json").ToString());
+        MenuItems = await HttpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(baseUrl, "_content/AntDesign.Docs/menu.json").ToString());
 
         LanguageService.LanguageChanged += (_, args) =>
         {

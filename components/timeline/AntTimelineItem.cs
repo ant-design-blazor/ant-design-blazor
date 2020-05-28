@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Linq;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class AntTimelineItem : AntDomComponentBase
     {

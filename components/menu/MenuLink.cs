@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Routing;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class MenuLink : AntDomComponentBase
     {

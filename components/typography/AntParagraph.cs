@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Rendering;
 using System;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class AntParagraph : AntTypographyBase
     {

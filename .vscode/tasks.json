@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/site/AntBlazor.Docs.Wasm/AntBlazor.Docs.Wasm.csproj",
+                "${workspaceFolder}/site/AntDesign.Docs.Wasm/AntDesign.Docs.Wasm.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/site/AntBlazor.Docs.Wasm/AntBlazor.Docs.Wasm.csproj",
+                "${workspaceFolder}/site/AntDesign.Docs.Wasm/AntDesign.Docs.Wasm.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,7 +32,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/site/AntBlazor.Docs.Wasm/AntBlazor.Docs.Wasm.csproj",
+                "${workspaceFolder}/site/AntDesign.Docs.Wasm/AntDesign.Docs.Wasm.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

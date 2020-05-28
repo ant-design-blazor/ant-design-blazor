@@ -1,5 +1,5 @@
 ﻿
-namespace AntBlazor
+namespace AntDesign
 {
     public class MonthPicker : DatePicker
     {

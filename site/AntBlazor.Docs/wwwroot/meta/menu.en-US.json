@@ -1,0 +1,228 @@
+[
+  {
+    "Order": 0,
+    "Title": "Docs",
+    "Type": "subMenu",
+    "Url": "docs",
+    "Children": [
+      {
+        "Order": 0,
+        "Title": "Ant Design of Blazor",
+        "Type": "menuItem",
+        "Url": "docs/introduce"
+      }
+    ]
+  },
+  {
+    "Order": 999,
+    "Title": "Components",
+    "Type": "subMenu",
+    "Url": "components",
+    "Children": [
+      {
+        "Order": 0,
+        "Title": "General",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Button",
+            "Type": "menuItem",
+            "Url": "components/button"
+          }
+        ]
+      },
+      {
+        "Order": 1,
+        "Title": "Layout",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Layout",
+            "Type": "menuItem",
+            "Url": "components/layout"
+          },
+          {
+            "Order": 0,
+            "Title": "Space",
+            "Type": "menuItem",
+            "Url": "components/space"
+          }
+        ]
+      },
+      {
+        "Order": 2,
+        "Title": "Navigation",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Dropdown",
+            "Type": "menuItem",
+            "Url": "components/dropdown"
+          },
+          {
+            "Order": 0,
+            "Title": "Menu",
+            "Type": "menuItem",
+            "Url": "components/menu"
+          },
+          {
+            "Order": 0,
+            "Title": "Pagination",
+            "Type": "menuItem",
+            "Url": "components/pagination"
+          }
+        ]
+      },
+      {
+        "Order": 3,
+        "Title": "Data Entry",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Checkbox",
+            "Type": "menuItem",
+            "Url": "components/checkbox"
+          },
+          {
+            "Order": 0,
+            "Title": "DatePicker",
+            "Type": "menuItem",
+            "Url": "components/datepicker"
+          },
+          {
+            "Order": 0,
+            "Title": "Input",
+            "Type": "menuItem",
+            "Url": "components/input"
+          },
+          {
+            "Order": 0,
+            "Title": "InputNumber",
+            "Type": "menuItem",
+            "Url": "components/inputnumber"
+          },
+          {
+            "Order": 0,
+            "Title": "Radio",
+            "Type": "menuItem",
+            "Url": "components/radio"
+          },
+          {
+            "Order": 0,
+            "Title": "Slider",
+            "Type": "menuItem",
+            "Url": "components/slider"
+          },
+          {
+            "Order": 0,
+            "Title": "Switch",
+            "Type": "menuItem",
+            "Url": "components/switch"
+          },
+          {
+            "Order": 0,
+            "Title": "TimePicker",
+            "Type": "menuItem",
+            "Url": "components/timepicker"
+          },
+          {
+            "Order": 0,
+            "Title": "Transfer",
+            "Type": "menuItem",
+            "Url": "components/transfer"
+          }
+        ]
+      },
+      {
+        "Order": 4,
+        "Title": "Data Display",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Avatar",
+            "Type": "menuItem",
+            "Url": "components/avatar"
+          },
+          {
+            "Order": 0,
+            "Title": "Badge",
+            "Type": "menuItem",
+            "Url": "components/badge"
+          },
+          {
+            "Order": 0,
+            "Title": "Empty",
+            "Type": "menuItem",
+            "Url": "components/empty"
+          },
+          {
+            "Order": 0,
+            "Title": "List",
+            "Type": "menuItem",
+            "Url": "components/list"
+          },
+          {
+            "Order": 0,
+            "Title": "Tooltip",
+            "Type": "menuItem",
+            "Url": "components/tooltip"
+          }
+        ]
+      },
+      {
+        "Order": 5,
+        "Title": "Feedback",
+        "Type": "itemGroup",
+        "Children": [
+          {
+            "Order": 0,
+            "Title": "Alert",
+            "Type": "menuItem",
+            "Url": "components/alert"
+          },
+          {
+            "Order": 0,
+            "Title": "Drawer",
+            "Type": "menuItem",
+            "Url": "components/drawer"
+          },
+          {
+            "Order": 0,
+            "Title": "Message",
+            "Type": "menuItem",
+            "Url": "components/message"
+          },
+          {
+            "Order": 0,
+            "Title": "Notification",
+            "Type": "menuItem",
+            "Url": "components/notification"
+          },
+          {
+            "Order": 0,
+            "Title": "Progress",
+            "Type": "menuItem",
+            "Url": "components/progress"
+          },
+          {
+            "Order": 0,
+            "Title": "Result",
+            "Type": "menuItem",
+            "Url": "components/result"
+          },
+          {
+            "Order": 0,
+            "Title": "Spin",
+            "Type": "menuItem",
+            "Url": "components/spin"
+          }
+        ]
+      }
+    ]
+  }
+]

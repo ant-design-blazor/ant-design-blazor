@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public static class JSInteropConstants
     {
-        private const string FUNC_PREFIX = "antBlazor.interop.";
+        private const string FUNC_PREFIX = "AntDesign.interop.";
 
         public static string getDomInfo => $"{FUNC_PREFIX}getDomInfo";
 

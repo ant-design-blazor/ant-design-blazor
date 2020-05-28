@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace AntBlazor.Docs.Routing
+namespace AntDesign.Docs.Routing
 {
     [DebuggerDisplay("{TemplateText}")]
     internal class RouteTemplate

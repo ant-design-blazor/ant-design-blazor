@@ -1,4 +1,4 @@
-﻿namespace AntBlazor.JsInterop
+﻿namespace AntDesign.JsInterop
 {
     public class Element
     {
