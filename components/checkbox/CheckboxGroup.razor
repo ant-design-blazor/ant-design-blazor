@@ -1,0 +1,21 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this">
+    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+        @if (Options != null)
+        {
+            @foreach (var option in Options)
+            {
+                <Checkbox class="ant-checkbox-group-item"
+                             Disabled="option.Disabled || Disabled"
+                             Checked="@(option.Checked)"
+                             Value="@option.Value"
+                             CheckedChange="_=>OnOptionChange()">
+                    <span>@option.Label</span>
+                </Checkbox>
+            }
+        }
+        @ChildContent
+    </div>
+</CascadingValue>

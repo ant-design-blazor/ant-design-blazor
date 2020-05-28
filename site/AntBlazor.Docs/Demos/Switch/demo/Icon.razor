@@ -1,0 +1,16 @@
+﻿<div>
+    <Switch Checked="true" CheckedChildren='@("开")' UnCheckedChildren='@("关")' />
+    <br />
+    <Switch Checked="false" CheckedChildren='@("开")' UnCheckedChildren='@("关")' />
+    <br />
+    <Switch Checked="true"
+               CheckedChildren="checkedChildren"
+               UnCheckedChildren="unCheckedChildren" />
+</div>
+
+
+@code{
+    RenderFragment checkedChildren = @<AntIcon Type="check"></AntIcon>;
+
+    RenderFragment unCheckedChildren = @<AntIcon Type="close"></AntIcon>;
+}

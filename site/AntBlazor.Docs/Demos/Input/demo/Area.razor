@@ -1,13 +1,13 @@
 ﻿<div>
-    <TextArea Placeholder="Autosize height based on content lines" AutoSize="true"></TextArea>
+    <AntBlazor.TextArea Placeholder="Autosize height based on content lines" AutoSize="true" @bind-Value="@txtValue"/>
     <br />
     <br />
-    <TextArea Placeholder="Autosize height based on content lines" MinRows="2" MaxRows="6"></TextArea>
+    <AntBlazor.TextArea Placeholder="Autosize height based on content lines" MinRows="2" MaxRows="6" @bind-Value="@txtValue"/>
     <br />
     <br />
-    <TextArea Placeholder="Autosize height based on content lines" MinRows="3" MaxRows="5" Value="@textValue"></TextArea>
+    <AntBlazor.TextArea Placeholder="Autosize height based on content lines" MinRows="3" MaxRows="5" @bind-Value="@txtValue"/>
 </div>
 
 @code{
-    string textValue { get; set; }
+    string txtValue { get; set; }
 }

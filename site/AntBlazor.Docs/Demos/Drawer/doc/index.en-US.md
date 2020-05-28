@@ -37,5 +37,5 @@ Drawer comes very handy.
 | OffsetY |  the offset of in Y-axis                                | int        | 0         |
 | Visible | Whether the Drawer dialog is visible or not.                               | boolean        | -         |
 | Keyboard | Whether support press esc to close                          | boolean        | true         |
-| OnClose        | 	Specify a callback that will be called when a user clicks mask, close button or Cancel button.                                   | function(e)     | -         |
+| OnClose        |Specify a callback that will be called when a user clicks mask, close button or Cancel button.                                   | function(e)     | -         |
 | OnViewInit             | Specify a callback that will be called before drawer displayed | function(e)        | - |
