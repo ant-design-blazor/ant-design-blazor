@@ -1,10 +1,8 @@
 ﻿var startLoader = function (progressElement, textElement) {
-  console.log('loading..')
   /*
    * Loader/splash screen
    * */
   if (!window.XMLHttpRequest) {
-    console.log('no XMLHttpRequest..')
     return;
   }
   var loading = {};
@@ -13,13 +11,11 @@
   var loaded = 0;
   var proxied = window.XMLHttpRequest.prototype.open;
   window.XMLHttpRequest.prototype.open = function () {
-    console.log('open..')
     var file = arguments[1];
     files.push(file);
     total++;
     loading[file] = 1;
     this.addEventListener("load", function () {
-      console.log(`Loaded ${file} ...`);
       delete (loading[file]);
       loaded++;
       var progress = Math.floor(((loaded / total) * 100));
