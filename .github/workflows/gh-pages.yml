@@ -7,11 +7,12 @@ env:
 on:
   push:
     branches:
-      - "ant-design-blazor/master"
+      - master
 
 jobs:
   publish-and-deploy:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
 
     steps:
       - name: Checkout 🛎️
