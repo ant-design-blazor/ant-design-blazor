@@ -1,20 +1,20 @@
 ﻿@inject NotificationService _notice
 
-<AntButton OnClick="@OnSuccessClick">
+<Button OnClick="@OnSuccessClick">
     success
-</AntButton>   
+</Button>   
 
- <AntButton OnClick="@OnInfoClick">
+ <Button OnClick="@OnInfoClick">
     info
-</AntButton>
+</Button>
 
-<AntButton OnClick="@OnWarningClick">
+<Button OnClick="@OnWarningClick">
     warning
-</AntButton>
+</Button>
 
-<AntButton OnClick="@OnErrorClick">
+<Button OnClick="@OnErrorClick">
     error
-</AntButton>
+</Button>
 
 @code{
     private async Task NoticeWithIcon(NotificationType type)

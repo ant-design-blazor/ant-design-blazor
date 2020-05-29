@@ -1,5 +1,5 @@
 ﻿<div style="width: 256;">
-    <AntButton Type="primary" OnClick="ToggleCollapsed" Style="margin-bottom: 16px">
+    <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-bottom: 16px">
         @if (collapsed)
         {
             <AntIcon  Type="menu-unfold" Theme="outline"></AntIcon>
@@ -8,7 +8,7 @@
         {
             <AntIcon  Type="menu-fold" Theme="outline"></AntIcon>
         }
-    </AntButton>
+    </Button>
     <Menu
         DefaultSelectedKeys=@(new[]{"1"})
         DefaultOpenKeys=@(new[]{"sub1"})

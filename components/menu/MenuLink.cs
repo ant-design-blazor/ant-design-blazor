@@ -50,7 +50,7 @@ namespace AntDesign
         public Menu Menu { get; set; }
 
         [CascadingParameter]
-        public AntButton Button { get; set; }
+        public Button Button { get; set; }
 
         [Inject] private NavigationManager NavigationManger { get; set; }
 

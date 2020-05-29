@@ -7,7 +7,7 @@ namespace AntDesign
     /// <summary>
     /// Alert component for feedback.
     /// </summary>
-    public partial class AntAlert : AntDomComponentBase
+    public partial class Alert : AntDomComponentBase
     {
         /// <summary>
         /// Called when close animation is finished
@@ -61,7 +61,7 @@ namespace AntDesign
         /// Type of Alert styles, options: success, info, warning, error
         /// </summary>
         [Parameter]
-        public string Type { get; set; } = AntAlertType.Default;
+        public string Type { get; set; } = AlertType.Default;
 
         /// <summary>
         /// Callback when Alert is closed.
@@ -79,10 +79,10 @@ namespace AntDesign
         /// Icon to show.
         /// </summary>
         protected string IconType => !string.IsNullOrEmpty(Icon) ? Icon
-                        : Type == AntAlertType.Success ? "check-circle"
-                        : Type == AntAlertType.Info ? "info-circle"
-                        : Type == AntAlertType.Warning ? "exclamation-circle"
-                        : Type == AntAlertType.Error ? "close-circle" : null;
+                        : Type == AlertType.Success ? "check-circle"
+                        : Type == AlertType.Info ? "info-circle"
+                        : Type == AlertType.Warning ? "exclamation-circle"
+                        : Type == AlertType.Error ? "close-circle" : null;
 
         /// <summary>
         /// Indicator if the component is closed or not.

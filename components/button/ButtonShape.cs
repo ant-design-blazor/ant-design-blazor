@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public static class AntButtonShape
+    public static class ButtonShape
     {
         public const string Circle = "circle";
         public const string CircleOutline = "circle-outline";

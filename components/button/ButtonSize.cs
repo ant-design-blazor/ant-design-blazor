@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public class AntButtonSize : AntSizeLDSType
+    public class ButtonSize : AntSizeLDSType
     {
     }
 }
