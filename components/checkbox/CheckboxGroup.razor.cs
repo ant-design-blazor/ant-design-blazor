@@ -20,7 +20,7 @@ namespace AntDesign
 
         [Parameter]
 #pragma warning disable CA1819 // 属性不应返回数组
-        public CheckBoxOption[] Options { get; set; }
+        public CheckboxOption[] Options { get; set; }
 
 #pragma warning restore CA1819 // 属性不应返回数组
 

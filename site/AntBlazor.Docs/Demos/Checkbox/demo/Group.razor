@@ -1,47 +1,44 @@
 <div>
-    <CheckboxGroup  Options="@plainOptions" @bind-Value="@checkValue1"  />
+    <CheckboxGroup Options="@plainOptions" @bind-Value="@checkValue1" />
     <br />
     <br />
-    <CheckboxGroup Options="@ckeckAllOptions"  @bind-Value="@checkValue2"/>
+    <CheckboxGroup Options="@ckeckAllOptions" @bind-Value="@checkValue2" />
     <br />
     <br />
-    <CheckboxGroup Options="@OptionsWithDisable"  @bind-Value="@checkValue1"/> 
+    <CheckboxGroup Options="@OptionsWithDisable" @bind-Value="@checkValue1" />
 </div>
-@code{ 
+@code{
 
-        string[] checkValue1 = { "Apple" };
-        string[] checkValue2 = { "Pear" };
+    string[] checkValue1 = {"Apple"};
+    string[] checkValue2 = {"Pear"};
 
-        CheckBoxOption[] plainOptions = new CheckBoxOption[]
-        {
-        new CheckBoxOption{ Label="Apple",Value="Apple" },
-        new CheckBoxOption{ Label="Pear", Value="Pear" },
-        new CheckBoxOption{ Label="Orange", Value="Orange" },
-        };
+    CheckboxOption[] plainOptions = new CheckboxOption[]
+    {
+        new CheckboxOption {Label = "Apple", Value = "Apple"},
+        new CheckboxOption {Label = "Pear", Value = "Pear"},
+        new CheckboxOption {Label = "Orange", Value = "Orange"},
+    };
 
-        CheckBoxOption[] ckeckAllOptions = new CheckBoxOption[]
-        {
-        new CheckBoxOption{ Label="Apple",Value="Apple" },
-        new CheckBoxOption{ Label="Pear", Value="Pear" ,Checked=true},
-        new CheckBoxOption{ Label="Orange", Value="Orange" },
-        };
+    CheckboxOption[] ckeckAllOptions = new CheckboxOption[]
+    {
+        new CheckboxOption {Label = "Apple", Value = "Apple"},
+        new CheckboxOption {Label = "Pear", Value = "Pear", Checked = true},
+        new CheckboxOption {Label = "Orange", Value = "Orange"},
+    };
 
-        CheckBoxOption[] OptionsWithDisable = new CheckBoxOption[]
-        {
-        new CheckBoxOption{ Label="Apple",Value="Apple" },
-        new CheckBoxOption{ Label="Pear", Value="Pear" },
-        new CheckBoxOption{ Label="Orange", Value="Orange", Disabled=true },
-        };
+    CheckboxOption[] OptionsWithDisable = new CheckboxOption[]
+    {
+        new CheckboxOption {Label = "Apple", Value = "Apple"},
+        new CheckboxOption {Label = "Pear", Value = "Pear"},
+        new CheckboxOption {Label = "Orange", Value = "Orange", Disabled = true},
+    };
 
     private bool checkAll { get; set; } = false;
 
-    void  groupValueChanged()
+    void groupValueChanged()
     {
         bool allChecked = checkAll;
         plainOptions.ForEach(o => o.Checked = !allChecked);
     }
-
-
-
 
 }
