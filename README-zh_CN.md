@@ -101,7 +101,7 @@ WebAssembly 静态托管页面示例
 - 最后就可以在`.razor`组件中引用啦！
 
   ```html
-  <AntButton Type="primary">Hello World!</AntButton>
+  <Button type="primary">Hello World!</Button>
   ```
 
 ## ⌨️ 本地开发

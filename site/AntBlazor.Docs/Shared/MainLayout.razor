@@ -44,11 +44,11 @@
                     </div>*@
                 @if (CurrentLanguage != "en-US")
                 {
-                    <AntButton Class="header-button" Size="small" OnClick="@(_ => ChangeLanguage("en-US"))">English</AntButton>
+                    <Button Class="header-button" Size="small" OnClick="@(_ => ChangeLanguage("en-US"))">English</Button>
                 }
                 else
                 {
-                    <AntButton Class="header-button" Size="small" OnClick="@(_ => ChangeLanguage("zh-CN"))">简体中文</AntButton>
+                    <Button Class="header-button" Size="small" OnClick="@(_ => ChangeLanguage("zh-CN"))">简体中文</Button>
                 }
                 @*<button type="button" class="ant-btn header-button header-lang-button ant-btn-sm">English</button>*@
                 @*<button type="button" class="ant-btn header-button header-direction-button ant-btn-sm"><span>RTL</span></button>

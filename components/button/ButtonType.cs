@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public static class AntButtonType
+    public static class ButtonType
     {
         public const string Default = "default";
         public const string Primary = "primary";

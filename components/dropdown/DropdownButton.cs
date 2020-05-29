@@ -34,7 +34,7 @@ namespace AntDesign
             }
         }
 
-        private string _type = AntButtonType.Default;
+        private string _type = ButtonType.Default;
         [Parameter]
         public string Type
         {

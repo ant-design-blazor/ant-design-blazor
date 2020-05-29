@@ -1,29 +1,29 @@
 ﻿@inject NotificationService _notice
 
 <div>
-    <AntButton Type="@AntButtonType.Primary" OnClick="@OnTopLeftClick">
+    <Button Type="@ButtonType.Primary" OnClick="@OnTopLeftClick">
         <AntIcon Type="Radius-Upleft" Theme="Outline"></AntIcon>
         TopLeft
-    </AntButton>
+    </Button>
 
-    <AntButton Type="@AntButtonType.Primary" OnClick="@OnTopRightClick">
+    <Button Type="@ButtonType.Primary" OnClick="@OnTopRightClick">
         <AntIcon Type="Radius-Upright" Theme="Outline"></AntIcon>
         TopRight
-    </AntButton>
+    </Button>
 </div>
 
 <br/>
 
 <div>
-    <AntButton Type="@AntButtonType.Primary" OnClick="@OnBottomLeftClick">
+    <Button Type="@ButtonType.Primary" OnClick="@OnBottomLeftClick">
         <AntIcon Type="Radius-Bottomleft" Theme="Outline"></AntIcon>
         BottomLeft
-    </AntButton>
+    </Button>
 
-    <AntButton Type="@AntButtonType.Primary" OnClick="@OnBottomRightClick">
+    <Button Type="@ButtonType.Primary" OnClick="@OnBottomRightClick">
         <AntIcon Type="Radius-Bottomright" Theme="Outline"></AntIcon>
         BottomRight
-    </AntButton>
+    </Button>
 </div>
 
 @code {

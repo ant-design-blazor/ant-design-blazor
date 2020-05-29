@@ -102,7 +102,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 - Finally, it can be referenced in the `.razor' component!
 
   ```html
-  <AntButton Type="primary">Hello World!</AntButton>
+  <Button Type="primary">Hello World!</Button>
   ```
 
 ## ⌨️ Local Development

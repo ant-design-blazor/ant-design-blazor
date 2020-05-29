@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class AntButton : AntDomComponentBase
+    public partial class Button : AntDomComponentBase
     {
         [Parameter]
         public bool Block { get; set; } = false;
@@ -21,7 +21,7 @@ namespace AntDesign
         public bool Loading { get; set; } = false;
 
         [Parameter]
-        public string Type { get; set; } = AntButtonType.Default;
+        public string Type { get; set; } = ButtonType.Default;
 
         [Parameter]
         public string Shape { get; set; } = null;
@@ -82,7 +82,7 @@ namespace AntDesign
             base.OnInitialized();
             //if (Link != null && string.IsNullOrEmpty(this.Type))
             //{
-            //    this.Type = AntButtonType.Link;
+            //    this.Type = ButtonType.Link;
             //}
             SetClassMap();
         }

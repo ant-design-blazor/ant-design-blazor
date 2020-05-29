@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class AntAvatar : AntDomComponentBase
+    public partial class Avatar : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
