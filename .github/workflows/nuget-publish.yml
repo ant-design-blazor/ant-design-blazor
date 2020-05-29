@@ -30,9 +30,6 @@ jobs:
       - name: Install dotnet tool
         run: dotnet tool install -g dotnetCampus.TagToVersion
 
-      - name: Set tag to version  
-        run: dotnet TagToVersion -t ${{ github.ref }}
-
       - name: Install npm
         run: npm install
 
@@ -43,7 +40,9 @@ jobs:
         run: dotnet build -c release
 
       - name: Package
-        run: dotnet pack components/AntBlazor.csproj -c Release --no-build --no-restore 
+        run: |
+         version=$(dotnet TagToVersion -t ${{ github.ref }} --toconsole true)
+         dotnet pack components/AntBlazor.csproj /p:PackageVersion=$version -c Release --no-build --no-restore 
 
       - name: Publish to Nuget
         run: dotnet nuget push ./bin/Release/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
