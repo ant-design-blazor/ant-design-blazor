@@ -1,17 +1,17 @@
 ﻿@inject NotificationService _notice
 
-<AntButton Type="@AntButtonType.Primary" OnClick="@OnClick">
+<Button Type="@ButtonType.Primary" OnClick="@OnClick">
     custom button
-</AntButton>
+</Button>
 
 @code{
 
     private async Task OnClick()
     {
         string key = $"open{DateTime.Now}";
-        RenderFragment btn = @<AntButton Type="@AntButtonType.Primary" OnClick="() => { _notice.Close(key); }">
+        RenderFragment btn = @<Button Type="@ButtonType.Primary" OnClick="() => { _notice.Close(key); }">
                                 confirm
-                            </AntButton>;
+                            </Button>;
         await _notice.Open(new NotificationConfig()
         {
             Message = "Notification Title",
