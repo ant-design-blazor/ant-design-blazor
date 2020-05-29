@@ -94,31 +94,31 @@
                     animation: antSpinMove 1s infinite linear alternate;
                 }
 
-                .ant-spin-dot-item:nth-child(1) {
-                    top: 0;
-                    left: 0;
-                }
+                    .ant-spin-dot-item:nth-child(1) {
+                        top: 0;
+                        left: 0;
+                    }
 
-                .ant-spin-dot-item:nth-child(2) {
-                    top: 0;
-                    right: 0;
-                    -webkit-animation-delay: 0.4s;
-                    animation-delay: 0.4s;
-                }
+                    .ant-spin-dot-item:nth-child(2) {
+                        top: 0;
+                        right: 0;
+                        -webkit-animation-delay: 0.4s;
+                        animation-delay: 0.4s;
+                    }
 
-                .ant-spin-dot-item:nth-child(3) {
-                    right: 0;
-                    bottom: 0;
-                    -webkit-animation-delay: 0.8s;
-                    animation-delay: 0.8s;
-                }
+                    .ant-spin-dot-item:nth-child(3) {
+                        right: 0;
+                        bottom: 0;
+                        -webkit-animation-delay: 0.8s;
+                        animation-delay: 0.8s;
+                    }
 
-                .ant-spin-dot-item:nth-child(4) {
-                    bottom: 0;
-                    left: 0;
-                    -webkit-animation-delay: 1.2s;
-                    animation-delay: 1.2s;
-                }
+                    .ant-spin-dot-item:nth-child(4) {
+                        bottom: 0;
+                        left: 0;
+                        -webkit-animation-delay: 1.2s;
+                        animation-delay: 1.2s;
+                    }
 
                 .ant-spin-dot-spin {
                     -webkit-transform: rotate(45deg);
@@ -134,13 +134,12 @@
                     height: 32px;
                 }
 
-                .ant-spin-lg .ant-spin-dot i {
-                    width: 14px;
-                    height: 14px;
-                }
+                    .ant-spin-lg .ant-spin-dot i {
+                        width: 14px;
+                        height: 14px;
+                    }
 
-                @media all and (-ms-high-contrast: none),
-                (-ms-high-contrast: active) {
+                @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
                     .ant-spin-blur {
                         background: #fff;
                         opacity: 0.5;
@@ -173,10 +172,9 @@
                     }
                 }
             </style>
-            <div
-                style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 420px; height: 100%;">
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 420px; height: 100%;">
                 <img src="https://raw.githubusercontent.com/ant-design-blazor/ant-design-blazor/master/logo.svg?sanitize=true"
-                    alt="logo" width="256">
+                     alt="logo" width="256">
                 <div class="page-loading-warp">
                     <div class="ant-spin ant-spin-lg ant-spin-spinning">
                         <span class="ant-spin-dot ant-spin-dot-spin">
@@ -187,9 +185,11 @@
                         </span>
                     </div>
                 </div>
-                <div style="display: flex; justify-content: center; align-items: center;">
+                <progress id="pbar"></progress>
+                <p id="loadingText">Loading...</p>
+                <div style="display: flex; justify-content: center; align-items: center; margin-top: 5em;">
                     <img src="https://raw.githubusercontent.com/ant-design-blazor/ant-design-blazor/master/logo.svg?sanitize=true"
-                        width="32" style="margin-right: 8px;"> Ant Design of Blazor
+                         width="32" style="margin-right: 8px;"> Ant Design of Blazor
                 </div>
             </div>
         </div>
@@ -226,6 +226,10 @@
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
 
+    <script src="_content/AntDesign.Docs/js/loading.js"></script>
+    <script>
+        startLoader(document.getElementById("pbar"), document.getElementById('loadingText'));
+    </script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
     <script src="_content/AntDesign.Docs/js/prism.js"></script>
@@ -241,5 +245,4 @@
     </script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>
-
 </html>
