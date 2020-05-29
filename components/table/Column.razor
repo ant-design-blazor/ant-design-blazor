@@ -1,13 +1,19 @@
-@namespace AntBlazor
-@inherits AntDomComponentBase
-@{Title ??=@<div></div>; }
-@{Render ??=@<div>@Data?.ToString()??""</div>; }
+@namespace AntDesign
+@inherits AntComponentBase
+@typeparam TItem
 
-@if (IsRenderingHead.Value)
+@if (IsHeader)
 {
-    <th class="ant-table-cell">@Title</th>
+    <th class="ant-table-cell">@(DisplayName??FieldName)</th>
 }
 else
 {
-    <td class="ant-table-cell">@Render</td>
+    @if (CellTemplate != null)
+    {
+        <td>@CellTemplate(Field)</td>
+    }
+    else
+    {
+        <td>@Field</td>
+    }
 }

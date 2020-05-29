@@ -1,8 +1,8 @@
-@namespace AntBlazor
+@namespace AntDesign
 @inherits AntDomComponentBase
-@typeparam TData
+@typeparam TItem
 
-<CascadingValue Value="@this" TValue="Internal.ITable">
+<CascadingValue Value="@this" TValue="ITable">
     <div class="ant-table">
         <div class="ant-table-container">
             <div class="ant-table-content">
@@ -10,17 +10,23 @@
                     <colgroup></colgroup>
                     <thead class="ant-table-thead">
                         <tr>
-                            <CascadingValue Value="@(new Column.IsRenderingHeadWrapper(true))">
-                                @ChildContent(default)
+                            <CascadingValue Name="IsHeader" Value="true">
+                                @if (FieldModel != null)
+                                {
+                                    @ChildContent(FieldModel)
+                                }
                             </CascadingValue>
                         </tr>
                     </thead>
                     <tbody class="ant-table-tbody">
-                        @foreach (var data in DataSource)
+                        @if (_columns.Count > 0)
                         {
-                            <tr class="ant-table-row ant-table-row-level-0">
-                                @ChildContent(data)
-                            </tr>
+                            @foreach (var data in DataSource)
+                            {
+                                <tr class="ant-table-row ant-table-row-level-0">
+                                    @ChildContent(data)
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>

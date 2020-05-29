@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace AntBlazor
+namespace AntDesign
 {
     internal enum CssSizeLengthUnit
     {
@@ -42,7 +42,9 @@ namespace AntBlazor
             _unit = unit;
         }
 
-        public CssSizeLength(int value) : this(value, CssSizeLengthUnit.Px) { }
+        public CssSizeLength(int value) : this(value, CssSizeLengthUnit.Px)
+        {
+        }
 
         public CssSizeLength(string value)
         {

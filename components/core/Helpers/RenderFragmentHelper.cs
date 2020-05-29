@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public static class RenderFragmentHelper
     {

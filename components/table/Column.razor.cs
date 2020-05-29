@@ -1,31 +1,49 @@
-﻿using AntBlazor.Internal;
+﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Forms;
 
-namespace AntBlazor
+namespace AntDesign
 {
-    public sealed partial class Column
+    public partial class Column<TItem> : AntComponentBase, ITableColumn
     {
-        internal struct IsRenderingHeadWrapper
+        [Parameter]
+        public TItem Field { get; set; }
+
+        [Parameter]
+        public EventCallback<TItem> FieldChanged { get; set; }
+
+        [Parameter]
+        public Expression<Func<TItem>> FieldExpression { get; set; }
+
+        [Parameter]
+        public bool Sort { get; set; }
+
+        [Parameter]
+        public RenderFragment<TItem> CellTemplate { get; set; }
+
+        [CascadingParameter]
+        public ITable Table { get; set; }
+
+        [CascadingParameter(Name = "IsHeader")]
+        public bool IsHeader { get; set; }
+
+        private FieldIdentifier? _fieldIdentifier;
+
+        public string DisplayName => _fieldIdentifier?.GetDisplayName();
+
+        public string FieldName => _fieldIdentifier?.FieldName;
+
+        protected override void OnInitialized()
         {
-            public bool Value { get; }
+            if (FieldExpression != null)
+            {
+                _fieldIdentifier = FieldIdentifier.Create(FieldExpression);
+            }
 
-            public IsRenderingHeadWrapper(bool value) => Value = value;
+            Table?.AddColumn(this);
         }
-
-        [CascadingParameter]
-        internal ITable Target { get; set; }
-
-        [CascadingParameter]
-        internal IsRenderingHeadWrapper IsRenderingHead { get; set; }
-
-        [Parameter]
-        public object Data { get; set; }
-
-        [Parameter]
-        public RenderFragment Title { get; set; }
-
-        [Parameter]
-        public RenderFragment Render { get; set; }
     }
 }

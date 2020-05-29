@@ -1,21 +1,28 @@
 ﻿using System.Collections.Generic;
-using AntBlazor.Internal;
+using System.Linq;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
-    public sealed partial class Table<TData> : ITable
+    public partial class Table<TItem> : AntDomComponentBase, ITable
     {
         [Parameter]
-        public IList<TData> DataSource { get; set; }
+        public IEnumerable<TItem> DataSource { get; set; }
 
         [Parameter]
-        public IList<ColumnType> Columns { get; set; }
+        public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
-        public RenderFragment<TData> ChildContent { get; set; }
+        public RowSelection<TItem> RowSelection { get; set; }
 
-        [Parameter]
-        public RowSelection<TData> RowSelection { get; set; }
+        private readonly IList<ITableColumn> _columns = new List<ITableColumn>();
+
+        public void AddColumn(ITableColumn column)
+        {
+            _columns.Add(column);
+            StateHasChanged();
+        }
+
+        private TItem FieldModel => DataSource.FirstOrDefault();
     }
 }
