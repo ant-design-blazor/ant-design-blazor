@@ -11,7 +11,7 @@
         "Name": "banner",
         "Title": "顶部公告",
         "Description": "<p>页面顶部通告形式，默认有图标且 <code>nzType</code> 为 <code>'warning'</code>。</p>\n",
-        "Code": "<AntAlert Type=\"@AntAlertType.Warning\"\r\n          Message=\"Warning Text\"\r\n          Banner\r\n          Closable />\r\n\r\n<AntAlert Type=\"@AntAlertType.Warning\"\r\n          Message=\"Warning Text\"\r\n          Description=\"Very long warning text warning text text text text text text text\"\r\n          Banner\r\n          Closable />\r\n\r\n<AntAlert Type=\"@AntAlertType.Warning\"\r\n          Message=\"Warning Text Without Icon\"\r\n          Banner\r\n          ShowIcon=\"false\" />\r\n\r\n<AntAlert Type=\"@AntAlertType.Error\"\r\n          Message=\"Error Text\"\r\n          Banner />",
+        "Code": "<Alert Type=\"@AlertType.Warning\"\r\n          Message=\"Warning Text\"\r\n          Banner\r\n          Closable />\r\n\r\n<Alert Type=\"@AlertType.Warning\"\r\n          Message=\"Warning Text\"\r\n          Description=\"Very long warning text warning text text text text text text text\"\r\n          Banner\r\n          Closable />\r\n\r\n<Alert Type=\"@AlertType.Warning\"\r\n          Message=\"Warning Text Without Icon\"\r\n          Banner\r\n          ShowIcon=\"false\" />\r\n\r\n<Alert Type=\"@AlertType.Error\"\r\n          Message=\"Error Text\"\r\n          Banner />",
         "Type": "Demos.Alert.demo.Banner",
         "Style": "",
         "Iframe": 250,
@@ -22,7 +22,7 @@
         "Name": "basic",
         "Title": "基本",
         "Description": "<p>最简单的用法，适用于简短的警告提示。</p>\n",
-        "Code": "<AntAlert Type=\"@AntAlertType.Success\" Message=\"Success Text\" />\r\n",
+        "Code": "<Alert Type=\"@AlertType.Success\" Message=\"Success Text\" />\r\n",
         "Type": "Demos.Alert.demo.Basic",
         "Style": "\n.code-box-demo .ant-alert {\n  margin-bottom: 16px;\n}\n\n",
         "Debug": false
@@ -32,7 +32,7 @@
         "Name": "closable",
         "Title": "可关闭的警告提示",
         "Description": "<p>显示关闭按钮，点击可关闭警告提示。</p>\n",
-        "Code": "<AntAlert Type=\"@AntAlertType.Warning\"\r\n          Message=\"Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text\"\r\n          Closable\r\n          OnClose=\"LogSomething\" />\r\n\r\n<AntAlert Type=\"@AntAlertType.Error\"\r\n          Message=\"Error Text\"\r\n          Description=\"Error Description Error Description Error Description Error Description Error Description Error Description\"\r\n          Closable\r\n          OnClose=\"LogSomething\" />\r\n\r\n@code{\r\n    private void LogSomething()\r\n    {\r\n        Console.WriteLine(\"Logging Something...\");\r\n    }\r\n}",
+        "Code": "<Alert Type=\"@AlertType.Warning\"\r\n          Message=\"Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text\"\r\n          Closable\r\n          OnClose=\"LogSomething\" />\r\n\r\n<Alert Type=\"@AlertType.Error\"\r\n          Message=\"Error Text\"\r\n          Description=\"Error Description Error Description Error Description Error Description Error Description Error Description\"\r\n          Closable\r\n          OnClose=\"LogSomething\" />\r\n\r\n@code{\r\n    private void LogSomething()\r\n    {\r\n        Console.WriteLine(\"Logging Something...\");\r\n    }\r\n}",
         "Type": "Demos.Alert.demo.Closable",
         "Style": "",
         "Debug": false
@@ -42,7 +42,7 @@
         "Name": "closetext",
         "Title": "自定义关闭",
         "Description": "<p>可以自定义关闭，自定义的内容会替换原先的关闭按钮。</p>\n",
-        "Code": "<AntAlert Message=\"Info Text\" Type=\"@AntAlertType.Info\" CloseText=\"Close Now\"  Closable/>",
+        "Code": "<Alert Message=\"Info Text\" Type=\"@AlertType.Info\" CloseText=\"Close Now\"  Closable/>\r\n",
         "Type": "Demos.Alert.demo.CloseText",
         "Style": "",
         "Debug": false
@@ -52,7 +52,7 @@
         "Name": "description",
         "Title": "含有辅助性文字介绍",
         "Description": "<p>含有辅助性文字介绍的警告提示。</p>\n",
-        "Code": "<AntAlert Message=\"Success Text\"\r\n          Description=\"Success Description Success Description Success Description\"\r\n          Type=\"@AntAlertType.Success\" />\r\n\r\n<AntAlert Message=\"Info Text\"\r\n          Description=\"Info Description Info Description Info Description Info Description\"\r\n          Type=\"@AntAlertType.Info\" />\r\n\r\n<AntAlert Message=\"Warning Text\"\r\n          Description=\"Warning Description Warning Description Warning Description Warning Description\"\r\n          Type=\"@AntAlertType.Warning\" />\r\n\r\n<AntAlert Message=\"Error Text\"\r\n          Description=\"Error Description Error Description Error Description Error Description\"\r\n          Type=\"@AntAlertType.Error\" />",
+        "Code": "<Alert Message=\"Success Text\"\r\n          Description=\"Success Description Success Description Success Description\"\r\n          Type=\"@AlertType.Success\" />\r\n\r\n<Alert Message=\"Info Text\"\r\n          Description=\"Info Description Info Description Info Description Info Description\"\r\n          Type=\"@AlertType.Info\" />\r\n\r\n<Alert Message=\"Warning Text\"\r\n          Description=\"Warning Description Warning Description Warning Description Warning Description\"\r\n          Type=\"@AlertType.Warning\" />\r\n\r\n<Alert Message=\"Error Text\"\r\n          Description=\"Error Description Error Description Error Description Error Description\"\r\n          Type=\"@AlertType.Error\" />\r\n",
         "Type": "Demos.Alert.demo.Description",
         "Style": "",
         "Debug": false
@@ -62,7 +62,7 @@
         "Name": "icon",
         "Title": "图标",
         "Description": "<p>可口的图标让信息类型更加醒目。</p>\n",
-        "Code": "<AntAlert Type=\"@AntAlertType.Success\"\r\n          Message=\"Success Tips\"\r\n          ShowIcon />\r\n\r\n<AntAlert Type=\"@AntAlertType.Info\"\r\n          Message=\"Informational Notes\"\r\n          ShowIcon />\r\n\r\n<AntAlert Type=\"@AntAlertType.Warning\"\r\n          Message=\"Warning\"\r\n          ShowIcon />\r\n\r\n<AntAlert Type=\"@AntAlertType.Error\"\r\n          Message=\"Error\"\r\n          ShowIcon />\r\n\r\n<AntAlert Type=\"@AntAlertType.Success\"\r\n          Message=\"Success Tips\"\r\n          Description=\"Detailed description and advice about successful copywriting.\"\r\n          ShowIcon />\r\n\r\n<AntAlert Type=\"@AntAlertType.Info\"\r\n          Message=\"Informational Notes\"\r\n          Description=\"Additional description and information about copywriting.\"\r\n          ShowIcon />\r\n\r\n<AntAlert Type=\"@AntAlertType.Warning\"\r\n          Message=\"Warning\"\r\n          Description=\"This is a warning notice about copywriting.\"\r\n          ShowIcon />\r\n\r\n<AntAlert Type=\"@AntAlertType.Error\"\r\n          Message=\"Error\"\r\n          Description=\"This is an error message about copywriting.\"\r\n          ShowIcon />",
+        "Code": "<Alert Type=\"@AlertType.Success\"\r\n          Message=\"Success Tips\"\r\n          ShowIcon />\r\n\r\n<Alert Type=\"@AlertType.Info\"\r\n          Message=\"Informational Notes\"\r\n          ShowIcon />\r\n\r\n<Alert Type=\"@AlertType.Warning\"\r\n          Message=\"Warning\"\r\n          ShowIcon />\r\n\r\n<Alert Type=\"@AlertType.Error\"\r\n          Message=\"Error\"\r\n          ShowIcon />\r\n\r\n<Alert Type=\"@AlertType.Success\"\r\n          Message=\"Success Tips\"\r\n          Description=\"Detailed description and advice about successful copywriting.\"\r\n          ShowIcon />\r\n\r\n<Alert Type=\"@AlertType.Info\"\r\n          Message=\"Informational Notes\"\r\n          Description=\"Additional description and information about copywriting.\"\r\n          ShowIcon />\r\n\r\n<Alert Type=\"@AlertType.Warning\"\r\n          Message=\"Warning\"\r\n          Description=\"This is a warning notice about copywriting.\"\r\n          ShowIcon />\r\n\r\n<Alert Type=\"@AlertType.Error\"\r\n          Message=\"Error\"\r\n          Description=\"This is an error message about copywriting.\"\r\n          ShowIcon />",
         "Type": "Demos.Alert.demo.Icon",
         "Style": "",
         "Debug": false
@@ -72,7 +72,7 @@
         "Name": "style",
         "Title": "四种样式",
         "Description": "<p>共有四种样式 <code>success</code>、<code>info</code>、<code>warning</code>、<code>error</code>。</p>\n",
-        "Code": "<AntAlert Message=\"Success Text\" Type=\"@AntAlertType.Success\" />\r\n\r\n<AntAlert Message=\"Info Text\" Type=\"@AntAlertType.Info\" />\r\n\r\n<AntAlert Message=\"Warning Text\" Type=\"@AntAlertType.Warning\" />\r\n\r\n<AntAlert Message=\"Error Text\" Type=\"@AntAlertType.Error\" />",
+        "Code": "<Alert Message=\"Success Text\" Type=\"@AlertType.Success\" />\r\n\r\n<Alert Message=\"Info Text\" Type=\"@AlertType.Info\" />\r\n\r\n<Alert Message=\"Warning Text\" Type=\"@AlertType.Warning\" />\r\n\r\n<Alert Message=\"Error Text\" Type=\"@AlertType.Error\" />\r\n",
         "Type": "Demos.Alert.demo.Style",
         "Style": "",
         "Debug": false
@@ -1960,7 +1960,7 @@
         "Name": "delayanddebounce",
         "Title": "延迟",
         "Description": "<p>延迟显示 loading 效果。当 spinning 状态在 <code>delay</code> 时间内结束，则不显示 loading 状态。</p>\n",
-        "Code": "<div>\r\n    <Spin Spinning=loading Delay=500>\r\n        <AntAlert\r\n            Message=\"Alert message title\"\r\n            Description=\"Further details about the context of this alert.\"\r\n            Type=\"info\"\r\n        />\r\n    </Spin>\r\n    <div style=\"margin-top: 16px\">\r\n        Loading state：\r\n        <AntSwitch Checked=loading OnChange=toggle />\r\n    </div>\r\n</div>\r\n\r\n@code {\r\n    bool loading = false;\r\n\r\n    void toggle(bool value) => loading = value;\r\n}\r\n",
+        "Code": "<div>\r\n    <Spin Spinning=loading Delay=500>\r\n        <Alert\r\n            Message=\"Alert message title\"\r\n            Description=\"Further details about the context of this alert.\"\r\n            Type=\"info\"\r\n        />\r\n    </Spin>\r\n    <div style=\"margin-top: 16px\">\r\n        Loading state：\r\n        <AntSwitch Checked=loading OnChange=toggle />\r\n    </div>\r\n</div>\r\n\r\n@code {\r\n    bool loading = false;\r\n\r\n    void toggle(bool value) => loading = value;\r\n}\r\n",
         "Type": "Demos.Spin.demo.DelayAndDebounce",
         "Style": "",
         "Debug": false
@@ -1980,7 +1980,7 @@
         "Name": "nested",
         "Title": "卡片加载中",
         "Description": "<p>可以直接把内容内嵌到 <code>Spin</code> 中，将现有容器变为加载状态。</p>\n",
-        "Code": "<div>\r\n    <Spin Spinning=loading>\r\n        <AntAlert\r\n            Message=\"Alert message title\"\r\n            Description=\"Further details about the context of this alert.\"\r\n            Type=\"info\"\r\n        />\r\n    </Spin>\r\n    <div style=\"margin-top: 16px\">\r\n        Loading state：\r\n        <AntSwitch Checked=loading OnChange=toggle />\r\n    </div>\r\n</div>\r\n\r\n@code {\r\n    bool loading = false;\r\n\r\n    void toggle(bool value) => loading = value;\r\n}",
+        "Code": "<div>\r\n    <Spin Spinning=loading>\r\n        <Alert\r\n            Message=\"Alert message title\"\r\n            Description=\"Further details about the context of this alert.\"\r\n            Type=\"info\"\r\n        />\r\n    </Spin>\r\n    <div style=\"margin-top: 16px\">\r\n        Loading state：\r\n        <AntSwitch Checked=loading OnChange=toggle />\r\n    </div>\r\n</div>\r\n\r\n@code {\r\n    bool loading = false;\r\n\r\n    void toggle(bool value) => loading = value;\r\n}",
         "Type": "Demos.Spin.demo.Nested",
         "Style": "",
         "Debug": false
@@ -2000,7 +2000,7 @@
         "Name": "tip",
         "Title": "自定义描述文案",
         "Description": "<p>自定义描述文案。</p>\n",
-        "Code": "<Spin Tip=\"Loading...\">\r\n    <AntAlert\r\n        Message=\"Alert message title\"\r\n        Description=\"Further details about the context of this alert.\"\r\n        Type=\"info\"\r\n    />\r\n</Spin>",
+        "Code": "<Spin Tip=\"Loading...\">\r\n    <Alert\r\n        Message=\"Alert message title\"\r\n        Description=\"Further details about the context of this alert.\"\r\n        Type=\"info\"\r\n    />\r\n</Spin>",
         "Type": "Demos.Spin.demo.Tip",
         "Style": "",
         "Debug": false

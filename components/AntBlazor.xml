@@ -19,104 +19,104 @@
             Specifies the scrollable area DOM node
             </summary>
         </member>
-        <member name="T:AntDesign.AntAlert">
+        <member name="T:AntDesign.Alert">
             <summary>
             Alert component for feedback.
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.AfterClose">
+        <member name="P:AntDesign.Alert.AfterClose">
             <summary>
             Called when close animation is finished
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.Banner">
+        <member name="P:AntDesign.Alert.Banner">
             <summary>
             Whether to show as banner
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.Closable">
+        <member name="P:AntDesign.Alert.Closable">
             <summary>
             Whether Alert can be closed
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.CloseText">
+        <member name="P:AntDesign.Alert.CloseText">
             <summary>
             Close text to show
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.Description">
+        <member name="P:AntDesign.Alert.Description">
             <summary>
             Additional content of Alert
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.Icon">
+        <member name="P:AntDesign.Alert.Icon">
             <summary>
             Custom icon, effective when showIcon is true
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.Message">
+        <member name="P:AntDesign.Alert.Message">
             <summary>
             Content of Aler
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.ShowIcon">
+        <member name="P:AntDesign.Alert.ShowIcon">
             <summary>
             Whether to show icon.
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.Type">
+        <member name="P:AntDesign.Alert.Type">
             <summary>
             Type of Alert styles, options: success, info, warning, error
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.OnClose">
+        <member name="P:AntDesign.Alert.OnClose">
             <summary>
             Callback when Alert is closed.
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.ChildContent">
+        <member name="P:AntDesign.Alert.ChildContent">
             <summary>
             Additional Content
             </summary>
         </member>
-        <member name="P:AntDesign.AntAlert.IconType">
+        <member name="P:AntDesign.Alert.IconType">
             <summary>
             Icon to show.
             </summary>
         </member>
-        <member name="F:AntDesign.AntAlert._isClosed">
+        <member name="F:AntDesign.Alert._isClosed">
             <summary>
             Indicator if the component is closed or not.
             </summary>
         </member>
-        <member name="F:AntDesign.AntAlert._isClosing">
+        <member name="F:AntDesign.Alert._isClosing">
             <summary>
             Just before we close the component we set this indicator to show a closing animation.
             </summary>
         </member>
-        <member name="M:AntDesign.AntAlert.SetClassMap">
+        <member name="M:AntDesign.Alert.SetClassMap">
             <summary>
             Sets the default classes.
             </summary>
         </member>
-        <member name="M:AntDesign.AntAlert.OnParametersSet">
+        <member name="M:AntDesign.Alert.OnParametersSet">
             <summary>
             Triggered each time a parameter is changed.
             </summary>
         </member>
-        <member name="M:AntDesign.AntAlert.OnInitialized">
+        <member name="M:AntDesign.Alert.OnInitialized">
             <summary>
             Start-up code.
             </summary>
         </member>
-        <member name="M:AntDesign.AntAlert.OnCloseHandler(Microsoft.AspNetCore.Components.Web.MouseEventArgs)">
+        <member name="M:AntDesign.Alert.OnCloseHandler(Microsoft.AspNetCore.Components.Web.MouseEventArgs)">
             <summary>
             Handles the close callback.
             </summary>
             <param name="args"></param>
             <returns></returns>
         </member>
-        <member name="M:AntDesign.AntAlert.AfterCloseHandler(Microsoft.AspNetCore.Components.Web.MouseEventArgs)">
+        <member name="M:AntDesign.Alert.AfterCloseHandler(Microsoft.AspNetCore.Components.Web.MouseEventArgs)">
             <summary>
             Handles the after close callback.
             </summary>
