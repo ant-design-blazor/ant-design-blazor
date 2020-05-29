@@ -1,23 +1,23 @@
 ﻿<div>
-    <AntDesign.Input Placeholder="large size"  Size="@InputSize.Large" @bind-Value="@txtValue" >
+    <Input Placeholder="large size"  Size="@InputSize.Large" @bind-Value="@txtValue" >
         <Prefix>
             <AntIcon Type="user" />
         </Prefix>
-    </AntDesign.Input>
+    </Input>
     <br />
     <br />
-    <AntDesign.Input Placeholder="default size" @bind-Value="@txtValue" >
+    <Input Placeholder="default size" @bind-Value="@txtValue" >
         <Prefix>
             <AntIcon Type="user" />
         </Prefix>
-    </AntDesign.Input>
+    </Input>
     <br />
     <br />
-    <AntDesign.Input Placeholder="small size" Size="@InputSize.Small" @bind-Value="@txtValue" >
+    <Input Placeholder="small size" Size="@InputSize.Small" @bind-Value="@txtValue" >
         <Prefix>
             <AntIcon Type="user" />
         </Prefix>
-    </AntDesign.Input>
+    </Input>
     <br />
     <br />
     <InputPassword @bind-Value="@txtValue" Placeholder="large Password" Size="@InputSize.Large" OnPressEnter="(e)=>Submit(e)" />

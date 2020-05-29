@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class AntButtonGroup : AntDomComponentBase
+    public partial class ButtonGroup : AntDomComponentBase
     {
         [Parameter] public RenderFragment ChildContent { get; set; }
 

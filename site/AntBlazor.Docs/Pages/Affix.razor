@@ -23,15 +23,15 @@
             <Demo>
                 <div>
                     <AntAffix OffsetTop="@_offsetTop">
-                        <AntButton Type="@AntButtonType.Primary" OnClick="AddTop">
+                        <Button Type="@ButtonType.Primary" OnClick="AddTop">
                             Affix top
-                        </AntButton>
+                        </Button>
                     </AntAffix>
                     <br />
                     <AntAffix OffsetBottom="@_offsetBottom">
-                        <AntButton Type="@AntButtonType.Primary" OnClick="AddBottom">
+                        <Button Type="@ButtonType.Primary" OnClick="AddBottom">
                             Affix bottom
-                        </AntButton>
+                        </Button>
                     </AntAffix>
                 </div>
             </Demo>
@@ -54,9 +54,9 @@
                 <div class="scrollable-container" @ref="_container">
                     <div class="background">
                         <AntAffix Target="@_container">
-                            <AntButton Type="@AntButtonType.Primary">
+                            <Button Type="@ButtonType.Primary">
                                 Fixed at the top of container
-                            </AntButton>
+                            </Button>
                         </AntAffix>
                     </div>
 
@@ -70,9 +70,9 @@
             <Description>Callback with affixed state.</Description>
             <Demo>
                 <AntAffix OffsetTop="120" OnChange="OnAffixChange">
-                    <AntButton>
+                    <Button>
                         120px to affix top
-                    </AntButton>
+                    </Button>
                 </AntAffix>
             </Demo>
         </DemoCard>

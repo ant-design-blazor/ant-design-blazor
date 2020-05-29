@@ -37,7 +37,7 @@ namespace AntDesign
             {
                 AddOnAfter = new RenderFragment((builder) =>
                 {
-                    builder.OpenComponent<AntButton>(_sequence++);
+                    builder.OpenComponent<Button>(_sequence++);
                     builder.AddAttribute(_sequence++, "class", $"{PrefixCls}-search-button");
                     builder.AddAttribute(_sequence++, "type", "primary");
                     builder.AddAttribute(_sequence++, "size", Size);

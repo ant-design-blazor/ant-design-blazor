@@ -210,7 +210,7 @@
     <Demo>
         <AntTabs DefaultActiveKey="1">
             <TabBarExtraContent>
-                <AntButton>Extra Action</AntButton>
+                <Button>Extra Action</Button>
             </TabBarExtraContent>
             <ChildContent>
                 <AntTabPane Key="1">
@@ -439,7 +439,7 @@
     <Demo>
         <div>
             <div style="margin-bottom: 16px;">
-                <AntButton @onclick="(e)=>Add()">ADD</AntButton>
+                <Button @onclick="(e)=>Add()">ADD</Button>
             </div>
             <AntTabs DefaultActiveKey="1" Type="@AntTabType.EditableCard" HideAdd>
                 @foreach (var temp in _panes)

@@ -15,7 +15,7 @@ namespace AntDesign
 
         private string _rightButtonIcon = "ellipsis";
         private string _buttonSize = AntSizeLDSType.Default;
-        private string _buttonType = AntButtonType.Default;
+        private string _buttonType = ButtonType.Default;
 
         private RenderFragment _leftButton;
         private RenderFragment _rightButton;

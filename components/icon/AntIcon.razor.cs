@@ -45,7 +45,7 @@ namespace AntDesign
         public string TabIndex { get; set; }
 
         [CascadingParameter]
-        public AntButton Button { get; set; }
+        public Button Button { get; set; }
 
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
