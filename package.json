@@ -15,10 +15,10 @@
   "homepage": "https://antd.blz.bit.cat",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ant-design-blazor/ant-design-blazor"
+    "url": "https://github.com/ElderJames/ant-design-blazor"
   },
   "bugs": {
-    "url": "https://github.com/ant-design-blazor/ant-design-blazor/issues"
+    "url": "https://github.com/ElderJames/ant-design-blazor/issues"
   },
   "scripts": {
     "start": "dotnet run -p ./site/AntDesign.Docs.Server",

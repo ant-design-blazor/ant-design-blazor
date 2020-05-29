@@ -1,0 +1,36 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+@typeparam TItem
+
+<CascadingValue Value="@this" TValue="ITable">
+    <div class="ant-table">
+        <div class="ant-table-container">
+            <div class="ant-table-content">
+                <table style="table-layout: auto;">
+                    <colgroup></colgroup>
+                    <thead class="ant-table-thead">
+                        <tr>
+                            <CascadingValue Name="IsHeader" Value="true">
+                                @if (FieldModel != null)
+                                {
+                                    @ChildContent(FieldModel)
+                                }
+                            </CascadingValue>
+                        </tr>
+                    </thead>
+                    <tbody class="ant-table-tbody">
+                        @if (_columns.Count > 0)
+                        {
+                            @foreach (var data in DataSource)
+                            {
+                                <tr class="ant-table-row ant-table-row-level-0">
+                                    @ChildContent(data)
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</CascadingValue>

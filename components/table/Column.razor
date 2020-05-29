@@ -1,0 +1,19 @@
+@namespace AntDesign
+@inherits AntComponentBase
+@typeparam TItem
+
+@if (IsHeader)
+{
+    <th class="ant-table-cell">@(DisplayName??FieldName)</th>
+}
+else
+{
+    @if (CellTemplate != null)
+    {
+        <td>@CellTemplate(Field)</td>
+    }
+    else
+    {
+        <td>@Field</td>
+    }
+}

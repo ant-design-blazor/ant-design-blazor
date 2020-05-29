@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public class CheckBoxOption
+    public class CheckboxOption
     {
         public string Label { get; set; }
 
