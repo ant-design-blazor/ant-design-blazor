@@ -1,0 +1,49 @@
+﻿
+<AntButton Type="primary" OnClick="@ShowModal">
+    Open Modal with customized footer
+</AntButton>
+@{
+    RenderFragment footer = @<Template>
+        <AntButton OnClick="@HandleCancel" @key="@( "back" )">Return</AntButton>
+        <AntButton OnClick="@HandleOk" @key="@( "submit" )"
+                   Type="@AntButtonType.Primary"
+                   Loading="@_loading">Submit</AntButton>
+    </Template>;
+}
+
+<Modal Title="@("Title")"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel"
+       Footer="@footer">
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+</Modal>
+
+
+@code{
+    bool _visible = false;
+    bool _loading = false;
+
+    private void ShowModal()
+    {
+        _visible = true;
+    }
+
+
+    private async Task HandleOk(MouseEventArgs e)
+    {
+        _loading = true;
+        await Task.Delay(3000);
+        _visible = false;
+        _loading = false;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        _visible = false;
+    }
+}

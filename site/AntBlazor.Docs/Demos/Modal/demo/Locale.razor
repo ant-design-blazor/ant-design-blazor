@@ -1,0 +1,46 @@
+﻿@inject ModalService _modalService
+
+<div>
+    <AntButton Type="primary" OnClick="@ShowModal">
+        Modal
+    </AntButton>
+    <Modal Title="@("Modal")"
+           Visible="@_visible"
+           OnOk="@HideModal"
+           OnCancel="@HideModal"
+           OkText="@("确认")"
+           CancelText="@("取消")">
+        <p>Bla bla ...</p>
+        <p>Bla bla ...</p>
+        <p>Bla bla ...</p>
+    </Modal>
+
+    <AntButton OnClick="@HandleConfirm">Confirm</AntButton>
+
+</div>
+
+
+@code {
+    private bool _visible = false;
+    private void ShowModal()
+    {
+        _visible = true;
+    }
+
+    private void HideModal()
+    {
+        _visible = false;
+    }
+
+    private void HandleConfirm()
+    {
+        _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Confirm",
+            Icon =@<AntIcon Type="exclamation-circle" Theme="Outline"></AntIcon>,
+            Content = "Bla bla ...",
+            OkText = "确认",
+            CancelText = "取消"
+        });
+    }
+}

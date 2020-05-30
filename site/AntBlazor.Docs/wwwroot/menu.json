@@ -216,6 +216,11 @@
             "url": "components/drawer"
           },
           {
+            "title": "Modal",
+            "type": "menuItem",
+            "url": "components/modal"
+          },
+          {
             "title": "Message",
             "type": "menuItem",
             "url": "components/message"

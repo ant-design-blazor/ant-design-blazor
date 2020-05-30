@@ -1,0 +1,72 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+<div @ref="_element">
+    <div class="ant-modal-root">
+        @if (Config.Mask)
+        {
+            <div class="ant-modal-mask ant-modal-mask-hidden" style="@Config.MaskStyle"></div>
+        }
+    <div tabindex="-1" class="ant-modal-wrap @Config.GetWrapClassNameExtended()" role="dialog" aria-labelledby="rcDialogTitle0"
+         @onclick="@OnMaskClick" @onclick:preventDefault @onclick:stopPropagation
+         @onmouseup="@OnMaskMouseUp" @onmouseup:preventDefault @onmouseup:stopPropagation
+         @onkeydown="@OnKeyDown" @onkeydown:preventDefault @onkeydown:stopPropagation
+         style="display: none;">
+        <div role="document" class="ant-modal @Config.ClassName "
+             @onmousedown="@OnDialogMouseDown" @onmousedown:preventDefault @onmousedown:stopPropagation
+             style="@GetStyle()">
+            <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
+            <div class="ant-modal-content">
+                @if (Config.Closable)
+                {
+                    <button type="button" aria-label="Close" class="ant-modal-close" @onclick="@OnCloserClick">
+                        <span class="ant-modal-close-x">
+                            <span role="img" aria-label="close" class="anticon anticon-close ant-modal-close-icon">
+                                @Config.CloseIcon
+                            </span>
+                        </span>
+                    </button>
+                }
+                
+                @if (Config.Title != null)
+                {
+                    var titleValue = Config.Title.Value;
+
+                    <div class="ant-modal-header">
+                        <div class="ant-modal-title" id="rcDialogTitle0">
+                            @if (titleValue.IsT0)
+                            {
+                                @(titleValue.AsT0)
+                            }
+                            else
+                            {
+                                @(titleValue.AsT1)
+                            }
+                        </div>
+                    </div>
+                }
+                
+                <div class="ant-modal-body" style="@Config.BodyStyle">
+                    @ChildContent
+                </div>
+                @if (Config.Footer != null)
+                {
+                    <div class="ant-modal-footer">
+                        <CascadingValue Value="@Config">
+                            @if (Config.Footer.Value.IsT0)
+                            {
+                                @(Config.Footer.Value.AsT0)
+                            }
+                            else
+                            {
+                                @(Config.Footer.Value.AsT1)
+                            }
+                        </CascadingValue>
+                    </div>
+                }
+            </div>
+            <div id="@_sentinelEnd" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
+        </div>
+    </div>
+    </div>
+</div>

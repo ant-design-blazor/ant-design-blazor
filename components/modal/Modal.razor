@@ -1,0 +1,9 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+@if(_hasAdd)
+{
+    <Dialog Config="@BuildDialogOptions()" 
+            Visible="@Visible" Style="@Style">
+        @ChildContent
+    </Dialog>
+}

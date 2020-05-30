@@ -1,0 +1,27 @@
+﻿@inject ModalService _modalService
+
+<AntButton OnClick="@CountDown">Open modal to close in 5s</AntButton>
+
+
+@code {
+
+    private async Task CountDown()
+    {
+        var secondsToGo = 5;
+        var props = new ConfirmOptions()
+        {
+            Title = "This is a notification message",
+            Content = $"This modal will be destroyed after {secondsToGo} second."
+        };
+        _modalService.Success(props);
+        while (secondsToGo > 0)
+        {
+            secondsToGo -= 1;
+            await Task.Delay(1000);
+            props.Content = $"This modal will be destroyed after {secondsToGo} second.";
+            _modalService.Update(props);
+        }
+
+        _modalService.Destroy(props);
+    }
+}

@@ -1,0 +1,7 @@
+﻿@namespace AntBlazor
+@inherits AntDomComponentBase
+
+@foreach (var confirm in confirms)
+{
+    <ConfirmDialog @key="@confirm" OnRemove="@OnRemove" Config ="@confirm" />
+}

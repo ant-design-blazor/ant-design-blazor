@@ -1,0 +1,72 @@
+﻿@inject ModalService _modalService
+
+<Space>
+    <SpaceItem>
+        <AntButton OnClick="@ShowConfirm">Confirm</AntButton>
+    </SpaceItem>
+    <SpaceItem>
+        <AntButton OnClick="@ShowDeleteConfirm" Type="dashed">Delete</AntButton>
+    </SpaceItem>
+
+    <SpaceItem>
+        <AntButton OnClick="@ShowPropsConfirm" Type="dashed"> With extra props</AntButton>
+    </SpaceItem>
+</Space>
+@code{
+    Action<MouseEventArgs> onOk = (e) =>
+    {
+        Console.WriteLine("Ok");
+    };
+    Action<MouseEventArgs> onCancel = (e) =>
+    {
+        Console.WriteLine("Cancel");
+    };
+    RenderFragment icon = @<AntIcon Type="exclamation-circle" Theme="outline"></AntIcon>;
+
+    private void ShowConfirm()
+    {
+        _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Do you Want to delete these items?",
+            Icon = icon,
+            Content = "Some descriptions",
+            OnOk = new EventCallback<MouseEventArgs>(this, onOk),
+            OnCancel = new EventCallback<MouseEventArgs>(this, onCancel)
+        });
+    }
+
+    private void ShowDeleteConfirm()
+    {
+        _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Are you sure delete this task?",
+            Icon = icon,
+            Content = "Some descriptions",
+            OnOk = new EventCallback<MouseEventArgs>(this, onOk),
+            OnCancel = new EventCallback<MouseEventArgs>(this, onCancel),
+            OkText = "Yes",
+            OkType = "danger",
+            CancelText = "No",
+
+        });
+    }
+
+    private void ShowPropsConfirm()
+    {
+        _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Are you sure delete this task?",
+            Icon = icon,
+            Content = "Some descriptions",
+            OnOk = new EventCallback<MouseEventArgs>(this, onOk),
+            OnCancel = new EventCallback<MouseEventArgs>(this, onCancel),
+            OkText = "Yes",
+            OkType = "danger",
+            CancelText = "No",
+            OkButtonProps = new AntBlazor.ButtonProps()
+            {
+                Disabled = true,
+            }
+        });
+    }
+}

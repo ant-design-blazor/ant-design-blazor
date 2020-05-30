@@ -1,0 +1,60 @@
+﻿<div>
+    <AntButton Type="primary" OnClick="@SetModal1Visible">
+        Display a modal dialog at 20px to Top
+    </AntButton>
+    <Modal Title="@("20px to Top")"
+           Style="top: 20px"
+           Visible="_visible1"
+           OnOk="@HideModal1"
+           OnCancel="@HideModal1"
+           >
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+    </Modal>
+    <br />
+    <br />
+    <AntButton Type="primary" OnClick="@SetModal2Visible">
+        Vertically centered modal dialog
+    </AntButton>
+    <Modal Title="@("Vertically centered modal dialog")"
+           Centered="true"
+           Visible="_visible2"
+           OnOk="@HideModal2"
+           OnCancel="@HideModal2"
+           >
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+    </Modal>
+</div>
+@code {
+    string title = "BasicModal";
+    bool _visible1 = false;
+    bool _visible2 = false;
+
+    private void HideModal1()
+    {
+        if (_visible1)
+        {
+            _visible1 = false;
+        }
+    }
+
+    private void HideModal2()
+    {
+        if (_visible2)
+        {
+            _visible2 = false;
+        }
+    }
+
+    private void SetModal1Visible()
+    {
+        _visible1 = true;
+    }
+    private void SetModal2Visible()
+    {
+        _visible2 = true;
+    }
+}
