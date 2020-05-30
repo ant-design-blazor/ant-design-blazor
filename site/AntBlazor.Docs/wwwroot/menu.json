@@ -124,6 +124,11 @@
             "url": "components/inputnumber"
           },
           {
+            "title": "Rate",
+            "type": "menuItem",
+            "url": "components/rate"
+          },
+          {
             "title": "Radio",
             "type": "menuItem",
             "url": "components/radio"

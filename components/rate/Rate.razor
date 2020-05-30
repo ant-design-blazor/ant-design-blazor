@@ -1,0 +1,25 @@
+﻿@namespace AntBlazor
+@inherits AntDesign.AntDomComponentBase
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.Web;
+
+    <ul class="@ClassMapper.Class" tabindex="0" role="radiogroup" style="@Style" @ref="Ref" id="@Id"
+        @onblur="@Blur"
+        @onfocus="@Focus"
+        @onkeydown="@KeyDown" @onkeydown:preventDefault
+        @onmouseout="@MouseLeave" @onmouseout:stopPropagation>
+        @foreach (RateMetaData item in RateMetaDatas)
+        {
+            <CascadingValue Value="@Character" Name="Character">
+                <RateItem AllowHalf="@AllowHalf"
+                          IndexOfGroup="@item.SerialNumber"
+                          ToolTip="@item.ToolTipText"
+                          hoverValue="@_hoverValue"
+                          hasHalf="@_hasHalf"
+                          isFocused="@_isFocused"
+                          OnItemClick="@(itemIsHalf=>ItemClick(item.SerialNumber,itemIsHalf))"
+                          OnItemHover="@(itemIshalf=>ItemHoverChange(item.SerialNumber,itemIshalf))" />
+            </CascadingValue>
+        }
+
+    </ul>
