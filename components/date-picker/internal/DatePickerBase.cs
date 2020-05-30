@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using AntBlazor.Internal;
-using AntBlazor.JsInterop;
+using AntDesign.Internal;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
 using OneOf;
 
-
-namespace AntBlazor
+namespace AntDesign
 {
     public class DatePickerBase<TValue> : AntInputComponentBase<TValue>
     {

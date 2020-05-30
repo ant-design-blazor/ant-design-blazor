@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Form : AntDomComponentBase
     {

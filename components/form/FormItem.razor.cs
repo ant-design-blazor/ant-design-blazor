@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class FormItem<TValue> : AntDomComponentBase
     {

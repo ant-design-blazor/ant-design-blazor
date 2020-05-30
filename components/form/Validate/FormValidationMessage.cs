@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace AntBlazor
+namespace AntDesign
 {
     /// <summary>
     /// FormValidationMessage is copy from ValidationMessage.

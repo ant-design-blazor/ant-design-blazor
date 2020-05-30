@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Globalization;
-using AntBlazor.Internal;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
