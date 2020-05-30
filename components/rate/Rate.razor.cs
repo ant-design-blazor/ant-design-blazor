@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AntDesign;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Rate : AntDomComponentBase
     {
@@ -55,7 +54,7 @@ namespace AntBlazor
             }
         }
         /// <summary>
-        /// 默认当前被选中的星星数量
+        /// 默认当前被选中的星星数量,如果被设置为小数位不为0的，则组件默认含有半星并且允许半星
         /// </summary>
         [Parameter] public decimal DefaultValue
         {
@@ -64,7 +63,8 @@ namespace AntBlazor
             {
                 this._currentValue = value;
                 this._hasHalf = !(_currentValue == (int)_currentValue);
-                this._hoverValue = (int)value;
+                this._hoverValue = (int)Math.Ceiling(value);
+                //StateHasChanged();
             }
         }
 
