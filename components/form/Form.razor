@@ -5,7 +5,13 @@
 <EditForm class="@ClassMapper.Class"
           style="@Style"
           id="@Id"
-          EditContext="_editContext">
+          EditContext="_editContext"
+          OnValidSubmit="OnFinish"
+          OnInvalidSubmit="OnFinishFailed">
     <DataAnnotationsValidator />
-    <CascadingValue Value="_editContext" Name="EditContext">@ChildContent</CascadingValue>
+    <CascadingValue Value="_editContext" Name="EditContext">
+        <CascadingValue Value="this" Name="Form">
+            @ChildContent
+        </CascadingValue>
+    </CascadingValue>
 </EditForm>

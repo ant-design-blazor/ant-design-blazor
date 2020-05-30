@@ -21,12 +21,17 @@ namespace AntDesign
         private ValidationMessageStore _parsingValidationMessages;
         private Type _nullableUnderlyingType;
 
-        [CascadingParameter] EditContext CascadedEditContext { get; set; }
+        [CascadingParameter(Name = "EditContext")]
+        EditContext CascadedEditContext { get; set; }
+
+        [CascadingParameter(Name = "FormItem")]
+        FormItem<TValue> FormItem { get; set; }
 
         /// <summary>
         /// Gets or sets a collection of additional attributes that will be applied to the created element.
         /// </summary>
-        [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
+        [Parameter(CaptureUnmatchedValues = true)]
+        public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
@@ -34,17 +39,20 @@ namespace AntDesign
         /// <example>
         /// @bind-Value="model.PropertyName"
         /// </example>
-        [Parameter] public TValue Value { get; set; }
+        [Parameter]
+        public TValue Value { get; set; }
 
         /// <summary>
         /// Gets or sets a callback that updates the bound value.
         /// </summary>
-        [Parameter] public EventCallback<TValue> ValueChanged { get; set; }
+        [Parameter]
+        public EventCallback<TValue> ValueChanged { get; set; }
 
         /// <summary>
         /// Gets or sets an expression that identifies the bound value.
         /// </summary>
-        [Parameter] public Expression<Func<TValue>> ValueExpression { get; set; }
+        [Parameter]
+        public Expression<Func<TValue>> ValueExpression { get; set; }
 
         /// <summary>
         /// Gets the associated <see cref="EditContext"/>.
@@ -69,7 +77,11 @@ namespace AntDesign
                 {
                     Value = value;
                     _ = ValueChanged.InvokeAsync(value);
-                    EditContext.NotifyFieldChanged(FieldIdentifier);
+
+                    if (_isNotifyFieldChanged)
+                    {
+                        EditContext.NotifyFieldChanged(FieldIdentifier);
+                    }
                 }
             }
         }
@@ -122,6 +134,9 @@ namespace AntDesign
                 }
             }
         }
+
+        private TValue _firstValue { get; set; }
+        private bool _isNotifyFieldChanged = true;
 
         /// <summary>
         /// Constructs an instance of <see cref="InputBase{TValue}"/>.
@@ -195,6 +210,17 @@ namespace AntDesign
             }
         }
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            if (FormItem != null)
+            {
+                FormItem.BindInputComponent(this, FieldIdentifier);
+            }
+
+            _firstValue = Value;
+        }
 
         /// <inheritdoc />
         public override Task SetParametersAsync(ParameterView parameters)
@@ -217,8 +243,10 @@ namespace AntDesign
 
                 if (ValueExpression == null)
                 {
-                    throw new InvalidOperationException($"{GetType()} requires a value for the 'ValueExpression' " +
-                        $"parameter. Normally this is provided automatically when using 'bind-Value'.");
+                    //throw new InvalidOperationException($"{GetType()} requires a value for the 'ValueExpression' " +
+                    //    $"parameter. Normally this is provided automatically when using 'bind-Value'.");
+
+                    return base.SetParametersAsync(ParameterView.Empty);
                 }
 
                 EditContext = CascadedEditContext;
@@ -250,6 +278,13 @@ namespace AntDesign
             }
 
             base.Dispose(disposing);
+        }
+
+        internal void ResetValue()
+        {
+            _isNotifyFieldChanged = false;
+            CurrentValue = _firstValue;
+            _isNotifyFieldChanged = true;
         }
     }
 }

@@ -1,16 +1,21 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace AntDesign
 {
-    public partial class FormItem<TValue> : AntDomComponentBase
+    public partial class FormItem<TValue> : FormItemBase
     {
         private readonly string _prefixCls = "ant-form-item";
 
         [CascadingParameter(Name = "EditContext")]
-        public EditContext EditContext { get; set; }
+        EditContext EditContext { get; set; }
+
+        [CascadingParameter(Name = "Form")]
+        Form Form { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -19,12 +24,32 @@ namespace AntDesign
         public string Label { get; set; }
 
         [Parameter]
-        public string Name { get; set; }
+        public string ValuePropName { get; set; }
 
         [Parameter]
         public Expression<Func<TValue>> For { get; set; }
 
+        private TValue _initValue;
         private bool _isValid = true;
+        private string _labelCls = "";
+
+        AntInputComponentBase<TValue> _inputComponent;
+        private FieldIdentifier _fieldIdentifier;
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            if (Form == null)
+            {
+                throw new InvalidOperationException("Form is null.FormItem should be childContent of Form.");
+            }
+
+            if (For != null)
+            {
+                Form.AddFormItem(this);
+            }
+        }
 
         protected override void OnParametersSet()
         {
@@ -41,9 +66,32 @@ namespace AntDesign
                ;
         }
 
-        public void TestSetValue(object value)
+        internal void BindInputComponent(AntInputComponentBase<TValue> inputComponent, FieldIdentifier fieldIdentifier)
         {
-            Console.WriteLine($"测试赋值：{value}");
+            _initValue = inputComponent.Value;
+
+            _inputComponent = inputComponent;
+            _fieldIdentifier = fieldIdentifier;
+
+            if (For != null)
+            {
+                if (fieldIdentifier.TryGetValidateProperty(out var propertyInfo))
+                {
+                    var requiredAttribute = propertyInfo.GetCustomAttributes(typeof(RequiredAttribute), true);
+
+                    if (requiredAttribute.Length > 0)
+                    {
+                        _labelCls = $"{_prefixCls}-required";
+                    }
+                }
+            }
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+
+            _inputComponent.ResetValue();
         }
     }
 }

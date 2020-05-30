@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
@@ -19,7 +21,16 @@ namespace AntDesign
         [Parameter]
         public object Model { get; set; }
 
+        [Parameter]
+        public EventCallback<EditContext> OnFinish { get; set; }
+
+        [Parameter]
+        public EventCallback<EditContext> OnFinishFailed { get; set; }
+
         private EditContext _editContext;
+        private List<FormItemBase> _formItems = new List<FormItemBase>();
+
+        internal Dictionary<string, object> FieldDefaultValues { get; private set; }
 
         protected override void OnInitialized()
         {
@@ -27,6 +38,12 @@ namespace AntDesign
 
             _editContext = new EditContext(Model);
             _editContext.OnFieldChanged += HandleFieldChanged;
+
+            FieldDefaultValues = Model.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(Model));
+
+            FieldDefaultValues.ForEach(item => {
+                Console.WriteLine($"___________FieldDefaultValues,{item.Key},{item.Value}");
+            });
         }
 
         protected override void OnParametersSet()
@@ -53,14 +70,26 @@ namespace AntDesign
 
         private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
         {
-            Console.WriteLine("HandleFieldChanged");
             _editContext.Validate();
             StateHasChanged();
         }
 
+        internal void AddFormItem(FormItemBase formItem)
+        {
+            _formItems.Add(formItem);
+        }
+
         public void HandleValidSubmit()
         {
+        }
 
+        public void Reset()
+        {
+            _editContext.OnFieldChanged -= HandleFieldChanged;
+
+            _formItems.ForEach(item => item.Reset());
+
+            _editContext.OnFieldChanged += HandleFieldChanged;
         }
     }
 }

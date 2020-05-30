@@ -1,7 +1,8 @@
 ﻿@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
 
-    <Form Model="@model">
-        @*<FormItem Label="Test" For="() => model.Test">
+<Form Model="@model" OnFinish="OnFinish" OnFinishFailed="OnFinishFailed">
+    @*<FormItem Label="Test" For="() => model.Test">
             <AntRadioGroup @bind-Value="@model.Test">
                 <AntRadio RadioButton Value="large">Large</AntRadio>
                 <AntRadio RadioButton Value="default">Default</AntRadio>
@@ -9,51 +10,54 @@
             </AntRadioGroup>
         </FormItem>*@
 
-        <FormItem Label="Username" For="() => model.Username">
-            <Input @bind-Value="@model.Username" />
-        </FormItem>
+    <FormItem Label="Username" For="() => model.Username">
+        <Input @bind-Value="@model.Username" />
+    </FormItem>
 
-        <FormItem Label="Password"
-                  For="() => model.Password">
-            <InputPassword @bind-Value="@model.Password" />
-        </FormItem>
+    <FormItem Label="Password"
+              For="() => model.Password">
+        <InputPassword @bind-Value="@model.Password" />
+    </FormItem>
 
-        @*<FormItem For="() => model.RememberMe">
-            <AntCheckbox @bind-Value="@model.RememberMe">Remember me</AntCheckbox>
+    @*<FormItem For="() => model.RememberMe">
+            <Checkbox @bind-Value="@model.RememberMe">Remember me</Checkbox>
         </FormItem>*@
 
-        <FormItem Label="DateTest"
-                  For="() => model.DateTest">
-            <DatePicker @bind-Value="@model.DateTest" />
-        </FormItem>
+    @*<FormItem Label="DateTest"
+              For="() => model.DateTest">
+        <DatePicker @bind-Value="@model.DateTest" />
+    </FormItem>*@
 
+    <FormItem TValue="string">
         <Button Type="@ButtonType.Primary" HtmlType="submit">
             Submit
         </Button>
-    </Form>
+    </FormItem>
+</Form>
 @code
 {
     public class Model
     {
-        [Required]
-        public string Test { get; set; }
         [Required]
         [StringLength(5, ErrorMessage = "Name is too long.")]
         public string Username { get; set; } = "mutou";
         [Required]
         [StringLength(3, ErrorMessage = "Password is too long.")]
         public string Password { get; set; }
-        public string RememberMe { get; set; }
-        [Required]
-        public DateTime DateTest { get; set; }
+        //public bool RememberMe { get; set; }
+        //[Required]
+        //public DateTime DateTest { get; set; }
     }
 
     private Model model = new Model();
-    private EditContext editContext;
 
-    protected override void OnInitialized()
+    private void OnFinish(EditContext editContext)
     {
-        editContext = new EditContext(model);
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
     }
 
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
     }
+}
