@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public enum ConfirmAutoFocusButton
     {
-        Null = 0,
-        Ok = 1,
-        Cancel = 2
+        Ok = 0,
+        Cancel = 1,
+        Null = 2,
     }
 }

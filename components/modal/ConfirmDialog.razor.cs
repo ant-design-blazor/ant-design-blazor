@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class ConfirmDialog
     {
@@ -15,8 +15,8 @@ namespace AntBlazor
         [Parameter]
         public EventCallback<ConfirmOptions> OnRemove { get; set; }
 
-        private AntButton _cancelBtn;
-        private AntButton _okBtn;
+        private Button _cancelBtn;
+        private Button _okBtn;
 
         private DialogOptions BuildDialogOptions(ConfirmOptions confirmOptions)
         {
@@ -41,7 +41,7 @@ namespace AntBlazor
                 TransitionName = confirmOptions.TransitionName,
                 MaskTransitionName = confirmOptions.MaskTransitionName,
 
-                ClassName = confirmOptions.ClassName
+                ClassName = confirmOptions.ClassName,
             };
 
             config.ClassName = "ant-modal-confirm ant-modal-confirm-" + confirmOptions.ConfirmType;
@@ -50,7 +50,7 @@ namespace AntBlazor
             config.Title = null;
             config.CloseIcon = null;
             config.OnClosed = new EventCallback(this, new Func<Task>(Close));
-            config.OnCancel =new EventCallback<MouseEventArgs>(this, new Func<MouseEventArgs, Task>(HandleCancel));
+            config.OnCancel = new EventCallback<MouseEventArgs>(this, new Func<MouseEventArgs, Task>(HandleCancel));
             return config;
         }
 
@@ -61,7 +61,7 @@ namespace AntBlazor
                 var element = Config.AutoFocusButton == ConfirmAutoFocusButton.Cancel
                     ? _cancelBtn
                     : _okBtn;
-                await JsInvokeAsync(JSInteropConstants.focus, element);
+                await JsInvokeAsync(JSInteropConstants.focusConfirmBtn, $"#{element.Id}");
             }
 
             await base.OnAfterRenderAsync(firstRender);

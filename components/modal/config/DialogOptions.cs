@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class DialogOptions
     {
@@ -55,7 +55,7 @@ namespace AntBlazor
 
         public OneOf<string, RenderFragment> OkText { get; set; } = "OK";
 
-        public string OkType { get; set; } = AntButtonType.Primary;
+        public string OkType { get; set; } = ButtonType.Primary;
 
         public OneOf<string, RenderFragment>? Title { get; set; } =  null;
 
@@ -109,5 +109,6 @@ namespace AntBlazor
         public string MaskTransitionName { get; set; }
 
         public string ClassName { get; set; }
+
     }
 }

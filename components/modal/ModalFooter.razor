@@ -1,4 +1,4 @@
-﻿@namespace AntBlazor
+﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
 @{
@@ -10,7 +10,7 @@
 }
 
 <div>
-    <AntButton OnClick="@HandleCancel" 
+    <Button OnClick="@HandleCancel" 
                Block="@cancelProps.Block"
                Ghost="@cancelProps.Ghost"
                Search="@cancelProps.Search"
@@ -32,8 +32,8 @@
                @(ModalProps.CancelText.AsT1)
            }
        }
-    </AntButton>
-    <AntButton 
+    </Button>
+    <Button 
             OnClick="@HandleOk"
 
             Loading="@okProps.Loading"
@@ -58,5 +58,5 @@
                 @(ModalProps.OkText.AsT1)
             }
         }
-    </AntButton>
+    </Button>
 </div>

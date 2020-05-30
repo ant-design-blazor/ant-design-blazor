@@ -1,13 +1,13 @@
 ﻿
-<AntButton Type="primary" OnClick="@ShowModal">
+<Button Type="primary" OnClick="@ShowModal">
     Open Modal with customized footer
-</AntButton>
+</Button>
 @{
     RenderFragment footer = @<Template>
-        <AntButton OnClick="@HandleCancel" @key="@( "back" )">Return</AntButton>
-        <AntButton OnClick="@HandleOk" @key="@( "submit" )"
-                   Type="@AntButtonType.Primary"
-                   Loading="@_loading">Submit</AntButton>
+        <Button OnClick="@HandleCancel" @key="@( "back" )">Return</Button>
+        <Button OnClick="@HandleOk" @key="@( "submit" )"
+                   Type="primary"
+                   Loading="@_loading">Submit</Button>
     </Template>;
 }
 

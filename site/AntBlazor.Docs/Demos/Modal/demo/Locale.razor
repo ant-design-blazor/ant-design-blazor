@@ -1,9 +1,9 @@
 ﻿@inject ModalService _modalService
 
 <div>
-    <AntButton Type="primary" OnClick="@ShowModal">
+    <Button Type="primary" OnClick="@ShowModal">
         Modal
-    </AntButton>
+    </Button>
     <Modal Title="@("Modal")"
            Visible="@_visible"
            OnOk="@HideModal"
@@ -15,7 +15,7 @@
         <p>Bla bla ...</p>
     </Modal>
 
-    <AntButton OnClick="@HandleConfirm">Confirm</AntButton>
+    <Button OnClick="@HandleConfirm">Confirm</Button>
 
 </div>
 

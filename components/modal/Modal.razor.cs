@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Modal
     {
@@ -68,7 +68,7 @@ namespace AntBlazor
         public OneOf<string, RenderFragment> OkText { get; set; } = "OK";
 
         [Parameter]
-        public string OkType { get; set; } = AntButtonType.Primary;
+        public string OkType { get; set; } = ButtonType.Primary;
 
         [Parameter]
         public OneOf<string, RenderFragment> Title { get; set; }
@@ -178,6 +178,5 @@ namespace AntBlazor
             }
             await base.OnParametersSetAsync();
         }
-
     }
 }

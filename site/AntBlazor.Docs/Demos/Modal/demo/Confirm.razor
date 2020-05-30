@@ -2,14 +2,14 @@
 
 <Space>
     <SpaceItem>
-        <AntButton OnClick="@ShowConfirm">Confirm</AntButton>
+        <Button OnClick="@ShowConfirm">Confirm</Button>
     </SpaceItem>
     <SpaceItem>
-        <AntButton OnClick="@ShowDeleteConfirm" Type="dashed">Delete</AntButton>
+        <Button OnClick="@ShowDeleteConfirm" Type="dashed">Delete</Button>
     </SpaceItem>
 
     <SpaceItem>
-        <AntButton OnClick="@ShowPropsConfirm" Type="dashed"> With extra props</AntButton>
+        <Button OnClick="@ShowPropsConfirm" Type="dashed"> With extra props</Button>
     </SpaceItem>
 </Space>
 @code{
@@ -63,7 +63,7 @@
             OkText = "Yes",
             OkType = "danger",
             CancelText = "No",
-            OkButtonProps = new AntBlazor.ButtonProps()
+            OkButtonProps = new AntDesign.ButtonProps()
             {
                 Disabled = true,
             }

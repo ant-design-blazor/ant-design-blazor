@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class ButtonProps
     {
@@ -16,7 +16,7 @@ namespace AntBlazor
 
         public bool Loading { get; set; } = false;
 
-        public string Type { get; set; } = AntButtonType.Default;
+        public string Type { get; set; } = ButtonType.Default;
 
         public string Shape { get; set; } = null;
 

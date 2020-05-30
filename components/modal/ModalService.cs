@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class ModalService
     {
@@ -14,7 +14,6 @@ namespace AntBlazor
 
         public void Confirm(ConfirmOptions props)
         {
-            props.MaskClosable = false;
             OnOpenConfirm?.Invoke(props);
         }
 

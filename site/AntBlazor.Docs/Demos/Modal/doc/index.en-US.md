@@ -1,4 +1,4 @@
-﻿---
+---
 type: Feedback
 category: Components
 title: Modal
@@ -8,140 +8,86 @@ Modal dialogs.
 
 ## When To Use
 
-When requiring users to interact with the application, but without jumping to a new page and interrupting the user's workflow, you can use `Modal` to create a new floating layer over the current page to get user feedback or display information. Additionally, if you need show a simple confirmation dialog, you can use `antd.Modal.confirm()`, and so on.
+When requiring users to interact with the application, but without jumping to a new page and interrupting the user's workflow, you can use `Modal` to create a new floating layer over the current page to get user feedback or display information. Additionally, if you need show a simple confirmation dialog, you can use `ModalService.Confirm()`, and so on.
 
 ## API
 
-| Property | Description | Type | Default |
-| --- | --- | --- | --- |
-| afterClose | Specify a function that will be called when modal is closed completely. | function | - |
-| bodyStyle | Body style for modal body element. Such as height, padding etc. | CSSProperties | {} |
-| cancelText | Text of the Cancel button | string\|ReactNode | `Cancel` |
-| centered | Centered Modal | Boolean | `false` |
-| closable | Whether a close (x) button is visible on top right of the modal dialog or not | boolean | true |
-| closeIcon | custom close icon | ReactNode | - |
-| confirmLoading | Whether to apply loading visual effect for OK button or not | boolean | false |
-| destroyOnClose | Whether to unmount child components on onClose | boolean | false |
-| footer | Footer content, set as `footer={null}` when you don't need default buttons | string\|ReactNode | OK and Cancel buttons |
-| forceRender | Force render Modal | boolean | false |
-| getContainer | Return the mount node for Modal | HTMLElement \| `() => HTMLElement` \| Selectors \| false | document.body |
-| mask | Whether show mask or not. | Boolean | true |
-| maskClosable | Whether to close the modal dialog when the mask (area outside the modal) is clicked | boolean | true |
-| maskStyle | Style for modal's mask element. | object | {} |
-| okText | Text of the OK button | string\|ReactNode | `OK` |
-| okType | Button `type` of the OK button | string | `primary` |
-| okButtonProps | The ok button props | [ButtonProps](/components/button/#API) | - |
-| cancelButtonProps | The cancel button props | [ButtonProps](/components/button/#API) | - |
-| style | Style of floating layer, typically used at least for adjusting the position. | CSSProperties | - |
-| title | The modal dialog's title | string\|ReactNode | - |
-| visible | Whether the modal dialog is visible or not | boolean | false |
-| width | Width of the modal dialog | string\|number | 520 |
-| wrapClassName | The class name of the container of the modal dialog | string | - |
-| zIndex | The `z-index` of the Modal | Number | 1000 |
-| onCancel | Specify a function that will be called when a user clicks mask, close button on top right or Cancel button | function(e) | - |
-| onOk | Specify a function that will be called when a user clicks the OK button | function(e) | - |
+| Property          | Description                                                  | Type                          | Default       |
+| ----------------- | ------------------------------------------------------------ | ----------------------------- | ------------- |
+| AfterClose        | Specify a function that will  be called when modal is closed completely. | EventCallback                 | -             |
+| BodyStyle         | Body style for modal body  element. Such as height, padding etc. | string                        | -             |
+| CancelText        | Text of the Cancel button                                    | string\|RenderFragment        | Cancel        |
+| Centered          | Centered Modal                                               | bool                          | false         |
+| Closable          | Whether a close (x) button is  visible on top right of the modal dialog or not | bool                          | true          |
+| CloseIcon         | custom close icon                                            | RenderFragment                | -             |
+| ConfirmLoading    | Whether to apply loading  visual effect for OK button or not | bool                          | false         |
+| DestroyOnClose    | Whether to unmount child  components on onClose              | bool                          | false         |
+| Footer            | Footer content, set as  footer={null} when you don't need default buttons | string\|RenderFragment        | 确定取消按钮  |
+| ForceRender       | Force render Modal                                           | bool                          | false         |
+| GetContainer      | Return the mount node for  Modal                             | ElementReference?             | document.body |
+| Keyboard          | Whether support press esc to close                           | bool                          | true          |
+| Mask              | Whether show mask or not.                                    | bool                          | true          |
+| MaskClosable      | Whether to close the modal  dialog when the mask (area outside the modal) is clicked | bool                          | true          |
+| MaskStyle         | Style for modal's mask  element.                             | string                        | -             |
+| OkText            | Text of the OK button                                        | string\|RenderFragment        | OK            |
+| OkType            | Button type of the OK button                                 | string                        | primary       |
+| OkButtonProps     | The ok button props                                          | ButtonProps                   | -             |
+| CancelButtonProps | The cancel button props                                      | ButtonProps                   | -             |
+| Style             | Style of floating layer,  typically used at least for adjusting the position. | string                        | -             |
+| Title             | The modal dialog's title                                     | string\|RenderFragment        | -             |
+| Visible           | Whether the modal dialog is  visible or not                  | bool                          | -             |
+| Width             | Width of the modal dialog                                    | string\|double                | 520           |
+| WrapClassName     | The class name of the  container of the modal dialog         | string                        | -             |
+| ZIndex            | The z-index of the Modal                                     | int                           | 1000          |
+| OnCancel          | Specify a function that will  be called when a user clicks mask, close button on top right or Cancel button | EventCallback<MouseEventArgs> | -             |
+| OnOk              | Specify a function that will  be called when a user clicks the OK button | EventCallback<MouseEventArgs> | -             |
 
 #### Note
 
-> The state of Modal will be preserved at it's component lifecycle by default, if you wish to open it with a brand new state everytime, set `destroyOnClose` on it.
+> The state of Modal will be preserved at it's component lifecycle by default, if you wish to open it with a brand new state everytime, set `DestroyOnClose` on it.
 
 ### Modal.method()
 
 There are five ways to display the information based on the content's nature:
 
-- `Modal.info`
-- `Modal.success`
-- `Modal.error`
-- `Modal.warning`
-- `Modal.confirm`
+- `ModalService.Info`
+- `ModalService.Success`
+- `ModalService.Error`
+- `ModalService.Warning`
+- `ModalService.Confirm`
 
 The items listed above are all functions, expecting a settings object as parameter. The properties of the object are follows:
 
-| Property | Description | Type | Default | Version |
-| --- | --- | --- | --- | --- |
-| autoFocusButton | Specify which button to autofocus | null\| `ok` \| `cancel` | `ok` |  |
-| cancelText | Text of the Cancel button with Modal.confirm | string | `Cancel` |  |
-| centered | Centered Modal | Boolean | `false` |  |
-| className | className of container | string | - |  |
-| content | Content | string\|ReactNode | - |  |
-| icon | custom icon | ReactNode | [<QuestionCircle /\>](/components/icon/) | 3.12.0 |
-| keyboard | Whether support press esc to close | Boolean | true |  |
-| mask | Whether show mask or not. | Boolean | true |  |
-| maskClosable | Whether to close the modal dialog when the mask (area outside the modal) is clicked | Boolean | `false` |  |
-| okText | Text of the OK button | string | `OK` |  |
-| okType | Button `type` of the OK button | string | `primary` |  |
-| okButtonProps | The ok button props | [ButtonProps](/components/button/#API) | - |  |
-| cancelButtonProps | The cancel button props | [ButtonProps](/components/button/#API) | - |  |
-| title | Title | string\|ReactNode | - |  |
-| width | Width of the modal dialog | string\|number | 416 |  |
-| zIndex | The `z-index` of the Modal | Number | 1000 |  |
-| onCancel | Specify a function that will be called when the user clicks the Cancel button. The parameter of this function is a function whose execution should include closing the dialog. You can also just return a promise and when the promise is resolved, the modal dialog will also be closed | function(close) | - |  |
-| onOk | Specify a function that will be called when the user clicks the OK button. The parameter of this function is a function whose execution should include closing the dialog. You can also just return a promise and when the promise is resolved, the modal dialog will also be closed | function(close) | - |  |
+| CancelText        | Text  of the Cancel button with Modal.confirm                | string                         | Cancel  |
+| ----------------- | ------------------------------------------------------------ | ------------------------------ | ------- |
+| Centered          | Centered Modal                                               | bool                           | fasle   |
+| ClassName         | className of container                                       | string                         | -       |
+| Content           | Content                                                      | string\|RenderFragment         | -       |
+| Icon              | custom icon                                                  | RenderFragment                 | -       |
+| Keyboard          | Whether support press esc to  close                          | bool                           | true    |
+| Mask              | Whether show mask or not.                                    | bool                           | true    |
+| MaskClosable      | Whether to close the modal  dialog when the mask (area outside the modal) is clicked | bool                           | fasle   |
+| OkText            | Text of the OK button                                        | string                         | OK      |
+| OkType            | Button type of the OK button                                 | string                         | primary |
+| OkButtonProps     | The ok button props                                          | ButtonProps                    | -       |
+| CancelButtonProps | The cancel button props                                      | ButtonProps                    | -       |
+| Title             | Title                                                        | string\|RenderFragment         | -       |
+| Width             | Width of the modal dialog                                    | string\|double                 | 416     |
+| ZIndex            | The z-index of the Modal                                     | int                            | 1000    |
+| OnCancel          | Specify a function that will  be called when the user clicks the Cancel button. The parameter of this  function is a function whose execution should include closing the dialog. You  can also just return a promise and when the promise is resolved, the modal dialog  will also be closed | EventCallback<MouseEventArgs>? | null    |
+| OnOk              | Specify a function that will  be called when the user clicks the OK button. The parameter of this function  is a function whose execution should include closing the dialog. You can also  just return a promise and when the promise is resolved, the modal dialog will  also be closed | EventCallback<MouseEventArgs>? | null    |
 
-All the `Modal.method`s will return a reference, and then we can update and close the modal dialog by the reference.
+All the `ModalService.Method`s will return a reference, and then we can update and close the modal dialog by the reference.
 
 ```jsx
-const modal = Modal.info();
+ConfirmOptions config = new ConfirmOptions();
+ModalService.Info(config);
 
-modal.update({
-  title: 'Updated title',
-  content: 'Updated content',
-});
+ModalService.Update(config);
 
-modal.destroy();
+ModalService.Destroy(config);
 ```
 
-- `Modal.destroyAll`
+- `ModalService.DestroyAll`
 
-`Modal.destroyAll()` could destroy all confirmation modal dialogs(Modal.info/Modal.success/Modal.error/Modal.warning/Modal.confirm). Usually, you can use it in router change event to destroy confirm modal dialog automatically without use modal reference to close( it's too complex to use for all modal dialogs)
-
-```jsx
-import { browserHistory } from 'react-router';
-
-// router change
-browserHistory.listen(() => {
-  Modal.destroyAll();
-});
-```
-
-### Modal.useModal()
-
-When you need using Context, you can use `contextHolder` which created by `Modal.useModal` to insert into children. Modal created by hooks will get all the context where `contextHolder` are. Created `modal` has the same creating function with `Modal.method`](<#Modal.method()>).
-
-```jsx
-const [modal, contextHolder] = Modal.useModal();
-
-React.useEffect(() => {
-  modal.confirm({
-    // ...
-  });
-}, []);
-
-return <div>{contextHolder}</div>;
-```
-
-## FAQ
-
-### Why I can not access context, redux in Modal.xxx?
-
-antd will dynamic create React instance by `ReactDOM.render` when call Modal methods. Whose context is different with origin code located context.
-
-When you need context info (like ConfigProvider context), you can use `Modal.useModal` to get `modal` instance and `contextHolder` node. And put it in your children:
-
-```tsx
-const [modal, contextHolder] = Modal.useModal();
-
-// then call modal.confirm instead of Modal.confirm
-
-return (
-  <Context1.Provider value="Ant">
-    {/* contextHolder is in Context1 which mean modal will not get context of Context1 */}
-    {contextHolder}
-    <Context2.Provider value="Design">
-      {/* contextHolder is out of Context2 which mean modal will not get context of Context2 */}
-    </Context2.Provider>
-  </Context1.Provider>
-);
-```
-
-**Note:** You must insert `contextHolder` into your children with hooks. You can use origin method if you do not need context connection.
+`ModalService.DestroyAll()` could destroy all confirmation modal dialogs(ModalService.Info/ModalService.Success/ModalService.Error/ModalService.Warning/ModalService.Confirm). Usually, you can use it in router change event to destroy confirm modal dialog automatically without use modal reference to close( it's too complex to use for all modal dialogs)

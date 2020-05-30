@@ -1,4 +1,4 @@
-﻿@namespace AntBlazor
+﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
 @{
@@ -47,7 +47,7 @@
             }
             @if (Config.OkCancel)
             {
-                <AntButton @ref="_cancelBtn"
+                <Button @ref="_cancelBtn"
                            OnClick="@HandleCancel"
                            Block="@cancelProps.Block"
                            Ghost="@cancelProps.Ghost"
@@ -69,10 +69,10 @@
                             @(Config.CancelText.AsT1)
                         }
                     }
-                </AntButton>
+                </Button>
 
             }
-            <AntButton @ref="_okBtn"
+            <Button @ref="_okBtn"
                        OnClick="@HandleOk"
                        Loading="@okProps.Loading"
                        Type="@okProps.Type"
@@ -94,7 +94,7 @@
                         @(Config.OkText.AsT1)
                     }
                 }
-            </AntButton>
+            </Button>
         </div>
     </div>
 </Dialog>

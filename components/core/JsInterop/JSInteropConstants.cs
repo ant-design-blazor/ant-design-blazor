@@ -48,5 +48,7 @@ namespace AntDesign
 
         public static string getActiveElement => $"{FUNC_PREFIX}getActiveElement";
 
+        public static string focusConfirmBtn => $"{FUNC_PREFIX}focusConfirmBtn";
+
     }
 }

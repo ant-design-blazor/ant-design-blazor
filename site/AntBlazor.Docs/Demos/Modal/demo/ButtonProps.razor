@@ -1,12 +1,12 @@
-﻿<AntButton Type="primary" OnClick="@ShowModal">
+﻿<Button Type="primary" OnClick="@ShowModal">
     Open Modal with customized button props
-</AntButton>
+</Button>
 <Modal Title="@("BasicModal")"
        Visible="@_visible"
        OnOk="@HandleOk"
        OnCancel="@HandleCancel"
-       OkButtonProps="new AntBlazor.ButtonProps(){ Disabled = true }"
-       CancelButtonProps="new AntBlazor.ButtonProps(){ Disabled = true }">
+       OkButtonProps="new AntDesign.ButtonProps(){ Disabled = true }"
+       CancelButtonProps="new AntDesign.ButtonProps(){ Disabled = true }">
     <p>Some contents...</p>
     <p>Some contents...</p>
     <p>Some contents...</p>

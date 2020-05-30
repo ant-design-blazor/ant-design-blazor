@@ -29,7 +29,7 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.8.7",
-    "@commitlint/cli": "^8.1.0",
+    "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "@types/es6-promise": "^3.3.0",
     "babel-core": "^6.26.3",
@@ -42,7 +42,7 @@
     "gulp-rename": "^2.0.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
-    "husky": "^4.2.3",
+    "husky": "^4.2.5",
     "tsify": "^4.0.1",
     "typescript": "^3.8.3",
     "vinyl-buffer": "^1.0.1",

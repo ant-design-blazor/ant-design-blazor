@@ -1,4 +1,4 @@
-﻿@namespace AntBlazor
+﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
 <div @ref="_element">
@@ -10,7 +10,7 @@
     <div tabindex="-1" class="ant-modal-wrap @Config.GetWrapClassNameExtended()" role="dialog" aria-labelledby="rcDialogTitle0"
          @onclick="@OnMaskClick" @onclick:preventDefault @onclick:stopPropagation
          @onmouseup="@OnMaskMouseUp" @onmouseup:preventDefault @onmouseup:stopPropagation
-         @onkeydown="@OnKeyDown" @onkeydown:preventDefault @onkeydown:stopPropagation
+         @onkeydown="@OnKeyDown"
          style="display: none;">
         <div role="document" class="ant-modal @Config.ClassName "
              @onmousedown="@OnDialogMouseDown" @onmousedown:preventDefault @onmousedown:stopPropagation

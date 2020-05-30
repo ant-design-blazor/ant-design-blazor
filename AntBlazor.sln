@@ -1,0 +1,77 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0CB79B3D-E483-4051-8026-6A80FCA0C6A6}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.github\workflows\gh-pages.yml = .github\workflows\gh-pages.yml
+		README.md = README.md
+		.github\workflows\style-sync.yml = .github\workflows\style-sync.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C60BCE84-4AF4-4393-8D3E-1B69E29549C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntBlazor", "components\AntBlazor.csproj", "{0D3995E9-EBD9-4BBB-9E6C-3A3DE8C4611A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntBlazor.Docs", "site\AntBlazor.Docs\AntBlazor.Docs.csproj", "{E2E6E4E8-2156-4B55-8164-40349D86330B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntBlazor.Docs.WasmHost", "site\AntBlazor.Docs.WasmHost\AntBlazor.Docs.WasmHost.csproj", "{7FD7BCA7-058C-468C-BD8B-8496074651FD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntBlazor.Docs.Server", "site\AntBlazor.Docs.Server\AntBlazor.Docs.Server.csproj", "{B8761D43-B253-49FC-B144-A6CCB061951B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntBlazor.Docs.Wasm", "site\AntBlazor.Docs.Wasm\AntBlazor.Docs.Wasm.csproj", "{3F5C09C7-81EB-461C-8E0E-538D3FBAB931}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{D34F1DE5-ECF7-4CF0-8325-B7A38F41D376}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntBlazor.Docs.Build.CLI", "site\AntBlazor.Docs.Build.CLI\AntBlazor.Docs.Build.CLI.csproj", "{5A765767-0766-433D-B78D-97D8F29CA6A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "hosts", "hosts", "{752F5AE8-BA08-4C41-B9B2-D2ED12727E63}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D3995E9-EBD9-4BBB-9E6C-3A3DE8C4611A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D3995E9-EBD9-4BBB-9E6C-3A3DE8C4611A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D3995E9-EBD9-4BBB-9E6C-3A3DE8C4611A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D3995E9-EBD9-4BBB-9E6C-3A3DE8C4611A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2E6E4E8-2156-4B55-8164-40349D86330B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2E6E4E8-2156-4B55-8164-40349D86330B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2E6E4E8-2156-4B55-8164-40349D86330B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2E6E4E8-2156-4B55-8164-40349D86330B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FD7BCA7-058C-468C-BD8B-8496074651FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FD7BCA7-058C-468C-BD8B-8496074651FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FD7BCA7-058C-468C-BD8B-8496074651FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FD7BCA7-058C-468C-BD8B-8496074651FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8761D43-B253-49FC-B144-A6CCB061951B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8761D43-B253-49FC-B144-A6CCB061951B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8761D43-B253-49FC-B144-A6CCB061951B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8761D43-B253-49FC-B144-A6CCB061951B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F5C09C7-81EB-461C-8E0E-538D3FBAB931}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F5C09C7-81EB-461C-8E0E-538D3FBAB931}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F5C09C7-81EB-461C-8E0E-538D3FBAB931}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F5C09C7-81EB-461C-8E0E-538D3FBAB931}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A765767-0766-433D-B78D-97D8F29CA6A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A765767-0766-433D-B78D-97D8F29CA6A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A765767-0766-433D-B78D-97D8F29CA6A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A765767-0766-433D-B78D-97D8F29CA6A6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0D3995E9-EBD9-4BBB-9E6C-3A3DE8C4611A} = {C60BCE84-4AF4-4393-8D3E-1B69E29549C1}
+		{E2E6E4E8-2156-4B55-8164-40349D86330B} = {C60BCE84-4AF4-4393-8D3E-1B69E29549C1}
+		{7FD7BCA7-058C-468C-BD8B-8496074651FD} = {752F5AE8-BA08-4C41-B9B2-D2ED12727E63}
+		{B8761D43-B253-49FC-B144-A6CCB061951B} = {752F5AE8-BA08-4C41-B9B2-D2ED12727E63}
+		{3F5C09C7-81EB-461C-8E0E-538D3FBAB931} = {752F5AE8-BA08-4C41-B9B2-D2ED12727E63}
+		{5A765767-0766-433D-B78D-97D8F29CA6A6} = {D34F1DE5-ECF7-4CF0-8325-B7A38F41D376}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E124DDCB-1F8D-4F96-BF41-D87019D0A412}
+	EndGlobalSection
+EndGlobal

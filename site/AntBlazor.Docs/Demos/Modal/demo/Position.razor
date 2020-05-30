@@ -1,7 +1,7 @@
 ﻿<div>
-    <AntButton Type="primary" OnClick="@SetModal1Visible">
+    <Button Type="primary" OnClick="@SetModal1Visible">
         Display a modal dialog at 20px to Top
-    </AntButton>
+    </Button>
     <Modal Title="@("20px to Top")"
            Style="top: 20px"
            Visible="_visible1"
@@ -14,9 +14,9 @@
     </Modal>
     <br />
     <br />
-    <AntButton Type="primary" OnClick="@SetModal2Visible">
+    <Button Type="primary" OnClick="@SetModal2Visible">
         Vertically centered modal dialog
-    </AntButton>
+    </Button>
     <Modal Title="@("Vertically centered modal dialog")"
            Centered="true"
            Visible="_visible2"

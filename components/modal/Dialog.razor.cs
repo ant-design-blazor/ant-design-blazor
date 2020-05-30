@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Dialog
     {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public class ConfirmOptions
     {
@@ -22,7 +22,7 @@ namespace AntBlazor
 
         public EventCallback<MouseEventArgs>? OnOk { get; set; }
 
-        public ButtonProps OkButtonProps { get; set; } = new ButtonProps(){ Type = AntButtonType.Primary};
+        public ButtonProps OkButtonProps { get; set; } = new ButtonProps(){ Type = ButtonType.Primary};
 
         public ButtonProps CancelButtonProps { get; set; } = new ButtonProps();
 
@@ -31,15 +31,16 @@ namespace AntBlazor
         public bool Centered { get; set; }
 
         public bool Mask { get; set; } = true;
-        public bool MaskClosable { get; set; } = true;
+        
+        public bool MaskClosable { get; set; } = false;
 
         public string MaskStyle { get; set; }
 
-        public OneOf<string, RenderFragment> OkText { get; set; } = "确定";
+        public OneOf<string, RenderFragment> OkText { get; set; } = "OK";
 
-        public string OkType { get; set; } = AntButtonType.Primary;
+        public string OkType { get; set; } = ButtonType.Primary;
 
-        public OneOf<string, RenderFragment> CancelText { get; set; } = "取消";
+        public OneOf<string, RenderFragment> CancelText { get; set; } = "Cancel";
 
         public RenderFragment? Icon { get; set; } = null;
 
@@ -52,7 +53,7 @@ namespace AntBlazor
 
         public string Style { get; set; }
 
-        public bool Keyboard { get; set; }
+        public bool Keyboard { get; set; } = true;
 
         public ConfirmAutoFocusButton AutoFocusButton { get; set; }
 

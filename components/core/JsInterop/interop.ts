@@ -349,16 +349,16 @@ export function showModal(element: HTMLElement) {
     } else {
         setTransformOrigin(antModal, '');
     }
-
-
+    
     addClassName(antModal, ["zoom-enter", "zoom-enter-active"]);
     addClassName(mask, ["fade-enter", "fade-enter-active"]);
+
+    let defaultFocus = find(antModal, "div:first-child")[0];
+    focus(defaultFocus);
 
     setTimeout(() => {
         removeClassName(antModal, ["zoom-enter", "zoom-enter-active"]);
         removeClassName(mask, ["fade-enter", "fade-enter-active"]);
-        let defaultFocus = find(antModal, "div:first-child")[0];
-        focus(defaultFocus);
     }, 200);
 }
 
@@ -375,4 +375,16 @@ export function destoryDialog(delElement, elementSelector) {
             parent.removeChild(delElement);
         }
     }
+}
+
+export function focusConfirmBtn(element: string,count:number = 0) {
+    setTimeout(() => {
+        focus(element);
+        let curId = "#" + getActiveElement();
+        if (curId !== element) {
+            if (count < 10) {
+                focusConfirmBtn(element, count++);
+            }
+        }
+    },50);
 }
