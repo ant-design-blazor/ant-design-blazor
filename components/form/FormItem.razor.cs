@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace AntBlazor
 {
-    public partial class FormItem : AntDomComponentBase
+    public partial class FormItem<TValue> : AntDomComponentBase
     {
         private readonly string _prefixCls = "ant-form-item";
 
@@ -17,13 +16,15 @@ namespace AntBlazor
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public FormRule[] Rules { get; set; }
-
-        [Parameter]
         public string Label { get; set; }
 
         [Parameter]
         public string Name { get; set; }
+
+        [Parameter]
+        public Expression<Func<TValue>> For { get; set; }
+
+        private bool _isValid = true;
 
         protected override void OnParametersSet()
         {
@@ -36,6 +37,7 @@ namespace AntBlazor
         {
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
+                .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
                ;
         }
 

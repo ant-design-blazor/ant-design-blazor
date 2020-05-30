@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign.Internal
-@inherits DatePickerPanelBase
+@typeparam TValue
+@inherits DatePickerPanelBase<TValue>
 @using System.Globalization;
 
 @{
@@ -13,7 +14,7 @@
 }
 
 <div class='@(DatePicker.IsShowTime ? $"{DatePicker.PrefixCls}-datetime-panel" : "")'>
-    <DatePickerTemplate PickerIndex="@PickerIndex"
+    <DatePickerTemplate TValue="TValue" PickerIndex="@PickerIndex"
                            MaxRow="6"
                            MaxCol="7"
                            ViewStartDate="startDate"
@@ -27,7 +28,7 @@
                            OnValueSelect="OnValueSelect"
                            GetNextColValue="date => date.AddDays(1)">
         <RenderPickerHeader>
-            <DatePickerHeader PickerIndex="@PickerIndex"
+            <DatePickerHeader TValue="TValue" PickerIndex="@PickerIndex"
                                  ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
                                  ShowPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
                                  ShowNextChange="@(!(DatePicker.IsRange && PickerIndex == 0))"

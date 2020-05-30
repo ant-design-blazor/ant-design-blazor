@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Internal
 {
-    public partial class DatePickerPanelChooser : AntDomComponentBase
+    public partial class DatePickerPanelChooser<TValue> : AntDomComponentBase
     {
         [Parameter]
-        public DatePicker DatePicker { get; set; }
+        public DatePickerBase<TValue> DatePicker { get; set; }
 
         [Parameter]
         public Action<DateTime, int> OnSelect { get; set; }

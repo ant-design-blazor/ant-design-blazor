@@ -1,19 +1,22 @@
 ﻿@namespace AntBlazor
 @inherits AntDomComponentBase
+@using Microsoft.AspNetCore.Components.Forms;
+@typeparam TValue
 
 <AntRow class="@ClassMapper.Class"
         style="@Style"
         id="@Id">
-    <AntCol class="ant-col-8 ant-form-item-label">
-        <label for="basic_username" class="ant-form-item-required" title="Username"> @(Label)</label>
+    <AntCol Span="8" class=@($"{_prefixCls}-label")>
+        <label for="basic_username" class=@($"{_prefixCls}-required")> @(Label)</label>
     </AntCol>
-    <AntCol class="ant-col-16 ant-form-item-control">
-        <div class="ant-form-item-control-input">
-            <div class="ant-form-item-control-input-content">
-                <CascadingValue Value="this" Name="FormItem">
+    <AntCol Span="16" class=@($"{_prefixCls}-control")>
+        <div class=@($"{_prefixCls}-control-input")>
+            <div class=@($"{_prefixCls}-control-input-content")>
+                <CascadingValue Value="EditContext">
                     @ChildContent
                 </CascadingValue>
             </div>
         </div>
+        <FormValidationMessage OnStateChange="valid => _isValid = valid" For="@For" />
     </AntCol>
 </AntRow>

@@ -16,14 +16,31 @@ namespace AntBlazor
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private List<FormItem> _formItems = new List<FormItem>();
+        [Parameter]
+        public object Model { get; set; }
+
         private EditContext _editContext;
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            _editContext = new EditContext(Model);
+            _editContext.OnFieldChanged += HandleFieldChanged;
+        }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
 
             SetClass();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            _editContext.OnFieldChanged -= HandleFieldChanged;
         }
 
         protected void SetClass()
@@ -34,9 +51,11 @@ namespace AntBlazor
                ;
         }
 
-        internal void AddFormItem(FormItem item)
+        private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
         {
-            _formItems.Add(item);
+            Console.WriteLine("HandleFieldChanged");
+            _editContext.Validate();
+            StateHasChanged();
         }
 
         public void HandleValidSubmit()

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace AntDesign
@@ -136,6 +138,8 @@ namespace AntDesign
 
         protected async Task OnChangeAsync(ChangeEventArgs args)
         {
+            CurrentValueAsString = args.Value.ToString();
+
             if (OnChange.HasDelegate)
             {
                 await OnChange.InvokeAsync(args);
@@ -182,8 +186,8 @@ namespace AntDesign
         {
             bool flag = !(!string.IsNullOrEmpty(Value) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
-            // AntInputComponentBase.Value will be empty, use args.Value
-            Value = args?.Value.ToString();
+            CurrentValueAsString = args.Value.ToString();
+
             if (_allowClear && flag)
             {
                 ToggleClearBtn();
