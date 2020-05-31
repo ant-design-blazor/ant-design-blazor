@@ -1,87 +1,87 @@
 ﻿@namespace AntDesign
 @inherits AntDesign.AntDomComponentBase
-
-<li class="@StarClassMapper.Class" title="@ToolTip">
-    <div role="radio" aria-checked="true" aria-posinset="@IndexOfGroup" aria-setsize="5" tabindex="0">
-        <div class="ant-rate-star-first" @onclick="@(async e=>await OnClick(true))" @onmouseover="@(async e=>await OnHover(true))">
-            @if (@Character != null)
-            {
-                @Character.Invoke(new RateItemRenderContext());
-            }
-            else
-            {
-                <AntIcon Type="star" Theme="fill"></AntIcon>
-            }
-        </div>
-        <div class="ant-rate-star-second" @onclick="@(async e=>await OnClick(false))" @onmouseover="@(async e=>await OnHover(false))">
-            @if (@Character != null)
-            {
-                @Character.Invoke(new RateItemRenderContext());
-            }
-            else
-            {
-                <AntIcon Type="star" Theme="fill"></AntIcon>
-            }
-        </div>
-    </div>
-</li>
-
-
-
-@code {
-
-    [CascadingParameter(Name = "Character")]
-    [Parameter] public RenderFragment<RateItemRenderContext> Character { get; set; }
-
-    [Parameter] public RenderFragment DefaultCharacter { get; set; }
-
-    [Parameter] public RenderFragment ChildContent { get; set; }
-
-    [Parameter] public bool AllowHalf { get; set; } = false;
-
-    [Parameter] public EventCallback<bool> OnItemHover { get; set; }
-
-    [Parameter] public EventCallback<bool> OnItemClick { get; set; }
+    <Tooltip Title="@ToolTip">
+        <li class="@StarClassMapper.Class">
+            <div role="radio" aria-checked="true" aria-posinset="@IndexOfGroup" aria-setsize="5" tabindex="0">
+                <div class="ant-rate-star-first" @onclick="@(async e=>await OnClick(true))" @onmouseover="@(async e=>await OnHover(true))">
+                    @if (@Character != null)
+                    {
+                        @Character.Invoke(new RateItemRenderContext());
+                    }
+                    else
+                    {
+                        <AntIcon Type="star" Theme="fill"></AntIcon>
+                    }
+                </div>
+                <div class="ant-rate-star-second" @onclick="@(async e=>await OnClick(false))" @onmouseover="@(async e=>await OnHover(false))">
+                    @if (@Character != null)
+                    {
+                        @Character.Invoke(new RateItemRenderContext());
+                    }
+                    else
+                    {
+                        <AntIcon Type="star" Theme="fill"></AntIcon>
+                    }
+                </div>
+            </div>
+        </li>
+    </Tooltip>
 
 
-    [Parameter] public string ToolTip { get; set; }
-    [Parameter] public int IndexOfGroup { get; set; }
-    [Parameter] public ClassMapper StarClassMapper { get; set; } = new ClassMapper();
+    @code {
 
-    [Parameter] public decimal hoverValue { get; set; } = 2;
-    [Parameter] public bool hasHalf { get; set; }
-    [Parameter] public bool isFocused { get; set; }
+        [CascadingParameter(Name = "Character")]
+        [Parameter] public RenderFragment<RateItemRenderContext> Character { get; set; }
 
-    private async Task OnHover(bool isHalf)
-    {
-        await OnItemHover.InvokeAsync(isHalf && this.AllowHalf);
+        [Parameter] public RenderFragment DefaultCharacter { get; set; }
+
+        [Parameter] public RenderFragment ChildContent { get; set; }
+
+        [Parameter] public bool AllowHalf { get; set; } = false;
+
+        [Parameter] public EventCallback<bool> OnItemHover { get; set; }
+
+        [Parameter] public EventCallback<bool> OnItemClick { get; set; }
+
+
+        [Parameter] public string ToolTip { get; set; }
+        [Parameter] public int IndexOfGroup { get; set; }
+        [Parameter] public ClassMapper StarClassMapper { get; set; } = new ClassMapper();
+
+        [Parameter] public decimal hoverValue { get; set; } = 2;
+        [Parameter] public bool hasHalf { get; set; }
+        [Parameter] public bool isFocused { get; set; }
+
+        private async Task OnHover(bool isHalf)
+        {
+            await OnItemHover.InvokeAsync(isHalf && this.AllowHalf);
+        }
+        private async Task OnClick(bool isHalf)
+        {
+            await OnItemClick.InvokeAsync(isHalf && this.AllowHalf);
+        }
+
+        protected override void OnParametersSet()
+        {
+            UpdateClass(hoverValue, hasHalf, isFocused);
+            base.OnParametersSet();
+        }
+
+        public void UpdateClass(decimal _hoverValue = 2, bool _hasHalf = true, bool _isFocused = true)
+        {
+            decimal val = IndexOfGroup + 1;
+            string prefixName = "ant-rate-star";
+
+            StarClassMapper.Clear();
+            StarClassMapper
+              .Add(prefixName)
+          .If($"{prefixName}-full", () => val < _hoverValue || (!_hasHalf && val == _hoverValue))
+          .If($"{prefixName}-half", () => _hasHalf && val == _hoverValue)
+          .If($"{prefixName}-active", () => _hasHalf && val == _hoverValue)
+          .If($"{prefixName}-zero", () => val > _hoverValue)
+          .If($"{prefixName}-focused", () => _hasHalf && val == _hoverValue && _isFocused)
+          ;
+
+        }
     }
-    private async Task OnClick(bool isHalf)
-    {
-        await OnItemClick.InvokeAsync(isHalf && this.AllowHalf);
-    }
-
-    protected override void OnParametersSet()
-    {
-        UpdateClass(hoverValue, hasHalf, isFocused);
-        base.OnParametersSet();
-    }
-
-    public void UpdateClass(decimal _hoverValue = 2, bool _hasHalf = true, bool _isFocused = true)
-    {
-        decimal val = IndexOfGroup + 1;
-        string prefixName = "ant-rate-star";
-
-        StarClassMapper.Clear();
-        StarClassMapper
-          .Add(prefixName)
-      .If($"{prefixName}-full", () => val < _hoverValue || (!_hasHalf && val == _hoverValue))
-      .If($"{prefixName}-half", () => _hasHalf && val == _hoverValue)
-      .If($"{prefixName}-active", () => _hasHalf && val == _hoverValue)
-      .If($"{prefixName}-zero", () => val > _hoverValue)
-      .If($"{prefixName}-focused", () => _hasHalf && val == _hoverValue && _isFocused)
-      ;
-
-    }
-}
 
