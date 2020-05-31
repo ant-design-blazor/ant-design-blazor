@@ -22,19 +22,24 @@
                  OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
                  OnOverlayMouseEnter="OnOverlayMouseEnter"
                  OnOverlayMouseLeave="OnOverlayMouseLeave">
-            <div class="ant-tooltip-content">
-                <div class="ant-tooltip-arrow"></div>
-                <div class="ant-tooltip-inner" role="tooltip">
-                    @if(Title.IsT0)
-                    {
-                        @Title.AsT0;
-                    }
-                    else
-                    {
-                        @Title.AsT1;
-                    }
-                </div>
-            </div>
+                @if (Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0))
+                {
+                    <div class="ant-tooltip-content">
+                        <div class="ant-tooltip-arrow"></div>
+                        <div class="ant-tooltip-inner" role="tooltip">
+                            @Title.AsT0
+                        </div>
+                    </div>
+                }
+                else if (Title.IsT1 && (Title.AsT1)!=null)
+                {
+                    <div class="ant-tooltip-content">
+                        <div class="ant-tooltip-arrow"></div>
+                        <div class="ant-tooltip-inner" role="tooltip">
+                            @Title.AsT1
+                        </div>
+                    </div>
+                }
         </Overlay>
     </CascadingValue>
 </CascadingValue>
