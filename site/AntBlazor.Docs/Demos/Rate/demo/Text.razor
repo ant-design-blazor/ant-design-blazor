@@ -1,0 +1,8 @@
+﻿<Rate @bind-Value="value" Tooltips="@desc" />
+<span class="ant-rate-text">@(desc[(int)value-1])</span>
+
+@code
+{
+    string[] desc = new string[] { "terrible", "bad", "normal", "good", "wonderful" };
+    decimal value = 3M;
+}

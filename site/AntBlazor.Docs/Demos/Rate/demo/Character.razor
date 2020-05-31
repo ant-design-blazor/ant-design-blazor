@@ -1,0 +1,23 @@
+﻿<Rate Character="@Character1" AllowHalf="true" DefaultValue="3" />
+<br />
+<Rate Character="@Character2" AllowHalf="true" DefaultValue="3" />
+<br />
+<Rate Character="@Character3" AllowHalf="true" DefaultValue="3" />
+
+@code
+{
+    RenderFragment<RateItemRenderContext> Character1 = (builder) =>
+    @<Template>
+        <AntIcon Type="heart" Theme="fill" />
+    </Template>;
+
+    RenderFragment<RateItemRenderContext> Character2 = (builder) =>
+    @<Template>
+        A
+    </Template>;
+
+    RenderFragment<RateItemRenderContext> Character3 = (builder) =>
+    @<Template>
+        好
+    </Template>;
+}
