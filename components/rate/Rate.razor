@@ -12,10 +12,10 @@
             <CascadingValue Value="@Character" Name="Character">
                 <RateItem AllowHalf="@AllowHalf"
                           IndexOfGroup="@item.SerialNumber"
-                          ToolTip="@item.ToolTipText"
-                          hoverValue="@_hoverValue"
-                          hasHalf="@_hasHalf"
-                          isFocused="@_isFocused"
+                          Tooltip="@item.ToolTipText"
+                          HoverValue="@_hoverValue"
+                          HasHalf="@_hasHalf"
+                          IsFocused="@_isFocused"
                           OnItemClick="@(itemIsHalf=>ItemClick(item.SerialNumber,itemIsHalf))"
                           OnItemHover="@(itemIshalf=>ItemHoverChange(item.SerialNumber,itemIshalf))" />
             </CascadingValue>

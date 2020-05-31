@@ -7,11 +7,7 @@ namespace AntDesign
     {
 
         [CascadingParameter(Name = "Character")]
-        [Parameter] public RenderFragment<RateItemRenderContext> Character { get; set; }
-
-        [Parameter] public RenderFragment DefaultCharacter { get; set; }
-
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        public RenderFragment<RateItemRenderContext> Character { get; set; }
 
         [Parameter] public bool AllowHalf { get; set; } = false;
 
@@ -19,14 +15,17 @@ namespace AntDesign
 
         [Parameter] public EventCallback<bool> OnItemClick { get; set; }
 
+        [Parameter] public string Tooltip { get; set; }
 
-        [Parameter] public string ToolTip { get; set; }
         [Parameter] public int IndexOfGroup { get; set; }
-        [Parameter] public ClassMapper StarClassMapper { get; set; } = new ClassMapper();
 
         [Parameter] public int HoverValue { get; set; }
+
         [Parameter] public bool HasHalf { get; set; }
+
         [Parameter] public bool IsFocused { get; set; }
+
+        private ClassMapper _starClassMapper { get; set; } = new ClassMapper();
 
         private async Task OnHover(bool isHalf)
         {
@@ -48,8 +47,7 @@ namespace AntDesign
             decimal val = IndexOfGroup + 1;
             string prefixName = "ant-rate-star";
 
-            StarClassMapper.Clear();
-            StarClassMapper
+            _starClassMapper.Clear()
               .Add(prefixName)
           .If($"{prefixName}-full", () => val < hoverValue || (!hasHalf && val == hoverValue))
           .If($"{prefixName}-half", () => hasHalf && val == hoverValue)

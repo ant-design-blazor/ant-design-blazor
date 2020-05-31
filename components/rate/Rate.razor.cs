@@ -44,29 +44,29 @@ namespace AntDesign
         /// <summary>
         /// 当前值--被选中的星星数量
         /// </summary>
-        [Parameter] public decimal Value
+        [Parameter]
+        public decimal Value
         {
             get { return _currentValue; }
             set
             {
-                this._currentValue = value;
-                this._hasHalf = !(_currentValue == (int)_currentValue);
+                if (_currentValue != value)
+                {
+                    this._currentValue = value;
+                    this._hasHalf = !(_currentValue == (int)_currentValue);
+                    this._hoverValue = (int)Math.Ceiling(value);
+                    ValueChanged.InvokeAsync(value);
+                }
             }
         }
+
+        [Parameter]
+        public EventCallback<decimal> ValueChanged { get; set; }
+
         /// <summary>
         /// 默认当前被选中的星星数量,如果被设置为小数位不为0的，则组件默认含有半星并且允许半星
         /// </summary>
-        [Parameter] public decimal DefaultValue
-        {
-            get { return _currentValue; }
-            set
-            {
-                this._currentValue = value;
-                this._hasHalf = !(_currentValue == (int)_currentValue);
-                this._hoverValue = (int)Math.Ceiling(value);
-                //StateHasChanged();
-            }
-        }
+        [Parameter] public decimal DefaultValue { get; set; }
 
         /// <summary>
         /// 自定义每项的提示信息（存储每个子元素的提醒框内容文本）
@@ -168,6 +168,11 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            if (DefaultValue > 0)
+            {
+                this.Value = DefaultValue;
+            }
+
             SetClass();
             RateMetaDatas = Enumerable.Range(1, Count).Select(c => new RateMetaData() { SerialNumber = c - 1, ToolTipText = this.Tooltips?[c - 1] });
             base.OnInitialized();
@@ -192,7 +197,7 @@ namespace AntDesign
 
     public class RateMetaData
     {
-        public int SerialNumber{ get; set; }
+        public int SerialNumber { get; set; }
 
         public string ToolTipText { get; set; }
 

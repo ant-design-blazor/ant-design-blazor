@@ -1,8 +1,8 @@
-﻿<h3>ToolTip</h3>
-
-<Rate DefaultValue="3" Tooltips="@toolTips"></Rate>
+﻿<Rate @bind-Value="value" Tooltips="@desc" />
+<span class="ant-rate-text">@(desc[(int)value-1])</span>
 
 @code
 {
-    string[] toolTips = new string[] { "terrible", "bad", "normal", "good", "wonderful" };
+    string[] desc = new string[] { "terrible", "bad", "normal", "good", "wonderful" };
+    decimal value = 3M;
 }

@@ -22,13 +22,12 @@
                  OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
                  OnOverlayMouseEnter="OnOverlayMouseEnter"
                  OnOverlayMouseLeave="OnOverlayMouseLeave">
-
                 @if (Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0))
                 {
                     <div class="ant-tooltip-content">
                         <div class="ant-tooltip-arrow"></div>
                         <div class="ant-tooltip-inner" role="tooltip">
-                            @Title.AsT0;
+                            @Title.AsT0
                         </div>
                     </div>
                 }
@@ -37,7 +36,7 @@
                     <div class="ant-tooltip-content">
                         <div class="ant-tooltip-arrow"></div>
                         <div class="ant-tooltip-inner" role="tooltip">
-                            @Title.AsT1;
+                            @Title.AsT1
                         </div>
                     </div>
                 }
