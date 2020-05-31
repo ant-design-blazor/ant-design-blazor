@@ -13,10 +13,16 @@ namespace AntDesign
         private readonly string _prefixCls = "ant-form";
 
         [Parameter]
-        public FormLayout Layout { get; set; } = FormLayout.Horizontal;
+        public string Layout { get; set; } = FormLayout.Horizontal;
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public ColLayoutParam LabelCol { get; set; }
+
+        [Parameter]
+        public ColLayoutParam WrapperCol { get; set; }
 
         [Parameter]
         public object Model { get; set; }
@@ -64,7 +70,7 @@ namespace AntDesign
         {
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
-                .Add($"{_prefixCls}-{Layout.Name}")
+                .Add($"{_prefixCls}-{Layout.ToLower()}")
                ;
         }
 

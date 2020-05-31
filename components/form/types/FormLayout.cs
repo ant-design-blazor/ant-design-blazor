@@ -2,14 +2,11 @@
 
 namespace AntDesign
 {
-    public sealed class FormLayout : SmartEnum<FormLayout>
+    public sealed class FormLayout
     {
-        public static readonly FormLayout Horizontal= new FormLayout(nameof(Horizontal), 0);
-        public static readonly FormLayout Vertical = new FormLayout(nameof(Vertical), 1);
-        public static readonly FormLayout Inline = new FormLayout(nameof(Inline), 2);
+        public static readonly string Horizontal = "Horizontal";
+        public static readonly string Vertical = "Vertical";
+        public static readonly string Inline = "Inline";
 
-        private FormLayout(string name, int value) : base(name, value)
-        {
-        }
     }
 }

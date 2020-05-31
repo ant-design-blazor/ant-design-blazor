@@ -1,7 +1,11 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 
-<Form Model="@model" OnFinish="OnFinish" OnFinishFailed="OnFinishFailed">
+<Form Model="@model" 
+      LabelCol="new ColLayoutParam { Span = 8 }"
+      WrapperCol="new ColLayoutParam { Span = 16 }"
+      OnFinish="OnFinish" 
+      OnFinishFailed="OnFinishFailed">
     @*<FormItem Label="Test" For="() => model.Test">
             <AntRadioGroup @bind-Value="@model.Test">
                 <AntRadio RadioButton Value="large">Large</AntRadio>
@@ -28,7 +32,7 @@
         <DatePicker @bind-Value="@model.DateTest" />
     </FormItem>*@
 
-    <FormItem TValue="string">
+    <FormItem TValue="string" WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
         <Button Type="@ButtonType.Primary" HtmlType="submit">
             Submit
         </Button>
@@ -39,10 +43,8 @@
     public class Model
     {
         [Required]
-        [StringLength(5, ErrorMessage = "Name is too long.")]
-        public string Username { get; set; } = "mutou";
+        public string Username { get; set; }
         [Required]
-        [StringLength(3, ErrorMessage = "Password is too long.")]
         public string Password { get; set; }
         //public bool RememberMe { get; set; }
         //[Required]

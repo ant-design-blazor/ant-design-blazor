@@ -7,13 +7,15 @@
 <AntRow class="@ClassMapper.Class"
         style="@Style"
         id="@Id">
-    <AntCol Span="8" class=@($"{_prefixCls}-label")>
-        @if (!string.IsNullOrEmpty(Label))
-        {
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <AntCol @attributes="GetLabelColAttributes()" class=@($"{_prefixCls}-label")>
+
             <label class=@(_labelCls)> @(Label)</label>
-        }
-    </AntCol>
-    <AntCol Span="16" class=@($"{_prefixCls}-control")>
+               
+        </AntCol>
+    }
+    <AntCol @attributes="GetWrapperColAttributes()" class=@($"{_prefixCls}-control")>
         <div class=@($"{_prefixCls}-control-input")>
             <div class=@($"{_prefixCls}-control-input-content")>
                 <CascadingValue Value="ValuePropName" Name="ValuePropName">

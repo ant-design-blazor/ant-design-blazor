@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using AntDesign.Internal;
@@ -25,6 +26,12 @@ namespace AntDesign
 
         [Parameter]
         public string ValuePropName { get; set; }
+
+        [Parameter]
+        public ColLayoutParam LabelCol { get; set; }
+
+        [Parameter]
+        public ColLayoutParam WrapperCol { get; set; }
 
         [Parameter]
         public Expression<Func<TValue>> For { get; set; }
@@ -64,6 +71,46 @@ namespace AntDesign
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
                ;
+        }
+
+        private Dictionary<string, object> GetLabelColAttributes()
+        {
+            ColLayoutParam labelColParameter;
+
+            if (LabelCol != null)
+            {
+                labelColParameter = LabelCol;
+            }
+            else if (Form.LabelCol != null)
+            {
+                labelColParameter = Form.LabelCol;
+            }
+            else
+            {
+                labelColParameter = new ColLayoutParam();
+            }
+
+            return labelColParameter.ToAttributes();
+        }
+
+        private Dictionary<string, object> GetWrapperColAttributes()
+        {
+            ColLayoutParam wrapperColParameter;
+
+            if (WrapperCol != null)
+            {
+                wrapperColParameter = WrapperCol;
+            }
+            else if (Form.WrapperCol != null)
+            {
+                wrapperColParameter = Form.WrapperCol;
+            }
+            else
+            {
+                wrapperColParameter = new ColLayoutParam();
+            }
+
+            return wrapperColParameter.ToAttributes();
         }
 
         internal void BindInputComponent(AntInputComponentBase<TValue> inputComponent, FieldIdentifier fieldIdentifier)
