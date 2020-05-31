@@ -99,6 +99,11 @@
             "url": "checkbox"
           },
           {
+            "title": "Cascader",
+            "type": "menuItem",
+            "url": "cascader"
+          },
+          {
             "title": "Switch",
             "type": "menuItem",
             "url": "switch"
