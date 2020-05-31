@@ -6,13 +6,6 @@
       WrapperCol="new ColLayoutParam { Span = 16 }"
       OnFinish="OnFinish" 
       OnFinishFailed="OnFinishFailed">
-    @*<FormItem Label="Test" For="() => model.Test">
-            <AntRadioGroup @bind-Value="@model.Test">
-                <AntRadio RadioButton Value="large">Large</AntRadio>
-                <AntRadio RadioButton Value="default">Default</AntRadio>
-                <AntRadio RadioButton Value="small">Small</AntRadio>
-            </AntRadioGroup>
-        </FormItem>*@
 
     <FormItem Label="Username" For="() => model.Username">
         <Input @bind-Value="@model.Username" />
@@ -22,15 +15,6 @@
               For="() => model.Password">
         <InputPassword @bind-Value="@model.Password" />
     </FormItem>
-
-    @*<FormItem For="() => model.RememberMe">
-            <Checkbox @bind-Value="@model.RememberMe">Remember me</Checkbox>
-        </FormItem>*@
-
-    @*<FormItem Label="DateTest"
-              For="() => model.DateTest">
-        <DatePicker @bind-Value="@model.DateTest" />
-    </FormItem>*@
 
     <FormItem TValue="string" WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
         <Button Type="@ButtonType.Primary" HtmlType="submit">
@@ -46,9 +30,6 @@
         public string Username { get; set; }
         [Required]
         public string Password { get; set; }
-        //public bool RememberMe { get; set; }
-        //[Required]
-        //public DateTime DateTest { get; set; }
     }
 
     private Model model = new Model();
