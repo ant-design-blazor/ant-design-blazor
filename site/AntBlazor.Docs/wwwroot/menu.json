@@ -99,6 +99,11 @@
             "url": "components/checkbox"
           },
           {
+            "title": "Cascader",
+            "type": "menuItem",
+            "url": "components/cascader"
+          },
+          {
             "title": "Switch",
             "type": "menuItem",
             "url": "components/switch"
