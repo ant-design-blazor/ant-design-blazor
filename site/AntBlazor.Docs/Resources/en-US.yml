@@ -14,6 +14,7 @@ DataEntry: Data Entry
 Checkbox: Checkbox
 Switch: Switch
 DatePicker: DatePicker
+Form: Form
 TimePicker: TimePicker
 Input: Input
 InputNumber: InputNumber

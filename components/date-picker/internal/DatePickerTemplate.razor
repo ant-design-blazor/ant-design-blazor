@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign.Internal
-@inherits DatePickerPanelBase
+@typeparam TValue
+@inherits DatePickerPanelBase<TValue>
 
 <div class="@(DatePicker.PrefixCls)-@(Picker)-panel">
     @RenderPickerHeader

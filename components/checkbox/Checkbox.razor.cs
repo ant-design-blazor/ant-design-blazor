@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Checkbox : AntDomComponentBase
+    public partial class Checkbox : AntInputComponentBase<string>
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -15,9 +15,6 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
-
-        [Parameter]
-        public string Value { get; set; }
 
         [Parameter]
         public bool AutoFocus { get; set; }

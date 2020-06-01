@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign.Internal
-@inherits DatePickerPanelBase
+@typeparam TValue
+@inherits DatePickerPanelBase<TValue>
 @using System.Globalization;
 
 @{
@@ -10,23 +11,24 @@
     const int MAX_ROW = 1;
     const int MAX_COL = 4;
 }
-<DatePickerTemplate 
-    PickerIndex="@PickerIndex"
-    MaxRow="MAX_ROW"
-    MaxCol="MAX_COL"
-    ViewStartDate="startDate"
-    IsInView="date => true"
-    IsToday="date => DateHelper.IsSameQuarter(date, DatePicker.CurrentDate)"
-    IsSelected="date => DateHelper.IsSameQuarter(date, Value)"
-    GetColTitle='date => date.ToString("yyyy")'
-    OnValueSelect="date => OnSelectQuarter(date)"
-    GetNextColValue="date => date.AddMonths(3)">
+<DatePickerTemplate TValue="TValue"
+                    PickerIndex="@PickerIndex"
+                    MaxRow="MAX_ROW"
+                    MaxCol="MAX_COL"
+                    ViewStartDate="startDate"
+                    IsInView="date => true"
+                    IsToday="date => DateHelper.IsSameQuarter(date, DatePicker.CurrentDate)"
+                    IsSelected="date => DateHelper.IsSameQuarter(date, Value)"
+                    GetColTitle='date => date.ToString("yyyy")'
+                    OnValueSelect="date => OnSelectQuarter(date)"
+                    GetNextColValue="date => date.AddMonths(3)">
     <RenderPickerHeader>
-        <DatePickerHeader PickerIndex="@PickerIndex"
-                             ShowPreChange="@false"
-                             ShowNextChange="@false"
-                             ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
-                             ShowSuperNextChange="@(!(DatePicker.IsRange && PickerIndex == 0))" />
+        <DatePickerHeader TValue="TValue"
+                          PickerIndex="@PickerIndex"
+                          ShowPreChange="@false"
+                          ShowNextChange="@false"
+                          ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
+                          ShowSuperNextChange="@(!(DatePicker.IsRange && PickerIndex == 0))" />
     </RenderPickerHeader>
     <RenderColValue Context="currentColDate">
         @DateHelper.GetDayOfQuarter(currentColDate)
