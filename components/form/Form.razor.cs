@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
@@ -36,7 +35,7 @@ namespace AntDesign
 
         private EditContext _editContext;
         private IList<IFormItem> _formItems = new List<IFormItem>();
-        private IList<IValueAccessor> _controls = new List<IValueAccessor>();
+        private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
 
         internal Dictionary<string, object> FieldDefaultValues { get; private set; }
 
@@ -97,7 +96,7 @@ namespace AntDesign
         {
             _editContext.OnFieldChanged -= HandleFieldChanged;
 
-            _formItems.ForEach(item => item.Reset());
+            _controls.ForEach(item => item.Reset());
 
             _editContext.OnFieldChanged += HandleFieldChanged;
         }
@@ -107,7 +106,7 @@ namespace AntDesign
             _formItems.Add(formItem);
         }
 
-        void IForm.AddControl(IValueAccessor valueAccessor)
+        void IForm.AddControl(IControlValueAccessor valueAccessor)
         {
             this._controls.Add(valueAccessor);
         }

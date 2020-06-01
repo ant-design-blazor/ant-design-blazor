@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign.Forms
 {
-    public interface IValueAccessor
+    public interface IControlValueAccessor
     {
         internal void Reset();
     }
