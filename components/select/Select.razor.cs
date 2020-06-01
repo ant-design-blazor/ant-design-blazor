@@ -3,25 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AntBlazor.JsInterop;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
+
 #pragma warning disable 1591
 #pragma warning disable CA1716
 // ReSharper disable once CheckNamespace
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Select : AntDomComponentBase
     {
         #region Private
+
         #region Constants
+
         private const string RootSelector = "body";
         private const string ClassPrefix = "ant-select";
-        #endregion
+
+        #endregion Constants
 
         #region Fields
+
         private bool _rootListened = false;
         private bool _isSelectOpened = false;
 
@@ -30,28 +35,38 @@ namespace AntBlazor
 
         private string _dropdownStyle;
         private readonly ClassMapper _dropdownClassMapper = new ClassMapper();
-        #endregion
+
+        #endregion Fields
 
         #region Properties
+
         [Inject]
         private DomEventService DomEventService { get; set; }
-        #endregion
-        #endregion
+
+        #endregion Properties
+
+        #endregion Private
 
         #region Protected
+
         #region Fields
+
         protected List<string> Values { get; } = new List<string>();
-        #endregion
+
+        #endregion Fields
 
         #region Properties
+
         protected SelectMode SelectMode => Mode.ToSelectMode();
 
         protected List<SelectOption> SelectOptions { get; } = new List<SelectOption>();
 
         protected List<SelectOption> SelectedOptions { get; } = new List<SelectOption>();
-        #endregion
+
+        #endregion Properties
 
         #region Methods
+
         protected void SetClassMap()
         {
             ClassMapper.Clear()
@@ -73,6 +88,7 @@ namespace AntBlazor
             SetClassMap();
 
             #region Init Values
+
             if (DefaultValue.IsT0)
             {
                 Values.Add(DefaultValue.AsT0);
@@ -82,7 +98,8 @@ namespace AntBlazor
             {
                 Values.AddRange(DefaultValue.AsT1);
             }
-            #endregion 
+
+            #endregion Init Values
 
             base.OnInitialized();
         }
@@ -141,9 +158,11 @@ namespace AntBlazor
                 _isSelectOpened = false;
             }
         }
-        #endregion
 
-        #region  Events
+        #endregion Methods
+
+        #region Events
+
         protected async Task OnSelectOpenClick(MouseEventArgs _)
         {
             if (!_isSelectOpened && !Disabled)
@@ -169,18 +188,26 @@ namespace AntBlazor
             SelectedOptions.Clear();
             await InvokeAsync(StateHasChanged);
         }
-        #endregion
-        #endregion
+
+        #endregion Events
+
+        #endregion Protected
 
         #region Public
+
         #region Properties
+
         #region Generals
+
         [Inject]
         public IconService IconService { get; set; }
-        #endregion
+
+        #endregion Generals
 
         #region Parameters
+
         #region Boolean(13)
+
         [Parameter] public bool AllowClear { get; set; } = false;
 
         [Parameter] public bool AutoClearSearchValue { get; set; } = true;//Only model is multiple or tags
@@ -206,9 +233,11 @@ namespace AntBlazor
         [Parameter] public bool? Open { get; set; } = true;
 
         [Parameter] public bool? DefaultOpen { get; set; } = true;
-        #endregion
+
+        #endregion Boolean(13)
 
         #region String(11)
+
         [Parameter] public string Mode { get; set; }
 
         [Parameter] public string Size { get; set; } = AntSizeLDSType.Default;
@@ -230,29 +259,37 @@ namespace AntBlazor
         [Parameter] public string MenuItemSelectedIcon { get; set; }
 
         [Parameter] public string DropdownStyle { get; set; }
-        #endregion
+
+        #endregion String(11)
 
         #region Number(3)
+
         [Parameter] public int ListHeight { get; set; } = 256;
 
         [Parameter] public int? MaxTagCount { get; set; }
 
         [Parameter] public int? MaxTagTextLength { get; set; }
-        #endregion
+
+        #endregion Number(3)
 
         #region Complex
+
         [Parameter] public OneOf<string, string[]> DefaultValue { get; set; }
 
         [Parameter] public OneOf<bool, int> DropdownMatchSelectWidth { get; set; }
 
         [Parameter] public OneOf<bool, Func<string, SelectOption, bool>> FilterOption { get; set; } = false;
-        #endregion
+
+        #endregion Complex
 
         #region Fragment
+
         [Parameter] public RenderFragment ChildContent { get; set; }
-        #endregion
+
+        #endregion Fragment
 
         #region Event(11)
+
         [Parameter]
         public EventCallback OnBlur { get; set; }
 
@@ -285,11 +322,15 @@ namespace AntBlazor
 
         [Parameter]
         public EventCallback<MouseEventArgs> OnMouseLeave { get; set; }
-        #endregion
-        #endregion
-        #endregion
+
+        #endregion Event(11)
+
+        #endregion Parameters
+
+        #endregion Properties
 
         #region Methods
+
         public void Blur()
         {
         }
@@ -312,6 +353,7 @@ namespace AntBlazor
                         StateHasChanged();
                     }
                     break;
+
                 default:
                     if (Values.Contains(selectOption?.Value))
                     {
@@ -340,13 +382,16 @@ namespace AntBlazor
                     SelectedOptions.Add(SelectOptions.First(option => option.Value == value));
 
                     break;
+
                 default:
                     break;
             }
 
             await InvokeAsync(StateHasChanged);
         }
-        #endregion
-        #endregion
+
+        #endregion Methods
+
+        #endregion Public
     }
 }

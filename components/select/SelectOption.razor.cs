@@ -6,18 +6,21 @@ using Microsoft.AspNetCore.Components;
 #pragma warning disable CA1716
 // ReSharper disable once CheckNamespace
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class SelectOption : AntDomComponentBase
     {
         #region Private
+
         private bool _isActive = false;
         private const string ClassPrefix = "ant-select-item";
 
         private bool IsSelected => SelectParent.OptionIsSelected(Value);
-        #endregion
+
+        #endregion Private
 
         #region Protected
+
         protected void SetClassMap()
         {
             ClassMapper.Clear()
@@ -38,6 +41,7 @@ namespace AntBlazor
         }
 
         #region Events
+
         protected async Task OnSelectOptionClick(EventArgs _)
         {
             if (!Disabled)
@@ -60,12 +64,17 @@ namespace AntBlazor
             SetClassMap();
             await InvokeAsync(StateHasChanged);
         }
-        #endregion
-        #endregion
+
+        #endregion Events
+
+        #endregion Protected
 
         #region Public
+
         #region Properties
+
         #region Paramters
+
         [Parameter] public string Title { get; set; }
 
         [Parameter] public string Value { get; set; }
@@ -74,14 +83,15 @@ namespace AntBlazor
 
         [Parameter] public bool Disabled { get; set; } = false;
 
-
         [Parameter] public RenderFragment ChildContent { get; set; }
-
 
         [CascadingParameter] public Select SelectParent { get; set; }
         [CascadingParameter] public SelectOptGroup SelectOptGroupParent { get; set; }
-        #endregion
-        #endregion
-        #endregion
+
+        #endregion Paramters
+
+        #endregion Properties
+
+        #endregion Public
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System;
+
 #pragma warning disable 1591
 // ReSharper disable once CheckNamespace
 
-namespace AntBlazor
+namespace AntDesign
 {
     public enum SelectMode
     {
