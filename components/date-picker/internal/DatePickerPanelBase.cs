@@ -8,10 +8,10 @@ using System;
 
 namespace AntDesign
 {
-    public class DatePickerPanelBase : PickerPanelBase
+    public class DatePickerPanelBase<TValue> : PickerPanelBase
     {
         [CascadingParameter]
-        public DatePicker DatePicker { get; set; }
+        public DatePickerBase<TValue> DatePicker { get; set; }
 
         protected void OnSelectTime(DateTime date)
         {

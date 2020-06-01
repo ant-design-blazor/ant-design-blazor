@@ -1,0 +1,27 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+@using AntDesign.Internal;
+
+<AntRow class="@ClassMapper.Class"
+        style="@Style"
+        id="@Id">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <AntCol @attributes="GetLabelColAttributes()" class=@($"{_prefixCls}-label")>
+            <label class=@(_labelCls)> @(Label)</label>
+        </AntCol>
+    }
+    <AntCol @attributes="GetWrapperColAttributes()" class=@($"{_prefixCls}-control")>
+        <div class=@($"{_prefixCls}-control-input")>
+            <div class=@($"{_prefixCls}-control-input-content")>
+                <CascadingValue Value="this" Name="FormItem" TValue="IFormItem">
+                    @ChildContent
+                </CascadingValue>
+            </div>
+        </div>
+        @if (_formValidation != null)
+        {
+            @_formValidation(this);
+        }
+    </AntCol>
+</AntRow>

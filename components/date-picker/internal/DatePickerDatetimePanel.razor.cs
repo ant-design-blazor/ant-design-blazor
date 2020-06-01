@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign.Internal
 {
-    public partial class DatePickerDatetimePanel : DatePickerPanelBase
+    public partial class DatePickerDatetimePanel<TValue> : DatePickerPanelBase<TValue>
     {
         private DatePickerDisabledTime GetDisabledTime()
         {
