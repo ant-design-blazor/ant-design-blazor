@@ -162,7 +162,7 @@
           {
             "title": "Card",
             "type": "menuItem",
-            "url": "card"
+            "url": "components/card"
           },
           {
             "title": "Empty",
