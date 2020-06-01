@@ -35,9 +35,7 @@ namespace AntDesign
 
         private RenderFragment<FormItem> _formValidation;
 
-        private FieldIdentifier _fieldIdentifier;
-
-        private IValueAccessor _control;
+        private IControlValueAccessor _control;
 
         protected override void OnInitialized()
         {
@@ -129,11 +127,6 @@ namespace AntDesign
                     _labelCls = $"{_prefixCls}-required";
                 }
             }
-        }
-
-        void IFormItem.Reset()
-        {
-            _control?.Reset();
         }
     }
 }
