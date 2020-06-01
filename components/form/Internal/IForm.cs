@@ -13,7 +13,7 @@ namespace AntDesign.Internal
 
         internal void AddFormItem(IFormItem formItem);
 
-        internal void AddControl(IValueAccessor valueAccessor);
+        internal void AddControl(IControlValueAccessor valueAccessor);
 
         void Reset();
     }

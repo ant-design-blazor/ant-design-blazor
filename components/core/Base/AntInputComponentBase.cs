@@ -15,7 +15,7 @@ namespace AntDesign
     /// reference:https://github.com/dotnet/aspnetcore/blob/master/src/Components/Web/src/Forms/InputBase.cs
     /// </summary>
     /// <typeparam name="TValue">the natural type of the input's value</typeparam>
-    public abstract class AntInputComponentBase<TValue> : AntDomComponentBase, IValueAccessor
+    public abstract class AntInputComponentBase<TValue> : AntDomComponentBase, IControlValueAccessor
     {
         private readonly EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
         private bool _previousParsingAttemptFailed;
@@ -286,7 +286,7 @@ namespace AntDesign
             _isNotifyFieldChanged = true;
         }
 
-        void IValueAccessor.Reset()
+        void IControlValueAccessor.Reset()
         {
             ResetValue();
         }
