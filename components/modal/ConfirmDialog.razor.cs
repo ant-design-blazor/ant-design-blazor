@@ -56,12 +56,12 @@ namespace AntDesign
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (Config.AutoFocusButton != ConfirmAutoFocusButton.Null)
+            if (Config.Visible && Config.AutoFocusButton != ConfirmAutoFocusButton.Null)
             {
                 var element = Config.AutoFocusButton == ConfirmAutoFocusButton.Cancel
                     ? _cancelBtn
                     : _okBtn;
-                await JsInvokeAsync(JSInteropConstants.focusConfirmBtn, $"#{element.Id}");
+                await JsInvokeAsync(JSInteropConstants.focusDialog, $"#{element.Id}");
             }
 
             await base.OnAfterRenderAsync(firstRender);

@@ -10,6 +10,8 @@ namespace AntDesign
 {
     public partial class Dialog
     {
+        private const string IdPrefix = "Ant-Design-";
+
         [Parameter]
         public DialogOptions Config { get; set; }
 
@@ -17,37 +19,51 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public EventCallback OnClosed { get; set; }
-
-        [Parameter]
         public bool Visible { get; set; }
 
+        private string _maskAnimation = "";
+        private string _modalAnimation = "";
+        private string _maskHideClsName = "";
+
+        private bool _hasShow;
         private bool _hasDestroy = true;
+        private string _wrapStyle = "";
 
-        private string GetStyle()
-        {
-            if (string.IsNullOrWhiteSpace(Style))
-            {
-                return Config.GetWidth();
-            }
-            else
-            {
-                return $"{Style};{Config.GetWidth()}";
-            }
-        }
-
-
+        /// <summary>
+        /// dialog root container
+        /// </summary>
         private ElementReference _element;
 
         /// <summary>
-        /// destory
+        /// ant-modal style
         /// </summary>
         /// <returns></returns>
-        private async Task RemoveFromContainer()
+        private string GetStyle()
         {
-            await JsInvokeAsync(JSInteropConstants.destoryDialog, _element, Config.GetContainer);
+            var style = $"{Config.GetWidth()};";
+
+            if (!string.IsNullOrWhiteSpace(Style))
+            {
+                style += Style + ";";
+            }
+
+            return style;
         }
 
+        /// <summary>
+        ///  append To body
+        /// </summary>
+        /// <returns></returns>
+        private async Task AppendToContainer()
+        {
+            await JsInvokeAsync(JSInteropConstants.addElementTo, _element, Config.GetContainer);
+        }
+
+        #region mask and dialog click event
+
+        /// <summary>
+        /// check is dialog click
+        /// </summary>
         private bool _dialogMouseDown = false;
 
         private void OnDialogMouseDown()
@@ -69,24 +85,27 @@ namespace AntDesign
             if (Config.MaskClosable
                 && !_dialogMouseDown)
             {
-                await OnCloserClick(e);
+                await CloseAsync();
             }
         }
 
-        private async Task OnCloserClick(MouseEventArgs e)
-        {
-            await Close(e);
-            await Config.OnCancel.InvokeAsync(e);
-        }
+        #endregion
 
-        private readonly string _sentinelStart = Guid.NewGuid().ToString();
-        private readonly string _sentinelEnd = Guid.NewGuid().ToString();
+        #region keyboard control
+
+        /// <summary>
+        /// TAB keyboard control
+        /// </summary>
+        private readonly string _sentinelStart = IdPrefix + Guid.NewGuid().ToString();
+        private readonly string _sentinelEnd = IdPrefix + Guid.NewGuid().ToString();
+
+        public string SentinelStart=> _sentinelStart;
 
         private async Task OnKeyDown(KeyboardEventArgs e)
         {
             if (Config.Keyboard && e.Key == "Escape")
             {
-                await Close(null);
+                await CloseAsync();
                 return;
             }
             if (Visible)
@@ -109,46 +128,110 @@ namespace AntDesign
             }
         }
 
-        /// <summary>
-        /// close modal, hide or Destroy
-        /// </summary>
-        /// <returns></returns>
-        private async Task Close(MouseEventArgs e)
+        #endregion
+
+
+        private async Task OnCloserClick(MouseEventArgs e)
+        {
+            await CloseAsync();
+        }
+
+        private async Task CloseAsync()
         {
             if (_hasDestroy)
             {
                 return;
             }
-
-            if (Config.DestroyOnClose || Config.ForceRender)
+            if (Config.OnCancel.HasDelegate)
             {
-                _hasDestroy = true;
-                await JsInvokeAsync(JSInteropConstants.hideModal, _element);
-                await Task.Delay(250);
-                await RemoveFromContainer();
-            }
-            else
-            {
-                await JsInvokeAsync(JSInteropConstants.hideModal, _element);
-            }
-
-            if (Config.OnClosed.HasDelegate)
-            {
-                await Config.OnClosed.InvokeAsync(null);
+                await Config.OnCancel.InvokeAsync(null);
             }
         }
 
-        private async Task ShowModal()
+        #region control show and hide class name and style
+
+        private void Show()
         {
-            await JsInvokeAsync(JSInteropConstants.showModal, _element);
+            if (_hasShow)
+            {
+                return;
+            }
+
+            if (Visible)
+            {
+                _wrapStyle = "";
+                _maskHideClsName = "";
+                _maskAnimation = ModalAnimation.MaskEnter;
+                _modalAnimation = ModalAnimation.ModalEnter;
+
+                _hasShow = true;
+            }
+
         }
 
-        private async Task AppendToContainer()
+        public async Task Hide()
         {
-            await JsInvokeAsync(JSInteropConstants.addElementTo, _element, Config.GetContainer);
+            if (!_hasShow)
+            {
+                return;
+            }
+
+            if (!Visible)
+            {
+                _maskAnimation = ModalAnimation.MaskLeave;
+                _modalAnimation = ModalAnimation.ModalLeave;
+                await Task.Delay(200);
+                _wrapStyle = "display: none;";
+                _maskHideClsName = "ant-modal-mask-hidden";
+                _hasShow = false;
+                StateHasChanged();
+                if (Config.OnClosed.HasDelegate)
+                {
+                    await Config.OnClosed.InvokeAsync(null);
+                }
+            }
+
+        }
+
+        #endregion
+
+        private string GetMaskClsName()
+        {
+            string clsName = _maskHideClsName;
+            clsName += _maskAnimation;
+            return clsName;
+        }
+
+        private string GetModalClsName()
+        {
+            string clsName = Config.ClassName;
+
+            return clsName + _modalAnimation;
         }
 
         #region override
+
+        protected override async Task OnParametersSetAsync()
+        {
+            //Reduce one rendering when showing and not destroyed
+            if (Visible)
+            {
+                if (!_hasDestroy)
+                {
+                    Show();
+                }
+                else
+                {
+                    _wrapStyle = "display: none;";
+                    _maskHideClsName = "ant-modal-mask-hidden";
+                }
+            }
+            else
+            {
+                await Hide();
+            }
+            await base.OnParametersSetAsync();
+        }
 
         protected override async Task OnAfterRenderAsync(bool isFirst)
         {
@@ -158,23 +241,13 @@ namespace AntDesign
                 {
                     await AppendToContainer();
                     _hasDestroy = false;
+                    Show();
+                    StateHasChanged();
                 }
-                await ShowModal();
-            }
-            else
-            {
-                await Close(null);
             }
 
             await base.OnAfterRenderAsync(isFirst);
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            _ = RemoveFromContainer();
-            base.Dispose(disposing);
-        }
-
         #endregion
     }
 }

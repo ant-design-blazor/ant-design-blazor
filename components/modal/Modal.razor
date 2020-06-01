@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @if(_hasAdd)
 {
-    <Dialog Config="@BuildDialogOptions()" 
+    <Dialog @ref="_dialog" Config="@BuildDialogOptions()" 
             Visible="@Visible" Style="@Style">
         @ChildContent
     </Dialog>

@@ -39,16 +39,10 @@ namespace AntDesign
         public static string addElementTo => $"{FUNC_PREFIX}addElementTo";
 
         public static string delElementFrom => $"{FUNC_PREFIX}delElementFrom";
-
-        public static string showModal => $"{FUNC_PREFIX}showModal";
-
-        public static string hideModal => $"{FUNC_PREFIX}hideModal";
-
-        public static string destoryDialog => $"{FUNC_PREFIX}destoryDialog";
-
+        
         public static string getActiveElement => $"{FUNC_PREFIX}getActiveElement";
 
-        public static string focusConfirmBtn => $"{FUNC_PREFIX}focusConfirmBtn";
+        public static string focusDialog => $"{FUNC_PREFIX}focusDialog";
 
     }
 }

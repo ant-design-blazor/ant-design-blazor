@@ -131,6 +131,8 @@ namespace AntDesign
 
         #endregion
 
+        private Dialog _dialog;
+
         private DialogOptions BuildDialogOptions()
         {
             DialogOptions options = new DialogOptions()
@@ -177,6 +179,27 @@ namespace AntDesign
                 _hasAdd = true;
             }
             await base.OnParametersSetAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool isFirst)
+        {
+            if (Visible)
+            {
+                await JsInvokeAsync(JSInteropConstants.focusDialog, $"#{_dialog.SentinelStart}");
+            }
+            else
+            {
+                if (DestroyOnClose)
+                {
+                    if (_dialog != null)
+                    {
+                        await _dialog.Hide();
+                    }
+                    _hasAdd = false;
+                    await InvokeAsync(StateHasChanged);
+                }
+            }
+            await base.OnAfterRenderAsync(isFirst);
         }
     }
 }

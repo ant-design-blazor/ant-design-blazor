@@ -1,18 +1,18 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div @ref="_element">
+<div @ref="@_element">
     <div class="ant-modal-root">
         @if (Config.Mask)
         {
-            <div class="ant-modal-mask ant-modal-mask-hidden" style="@Config.MaskStyle"></div>
+            <div class="ant-modal-mask @GetMaskClsName()" style="@Config.MaskStyle"></div>
         }
     <div tabindex="-1" class="ant-modal-wrap @Config.GetWrapClassNameExtended()" role="dialog" aria-labelledby="rcDialogTitle0"
          @onclick="@OnMaskClick" @onclick:preventDefault @onclick:stopPropagation
          @onmouseup="@OnMaskMouseUp" @onmouseup:preventDefault @onmouseup:stopPropagation
          @onkeydown="@OnKeyDown"
-         style="display: none;">
-        <div role="document" class="ant-modal @Config.ClassName "
+         style="@_wrapStyle">
+        <div role="document" class="ant-modal @GetModalClsName()"
              @onmousedown="@OnDialogMouseDown" @onmousedown:preventDefault @onmousedown:stopPropagation
              style="@GetStyle()">
             <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>

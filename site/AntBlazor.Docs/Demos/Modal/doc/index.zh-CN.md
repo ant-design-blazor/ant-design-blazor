@@ -72,8 +72,8 @@ title: Modal
 | MaskClosable | 点击蒙层是否允许关闭 | bool | `false` |
 | OkText | 确认按钮文字 | string | 确定 |
 | OkType | 确认按钮类型 | string | primary |
-| OkButtonProps | ok 按钮 props | [ButtonProps](/components/button/#API) | - |
-| CancelButtonProps | cancel 按钮 props | [ButtonProps](/components/button/#API) | - |
+| OkButtonProps | ok 按钮 props | ButtonProps | - |
+| CancelButtonProps | cancel 按钮 props | ButtonProps | - |
 | Title | 标题 | string\|RenderFragment | - |
 | Width | 宽度 | string\|double | 416 |
 | ZIndex | 设置 Modal 的 `z-index` | int | 1000 |
