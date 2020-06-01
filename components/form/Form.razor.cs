@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace AntDesign
 {
-    public partial class Form : AntDomComponentBase
+    public partial class Form<TModel> : AntDomComponentBase, IForm
     {
         private readonly string _prefixCls = "ant-form";
 
@@ -16,7 +17,7 @@ namespace AntDesign
         public string Layout { get; set; } = FormLayout.Horizontal;
 
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment<TModel> ChildContent { get; set; }
 
         [Parameter]
         public ColLayoutParam LabelCol { get; set; }
@@ -25,7 +26,7 @@ namespace AntDesign
         public ColLayoutParam WrapperCol { get; set; }
 
         [Parameter]
-        public object Model { get; set; }
+        public TModel Model { get; set; }
 
         [Parameter]
         public EventCallback<EditContext> OnFinish { get; set; }
@@ -34,9 +35,16 @@ namespace AntDesign
         public EventCallback<EditContext> OnFinishFailed { get; set; }
 
         private EditContext _editContext;
-        private List<FormItemBase> _formItems = new List<FormItemBase>();
+        private IList<IFormItem> _formItems = new List<IFormItem>();
+        private IList<IValueAccessor> _controls = new List<IValueAccessor>();
 
         internal Dictionary<string, object> FieldDefaultValues { get; private set; }
+
+        ColLayoutParam IForm.WrapperCol => WrapperCol;
+
+        ColLayoutParam IForm.LabelCol => LabelCol;
+
+        EditContext IForm.EditContext => _editContext;
 
         protected override void OnInitialized()
         {
@@ -47,7 +55,8 @@ namespace AntDesign
 
             FieldDefaultValues = Model.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(Model));
 
-            FieldDefaultValues.ForEach(item => {
+            FieldDefaultValues.ForEach(item =>
+            {
                 Console.WriteLine($"___________FieldDefaultValues,{item.Key},{item.Value}");
             });
         }
@@ -80,11 +89,6 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        internal void AddFormItem(FormItemBase formItem)
-        {
-            _formItems.Add(formItem);
-        }
-
         public void HandleValidSubmit()
         {
         }
@@ -96,6 +100,16 @@ namespace AntDesign
             _formItems.ForEach(item => item.Reset());
 
             _editContext.OnFieldChanged += HandleFieldChanged;
+        }
+
+        void IForm.AddFormItem(IFormItem formItem)
+        {
+            _formItems.Add(formItem);
+        }
+
+        void IForm.AddControl(IValueAccessor valueAccessor)
+        {
+            this._controls.Add(valueAccessor);
         }
     }
 }

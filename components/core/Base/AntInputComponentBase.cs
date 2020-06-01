@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Components.Forms;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AntDesign.Forms;
+using AntDesign.Internal;
 
 namespace AntDesign
 {
@@ -14,18 +15,18 @@ namespace AntDesign
     /// reference:https://github.com/dotnet/aspnetcore/blob/master/src/Components/Web/src/Forms/InputBase.cs
     /// </summary>
     /// <typeparam name="TValue">the natural type of the input's value</typeparam>
-    public abstract class AntInputComponentBase<TValue> : AntDomComponentBase
+    public abstract class AntInputComponentBase<TValue> : AntDomComponentBase, IValueAccessor
     {
         private readonly EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
         private bool _previousParsingAttemptFailed;
         private ValidationMessageStore _parsingValidationMessages;
         private Type _nullableUnderlyingType;
 
-        [CascadingParameter(Name = "EditContext")]
-        EditContext CascadedEditContext { get; set; }
-
         [CascadingParameter(Name = "FormItem")]
-        FormItem<TValue> FormItem { get; set; }
+        private IFormItem FormItem { get; set; }
+
+        [CascadingParameter(Name = "Form")]
+        private IForm Form { get; set; }
 
         /// <summary>
         /// Gets or sets a collection of additional attributes that will be applied to the created element.
@@ -62,7 +63,7 @@ namespace AntDesign
         /// <summary>
         /// Gets the <see cref="FieldIdentifier"/> for the bound value.
         /// </summary>
-        protected FieldIdentifier FieldIdentifier { get; set; }
+        internal FieldIdentifier FieldIdentifier { get; set; }
 
         /// <summary>
         /// Gets or sets the current value of the input.
@@ -214,10 +215,8 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (FormItem != null)
-            {
-                FormItem.BindInputComponent(this, FieldIdentifier);
-            }
+            FormItem?.AddControl(this);
+            Form?.AddControl(this);
 
             _firstValue = Value;
         }
@@ -232,7 +231,7 @@ namespace AntDesign
                 // This is the first run
                 // Could put this logic in OnInit, but its nice to avoid forcing people who override OnInit to call base.OnInit()
 
-                if (CascadedEditContext == null)
+                if (Form?.EditContext == null)
                 {
                     //throw new InvalidOperationException($"{GetType()} requires a cascading parameter " +
                     //    $"of type {nameof(EditContext)}. For example, you can use {GetType().FullName} inside " +
@@ -249,13 +248,13 @@ namespace AntDesign
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
-                EditContext = CascadedEditContext;
+                EditContext = Form?.EditContext;
                 FieldIdentifier = FieldIdentifier.Create(ValueExpression);
                 _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
 
                 EditContext.OnValidationStateChanged += _validationStateChangedHandler;
             }
-            else if (CascadedEditContext != EditContext)
+            else if (Form?.EditContext != EditContext)
             {
                 // Not the first run
 
@@ -285,6 +284,11 @@ namespace AntDesign
             _isNotifyFieldChanged = false;
             CurrentValue = _firstValue;
             _isNotifyFieldChanged = true;
+        }
+
+        void IValueAccessor.Reset()
+        {
+            ResetValue();
         }
     }
 }

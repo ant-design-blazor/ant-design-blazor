@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
+using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace AntDesign
 {
-    public partial class FormItem<TValue> : FormItemBase
+    public partial class FormItem : AntDomComponentBase, IFormItem
     {
         private readonly string _prefixCls = "ant-form-item";
 
-        [CascadingParameter(Name = "EditContext")]
-        EditContext EditContext { get; set; }
-
         [CascadingParameter(Name = "Form")]
-        Form Form { get; set; }
+        private IForm Form { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -25,23 +22,22 @@ namespace AntDesign
         public string Label { get; set; }
 
         [Parameter]
-        public string ValuePropName { get; set; }
-
-        [Parameter]
         public ColLayoutParam LabelCol { get; set; }
 
         [Parameter]
         public ColLayoutParam WrapperCol { get; set; }
 
-        [Parameter]
-        public Expression<Func<TValue>> For { get; set; }
+        private EditContext EditContext => Form?.EditContext;
 
-        private TValue _initValue;
         private bool _isValid = true;
+
         private string _labelCls = "";
 
-        AntInputComponentBase<TValue> _inputComponent;
+        private RenderFragment<FormItem> _formValidation;
+
         private FieldIdentifier _fieldIdentifier;
+
+        private IValueAccessor _control;
 
         protected override void OnInitialized()
         {
@@ -52,10 +48,7 @@ namespace AntDesign
                 throw new InvalidOperationException("Form is null.FormItem should be childContent of Form.");
             }
 
-            if (For != null)
-            {
-                Form.AddFormItem(this);
-            }
+            Form.AddFormItem(this);
         }
 
         protected override void OnParametersSet()
@@ -113,32 +106,34 @@ namespace AntDesign
             return wrapperColParameter.ToAttributes();
         }
 
-        internal void BindInputComponent(AntInputComponentBase<TValue> inputComponent, FieldIdentifier fieldIdentifier)
+        void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
-            _initValue = inputComponent.Value;
-
-            _inputComponent = inputComponent;
-            _fieldIdentifier = fieldIdentifier;
-
-            if (For != null)
+            this._control = control;
+            _formValidation = form =>
             {
-                if (fieldIdentifier.TryGetValidateProperty(out var propertyInfo))
+                return builder =>
                 {
-                    var requiredAttribute = propertyInfo.GetCustomAttributes(typeof(RequiredAttribute), true);
+                    var i = 0;
+                    builder.OpenComponent<FormValidationMessage<TValue>>(i++);
+                    builder.AddAttribute(i++, "For", control.ValueExpression);
+                    builder.AddAttribute(i++, "OnStateChange", EventCallback.Factory.Create<bool>(form, valid => form._isValid = valid));
+                    builder.CloseComponent();
+                };
+            };
 
-                    if (requiredAttribute.Length > 0)
-                    {
-                        _labelCls = $"{_prefixCls}-required";
-                    }
+            if (control.FieldIdentifier.TryGetValidateProperty(out var propertyInfo))
+            {
+                var requiredAttribute = propertyInfo.GetCustomAttributes(typeof(RequiredAttribute), true);
+                if (requiredAttribute.Length > 0)
+                {
+                    _labelCls = $"{_prefixCls}-required";
                 }
             }
         }
 
-        public override void Reset()
+        void IFormItem.Reset()
         {
-            base.Reset();
-
-            _inputComponent.ResetValue();
+            _control?.Reset();
         }
     }
 }

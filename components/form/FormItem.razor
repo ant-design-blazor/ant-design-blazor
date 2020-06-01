@@ -1,7 +1,5 @@
 ﻿@namespace AntDesign
-@inherits FormItemBase
-@typeparam TValue
-
+@inherits AntDomComponentBase
 @using AntDesign.Internal;
 
 <AntRow class="@ClassMapper.Class"
@@ -10,26 +8,20 @@
     @if (!string.IsNullOrEmpty(Label))
     {
         <AntCol @attributes="GetLabelColAttributes()" class=@($"{_prefixCls}-label")>
-
             <label class=@(_labelCls)> @(Label)</label>
-               
         </AntCol>
     }
     <AntCol @attributes="GetWrapperColAttributes()" class=@($"{_prefixCls}-control")>
         <div class=@($"{_prefixCls}-control-input")>
             <div class=@($"{_prefixCls}-control-input-content")>
-                <CascadingValue Value="ValuePropName" Name="ValuePropName">
-                    <CascadingValue Value="EditContext" Name="EditContext">
-                        <CascadingValue Value="this" Name="FormItem">
-                            @ChildContent
-                        </CascadingValue>
-                    </CascadingValue>
+                <CascadingValue Value="this" Name="FormItem" TValue="IFormItem">
+                    @ChildContent
                 </CascadingValue>
             </div>
         </div>
-        @if (For != null)
+        @if (_formValidation != null)
         {
-            <FormValidationMessage OnStateChange="valid => _isValid = valid" For="@For" />
+            @_formValidation(this);
         }
     </AntCol>
 </AntRow>

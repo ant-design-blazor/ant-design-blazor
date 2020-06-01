@@ -11,9 +11,6 @@ namespace AntDesign
 {
     public class DatePickerBase<TValue> : AntInputComponentBase<TValue>
     {
-        [CascadingParameter(Name = "Form")]
-        public Form Form { get; set; }
-
         [Parameter]
         public string PrefixCls { get; set; } = "ant-picker";
 
@@ -48,6 +45,7 @@ namespace AntDesign
 
         [Parameter]
         public bool Open { get; set; }
+
         [Parameter]
         public bool InputReadOnly { get; set; } = false;
 
@@ -547,7 +545,13 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        public virtual void ChangeValue(DateTime value, int index = 0) { }
-        public virtual DateTime? GetIndexValue(int index) { return null; }
+        public virtual void ChangeValue(DateTime value, int index = 0)
+        {
+        }
+
+        public virtual DateTime? GetIndexValue(int index)
+        {
+            return null;
+        }
     }
 }

@@ -159,14 +159,14 @@ namespace AntDesign
             Suffix = (builder) =>
             {
                 builder.OpenComponent<AntIcon>(31);
-                builder.AddAttribute(32, "type", "close-circle");
+                builder.AddAttribute(32, "Type", "close-circle");
                 if (string.IsNullOrEmpty(Value))
                 {
-                    builder.AddAttribute(33, "style", "visibility: hidden;");
+                    builder.AddAttribute(33, "Style", "visibility: hidden;");
                 }
                 else
                 {
-                    builder.AddAttribute(33, "style", "visibility: visible;");
+                    builder.AddAttribute(33, "Style", "visibility: visible;");
                 }
                 builder.AddAttribute(34, "onclick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
                 {

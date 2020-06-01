@@ -6,23 +6,23 @@
       Model="@model" 
       OnFinish="OnFinish" 
       OnFinishFailed="OnFinishFailed">
-    <FormItem Label="Form Layout" For="() => model.Layout">
-        <RadioGroup @bind-Value="@model.Layout">
-            <Radio RadioButton value="@FormLayout.Horizontal">Horizontal</Radio>
-            <Radio RadioButton value="@FormLayout.Vertical">Vertical</Radio>
-            <Radio RadioButton value="@FormLayout.Inline">Inline</Radio>
+    <FormItem Label="Form Layout" >
+        <RadioGroup @bind-Value="@context.Layout">
+            <Radio RadioButton Value="@FormLayout.Horizontal">Horizontal</Radio>
+            <Radio RadioButton Value="@FormLayout.Vertical">Vertical</Radio>
+            <Radio RadioButton Value="@FormLayout.Inline">Inline</Radio>
         </RadioGroup>
     </FormItem>
 
-    <FormItem Label="Field A" For="() => model.FieldA">
-        <Input @bind-Value="@model.FieldA" />
+    <FormItem Label="Field A">
+        <Input @bind-Value="@context.FieldA" />
     </FormItem>
 
-    <FormItem Label="Field B" For="() => model.FieldB">
-        <Input @bind-Value="@model.FieldB" />
+    <FormItem Label="Field B">
+        <Input @bind-Value="@context.FieldB" />
     </FormItem>
 
-    <FormItem WrapperCol="GetButtonItemLayout()" TValue="string">
+    <FormItem WrapperCol="GetButtonItemLayout()">
         <Button Type="@ButtonType.Primary" HtmlType="submit">
             Submit
         </Button>

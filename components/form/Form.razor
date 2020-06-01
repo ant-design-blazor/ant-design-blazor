@@ -1,6 +1,8 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
+@typeparam TModel
 @using Microsoft.AspNetCore.Components.Forms;
+@using AntDesign.Internal;
 
 <EditForm class="@ClassMapper.Class"
           style="@Style"
@@ -9,9 +11,7 @@
           OnValidSubmit="OnFinish"
           OnInvalidSubmit="OnFinishFailed">
     <DataAnnotationsValidator />
-    <CascadingValue Value="_editContext" Name="EditContext">
-        <CascadingValue Value="this" Name="Form">
-            @ChildContent
-        </CascadingValue>
+    <CascadingValue Value="this" Name="Form" TValue="IForm">
+        @ChildContent(Model)
     </CascadingValue>
 </EditForm>
