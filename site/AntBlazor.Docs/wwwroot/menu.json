@@ -109,6 +109,11 @@
             "url": "components/datePicker"
           },
           {
+            "title": "Form",
+            "type": "menuItem",
+            "url": "components/form"
+          },
+          {
             "title": "TimePicker",
             "type": "menuItem",
             "url": "components/timePicker"

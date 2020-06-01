@@ -1,10 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class DatePicker : DatePickerBase<DateTime>
+    public partial class RangePicker : DatePickerBase<DateTime[]>
     {
+        public RangePicker()
+        {
+            IsRange = true;
+
+            Value = new DateTime[2];
+
+            DisabledDate = (date) =>
+            {
+                if (_pickerStatus[0]._hadSelectValue && _inputEnd.IsOnFocused)
+                {
+                    return date.CompareTo(Value[0]) < 0;
+                }
+                if (_pickerStatus[1]._hadSelectValue && _inputStart.IsOnFocused)
+                {
+                    return date.CompareTo(Value[1]) > 0;
+                }
+
+                return false;
+            };
+        }
+
         protected void OnInput(ChangeEventArgs args, int index = 0)
         {
             if (args == null)
@@ -14,13 +37,13 @@ namespace AntDesign
 
             if (DateTime.TryParse(args.Value.ToString(), out DateTime changeValue))
             {
-                Value = changeValue;
+                Value[index] = changeValue;
                 _pickerValues[index] = changeValue;
 
                 StateHasChanged();
             }
 
-            UpdateCurrentValueAsString();
+            UpdateCurrentValueAsString(index);
         }
 
         /// <summary>
@@ -32,7 +55,7 @@ namespace AntDesign
         {
             if (_pickerStatus[index]._hadSelectValue)
             {
-                return Value;
+                return Value[index];
             }
             else if (_defaultValues[index] != null)
             {
@@ -46,11 +69,11 @@ namespace AntDesign
 
         public override void ChangeValue(DateTime value, int index = 0)
         {
-            Value = value;
+            Value[index] = value;
 
             _pickerStatus[index]._hadSelectValue = true;
 
-            UpdateCurrentValueAsString();
+            UpdateCurrentValueAsString(index);
 
             if (IsRange && !IsShowTime && Picker != DatePickerType.Time)
             {

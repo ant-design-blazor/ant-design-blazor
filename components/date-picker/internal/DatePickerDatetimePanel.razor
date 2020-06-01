@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign.Internal
-@inherits DatePickerPanelBase
+@typeparam TValue
+@inherits DatePickerPanelBase<TValue>
 @using System.Globalization;
 
 @{
@@ -15,19 +16,20 @@
 <div class='@(DatePicker.IsShowTime || Picker == DatePickerType.Time ? $"{DatePicker.PrefixCls}-datetime-panel" : "")'>
     @if (DatePicker.IsShowTime)
     {
-        <DatePickerTemplate PickerIndex="@PickerIndex"
-                               MaxRow="6"
-                               MaxCol="7"
-                               ViewStartDate="startDate"
-                               ShowFooter="@DatePicker.ShowToday"
-                               IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
-                               IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
-                               IsSelected="date => DateHelper.IsSameDay(date, Value)"
-                               GetColTitle='date => date.ToString("yyyy-MM-dd")'
-                               OnValueSelect="OnSelectDate"
-                               GetNextColValue="date => date.AddDays(1)">
+        <DatePickerTemplate TValue="TValue" 
+                            PickerIndex="@PickerIndex"
+                            MaxRow="6"
+                            MaxCol="7"
+                            ViewStartDate="startDate"
+                            ShowFooter="@DatePicker.ShowToday"
+                            IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
+                            IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
+                            IsSelected="date => DateHelper.IsSameDay(date, Value)"
+                            GetColTitle='date => date.ToString("yyyy-MM-dd")'
+                            OnValueSelect="OnSelectDate"
+                            GetNextColValue="date => date.AddDays(1)">
             <RenderPickerHeader>
-                <DatePickerHeader PickerIndex="@PickerIndex" />
+                <DatePickerHeader TValue="TValue" PickerIndex="@PickerIndex" />
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>

@@ -1,0 +1,59 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
+@using AntDesign.Internal
+
+<Form @ref="form" 
+      Model="@model" 
+      LabelCol="new ColLayoutParam { Span = 8 }"
+      WrapperCol="new ColLayoutParam { Span = 16 }"
+      OnFinish="OnFinish" 
+      OnFinishFailed="OnFinishFailed">
+    <FormItem Label="Note">
+        <Input @bind-Value="@model.Note" />
+    </FormItem>
+
+    <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+        <Button OnClick="Reset">
+            Reset
+        </Button>
+        <Button Type="@ButtonType.Link" OnClick="OnFill">
+            Fill form
+        </Button>
+    </FormItem>
+</Form>
+@code
+{
+    public class Model
+    {
+        [Required]
+        public string Note { get; set; }
+    }
+
+    private Model model = new Model();
+    private IForm form;
+
+    private void OnFill(MouseEventArgs args)
+    {
+        model.Note = "Hello world!";
+
+        Console.WriteLine($"form ref:{form}");
+    }
+
+    private void Reset(MouseEventArgs args)
+    {
+        form.Reset();
+    }
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+}

@@ -1,4 +1,5 @@
 ﻿@namespace AntDesign.Internal
+@typeparam TValue
 @inherits AntDomComponentBase
 
 <CascadingValue Value=@DatePicker>
@@ -6,35 +7,35 @@
     {
         @if (DatePicker.IsShowTime)
         {
-            <DatePickerDatetimePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+            <DatePickerDatetimePanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
         }
         else
         {
-            <DatePickerDatePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+            <DatePickerDatePanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
         }
     }
     else if (IsShowQuarterPanel())
     {
-        <DatePickerQuarterPanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        <DatePickerQuarterPanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
     }
     else if (IsShowWeekPanel())
     {
-        <DatePickerDatePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" IsWeek="@true" />
+        <DatePickerDatePanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" IsWeek="@true" />
     }
     else if (IsShowMonthPanel())
     {
-        <DatePickerMonthPanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        <DatePickerMonthPanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
     }
     else if (IsShowYearPanel())
     {
-        <DatePickerYearPanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        <DatePickerYearPanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
     }
     else if (IsShowDecadePanel())
     {
-        <DatePickerDecadePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        <DatePickerDecadePanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
     }
     else if (IsShowTimePanel())
     {
-        <DatePickerDatetimePanel PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        <DatePickerDatetimePanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
     }
 </CascadingValue>

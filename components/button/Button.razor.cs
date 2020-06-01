@@ -24,6 +24,9 @@ namespace AntDesign
         public string Type { get; set; } = ButtonType.Default;
 
         [Parameter]
+        public string HtmlType { get; set; } = "button";
+
+        [Parameter]
         public string Shape { get; set; } = null;
 
         [Parameter]

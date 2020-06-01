@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace AntDesign
@@ -136,6 +138,8 @@ namespace AntDesign
 
         protected async Task OnChangeAsync(ChangeEventArgs args)
         {
+            CurrentValueAsString = args.Value.ToString();
+
             if (OnChange.HasDelegate)
             {
                 await OnChange.InvokeAsync(args);
@@ -155,14 +159,14 @@ namespace AntDesign
             Suffix = (builder) =>
             {
                 builder.OpenComponent<AntIcon>(31);
-                builder.AddAttribute(32, "type", "close-circle");
+                builder.AddAttribute(32, "Type", "close-circle");
                 if (string.IsNullOrEmpty(Value))
                 {
-                    builder.AddAttribute(33, "style", "visibility: hidden;");
+                    builder.AddAttribute(33, "Style", "visibility: hidden;");
                 }
                 else
                 {
-                    builder.AddAttribute(33, "style", "visibility: visible;");
+                    builder.AddAttribute(33, "Style", "visibility: visible;");
                 }
                 builder.AddAttribute(34, "onclick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
                 {
@@ -182,8 +186,8 @@ namespace AntDesign
         {
             bool flag = !(!string.IsNullOrEmpty(Value) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
-            // AntInputComponentBase.Value will be empty, use args.Value
-            Value = args?.Value.ToString();
+            CurrentValueAsString = args.Value.ToString();
+
             if (_allowClear && flag)
             {
                 ToggleClearBtn();

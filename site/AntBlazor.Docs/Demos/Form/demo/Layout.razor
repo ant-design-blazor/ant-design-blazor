@@ -1,0 +1,66 @@
+﻿@using System.Text.Json;
+
+<Form Layout="@model.Layout" 
+      LabelCol="GetFormLabelCol()"
+      WrapperCol="GetFormWrapperCol()"
+      Model="@model" 
+      OnFinish="OnFinish" 
+      OnFinishFailed="OnFinishFailed">
+    <FormItem Label="Form Layout" >
+        <RadioGroup @bind-Value="@context.Layout">
+            <Radio RadioButton Value="@FormLayout.Horizontal">Horizontal</Radio>
+            <Radio RadioButton Value="@FormLayout.Vertical">Vertical</Radio>
+            <Radio RadioButton Value="@FormLayout.Inline">Inline</Radio>
+        </RadioGroup>
+    </FormItem>
+
+    <FormItem Label="Field A">
+        <Input @bind-Value="@context.FieldA" />
+    </FormItem>
+
+    <FormItem Label="Field B">
+        <Input @bind-Value="@context.FieldB" />
+    </FormItem>
+
+    <FormItem WrapperCol="GetButtonItemLayout()">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+</Form>
+@code
+{
+    public class Model
+    {
+        public string Layout { get; set; } = FormLayout.Horizontal;
+        public string FieldA { get; set; }
+        public string FieldB { get; set; }
+    }
+
+    private Model model = new Model();
+
+    private ColLayoutParam GetFormLabelCol()
+    {
+        return model.Layout == FormLayout.Horizontal ? new ColLayoutParam { Span = "4" } : null;
+    }
+
+    private ColLayoutParam GetFormWrapperCol()
+    {
+        return model.Layout == FormLayout.Horizontal ? new ColLayoutParam { Span = "14" } : null;
+    }
+
+    private ColLayoutParam GetButtonItemLayout()
+    {
+        return model.Layout == FormLayout.Horizontal ? new ColLayoutParam { Span = "14", Offset = "4" } : null;
+    }
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+}
