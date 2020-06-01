@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Components.Web;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+
 namespace AntDesign
 {
     /// <summary>
     ///
     /// </summary>
-    public class Input : AntInputComponentBase<string>
+    public  class Input : AntInputComponentBase<string>
     {
         protected const string PrefixCls = "ant-input";
 
@@ -38,6 +39,9 @@ namespace AntDesign
         public string Placeholder { get; set; }
 
         [Parameter]
+        public bool AutoFocus { get; set; }
+
+        [Parameter]
         public string DefaultValue { get; set; }
 
         [Parameter]
@@ -45,6 +49,7 @@ namespace AntDesign
 
         [Parameter]
         public bool Disabled { get; set; }
+
 
         [Parameter]
         public bool AllowClear { get; set; }
@@ -82,7 +87,7 @@ namespace AntDesign
         }
 
         protected virtual void SetClasses()
-        {
+        {           
             ClassMapper.Clear()
                 .If($"{PrefixCls}", () => Type != "number")
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
@@ -108,6 +113,8 @@ namespace AntDesign
                 ClassMapper.Add($"{PrefixCls}-disabled");
             }
 
+
+
             if (AllowClear)
             {
                 _allowClear = true;
@@ -132,6 +139,16 @@ namespace AntDesign
             base.OnParametersSet();
 
             SetClasses();
+        }
+
+        public async Task Focus()
+        {
+            await JsInvokeAsync(JSInteropConstants.focus, this);
+        }
+
+        protected async Task Blur()
+        {
+            await JsInvokeAsync(JSInteropConstants.blur, this);
         }
 
         protected async Task OnChangeAsync(ChangeEventArgs args)
@@ -172,6 +189,19 @@ namespace AntDesign
                 builder.CloseComponent();
             };
         }
+
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+             base.OnAfterRenderAsync(firstRender);
+        
+            if (this.AutoFocus)
+            {
+                await this.Focus();
+            }
+
+        }
+
 
         /// <summary>
         /// Invoked when user add/remove content
@@ -268,7 +298,7 @@ namespace AntDesign
                 builder.AddAttribute(21, "value", Value);
                 builder.AddAttribute(22, "onchange", CallbackFactory.Create(this, OnChangeAsync));
                 builder.AddAttribute(23, "onkeypress", CallbackFactory.Create(this, OnPressEnterAsync));
-                builder.AddAttribute(24, "oninput", CallbackFactory.Create(this, OnInputAsync));
+                builder.AddAttribute(24, "oninput", CallbackFactory.Create(this, OnInputAsync));          
                 builder.CloseElement();
 
                 if (Suffix != null)

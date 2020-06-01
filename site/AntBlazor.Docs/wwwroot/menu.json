@@ -182,7 +182,7 @@
           {
             "title": "Tag",
             "type": "menuItem",
-            "url": "tag"
+            "url": "components/tag"
           },
           {
             "title": "Tabs",

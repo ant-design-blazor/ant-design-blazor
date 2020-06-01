@@ -1,0 +1,81 @@
+﻿<div>
+    <div>
+        @foreach (var item in lstTags)
+        {
+            <AntTag Mode="closeable" OnClose="()=>onClose(item)">@item</AntTag>
+        }
+    </div>
+    <br/>
+
+    <div>
+        @if (bVisiable)
+        {
+            <Input  @ref ="inputRef" Style="width: 78px"  Size="small" @bind-Value="newTag" OnPressEnter="OnEnter"/>
+        }
+        else
+        {
+
+            <AntTag Mode="checkable" Style="width:78px;border: 1px dashed " Checked="bVisiable"  CheckedChange="_checked=>OnChecked(_checked)">+New Tag</AntTag>
+        }
+    </div>
+</div>
+
+
+@code{
+
+
+    private bool bVisiable { get; set; } = false;
+
+    string newTag { get; set; }
+
+    AntDesign.Input inputRef { get; set; } = new AntDesign.Input();
+
+
+    List<string> lstTags { get; set; } = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        lstTags.Add("Apple");
+        lstTags.Add("Mongo");
+        lstTags.Add("Peach");
+
+    }
+
+    void ValueChange(ChangeEventArgs value)
+    {
+        lstTags.Add(value.Value.ToString());
+    }
+
+    void OnChecked(bool item)
+    {
+        bVisiable = !bVisiable;
+        inputRef.Focus();
+
+
+    }
+
+    void onClose(string item)
+    {
+        lstTags.Remove(item);
+    }
+
+    void OnEnter()
+    {
+        if (string.IsNullOrEmpty(newTag)) return;
+
+        string res = lstTags.Find(s=>s==newTag);
+
+        if (string.IsNullOrEmpty(res))
+        {
+            lstTags.Add(newTag);
+
+            newTag = string.Empty;
+        }
+
+        bVisiable = !bVisiable;
+
+
+    }
+
+
+}

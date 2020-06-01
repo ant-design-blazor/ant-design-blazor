@@ -32,6 +32,9 @@ namespace AntDesign
         public bool Checked { get; set; }
 
         [Parameter]
+        public string Icon { get; set; }
+
+        [Parameter]
         public bool NoAnimation { get; set; }
 
         [Parameter]
@@ -65,7 +68,9 @@ namespace AntDesign
                 return false;
             }
 
-            return Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime)(-inverse)?$");
+            bool result = Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime)(-inverse)?$");
+            if (!result) result = Regex.IsMatch(color, "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$");
+            return result;
         }
 
         private void UpdateClassMap()
@@ -74,8 +79,9 @@ namespace AntDesign
             string prefix = "ant-tag";
             this.ClassMapper.Clear().Add(prefix)
                 .If($"{prefix}-has-color", () => !string.IsNullOrEmpty(Color) && !_presetColor)
-                .If($"{prefix}-${Color}", () => _presetColor)
-                .If($"{prefix}-checkable", () => Mode == "checkable")
+                .If($"{prefix}-hidden", () => Visible == false)
+                .If($"{prefix}-{Color}", () => _presetColor)
+                .If($"{prefix}-checkable", () => Mode == "checkable" )
                 .If($"{prefix}-checkable-checked", () => Checked)
                 ;
         }
@@ -94,6 +100,11 @@ namespace AntDesign
         {
             await this.OnClose.InvokeAsync(e);
             this._closed = true;
+        }
+
+        private async Task ClickTag(MouseEventArgs e)
+        {
+            await this.UpdateCheckedStatus();
         }
     }
 }
