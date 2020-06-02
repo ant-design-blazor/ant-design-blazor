@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AntDesign.Forms;
 using AntDesign.Internal;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace AntDesign
 {
@@ -184,33 +184,6 @@ namespace AntDesign
             }
         }
 
-        /// <summary>
-        /// Gets a string that indicates the status of the field being edited. This will include
-        /// some combination of "modified", "valid", or "invalid", depending on the status of the field.
-        /// </summary>
-        private string FieldClass
-            => EditContext.FieldCssClass(FieldIdentifier);
-
-        /// <summary>
-        /// Gets a CSS class string that combines the <c>class</c> attribute and <see cref="FieldClass"/>
-        /// properties. Derived components should typically use this value for the primary HTML element's
-        /// 'class' attribute.
-        /// </summary>
-        protected string CssClass
-        {
-            get
-            {
-                if (AdditionalAttributes != null &&
-                    AdditionalAttributes.TryGetValue("class", out var @class) &&
-                    !string.IsNullOrEmpty(Convert.ToString(@class)))
-                {
-                    return $"{@class} {FieldClass}";
-                }
-
-                return FieldClass; // Never null or empty
-            }
-        }
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -233,18 +206,11 @@ namespace AntDesign
 
                 if (Form?.EditContext == null)
                 {
-                    //throw new InvalidOperationException($"{GetType()} requires a cascading parameter " +
-                    //    $"of type {nameof(EditContext)}. For example, you can use {GetType().FullName} inside " +
-                    //    $"an {nameof(EditForm)}.");
-
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
                 if (ValueExpression == null)
                 {
-                    //throw new InvalidOperationException($"{GetType()} requires a value for the 'ValueExpression' " +
-                    //    $"parameter. Normally this is provided automatically when using 'bind-Value'.");
-
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 

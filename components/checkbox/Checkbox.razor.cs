@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using System.Linq.Expressions;
 
 namespace AntDesign
 {
-    public partial class Checkbox : AntInputComponentBase<string>
+    public partial class Checkbox : AntInputComponentBase<bool>
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -15,6 +16,9 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
+
+        [Parameter]
+        public Expression<Func<bool>> CheckedExpression { get; set; }
 
         [Parameter]
         public bool AutoFocus { get; set; }
@@ -27,6 +31,9 @@ namespace AntDesign
 
         [Parameter]
         public bool Checked { get; set; }
+
+        [Parameter]
+        public string Label { get; set; }
 
         [CascadingParameter]
         public CheckboxGroup CheckboxGroup { get; set; }
@@ -45,6 +52,8 @@ namespace AntDesign
             {
                 CheckboxGroup?.CheckboxItems.Add(checkbox);
             }
+
+            CurrentValue = Checked;
         }
 
         protected void SetClass()
@@ -62,6 +71,8 @@ namespace AntDesign
             if (args != null && args.Value is bool value)
             {
                 await InnerCheckedChange(value);
+
+                CurrentValue = value;
             }
         }
 
@@ -70,6 +81,7 @@ namespace AntDesign
             if (!this.Disabled)
             {
                 this.Checked = @checked;
+
                 await this.CheckedChange.InvokeAsync(this.Checked);
                 CheckboxGroup?.OnCheckboxChange(this);
             }

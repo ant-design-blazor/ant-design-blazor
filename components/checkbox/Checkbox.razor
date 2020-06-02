@@ -1,10 +1,10 @@
 ﻿@namespace AntDesign
-@inherits AntInputComponentBase<string>
+@inherits AntInputComponentBase<bool>
 
 <label class="ant-checkbox-wrapper" style="@Style;" id="@Id" @ref="Ref">
     <span class="@ClassMapper.Class" style="">
         <input @ref="_inputElement"
-                value="@(Value)"
+                value="@(Label)"
                 checked="@(Checked)"
                 disabled="@(Disabled)"
                 @onchange="@InputCheckedChange"
