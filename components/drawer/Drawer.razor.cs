@@ -7,6 +7,8 @@ namespace AntDesign
 {
     public partial class Drawer : AntDomComponentBase
     {
+        [CascadingParameter] public Drawer ParentDrawer { get; set; } = null;
+        
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -125,11 +127,18 @@ namespace AntDesign
             }
         }
 
+        private bool _isRenderAnimation = false;
+        private const string _duration = "0.3s";
+        private const string _ease = "cubic-bezier(0.78, 0.14, 0.15, 0.86)";
+        private string _widthTransition = "";
+        private readonly string _transformTransition = $"transform {_duration} {_ease} 0s";
+        private string _heightTransition = "";
+
         private string Transform
         {
             get
             {
-                if (this._isOpen)
+                if (this._isRenderAnimation)
                 {
                     return null;
                 }
@@ -159,10 +168,8 @@ namespace AntDesign
             {(Transform != null ? $"transform:{Transform};" : "")}
             {(PlacementChanging ? "transition:none;" : "")}";
 
-        private string DrawerStyle => $@"
-            {(Transform != null ? $"transform:{Transform};" : "")}
-            {(PlacementChanging ? "transition:none;" : "")}
-            z-index:{ZIndex};";
+
+        private string DrawerStyle;
 
         private bool _isPlacementFirstChange = true;
 
@@ -203,7 +210,29 @@ namespace AntDesign
                 }
             }
 
+            DrawerStyle = "";
+
             base.OnParametersSet();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool isFirst)
+        {
+            if (_isOpen && !NoAnimation)
+            {
+                if (!_isRenderAnimation)
+                {
+                    _isRenderAnimation = true;
+                    CalcDrawerStyle();
+                    await Task.Delay(10);
+                    StateHasChanged();
+                }
+                else
+                {
+                    DrawerStyle = "";
+                    StateHasChanged();
+                }
+            }
+            await base.OnAfterRenderAsync(isFirst);
         }
 
         private Timer _timer;
@@ -232,7 +261,7 @@ namespace AntDesign
         {
             if (this.MaskClosable && this.Mask && this.OnClose.HasDelegate)
             {
-                await this.OnClose.InvokeAsync(this);
+                await HandleClose();
             }
         }
 
@@ -242,8 +271,49 @@ namespace AntDesign
             {
                 _timer?.Dispose();
 
-                await OnClose.InvokeAsync(this);
+                await HandleClose();
             }
+        }
+
+        private async Task HandleClose()
+        {
+            _isRenderAnimation = false;
+            await OnClose.InvokeAsync(this);
+        }
+
+        private void CalcAnimation()
+        {
+            switch (this.Placement)
+            {
+                case "left":
+                    _widthTransition = $"width 0s {_ease} {_duration}";
+                    break;
+                case "right":
+                    _widthTransition = $"width 0s {_ease} {_duration}";
+                    break;
+                case "top":
+                case "bottom":
+                    _heightTransition = $"height 0s {_ease} {_duration}";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void CalcDrawerStyle()
+        {
+            string style = null;
+            if (_isOpen && _isRenderAnimation)
+            {
+                CalcAnimation();
+                if (string.IsNullOrWhiteSpace(_heightTransition))
+                {
+                    _heightTransition += ",";
+                }
+
+                style = $"transition:{_transformTransition} {_heightTransition} {_widthTransition};";
+            }
+            DrawerStyle = style;
         }
     }
 }
