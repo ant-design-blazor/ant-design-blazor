@@ -15,7 +15,8 @@
   overflow: hidden;
 
   // ========================== Navigation ==========================
-  > .@{tab-prefix-cls}-nav {
+  > .@{tab-prefix-cls}-nav,
+  > div > .@{tab-prefix-cls}-nav {
     position: relative;
     display: flex;
     flex: none;
@@ -26,6 +27,7 @@
       display: inline-block;
       display: flex;
       flex: auto;
+      align-self: stretch;
       overflow: hidden;
       white-space: nowrap;
       transform: translate(0); // Fix chrome render bug
