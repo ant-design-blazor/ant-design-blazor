@@ -172,7 +172,7 @@
           {
             "title": "Carousel",
             "type": "menuItem",
-            "url": "carousel"
+            "url": "components/carousel"
           },
           {
             "title": "Card",

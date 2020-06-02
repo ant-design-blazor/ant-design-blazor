@@ -1,0 +1,31 @@
+ <div>
+        <RadioGroup @bind-Value="_position" Style="margin-bottom: 8px;">
+            <Radio RadioButton Value="@AntCarouselDotPosition.Top.ToString()">Top</Radio>
+            <Radio RadioButton Value="@AntCarouselDotPosition.Bottom.ToString()">Bottom</Radio>
+            <Radio RadioButton Value="@AntCarouselDotPosition.Left.ToString()">Left</Radio>
+            <Radio RadioButton Value="@AntCarouselDotPosition.Right.ToString()">Right</Radio>
+        </RadioGroup>
+        <AntCarousel DotPosition="@_position">
+            <AntCarouselSlick>
+                <h3>1</h3>
+            </AntCarouselSlick>
+            <AntCarouselSlick>
+                <h3>2</h3>
+            </AntCarouselSlick>
+            <AntCarouselSlick>
+                <h3>3</h3>
+            </AntCarouselSlick>
+            <AntCarouselSlick>
+                <h3>4</h3>
+            </AntCarouselSlick>
+        </AntCarousel>
+ </div>
+
+@code{
+
+    private string _paragraph = @"When there is a group of content on the same level.
+* When there is insufficient content space, it can be used to save space in the form of a revolving door.
+* Commonly used for a group of pictures/cards.";
+
+    private string _position = AntCarouselDotPosition.Bottom;
+}
