@@ -5,11 +5,9 @@ using System.Linq;
 
 namespace AntDesign
 {
-    public partial class Cascader : AntDomComponentBase
+    public partial class Cascader : AntInputComponentBase<string>
     {
         [Parameter] public bool Readonly { get; set; } = true;
-
-        [Parameter] public string Value { get; set; }
 
         /// <summary>
         /// 是否支持清除
@@ -54,7 +52,7 @@ namespace AntDesign
         /// <summary>
         /// 输入框大小，可选 'large', 'middle', 'small'
         /// </summary>
-        [Parameter] public string Size { get; set; } = "large";
+        [Parameter] public string Size { get; set; } = "middle";
 
         /// <summary>
         /// 选择完成后的回调(参数为选中的节点集合及选中值)
@@ -119,6 +117,8 @@ namespace AntDesign
         /// </summary>
         private SelectedTypeEnum SelectedType { get; set; }
 
+        private string _displayText;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -135,10 +135,11 @@ namespace AntDesign
                 _inputSizeClass = "ant-input-sm";
             }
 
-            SetDefaultValue(DefaultValue);
+            SetDefaultValue(Value ?? DefaultValue);
         }
 
         #region event
+
         /// <summary>
         /// 输入框单击(显示/隐藏浮层)
         /// </summary>
@@ -235,7 +236,8 @@ namespace AntDesign
 
             SetSelectedNode(node, SelectedTypeEnum.Hover);
         }
-        #endregion
+
+        #endregion event
 
         /// <summary>
         /// 选中节点
@@ -326,21 +328,26 @@ namespace AntDesign
         private void SetValue(string value)
         {
             _selectedNodes.Sort((x, y) => x.Level.CompareTo(y.Level));  //Level 升序排序
-            string text = string.Empty; int count = 0;
+            _displayText = string.Empty;
+            int count = 0;
             foreach (var node in _selectedNodes)
             {
                 if (node == null) continue;
 
                 if (count < _selectedNodes.Count - 1)
-                    text += node.Label + " / ";
+                    _displayText += node.Label + " / ";
                 else
-                    text += node.Label;
+                    _displayText += node.Label;
                 count++;
             }
-            Value = text;
 
-            if (OnChange != null)
-                OnChange(_selectedNodes, value, text);
+            if (Value != value)
+            {
+                Value = value;
+                ValueChanged.InvokeAsync(Value);
+            }
+
+            OnChange?.Invoke(_selectedNodes, value, _displayText);
         }
 
         /// <summary>
