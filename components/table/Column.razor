@@ -4,13 +4,17 @@
 
 @if (IsHeader)
 {
-    <th class="ant-table-cell">@(DisplayName??FieldName)</th>
+    <th class="ant-table-cell">@(Title??DisplayName??FieldName)</th>
 }
 else
 {
-    @if (CellTemplate != null)
+    @if (CellRender != null)
     {
-        <td>@CellTemplate(Field)</td>
+        <td>@CellRender(Field)</td>
+    }
+    else if (ChildContent != null)
+    {
+        <td>@ChildContent</td>
     }
     else
     {

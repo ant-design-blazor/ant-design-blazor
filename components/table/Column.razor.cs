@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using System.Reflection;
-using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
@@ -9,6 +7,9 @@ namespace AntDesign
 {
     public partial class Column<TItem> : AntComponentBase, ITableColumn
     {
+        [Parameter]
+        public string Title { get; set; }
+
         [Parameter]
         public TItem Field { get; set; }
 
@@ -22,7 +23,10 @@ namespace AntDesign
         public bool Sort { get; set; }
 
         [Parameter]
-        public RenderFragment<TItem> CellTemplate { get; set; }
+        public RenderFragment<TItem> CellRender { get; set; }
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
         [CascadingParameter]
         public ITable Table { get; set; }
