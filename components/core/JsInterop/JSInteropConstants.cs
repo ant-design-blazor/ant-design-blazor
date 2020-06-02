@@ -45,5 +45,7 @@ namespace AntDesign
         public static string focusDialog => $"{FUNC_PREFIX}focusDialog";
 
         public static string getWindow = $"{FUNC_PREFIX}getWindow";
+        public static string disableBodyScroll => $"{FUNC_PREFIX}disableBodyScroll";
+        public static string enableBodyScroll => $"{FUNC_PREFIX}enableBodyScroll";
     }
 }

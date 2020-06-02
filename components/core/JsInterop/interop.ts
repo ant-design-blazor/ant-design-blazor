@@ -220,3 +220,55 @@ function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args);
   };
 };
+
+export function css(element: HTMLElement, name: string | object, value: string | null = null) {
+    if (typeof name === 'string') {
+        element.style[name] = value;
+    } else {
+        for (let key in name) {
+            if (name.hasOwnProperty(key)) {
+                element.style[key] = name[key];
+            }
+        }
+    }
+}
+
+export function addCls(selector: Element | string, clsName: string | Array<string>) {
+    let element = getDom(selector);
+
+    if (typeof clsName === "string") {
+        element.classList.add(clsName);
+    } else {
+        element.classList.add(...clsName);
+    }
+}
+
+export function removeCls(selector: Element|string, clsName: string | Array<string>) {
+    let element = getDom(selector);
+
+    if (typeof clsName === "string") {
+        element.classList.remove(clsName);
+    } else {
+        element.classList.remove(...clsName);
+    }
+}
+
+export function disableBodyScroll() {
+    css(document.body,
+        {
+            "position": "relative",
+            "width": "calc(100% - 17px)",
+            "overflow": "hidden"
+        });
+    addCls(document.body, "ant-scrolling-effect");
+}
+
+export function enableBodyScroll() {
+    css(document.body,
+        {
+            "position": null,
+            "width": null,
+            "overflow": null
+        });
+    removeCls(document.body, "ant-scrolling-effect");
+}

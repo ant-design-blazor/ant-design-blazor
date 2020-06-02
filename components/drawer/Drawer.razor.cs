@@ -7,8 +7,6 @@ namespace AntDesign
 {
     public partial class Drawer : AntDomComponentBase
     {
-        [CascadingParameter] public Drawer ParentDrawer { get; set; } = null;
-        
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
