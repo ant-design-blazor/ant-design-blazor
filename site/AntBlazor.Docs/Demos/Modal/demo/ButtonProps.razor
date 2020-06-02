@@ -1,0 +1,34 @@
+﻿<Button Type="primary" OnClick="@ShowModal">
+    Open Modal with customized button props
+</Button>
+<Modal Title="@("BasicModal")"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel"
+       OkButtonProps="new AntDesign.ButtonProps(){ Disabled = true }"
+       CancelButtonProps="new AntDesign.ButtonProps(){ Disabled = true }">
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+</Modal>
+
+@code{
+    bool _visible = false;
+
+    private void ShowModal()
+    {
+        _visible = true;
+    }
+
+    private void HandleOk(MouseEventArgs e)
+    {
+        Console.WriteLine("e");
+        _visible = false;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine("e");
+        _visible = false;
+    }
+}

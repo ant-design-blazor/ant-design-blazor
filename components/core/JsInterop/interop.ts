@@ -162,9 +162,36 @@ export function delElementFromBody(element) {
 }
 
 export function addElementTo(addElement, elementSelector) {
-    getDom(elementSelector).appendChild(addElement);
+    let parent = getDom(elementSelector);
+    if (parent && addElement) {
+        parent.appendChild(addElement);
+    }
 }
 
 export function delElementFrom(delElement, elementSelector) {
-    getDom(elementSelector).removeChild(delElement);
+    let parent = getDom(elementSelector);
+    if (parent && delElement) {
+        parent.removeChild(delElement);
+    }
+}
+
+export function getActiveElement() {
+    let element = document.activeElement;
+    let id = element.getAttribute("id") || "";
+    return id;
+}
+
+export function focusDialog(selector: string,count:number = 0) {
+    let ele = <HTMLElement>document.querySelector(selector);
+    if (ele && !ele.hasAttribute("disabled")) {
+        setTimeout(() => {
+            ele.focus();
+            let curId = "#" + getActiveElement();
+            if (curId !== selector) {
+                if (count < 10) {
+                    focusDialog(selector, count+1);
+                }
+            }
+        }, 10);
+    }
 }
