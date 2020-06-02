@@ -32,7 +32,6 @@
 
     Dictionary<string, object> dateAttributes = new Dictionary<string, object>(attributes);
     dateAttributes.Add("ShowToday", DatePicker.ShowToday);
-    dateAttributes.Add("IsShowTime", DatePicker.IsShowTime);
 
     Dictionary<string, object> dateTimeAttributes = new Dictionary<string, object>(dateAttributes);
     dateTimeAttributes.Add("ShowTimeFormat", DatePicker.ShowTimeFormat);
@@ -41,6 +40,7 @@
     dateTimeAttributes.Add("DisabledMinutes", DatePicker.DisabledMinutes);
     dateTimeAttributes.Add("DisabledSeconds", DatePicker.DisabledSeconds);
     dateTimeAttributes.Add("DisabledTime", DatePicker.DisabledTime);
+    dateTimeAttributes.Add("IsShowTime", DatePicker.IsShowTime);
 }
 
 <CascadingValue Value=@DatePicker>

@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using AntBlazor.Internal;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor
+namespace AntDesign
 {
-    public partial class Calendar : DatePickerBase
+    public partial class Calendar : AntDomComponentBase, IDatePicker
     {
+        DateTime IDatePicker.CurrentDate { get; set; } = DateTime.Now;
+
         [Parameter]
         public DateTime Value { get; set; } = DateTime.Now;
 
@@ -54,6 +56,16 @@ namespace AntBlazor
 
         [Parameter]
         public Func<DateTime, RenderFragment> MonthFullCellRender { get; set; }
+
+        [Parameter]
+        public Action<DateTime, string> OnPanelChange { get; set; }
+
+        [Parameter]
+        public Func<DateTime, bool> DisabledDate { get; set; } = null;
+
+        protected string _picker;
+        protected readonly DateTime[] _pickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
+        protected Stack<string> _prePickerStack = new Stack<string>();
 
         public readonly string PrefixCls = "ant-picker-calendar";
 
@@ -111,7 +123,7 @@ namespace AntBlazor
             StateHasChanged();
         }
 
-        public override void ChangePickerType(string type, int index)
+        public void ChangePickerType(string type, int index)
         {
             Mode = type;
 
@@ -122,7 +134,21 @@ namespace AntBlazor
                 _ => DatePickerType.Date,
             };
 
-            base.ChangePickerType(mode, index);
+            _prePickerStack.Push(_picker);
+            _picker = mode;
+
+            OnPanelChange?.Invoke(_pickerValues[index], _picker);
+
+            StateHasChanged();
+        }
+
+        public void ChangePickerType(string type)
+        {
+            ChangePickerType(type, 0);
+        }
+
+        public void Close()
+        {
         }
 
         public string Picker { get { return _picker; } }

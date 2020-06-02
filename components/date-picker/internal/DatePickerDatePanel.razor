@@ -19,12 +19,13 @@
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
 
-<div class='@(DatePicker.IsShowTime ? $"{DatePicker.PrefixCls}-datetime-panel" : "")'>
-    <DatePickerTemplate TValue="TValue" PickerIndex="@PickerIndex"
+<div class='@($"{PrefixCls}-panel")'>
+    <DatePickerTemplate TValue="TValue" 
+                        @attributes="GetAttritubes()"
                            MaxRow="6"
                            MaxCol="7"
                            ViewStartDate="startDate"
-                           ShowFooter="@DatePicker.ShowToday"
+                           ShowFooter="@ShowToday"
                            GetRowClass="GetRowClass"
                            IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                            IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
@@ -35,13 +36,7 @@
                            GetNextColValue="date => date.AddDays(1)">
         <RenderPickerHeader>
             <DatePickerHeader TValue="TValue"
-                              PrefixCls="@PrefixCls"
-                              Picker="@Picker"
-                              PickerIndex="@PickerIndex"
-                              GetIndexPickerValue="GetIndexPickerValue"
-                              GetIndexValue="GetIndexValue"
-                              ChangePickerType="ChangePickerType"
-                              ChangePickerValue="ChangePickerValue"
+                              @attributes="GetAttritubes()"
                               ShowSuperPreChange="@(!(IsRange && PickerIndex == 1))"
                               ShowPreChange="@(!(IsRange && PickerIndex == 1))"
                               ShowNextChange="@(!(IsRange && PickerIndex == 0))"
@@ -85,8 +80,7 @@
     </div>
 }
 
-@if (ShowToday && !IsRange
-    && !IsShowTime && Picker != DatePickerType.Time)
+@if (ShowToday && !IsRange && Picker != DatePickerType.Time)
 {
     <div class="@(PrefixCls)-footer">
         <a class="@(PrefixCls)-today-btn" 
@@ -96,25 +90,6 @@
     </div>
 }
 
-@if (IsShowTime)
-{
-    <div class="@(PrefixCls)-footer">
-        <ul class="@(PrefixCls)-ranges">
-            <li class="@(PrefixCls)-now">
-                <a class="@(PrefixCls)-now-btn"
-                   @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
-                    此刻
-                </a>
-            </li>
-            <li class="@(DatePicker.PrefixCls)-ok">
-                <Button Type="@ButtonType.Primary"
-                           OnClick="e => DatePicker.Close()">
-                    确 定
-                </Button>
-            </li>
-        </ul>
-    </div>
-}
 
 @code {
     [Parameter]
@@ -122,9 +97,6 @@
 
     [Parameter]
     public bool ShowToday { get; set; } = false;
-
-    [Parameter]
-    public bool IsShowTime { get; set; } = false;
 
     private string GetRowClass(DateTime viewDate)
     {

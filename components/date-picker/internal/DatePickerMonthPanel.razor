@@ -27,14 +27,8 @@
                         OnValueSelect="date => OnSelectMonth(date)"
                         GetNextColValue="date => date.AddMonths(1)">
         <RenderPickerHeader>
-            <DatePickerHeader PrefixCls="@PrefixCls"
+            <DatePickerHeader @attributes="GetAttritubes()"
                               TValue="TValue"
-                              Picker="@Picker"
-                              PickerIndex="@PickerIndex"
-                              GetIndexPickerValue="GetIndexPickerValue"
-                              GetIndexValue="GetIndexValue"
-                              ChangePickerType="ChangePickerType"
-                              ChangePickerValue="ChangePickerValue"
                               ShowNextChange="@false"
                               ShowPreChange="@false"
                               ShowSuperPreChange="@(!(IsRange && PickerIndex == 1))"

@@ -13,15 +13,15 @@
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
 
-<div class='@(IsShowTime || Picker == DatePickerType.Time ? $"{PrefixCls}-datetime-panel" : $"{PrefixCls}-panel")'>
+<div class='@($"{PrefixCls}-datetime-panel")'>
     @if (IsShowTime)
     {
         <DatePickerTemplate TValue="TValue" 
-                            PickerIndex="@PickerIndex"
+                            @attributes="GetAttritubes()"
                             MaxRow="6"
                             MaxCol="7"
                             ViewStartDate="startDate"
-                            ShowFooter="@DatePicker.ShowToday"
+                            ShowFooter="@ShowToday"
                             IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                             IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
                             IsSelected="date => DateHelper.IsSameDay(date, Value)"
@@ -30,13 +30,7 @@
                             GetNextColValue="date => date.AddDays(1)">
             <RenderPickerHeader>
                 <DatePickerHeader TValue="TValue"
-                                  Picker="@Picker" 
-                                  PrefixCls="@PrefixCls" 
-                                  PickerIndex="@PickerIndex"
-                                  ChangePickerType="ChangePickerType"
-                                  ChangePickerValue="ChangePickerValue"
-                                  GetIndexPickerValue="GetIndexPickerValue"
-                                  GetIndexValue="GetIndexValue" />
+                                  @attributes="GetAttritubes()" />
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
@@ -161,7 +155,7 @@
                 此刻
             </a>
         </li>
-        <li class="@(DatePicker.PrefixCls)-ok">
+        <li class="@(PrefixCls)-ok">
             <Button Type="@ButtonType.Primary"
                        OnClick="e => DatePicker.Close()">
                 确 定

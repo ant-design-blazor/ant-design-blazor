@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using AntBlazor.Internal;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -8,7 +8,7 @@ namespace AntDesign
     public class DatePickerPanelBase<TValue> : PickerPanelBase
     {
         [CascadingParameter]
-        public DatePickerBase<TValue> DatePicker { get; set; }
+        public IDatePicker DatePicker { get; set; }
 
         [Parameter]
         public string PrefixCls { get; set; }

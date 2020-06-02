@@ -27,15 +27,10 @@
                         OnValueSelect="date => OnSelectYear(date)"
                         GetNextColValue="date => date.AddYears(10)">
         <RenderPickerHeader>
-            <DatePickerHeader PrefixCls="@PrefixCls"
+            <DatePickerHeader @attributes="GetAttritubes()"
                               TValue="TValue"
                               Picker="@Picker"
                               SuperChangeDateInterval="100"
-                              PickerIndex="@PickerIndex"
-                              GetIndexPickerValue="GetIndexPickerValue"
-                              GetIndexValue="GetIndexValue"
-                              ChangePickerType="ChangePickerType"
-                              ChangePickerValue="ChangePickerValue"
                               ShowPreChange="@false"
                               ShowNextChange="@false"
                               ShowSuperPreChange="@(!(IsRange && PickerIndex == 1))"

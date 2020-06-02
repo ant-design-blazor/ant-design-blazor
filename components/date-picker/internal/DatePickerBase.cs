@@ -9,7 +9,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public class DatePickerBase<TValue> : AntInputComponentBase<TValue>
+    public class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
     {
         [Parameter]
         public string PrefixCls { get; set; } = "ant-picker";
@@ -214,7 +214,7 @@ namespace AntDesign
         //    }
         //}
 
-        public DateTime CurrentDate { get; protected set; } = DateTime.Now;
+        public DateTime CurrentDate { get; set; } = DateTime.Now;
 
         protected readonly DateTime[] _pickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
         protected OneOf<DateTime, DateTime[]> _pickerValue;
@@ -512,7 +512,7 @@ namespace AntDesign
             return _pickerValues[index];
         }
 
-        public void ChangePickerValue(DateTime date, int index = 0)
+        internal void ChangePickerValue(DateTime date, int index = 0)
         {
             TimeSpan interval = date - _pickerValues[index];
 

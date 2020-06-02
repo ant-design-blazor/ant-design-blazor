@@ -1,6 +1,6 @@
-﻿@namespace AntBlazor
+﻿@namespace AntDesign
 @inherits AntDomComponentBase
-@using AntBlazor.Internal
+@using AntDesign.Internal
 
 <div class="@(PrefixCls)-header"
      style="@Style"
@@ -58,12 +58,12 @@
         </select>
     }
     
-    <AntRadioGroup class="@($"{PrefixCls}-mode-switch")"
+    <RadioGroup class="@($"{PrefixCls}-mode-switch")"
                    Value="@Calendar.Mode"
                    OnChange="OnModeChange">
-      <AntRadio RadioButton Value="@DatePickerType.Month">月</AntRadio>
-      <AntRadio RadioButton Value="@DatePickerType.Year">年</AntRadio>
-    </AntRadioGroup>
+      <Radio RadioButton Value="@DatePickerType.Month">月</Radio>
+      <Radio RadioButton Value="@DatePickerType.Year">年</Radio>
+    </RadioGroup>
 </div>
 
 @code

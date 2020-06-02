@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Components;
 
-namespace AntBlazor.Internal
+namespace AntDesign.Internal
 {
     public partial class CalendarPanelChooser : AntDomComponentBase
     {
