@@ -4,32 +4,33 @@
         {
             <AntTag Mode="closeable" OnClose="()=>onClose(item)">@item</AntTag>
         }
-    </div>
-    <br/>
-
-    <div>
-        @if (bVisiable)
+        @if (inputVisible)
         {
-            <Input  @ref ="inputRef" Style="width: 78px"  Size="small" @bind-Value="newTag" OnPressEnter="OnEnter"/>
+            <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="handleInputConfirm" OnPressEnter="handleInputConfirm" />
         }
         else
         {
-
-            <AntTag Mode="checkable" Style="width:78px;border: 1px dashed " Checked="bVisiable"  CheckedChange="_checked=>OnChecked(_checked)">+New Tag</AntTag>
+            <AntTag Mode="checkable" Class="editable-tag" OnClick="OnChecked">
+                <AntIcon Type="plus" />New Tag
+            </AntTag>
         }
     </div>
 </div>
-
+<style>
+    .editable-tag {
+        background: rgb(255, 255, 255);
+        border-style: dashed;
+    }
+</style>
 
 @code{
 
 
-    private bool bVisiable { get; set; } = false;
+    private bool inputVisible { get; set; } = false;
 
-    string newTag { get; set; }
+    string _inputValue;
 
-    AntDesign.Input inputRef { get; set; } = new AntDesign.Input();
-
+    Input _inputRef;
 
     List<string> lstTags { get; set; } = new List<string>();
 
@@ -46,12 +47,11 @@
         lstTags.Add(value.Value.ToString());
     }
 
-    void OnChecked(bool item)
+    async Task OnChecked()
     {
-        bVisiable = !bVisiable;
-        inputRef.Focus();
-
-
+        inputVisible = !inputVisible;
+        if (_inputRef != null)
+            await _inputRef.Focus();
     }
 
     void onClose(string item)
@@ -59,22 +59,19 @@
         lstTags.Remove(item);
     }
 
-    void OnEnter()
+    void handleInputConfirm()
     {
-        if (string.IsNullOrEmpty(newTag)) return;
+        if (string.IsNullOrEmpty(_inputValue)) return;
 
-        string res = lstTags.Find(s=>s==newTag);
+        string res = lstTags.Find(s => s == _inputValue);
 
         if (string.IsNullOrEmpty(res))
         {
-            lstTags.Add(newTag);
-
-            newTag = string.Empty;
+            lstTags.Add(_inputValue);
         }
 
-        bVisiable = !bVisiable;
-
-
+        this._inputValue = "";
+        this.inputVisible = false;
     }
 
 

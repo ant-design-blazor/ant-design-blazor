@@ -4,13 +4,12 @@ using Microsoft.AspNetCore.Components.Web;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-
 namespace AntDesign
 {
     /// <summary>
     ///
     /// </summary>
-    public  class Input : AntInputComponentBase<string>
+    public class Input : AntInputComponentBase<string>
     {
         protected const string PrefixCls = "ant-input";
 
@@ -20,8 +19,6 @@ namespace AntDesign
 
         //protected string ClearIconClass { get; set; }
         protected static readonly EventCallbackFactory CallbackFactory = new EventCallbackFactory();
-
-        protected ElementReference InputEl { get; set; }
 
         [Parameter]
         public string Type { get; set; } = "text";
@@ -50,7 +47,6 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
-
         [Parameter]
         public bool AllowClear { get; set; }
 
@@ -72,6 +68,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<ChangeEventArgs> OnInput { get; set; }
 
+        [Parameter]
+        public EventCallback<FocusEventArgs> OnBlur { get; set; }
+
         public Dictionary<string, object> Attributes { get; set; }
 
         protected override void OnInitialized()
@@ -87,7 +86,7 @@ namespace AntDesign
         }
 
         protected virtual void SetClasses()
-        {           
+        {
             ClassMapper.Clear()
                 .If($"{PrefixCls}", () => Type != "number")
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
@@ -112,8 +111,6 @@ namespace AntDesign
                 AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-disabled");
                 ClassMapper.Add($"{PrefixCls}-disabled");
             }
-
-
 
             if (AllowClear)
             {
@@ -143,12 +140,7 @@ namespace AntDesign
 
         public async Task Focus()
         {
-            await JsInvokeAsync(JSInteropConstants.focus, this);
-        }
-
-        protected async Task Blur()
-        {
-            await JsInvokeAsync(JSInteropConstants.blur, this);
+            await JsInvokeAsync(JSInteropConstants.focus, Ref);
         }
 
         protected async Task OnChangeAsync(ChangeEventArgs args)
@@ -164,6 +156,14 @@ namespace AntDesign
             if (args != null && args.Key == "Enter" && OnPressEnter.HasDelegate)
             {
                 await OnPressEnter.InvokeAsync(args);
+            }
+        }
+
+        private async Task OnBlurAsync(FocusEventArgs e)
+        {
+            if (OnBlur.HasDelegate)
+            {
+                await OnBlur.InvokeAsync(e);
             }
         }
 
@@ -190,18 +190,15 @@ namespace AntDesign
             };
         }
 
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-             base.OnAfterRenderAsync(firstRender);
-        
+            await base.OnAfterRenderAsync(firstRender);
+
             if (this.AutoFocus)
             {
                 await this.Focus();
             }
-
         }
-
 
         /// <summary>
         /// Invoked when user add/remove content
@@ -232,81 +229,84 @@ namespace AntDesign
                 base.BuildRenderTree(builder);
 
                 string container = "input";
+                int i = 0;
 
                 if (AddOnBefore != null || AddOnAfter != null)
                 {
                     container = "groupWrapper";
-                    builder.OpenElement(0, "span");
-                    builder.AddAttribute(1, "class", GroupWrapperClass);
-                    builder.AddAttribute(2, "style", Style);
-                    builder.OpenElement(3, "span");
-                    builder.AddAttribute(4, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
+                    builder.OpenElement(i++, "span");
+                    builder.AddAttribute(i++, "class", GroupWrapperClass);
+                    builder.AddAttribute(i++, "style", Style);
+                    builder.OpenElement(i++, "span");
+                    builder.AddAttribute(i++, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
                 }
 
                 if (AddOnBefore != null)
                 {
                     // addOnBefore
-                    builder.OpenElement(5, "span");
-                    builder.AddAttribute(6, "class", $"{PrefixCls}-group-addon");
-                    builder.AddContent(7, AddOnBefore);
+                    builder.OpenElement(i++, "span");
+                    builder.AddAttribute(i++, "class", $"{PrefixCls}-group-addon");
+                    builder.AddContent(i++, AddOnBefore);
                     builder.CloseElement();
                 }
 
                 if (Prefix != null || Suffix != null)
                 {
-                    builder.OpenElement(8, "span");
-                    builder.AddAttribute(9, "class", AffixWrapperClass);
+                    builder.OpenElement(i++, "span");
+                    builder.AddAttribute(i++, "class", AffixWrapperClass);
                     if (container == "input")
                     {
                         container = "affixWrapper";
-                        builder.AddAttribute(10, "style", Style);
+                        builder.AddAttribute(i++, "style", Style);
                     }
                 }
 
                 if (Prefix != null)
                 {
                     // prefix
-                    builder.OpenElement(11, "span");
-                    builder.AddAttribute(12, "class", $"{PrefixCls}-prefix");
-                    builder.AddContent(13, Prefix);
+                    builder.OpenElement(i++, "span");
+                    builder.AddAttribute(i++, "class", $"{PrefixCls}-prefix");
+                    builder.AddContent(i++, Prefix);
                     builder.CloseElement();
                 }
 
                 // input
-                builder.OpenElement(14, "input");
-                builder.AddAttribute(15, "class", ClassMapper.Class);
+                builder.OpenElement(i++, "input");
+                builder.AddAttribute(i++, "class", ClassMapper.Class);
                 if (container == "input")
                 {
-                    builder.AddAttribute(16, "style", Style);
+                    builder.AddAttribute(i++, "style", Style);
                 }
 
                 if (Attributes != null)
                 {
                     foreach (KeyValuePair<string, object> pair in Attributes)
                     {
-                        builder.AddAttribute(17, pair.Key, pair.Value);
+                        builder.AddAttribute(i++, pair.Key, pair.Value);
                     }
                 }
 
-                builder.AddAttribute(18, "Id", Id);
+                builder.AddAttribute(i++, "Id", Id);
                 if (Type != "number")
                 {
-                    builder.AddAttribute(19, "type", Type);
+                    builder.AddAttribute(i++, "type", Type);
                 }
 
-                builder.AddAttribute(20, "placeholder", Placeholder);
-                builder.AddAttribute(21, "value", Value);
-                builder.AddAttribute(22, "onchange", CallbackFactory.Create(this, OnChangeAsync));
-                builder.AddAttribute(23, "onkeypress", CallbackFactory.Create(this, OnPressEnterAsync));
-                builder.AddAttribute(24, "oninput", CallbackFactory.Create(this, OnInputAsync));          
+                builder.AddAttribute(i++, "placeholder", Placeholder);
+                builder.AddAttribute(i++, "value", Value);
+                builder.AddAttribute(i++, "onchange", CallbackFactory.Create(this, OnChangeAsync));
+                builder.AddAttribute(i++, "onkeypress", CallbackFactory.Create(this, OnPressEnterAsync));
+                builder.AddAttribute(i++, "oninput", CallbackFactory.Create(this, OnInputAsync));
+                builder.AddAttribute(i++, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+                builder.AddElementReferenceCapture(i++, r => Ref = r);
                 builder.CloseElement();
 
                 if (Suffix != null)
                 {
                     // suffix
-                    builder.OpenElement(25, "span");
-                    builder.AddAttribute(26, "class", $"{PrefixCls}-suffix");
-                    builder.AddContent(27, Suffix);
+                    builder.OpenElement(i++, "span");
+                    builder.AddAttribute(i++, "class", $"{PrefixCls}-suffix");
+                    builder.AddContent(i++, Suffix);
                     builder.CloseElement();
                 }
 
@@ -318,9 +318,9 @@ namespace AntDesign
                 if (AddOnAfter != null)
                 {
                     // addOnAfter
-                    builder.OpenElement(28, "span");
-                    builder.AddAttribute(29, "class", $"{PrefixCls}-group-addon");
-                    builder.AddContent(30, AddOnAfter);
+                    builder.OpenElement(i++, "span");
+                    builder.AddAttribute(i++, "class", $"{PrefixCls}-group-addon");
+                    builder.AddContent(i++, AddOnAfter);
                     builder.CloseElement();
                 }
 
