@@ -18,15 +18,9 @@
             <AntIcon Type="user" />
         </Prefix>
     </Input>
-    <br />
-    <br />
-    <InputPassword @bind-Value="@txtValue" Placeholder="large Password" Size="@InputSize.Large" OnPressEnter="(e)=>Submit(e)" />
+
 </div>
 @code{
     private string txtValue { get; set; }
-
-    private void Submit(KeyboardEventArgs args)
-    {
-        Console.WriteLine($"password: {txtValue}");
-    }
+  
 }

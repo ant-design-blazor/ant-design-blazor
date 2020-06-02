@@ -172,7 +172,7 @@
           {
             "title": "Card",
             "type": "menuItem",
-            "url": "card"
+            "url": "components/card"
           },
           {
             "title": "Empty",
@@ -192,7 +192,7 @@
           {
             "title": "Tag",
             "type": "menuItem",
-            "url": "tag"
+            "url": "components/tag"
           },
           {
             "title": "Tabs",

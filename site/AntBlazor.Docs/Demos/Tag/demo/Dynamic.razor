@@ -1,0 +1,78 @@
+﻿<div>
+    <div>
+        @foreach (var item in lstTags)
+        {
+            <AntTag Mode="closeable" OnClose="()=>onClose(item)">@item</AntTag>
+        }
+        @if (inputVisible)
+        {
+            <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="handleInputConfirm" OnPressEnter="handleInputConfirm" />
+        }
+        else
+        {
+            <AntTag Mode="checkable" Class="editable-tag" OnClick="OnChecked">
+                <AntIcon Type="plus" />New Tag
+            </AntTag>
+        }
+    </div>
+</div>
+<style>
+    .editable-tag {
+        background: rgb(255, 255, 255);
+        border-style: dashed;
+    }
+</style>
+
+@code{
+
+
+    private bool inputVisible { get; set; } = false;
+
+    string _inputValue;
+
+    Input _inputRef;
+
+    List<string> lstTags { get; set; } = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        lstTags.Add("Apple");
+        lstTags.Add("Mongo");
+        lstTags.Add("Peach");
+
+    }
+
+    void ValueChange(ChangeEventArgs value)
+    {
+        lstTags.Add(value.Value.ToString());
+    }
+
+    async Task OnChecked()
+    {
+        inputVisible = !inputVisible;
+        if (_inputRef != null)
+            await _inputRef.Focus();
+    }
+
+    void onClose(string item)
+    {
+        lstTags.Remove(item);
+    }
+
+    void handleInputConfirm()
+    {
+        if (string.IsNullOrEmpty(_inputValue)) return;
+
+        string res = lstTags.Find(s => s == _inputValue);
+
+        if (string.IsNullOrEmpty(res))
+        {
+            lstTags.Add(_inputValue);
+        }
+
+        this._inputValue = "";
+        this.inputVisible = false;
+    }
+
+
+}
