@@ -13,6 +13,9 @@
         <InputPassword @bind-Value="@context.Password" />
     </FormItem>
     <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
+        <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
+    </FormItem>
+    <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
         <Button Type="@ButtonType.Primary" HtmlType="submit">
             Submit
         </Button>
@@ -26,6 +29,7 @@
         public string Username { get; set; }
         [Required]
         public string Password { get; set; }
+        public bool RememberMe { get; set; } = true;
     }
 
     private Model model = new Model();
