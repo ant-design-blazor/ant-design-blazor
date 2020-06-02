@@ -22,14 +22,46 @@ namespace AntDesign
         public int Total { get; set; }
 
         [Parameter]
+        public EventCallback<int> TotalChanged { get; set; }
+
+        [Parameter]
         public int PageIndex { get; set; }
 
-        private IEnumerable<TItem> ShowItems => DataSource.Skip(_current - 1 * _pageSize).Take(_pageSize);
+        [Parameter]
+        public EventCallback<int> PageIndexChanged { get; set; }
+
+        [Parameter]
+        public int PageSize { get; set; }
+
+        [Parameter]
+        public EventCallback<int> PageSizeChanged { get; set; }
+
+        [Parameter]
+        public bool ClientSide { get; set; }
+
+        [Parameter]
+        public EventCallback<PaginationEventArgs> OnPageIndexChange { get; set; }
+
+        [Parameter]
+        public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
+
+        private IEnumerable<TItem> ShowItems => !ClientSide ? DataSource : DataSource.Skip(_pageIndex - 1 * _pageSize).Take(_pageSize);
 
         private int _pageSize = 10;
-        private int _current = 1;
-        private int _total => Total > 0 ? Total : DataSource.Count();
+        private int _pageIndex = 1;
 
         private string PaginationClass => $"ant-table-pagination ant-table-pagination-{Regex.Replace(PaginationPosition, "bottom|top", "").ToLowerInvariant()}";
+
+        private void HandlePageIndexChange(PaginationEventArgs args)
+        {
+            PageIndexChanged.InvokeAsync(args.PageIndex);
+            OnPageIndexChange.InvokeAsync(args);
+        }
+
+        private void HandlePageSizeChange(PaginationEventArgs args)
+        {
+            PageSizeChanged.InvokeAsync(args.PageSize);
+            OnPageSizeChange.InvokeAsync(args);
+        }
     }
 }

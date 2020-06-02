@@ -6,7 +6,12 @@
     <Spin Spinning="Loading">
         @if (ShowPagination && PaginationPosition.Contains("top"))
         {
-            <Pagination Class="@PaginationClass" Total="_total" PageSize="_pageSize" @bind-Current="_current" />
+            <Pagination Class="@PaginationClass"
+                        Total="Total"
+                        PageSize="PageSize"
+                        Current="PageIndex"
+                        OnPageIndexChange="HandlePageIndexChange"
+                        OnPageSizeChange="HandlePageSizeChange" />
         }
         <div class="ant-table">
             <div class="ant-table-container">
@@ -26,23 +31,23 @@
                             </tr>
                         </thead>
                         <tbody class="ant-table-tbody">
-                        @if (!ShowItems.Any())
-                        {
-                            <tr class="ant-table-placeholder">
-                                <td colspan="6" class="ant-table-cell">
-                                    <Empty Simple />
-                                </td>
-                            </tr>
-                        }
-                        @if (_columns.Count > 0)
-                        {
-                            @foreach (var data in ShowItems)
+                            @if (Total <= 0)
                             {
-                                <tr class="ant-table-row ant-table-row-level-0">
-                                    @ChildContent(data)
+                                <tr class="ant-table-placeholder">
+                                    <td colspan="6" class="ant-table-cell">
+                                        <Empty Simple />
+                                    </td>
                                 </tr>
                             }
-                        }
+                            else if (ShowItems != null && _columns.Count > 0)
+                            {
+                                @foreach (var data in ShowItems)
+                                {
+                                    <tr class="ant-table-row ant-table-row-level-0">
+                                        @ChildContent(data)
+                                    </tr>
+                                }
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -50,7 +55,12 @@
         </div>
         @if (ShowPagination && PaginationPosition.Contains("bottom"))
         {
-            <Pagination Class="@PaginationClass" Total="_total" PageSize="_pageSize" @bind-Current="_current" />
+            <Pagination Class="@PaginationClass"
+                        Total="Total"
+                        PageSize="PageSize"
+                        Current="PageIndex"
+                        OnPageIndexChange="HandlePageIndexChange"
+                        OnPageSizeChange="HandlePageSizeChange" />
         }
     </Spin>
 </div>
