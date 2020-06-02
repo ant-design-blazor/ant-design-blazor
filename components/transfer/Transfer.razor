@@ -41,7 +41,7 @@
                     foreach (var item in _leftDataSource)
                     {
                         <li @key="item" class="ant-transfer-list-content-item ng-star-inserted @(item.Disabled || Disabled ? DisabledClass : "")">
-                            <Checkbox Value="@item.Key" Checked="_sourceSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Left, item.Key))" Disabled="@(item.Disabled || Disabled)">
+                            <Checkbox Label="@item.Key" Checked="_sourceSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Left, item.Key))" Disabled="@(item.Disabled || Disabled)">
                                 @if (Render == null)
                                 {
                                     @item.Title
@@ -118,7 +118,7 @@
                     foreach (var item in _rightDataSource)
                     {
                         <li @key="item" class="ant-transfer-list-content-item ng-star-inserted @(item.Disabled || Disabled ? DisabledClass : "")">
-                            <Checkbox Value="@item.Key" Checked="_targetSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Right, item.Key))" Disabled="@(item.Disabled || Disabled)">
+                            <Checkbox Label="@item.Key" Checked="_targetSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Right, item.Key))" Disabled="@(item.Disabled || Disabled)">
                                 @if (Render == null)
                                 {
                                     @item.Title
