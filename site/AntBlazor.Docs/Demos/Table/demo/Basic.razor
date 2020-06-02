@@ -1,21 +1,31 @@
 ﻿@using System.ComponentModel
 
 <Table DataSource="@data">
-    <Column @bind-Field="@context.Key"></Column>
-    <Column @bind-Field="@context.Name"></Column>
+    <Column @bind-Field="@context.Name">
+        <a>@context.Name</a>
+    </Column>
     <Column @bind-Field="@context.Age"></Column>
     <Column @bind-Field="@context.Address"></Column>
     <Column @bind-Field="@context.Tags">
-        <CellTemplate Context="tags">
-            @foreach (var tag in tags)
+        @foreach (var tag in context.Tags)
+        {
+            var color = tag.Length > 5 ? "geekblue" : "green";
+            if (tag == "loser")
             {
-                var color = tag.Length > 5 ? "geekblue" : "green";
-                if (tag == "loser") {
-                    color = "volcano";
-                }
-                <AntTag Color="@color">@tag</AntTag>
+                color = "volcano";
             }
-        </CellTemplate>
+            <AntTag Color="@color">@tag</AntTag>
+        }
+    </Column>
+    <Column TItem="string" Title="Acton">
+        <Space Size="middle">
+            <SpaceItem>
+                <a>Invite @context.Name</a>
+            </SpaceItem>
+            <SpaceItem>
+                <a>Delete</a>
+            </SpaceItem>
+        </Space>
     </Column>
 </Table>
 

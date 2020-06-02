@@ -9,6 +9,10 @@
             string alt = !string.IsNullOrEmpty(des) ? des : "empty";
             <img alt="@alt" src="@Image.AsT0" />
         }
+        else if (Simple)
+        {
+            @PRESENTED_IMAGE_SIMPLE
+        }
         else if (Image.IsT1 && Image.AsT1 != null)
         {
             @Image.AsT1

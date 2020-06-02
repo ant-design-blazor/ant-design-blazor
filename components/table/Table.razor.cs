@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -15,6 +16,9 @@ namespace AntDesign
         [Parameter]
         public RowSelection<TItem> RowSelection { get; set; }
 
+        [Parameter]
+        public bool Loading { get; set; }
+
         private readonly IList<ITableColumn> _columns = new List<ITableColumn>();
 
         public void AddColumn(ITableColumn column)
@@ -23,6 +27,6 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        private TItem FieldModel => DataSource.FirstOrDefault();
+        private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
     }
 }
