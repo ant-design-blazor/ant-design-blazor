@@ -1,0 +1,22 @@
+﻿<div>
+    <AntCard Loading="loading" Title=@("Card title")>
+        <p>Card content</p>
+        <p>Card content</p>
+        <p>Card content</p>
+    </AntCard>
+    <Button Style="margin-top: 16px"  OnClick="handleClick">
+        Toggle loading
+    </Button>
+</div>
+
+@code
+{
+    bool loading { get; set; } = true;
+    void handleClick()
+    {
+        loading = !loading;
+    }
+}
+
+
+  
