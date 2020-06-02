@@ -21,6 +21,9 @@ namespace AntDesign
         public bool Small { get; set; }
 
         [Parameter]
+        public bool Simple { get; set; }
+
+        [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]

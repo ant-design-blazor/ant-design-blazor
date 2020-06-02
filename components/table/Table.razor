@@ -2,35 +2,55 @@
 @inherits AntDomComponentBase
 @typeparam TItem
 
-<CascadingValue Value="@this" TValue="ITable">
-    <div class="ant-table">
-        <div class="ant-table-container">
-            <div class="ant-table-content">
-                <table style="table-layout: auto;">
-                    <colgroup></colgroup>
-                    <thead class="ant-table-thead">
-                        <tr>
-                            <CascadingValue Name="IsHeader" Value="true">
-                                @if (FieldModel != null)
-                                {
-                                    @ChildContent(FieldModel)
-                                }
-                            </CascadingValue>
-                        </tr>
-                    </thead>
-                    <tbody class="ant-table-tbody">
+<div class="ant-table-wrapper">
+    <Spin Spinning="Loading">
+        @if (ShowPagination && PaginationPosition.Contains("top"))
+        {
+            <Pagination Class="@PaginationClass" Total="_total" PageSize="_pageSize" @bind-Current="_current" />
+        }
+        <div class="ant-table">
+            <div class="ant-table-container">
+                <div class="ant-table-content">
+                    <table style="table-layout: auto;">
+                        <colgroup></colgroup>
+                        <thead class="ant-table-thead">
+                            <tr>
+                                <CascadingValue Value="@this" TValue="ITable">
+                                    <CascadingValue Name="IsHeader" Value="true">
+                                        @if (_fieldModel != null)
+                                        {
+                                            @ChildContent(_fieldModel)
+                                        }
+                                    </CascadingValue>
+                                </CascadingValue>
+                            </tr>
+                        </thead>
+                        <tbody class="ant-table-tbody">
+                        @if (!ShowItems.Any())
+                        {
+                            <tr class="ant-table-placeholder">
+                                <td colspan="6" class="ant-table-cell">
+                                    <Empty Simple />
+                                </td>
+                            </tr>
+                        }
                         @if (_columns.Count > 0)
                         {
-                            @foreach (var data in DataSource)
+                            @foreach (var data in ShowItems)
                             {
                                 <tr class="ant-table-row ant-table-row-level-0">
                                     @ChildContent(data)
                                 </tr>
                             }
                         }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-</CascadingValue>
+        @if (ShowPagination && PaginationPosition.Contains("bottom"))
+        {
+            <Pagination Class="@PaginationClass" Total="_total" PageSize="_pageSize" @bind-Current="_current" />
+        }
+    </Spin>
+</div>
