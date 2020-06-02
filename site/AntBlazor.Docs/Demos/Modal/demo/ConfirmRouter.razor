@@ -1,0 +1,29 @@
+﻿@inject ModalService _modalService
+
+<Button OnClick="@ShowConfirm">Confirm</Button>
+
+
+@code {
+
+    private void DestroyAll()
+    {
+        _modalService.DestroyAll();
+    }
+
+    private async Task ShowConfirm()
+    {
+        RenderFragment icon =@<AntIcon Type="exclamation-circle" Theme="outline"></AntIcon>;
+        RenderFragment content = @<Button OnClick="DestroyAll"> Click to destroy all </Button>;
+
+        for (int i = 0; i < 3; i++)
+        {
+
+            _modalService.Confirm(new ConfirmOptions()
+            {
+                Icon = icon,
+                Content = content,
+            });
+            await Task.Delay(500);
+        }
+    }
+}

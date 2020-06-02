@@ -1,0 +1,56 @@
+﻿@inject ModalService _modalService
+
+<Space>
+    <SpaceItem>
+        <Button OnClick="HandleInfo">Info</Button>
+    </SpaceItem>
+    <SpaceItem>
+        <Button OnClick="HandleSuccess">Success</Button>
+    </SpaceItem>
+    <SpaceItem>
+        <Button OnClick="HandleError">Error</Button>
+    </SpaceItem>
+    <SpaceItem>
+        <Button OnClick="HandleWarning">Warning</Button>
+    </SpaceItem>
+</Space>
+@code {
+    private void HandleInfo()
+    {
+        RenderFragment content =@<div>
+                <p>some messages...some messages...</p>
+                <p>some messages...some messages...</p>
+            </div>;
+        _modalService.Info(new ConfirmOptions()
+        {
+            Title = "This is a notification message",
+            Content = content
+        });
+    }
+
+    private void HandleSuccess()
+    {
+      _modalService.Success(new ConfirmOptions()
+      {
+          Content = "some messages...some messages..."
+      });
+    }
+
+    private void HandleError()
+    {
+      _modalService.Error(new ConfirmOptions()
+      {
+          Title = "This is an error message",
+          Content = "some messages...some messages..."
+      });
+    }
+
+    private void HandleWarning()
+    {
+      _modalService.Warning(new ConfirmOptions()
+      {
+          Title = "This is a warning message",
+          Content = "some messages...some messages..."
+      });
+    }
+}

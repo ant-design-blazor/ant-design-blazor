@@ -1,0 +1,72 @@
+﻿@inject ModalService _modalService
+
+<Space>
+    <SpaceItem>
+        <Button OnClick="@ShowConfirm">Confirm</Button>
+    </SpaceItem>
+    <SpaceItem>
+        <Button OnClick="@ShowDeleteConfirm" Type="dashed">Delete</Button>
+    </SpaceItem>
+
+    <SpaceItem>
+        <Button OnClick="@ShowPropsConfirm" Type="dashed"> With extra props</Button>
+    </SpaceItem>
+</Space>
+@code{
+    Action<MouseEventArgs> onOk = (e) =>
+    {
+        Console.WriteLine("Ok");
+    };
+    Action<MouseEventArgs> onCancel = (e) =>
+    {
+        Console.WriteLine("Cancel");
+    };
+    RenderFragment icon = @<AntIcon Type="exclamation-circle" Theme="outline"></AntIcon>;
+
+    private void ShowConfirm()
+    {
+        _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Do you Want to delete these items?",
+            Icon = icon,
+            Content = "Some descriptions",
+            OnOk = new EventCallback<MouseEventArgs>(this, onOk),
+            OnCancel = new EventCallback<MouseEventArgs>(this, onCancel)
+        });
+    }
+
+    private void ShowDeleteConfirm()
+    {
+        _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Are you sure delete this task?",
+            Icon = icon,
+            Content = "Some descriptions",
+            OnOk = new EventCallback<MouseEventArgs>(this, onOk),
+            OnCancel = new EventCallback<MouseEventArgs>(this, onCancel),
+            OkText = "Yes",
+            OkType = "danger",
+            CancelText = "No",
+
+        });
+    }
+
+    private void ShowPropsConfirm()
+    {
+        _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Are you sure delete this task?",
+            Icon = icon,
+            Content = "Some descriptions",
+            OnOk = new EventCallback<MouseEventArgs>(this, onOk),
+            OnCancel = new EventCallback<MouseEventArgs>(this, onCancel),
+            OkText = "Yes",
+            OkType = "danger",
+            CancelText = "No",
+            OkButtonProps = new AntDesign.ButtonProps()
+            {
+                Disabled = true,
+            }
+        });
+    }
+}

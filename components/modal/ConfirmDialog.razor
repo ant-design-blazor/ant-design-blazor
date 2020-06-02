@@ -1,0 +1,100 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+@{
+    var dialogOptions = BuildDialogOptions(Config);
+    
+}
+
+<Dialog Config="@dialogOptions" Visible="@Config.Visible" Style="@Config.Style">
+    <div class="ant-modal-confirm-body-wrapper">
+        <div class="ant-modal-confirm-body">
+            @if (Config.Icon != null)
+            {
+                @(Config.Icon)
+            }
+
+            @if(Config.Title != null)
+            {
+                var titleValue = Config.Title.Value;
+                <span class="ant-modal-confirm-title">
+                    @if (titleValue.IsT0)
+                    {
+                        @(titleValue.AsT0)
+                    }
+                    else
+                    {
+                        @(titleValue.AsT1)
+                    }
+                </span>
+            }
+            
+            <div class="ant-modal-confirm-content">
+                @if (Config.Content.IsT0)
+                {
+                    @(Config.Content.AsT0)
+                }
+                else
+                {
+                    @(Config.Content.AsT1)
+                }
+            </div>
+        </div>
+        <div class="ant-modal-confirm-btns">
+            @{
+                var cancelProps = Config.CancelButtonProps;
+                var okProps = Config.OkButtonProps;
+            }
+            @if (Config.OkCancel)
+            {
+                <Button @ref="_cancelBtn"
+                           OnClick="@HandleCancel"
+                           Block="@cancelProps.Block"
+                           Ghost="@cancelProps.Ghost"
+                           Search="@cancelProps.Search"
+                           Loading="@cancelProps.Loading"
+                           Type="@cancelProps.Type"
+                           Shape="@cancelProps.Shape"
+                           Size="@cancelProps.Size"
+                           Icon="@cancelProps.Icon"
+                           Disabled="@cancelProps.Disabled"
+                           Danger="@cancelProps.Danger">
+                    @{
+                        if (Config.CancelText.IsT0)
+                        {
+                            @(Config.CancelText.AsT0)
+                        }
+                        else
+                        {
+                            @(Config.CancelText.AsT1)
+                        }
+                    }
+                </Button>
+
+            }
+            <Button @ref="_okBtn"
+                       OnClick="@HandleOk"
+                       Loading="@okProps.Loading"
+                       Type="@okProps.Type"
+                       Block="@okProps.Block"
+                       Ghost="@okProps.Ghost"
+                       Search="@okProps.Search"
+                       Shape="@okProps.Shape"
+                       Size="@okProps.Size"
+                       Icon="@okProps.Icon"
+                       Disabled="@okProps.Disabled"
+                       Danger="@okProps.Danger">
+                @{
+                    if (Config.OkText.IsT0)
+                    {
+                        @(Config.OkText.AsT0)
+                    }
+                    else
+                    {
+                        @(Config.OkText.AsT1)
+                    }
+                }
+            </Button>
+        </div>
+    </div>
+</Dialog>

@@ -1,0 +1,46 @@
+﻿@inject ModalService _modalService
+
+<div>
+    <Button Type="primary" OnClick="@ShowModal">
+        Modal
+    </Button>
+    <Modal Title="@("Modal")"
+           Visible="@_visible"
+           OnOk="@HideModal"
+           OnCancel="@HideModal"
+           OkText="@("确认")"
+           CancelText="@("取消")">
+        <p>Bla bla ...</p>
+        <p>Bla bla ...</p>
+        <p>Bla bla ...</p>
+    </Modal>
+
+    <Button OnClick="@HandleConfirm">Confirm</Button>
+
+</div>
+
+
+@code {
+    private bool _visible = false;
+    private void ShowModal()
+    {
+        _visible = true;
+    }
+
+    private void HideModal()
+    {
+        _visible = false;
+    }
+
+    private void HandleConfirm()
+    {
+        _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Confirm",
+            Icon =@<AntIcon Type="exclamation-circle" Theme="Outline"></AntIcon>,
+            Content = "Bla bla ...",
+            OkText = "确认",
+            CancelText = "取消"
+        });
+    }
+}

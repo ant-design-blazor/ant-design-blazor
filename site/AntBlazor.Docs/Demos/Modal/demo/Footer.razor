@@ -1,0 +1,49 @@
+﻿
+<Button Type="primary" OnClick="@ShowModal">
+    Open Modal with customized footer
+</Button>
+@{
+    RenderFragment footer = @<Template>
+        <Button OnClick="@HandleCancel" @key="@( "back" )">Return</Button>
+        <Button OnClick="@HandleOk" @key="@( "submit" )"
+                   Type="primary"
+                   Loading="@_loading">Submit</Button>
+    </Template>;
+}
+
+<Modal Title="@("Title")"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel"
+       Footer="@footer">
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+</Modal>
+
+
+@code{
+    bool _visible = false;
+    bool _loading = false;
+
+    private void ShowModal()
+    {
+        _visible = true;
+    }
+
+
+    private async Task HandleOk(MouseEventArgs e)
+    {
+        _loading = true;
+        await Task.Delay(3000);
+        _visible = false;
+        _loading = false;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        _visible = false;
+    }
+}

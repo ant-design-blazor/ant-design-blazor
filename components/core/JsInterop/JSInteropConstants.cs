@@ -39,16 +39,10 @@ namespace AntDesign
         public static string addElementTo => $"{FUNC_PREFIX}addElementTo";
 
         public static string delElementFrom => $"{FUNC_PREFIX}delElementFrom";
-
-
-        public static string initNotification => $"{FUNC_PREFIX}initNotification";
-
-        public static string createNotificationContaner => $"{FUNC_PREFIX}createNotificationContainer";
         
-        public static string addNotification => $"{FUNC_PREFIX}addNotification";
-        
-        public static string removeNotification => $"{FUNC_PREFIX}removeNotification";
+        public static string getActiveElement => $"{FUNC_PREFIX}getActiveElement";
 
-        public static string destroyNotification => $"{FUNC_PREFIX}destroyNotification";
+        public static string focusDialog => $"{FUNC_PREFIX}focusDialog";
+
     }
 }
