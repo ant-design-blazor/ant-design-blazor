@@ -1,0 +1,16 @@
+﻿<div>
+
+    <AntTag Mode="closeable" Visible="bVisible">Movies</AntTag>
+    <br />
+    <br />
+    <Button Size="small" OnClick="onClick">Toggle</Button>
+
+</div>
+
+@code{
+    bool bVisible { get; set; } = true;
+    void onClick()
+    {
+        bVisible = !bVisible;
+    }
+}
