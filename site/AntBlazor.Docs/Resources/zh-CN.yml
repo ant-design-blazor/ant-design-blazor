@@ -12,6 +12,7 @@ Menu: 导航菜单
 Steps: 步骤条
 DataEntry: 数据录入
 Checkbox: 多选框
+Cascader: 级联选择
 Switch: 开关
 DatePicker: 日期选择框
 Form: 表单
