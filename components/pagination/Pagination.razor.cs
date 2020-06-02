@@ -7,13 +7,16 @@ namespace AntDesign
     public partial class Pagination : AntDomComponentBase
     {
         [Parameter]
-        public EventCallback<int> PageSizeChange { get; set; }
+        public EventCallback<int> PageSizeChanged { get; set; }
 
         [Parameter]
-        public EventCallback<int> PageIndexChange { get; set; }
+        public EventCallback<int> PageIndexChanged { get; set; }
 
         [Parameter]
-        public EventCallback<int> OnChange { get; set; }
+        public EventCallback<PaginationEventArgs> OnPageIndexChange { get; set; }
+
+        [Parameter]
+        public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
         [Parameter]
         public OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>> ShowTotal { get; set; }
@@ -54,7 +57,18 @@ namespace AntDesign
         public bool Responsive { get; set; }
 
         [Parameter]
-        public int Total { get; set; } = 0;
+        public int Total
+        {
+            get => _total;
+            set
+            {
+                if (_total != value)
+                {
+                    _total = value;
+                    OnTotalChange(value);
+                }
+            }
+        }
 
         [Parameter]
         public int PageIndex { get; set; } = 1;
@@ -90,6 +104,14 @@ namespace AntDesign
             this.PageSize = DefaultPageSize;
         }
 
+        protected override void OnParametersSet()
+        {
+            if (this.PageSize <= 0)
+            {
+                this.PageSize = DefaultPageSize;
+            }
+        }
+
         private static int ValidatePageIndex(int value, int lastIndex)
         {
             if (value > lastIndex)
@@ -106,27 +128,43 @@ namespace AntDesign
             }
         }
 
-        private void OnPageIndexChange(int index)
+        private void HandlePageIndexChange(int index)
         {
             var lastIndex = GetLastIndex(this.Total, this.PageSize);
             var validIndex = ValidatePageIndex(index, lastIndex);
             if (validIndex != this.PageIndex && !this.Disabled)
             {
                 this.PageIndex = validIndex;
-                this.PageIndexChange.InvokeAsync(this.PageIndex);
-                this.OnChange.InvokeAsync(this.PageIndex);
+                this.PageIndexChanged.InvokeAsync(this.PageIndex);
                 this.CurrentChanged.InvokeAsync(this.PageIndex);
+                this.OnPageIndexChange.InvokeAsync(new PaginationEventArgs()
+                {
+                    PageCount = lastIndex,
+                    PageIndex = PageIndex,
+                    PageSize = PageSize,
+                    Total = Total
+                });
             }
         }
 
-        private void OnPageSizeChange(int size)
+        private void HandlePageSizeChange(int size)
         {
             this.PageSize = size;
-            this.PageSizeChange.InvokeAsync(size);
+            this.PageSizeChanged.InvokeAsync(size);
             var lastIndex = GetLastIndex(this.Total, this.PageSize);
             if (this.PageIndex > lastIndex)
             {
-                this.OnPageIndexChange(lastIndex);
+                this.HandlePageIndexChange(lastIndex);
+            }
+            else
+            {
+                this.OnPageSizeChange.InvokeAsync(new PaginationEventArgs()
+                {
+                    PageCount = lastIndex,
+                    PageIndex = PageIndex,
+                    PageSize = PageSize,
+                    Total = Total
+                });
             }
         }
 
@@ -135,7 +173,7 @@ namespace AntDesign
             var lastIndex = GetLastIndex(total, this.PageSize);
             if (this.PageIndex > lastIndex)
             {
-                this.OnPageIndexChange(lastIndex);
+                this.HandlePageIndexChange(lastIndex);
             }
         }
 
