@@ -90,7 +90,7 @@ namespace AntDesign
             this.PageSize = DefaultPageSize;
         }
 
-        private int ValidatePageIndex(int value, int lastIndex)
+        private static int ValidatePageIndex(int value, int lastIndex)
         {
             if (value > lastIndex)
             {
@@ -109,7 +109,7 @@ namespace AntDesign
         private void OnPageIndexChange(int index)
         {
             var lastIndex = GetLastIndex(this.Total, this.PageSize);
-            var validIndex = this.ValidatePageIndex(index, lastIndex);
+            var validIndex = ValidatePageIndex(index, lastIndex);
             if (validIndex != this.PageIndex && !this.Disabled)
             {
                 this.PageIndex = validIndex;
