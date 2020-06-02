@@ -12,6 +12,7 @@ Menu: Menu
 Steps: Steps 
 DataEntry: Data Entry
 Checkbox: Checkbox
+Cascader: Cascader
 Switch: Switch
 DatePicker: DatePicker
 Form: Form
