@@ -53,11 +53,6 @@ namespace AntDesign
             _editContext.OnFieldChanged += HandleFieldChanged;
 
             FieldDefaultValues = Model.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(Model));
-
-            FieldDefaultValues.ForEach(item =>
-            {
-                Console.WriteLine($"___________FieldDefaultValues,{item.Key},{item.Value}");
-            });
         }
 
         protected override void OnParametersSet()
@@ -94,11 +89,7 @@ namespace AntDesign
 
         public void Reset()
         {
-            _editContext.OnFieldChanged -= HandleFieldChanged;
-
             _controls.ForEach(item => item.Reset());
-
-            _editContext.OnFieldChanged += HandleFieldChanged;
         }
 
         void IForm.AddFormItem(IFormItem formItem)
