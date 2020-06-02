@@ -33,16 +33,6 @@
     <Compile Include="..\Shared\DemoMenuItem.cs" Link="Services\DemoMenuItem.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Demos\Tag\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Demos\Carousel\demo\Automatic.razor" />
-    <None Include="Demos\Carousel\demo\Basic.razor" />
-    <None Include="Demos\Carousel\demo\Fadein.razor" />
-    <None Include="Demos\Carousel\demo\Position.razor" />
-  </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
     <!-- Ensure Node.js is installed -->
