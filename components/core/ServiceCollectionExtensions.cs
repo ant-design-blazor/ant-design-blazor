@@ -21,6 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<InteropService>();
             services.TryAddScoped<NotificationService>();
             services.TryAddScoped<MessageService>();
+            services.TryAddScoped<ModalService>();
 
             return services;
         }
