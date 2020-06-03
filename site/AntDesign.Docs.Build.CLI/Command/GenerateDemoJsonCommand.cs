@@ -112,7 +112,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                             Iframe = descriptionContent.Meta.Iframe,
                             Code = code,
                             Description = descriptionContent.Descriptions[title.Key],
-                            Name = demo.Key,
+                            Name = descriptionFile?.Name.Replace(".md", ""),
                             Style = descriptionContent.Style,
                             Debug = descriptionContent.Meta.Debug,
                             Type = $"{demoDirectoryInfo.Name}.{component.Name}.{demoDir.Name}.{razorFile.Name.Replace(razorFile.Extension, "")}"

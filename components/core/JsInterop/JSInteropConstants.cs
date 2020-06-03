@@ -39,10 +39,11 @@ namespace AntDesign
         public static string addElementTo => $"{FUNC_PREFIX}addElementTo";
 
         public static string delElementFrom => $"{FUNC_PREFIX}delElementFrom";
-        
+
         public static string getActiveElement => $"{FUNC_PREFIX}getActiveElement";
 
         public static string focusDialog => $"{FUNC_PREFIX}focusDialog";
 
+        public static string getWindow = $"{FUNC_PREFIX}getWindow";
     }
 }
