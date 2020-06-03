@@ -1,5 +1,5 @@
 ﻿<Layout>
-    <Sider Breakpoint="lg"
+    <Sider Breakpoint="@BreakpointType.Lg"
            CollapsedWidth="0"
            OnBreakpoint="broken => {
             Console.WriteLine(broken);
@@ -28,7 +28,7 @@
         </Menu>
     </Sider>
     <Layout>
-        <Header Class="site-layout-sub-header-background" Style="padding: 0;" />
+        <Header Class="site-layout-sub-header-background" Style="padding: 0;" ></Header>
         <Content Style=" margin: 24px 16px 0;">
             <div class="site-layout-background" style="padding: 24px; min-height: 360px">
                 content

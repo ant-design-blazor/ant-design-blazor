@@ -1,5 +1,68 @@
-﻿<h3>CustomTrigger</h3>
+﻿@code
+{
+    bool collapsed;
 
-@code {
-
+    void toggle()
+    {
+        collapsed = !collapsed;
+    }
 }
+
+<Layout>
+    <Sider Collapsible Collapsed=@collapsed>
+        <div class="logo" />
+        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"1"})>
+            <MenuItem Key="1">
+                <AntIcon Type="user" Theme="outline" />
+                <span>nav 1</span>
+            </MenuItem>
+            <MenuItem Key="2">
+                <AntIcon Type="video-camera" Theme="outline" />
+                <span>nav 2</span>
+            </MenuItem>
+            <MenuItem Key="3">
+                <AntIcon Type="upload" Theme="outline" />
+                <span>nav 3</span>
+            </MenuItem>
+        </Menu>
+    </Sider>
+    <Layout Class="site-layout">
+        <Header Class="site-layout-background" Style="padding: 0;">
+            @if (collapsed)
+            {
+                <AntIcon Type="menu-unfold" Theme="outline" Class="trigger" OnClick="toggle" />
+            }
+            else
+            {
+                <AntIcon Type="menu-fold" Theme="outline" Class="trigger" OnClick="toggle" />
+            }
+        </Header>
+        <Content Class="site-layout-background" Style="margin: 24px 16px;padding: 24px;min-height: 280px;">
+            Content
+        </Content>
+    </Layout>
+</Layout>
+
+<style>
+    #components-layout-demo-custom-trigger .trigger {
+        font-size: 18px;
+        line-height: 64px;
+        padding: 0 24px;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+
+        #components-layout-demo-custom-trigger .trigger:hover {
+            color: #1890ff;
+        }
+
+    #components-layout-demo-custom-trigger .logo {
+        height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        margin: 16px;
+    }
+
+    .site-layout .site-layout-background {
+        background: #fff;
+    }
+</style>
