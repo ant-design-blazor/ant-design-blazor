@@ -54,10 +54,10 @@ namespace AntDesign
             ClassMapper
                     .Clear()
                     .Add(prefixCls)
-                    .Add($"{prefixCls}-{RootMenu.InternalMode}")
+                    .Add($"{prefixCls}-{RootMenu?.InternalMode}")
                     .If($"{prefixCls}-disabled", () => Disabled)
                     .If($"{prefixCls}-selected", () => _isSelected)
-                    .If($"{prefixCls}-open", () => RootMenu.InternalMode == MenuMode.Inline && IsOpen)
+                    .If($"{prefixCls}-open", () => RootMenu?.InternalMode == MenuMode.Inline && IsOpen)
                     ;
 
             SubMenuMapper
