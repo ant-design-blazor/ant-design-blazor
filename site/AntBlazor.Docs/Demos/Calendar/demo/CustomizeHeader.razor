@@ -1,0 +1,111 @@
+﻿<div class="site-calendar-customize-header-wrapper">
+    <Calendar
+      FullScreen="@false"
+      HeaderRender="HeaderRender"
+      OnPanelChange="OnPanelChange"
+    />
+  </div>
+
+@code
+{
+    private void OnPanelChange(DateTime value, string mode)
+    {
+        Console.WriteLine($"{value} {mode}");
+    }
+
+    private RenderFragment GetMonthOptions()
+    {
+        return @<Template>
+            @for (int index = 1; index <= 12; index++)
+            {
+                <option class="month-item" key="@index" value="@index">
+                    @(index)月
+                </option>
+            }
+
+        </Template>;
+    }
+            
+    private RenderFragment GetYearOptions(int currentYear)
+    {
+        return @<Template>
+            @for (int i = currentYear - 10; i < currentYear + 10; i += 1)
+            {
+                <option class="year-item" key="@i" value="@i">
+                    @(i)年
+                </option>
+            }
+
+        </Template>;
+    }
+
+    private void OnSelectYear(ChangeEventArgs args, CalendarHeaderRenderArgs renderArgs)
+    {
+        int year = Convert.ToInt32(args.Value);
+        renderArgs.OnChange.InvokeAsync(DateHelper.CombineNewDate(renderArgs.Value, year: year));
+    }
+
+    private void OnSelectMonth(ChangeEventArgs args, CalendarHeaderRenderArgs renderArgs)
+    {
+        int month = Convert.ToInt32(args.Value);
+        renderArgs.OnChange.InvokeAsync(DateHelper.CombineNewDate(renderArgs.Value, month: month));
+    }
+
+    private void OnTypeChange()
+    {
+
+    }
+
+    private RenderFragment HeaderRender(CalendarHeaderRenderArgs args) {
+        int start = 0;
+        int end = 12;
+
+        int month = args.Value.Month;
+        int year = args.Value.Year;
+
+        return
+        @<Template>
+            <div style="padding: 8px">
+                <AntTitle Level="4">
+                    Custom header
+                </AntTitle>
+                <AntRow Gutter="8">
+                    <AntCol>
+                        <AntRadioGroup size="small" OnChange="value => args.OnTypeChange.InvokeAsync(value)" Value="@args.Type">
+                            <AntRadio RadioButton Value="@DatePickerType.Month">Month</AntRadio>
+                            <AntRadio RadioButton Value="@DatePickerType.Year">Year</AntRadio>
+                        </AntRadioGroup>
+                    </AntCol>
+                    <AntCol>
+                        <select size="small"
+                                dropdownMatchSelectWidth="@false"
+                                class="my-year-select"
+                                @onchange="e => OnSelectYear(e, args)"
+                                value="@year"
+                            >
+                            @GetYearOptions(year)
+                        </select>
+                    </AntCol>
+                    <AntCol>
+                        <select size="small"
+                                dropdownMatchSelectWidth="@false"
+                                value="@month"
+                                @onchange="e => OnSelectMonth(e, args)"
+                            >
+                            @GetMonthOptions()
+                        </select>
+                    </AntCol>
+                </AntRow>
+            </div>
+        </Template>;
+
+      }
+}
+
+<Style>
+    .site-calendar-customize-header-wrapper {
+        width: 300px;
+        border: 1px solid #f0f0f0;
+        border-radius: 2px;
+    }
+</Style>
