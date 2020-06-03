@@ -6,9 +6,7 @@
     <section class="code-box-demo">
         @if (Demo.Iframe > 0)
         {
-            <MockBrowser Height="@Demo.Iframe.Value" WithUrl>
-                @ShowCaseContent
-            </MockBrowser>
+            <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@($"/mock?type={Demo.Type}")" />
         }
         else
         {
