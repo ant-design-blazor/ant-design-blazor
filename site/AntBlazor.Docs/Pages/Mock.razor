@@ -1,0 +1,19 @@
+﻿@page "/mock"
+@using System.Reflection
+@layout BlankLayout;
+
+
+@ShowCaseContent
+
+@code
+{
+    [Parameter]
+    public string Type { get; set; }
+
+    RenderFragment ShowCaseContent => (builder) =>
+    {
+        var showCase = System.Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Type}");
+        builder.OpenComponent(0, showCase);
+        builder.CloseComponent();
+    };
+}

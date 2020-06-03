@@ -10,7 +10,7 @@ namespace AntDesign.Docs.Shared
         public int Height { get; set; }
 
         [Parameter]
-        public bool WithUrl { get; set; }
+        public string WithUrl { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -18,7 +18,7 @@ namespace AntDesign.Docs.Shared
         protected override void OnInitialized()
         {
             ClassMapper.Add("browser-mockup")
-                .If("with-url", () => WithUrl);
+                .If("with-url", () => WithUrl != null);
         }
     }
 }

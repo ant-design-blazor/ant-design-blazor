@@ -1,4 +1,4 @@
-﻿@*<Layout Style="min-height: 100vh; ">
+﻿<Layout Style="min-height: 100vh; ">
     <Sider Collapsible Collapsed=@collapsed OnCollapse=@onCollapse>
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" DefaultSelectedKeys=@(new[]{"1"}) Mode="MenuMode.Inline">
@@ -39,7 +39,7 @@
         </Menu>
     </Sider>
     <Layout Class="site-layout" >
-        <Header Class="site-layout-background" Style=" padding: 0 ;" />
+        <Header Class="site-layout-background" Style=" padding: 0 ;" ></Header>
         <Content Style="margin:0 16px;" >
             <Breadcrumb Style="margin:16px 0;">
                 <BreadcrumbItem>User</BreadcrumbItem>
@@ -51,7 +51,7 @@
         </Content>
         <Footer Style="text-align:center ">Ant Design ©2018 Created by Ant UED</Footer>
     </Layout>
-</Layout>*@
+</Layout>
 
 
 @code {
