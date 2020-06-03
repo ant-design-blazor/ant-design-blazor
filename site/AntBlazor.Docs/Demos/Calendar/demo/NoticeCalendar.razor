@@ -1,0 +1,105 @@
+﻿ <Calendar DateCellRender="DateCellRender" MonthCellRender="MonthCellRender" />
+
+@code
+{
+    class ListData
+    {
+        public string type;
+        public string content;
+    }
+
+    private List<ListData> GetListData(DateTime value) {
+        List<ListData> listData = null;
+        switch (value.Day) {
+            case 8:
+                listData = new List<ListData>
+                {
+                    new ListData { type = "warning", content = "This is warning event." },
+                    new ListData { type = "success", content = "This is usual event." },
+                };
+                break;
+            case 10:
+                listData = new List<ListData> {
+                    new ListData { type = "warning", content = "This is warning event." },
+                    new ListData { type = "success", content = "This is usual event." },
+                    new ListData { type = "error", content = "This is error event." },
+                };
+                break;
+            case 15:
+                listData = new List<ListData> {
+                    new ListData { type = "warning", content = "This is warning event" },
+                    new ListData { type = "success", content = "This is very long usual event。。...." },
+                    new ListData { type = "error", content = "This is error event 1." },
+                    new ListData { type = "error", content = "This is error event 2." },
+                    new ListData { type = "error", content = "This is error event 3." },
+                    new ListData { type = "error", content = "This is error event 4." },
+                };
+                break;
+        }
+
+        return listData ?? new List<ListData>();
+    }
+
+    private RenderFragment DateCellRender(DateTime value) {
+        var listData = GetListData(value);
+        return @<Template>
+                    <ul class="events">
+                        @foreach (var data in listData)
+                        {
+                            <li key="@data.content">
+                                <Badge Status="@data.type" Text="@data.content" />
+                            </li>
+                        }
+                    </ul>
+                </Template>;
+    }
+
+    private int? GetMonthData(DateTime value) {
+        if (value.Month == 8) {
+            return 1394;
+        }
+
+        return null;
+    }
+
+    private RenderFragment MonthCellRender(DateTime value) {
+        int? num = GetMonthData(value);
+
+        if (num == null)
+        {
+            return null;
+        }
+
+        return @<Template>
+                    <div className="notes-month">
+                        <section>@num</section>
+                        <span>Backlog number</span>
+                    </div>
+        </Template>;
+    }
+}
+
+<Style>
+    .events {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        .events .ant-badge-status {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+            text-overflow: ellipsis;
+            font-size: 12px;
+        }
+
+    .notes-month {
+        text-align: center;
+        font-size: 28px;
+    }
+
+        .notes-month section {
+            font-size: 28px;
+        }
+</Style>

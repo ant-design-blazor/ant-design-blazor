@@ -1,0 +1,21 @@
+﻿<div>
+    <Alert Message=@($"You selected date: {selectedValue.ToString("yyyy-MM-dd")}") />
+    <Calendar Value="@value" OnSelect="OnSelect" OnPanelChange="OnPanelChange" />
+</div>
+
+@code
+{
+    private DateTime selectedValue = new DateTime(2017, 1, 25);
+    private DateTime value = new DateTime(2017, 1, 25);
+
+    private void OnSelect(DateTime value)
+    {
+        this.value = value;
+        selectedValue = value;
+    }
+
+    private void OnPanelChange(DateTime value, string mode)
+    {
+        this.value = value;
+    }
+}

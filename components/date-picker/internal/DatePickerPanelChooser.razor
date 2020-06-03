@@ -2,40 +2,81 @@
 @typeparam TValue
 @inherits AntDomComponentBase
 
+@{
+    Action ClosePanel = () => { DatePicker.Close(); };
+    Action<DateTime, int> ChangePickerValue = (date, index) => { DatePicker.ChangePickerValue(date, index); };
+    Action<DateTime, int> ChangeValue = (date, index) => { DatePicker.ChangeValue(date, index); };
+    Action<string, int> ChangePickerType = (type, index) => { DatePicker.ChangePickerType(type, index); };
+    Func<int, DateTime> GetIndexPickerValue = (index) => DatePicker.GetIndexPickerValue(index);
+    Func<int, DateTime?> GetIndexValue = (index) => DatePicker.GetIndexValue(index);
+
+    Dictionary<string, object> attributes =
+        new Dictionary<string, object>()
+        {
+            { "PrefixCls", DatePicker.PrefixCls },
+            { "Picker", DatePicker.Picker },
+            { "ClosePanel", ClosePanel },
+            { "ChangePickerValue", ChangePickerValue },
+            { "ChangeValue", ChangeValue },
+            { "ChangePickerType", ChangePickerType },
+            { "GetIndexPickerValue", GetIndexPickerValue },
+            { "GetIndexValue", GetIndexValue },
+            { "DisabledDate", DatePicker.DisabledDate },
+            { "DateRender", DatePicker.DateRender },
+            { "MonthCellRender", DatePicker.MonthCellRender },
+            { "RenderExtraFooter", DatePicker.RenderExtraFooter },
+            { "IsRange", DatePicker.IsRange },
+            { "OnSelect", OnSelect },
+            { "PickerIndex", PickerIndex },
+        };
+
+    Dictionary<string, object> dateAttributes = new Dictionary<string, object>(attributes);
+    dateAttributes.Add("ShowToday", DatePicker.ShowToday);
+
+    Dictionary<string, object> dateTimeAttributes = new Dictionary<string, object>(dateAttributes);
+    dateTimeAttributes.Add("ShowTimeFormat", DatePicker.ShowTimeFormat);
+    dateTimeAttributes.Add("Format", DatePicker.Format);
+    dateTimeAttributes.Add("DisabledHours", DatePicker.DisabledHours);
+    dateTimeAttributes.Add("DisabledMinutes", DatePicker.DisabledMinutes);
+    dateTimeAttributes.Add("DisabledSeconds", DatePicker.DisabledSeconds);
+    dateTimeAttributes.Add("DisabledTime", DatePicker.DisabledTime);
+    dateTimeAttributes.Add("IsShowTime", DatePicker.IsShowTime);
+}
+
 <CascadingValue Value=@DatePicker>
     @if (IsShowDatePanel())
     {
         @if (DatePicker.IsShowTime)
         {
-            <DatePickerDatetimePanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+            <DatePickerDatetimePanel TValue="TValue" @attributes="dateTimeAttributes" />
         }
         else
         {
-            <DatePickerDatePanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+            <DatePickerDatePanel TValue="TValue" @attributes="dateAttributes" />
         }
     }
     else if (IsShowQuarterPanel())
     {
-        <DatePickerQuarterPanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        <DatePickerQuarterPanel TValue="TValue" @attributes="attributes" />
     }
     else if (IsShowWeekPanel())
     {
-        <DatePickerDatePanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" IsWeek="@true" />
+        <DatePickerDatePanel TValue="TValue" @attributes="dateAttributes" IsWeek="@true" />
     }
     else if (IsShowMonthPanel())
     {
-        <DatePickerMonthPanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        <DatePickerMonthPanel TValue="TValue" @attributes="attributes" />
     }
     else if (IsShowYearPanel())
     {
-        <DatePickerYearPanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        <DatePickerYearPanel TValue="TValue" @attributes="attributes" />
     }
     else if (IsShowDecadePanel())
     {
-        <DatePickerDecadePanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        <DatePickerDecadePanel TValue="TValue" @attributes="attributes" />
     }
     else if (IsShowTimePanel())
     {
-        <DatePickerDatetimePanel TValue="TValue" PickerIndex="@PickerIndex" OnSelect="OnSelect" />
+        <DatePickerDatetimePanel TValue="TValue" @attributes="dateTimeAttributes" />
     }
 </CascadingValue>
