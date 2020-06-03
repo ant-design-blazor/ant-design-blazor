@@ -5,7 +5,7 @@ namespace AntDesign
 {
     public static class DateHelper
     {
-        private static readonly Calendar _calendar = CultureInfo.InvariantCulture.Calendar;
+        private static readonly System.Globalization.Calendar _calendar = CultureInfo.InvariantCulture.Calendar;
 
         public static bool IsSameDate(DateTime date, DateTime compareDate)
         {
@@ -53,5 +53,32 @@ namespace AntDesign
         {
             return _calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
         }
+
+        public static DateTime CombineNewDate(
+            DateTime date,
+            int? year = null,
+            int? month = null,
+            int? day = null,
+            int? hour = null,
+            int? minute = null,
+            int? second = null)
+        {
+            return date
+                .AddYears(year != null ? (int)year - date.Year : 0)
+                .AddMonths(month != null ? (int)month - date.Month : 0)
+                .AddDays(day != null ? (int)day - date.Day : 0)
+                .AddHours(hour != null ? (int)hour - date.Hour : 0)
+                .AddMinutes(minute != null ? (int)minute - date.Minute : 0)
+                .AddSeconds(second != null ? (int)second - date.Second : 0);
+            //return new DateTime(
+            //    year ?? date.Year,
+            //    month ?? date.Month,
+            //    day ?? date.Day,
+            //    hour ?? date.Hour,
+            //    minute ?? date.Minute,
+            //    second ?? date.Second
+            //);
+        }
+
     }
 }

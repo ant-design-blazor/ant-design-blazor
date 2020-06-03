@@ -1,17 +1,102 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
+﻿using System;
+using System.Collections.Generic;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
-using System;
 
 namespace AntDesign
 {
     public class DatePickerPanelBase<TValue> : PickerPanelBase
     {
         [CascadingParameter]
-        public DatePickerBase<TValue> DatePicker { get; set; }
+        public IDatePicker DatePicker { get; set; }
+
+        [Parameter]
+        public string PrefixCls { get; set; }
+
+        [Parameter]
+        public string Picker { get; set; }
+
+        [Parameter]
+        public bool IsRange { get; set; } = false;
+
+        [Parameter]
+        public bool IsCalendar { get; set; } = false;
+
+        [Parameter]
+        public bool IsShowHeader { get; set; } = true;
+
+        [Parameter]
+        public Action ClosePanel { get; set; }
+
+        [Parameter]
+        public Action<DateTime, int> ChangePickerValue { get; set; }
+
+        [Parameter]
+        public Action<DateTime, int> ChangeValue { get; set; }
+
+        [Parameter]
+        public Action<string, int> ChangePickerType { get; set; }
+
+        [Parameter]
+        public Func<int, DateTime> GetIndexPickerValue { get; set; }
+
+        [Parameter]
+        public Func<int, DateTime?> GetIndexValue { get; set; }
+
+        [Parameter]
+        public Func<DateTime, bool> DisabledDate { get; set; } = null;
+
+        /// <summary>
+        /// for Calendar.DateFullCellRender、DatePicker.DateRender
+        /// </summary>
+        [Parameter]
+        public Func<DateTime, DateTime, RenderFragment> DateRender { get; set; }
+
+        /// <summary>
+        /// for Calendar.MonthFullCellRender、DatePicker.MonthCellRender
+        /// </summary>
+        [Parameter]
+        public Func<DateTime, RenderFragment> MonthCellRender { get; set; }
+
+        /// <summary>
+        /// for Calendar.DateCellRender
+        /// </summary>
+        [Parameter]
+        public Func<DateTime, RenderFragment> CalendarDateRender { get; set; }
+
+        /// <summary>
+        /// for Calendar.MonthCellRender
+        /// </summary>
+        [Parameter]
+        public Func<DateTime, RenderFragment> CalendarMonthCellRender { get; set; }
+
+        [Parameter]
+        public RenderFragment RenderExtraFooter { get; set; }
+
+        protected Dictionary<string, object> GetAttritubes()
+        {
+            return new Dictionary<string, object>()
+            {
+                { "PrefixCls", PrefixCls },
+                { "Picker", Picker },
+                { "ClosePanel", ClosePanel },
+                { "ChangePickerValue", ChangePickerValue },
+                { "ChangeValue", ChangeValue },
+                { "ChangePickerType", ChangePickerType },
+                { "GetIndexPickerValue", GetIndexPickerValue },
+                { "GetIndexValue", GetIndexValue },
+                { "DisabledDate", DisabledDate },
+                { "DateRender", DateRender },
+                { "MonthCellRender", MonthCellRender },
+                { "CalendarDateRender", CalendarDateRender },
+                { "CalendarMonthCellRender", CalendarMonthCellRender },
+                { "RenderExtraFooter", RenderExtraFooter },
+                { "IsRange", IsRange },
+                { "PickerIndex", PickerIndex },
+                { "IsCalendar", IsCalendar },
+                { "IsShowHeader", IsShowHeader },
+            };
+        }
 
         protected void OnSelectTime(DateTime date)
         {
@@ -60,17 +145,17 @@ namespace AntDesign
 
         protected void OnSelectShowYear(DateTime date)
         {
-            DatePicker.ChangePickerValue(CombineNewShowDate(year: date.Year), PickerIndex);
+            ChangePickerValue(CombineNewShowDate(year: date.Year), PickerIndex);
         }
 
         protected void OnSelectShowMonth(DateTime date)
         {
-            DatePicker.ChangePickerValue(CombineNewShowDate(month: date.Month), PickerIndex);
+            ChangePickerValue(CombineNewShowDate(month: date.Month), PickerIndex);
         }
 
         protected void OnSelectShowDay(DateTime date)
         {
-            DatePicker.ChangePickerValue(CombineNewShowDate(day: date.Day), PickerIndex);
+            ChangePickerValue(CombineNewShowDate(day: date.Day), PickerIndex);
         }
 
         protected DateTime CombineNewShowDate(
@@ -81,45 +166,39 @@ namespace AntDesign
             int? minute = null,
             int? second = null)
         {
-            return new DateTime(
-                year ?? PickerValue.Year,
-                month ?? PickerValue.Month,
-                day ?? PickerValue.Day,
-                hour ?? PickerValue.Hour,
-                minute ?? PickerValue.Minute,
-                second ?? PickerValue.Second
-            );
+            return DateHelper.CombineNewDate(
+                PickerValue,
+                year,
+                month,
+                day,
+                hour,
+                minute,
+                second
+                );
         }
 
         protected void ChangePickerYearValue(int interval)
         {
-            DatePicker.ChangePickerValue(PickerValue.AddYears(interval), PickerIndex);
+            ChangePickerValue(PickerValue.AddYears(interval), PickerIndex);
         }
 
         protected void ChangePickerMonthValue(int interval)
         {
-            DatePicker.ChangePickerValue(PickerValue.AddMonths(interval), PickerIndex);
+            ChangePickerValue(PickerValue.AddMonths(interval), PickerIndex);
         }
 
-        protected void ChangePickerValue(DateTime date)
+        protected void Close()
         {
-            DatePicker.ChangePickerValue(date, PickerIndex);
+            ClosePanel?.Invoke();
         }
 
-        protected void ChangeValue(DateTime date)
-        {
-            DatePicker.ChangeValue(date, PickerIndex);
-        }
+        protected DateTime PickerValue { get => GetIndexPickerValue(PickerIndex); }
 
-        protected string Picker { get => DatePicker.Picker; }
-
-        protected DateTime PickerValue { get => DatePicker.GetIndexPickerValue(PickerIndex); }
-
-        protected DateTime Value { get => DatePicker.GetIndexValue(PickerIndex) ?? DateTime.Now; }
+        protected DateTime Value { get => GetIndexValue(PickerIndex) ?? DateTime.Now; }
 
         public void PopUpPicker(string type)
         {
-            DatePicker.ChangePickerType(type, PickerIndex);
+            ChangePickerType(type, PickerIndex);
         }
     }
 }

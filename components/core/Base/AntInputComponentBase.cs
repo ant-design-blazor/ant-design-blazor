@@ -23,10 +23,10 @@ namespace AntDesign
         private Type _nullableUnderlyingType;
 
         [CascadingParameter(Name = "FormItem")]
-        private IFormItem FormItem { get; set; }
+        protected IFormItem FormItem { get; set; }
 
         [CascadingParameter(Name = "Form")]
-        private IForm Form { get; set; }
+        protected IForm Form { get; set; }
 
         /// <summary>
         /// Gets or sets a collection of additional attributes that will be applied to the created element.
@@ -81,7 +81,7 @@ namespace AntDesign
 
                     if (_isNotifyFieldChanged)
                     {
-                        EditContext.NotifyFieldChanged(FieldIdentifier);
+                        EditContext?.NotifyFieldChanged(FieldIdentifier);
                     }
                 }
             }
