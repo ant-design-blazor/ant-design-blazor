@@ -147,7 +147,10 @@ namespace AntDesign
 
         protected async Task OnChangeAsync(ChangeEventArgs args)
         {
-            CurrentValueAsString = args.Value.ToString();
+            if (Form != null)
+            {
+                CurrentValueAsString = args.Value.ToString();
+            }
 
             if (OnChange.HasDelegate)
             {
@@ -213,7 +216,10 @@ namespace AntDesign
         {
             bool flag = !(!string.IsNullOrEmpty(Value) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
-            CurrentValueAsString = args.Value.ToString();
+            if (Form != null)
+            {
+                CurrentValueAsString = args.Value.ToString();
+            }
 
             if (_allowClear && flag)
             {
