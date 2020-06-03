@@ -257,7 +257,8 @@ namespace AntDesign
                 if (_disableBodyScroll)
                 {
                     _disableBodyScroll = false;
-                    await JsInvokeAsync(JSInteropConstants.enableBodyScroll);
+                    await Task.Delay(250);
+                    await JsInvokeAsync(JSInteropConstants.enableModalBodyScroll);
                 }
             }
             await base.OnAfterRenderAsync(isFirst);

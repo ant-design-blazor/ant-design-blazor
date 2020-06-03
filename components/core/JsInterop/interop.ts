@@ -185,18 +185,18 @@ export function getActiveElement() {
 }
 
 export function focusDialog(selector: string, count: number = 0) {
-  let ele = <HTMLElement>document.querySelector(selector);
-  if (ele && !ele.hasAttribute("disabled")) {
-    setTimeout(() => {
-      ele.focus();
-      let curId = "#" + getActiveElement();
-      if (curId !== selector) {
-        if (count < 10) {
-          focusDialog(selector, count + 1);
-        }
-      }
-    }, 10);
-  }
+    let ele = <HTMLElement>document.querySelector(selector);
+    if (ele && !ele.hasAttribute("disabled")) {
+        setTimeout(() => {
+            ele.focus();
+            let curId = "#" + getActiveElement();
+            if (curId !== selector) {
+                if (count < 10) {
+                    focusDialog(selector, count + 1);
+                }
+            }
+        }, 10);
+    }
 }
 
 export function getWindow() {
@@ -243,7 +243,7 @@ export function addCls(selector: Element | string, clsName: string | Array<strin
     }
 }
 
-export function removeCls(selector: Element|string, clsName: string | Array<string>) {
+export function removeCls(selector: Element | string, clsName: string | Array<string>) {
     let element = getDom(selector);
 
     if (typeof clsName === "string") {
@@ -263,12 +263,34 @@ export function disableBodyScroll() {
     addCls(document.body, "ant-scrolling-effect");
 }
 
-export function enableBodyScroll() {
-    css(document.body,
-        {
-            "position": null,
-            "width": null,
-            "overflow": null
+function enableBodyScroll(selector, filter = null) {
+    let length = 0;
+    let queryElements = document.querySelectorAll(selector);
+    if (typeof filter === "function") {
+        queryElements.forEach((value, key, parent) => {
+            if (!filter(value, key, parent)) {
+                length += 1;
+            }
         });
-    removeCls(document.body, "ant-scrolling-effect");
+    } else {
+        length = queryElements.length;
+    }
+    if (length === 0) {
+        css(document.body,
+            {
+                "position": null,
+                "width": null,
+                "overflow": null
+            });
+        removeCls(document.body, "ant-scrolling-effect");
+    }
+}
+
+export function enableModalBodyScroll() {
+    enableBodyScroll(".ant-modal-mask:not(.ant-modal-mask-hidden)");
+}
+
+export function enableDrawerBodyScroll() {
+    enableBodyScroll(".ant-drawer-open",
+        (value, key, parent) => { return value.style.position === "absolute" } );
 }

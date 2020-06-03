@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.AspNetCore.Components;
 using OneOf;
@@ -136,7 +137,7 @@ namespace AntDesign
         {
             get
             {
-                if (this._isRenderAnimation)
+                if (this._isOpen && this._isRenderAnimation)
                 {
                     return null;
                 }
@@ -166,6 +167,7 @@ namespace AntDesign
             {(Transform != null ? $"transform:{Transform};" : "")}
             {(PlacementChanging ? "transition:none;" : "")}";
 
+        private Regex _renderInCurrentContainerRegex = new Regex("position:[\\s]*absolute");
 
         private string DrawerStyle;
 
@@ -223,6 +225,19 @@ namespace AntDesign
                     CalcDrawerStyle();
                     await Task.Delay(10);
                     StateHasChanged();
+
+                    if (string.IsNullOrWhiteSpace(Style))
+                    {
+                        _ = JsInvokeAsync(JSInteropConstants.disableBodyScroll);
+                    }
+                    else if (!string.IsNullOrWhiteSpace(Style))
+                    {
+                        var m = _renderInCurrentContainerRegex.IsMatch(Style);
+                        if (!m)
+                        {
+                            await JsInvokeAsync(JSInteropConstants.disableBodyScroll);
+                        }
+                    }
                 }
                 else
                 {
@@ -277,6 +292,8 @@ namespace AntDesign
         {
             _isRenderAnimation = false;
             await OnClose.InvokeAsync(this);
+            await Task.Delay(10);
+            await JsInvokeAsync(JSInteropConstants.enableDrawerBodyScroll);
         }
 
         private void CalcAnimation()
