@@ -81,7 +81,7 @@ namespace AntDesign
 
                     if (_isNotifyFieldChanged)
                     {
-                        EditContext.NotifyFieldChanged(FieldIdentifier);
+                        EditContext?.NotifyFieldChanged(FieldIdentifier);
                     }
                 }
             }
