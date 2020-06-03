@@ -1,0 +1,103 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+@using AntDesign.Internal
+
+<div class="@(PrefixCls)-header"
+     style="@Style"
+     id="@Id"
+     @ref="@Ref">
+    <select class="@(PrefixCls)-year-select" 
+            @onchange="async e => await OnSelectYear(e)">
+        @{
+            int startYear = Calendar.Value.AddYears(-10).Year;
+            int endYear = Calendar.Value.AddYears(10).Year;
+
+            if (Calendar.ValidRange != null)
+            {
+                startYear = Calendar.ValidRange[0].Year;
+                endYear = Calendar.ValidRange[1].Year;
+            }
+        }
+        @for (int year = startYear; year <= endYear; year++)
+        {
+            if (year == Calendar.Value.Year)
+            {
+                <option class=@($"ant-select-item") selected="selected" value="@year">@(year)年</option>
+            }
+            else
+            {
+                <option class=@($"ant-select-item") value="@year">@(year)年</option>
+            }
+        }
+    </select>
+    @if (Calendar.Mode == DatePickerType.Month)
+    {
+        <select class="@(PrefixCls)-month-select" @onchange="async e => await OnSelectMonth(e)">
+        @{
+            int startMonth = 1;
+            int endMonth = 12;
+
+            if (Calendar.ValidRange != null)
+            {
+                startMonth = Calendar.Value.Year == Calendar.ValidRange[0].Year ? Calendar.ValidRange[0].Month : startMonth;
+                endMonth = Calendar.Value.Year == Calendar.ValidRange[1].Year ? Calendar.ValidRange[1].Month : endMonth;
+            }
+
+        }
+        @for (int month = startMonth; month <= endMonth; month++)
+        {
+            if (month == Calendar.Value.Month)
+            {
+                <option class=@($"ant-select-item") selected="selected" value="@month">@(month)月</option>
+            }
+            else
+            {
+                <option class=@($"ant-select-item") value="@month">@(month)月</option>
+            }
+        }
+        </select>
+    }
+    
+    <RadioGroup class="@($"{PrefixCls}-mode-switch")"
+                   Value="@Calendar.Mode"
+                   OnChange="OnModeChange">
+      <Radio RadioButton Value="@DatePickerType.Month">月</Radio>
+      <Radio RadioButton Value="@DatePickerType.Year">年</Radio>
+    </RadioGroup>
+</div>
+
+@code
+{
+    [CascadingParameter(Name = "PrefixCls")]
+    public string PrefixCls { get; set; }
+
+    [CascadingParameter(Name = "Calendar")]
+    public Calendar Calendar { get; set; }
+
+    private DateTime currentDate;
+    private bool hasChangeYear = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        currentDate = Calendar.Value;
+    }
+
+    private void OnModeChange(string value)
+    {
+        Calendar.ChangePickerType(value);
+    }
+
+    private async Task OnSelectYear(ChangeEventArgs args)
+    {
+        int year = Convert.ToInt32(args.Value);
+        await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, year: year));
+    }
+
+    private async Task OnSelectMonth(ChangeEventArgs args)
+    {
+        int month = Convert.ToInt32(args.Value);
+        await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, month: month));
+    }
+}
