@@ -13,15 +13,15 @@
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
 
-<div class='@(DatePicker.IsShowTime || Picker == DatePickerType.Time ? $"{DatePicker.PrefixCls}-datetime-panel" : "")'>
-    @if (DatePicker.IsShowTime)
+<div class='@($"{PrefixCls}-datetime-panel")'>
+    @if (IsShowTime)
     {
         <DatePickerTemplate TValue="TValue" 
-                            PickerIndex="@PickerIndex"
+                            @attributes="GetAttritubes()"
                             MaxRow="6"
                             MaxCol="7"
                             ViewStartDate="startDate"
-                            ShowFooter="@DatePicker.ShowToday"
+                            ShowFooter="@ShowToday"
                             IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                             IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
                             IsSelected="date => DateHelper.IsSameDay(date, Value)"
@@ -29,7 +29,8 @@
                             OnValueSelect="OnSelectDate"
                             GetNextColValue="date => date.AddDays(1)">
             <RenderPickerHeader>
-                <DatePickerHeader TValue="TValue" PickerIndex="@PickerIndex" />
+                <DatePickerHeader TValue="TValue"
+                                  @attributes="GetAttritubes()" />
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
@@ -50,34 +51,38 @@
 
     @{
         var startTime = new DateTime(2020, 1, 1, 0, 0, 0);
-        var timeFormat = DatePicker.ShowTimeFormat;
+        var timeFormat = ShowTimeFormat;
 
-        if (Picker == DatePickerType.Time && !string.IsNullOrEmpty(DatePicker.Format))
+        if (Picker == DatePickerType.Time && !string.IsNullOrEmpty(Format))
         {
-            timeFormat = DatePicker.Format;
+            timeFormat = Format;
         }
 
         DatePickerDisabledTime disabledTime = GetDisabledTime();
     }
-    <div class="@(DatePicker.PrefixCls)-time-panel">
-        <div class="@(DatePicker.PrefixCls)-header">
-            <div class="@(DatePicker.PrefixCls)-header-view">
-                @Value.ToString(timeFormat) <br />
+    <div class="@(PrefixCls)-time-panel">
+        @if(Picker == DatePickerType.Date)
+        {
+            <div class="@(PrefixCls)-header">
+                <div class="@(PrefixCls)-header-view">
+                    @Value.ToString(timeFormat) <br />
+                </div>
             </div>
-        </div>
-        <div class="@(DatePicker.PrefixCls)-content">
+        }
+        
+        <div class="@(PrefixCls)-content">
             @if (timeFormat.ToLower().Contains("hh"))
             {
-                <ul class="@(DatePicker.PrefixCls)-time-panel-column" style="position: relative;">
+                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
                     @for (int hour = 0; hour < 24; hour++)
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledHours.Contains(hour);
-                        string isSelectedCls = viewTime.Hour == Value.Hour ? $"{DatePicker.PrefixCls}-time-panel-cell-selected" : "";
-                        string disabledCls = disabled ? $"{DatePicker.PrefixCls}-time-panel-cell-disabled" : "";
+                        string isSelectedCls = viewTime.Hour == Value.Hour ? $"{PrefixCls}-time-panel-cell-selected" : "";
+                        string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li class="@(DatePicker.PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
-                            <div class="@(DatePicker.PrefixCls)-time-panel-cell-inner"
+                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                            <div class="@(PrefixCls)-time-panel-cell-inner"
                                  @onclick="e => { if (!disabled) OnSelectHour(viewTime); }">
                                 @hour
                             </div>
@@ -89,16 +94,16 @@
             }
             @if (timeFormat.ToLower().Contains("mm"))
             {
-                <ul class="@(DatePicker.PrefixCls)-time-panel-column" style="position: relative;">
+                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
                     @for (int minute = 0; minute < 60; minute++)
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledMinutes.Contains(minute);
-                        string isSelectedCls = viewTime.Minute == Value.Minute ? $"{DatePicker.PrefixCls}-time-panel-cell-selected" : "";
-                        string disabledCls = disabled ? $"{DatePicker.PrefixCls}-time-panel-cell-disabled" : "";
+                        string isSelectedCls = viewTime.Minute == Value.Minute ? $"{PrefixCls}-time-panel-cell-selected" : "";
+                        string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li class="@(DatePicker.PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
-                            <div class="@(DatePicker.PrefixCls)-time-panel-cell-inner"
+                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                            <div class="@(PrefixCls)-time-panel-cell-inner"
                                  @onclick="e => { if (!disabled) OnSelectMinute(viewTime); }">
                                 @minute
                             </div>
@@ -110,16 +115,16 @@
             }
             @if (timeFormat.ToLower().Contains("ss"))
             {
-                <ul class="@(DatePicker.PrefixCls)-time-panel-column" style="position: relative;">
+                <ul class="@(PrefixCls)-time-panel-column" style="position: relative;">
                     @for (int second = 0; second < 60; second++)
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledSeconds.Contains(second);
-                        string isSelectedCls = viewTime.Second == Value.Second ? $"{DatePicker.PrefixCls}-time-panel-cell-selected" : "";
-                        string disabledCls = disabled ? $"{DatePicker.PrefixCls}-time-panel-cell-disabled" : "";
+                        string isSelectedCls = viewTime.Second == Value.Second ? $"{PrefixCls}-time-panel-cell-selected" : "";
+                        string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li class="@(DatePicker.PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
-                            <div class="@(DatePicker.PrefixCls)-time-panel-cell-inner"
+                        <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                            <div class="@(PrefixCls)-time-panel-cell-inner"
                                  @onclick="e => { if (!disabled) OnSelectSecond(viewTime); }">
                                 @second
                             </div>
@@ -133,24 +138,24 @@
     </div>
 </div>
 
-@if (DatePicker.RenderExtraFooter != null)
+@if (RenderExtraFooter != null)
 {
-    <div class="@(DatePicker.PrefixCls)-footer">
-        <div class="@(DatePicker.PrefixCls)-footer-extra">
-            @DatePicker.RenderExtraFooter
+    <div class="@(PrefixCls)-footer">
+        <div class="@(PrefixCls)-footer-extra">
+            @RenderExtraFooter
         </div>
     </div>
 }
 
-<div class="@(DatePicker.PrefixCls)-footer">
-    <ul class="@(DatePicker.PrefixCls)-ranges">
-        <li class="@(DatePicker.PrefixCls)-now">
-            <a class="@(DatePicker.PrefixCls)-now-btn"
-               @onclick="e => { OnSelectTime(DateTime.Now); DatePicker.Close(); }">
+<div class="@(PrefixCls)-footer">
+    <ul class="@(PrefixCls)-ranges">
+        <li class="@(PrefixCls)-now">
+            <a class="@(PrefixCls)-now-btn"
+               @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
                 此刻
             </a>
         </li>
-        <li class="@(DatePicker.PrefixCls)-ok">
+        <li class="@(PrefixCls)-ok">
             <Button Type="@ButtonType.Primary"
                        OnClick="e => DatePicker.Close()">
                 确 定

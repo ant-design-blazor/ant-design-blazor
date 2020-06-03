@@ -15,26 +15,30 @@
     const int FIRST_YEAR_INDEX = 0;
     const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL;
 }
-<DatePickerTemplate TValue="TValue" PickerIndex="@PickerIndex"
-                    MaxRow="MAX_ROW"
-                    MaxCol="MAX_COL"
-                    ViewStartDate="startDate"
-                    IsInView="date => yearIndex != FIRST_YEAR_INDEX && yearIndex != LAST_YEAR_INDEX"
-                    IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
-                    IsSelected="date => DateHelper.IsSameYear(date, Value)"
-                    GetColTitle='date => date.ToString("yyyy")'
-                    OnValueSelect="date => OnSelectYear(date)"
-                    GetNextColValue="date => date.AddYears(1)">
-    <RenderPickerHeader>
-        <DatePickerHeader TValue="TValue" SuperChangeDateInterval="10"
-                          PickerIndex="@PickerIndex"
-                          ShowPreChange="@false"
-                          ShowNextChange="@false"
-                          ShowSuperPreChange="@(!(DatePicker.IsRange && PickerIndex == 1))"
-                          ShowSuperNextChange="@(!(DatePicker.IsRange && PickerIndex == 0))" />
-    </RenderPickerHeader>
-    <RenderColValue Context="currentColDate">
-        @{yearIndex++;}
-        @currentColDate.Year
-    </RenderColValue>
-</DatePickerTemplate>
+<div class='@($"{PrefixCls}-panel")'>
+    <DatePickerTemplate @attributes="GetAttritubes()"
+                        TValue="TValue"
+                        MaxRow="MAX_ROW"
+                        MaxCol="MAX_COL"
+                        ViewStartDate="startDate"
+                        IsInView="date => yearIndex != FIRST_YEAR_INDEX && yearIndex != LAST_YEAR_INDEX"
+                        IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
+                        IsSelected="date => DateHelper.IsSameYear(date, Value)"
+                        GetColTitle='date => date.ToString("yyyy")'
+                        OnValueSelect="date => OnSelectYear(date)"
+                        GetNextColValue="date => date.AddYears(1)">
+        <RenderPickerHeader>
+            <DatePickerHeader @attributes="GetAttritubes()"
+                              TValue="TValue"
+                              SuperChangeDateInterval="10"
+                              ShowPreChange="@false"
+                              ShowNextChange="@false"
+                              ShowSuperPreChange="@(!(IsRange && PickerIndex == 1))"
+                              ShowSuperNextChange="@(!(IsRange && PickerIndex == 0))" />
+        </RenderPickerHeader>
+        <RenderColValue Context="currentColDate">
+            @{yearIndex++;}
+            @currentColDate.Year
+        </RenderColValue>
+    </DatePickerTemplate>
+</div>

@@ -1,0 +1,19 @@
+﻿<div class="site-calendar-demo-card">
+    <Calendar FullScreen="@false" OnPanelChange="OnPanelChange" />
+</div>
+
+@code
+{
+    private void OnPanelChange(DateTime value, string mode)
+    {
+        Console.WriteLine($"{value.ToString("YYYY-MM-DD")} {mode}");
+    }
+}
+
+<Style>
+    .site-calendar-demo-card {
+        width: 300px;
+        border: 1px solid #f0f0f0;
+        border-radius: 2px;
+    }
+</Style>

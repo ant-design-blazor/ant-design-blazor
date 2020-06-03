@@ -2,31 +2,31 @@
 @typeparam TValue
 @inherits DatePickerPanelBase<TValue>
 
-<div class="@(DatePicker.PrefixCls)-header">
+<div class="@(PrefixCls)-header">
     @if (ShowSuperPreChange)
     {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-prev-btn" @onclick="e => ChangePickerYearValue(-SuperChangeDateInterval)">
-            <span class="@(DatePicker.PrefixCls)-super-prev-icon"></span>
+        <button tabindex="-1" class="@(PrefixCls)-header-super-prev-btn" @onclick="e => ChangePickerYearValue(-SuperChangeDateInterval)">
+            <span class="@(PrefixCls)-super-prev-icon"></span>
         </button>
     }
 
     @if (ShowPreChange)
     {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-prev-btn" @onclick="e => ChangePickerMonthValue(-ChangeDateInterval)">
-            <span class="@(DatePicker.PrefixCls)-prev-icon"></span>
+        <button tabindex="-1" class="@(PrefixCls)-header-prev-btn" @onclick="e => ChangePickerMonthValue(-ChangeDateInterval)">
+            <span class="@(PrefixCls)-prev-icon"></span>
         </button>
     }
 
-    <div class="@(DatePicker.PrefixCls)-header-view">
+    <div class="@(PrefixCls)-header-view">
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
         {
-            <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
+            <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
                 @(PickerValue.Year)年
             </button>
         }
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
         {
-            <button type="button" tabindex="-1" class="@(DatePicker.PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
+            <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
                 @(PickerValue.Month)月
             </button>
         }
@@ -34,7 +34,7 @@
         {
             int startYear = PickerValue.Year / 10 * 10;
 
-            <button type="button" class="@(DatePicker.PrefixCls)-decade-btn" @onclick="e => PopUpPicker(DatePickerType.Decade)">
+            <button type="button" class="@(PrefixCls)-decade-btn" @onclick="e => PopUpPicker(DatePickerType.Decade)">
                 @(startYear)-@(startYear + 9)
             </button>
         }
@@ -42,7 +42,7 @@
         {
             int startYear = PickerValue.Year / 100 * 100;
 
-            <button type="button" class="@(DatePicker.PrefixCls)-decade-btn">
+            <button type="button" class="@(PrefixCls)-decade-btn">
                 @(startYear)-@(startYear + 99)
             </button>
         }
@@ -50,14 +50,14 @@
 
     @if (ShowNextChange)
     {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-next-btn" @onclick="e => ChangePickerMonthValue(ChangeDateInterval)">
-            <span class="@(DatePicker.PrefixCls)-next-icon"></span>
+        <button tabindex="-1" class="@(PrefixCls)-header-next-btn" @onclick="e => ChangePickerMonthValue(ChangeDateInterval)">
+            <span class="@(PrefixCls)-next-icon"></span>
         </button>
     }
     @if (ShowSuperNextChange)
     {
-        <button tabindex="-1" class="@(DatePicker.PrefixCls)-header-super-next-btn" @onclick="e => ChangePickerYearValue(SuperChangeDateInterval)">
-            <span class="@(DatePicker.PrefixCls)-super-next-icon"></span>
+        <button tabindex="-1" class="@(PrefixCls)-header-super-next-btn" @onclick="e => ChangePickerYearValue(SuperChangeDateInterval)">
+            <span class="@(PrefixCls)-super-next-icon"></span>
         </button>
     }
 </div>
