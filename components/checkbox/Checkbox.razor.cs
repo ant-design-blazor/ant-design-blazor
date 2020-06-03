@@ -53,7 +53,7 @@ namespace AntDesign
                 CheckboxGroup?.CheckboxItems.Add(checkbox);
             }
 
-            if (EditContext != null)
+            if (Form != null)
             {
                 CurrentValue = Checked;
             }
@@ -75,7 +75,7 @@ namespace AntDesign
             {
                 await InnerCheckedChange(value);
 
-                if (EditContext != null)
+                if (Form != null)
                 {
                     CurrentValue = Checked;
                 }

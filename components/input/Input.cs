@@ -147,7 +147,7 @@ namespace AntDesign
 
         protected async Task OnChangeAsync(ChangeEventArgs args)
         {
-            if (EditContext != null)
+            if (Form != null)
             {
                 CurrentValueAsString = args.Value.ToString();
             }
@@ -216,7 +216,7 @@ namespace AntDesign
         {
             bool flag = !(!string.IsNullOrEmpty(Value) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
-            if (EditContext != null)
+            if (Form != null)
             {
                 CurrentValueAsString = args.Value.ToString();
             }
