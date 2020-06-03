@@ -23,10 +23,10 @@ namespace AntDesign
         private Type _nullableUnderlyingType;
 
         [CascadingParameter(Name = "FormItem")]
-        protected IFormItem FormItem { get; set; }
+        private IFormItem FormItem { get; set; }
 
         [CascadingParameter(Name = "Form")]
-        protected IForm Form { get; set; }
+        private IForm Form { get; set; }
 
         /// <summary>
         /// Gets or sets a collection of additional attributes that will be applied to the created element.
@@ -116,19 +116,22 @@ namespace AntDesign
                 {
                     parsingFailed = true;
 
-                    if (_parsingValidationMessages == null)
+                    if (EditContext != null)
                     {
-                        _parsingValidationMessages = new ValidationMessageStore(EditContext);
+                        if (_parsingValidationMessages == null)
+                        {
+                            _parsingValidationMessages = new ValidationMessageStore(EditContext);
+                        }
+
+                        _parsingValidationMessages.Add(FieldIdentifier, validationErrorMessage);
+
+                        // Since we're not writing to CurrentValue, we'll need to notify about modification from here
+                        EditContext.NotifyFieldChanged(FieldIdentifier);
                     }
-
-                    _parsingValidationMessages.Add(FieldIdentifier, validationErrorMessage);
-
-                    // Since we're not writing to CurrentValue, we'll need to notify about modification from here
-                    EditContext.NotifyFieldChanged(FieldIdentifier);
                 }
 
                 // We can skip the validation notification if we were previously valid and still are
-                if (parsingFailed || _previousParsingAttemptFailed)
+                if ((parsingFailed || _previousParsingAttemptFailed) && EditContext != null)
                 {
                     EditContext.NotifyValidationStateChanged();
                     _previousParsingAttemptFailed = parsingFailed;
