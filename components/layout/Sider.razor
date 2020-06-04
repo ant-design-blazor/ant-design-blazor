@@ -14,7 +14,7 @@
             @ChildContent
         </div>
     </CascadingValue>
-    @if (Collapsible && Breakpoint != null)
+    @if (Collapsible && !NoTrigger)
     {
         <div class="ant-layout-sider-trigger" style="width: @($"{width}px")" @onclick="ToggleCollapsed">
             @Trigger
