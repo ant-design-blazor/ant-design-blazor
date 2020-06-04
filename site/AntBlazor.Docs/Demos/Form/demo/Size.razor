@@ -1,0 +1,48 @@
+﻿@using System.Text.Json;
+
+<Form Model="@model" 
+      LabelCol="new ColLayoutParam { Span = 8 }"
+      WrapperCol="new ColLayoutParam { Span = 16 }"
+      OnFinish="OnFinish" 
+      OnFinishFailed="OnFinishFailed">
+    <FormItem Label="Form Size" >
+        <RadioGroup @bind-Value="@context.Size" Size="@context.Size">
+            <Radio RadioButton Value="@AntSizeLDSType.Small">Small</Radio>
+            <Radio RadioButton Value="@AntSizeLDSType.Default">Default</Radio>
+            <Radio RadioButton Value="@AntSizeLDSType.Large">Large</Radio>
+        </RadioGroup>
+    </FormItem>
+
+    <FormItem Label="Input" >
+        <Input @bind-Value="@context.Input" Size="@context.Size"/>
+    </FormItem>
+    <FormItem Label="InputNumber">
+        <AntDesign.InputNumber @bind-Value="@context.Number" Size="@context.Size" />
+    </FormItem>
+    <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+</Form>
+@code
+{
+    public class Model
+    {
+        public string Size { get; set; } = AntSizeLDSType.Small;
+        public string Input { get; set; }
+        public double Number { get; set; }
+    }
+
+    private Model model = new Model();
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+}
