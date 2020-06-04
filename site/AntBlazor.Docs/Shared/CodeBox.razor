@@ -1,12 +1,13 @@
 ﻿@using System.Reflection
 @using AntDesign.JsInterop
+@using System.Net
 @inherits ComponentBase
 
 <div class="code-box" id="@DemoId">
     <section class="code-box-demo">
         @if (Demo.Iframe > 0)
         {
-            <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@($"/mock?type={Demo.Type}")" />
+            <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@($"/mock?demoId={@DemoId}&type={Demo.Type}")" />
         }
         else
         {
@@ -45,16 +46,14 @@
             <HighlightedCode Code="@Demo.Code" CanLoad="codeExpand" Language="html"></HighlightedCode>
         </div>
     </section>
-    <Style>
+    <style>
         @Demo.Style
-    </Style>
+    </style>
 </div>
 
 @inject InteropService InteropService
 
 @code {
-
-
 
     [Parameter]
     public string ComponentName { get; set; }
