@@ -101,7 +101,7 @@ namespace AntDesign
 
             if (num >= Min && num <= Max)
             {
-                Value = num;
+                CurrentValue = num;
             }
         }
 
@@ -120,7 +120,7 @@ namespace AntDesign
             return cls;
         }
 
-        private string DisplayValue()
+        protected override string FormatValueAsString(double value)
         {
             if (Formatter != null)
             {
