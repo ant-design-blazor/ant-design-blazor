@@ -1,12 +1,18 @@
 ﻿@page "/mock"
 @using System.Reflection
+@using System.Net
 @layout BlankLayout;
 
+<div id="@DemoId">
+    @ShowCaseContent
+</div>
 
-@ShowCaseContent
 
 @code
 {
+    [Parameter]
+    public string DemoId { get; set; }
+
     [Parameter]
     public string Type { get; set; }
 

@@ -22,6 +22,8 @@ namespace AntDesign
 
         [Parameter] public RenderFragment Trigger { get; set; }
 
+        [Parameter] public bool NoTrigger { get; set; }
+
         [CascadingParameter] public Layout Parent { get; set; }
 
         [Parameter] public BreakpointType Breakpoint { get; set; }
@@ -82,11 +84,10 @@ namespace AntDesign
         {
             base.OnInitialized();
             Parent?.HasSider();
-            if (Trigger == null)
+            if (Trigger == null && !NoTrigger)
             {
                 Trigger = defaultTrigger;
             }
-
             isCollapsed = Collapsed;
             SetClass();
         }

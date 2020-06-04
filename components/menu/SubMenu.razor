@@ -9,7 +9,7 @@
 @if (RootMenu.InternalMode == MenuMode.Inline)
 {
     <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="position:relative;@Style">
-        <div class="@(prefixCls)-title" role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
+        <div class="@(prefixCls)-title" style="padding-left: @(PaddingLeft)px; " role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
 
             @if (Title.IsT0)
             {
