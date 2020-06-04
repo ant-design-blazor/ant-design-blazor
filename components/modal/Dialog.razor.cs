@@ -28,6 +28,7 @@ namespace AntDesign
         private bool _hasShow;
         private bool _hasDestroy = true;
         private string _wrapStyle = "";
+        private bool _disableBodyScroll;
 
         /// <summary>
         /// dialog root container
@@ -244,8 +245,22 @@ namespace AntDesign
                     Show();
                     StateHasChanged();
                 }
-            }
 
+                if (!_disableBodyScroll)
+                {
+                    _disableBodyScroll = true;
+                    await JsInvokeAsync(JSInteropConstants.disableBodyScroll);
+                }
+            }
+            else
+            {
+                if (_disableBodyScroll)
+                {
+                    _disableBodyScroll = false;
+                    await Task.Delay(250);
+                    await JsInvokeAsync(JSInteropConstants.enableModalBodyScroll);
+                }
+            }
             await base.OnAfterRenderAsync(isFirst);
         }
         #endregion

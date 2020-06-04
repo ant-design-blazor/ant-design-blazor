@@ -24,6 +24,7 @@ namespace AntDesign
         public static string focus => $"{FUNC_PREFIX}focus";
 
         public static string blur => $"{FUNC_PREFIX}blur";
+
         public static string backTop => $"{FUNC_PREFIX}BackTop";
 
         public static string getFirstChildDomInfo => $"{FUNC_PREFIX}getFirstChildDomInfo";
@@ -45,5 +46,11 @@ namespace AntDesign
         public static string focusDialog => $"{FUNC_PREFIX}focusDialog";
 
         public static string getWindow = $"{FUNC_PREFIX}getWindow";
+
+        public static string disableBodyScroll => $"{FUNC_PREFIX}disableBodyScroll";
+
+        public static string enableModalBodyScroll => $"{FUNC_PREFIX}enableModalBodyScroll";
+
+        public static string enableDrawerBodyScroll => $"{FUNC_PREFIX}enableDrawerBodyScroll";
     }
 }
