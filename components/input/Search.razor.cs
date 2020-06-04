@@ -96,7 +96,6 @@ namespace AntDesign
             {
                 await OnSearch.InvokeAsync(EventArgs.Empty);
             }
-            await Task.Delay(TimeSpan.FromSeconds(10));
             _isSearching = false;
             StateHasChanged();
         }

@@ -53,10 +53,7 @@ namespace AntDesign
                 CheckboxGroup?.CheckboxItems.Add(checkbox);
             }
 
-            if (Form != null)
-            {
-                CurrentValue = Checked;
-            }
+            Value = Checked;
         }
 
         protected void SetClass()
@@ -75,10 +72,7 @@ namespace AntDesign
             {
                 await InnerCheckedChange(value);
 
-                if (Form != null)
-                {
-                    CurrentValue = Checked;
-                }
+                CurrentValue = Checked;
             }
         }
 

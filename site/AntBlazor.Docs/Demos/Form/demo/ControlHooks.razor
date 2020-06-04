@@ -1,6 +1,5 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
-@using AntDesign.Internal
 
 <Form @ref="form" 
       Model="@model" 
@@ -9,7 +8,7 @@
       OnFinish="OnFinish" 
       OnFinishFailed="OnFinishFailed">
     <FormItem Label="Note">
-        <Input @bind-Value="@model.Note" />
+        <Input @bind-Value="@context.Note" />
     </FormItem>
 
     <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
@@ -33,7 +32,7 @@
     }
 
     private Model model = new Model();
-    private IForm form;
+    private Form<Model> form;
 
     private void OnFill(MouseEventArgs args)
     {

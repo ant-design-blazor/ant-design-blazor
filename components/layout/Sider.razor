@@ -1,50 +1,23 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<CascadingValue Value="this">
-    <aside class="@ClassMapper.Class" @ref="Ref" style="@InternalStyle @Style" id="@Id">
-        @if (IsZeroTrigger)
-        {
-            <span class="ant-layout-sider-zero-width-trigger" @onclick="ToggleCollapse">
-                @if (ZeroTrigger != null)
-                {
-                    @ZeroTrigger
-                }
-                else
-                {
-                    <AntIcon Type="bars"></AntIcon>
-                }
-            </span>
-        }
-
+<aside class="@ClassMapper.Class" style="@SiderStyles @Style">
+    @if (isCollapsed && CollapsedWidth == 0)
+    {
+        <span class="ant-layout-sider-zero-width-trigger ant-layout-sider-zero-width-trigger-left"
+              @onclick="ToggleCollapsed">
+            <AntIcon Type="bars" />
+        </span>
+    }
+    <CascadingValue Value="this">
         <div class="ant-layout-sider-children">
             @ChildContent
         </div>
-
-        @if (IsSiderTrigger)
-        {
-            <div class="ant-layout-sider-trigger"
-                 @onclick="ToggleCollapse"
-                 style="width: @WidthSetting">
-                @SiderTrigger
-            </div>
-        }
-    </aside>
-</CascadingValue>
-
-@code {
-
-
-    private RenderFragment<Sider> defaultTrigger = (sider) =>
-    @<Template>
-        @if (!sider.ReverseArrow)
-        {
-            <AntIcon Type="@(sider.Collapsed ? "right" : "left")"></AntIcon>
-        }
-        else
-        {
-            <AntIcon Type="@(sider.Collapsed ? "left" : "right")"></AntIcon>
-        }
-    </Template>;
-
-}
+    </CascadingValue>
+    @if (Collapsible && !NoTrigger)
+    {
+        <div class="ant-layout-sider-trigger" style="width: @($"{width}px")" @onclick="ToggleCollapsed">
+            @Trigger
+        </div>
+    }
+</aside>
