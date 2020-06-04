@@ -5,25 +5,25 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace AntDesign
 {
-    public partial class Column<TItem> : AntComponentBase, ITableColumn
+    public partial class Column<TData> : AntDomComponentBase, ITableColumn
     {
         [Parameter]
         public string Title { get; set; }
 
         [Parameter]
-        public TItem Field { get; set; }
+        public TData Field { get; set; }
 
         [Parameter]
-        public EventCallback<TItem> FieldChanged { get; set; }
+        public EventCallback<TData> FieldChanged { get; set; }
 
         [Parameter]
-        public Expression<Func<TItem>> FieldExpression { get; set; }
+        public Expression<Func<TData>> FieldExpression { get; set; }
 
         [Parameter]
         public bool Sort { get; set; }
 
         [Parameter]
-        public RenderFragment<TItem> CellRender { get; set; }
+        public RenderFragment<TData> CellRender { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -40,6 +40,13 @@ namespace AntDesign
 
         public string FieldName => _fieldIdentifier?.FieldName;
 
+        private void SetClass()
+        {
+            ClassMapper
+                .If("ant-table-cell", () => IsHeader)
+                ;
+        }
+
         protected override void OnInitialized()
         {
             if (FieldExpression != null)
@@ -48,6 +55,7 @@ namespace AntDesign
             }
 
             Table?.AddColumn(this);
+            SetClass();
         }
     }
 }

@@ -1,21 +1,29 @@
 ﻿@using System.ComponentModel
 
-<Table DataSource="@forecasts" Total="_total" @bind-PageIndex="_pageIndex" @bind-PageSize="_pageSize" OnPageIndexChange="async e=>await fetchData(e)">
-    <Column @bind-Field="@context.Id" />
+<Table DataSource="@forecasts"
+       Total="_total"
+       @bind-PageIndex="_pageIndex"
+       @bind-PageSize="_pageSize"
+       OnPageIndexChange="async e=>await fetchData(e)">
+    <RowSelection Type="checkbox" SelectedRows="selectedRows"/>
+    <Column @bind-Field="@context.Id"/>
     <Column @bind-Field="@context.Date">
         @context.Date.ToShortDateString()
     </Column>
-    <Column @bind-Field="@context.TemperatureC" />
-    <Column Title="Temp. (F)" Field="@context.TemperatureF" />
-    <Column @bind-Field="@context.Summary" />
+    <Column @bind-Field="@context.TemperatureC"/>
+    <Column Title="Temp. (F)" Field="@context.TemperatureF"/>
+    <Column @bind-Field="@context.Summary"/>
 </Table>
 
-<br/>
+<br />
 <p>pageIndex: @_pageIndex | pageSize: @_pageSize | Total: @_total</p>
 
 @code {
 
     WeatherForecast[] forecasts;
+
+    WeatherForecast[] selectedRows;
+
     int _pageIndex = 1;
     int _pageSize = 10;
     int _total = 0;
