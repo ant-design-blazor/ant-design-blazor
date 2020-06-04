@@ -143,8 +143,8 @@ If you would like to contribute, feel free to create a [Pull Request](https://gi
 
 If you encounter any problems in the process, feel free to ask for help via following channels. We also encourage experienced users to help newcomers.
 
-- [![Slack Group](https://img.shields.io/badge/Slack-AntDesign-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/AntDesign/shared_invite/zt-cw1enker-xVw3s93cTf4uhY2lRGRyRw) (Chinese & English)
-- [![Ding Talk Group](https://img.shields.io/badge/DingTalk-AntDesign-blue.svg?style=flat-square)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) (Chinese)
+- [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/AntBlazor/shared_invite/zt-etfaf1ww-AEHRU41B5YYKij7SlHqajA) (Chinese & English)
+- [![Ding Talk Group](https://img.shields.io/badge/DingTalk-AntBlazor-blue.svg?style=flat-square)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11) (Chinese)
 
 <details>
   <summary>Scan QR Code with DingTalk</summary>
