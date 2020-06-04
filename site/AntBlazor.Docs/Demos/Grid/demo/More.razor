@@ -1,0 +1,40 @@
+﻿<div>
+    <AntRow>
+        <AntCol Xs="@xs1" Lg="lg1">
+            Col
+        </AntCol>
+        <AntCol Xs="@xs2" Lg="lg1">
+            Col
+        </AntCol>
+        <AntCol Xs="@xs3" Lg="lg1">
+                Col
+        </AntCol>
+    </AntRow>
+</div>
+
+@code
+{
+    EmbeddedProperty xs1 = new EmbeddedProperty()
+    {
+        Span="5",
+        Offset="1"
+    };
+
+    EmbeddedProperty lg1 = new EmbeddedProperty()
+    {
+        Span = "6",
+        Offset = "2"
+    };
+
+    EmbeddedProperty xs2 = new EmbeddedProperty()
+    {
+        Span = "11",
+        Offset = "1"
+    };
+
+    EmbeddedProperty xs3= new EmbeddedProperty()
+    {
+        Span = "5",
+        Offset = "1"
+    };
+}
