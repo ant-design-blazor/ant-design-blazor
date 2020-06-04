@@ -184,7 +184,7 @@ namespace AntDesign
 
             this.TitleClassMapper.Clear()
                 .If("ant-drawer-header", () => _title.Value != null)
-                .If("ant-drawer-header-no-title", () => _title.Value != null)
+                .If("ant-drawer-header-no-title", () => _title.Value == null)
                 ;
         }
 
@@ -303,13 +303,16 @@ namespace AntDesign
                 case "left":
                     _widthTransition = $"width 0s {_ease} {_duration}";
                     break;
+
                 case "right":
                     _widthTransition = $"width 0s {_ease} {_duration}";
                     break;
+
                 case "top":
                 case "bottom":
                     _heightTransition = $"height 0s {_ease} {_duration}";
                     break;
+
                 default:
                     break;
             }

@@ -185,18 +185,18 @@ export function getActiveElement() {
 }
 
 export function focusDialog(selector: string, count: number = 0) {
-    let ele = <HTMLElement>document.querySelector(selector);
-    if (ele && !ele.hasAttribute("disabled")) {
-        setTimeout(() => {
-            ele.focus();
-            let curId = "#" + getActiveElement();
-            if (curId !== selector) {
-                if (count < 10) {
-                    focusDialog(selector, count + 1);
-                }
-            }
-        }, 10);
-    }
+  let ele = <HTMLElement>document.querySelector(selector);
+  if (ele && !ele.hasAttribute("disabled")) {
+    setTimeout(() => {
+      ele.focus();
+      let curId = "#" + getActiveElement();
+      if (curId !== selector) {
+        if (count < 10) {
+          focusDialog(selector, count + 1);
+        }
+      }
+    }, 10);
+  }
 }
 
 export function getWindow() {
@@ -222,75 +222,75 @@ function debounce(func, wait, immediate) {
 };
 
 export function css(element: HTMLElement, name: string | object, value: string | null = null) {
-    if (typeof name === 'string') {
-        element.style[name] = value;
-    } else {
-        for (let key in name) {
-            if (name.hasOwnProperty(key)) {
-                element.style[key] = name[key];
-            }
-        }
+  if (typeof name === 'string') {
+    element.style[name] = value;
+  } else {
+    for (let key in name) {
+      if (name.hasOwnProperty(key)) {
+        element.style[key] = name[key];
+      }
     }
+  }
 }
 
 export function addCls(selector: Element | string, clsName: string | Array<string>) {
-    let element = getDom(selector);
+  let element = getDom(selector);
 
-    if (typeof clsName === "string") {
-        element.classList.add(clsName);
-    } else {
-        element.classList.add(...clsName);
-    }
+  if (typeof clsName === "string") {
+    element.classList.add(clsName);
+  } else {
+    element.classList.add(...clsName);
+  }
 }
 
 export function removeCls(selector: Element | string, clsName: string | Array<string>) {
-    let element = getDom(selector);
+  let element = getDom(selector);
 
-    if (typeof clsName === "string") {
-        element.classList.remove(clsName);
-    } else {
-        element.classList.remove(...clsName);
-    }
+  if (typeof clsName === "string") {
+    element.classList.remove(clsName);
+  } else {
+    element.classList.remove(...clsName);
+  }
 }
 
 export function disableBodyScroll() {
-    css(document.body,
-        {
-            "position": "relative",
-            "width": "calc(100% - 17px)",
-            "overflow": "hidden"
-        });
-    addCls(document.body, "ant-scrolling-effect");
+  css(document.body,
+    {
+      "position": "relative",
+      "width": "calc(100% - 17px)",
+      "overflow": "hidden"
+    });
+  addCls(document.body, "ant-scrolling-effect");
 }
 
 function enableBodyScroll(selector, filter = null) {
-    let length = 0;
-    let queryElements = document.querySelectorAll(selector);
-    if (typeof filter === "function") {
-        queryElements.forEach((value, key, parent) => {
-            if (!filter(value, key, parent)) {
-                length += 1;
-            }
-        });
-    } else {
-        length = queryElements.length;
-    }
-    if (length === 0) {
-        css(document.body,
-            {
-                "position": null,
-                "width": null,
-                "overflow": null
-            });
-        removeCls(document.body, "ant-scrolling-effect");
-    }
+  let length = 0;
+  let queryElements = document.querySelectorAll(selector);
+  if (typeof filter === "function") {
+    queryElements.forEach((value, key, parent) => {
+      if (!filter(value, key, parent)) {
+        length += 1;
+      }
+    });
+  } else {
+    length = queryElements.length;
+  }
+  if (length === 0) {
+    css(document.body,
+      {
+        "position": null,
+        "width": null,
+        "overflow": null
+      });
+    removeCls(document.body, "ant-scrolling-effect");
+  }
 }
 
 export function enableModalBodyScroll() {
-    enableBodyScroll(".ant-modal-mask:not(.ant-modal-mask-hidden)");
+  enableBodyScroll(".ant-modal-mask:not(.ant-modal-mask-hidden)");
 }
 
 export function enableDrawerBodyScroll() {
-    enableBodyScroll(".ant-drawer-open",
-        (value, key, parent) => { return value.style.position === "absolute" } );
+  enableBodyScroll(".ant-drawer-open",
+    (value, key, parent) => { return value.style.position === "absolute" });
 }
