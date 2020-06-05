@@ -36,6 +36,15 @@ export function getBoundingClientRect(element) {
   return dom.getBoundingClientRect();
 }
 
+export function getInnerText(element) {
+    let dom = getDom(element);
+    return dom.innerText;
+}
+
+export function getScroll() {
+    return { x: window.pageXOffset, y: window.pageYOffset };
+}
+
 export function addDomEventListener(element, eventName, invoker) {
   let callback = args => {
     const obj = {};

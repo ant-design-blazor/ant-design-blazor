@@ -13,6 +13,10 @@ namespace AntDesign
 
         public static string getBoundingClientRect => $"{FUNC_PREFIX}getBoundingClientRect";
 
+        public static string getScroll => $"{FUNC_PREFIX}getScroll";
+
+        public static string getInnerText => $"{FUNC_PREFIX}getInnerText";
+
         public static string addDomEventListener => $"{FUNC_PREFIX}addDomEventListener";
 
         public static string matchMedia => $"{FUNC_PREFIX}matchMedia";

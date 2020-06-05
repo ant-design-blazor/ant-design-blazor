@@ -2,17 +2,14 @@
 using Microsoft.AspNetCore.Components;
 
 #pragma warning disable 1591
-// ReSharper disable once CheckNamespace
 
 namespace AntDesign
 {
     public partial class SelectOptGroup : AntDomComponentBase
     {
         #region Private
-
-        private const string ClassNamePrefix = "ant-select-opt-group";
-
-        #endregion Private
+        private const string ClassNamePrefix = "ant-select-item-group";
+        #endregion
 
         #region Protected
 
@@ -33,6 +30,7 @@ namespace AntDesign
         protected void SetClassMap()
         {
             ClassMapper.Clear()
+                .Add("ant-select-item")
                 .Add(ClassNamePrefix);
         }
 
@@ -45,15 +43,17 @@ namespace AntDesign
         #region Properties
 
         #region Parameters
+<<<<<<< HEAD
 
         [CascadingParameter]
         public Select Parent { get; set; }
+=======
+        [Parameter] public string Key { get; set; }
+>>>>>>> feat: add Select
 
-        [Parameter]
-        public string Key { get; set; }
+        [Parameter] public string Label { get; set; }
 
-        [Parameter]
-        public string Label { get; set; }
+        [CascadingParameter] public Select Parent { get; set; }
 
         [Parameter] public RenderFragment ChildContent { get; set; }
 
