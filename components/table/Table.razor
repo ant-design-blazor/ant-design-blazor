@@ -13,46 +13,51 @@
                         OnPageIndexChange="HandlePageIndexChange"
                         OnPageSizeChange="HandlePageSizeChange" />
         }
-        <div class="ant-table">
-            <div class="ant-table-container">
-                <div class="ant-table-content">
-                    <table style="table-layout: auto;">
-                        <colgroup></colgroup>
-                        <thead class="ant-table-thead">
-                            <tr>
-                                <CascadingValue Value="@this" TValue="ITable">
+
+        <CascadingValue Value="@this" TValue="ITable">
+            <div class="ant-table">
+                <div class="ant-table-container">
+                    <div class="ant-table-content">
+                        <table style="table-layout: auto;">
+                            <colgroup></colgroup>
+                            <thead class="ant-table-thead">
+                                <tr>
                                     <CascadingValue Name="IsHeader" Value="true">
                                         @if (_fieldModel != null)
                                         {
                                             @ChildContent(_fieldModel)
                                         }
                                     </CascadingValue>
-                                </CascadingValue>
-                            </tr>
-                        </thead>
-                        <tbody class="ant-table-tbody">
-                            @if (Total <= 0)
-                            {
-                                <tr class="ant-table-placeholder">
-                                    <td colspan="6" class="ant-table-cell">
-                                        <Empty Simple />
-                                    </td>
                                 </tr>
-                            }
-                            else if (ShowItems != null && _columns.Count > 0)
-                            {
-                                @foreach (var data in ShowItems)
+                            </thead>
+                            <tbody class="ant-table-tbody">
+                                @if (ActualTotal <= 0)
                                 {
-                                    <tr class="ant-table-row ant-table-row-level-0">
-                                        @ChildContent(data)
+                                    <tr class="ant-table-placeholder">
+                                        <td colspan="6" class="ant-table-cell">
+                                            <Empty Simple />
+                                        </td>
                                     </tr>
                                 }
-                            }
-                        </tbody>
-                    </table>
+                                else if (ShowItems != null && _columns.Count > 0)
+                                {
+                                    for (int i = 0; i < ShowItems.Count(); i++)
+                                    {
+                                        var data = ShowItems.ElementAt(i);
+                                        var @checked = HeaderSelection?.RowSelections.ElementAtOrDefault(i)?.Checked??false;
+                                        <CascadingValue Value="i" Name="Index">
+                                                <tr class="ant-table-row ant-table-row-level-0 @(@checked ? "ant-table-row-selected" : "")">
+                                                    @ChildContent(data)
+                                                </tr>
+                                        </CascadingValue>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
+        </CascadingValue>
         @if (ShowPagination && PaginationPosition.Contains("bottom"))
         {
             <Pagination Class="@PaginationClass"

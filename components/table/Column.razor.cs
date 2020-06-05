@@ -5,40 +5,52 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace AntDesign
 {
-    public partial class Column<TItem> : AntComponentBase, ITableColumn
+    public partial class Column<TData> : AntDomComponentBase, ITableColumn
     {
-        [Parameter]
-        public string Title { get; set; }
-
-        [Parameter]
-        public TItem Field { get; set; }
-
-        [Parameter]
-        public EventCallback<TItem> FieldChanged { get; set; }
-
-        [Parameter]
-        public Expression<Func<TItem>> FieldExpression { get; set; }
-
-        [Parameter]
-        public bool Sort { get; set; }
-
-        [Parameter]
-        public RenderFragment<TItem> CellRender { get; set; }
-
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
-
         [CascadingParameter]
         public ITable Table { get; set; }
 
         [CascadingParameter(Name = "IsHeader")]
         public bool IsHeader { get; set; }
 
+        [CascadingParameter(Name = "Index")]
+        public int Index { get; set; }
+
+        [Parameter]
+        public string Title { get; set; }
+
+        [Parameter]
+        public TData Field { get; set; }
+
+        [Parameter]
+        public EventCallback<TData> FieldChanged { get; set; }
+
+        [Parameter]
+        public Expression<Func<TData>> FieldExpression { get; set; }
+
+        [Parameter]
+        public bool Sort { get; set; }
+
+        [Parameter]
+        public RenderFragment<TData> CellRender { get; set; }
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        public bool Selected { get; set; }
+
         private FieldIdentifier? _fieldIdentifier;
 
         public string DisplayName => _fieldIdentifier?.GetDisplayName();
 
         public string FieldName => _fieldIdentifier?.FieldName;
+
+        private void SetClass()
+        {
+            ClassMapper
+                .If("ant-table-cell", () => IsHeader)
+                ;
+        }
 
         protected override void OnInitialized()
         {
@@ -48,6 +60,7 @@ namespace AntDesign
             }
 
             Table?.AddColumn(this);
+            SetClass();
         }
     }
 }

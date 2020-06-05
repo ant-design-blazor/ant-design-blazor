@@ -1,6 +1,6 @@
 ﻿@using System.ComponentModel
 
-<Table DataSource="@data">
+<Table DataSource="@data" ClientSide>
     <Column @bind-Field="@context.Name">
         <a>@context.Name</a>
     </Column>
@@ -17,7 +17,7 @@
             <AntTag Color="@color">@tag</AntTag>
         }
     </Column>
-    <Column TItem="string" Title="Acton">
+    <Column TData="string" Title="Acton">
         <Space Size="middle">
             <SpaceItem>
                 <a>Invite @context.Name</a>
