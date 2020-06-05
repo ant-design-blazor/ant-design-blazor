@@ -2,7 +2,18 @@
 @inherits AntDomComponentBase
 @typeparam TData
 
-@if (IsHeader)
+@if (IsPlaceholder)
+{
+    <td style="padding: 0px; border: 0px; height: 0px;"></td>
+}
+else if (InColGroup)
+{
+    if (Width != null)
+    {
+        <col style="width: @Width; min-width: @Width;">
+    }
+}
+else if (IsHeader)
 {
     <th class="ant-table-cell">
         @(Title ?? DisplayName ?? FieldName)

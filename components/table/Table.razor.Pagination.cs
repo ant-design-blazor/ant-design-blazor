@@ -25,19 +25,16 @@ namespace AntDesign
         public EventCallback<int> TotalChanged { get; set; }
 
         [Parameter]
-        public int PageIndex { get; set; }
+        public int PageIndex { get; set; } = 1;
 
         [Parameter]
         public EventCallback<int> PageIndexChanged { get; set; }
 
         [Parameter]
-        public int PageSize { get; set; }
+        public int PageSize { get; set; } = 10;
 
         [Parameter]
         public EventCallback<int> PageSizeChanged { get; set; }
-
-        [Parameter]
-        public bool ClientSide { get; set; }
 
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageIndexChange { get; set; }
@@ -45,12 +42,11 @@ namespace AntDesign
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
-        private IEnumerable<TItem> ShowItems => !ClientSide ? DataSource : DataSource.Skip(_pageIndex - 1 * _pageSize).Take(_pageSize);
+        private IEnumerable<TItem> ShowItems => Total > 0 ? DataSource : DataSource.Skip((PageIndex - 1) * PageSize).Take(PageSize);
 
-        private int ActualTotal => !ClientSide ? Total : DataSource.Count();
+        private int ActualTotal => Total > 0 ? Total : _total;
 
-        private int _pageSize = 10;
-        private int _pageIndex = 1;
+        private int _total = 0;
 
         private string PaginationClass => $"ant-table-pagination ant-table-pagination-{Regex.Replace(PaginationPosition, "bottom|top", "").ToLowerInvariant()}";
 

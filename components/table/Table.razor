@@ -17,44 +17,43 @@
         <CascadingValue Value="@this" TValue="ITable">
             <div class="ant-table">
                 <div class="ant-table-container">
-                    <div class="ant-table-content">
-                        <table style="table-layout: auto;">
-                            <colgroup></colgroup>
-                            <thead class="ant-table-thead">
-                                <tr>
-                                    <CascadingValue Name="IsHeader" Value="true">
-                                        @if (_fieldModel != null)
-                                        {
-                                            @ChildContent(_fieldModel)
-                                        }
-                                    </CascadingValue>
-                                </tr>
-                            </thead>
-                            <tbody class="ant-table-tbody">
-                                @if (ActualTotal <= 0)
-                                {
-                                    <tr class="ant-table-placeholder">
-                                        <td colspan="6" class="ant-table-cell">
-                                            <Empty Simple />
-                                        </td>
-                                    </tr>
-                                }
-                                else if (ShowItems != null && _columns.Count > 0)
-                                {
-                                    for (int i = 0; i < ShowItems.Count(); i++)
-                                    {
-                                        var data = ShowItems.ElementAt(i);
-                                        var @checked = HeaderSelection?.RowSelections.ElementAtOrDefault(i)?.Checked??false;
-                                        <CascadingValue Value="i" Name="Index">
-                                                <tr class="ant-table-row ant-table-row-level-0 @(@checked ? "ant-table-row-selected" : "")">
-                                                    @ChildContent(data)
-                                                </tr>
+                    @if (ScrollX != null || ScrollY != null)
+                    {
+                        <div class="ant-table-header" style="overflow: hidden;">
+                            <table style="table-layout: fixed;">
+                                @colGroup(this)
+                                @header(this)
+                            </table>
+                        </div>
+                        <div class="ant-table-body" style="overflow-y: scroll; max-height: @ScrollY;">
+                            <table style="table-layout: fixed;">
+                                @colGroup(this)
+                                <tbody class="ant-table-tbody">
+                                    <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px;">
+                                        <CascadingValue Name="IsPlaceholder" Value="true">
+                                            @if (_fieldModel != null)
+                                            {
+                                                @ChildContent(_fieldModel)
+                                            }
                                         </CascadingValue>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                                    </tr>
+                                    @body(this)
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="ant-table-content">
+                            <table style="table-layout: auto;">
+                                @colGroup(this)
+                                @header(this)
+                                <tbody class="ant-table-tbody">
+                                    @body(this)
+                                </tbody>
+                            </table>
+                        </div>
+                    }
                 </div>
             </div>
         </CascadingValue>
@@ -69,3 +68,58 @@
         }
     </Spin>
 </div>
+
+@code
+{
+    RenderFragment<Table<TItem>> header = table =>
+        @<Template>
+            <thead class="ant-table-thead">
+            <tr>
+                <CascadingValue Name="IsHeader" Value="true">
+                    @if (_fieldModel != null)
+                    {
+                        @table.ChildContent(_fieldModel)
+                    }
+                </CascadingValue>
+            </tr>
+            </thead>
+        </Template>;
+
+    RenderFragment<Table<TItem>> colGroup = table =>
+        @<Template>
+            <CascadingValue Name="InColGroup" Value="true">
+                <colgroup>
+                    @if (_fieldModel != null)
+                    {
+                        @table.ChildContent(Table<TItem>._fieldModel)
+                    }
+                </colgroup>
+            </CascadingValue>
+        </Template>;
+
+    RenderFragment<Table<TItem>> body = table =>
+        @<Template>
+
+            @if (table.ActualTotal <= 0)
+            {
+                <tr class="ant-table-placeholder">
+                    <td colspan="6" class="ant-table-cell">
+                        <Empty Simple/>
+                    </td>
+                </tr>
+            }
+            else if (table.ShowItems != null && table._columns.Count > 0)
+            {
+                for (int i = 0; i < table.ShowItems.Count(); i++)
+                {
+                    var data = table.ShowItems.ElementAt(i);
+                    var @checked = table.HeaderSelection?.RowSelections.ElementAtOrDefault(i)?.Checked ?? false;
+    <CascadingValue Value="i" Name="Index">
+        <tr class="ant-table-row ant-table-row-level-0 @(@checked ? "ant-table-row-selected" : "")">
+            @table.ChildContent(data)
+        </tr>
+    </CascadingValue>
+                }
+            }
+        </Template>;
+}

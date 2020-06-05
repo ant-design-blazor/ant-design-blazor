@@ -11,7 +11,15 @@ namespace AntDesign
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
 
         [Parameter]
-        public IEnumerable<TItem> DataSource { get; set; }
+        public IEnumerable<TItem> DataSource
+        {
+            get => _dataSource;
+            set
+            {
+                _total = value.Count();
+                _dataSource = value;
+            }
+        }
 
         [Parameter]
         public RenderFragment<TItem> ChildContent { get; set; }
@@ -25,9 +33,17 @@ namespace AntDesign
         [Parameter]
         public bool Loading { get; set; }
 
+        [Parameter]
+        public string ScrollX { get; set; }
+
+        [Parameter]
+        public string ScrollY { get; set; }
+
         private readonly IList<ITableColumn> _columns = new List<ITableColumn>();
 
         public IRowSelection HeaderSelection { get; set; }
+
+        private IEnumerable<TItem> _dataSource;
 
         public void AddColumn(ITableColumn column)
         {

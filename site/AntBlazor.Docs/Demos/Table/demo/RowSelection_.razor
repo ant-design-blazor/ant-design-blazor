@@ -15,7 +15,7 @@
         }
     </h5>
 
-    <Table DataSource="@data" @bind-SelectedRows="selectedRows" ClientSide>
+    <Table DataSource="@data" @bind-SelectedRows="selectedRows">
         <RowSelection Type="@selectionType" Disabled="@(context.Name=="Disabled User")"/>
         <Column @bind-Field="@context.Name">
             <a>@context.Name</a>

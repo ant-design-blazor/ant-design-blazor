@@ -13,6 +13,12 @@ namespace AntDesign
         [CascadingParameter(Name = "IsHeader")]
         public bool IsHeader { get; set; }
 
+        [CascadingParameter(Name = "InColGroup")]
+        public bool InColGroup { get; set; }
+
+        [CascadingParameter(Name = "IsPlaceholder")]
+        public bool IsPlaceholder { get; set; }
+
         [CascadingParameter(Name = "Index")]
         public int Index { get; set; }
 
@@ -21,6 +27,9 @@ namespace AntDesign
 
         [Parameter]
         public TData Field { get; set; }
+
+        [Parameter]
+        public string Width { get; set; }
 
         [Parameter]
         public EventCallback<TData> FieldChanged { get; set; }

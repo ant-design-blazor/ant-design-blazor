@@ -5,7 +5,9 @@
        @bind-PageIndex="_pageIndex"
        @bind-PageSize="_pageSize"
        OnPageIndexChange="async e=>await fetchData(e)"
-       @bind-SelectedRows="selectedRows">
+       @bind-SelectedRows="selectedRows"
+       ScrollY="240px"
+       >
     <RowSelection />
     <Column @bind-Field="@context.Id" />
     <Column @bind-Field="@context.Date">

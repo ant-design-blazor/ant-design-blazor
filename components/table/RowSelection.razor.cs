@@ -6,6 +6,12 @@ namespace AntDesign
 {
     public partial class RowSelection : AntDomComponentBase, IRowSelection
     {
+        [CascadingParameter(Name = "InColGroup")]
+        public bool InColGroup { get; set; }
+
+        [CascadingParameter(Name = "IsPlaceholder")]
+        public bool IsPlaceholder { get; set; }
+
         [CascadingParameter(Name = "IsHeader")] public bool IsHeader { get; set; }
 
         [CascadingParameter(Name = "Index")] public int Index { get; set; }
@@ -15,6 +21,8 @@ namespace AntDesign
         [Parameter] public string Type { get; set; } = "checkbox";
 
         [Parameter] public bool Disabled { get; set; }
+
+        [Parameter] public string Width { get; set; }
 
         public bool Checked { get; set; }
 
@@ -34,7 +42,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    Table?.HeaderSelection.RowSelections.Add(this);
+                    Table?.HeaderSelection?.RowSelections.Add(this);
                 }
             }
         }
