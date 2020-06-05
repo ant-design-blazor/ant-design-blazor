@@ -1,3 +1,91 @@
+<style>
+    .code-box-demo .ant-select {
+        margin: 0 8px 10px 0;
+    }
+
+    .ant-row-rtl .code-box-demo .ant-select {
+        margin: 0 0 10px 8px;
+    }
+
+    #components-select-demo-search-box .code-box-demo .ant-select {
+        margin: 0;
+    }
+</style>
+
+<AntRadioGroup @bind-Value="@_sizeValue" OnChange="OnChangeSize">
+    <AntRadio RadioButton value="large">Large</AntRadio>
+    <AntRadio RadioButton value="default">Default</AntRadio>
+    <AntRadio RadioButton value="small">Small</AntRadio>
+</AntRadioGroup>
+<br />
+<br />
+
+<Select Size="@_sizeValue"
+        DefaultValue="@("0a10")"
+        OnChange=OnChange
+        Style="width: 200px">
+    @foreach (var item in _items)
+    {
+        <SelectOption Value="@item" Title="@item">@item</SelectOption>
+    }
+</Select>
+<br />
+<br />
+
+<Select Mode="multiple"
+        Size="@_sizeValue"
+        Placeholder="Please select"
+        DefaultValue="@_defaultValues"
+        OnChange=OnChange
+        Style="width: 100%">
+    @foreach (var item in _items)
+    {
+        <SelectOption Value="@item">@item</SelectOption>
+    }
+</Select>
+<br />
+
+<Select Mode="multiple"
+        Size="@_sizeValue"
+        Placeholder="Please select"
+        DefaultValue="@_defaultValues"
+        OnChange=OnChange
+        Style="width: 100%">
+    @foreach (var item in _items)
+    {
+        <SelectOption Value="@item">@item</SelectOption>
+    }
+</Select>
+<br />
+
+@using OneOf;
 @code
 {
+    private string[] _items;
+    private string[] _defaultValues;
+    private string _sizeValue = AntSizeLDSType.Default;
+
+    protected override void OnInitialized()
+    {
+        var min = 10;
+        var max = 36;
+        _defaultValues = new[] { "0a10", "0c12" };
+
+        _items = new string[max - min];
+        for (var i = min; max > i; i++)
+        {
+            _items[i - min] = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+        }
+    }
+
+    private void OnChangeSize(string value)
+    {
+        _sizeValue = value;
+        Console.WriteLine($"selected size: ${value}");
+    }
+
+    private void OnChange(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value, OneOf<SelectOption, IEnumerable<SelectOption>> option)
+    {
+        Console.WriteLine($"selected: ${value}");
+    }
 }
