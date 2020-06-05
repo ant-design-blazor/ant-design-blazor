@@ -47,6 +47,8 @@ namespace AntDesign
 
         private IEnumerable<TItem> ShowItems => !ClientSide ? DataSource : DataSource.Skip(_pageIndex - 1 * _pageSize).Take(_pageSize);
 
+        private int ActualTotal => !ClientSide ? Total : DataSource.Count();
+
         private int _pageSize = 10;
         private int _pageIndex = 1;
 

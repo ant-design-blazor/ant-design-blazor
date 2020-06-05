@@ -13,7 +13,10 @@
                @ref="InputRef" />
         <span class="@InnerClassMapper.Class"></span>
     </span>
-    <span>@ChildContent</span>
+    @if (ChildContent != null)
+    {
+        <span>@ChildContent</span>
+    }
 </label>
 
 

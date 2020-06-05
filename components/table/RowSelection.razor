@@ -1,0 +1,25 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+@if (IsHeader)
+{
+    <th class="ant-table-cell ant-table-selection-column">
+        @if (Type == "checkbox")
+        {
+            <Checkbox @bind-Checked="Checked" CheckedChange="HandleCheckedChange" Indeterminate="Indeterminate"/>
+        }
+    </th>
+}
+else
+{
+    <td class="ant-table-cell ant-table-selection-column">
+        @if (Type == "checkbox")
+        {
+            <Checkbox @bind-Checked="Checked" Disabled="Disabled" CheckedChange="HandleCheckedChange"/>
+        }
+        else if (Type == "radio")
+        {
+            <Radio @bind-Checked="Checked" Disabled="Disabled" CheckedChange="HandleCheckedChange"/>
+        }
+    </td>
+}
