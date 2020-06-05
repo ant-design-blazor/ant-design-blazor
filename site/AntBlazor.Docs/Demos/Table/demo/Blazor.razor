@@ -1,6 +1,12 @@
 ﻿@using System.ComponentModel
 
-<Table DataSource="@forecasts" Total="_total" @bind-PageIndex="_pageIndex" @bind-PageSize="_pageSize" OnPageIndexChange="async e=>await fetchData(e)">
+<Table DataSource="@forecasts"
+       Total="_total"
+       @bind-PageIndex="_pageIndex"
+       @bind-PageSize="_pageSize"
+       OnPageIndexChange="async e=>await fetchData(e)"
+       @bind-SelectedRows="selectedRows">
+    <RowSelection />
     <Column @bind-Field="@context.Id" />
     <Column @bind-Field="@context.Date">
         @context.Date.ToShortDateString()
@@ -10,12 +16,25 @@
     <Column @bind-Field="@context.Summary" />
 </Table>
 
-<br/>
+<br />
 <p>pageIndex: @_pageIndex | pageSize: @_pageSize | Total: @_total</p>
+
+<br />
+<h5>selections:</h5>
+@if (selectedRows != null)
+{
+    @foreach (var selected in selectedRows)
+    {
+        <AntTag>@selected.Summary</AntTag>
+    }
+}
 
 @code {
 
     WeatherForecast[] forecasts;
+
+    IEnumerable<WeatherForecast> selectedRows;
+
     int _pageIndex = 1;
     int _pageSize = 10;
     int _total = 0;
