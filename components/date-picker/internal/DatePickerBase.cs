@@ -109,9 +109,6 @@ namespace AntDesign
         public string DropdownClassName { get; set; }
 
         [Parameter]
-        public string Size { get; set; } = DatePickerSize.Default;
-
-        [Parameter]
         public string Format { get; set; }
 
         protected readonly DateTime?[] _defaultValues = new DateTime?[2];

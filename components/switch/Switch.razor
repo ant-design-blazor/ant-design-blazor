@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @using OneOf;
 @using System.Timers
-@inherits AntDomComponentBase
+@inherits AntInputComponentBase<bool>
 
     <button type="button" role="switch"
             aria-checked="@(_isChecked?"true":"false")"
@@ -86,10 +86,6 @@
     public bool Control { get; set; }
 
     [Parameter]
-    public string Size { get; set; } = "default";
-
-
-    [Parameter]
     public EventCallback<bool> OnChange { get; set; }
 
     [Parameter]
@@ -111,6 +107,7 @@
         if (this._isChecked != value)
         {
             this._isChecked = value;
+            CurrentValue = value;
             this.OnChange.InvokeAsync(this._isChecked);
         }
     }
@@ -119,6 +116,7 @@
     {
         if (!Disabled && !Loading && !Control)
         {
+            CurrentValue = !this._isChecked;
             this.UpdateValue(!this._isChecked);
         }
     }

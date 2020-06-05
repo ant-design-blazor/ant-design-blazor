@@ -41,6 +41,7 @@ namespace AntDesign
                     builder.AddAttribute(_sequence++, "class", $"{PrefixCls}-search-button");
                     builder.AddAttribute(_sequence++, "type", "primary");
                     builder.AddAttribute(_sequence++, "size", Size);
+
                     if (_isSearching)
                     {
                         builder.AddAttribute(_sequence++, "loading", true);

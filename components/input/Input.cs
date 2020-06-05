@@ -32,9 +32,6 @@ namespace AntDesign
         public RenderFragment AddOnAfter { get; set; }
 
         [Parameter]
-        public string Size { get; set; } = InputSize.Default;
-
-        [Parameter]
         public string Placeholder { get; set; }
 
         [Parameter]
