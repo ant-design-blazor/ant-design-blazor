@@ -11,7 +11,7 @@
         }
         else if (Type == "radio")
         {
-            <Radio></Radio>
+         
         }
     </th>
 }
@@ -24,7 +24,7 @@ else
         }
         else if (Type == "radio")
         {
-            <Radio></Radio>
+            <Radio @bind-Checked="Checked" CheckedChange="HandleCheckedChange"></Radio>
         }
     </td>
 }

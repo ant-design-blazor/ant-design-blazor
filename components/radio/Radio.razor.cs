@@ -20,10 +20,16 @@ namespace AntDesign
         public bool RadioButton { get; set; }
 
         [Parameter]
-        public bool Checked { get; set; }
+        public bool Checked { get => _checked ?? false; set { _checked = value; } }
+
+        [Parameter]
+        public EventCallback<bool> CheckedChanged { get; set; }
 
         [Parameter]
         public bool Disabled { get; set; }
+
+        [Parameter]
+        public EventCallback<bool> CheckedChange { get; set; }
 
         [CascadingParameter] public RadioGroup RadioGroup { get; set; }
 
@@ -94,6 +100,8 @@ namespace AntDesign
             if (!Disabled && !IsChecked)
             {
                 this._checked = true;
+                await CheckedChange.InvokeAsync(true);
+                await CheckedChanged.InvokeAsync(true);
             }
 
             if (RadioGroup != null)
@@ -107,6 +115,8 @@ namespace AntDesign
             if (this.IsChecked)
             {
                 this._checked = false;
+                await CheckedChange.InvokeAsync(false);
+                await CheckedChanged.InvokeAsync(false);
             }
             await Task.CompletedTask;
         }

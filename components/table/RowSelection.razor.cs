@@ -52,6 +52,11 @@ namespace AntDesign
             }
             else
             {
+                if (Type == "radio")
+                {
+                    Table?.HeaderSelection.RowSelections.Where(x => x.Index != this.Index).ForEach(x => x.Check(false));
+                }
+
                 Table?.HeaderSelection.Check(@checked);
             }
         }

@@ -5,7 +5,7 @@
        @bind-PageIndex="_pageIndex"
        @bind-PageSize="_pageSize"
        OnPageIndexChange="async e=>await fetchData(e)">
-    <RowSelection Type="checkbox" SelectedRows="selectedRows"/>
+    <RowSelection Type="radio" SelectedRows="selectedRows"/>
     <Column @bind-Field="@context.Id"/>
     <Column @bind-Field="@context.Date">
         @context.Date.ToShortDateString()
