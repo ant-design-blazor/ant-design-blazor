@@ -8,12 +8,6 @@ namespace AntDesign
 
         IRowSelection HeaderSelection { get; set; }
 
-        //void Selected(IRowSelection selection, bool @checked);
-
-        //void SelectAll();
-
-        //void UnSelectAll();
-
-        //IEnumerable<IRowSelection> SelectedRows { get; }
+        internal void OnSelectionChanged(int[] checkedIndex);
     }
 }

@@ -7,6 +7,15 @@ namespace AntDesign
 {
     public partial class Column<TData> : AntDomComponentBase, ITableColumn
     {
+        [CascadingParameter]
+        public ITable Table { get; set; }
+
+        [CascadingParameter(Name = "IsHeader")]
+        public bool IsHeader { get; set; }
+
+        [CascadingParameter(Name = "Index")]
+        public int Index { get; set; }
+
         [Parameter]
         public string Title { get; set; }
 
@@ -28,11 +37,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        [CascadingParameter]
-        public ITable Table { get; set; }
-
-        [CascadingParameter(Name = "IsHeader")]
-        public bool IsHeader { get; set; }
+        public bool Selected { get; set; }
 
         private FieldIdentifier? _fieldIdentifier;
 

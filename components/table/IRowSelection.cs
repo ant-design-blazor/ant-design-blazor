@@ -10,6 +10,8 @@ namespace AntDesign
 
         public bool Checked { get; set; }
 
+        public bool Disabled { get; set; }
+
         public void Check(bool @checked);
 
         public IList<IRowSelection> RowSelections { get; set; }

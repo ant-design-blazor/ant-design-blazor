@@ -4,25 +4,36 @@
        Total="_total"
        @bind-PageIndex="_pageIndex"
        @bind-PageSize="_pageSize"
-       OnPageIndexChange="async e=>await fetchData(e)">
-    <RowSelection Type="radio" SelectedRows="selectedRows"/>
-    <Column @bind-Field="@context.Id"/>
+       OnPageIndexChange="async e=>await fetchData(e)"
+       @bind-SelectedRows="selectedRows">
+    <RowSelection />
+    <Column @bind-Field="@context.Id" />
     <Column @bind-Field="@context.Date">
         @context.Date.ToShortDateString()
     </Column>
-    <Column @bind-Field="@context.TemperatureC"/>
-    <Column Title="Temp. (F)" Field="@context.TemperatureF"/>
-    <Column @bind-Field="@context.Summary"/>
+    <Column @bind-Field="@context.TemperatureC" />
+    <Column Title="Temp. (F)" Field="@context.TemperatureF" />
+    <Column @bind-Field="@context.Summary" />
 </Table>
 
 <br />
 <p>pageIndex: @_pageIndex | pageSize: @_pageSize | Total: @_total</p>
 
+<br />
+<h5>selections:</h5>
+@if (selectedRows != null)
+{
+    @foreach (var selected in selectedRows)
+    {
+        <AntTag>@selected.Summary</AntTag>
+    }
+}
+
 @code {
 
     WeatherForecast[] forecasts;
 
-    WeatherForecast[] selectedRows;
+    IEnumerable<WeatherForecast> selectedRows;
 
     int _pageIndex = 1;
     int _pageSize = 10;

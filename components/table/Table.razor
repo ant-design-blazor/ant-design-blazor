@@ -44,12 +44,11 @@
                                     for (int i = 0; i < ShowItems.Count(); i++)
                                     {
                                         var data = ShowItems.ElementAt(i);
+                                        var @checked = HeaderSelection?.RowSelections.ElementAtOrDefault(i)?.Checked??false;
                                         <CascadingValue Value="i" Name="Index">
-                                            <CascadingValue Value="data" TValue="TItem">
-                                                <tr class="ant-table-row ant-table-row-level-0">
+                                                <tr class="ant-table-row ant-table-row-level-0 @(@checked ? "ant-table-row-selected" : "")">
                                                     @ChildContent(data)
                                                 </tr>
-                                            </CascadingValue>
                                         </CascadingValue>
                                     }
                                 }
