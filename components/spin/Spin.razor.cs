@@ -22,7 +22,17 @@ namespace AntDesign
         public int Delay { get; set; } = 0;
 
         [Parameter]
-        public bool Spinning { get; set; } = true;
+        public bool Spinning
+        {
+            get
+            {
+                return _isLoading;
+            }
+            set
+            {
+                _isLoading = value;
+            }
+        }
 
         [Parameter]
         public string WrapperClassName { get; set; }
@@ -87,6 +97,13 @@ namespace AntDesign
                 else
                 {
                     _delayTimer.Stop();
+                }
+            }
+            else
+            {
+                if (_isLoading != Spinning)
+                {
+                    InvokeAsync(StateHasChanged);
                 }
             }
         }
