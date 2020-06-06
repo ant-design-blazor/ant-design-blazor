@@ -21,7 +21,7 @@ namespace AntDesign
         public StringNumber Order { get; set; }
     }
 
-    public partial class AntCol : AntDomComponentBase
+    public partial class Col : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -63,7 +63,7 @@ namespace AntDesign
         public OneOf<int, EmbeddedProperty> Xxl { get; set; }
 
         [CascadingParameter]
-        public AntRow Row { get; set; }
+        public Row Row { get; set; }
 
         private string _hostFlexStyle = null;
 
@@ -140,7 +140,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            if (this is AntCol col)
+            if (this is Col col)
             {
                 this.Row?.Cols.Add(col);
             }
@@ -156,7 +156,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (this is AntCol col)
+            if (this is Col col)
             {
                 this.Row?.Cols.Remove(col);
             }
