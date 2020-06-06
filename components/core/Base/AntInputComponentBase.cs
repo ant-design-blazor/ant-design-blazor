@@ -26,7 +26,22 @@ namespace AntDesign
         private IFormItem FormItem { get; set; }
 
         [CascadingParameter(Name = "Form")]
-        private IForm Form { get; set; }
+        protected IForm Form { get; set; }
+
+        private string _formSize;
+        [CascadingParameter(Name = "FormSize")]
+        public string FormSize
+        {
+            get
+            {
+                return _formSize;
+            }
+            set
+            {
+                _formSize = value;
+                Size = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a collection of additional attributes that will be applied to the created element.
@@ -54,6 +69,9 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Expression<Func<TValue>> ValueExpression { get; set; }
+
+        [Parameter]
+        public string Size { get; set; } = AntSizeLDSType.Default;
 
         /// <summary>
         /// Gets the associated <see cref="EditContext"/>.
@@ -139,7 +157,7 @@ namespace AntDesign
             }
         }
 
-        private TValue _firstValue { get; set; }
+        private TValue _firstValue;
         private bool _isNotifyFieldChanged = true;
 
         /// <summary>

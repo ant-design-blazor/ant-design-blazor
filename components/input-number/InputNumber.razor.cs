@@ -45,9 +45,6 @@ namespace AntDesign
         public double Min { get; set; } = double.NegativeInfinity;
 
         [Parameter]
-        public string Size { get; set; } = InputSize.Default;
-
-        [Parameter]
         public bool Disabled { get; set; }
 
         protected override void OnInitialized()
