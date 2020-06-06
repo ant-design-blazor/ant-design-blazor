@@ -8,17 +8,17 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public class AntCarouselSlick : AntDomComponentBase
+    public class CarouselSlick : AntDomComponentBase
     {
         private const string PreFixCls = "slick";
-        private AntCarousel _parent;
+        private Carousel _parent;
         internal bool Active { get; private set; }
         internal new string Class => ClassMapper.Class;
 
         #region Parameters
 
         [CascadingParameter]
-        internal AntCarousel Parent
+        internal Carousel Parent
         {
             get => _parent;
             set
@@ -74,7 +74,7 @@ namespace AntDesign
 
         internal string GetStyle(int index, int width, string effect)
         {
-            if (effect == AntCarouselEffect.Fade)
+            if (effect == CarouselEffect.Fade)
             {
                 return $"outline: none; width: {width}px; position: relative; left: {-width * index}px; opacity: {(Active ? 1 : 0)}; transition: opacity 500ms ease 0s, visibility 500ms ease 0s;";
             }

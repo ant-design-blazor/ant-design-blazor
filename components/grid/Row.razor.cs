@@ -9,7 +9,7 @@ namespace AntDesign
 {
     using GutterType = OneOf<int, Dictionary<string, int>, (int, int)>;
 
-    public partial class AntRow : AntDomComponentBase
+    public partial class Row : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -37,7 +37,7 @@ namespace AntDesign
 
         private string GutterStyle { get; set; }
 
-        public IList<AntCol> Cols { get; } = new List<AntCol>();
+        public IList<Col> Cols { get; } = new List<Col>();
 
         private static Hashtable _gridResponsiveMap = new Hashtable()
         {
