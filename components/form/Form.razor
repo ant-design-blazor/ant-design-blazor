@@ -12,6 +12,16 @@
           OnInvalidSubmit="OnFinishFailed">
     <DataAnnotationsValidator />
     <CascadingValue Value="this" Name="Form" TValue="IForm">
-        @ChildContent(Model)
+        @if (!string.IsNullOrEmpty(Size))
+        {
+            <CascadingValue Value="Size" Name="FormSize">
+                @ChildContent(Model)
+            </CascadingValue>
+        }
+        else
+        {
+            @ChildContent(Model)
+        }
+
     </CascadingValue>
 </EditForm>
