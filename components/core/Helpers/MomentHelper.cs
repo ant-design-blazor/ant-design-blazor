@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public static class MomentHelper
     {

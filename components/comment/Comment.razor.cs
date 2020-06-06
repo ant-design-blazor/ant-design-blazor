@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OneOf;
 
-namespace AntBlazor
+namespace AntDesign
 {
     public partial class Comment : AntDomComponentBase
     {
