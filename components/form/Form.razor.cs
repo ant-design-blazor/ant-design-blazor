@@ -25,6 +25,9 @@ namespace AntDesign
         public ColLayoutParam WrapperCol { get; set; }
 
         [Parameter]
+        public bool Loading { get; set; }
+
+        [Parameter]
         public TModel Model { get; set; }
 
         [Parameter]
