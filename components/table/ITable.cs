@@ -4,10 +4,14 @@ namespace AntDesign
 {
     public interface ITable
     {
-        void AddColumn(ITableColumn column);
+        //IList<ITableColumn> Columns { get; }
 
-        IRowSelection HeaderSelection { get; set; }
+        //void AddColumn(ITableColumn column);
+
+        ISelectionColumn HeaderSelection { get; set; }
 
         internal void OnSelectionChanged(int[] checkedIndex);
+
+        internal void Refresh();
     }
 }

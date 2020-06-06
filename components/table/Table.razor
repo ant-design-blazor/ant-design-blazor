@@ -15,7 +15,7 @@
         }
 
         <CascadingValue Value="@this" TValue="ITable">
-            <div class="ant-table">
+            <div class="@ClassMapper.Class">
                 <div class="ant-table-container">
                     @if (ScrollX != null || ScrollY != null)
                     {
@@ -30,12 +30,10 @@
                                 @colGroup(this)
                                 <tbody class="ant-table-tbody">
                                     <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px;">
-                                        <CascadingValue Name="IsPlaceholder" Value="true">
-                                            @if (_fieldModel != null)
-                                            {
-                                                @ChildContent(_fieldModel)
-                                            }
-                                        </CascadingValue>
+                                        @for (var i = 0; i < ColumnContext.Columns.Count; i++)
+                                        {
+                                            <td style="padding: 0px; border: 0px; height: 0px;"></td>
+                                        }
                                     </tr>
                                     @body(this)
                                 </tbody>
@@ -72,54 +70,56 @@
 @code
 {
     RenderFragment<Table<TItem>> header = table =>
-        @<Template>
-            <thead class="ant-table-thead">
+    @<Template>
+        <thead class="ant-table-thead">
             <tr>
                 <CascadingValue Name="IsHeader" Value="true">
-                    @if (_fieldModel != null)
-                    {
-                        @table.ChildContent(_fieldModel)
-                    }
+                    <CascadingValue Value="@table.ColumnContext">
+                        @if (_fieldModel != null)
+                        {
+                            @table.ChildContent(_fieldModel)
+                        }
+                    </CascadingValue>
                 </CascadingValue>
             </tr>
-            </thead>
-        </Template>;
+        </thead>
+    </Template>;
 
-    RenderFragment<Table<TItem>> colGroup = table =>
-        @<Template>
-            <CascadingValue Name="InColGroup" Value="true">
-                <colgroup>
-                    @if (_fieldModel != null)
-                    {
-                        @table.ChildContent(Table<TItem>._fieldModel)
-                    }
-                </colgroup>
-            </CascadingValue>
-        </Template>;
-
-    RenderFragment<Table<TItem>> body = table =>
-        @<Template>
-
-            @if (table.ActualTotal <= 0)
+RenderFragment<Table<TItem>> colGroup = table =>
+@<Template>
+    <CascadingValue Name="IsColGroup" Value="true">
+        <colgroup>
+            @if (_fieldModel != null)
             {
-                <tr class="ant-table-placeholder">
-                    <td colspan="6" class="ant-table-cell">
-                        <Empty Simple/>
-                    </td>
-                </tr>
+                @table.ChildContent(Table<TItem>._fieldModel)
             }
-            else if (table.ShowItems != null && table._columns.Count > 0)
-            {
-                for (int i = 0; i < table.ShowItems.Count(); i++)
-                {
-                    var data = table.ShowItems.ElementAt(i);
-                    var @checked = table.HeaderSelection?.RowSelections.ElementAtOrDefault(i)?.Checked ?? false;
-    <CascadingValue Value="i" Name="Index">
-        <tr class="ant-table-row ant-table-row-level-0 @(@checked ? "ant-table-row-selected" : "")">
-            @table.ChildContent(data)
-        </tr>
+        </colgroup>
     </CascadingValue>
-                }
-            }
-        </Template>;
+</Template>;
+
+RenderFragment<Table<TItem>> body = table =>
+@<Template>
+
+    @if (table.ActualTotal <= 0)
+    {
+        <tr class="ant-table-placeholder">
+            <td colspan="6" class="ant-table-cell">
+                <Empty Simple />
+            </td>
+        </tr>
+    }
+    else if (table.ShowItems != null && table.ColumnContext.Columns.Count > 0)
+    {
+        for (int i = 0; i < table.ShowItems.Count(); i++)
+        {
+            var data = table.ShowItems.ElementAt(i);
+            var @checked = table.HeaderSelection?.RowSelections.ElementAtOrDefault(i)?.Checked ?? false;
+            <CascadingValue Value="@table.ColumnContext">
+                <tr class="ant-table-row ant-table-row-level-0 @(@checked ? "ant-table-row-selected" : "")">
+                    @table.ChildContent(data)
+                </tr>
+            </CascadingValue>
+        }
+    }
+</Template>;
 }

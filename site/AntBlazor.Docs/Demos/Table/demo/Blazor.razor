@@ -9,13 +9,13 @@
        ScrollY="240px"
        >
     <RowSelection />
-    <Column @bind-Field="@context.Id" />
-    <Column @bind-Field="@context.Date">
+    <Column @bind-Field="@context.Id" Fixed="left"/>
+    <Column @bind-Field="@context.Date" Fixed="left">
         @context.Date.ToShortDateString()
     </Column>
     <Column @bind-Field="@context.TemperatureC" />
     <Column Title="Temp. (F)" Field="@context.TemperatureF" />
-    <Column @bind-Field="@context.Summary" />
+    <Column @bind-Field="@context.Summary" Fixed="right"/>
 </Table>
 
 <br />

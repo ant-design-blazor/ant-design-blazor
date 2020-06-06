@@ -39,17 +39,11 @@ namespace AntDesign
         [Parameter]
         public string ScrollY { get; set; }
 
-        private readonly IList<ITableColumn> _columns = new List<ITableColumn>();
+        public ColumnContext ColumnContext { get; set; } = new ColumnContext();
 
-        public IRowSelection HeaderSelection { get; set; }
+        public ISelectionColumn HeaderSelection { get; set; }
 
         private IEnumerable<TItem> _dataSource;
-
-        public void AddColumn(ITableColumn column)
-        {
-            _columns.Add(column);
-            StateHasChanged();
-        }
 
         void ITable.OnSelectionChanged(int[] checkedIndex)
         {
@@ -61,6 +55,30 @@ namespace AntDesign
 
             SelectedRows = list.ToArray();
             SelectedRowsChanged.InvokeAsync(SelectedRows);
+        }
+
+        void ITable.Refresh()
+        {
+            StateHasChanged();
+        }
+
+        private void SetClass()
+        {
+            string prefixCls = "ant-table";
+            ClassMapper.Add(prefixCls)
+                .If($"{prefixCls}-fixed-header", () => ScrollY != null)
+                //.Add( "ant-table ant-table-ping-left ant-table-ping-right ")
+                .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ColumnContext.Columns.Any(x => x.Fixed.IsIn("left", "right")))
+                .If($"{prefixCls}-has-fix-left", () => ColumnContext.Columns.Any(x => x.Fixed == "left"))
+                .If($"{prefixCls}-has-fix-right {prefixCls}-ping-right ", () => ColumnContext.Columns.Any(x => x.Fixed == "right"))
+                ;
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            SetClass();
         }
     }
 }

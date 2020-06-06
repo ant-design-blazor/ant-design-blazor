@@ -1,29 +1,29 @@
 ﻿@namespace AntDesign
-@inherits AntDomComponentBase
+@inherits ColumnBase
 
 @if (IsPlaceholder)
 {
     <td style="padding: 0px; border: 0px; height: 0px;"></td>
 }
-else if (InColGroup)
+else if (IsColGroup)
 {
-    if (Width != null)
+    if (Width > 0)
     {
-        <col style="width: @Width; min-width: @Width;">
+        <col style="width: @(Width)px; min-width: @(Width)px;">
     }
 }
 else if (IsHeader)
 {
-    <th class="ant-table-cell ant-table-selection-column">
+    <th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style">
         @if (Type == "checkbox")
         {
-            <Checkbox @bind-Checked="Checked" CheckedChange="HandleCheckedChange" Indeterminate="Indeterminate" />
+            <Checkbox @bind-Checked="Checked" CheckedChange="HandleCheckedChange" Indeterminate="Indeterminate" /> @Index
         }
     </th>
 }
 else
 {
-    <td class="ant-table-cell ant-table-selection-column">
+    <td class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style">
         @if (Type == "checkbox")
         {
             <Checkbox @bind-Checked="Checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" />
@@ -32,5 +32,6 @@ else
         {
             <Radio @bind-Checked="Checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" />
         }
+        @Index
     </td>
 }
