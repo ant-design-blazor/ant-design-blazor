@@ -2,16 +2,14 @@
 @inherits AntDomComponentBase
 @using AntDesign.Internal;
 
-<AntRow class="@ClassMapper.Class"
-        style="@Style"
-        id="@Id">
+<Row class="@ClassMapper.Class" style="@Style" id="@Id">
     @if (!string.IsNullOrEmpty(Label))
     {
-        <AntCol @attributes="GetLabelColAttributes()" class=@($"{_prefixCls}-label")>
+        <AntDesign.Col @attributes="GetLabelColAttributes()" class=@($"{_prefixCls}-label")>
             <label class=@(_labelCls)> @(Label)</label>
-        </AntCol>
+        </AntDesign.Col>
     }
-    <AntCol @attributes="GetWrapperColAttributes()" class=@($"{_prefixCls}-control")>
+    <AntDesign.Col @attributes="GetWrapperColAttributes()" class=@($"{_prefixCls}-control")>
         <div class=@($"{_prefixCls}-control-input")>
             <div class=@($"{_prefixCls}-control-input-content")>
                 <CascadingValue Value="this" Name="FormItem" TValue="IFormItem">
@@ -23,5 +21,5 @@
         {
             @_formValidation(this);
         }
-    </AntCol>
-</AntRow>
+    </AntDesign.Col>
+</Row>

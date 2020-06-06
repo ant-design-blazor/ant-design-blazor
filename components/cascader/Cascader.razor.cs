@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using System.Linq;
+using System.Collections;
 
 namespace AntDesign
 {
@@ -48,11 +49,6 @@ namespace AntDesign
         /// 在选择框中显示搜索框
         /// </summary>
         [Parameter] public bool ShowSearch { get; set; }
-
-        /// <summary>
-        /// 输入框大小，可选 'large', 'middle', 'small'
-        /// </summary>
-        [Parameter] public string Size { get; set; } = "middle";
 
         /// <summary>
         /// 选择完成后的回调(参数为选中的节点集合及选中值)
@@ -124,18 +120,29 @@ namespace AntDesign
             base.OnInitialized();
             InitCascaderNodeState(_nodelist, null, 0);
 
-            if (Size == "large")
-            {
-                _pickerSizeClass = "ant-cascader-picker-large";
-                _inputSizeClass = "ant-input-lg";
-            }
-            else if (Size == "small")
-            {
-                _pickerSizeClass = "ant-cascader-picker-small";
-                _inputSizeClass = "ant-input-sm";
-            }
-
             SetDefaultValue(Value ?? DefaultValue);
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            Hashtable sizeMap = new Hashtable()
+            {
+                ["large"] = "lg",
+                ["small"] = "sm"
+            };
+
+            if (sizeMap.ContainsKey(Size))
+            {
+                _pickerSizeClass = $"ant-cascader-picker-{Size}";
+                _inputSizeClass = $"ant-input-{sizeMap[Size]}";
+            }
+            else
+            {
+                _pickerSizeClass = "";
+                _inputSizeClass = "";
+            }
         }
 
         #region event
@@ -189,7 +196,7 @@ namespace AntDesign
         {
             _selectedNodes.Clear();
             _hoverSelectedNodes.Clear();
-            Value = string.Empty;
+            CurrentValueAsString = string.Empty;
         }
 
         /// <summary>
@@ -343,7 +350,7 @@ namespace AntDesign
 
             if (Value != value)
             {
-                Value = value;
+                CurrentValueAsString = value;
                 ValueChanged.InvokeAsync(Value);
             }
 

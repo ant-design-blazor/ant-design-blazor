@@ -25,6 +25,9 @@ namespace AntDesign
         public ColLayoutParam WrapperCol { get; set; }
 
         [Parameter]
+        public string Size { get; set; }
+
+        [Parameter]
         public TModel Model { get; set; }
 
         [Parameter]
@@ -44,6 +47,7 @@ namespace AntDesign
         ColLayoutParam IForm.LabelCol => LabelCol;
 
         EditContext IForm.EditContext => _editContext;
+        string IForm.Size => Size;
 
         protected override void OnInitialized()
         {
