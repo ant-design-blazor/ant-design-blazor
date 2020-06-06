@@ -39,7 +39,7 @@
           {
             "title": "Grid",
             "type": "menuItem",
-            "url": "grid"
+            "url": "components/grid"
           },
           {
             "title": "Layout",
@@ -177,7 +177,7 @@
           {
             "title": "Carousel",
             "type": "menuItem",
-            "url": "carousel"
+            "url": "components/carousel"
           },
           {
             "title": "Card",

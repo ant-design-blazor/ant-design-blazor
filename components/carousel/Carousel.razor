@@ -6,10 +6,10 @@
 </CascadingValue>
 
 <div class="@ClassMapper.Class" id="@Id">
-    <div class="slick-slider slick-initialized" dir="ltr">
+    <div class="@SlickSliderClassMapper.Class" dir="ltr">
         <div class="slick-list" @ref="_ref" >
             <div class="slick-track" style="@_trackStyle">
-                @if (_slicks.Count > 0 && Effect == AntCarouselEffect.ScrollX)
+                @if (_slicks.Count > 0 && Effect == CarouselEffect.ScrollX)
                 {
                     <div data-index="-1" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@_slickClonedStyle">
                         <div>
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                 }
-                @if (Effect == AntCarouselEffect.ScrollX)
+                @if (Effect == CarouselEffect.ScrollX)
                 {
                     for (int i = 0; i < _slicks.Count; i++)
                     {

@@ -37,7 +37,7 @@
                     </span>
                 </h2>
             </section>
-            <AntRow Style="margin-left: -8px; margin-right: -8px;">
+            <Row Style="margin-left: -8px; margin-right: -8px;">
                 @{
                     var demos = _demoComponent.DemoList.Where(x => !x.Debug).OrderBy(x => x.Order);
                 }
@@ -45,9 +45,9 @@
                 {
                     foreach (var demo in demos)
                     {
-                        <AntCol Span="24" Class="code-boxes-col-1-1" Style="padding-left: 8px; padding-right: 8px;">
+                        <AntDesign.Col Span="24" Class="code-boxes-col-1-1" Style="padding-left: 8px; padding-right: 8px;">
                             <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
-                        </AntCol>
+                        </AntDesign.Col>
                     }
                 }
                 else
@@ -55,25 +55,25 @@
                     var leftList = demos.Where((_, i) => i % 2 == 0);
                     var rightList = demos.Where((_, i) => i % 2 != 0);
 
-                    <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                    <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                         @foreach (var demo in leftList)
                         {
                             <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
                         }
-                    </AntCol>
-                    <AntCol Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                    </AntDesign.Col>
+                    <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                         @foreach (var demo in rightList)
                         {
                             <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
                         }
-                    </AntCol>
+                    </AntDesign.Col>
                 }
 
-            </AntRow>
+            </Row>
             <section class="markdown api-container">
                 @*<h2 id="API" data-scrollama-index="10">
-                    <span>API</span><a href="#API" class="anchor">#</a>
-                </h2>*@
+                        <span>API</span><a href="#API" class="anchor">#</a>
+                    </h2>*@
                 @((MarkupString) _demoComponent.ApiDoc)
             </section>
         }

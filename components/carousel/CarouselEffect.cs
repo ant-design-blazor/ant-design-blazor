@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public static class AntCarouselEffect
+    public static class CarouselEffect
     {
         public const string ScrollX = "scrollx";
         public const string Fade = "fade";
