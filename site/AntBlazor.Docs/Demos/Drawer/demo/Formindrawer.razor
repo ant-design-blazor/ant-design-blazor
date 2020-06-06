@@ -2,50 +2,50 @@
     <Button Icon="plus" Type="primary" @onclick="_=>open()">New account</Button>
     <Drawer Closable="true" Width="720" Visible="visible" Title='("Submit from in Drawer")' OnClose="_=>close()">
         <Template style="height:90%">
-            <AntRow Gutter="16">
-                <AntCol Span="12">
+            <Row Gutter="16">
+                <Col Span="12">
                     <AntText>Name</AntText>
                     <Input Placeholder="Please enter user name"></Input>
-                </AntCol>
-                <AntCol Span="12">
+                </Col>
+                <Col Span="12">
                     <AntText>Url</AntText>
                     <AntDesign.Input Placeholder="please enter url">
                         <AddOnBefore>Http://</AddOnBefore>
                         <AddOnAfter>.Com</AddOnAfter>
                     </AntDesign.Input>
-                </AntCol>
-            </AntRow>
+                </Col>
+            </Row>
             <br />
-            <AntRow Gutter="16">
-                <AntCol Span="12">
+            <Row Gutter="16">
+                <Col Span="12">
                     <AntText>Owner</AntText>
                     <Input Placeholder="Please select a owner"/>
-                </AntCol>
-                <AntCol Span="12">
+                </Col>
+                <Col Span="12">
                     <AntText>Type</AntText>
                     <Input Placeholder="please enter url"/>
-                </AntCol>
-            </AntRow>
+                </Col>
+            </Row>
             <br />
 
-            <AntRow>
-                <AntCol Span="24">
+            <Row>
+                <Col Span="24">
                     <AntText>Description</AntText>
                     <TextArea Placeholder="Please enter your description">
 
                     </TextArea>
-                </AntCol>
-            </AntRow>
+                </Col>
+            </Row>
             <br />
-            <AntRow>
-                <AntCol Span="18">
+            <Row>
+                <Col Span="18">
 
-                </AntCol>
-                <AntCol Span="6">
+                </Col>
+                <Col Span="6">
                     <Button Type="default">Cancel</Button>
                     <Button Type="primary">Submit</Button>
-                </AntCol>
-            </AntRow>
+                </Col>
+            </Row>
         </Template>
     </Drawer>
 </div>

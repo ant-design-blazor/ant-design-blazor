@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public static class AntCarouselDotPosition
+    public static class CarouselDotPosition
     {
         public const string Top = "Top";
         public const string Bottom = "Bottom";
