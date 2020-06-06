@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -28,6 +29,22 @@ namespace AntDesign
 
         [Parameter]
         public string Shape { get; set; } = null;
+
+        private string _formSize;
+        [CascadingParameter(Name = "FormSize")]
+        public string FormSize
+        {
+            get
+            {
+                return _formSize;
+            }
+            set
+            {
+                _formSize = value;
+
+                Size = value;
+            }
+        }
 
         [Parameter]
         public string Size { get; set; } = AntSizeLDSType.Default;
@@ -69,7 +86,7 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add("ant-btn")
                 .If($"{prefixName}-{this.Type}", () => !string.IsNullOrEmpty(Type))
-                 .If($"{prefixName}-dangerous", () => Danger)
+                .If($"{prefixName}-dangerous", () => Danger)
                 .If($"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
                 .If($"{prefixName}-{sizeMap[this.Size]}", () => sizeMap.ContainsKey(Size))
                 .If($"{prefixName}-loading", () => Loading)
