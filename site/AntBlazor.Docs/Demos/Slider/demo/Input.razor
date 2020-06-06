@@ -1,20 +1,20 @@
 ﻿<div>
-    <AntRow>
-        <AntCol Span="12">
+    <Row>
+        <Col Span="12">
             <Slider Min="1" Max="20" Value="@inputValue1" />
-        </AntCol>
-        <AntCol Span="4">
+        </Col>
+        <Col Span="4">
             <AntDesign.InputNumber Min="1" Max="20" Style="margin:0 16px;" Value="@inputValue1" ValueChanged="(e)=>UpdateValue1(e)" />
-        </AntCol>
-    </AntRow>
-    <AntRow>
-        <AntCol Span="12">
+        </Col>
+    </Row>
+    <Row>
+        <Col Span="12">
             <Slider Min="0" Max="1" Step="0.01" Value="@inputValue2"  />
-        </AntCol>
-        <AntCol Span="4">
+        </Col>
+        <Col Span="4">
             <AntDesign.InputNumber Min="0" Max="10" Step="0.1" Style="margin:0 16px;" Value="@inputValue2" ValueChanged="(e)=>UpdateValue2(e)" />
-        </AntCol>
-    </AntRow>
+        </Col>
+    </Row>
 </div>
 
 

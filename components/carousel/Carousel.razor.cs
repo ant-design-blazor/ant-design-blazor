@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class AntCarousel : AntDomComponentBase
+    public partial class Carousel : AntDomComponentBase
     {
         private const string PrefixCls = "ant-carousel";
         private string _trackStyle;
@@ -18,9 +18,10 @@ namespace AntDesign
         private ElementReference _ref;
         private int _slickWidth = -1;
         private int _totalWidth = -1;
-        private List<AntCarouselSlick> _slicks = new List<AntCarouselSlick>();
-        private AntCarouselSlick _activeSlick;
+        private List<CarouselSlick> _slicks = new List<CarouselSlick>();
+        private CarouselSlick _activeSlick;
         private Timer _timer;
+        private ClassMapper SlickSliderClassMapper { get; } = new ClassMapper();
 
         #region Parameters
 
@@ -28,10 +29,10 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// The position of the dots, which can be one of Top, Bottom, Left or Right, <see cref="AntCarouselDotPosition"/>
+        /// The position of the dots, which can be one of Top, Bottom, Left or Right, <see cref="CarouselDotPosition"/>
         /// </summary>
         [Parameter]
-        public string DotPosition { get; set; } = AntCarouselDotPosition.Bottom;
+        public string DotPosition { get; set; } = CarouselDotPosition.Bottom;
 
         /// <summary>
         /// Whether to scroll automatically
@@ -40,20 +41,37 @@ namespace AntDesign
         public TimeSpan Autoplay { get; set; } = TimeSpan.Zero;
 
         /// <summary>
-        /// Transition effect, <see cref="AntCarouselEffect"/>
+        /// Transition effect, <see cref="CarouselEffect"/>
         /// </summary>
         [Parameter]
-        public string Effect { get; set; } = AntCarouselEffect.ScrollX;
+        public string Effect { get; set; } = CarouselEffect.ScrollX;
 
         #endregion Parameters
+
+        private void SetClass()
+        {
+            SlickSliderClassMapper.Add("slick-slider slick-initialized")
+                .If("slick-vertical", () => DotPosition.IsIn(CarouselDotPosition.Left, CarouselDotPosition.Right))
+                ;
+
+            ClassMapper.Clear()
+                .Add(PrefixCls)
+                .If($"{PrefixCls}-vertical", () => DotPosition.IsIn(CarouselDotPosition.Left, CarouselDotPosition.Right));
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            SetClass();
+        }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
 
-            if (Effect != AntCarouselEffect.ScrollX && Effect != AntCarouselEffect.Fade)
+            if (Effect != CarouselEffect.ScrollX && Effect != CarouselEffect.Fade)
             {
-                throw new ArgumentOutOfRangeException($"{nameof(Effect)} must be one of {nameof(AntCarouselEffect)}.{nameof(AntCarouselEffect.ScrollX)} or {nameof(AntCarouselEffect)}.{nameof(AntCarouselEffect.Fade)}.");
+                throw new ArgumentOutOfRangeException($"{nameof(Effect)} must be one of {nameof(CarouselEffect)}.{nameof(CarouselEffect.ScrollX)} or {nameof(CarouselEffect)}.{nameof(CarouselEffect.Fade)}.");
             }
 
             _timer?.Dispose();
@@ -61,10 +79,6 @@ namespace AntDesign
             {
                 _timer = new Timer(AutoplaySlick, null, (int)Autoplay.TotalMilliseconds, (int)Autoplay.TotalMilliseconds);
             }
-
-            ClassMapper.Clear()
-                .Add(PrefixCls)
-                .If($"{PrefixCls}-vertical", () => DotPosition == AntCarouselDotPosition.Left || DotPosition == AntCarouselDotPosition.Right);
         }
 
         protected async override Task OnAfterRenderAsync(bool firstRender)
@@ -76,7 +90,7 @@ namespace AntDesign
             {
                 _slickWidth = (int)listRect.width;
                 _totalWidth = _slickWidth * (_slicks.Count * 2 + 1);
-                if (Effect == AntCarouselEffect.ScrollX)
+                if (Effect == CarouselEffect.ScrollX)
                 {
                     _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px); transition: -webkit-transform 500ms ease 0s;";
                 }
@@ -90,7 +104,7 @@ namespace AntDesign
             }
         }
 
-        internal void AddSlick(AntCarouselSlick slick)
+        internal void AddSlick(CarouselSlick slick)
         {
             _slicks.Add(slick);
             if (_activeSlick == null)
@@ -101,7 +115,7 @@ namespace AntDesign
 
         private int Activate(int index, string transition = " transition: -webkit-transform 500ms ease 0s;")
         {
-            if (Effect == AntCarouselEffect.ScrollX)
+            if (Effect == CarouselEffect.ScrollX)
             {
                 _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth * (index + 1)}px, 0px, 0px);{transition}";
             }
@@ -111,7 +125,7 @@ namespace AntDesign
                 index = 0;
             }
 
-            AntCarouselSlick slick = _slicks[index];
+            CarouselSlick slick = _slicks[index];
             _slicks.ForEach(s =>
             {
                 if (s == slick)
@@ -138,7 +152,7 @@ namespace AntDesign
             // Use InvokeAsync() to switch execution to the Dispatcher when triggering rendering or component state
             await InvokeAsync(() => StateHasChanged());
 
-            if (realIndex == 0 && Effect == AntCarouselEffect.ScrollX)
+            if (realIndex == 0 && Effect == CarouselEffect.ScrollX)
             {
                 Thread.Sleep((int)Autoplay.TotalMilliseconds / 2);
                 _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px);";
