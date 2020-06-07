@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.AspNetCore.Components;
@@ -224,25 +225,24 @@ namespace AntDesign
                     _isRenderAnimation = true;
                     CalcDrawerStyle();
                     await Task.Delay(10);
-                    StateHasChanged();
 
                     if (string.IsNullOrWhiteSpace(Style))
                     {
                         _ = JsInvokeAsync(JSInteropConstants.disableBodyScroll);
                     }
-                    else if (!string.IsNullOrWhiteSpace(Style))
+                    else if (!_renderInCurrentContainerRegex.IsMatch(Style))
                     {
-                        var m = _renderInCurrentContainerRegex.IsMatch(Style);
-                        if (!m)
-                        {
-                            await JsInvokeAsync(JSInteropConstants.disableBodyScroll);
-                        }
+                        await JsInvokeAsync(JSInteropConstants.disableBodyScroll);
                     }
+                    StateHasChanged();
                 }
                 else
                 {
-                    DrawerStyle = "";
-                    StateHasChanged();
+                    if (!string.IsNullOrWhiteSpace(DrawerStyle))
+                    {
+                        DrawerStyle = "";
+                        StateHasChanged();
+                    }
                 }
             }
             await base.OnAfterRenderAsync(isFirst);
