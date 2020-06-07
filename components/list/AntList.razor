@@ -41,14 +41,14 @@
     @<Template>
         @if (content.Grid != null)
         {
-            <AntRow Gutter="content.Grid.Gutter">
+            <Row Gutter="content.Grid.Gutter">
                 @foreach (var item in content.DataSource)
                 {
                     <AntListItem>
                         @content.Item(item)
                     </AntListItem>
                 }
-            </AntRow>
+            </Row>
         }
         else
         {

@@ -195,7 +195,7 @@
         </member>
         <member name="P:AntDesign.AntCarousel.DotPosition">
             <summary>
-            The position of the dots, which can be one of Top, Bottom, Left or Right, <see cref="T:AntDesign.AntCarouselDotPosition"/>
+            The position of the dots, which can be one of Top, Bottom, Left or Right, <see cref="T:AntDesign.CarouselDotPosition"/>
             </summary>
         </member>
         <member name="P:AntDesign.AntCarousel.Autoplay">
@@ -205,7 +205,7 @@
         </member>
         <member name="P:AntDesign.AntCarousel.Effect">
             <summary>
-            Transition effect, <see cref="T:AntDesign.AntCarouselEffect"/>
+            Transition effect, <see cref="T:AntDesign.CarouselEffect"/>
             </summary>
         </member>
         <member name="P:AntDesign.AntDomComponentBase.Ref">
@@ -311,12 +311,12 @@
             "ltr"|"rtl"
             </summary>
         </member>
-        <member name="P:AntDesign.AntRow.Align">
+        <member name="P:AntDesign.Row.Align">
             <summary>
             'top' | 'middle' | 'bottom'
             </summary>
         </member>
-        <member name="P:AntDesign.AntRow.Justify">
+        <member name="P:AntDesign.Row.Justify">
             <summary>
             'start' | 'end' | 'center' | 'space-around' | 'space-between'
             </summary>

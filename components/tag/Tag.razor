@@ -1,0 +1,20 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+@if (!_closed)
+{
+ 
+    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref" @onclick="ClickTag">
+        @if (!string.IsNullOrEmpty(Icon))
+        {
+            <Icon Type="@Icon"></Icon>
+        }
+        @ChildContent
+        @if (Mode == "closeable" || Closable)
+        {
+            <Icon Type="close" TabIndex="-1" @onclick="CloseTag" />
+        }
+
+    </div>
+
+}

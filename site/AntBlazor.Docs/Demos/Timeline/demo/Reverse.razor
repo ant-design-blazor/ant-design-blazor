@@ -1,0 +1,20 @@
+<div>
+    <Timeline Pending="pending" Reverse=@bReverse>
+        <TimelineItem>Create a services site 2015-09-01</TimelineItem>
+        <TimelineItem>Solve initial network problems 2015-09-01</TimelineItem>
+        <TimelineItem>Technical testing 2015-09-01</TimelineItem>
+    </Timeline>
+    <Button Type="primary" Style="margin-top: 16px " OnClick="HandleClick">
+        Toggle Reverse
+    </Button>
+</div>
+@code{
+    private bool bReverse { get; set; } = false;
+    RenderFragment pending = @<Template>
+                                                        Recording...
+                                                    </Template>;
+    void HandleClick()
+    {
+     bReverse = !bReverse;
+    }
+}

@@ -1,0 +1,126 @@
+﻿<h3>Step</h3>
+
+<DemoCard>
+    <Title>基本用法</Title>
+    <Description>简单的步骤条。</Description>
+    <Demo>
+        <Steps Current="1">
+            <Step Title="Finished" Description="This is a description." />
+            <Step Title="In Progress" Subtitle="Left 00:00:08" Description="This is a description." />
+            <Step Title="Waiting" Description="This is a description." />
+            <Step Title="Waiting" Description="This is a description." />
+        </Steps>
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>迷你版</Title>
+    <Description>
+        <Text>迷你版的步骤条，通过设置<Text Code>@((MarkupString)"Steps size=\"small\"")</Text>启用</Text>
+    </Description>
+    <Demo>
+        <Steps Size="small" Current=1>
+            <Step Title="Finished" />
+            <Step Title="In Progress" />
+            <Step Title="Waiting" />
+        </Steps>
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>带图标的步骤条</Title>
+    <Description>
+        <Text>通过设置 <Text Code>Steps.Step</Text> 的 <Text Code>icon</Text> 属性，可以启用自定义图标。</Text>
+    </Description>
+    <Demo>
+        <Steps>
+            <Step Title="Login" Icon="user" Status="finish" />
+            <Step Title="In Progress" Icon="solution" Status="finish" />
+            <Step Title="Waiting" Icon="loading" Status="process" />
+            <Step Title="Waiting" Icon="smile" Status="wait" />
+        </Steps>
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>竖直方向的步骤条</Title>
+    <Description>简单的竖直方向的步骤条。</Description>
+    <Demo>
+        <Steps Direction="vertical" Current="1">
+            <Step Title="Finished" Description="This is a description." />
+            <Step Title="In Progress" Description="This is a description." />
+            <Step Title="Waiting" Description="This is a description." />
+        </Steps>
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>竖直方向的小型步骤条</Title>
+    <Description>简单的竖直方向的小型步骤条。</Description>
+    <Demo>
+        <Steps Direction="vertical" Size="small" Current="1">
+            <Step Title="Finished" Description="This is a description." />
+            <Step Title="In Progress" Description="This is a description." />
+            <Step Title="Waiting" Description="This is a description." />
+        </Steps>
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>步骤运行错误</Title>
+    <Description>使用Steps的<Text code>Status</Text>属性来指定当前步骤的状态</Description>
+    <Demo>
+        <Steps Current="1" Status="error">
+            <Step Title="Finished" Description="This is a description." />
+            <Step Title="In Progress" Description="This is a description." />
+            <Step Title="Waiting" Description="This is a description." />
+        </Steps>
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>点状步骤条</Title>
+    <Description>包含步骤点的进度条。</Description>
+    <Demo>
+        <Steps ShowProgressDot Current="1">
+            <Step Title="Finished" Description="This is a description." />
+            <Step Title="In Progress" Description="This is a description." />
+            <Step Title="Waiting" Description="This is a description." />
+        </Steps>
+        <Divider />
+        <Steps ShowProgressDot Current="1" Direction="vertical">
+            <Step Title="Finished" Description="This is a description. This is a description." />
+            <Step Title="Finished" Description="This is a description. This is a description." />
+            <Step Title="In Progress" Description="This is a description. This is a description." />
+            <Step Title="Waiting" Description="This is a description." />
+            <Step Title="Waiting" Description="This is a description." />
+        </Steps>
+    </Demo>
+</DemoCard>
+<br />
+<DemoCard>
+    <Title>导航步骤</Title>
+    <Description>导航类型的步骤条。</Description>
+    <Demo>
+        <Steps Type="navigation" Size="small" Current=@Current ClassName="site-navigation-steps" >
+            <Step Title="Step 1" Subtitle="00:00:05" Status="finish" Description="This is a description." />
+            <Step Title="Step 2" Subtitle="00:01:02" Status="process" Description="This is a description." />
+            <Step Title="Step 3" Subtitle="waiting for longlong time" Status="wait" Description="This is a description." />
+        </Steps>
+        <Steps Type="navigation" Current="@Current"  ClassName="site-navigation-steps" >
+            <Step Status="finish" Title="Step 1" />
+            <Step Status="process" Title="Step 2" />
+            <Step Status="wait" Title="Step 3" />
+            <Step Status="wait" Title="Step 4" />
+        </Steps>
+        <Steps Type="navigation" Size="small" Current="@Current" ClassName="site-navigation-steps">
+            <Step Status="finish" Title="finish 1" />
+            <Step Status="finish" Title="finish 2" />
+            <Step Status="process" Title="current process" />
+            <Step Status="wait" Title="wait" Disabled />
+        </Steps>
+    </Demo>
+</DemoCard>
+@code {
+    public int Current { get; set; } = 0;
+}

@@ -66,7 +66,7 @@ namespace AntDesign
 
         [Inject] private NavigationManager NavigationManger { get; set; }
 
-        public IList<AntIcon> Icons { get; set; } = new List<AntIcon>();
+        public IList<Icon> Icons { get; set; } = new List<Icon>();
 
         //public AntNavLink Link { get; set; }
 

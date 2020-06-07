@@ -1,0 +1,26 @@
+<div>
+	<Breadcrumb Separator="/">
+    <BreadcrumbItem>
+        Ant Design Blazor
+    </BreadcrumbItem>
+    <BreadcrumbItem>
+        <a>Component</a>
+    </BreadcrumbItem>
+    <BreadcrumbItem >
+        <Menu Mode=MenuMode.Horizontal>
+            <MenuItem Key="mail">
+                <Icon Type="mail" Theme="outline"></Icon>
+                Navigation One
+            </MenuItem>
+            <MenuItem Key="app" Disabled>
+                <Icon Type="appstore" Theme="outline"></Icon>
+                Navigation Two
+            </MenuItem>
+        </Menu>
+    </BreadcrumbItem>
+</Breadcrumb>
+</div>
+
+@code{
+    object abc { get; set; } = new object();
+ }
