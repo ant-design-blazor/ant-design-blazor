@@ -149,6 +149,11 @@
             "url": "components/slider"
           },
           {
+            "title": "Select",
+            "type": "menuItem",
+            "url": "components/select"
+          },
+          {
             "title": "Transfer",
             "type": "menuItem",
             "url": "components/transfer"

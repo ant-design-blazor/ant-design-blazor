@@ -1,0 +1,34 @@
+<Select SuffixIcon="_syncIcon"
+        DefaultValue="@("luck")"
+        Style="width: 120px"
+        OnChange="@OnChange">
+    <SelectOption Value="jack">Jack</SelectOption>
+    <SelectOption Value="lucy">Lucy</SelectOption>
+    <SelectOption Value="disabled" Disabled>Disabled</SelectOption>
+    <SelectOption Value="yaoming">YaoMing</SelectOption>
+</Select>
+
+<Select SuffixIcon="_smileIcon"
+        DefaultValue="@("luck")"
+        Style="width: 120px" Disabled>
+    <SelectOption Value="lucy">Lucy</SelectOption>
+</Select>
+
+@using OneOf;
+@code
+{
+    private RenderFragment _syncIcon;
+    private RenderFragment _smileIcon;
+
+    protected override void OnParametersSet()
+    {
+        _syncIcon =@<AntIcon Type="sync" Theme="true"></AntIcon>;
+        _smileIcon =@<AntIcon Type="smile" Theme="outline" Rotate="180"></AntIcon>;
+        base.OnParametersSet();
+    }
+
+    private void OnChange(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value, OneOf<SelectOption, IEnumerable<SelectOption>> option)
+    {
+        Console.WriteLine($"selected: ${value}");
+    }
+}
