@@ -294,3 +294,12 @@ export function enableDrawerBodyScroll() {
   enableBodyScroll(".ant-drawer-open",
     (value, key, parent) => { return value.style.position === "absolute" });
 }
+
+export function getInnerText(element) {
+    let dom = getDom(element);
+    return dom.innerText;
+}
+
+export function getScroll() {
+    return { x: window.pageXOffset, y: window.pageYOffset };
+}
