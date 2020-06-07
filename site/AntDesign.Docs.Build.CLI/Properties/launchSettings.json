@@ -2,8 +2,7 @@
   "profiles": {
     "AntDesign.Docs.Build.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "demo2json ../../../../AntDesign.Docs/Demos ./"
-      //"commandLineArgs": "menu2json ../../../../AntDesign.Docs/Demos ../../../../../docs ./"
+      "commandLineArgs": "demo2json ../../../../AntBlazor.Docs/Demos ./"
     }
   }
 }
