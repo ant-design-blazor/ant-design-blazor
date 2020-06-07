@@ -1,5 +1,5 @@
 ﻿<div>
-    <AntCard Bordered Title=@("Default size card")>
+    <Card Bordered Title=@("Default size card")>
         <Extra>
             <a>More</a>
         </Extra>
@@ -8,9 +8,9 @@
             <p>Card content</p>
             <p>Card content</p>
         </Body>
-    </AntCard>
+    </Card>
 
-    <AntCard Bordered Size="small" Title=@("Small size card")>
+    <Card Bordered Size="small" Title=@("Small size card")>
         <Extra>
             <a>More</a>
         </Extra>
@@ -19,16 +19,16 @@
             <p>Card content</p>
             <p>Card content</p>
         </Body>
-    </AntCard>
+    </Card>
 
 
 </div>
 @code
 {
-    private RenderFragment actionSetting =@<Template>  <AntIcon Type="setting" /></Template>;
+    private RenderFragment actionSetting =@<Template>  <Icon Type="setting" /></Template>;
 
-    private RenderFragment actionEdit =@<Template><AntIcon Type="edit" /></Template>;
+    private RenderFragment actionEdit =@<Template><Icon Type="edit" /></Template>;
 
-    private RenderFragment actionEllipsis =@<Template> <AntIcon Type="ellipsis" /></Template>;
+    private RenderFragment actionEllipsis =@<Template> <Icon Type="ellipsis" /></Template>;
 
 }

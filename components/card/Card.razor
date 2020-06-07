@@ -1,0 +1,69 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this">
+    <div class="@ClassMapper.Class" style="@Style" id="@Id">
+        @if (Title.Value != null || Extra != null || AntCardTab != null)
+        {
+            <div class="ant-card-head">
+                <div class="ant-card-head-wrapper">
+                    @if (Title.Value != null)
+                    {
+
+                        <div class="ant-card-head-title">
+                            @if (Title.IsT0)
+                            {
+                                @Title.AsT0
+                            }
+                            else
+                            {
+                                @Title.AsT1
+                            }
+                        </div>
+                    }
+                    @if (Extra != null)
+                    {
+                        <div class="ant-card-extra">
+                            @Extra
+                        </div>
+                    }
+                </div>
+                @if (AntCardTab != null)
+                {
+                    @AntCardTab
+                }
+            </div>
+        }
+
+        @if (Cover != null)
+        {
+            <div class="ant-card-cover">
+                @Cover
+            </div>
+        }
+
+        <div class="ant-card-body" style="@BodyStyle">
+            @if (!Loading)
+            {
+                @Body
+                @ChildContent
+            }
+            else
+            {
+                <CardLoading></CardLoading>
+            }
+        </div>
+
+        @if (Actions.Count > 0)
+        {
+            <ul class="ant-card-actions">
+                @foreach (var action in Actions)
+                {
+                    <li style="@($"width:{100 / Actions.Count}%") ">
+                        <span>@action</span>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</CascadingValue>

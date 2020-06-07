@@ -13,15 +13,15 @@
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"1"})>
             <MenuItem Key="1">
-                <AntIcon Type="user" Theme="outline" />
+                <Icon Type="user" Theme="outline" />
                 <span>nav 1</span>
             </MenuItem>
             <MenuItem Key="2">
-                <AntIcon Type="video-camera" Theme="outline" />
+                <Icon Type="video-camera" Theme="outline" />
                 <span>nav 2</span>
             </MenuItem>
             <MenuItem Key="3">
-                <AntIcon Type="upload" Theme="outline" />
+                <Icon Type="upload" Theme="outline" />
                 <span>nav 3</span>
             </MenuItem>
         </Menu>
@@ -30,11 +30,11 @@
         <Header Class="site-layout-background" Style="padding: 0;">
             @if (collapsed)
             {
-                <AntIcon Type="menu-unfold" Theme="outline" Class="trigger" OnClick="toggle" />
+                <Icon Type="menu-unfold" Theme="outline" Class="trigger" OnClick="toggle" />
             }
             else
             {
-                <AntIcon Type="menu-fold" Theme="outline" Class="trigger" OnClick="toggle" />
+                <Icon Type="menu-fold" Theme="outline" Class="trigger" OnClick="toggle" />
             }
         </Header>
         <Content Class="site-layout-background" Style="margin: 24px 16px;padding: 24px;min-height: 280px;">

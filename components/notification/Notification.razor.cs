@@ -86,7 +86,7 @@ namespace AntDesign
 
         private RenderFragment _defaultCloseIcon = (builder) =>
         {
-            builder.OpenComponent<AntIcon>(0);
+            builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "close");
             builder.CloseComponent();
         };
