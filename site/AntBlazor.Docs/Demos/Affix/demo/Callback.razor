@@ -1,0 +1,15 @@
+<div>
+<Affix OffsetTop="120" OnChange="OnAffixChange">
+	<Button>
+		120px to affix top
+	</Button>
+</Affix>
+</div>
+
+@code{
+        private void OnAffixChange(bool affixed)
+        {
+            Console.WriteLine(affixed);
+        }
+		
+}

@@ -36,7 +36,7 @@ namespace AntDesign
                     int i = 0;
                     builder.OpenElement(i++, "span");
                     builder.AddAttribute(i++, "class", $"{PrefixCls}-suffix");
-                    builder.OpenComponent<AntIcon>(i++);
+                    builder.OpenComponent<Icon>(i++);
                     builder.AddAttribute(i++, "class", $"{PrefixCls}-password-icon");
                     builder.AddAttribute(i++, "type", _eyeIcon);
                     builder.AddAttribute(i++, "onclick", CallbackFactory.Create(this, ToggleVisibility));

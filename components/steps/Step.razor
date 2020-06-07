@@ -1,0 +1,66 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+
+    <div class="@ClassMapper.Class" style="@Style"id="@Id">
+        <div class="ant-steps-item-container" @onclick="@OnClick" tabindex="@GetTabIndex()" @attributes="@_containerAttributes">
+            @if (!Last)
+            {
+                <div class="ant-steps-item-tail"></div>
+            }
+            <div class="ant-steps-item-icon">
+                @if (!ShowProcessDot)
+                {
+                    <span class="ant-steps-icon">
+                        @if (string.IsNullOrEmpty(Icon))
+                        {
+                            if (Status == "finish")
+                            {
+                                <Icon type="check"></Icon>
+                            }
+                            else if (Status == "error")
+                            {
+                                <Icon type="close"></Icon>
+                            }
+                            else if (Status == "process" || Status == "wait")
+                            {
+                                @(Index+1)
+                            }
+                        }
+                        else
+                        {
+                            if (Status == "error")
+                            {
+                                <Icon type="close"></Icon>
+                            }
+                            else
+                            {
+                                <Icon type="@Icon"></Icon>
+                            }
+
+                        }
+                    </span>
+                    
+                }
+                else
+                {
+                    <span class="ant-steps-icon">
+                        <span class="ant-steps-icon-dot"></span>
+                    </span>
+                }
+            </div>
+            <div class="ant-steps-item-content">
+                <div class="ant-steps-item-title">
+                    @Title
+                    @if (!string.IsNullOrEmpty(Subtitle))
+                    {
+                        <div class="ant-steps-item-subtitle">@Subtitle</div>
+                    }
+                </div>
+                @if (!string.IsNullOrEmpty(Description))
+                {
+                    <div class="ant-steps-item-description">@Description</div>
+                }
+            </div>
+        </div>
+    </div>

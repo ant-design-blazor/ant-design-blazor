@@ -23,12 +23,12 @@
           {
             "title": "Icon",
             "type": "menuItem",
-            "url": "icon"
+            "url": "icondemo"
           },
           {
             "title": "Typography",
             "type": "menuItem",
-            "url": "typography"
+            "url": "components/typography"
           }
         ]
       },
@@ -60,12 +60,12 @@
           {
             "title": "Affix",
             "type": "menuItem",
-            "url": "affix"
+            "url": "components/affix"
           },
           {
             "title": "Breadcrumb",
             "type": "menuItem",
-            "url": "breadcrumb"
+            "url": "components/breadcrumb"
           },
           {
             "title": "Menu",
@@ -85,7 +85,7 @@
           {
             "title": "Steps",
             "type": "menuItem",
-            "url": "step"
+            "url": "stepdemo"
           }
         ]
       },
@@ -207,12 +207,12 @@
           {
             "title": "Tabs",
             "type": "menuItem",
-            "url": "tabs"
+            "url": "tabsdemo"
           },
           {
             "title": "Timeline",
             "type": "menuItem",
-            "url": "timeline"
+            "url": "components/timeline"
           },
           {
             "title": "Table",
@@ -274,12 +274,12 @@
           {
             "title": "Divider",
             "type": "menuItem",
-            "url": "divider"
+            "url": "components/divider"
           },
           {
             "title": "BackTop",
             "type": "menuItem",
-            "url": "backtop"
+            "url": "components/backtop"
           }
         ]
       }

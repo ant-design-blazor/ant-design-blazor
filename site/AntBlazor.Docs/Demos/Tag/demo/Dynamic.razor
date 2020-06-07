@@ -2,7 +2,7 @@
     <div>
         @foreach (var item in lstTags)
         {
-            <AntTag Mode="closeable" OnClose="()=>onClose(item)">@item</AntTag>
+            <Tag Mode="closeable" OnClose="()=>onClose(item)">@item</Tag>
         }
         @if (inputVisible)
         {
@@ -10,9 +10,9 @@
         }
         else
         {
-            <AntTag Mode="checkable" Class="editable-tag" OnClick="OnChecked">
-                <AntIcon Type="plus" />New Tag
-            </AntTag>
+            <Tag Mode="checkable" Class="editable-tag" OnClick="OnChecked">
+                <Icon Type="plus" />New Tag
+            </Tag>
         }
     </div>
 </div>
@@ -22,16 +22,10 @@
         border-style: dashed;
     }
 </style>
-
 @code{
-
-
     private bool inputVisible { get; set; } = false;
-
     string _inputValue;
-
     Input _inputRef;
-
     List<string> lstTags { get; set; } = new List<string>();
 
     protected override void OnInitialized()
@@ -39,7 +33,6 @@
         lstTags.Add("Apple");
         lstTags.Add("Mongo");
         lstTags.Add("Peach");
-
     }
 
     void ValueChange(ChangeEventArgs value)

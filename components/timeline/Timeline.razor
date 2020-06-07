@@ -1,0 +1,30 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this">
+    <ul class="@ClassMapper.Class" style="@Style" id="@Id">
+        @ChildContent
+
+        @foreach (var item in DisplayItems)
+        {
+            <li class="@item.ItemClass" @ref="item.Ref" style="@item.Style" id="@item.Id">
+                <div class="ant-timeline-item-tail"></div>
+                <div class="@item._headClassMapper.Class" style="@item.HeadStyle">
+                    @if (item.Dot != null)
+                    {
+                        @item.Dot
+                    }
+                </div>
+                <div class="ant-timeline-item-content">
+                    @item.ChildContent
+                </div>
+            </li>
+        }
+    </ul>
+</CascadingValue>
+
+@code{
+
+  private RenderFragment _loadingDot = @<Icon type="loading"></Icon>;
+
+}

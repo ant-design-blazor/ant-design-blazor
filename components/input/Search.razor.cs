@@ -26,7 +26,7 @@ namespace AntDesign
             {
                 Suffix = new RenderFragment((builder) =>
                 {
-                    builder.OpenComponent<AntIcon>(35);
+                    builder.OpenComponent<Icon>(35);
                     builder.AddAttribute(36, "class", $"{PrefixCls}-search-icon");
                     builder.AddAttribute(37, "type", "search");
                     builder.AddAttribute(38, "onclick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));

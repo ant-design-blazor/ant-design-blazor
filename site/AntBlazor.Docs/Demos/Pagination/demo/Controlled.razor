@@ -1,6 +1,10 @@
-﻿<Pagination @bind-Current="@current" OnChange=onChange Total="50" />
+﻿<div>
+    <Pagination Current="@current" CurrentChanged=onChange Total="50" />
+</div>
+
 
 @code {
+
     int current = 3;
 
     void onChange(int page)

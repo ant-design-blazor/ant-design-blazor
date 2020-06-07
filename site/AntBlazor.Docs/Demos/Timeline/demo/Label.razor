@@ -1,0 +1,21 @@
+<div>
+    <RadioGroup   @bind-Value ="@mode" Style="margin-bottom:20px" >      
+        <Radio Value="left">Left</Radio>
+        <Radio Value="right">Right</Radio>
+        <Radio Value="alternate">Alternate</Radio>
+    </RadioGroup>
+    <Timeline Mode="@mode">
+        <TimelineItem >Create a services 2015-09-01</TimelineItem>
+        <TimelineItem>Solve initial network problems 2015-09-01 09:12:11</TimelineItem>
+        <TimelineItem>Technical testing</TimelineItem>
+        <TimelineItem >Network problems being solved 2015-09-01 09:12:11</TimelineItem>
+    </Timeline>
+</div
+@code{
+    private string mode = "left";
+    void OnChangClick()
+    {
+
+    }
+
+}
