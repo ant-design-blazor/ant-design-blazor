@@ -1,0 +1,23 @@
+﻿
+<DemoCard>
+    <Title>基本使用</Title>
+    <Description>
+        <Paragraph>使用 <Text Code>@(@"<Icon></Icon>")</Text> 标签声明组件，指定图标对应的 <Text Code>Type</Text> 属性。可以通过 <Text Code>Theme</Text> 属性来设置不同的主题风格的图标，也可以通过设置 <Text Code>spin</Text> 属性来实现动画旋转效果。</Paragraph>
+    </Description>
+    <Demo>
+        <div class="icons-list">
+            <Icon Type="home"></Icon>
+            <Icon Type="setting" Theme="fill"></Icon>
+            <Icon Type="smile" Theme="outline"></Icon>
+            <Icon Type="sync" Theme="true"></Icon>
+            <Icon Type="smile" Theme="outline" Rotate="180"></Icon>
+            <!-- Loading with new API would spin automatically! -->
+            <Icon Type="loading"></Icon>
+        </div>
+    </Demo>
+</DemoCard>
+
+
+@code {
+
+}

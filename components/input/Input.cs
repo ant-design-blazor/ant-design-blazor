@@ -172,7 +172,7 @@ namespace AntDesign
         {
             Suffix = (builder) =>
             {
-                builder.OpenComponent<AntIcon>(31);
+                builder.OpenComponent<Icon>(31);
                 builder.AddAttribute(32, "Type", "close-circle");
                 if (string.IsNullOrEmpty(Value))
                 {

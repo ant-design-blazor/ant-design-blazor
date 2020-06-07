@@ -3,17 +3,17 @@
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" DefaultSelectedKeys=@(new[]{"1"}) Mode="MenuMode.Inline">
             <MenuItem Key="1">
-                <AntIcon Type="pie-chart" Theme="outline" />
+                <Icon Type="pie-chart" Theme="outline" />
                 <span>Option 1</span>
             </MenuItem>
             <MenuItem Key="2">
-                <AntIcon Type="desktop" Theme="outline" />
+                <Icon Type="desktop" Theme="outline" />
                 <span>Option 2</span>
             </MenuItem>
             @{
                 RenderFragment sub1Title =
                     @<span>
-                        <AntIcon Type="user" Theme="outline"/>
+                        <Icon Type="user" Theme="outline"/>
                         <span>User</span>
                     </span>;
             }
@@ -25,7 +25,7 @@
             @{
                 RenderFragment sub2Title =
                     @<span>
-                        <AntIcon Type="team" Theme="outline"/>
+                        <Icon Type="team" Theme="outline"/>
                         <span>Team</span>
                     </span>;
             }
@@ -34,7 +34,7 @@
             <MenuItem Key="8">Team 2</MenuItem>
             </SubMenu>
             <MenuItem Key="9">
-                <AntIcon Type="file" Theme="outline"/>
+                <Icon Type="file" Theme="outline"/>
             </MenuItem>
         </Menu>
     </Sider>
