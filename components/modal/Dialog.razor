@@ -8,12 +8,12 @@
             <div class="ant-modal-mask @GetMaskClsName()" style="@Config.MaskStyle"></div>
         }
     <div tabindex="-1" class="ant-modal-wrap @Config.GetWrapClassNameExtended()" role="dialog" aria-labelledby="rcDialogTitle0"
-         @onclick="@OnMaskClick" @onclick:preventDefault @onclick:stopPropagation
-         @onmouseup="@OnMaskMouseUp" @onmouseup:preventDefault @onmouseup:stopPropagation
+         @onclick="@OnMaskClick" 
+         @onmouseup="@OnMaskMouseUp"
          @onkeydown="@OnKeyDown"
          style="@_wrapStyle">
         <div role="document" class="ant-modal @GetModalClsName()"
-             @onmousedown="@OnDialogMouseDown" @onmousedown:preventDefault @onmousedown:stopPropagation
+             @onmousedown="@OnDialogMouseDown"
              style="@GetStyle()">
             <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
             <div class="ant-modal-content">
