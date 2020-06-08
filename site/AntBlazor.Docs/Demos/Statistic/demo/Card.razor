@@ -1,0 +1,36 @@
+﻿<div style="background-color: #ececec; padding: 20px;">
+    <AntRow>
+        <AntCol Span="12" style="padding-left: 8px; padding-right: 8px;">
+            <AntCard Bordered="false">
+                <Body>
+                    <Statistic Title="@title1" Value="@value1" Precision="@precision1" ValueStyle="@valueStyle1" Prefix="@prefix1" Suffix="@suffix1" />
+                </Body>
+            </AntCard>
+        </AntCol>
+        <AntCol Span="12" style="padding-left: 8px; padding-right: 8px;">
+            <AntCard Bordered="false">
+                <Body>
+                    <Statistic Title="@title2" Value="@value2" Precision="@precision2" ValueStyle="@valueStyle2" Prefix="@prefix2" Suffix="@suffix2" />
+                </Body>
+            </AntCard>
+        </AntCol>
+    </AntRow>
+</div>
+
+@code
+{
+    string title1 = "Active";
+    decimal value1 = 11.28M;
+    int precision1 = 2;
+    string valueStyle1 = "color: rgb(63, 134, 0);";
+    RenderFragment prefix1 =@<span><AntIcon Type="arrow-up" /></span>;
+    string suffix1 = "%";
+
+    string title2 = "Unmerged";
+    decimal value2 = 9.3M;
+    int precision2 = 2;
+    string valueStyle2 = "color: rgb(207, 19, 34);";
+    RenderFragment prefix2 =@<span><AntIcon Type="arrow-down" /></span>;
+    string suffix2 = "%";
+}
+
