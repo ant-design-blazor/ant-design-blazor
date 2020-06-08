@@ -232,7 +232,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-nav-container-scrolling", () => _prevIconEnabled.HasValue || _nextIconEnabled.HasValue);
 
             _navStyle = "transform: translate3d(0px, 0px, 0px);";
-            _inkStyle = "width: 0px; display: block; transform: translate3d(0px, 0px, 0px);";
+            _inkStyle = "left: 0px; width: 0px;";
             _contentStyle = "margin-" + (IsHorizontal ? "left" : "top") + ": 0;";
         }
 
@@ -350,12 +350,13 @@ namespace AntDesign
                 Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
                 if (IsHorizontal)
                 {
-                    _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
+                    //_inkStyle = "left: 0px; width: 0px;";
+                    _inkStyle = $"left: {element.offsetLeft}px; width: {element.clientWidth}px";
                     _contentStyle = $"margin-left: -{_panes.IndexOf(_activePane)}00%;";
                 }
                 else
                 {
-                    _inkStyle = $"height: {element.clientHeight}px; display: block; transform: translate3d(0px, {element.offsetTop}px, 0px);";
+                    _inkStyle = $"top: {element.offsetTop}px; height: {element.clientHeight}px;";
                     _contentStyle = $"margin-top: -{_panes.IndexOf(_activePane)}00%;";
                 }
                 StateHasChanged();
