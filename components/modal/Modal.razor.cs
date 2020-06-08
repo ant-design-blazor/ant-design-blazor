@@ -171,6 +171,7 @@ namespace AntDesign
         }
 
         private bool _hasAdd = false;
+        private bool _hasFocus = false;
 
         protected override async Task OnParametersSetAsync()
         {
@@ -185,7 +186,11 @@ namespace AntDesign
         {
             if (Visible)
             {
-                await JsInvokeAsync(JSInteropConstants.focusDialog, $"#{_dialog.SentinelStart}");
+                if (!_hasFocus)
+                {
+                    await JsInvokeAsync(JSInteropConstants.focusDialog, $"#{_dialog.SentinelStart}");
+                    _hasFocus = true;
+                }
             }
             else
             {
@@ -196,6 +201,7 @@ namespace AntDesign
                         await _dialog.Hide();
                     }
                     _hasAdd = false;
+                    _hasFocus = false;
                     await InvokeAsync(StateHasChanged);
                 }
             }
