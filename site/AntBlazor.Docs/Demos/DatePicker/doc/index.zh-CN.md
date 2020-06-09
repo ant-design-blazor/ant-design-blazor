@@ -22,25 +22,9 @@ subtitle: 日期选择框
 - YearPicker
 - QuarterPicker (4.1.0 新增)
 
-### 国际化配置（TODO）
+### 国际化配置
 
-默认配置为 en-US，如果你需要设置其他语言，推荐在入口处使用我们提供的国际化组件，详见：[ConfigProvider 国际化](http://ant.design/components/config-provider-cn/)。
-
-如有特殊需求（仅修改单一组件的语言），请使用 locale 参数，参考：[默认配置](https://github.com/ant-design/ant-design/blob/master/components/date-picker/locale/example.json)。
-
-```jsx
-import locale from 'antd/es/date-picker/locale/zh_CN';
-
-<DatePicker locale={locale} />;
-```
-
-```jsx
-// 默认语言为 en-US，如果你需要设置其他语言，推荐在入口文件全局设置 locale
-import moment from 'moment';
-import 'moment/locale/zh-cn';
-
-<DatePicker defaultValue={moment('2015-01-01', 'YYYY-MM-DD')} />;
-```
+使用 System.Globalization.CultureInfo 属性为 DatePicker 配置国际化选项。暂时只提供 en-US 和 zh-CN 两种内置方案。
 
 ### 共同的 API
 

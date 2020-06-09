@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 using AntDesign.Internal;
@@ -25,9 +26,7 @@ namespace AntDesign
             {
                 _isSetPicker = true;
                 _picker = value;
-
-                InitPicker(value, 0);
-                InitPicker(value, 1);
+                InitPicker(value);
             }
         }
 
@@ -51,6 +50,9 @@ namespace AntDesign
 
         [Parameter]
         public bool ShowToday { get; set; } = true;
+
+        [Parameter]
+        public CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
 
         public bool IsShowTime { get; protected set; } = false;
         public string ShowTimeFormat { get; protected set; } = "HH:mm:ss";
@@ -332,7 +334,7 @@ namespace AntDesign
             if (!string.IsNullOrEmpty(Format))
             {
                 // TODO：Locale
-                return value.ToString(Format, CultureInfo.CurrentCulture);
+                return value.ToString(Format, this.CultureInfo);
             }
 
             // TODO：Locale
@@ -347,7 +349,7 @@ namespace AntDesign
                 _ => "yyyy-MM-dd",
             };
 
-            return value.ToString(formater, CultureInfo.CurrentCulture);
+            return value.ToString(formater, this.CultureInfo);
         }
 
         protected void ChangeFocusTarget(bool inputStartFocus, bool inputEndFocus)
@@ -402,30 +404,40 @@ namespace AntDesign
             ChangePickerValue(date, index);
         }
 
-        protected void InitPicker(string picker, int index = 0)
+        protected void InitPicker(string picker)
         {
-            if (string.IsNullOrEmpty(_pickerStatus[index]._initPicker))
+            if (string.IsNullOrEmpty(_pickerStatus[0]._initPicker)) {
+                _pickerStatus[0]._initPicker = picker;
+            }
+            if (string.IsNullOrEmpty(_pickerStatus[1]._initPicker))
             {
-                // note first picker type
-                _pickerStatus[index]._initPicker = picker;
-
-                // set default placeholder
-                _placeholders[index] = DatePickerPlaceholder.GetPlaceholderByType(_pickerStatus[index]._initPicker);
-
-                if (IsRange && index != 0)
+                _pickerStatus[1]._initPicker = picker;
+            }
+            if (IsRange)
+            {
+                (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(picker, this.CultureInfo);
+                _placeholders[0] = first;
+                _placeholders[1] = second;
+            }
+            else
+            {
+                string first = DatePickerPlaceholder.GetPlaceholderByType(picker, this.CultureInfo);
+                _placeholders[0] = first;
+                _placeholders[1] = first;
+            }
+            if (IsRange)
+            {
+                DateTime now = DateTime.Now;
+                _pickerValues[1] = picker switch
                 {
-                    DateTime now = DateTime.Now;
-                    _pickerValues[index] = picker switch
-                    {
-                        DatePickerType.Date => now.AddMonths(1),
-                        DatePickerType.Week => now.AddMonths(1),
-                        DatePickerType.Month => now.AddYears(1),
-                        DatePickerType.Decade => now.AddYears(1),
-                        DatePickerType.Quarter => now.AddYears(1),
-                        DatePickerType.Year => now.AddYears(10),
-                        _ => now,
-                    };
-                }
+                    DatePickerType.Date => now.AddMonths(1),
+                    DatePickerType.Week => now.AddMonths(1),
+                    DatePickerType.Month => now.AddYears(1),
+                    DatePickerType.Decade => now.AddYears(1),
+                    DatePickerType.Quarter => now.AddYears(1),
+                    DatePickerType.Year => now.AddYears(10),
+                    _ => now,
+                };
             }
         }
 

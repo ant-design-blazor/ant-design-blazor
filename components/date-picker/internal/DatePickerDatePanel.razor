@@ -4,7 +4,7 @@
 @using System.Globalization;
 
 @{
-    var calendar = CultureInfo.InvariantCulture.Calendar;
+    var calendar = this.DatePicker.CultureInfo.Calendar;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
@@ -15,7 +15,7 @@
         monthFirstDayOfWeek = 7;
     }
 
-    int diffDay = 1 - monthFirstDayOfWeek;
+    int diffDay = (int)this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
 
@@ -30,7 +30,7 @@
                            IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                            IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
                            IsSelected="date => !IsWeek && DateHelper.IsSameDay(date, Value)"
-                           GetColTitle='date => date.ToString("yyyy-MM-dd")'
+                           GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().DateFormat)'
                            OnRowSelect="OnRowSelect"
                            OnValueSelect="OnValueSelect"
                            GetNextColValue="date => date.AddDays(1)">
@@ -48,13 +48,10 @@
                 {
                     <th></th>
                 }
-                <th>一</th>
-                <th>二</th>
-                <th>三</th>
-                <th>四</th>
-                <th>五</th>
-                <th>六</th>
-                <th>日</th>
+                @foreach(string weekDay in this.DatePicker.CultureInfo.GetDateLocale().ShortWeekDays)
+                {
+                    <th>@(weekDay)</th>
+                }
             </tr>
         </RenderTableHeader>
         <RenderFisrtCol>
@@ -85,7 +82,7 @@
     <div class="@(PrefixCls)-footer">
         <a class="@(PrefixCls)-today-btn" 
            @onclick="e => { OnSelectDate(DateTime.Now); Close(); }">
-            今天
+            @this.DatePicker.CultureInfo.GetDateLocale().Today
         </a>
     </div>
 }

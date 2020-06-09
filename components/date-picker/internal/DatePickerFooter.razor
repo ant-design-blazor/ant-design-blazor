@@ -1,7 +1,9 @@
 ﻿@namespace AntDesign.Internal
 
 <div class="@(DatePicker.PrefixCls)-footer">
-    <a class="@(DatePicker.PrefixCls)-today-btn" @onclick="e => DatePicker.ChangePickerValue(DateTime.Now)">今天</a>
+    <a class="@(DatePicker.PrefixCls)-today-btn" @onclick="e => DatePicker.ChangePickerValue(DateTime.Now)">
+        @this.DatePicker.CultureInfo.GetDateLocale().Today
+    </a>
 </div>
 
 @code {
