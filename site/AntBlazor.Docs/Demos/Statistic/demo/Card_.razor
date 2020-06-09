@@ -1,0 +1,28 @@
+﻿<div class="site-statistic-demo-card">
+    <Row Gutter="16">
+        <Col Span="12">
+            <Card>
+                <Statistic Title="@("Active")" Value="11.28" Precision="2" ValueStyle="color: #3f8600;" Prefix="@prefix1" Suffix="@("%")" />
+            </Card>
+        </Col>
+        <Col Span="12">
+            <Card>
+                <Statistic Title="@("Idle")" Value="9.3" Precision="2" ValueStyle="color: #cf1322;" Prefix="@prefix2" Suffix="@("%")" />
+            </Card>
+        </Col>
+    </Row>
+</div>
+
+<style>
+    .site-statistic-demo-card {
+        background: #ececec;
+        padding: 30px;
+    }
+</style>
+
+@code
+{
+    RenderFragment prefix1 = @<span><Icon Type="arrow-up"/></span>;
+    RenderFragment prefix2 = @<span><Icon Type="arrow-down"/></span>;
+}
+
