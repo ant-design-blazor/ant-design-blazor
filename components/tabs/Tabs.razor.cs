@@ -12,21 +12,31 @@ namespace AntDesign
     {
         private const string PrefixCls = "ant-tabs";
         private bool IsHorizontal { get => TabPosition == AntDesign.TabPosition.Top || TabPosition == AntDesign.TabPosition.Bottom; }
+
         //private ClassMapper _barClassMapper = new ClassMapper();
         //private ClassMapper _prevClassMapper = new ClassMapper();
         //private ClassMapper _nextClassMapper = new ClassMapper();
         //private ClassMapper _navClassMapper = new ClassMapper();
         private TabPane _activePane;
+
         private TabPane _renderedActivePane;
         private ElementReference _activeTabBar;
-        //private ElementReference _scrollTabBar;
-        //private ElementReference _tabBars;
+
+        private ElementReference _scrollTabBar;
+        private ElementReference _tabBars;
+
         private string _inkStyle;
+
         //private string _navStyle;
         //private string _contentStyle;
         //private bool? _prevIconEnabled;
         //private bool? _nextIconEnabled;
+        private string _operationClass;
+
+        private string _operationStyle;
+
         private int _navIndex;
+
         private int _navTotal;
         private int _navSection;
         private bool _needRefresh;
@@ -188,17 +198,17 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            if (Type == TabType.EditableCard && !HideAdd)
-            {
-                TabBarExtraContent = (b) =>
-                {
-                    b.OpenComponent<Icon>(0);
-                    b.AddAttribute(1, "Type", "plus");
-                    b.AddAttribute(2, "class", $"{PrefixCls}-new-tab");
-                    b.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, AddTabPane));
-                    b.CloseComponent();
-                };
-            }
+            //if (Type == TabType.EditableCard && !HideAdd)
+            //{
+            //    TabBarExtraContent = (b) =>
+            //    {
+            //        b.OpenComponent<Icon>(0);
+            //        b.AddAttribute(1, "Type", "plus");
+            //        b.AddAttribute(2, "class", $"{PrefixCls}-new-tab");
+            //        b.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, AddTabPane));
+            //        b.CloseComponent();
+            //    };
+            //}
 
             ClassMapper.Clear()
                 .Add(PrefixCls)
@@ -261,14 +271,14 @@ namespace AntDesign
             }
         }
 
-        public void AddTabPane(MouseEventArgs args)
+        private void AddTabPane(MouseEventArgs args)
         {
             if (CreateTabPane != null)
             {
                 TabPane pane = CreateTabPane();
                 Dictionary<string, object> properties = new Dictionary<string, object>
                 {
-                    [nameof(TabPane.Parent)] = this,
+                    //[nameof(TabPane.Parent)] = this,
                     [nameof(TabPane.ForceRender)] = pane.ForceRender,
                     [nameof(TabPane.Key)] = pane.Key,
                     [nameof(TabPane.Tab)] = pane.Tab,
@@ -317,28 +327,25 @@ namespace AntDesign
 
             await TryRenderInk();
 
-            //await TryRenderNavIcon();
+            await TryRenderNavOperation();
             _needRefresh = false;
         }
 
-        //private async Task TryRenderNavIcon()
-        //{
-        //    if (_needRefresh)
-        //    {
-        //        if (IsHorizontal)
-        //        {
-        //            // Prev/Next icon, show icon if scroll div's width less than tab bars' total width
-        //            _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-        //            _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-        //        }
-        //        else
-        //        {
-        //            _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
-        //            _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
-        //        }
-        //        RefreshNavIcon();
-        //    }
-        //}
+        private async Task TryRenderNavOperation()
+        {
+            int navWidth = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            int navTotalWidth = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+            if (navTotalWidth > navWidth)
+            {
+                _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
+                _operationStyle = "visibility: hidden; order: 1;";
+            }
+            else
+            {
+                _operationClass = "ant-tabs-nav-operations";
+                _operationStyle = string.Empty;
+            }
+        }
 
         private async Task TryRenderInk()
         {

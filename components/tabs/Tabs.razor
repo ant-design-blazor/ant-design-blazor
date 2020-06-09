@@ -15,8 +15,8 @@
 
     <!--Tab bar-->
     <div role="tablist" class="ant-tabs-nav">
-        <div class="ant-tabs-nav-wrap">
-            <div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);">
+        <div class="ant-tabs-nav-wrap" @ref="@_tabBars">
+            <div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);" @ref="@_scrollTabBar">
                 @foreach (var pane in _panes)
                 {
                     if (pane.IsActive)
@@ -64,11 +64,25 @@
                         </button>
                     }
                 }
+                @if (Type == TabType.EditableCard && !HideAdd)
+                {
+                    <button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="(e)=>AddTabPane(e)">
+                        <span role="img" aria-label="plus" class="anticon anticon-plus">
+                            <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                                <defs><style></style></defs>
+                                <path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path>
+                                <path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z">
+                                </path>
+                            </svg>
+                        </span>
+                    </button>
+                }
                 <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="@_inkStyle"></div>
             </div>
         </div>
-        <div class="ant-tabs-nav-operations ant-tabs-nav-operations-hidden">
-            <button tabindex="-1" class="ant-tabs-nav-more" id="rc-tabs-0-more" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true" aria-controls="rc-tabs-0-more-popup" style="visibility: hidden; order: 1;" type="button">
+        <div class="@_operationClass"
+            <button tabindex="-1" class="ant-tabs-nav-more" id="rc-tabs-0-more" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true" aria-controls="rc-tabs-0-more-popup"
+                    style="@_operationStyle" type="button">
                 <span class="anticon anticon-ellipsis" role="img" aria-label="ellipsis">
                     <svg xmlns="http://www.w3.org/2000/svg" class="" aria-hidden="true" fill="currentColor" viewBox="64 64 896 896" focusable="false" width="1em" height="1em" data-icon="ellipsis"><path d="M 176 511 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z m 280 0 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z m 280 0 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z" /></svg>
                 </span>
