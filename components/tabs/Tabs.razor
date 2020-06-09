@@ -42,7 +42,9 @@
                     }
                     else
                     {
-                        <button type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="ant-tabs-tab" id="@($"rc-tabs-{Id}-tab-{pane.Key}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")" @onclick="(e)=>ActivatePane(pane)"
+                        <button type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="ant-tabs-tab@(pane.Disabled?" ant-tabs-tab-disabled":string.Empty)" id="@($"rc-tabs-{Id}-tab-{pane.Key}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")"
+                                disabled="@(pane.Disabled)"
+                                @onclick="(e)=>ActivatePane(pane)"
                                 @onclick:stopPropagation
                                 draggable="@Draggable.ToString()"
                                 ondragover="event.preventDefault();"
