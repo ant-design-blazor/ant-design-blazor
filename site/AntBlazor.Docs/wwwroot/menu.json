@@ -207,7 +207,7 @@
           {
             "title": "Tabs",
             "type": "menuItem",
-            "url": "tabsdemo"
+            "url": "components/tabs"
           },
           {
             "title": "Timeline",
