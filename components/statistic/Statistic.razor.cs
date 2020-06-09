@@ -4,26 +4,15 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Statistic : StatisticComponentBase<decimal>
+    public partial class Statistic<TValue> : StatisticComponentBase<TValue>
     {
-        /// <summary>
-        /// 设置小数点   string
-        /// </summary>
         [Parameter] public string DecimalSeparator { get; set; } = ".";
 
-        //Formatter 自定义数值展示(value) => ReactNode -
-
-        /// <summary>
-        /// 设置千分位标识符 string	,	
-        /// </summary>
         [Parameter] public string GroupSeparator { get; set; } = ",";
 
-        /// <summary>
-        /// 数值精度,默认不取舍，当值为0或正整数时会取舍小数位，位数不足右边补0
-        /// </summary>
         [Parameter] public int Precision { get; set; } = -1;
 
-        private string IntegerPart { get {return Convert.ToDecimal(Value).ToString($"###{GroupSeparator}###"); } }
+        private string IntegerPart { get { return Convert.ToDecimal(Value).ToString($"###{GroupSeparator}###"); } }
 
         private string FractionalPart
         {
@@ -41,6 +30,5 @@ namespace AntDesign
                 return string.IsNullOrEmpty(tem) ? null : DecimalSeparator + tem;
             }
         }
-
     }
 }

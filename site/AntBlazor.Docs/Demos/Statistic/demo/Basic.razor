@@ -1,26 +1,12 @@
 ﻿
-<div class="ant-row" style="margin-left: -8px; margin-right: -8px;">
-    <div class="ant-col ant-col-12" style="padding-left: 8px; padding-right: 8px;">
-        <div class="ant-card ant-card-bordered">
-            <div class="ant-card-body">
-                <Statistic Title="title" Value="value" />
-            </div>
-        </div>
-    </div>
-    <div class="ant-col ant-col-12" style="padding-left: 8px; padding-right: 8px;">
-        <div class="ant-card ant-card-bordered">
-            <div class="ant-card-body">
-                <Statistic Title="title2" Value="value2" />
-            </div>
-        </div>
-    </div>
-</div>
-
-@code
-{
-    string title = "Active Users";
-    decimal value = 121652;
-
-    string title2 = "Account Balance (CNY)";
-    decimal value2 = 899363.26M;
-}
+<Row Gutter="16">
+    <Col Span="12">
+        <Statistic Title="@("Active Users")" Value="112893" />
+    </Col>
+    <Col Span="12">
+        <Statistic Title="@("Account Balance (CNY)")" Value="112893" Precision="2"/>
+        <Button Style="margin-top: 16px;" Type="primary">
+            Recharge
+        </Button>
+    </Col>
+</Row>

@@ -1,44 +1,23 @@
 ﻿
-    <div class="ant-row" style="margin-left: -8px; margin-right: -8px;">
-        <div class="ant-col ant-col-12" style="padding-left: 8px; padding-right: 8px;">
-            <div class="ant-card ant-card-bordered">
-                <div class="ant-card-body">
-                    <CountDown Title="@title1" Value="@TimeSpanValue" />
-                </div>
-            </div>
-        </div>
-        <div class="ant-col ant-col-12" style="padding-left: 8px; padding-right: 8px;">
-            <div class="ant-card ant-card-bordered">
-                <div class="ant-card-body">
-                    <CountDown Title="@title2" Value="@TimeSpanValue" Format="@fomatString2" />
-                </div>
-            </div>
-        </div>
-        <div class="ant-col ant-col-24" style="padding-left: 8px; padding-right: 8px; padding-top:8px">
-            <div class="ant-card ant-card-bordered">
-                <div class="ant-card-body">
-                    <CountDown Title="@title3" Value="@TimeValue" Format="@fomatString3" ValueStyle="@valueStyle3" />
-                </div>
-            </div>
-        </div>
-    </div>
-
+<Row Gutter="16">
+    <Col Span="12">
+        <CountDown Title="@("Countdown")" Value="@deadline" OnFinish="OnFinish" />
+    </Col>
+    <Col Span="12">
+        <CountDown Title="@("Million")" Value="@deadline" Format="hh\:mm\:ss\:fff" />
+    </Col>
+    <Col Span="24">
+        <CountDown Title="@("Day Level")" Value="@deadline" Format="dd\ \天\ h\ \小\时\ m\ \分\钟\ s\ \秒" />
+    </Col>
+</Row>
 
 @code
 {
+    DateTime deadline = DateTime.Now.AddMilliseconds(1000 * 60 * 60 * 24 * 2 + 1000 * 30);
 
-    //以现在时刻为起点的倒计时时间长度：2天22小时59分59秒
-    TimeSpan TimeSpanValue = new TimeSpan(2, 8, 0, 0);
-    //倒计时截止到未来某时刻,类型为DateTime
-    DateTime TimeValue = DateTime.Now.AddDays(180);
-
-    string title1 = "Countdown";
-
-    string title2 = "Million Seconds";
-    string fomatString2 = @"hh\:mm\:ss\.fff";
-
-    string title3 = "Day Level";
-    string fomatString3 = @"d\ \天\ h\ \小\时\ m\ \分\钟\ s\ \秒";
-    string valueStyle3 = "color: rgb(207, 19, 34);";
+    void OnFinish()
+    {
+        Console.WriteLine("finished!");
+    }
 }
 

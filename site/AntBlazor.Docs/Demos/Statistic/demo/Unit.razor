@@ -1,20 +1,16 @@
-﻿<div class="ant-row" style="margin-left: -8px; margin-right: -8px;">
-    <div class="ant-col ant-col-12" style="padding-left: 8px; padding-right: 8px;">
-        <Statistic Title="title1" Prefix="prefix1" Value="value1" />
-    </div>    
-    <div class="ant-col ant-col-12" style="padding-left: 8px; padding-right: 8px;">
-        <Statistic Title="title2" Suffix="suffix2" Value="value2" />
-    </div>
-</div>
+﻿<Row Gutter=16>
+    <Col Span=12>
+    <Statistic Title="@("Feedback")" Value="1128" Prefix="prefix1" />
+    </Col>
+    <Col Span=12>
+    <Statistic Title="@("Unmerged")" Value="93" Suffix="@("/ 100")" />
+    </Col>
+</Row>
 
 
 @code
 {
     string title1 = "Feedback";
-    RenderFragment prefix1 =@<span><AntIcon Type="like" /></span>;
-    decimal value1 = 1168M;
 
-    string title2 = "Unmerged";
-    string suffix2 = "/100";
-    decimal value2 = 93M;
+    RenderFragment prefix1 =@<Icon Type="like" />;
 }
