@@ -13,149 +13,81 @@
         </div>
     }
 
-    @if (TabPosition != AntDesign.TabPosition.Bottom)
-    {
-        <!--Tab bar-->
-        <div role="tablist" class="ant-tabs-nav">
-            <div class="ant-tabs-nav-wrap">
-                <div class="ant-tabs-nav-list" style="transform: tanslate(0px, 0px);">
-                    @foreach (var pane in _panes)
+    <!--Tab bar-->
+    <div role="tablist" class="ant-tabs-nav">
+        <div class="ant-tabs-nav-wrap">
+            <div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);">
+                @foreach (var pane in _panes)
+                {
+                    if (pane.IsActive)
                     {
-                        if (pane.IsActive)
-                        {
-                            <button @ref="_activeTabBar" type="buton" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="ant-tabs-tab ant-tabs-tab-active" id="@($"rc-tabs-{Id}-tab-{pane.Id}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Id}")"
-                                    draggable="@Draggable.ToString()"
-                                    @ondragover:preventDefault
-                                    ondragover="event.preventDefault();"
-                                    @ondragstart="(e)=>HandleDragStart(e, pane)"
-                                    @ondrop="(e)=>HandleDrop(pane)">
-                                @if (Type == TabType.EditableCard && pane.Closable)
-                                {
-                                    <div>
-                                        @pane.Tab
-                                        <Icon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
-                                    </div>
-                                }
-                                else
-                                {
+                        <button @ref="_activeTabBar" type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="ant-tabs-tab ant-tabs-tab-active" id="@($"rc-tabs-{Id}-tab-{pane.Key}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")"
+                                draggable="@Draggable.ToString()"
+                                @ondragover:preventDefault
+                                ondragover="event.preventDefault();"
+                                @ondragstart="(e)=>HandleDragStart(e, pane)"
+                                @ondrop="(e)=>HandleDrop(pane)">
+                            @if (Type == TabType.EditableCard && pane.Closable)
+                            {
+                                <div>
                                     @pane.Tab
-                                }
-                            </button>
-                        }
-                        else
-                        {
-                            <button type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="ant-tabs-tab" id="@($"rc-tabs-{Id}-tab-{pane.Id}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Id}")" @onclick="(e)=>ActivatePane(pane)"
-                                    @onclick:stopPropagation
-                                    draggable="@Draggable.ToString()"
-                                    ondragover="event.preventDefault();"
-                                    @ondragstart="(e)=>HandleDragStart(e, pane)"
-                                    @ondrop="(e)=>HandleDrop(pane)">
-                                @if (Type == TabType.EditableCard && pane.Closable)
-                                {
-                                    <div>
-                                        @pane.Tab
-                                        <Icon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
-                                    </div>
-                                }
-                                else
-                                {
-                                    @pane.Tab
-                                }
-                            </button>
-                        }
+                                    <Icon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
+                                </div>
+                            }
+                            else
+                            {
+                                @pane.Tab
+                            }
+                        </button>
                     }
-                    <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="@_inkStyle"></div>
-                </div>
+                    else
+                    {
+                        <button type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="ant-tabs-tab" id="@($"rc-tabs-{Id}-tab-{pane.Key}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")" @onclick="(e)=>ActivatePane(pane)"
+                                @onclick:stopPropagation
+                                draggable="@Draggable.ToString()"
+                                ondragover="event.preventDefault();"
+                                @ondragstart="(e)=>HandleDragStart(e, pane)"
+                                @ondrop="(e)=>HandleDrop(pane)">
+                            @if (Type == TabType.EditableCard && pane.Closable)
+                            {
+                                <div>
+                                    @pane.Tab
+                                    <Icon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
+                                </div>
+                            }
+                            else
+                            {
+                                @pane.Tab
+                            }
+                        </button>
+                    }
+                }
+                <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="@_inkStyle"></div>
             </div>
         </div>
-    }
-    <!--Tab content-->
-    <div class="ant-tabs-content-holder ant-tabs-@TabPosition-content ant-tabs-@Type-content ant-tabs-content-animated" style="@_contentStyle">
-        @foreach (var pane in _panes)
-        {
-            @if (pane.IsActive)
-            {
-                <div role="tabpanel" aria-hidden="false" tabindex="0" class="ant-tabs-tabpane ant-tabs-tabpane-active" style="visibility: visible;">@pane.ChildContent</div>
-            }
-            else
-            {
-                <div role="tabpanel" aria-hidden="true" tabindex="-1" class="ant-tabs-tabpane ant-tabs-tabpane-inactive" style="visibility: hidden;">@pane.ChildContent</div>
-            }
-
-        }
+        <div class="ant-tabs-nav-operations ant-tabs-nav-operations-hidden">
+            <button tabindex="-1" class="ant-tabs-nav-more" id="rc-tabs-0-more" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true" aria-controls="rc-tabs-0-more-popup" style="visibility: hidden; order: 1;" type="button">
+                <span class="anticon anticon-ellipsis" role="img" aria-label="ellipsis">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="" aria-hidden="true" fill="currentColor" viewBox="64 64 896 896" focusable="false" width="1em" height="1em" data-icon="ellipsis"><path d="M 176 511 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z m 280 0 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z m 280 0 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z" /></svg>
+                </span>
+            </button>
+        </div>
     </div>
-    @if (TabPosition == AntDesign.TabPosition.Bottom)
-    {
-        <!--Tab bar-->
-        <div tabindex="-1" class="@_barClassMapper.Class" role="tablist">
-            <div class="@_navClassMapper.Class">
-                <span class="@_prevClassMapper.Class" unselectable="unselectable" @onclick="OnPrevClicked">
-                    <span class="ant-tabs-tab-prev-icon">
-                        <Icon class="ant-tabs-tab-prev-icon-target" type="@(TabPosition ==  AntDesign.TabPosition.Top || TabPosition ==  AntDesign.TabPosition.Bottom?"left":"up")" />
-                    </span>
-                </span>
-                <span class="@_nextClassMapper.Class" unselectable="unselectable" @onclick="OnNextClicked">
-                    <span class="ant-tabs-tab-next-icon">
-                        <Icon class="ant-tabs-tab-next-icon-target" type="@(TabPosition ==  AntDesign.TabPosition.Top || TabPosition ==  AntDesign.TabPosition.Bottom?"right":"down")" />
-                    </span>
-                </span>
-                <div class="ant-tabs-nav-wrap" @ref="_scrollTabBar">
-                    <div class="ant-tabs-nav-scroll">
-                        <div class="ant-tabs-nav ant-tabs-nav-animated" style="@_navStyle">
-                            <div @ref="_tabBars">
-                                @foreach (var pane in _panes)
-                                {
-                                    if (pane.IsActive)
-                                    {
-                                        <div @ref="_activeTabBar" tabindex="0" class="@pane._classMapper.Class" id="tab-@pane.Key" role="tab"
-                                             aria-disabled="@pane.Disabled" aria-selected="true" aria-controls="tabpane-@pane.Key"
-                                             draggable="@Draggable.ToString()"
-                                             @ondragover:preventDefault
-                                             ondragover="event.preventDefault();"
-                                             @ondragstart="(e)=>HandleDragStart(e, pane)"
-                                             @ondrop="(e)=>HandleDrop(pane)">
-                                            @if (Type == TabType.EditableCard && pane.Closable)
-                                            {
-                                                <div>
-                                                    @pane.Tab
-                                                    <Icon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                @pane.Tab
-                                            }
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div tabindex="-1" class="ant-tabs-tab" id="tab-@pane.Key" role="tab"
-                                             aria-disabled="@pane.Disabled" aria-selected="false" aria-controls="tabpane-@pane.Key"
-                                             @onclick="(e)=>ActivatePane(pane)" @onclick:stopPropagation
-                                             draggable="@Draggable.ToString()"
-                                             ondragover="event.preventDefault();"
-                                             @ondragstart="(e)=>HandleDragStart(e, pane)"
-                                             @ondrop="(e)=>HandleDrop(pane)">
-                                            @if (Type == TabType.EditableCard && pane.Closable)
-                                            {
-                                                <div>
-                                                    @pane.Tab
-                                                    <Icon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                @pane.Tab
-                                            }
-                                        </div>
-                                    }
-                                }
-                            </div>
-                            <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="@_inkStyle"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!--Tab content-->
+    <div class="ant-tabs-content-holder ">
+        <div class="ant-tabs-content ant-tabs-content-@TabPosition">
+            @foreach (var pane in _panes)
+            {
+                @if (pane.IsActive)
+                {
+                    <div tabindex="0" class="ant-tabs-tabpane ant-tabs-tabpane-active" id="@($"rc-tabs-{Id}-panel-{pane.Key}")" role="tabpanel" aria-hidden="false" aria-labelledby="@($"rc-tabs-{Id}-panel-{pane.Key}")">@pane.ChildContent</div>
+                }
+                else
+                {
+                    <div tabindex="-1" class="ant-tabs-tabpane" id="@($"rc-tabs-{Id}-panel-{pane.Key}")" role="tabpanel" aria-hidden="true" aria-labelledby="@($"rc-tabs-{Id}-panel-{pane.Key}")" style="display: none;">@pane.ChildContent</div>
+                }
+
+            }
         </div>
-    }
+    </div>
 </div>
