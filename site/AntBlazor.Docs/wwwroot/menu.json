@@ -195,6 +195,11 @@
             "url": "components/list"
           },
           {
+            "title": "Statistic",
+            "type": "menuItem",
+            "url": "components/statistic"
+          },
+          {
             "title": "Tooltip",
             "type": "menuItem",
             "url": "components/tooltip"
