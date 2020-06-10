@@ -267,9 +267,19 @@ namespace AntDesign
             }
 
             _panes.Add(tabPane);
-            if (tabPane.Key == DefaultActiveKey)
+            if (!string.IsNullOrEmpty(DefaultActiveKey))
             {
-                ActivatePane(tabPane);
+                if (tabPane.Key == DefaultActiveKey)
+                {
+                    ActivatePane(tabPane);
+                }
+            }
+            else
+            {
+                if (_panes.Count == 1)
+                {
+                    ActivatePane(tabPane);
+                }
             }
         }
 

@@ -1,0 +1,24 @@
+<div>
+    <Steps Current=current OnChange=onChange>
+        <Step Title="Step 1" Description="This is a description." />
+        <Step Title="Step 2" Description="This is a description." />
+        <Step Title="Step 3" Description="This is a description." />
+    </Steps>
+
+    <Divider />
+
+    <Steps Current=current OnChange=onChange Direction="vertical">
+        <Step Title="Step 1" Description="This is a description." />
+        <Step Title="Step 2" Description="This is a description." />
+        <Step Title="Step 3" Description="This is a description." />
+    </Steps>
+</div>
+
+@code{
+    int current;
+
+    void onChange(int current)
+    {
+        this.current = current;
+    }
+}

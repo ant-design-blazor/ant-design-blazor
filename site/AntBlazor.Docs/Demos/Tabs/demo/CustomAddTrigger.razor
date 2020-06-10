@@ -2,7 +2,7 @@
     <div style="margin-bottom: 16px;">
         <Button @onclick="(e)=>Add()">ADD</Button>
     </div>
-    <Tabs DefaultActiveKey="1" Type="@TabType.EditableCard" HideAdd>
+    <Tabs Type="@TabType.EditableCard" HideAdd>
         @foreach (var temp in _panes)
         {
             TabPane pane = temp;
@@ -15,9 +15,7 @@
 </div>
 
 @code{
-    private List<TabPane>
-        _panes = new List<TabPane>
-            ();
+    private List<TabPane> _panes = new List<TabPane>();
     private static int btnIndex = 1;
     private void Add()
     {
