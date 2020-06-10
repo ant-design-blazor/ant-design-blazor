@@ -1,0 +1,74 @@
+<div>
+    <Steps Current="current">
+        @foreach (var item in steps)
+        {
+            <Step Title="@item.Title" Subtitle="@item.Content" />
+        }
+    </Steps>
+
+    <div class="steps-content">
+        @steps[current].Content
+    </div>
+    <div class="steps-action">
+        @if (current < steps.Length - 1)
+        {
+            <Button Type="primary" OnClick="OnNextClick">Next</Button>
+        }
+        @if (current == steps.Length - 1)
+        {
+            <Button Type="primary" OnClick=@(() => message.Success("Processing complete!"))>
+                Done
+            </Button>
+        }
+        @if (current > 0)
+        {
+            <Button Type="primary" OnClick="OnPreClick">Previous</Button>
+        }
+    </div>
+</div>
+
+<style>
+    .steps-content {
+        margin-top: 16px;
+        border: 1px dashed #e9e9e9;
+        border-radius: 6px;
+        background-color: #fafafa;
+        min-height: 200px;
+        text-align: center;
+        padding-top: 80px;
+    }
+
+    .steps-action {
+        margin-top: 24px;
+    }
+</style>
+
+@inject MessageService message
+@code {
+
+    public class StepItem
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+    }
+
+    public int current { get; set; } = 0;
+
+    public StepItem[] steps =
+    {
+        new StepItem {Title = "First", Content = "First-content"},
+        new StepItem {Title = "Second", Content = "Second-content"},
+        new StepItem {Title = "Third", Content = "Third-content"},
+        new StepItem {Title = "Last", Content = "Last-content"}
+    };
+
+    void OnPreClick()
+    {
+        current--;
+    }
+
+    void OnNextClick()
+    {
+        current++;
+    }
+}

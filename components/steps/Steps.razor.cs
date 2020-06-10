@@ -40,7 +40,6 @@ namespace AntDesign
         [Parameter] public int StartIndex { get; set; } = 0;
         [Parameter] public string Status { get; set; } = "process";
         [Parameter] public RenderFragment ChildContent { get; set; }
-        [Parameter] public string ClassName { get; set; }
         [Parameter] public Action<int> OnChange { get; set; }
 
         protected override void Dispose(bool disposing)
@@ -95,7 +94,6 @@ namespace AntDesign
             string prefixName = "ant-steps";
             ClassMapper.Clear()
                 .Add(prefixName)
-                .Add(ClassName)
                 .If($"{prefixName}-{Direction}", () => !string.IsNullOrEmpty(Direction))
                 .If($"{prefixName}-label-horizontal", () => Direction == "horizontal")
                 .If($"{prefixName}-label-vertical", () => (_showProgressDot || LabelPlacement == "vertical") && Direction == "horizontal")

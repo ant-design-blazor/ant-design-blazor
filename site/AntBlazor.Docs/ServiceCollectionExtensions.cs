@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using AntDesign;
 using AntDesign.Docs.Highlight;
 using AntDesign.Docs.Localization;
 using AntDesign.Docs.Routing;

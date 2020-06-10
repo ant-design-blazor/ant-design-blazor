@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
     public class IconService
     {
         private static readonly ConcurrentDictionary<string, string> _svgCache = new ConcurrentDictionary<string, string>();
+        private static readonly ConcurrentDictionary<string, string> _customCache = new ConcurrentDictionary<string, string>();
         private readonly HttpClient _httpClient;
+        private IJSRuntime _js;
 
-        public IconService(HttpClient httpClient, NavigationManager navigationManager)
+        public IconService(HttpClient httpClient, NavigationManager navigationManager, IJSRuntime js)
         {
-#pragma warning disable CA1062
-            httpClient.BaseAddress = new Uri(navigationManager.BaseUri);
-#pragma warning restore CA1062
+            if (httpClient != null && navigationManager != null)
+                httpClient.BaseAddress = new Uri(navigationManager.BaseUri);
+
             _httpClient = httpClient;
+            _js = js;
         }
 
         public async ValueTask<string> GetIconImg(string type, string theme)
@@ -38,17 +43,31 @@ namespace AntDesign
             return iconImg;
         }
 
-        public async ValueTask<string> GetIconSvg(string type, string theme, string width = "1em", string height = "1em", string fill = "currentColor")
+        public static string GetStyledSvg(string svgImg, string width = "1em", string height = "1em", string fill = "currentColor", int rotate = 0, bool spin = false)
         {
-            var svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\"";
-
-            var svgImg = await GetIconImg(type, theme);
+            var svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" style=\"transform: rotate({rotate}deg); \" {(spin ? "class=\"anticon-spin\"" : "")}";
             if (!string.IsNullOrEmpty(svgImg))
             {
                 return svgImg.Insert(svgImg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {svgStyle} ");
             }
 
-            return svgImg;
+            return null;
+        }
+
+        public async ValueTask CreateFromIconfontCN(string scriptUrl)
+        {
+            if (string.IsNullOrEmpty(scriptUrl))
+            {
+                return;
+            }
+
+            //if (_customCache.ContainsKey(scriptUrl))
+            //{
+            //    return;
+            //}
+
+            await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, scriptUrl);
+            //_customCache[scriptUrl] = scriptUrl;
         }
     }
 }
