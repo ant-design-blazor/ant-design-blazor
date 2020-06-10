@@ -1,0 +1,24 @@
+<div>
+    <Steps Type="navigation" Size="small" Current=@current Class="site-navigation-steps">
+        <Step Title="Step 1" Subtitle="00:00:05" Status="finish" Description="This is a description." />
+        <Step Title="Step 2" Subtitle="00:01:02" Status="process" Description="This is a description." />
+        <Step Title="Step 3" Subtitle="waiting for longlong time" Status="wait" Description="This is a description." />
+    </Steps>
+    <Steps Type="navigation" Current="@current" Class="site-navigation-steps">
+        <Step Status="finish" Title="Step 1" />
+        <Step Status="process" Title="Step 2" />
+        <Step Status="wait" Title="Step 3" />
+        <Step Status="wait" Title="Step 4" />
+    </Steps>
+    <Steps Type="navigation" Size="small" Current="@current" Class="site-navigation-steps">
+        <Step Status="finish" Title="finish 1" />
+        <Step Status="finish" Title="finish 2" />
+        <Step Status="process" Title="current process" />
+        <Step Status="wait" Title="wait" Disabled />
+    </Steps>
+</div>
+
+
+@code {
+    int current;
+}
