@@ -13,9 +13,12 @@
             <Radio RadioButton Value="@AntSizeLDSType.Large">Large</Radio>
         </RadioGroup>
     </FormItem>
-    
+
     <FormItem Label="Input">
         <Input @bind-Value="@context.Input" />
+    </FormItem>
+    <FormItem Label="InputArea">
+        <TextArea @bind-Value="@context.InputArea" />
     </FormItem>
     <FormItem Label="Cascader">
         <Cascader @bind-Value="@context.Cascader" Options="districts" />
@@ -41,6 +44,7 @@
     {
         public string Size { get; set; } = AntSizeLDSType.Small;
         public string Input { get; set; }
+        public string InputArea { get; set; }
         public string Cascader { get; set; }
         public DateTime DatePicker { get; set; }
         public double Number { get; set; }
@@ -55,8 +59,9 @@
         {
             Value = "1",
             Label = "zhejiang",
-            Children = new CascaderNode[] {
-                new CascaderNode{ Value = "11", Label="hangzhou"},
+            Children = new []
+            {
+                new CascaderNode {Value = "11", Label = "hangzhou"},
             }
         }
     };
