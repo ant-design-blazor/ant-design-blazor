@@ -27,7 +27,7 @@ namespace AntDesign
 
         private string _inkStyle;
 
-        //private string _navStyle;
+        private string _navStyle;
         //private string _contentStyle;
         //private bool? _prevIconEnabled;
         //private bool? _nextIconEnabled;
@@ -36,7 +36,7 @@ namespace AntDesign
         private string _operationStyle;
 
         private int _navIndex;
-
+        private int _scrollOffset;
         private int _navTotal;
         private int _navSection;
         private bool _needRefresh;
@@ -363,12 +363,24 @@ namespace AntDesign
                 {
                     //_inkStyle = "left: 0px; width: 0px;";
                     _inkStyle = $"left: {element.offsetLeft}px; width: {element.clientWidth}px";
-                    
+                    if (element.offsetLeft > _scrollOffset + navSection.clientWidth
+                        || element.offsetLeft < _scrollOffset)
+                    {
+                        // need to scroll tab bars
+                        _scrollOffset = element.offsetLeft;
+                        _navStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
+                    }
                 }
                 else
                 {
                     _inkStyle = $"top: {element.offsetTop}px; height: {element.clientHeight}px;";
-                    //_contentStyle = $"margin-top: -{_panes.IndexOf(_activePane)}00%;";
+                    if (element.offsetTop > _scrollOffset + navSection.clientHeight
+                        || element.offsetTop < _scrollOffset)
+                    {
+                        // need to scroll tab bars
+                        _scrollOffset = element.offsetTop;
+                        _navStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+                    }
                 }
                 StateHasChanged();
                 _renderedActivePane = _activePane;

@@ -16,7 +16,7 @@
     <!--Tab bar-->
     <div role="tablist" class="ant-tabs-nav">
         <div class="ant-tabs-nav-wrap" @ref="@_tabBars">
-            <div class="ant-tabs-nav-list" style="transform: translate(0px, 0px);" @ref="@_scrollTabBar">
+            <div class="ant-tabs-nav-list" style="@_navStyle" @ref="@_scrollTabBar">
                 @foreach (var pane in _panes)
                 {
                     if (pane.IsActive)
@@ -87,7 +87,7 @@
                     {
                         <li class="ant-tabs-dropdown-menu-item @(pane.Disabled?$"ant-tabs-dropdown-menu-item-disabled":string.Empty)" id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false" aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
                             @onclick="(e)=>ActivatePane(pane)">@pane.Tab</li>
-                        }
+                    }
                 </ul>
             </Overlay>
             <ChildContent>
