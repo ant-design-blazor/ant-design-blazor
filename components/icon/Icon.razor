@@ -1,6 +1,13 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<i class="@ClassMapper.Class" style="@Style" id="@Id" @onclick="HandleOnClick" tabindex="@TabIndex" type="@Type">
-     @((MarkupString)SvgImg)
-</i>
+<span role="img" class="@ClassMapper.Class" style="@Style" id="@Id" @onclick="HandleOnClick" tabindex="@TabIndex">
+    @if (Component == null)
+    {
+        @((MarkupString) _svgImg)
+    }
+    else
+    {
+        @Component
+    }
+</span>

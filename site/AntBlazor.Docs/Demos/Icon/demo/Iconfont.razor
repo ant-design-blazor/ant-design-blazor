@@ -1,0 +1,15 @@
+@inject IconService iconService;
+
+<div class="icons-list">
+    <Icon IconFont="icon-tuichu" />
+    <Icon IconFont="icon-facebook" />
+    <Icon IconFont="icon-twitter" />
+</div>
+
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js");
+    }
+}
