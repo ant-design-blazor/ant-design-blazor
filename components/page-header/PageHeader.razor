@@ -1,0 +1,49 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+@PageHeaderBreadcrumb
+
+<div class="ant-page-header-heading">
+    <div class="ant-page-header-heading-left">
+        <!--back-->
+        @if (BackIcon != null)
+        {
+            <div @onclick="OnBackClick" class="ant-page-header-back">
+                <div role="button" tabindex="0" class="ant-page-header-back-button">
+                    <Icon Type="@(BackIcon==""?"arrow-left":BackIcon)" Theme="outline" />
+                </div>
+            </div>
+        }
+        <!--avatar-->
+        <ng-content select="nz-avatar[nz-page-header-avatar]"></ng-content>
+        @PageHeaderAvatar
+        <!--title-->
+        @if (Title != null)
+        {
+            <span class="ant-page-header-heading-title">
+                @Title
+            </span>
+        }
+        else
+        {
+            @PageHeaderTitle
+        }
+        <!--subtitle-->
+        @if (Subtitle != null)
+        {
+            <span class="ant-page-header-heading-sub-title">
+                @Subtitle
+            </span>
+        }
+        else
+        {
+            @PageHeaderSubtitle
+        }
+
+        @PageHeaderTags
+    </div>
+    @PageHeaderExtra
+</div>
+
+@PageHeaderContent
+@PageHeaderFooter
