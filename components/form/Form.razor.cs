@@ -31,6 +31,9 @@ namespace AntDesign
         public TModel Model { get; set; }
 
         [Parameter]
+        public bool Loading { get; set; }
+
+        [Parameter]
         public EventCallback<EditContext> OnFinish { get; set; }
 
         [Parameter]
