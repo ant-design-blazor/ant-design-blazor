@@ -5,34 +5,26 @@
 </CascadingValue>
 
 <div class="@ClassMapper.Class" style="@Style" id="@Id">
-    <!---->
-    @if (TabBarExtraContent != null)
-    {
-        <div class="ant-tabs-extra-content" style="float: right;">
-            @TabBarExtraContent
-        </div>
-    }
-
     <!--Tab bar-->
     <div role="tablist" class="ant-tabs-nav">
-        <div class="ant-tabs-nav-wrap" @ref="@_tabBars">
+        <div class="ant-tabs-nav-wrap @_tabsNavWarpPingClass" @ref="@_tabBars">
             <div class="ant-tabs-nav-list" style="@_navStyle" @ref="@_scrollTabBar">
                 @foreach (var pane in _panes)
                 {
                     if (pane.IsActive)
                     {
-                        <button @ref="_activeTabBar" type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="ant-tabs-tab ant-tabs-tab-active" id="@($"rc-tabs-{Id}-tab-{pane.Key}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")"
-                                draggable="@Draggable.ToString()"
-                                @ondragover:preventDefault
-                                ondragover="event.preventDefault();"
-                                @ondragstart="(e)=>HandleDragStart(e, pane)"
-                                @ondrop="(e)=>HandleDrop(pane)">
+                        <button @ref="_activeTabBar" type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="@pane._classMapper.Class" id="@($"rc-tabs-{Id}-tab-{pane.Key}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")"
+                                 draggable="@Draggable.ToString()"
+                                 @ondragover:preventDefault
+                                 ondragover="event.preventDefault();"
+                                 @ondragstart="(e)=>HandleDragStart(e, pane)"
+                                 @ondrop="(e)=>HandleDrop(pane)">
                             @if (Type == TabType.EditableCard && pane.Closable)
                             {
-                                <div>
-                                    @pane.Tab
-                                    <Icon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
-                                </div>
+                                @pane.Tab
+                                <span class="ant-tabs-tab-remove">
+                                    <Icon Type="close" @onclick="(e)=>RemoveTabPane(pane)" />
+                                </span>
                             }
                             else
                             {
@@ -42,7 +34,7 @@
                     }
                     else
                     {
-                        <button type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="ant-tabs-tab@(pane.Disabled?" ant-tabs-tab-disabled":string.Empty)" id="@($"rc-tabs-{Id}-tab-{pane.Key}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")"
+                        <button type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="@pane._classMapper.Class" id="@($"rc-tabs-{Id}-tab-{pane.Key}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")"
                                 disabled="@(pane.Disabled)"
                                 @onclick="(e)=>ActivatePane(pane)"
                                 @onclick:stopPropagation
@@ -52,10 +44,10 @@
                                 @ondrop="(e)=>HandleDrop(pane)">
                             @if (Type == TabType.EditableCard && pane.Closable)
                             {
-                                <div>
-                                    @pane.Tab
-                                    <Icon class="ant-tabs-close-x" type="close" @onclick="(e)=>RemoveTabPane(pane)" />
-                                </div>
+                                @pane.Tab
+                                <span class="ant-tabs-tab-remove">
+                                    <Icon Type="close" @onclick="(e)=>RemoveTabPane(pane)" />
+                                </span>
                             }
                             else
                             {
@@ -80,6 +72,12 @@
                 <div class="ant-tabs-ink-bar ant-tabs-ink-bar-animated" style="@_inkStyle"></div>
             </div>
         </div>
+        @if (TabBarExtraContent != null)
+        {
+            <div class="ant-tabs-extra-content">
+                @TabBarExtraContent
+            </div>
+        }
         <Dropdown>
             <Overlay>
                 <ul tabindex="0" class="ant-tabs-dropdown-menu ant-tabs-dropdown-menu-root ant-tabs-dropdown-menu-vertical" id="@($"rc-tabs-{Id}-more-popup")" role="listbox" aria-label="expanded dropdown">

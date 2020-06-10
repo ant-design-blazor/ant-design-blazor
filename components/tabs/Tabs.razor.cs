@@ -28,11 +28,13 @@ namespace AntDesign
         private string _inkStyle;
 
         private string _navStyle;
+
         //private string _contentStyle;
         //private bool? _prevIconEnabled;
         //private bool? _nextIconEnabled;
         private string _operationClass;
 
+        private string _tabsNavWarpPingClass;
         private string _operationStyle;
 
         private int _navIndex;
@@ -339,10 +341,12 @@ namespace AntDesign
             {
                 _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
                 _operationStyle = "visibility: hidden; order: 1;";
+                _tabsNavWarpPingClass = string.Empty;
             }
             else
             {
                 _operationClass = "ant-tabs-nav-operations";
+                _tabsNavWarpPingClass = "ant-tabs-nav-wrap-ping-right";
                 _operationStyle = string.Empty;
             }
 
