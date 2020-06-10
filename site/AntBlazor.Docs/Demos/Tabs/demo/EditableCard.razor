@@ -1,0 +1,28 @@
+﻿<Tabs DefaultActiveKey="1" Type="@TabType.EditableCard" CreateTabPane="@Create">
+    <TabPane Key="1">
+        <Tab>Tab 1</Tab>
+        <ChildContent>Content of Tab Pane 1</ChildContent>
+    </TabPane>
+    <TabPane Key="2">
+        <Tab>Tab 2</Tab>
+        <ChildContent>Content of Tab Pane 2</ChildContent>
+    </TabPane>
+    <TabPane Key="3" Closable="false">
+        <Tab>Tab 3</Tab>
+        <ChildContent>Content of Tab Pane 3</ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+    private static int addedIndex = 3;
+    private readonly Func<TabPane> Create = () =>
+        {
+            addedIndex++;
+            int temp = addedIndex;
+            return new TabPane(
+                key: temp.ToString(),
+                childContent: (b) => { b.AddContent(0, $"Content of Tab Pane {temp}"); },
+                tab: (b) => { b.AddContent(0, $"Tab {temp}"); }
+            );
+        };
+}
