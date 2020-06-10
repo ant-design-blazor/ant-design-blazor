@@ -406,7 +406,8 @@ namespace AntDesign
 
         protected void InitPicker(string picker)
         {
-            if (string.IsNullOrEmpty(_pickerStatus[0]._initPicker)) {
+            if (string.IsNullOrEmpty(_pickerStatus[0]._initPicker))
+            {
                 _pickerStatus[0]._initPicker = picker;
             }
             if (string.IsNullOrEmpty(_pickerStatus[1]._initPicker))

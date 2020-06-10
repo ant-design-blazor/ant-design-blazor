@@ -7,7 +7,7 @@ namespace AntDesign
 {
     static class DatePickerLocaleHelper
     {
-        static Dictionary<string, IDateLocale> _locales = new Dictionary<string, IDateLocale>();
+        static readonly Dictionary<string, IDateLocale> _locales = new Dictionary<string, IDateLocale>();
 
         public static IDateLocale GetDateLocale(this CultureInfo info)
         {
@@ -62,7 +62,7 @@ namespace AntDesign
     class EnUsDateLocale : IDateLocale
     {
         private string _locale = "en-US";
-        public string DateFormat => "YYYY-MM-DD";
+        public string DateFormat => "yyyy-MM-dd";
         public string[] ShortWeekDays => CultureInfo.GetCultureInfo(_locale).DateTimeFormat.ShortestDayNames;
         public string Today => "Today";
         public bool MonthBeforeYear => true;
@@ -90,12 +90,12 @@ namespace AntDesign
     class ZhCnLocale : IDateLocale
     {
         private string _locale = "zh-CN";
-        public string DateFormat => "YYYY年M月D日";
+        public string DateFormat => "yyyy年M月d日";
         public string[] ShortWeekDays => CultureInfo.GetCultureInfo(_locale).DateTimeFormat.ShortestDayNames;
         public string Today => "今天";
         public bool MonthBeforeYear => false;
         public string YearFormat => "yyyy年";
-        public string MonthFormat => "MMM";
+        public string MonthFormat => "M月";
         public string Ok => "确 定";
         public string Now => "此刻";
         public string SelectDate => "请选择日期";
