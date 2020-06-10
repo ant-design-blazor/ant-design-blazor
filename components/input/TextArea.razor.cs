@@ -85,19 +85,6 @@ namespace AntDesign
             }
         }
 
-        protected override async void OnInputAsync(ChangeEventArgs args)
-        {
-            // do not call base method to avoid lost focus
-            //base.OnInputAsync(args);
-
-            Value = args?.Value.ToString();
-
-            if (AutoSize)
-            {
-                await ChangeSizeAsync();
-            }
-        }
-
         private async Task ChangeSizeAsync()
         {
             // Ant-design use a hidden textarea to calculate row height, totalHeight = rows * rowHeight
