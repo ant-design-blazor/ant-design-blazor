@@ -90,7 +90,7 @@ namespace AntDesign
             // do not call base method to avoid lost focus
             //base.OnInputAsync(args);
 
-            Value = args?.Value.ToString();
+            CurrentValueAsString = args.Value.ToString();
 
             if (AutoSize)
             {
