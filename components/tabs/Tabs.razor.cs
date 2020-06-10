@@ -12,21 +12,33 @@ namespace AntDesign
     {
         private const string PrefixCls = "ant-tabs";
         private bool IsHorizontal { get => TabPosition == AntDesign.TabPosition.Top || TabPosition == AntDesign.TabPosition.Bottom; }
-        private ClassMapper _barClassMapper = new ClassMapper();
-        private ClassMapper _prevClassMapper = new ClassMapper();
-        private ClassMapper _nextClassMapper = new ClassMapper();
-        private ClassMapper _navClassMapper = new ClassMapper();
+
+        //private ClassMapper _barClassMapper = new ClassMapper();
+        //private ClassMapper _prevClassMapper = new ClassMapper();
+        //private ClassMapper _nextClassMapper = new ClassMapper();
+        //private ClassMapper _navClassMapper = new ClassMapper();
         private TabPane _activePane;
+
         private TabPane _renderedActivePane;
         private ElementReference _activeTabBar;
+
         private ElementReference _scrollTabBar;
         private ElementReference _tabBars;
+
         private string _inkStyle;
+
         private string _navStyle;
-        private string _contentStyle;
-        private bool? _prevIconEnabled;
-        private bool? _nextIconEnabled;
+
+        //private string _contentStyle;
+        //private bool? _prevIconEnabled;
+        //private bool? _nextIconEnabled;
+        private string _operationClass;
+
+        private string _tabsNavWarpPingClass;
+        private string _operationStyle;
+
         private int _navIndex;
+        private int _scrollOffset;
         private int _navTotal;
         private int _navSection;
         private bool _needRefresh;
@@ -188,17 +200,17 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            if (Type == TabType.EditableCard && !HideAdd)
-            {
-                TabBarExtraContent = (b) =>
-                {
-                    b.OpenComponent<Icon>(0);
-                    b.AddAttribute(1, "Type", "plus");
-                    b.AddAttribute(2, "class", $"{PrefixCls}-new-tab");
-                    b.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, AddTabPane));
-                    b.CloseComponent();
-                };
-            }
+            //if (Type == TabType.EditableCard && !HideAdd)
+            //{
+            //    TabBarExtraContent = (b) =>
+            //    {
+            //        b.OpenComponent<Icon>(0);
+            //        b.AddAttribute(1, "Type", "plus");
+            //        b.AddAttribute(2, "class", $"{PrefixCls}-new-tab");
+            //        b.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, AddTabPane));
+            //        b.CloseComponent();
+            //    };
+            //}
 
             ClassMapper.Clear()
                 .Add(PrefixCls)
@@ -209,31 +221,31 @@ namespace AntDesign
                 .If($"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
                 .If($"{PrefixCls}-no-animation", () => !Animated);
 
-            _barClassMapper.Clear()
-                .Add($"{PrefixCls}-bar")
-                .Add($"{PrefixCls}-{TabPosition}-bar")
-                .Add($"{PrefixCls}-{Type}-bar")
-                .If($"{PrefixCls}-{TabType.Card}-bar", () => Type == TabType.EditableCard)
-                .If($"{PrefixCls}-large-bar", () => Size == TabSize.Large)
-                .If($"{PrefixCls}-small-bar", () => Size == TabSize.Small);
+            //_barClassMapper.Clear()
+            //    .Add($"{PrefixCls}-bar")
+            //    .Add($"{PrefixCls}-{TabPosition}-bar")
+            //    .Add($"{PrefixCls}-{Type}-bar")
+            //    .If($"{PrefixCls}-{TabType.Card}-bar", () => Type == TabType.EditableCard)
+            //    .If($"{PrefixCls}-large-bar", () => Size == TabSize.Large)
+            //    .If($"{PrefixCls}-small-bar", () => Size == TabSize.Small);
 
-            _prevClassMapper.Clear()
-                .Add($"{PrefixCls}-tab-prev")
-                .If($"{PrefixCls}-tab-btn-disabled", () => !_prevIconEnabled.HasValue || !_prevIconEnabled.Value)
-                .If($"{PrefixCls}-tab-arrow-show", () => _prevIconEnabled.HasValue);
+            //_prevClassMapper.Clear()
+            //    .Add($"{PrefixCls}-tab-prev")
+            //    .If($"{PrefixCls}-tab-btn-disabled", () => !_prevIconEnabled.HasValue || !_prevIconEnabled.Value)
+            //    .If($"{PrefixCls}-tab-arrow-show", () => _prevIconEnabled.HasValue);
 
-            _nextClassMapper.Clear()
-                .Add($"{PrefixCls}-tab-next")
-                .If($"{PrefixCls}-tab-btn-disabled", () => !_nextIconEnabled.HasValue || !_nextIconEnabled.Value)
-                .If($"{PrefixCls}-tab-arrow-show", () => _nextIconEnabled.HasValue);
+            //_nextClassMapper.Clear()
+            //    .Add($"{PrefixCls}-tab-next")
+            //    .If($"{PrefixCls}-tab-btn-disabled", () => !_nextIconEnabled.HasValue || !_nextIconEnabled.Value)
+            //    .If($"{PrefixCls}-tab-arrow-show", () => _nextIconEnabled.HasValue);
 
-            _navClassMapper.Clear()
-                .Add($"{PrefixCls}-nav-container")
-                .If($"{PrefixCls}-nav-container-scrolling", () => _prevIconEnabled.HasValue || _nextIconEnabled.HasValue);
+            //_navClassMapper.Clear()
+            //    .Add($"{PrefixCls}-nav-container")
+            //    .If($"{PrefixCls}-nav-container-scrolling", () => _prevIconEnabled.HasValue || _nextIconEnabled.HasValue);
 
-            _navStyle = "transform: translate3d(0px, 0px, 0px);";
-            _inkStyle = "width: 0px; display: block; transform: translate3d(0px, 0px, 0px);";
-            _contentStyle = "margin-" + (IsHorizontal ? "left" : "top") + ": 0;";
+            //_navStyle = "transform: translate3d(0px, 0px, 0px);";
+            _inkStyle = "left: 0px; width: 0px;";
+            //_contentStyle = "margin-" + (IsHorizontal ? "left" : "top") + ": 0;";
         }
 
         /// <summary>
@@ -261,14 +273,14 @@ namespace AntDesign
             }
         }
 
-        public void AddTabPane(MouseEventArgs args)
+        private void AddTabPane(MouseEventArgs args)
         {
             if (CreateTabPane != null)
             {
                 TabPane pane = CreateTabPane();
                 Dictionary<string, object> properties = new Dictionary<string, object>
                 {
-                    [nameof(TabPane.Parent)] = this,
+                    //[nameof(TabPane.Parent)] = this,
                     [nameof(TabPane.ForceRender)] = pane.ForceRender,
                     [nameof(TabPane.Key)] = pane.Key,
                     [nameof(TabPane.Tab)] = pane.Tab,
@@ -317,27 +329,28 @@ namespace AntDesign
 
             await TryRenderInk();
 
-            await TryRenderNavIcon();
+            await TryRenderNavOperation();
             _needRefresh = false;
         }
 
-        private async Task TryRenderNavIcon()
+        private async Task TryRenderNavOperation()
         {
-            if (_needRefresh)
+            int navWidth = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+            int navTotalWidth = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+            if (navTotalWidth < navWidth)
             {
-                if (IsHorizontal)
-                {
-                    // Prev/Next icon, show icon if scroll div's width less than tab bars' total width
-                    _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-                    _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-                }
-                else
-                {
-                    _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
-                    _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
-                }
-                RefreshNavIcon();
+                _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
+                _operationStyle = "visibility: hidden; order: 1;";
+                _tabsNavWarpPingClass = string.Empty;
             }
+            else
+            {
+                _operationClass = "ant-tabs-nav-operations";
+                _tabsNavWarpPingClass = "ant-tabs-nav-wrap-ping-right";
+                _operationStyle = string.Empty;
+            }
+
+            StateHasChanged();
         }
 
         private async Task TryRenderInk()
@@ -348,125 +361,140 @@ namespace AntDesign
                 // animate Active Ink
                 // ink bar
                 Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
+                Element navSection = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars);
+                Element navScroll = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar);
                 if (IsHorizontal)
                 {
-                    _inkStyle = $"width: {element.clientWidth}px; display: block; transform: translate3d({element.offsetLeft}px, 0px, 0px);";
-                    _contentStyle = $"margin-left: -{_panes.IndexOf(_activePane)}00%;";
+                    //_inkStyle = "left: 0px; width: 0px;";
+                    _inkStyle = $"left: {element.offsetLeft}px; width: {element.clientWidth}px";
+                    if (element.offsetLeft > _scrollOffset + navSection.clientWidth
+                        || element.offsetLeft < _scrollOffset)
+                    {
+                        // need to scroll tab bars
+                        _scrollOffset = element.offsetLeft;
+                        _navStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
+                    }
                 }
                 else
                 {
-                    _inkStyle = $"height: {element.clientHeight}px; display: block; transform: translate3d(0px, {element.offsetTop}px, 0px);";
-                    _contentStyle = $"margin-top: -{_panes.IndexOf(_activePane)}00%;";
+                    _inkStyle = $"top: {element.offsetTop}px; height: {element.clientHeight}px;";
+                    if (element.offsetTop > _scrollOffset + navSection.clientHeight
+                        || element.offsetTop < _scrollOffset)
+                    {
+                        // need to scroll tab bars
+                        _scrollOffset = element.offsetTop;
+                        _navStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+                    }
                 }
                 StateHasChanged();
                 _renderedActivePane = _activePane;
             }
         }
 
-        private async void OnPrevClicked()
-        {
-            _needRefresh = true;
-            if (OnPrevClick.HasDelegate)
-            {
-                await OnPrevClick.InvokeAsync(null);
-            }
+        //private async void OnPrevClicked()
+        //{
+        //    _needRefresh = true;
+        //    if (OnPrevClick.HasDelegate)
+        //    {
+        //        await OnPrevClick.InvokeAsync(null);
+        //    }
 
-            // get the old offset to the left, and _navIndex != 0 because prev will be disabled
-            int left = _navIndex * _navSection;
-            if (IsHorizontal)
-            {
-                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-            }
-            else
-            {
-                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
-                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
-            }
-            // calculate the current _navIndex after users resize the browser, and _navIndex > 0 guaranteed since left > 0
-            _navIndex = (int)Math.Ceiling(1.0 * left / _navSection);
-            int offset = --_navIndex * _navSection;
-            if (IsHorizontal)
-            {
-                _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
-            }
-            else
-            {
-                _navStyle = $"transform: translate3d(0px, -{offset}px, 0px);";
-            }
-            RefreshNavIcon();
-            _needRefresh = false;
-        }
+        //    // get the old offset to the left, and _navIndex != 0 because prev will be disabled
+        //    int left = _navIndex * _navSection;
+        //    if (IsHorizontal)
+        //    {
+        //        _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+        //        _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+        //    }
+        //    else
+        //    {
+        //        _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
+        //        _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
+        //    }
+        //    // calculate the current _navIndex after users resize the browser, and _navIndex > 0 guaranteed since left > 0
+        //    _navIndex = (int)Math.Ceiling(1.0 * left / _navSection);
+        //    int offset = --_navIndex * _navSection;
+        //    if (IsHorizontal)
+        //    {
+        //        _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+        //    }
+        //    else
+        //    {
+        //        _navStyle = $"transform: translate3d(0px, -{offset}px, 0px);";
+        //    }
+        //    RefreshNavIcon();
+        //    _needRefresh = false;
+        //}
 
-        private async void OnNextClicked()
-        {
-            // BUG: when vertical
-            _needRefresh = true;
-            if (OnNextClick.HasDelegate)
-            {
-                await OnNextClick.InvokeAsync(null);
-            }
+        //private async void OnNextClicked()
+        //{
+        //    // BUG: when vertical
+        //    _needRefresh = true;
+        //    if (OnNextClick.HasDelegate)
+        //    {
+        //        await OnNextClick.InvokeAsync(null);
+        //    }
 
-            // get the old offset to the left
-            int left = _navIndex * _navSection;
-            if (IsHorizontal)
-            {
-                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-            }
-            else
-            {
-                _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
-                _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
-            }
-            // calculate the current _navIndex after users resize the browser
-            _navIndex = left / _navSection;
-            int offset = Math.Min(++_navIndex * _navSection, _navTotal / _navSection * _navSection);
-            if (IsHorizontal)
-            {
-                _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
-            }
-            else
-            {
-                _navStyle = $"transform: translate3d(0px, -{offset}px, 0px);";
-            }
-            RefreshNavIcon();
-            _needRefresh = false;
-        }
+        //    // get the old offset to the left
+        //    int left = _navIndex * _navSection;
+        //    if (IsHorizontal)
+        //    {
+        //        _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+        //        _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
+        //    }
+        //    else
+        //    {
+        //        _navSection = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientHeight;
+        //        _navTotal = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientHeight;
+        //    }
+        //    // calculate the current _navIndex after users resize the browser
+        //    _navIndex = left / _navSection;
+        //    int offset = Math.Min(++_navIndex * _navSection, _navTotal / _navSection * _navSection);
+        //    if (IsHorizontal)
+        //    {
+        //        _navStyle = $"transform: translate3d(-{offset}px, 0px, 0px);";
+        //    }
+        //    else
+        //    {
+        //        _navStyle = $"transform: translate3d(0px, -{offset}px, 0px);";
+        //    }
+        //    RefreshNavIcon();
+        //    _needRefresh = false;
+        //}
 
-        private void RefreshNavIcon()
-        {
-            if (_navTotal > _navSection)
-            {
-                if (_navIndex == 0)
-                {
-                    // reach the first section
-                    _prevIconEnabled = false;
-                }
-                else
-                {
-                    _prevIconEnabled = true;
-                }
+        //private void RefreshNavIcon()
+        //{
+        //    if (_navTotal > _navSection)
+        //    {
+        //        if (_navIndex == 0)
+        //        {
+        //            // reach the first section
+        //            _prevIconEnabled = false;
+        //        }
+        //        else
+        //        {
+        //            _prevIconEnabled = true;
+        //        }
 
-                if ((_navIndex + 1) * _navSection > _navTotal)
-                {
-                    // reach the last section
-                    _nextIconEnabled = false;
-                }
-                else
-                {
-                    _nextIconEnabled = true;
-                }
-            }
-            else
-            {
-                // hide icon
-                _prevIconEnabled = null;
-                _nextIconEnabled = null;
-            }
+        //        if ((_navIndex + 1) * _navSection > _navTotal)
+        //        {
+        //            // reach the last section
+        //            _nextIconEnabled = false;
+        //        }
+        //        else
+        //        {
+        //            _nextIconEnabled = true;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // hide icon
+        //        _prevIconEnabled = null;
+        //        _nextIconEnabled = null;
+        //    }
 
-            StateHasChanged();
-        }
+        //    StateHasChanged();
+        //}
 
         protected override bool ShouldRender()
         {

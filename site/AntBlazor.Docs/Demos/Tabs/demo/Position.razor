@@ -1,0 +1,26 @@
+﻿<div>
+    <RadioGroup @bind-Value="position" Style="margin-bottom: 16px;">
+        <Radio RadioButton Value="@TabPosition.Top">Top</Radio>
+        <Radio RadioButton Value="@TabPosition.Left">Left</Radio>
+        <Radio RadioButton Value="@TabPosition.Right">Right</Radio>
+        <Radio RadioButton Value="@TabPosition.Bottom">Bottom</Radio>
+    </RadioGroup>
+    <Tabs DefaultActiveKey="1" TabPosition="@position">
+        <TabPane Key="1">
+            <Tab>Tab 1</Tab>
+            <ChildContent>Content of Tab Pane 1</ChildContent>
+        </TabPane>
+        <TabPane Key="2">
+            <Tab>Tab 2</Tab>
+            <ChildContent>Content of Tab Pane 2</ChildContent>
+        </TabPane>
+        <TabPane Key="3">
+            <Tab>Tab 3</Tab>
+            <ChildContent>Content of Tab Pane 3</ChildContent>
+        </TabPane>
+    </Tabs>
+</div>
+
+@code{
+    private string position = TabPosition.Top;
+}

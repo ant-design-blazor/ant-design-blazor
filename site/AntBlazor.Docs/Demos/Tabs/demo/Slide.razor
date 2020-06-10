@@ -1,0 +1,140 @@
+﻿<div>
+    <RadioGroup @bind-Value="mode" Style="margin-bottom: 8px;">
+        <Radio RadioButton Value="@TabPosition.Top">Horizontal</Radio>
+        <Radio RadioButton Value="@TabPosition.Left">Vertical</Radio>
+    </RadioGroup>
+    <Tabs DefaultActiveKey="0" TabPosition="@mode" Style="height: 220px;">
+        <TabPane Key="0">
+            <Tab>Tab-0</Tab>
+            <ChildContent>Content of tab Pane 0</ChildContent>
+        </TabPane>
+        <TabPane Key="1">
+            <Tab>Tab-1</Tab>
+            <ChildContent>Content of tab Pane 1</ChildContent>
+        </TabPane>
+        <TabPane Key="2">
+            <Tab>Tab-2</Tab>
+            <ChildContent>Content of tab Pane 2</ChildContent>
+        </TabPane><TabPane Key="3">
+            <Tab>Tab-3</Tab>
+            <ChildContent>Content of tab Pane 3</ChildContent>
+        </TabPane>
+        <TabPane Key="4">
+            <Tab>Tab-4</Tab>
+            <ChildContent>Content of tab Pane 4</ChildContent>
+        </TabPane><TabPane Key="5">
+            <Tab>Tab-5</Tab>
+            <ChildContent>Content of tab Pane 5</ChildContent>
+        </TabPane>
+        <TabPane Key="6">
+            <Tab>Tab-6</Tab>
+            <ChildContent>Content of tab Pane 6</ChildContent>
+        </TabPane>
+        <TabPane Key="7">
+            <Tab>Tab-7</Tab>
+            <ChildContent>Content of tab Pane 7</ChildContent>
+        </TabPane><TabPane Key="8">
+            <Tab>Tab-8</Tab>
+            <ChildContent>Content of tab Pane 8</ChildContent>
+        </TabPane>
+        <TabPane Key="9">
+            <Tab>Tab-9</Tab>
+            <ChildContent>Content of tab Pane 9</ChildContent>
+        </TabPane>
+        <TabPane Key="10">
+            <Tab>Tab-10</Tab>
+            <ChildContent>Content of tab Pane 10</ChildContent>
+        </TabPane>
+        <TabPane Key="11">
+            <Tab>Tab-11</Tab>
+            <ChildContent>Content of tab Pane 11</ChildContent>
+        </TabPane>
+        <TabPane Key="12">
+            <Tab>Tab-12</Tab>
+            <ChildContent>Content of tab Pane 12</ChildContent>
+        </TabPane>
+        <TabPane Key="13">
+            <Tab>Tab-13</Tab>
+            <ChildContent>Content of tab Pane 13</ChildContent>
+        </TabPane>
+        <TabPane Key="14">
+            <Tab>Tab-14</Tab>
+            <ChildContent>Content of tab Pane 14</ChildContent>
+        </TabPane>
+        <TabPane Key="15">
+            <Tab>Tab-15</Tab>
+            <ChildContent>Content of tab Pane 15</ChildContent>
+        </TabPane>
+        <TabPane Key="16">
+            <Tab>Tab-16</Tab>
+            <ChildContent>Content of tab Pane 16</ChildContent>
+        </TabPane>
+        <TabPane Key="17">
+            <Tab>Tab-17</Tab>
+            <ChildContent>Content of tab Pane 17</ChildContent>
+        </TabPane>
+        <TabPane Key="18">
+            <Tab>Tab-18</Tab>
+            <ChildContent>Content of tab Pane 18</ChildContent>
+        </TabPane>
+        <TabPane Key="19">
+            <Tab>Tab-19</Tab>
+            <ChildContent>Content of tab Pane 19</ChildContent>
+        </TabPane>
+        <TabPane Key="20">
+            <Tab>Tab-20</Tab>
+            <ChildContent>Content of tab Pane 20</ChildContent>
+        </TabPane>
+        <TabPane Key="21">
+            <Tab>Tab-21</Tab>
+            <ChildContent>Content of tab Pane 21</ChildContent>
+        </TabPane>
+        <TabPane Key="22">
+            <Tab>Tab-22</Tab>
+            <ChildContent>Content of tab Pane 22</ChildContent>
+        </TabPane>
+        <TabPane Key="23">
+            <Tab>Tab-23</Tab>
+            <ChildContent>Content of tab Pane 23</ChildContent>
+        </TabPane>
+        <TabPane Key="24">
+            <Tab>Tab-24</Tab>
+            <ChildContent>Content of tab Pane 24</ChildContent>
+        </TabPane>
+        <TabPane Key="25">
+            <Tab>Tab-25</Tab>
+            <ChildContent>Content of tab Pane 25</ChildContent>
+        </TabPane>
+        <TabPane Key="26">
+            <Tab>Tab-26</Tab>
+            <ChildContent>Content of tab Pane 26</ChildContent>
+        </TabPane>
+        <TabPane Key="27">
+            <Tab>Tab-27</Tab>
+            <ChildContent>Content of tab Pane 27</ChildContent>
+        </TabPane>
+        <TabPane Key="28" Disabled>
+            <Tab>Tab-28</Tab>
+            <ChildContent>Content of tab Pane 28</ChildContent>
+        </TabPane>
+        <TabPane Key="29">
+            <Tab>Tab-29</Tab>
+            <ChildContent>Content of tab Pane 29</ChildContent>
+        </TabPane>
+
+        @*@{
+            Enumerable.Range(1, 29).Select<int, RenderFragment>
+                (i => { return template(i); }).Aggregate((r1, r2) => r1 + r2);
+        }*@
+    </Tabs>
+</div>
+
+@code{
+    private string mode = TabPosition.Top;
+
+    RenderFragment<int> template = (i) =>@<TabPane Key="@i.ToString()">
+        <Tab>Tab-@i</Tab>
+        <ChildContent>Content of tab Pane @i</ChildContent>
+    </TabPane>;
+
+}

@@ -1,0 +1,59 @@
+﻿<style>
+    [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-content,
+    .card-container > .ant-tabs-card > .ant-tabs-content {
+        height: 120px;
+        margin-top: -16px;
+    }
+
+        [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane,
+        .card-container > .ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane {
+            background: #fff;
+            padding: 16px;
+        }
+
+    [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-bar,
+    .card-container > .ant-tabs-card > .ant-tabs-bar {
+        border-color: #fff;
+    }
+
+        [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab,
+        .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
+            border-color: transparent;
+            background: transparent;
+        }
+
+        [data-theme='compact'] .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active,
+        .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
+            border-color: #fff;
+            background: #fff;
+        }
+</style>
+
+<div class="card-container">
+    <Tabs DefaultActiveKey="1" Type="@TabType.Card">
+        <TabPane Key="1">
+            <Tab>Tab Title 1</Tab>
+            <ChildContent>
+                <p>Content of Tab Pane 1</p>
+                <p>Content of Tab Pane 1</p>
+                <p>Content of Tab Pane 1</p>
+            </ChildContent>
+        </TabPane>
+        <TabPane Key="2">
+            <Tab>Tab Title 2</Tab>
+            <ChildContent>
+                <p>Content of Tab Pane 2</p>
+                <p>Content of Tab Pane 2</p>
+                <p>Content of Tab Pane 2</p>
+            </ChildContent>
+        </TabPane>
+        <TabPane Key="3">
+            <Tab>Tab Title 3</Tab>
+            <ChildContent>
+                <p>Content of Tab Pane 3</p>
+                <p>Content of Tab Pane 3</p>
+                <p>Content of Tab Pane 3</p>
+            </ChildContent>
+        </TabPane>
+    </Tabs>
+</div>

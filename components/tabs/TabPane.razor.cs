@@ -73,6 +73,7 @@ namespace AntDesign
             _classMapper.Clear().
                 Add(PrefixCls)
                 .If($"{PrefixCls}-active", () => IsActive)
+                .If($"{PrefixCls}-with-remove", () => Closable)
                 .If($"{PrefixCls}-disabled", () => Disabled);
         }
     }
