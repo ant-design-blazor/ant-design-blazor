@@ -335,7 +335,7 @@ namespace AntDesign
         {
             int navWidth = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
             int navTotalWidth = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
-            if (navTotalWidth > navWidth)
+            if (navTotalWidth < navWidth)
             {
                 _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
                 _operationStyle = "visibility: hidden; order: 1;";
@@ -345,6 +345,8 @@ namespace AntDesign
                 _operationClass = "ant-tabs-nav-operations";
                 _operationStyle = string.Empty;
             }
+
+            StateHasChanged();
         }
 
         private async Task TryRenderInk()
@@ -355,11 +357,13 @@ namespace AntDesign
                 // animate Active Ink
                 // ink bar
                 Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
+                Element navSection = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars);
+                Element navScroll = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar);
                 if (IsHorizontal)
                 {
                     //_inkStyle = "left: 0px; width: 0px;";
                     _inkStyle = $"left: {element.offsetLeft}px; width: {element.clientWidth}px";
-                    //_contentStyle = $"margin-left: -{_panes.IndexOf(_activePane)}00%;";
+                    
                 }
                 else
                 {

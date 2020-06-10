@@ -83,7 +83,7 @@
         <Dropdown>
             <Overlay>
                 <ul tabindex="0" class="ant-tabs-dropdown-menu ant-tabs-dropdown-menu-root ant-tabs-dropdown-menu-vertical" id="@($"rc-tabs-{Id}-more-popup")" role="listbox" aria-label="expanded dropdown">
-                    @foreach (var pane in _panes)
+                    @foreach (var pane in _panes.Where(p => !p.IsActive))
                     {
                         <li class="ant-tabs-dropdown-menu-item @(pane.Disabled?$"ant-tabs-dropdown-menu-item-disabled":string.Empty)" id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false" aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
                             @onclick="(e)=>ActivatePane(pane)">@pane.Tab</li>
