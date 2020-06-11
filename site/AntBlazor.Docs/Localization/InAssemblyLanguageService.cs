@@ -31,6 +31,7 @@ namespace AntDesign.Docs.Localization
         private void SetDefaultLanguage(CultureInfo culture)
         {
             CurrentCulture = culture;
+            CultureInfo.CurrentCulture = culture;
 
             string[] languageFileNames = _resourcesAssembly.GetManifestResourceNames().Where(s => s.Contains("Resources") && s.Contains(".yml") && s.Contains("-")).ToArray();
 
@@ -57,6 +58,7 @@ namespace AntDesign.Docs.Localization
             if (CurrentCulture == null || !CurrentCulture.Equals(culture))
             {
                 CurrentCulture = culture;
+                CultureInfo.CurrentCulture = culture;
                 string fileName = $"{_resourcesAssembly.GetName().Name}.Resources.{culture.Name}.yml";
 
                 Resources = GetKeysFromCulture(culture.Name, fileName);
@@ -75,9 +77,10 @@ namespace AntDesign.Docs.Localization
                 using var fileStream = _resourcesAssembly.GetManifestResourceStream(fileName);
                 if (fileStream == null) return null;
                 using var streamReader = new StreamReader(fileStream);
-                return new Resources(streamReader.ReadToEnd());
+                var content = streamReader.ReadToEnd();
+                return new Resources(content);
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
                 return null;
             }
