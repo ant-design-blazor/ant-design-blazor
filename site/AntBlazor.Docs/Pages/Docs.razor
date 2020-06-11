@@ -2,14 +2,21 @@
 @page "/docs"
 
 @using AntDesign.Docs.Services
+@using AntDesign.Docs.Highlight
 
 @inject NavigationManager NavigationManager
 @inject ILanguageService LanguageService
 @inject DemoService DemoService
+@inject IPrismHighlighter PrismHighlighter
+@inject HttpClient HttpClient;
 
 <MainContent>
     <article class="markdown">
-        <Markdown docUrl="@docUrl"></Markdown>
+        @if (file != null)
+        {
+            <h1>@file.Title</h1>
+            @((MarkupString) @file.Html)
+        }
     </article>
 </MainContent>
 
@@ -17,7 +24,7 @@
 
     [Parameter] public string fileName { get; set; }
 
-    string docUrl { get; set; }
+    DocsFile file;
 
     string currentLanguage => LanguageService.CurrentCulture.Name;
 
@@ -32,7 +39,8 @@
         if (!string.IsNullOrEmpty(fileName))
         {
             var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-            docUrl = new Uri(baseUrl, $"docs/{fileName}.{currentLanguage}.md").ToString();
+            var docUrl = new Uri(baseUrl, $"_content/AntDesign.Docs/docs/{fileName}.{currentLanguage}.json").ToString();
+            file = await this.HttpClient.GetFromJsonAsync<DocsFile>(docUrl);
             StateHasChanged();
         }
         else
@@ -46,6 +54,12 @@
                 NavigationManager.NavigateTo($"{currentLanguage}/{current.Children[0].Url}");
             }
         }
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await PrismHighlighter.HighlightAllAsync();
     }
 
 }
