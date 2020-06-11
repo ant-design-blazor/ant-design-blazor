@@ -35,10 +35,16 @@ namespace AntDesign.Internal
         public int WaitForHideAnimMilliseconds { get; set; } = 200;
 
         /// <summary>
-        /// offset between Trigger and Overlay, default is 4
+        /// vertical offset between Trigger and Overlay, default is 4
         /// </summary>
         [Parameter]
-        public int Offset { get; set; } = 4;
+        public int VerticalOffset { get; set; } = 4;
+
+        /// <summary>
+        /// horizontal offset between Trigger and Overlay, default is 4
+        /// </summary>
+        [Parameter]
+        public int HorizontalOffset { get; set; } = 4;
 
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
@@ -272,11 +278,11 @@ namespace AntDesign.Internal
             }
             else if (Trigger.Placement.IsIn(PlacementType.BottomLeft, PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.BottomRight))
             {
-                top = triggerTop + triggerHeight + Offset;
+                top = triggerTop + triggerHeight + VerticalOffset;
             }
             else if (Trigger.Placement.IsIn(PlacementType.TopLeft, PlacementType.TopCenter, PlacementType.Top, PlacementType.TopRight))
             {
-                top = triggerTop - overlay.clientHeight - Offset;
+                top = triggerTop - overlay.clientHeight - VerticalOffset;
             }
 
             return top;
@@ -297,11 +303,11 @@ namespace AntDesign.Internal
 
             if (Trigger.Placement.IsIn(PlacementType.Left, PlacementType.LeftTop, PlacementType.LeftBottom))
             {
-                left = triggerLeft - overlay.clientWidth - Offset;
+                left = triggerLeft - overlay.clientWidth - HorizontalOffset;
             }
             else if (Trigger.Placement.IsIn(PlacementType.Right, PlacementType.RightTop, PlacementType.RightBottom))
             {
-                left = triggerLeft + triggerWidth + Offset;
+                left = triggerLeft + triggerWidth + HorizontalOffset;
             }
             else if (Trigger.Placement.IsIn(PlacementType.BottomLeft, PlacementType.TopLeft))
             {
