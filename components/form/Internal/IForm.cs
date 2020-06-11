@@ -17,5 +17,7 @@ namespace AntDesign.Internal
         internal void AddControl(IControlValueAccessor valueAccessor);
 
         void Reset();
+
+        bool Validate();
     }
 }
