@@ -1,10 +1,12 @@
-﻿<DatePicker Bordered="@false" Picker="@DatePickerType.Date" />
+﻿@inject ILanguageService LanguageSerevice;
+
+<DatePicker Bordered="@false" Picker="@DatePickerType.Date" CultureInfo="@LanguageSerevice.CurrentCulture"/>
 <br />
-<DatePicker Bordered="@false" Picker="@DatePickerType.Week" />
+<DatePicker Bordered="@false" Picker="@DatePickerType.Week" CultureInfo="@LanguageSerevice.CurrentCulture" />
 <br />
-<DatePicker Bordered="@false" Picker="@DatePickerType.Month" />
+<DatePicker Bordered="@false" Picker="@DatePickerType.Month" CultureInfo="@LanguageSerevice.CurrentCulture" />
 <br />
-<DatePicker Bordered="@false" Picker="@DatePickerType.Quarter" />
+<DatePicker Bordered="@false" Picker="@DatePickerType.Quarter" CultureInfo="@LanguageSerevice.CurrentCulture" />
 <br />
-<DatePicker Bordered="@false" Picker="@DatePickerType.Year" />
+<DatePicker Bordered="@false" Picker="@DatePickerType.Year" CultureInfo="@LanguageSerevice.CurrentCulture" />
 <br />

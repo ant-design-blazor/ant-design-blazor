@@ -20,32 +20,32 @@
 <div class="@(PrefixCls)-header-view">
     @if (this.DatePicker.CultureInfo.GetDateLocale().MonthBeforeYear)
     {
-        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
+        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
         {
-            <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
+            <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
                 @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().MonthFormat))
             </button>
         }
-        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
+        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
         {
-<button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
-    @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat))
-</button>
+            <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
+                @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat))
+            </button>
         }
     }
     else
     {
-        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
-        {
-<button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
-    @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat))
-</button>
-        }
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
         {
-<button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
-    @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().MonthFormat))
-</button>
+            <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
+                @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat))
+            </button>
+        }
+        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
+        {
+            <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
+                @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().MonthFormat))
+            </button>
         }
 
     }

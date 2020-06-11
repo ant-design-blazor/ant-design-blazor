@@ -1,11 +1,13 @@
-﻿<RangePicker />
+﻿@inject ILanguageService LanguageService 
+
+<RangePicker CultureInfo="LanguageService.CurrentCulture"/>
 <br />
-<RangePicker ShowTime="@true" />
+<RangePicker ShowTime="@true" CultureInfo="LanguageService.CurrentCulture"/>
 <br />
-<RangePicker Picker="@DatePickerType.Week" />
+<RangePicker Picker="@DatePickerType.Week" CultureInfo="LanguageService.CurrentCulture"/>
 <br />
-<RangePicker Picker="@DatePickerType.Month" />
+<RangePicker Picker="@DatePickerType.Month" CultureInfo="LanguageService.CurrentCulture"/>
 <br />
-<RangePicker Picker="@DatePickerType.Quarter" />
+<RangePicker Picker="@DatePickerType.Quarter" CultureInfo="LanguageService.CurrentCulture"/>
 <br />
-<RangePicker Picker="@DatePickerType.Year" />
+<RangePicker Picker="@DatePickerType.Year" CultureInfo="LanguageService.CurrentCulture"/>

@@ -1,6 +1,8 @@
-﻿<DatePicker ShowTime="@true" OnChange="OnChange" />
+﻿@inject ILanguageService LanguageService; 
+
+<DatePicker ShowTime="@true" OnChange="OnChange"  CultureInfo="LanguageService.CurrentCulture"/>
 <br />
-<RangePicker ShowTime='@("HH:mm")' OnChange="OnChange" />
+<RangePicker ShowTime='@("HH:mm")' OnChange="OnChange"  CultureInfo="LanguageService.CurrentCulture"/>
 
 @code
 {

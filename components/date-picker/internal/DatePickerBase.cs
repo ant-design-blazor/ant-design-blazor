@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Threading.Tasks;
 using AntDesign.Internal;
@@ -51,8 +50,18 @@ namespace AntDesign
         [Parameter]
         public bool ShowToday { get; set; } = true;
 
+
+        private CultureInfo _cultureInfo = CultureInfo.CurrentCulture;
         [Parameter]
-        public CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
+        public CultureInfo CultureInfo
+        {
+            get => this._cultureInfo;
+            set
+            {
+                _cultureInfo = value;
+                InitPicker(this._picker);
+            }
+        }
 
         public bool IsShowTime { get; protected set; } = false;
         public string ShowTimeFormat { get; protected set; } = "HH:mm:ss";

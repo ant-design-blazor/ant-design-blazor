@@ -36,6 +36,9 @@ namespace AntDesign
     interface IDateLocale
     {
         string DateFormat { get; }
+        /// <summary>
+        /// The start day of week should be either Monday or Sunday according to the CultureInfo
+        /// </summary>
         string[] ShortWeekDays { get; }
         string Today { get; }
         bool MonthBeforeYear { get; }
@@ -63,7 +66,7 @@ namespace AntDesign
     {
         private string _locale = "en-US";
         public string DateFormat => "yyyy-MM-dd";
-        public string[] ShortWeekDays => CultureInfo.GetCultureInfo(_locale).DateTimeFormat.ShortestDayNames;
+        public string[] ShortWeekDays => new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
         public string Today => "Today";
         public bool MonthBeforeYear => true;
         public string YearFormat => "yyyy";
@@ -91,7 +94,7 @@ namespace AntDesign
     {
         private string _locale = "zh-CN";
         public string DateFormat => "yyyy年M月d日";
-        public string[] ShortWeekDays => CultureInfo.GetCultureInfo(_locale).DateTimeFormat.ShortestDayNames;
+        public string[] ShortWeekDays => new string[] { "一", "二", "三", "四", "五", "六", "日" };
         public string Today => "今天";
         public bool MonthBeforeYear => false;
         public string YearFormat => "yyyy年";
