@@ -108,5 +108,10 @@ namespace AntDesign
         {
             this._controls.Add(valueAccessor);
         }
+
+        public bool Validate()
+        {
+            return _editContext.Validate();
+        }
     }
 }
