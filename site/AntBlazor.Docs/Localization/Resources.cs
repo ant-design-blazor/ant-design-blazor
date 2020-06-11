@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using YamlDotNet.Serialization;
 
 namespace AntDesign.Docs.Localization
 {
@@ -15,7 +15,8 @@ namespace AntDesign.Docs.Localization
 
         private void Initialize(string languageContent)
         {
-            _keyValues = new Deserializer().Deserialize<Dictionary<string, string>>(languageContent).Select(k => new { Key = k.Key.ToLower(), Value = k.Value }).ToDictionary(t => t.Key, t => t.Value);
+            _keyValues = languageContent.Split(Environment.NewLine).Select(line => line.Split(":")).ToList()
+                .ToDictionary(x => x[0].ToLower(), x => x.Length == 2 ? x[1].Trim(' ') : "");
         }
 
         public string this[string key]
@@ -26,8 +27,9 @@ namespace AntDesign.Docs.Localization
                 {
                     return _keyValues[key.ToLower()];
                 }
-                catch
+                catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                     return key;
                 }
             }
