@@ -1,7 +1,11 @@
-﻿<PageHeader class="site-page-header" OnBack="OnBack" Title="Title" Subtitle="This is a subtitle">
+﻿<PageHeader class="site-page-header" OnBack="OnBack" Title="@_title" Subtitle="@_subtitle">
 </PageHeader>
 
 @code{
+
+    private string _title = "Title";
+
+    private string _subtitle = "This is a subtitle";
 
     void OnBack()
     {

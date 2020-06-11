@@ -4,6 +4,7 @@ using System.Text;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -12,13 +13,16 @@ namespace AntDesign
         #region Parameters
 
         [Parameter]
-        public string BackIcon { get; set; } = "";
+        public bool Ghost { get; set; } = false;
 
         [Parameter]
-        public string Title { get; set; }
+        public OneOf<string, RenderFragment> BackIcon { get; set; }
 
         [Parameter]
-        public string Subtitle { get; set; }
+        public OneOf<string, RenderFragment> Title { get; set; }
+
+        [Parameter]
+        public OneOf<string, RenderFragment> Subtitle { get; set; }
 
         [Parameter]
         public EventCallback OnBack { get; set; }
@@ -54,6 +58,20 @@ namespace AntDesign
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
+        private void SetClassMap()
+        {
+            ClassMapper.Clear().Add("ant-page-header")
+                .If("has-footer", () => PageHeaderFooter != null)
+                .If("ant-page-header-ghost", () => this.Ghost == true)
+                .If("has-breadcrumb", () => PageHeaderBreadcrumb != null);
+        }
+
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            SetClassMap();
+        }
 
         private async void OnBackClick(MouseEventArgs eventArgs)
         {
@@ -63,8 +81,10 @@ namespace AntDesign
             }
             else
             {
+
             }
 
         }
+
     }
 }
