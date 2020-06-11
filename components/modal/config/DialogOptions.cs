@@ -24,8 +24,8 @@ namespace AntDesign
         private static readonly RenderFragment _defaultCloseIcon = (builder) =>
         {
             builder.OpenComponent<Icon>(0);
-            builder.AddAttribute(1, "Type", "Close");
-            builder.AddAttribute(2, "Theme", "Outline");
+            builder.AddAttribute(1, "Type", "close");
+            builder.AddAttribute(2, "Theme", "outline");
             builder.CloseComponent();
         };
 
@@ -35,7 +35,7 @@ namespace AntDesign
 
         public bool DestroyOnClose { get; set; }
 
-        internal static readonly RenderFragment _defaultFooter = (builder) =>
+        private static readonly RenderFragment _defaultFooter = (builder) =>
         {
             builder.OpenComponent<ModalFooter>(0);
             builder.CloseComponent();
@@ -57,7 +57,7 @@ namespace AntDesign
 
         public string OkType { get; set; } = ButtonType.Primary;
 
-        public OneOf<string, RenderFragment>? Title { get; set; } =  null;
+        public OneOf<string, RenderFragment>? Title { get; set; } = null;
 
         public OneOf<string, double> Width { get; set; } = 520;
 
@@ -109,6 +109,5 @@ namespace AntDesign
         public string MaskTransitionName { get; set; }
 
         public string ClassName { get; set; }
-
     }
 }
