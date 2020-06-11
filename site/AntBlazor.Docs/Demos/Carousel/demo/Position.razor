@@ -1,25 +1,25 @@
- <div>
-        <RadioGroup @bind-Value="_position" Style="margin-bottom: 8px;">
-            <Radio RadioButton Value="@CarouselDotPosition.Top">Top</Radio>
-            <Radio RadioButton Value="@CarouselDotPosition.Bottom">Bottom</Radio>
-            <Radio RadioButton Value="@CarouselDotPosition.Left">Left</Radio>
-            <Radio RadioButton Value="@CarouselDotPosition.Right">Right</Radio>
-        </RadioGroup>
-        <Carousel DotPosition="@_position">
-            <CarouselSlick>
-                <h3>1</h3>
-            </CarouselSlick>
-            <CarouselSlick>
-                <h3>2</h3>
-            </CarouselSlick>
-            <CarouselSlick>
-                <h3>3</h3>
-            </CarouselSlick>
-            <CarouselSlick>
-                <h3>4</h3>
-            </CarouselSlick>
-        </Carousel>
- </div>
+<div>
+    <RadioGroup @bind-Value="_position" Style="margin-bottom: 8px;">
+        <Radio RadioButton Value="@CarouselDotPosition.Top">Top</Radio>
+        <Radio RadioButton Value="@CarouselDotPosition.Bottom">Bottom</Radio>
+        <Radio RadioButton Value="@CarouselDotPosition.Left">Left</Radio>
+        <Radio RadioButton Value="@CarouselDotPosition.Right">Right</Radio>
+    </RadioGroup>
+    <Carousel DotPosition="@_position">
+        <CarouselSlick>
+            <h3>1</h3>
+        </CarouselSlick>
+        <CarouselSlick>
+            <h3>2</h3>
+        </CarouselSlick>
+        <CarouselSlick>
+            <h3>3</h3>
+        </CarouselSlick>
+        <CarouselSlick>
+            <h3>4</h3>
+        </CarouselSlick>
+    </Carousel>
+</div>
 
 @code{
     private string _position = CarouselDotPosition.Bottom;
