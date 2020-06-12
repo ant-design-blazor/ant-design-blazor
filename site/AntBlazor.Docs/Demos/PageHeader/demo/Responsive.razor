@@ -1,4 +1,4 @@
-﻿<PageHeader class="site-page-header">
+﻿<PageHeader Class="site-page-header">
     <PageHeaderTitle>Title</PageHeaderTitle>
     <PageHeaderSubtitle>This is a subtitle</PageHeaderSubtitle>
     <PageHeaderExtra>
@@ -23,7 +23,7 @@
             <div class="extra">
                 <div>
                     <Statistic Title="@("Status")" Value="@("Pending")"></Statistic>
-                    <Statistic Title="@("Price")" Value="568.08" Prefix="@("$")" style="margin: 0 32px"></Statistic>
+                    <Statistic Title="@("Price")" Value="568.08" Prefix="@("$")" Style="margin: 0 32px"></Statistic>
                 </div>
             </div>
         </div>
@@ -40,30 +40,31 @@
     </PageHeaderFooter>
 </PageHeader>
 
-<Style>
-     .content {
+<style>
+    .content {
         display: flex;
-      }
-      .extra > div {
+    }
+
+    .extra div {
         display: flex;
         width: max-content;
         justify-content: flex-end;
-      }
+    }
 
-      media (max-width: 576px) {
+    @@media (max-width: 576px) {
         .content {
-          display: block;
+            display: block;
         }
 
         .main {
-          width: 100%;
-          margin-bottom: 12px;
+            width: 100%;
+            margin-bottom: 12px;
         }
 
         .extra {
-          width: 100%;
-          margin-left: 0;
-          text-align: left;
+            width: 100%;
+            margin-left: 0;
+            text-align: left;
         }
-      }
-</Style>
+    }
+</style>

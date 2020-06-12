@@ -1,5 +1,4 @@
-﻿
-<PageHeader class="site-page-header">
+﻿<PageHeader Class="site-page-header">
     <!--breadcrumb-->
     <PageHeaderBreadcrumb>
         <Breadcrumb>
@@ -13,7 +12,7 @@
 
     <!--avatar-->
     <PageHeaderAvatar>
-        <Avatar Src="https://avatars0.githubusercontent.com/u/22736418?s=88&v=4"> </Avatar>
+        <Avatar Src="https://avatars0.githubusercontent.com/u/22736418?s=88&v=4" />
     </PageHeaderAvatar>
     <!--title-->
     <PageHeaderTitle>Title</PageHeaderTitle>
@@ -23,14 +22,14 @@
 
     <!--tags-->
     <PageHeaderTags>
-        <Tag Color="'blue'">Running</Tag>
+        <Tag Color="blue">Running</Tag>
     </PageHeaderTags>
 
     <!--extra-->
     <PageHeaderExtra>
         <Button>Operation</Button>
         <Button>Operation</Button>
-        <Button Type="primary">Primary</Button>
+        <Button Type="@ButtonType.Primary">Primary</Button>
         <Dropdown Placement="@PlacementType.BottomRight">
             <Overlay>
                 <Menu>
@@ -75,31 +74,30 @@
     </PageHeaderContent>
 </PageHeader>
 
-<Style>
-      .content {
+<style>
+    .content {
         flex: 1;
-      }
+    }
 
-      .content p {
-        margin-bottom: 1em;
-      }
+        .content p {
+            margin-bottom: 1em;
+        }
 
-      .content-link a {
+    .content-link a {
         margin-right: 16px;
-      }
+    }
 
-      .content-link a img {
-        margin-right: 8px;
-      }
+        .content-link a img {
+            margin-right: 8px;
+        }
 
-      .content-image {
+    .content-image {
         margin: 0 0 0 60px;
         display: flex;
         align-items: center;
-      }
+    }
 
-      .content-image img {
-        width: 100%;
-      }
-
-</Style>
+        .content-image img {
+            width: 100%;
+        }
+</style>

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AntDesign.JsInterop;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 using OneOf;
 
 namespace AntDesign
@@ -14,7 +9,7 @@ namespace AntDesign
         #region Parameters
 
         [Parameter]
-        public bool Ghost { get; set; } = false;
+        public bool Ghost { get; set; }
 
         [Parameter]
         public OneOf<string, RenderFragment> BackIcon { get; set; }
@@ -27,7 +22,6 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback OnBack { get; set; }
-
 
         [Parameter]
         public RenderFragment PageHeaderContent { get; set; }
@@ -53,19 +47,15 @@ namespace AntDesign
         [Parameter]
         public RenderFragment PageHeaderExtra { get; set; }
 
-        #endregion
-
-        [Inject]
-        IJSRuntime JSRuntime { get; set; }
+        #endregion Parameters
 
         private void SetClassMap()
         {
             ClassMapper.Clear().Add("ant-page-header")
                 .If("has-footer", () => PageHeaderFooter != null)
-                .If("ant-page-header-ghost", () => this.Ghost == true)
+                .If("ant-page-header-ghost", () => this.Ghost)
                 .If("has-breadcrumb", () => PageHeaderBreadcrumb != null);
         }
-
 
         protected override void OnInitialized()
         {
@@ -83,8 +73,6 @@ namespace AntDesign
             {
                 await JsInvokeAsync("history.back");
             }
-
         }
-
     }
 }
