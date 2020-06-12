@@ -1,12 +1,13 @@
-﻿@page "/mock"
+﻿@layout BlankLayout;
+@page "/mock"
 @using System.Reflection
-@using System.Net
-@layout BlankLayout;
+@using AntDesign.Docs.Services
 
 <div id="@DemoId">
     @ShowCaseContent
 </div>
 
+@inject DemoService demoService
 
 @code
 {
@@ -18,7 +19,8 @@
 
     RenderFragment ShowCaseContent => (builder) =>
     {
-        var showCase = System.Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Type}");
+        var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+        var showCase = System.Type.GetType($"{assemblyName}.{Type}");
         builder.OpenComponent(0, showCase);
         builder.CloseComponent();
     };
