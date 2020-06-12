@@ -55,6 +55,11 @@ namespace AntDesign
 
         protected override async Task OnInitializedAsync()
         {
+            if (Type == "loading")
+            {
+                Spin = true;
+            }
+
             await SetupSvgImg();
 
             if (this is Icon icon)
@@ -87,7 +92,7 @@ namespace AntDesign
             }
             else
             {
-                var svg = await IconService.GetIconImg(Type, Theme);
+                var svg = await IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
                 _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate, Spin);
             }
 
