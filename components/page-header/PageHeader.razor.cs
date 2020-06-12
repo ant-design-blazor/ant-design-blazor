@@ -4,6 +4,7 @@ using System.Text;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using OneOf;
 
 namespace AntDesign
@@ -54,9 +55,8 @@ namespace AntDesign
 
         #endregion
 
-
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        IJSRuntime JSRuntime { get; set; }
 
         private void SetClassMap()
         {
@@ -81,7 +81,7 @@ namespace AntDesign
             }
             else
             {
-
+                await JsInvokeAsync("history.back");
             }
 
         }

@@ -1,0 +1,41 @@
+﻿<PageHeader class="site-page-header">
+    <PageHeaderTitle>Title</PageHeaderTitle>
+    <PageHeaderSubtitle>This is a subtitle</PageHeaderSubtitle>
+    <PageHeaderExtra>
+        <Button>Operation</Button>
+        <Button>Operation</Button>
+        <Button Type="@ButtonType.Primary">Primary</Button>
+    </PageHeaderExtra>
+    <PageHeaderContent>
+        <div class="content">
+            <div class="main">
+                todo:Descriptions
+                @*<nz-descriptions nzSize="small" [nzColumn]="2">
+                        <nz-descriptions-item nzTitle="Created" [nzSpan]="1">Lili Qu</nz-descriptions-item>
+                        <nz-descriptions-item nzTitle="Association" [nzSpan]="1"><a>421421</a></nz-descriptions-item>
+                        <nz-descriptions-item nzTitle="Creation Time" [nzSpan]="1">2017-01-10</nz-descriptions-item>
+                        <nz-descriptions-item nzTitle="Effective Time" [nzSpan]="1">2017-10-10</nz-descriptions-item>
+                        <nz-descriptions-item nzTitle="Remarks" [nzSpan]="2">
+                            Gonghu Road, Xihu District, Hangzhou, Zhejiang, China
+                        </nz-descriptions-item>
+                    </nz-descriptions>*@
+            </div>
+            <div class="extra">
+                <div>
+                    <Statistic Title="@("Status")" Value="@("Pending")"></Statistic>
+                    <Statistic Title="@("Price")" Value="568.08" Prefix="@("$")" style="margin: 0 32px"></Statistic>
+                </div>
+            </div>
+        </div>
+    </PageHeaderContent>
+    <PageHeaderFooter>
+        <Tabs DefaultActiveKey="1">
+            <TabPane Key="1">
+                <Tab>Details</Tab>
+            </TabPane>
+            <TabPane Key="2">
+                <Tab>Rule</Tab>
+            </TabPane>
+        </Tabs>
+    </PageHeaderFooter>
+</PageHeader>

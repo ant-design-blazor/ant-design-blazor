@@ -1,0 +1,41 @@
+﻿<PageHeader class="site-page-header">
+    <PageHeaderTitle>Title</PageHeaderTitle>
+    <PageHeaderSubtitle>This is a subtitle</PageHeaderSubtitle>
+    <PageHeaderExtra>
+        <Button>Operation</Button>
+        <Button>Operation</Button>
+        <Button Type="@ButtonType.Primary">Primary</Button>
+    </PageHeaderExtra>
+    <PageHeaderContent>
+        todo:Descriptions
+        @*<Descriptions nzSize="small" [nzColumn]="3">
+            <DescriptionsItem nzTitle="Created" [nzSpan]="1">Lili Qu</DescriptionsItem>
+            <DescriptionsItem nzTitle="Association" [nzSpan]="1"><a>421421</a></DescriptionsItem>
+            <DescriptionsItem nzTitle="Creation Time" [nzSpan]="1">2017-01-10</DescriptionsItem>
+            <DescriptionsItem nzTitle="Effective Time" [nzSpan]="1">2017-10-10</DescriptionsItem>
+            <DescriptionsItem nzTitle="Remarks" [nzSpan]="2">
+                Gonghu Road, Xihu District, Hangzhou, Zhejiang, China
+            </DescriptionsItem>
+        </Descriptions>*@
+    </PageHeaderContent>
+</PageHeader>
+<br />
+<PageHeader>
+    <PageHeaderTitle>Title</PageHeaderTitle>
+    <PageHeaderSubtitle>This is a subtitle</PageHeaderSubtitle>
+    <PageHeaderTags>
+        <Tag Color="blue">Runing</Tag>
+    </PageHeaderTags>
+    <PageHeaderExtra>
+        <Button>Operation</Button>
+        <Button>Operation</Button>
+        <Button Type="@ButtonType.Primary">Primary</Button>
+    </PageHeaderExtra>
+    <PageHeaderContent>
+        <Row Type="flex">
+            <Statistic Title="@("Status")" TValue="string" Value="@("Pending")"></Statistic>
+            <Statistic Title="@("Price")" Value="568.08" Prefix="@("$")" style="margin: 0 32px"></Statistic>
+            <Statistic Title="@("Balance")" Value="3345.08" Prefix="@("$")"></Statistic>
+        </Row>
+    </PageHeaderContent>
+</PageHeader>
