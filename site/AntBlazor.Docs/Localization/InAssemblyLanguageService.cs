@@ -55,16 +55,21 @@ namespace AntDesign.Docs.Localization
 
         public void SetLanguage(CultureInfo culture)
         {
+            if (!culture.Equals(CultureInfo.CurrentCulture))
+            {
+                CultureInfo.CurrentCulture = culture;
+            }
+
             if (CurrentCulture == null || !CurrentCulture.Equals(culture))
             {
                 CurrentCulture = culture;
-                CultureInfo.CurrentCulture = culture;
                 string fileName = $"{_resourcesAssembly.GetName().Name}.Resources.{culture.Name}.yml";
 
                 Resources = GetKeysFromCulture(culture.Name, fileName);
 
                 if (Resources == null)
                     throw new FileNotFoundException($"There is no language files for '{culture.Name}' existing in the Resources folder within '{_resourcesAssembly.GetName().Name}' assembly");
+
                 LanguageChanged?.Invoke(this, culture);
             }
         }

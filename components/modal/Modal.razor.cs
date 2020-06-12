@@ -33,8 +33,8 @@ namespace AntDesign
         private static readonly RenderFragment _defaultCloseIcon = (builder) =>
         {
             builder.OpenComponent<Icon>(0);
-            builder.AddAttribute(1, "Type", "Close");
-            builder.AddAttribute(2, "Theme", "Outline");
+            builder.AddAttribute(1, "Type", "close");
+            builder.AddAttribute(2, "Theme", "outline");
             builder.CloseComponent();
         };
 
@@ -43,7 +43,6 @@ namespace AntDesign
         [Parameter] public bool ConfirmLoading { get; set; }
 
         [Parameter] public bool DestroyOnClose { get; set; }
-
 
         private static readonly RenderFragment _defaultFooter = (builder) =>
         {
@@ -129,7 +128,7 @@ namespace AntDesign
             return string.Join(' ', classNameArray);
         }
 
-        #endregion
+        #endregion Parameter
 
         private Dialog _dialog;
 
@@ -149,7 +148,7 @@ namespace AntDesign
                 ForceRender = ForceRender,
 
                 GetContainer = GetContainer,
-                Keyboard= Keyboard,
+                Keyboard = Keyboard,
                 Mask = Mask,
                 MaskClosable = MaskClosable,
                 MaskStyle = MaskStyle,
