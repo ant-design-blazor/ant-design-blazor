@@ -1,0 +1,19 @@
+﻿<PageHeader Class="site-page-header" Title="@_title" Subtitle="@_subtitle">
+    <PageHeaderBreadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>First-level Menu</BreadcrumbItem>
+            <BreadcrumbItem>
+                <a>Second-level Menu</a>
+            </BreadcrumbItem>
+            <BreadcrumbItem>Third-level Menu</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderBreadcrumb>
+</PageHeader>
+
+@code{
+
+    private string _title = "Title";
+
+    private string _subtitle = "This is a subtitle";
+
+}
