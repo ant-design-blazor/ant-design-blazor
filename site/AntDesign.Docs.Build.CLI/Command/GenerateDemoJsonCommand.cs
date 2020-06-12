@@ -59,6 +59,7 @@ namespace AntDesign.Docs.Build.CLI.Command
             }
 
             IList<Dictionary<string, DemoComponent>> componentList = null;
+            IList<string> demoTypes = null;
 
             foreach (FileSystemInfo component in demoDirectoryInfo.GetFileSystemInfos())
             {
@@ -98,7 +99,11 @@ namespace AntDesign.Docs.Build.CLI.Command
                     FileSystemInfo razorFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".razor");
                     FileSystemInfo descriptionFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".md");
                     string code = razorFile != null ? File.ReadAllText(razorFile.FullName) : null;
+                    string demoType = $"{demoDirectoryInfo.Name}.{component.Name}.{demoDir.Name}.{razorFile.Name.Replace(razorFile.Extension, "")}";
                     (DescriptionYaml Meta, string Style, Dictionary<string, string> Descriptions) descriptionContent = descriptionFile != null ? DocParser.ParseDescription(File.ReadAllText(descriptionFile.FullName)) : default;
+
+                    demoTypes ??= new List<string>();
+                    demoTypes.Add(demoType);
 
                     foreach (KeyValuePair<string, string> title in descriptionContent.Meta.Title)
                     {
@@ -115,7 +120,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                             Name = descriptionFile?.Name.Replace(".md", ""),
                             Style = descriptionContent.Style,
                             Debug = descriptionContent.Meta.Debug,
-                            Type = $"{demoDirectoryInfo.Name}.{component.Name}.{demoDir.Name}.{razorFile.Name.Replace(razorFile.Extension, "")}"
+                            Type = demoType
                         });
                     }
                 }
@@ -127,36 +132,51 @@ namespace AntDesign.Docs.Build.CLI.Command
             if (componentList == null)
                 return;
 
+            string configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
+
+            if (!Directory.Exists(configFileDirectory))
+            {
+                Directory.CreateDirectory(configFileDirectory);
+            }
+
             IEnumerable<IGrouping<string, KeyValuePair<string, DemoComponent>>> componentI18N = componentList
                 .SelectMany(x => x).GroupBy(x => x.Key);
 
             foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> componentDic in componentI18N)
             {
                 IEnumerable<DemoComponent> components = componentDic.Select(x => x.Value);
-                string json = JsonSerializer.Serialize(components, new JsonSerializerOptions()
+                string componentJson = JsonSerializer.Serialize(components, new JsonSerializerOptions()
                 {
                     WriteIndented = true,
                     IgnoreNullValues = true,
                     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
                 });
 
-                string configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
-                if (!Directory.Exists(configFileDirectory))
-                {
-                    Directory.CreateDirectory(configFileDirectory);
-                }
-
-                string configFilePath = Path.Combine(configFileDirectory, $"demo.{componentDic.Key}.json");
-                Console.WriteLine(json);
+                string configFilePath = Path.Combine(configFileDirectory, $"components.{componentDic.Key}.json");
 
                 if (File.Exists(configFilePath))
                 {
                     File.Delete(configFilePath);
                 }
 
-                File.WriteAllText(configFilePath, json);
+                File.WriteAllText(configFilePath, componentJson);
+
                 Console.WriteLine("Generate demo file to {0}", configFilePath);
             }
+
+            var demoJson = JsonSerializer.Serialize(demoTypes, new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                IgnoreNullValues = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            });
+
+            string demoFilePath = Path.Combine(configFileDirectory, $"demos.json");
+            if (File.Exists(demoFilePath))
+            {
+                File.Delete(demoFilePath);
+            }
+            File.WriteAllText(demoFilePath, demoJson);
         }
     }
 }

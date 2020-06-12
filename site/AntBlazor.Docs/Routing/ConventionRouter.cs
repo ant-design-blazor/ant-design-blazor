@@ -98,7 +98,7 @@ namespace AntDesign.Docs.Routing
                 }
                 else
                 {
-                    NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}", true);
+                    NavigationManager.NavigateTo($"en-US/{relativeUri}", true);
                     return;
                 }
             }

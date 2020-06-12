@@ -1,17 +1,16 @@
-﻿@using System.Reflection
-@using AntDesign.JsInterop
-@using System.Net
+﻿@using AntDesign.JsInterop
+@using AntDesign.Docs.Services
 @inherits ComponentBase
 
 <div class="code-box" id="@DemoId">
     <section class="code-box-demo">
         @if (Demo.Iframe > 0)
         {
-            <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@($"/mock?demoId={@DemoId}&type={Demo.Type}")" />
+            <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@($"/mock?demoId={DemoId}&type={Demo.Type}")" />
         }
         else
         {
-            @ShowCaseContent
+            @demoService.GetShowCase(Demo.Type)
         }
     </section>
     <section class="code-box-meta markdown">
@@ -52,6 +51,7 @@
 </div>
 
 @inject InteropService InteropService
+@inject DemoService demoService;
 
 @code {
 
@@ -64,14 +64,6 @@
     private bool codeExpand { get; set; }
 
     protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
-
-
-    RenderFragment ShowCaseContent => (builder) =>
-    {
-        var showCase = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Demo.Type}");
-        builder.OpenComponent(0, showCase);
-        builder.CloseComponent();
-    };
 
     async ValueTask Copy()
     {
