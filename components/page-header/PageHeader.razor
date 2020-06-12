@@ -1,0 +1,117 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style" id="@Id">
+
+    @PageHeaderBreadcrumb
+
+    <div class="ant-page-header-heading">
+        <div class="ant-page-header-heading-left">
+            <!--back-->
+            @if (BackIcon.Value != null)
+            {
+                @if (BackIcon.IsT0)
+                {
+                    <div @onclick="OnBackClick" class="ant-page-header-back">
+                        <div role="button" tabindex="0" class="ant-page-header-back-button">
+                            <Icon Type="@BackIcon.AsT0" Theme="outline" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @BackIcon.AsT1
+                }
+            }
+            else
+            {
+                <div @onclick="OnBackClick" class="ant-page-header-back">
+                    <div role="button" tabindex="0" class="ant-page-header-back-button">
+                        <Icon Type="arrow-left" Theme="outline" />
+                    </div>
+                </div>
+            }
+
+            <!--avatar-->
+            @PageHeaderAvatar
+
+            <!--title-->
+            @if (Title.Value != null)
+            {
+
+                <span class="ant-page-header-heading-title">
+                    @if (Title.IsT0)
+                    {
+                        @Title.AsT0
+                    }
+                    else
+                    {
+                        @Title.AsT1
+                    }
+                </span>
+            }
+            else
+            {
+                if (PageHeaderTitle != null)
+                {
+                    <div class="ant-page-header-heading-title">
+                        @PageHeaderTitle
+                    </div>
+                }
+            }
+
+            <!--subtitle-->
+            @if (Subtitle.Value != null)
+            {
+
+                <span class="ant-page-header-heading-sub-title">
+                    @if (Subtitle.IsT0)
+                    {
+                        @Subtitle.AsT0
+                    }
+                    else
+                    {
+                        @Subtitle.AsT1
+                    }
+                </span>
+            }
+            else
+            {
+                if (PageHeaderSubtitle != null)
+                {
+                    <div class="ant-page-header-heading-sub-title">
+                        @PageHeaderSubtitle
+                    </div>
+                }
+
+            }
+            @if (PageHeaderTags != null)
+            {
+                <div class="ant-page-header-heading-tags">
+                    @PageHeaderTags
+                </div>
+            }
+        </div>
+
+        @if (PageHeaderExtra != null)
+        {
+            <div class="ant-page-header-heading-extra">
+                @PageHeaderExtra
+            </div>
+        }
+    </div>
+    @if (PageHeaderContent != null)
+    {
+        <div class="ant-page-header-content">
+            @PageHeaderContent
+        </div>
+    }
+
+    @if (PageHeaderFooter != null)
+    {
+        <div class="ant-page-header-footer">
+            @PageHeaderFooter
+        </div>
+    }
+
+</div>

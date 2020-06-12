@@ -73,6 +73,11 @@
             "url": "components/menu"
           },
           {
+            "title": "PageHeader",
+            "type": "menuItem",
+            "url": "components/pageheader"
+          },
+          {
             "title": "Pagination",
             "type": "menuItem",
             "url": "components/pagination"
