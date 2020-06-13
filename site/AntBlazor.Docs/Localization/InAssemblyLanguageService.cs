@@ -31,6 +31,7 @@ namespace AntDesign.Docs.Localization
         private void SetDefaultLanguage(CultureInfo culture)
         {
             CurrentCulture = culture;
+            CultureInfo.CurrentCulture = culture;
 
             string[] languageFileNames = _resourcesAssembly.GetManifestResourceNames().Where(s => s.Contains("Resources") && s.Contains(".yml") && s.Contains("-")).ToArray();
 
@@ -54,6 +55,11 @@ namespace AntDesign.Docs.Localization
 
         public void SetLanguage(CultureInfo culture)
         {
+            if (!culture.Equals(CultureInfo.CurrentCulture))
+            {
+                CultureInfo.CurrentCulture = culture;
+            }
+
             if (CurrentCulture == null || !CurrentCulture.Equals(culture))
             {
                 CurrentCulture = culture;
@@ -63,6 +69,7 @@ namespace AntDesign.Docs.Localization
 
                 if (Resources == null)
                     throw new FileNotFoundException($"There is no language files for '{culture.Name}' existing in the Resources folder within '{_resourcesAssembly.GetName().Name}' assembly");
+
                 LanguageChanged?.Invoke(this, culture);
             }
         }
@@ -75,9 +82,10 @@ namespace AntDesign.Docs.Localization
                 using var fileStream = _resourcesAssembly.GetManifestResourceStream(fileName);
                 if (fileStream == null) return null;
                 using var streamReader = new StreamReader(fileStream);
-                return new Resources(streamReader.ReadToEnd());
+                var content = streamReader.ReadToEnd();
+                return new Resources(content);
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
                 return null;
             }

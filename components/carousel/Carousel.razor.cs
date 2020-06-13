@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization.Formatters;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -15,13 +12,17 @@ namespace AntDesign
         private const string PrefixCls = "ant-carousel";
         private string _trackStyle;
         private string _slickClonedStyle;
+        private string _slickListStyle;
         private ElementReference _ref;
         private int _slickWidth = -1;
+        private int _slickHeight = -1;
         private int _totalWidth = -1;
+        private int _totalHeight = -1;
         private List<CarouselSlick> _slicks = new List<CarouselSlick>();
         private CarouselSlick _activeSlick;
         private Timer _timer;
         private ClassMapper SlickSliderClassMapper { get; } = new ClassMapper();
+        private bool IsHorizontal => DotPosition == CarouselDotPosition.Top || DotPosition == CarouselDotPosition.Bottom;
 
         #region Parameters
 
@@ -50,24 +51,20 @@ namespace AntDesign
 
         private void SetClass()
         {
-            SlickSliderClassMapper.Add("slick-slider slick-initialized")
-                .If("slick-vertical", () => DotPosition.IsIn(CarouselDotPosition.Left, CarouselDotPosition.Right))
-                ;
+            SlickSliderClassMapper.Clear()
+                .Add("slick-slider slick-initialized")
+                .If("slick-vertical", () => !IsHorizontal);
 
             ClassMapper.Clear()
                 .Add(PrefixCls)
-                .If($"{PrefixCls}-vertical", () => DotPosition.IsIn(CarouselDotPosition.Left, CarouselDotPosition.Right));
-        }
-
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            SetClass();
+                .If($"{PrefixCls}-vertical", () => !IsHorizontal);
         }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+
+            SetClass();
 
             if (Effect != CarouselEffect.ScrollX && Effect != CarouselEffect.Fade)
             {
@@ -86,20 +83,42 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
 
             DomRect listRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ref);
-            if (_slickWidth != (int)listRect.width)
+            if ((_slickWidth != (int)listRect.width && IsHorizontal)
+                || (_slickHeight != (int)listRect.height && !IsHorizontal)
+                || IsHorizontal && !string.IsNullOrEmpty(_slickListStyle)
+                || !IsHorizontal && string.IsNullOrEmpty(_slickListStyle))
             {
                 _slickWidth = (int)listRect.width;
+                _slickHeight = (int)listRect.height;
                 _totalWidth = _slickWidth * (_slicks.Count * 2 + 1);
+                _totalHeight = _slickHeight * (_slicks.Count * 2 + 1);
                 if (Effect == CarouselEffect.ScrollX)
                 {
-                    _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px); transition: -webkit-transform 500ms ease 0s;";
+                    if (IsHorizontal)
+                    {
+                        _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px); transition: -webkit-transform 500ms ease 0s;";
+                    }
+                    else
+                    {
+                        _trackStyle = $"height: {_totalHeight}px; opacity: 1; transform: translate3d(0px, -{_slickHeight}px, 0px); transition: -webkit-transform 500ms ease 0s;";
+                    }
                 }
                 else
                 {
-                    _trackStyle = $"width: {_totalWidth}px; opacity: 1;";
+                    if (IsHorizontal)
+                    {
+                        _trackStyle = $"width: {_totalWidth}px; opacity: 1;";
+                    }
+                    else
+                    {
+                        _trackStyle = $"height: {_totalHeight}px; opacity: 1;";
+                    }
                 }
+
+                _slickListStyle = IsHorizontal ? string.Empty : $"height: {_slickHeight}px";
                 _slickClonedStyle = $"width: {_slickWidth}px;";
 
+                Activate(_slicks.IndexOf(_activeSlick));
                 StateHasChanged();
             }
         }
@@ -117,7 +136,14 @@ namespace AntDesign
         {
             if (Effect == CarouselEffect.ScrollX)
             {
-                _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth * (index + 1)}px, 0px, 0px);{transition}";
+                if (IsHorizontal)
+                {
+                    _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth * (index + 1)}px, 0px, 0px);{transition}";
+                }
+                else
+                {
+                    _trackStyle = $"height: {_totalHeight}px; opacity: 1; transform: translate3d(0px, -{_slickHeight * (index + 1)}px, 0px);{transition}";
+                }
             }
 
             if (index == _slicks.Count)
@@ -155,7 +181,14 @@ namespace AntDesign
             if (realIndex == 0 && Effect == CarouselEffect.ScrollX)
             {
                 Thread.Sleep((int)Autoplay.TotalMilliseconds / 2);
-                _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px);";
+                if (IsHorizontal)
+                {
+                    _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px);";
+                }
+                else
+                {
+                    _trackStyle = $"height: {_totalHeight}px; opacity: 1; transform: translate3d(0px, -{_slickHeight}px, 0px);";
+                }
             }
 
             await InvokeAsync(() => StateHasChanged());

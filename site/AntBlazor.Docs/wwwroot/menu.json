@@ -23,7 +23,7 @@
           {
             "title": "Icon",
             "type": "menuItem",
-            "url": "icondemo"
+            "url": "components/icon"
           },
           {
             "title": "Typography",
@@ -90,7 +90,7 @@
           {
             "title": "Steps",
             "type": "menuItem",
-            "url": "stepdemo"
+            "url": "components/steps"
           }
         ]
       },

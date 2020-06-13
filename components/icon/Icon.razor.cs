@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Globalization;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using OneOf;
 
 namespace AntDesign
 {
@@ -15,7 +10,7 @@ namespace AntDesign
         public bool Spin { get; set; }
 
         [Parameter]
-        public OneOf<int, string> Rotate { get; set; } = 0;
+        public int Rotate { get; set; } = 0;
 
         [Parameter]
         public string Type { get; set; }
@@ -51,38 +46,28 @@ namespace AntDesign
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         [Inject]
-        private HttpClient HttpClient { get; set; }
+        public IconService IconService { get; set; }
 
-        [Inject]
-        private NavigationManager NavigationManager { get; set; }
+        [Parameter]
+        public RenderFragment Component { get; set; }
 
-        private static readonly ConcurrentDictionary<string, string> _svgCache = new ConcurrentDictionary<string, string>();
-
-        private string SvgImg { get; set; }
-        private string SvgStyle { get; set; }
-        private string _iconSvg;
-
-        private Uri _baseUrl;
-
-        public void SetClassSet()
-        {
-            string prefixName = "anticon";
-            ClassMapper.Add(prefixName)
-                .If($"{prefixName}-spin", () => Spin || this.Type == "loading");
-
-            SvgStyle = $"focusable=\"false\" width=\"{Width}\" height=\"{Height}\" fill=\"{Fill}\"";
-        }
+        private string _svgImg;
 
         protected override async Task OnInitializedAsync()
         {
-            this.SetClassSet();
+            if (Type == "loading")
+            {
+                Spin = true;
+            }
 
-            _baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
+            await SetupSvgImg();
 
             if (this is Icon icon)
             {
                 Button?.Icons.Add(icon);
             }
+
+            ClassMapper.Add("anticon anticon-sync");
 
             await base.OnInitializedAsync();
         }
@@ -95,23 +80,20 @@ namespace AntDesign
 
         private async Task SetupSvgImg()
         {
-            if (_svgCache.TryGetValue($"{Theme}-{Type}", out string svg))
+            if (Component != null)
             {
-                _iconSvg = svg;
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(IconFont))
+            {
+                var svg = $"<svg><use xlink:href=#{IconFont} /></svg>";
+                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate, Spin);
             }
             else
             {
-                HttpResponseMessage res = await HttpClient.GetAsync(new Uri(_baseUrl, $"_content/AntDesign/icons/{Theme.ToLower(CultureInfo.CurrentCulture)}/{Type.ToLower(CultureInfo.CurrentCulture)}.svg"));
-                if (res.IsSuccessStatusCode)
-                {
-                    _iconSvg = await res.Content.ReadAsStringAsync();
-                    _svgCache.TryAdd($"{Theme}-{Type}", _iconSvg);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(_iconSvg))
-            {
-                SvgImg = _iconSvg.Insert(_iconSvg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {SvgStyle} ");
+                var svg = await IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
+                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate, Spin);
             }
 
             StateHasChanged();

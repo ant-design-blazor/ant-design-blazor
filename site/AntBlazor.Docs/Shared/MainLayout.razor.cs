@@ -34,6 +34,8 @@ namespace AntDesign.Docs.Shared
             //await GetCurrentMenuItems();
             //StateHasChanged();
 
+            await DemoService.InitializeDemos();
+
             LanguageService.LanguageChanged += OnLanguageChanged;
 
             NavigationManager.LocationChanged += (_, args) =>
