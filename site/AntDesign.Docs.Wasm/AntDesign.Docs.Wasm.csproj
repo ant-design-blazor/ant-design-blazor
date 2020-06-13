@@ -12,10 +12,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.0" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- When publishing, swap service-worker.published.js in place of service-worker.js -->
-  <ItemGroup Condition="'$(Configuration)' != 'Debug' And '$(DesignTimeBuild)' != 'true'">
-    <Content Remove="wwwroot\service-worker.js" />
-    <Content Update="wwwroot\service-worker.published.js" Link="wwwroot\service-worker.js" />
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
 
   <ItemGroup>
