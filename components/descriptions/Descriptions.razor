@@ -37,19 +37,19 @@
                                 if (Bordered == false)
                                 {
                                     <!-- Horizontal & NOT Bordered -->
-                                    <td class="ant-descriptions-item" colspan="@item.Span">
+                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
                                         <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-colon" : null)">
-                                            @if (item.Title.IsT0)
+                                            @if (item.item.Title.IsT0)
                                             {
-                                                @item.Title.AsT0
+                                                @item.item.Title.AsT0
                                             }
                                             else
                                             {
-                                                @item.Title.AsT1
+                                                @item.item.Title.AsT1
                                             }
                                         </span>
                                         <span class="ant-descriptions-item-content">
-                                            @item.ChildContent
+                                            @item.item.ChildContent
                                         </span>
                                     </td>
 
@@ -58,17 +58,17 @@
                                 {
                                     <!-- Horizontal & Bordered -->
                                     <td class="ant-descriptions-item-label">
-                                        @if (item.Title.IsT0)
+                                        @if (item.item.Title.IsT0)
                                         {
-                                            @item.Title.AsT0
+                                            @item.item.Title.AsT0
                                         }
                                         else
                                         {
-                                            @item.Title.AsT1
+                                            @item.item.Title.AsT1
                                         }
                                     </td>
-                                    <td class="ant-descriptions-item-content" colspan="@item.Span* 2 - 1">
-                                        @item.ChildContent
+                                    <td class="ant-descriptions-item-content" colspan="@item.realSpan * 2 - 1">
+                                        @item.item.ChildContent
                                     </td>
                                 }
                             }
@@ -86,15 +86,15 @@
                             <tr class="ant-descriptions-row">
                                 @foreach (var item in row)
                                 {
-                                    <td class="ant-descriptions-item" colspan="@item.Span">
+                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
                                         <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-colon" : null)">
-                                            @if (item.Title.IsT0)
+                                            @if (item.item.Title.IsT0)
                                             {
-                                                @item.Title.AsT0
+                                                @item.item.Title.AsT0
                                             }
                                             else
                                             {
-                                                @item.Title.AsT1
+                                                @item.item.Title.AsT1
                                             }
                                         </span>
                                     </td>
@@ -103,9 +103,9 @@
                             <tr class="ant-descriptions-row">
                                 @foreach (var item in row)
                                 {
-                                    <td class="ant-descriptions-item" colspan="@item.Span">
+                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
                                         <span class="ant-descriptions-item-content">
-                                            @item.ChildContent
+                                            @item.item.ChildContent
                                         </span>
                                     </td>
                                 }
@@ -120,14 +120,14 @@
                             <tr class="ant-descriptions-row">
                                 @foreach (var item in row)
                                 {
-                                    <td class="ant-descriptions-item-label" colspan="@item.Span">
-                                        @if (item.Title.IsT0)
+                                    <td class="ant-descriptions-item-label" colspan="@item.realSpan">
+                                        @if (item.item.Title.IsT0)
                                         {
-                                            @item.Title.AsT0
+                                            @item.item.Title.AsT0
                                         }
                                         else
                                         {
-                                            @item.Title.AsT1
+                                            @item.item.Title.AsT1
                                         }
                                     </td>
                                 }
@@ -135,8 +135,8 @@
                             <tr class="ant-descriptions-row">
                                 @foreach (var item in row)
                                 {
-                                    <td class="ant-descriptions-item-content" colspan="@item.Span">
-                                        @item.ChildContent
+                                    <td class="ant-descriptions-item-content" colspan="@item.realSpan">
+                                        @item.item.ChildContent
                                     </td>
                                 }
                             </tr>

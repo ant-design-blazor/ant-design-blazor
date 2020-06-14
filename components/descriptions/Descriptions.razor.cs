@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
 {
+    using ColumnType = OneOf<int, Dictionary<string, int>>;
+
     public partial class Descriptions : AntDomComponentBase
     {
         #region Parameters
@@ -18,7 +22,7 @@ namespace AntDesign
         public string Layout { get; set; } = DescriptionsLayout.Horizontal;
 
         [Parameter]
-        public int Column { get; set; } = 3;//TODO:缺少响应式布局支持
+        public ColumnType Column { get; set; }
 
         [Parameter]
         public string Size { get; set; }
@@ -36,7 +40,31 @@ namespace AntDesign
 
         public IList<IDescriptionsItem> Items { get; } = new List<IDescriptionsItem>();
 
-        private List<List<IDescriptionsItem>> _itemMatrix = new List<List<IDescriptionsItem>>();
+        private List<List<(IDescriptionsItem item, int realSpan)>> _itemMatrix = new List<List<(IDescriptionsItem item, int realSpan)>>();
+
+        [Inject]
+        public DomEventService DomEventService { get; set; }
+
+        private int _realColumn;
+
+        private Dictionary<string, int> _defaultColumnMap = new Dictionary<string, int> {
+            { "xxl", 3 },
+            { "xl", 3},
+            { "lg", 3},
+            { "md", 3},
+            { "sm", 2},
+            { "xs", 1}
+        };
+
+        private static Hashtable _descriptionsResponsiveMap = new Hashtable()
+        {
+            [nameof(BreakpointEnum.xs)] = "(max-width: 575px)",
+            [nameof(BreakpointEnum.sm)] = "(max-width: 576px)",
+            [nameof(BreakpointEnum.md)] = "(max-width: 768px)",
+            [nameof(BreakpointEnum.lg)] = "(max-width: 992px)",
+            [nameof(BreakpointEnum.xl)] = "(max-width: 1200px)",
+            [nameof(BreakpointEnum.xxl)] = "(max-width: 1600px)",
+        };
 
         private void SetClassMap()
         {
@@ -46,10 +74,21 @@ namespace AntDesign
                 .If("ant-descriptions-small", () => this.Size == DescriptionsSize.Small);
         }
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             SetClassMap();
-            base.OnInitialized();
+            await SetRealColumn();
+
+            if (Column.IsT1)
+            {
+                DomEventService.AddEventListener<object>("window", "resize", async _ =>
+                {
+                    await this.SetRealColumn();
+                    PrepareMatrix();
+                    StateHasChanged();//TODO: BUG 需要彻底重绘组件
+                });
+            }
+            await base.OnInitializedAsync();
         }
 
         protected override Task OnFirstAfterRenderAsync()
@@ -68,50 +107,69 @@ namespace AntDesign
 
         private void PrepareMatrix()
         {
-            List<List<IDescriptionsItem>> itemMatrix = new List<List<IDescriptionsItem>>();
+            List<List<(IDescriptionsItem item, int realSpan)>> itemMatrix = new List<List<(IDescriptionsItem item, int realSpan)>>();
 
-            List<IDescriptionsItem> currentRow = new List<IDescriptionsItem>();
+            List<(IDescriptionsItem item, int realSpan)> currentRow = new List<(IDescriptionsItem item, int realSpan)>();
             var width = 0;
-            var column = this.Column;
 
             for (int i = 0; i < this.Items.Count; i++)
             {
                 var item = this.Items[i];
                 width += item.Span;
 
-                if (width >= column)
+                if (width >= _realColumn)
                 {
-                    if (width > column)
+                    if (width > _realColumn)
                     {
-                        Console.WriteLine(@$"""Column"" is {column} but we have row length ${width}");
+                        Console.WriteLine(@$"""Column"" is {_realColumn} but we have row length ${width}");
                     }
-                    item.Span = column - (width - item.Span);
-                    currentRow.Add(item);
+                    currentRow.Add((item, _realColumn - (width - item.Span)));
                     FlushRow();
                 }
                 else if (i == this.Items.Count - 1)
                 {
-                    item.Span = column - (width - item.Span);
-                    currentRow.Add(item);
+                    currentRow.Add((item, _realColumn - (width - item.Span)));
                     FlushRow();
                 }
                 else
                 {
-                    currentRow.Add(item);
+                    currentRow.Add((item, item.Span));
                 }
             }
-
             this._itemMatrix = itemMatrix;
 
-            Console.WriteLine(this._itemMatrix.Count);
+
+            Console.WriteLine($"this._itemMatrix-{this._itemMatrix.Count}");
 
             void FlushRow()
             {
                 itemMatrix.Add(currentRow);
-                currentRow = new List<IDescriptionsItem>();
+                currentRow = new List<(IDescriptionsItem item, int realSpan)>();
                 width = 0;
             }
 
+        }
+
+        private async Task SetRealColumn()
+        {
+            if (Column.IsT0)
+            {
+                _realColumn = Column.AsT0 == 0 ? 3 : Column.AsT0;
+            }
+            else
+            {
+                string breakPoint = null;
+
+                await typeof(BreakpointEnum).GetEnumNames().ForEachAsync(async bp =>
+                {
+                    if (await JsInvokeAsync<bool>(JSInteropConstants.matchMedia, _descriptionsResponsiveMap[bp]))
+                    {
+                        breakPoint = bp;
+                    }
+                });
+                if (string.IsNullOrWhiteSpace(breakPoint)) breakPoint = BreakpointEnum.xxl.ToString();
+                _realColumn = Column.AsT1.ContainsKey(breakPoint) ? Column.AsT1[breakPoint] : _defaultColumnMap[breakPoint];
+            }
         }
     }
 }
