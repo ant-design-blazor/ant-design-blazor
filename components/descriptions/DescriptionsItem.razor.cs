@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -17,25 +18,13 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-
-        private Descriptions _parent;
-
         [CascadingParameter]
-        internal Descriptions Parent
-        {
-            get
-            {
-                return _parent;
-            }
-            set
-            {
-                if (_parent == null)
-                {
-                    _parent = value;
-                    _parent.AddDescriptionsItem(this);
-                }
-            }
-        }
+        public Descriptions Descriptions { get; set; }
 
+        protected override void OnInitialized()
+        {
+            this.Descriptions?.Items.Add(this);
+            base.OnInitialized();
+        }
     }
 }

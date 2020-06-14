@@ -19,7 +19,6 @@ namespace AntDesign
 
         [Parameter]
         public int Column { get; set; } = 3;//TODO:缺少响应式布局支持
-        //  @Input() @WithConfig(NZ_CONFIG_COMPONENT_NAME) nzColumn: number | { [key in NzBreakpointEnum]: number} = defaultColumnMap;
 
         [Parameter]
         public string Size { get; set; }
@@ -35,7 +34,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        internal List<IDescriptionsItem> _items = new List<IDescriptionsItem>();
+        public IList<IDescriptionsItem> Items { get; } = new List<IDescriptionsItem>();
 
         private List<List<IDescriptionsItem>> _itemMatrix = new List<List<IDescriptionsItem>>();
 
@@ -49,13 +48,8 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            base.OnInitialized();
             SetClassMap();
-        }
-
-        public void AddDescriptionsItem(IDescriptionsItem item)
-        {
-            _items.Add(item);
+            base.OnInitialized();
         }
 
         protected override Task OnFirstAfterRenderAsync()
@@ -80,22 +74,22 @@ namespace AntDesign
             var width = 0;
             var column = this.Column;
 
-            for (int i = 0; i < this._items.Count; i++)
+            for (int i = 0; i < this.Items.Count; i++)
             {
-                var item = this._items[i];
+                var item = this.Items[i];
                 width += item.Span;
 
                 if (width >= column)
                 {
                     if (width > column)
                     {
-                        Console.WriteLine(@$"""nzColumn"" is {column} but we have row length ${width}");
+                        Console.WriteLine(@$"""Column"" is {column} but we have row length ${width}");
                     }
                     item.Span = column - (width - item.Span);
                     currentRow.Add(item);
                     FlushRow();
                 }
-                else if (i == this._items.Count - 1)
+                else if (i == this.Items.Count - 1)
                 {
                     item.Span = column - (width - item.Span);
                     currentRow.Add(item);
