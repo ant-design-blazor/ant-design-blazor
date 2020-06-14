@@ -190,6 +190,11 @@
             "url": "components/calendar"
           },
           {
+            "title": "Descriptions",
+            "type": "menuItem",
+            "url": "components/descriptions"
+          },
+          {
             "title": "Empty",
             "type": "menuItem",
             "url": "components/empty"

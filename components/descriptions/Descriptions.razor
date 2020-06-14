@@ -1,0 +1,88 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
+
+<div class="@ClassMapper.Class" style="@Style" id="@Id">
+
+
+    @if (Title.Value != null)
+    {
+
+        <div class="ant-descriptions-title">
+            @if (Title.IsT0)
+            {
+                @Title.AsT0
+            }
+            else
+            {
+                @Title.AsT1
+            }
+        </div>
+    }
+
+    @foreach (var item in this._items)
+    {
+        <Spin>@item.Title</Spin>
+        <p>@item.Content</p>
+        <hr />
+
+    }
+
+    @*<div class="ant-descriptions-view">
+            <table>
+                <tbody>
+                    @if (Layout == AntDirectionVHType.Horizontal)
+                    {
+                        foreach (var row in this._itemMatrix)
+                        {
+                            <tr class="ant-descriptions-row" *ngFor="let row of itemMatrix; let i = index">
+                                @foreach (var item in row)
+                                {
+
+                                    if (Bordered == false)
+                                    {
+
+                                        <td class="ant-descriptions-item" colspan="@item.Span">
+                                            <span class="ant-descriptions-item-label @(Colon?"ant-descriptions-item-colon":null)">
+                                                @if (item.Title.IsT0)
+                                                {
+                                                    @item.Title.AsT0
+                                                }
+                                                else
+                                                {
+                                                    @item.Title.AsT1
+                                                }
+                                            </span>
+                                            <span class="ant-descriptions-item-content">
+                                                @item.Content
+                                            </span>
+                                        </td>
+
+                                    }
+                                    else
+                                    {
+
+                                        <td class="ant-descriptions-item-label">
+                                            @if (item.Title.IsT0)
+                                            {
+                                                @item.Title.AsT0
+                                            }
+                                            else
+                                            {
+                                                @item.Title.AsT1
+                                            }
+                                        </td>
+                                        <td class="ant-descriptions-item-content" colspan="@item.Span* 2 - 1">
+                                            @item.Content
+                                        </td>
+                                    }
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>*@
+</div>
