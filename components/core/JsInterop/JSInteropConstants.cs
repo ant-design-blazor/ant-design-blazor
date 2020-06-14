@@ -54,5 +54,9 @@ namespace AntDesign
         public static string enableDrawerBodyScroll => $"{FUNC_PREFIX}enableDrawerBodyScroll";
 
         public static string CreateIconFromfontCN => $"{FUNC_PREFIX}createIconFromfontCN";
+
+        public static string getScroll => $"{FUNC_PREFIX}getScroll";
+
+        public static string getInnerText => $"{FUNC_PREFIX}getInnerText";
     }
 }
