@@ -304,3 +304,12 @@ export function createIconFromfontCN(scriptUrl) {
   script.setAttribute('data-namespace', scriptUrl);
   document.body.appendChild(script);
 }
+
+export function getScroll() {
+    return { x: window.pageXOffset, y: window.pageYOffset };
+}
+
+export function getInnerText(element) {
+    let dom = getDom(element);
+    return dom.innerText;
+}
