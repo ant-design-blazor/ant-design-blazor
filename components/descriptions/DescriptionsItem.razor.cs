@@ -12,10 +12,10 @@ namespace AntDesign
         public OneOf<string, RenderFragment> Title { get; set; } = "";
 
         [Parameter]
-        public int Span { get; set; }
+        public int Span { get; set; } = 1;
 
         [Parameter]
-        public RenderFragment Content { get; set; }
+        public RenderFragment ChildContent { get; set; }
 
 
         private Descriptions _parent;

@@ -15,6 +15,6 @@ namespace AntDesign
         int Span { get; set; }
 
         [Parameter]
-        RenderFragment Content { get; set; }
+        RenderFragment ChildContent { get; set; }
     }
 }
