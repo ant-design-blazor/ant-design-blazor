@@ -1,18 +1,16 @@
-﻿@inject ILanguageService LanguageService;
-
-<RadioGroup @bind-Value="@datePickerSize">
+﻿<RadioGroup @bind-Value="@datePickerSize">
     <Radio RadioButton Value="@DatePickerSize.Large">Large</Radio>
     <Radio RadioButton Value="@DatePickerSize.Default">Default</Radio>
     <Radio RadioButton Value="@DatePickerSize.Small">Small</Radio>
 </RadioGroup>
 <br />
-<DatePicker Size="@datePickerSize"  CultureInfo="LanguageService.CurrentCulture" />
+<DatePicker Size="@datePickerSize"   />
 <br />
-<DatePicker Picker="@DatePickerType.Month" Size="@datePickerSize"  CultureInfo="LanguageService.CurrentCulture"/>
+<DatePicker Picker="@DatePickerType.Month" Size="@datePickerSize"  />
 <br />
-<RangePicker Size="@datePickerSize"  CultureInfo="LanguageService.CurrentCulture"/>
+<RangePicker Size="@datePickerSize"  />
 <br />
-<DatePicker Picker="@DatePickerType.Week" Size="@datePickerSize"  CultureInfo="LanguageService.CurrentCulture"/>
+<DatePicker Picker="@DatePickerType.Week" Size="@datePickerSize"  />
 
 @code {
     private string datePickerSize = DatePickerSize.Default;

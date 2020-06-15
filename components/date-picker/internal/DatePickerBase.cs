@@ -51,11 +51,14 @@ namespace AntDesign
         public bool ShowToday { get; set; } = true;
 
 
-        private CultureInfo _cultureInfo = CultureInfo.CurrentCulture;
+        private CultureInfo? _cultureInfo;
         [Parameter]
         public CultureInfo CultureInfo
         {
-            get => this._cultureInfo;
+            get
+            {
+                return this._cultureInfo ?? CultureInfo.CurrentCulture;
+            }
             set
             {
                 _cultureInfo = value;
@@ -267,6 +270,8 @@ namespace AntDesign
             {
                 Picker = DatePickerType.Date;
             }
+
+            // Debug.WriteLine(System.Globalization.CultureInfo.CurrentCulture.Name);
 
             this.SetClass();
 

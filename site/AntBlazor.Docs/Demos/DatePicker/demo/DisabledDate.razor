@@ -1,21 +1,19 @@
-﻿@inject ILanguageService LanguageService
-
-<DatePicker ShowTime="@true"
+﻿<DatePicker ShowTime="@true"
                DefaultValue="new DateTime(2020, 05, 11, 0, 0, 0)"
                Format="yyyy-MM-dd HH:mm:ss"
                DisabledDate="date => date <= DateTime.Now"
                DisabledTime="date => GetDisabledTime(date)" 
-               CultureInfo="LanguageService.CurrentCulture"/>
+               />
 <br />
 <DatePicker Picker="@DatePickerType.Month"
                DisabledDate="date => date <= DateTime.Now"
-                CultureInfo="LanguageService.CurrentCulture"/>
+                />
 <br />
-<RangePicker DisabledDate="date => date <= DateTime.Now" CultureInfo="LanguageService.CurrentCulture" />
+<RangePicker DisabledDate="date => date <= DateTime.Now"/>
 <br />
 <RangePicker ShowTime='@true'
                 DisabledDate="date => date <= DateTime.Now" 
-                CultureInfo="LanguageService.CurrentCulture"/>
+                />
 
 @code {
     private DatePickerDisabledTime GetDisabledTime(DateTime date)

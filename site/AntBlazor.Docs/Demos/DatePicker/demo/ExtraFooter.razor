@@ -1,14 +1,12 @@
-﻿@inject ILanguageService LanguageService;
-
-<DatePicker RenderExtraFooter="extraFooter" CultureInfo="LanguageService.CurrentCulture"/>
+﻿<DatePicker RenderExtraFooter="extraFooter"/>
 <br />
-<DatePicker ShowTime="@true" RenderExtraFooter="extraFooter" CultureInfo="LanguageService.CurrentCulture"/>
+<DatePicker ShowTime="@true" RenderExtraFooter="extraFooter"/>
 <br />
 <RangePicker RenderExtraFooter="extraFooter" />
 <br />
-<RangePicker ShowTime="@true" RenderExtraFooter="extraFooter" CultureInfo="LanguageService.CurrentCulture"/>
+<RangePicker ShowTime="@true" RenderExtraFooter="extraFooter"/>
 <br />
-<DatePicker Picker="@DatePickerType.Month" RenderExtraFooter="extraFooter" CultureInfo="LanguageService.CurrentCulture"/>
+<DatePicker Picker="@DatePickerType.Month" RenderExtraFooter="extraFooter"/>
 
 @code {
     private RenderFragment extraFooter =@<span>extra footer</span>;
