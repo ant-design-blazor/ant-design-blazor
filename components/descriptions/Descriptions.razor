@@ -1,0 +1,149 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
+
+<div class="@ClassMapper.Class" style="@Style" id="@Id">
+
+
+    @if (Title.Value != null)
+    {
+
+        <div class="ant-descriptions-title">
+            @if (Title.IsT0)
+            {
+                @Title.AsT0
+            }
+            else
+            {
+                @Title.AsT1
+            }
+        </div>
+    }
+
+    <div class="ant-descriptions-view">
+        <table>
+            <tbody>
+                @if (Layout == DescriptionsLayout.Horizontal)
+                {
+                    foreach (var row in this._itemMatrix)
+                    {
+                        <tr class="ant-descriptions-row">
+                            @foreach (var item in row)
+                            {
+
+                                if (Bordered == false)
+                                {
+                                    <!-- Horizontal & NOT Bordered -->
+                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
+                                        <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-colon" : null)">
+                                            @if (item.item.Title.IsT0)
+                                            {
+                                                @item.item.Title.AsT0
+                                            }
+                                            else
+                                            {
+                                                @item.item.Title.AsT1
+                                            }
+                                        </span>
+                                        <span class="ant-descriptions-item-content">
+                                            @item.item.ChildContent
+                                        </span>
+                                    </td>
+
+                                }
+                                else
+                                {
+                                    <!-- Horizontal & Bordered -->
+                                    <td class="ant-descriptions-item-label">
+                                        @if (item.item.Title.IsT0)
+                                        {
+                                            @item.item.Title.AsT0
+                                        }
+                                        else
+                                        {
+                                            @item.item.Title.AsT1
+                                        }
+                                    </td>
+                                    <td class="ant-descriptions-item-content" colspan="@item.realSpan * 2 - 1">
+                                        @item.item.ChildContent
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                }
+
+                else if (Layout == DescriptionsLayout.Vertical)
+                {
+                    if (Bordered == false)
+                    {
+                        <!-- Vertical & NOT Bordered -->
+                        foreach (var row in this._itemMatrix)
+                        {
+                            <tr class="ant-descriptions-row">
+                                @foreach (var item in row)
+                                {
+                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
+                                        <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-colon" : null)">
+                                            @if (item.item.Title.IsT0)
+                                            {
+                                                @item.item.Title.AsT0
+                                            }
+                                            else
+                                            {
+                                                @item.item.Title.AsT1
+                                            }
+                                        </span>
+                                    </td>
+                                }
+                            </tr>
+                            <tr class="ant-descriptions-row">
+                                @foreach (var item in row)
+                                {
+                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
+                                        <span class="ant-descriptions-item-content">
+                                            @item.item.ChildContent
+                                        </span>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <!-- Vertical & Bordered -->
+                        foreach (var row in this._itemMatrix)
+                        {
+                            <tr class="ant-descriptions-row">
+                                @foreach (var item in row)
+                                {
+                                    <td class="ant-descriptions-item-label" colspan="@item.realSpan">
+                                        @if (item.item.Title.IsT0)
+                                        {
+                                            @item.item.Title.AsT0
+                                        }
+                                        else
+                                        {
+                                            @item.item.Title.AsT1
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                            <tr class="ant-descriptions-row">
+                                @foreach (var item in row)
+                                {
+                                    <td class="ant-descriptions-item-content" colspan="@item.realSpan">
+                                        @item.item.ChildContent
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

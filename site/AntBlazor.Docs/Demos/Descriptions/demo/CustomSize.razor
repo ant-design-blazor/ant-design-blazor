@@ -1,0 +1,35 @@
+﻿<RadioGroup @bind-Value="@size">
+    <Radio Value="default">default</Radio>
+    <Radio Value="middle">middle</Radio>
+    <Radio Value="small">small</Radio>
+</RadioGroup>
+<br />
+<br />
+<Descriptions Title="@("Custom Size")" Bordered Size="@size">
+    <DescriptionsItem Title="@("Product")">
+        Cloud Database
+    </DescriptionsItem>
+    <DescriptionsItem Title="@("Billing")">Prepaid</DescriptionsItem>
+    <DescriptionsItem Title="@("time")">18:00:00</DescriptionsItem>
+    <DescriptionsItem Title="@("Amount")">$80.00</DescriptionsItem>
+    <DescriptionsItem Title="@("Discount")">$20.00</DescriptionsItem>
+    <DescriptionsItem Title="@("Official")">$60.00</DescriptionsItem>
+    <DescriptionsItem Title="@("Config Info")">
+        Data disk type: MongoDB
+        <br />
+        Database version: 3.4
+        <br />
+        Package: dds.mongo.mid
+        <br />
+        Storage space: 10 GB
+        <br />
+        Replication_factor:3
+        <br />
+        Region: East China 1
+        <br />
+    </DescriptionsItem>
+</Descriptions>
+
+@code{
+    private string size = DescriptionsSize.Default;
+}
