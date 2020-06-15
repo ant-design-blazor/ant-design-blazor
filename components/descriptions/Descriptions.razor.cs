@@ -77,7 +77,6 @@ namespace AntDesign
         protected override async Task OnInitializedAsync()
         {
             SetClassMap();
-            await SetRealColumn();
 
             if (Column.IsT1)
             {
@@ -85,25 +84,28 @@ namespace AntDesign
                 {
                     await this.SetRealColumn();
                     PrepareMatrix();
-                    StateHasChanged();//TODO: BUG 需要彻底重绘组件
+                    await InvokeAsync(StateHasChanged);
                 });
             }
             await base.OnInitializedAsync();
         }
 
-        protected override Task OnFirstAfterRenderAsync()
+        protected override async Task OnFirstAfterRenderAsync()
         {
+            await SetRealColumn();
             PrepareMatrix();
-            StateHasChanged();
-            return base.OnFirstAfterRenderAsync();
+            await InvokeAsync(StateHasChanged);
+            await base.OnFirstAfterRenderAsync();
         }
 
-        protected override Task OnParametersSetAsync()
+        protected override async Task OnParametersSetAsync()
         {
             SetClassMap();
-            StateHasChanged();
-            return base.OnParametersSetAsync();
+            PrepareMatrix();
+            await InvokeAsync(StateHasChanged);
+            await base.OnParametersSetAsync();
         }
+
 
         private void PrepareMatrix()
         {
@@ -137,9 +139,6 @@ namespace AntDesign
                 }
             }
             this._itemMatrix = itemMatrix;
-
-
-            Console.WriteLine($"this._itemMatrix-{this._itemMatrix.Count}");
 
             void FlushRow()
             {
