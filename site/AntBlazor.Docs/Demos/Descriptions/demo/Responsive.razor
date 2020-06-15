@@ -1,0 +1,37 @@
+﻿<Descriptions Title="@("Responsive Descriptions")" Bordered Column="@column">
+    <DescriptionsItem Title="@("Product")">
+        Cloud Database
+    </DescriptionsItem>
+    <DescriptionsItem Title="@("Billing")">Prepaid</DescriptionsItem>
+    <DescriptionsItem Title="@("time")">18:00:00</DescriptionsItem>
+    <DescriptionsItem Title="@("Amount")">$80.00</DescriptionsItem>
+    <DescriptionsItem Title="@("Discount")">$20.00</DescriptionsItem>
+    <DescriptionsItem Title="@("Official")">$60.00</DescriptionsItem>
+    <DescriptionsItem Title="@("Config Info")">
+        Data disk type: MongoDB
+        <br />
+        Database version: 3.4
+        <br />
+        Package: dds.mongo.mid
+        <br />
+        Storage space: 10 GB
+        <br />
+        Replication_factor:3
+        <br />
+        Region: East China 1
+        <br />
+    </DescriptionsItem>
+</Descriptions>
+
+@code{
+
+    private Dictionary<string, int> column = new Dictionary<string, int> {
+            { "xxl", 3 },
+            { "xl", 2},
+            { "lg", 1},
+            { "md", 1},
+            { "sm", 1},
+            { "xs", 1}
+        };
+
+}
