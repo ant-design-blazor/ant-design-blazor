@@ -33,7 +33,7 @@ namespace AntDesign
         [Parameter]
         public bool Colon { get; set; }
 
-        #endregion
+        #endregion Parameters
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -47,7 +47,7 @@ namespace AntDesign
 
         private int _realColumn;
 
-        private Dictionary<string, int> _defaultColumnMap = new Dictionary<string, int> {
+        private readonly Dictionary<string, int> _defaultColumnMap = new Dictionary<string, int> {
             { "xxl", 3 },
             { "xl", 3},
             { "lg", 3},
@@ -56,7 +56,7 @@ namespace AntDesign
             { "xs", 1}
         };
 
-        private static Hashtable _descriptionsResponsiveMap = new Hashtable()
+        private static readonly Hashtable _descriptionsResponsiveMap = new Hashtable()
         {
             [nameof(BreakpointEnum.xs)] = "(max-width: 575px)",
             [nameof(BreakpointEnum.sm)] = "(max-width: 576px)",
@@ -106,7 +106,6 @@ namespace AntDesign
             await base.OnParametersSetAsync();
         }
 
-
         private void PrepareMatrix()
         {
             List<List<(IDescriptionsItem item, int realSpan)>> itemMatrix = new List<List<(IDescriptionsItem item, int realSpan)>>();
@@ -146,7 +145,6 @@ namespace AntDesign
                 currentRow = new List<(IDescriptionsItem item, int realSpan)>();
                 width = 0;
             }
-
         }
 
         private async Task SetRealColumn()
