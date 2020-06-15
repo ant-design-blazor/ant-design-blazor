@@ -9,8 +9,8 @@ namespace AntDesign
     {
         public const string Default = "default";
         public const string Success = "success";
-        public const string Processing = "processing ";
-        public const string Error = "error ";
-        public const string Warning = "warning ";
+        public const string Processing = "processing";
+        public const string Error = "error";
+        public const string Warning = "warning";
     }
 }
