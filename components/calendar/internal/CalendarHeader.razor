@@ -6,63 +6,61 @@
      style="@Style"
      id="@Id"
      @ref="@Ref">
-    <select class="@(PrefixCls)-year-select" 
-            @onchange="async e => await OnSelectYear(e)">
-        @{
-            int startYear = Calendar.Value.AddYears(-10).Year;
-            int endYear = Calendar.Value.AddYears(10).Year;
+    @{
+        int startYear = Calendar.Value.AddYears(-10).Year;
+        int endYear = Calendar.Value.AddYears(10).Year;
 
-            if (Calendar.ValidRange != null)
-            {
-                startYear = Calendar.ValidRange[0].Year;
-                endYear = Calendar.ValidRange[1].Year;
-            }
+        if (Calendar.ValidRange != null)
+        {
+            startYear = Calendar.ValidRange[0].Year;
+            endYear = Calendar.ValidRange[1].Year;
         }
+
+        string yearFormat = Calendar.CultureInfo.GetDateLocale().YearFormat;
+    }
+    <Select class=@($"{PrefixCls}-year-select") 
+            DefaultValue=@($"{Calendar.Value.Year}") 
+            OnChange="async (value, option) => await OnSelectYear(value.AsT0)">
         @for (int year = startYear; year <= endYear; year++)
         {
-            if (year == Calendar.Value.Year)
-            {
-                <option class=@($"ant-select-item") selected="selected" value="@year">@(year)年</option>
-            }
-            else
-            {
-                <option class=@($"ant-select-item") value="@year">@(year)年</option>
-            }
+            DateTime yearDate = new DateTime(year, 1, 1);
+            <SelectOption @key="@yearDate.Year" Value=@($"{yearDate.Year}")>
+                @(yearDate.ToString(yearFormat, Calendar.CultureInfo))
+            </SelectOption>
         }
-    </select>
+    </Select>
+
     @if (Calendar.Mode == DatePickerType.Month)
     {
-        <select class="@(PrefixCls)-month-select" @onchange="async e => await OnSelectMonth(e)">
-        @{
-            int startMonth = 1;
-            int endMonth = 12;
+        int startMonth = 1;
+        int endMonth = 12;
 
-            if (Calendar.ValidRange != null)
-            {
-                startMonth = Calendar.Value.Year == Calendar.ValidRange[0].Year ? Calendar.ValidRange[0].Month : startMonth;
-                endMonth = Calendar.Value.Year == Calendar.ValidRange[1].Year ? Calendar.ValidRange[1].Month : endMonth;
-            }
-
-        }
-        @for (int month = startMonth; month <= endMonth; month++)
+        if (Calendar.ValidRange != null)
         {
-            if (month == Calendar.Value.Month)
-            {
-                <option class=@($"ant-select-item") selected="selected" value="@month">@(month)月</option>
-            }
-            else
-            {
-                <option class=@($"ant-select-item") value="@month">@(month)月</option>
-            }
+            startMonth = Calendar.Value.Year == Calendar.ValidRange[0].Year ? Calendar.ValidRange[0].Month : startMonth;
+            endMonth = Calendar.Value.Year == Calendar.ValidRange[1].Year ? Calendar.ValidRange[1].Month : endMonth;
         }
-        </select>
+
+        string monthFormat = Calendar.CultureInfo.GetDateLocale().MonthFormat;
+
+        <Select class=@($"{PrefixCls}-month-select") 
+                DefaultValue=@($"{Calendar.Value.Month}") 
+                OnChange="async (value, option) => await OnSelectMonth(value.AsT0)">
+            @for (int month = startMonth; month <= endMonth; month++)
+            {
+                DateTime monthDate = new DateTime(1, month, 1);
+                <SelectOption @key="@monthDate.Month" Value=@($"{monthDate.Month}")>
+                    @(monthDate.ToString(monthFormat, Calendar.CultureInfo))
+                </SelectOption>
+            }
+        </Select>
     }
     
     <RadioGroup class="@($"{PrefixCls}-mode-switch")"
                    Value="@Calendar.Mode"
                    OnChange="OnModeChange">
-      <Radio RadioButton Value="@DatePickerType.Month">月</Radio>
-      <Radio RadioButton Value="@DatePickerType.Year">年</Radio>
+        <Radio RadioButton Value="@DatePickerType.Month">@(Calendar.CultureInfo.GetDateLocale().Month)</Radio>
+        <Radio RadioButton Value="@DatePickerType.Year">@(Calendar.CultureInfo.GetDateLocale().Year)</Radio>
     </RadioGroup>
 </div>
 
@@ -89,15 +87,16 @@
         Calendar.ChangePickerType(value);
     }
 
-    private async Task OnSelectYear(ChangeEventArgs args)
+    private async Task OnSelectYear(string value)
     {
-        int year = Convert.ToInt32(args.Value);
+        Console.WriteLine($"value:{value}");
+        int year = Convert.ToInt32(value);
         await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, year: year));
     }
 
-    private async Task OnSelectMonth(ChangeEventArgs args)
+    private async Task OnSelectMonth(string value)
     {
-        int month = Convert.ToInt32(args.Value);
+        int month = Convert.ToInt32(value);
         await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, month: month));
     }
 }
