@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -152,5 +154,7 @@ namespace AntDesign
         }
 
         public string Picker { get { return _picker; } }
+
+        public CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
     }
 }
