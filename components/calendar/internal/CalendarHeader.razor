@@ -92,7 +92,6 @@
 
     private async Task OnSelectYear(string value)
     {
-        Console.WriteLine($"value:{value}");
         int year = Convert.ToInt32(value);
         await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, year: year));
     }
