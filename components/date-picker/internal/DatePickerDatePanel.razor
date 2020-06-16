@@ -30,7 +30,7 @@
                            IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                            IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
                            IsSelected="date => !IsWeek && DateHelper.IsSameDay(date, Value)"
-                           GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().DateFormat)'
+                           GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().DateFormat, this.DatePicker.CultureInfo)'
                            OnRowSelect="OnRowSelect"
                            OnValueSelect="OnValueSelect"
                            GetNextColValue="date => date.AddDays(1)">
