@@ -1,4 +1,6 @@
-﻿<DatePicker Picker="@DatePickerType.Date" />
+﻿@inject ILanguageService LS;
+
+<DatePicker Picker="@DatePickerType.Date" />
 <br />
 <DatePicker Picker="@DatePickerType.Week" />
 <br />
@@ -6,5 +8,5 @@
 <br />
 <DatePicker Picker="@DatePickerType.Quarter" />
 <br />
-<DatePicker Picker="@DatePickerType.Year" />
+<DatePicker Picker="@DatePickerType.Year"/>
 <br />

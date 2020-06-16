@@ -24,7 +24,7 @@
                         IsInView="date => yearIndex != FIRST_YEAR_INDEX && yearIndex != LAST_YEAR_INDEX"
                         IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
                         IsSelected="date => DateHelper.IsSameYear(date, Value)"
-                        GetColTitle='date => date.ToString("yyyy")'
+                        GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo)'
                         OnValueSelect="date => OnSelectYear(date)"
                         GetNextColValue="date => date.AddYears(1)">
         <RenderPickerHeader>
