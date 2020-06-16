@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -15,10 +14,12 @@ namespace AntDesign
         private readonly HttpClient _httpClient;
         private IJSRuntime _js;
 
+        private Uri _baseAddress;
+
         public IconService(HttpClient httpClient, NavigationManager navigationManager, IJSRuntime js)
         {
-            if (httpClient != null && navigationManager != null)
-                httpClient.BaseAddress = new Uri(navigationManager.BaseUri);
+            if (navigationManager != null)
+                _baseAddress = new Uri(navigationManager.BaseUri);
 
             _httpClient = httpClient;
             _js = js;
@@ -33,7 +34,7 @@ namespace AntDesign
             }
             else
             {
-                var res = await _httpClient.GetAsync($"_content/AntDesign/icons/{theme}/{type}.svg");
+                var res = await _httpClient.GetAsync(new Uri(_baseAddress, $"_content/AntDesign/icons/{theme}/{type}.svg"));
                 if (res.IsSuccessStatusCode)
                 {
                     iconImg = await res.Content.ReadAsStringAsync();
