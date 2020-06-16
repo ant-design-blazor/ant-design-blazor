@@ -4,7 +4,7 @@
 
 <div class="ant-table-wrapper">
     <Spin Spinning="Loading">
-        @if (ShowPagination && PaginationPosition.Contains("top"))
+        @if (!HidePagination && PaginationPosition.Contains("top"))
         {
             <Pagination Class="@PaginationClass"
                         Total="Total"
@@ -58,7 +58,7 @@
                 </div>
             </div>
         </CascadingValue>
-        @if (ShowPagination && PaginationPosition.Contains("bottom"))
+        @if (!HidePagination && PaginationPosition.Contains("bottom"))
         {
             <Pagination Class="@PaginationClass"
                         Total="Total"
