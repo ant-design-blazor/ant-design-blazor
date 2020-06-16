@@ -47,7 +47,8 @@ namespace AntDesign
 
         private int _realColumn;
 
-        private readonly Dictionary<string, int> _defaultColumnMap = new Dictionary<string, int> {
+        private readonly Dictionary<string, int> _defaultColumnMap = new Dictionary<string, int>
+        {
             { "xxl", 3 },
             { "xl", 3},
             { "lg", 3},
