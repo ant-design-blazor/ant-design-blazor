@@ -18,7 +18,8 @@
 
         string yearFormat = Calendar.CultureInfo.GetDateLocale().YearFormat;
     }
-    <Select class=@($"{PrefixCls}-year-select") 
+    <Select class=@($"{PrefixCls}-year-select")
+            Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
             DefaultValue=@($"{Calendar.Value.Year}") 
             OnChange="async (value, option) => await OnSelectYear(value.AsT0)">
         @for (int year = startYear; year <= endYear; year++)
@@ -43,7 +44,8 @@
 
         string monthFormat = Calendar.CultureInfo.GetDateLocale().MonthFormat;
 
-        <Select class=@($"{PrefixCls}-month-select") 
+        <Select class=@($"{PrefixCls}-month-select")
+                Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
                 DefaultValue=@($"{Calendar.Value.Month}") 
                 OnChange="async (value, option) => await OnSelectMonth(value.AsT0)">
             @for (int month = startMonth; month <= endMonth; month++)
@@ -56,9 +58,10 @@
         </Select>
     }
     
-    <RadioGroup class="@($"{PrefixCls}-mode-switch")"
-                   Value="@Calendar.Mode"
-                   OnChange="OnModeChange">
+    <RadioGroup class=@($"{PrefixCls}-mode-switch")
+                Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
+                Value="@Calendar.Mode"
+                OnChange="OnModeChange">
         <Radio RadioButton Value="@DatePickerType.Month">@(Calendar.CultureInfo.GetDateLocale().Month)</Radio>
         <Radio RadioButton Value="@DatePickerType.Year">@(Calendar.CultureInfo.GetDateLocale().Year)</Radio>
     </RadioGroup>
