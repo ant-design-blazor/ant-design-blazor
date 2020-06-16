@@ -10,7 +10,7 @@ namespace AntDesign
     public partial class Table<TItem>
     {
         [Parameter]
-        public bool ShowPagination { get; set; } = true;
+        public bool HidePagination { get; set; }
 
         /// <summary>
         /// topLeft | topCenter | topRight |bottomLeft | bottomCenter | bottomRight
