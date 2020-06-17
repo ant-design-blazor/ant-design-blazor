@@ -1,0 +1,35 @@
+<div>
+    <Collapse 
+        DefaultActiveKey="@(new[]{"1"})" 
+        OnChange="Callback"
+        ExpandIconPosition="@expandIconPosition"
+        >
+        <Panel Header=@("This is panel header 1") Key="1" Extra="@extra">
+            <div>@text</div>
+        </Panel>
+        <Panel Header=@("This is panel header 2") Key="2" Extra="@extra">
+            <div>@text</div>
+        </Panel>
+        <Panel Header=@("This is panel header 3") Key="3" Extra="@extra">
+            <div>@text</div>
+        </Panel>
+    </Collapse>
+</div>
+@code{
+
+    string text = @"
+A dog is a type of domesticated animal.
+Known for its loyalty and faithfulness,
+it can be found as a welcome guest in many households across the world.
+";
+
+    RenderFragment extra =@<div @onclick:stopPropagation><Icon Type="setting"></Icon></div>;
+
+    string expandIconPosition = "left";
+
+    void Callback(string[] key)
+    {
+        Console.WriteLine(key);
+    }
+}
+

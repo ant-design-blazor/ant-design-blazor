@@ -1,0 +1,41 @@
+<Collapse
+    Bordered="false"
+    DefaultActiveKey="@(new[]{"1"})" 
+    ExpandIcon="expandIcon"
+    Class="site-collapse-custom-collapse">
+    <Panel Header=@("This is panel header 1") Key="1"
+           Class="site-collapse-custom-panel">
+        <p>@text</p>
+    </Panel>
+    <Panel Header=@("This is panel header 2") Key="2"
+           Class="site-collapse-custom-panel">
+        <p>@text</p>
+    </Panel>
+    <Panel Header=@("This is panel header 3") Key="3" 
+           Class="site-collapse-custom-panel">
+        <p>@text</p>
+    </Panel>
+</Collapse>
+
+@code{
+
+    string text = @"
+A dog is a type of domesticated animal.
+Known for its loyalty and faithfulness,
+it can be found as a welcome guest in many households across the world.
+";
+
+    RenderFragment<bool> expandIcon = isActive => @<Icon Type="caret-right" Rotate="@(isActive ? 90 : 0)"></Icon>;
+
+}
+
+<style>
+    [data-theme='compact'] .site-collapse-custom-collapse .site-collapse-custom-panel,
+    .site-collapse-custom-collapse .site-collapse-custom-panel {
+        background: #f7f7f7;
+        border-radius: 2px;
+        margin-bottom: 24px;
+        border: 0px;
+        overflow: hidden;
+    }
+</style>

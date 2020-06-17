@@ -1,0 +1,22 @@
+﻿<Collapse DefaultActiveKey="@(new[]{"1"})" OnChange="Callback">
+    <Panel Header=@("This is panel header with arrow icon") Key="1">
+        <p>@text</p>
+    </Panel>
+    <Panel ShowArrow="false" Header=@("This is panel header with no arrow icon") Key="2">
+        <p>@text</p>
+    </Panel>
+</Collapse>
+
+@code{
+
+    string text = @"
+A dog is a type of domesticated animal.
+Known for its loyalty and faithfulness,
+it can be found as a welcome guest in many households across the world.
+";
+
+    void Callback(string[] key)
+    {
+        Console.WriteLine(key);
+    }
+}
