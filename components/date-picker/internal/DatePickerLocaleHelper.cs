@@ -40,6 +40,8 @@ namespace AntDesign
         /// The start day of week should be either Monday or Sunday according to the CultureInfo
         /// </summary>
         string[] ShortWeekDays { get; }
+        string Year { get; }
+        string Month { get; }
         string Today { get; }
         bool MonthBeforeYear { get; }
         string YearFormat { get; }
@@ -67,6 +69,8 @@ namespace AntDesign
         private string _locale = "en-US";
         public string DateFormat => "yyyy-MM-dd";
         public string[] ShortWeekDays => new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
+        public string Year => "Year";
+        public string Month => "Month";
         public string Today => "Today";
         public bool MonthBeforeYear => true;
         public string YearFormat => "yyyy";
@@ -95,6 +99,8 @@ namespace AntDesign
         private string _locale = "zh-CN";
         public string DateFormat => "yyyy年M月d日";
         public string[] ShortWeekDays => new string[] { "一", "二", "三", "四", "五", "六", "日" };
+        public string Year => "年";
+        public string Month => "月";
         public string Today => "今天";
         public bool MonthBeforeYear => false;
         public string YearFormat => "yyyy年";
