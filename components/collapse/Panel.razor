@@ -1,0 +1,46 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style" id="@Id">
+    <div class="ant-collapse-header" @onclick="OnClickHeader">
+        @if (ShowArrow)
+        {
+            @if (Collapse.ExpandIcon.IsT0 && Collapse.ExpandIcon.AsT0)
+            {
+                <Icon Type="right" Theme="outline" Class="ant-collapse-arrow" Rotate="@(Active ? 90 : 0)" />
+            }
+            else if (Collapse.ExpandIcon.AsT1 != null)
+            {
+                @Collapse.ExpandIcon.AsT1(Active)
+            }
+        }
+
+        @if (Header.IsT0)
+        {
+            @Header.AsT0
+        }
+        else
+        {
+            @Header.AsT1
+        }
+
+        @if (Extra.Value != null)
+        {
+            <div class="ant-collapse-extra">
+                @if (Extra.IsT0)
+                {
+                    @Extra.AsT0
+                }
+                else
+                {
+                    @Extra.AsT1
+                }
+            </div>
+        }
+    </div>
+    <div class="ant-collapse-content @(Active?"":"ant-collapse-content-inactive")">
+        <div class="ant-collapse-content-box">
+            @ChildContent
+        </div>
+    </div>
+</div>
