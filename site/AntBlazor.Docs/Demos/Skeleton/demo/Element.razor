@@ -1,0 +1,78 @@
+﻿<Row Align="middle" Gutter="8">
+    <Col Span="5">
+    ButtonActive:
+    <Switch @bind-Value="@_buttonActive"></Switch>
+    </Col>
+    <Col Span="9">
+    ButtonSize:
+    <RadioGroup @bind-Value="@_buttonSize">
+        <Radio Value="default">Default</Radio>
+        <Radio Value="large">Large</Radio>
+        <Radio Value="small">Small</Radio>
+    </RadioGroup>
+    </Col>
+    <Col Span="9">
+    ButtonShape:
+    <RadioGroup @bind-Value="@_buttonShape">
+        <Radio Value="default">Default</Radio>
+        <Radio Value="circle">Circle</Radio>
+        <Radio Value="round">Round</Radio>
+    </RadioGroup>
+    </Col>
+</Row>
+<br />
+<SkeletonElement Type="button" Active="@_buttonActive" Size="@_buttonSize" Shape="@_buttonShape"></SkeletonElement>
+<br />
+<br />
+<Row Align="middle" Gutter="8">
+    <Col Span="5">
+    AvatarActive:
+    <Switch @bind-Value="@_avatarActive"></Switch>
+    </Col>
+    <Col Span="9">
+    AvatarSize:
+    <RadioGroup @bind-Value="@_avatarSize">
+        <Radio Value="default">Default</Radio>
+        <Radio Value="large">Large</Radio>
+        <Radio Value="small">Small</Radio>
+    </RadioGroup>
+    </Col>
+    <Col Span="9">
+    AvatarShape:
+    <RadioGroup @bind-Value="@_avatarShape">
+        <Radio Value="circle">Circle</Radio>
+        <Radio Value="square">Square</Radio>
+    </RadioGroup>
+    </Col>
+</Row>
+<br />
+<SkeletonElement Type="avatar" Active="@_avatarActive" Size="@_avatarSize" Shape="@_avatarShape"></SkeletonElement>
+<br />
+<br />
+<Row Align="middle" Gutter="8">
+    <Col Span="5">
+    InputActive:
+    <Switch @bind-Value="@_inputActive"></Switch>
+    </Col>
+    <Col Span="9">
+    InputSize:
+    <RadioGroup @bind-Value="@_inputSize">
+        <Radio Value="default">Default</Radio>
+        <Radio Value="large">Large</Radio>
+        <Radio Value="small">Small</Radio>
+    </RadioGroup>
+    </Col>
+</Row>
+<br />
+<SkeletonElement Type="input" Active="@_inputActive" Size="@_inputSize" style="width:300px"></SkeletonElement>
+
+@code{
+    bool _buttonActive = false;
+    bool _avatarActive = false;
+    bool _inputActive = false;
+    string _buttonSize = SkeletonElementSize.Default;
+    string _avatarSize = SkeletonElementSize.Default;
+    string _inputSize = SkeletonElementSize.Default;
+    string _buttonShape = SkeletonButtonShape.Default;
+    string _avatarShape = SkeletonAvatarShape.Circle;
+}

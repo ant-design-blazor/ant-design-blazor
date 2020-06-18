@@ -1,0 +1,42 @@
+﻿<Switch Checked="@_loading" @bind-Value="@_loading"></Switch>
+
+<AntList DataSource="@_listData">
+    <Item Context="item">
+        <Skeleton Loading="@_loading" Active="true" Avatar="true">
+            <AntListItemMeta Avatar="@item.Avatar" Description="@item.Description">
+                <Title>
+                    <a href="@item.Href">@item.Title</a>
+                </Title>
+            </AntListItemMeta>
+            @item.Content
+        </Skeleton>
+    </Item>
+</AntList>
+
+@code{
+    bool _loading = true;
+
+    List<DataItem> _listData = new List<int>() { 1, 2, 3 }.Select(x => new DataItem()
+    {
+
+        Href = "http://ng.ant.design",
+        Title = $"ant design part {x}",
+        Avatar = "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+        Description = "Ant Design, a design language for background applications, is refined by Ant UED Team.",
+        Content =
+                  "We supply a series of design principles, practical patterns and high quality design resources " +
+                  "(Sketch and Axure), to help people create their product prototypes beautifully and efficiently."
+    }).ToList();
+
+
+    private class DataItem
+    {
+        public string Href { get; set; }
+        public string Title { get; set; }
+        public string Avatar { get; set; }
+        public string Description { get; set; }
+        public string Content { get; set; }
+
+    }
+}
+
