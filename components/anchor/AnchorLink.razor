@@ -1,0 +1,13 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
+
+<div class="ant-anchor-link">
+    <a title="@Title" class="ant-anchor-link-title" href="@Href">@Title</a>
+    <CascadingValue Value="this">
+        @ChildContent
+    </CascadingValue>
+</div>

@@ -317,6 +317,11 @@
         "type": "itemGroup",
         "children": [
           {
+            "title": "Anchor",
+            "type": "menuItem",
+            "url": "components/anchor"
+          },
+          {
             "title": "Divider",
             "type": "menuItem",
             "url": "components/divider"
