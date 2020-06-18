@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace AntDesign
             get => _parent;
             set
             {
+                Debug.WriteLine($"link:{Title} {GetHashCode()}\tparent:{value.GetHashCode()}");
                 _parent = value;
                 _parent?.Links.Add(this);
             }
@@ -39,7 +41,7 @@ namespace AntDesign
         /// content of hyperlink
         /// </summary>
         [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Specifies where to display the linked URL
