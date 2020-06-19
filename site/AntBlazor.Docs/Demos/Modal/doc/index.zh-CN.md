@@ -59,6 +59,8 @@ title: Modal
 - `ModalService.Warning`
 - `ModalService.Confirm`
 
+> 请确认已经在 `App.Razor` 中添加了 `<AntContainer />` 组件。
+
 以上均为一个函数，参数为 ConfirmOptions，具体属性如下：
 
 | 参数 | 说明 | 类型 | 默认值 |
