@@ -10,13 +10,14 @@
         {
             @foreach (var selected in selectedRows)
             {
-                <Tag>@selected.Name</Tag>
+                <Tag  Closable OnClose="e=>RemoveSelection(selected.Name)">@selected.Name</Tag>
             }
+            <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Clear</Button>
         }
     </h5>
 
-    <Table DataSource="@data" @bind-SelectedRows="selectedRows" ClientSide>
-        <RowSelection Type="@selectionType" Disabled="@(context.Name=="Disabled User")"/>
+    <Table @ref="table" DataSource="@data" SelectedRows="selectedRows">
+        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name=="Disabled User")"/>
         <Column @bind-Field="@context.Name">
             <a>@context.Name</a>
         </Column>
@@ -27,6 +28,8 @@
 
 
 @code {
+
+    ITable table;
 
     class Column
     {
@@ -67,4 +70,10 @@
 
     IEnumerable<Column> selectedRows;
     string selectionType = "checkbox";
+
+    public void RemoveSelection(string key)
+    {
+        var selected = selectedRows.Where(x => x.Name != key).ToList();
+        table.SetSelection(selected.Select(x => x.Name).ToArray());
+    }
 }

@@ -1,13 +1,14 @@
 ﻿@using System.ComponentModel
 
-<Table DataSource="@forecasts"
+<Table @ref="table"
+       DataSource="@forecasts"
        Total="_total"
        @bind-PageIndex="_pageIndex"
        @bind-PageSize="_pageSize"
        OnPageIndexChange="async e=>await fetchData(e)"
        @bind-SelectedRows="selectedRows">
-    <RowSelection />
-    <Column @bind-Field="@context.Id" />
+    <Selection Key="@(context.Id.ToString())" />
+    <Column @bind-Field="@context.Id"/>
     <Column @bind-Field="@context.Date">
         @context.Date.ToShortDateString()
     </Column>
@@ -21,19 +22,23 @@
 
 <br />
 <h5>selections:</h5>
-@if (selectedRows != null)
+@if (selectedRows != null && selectedRows.Any())
 {
+    <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Clear</Button>
+
     @foreach (var selected in selectedRows)
     {
-        <Tag>@selected.Summary</Tag>
+        <Tag @key="selected.Id" Closable OnClose="e=>RemoveSelection(selected.Id)">@selected.Id - @selected.Summary</Tag>
     }
 }
+
 
 @code {
 
     WeatherForecast[] forecasts;
 
     IEnumerable<WeatherForecast> selectedRows;
+    ITable table;
 
     int _pageIndex = 1;
     int _pageSize = 10;
@@ -81,5 +86,11 @@
             TemperatureC = rng.Next(-20, 55),
             Summary = Summaries[rng.Next(Summaries.Length)]
         }).ToArray());
+    }
+
+    public void RemoveSelection(int id)
+    {
+        var selected = selectedRows.Where(x => x.Id != id).ToList();
+        table.SetSelection(selected.Select(x => x.Id.ToString()).ToArray());
     }
 }

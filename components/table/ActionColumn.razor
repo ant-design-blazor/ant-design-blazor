@@ -1,6 +1,5 @@
-@namespace AntDesign
+﻿@namespace AntDesign
 @inherits ColumnBase
-@typeparam TData
 
 @if (IsPlaceholder)
 {
@@ -16,23 +15,12 @@ else if (IsColGroup)
 else if (IsHeader)
 {
     <th class="@ClassMapper.Class" style="@FixedStyle @Style">
-        @(Title ?? DisplayName ?? FieldName)
+        @(Title)
     </th>
 }
 else
 {
     <td class="@ClassMapper.Class" style="@FixedStyle @Style">
-        @if (CellRender != null)
-        {
-            @CellRender(Field)
-        }
-        else if (ChildContent != null)
-        {
-            @ChildContent
-        }
-        else
-        {
-            @Field
-        }
+        @ChildContent
     </td>
 }
