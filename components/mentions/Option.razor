@@ -1,0 +1,16 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+
+
+
+
+    <div  class="@ClassMapper.Class" @ref="@Ref"
+         @onmouseenter="OnMouseEnter"
+         @onmouseleave="OnMouseLeave"
+         @onclick="OnClick"        
+         id="@Id">
+         @ChildContent
+    </div>
+
+
