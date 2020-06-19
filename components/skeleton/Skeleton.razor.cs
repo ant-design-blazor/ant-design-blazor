@@ -130,11 +130,23 @@ namespace AntDesign
         {
             if (Paragraph == false) return;
 
-            int rows = (!Avatar && Title) ? 3 : 2;
+            int rows;
+            if (ParagraphRows.HasValue)
+            {
+                rows = ParagraphRows.Value - 1;
+            }
+            else if (!Avatar && Title)
+            {
+                rows = 2;
+            }
+            else
+            {
+                rows = 1;
+            }
 
             if (ParagraphWidth.Value == null)
             {
-                _paragraphRowsList = CreateRowsList(3, "61%");
+                _paragraphRowsList = CreateRowsList(rows, "61%");
             }
             else
             {
