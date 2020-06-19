@@ -14,6 +14,8 @@ title: Message
 
 ## API
 
+> 请确认已经在 `App.Razor` 中添加了 `<AntContainer />` 组件。
+
 组件提供了一些静态方法，使用方式和参数如下：
 
 - `MessageService.Success(content, [duration], onClose)`
