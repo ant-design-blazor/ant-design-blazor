@@ -56,6 +56,8 @@ There are five ways to display the information based on the content's nature:
 - `ModalService.Warning`
 - `ModalService.Confirm`
 
+> Please confirm that the `<AntContainer />` component has been added to `App.Razor`.
+
 The items listed above are all functions, expecting a settings object as parameter. The properties of the object are follows:
 
 | CancelText        | Text  of the Cancel button with Modal.confirm                | string                         | Cancel  |

@@ -16,6 +16,8 @@ To display a notification message at any of the four corners of the viewport. Ty
 
 ## API
 
+> Please confirm that the `<AntContainer />` component has been added to `App.Razor`.
+
 - `NotificationService.Open(config:NotificationConfig)`
 - `NotificationService.Info(config:NotificationConfig)`
 - `NotificationService.Success(config:NotificationConfig)`
