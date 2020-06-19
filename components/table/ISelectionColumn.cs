@@ -6,9 +6,13 @@ namespace AntDesign
     {
         public bool Disabled { get; set; }
 
-        public bool Checked { get; set; }
+        internal bool Checked { get; set; }
 
         public void Check(bool @checked);
+
+        public string Key { get; set; }
+
+        public int RowIndex { get; set; }
 
         public IList<ISelectionColumn> RowSelections { get; set; }
     }

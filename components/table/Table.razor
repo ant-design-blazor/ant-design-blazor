@@ -17,7 +17,7 @@
         <CascadingValue Value="@this" TValue="ITable">
             <div class="@ClassMapper.Class">
                 <div class="ant-table-container">
-                    @if (ScrollX != null || ScrollY != null)
+                    @if (ScrollY != null)
                     {
                         <div class="ant-table-header" style="overflow: hidden;">
                             <table style="table-layout: fixed;">
@@ -81,6 +81,10 @@
                         }
                     </CascadingValue>
                 </CascadingValue>
+                @if (table.ScrollY != null)
+                {
+                    <th class="ant-table-cell ant-table-cell-scrollbar"></th>
+                }
             </tr>
         </thead>
     </Template>;
@@ -92,6 +96,10 @@ RenderFragment<Table<TItem>> colGroup = table =>
             @if (_fieldModel != null)
             {
                 @table.ChildContent(Table<TItem>._fieldModel)
+            }
+            @if (table.ScrollY != null)
+            {
+                <col style="width: @(table.ScrollBarWidth)px; min-width: @(table.ScrollBarWidth)px;" />
             }
         </colgroup>
     </CascadingValue>
@@ -112,12 +120,15 @@ RenderFragment<Table<TItem>> body = table =>
     {
         for (int i = 0; i < table.ShowItems.Count(); i++)
         {
+            var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
             var data = table.ShowItems.ElementAt(i);
-            var @checked = table.HeaderSelection?.RowSelections.ElementAtOrDefault(i)?.Checked ?? false;
-            <CascadingValue Value="@table.ColumnContext">
-                <tr class="ant-table-row ant-table-row-level-0 @(@checked ? "ant-table-row-selected" : "")">
-                    @table.ChildContent(data)
-                </tr>
+            var @checked = table._headerSelection?.RowSelections.ElementAtOrDefault(i)?.Checked ?? false;
+            <CascadingValue Value="@rowIndex" Name="RowIndex">
+                <CascadingValue Value="table.ColumnContext">
+                    <tr data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-0 @(@checked ? "ant-table-row-selected" : "")">
+                        @table.ChildContent(data)
+                    </tr>
+                </CascadingValue>
             </CascadingValue>
         }
     }

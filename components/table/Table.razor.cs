@@ -39,22 +39,32 @@ namespace AntDesign
         [Parameter]
         public string ScrollY { get; set; }
 
+        [Parameter]
+        public int ScrollBarWidth { get; set; } = 17;
+
         public ColumnContext ColumnContext { get; set; } = new ColumnContext();
 
-        public ISelectionColumn HeaderSelection { get; set; }
-
         private IEnumerable<TItem> _dataSource;
+        private ISelectionColumn _headerSelection;
 
-        void ITable.OnSelectionChanged(int[] checkedIndex)
+        ISelectionColumn ITable.HeaderSelection
         {
-            var list = new List<TItem>();
-            foreach (var index in checkedIndex)
-            {
-                list.Add(DataSource.ElementAt(index));
-            }
+            get => _headerSelection;
+            set => _headerSelection = value;
+        }
 
-            SelectedRows = list.ToArray();
-            SelectedRowsChanged.InvokeAsync(SelectedRows);
+        void ITable.SelectionChanged(int[] checkedIndex)
+        {
+            if (SelectedRowsChanged.HasDelegate)
+            {
+                var list = new List<TItem>();
+                foreach (var index in checkedIndex)
+                {
+                    list.Add(DataSource.ElementAt(index));
+                }
+
+                SelectedRowsChanged.InvokeAsync(list);
+            }
         }
 
         void ITable.Refresh()
@@ -79,6 +89,36 @@ namespace AntDesign
             base.OnInitialized();
 
             SetClass();
+        }
+
+        private void ChangeSelection(int[] indexes)
+        {
+            if (indexes == null || !indexes.Any())
+            {
+                this._headerSelection.RowSelections.ForEach(x => x.Check(false));
+                this._headerSelection.Check(false);
+            }
+            else
+            {
+                this._headerSelection.RowSelections.Where(x => !x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(false));
+                this._headerSelection.RowSelections.Where(x => x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(true));
+                this._headerSelection.Check(true);
+            }
+        }
+
+        public void SetSelection(string[] keys)
+        {
+            if (keys == null || !keys.Any())
+            {
+                this._headerSelection.RowSelections.ForEach(x => x.Check(false));
+                this._headerSelection.Check(false);
+            }
+            else
+            {
+                this._headerSelection.RowSelections.Where(x => !x.Key.IsIn(keys)).ForEach(x => x.Check(false));
+                this._headerSelection.RowSelections.Where(x => x.Key.IsIn(keys)).ForEach(x => x.Check(true));
+                this._headerSelection.Check(keys.Any());
+            }
         }
     }
 }

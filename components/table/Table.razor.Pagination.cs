@@ -54,6 +54,8 @@ namespace AntDesign
         {
             PageIndexChanged.InvokeAsync(args.PageIndex);
             OnPageIndexChange.InvokeAsync(args);
+
+            ChangeSelection(null);
         }
 
         private void HandlePageSizeChange(PaginationEventArgs args)

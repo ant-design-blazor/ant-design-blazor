@@ -15,12 +15,12 @@ else if (IsColGroup)
 else if (IsHeader)
 {
     <th class="@ClassMapper.Class" style="@FixedStyle @Style">
-        @(Title) @Index
+        @(Title)
     </th>
 }
 else
 {
     <td class="@ClassMapper.Class" style="@FixedStyle @Style">
-        @ChildContent  @Index
+        @ChildContent
     </td>
 }

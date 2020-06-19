@@ -4,13 +4,24 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class RowSelection : ColumnBase, ISelectionColumn
+    public partial class Selection : ColumnBase, ISelectionColumn
     {
         [Parameter] public string Type { get; set; } = "checkbox";
 
         [Parameter] public bool Disabled { get; set; }
 
-        public bool Checked { get; set; }
+        [Parameter] public string Key { get; set; }
+
+        [CascadingParameter(Name = "RowIndex")]
+        public int RowIndex { get; set; }
+
+        bool ISelectionColumn.Checked
+        {
+            get => _checked;
+            set => _checked = value;
+        }
+
+        private bool _checked;
 
         private bool Indeterminate => IsHeader
                                       && this.RowSelections.Any(x => x.Checked)
@@ -50,7 +61,7 @@ namespace AntDesign
 
         private void HandleCheckedChange(bool @checked)
         {
-            this.Checked = @checked;
+            this._checked = @checked;
 
             if (this.IsHeader)
             {
@@ -71,7 +82,7 @@ namespace AntDesign
 
         void ISelectionColumn.Check(bool @checked)
         {
-            this.Checked = @checked;
+            this._checked = @checked;
             StateHasChanged();
 
             InvokeSelectedRowsChange();
@@ -81,8 +92,8 @@ namespace AntDesign
         {
             if (IsHeader)
             {
-                var checkedIndex = RowSelections.Where(x => x.Checked).Select(x => x.Index).ToArray();
-                Table.OnSelectionChanged(checkedIndex);
+                var checkedIndex = RowSelections.Where(x => x.Checked).Select(x => x.RowIndex).ToArray();
+                Table.SelectionChanged(checkedIndex);
             }
         }
     }
