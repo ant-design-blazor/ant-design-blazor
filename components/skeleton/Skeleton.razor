@@ -1,0 +1,35 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style" id="@Id">
+
+    @if (Loading)
+    {
+        if (Avatar)
+        {
+            <div class="ant-skeleton-header">
+                <SkeletonElement Type="@SkeletonElementType.Avatar" Size="@AvatarSize" Shape="@AvatarShape"></SkeletonElement>
+            </div>
+        }
+        <div class="ant-skeleton-content">
+            @if (Title)
+            {
+                <h3 class="ant-skeleton-title" style="width:@ToCSSUnit(TitleWidth)"></h3>
+            }
+            @if (Paragraph)
+            {
+                <ul class="ant-skeleton-paragraph">
+                    @foreach (var row in this._paragraphRowsList)
+                    {
+                        <li style="width:@ToCSSUnit(row)"></li>
+                    }
+                </ul>
+            }
+        </div>
+    }
+    @if (!Loading)
+    {
+        @ChildContent
+    }
+
+</div>
