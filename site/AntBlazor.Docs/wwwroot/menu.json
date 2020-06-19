@@ -286,6 +286,11 @@
             "url": "components/result"
           },
           {
+            "title": "Skeleton",
+            "type": "menuItem",
+            "url": "components/skeleton"
+          },
+          {
             "title": "Spin",
             "type": "menuItem",
             "url": "components/spin"
