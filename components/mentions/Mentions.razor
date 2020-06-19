@@ -1,0 +1,28 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+
+    <div class="@ClassMapper.Class" style="@Style" id="@Id">
+        <textarea @bind="@Value" @ref="@Ref"
+                  rows="@Rows"
+                  disabled="@Disable"
+                  readonly="@Readonly"
+                  placeholder="@Placeholder"                   
+                  @onfocus="@Onfocus"
+                  @onblur="@Onblur"
+                  @onkeydown="e=>Keydown(e)"
+                  @onkeyup="e=>Keyup(e)">
+    </textarea>
+        <CascadingValue Value="this">
+            @if (ShowMentions)
+            {
+            <div class="ant-mentions-measure">
+                <div class="ant-mentions-dropdown" style="top:31px;left:20px">
+                    <div class="ant-mentions-dropdown-menu" style="display:inline-block">
+                        @ChildContent
+                    </div>
+                </div>
+            </div>
+            }
+        </CascadingValue>
+    </div>
