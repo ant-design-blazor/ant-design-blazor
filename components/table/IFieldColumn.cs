@@ -2,10 +2,8 @@
 
 namespace AntDesign
 {
-    public interface ITableColumn
+    public interface IFieldColumn : IColumn
     {
-        public int Index { get; set; }
-
         public string DisplayName { get; }
 
         public string FieldName { get; }

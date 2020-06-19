@@ -4,28 +4,35 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class RowSelection : AntDomComponentBase, IRowSelection
+    public partial class Selection : ColumnBase, ISelectionColumn
     {
-        [CascadingParameter(Name = "IsHeader")] public bool IsHeader { get; set; }
-
-        [CascadingParameter(Name = "Index")] public int Index { get; set; }
-
-        [CascadingParameter] public ITable Table { get; set; }
-
         [Parameter] public string Type { get; set; } = "checkbox";
 
         [Parameter] public bool Disabled { get; set; }
 
-        public bool Checked { get; set; }
+        [Parameter] public string Key { get; set; }
+
+        [CascadingParameter(Name = "RowIndex")]
+        public int RowIndex { get; set; }
+
+        bool ISelectionColumn.Checked
+        {
+            get => _checked;
+            set => _checked = value;
+        }
+
+        private bool _checked;
 
         private bool Indeterminate => IsHeader
                                       && this.RowSelections.Any(x => x.Checked)
                                       && !this.RowSelections.All(x => x.Checked);
 
-        public IList<IRowSelection> RowSelections { get; set; } = new List<IRowSelection>();
+        public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
 
         protected override void OnInitialized()
         {
+            base.OnInitialized();
+
             if (Table != null)
             {
                 if (IsHeader)
@@ -34,7 +41,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    Table?.HeaderSelection.RowSelections.Add(this);
+                    Table?.HeaderSelection?.RowSelections.Add(this);
                 }
             }
         }
@@ -54,7 +61,7 @@ namespace AntDesign
 
         private void HandleCheckedChange(bool @checked)
         {
-            this.Checked = @checked;
+            this._checked = @checked;
 
             if (this.IsHeader)
             {
@@ -73,9 +80,9 @@ namespace AntDesign
             InvokeSelectedRowsChange();
         }
 
-        void IRowSelection.Check(bool @checked)
+        void ISelectionColumn.Check(bool @checked)
         {
-            this.Checked = @checked;
+            this._checked = @checked;
             StateHasChanged();
 
             InvokeSelectedRowsChange();
@@ -85,8 +92,8 @@ namespace AntDesign
         {
             if (IsHeader)
             {
-                var checkedIndex = RowSelections.Where(x => x.Checked).Select(x => x.Index).ToArray();
-                Table.OnSelectionChanged(checkedIndex);
+                var checkedIndex = RowSelections.Where(x => x.Checked).Select(x => x.RowIndex - 1).ToArray();
+                Table.SelectionChanged(checkedIndex);
             }
         }
     }

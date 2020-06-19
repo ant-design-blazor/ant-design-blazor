@@ -1,0 +1,36 @@
+﻿@using System.ComponentModel
+<Table DataSource="data" ScrollY="240px" PageSize="50" ScrollX="1300px">
+    <Column @bind-Field="@context.Name" Width="100" Fixed="left" />
+    <Column @bind-Field="@context.Age" Width="100" Fixed="left" />
+    <Column Title="Column 1" @bind-Field="@context.Address" />
+    <Column Title="Column 2" @bind-Field="@context.Address" />
+    <Column Title="Column 3" @bind-Field="@context.Address" />
+    <Column Title="Column 4" @bind-Field="@context.Address" />
+    <Column Title="Column 5" @bind-Field="@context.Address" />
+    <Column Title="Column 6" @bind-Field="@context.Address" />
+    <Column Title="Column 7" @bind-Field="@context.Address" />
+    <Column Title="Column 8" @bind-Field="@context.Address" />
+    <ActionColumn Title="Action" Width="100" Fixed="right">
+        <a>action</a>
+    </ActionColumn>
+</Table>
+
+@code {
+    class Column
+    {
+        [DisplayName("Full Name")]
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Address { get; set; }
+    }
+
+    Column[] data = Enumerable.Range(0, 100).Select(i => new Column()
+    {
+        Name = $"Edward King {i}",
+        Age = 32,
+        Address = $"Edward King {i}"
+    }).ToArray();
+
+}
