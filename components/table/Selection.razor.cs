@@ -92,7 +92,7 @@ namespace AntDesign
         {
             if (IsHeader)
             {
-                var checkedIndex = RowSelections.Where(x => x.Checked).Select(x => x.RowIndex).ToArray();
+                var checkedIndex = RowSelections.Where(x => x.Checked).Select(x => x.RowIndex - 1).ToArray();
                 Table.SelectionChanged(checkedIndex);
             }
         }
