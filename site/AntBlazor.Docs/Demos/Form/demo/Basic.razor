@@ -9,9 +9,6 @@
         <FormItem Label="Username">
             <Input @bind-Value="@context.Username" />
         </FormItem>
-        <FormItem Label="Username">
-            <Input @bind-Value="@context._intNull" />
-        </FormItem>
         <FormItem Label="Password">
             <InputPassword @bind-Value="@context.Password" />
         </FormItem>
@@ -32,7 +29,6 @@
         public string Username { get; set; }
         [Required]
         public string Password { get; set; }
-        public int? _intNull { get; set; }
         public bool RememberMe { get; set; } = true;
     }
 
