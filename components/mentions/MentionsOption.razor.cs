@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class Option
+    public partial class MentionsOption
     {
         [CascadingParameter] public Mentions Mentions { get; set; }
         [Parameter] public string Value { get; set; }
@@ -24,9 +24,9 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            if (this is Option option)
+            if (this is MentionsOption option)
             {
-                this.Mentions?.Options.Add(option);
+                this.Mentions?.AddOption(option);
             }
 
             SetClassMap();
@@ -51,12 +51,14 @@ namespace AntDesign
         {
 
             this.Active = true;
+            SetClassMap();
             StateHasChanged();
         }
 
         private void OnMouseLeave(MouseEventArgs args)
         {
             this.Active = false;
+            SetClassMap();
             StateHasChanged();
 
         }

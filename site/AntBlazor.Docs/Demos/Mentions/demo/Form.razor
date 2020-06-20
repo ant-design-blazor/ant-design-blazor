@@ -1,21 +1,25 @@
 ﻿<div>
 
+    <div style="margin-bottom: 10px">
 
-    <Mentions>
-        <Option Value="afc163">afc163</Option>
-        <Option Value="zombieJ">zombieJ</Option>
-        <Option Value="yesmeck">yesmeck</Option>
-    </Mentions>
+                <Mentions>
+                    <MentionsOption Value="afc163">afc163</MentionsOption>
+                    <MentionsOption Value="zombieJ">zombieJ</MentionsOption>
+                    <MentionsOption Value="yesmeck">yesmeck</MentionsOption>
+                </Mentions>
 
-    <br />
 
-    <Mentions Rows="3" Placeholder="You can use  to ref user here">
-        <Option Value="afc163">afc163</Option>
-        <Option Value="zombieJ">zombieJ</Option>
-        <Option Value="yesmeck">yesmeck</Option>
-    </Mentions>
+    </div>
 
-    <br />
+    <div style="margin-bottom: 10px">
+
+        <Mentions Rows="8" Placeholder="You can use  to ref user here">
+            <MentionsOption Value="afc163">afc163</MentionsOption>
+            <MentionsOption Value="zombieJ">zombieJ</MentionsOption>
+            <MentionsOption Value="yesmeck">yesmeck</MentionsOption>
+        </Mentions>
+
+    </div>
 
     <Button Type="primary">Submit</Button>
     <Button>Reset</Button>
@@ -23,3 +27,17 @@
 
 
 </div>
+
+
+@code{
+
+    private class FormData
+    {
+        public string data1 { get; set; }
+        public string data2 { get; set; }
+    }
+
+
+    private FormData frmData = new FormData();
+
+}
