@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace AntDesign
 {
@@ -16,10 +18,10 @@ namespace AntDesign
         [Parameter]
         public Func<string, TValue> Parser { get; set; }
 
-        private double _step = 1;
+        private TValue _step;
 
         [Parameter]
-        public double Step
+        public TValue Step
         {
             get
             {
@@ -30,7 +32,7 @@ namespace AntDesign
                 _step = value;
                 if (string.IsNullOrEmpty(_format))
                 {
-                    _format = string.Join('.', _step.ToString(CultureInfo.InvariantCulture).Split('.').Select(n => new string('0', n.Length)));
+                    _format = string.Join('.', _step.ToString().Split('.').Select(n => new string('0', n.Length)));
                 }
             }
         }
@@ -49,19 +51,57 @@ namespace AntDesign
 
         private bool _isNullable;
 
+        private Func<TValue, TValue, TValue> _increaseFunc;
+        private Func<TValue, TValue, TValue> _decreaseFunc;
+        private Func<TValue, TValue, bool> _greaterThanFunc;
+        private Func<TValue, TValue, bool> _greaterThanOrEqualFunc;
+        private Func<TValue, string, string> _toStringFunc;
+
         public InputNumber()
         {
-            var t = typeof(TValue);
-            _isNullable = t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>));
-
-            if (typeof(TValue) == typeof(int) || typeof(TValue) == typeof(int?))
+            var surfaceType = typeof(TValue);
+            _isNullable = surfaceType.IsGenericType && surfaceType.GetGenericTypeDefinition().Equals(typeof(Nullable<>));
+ 
+            if (surfaceType == typeof(int) || surfaceType == typeof(int?))
                 SetMinMax(int.MinValue, int.MaxValue);
-            else if (typeof(TValue) == typeof(decimal) || typeof(TValue) == typeof(decimal?))
+            else if (surfaceType == typeof(decimal) || surfaceType == typeof(decimal?))
                 SetMinMax(decimal.MinValue, decimal.MaxValue);
-            else if (typeof(TValue) == typeof(double) || typeof(TValue) == typeof(double?))
+            else if (surfaceType == typeof(double) || surfaceType == typeof(double?))
                 SetMinMax(double.NegativeInfinity, double.PositiveInfinity);
-            else if (typeof(TValue) == typeof(float) || typeof(TValue) == typeof(float?))
+            else if (surfaceType == typeof(float) || surfaceType == typeof(float?))
                 SetMinMax(float.NegativeInfinity, float.PositiveInfinity);
+
+            ParameterExpression piValue = Expression.Parameter(surfaceType, "value");
+            ParameterExpression piStep = Expression.Parameter(surfaceType, "step");
+            var fexpAdd = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Add(piValue, piStep), piValue, piStep);
+            _increaseFunc = fexpAdd.Compile();
+            var fexpSubtract = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Subtract(piValue, piStep), piValue, piStep);
+            _decreaseFunc = fexpSubtract.Compile();
+
+            ParameterExpression piLeft = Expression.Parameter(surfaceType, "left");
+            ParameterExpression piRight = Expression.Parameter(surfaceType, "right");
+            var fexpGreaterThan = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThan(piLeft, piRight), piLeft, piRight);
+            _greaterThanFunc = fexpGreaterThan.Compile();
+            var fexpGreaterThanOrEqual = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThanOrEqual(piLeft, piRight), piLeft, piRight);
+            _greaterThanOrEqualFunc = fexpGreaterThanOrEqual.Compile();
+
+
+
+            ParameterExpression format = Expression.Parameter(typeof(string), "format");
+            ParameterExpression value = Expression.Parameter(surfaceType, "value");
+            Expression expValue;
+            if (_isNullable == true)
+                expValue = Expression.Property(value, "Value");
+            else
+                expValue = value;
+            MethodCallExpression expToString = Expression.Call(expValue, expValue.Type.GetMethod("ToString", new Type[] { typeof(string), typeof(IFormatProvider) }), format, Expression.Constant(CultureInfo.InvariantCulture));
+            var lambdaToString = Expression.Lambda<Func<TValue, string, string>>(expToString, value, format);
+            _toStringFunc = lambdaToString.Compile();
+
+            Console.WriteLine(_toStringFunc.ToString());
+           
+            var underlyingType = _isNullable ? Nullable.GetUnderlyingType(surfaceType) : surfaceType;
+            _step = (TValue)Convert.ChangeType(1, underlyingType);
         }
 
         private void SetMinMax(object min, object max)
@@ -95,48 +135,12 @@ namespace AntDesign
 
         private void Increase()
         {
-            object value = Value;
-
-            if (typeof(TValue) == typeof(int) || typeof(TValue) == typeof(int?))
-            {
-                value = Convert.ToInt32(value) + Step;
-            }
-            else if (typeof(TValue) == typeof(decimal) || typeof(TValue) == typeof(decimal?))
-            {
-                value = Convert.ToDecimal(value) + Convert.ToDecimal(Step);
-            }
-            else if (typeof(TValue) == typeof(double) || typeof(TValue) == typeof(double?))
-            {
-                value = Convert.ToDouble(value) + Step;
-            }
-            else if (typeof(TValue) == typeof(float) || typeof(TValue) == typeof(float?))
-            {
-                value = Convert.ToSingle(value) + Step;
-            }
-
-            OnInput(new ChangeEventArgs() { Value = value });
+            OnInput(new ChangeEventArgs() { Value = _increaseFunc(Value, Step) });
         }
 
         private void Decrease()
         {
-            object value = Value;
-            if (typeof(TValue) == typeof(int) || typeof(TValue) == typeof(int?))
-            {
-                value = Convert.ToInt32(value) - Step;
-            }
-            else if (typeof(TValue) == typeof(decimal) || typeof(TValue) == typeof(decimal?))
-            {
-                value = Convert.ToDecimal(value) - Convert.ToDecimal(Step);
-            }
-            else if (typeof(TValue) == typeof(double) || typeof(TValue) == typeof(double?))
-            {
-                value = Convert.ToDouble(value) - Step;
-            }
-            else if (typeof(TValue) == typeof(float) || typeof(TValue) == typeof(float?))
-            {
-                value = Convert.ToSingle(value) - Step;
-            }
-            OnInput(new ChangeEventArgs() { Value = value });
+            OnInput(new ChangeEventArgs() { Value = _decreaseFunc(Value, Step) });
         }
 
         private void OnInput(ChangeEventArgs args)
@@ -176,36 +180,12 @@ namespace AntDesign
                 }
             }
 
-            if (MoreThan(num, Max))
+            if (_greaterThanFunc(num, Max))
                 CurrentValue = Max;
-            else if (MoreThan(Min, num))
+            else if (_greaterThanFunc(Min, num))
                 CurrentValue = Min;
             else
                 CurrentValue = num;
-        }
-
-        private bool MoreThan(TValue left, TValue right)
-        {
-            if (typeof(TValue) == typeof(int) || typeof(TValue) == typeof(int?))
-            {
-                return (Convert.ToInt32(left) > Convert.ToInt32(right));
-            }
-            else if (typeof(TValue) == typeof(decimal) || typeof(TValue) == typeof(decimal?))
-            {
-                return (Convert.ToDecimal(left) > Convert.ToDecimal(right));
-            }
-            else if (typeof(TValue) == typeof(double) || typeof(TValue) == typeof(double?))
-            {
-                return (Convert.ToDouble(left) > Convert.ToDouble(right));
-            }
-            else if (typeof(TValue) == typeof(float) || typeof(TValue) == typeof(float?))
-            {
-                return (Convert.ToSingle(left) > Convert.ToSingle(right));
-            }
-            else
-            {
-                return false;
-            }
         }
 
         private string GetIconClass(string direction)
@@ -213,11 +193,11 @@ namespace AntDesign
             string cls;
             if (direction == "up")
             {
-                cls = $"ant-input-number-handler ant-input-number-handler-up " + (MoreThan(Value, Max) ? "ant-input-number-handler-up-disabled" : string.Empty);
+                cls = $"ant-input-number-handler ant-input-number-handler-up " + (_greaterThanOrEqualFunc(Value, Max) ? "ant-input-number-handler-up-disabled" : string.Empty);
             }
             else
             {
-                cls = $"ant-input-number-handler ant-input-number-handler-down " + (MoreThan(Min, Value) ? "ant-input-number-handler-down-disabled" : string.Empty);
+                cls = $"ant-input-number-handler ant-input-number-handler-down " + (_greaterThanOrEqualFunc(Min, Value) ? "ant-input-number-handler-down-disabled" : string.Empty);
             }
 
             return cls;
@@ -230,26 +210,10 @@ namespace AntDesign
                 return Formatter(Value);
             }
 
-            if (typeof(TValue) == typeof(int) || typeof(TValue) == typeof(int?))
-            {
-                return Convert.ToInt32(Value).ToString(_format, CultureInfo.InvariantCulture);
-            }
-            else if (typeof(TValue) == typeof(decimal) || typeof(TValue) == typeof(decimal?))
-            {
-                return Convert.ToDecimal(Value).ToString(_format, CultureInfo.InvariantCulture);
-            }
-            else if (typeof(TValue) == typeof(double) || typeof(TValue) == typeof(double?))
-            {
-                return Convert.ToDouble(Value).ToString(_format, CultureInfo.InvariantCulture);
-            }
-            else if (typeof(TValue) == typeof(float) || typeof(TValue) == typeof(float?))
-            {
-                return Convert.ToSingle(Value).ToString(_format, CultureInfo.InvariantCulture);
-            }
+            if (EqualityComparer<TValue>.Default.Equals(value, default(TValue)) == false)
+                return _toStringFunc(value, _format);
             else
-            {
-                return Value?.ToString();
-            }
+                return default(TValue).ToString();
         }
     }
 }
