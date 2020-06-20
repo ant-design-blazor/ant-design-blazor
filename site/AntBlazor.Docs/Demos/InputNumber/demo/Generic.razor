@@ -1,0 +1,41 @@
+<div>
+
+    <Text>int</Text>
+    <AntDesign.InputNumber @bind-Value="@_int" />
+    <p>value:@_int</p>
+    <br />
+
+    <Text>int?</Text>
+    <AntDesign.InputNumber @bind-Value="@_intNull" />
+    <p>value:@_intNull</p>
+    <br />
+
+    <Text>decimal</Text>
+    <AntDesign.InputNumber @bind-Value="@_dec" />
+    <p>value:@_dec</p>
+    <br />
+
+    <Text>decimal?</Text>
+    <AntDesign.InputNumber @bind-Value="@_decNull" />
+    <p>value:@_decNull</p>
+    <br />
+
+    <Text>double</Text>
+    <AntDesign.InputNumber @bind-Value="@_double" />
+    <p>value:@_double</p>
+    <br />
+
+    <Text>double?</Text>
+    <AntDesign.InputNumber @bind-Value="@_doubleNull" />
+    <p>value:@_doubleNull</p>
+    <br />
+</div>
+@code{
+
+    int _int;
+    int? _intNull;
+    decimal _dec;
+    decimal? _decNull;
+    double _double;
+    double? _doubleNull;
+}

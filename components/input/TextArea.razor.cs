@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public partial class TextArea : Input
+    public partial class TextArea : Input<string>
     {
         private const uint DEFAULT_MIN_ROWS = 1;
 

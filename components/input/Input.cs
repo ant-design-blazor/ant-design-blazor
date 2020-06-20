@@ -11,7 +11,7 @@ namespace AntDesign
     /// <summary>
     ///
     /// </summary>
-    public class Input : AntInputComponentBase<string>
+    public class Input<TValue> : AntInputComponentBase<TValue>
     {
         protected const string PrefixCls = "ant-input";
 
@@ -38,7 +38,7 @@ namespace AntDesign
         public bool AutoFocus { get; set; }
 
         [Parameter]
-        public string DefaultValue { get; set; }
+        public TValue DefaultValue { get; set; }
 
         [Parameter]
         public int MaxLength { get; set; } = -1;
@@ -76,7 +76,7 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (!string.IsNullOrEmpty(DefaultValue) && string.IsNullOrEmpty(Value))
+            if (!string.IsNullOrEmpty(DefaultValue?.ToString()) && string.IsNullOrEmpty(Value?.ToString()))
             {
                 Value = DefaultValue;
             }
@@ -144,8 +144,7 @@ namespace AntDesign
 
         protected async Task OnChangeAsync(ChangeEventArgs args)
         {
-            CurrentValueAsString = args.Value.ToString();
-
+            CurrentValueAsString = args.Value?.ToString();
             if (OnChange.HasDelegate)
             {
                 await OnChange.InvokeAsync(args);
@@ -174,7 +173,7 @@ namespace AntDesign
             {
                 builder.OpenComponent<Icon>(31);
                 builder.AddAttribute(32, "Type", "close-circle");
-                if (string.IsNullOrEmpty(Value))
+                if (string.IsNullOrEmpty(Value?.ToString()))
                 {
                     builder.AddAttribute(33, "Style", "visibility: hidden;");
                 }
@@ -184,7 +183,7 @@ namespace AntDesign
                 }
                 builder.AddAttribute(34, "onclick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
                 {
-                    Value = string.Empty;
+                    Value = default;//string.Empty;
                     ToggleClearBtn();
                 }));
                 builder.CloseComponent();
@@ -208,7 +207,7 @@ namespace AntDesign
         /// <returns></returns>
         protected virtual async void OnInputAsync(ChangeEventArgs args)
         {
-            bool flag = !(!string.IsNullOrEmpty(Value) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
+            bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
             CurrentValueAsString = args.Value.ToString();
 

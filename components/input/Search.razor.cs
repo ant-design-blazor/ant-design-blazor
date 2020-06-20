@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public partial class Search : Input
+    public partial class Search : Input<string>
     {
         private bool _isSearching;
 
