@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace AntDesign
 {
@@ -16,7 +17,7 @@ namespace AntDesign
         public Func<TValue, string> Formatter { get; set; }
 
         [Parameter]
-        public Func<string, TValue> Parser { get; set; }
+        public Func<string, string> Parser { get; set; }
 
         private TValue _step;
 
@@ -50,6 +51,8 @@ namespace AntDesign
         public bool Disabled { get; set; }
 
         private bool _isNullable;
+        private string _inputString;
+        private bool _focused;
 
         private Func<TValue, TValue, TValue> _increaseFunc;
         private Func<TValue, TValue, TValue> _decreaseFunc;
@@ -60,8 +63,8 @@ namespace AntDesign
         public InputNumber()
         {
             var surfaceType = typeof(TValue);
-            _isNullable = surfaceType.IsGenericType && surfaceType.GetGenericTypeDefinition().Equals(typeof(Nullable<>));
- 
+            _isNullable = surfaceType.IsGenericType && surfaceType.GetGenericTypeDefinition() == typeof(Nullable<>);
+
             if (surfaceType == typeof(int) || surfaceType == typeof(int?))
                 SetMinMax(int.MinValue, int.MaxValue);
             else if (surfaceType == typeof(decimal) || surfaceType == typeof(decimal?))
@@ -85,8 +88,6 @@ namespace AntDesign
             var fexpGreaterThanOrEqual = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThanOrEqual(piLeft, piRight), piLeft, piRight);
             _greaterThanOrEqualFunc = fexpGreaterThanOrEqual.Compile();
 
-
-
             ParameterExpression format = Expression.Parameter(typeof(string), "format");
             ParameterExpression value = Expression.Parameter(surfaceType, "value");
             Expression expValue;
@@ -99,7 +100,7 @@ namespace AntDesign
             _toStringFunc = lambdaToString.Compile();
 
             Console.WriteLine(_toStringFunc.ToString());
-           
+
             var underlyingType = _isNullable ? Nullable.GetUnderlyingType(surfaceType) : surfaceType;
             _step = (TValue)Convert.ChangeType(1, underlyingType);
         }
@@ -114,7 +115,8 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            Value = DefaultValue;
+            CurrentValue = DefaultValue;
+            _inputString = CurrentValueAsString;
         }
 
         private void SetClass()
@@ -123,6 +125,7 @@ namespace AntDesign
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
+                .If($"{PrefixCls}-focused", () => _focused)
                 .If($"{PrefixCls}-disabled", () => this.Disabled);
         }
 
@@ -135,57 +138,78 @@ namespace AntDesign
 
         private void Increase()
         {
-            OnInput(new ChangeEventArgs() { Value = _increaseFunc(Value, Step) });
+            _inputString = _increaseFunc(Value, Step).ToString();
+            ConvertNumber(_inputString);
         }
 
         private void Decrease()
         {
-            OnInput(new ChangeEventArgs() { Value = _decreaseFunc(Value, Step) });
+            _inputString = _decreaseFunc(Value, Step).ToString();
+            ConvertNumber(_inputString);
         }
 
         private void OnInput(ChangeEventArgs args)
         {
-            // TODO: handle non-number input, parser
-            TValue num = default;
+            _inputString = args.Value?.ToString();
+            ConvertNumber(_inputString);
+        }
+
+        private void OnFocus()
+        {
+            _focused = true;
+        }
+
+        private void OnBlur()
+        {
+            _focused = false;
+            _inputString = Regex.Replace(_inputString, @"[^\d.\d]", "");
+            ConvertNumber(_inputString);
+        }
+
+        private void ConvertNumber(string inputString)
+        {
             if (Parser != null)
             {
-                num = Parser(args.Value?.ToString());
+                _inputString = Parser(inputString);
             }
-            else
+
+            if (Regex.IsMatch(inputString, @"^[+-]?\d*[.]?\d*$"))
             {
-                try
+                TValue num;
+                if (!_isNullable)
                 {
-                    var value = args.Value;
-                    if (_isNullable == false)
+                    if (string.IsNullOrWhiteSpace(inputString))
                     {
-                        if (string.IsNullOrWhiteSpace(args.Value?.ToString())) value = default(TValue);
-                        num = (TValue)Convert.ChangeType(value, typeof(TValue));
+                        num = default;
                     }
                     else
                     {
-                        if (string.IsNullOrWhiteSpace(args.Value?.ToString()))
-                        {
-                            num = default(TValue);
-                        }
-                        else
-                        {
-                            num = (TValue)Convert.ChangeType(args.Value, Nullable.GetUnderlyingType(typeof(TValue)));
-                        }
+                        num = (TValue)Convert.ChangeType(inputString, typeof(TValue));
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    //TODO:还需补全非数字输入处理逻辑
-                    return;
+                    if (string.IsNullOrWhiteSpace(inputString))
+                    {
+                        num = default;
+                    }
+                    else
+                    {
+                        num = (TValue)Convert.ChangeType(inputString, Nullable.GetUnderlyingType(typeof(TValue)));
+                    }
                 }
+                ChangeValue(num);
             }
+        }
 
-            if (_greaterThanFunc(num, Max))
+        private void ChangeValue(TValue value)
+        {
+            if (_greaterThanFunc(value, Max))
                 CurrentValue = Max;
-            else if (_greaterThanFunc(Min, num))
+            else if (_greaterThanFunc(Min, value))
                 CurrentValue = Min;
             else
-                CurrentValue = num;
+                CurrentValue = value;
         }
 
         private string GetIconClass(string direction)

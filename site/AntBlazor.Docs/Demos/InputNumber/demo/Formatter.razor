@@ -14,11 +14,9 @@
         return "$ " + value.ToString("n0");
     }
 
-    private double Parse1(string value)
+    private string Parse1(string value)
     {
-        double val = double.Parse(Regex.Replace(value, @"\$\s?|(,*)", ""));
-
-        return val;
+       return Regex.Replace(value, @"\$\s?|(,*)", "");
     }
 
     private string Format2(double value)
@@ -26,8 +24,8 @@
         return value.ToString() + "%";
     }
 
-    private double Parse2(string value)
+    private string Parse2(string value)
     {
-        return double.Parse(value.Replace("%", ""));
+        return value.Replace("%", "");
     }
 }		
