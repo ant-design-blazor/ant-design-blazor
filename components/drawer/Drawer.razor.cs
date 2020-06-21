@@ -333,5 +333,10 @@ namespace AntDesign
             }
             DrawerStyle = style;
         }
+
+        internal async Task InvokeStateHasChangedAsync()
+        {
+            await InvokeAsync(StateHasChanged);
+        }
     }
 }

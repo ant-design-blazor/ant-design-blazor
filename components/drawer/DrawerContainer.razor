@@ -1,0 +1,28 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+@foreach (DrawerConfig drawerConfig in _drawerConfigs)
+{
+    <Drawer @key="@drawerConfig"
+            Content="@drawerConfig.Content"
+            Closable="@drawerConfig.Closable"
+            MaskClosable="@drawerConfig.MaskClosable"
+            Mask="@drawerConfig.Mask"
+            NoAnimation="@drawerConfig.NoAnimation"
+            Keyboard="@drawerConfig.Keyboard"
+            Title="@drawerConfig.Title"
+            Placement="@drawerConfig.Placement"
+            MaskStyle="@drawerConfig.MaskStyle"
+            BodyStyle="@drawerConfig.BodyStyle"
+            WrapClassName="@drawerConfig.WrapClassName"
+            Width="@drawerConfig.Width"
+            Height="@drawerConfig.Height"
+            ZIndex="@drawerConfig.ZIndex"
+            OffsetX="@drawerConfig.OffsetX"
+            OffsetY="@drawerConfig.OffsetY"
+            Visible="@drawerConfig.Visible"
+            OnViewInit="@drawerConfig.OnViewInit"
+            OnClose="@drawerConfig.HandleOnClose">
+        @drawerConfig.ChildContent
+    </Drawer>
+}

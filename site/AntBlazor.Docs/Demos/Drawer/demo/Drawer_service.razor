@@ -1,0 +1,52 @@
+﻿@inject DrawerService DrawerService
+
+<AntDesign.Button OnClick="OpenDrawer" Type="primary">OpenDrawer</AntDesign.Button>
+
+<AntDesign.Button OnClick="OpenCompontentTemplate" Type="primary">Using Compontent</AntDesign.Button>
+
+@code{
+    DrawerRef drawerRef;
+    private async Task OpenDrawer()
+    {
+        RenderFragment content =@<div><Input value="" /><Button OnClick="CloseDrawer">CloseDrawer</Button></div>;
+
+        var options = new DrawerConfig()
+        {
+            Title = "Drawer",
+            ChildContent = content
+        };
+        options.OnClose = new EventCallback(this, (Action)(() => { Console.WriteLine("Close Drawer"); }));
+        drawerRef = await DrawerService.CreateAsync(options);
+    }
+
+    private async Task CloseDrawer()
+    {
+        if (drawerRef != null)
+        {
+            await drawerRef.CloseAsync();
+        }
+    }
+
+    private async Task OpenCompontentTemplate()
+    {
+        var options = new DrawerConfig()
+        {
+            Title = "Compontent"
+        };
+        options.OnClose = new EventCallback(this, (Action)(() => { Console.WriteLine("Close CompontentTemplate Drawer"); }));
+
+        //CompontentTemplate.razor
+        //Compontent CompontentTemplate source code
+        //
+        //@namespace AntDesign.Docs.Demos.Drawer.demo
+        //@inherits DrawerTemplate<string>
+        //<div>
+        //    <h3>Compontent</h3>
+        //    <p>@Config</p>
+        //    <AntDesign.Button Type="primary" OnClick="base.HandleClose">CloseDrawer</AntDesign.Button>
+        //</div>
+        //
+        await DrawerService.CreateAsync<CompontentTemplate, string>(options, "here is compontent paramter");
+    }
+
+}
