@@ -60,36 +60,37 @@ namespace AntDesign
         private Func<TValue, TValue, bool> _greaterThanOrEqualFunc;
         private Func<TValue, string, string> _toStringFunc;
 
+        private static Type _surfaceType = typeof(TValue);
+
         public InputNumber()
         {
-            var surfaceType = typeof(TValue);
-            _isNullable = surfaceType.IsGenericType && surfaceType.GetGenericTypeDefinition() == typeof(Nullable<>);
+            _isNullable = _surfaceType.IsGenericType && _surfaceType.GetGenericTypeDefinition() == typeof(Nullable<>);
 
-            if (surfaceType == typeof(int) || surfaceType == typeof(int?))
+            if (_surfaceType == typeof(int) || _surfaceType == typeof(int?))
                 SetMinMax(int.MinValue, int.MaxValue);
-            else if (surfaceType == typeof(decimal) || surfaceType == typeof(decimal?))
+            else if (_surfaceType == typeof(decimal) || _surfaceType == typeof(decimal?))
                 SetMinMax(decimal.MinValue, decimal.MaxValue);
-            else if (surfaceType == typeof(double) || surfaceType == typeof(double?))
+            else if (_surfaceType == typeof(double) || _surfaceType == typeof(double?))
                 SetMinMax(double.NegativeInfinity, double.PositiveInfinity);
-            else if (surfaceType == typeof(float) || surfaceType == typeof(float?))
+            else if (_surfaceType == typeof(float) || _surfaceType == typeof(float?))
                 SetMinMax(float.NegativeInfinity, float.PositiveInfinity);
 
-            ParameterExpression piValue = Expression.Parameter(surfaceType, "value");
-            ParameterExpression piStep = Expression.Parameter(surfaceType, "step");
+            ParameterExpression piValue = Expression.Parameter(_surfaceType, "value");
+            ParameterExpression piStep = Expression.Parameter(_surfaceType, "step");
             var fexpAdd = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Add(piValue, piStep), piValue, piStep);
             _increaseFunc = fexpAdd.Compile();
             var fexpSubtract = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Subtract(piValue, piStep), piValue, piStep);
             _decreaseFunc = fexpSubtract.Compile();
 
-            ParameterExpression piLeft = Expression.Parameter(surfaceType, "left");
-            ParameterExpression piRight = Expression.Parameter(surfaceType, "right");
+            ParameterExpression piLeft = Expression.Parameter(_surfaceType, "left");
+            ParameterExpression piRight = Expression.Parameter(_surfaceType, "right");
             var fexpGreaterThan = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThan(piLeft, piRight), piLeft, piRight);
             _greaterThanFunc = fexpGreaterThan.Compile();
             var fexpGreaterThanOrEqual = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThanOrEqual(piLeft, piRight), piLeft, piRight);
             _greaterThanOrEqualFunc = fexpGreaterThanOrEqual.Compile();
 
             ParameterExpression format = Expression.Parameter(typeof(string), "format");
-            ParameterExpression value = Expression.Parameter(surfaceType, "value");
+            ParameterExpression value = Expression.Parameter(_surfaceType, "value");
             Expression expValue;
             if (_isNullable == true)
                 expValue = Expression.Property(value, "Value");
@@ -101,13 +102,13 @@ namespace AntDesign
 
             Console.WriteLine(_toStringFunc.ToString());
 
-            var underlyingType = _isNullable ? Nullable.GetUnderlyingType(surfaceType) : surfaceType;
+            var underlyingType = _isNullable ? Nullable.GetUnderlyingType(_surfaceType) : _surfaceType;
             _step = (TValue)Convert.ChangeType(1, underlyingType);
         }
 
         private void SetMinMax(object min, object max)
         {
-            var t = _isNullable ? Nullable.GetUnderlyingType(typeof(TValue)) : typeof(TValue);
+            var t = _isNullable ? Nullable.GetUnderlyingType(_surfaceType) : _surfaceType;
             Max = (TValue)Convert.ChangeType(max, t);
             Min = (TValue)Convert.ChangeType(min, t);
         }
@@ -184,7 +185,7 @@ namespace AntDesign
                     }
                     else
                     {
-                        num = (TValue)Convert.ChangeType(inputString, typeof(TValue));
+                        num = (TValue)Convert.ChangeType(inputString, _surfaceType);
                     }
                 }
                 else
@@ -195,7 +196,7 @@ namespace AntDesign
                     }
                     else
                     {
-                        num = (TValue)Convert.ChangeType(inputString, Nullable.GetUnderlyingType(typeof(TValue)));
+                        num = (TValue)Convert.ChangeType(inputString, Nullable.GetUnderlyingType(_surfaceType));
                     }
                 }
                 ChangeValue(num);
@@ -234,10 +235,10 @@ namespace AntDesign
                 return Formatter(Value);
             }
 
-            if (EqualityComparer<TValue>.Default.Equals(value, default(TValue)) == false)
+            if (EqualityComparer<TValue>.Default.Equals(value, default) == false)
                 return _toStringFunc(value, _format);
             else
-                return default(TValue).ToString();
+                return default(TValue)?.ToString();
         }
     }
 }
