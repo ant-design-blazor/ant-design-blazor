@@ -54,7 +54,7 @@ namespace AntDesign
             {
                 config.DrawerService = this;
                 await OnCreate.Invoke(config);
-                DrawerRef drawerRef = new DrawerRef(config);
+                DrawerRef drawerRef = new DrawerRef(config, this);
                 return drawerRef;
             }
             return null;

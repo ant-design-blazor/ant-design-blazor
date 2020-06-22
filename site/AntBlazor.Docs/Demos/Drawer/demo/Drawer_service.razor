@@ -15,7 +15,13 @@
             Title = "Drawer",
             ChildContent = content
         };
-        options.OnClose = new EventCallback(this, (Action)(() => { Console.WriteLine("Close Drawer"); }));
+        
+        options.OnClose = () =>
+        {
+            Console.WriteLine("Close Drawer");
+            return Task.CompletedTask;
+        };
+
         drawerRef = await DrawerService.CreateAsync(options);
     }
 
@@ -33,7 +39,11 @@
         {
             Title = "Compontent"
         };
-        options.OnClose = new EventCallback(this, (Action)(() => { Console.WriteLine("Close CompontentTemplate Drawer"); }));
+        options.OnClose = () =>
+        {
+            Console.WriteLine("Close CompontentTemplate Drawer");
+            return Task.CompletedTask;
+        };
 
         //CompontentTemplate.razor
         //Compontent CompontentTemplate source code

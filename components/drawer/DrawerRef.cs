@@ -8,10 +8,17 @@ namespace AntDesign
     public class DrawerRef
     {
         private DrawerConfig _config;
+        private DrawerService _service;
 
         internal DrawerRef(DrawerConfig config)
         {
             _config = config;
+        }
+
+        internal DrawerRef(DrawerConfig config, DrawerService service)
+        {
+            _config = config;
+            _service = service;
         }
 
         /// <summary>

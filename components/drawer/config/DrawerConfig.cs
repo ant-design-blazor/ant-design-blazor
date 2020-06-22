@@ -49,20 +49,17 @@ namespace AntDesign
 
         public bool Visible { get; set; }
 
-        public EventCallback OnViewInit { get; set; }
-
-        public EventCallback OnClose { get; set; }
+        public Func<Task> OnClose { get; set; }
 
         internal DrawerService DrawerService { get; set; }
 
         internal async Task HandleOnClose()
         {
             await DrawerService.CloseAsync(this);
-            if (OnClose.HasDelegate)
+            if (OnClose != null)
             {
-                await OnClose.InvokeAsync(null);
+                await OnClose.Invoke();
             }
         }
-
     }
 }

@@ -17,7 +17,7 @@ namespace AntDesign
 
         #region Parameter
 
-        [Parameter] public EventCallback AfterClose { get; set; }
+        [Parameter] public Func<Task> AfterClose { get; set; }
 
         [Parameter]
         public string BodyStyle { get; set; }
@@ -159,8 +159,20 @@ namespace AntDesign
                 Width = Width,
                 WrapClassName = WrapClassName,
                 ZIndex = ZIndex,
-                OnCancel = OnCancel,
-                OnOk = OnOk,
+                OnCancel = async (e) =>
+                {
+                    if (OnCancel.HasDelegate)
+                    {
+                        await OnCancel.InvokeAsync(e);
+                    }
+                },
+                OnOk = async (e) =>
+                {
+                    if (OnOk.HasDelegate)
+                    {
+                        await OnOk.InvokeAsync(e);
+                    }
+                },
                 OkButtonProps = OkButtonProps,
 
                 CancelButtonProps = CancelButtonProps,
