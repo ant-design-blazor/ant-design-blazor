@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using System.Diagnostics;
 
 namespace AntDesign
 {
@@ -13,6 +14,8 @@ namespace AntDesign
     {
         private string _ballClass = "ant-anchor-ink-ball";
         private string _ballStyle = string.Empty;
+        private ElementReference _self;
+        private ElementReference _ink;
         private Dictionary<string, decimal> _linkTops;
         private List<AnchorLink> _flatLinks;
         private List<AnchorLink> _links = new List<AnchorLink>();
@@ -20,13 +23,12 @@ namespace AntDesign
         [Inject]
         private DomEventService DomEventService { get; set; }
 
-
         #region Parameters
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        #endregion
+        #endregion Parameters
 
         protected override void OnInitialized()
         {
@@ -39,10 +41,15 @@ namespace AntDesign
         {
             base.OnAfterRender(firstRender);
 
-            _flatLinks = FlatChildren();
-            foreach (var link in _flatLinks)
+            if (firstRender)
             {
-                _linkTops[link.Href] = decimal.MaxValue;
+                Console.WriteLine(Id);
+                _linkTops = new Dictionary<string, decimal>();
+                _flatLinks = FlatChildren();
+                foreach (var link in _flatLinks)
+                {
+                    _linkTops[link.Href] = 1;
+                }
             }
         }
 
@@ -67,15 +74,21 @@ namespace AntDesign
         {
             foreach (var link in _flatLinks)
             {
-                string id = "#" + link.Href.Split('#')[1];
-                DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, id);
-
-                if (_linkTops[link.Href] * domRect.top <= 0)
+                try
                 {
-                    DomRect containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, Id);
-                    Activate(link, (domRect.top - containerRect.top) + domRect.height / 2);
+                    DomRect domRect = await link.GetDom();
+
+                    if (_linkTops[link.Href] * domRect.top <= 0)
+                    {
+                        DomRect containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ink);
+                        Activate(link, (domRect.top - containerRect.top) + domRect.height / 2);
+                        Debug.WriteLine((domRect.top - containerRect.top) + domRect.height / 2);
+                    }
+                    _linkTops[link.Href] = domRect.top;
                 }
-                _linkTops[link.Href] = domRect.top;
+                catch (Exception ex)
+                {
+                }
             }
         }
 
@@ -88,7 +101,8 @@ namespace AntDesign
 
             _ballClass = "ant-anchor-ink-ball visible";
             _ballStyle = $"top: {top}px;";
-        }
 
+            StateHasChanged();
+        }
     }
 }

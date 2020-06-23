@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -13,11 +14,14 @@ namespace AntDesign
     {
         private bool _active;
 
+        private ElementReference _self;
+
         private List<AnchorLink> _links = new List<AnchorLink>();
 
         #region Parameters
 
         private IAnchor _parent;
+
         [CascadingParameter]
         public IAnchor Parent
         {
@@ -51,7 +55,7 @@ namespace AntDesign
         [Parameter]
         public string Target { get; set; }
 
-        #endregion
+        #endregion Parameters
 
         public void Add(AnchorLink anchorLink)
         {
@@ -78,6 +82,13 @@ namespace AntDesign
         internal void Activate(bool active)
         {
             _active = active;
+        }
+
+        internal async Task<DomRect> GetDom()
+        {
+            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _self);
+            Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _self);
+            return domRect;
         }
     }
 }
