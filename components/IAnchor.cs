@@ -8,6 +8,9 @@ namespace AntDesign
 {
     public interface IAnchor
     {
-        List<AnchorLink> Links { get; }
+        //List<AnchorLink> Links { get; }
+        void Add(AnchorLink anchorLink);
+
+        List<AnchorLink> FlatChildren();
     }
 }

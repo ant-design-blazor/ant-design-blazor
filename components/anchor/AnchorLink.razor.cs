@@ -11,7 +11,9 @@ namespace AntDesign
 {
     public partial class AnchorLink : AntDomComponentBase, IAnchor
     {
-        public List<AnchorLink> Links { get; } = new List<AnchorLink>();
+        private bool _active;
+
+        private List<AnchorLink> _links = new List<AnchorLink>();
 
         #region Parameters
 
@@ -24,7 +26,7 @@ namespace AntDesign
             {
                 Debug.WriteLine($"link:{Title} {GetHashCode()}\tparent:{value.GetHashCode()}");
                 _parent = value;
-                _parent?.Links.Add(this);
+                _parent?.Add(this);
             }
         }
 
@@ -50,5 +52,32 @@ namespace AntDesign
         public string Target { get; set; }
 
         #endregion
+
+        public void Add(AnchorLink anchorLink)
+        {
+            _links.Add(anchorLink);
+        }
+
+        public List<AnchorLink> FlatChildren()
+        {
+            List<AnchorLink> results = new List<AnchorLink>();
+
+            if (!string.IsNullOrEmpty(Href))
+            {
+                results.Add(this);
+            }
+
+            foreach (IAnchor child in _links)
+            {
+                results.AddRange(child.FlatChildren());
+            }
+
+            return results;
+        }
+
+        internal void Activate(bool active)
+        {
+            _active = active;
+        }
     }
 }

@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <div class="ant-anchor-link">
-    <a title="@Title" class="ant-anchor-link-title" href="@Href">@Title</a>
+    <a title="@Title" class="@(_active?"ant-anchor-link-title ant-anchor-link-title-active":"ant-anchor-link-title")" href="@Href">@Title</a>
     <CascadingValue Value="this">
         @ChildContent
     </CascadingValue>
