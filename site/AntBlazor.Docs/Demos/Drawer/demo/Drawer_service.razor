@@ -2,7 +2,7 @@
 
 <AntDesign.Button OnClick="OpenDrawer" Type="primary">OpenDrawer</AntDesign.Button>
 
-<AntDesign.Button OnClick="OpenCompontentTemplate" Type="primary">Using Compontent</AntDesign.Button>
+<AntDesign.Button OnClick="OpenComponentTemplate" Type="primary">Using Component</AntDesign.Button>
 
 @code{
     DrawerRef drawerRef;
@@ -33,30 +33,30 @@
         }
     }
 
-    private async Task OpenCompontentTemplate()
+    private async Task OpenComponentTemplate()
     {
         var options = new DrawerConfig()
         {
-            Title = "Compontent"
+            Title = "Component"
         };
         options.OnClose = () =>
         {
-            Console.WriteLine("Close CompontentTemplate Drawer");
+            Console.WriteLine("Close ComponentTemplate Drawer");
             return Task.CompletedTask;
         };
 
-        //CompontentTemplate.razor
-        //Compontent CompontentTemplate source code
+        //ComponentTemplate.razor
+        //Component ComponentTemplate source code
         //
         //@namespace AntDesign.Docs.Demos.Drawer.demo
         //@inherits DrawerTemplate<string>
         //<div>
-        //    <h3>Compontent</h3>
+        //    <h3>Component</h3>
         //    <p>@Config</p>
         //    <AntDesign.Button Type="primary" OnClick="base.HandleClose">CloseDrawer</AntDesign.Button>
         //</div>
         //
-        await DrawerService.CreateAsync<CompontentTemplate, string>(options, "here is compontent paramter");
+        await DrawerService.CreateAsync<ComponentTemplate, string>(options, "here is Component paramter");
     }
 
 }

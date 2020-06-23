@@ -8,7 +8,7 @@ namespace AntDesign
     public abstract class TemplateComponentBase<TConfig> : AntComponentBase
     {
         /// <summary>
-        /// this compontent Parameter object
+        /// The component Parameter object
         /// </summary>
         [Parameter]
         public TConfig Config { get; set; }

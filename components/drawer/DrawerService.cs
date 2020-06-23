@@ -26,12 +26,12 @@ namespace AntDesign
         /// <summary>
         /// Create a drawer from an existing component template
         /// </summary>
-        /// <typeparam name="T">compontent template type</typeparam>
-        /// <typeparam name="TCompontentParameter">compontent template parameter object type</typeparam>
+        /// <typeparam name="T">Component template type</typeparam>
+        /// <typeparam name="TComponentParameter">Component template parameter object type</typeparam>
         /// <param name="config">DrawerConfig</param>
-        /// <param name="parameter">compontent template parameter object</param>
+        /// <param name="parameter">Component template parameter object</param>
         /// <returns>DrawerRef object</returns>
-        public async Task<DrawerRef> CreateAsync<T, TCompontentParameter>(DrawerConfig config, TCompontentParameter parameter) where T : DrawerTemplate<TCompontentParameter>
+        public async Task<DrawerRef> CreateAsync<T, TComponentParameter>(DrawerConfig config, TComponentParameter parameter) where T : DrawerTemplate<TComponentParameter>
         {
             CheckIsNull(config);
 
@@ -46,7 +46,6 @@ namespace AntDesign
 
             return await HandleCreate(config);
         }
-
 
         private async Task<DrawerRef> HandleCreate(DrawerConfig config)
         {
