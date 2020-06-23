@@ -143,9 +143,9 @@ namespace AntDesign
             {
                 return;
             }
-            if (Config.OnCancel.HasDelegate)
+            if (Config.OnCancel != null)
             {
-                await Config.OnCancel.InvokeAsync(null);
+                await Config.OnCancel.Invoke(null);
             }
         }
 
@@ -186,9 +186,9 @@ namespace AntDesign
                 _maskHideClsName = "ant-modal-mask-hidden";
                 _hasShow = false;
                 StateHasChanged();
-                if (Config.OnClosed.HasDelegate)
+                if (Config.OnClosed != null)
                 {
-                    await Config.OnClosed.InvokeAsync(null);
+                    await Config.OnClosed.Invoke();
                 }
             }
 
