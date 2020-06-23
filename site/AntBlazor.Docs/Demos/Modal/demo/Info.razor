@@ -15,42 +15,42 @@
     </SpaceItem>
 </Space>
 @code {
-    private void HandleInfo()
+    private async Task HandleInfo()
     {
         RenderFragment content =@<div>
                 <p>some messages...some messages...</p>
                 <p>some messages...some messages...</p>
             </div>;
-        _modalService.Info(new ConfirmOptions()
+        await _modalService.Info(new ConfirmOptions()
         {
             Title = "This is a notification message",
             Content = content
         });
     }
 
-    private void HandleSuccess()
+    private async Task HandleSuccess()
     {
-      _modalService.Success(new ConfirmOptions()
-      {
-          Content = "some messages...some messages..."
-      });
+        await _modalService.Success(new ConfirmOptions()
+        {
+            Content = "some messages...some messages..."
+        });
     }
 
-    private void HandleError()
+    private async Task HandleError()
     {
-      _modalService.Error(new ConfirmOptions()
-      {
-          Title = "This is an error message",
-          Content = "some messages...some messages..."
-      });
+        await _modalService.Error(new ConfirmOptions()
+        {
+            Title = "This is an error message",
+            Content = "some messages...some messages..."
+        });
     }
 
     private void HandleWarning()
     {
-      _modalService.Warning(new ConfirmOptions()
-      {
-          Title = "This is a warning message",
-          Content = "some messages...some messages..."
-      });
+        _modalService.Warning(new ConfirmOptions()
+        {
+            Title = "This is a warning message",
+            Content = "some messages...some messages..."
+        });
     }
 }

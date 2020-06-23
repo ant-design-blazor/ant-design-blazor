@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -11,7 +12,7 @@ namespace AntDesign
     {
         internal const string PrefixCls = "ant-modal";
 
-        public EventCallback OnClosed { get; set; }
+        public Func<Task> OnClosed { get; set; }
 
         public string BodyStyle { get; set; }
 
@@ -77,9 +78,9 @@ namespace AntDesign
 
         public int ZIndex { get; set; } = 1000;
 
-        public EventCallback<MouseEventArgs> OnCancel { get; set; }
+        public Func<MouseEventArgs, Task> OnCancel { get; set; }
 
-        public EventCallback<MouseEventArgs> OnOk { get; set; }
+        public Func<MouseEventArgs, Task> OnOk { get; set; }
 
         public ButtonProps OkButtonProps { get; set; }
 

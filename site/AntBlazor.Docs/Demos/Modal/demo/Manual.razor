@@ -19,7 +19,7 @@
             secondsToGo -= 1;
             await Task.Delay(1000);
             props.Content = $"This modal will be destroyed after {secondsToGo} second.";
-            _modalService.Update(props);
+            await _modalService.Update(props);
         }
 
         _modalService.Destroy(props);
