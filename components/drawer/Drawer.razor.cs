@@ -88,10 +88,19 @@ namespace AntDesign
         public bool Visible
         {
             get => this._isOpen;
-            set => this._isOpen = value;
+            set
+            {
+                if (this._isOpen && !value)
+                {
+                    _isClosing = true;
+                }
+                else
+                {
+                    _isClosing = false;
+                }
+                this._isOpen = value;
+            }
         }
-
-        [Parameter] public EventCallback OnViewInit { get; set; }
 
         [Parameter] public EventCallback OnClose { get; set; }
 
@@ -101,6 +110,7 @@ namespace AntDesign
 
         private RenderFragment ContentTemplate { get; set; }
 
+        private bool _isClosing = false;
         private bool _isOpen = default;
 
         private string _originalPlacement;
@@ -245,6 +255,13 @@ namespace AntDesign
                     }
                 }
             }
+            else
+            {
+                if (_isClosing)
+                {
+                    await HandleClose(true);
+                }
+            }
             await base.OnAfterRenderAsync(isFirst);
         }
 
@@ -288,11 +305,14 @@ namespace AntDesign
             }
         }
 
-        private async Task HandleClose()
+        private async Task HandleClose(bool isChangeByParamater = false)
         {
             _isRenderAnimation = false;
-            await OnClose.InvokeAsync(this);
-            await Task.Delay(10);
+            if (!isChangeByParamater)
+            {
+                await OnClose.InvokeAsync(this);
+                await Task.Delay(10);
+            }
             await JsInvokeAsync(JSInteropConstants.enableDrawerBodyScroll);
         }
 
@@ -332,6 +352,11 @@ namespace AntDesign
                 style = $"transition:{_transformTransition} {_heightTransition} {_widthTransition};";
             }
             DrawerStyle = style;
+        }
+
+        internal async Task InvokeStateHasChangedAsync()
+        {
+            await InvokeAsync(StateHasChanged);
         }
     }
 }

@@ -20,18 +20,18 @@ namespace AntDesign
             ModalService.OnUpdate += Modal_OnUpdate;
         }
 
-        private List<ConfirmOptions> confirms = new List<ConfirmOptions>();
+        private List<ConfirmOptions> _confirms = new List<ConfirmOptions>();
 
         private async Task OnRemove(ConfirmOptions obj)
         {
             await Task.Delay(250);
-            confirms.Remove(obj);
+            _confirms.Remove(obj);
             await InvokeAsync(StateHasChanged);
         }
 
         private async Task Modal_OnOpenConfirm(ConfirmOptions obj)
         {
-            confirms.Add(obj);
+            _confirms.Add(obj);
             obj.Visible = true;
             await InvokeAsync(StateHasChanged);
         }
@@ -52,7 +52,7 @@ namespace AntDesign
 
         private async Task Modal_OnDestroyAll()
         {
-            foreach (var confirm in confirms)
+            foreach (var confirm in _confirms)
             {
                 confirm.Visible = false;
             }

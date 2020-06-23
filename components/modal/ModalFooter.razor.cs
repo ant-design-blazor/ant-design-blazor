@@ -15,18 +15,18 @@ namespace AntDesign
         private async Task HandleCancel(MouseEventArgs e)
         {
             var onCancel = ModalProps.OnCancel;
-            if (onCancel.HasDelegate)
+            if (onCancel != null)
             {
-                await onCancel.InvokeAsync(e);
+                await onCancel.Invoke(e);
             }
         }
 
         private async Task HandleOk(MouseEventArgs e)
         {
             var onOk = ModalProps.OnOk;
-            if (onOk.HasDelegate)
+            if (onOk != null)
             {
-                await onOk.InvokeAsync(e);
+                await onOk.Invoke(e);
             }
         }
     }

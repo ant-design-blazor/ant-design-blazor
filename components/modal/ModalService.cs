@@ -12,12 +12,12 @@ namespace AntDesign
         internal event Func<ConfirmOptions, Task> OnDestroy;
         internal event Func<Task> OnDestroyAll;
 
-        public void Confirm(ConfirmOptions props)
+        public Task Confirm(ConfirmOptions props)
         {
-            OnOpenConfirm?.Invoke(props);
+            return OnOpenConfirm?.Invoke(props);
         }
 
-        public void Info(ConfirmOptions options)
+        public Task Info(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -33,10 +33,10 @@ namespace AntDesign
             options.OkCancel = false;
             options.OkText = "OK";
             options.ConfirmType = "info";
-            Confirm(options);
+            return Confirm(options);
         }
 
-        public void Success(ConfirmOptions options)
+        public Task Success(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -52,10 +52,10 @@ namespace AntDesign
             options.OkCancel = false;
             options.OkText = "OK";
             options.ConfirmType = "success";
-            Confirm(options);
+            return Confirm(options);
         }
 
-        public void Error(ConfirmOptions options)
+        public Task Error(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -71,10 +71,10 @@ namespace AntDesign
             options.OkCancel = false;
             options.OkText = "OK";
             options.ConfirmType = "error";
-            Confirm(options);
+            return Confirm(options);
         }
 
-        public void Warning(ConfirmOptions options)
+        public Task Warning(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -90,22 +90,22 @@ namespace AntDesign
             options.OkCancel = false;
             options.OkText = "OK";
             options.ConfirmType = "warning";
-            Confirm(options);
+            return Confirm(options);
         }
 
-        public void Update(ConfirmOptions options)
+        public Task Update(ConfirmOptions options)
         {
-            OnUpdate?.Invoke(options);
+            return OnUpdate?.Invoke(options);
         }
 
-        public void Destroy(ConfirmOptions options)
+        public Task Destroy(ConfirmOptions options)
         {
-            OnDestroy?.Invoke(options);
+            return OnDestroy?.Invoke(options);
         }
 
-        public void DestroyAll()
+        public Task DestroyAll()
         {
-            OnDestroyAll?.Invoke();
+            return OnDestroyAll?.Invoke();
         }
     }
 }

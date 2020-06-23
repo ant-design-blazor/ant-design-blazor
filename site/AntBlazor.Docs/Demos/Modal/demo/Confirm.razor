@@ -13,13 +13,15 @@
     </SpaceItem>
 </Space>
 @code{
-    Action<MouseEventArgs> onOk = (e) =>
+    Func<MouseEventArgs, Task> onOk = (e) =>
     {
         Console.WriteLine("Ok");
+        return Task.CompletedTask;
     };
-    Action<MouseEventArgs> onCancel = (e) =>
+    Func<MouseEventArgs, Task> onCancel = (e) =>
     {
         Console.WriteLine("Cancel");
+        return Task.CompletedTask;
     };
     RenderFragment icon = @<Icon Type="exclamation-circle" Theme="outline"></Icon>;
 
@@ -30,8 +32,8 @@
             Title = "Do you Want to delete these items?",
             Icon = icon,
             Content = "Some descriptions",
-            OnOk = new EventCallback<MouseEventArgs>(this, onOk),
-            OnCancel = new EventCallback<MouseEventArgs>(this, onCancel)
+            OnOk = onOk,
+            OnCancel = onCancel
         });
     }
 
@@ -42,8 +44,8 @@
             Title = "Are you sure delete this task?",
             Icon = icon,
             Content = "Some descriptions",
-            OnOk = new EventCallback<MouseEventArgs>(this, onOk),
-            OnCancel = new EventCallback<MouseEventArgs>(this, onCancel),
+            OnOk = onOk,
+            OnCancel = onCancel,
             OkText = "Yes",
             OkType = "danger",
             CancelText = "No",
@@ -58,8 +60,8 @@
             Title = "Are you sure delete this task?",
             Icon = icon,
             Content = "Some descriptions",
-            OnOk = new EventCallback<MouseEventArgs>(this, onOk),
-            OnCancel = new EventCallback<MouseEventArgs>(this, onCancel),
+            OnOk = onOk,
+            OnCancel = onCancel,
             OkText = "Yes",
             OkType = "danger",
             CancelText = "No",
