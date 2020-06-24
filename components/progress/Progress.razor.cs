@@ -179,7 +179,7 @@ namespace AntDesign
                 _bgStyle = GetLineBGStyle();
                 if (SuccessPercent != 0)
                 {
-                    _bgSuccessStyle = $"width: {SuccessPercent}%; height: {(Size == ProgressSize.Default ? 8 : 6)}px;";
+                    _bgSuccessStyle = $"width: {SuccessPercent}%; height: {StrokeWidth}px;";
                 }
             }
             else if (Type == ProgressType.Circle)
@@ -216,7 +216,7 @@ namespace AntDesign
 
         private string GetLineBGStyle()
         {
-            string style = $"{(StrokeLinecap == ProgressStrokeLinecap.Round ? string.Empty : "border-radius: 0px; ")}width: {Percent}%; height: {(Size == ProgressSize.Default ? 8 : 6)}px;";
+            string style = $"{(StrokeLinecap == ProgressStrokeLinecap.Round ? string.Empty : "border-radius: 0px; ")}width: {Percent}%; height: {StrokeWidth}px;";
 
             // width: 99.9%; height: 8px; background-image: linear-gradient(to right, rgb(16, 142, 233) 0%, rgb(135, 208, 104) 100%);
             // width: 99.9%; height: 8px; background-image: linear-gradient(to right, rgb(16, 142, 233), rgb(135, 208, 104));
