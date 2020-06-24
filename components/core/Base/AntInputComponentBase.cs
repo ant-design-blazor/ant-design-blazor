@@ -28,6 +28,8 @@ namespace AntDesign
         [CascadingParameter(Name = "Form")]
         protected IForm Form { get; set; }
 
+        public string[] ValidationMessages { get; set; } = Array.Empty<string>();
+
         private string _formSize;
         [CascadingParameter(Name = "FormSize")]
         public string FormSize
