@@ -1,0 +1,26 @@
+﻿@namespace AntDesign
+@inherits ColumnBase
+
+@if (IsPlaceholder)
+{
+    <td style="padding: 0px; border: 0px; height: 0px;"></td>
+}
+else if (IsColGroup)
+{
+    if (Width > 0)
+    {
+        <col style="width: @(Width)px; min-width: @(Width)px;">
+    }
+}
+else if (IsHeader)
+{
+    <th class="@ClassMapper.Class" style="@FixedStyle @Style">
+        @(Title)
+    </th>
+}
+else
+{
+    <td class="@ClassMapper.Class" style="@FixedStyle @Style">
+        @ChildContent
+    </td>
+}

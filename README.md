@@ -19,6 +19,8 @@ An enterprise-class UI components based on Ant Design and Blazor.
 
 </div>
 
+[![](https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*Yl83RJhUE7kAAAAAAAAAAABkARQnAQ)](https://ant-design-blazor.github.io)
+
 English | [简体中文](README-zh_CN.md)
 
 ## ✨ Features
@@ -97,6 +99,23 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
   ```csharp
   @using AntDesign
+  ```
+
+- To display the pop-up component dynamically, you need to add the `<AntContainer />` component in `App.razor`. 
+
+  ```
+  <Router AppAssembly="@typeof(MainLayout).Assembly">
+      <Found Context="routeData">
+          <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)" />
+      </Found>
+      <NotFound>
+          <LayoutView Layout="@typeof(MainLayout)">
+              <Result Status="404" />
+          </LayoutView>
+      </NotFound>
+  </Router>
+
+  <AntContainer />   <-- add this component ✨
   ```
 
 - Finally, it can be referenced in the `.razor' component!

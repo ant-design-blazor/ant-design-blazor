@@ -49,8 +49,8 @@ namespace AntDesign
             config.Width = 416;
             config.Title = null;
             config.CloseIcon = null;
-            config.OnClosed = new EventCallback(this, new Func<Task>(Close));
-            config.OnCancel = new EventCallback<MouseEventArgs>(this, new Func<MouseEventArgs, Task>(HandleCancel));
+            config.OnClosed = Close;
+            config.OnCancel = HandleCancel;
             return config;
         }
 
@@ -81,10 +81,9 @@ namespace AntDesign
         {
             if (Config.OnOk != null)
             {
-                var onOk = Config.OnOk.Value;
                 Config.OkButtonProps.Loading = true;
                 await InvokeAsync(StateHasChanged);
-                await onOk.InvokeAsync(e);
+                await Config.OnOk.Invoke(e);
             }
             await Close();
         }
@@ -93,10 +92,9 @@ namespace AntDesign
         {
             if (Config.OnCancel != null)
             {
-                var onCancel = Config.OnCancel.Value;
                 Config.CancelButtonProps.Loading = true;
                 await InvokeAsync(StateHasChanged);
-                await onCancel.InvokeAsync(e);
+                await Config.OnCancel.Invoke(e);
             }
             await Close();
         }

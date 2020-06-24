@@ -1,0 +1,33 @@
+﻿<div class="article">
+    <Skeleton Loading="@_loading">
+        <h4>Ant Design, a design language</h4>
+        <p>
+            We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people
+            create their product prototypes beautifully and efficiently.
+        </p>
+    </Skeleton>
+    <Button @onclick="showSkeleton" Disabled="@_loading">
+        Show Skeleton
+    </Button>
+</div>
+
+<style>
+    .article h4 {
+        margin-bottom: 16px;
+    }
+
+    .article button {
+        margin-top: 16px;
+    }
+</style>
+
+@code{
+    private bool _loading = false;
+
+    private async Task showSkeleton()
+    {
+        this._loading = true;
+        await Task.Delay(3000);
+        this._loading = false;
+    }
+}

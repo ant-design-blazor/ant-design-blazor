@@ -30,7 +30,7 @@ Following the Ant Design specification, we developed a Blazor Components library
 - 💕 Supports WebAssembly-based client-side and SignalR-based server-side UI event interaction.
 - 🎨 Supports Progressive Web Applications (PWA).
 - 🛡 Build with C#, a multi-paradigm static language for an efficient development experience.
-- ⚙️ NET Standard 2.1 based, with direct reference to the rich .NET ecosystem.
+- ⚙️ .NET Standard 2.1 based, with direct reference to the rich .NET ecosystem.
 - 🎁 Seamless integration with existing ASP.NET Core MVC and Razor Pages projects.
 
 ## 🌈 Online Examples
@@ -99,6 +99,23 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
   ```csharp
   @using AntDesign
+  ```
+
+- To display the pop-up component dynamically, you need to add the `<AntContainer />` component in `App.razor`. 
+
+  ```
+  <Router AppAssembly="@typeof(MainLayout).Assembly">
+      <Found Context="routeData">
+          <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)" />
+      </Found>
+      <NotFound>
+          <LayoutView Layout="@typeof(MainLayout)">
+              <Result Status="404" />
+          </LayoutView>
+      </NotFound>
+  </Router>
+
+  <AntContainer />   <-- add this component ✨
   ```
 
 - Finally, it can be referenced in the `.razor' component!

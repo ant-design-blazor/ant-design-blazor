@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     public interface ITable
     {
-        void AddColumn(ITableColumn column);
+        internal ISelectionColumn HeaderSelection { get; set; }
 
-        IRowSelection HeaderSelection { get; set; }
+        internal void SelectionChanged(int[] checkedIndex);
 
-        internal void OnSelectionChanged(int[] checkedIndex);
+        internal void Refresh();
+
+        void SetSelection(string[] keys);
     }
 }

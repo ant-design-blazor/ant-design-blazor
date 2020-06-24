@@ -17,6 +17,8 @@ title: Notification
 
 ## API
 
+> 请确认已经在 `App.Razor` 中添加了 `<AntContainer />` 组件。
+
 - `NotificationService.Open(config:NotificationConfig)`
 - `NotificationService.Info(config:NotificationConfig)`
 - `NotificationService.Success(config:NotificationConfig)`

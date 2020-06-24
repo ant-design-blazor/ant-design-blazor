@@ -13,6 +13,8 @@ Display global messages as feedback in response to user operations.
 
 ## API
 
+> Please confirm that the `<AntContainer />` component has been added to `App.Razor`.
+
 This components provides some static methods, with usage and arguments as following:
 
 - `MessageService.Success(content, [duration], onClose)`

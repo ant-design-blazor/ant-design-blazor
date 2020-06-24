@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-@foreach (var confirm in confirms)
+@foreach (var confirm in _confirms)
 {
     <ConfirmDialog @key="@confirm" OnRemove="@OnRemove" Config ="@confirm" />
 }
