@@ -71,7 +71,7 @@ namespace AntDesign
         private Func<TValue, TValue, bool> _greaterThanFunc;
         private Func<TValue, TValue, bool> _greaterThanOrEqualFunc;
         private Func<TValue, string, string> _toStringFunc;
-        private Func<TValue, TValue> _roundFunc;
+        private Func<TValue, int, TValue> _roundFunc;
 
         private static Type _surfaceType = typeof(TValue);
 
@@ -118,8 +118,9 @@ namespace AntDesign
 
             //四舍五入
             ParameterExpression num = Expression.Parameter(_surfaceType, "num");
-            MethodCallExpression expRound = Expression.Call(null, typeof(InputNumberMath).GetMethod("Round", new Type[] { _surfaceType, typeof(int) }), num, Expression.Constant(3));
-            var lambdaRound = Expression.Lambda<Func<TValue, TValue>>(expRound, num);
+            ParameterExpression decimalPlaces = Expression.Parameter(typeof(int), "decimalPlaces");
+            MethodCallExpression expRound = Expression.Call(null, typeof(InputNumberMath).GetMethod("Round", new Type[] { _surfaceType, typeof(int) }), num, decimalPlaces);
+            var lambdaRound = Expression.Lambda<Func<TValue, int, TValue>>(expRound, num, decimalPlaces);
             _roundFunc = lambdaRound.Compile();
 
 
@@ -220,7 +221,8 @@ namespace AntDesign
                         num = (TValue)Convert.ChangeType(inputString, Nullable.GetUnderlyingType(_surfaceType));
                     }
                 }
-                num = _roundFunc(num);
+                if (DecimalPlaces.HasValue)
+                    num = _roundFunc(num, DecimalPlaces.Value);
                 ChangeValue(num);
             }
         }
