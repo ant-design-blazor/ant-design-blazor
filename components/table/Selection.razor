@@ -30,7 +30,7 @@ else
         }
         else if (Type == "radio")
         {
-            <Radio @bind-Checked="@_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" TValue="bool" />
+            <Radio @bind-Checked="_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" TValue="bool" />
         }
     </td>
 }
