@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Text;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -33,13 +34,13 @@ namespace AntDesign
         /// 通知提醒标题，必选，string 或者 RenderFragment
         /// </summary>
         [NotNull]
-        public object Message { get; set; }
+        public OneOf<string, RenderFragment> Message { get; set; }
 
         /// <summary>
         /// 通知提醒内容，必选，string 或者 RenderFragment
         /// </summary>
         [NotNull]
-        public object Description { get; set; }
+        public OneOf<string, RenderFragment> Description { get; set; }
 
         /// <summary>
         /// 自动关闭的延时，单位为秒。默认 4.5 秒后自动关闭，配置为 null 则不自动关闭

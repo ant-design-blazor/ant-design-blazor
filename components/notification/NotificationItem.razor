@@ -54,29 +54,27 @@
             }
 
             <div class="@(ClassPrefix)-notice-message">
-                @if (Config.Message != null)
-                {
-                    if (Config.Message is string msg)
+                @{
+                    if (Config.Message.IsT0)
                     {
-                        @((MarkupString)(msg))
+                        @((MarkupString)(Config.Message.AsT0))
                     }
-                    else if (Config.Message is RenderFragment renderFragment)
+                    else
                     {
-                        @renderFragment
+                        @Config.Message.AsT1
                     }
                 }
             </div>
 
             <div class="@(ClassPrefix)-notice-description">
-                @if (Config.Description != null)
-                {
-                    if (Config.Description is string description)
+                @{
+                    if (Config.Description.IsT0)
                     {
-                        @((MarkupString)(description))
+                        @((MarkupString)(Config.Description.AsT0))
                     }
-                    else if (Config.Message is RenderFragment renderFragment)
+                    else
                     {
-                        @renderFragment
+                        @Config.Description.AsT1
                     }
                 }
             </div>
