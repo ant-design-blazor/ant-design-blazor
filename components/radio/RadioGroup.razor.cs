@@ -7,7 +7,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public partial class RadioGroup<TValue> : AntDomComponentBase
+    public partial class RadioGroup<TValue> : AntInputComponentBase<TValue>
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -19,43 +19,12 @@ namespace AntDesign
         public string ButtonStyle { get; set; } = "outline";
 
         [Parameter]
-        public string Size { get; set; } = "default";
-
-        [Parameter]
         public string Name { get; set; }
 
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
 
-        private TValue _value;
-        [Parameter]
-        public TValue Value
-        {
-            get { return _value; }
-            set
-            {
-                _value = value;
-                foreach (var radio in RadioItems)
-                {
-                    if (EqualsValue(this.CurrentValue, radio.Value))
-                    {
-                        InvokeAsync(radio.Select);
-                    }
-                    else
-                    {
-                        InvokeAsync(radio.UnSelect);
-                    }
-                }
-                StateHasChanged();
-            }
-        }
-
-        [Parameter]
-        public EventCallback<TValue> ValueChanged { get; set; }
-
         internal List<Radio<TValue>> RadioItems { get; set; } = new List<Radio<TValue>>();
-
-        TValue CurrentValue => Value;
 
         protected override async Task OnInitializedAsync()
         {
@@ -64,29 +33,8 @@ namespace AntDesign
                 .If($"{prefixCls}-large", () => Size == "large")
                 .If($"{prefixCls}-small", () => Size == "small")
                 .If($"{prefixCls}-solid", () => ButtonStyle == "solid");
-
-
             await base.OnInitializedAsync();
         }
-
-        protected override async Task OnParametersSetAsync()
-        {
-
-            //foreach (var radio in RadioItems)
-            //{
-            //    if (EqualsValue(this.CurrentValue, radio.Value))
-            //    {
-            //        await radio.Select();
-            //    }
-            //    else
-            //    {
-            //        await radio.UnSelect();
-            //    }
-            //}
-            //StateHasChanged();
-            await base.OnParametersSetAsync();
-        }
-
         internal async Task AddRadio(Radio<TValue> radio)
         {
             if (this.Name != null)
@@ -101,28 +49,35 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        protected override async Task OnParametersSetAsync()
+        {
+            foreach (var radio in RadioItems)
+            {
+                if (EqualsValue(this.CurrentValue, radio.Value))
+                {
+                    await radio.Select();
+                }
+                else
+                {
+                    await radio.UnSelect();
+                }
+            }
+            await base.OnParametersSetAsync();
+        }
+
         internal async Task OnRadioChange(TValue value)
         {
             if (!EqualsValue(this.CurrentValue, value))
             {
-                this.Value = value;
-                await this.ValueChanged.InvokeAsync(value);
+                this.CurrentValue = value;
 
-                foreach (var radio in RadioItems)
-                {
-                    if (!EqualsValue(this.CurrentValue, radio.Value))
-                    {
-                        await radio.UnSelect();
-                    }
-                }
+                await this.ValueChanged.InvokeAsync(value);
 
                 if (this.OnChange.HasDelegate)
                 {
                     await this.OnChange.InvokeAsync(value);
                 }
             }
-            StateHasChanged();
-
         }
 
         private static bool EqualsValue(TValue left, TValue right)

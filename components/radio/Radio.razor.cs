@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using OneOf;
 
 namespace AntDesign
 {
@@ -104,11 +102,6 @@ namespace AntDesign
                 await CheckedChange.InvokeAsync(true);
                 await CheckedChanged.InvokeAsync(true);
             }
-
-            if (RadioGroup != null)
-            {
-                await RadioGroup.OnRadioChange(this.Value);
-            }
         }
 
         internal async Task UnSelect()
@@ -124,7 +117,14 @@ namespace AntDesign
 
         public async Task OnClick()
         {
-            await Select();
+            if (RadioGroup != null)
+            {
+                await RadioGroup.OnRadioChange(this.Value);
+            }
+            else
+            {
+                await Select();
+            }
         }
 
         protected async Task Focus()
