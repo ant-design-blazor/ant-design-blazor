@@ -16,6 +16,7 @@ namespace AntDesign
         private string _ballStyle = string.Empty;
         private ElementReference _self;
         private ElementReference _ink;
+        private DomRect _selfDom;
         private Dictionary<string, decimal> _linkTops;
         private List<AnchorLink> _flatLinks;
         private List<AnchorLink> _links = new List<AnchorLink>();
@@ -37,13 +38,13 @@ namespace AntDesign
             DomEventService.AddEventListener("window", "scroll", OnScroll);
         }
 
-        protected override void OnAfterRender(bool firstRender)
+        protected async override void OnAfterRender(bool firstRender)
         {
             base.OnAfterRender(firstRender);
 
             if (firstRender)
             {
-                Console.WriteLine(Id);
+                _selfDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ink);
                 _linkTops = new Dictionary<string, decimal>();
                 _flatLinks = FlatChildren();
                 foreach (var link in _flatLinks)
@@ -76,15 +77,14 @@ namespace AntDesign
             {
                 try
                 {
-                    DomRect domRect = await link.GetDom();
+                    DomRect hrefDom = await link.GetHrefDom();
 
-                    if (_linkTops[link.Href] * domRect.top <= 0)
+                    if (_linkTops[link.Href] * hrefDom.top <= 0)
                     {
-                        DomRect containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ink);
-                        Activate(link, (domRect.top - containerRect.top) + domRect.height / 2);
-                        Debug.WriteLine((domRect.top - containerRect.top) + domRect.height / 2);
+                        Activate(link, (link.LinkDom.top - _selfDom.top) + link.LinkDom.height / 2);
+                        Debug.WriteLine((link.LinkDom.top - _selfDom.top) + link.LinkDom.height / 2);
                     }
-                    _linkTops[link.Href] = domRect.top;
+                    _linkTops[link.Href] = hrefDom.top;
                 }
                 catch (Exception ex)
                 {

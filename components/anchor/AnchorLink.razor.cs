@@ -13,10 +13,9 @@ namespace AntDesign
     public partial class AnchorLink : AntDomComponentBase, IAnchor
     {
         private bool _active;
-
         private ElementReference _self;
-
         private List<AnchorLink> _links = new List<AnchorLink>();
+        public DomRect LinkDom { get; private set; }
 
         #region Parameters
 
@@ -28,7 +27,7 @@ namespace AntDesign
             get => _parent;
             set
             {
-                Debug.WriteLine($"link:{Title} {GetHashCode()}\tparent:{value.GetHashCode()}");
+                //Debug.WriteLine($"link:{Title} {GetHashCode()}\tparent:{value.GetHashCode()}");
                 _parent = value;
                 _parent?.Add(this);
             }
@@ -57,6 +56,13 @@ namespace AntDesign
 
         #endregion Parameters
 
+        protected async override Task OnFirstAfterRenderAsync()
+        {
+            await base.OnFirstAfterRenderAsync();
+
+            LinkDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _self);
+        }
+
         public void Add(AnchorLink anchorLink)
         {
             _links.Add(anchorLink);
@@ -84,10 +90,9 @@ namespace AntDesign
             _active = active;
         }
 
-        internal async Task<DomRect> GetDom()
+        internal async Task<DomRect> GetHrefDom()
         {
-            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _self);
-            Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _self);
+            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#" + Href.Split('#')[1]);
             return domRect;
         }
     }
