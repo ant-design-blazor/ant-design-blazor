@@ -14,6 +14,6 @@
     <div class="ant-input-number-input-wrap">
         <Input role="spinbutton" aria-valuemin="@Min" aria-valuemax="@Max" autocomplete="off" max="@Max" min="@Min" step="@Step"
                spellcheck="false" data-ms-editor="true" aria-valuenow="@CurrentValue"
-               Class="ant-input-number-input" Value="@CurrentValueAsString" Type="number" OnInput="(e)=>OnInput(e)" OnFocus="OnFocus" OnBlur="OnBlur" />
+               Class="ant-input-number-input" Value="@(_focused?CurrentValue?.ToString():CurrentValueAsString)" Type="number" OnInput="(e)=>OnInput(e)" OnFocus="OnFocus" OnBlur="OnBlur" />
     </div>
 </div>

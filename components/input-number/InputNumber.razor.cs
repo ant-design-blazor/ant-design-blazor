@@ -75,18 +75,25 @@ namespace AntDesign
 
         private static Type _surfaceType = typeof(TValue);
 
+        private static Dictionary<Type, object> _defaultMaximum = new Dictionary<Type, object>()
+        {
+            { typeof(int),int.MaxValue },
+            { typeof(decimal),decimal.MaxValue },
+            { typeof(double),double.PositiveInfinity },
+            { typeof(float),float.PositiveInfinity },
+        };
+
+        private static Dictionary<Type, object> _defaultMinimum = new Dictionary<Type, object>()
+        {
+            { typeof(int),int.MinValue },
+            { typeof(decimal),decimal.MinValue },
+            { typeof(double),double.NegativeInfinity },
+            { typeof(float),float.NegativeInfinity},
+        };
+
         public InputNumber()
         {
             _isNullable = _surfaceType.IsGenericType && _surfaceType.GetGenericTypeDefinition() == typeof(Nullable<>);
-
-            if (_surfaceType == typeof(int) || _surfaceType == typeof(int?))
-                SetMinMax(int.MinValue, int.MaxValue);
-            else if (_surfaceType == typeof(decimal) || _surfaceType == typeof(decimal?))
-                SetMinMax(decimal.MinValue, decimal.MaxValue);
-            else if (_surfaceType == typeof(double) || _surfaceType == typeof(double?))
-                SetMinMax(double.NegativeInfinity, double.PositiveInfinity);
-            else if (_surfaceType == typeof(float) || _surfaceType == typeof(float?))
-                SetMinMax(float.NegativeInfinity, float.PositiveInfinity);
 
             //递增与递减
             ParameterExpression piValue = Expression.Parameter(_surfaceType, "value");
@@ -125,6 +132,10 @@ namespace AntDesign
 
 
             var underlyingType = _isNullable ? Nullable.GetUnderlyingType(_surfaceType) : _surfaceType;
+
+            if (_defaultMaximum.ContainsKey(underlyingType)) Max = (TValue)Convert.ChangeType(_defaultMaximum[underlyingType], underlyingType);
+            if (_defaultMinimum.ContainsKey(underlyingType)) Min = (TValue)Convert.ChangeType(_defaultMinimum[underlyingType], underlyingType);
+
             _step = (TValue)Convert.ChangeType(1, underlyingType);
         }
 
@@ -155,7 +166,6 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-
             SetClass();
         }
 
@@ -174,18 +184,19 @@ namespace AntDesign
         private void OnInput(ChangeEventArgs args)
         {
             _inputString = args.Value?.ToString();
-            ConvertNumber(_inputString);
         }
 
         private void OnFocus()
         {
             _focused = true;
+            CurrentValue = Value;
         }
 
         private void OnBlur()
         {
             _focused = false;
-            _inputString = Regex.Replace(_inputString, @"[^\d.\d]", "");
+            if (_inputString == null) _inputString = Value.ToString();
+            _inputString = Regex.Replace(_inputString, @"[^\+\-\d.\d]", "");
             ConvertNumber(_inputString);
         }
 
@@ -198,6 +209,7 @@ namespace AntDesign
 
             if (Regex.IsMatch(inputString, @"^[+-]?\d*[.]?\d*$"))
             {
+                if (inputString == "-" || inputString == "+") inputString = "0";
                 TValue num;
                 if (!_isNullable)
                 {
