@@ -12,10 +12,10 @@
     }
 </style>
 
-<RadioGroup @bind-Value="@_sizeValue"  OnChange="OnChangeSize">
-    <Radio RadioButton value="large">Large</Radio>
-    <Radio RadioButton value="default">Default</Radio>
-    <Radio RadioButton value="small">Small</Radio>
+<RadioGroup @bind-Value="@_sizeValue" OnChange="OnChangeSize" TValue="string">
+    <Radio RadioButton Value="@("large")">Large</Radio>
+    <Radio RadioButton Value="@("default")">Default</Radio>
+    <Radio RadioButton Value="@("small")">Small</Radio>
 </RadioGroup>
 <br />
 <br />

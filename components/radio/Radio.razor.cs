@@ -2,16 +2,17 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
-    public partial class Radio : AntDomComponentBase
+    public partial class Radio<TValue> : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public string Value { get; set; }
+        public TValue Value { get; set; }
 
         [Parameter]
         public bool AutoFocus { get; set; } = false;
@@ -31,7 +32,7 @@ namespace AntDesign
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
 
-        [CascadingParameter] public RadioGroup RadioGroup { get; set; }
+        [CascadingParameter] public RadioGroup<TValue> RadioGroup { get; set; }
 
         protected ClassMapper RadioClassMapper { get; set; } = new ClassMapper();
 
@@ -88,7 +89,7 @@ namespace AntDesign
             {
                 await this.Focus();
             }
-            if (this is Radio radio)
+            if (this is Radio<TValue> radio)
             {
                 RadioGroup?.AddRadio(radio);
             }
