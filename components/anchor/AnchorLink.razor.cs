@@ -12,7 +12,10 @@ namespace AntDesign
 {
     public partial class AnchorLink : AntDomComponentBase, IAnchor
     {
+        private const string PrefixCls = "ant-anchor-link";
         private bool _active;
+        private bool _hrefDomExist;
+        private ClassMapper _titleClass = new ClassMapper();
         private ElementReference _self;
         private List<AnchorLink> _links = new List<AnchorLink>();
         public DomRect LinkDom { get; private set; }
@@ -56,11 +59,30 @@ namespace AntDesign
 
         #endregion Parameters
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            ClassMapper.Clear()
+                .Add($"{PrefixCls}")
+                .If($"{PrefixCls}-active", () => _active);
+
+            _titleClass.Clear()
+                .Add($"{PrefixCls}-title")
+                .If($"{PrefixCls}-title-active", () => _active);
+        }
+
         protected async override Task OnFirstAfterRenderAsync()
         {
             await base.OnFirstAfterRenderAsync();
 
             LinkDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _self);
+            try
+            {
+                await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#" + Href.Split('#')[1]);
+                _hrefDomExist = true;
+            }
+            catch { }
         }
 
         public void Add(AnchorLink anchorLink)
@@ -92,7 +114,11 @@ namespace AntDesign
 
         internal async Task<DomRect> GetHrefDom()
         {
-            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#" + Href.Split('#')[1]);
+            DomRect domRect = null;
+            if (_hrefDomExist)
+            {
+                domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#" + Href.Split('#')[1]);
+            }
             return domRect;
         }
     }

@@ -29,6 +29,63 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Fixed mode of Anchor
+        /// </summary>
+        [Parameter]
+        public bool Affix { get; set; } = true;
+
+        /// <summary>
+        /// Bounding distance of anchor area
+        /// </summary>
+        [Parameter]
+        public int Bounds { get; set; } = 5;
+
+        /// <summary>
+        /// Scrolling container
+        /// </summary>
+        [Parameter]
+        public Func<string> GetContainer { get; set; } = () => "window";
+
+        /// <summary>
+        /// Pixels to offset from bottom when calculating position of scroll
+        /// </summary>
+        [Parameter]
+        public int? OffsetBottom { get; set; }
+
+        /// <summary>
+        /// Pixels to offset from top when calculating position of scroll
+        /// </summary>
+        [Parameter]
+        public int? OffsetTop { get; set; } = 0;
+
+        /// <summary>
+        /// Whether show ink-balls in Fixed mode
+        /// </summary>
+        [Parameter]
+        public bool ShowInkInFixed { get; set; } = false;
+
+        /// <summary>
+        /// set the handler to handle click event
+        /// </summary>
+        [Parameter]
+        public EventCallback OnClick { get; set; }
+
+        /// <summary>
+        /// Customize the anchor highlight
+        /// </summary>
+        [Parameter]
+        public Func<string> GetCurrentAnchor { get; set; }
+
+        /// <summary>
+        /// Anchor scroll offset, default as <see cref="OffsetTop"/>
+        /// </summary>
+        [Parameter]
+        public int? TargetOffset { get; set; }
+
+        [Parameter]
+        public EventCallback OnChange { get; set; }
+
         #endregion Parameters
 
         protected override void OnInitialized()
@@ -78,13 +135,14 @@ namespace AntDesign
                 try
                 {
                     DomRect hrefDom = await link.GetHrefDom();
-
-                    if (_linkTops[link.Href] * hrefDom.top <= 0)
+                    if (hrefDom != null)
                     {
-                        Activate(link, (link.LinkDom.top - _selfDom.top) + link.LinkDom.height / 2);
-                        Debug.WriteLine((link.LinkDom.top - _selfDom.top) + link.LinkDom.height / 2);
+                        if (_linkTops[link.Href] * hrefDom.top <= 0)
+                        {
+                            Activate(link, (link.LinkDom.top - _selfDom.top) + link.LinkDom.height / 2 - 2);
+                        }
+                        _linkTops[link.Href] = hrefDom.top;
                     }
-                    _linkTops[link.Href] = hrefDom.top;
                 }
                 catch (Exception ex)
                 {
@@ -99,8 +157,11 @@ namespace AntDesign
                 link.Activate(link == anchorLink);
             }
 
-            _ballClass = "ant-anchor-ink-ball visible";
-            _ballStyle = $"top: {top}px;";
+            if (Affix)
+            {
+                _ballClass = "ant-anchor-ink-ball visible";
+                _ballStyle = $"top: {top}px;";
+            }
 
             StateHasChanged();
         }

@@ -1,8 +1,8 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="ant-anchor-link" @ref="@_self" id="@Id">
-    <a title="@Title" class="@(_active?"ant-anchor-link-title ant-anchor-link-title-active":"ant-anchor-link-title")" href="@Href">@Title</a>
+<div class="@ClassMapper.Class" @ref="@_self" id="@Id">
+    <a title="@Title" class="@_titleClass.Class" href="@Href">@Title</a>
     <CascadingValue Value="this">
         @ChildContent
     </CascadingValue>
