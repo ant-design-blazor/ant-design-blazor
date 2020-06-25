@@ -1,0 +1,7 @@
+﻿@namespace AntDesign
+@typeparam TValue
+
+@foreach (var message in _control.ValidationMessages)
+{
+    <FormValidationMessageItem AdditionalAttributes="@AdditionalAttributes" Message="@message" @key="message"></FormValidationMessageItem>
+}
