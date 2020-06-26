@@ -8,7 +8,7 @@
     DrawerRef drawerRef;
     private async Task OpenDrawer()
     {
-        RenderFragment content =@<div><Input value="" /><Button OnClick="CloseDrawer">CloseDrawer</Button></div>;
+        RenderFragment content =@<div><Input Value="@("")" /><Button OnClick="CloseDrawer">CloseDrawer</Button></div>;
 
         var options = new DrawerConfig()
         {
