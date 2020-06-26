@@ -11,7 +11,7 @@ namespace AntDesign
     /// <summary>
     ///
     /// </summary>
-    public class Input : AntInputComponentBase<string>
+    public class Input<TValue> : AntInputComponentBase<TValue>
     {
         protected const string PrefixCls = "ant-input";
 
@@ -38,7 +38,7 @@ namespace AntDesign
         public bool AutoFocus { get; set; }
 
         [Parameter]
-        public string DefaultValue { get; set; }
+        public TValue DefaultValue { get; set; }
 
         [Parameter]
         public int MaxLength { get; set; } = -1;
@@ -70,13 +70,16 @@ namespace AntDesign
         [Parameter]
         public EventCallback<FocusEventArgs> OnBlur { get; set; }
 
+        [Parameter]
+        public EventCallback<FocusEventArgs> OnFocus { get; set; }
+
         public Dictionary<string, object> Attributes { get; set; }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (!string.IsNullOrEmpty(DefaultValue) && string.IsNullOrEmpty(Value))
+            if (!string.IsNullOrEmpty(DefaultValue?.ToString()) && string.IsNullOrEmpty(Value?.ToString()))
             {
                 Value = DefaultValue;
             }
@@ -91,10 +94,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small);
 
-            if (Attributes is null)
-            {
-                Attributes = new Dictionary<string, object>();
-            }
+            Attributes ??= new Dictionary<string, object>();
 
             AffixWrapperClass = $"{PrefixCls}-affix-wrapper";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper";
@@ -144,8 +144,7 @@ namespace AntDesign
 
         protected async Task OnChangeAsync(ChangeEventArgs args)
         {
-            CurrentValueAsString = args.Value.ToString();
-
+            CurrentValueAsString = args.Value?.ToString();
             if (OnChange.HasDelegate)
             {
                 await OnChange.InvokeAsync(args);
@@ -174,7 +173,7 @@ namespace AntDesign
             {
                 builder.OpenComponent<Icon>(31);
                 builder.AddAttribute(32, "Type", "close-circle");
-                if (string.IsNullOrEmpty(Value))
+                if (string.IsNullOrEmpty(Value?.ToString()))
                 {
                     builder.AddAttribute(33, "Style", "visibility: hidden;");
                 }
@@ -184,7 +183,7 @@ namespace AntDesign
                 }
                 builder.AddAttribute(34, "onclick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
                 {
-                    Value = string.Empty;
+                    Value = default;//string.Empty;
                     ToggleClearBtn();
                 }));
                 builder.CloseComponent();
@@ -208,7 +207,7 @@ namespace AntDesign
         /// <returns></returns>
         protected virtual async void OnInputAsync(ChangeEventArgs args)
         {
-            bool flag = !(!string.IsNullOrEmpty(Value) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
+            bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
             CurrentValueAsString = args.Value.ToString();
 
@@ -281,10 +280,12 @@ namespace AntDesign
 
                 if (Attributes != null)
                 {
-                    foreach (KeyValuePair<string, object> pair in Attributes)
-                    {
-                        builder.AddAttribute(i++, pair.Key, pair.Value);
-                    }
+                    builder.AddMultipleAttributes(i++, Attributes);
+                }
+
+                if (AdditionalAttributes != null)
+                {
+                    builder.AddMultipleAttributes(i++, AdditionalAttributes);
                 }
 
                 builder.AddAttribute(i++, "Id", Id);
@@ -294,11 +295,12 @@ namespace AntDesign
                 }
 
                 builder.AddAttribute(i++, "placeholder", Placeholder);
-                builder.AddAttribute(i++, "value", Value);
+                builder.AddAttribute(i++, "value", CurrentValueAsString);
                 builder.AddAttribute(i++, "onchange", CallbackFactory.Create(this, OnChangeAsync));
                 builder.AddAttribute(i++, "onkeypress", CallbackFactory.Create(this, OnPressEnterAsync));
                 builder.AddAttribute(i++, "oninput", CallbackFactory.Create(this, OnInputAsync));
                 builder.AddAttribute(i++, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+                builder.AddAttribute(i++, "onfocus", CallbackFactory.Create(this, OnFocus));
                 builder.AddElementReferenceCapture(i++, r => Ref = r);
                 builder.CloseElement();
 
