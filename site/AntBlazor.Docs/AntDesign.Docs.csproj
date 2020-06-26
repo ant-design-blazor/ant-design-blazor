@@ -55,7 +55,7 @@
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet build $(CLIProjectDir)" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) demo2json $(ProjectDir)Demos $(ProjectDir)wwwroot/meta" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) menu2json $(ProjectDir)Demos docs $(ProjectDir)wwwroot/meta" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) docs2html $(SolutionDir)docs $(ProjectDir)wwwroot/docs" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) docs2html docs $(ProjectDir)wwwroot/docs" />
   </Target>
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
