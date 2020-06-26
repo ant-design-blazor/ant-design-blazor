@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class InputPassword : Input
+    public partial class InputPassword : Input<string>
     {
         private bool _visible = false;
         private string _eyeIcon;
