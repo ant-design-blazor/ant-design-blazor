@@ -29,6 +29,7 @@ namespace AntDesign
         protected IForm Form { get; set; }
 
         private string _formSize;
+
         [CascadingParameter(Name = "FormSize")]
         public string FormSize
         {
@@ -95,7 +96,7 @@ namespace AntDesign
                 if (hasChanged)
                 {
                     Value = value;
-                    _ = ValueChanged.InvokeAsync(value);
+                    ValueChanged.InvokeAsync(value);
 
                     if (_isNotifyFieldChanged)
                     {

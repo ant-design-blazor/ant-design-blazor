@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace AntDesign
 {
@@ -40,15 +40,14 @@ namespace AntDesign
                 else
                 {
                     if (stepStr.IndexOf('.') > 0)
-                        DecimalPlaces = stepStr.Length - stepStr.IndexOf('.') - 1;
+                        _decimalPlaces = stepStr.Length - stepStr.IndexOf('.') - 1;
                     else
-                        DecimalPlaces = 0;
+                        _decimalPlaces = 0;
                 }
             }
         }
 
-
-        public int? DecimalPlaces { get; set; }
+        private int? _decimalPlaces;
 
         [Parameter]
         public TValue DefaultValue { get; set; }
@@ -62,20 +61,18 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
-        private bool _isNullable;
-        private string _inputString;
-        private bool _focused;
+        private readonly bool _isNullable;
 
-        private Func<TValue, TValue, TValue> _increaseFunc;
-        private Func<TValue, TValue, TValue> _decreaseFunc;
-        private Func<TValue, TValue, bool> _greaterThanFunc;
-        private Func<TValue, TValue, bool> _greaterThanOrEqualFunc;
-        private Func<TValue, string, string> _toStringFunc;
-        private Func<TValue, int, TValue> _roundFunc;
+        private readonly Func<TValue, TValue, TValue> _increaseFunc;
+        private readonly Func<TValue, TValue, TValue> _decreaseFunc;
+        private readonly Func<TValue, TValue, bool> _greaterThanFunc;
+        private readonly Func<TValue, TValue, bool> _greaterThanOrEqualFunc;
+        private readonly Func<TValue, string, string> _toStringFunc;
+        private readonly Func<TValue, int, TValue> _roundFunc;
 
-        private static Type _surfaceType = typeof(TValue);
+        private static readonly Type _surfaceType = typeof(TValue);
 
-        private static Dictionary<Type, object> _defaultMaximum = new Dictionary<Type, object>()
+        private static readonly Dictionary<Type, object> _defaultMaximum = new Dictionary<Type, object>()
         {
             { typeof(int),int.MaxValue },
             { typeof(decimal),decimal.MaxValue },
@@ -83,13 +80,17 @@ namespace AntDesign
             { typeof(float),float.PositiveInfinity },
         };
 
-        private static Dictionary<Type, object> _defaultMinimum = new Dictionary<Type, object>()
+        private static readonly Dictionary<Type, object> _defaultMinimum = new Dictionary<Type, object>()
         {
             { typeof(int),int.MinValue },
             { typeof(decimal),decimal.MinValue },
             { typeof(double),double.NegativeInfinity },
             { typeof(float),float.NegativeInfinity},
         };
+
+        private string _inputString;
+        private bool _focused;
+        private ElementReference _inputRef;
 
         public InputNumber()
         {
@@ -115,7 +116,7 @@ namespace AntDesign
             ParameterExpression format = Expression.Parameter(typeof(string), "format");
             ParameterExpression value = Expression.Parameter(_surfaceType, "value");
             Expression expValue;
-            if (_isNullable == true)
+            if (_isNullable)
                 expValue = Expression.Property(value, "Value");
             else
                 expValue = value;
@@ -141,8 +142,8 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            SetClass();
             CurrentValue = DefaultValue;
-            //_inputString = CurrentValueAsString;
         }
 
         private void SetClass()
@@ -155,22 +156,24 @@ namespace AntDesign
                 .If($"{PrefixCls}-disabled", () => this.Disabled);
         }
 
-        protected override void OnParametersSet()
+        private async Task Increase()
         {
-            base.OnParametersSet();
-            SetClass();
-        }
-
-        private void Increase()
-        {
-            var num = _increaseFunc(Value, Step);
+            await SetFocus();
+            var num = _increaseFunc(Value, _step);
             ChangeValue(num);
         }
 
-        private void Decrease()
+        private async Task Decrease()
         {
-            var num = _decreaseFunc(Value, Step);
+            await SetFocus();
+            var num = _decreaseFunc(Value, _step);
             ChangeValue(num);
+        }
+
+        private async Task SetFocus()
+        {
+            _focused = true;
+            await JsInvokeAsync(JSInteropConstants.focus, _inputRef);
         }
 
         private void OnInput(ChangeEventArgs args)
@@ -192,49 +195,50 @@ namespace AntDesign
                 ChangeValue(Value);
                 return;
             }
+
+            _inputString = Parser != null ? Parser(_inputString) : Regex.Replace(_inputString, @"[^\+\-\d.\d]", "");
+
             ConvertNumber(_inputString);
+            _inputString = null;
         }
 
         private void ConvertNumber(string inputString)
         {
-            if (Parser != null)
+            if (!Regex.IsMatch(inputString, @"^[+-]?\d*[.]?\d*$"))
             {
-                _inputString = Parser(inputString);
-            }
-            else
-            {
-                _inputString = Regex.Replace(_inputString, @"[^\+\-\d.\d]", "");
+                return;
             }
 
-            if (Regex.IsMatch(inputString, @"^[+-]?\d*[.]?\d*$"))
+            if (inputString == "-" || inputString == "+")
             {
-                if (inputString == "-" || inputString == "+") inputString = "0";
-                TValue num;
-                if (!_isNullable)
+                inputString = "0";
+            }
+
+            TValue num;
+            if (!_isNullable)
+            {
+                if (string.IsNullOrWhiteSpace(inputString))
                 {
-                    if (string.IsNullOrWhiteSpace(inputString))
-                    {
-                        num = default;
-                    }
-                    else
-                    {
-                        num = (TValue)Convert.ChangeType(inputString, _surfaceType);
-                    }
+                    num = default;
                 }
                 else
                 {
-                    if (string.IsNullOrWhiteSpace(inputString))
-                    {
-                        num = default;
-                    }
-                    else
-                    {
-                        num = (TValue)Convert.ChangeType(inputString, Nullable.GetUnderlyingType(_surfaceType));
-                    }
+                    num = (TValue)Convert.ChangeType(inputString, _surfaceType);
                 }
-
-                ChangeValue(num);
             }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(inputString))
+                {
+                    num = default;
+                }
+                else
+                {
+                    num = (TValue)Convert.ChangeType(inputString, Nullable.GetUnderlyingType(_surfaceType));
+                }
+            }
+
+            ChangeValue(num);
         }
 
         private void ChangeValue(TValue value)
@@ -244,10 +248,7 @@ namespace AntDesign
             else if (_greaterThanFunc(Min, value))
                 value = Min;
 
-            if (DecimalPlaces.HasValue)
-                CurrentValue = _roundFunc(value, DecimalPlaces.Value);
-            else
-                CurrentValue = value;
+            CurrentValue = _decimalPlaces.HasValue ? _roundFunc(value, _decimalPlaces.Value) : value;
         }
 
         private string GetIconClass(string direction)
