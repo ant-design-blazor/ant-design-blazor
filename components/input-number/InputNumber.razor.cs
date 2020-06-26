@@ -130,27 +130,19 @@ namespace AntDesign
             var lambdaRound = Expression.Lambda<Func<TValue, int, TValue>>(expRound, num, decimalPlaces);
             _roundFunc = lambdaRound.Compile();
 
-
             var underlyingType = _isNullable ? Nullable.GetUnderlyingType(_surfaceType) : _surfaceType;
 
-            if (_defaultMaximum.ContainsKey(underlyingType)) Max = (TValue)Convert.ChangeType(_defaultMaximum[underlyingType], underlyingType);
-            if (_defaultMinimum.ContainsKey(underlyingType)) Min = (TValue)Convert.ChangeType(_defaultMinimum[underlyingType], underlyingType);
+            if (_defaultMaximum.ContainsKey(underlyingType)) Max = (TValue)_defaultMaximum[underlyingType];
+            if (_defaultMinimum.ContainsKey(underlyingType)) Min = (TValue)_defaultMinimum[underlyingType];
 
             _step = (TValue)Convert.ChangeType(1, underlyingType);
-        }
-
-        private void SetMinMax(object min, object max)
-        {
-            var t = _isNullable ? Nullable.GetUnderlyingType(_surfaceType) : _surfaceType;
-            Max = (TValue)Convert.ChangeType(max, t);
-            Min = (TValue)Convert.ChangeType(min, t);
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
             CurrentValue = DefaultValue;
-            _inputString = CurrentValueAsString;
+            //_inputString = CurrentValueAsString;
         }
 
         private void SetClass()
@@ -171,14 +163,14 @@ namespace AntDesign
 
         private void Increase()
         {
-            _inputString = _increaseFunc(Value, Step).ToString();
-            ConvertNumber(_inputString);
+            var num = _increaseFunc(Value, Step);
+            ChangeValue(num);
         }
 
         private void Decrease()
         {
-            _inputString = _decreaseFunc(Value, Step).ToString();
-            ConvertNumber(_inputString);
+            var num = _decreaseFunc(Value, Step);
+            ChangeValue(num);
         }
 
         private void OnInput(ChangeEventArgs args)
@@ -195,8 +187,11 @@ namespace AntDesign
         private void OnBlur()
         {
             _focused = false;
-            if (_inputString == null) _inputString = Value.ToString();
-            _inputString = Regex.Replace(_inputString, @"[^\+\-\d.\d]", "");
+            if (_inputString == null)
+            {
+                ChangeValue(Value);
+                return;
+            }
             ConvertNumber(_inputString);
         }
 
@@ -205,6 +200,10 @@ namespace AntDesign
             if (Parser != null)
             {
                 _inputString = Parser(inputString);
+            }
+            else
+            {
+                _inputString = Regex.Replace(_inputString, @"[^\+\-\d.\d]", "");
             }
 
             if (Regex.IsMatch(inputString, @"^[+-]?\d*[.]?\d*$"))
@@ -233,8 +232,7 @@ namespace AntDesign
                         num = (TValue)Convert.ChangeType(inputString, Nullable.GetUnderlyingType(_surfaceType));
                     }
                 }
-                if (DecimalPlaces.HasValue)
-                    num = _roundFunc(num, DecimalPlaces.Value);
+
                 ChangeValue(num);
             }
         }
@@ -242,9 +240,12 @@ namespace AntDesign
         private void ChangeValue(TValue value)
         {
             if (_greaterThanFunc(value, Max))
-                CurrentValue = Max;
+                value = Max;
             else if (_greaterThanFunc(Min, value))
-                CurrentValue = Min;
+                value = Min;
+
+            if (DecimalPlaces.HasValue)
+                CurrentValue = _roundFunc(value, DecimalPlaces.Value);
             else
                 CurrentValue = value;
         }

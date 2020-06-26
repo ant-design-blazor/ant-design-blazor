@@ -4,11 +4,11 @@
 
 <div class="@ClassMapper.Class" style="@Style" id="@Id">
     <div class="ant-input-number-handler-wrap">
-        <span unselectable="unselectable" role="button" aria-label="Increase Value" class="@GetIconClass("up")">
-            <Icon Class="ant-input-number-handler-up-inner" Type="up" OnClick="Increase" />
+        <span unselectable="unselectable" role="button" aria-label="Increase Value" class="@GetIconClass("up")" @onclick="Increase">
+            <Icon Class="ant-input-number-handler-up-inner" Type="up"  />
         </span>
-        <span unselectable="unselectable" role="button" aria-label="Decrease Value" class="@GetIconClass("down")">
-            <Icon Class="ant-input-number-handler-down-inner" Type="down" OnClick="Decrease" />
+        <span unselectable="unselectable" role="button" aria-label="Decrease Value" class="@GetIconClass("down")" @onclick="Decrease">
+            <Icon Class="ant-input-number-handler-down-inner" Type="down"  />
         </span>
     </div>
     <div class="ant-input-number-input-wrap">
