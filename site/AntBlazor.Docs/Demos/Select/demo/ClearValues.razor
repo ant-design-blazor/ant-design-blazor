@@ -1,0 +1,42 @@
+﻿<Select @ref="select" Mode="tags"
+        Style="width: 100%"
+        Placeholder="Tags Mode" Value="@selectedItems" AllowClear=true>
+    @foreach (var item in _items)
+    {
+        <SelectOption Value="@item">@item</SelectOption>
+    }
+</Select>
+
+<Button OnClick="Reset">
+    Reset
+</Button>
+
+@using OneOf;
+@code
+{
+    Select select;
+    private string[] _items;
+    private OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> selectedItems = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        var min = 10;
+        var max = 36;
+        _items = new string[max - min];
+        for (var i = min; max > i; i++)
+        {
+            _items[i - min] = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+        }
+    }
+
+    private async Task Reset(MouseEventArgs args)
+    {
+        var values = selectedItems.AsT1.ToList();
+        Console.WriteLine("Before delete count: " + values.Count());
+        values.Clear();
+        selectedItems = values;
+
+        await select.ClearAll();
+        Console.WriteLine("After delete count: " + selectedItems.AsT1.Count());
+    }
+}
