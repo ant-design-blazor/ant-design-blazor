@@ -1,0 +1,8 @@
+﻿<div>
+    <AutoComplete Options="@options" PlaceHolder="try to type 'b'" FilterOption="(value,option)=>option.Contains(value,StringComparison.InvariantCultureIgnoreCase)"></AutoComplete>
+</div>
+
+@code
+{
+    private List<string> options = new List<string>() { "Burns Bay Road", "Downing Street", "Wall Street" };
+}

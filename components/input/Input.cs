@@ -59,7 +59,7 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public EventCallback<ChangeEventArgs> OnChange { get; set; }
+        public EventCallback<TValue> OnChange { get; set; }
 
         [Parameter]
         public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
@@ -147,7 +147,7 @@ namespace AntDesign
             CurrentValueAsString = args.Value?.ToString();
             if (OnChange.HasDelegate)
             {
-                await OnChange.InvokeAsync(args);
+                await OnChange.InvokeAsync(Value);
             }
         }
 

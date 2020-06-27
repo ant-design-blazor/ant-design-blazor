@@ -1,0 +1,10 @@
+﻿<div>
+    <AutoComplete FormatList="@_formatList" @bind-Value="_value"></AutoComplete>
+</div>
+
+@code
+{
+    private string _value;
+
+    private List<string> _formatList = new List<string>() { "{0}@gmail.com", "{0}@163.com", "{0}@qq.com" };
+}
