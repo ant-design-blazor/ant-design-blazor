@@ -28,7 +28,7 @@ namespace AntDesign
                 {
                     builder.OpenComponent<Icon>(35);
                     builder.AddAttribute(36, "class", $"{PrefixCls}-search-icon");
-                    builder.AddAttribute(37, "type", "search");
+                    builder.AddAttribute(37, "Type", "search");
                     builder.AddAttribute(38, "onclick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                     builder.CloseComponent();
                 });
@@ -39,7 +39,7 @@ namespace AntDesign
                 {
                     builder.OpenComponent<Button>(_sequence++);
                     builder.AddAttribute(_sequence++, "class", $"{PrefixCls}-search-button");
-                    builder.AddAttribute(_sequence++, "type", "primary");
+                    builder.AddAttribute(_sequence++, "Type", "primary");
                     builder.AddAttribute(_sequence++, "size", Size);
 
                     if (_isSearching)
