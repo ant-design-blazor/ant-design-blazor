@@ -99,6 +99,11 @@
         "type": "itemGroup",
         "children": [
           {
+            "title": "AutoComplete",
+            "type": "menuItem",
+            "url": "components/autocomplete"
+          },
+          {
             "title": "Checkbox",
             "type": "menuItem",
             "url": "components/checkbox"

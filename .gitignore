@@ -346,3 +346,4 @@ package-lock.json
 /site/**/wwwroot/docs
 /site/AntBlazor.Docs/wwwroot/css/docs.css
 /site/AntBlazor.Docs/wwwroot/meta
+/AntBlazor.Docs/wwwroot/docs
