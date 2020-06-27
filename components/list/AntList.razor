@@ -32,21 +32,56 @@
     {
         @LoadMore
     }
+    @if (Pagination != null)
+    {
+        @*<div class="@PrefixName-pagination">
+                <Pagination Current="Pagination.cu" Total="Pagination.Total" PageSize="Pagination.PageSize"></Pagination>
+            </div>*@
+    }
 </div>
 
 @code{
 
+    //if(DataSource.Count > (Pagination.Current - 1) * Pagination.PageSize)
+    //{
+
+    //}
+
+    //EventCallback<bool> onPaginationChange(int page, int pageSize)
+    //{
+    //    Pagination.Current = page;
+    //    Pagination.PageSize = pageSize;
+    //    Pagination.OnChange.InvokeAsync(page);
+
+    //}
+
+    //EventCallback<int> onPaginationShowSizeChange()
+    //{
+
+    //}
+
 
     RenderFragment<AntList<TItem>> childrenContent = content =>
     @<Template>
+
         @if (content.Grid != null)
         {
             <Row Gutter="content.Grid.Gutter">
                 @foreach (var item in content.DataSource)
                 {
-                    <AntListItem>
-                        @content.Item(item)
-                    </AntListItem>
+                    @if (content.Extra != null)
+                    {
+                        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Grid="content.Grid" Actions="content.Actions" Extra="content.Extra">
+                            @content.Item(item)
+                        </AntListItem>
+                    }
+                    else
+                    {
+                        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Grid="content.Grid" Actions="content.Actions">
+                            @content.Item(item)
+                        </AntListItem>
+                    }
+
                 }
             </Row>
         }
@@ -55,12 +90,23 @@
             <ul class="ant-list-items">
                 @foreach (var item in content.DataSource)
                 {
-                    <AntListItem>
-                        @content.Item(item)
-                    </AntListItem>
+                    @if (content.Extra != null)
+                    {
+                        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Actions="content.Actions" Extra="content.Extra">
+                            @content.Item(item)
+                        </AntListItem>
+                    }
+                    else
+                    {
+                        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Actions="content.Actions">
+                            @content.Item(item)
+                        </AntListItem>
+                    }
                 }
             </ul>
         }
 
     </Template>;
+
+
 }
