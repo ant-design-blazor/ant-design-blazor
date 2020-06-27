@@ -1,0 +1,25 @@
+﻿@using Microsoft.Extensions.Primitives
+<div>
+    <AutoComplete @ref="@_autoComplete">
+        <CustomInput>
+            <TextArea Placeholder="input here" AutoSize="true" OnChange="OnChange" @bind-Value="@txtValue" />
+        </CustomInput>
+    </AutoComplete>
+</div>
+
+@code
+{
+    private AutoComplete _autoComplete;
+    private string txtValue;
+
+    private void OnChange(string value)
+    {
+        var list = string.IsNullOrWhiteSpace(value) ? Array.Empty<string>() : new[]
+        {
+            value,
+            value + value,
+            value + value + value
+        };
+        _autoComplete.LoadData(list);
+    }
+}

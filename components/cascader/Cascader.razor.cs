@@ -43,7 +43,7 @@ namespace AntDesign
         /// <summary>
         /// 输入框占位文本
         /// </summary>
-        [Parameter] public string PlaceHolder { get; set; } = "Please Select";
+        [Parameter] public string PlaceHolder { get; set; } = "请选择";
 
         /// <summary>
         /// 在选择框中显示搜索框
@@ -196,6 +196,7 @@ namespace AntDesign
         {
             _selectedNodes.Clear();
             _hoverSelectedNodes.Clear();
+            _displayText = string.Empty;
             CurrentValueAsString = string.Empty;
         }
 
