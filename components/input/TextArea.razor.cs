@@ -91,6 +91,10 @@ namespace AntDesign
             //base.OnInputAsync(args);
 
             CurrentValueAsString = args.Value.ToString();
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(CurrentValueAsString);
+            }
 
             if (AutoSize)
             {

@@ -1,0 +1,23 @@
+﻿<div>
+    <AutoComplete @ref="@_autoComplete" OnChange="OnChange"></AutoComplete>
+</div>
+
+@code
+{
+    private AutoComplete _autoComplete;
+
+    private void OnChange(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            _autoComplete.LoadData(null);
+            return;
+        }
+
+        var list = new List<string>()
+        {
+            value, value + value, value + value + value
+        };
+        _autoComplete.LoadData(list);
+    }
+}
