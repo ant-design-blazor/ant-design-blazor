@@ -32,34 +32,10 @@
     {
         @LoadMore
     }
-    @if (Pagination != null)
-    {
-        @*<div class="@PrefixName-pagination">
-                <Pagination Current="Pagination.cu" Total="Pagination.Total" PageSize="Pagination.PageSize"></Pagination>
-            </div>*@
-    }
+    
 </div>
 
 @code{
-
-    //if(DataSource.Count > (Pagination.Current - 1) * Pagination.PageSize)
-    //{
-
-    //}
-
-    //EventCallback<bool> onPaginationChange(int page, int pageSize)
-    //{
-    //    Pagination.Current = page;
-    //    Pagination.PageSize = pageSize;
-    //    Pagination.OnChange.InvokeAsync(page);
-
-    //}
-
-    //EventCallback<int> onPaginationShowSizeChange()
-    //{
-
-    //}
-
 
     RenderFragment<AntList<TItem>> childrenContent = content =>
     @<Template>
