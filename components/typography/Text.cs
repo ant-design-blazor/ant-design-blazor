@@ -57,8 +57,8 @@ namespace AntDesign
                     builder.OpenElement(7, "a");
                     builder.AddAttribute(8, "onclick", (Action)(async () => await Copy()));
                     builder.OpenComponent<Icon>(9);
-                    builder.AddAttribute(10, "type", "copy");
-                    builder.AddAttribute(11, "theme", IconThemeType.Outline);
+                    builder.AddAttribute(10, "Type", "copy");
+                    builder.AddAttribute(11, "Theme", IconThemeType.Outline);
                     builder.CloseComponent();
                     builder.CloseElement();
                 }
