@@ -19,6 +19,7 @@ namespace AntDesign
             {
                 _total = value.Count();
                 _dataSource = value;
+                StateHasChanged();
             }
         }
 
