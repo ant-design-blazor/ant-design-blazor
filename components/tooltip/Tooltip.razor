@@ -25,7 +25,9 @@
                 @if (Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0))
                 {
                     <div class="ant-tooltip-content">
-                        <div class="ant-tooltip-arrow"></div>
+                        <div class="ant-tooltip-arrow">
+                            <span class="ant-tooltip-arrow-content"></span>
+                        </div>
                         <div class="ant-tooltip-inner" role="tooltip">
                             @Title.AsT0
                         </div>
@@ -34,7 +36,9 @@
                 else if (Title.IsT1 && (Title.AsT1)!=null)
                 {
                     <div class="ant-tooltip-content">
-                        <div class="ant-tooltip-arrow"></div>
+                        <div class="ant-tooltip-arrow">
+                            <span class="ant-tooltip-arrow-content"></span>
+                        </div>
                         <div class="ant-tooltip-inner" role="tooltip">
                             @Title.AsT1
                         </div>
