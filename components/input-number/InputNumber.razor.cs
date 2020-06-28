@@ -66,7 +66,6 @@ namespace AntDesign
         private readonly Func<TValue, TValue, TValue> _increaseFunc;
         private readonly Func<TValue, TValue, TValue> _decreaseFunc;
         private readonly Func<TValue, TValue, bool> _greaterThanFunc;
-        //private readonly Func<TValue, TValue, bool> _greaterThanOrEqualFunc;
         private readonly Func<TValue, string, string> _toStringFunc;
         private readonly Func<TValue, int, TValue> _roundFunc;
 
@@ -109,8 +108,6 @@ namespace AntDesign
             ParameterExpression piRight = Expression.Parameter(_surfaceType, "right");
             var fexpGreaterThan = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThan(piLeft, piRight), piLeft, piRight);
             _greaterThanFunc = fexpGreaterThan.Compile();
-            //var fexpGreaterThanOrEqual = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThanOrEqual(piLeft, piRight), piLeft, piRight);
-            //_greaterThanOrEqualFunc = fexpGreaterThanOrEqual.Compile();
 
             //格式化
             ParameterExpression format = Expression.Parameter(typeof(string), "format");
