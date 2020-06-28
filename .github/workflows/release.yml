@@ -1,0 +1,34 @@
+name: Release
+
+env:
+  NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release-and-publish-package:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.300
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+
+      - name: Package and publish to Nuget📦
+        run: |
+          VERSION=`git describe --tags`
+          echo "Publishing Version: ${VERSION}"
+          npm install
+          dotnet pack components/AntDesign.csproj /p:PackageVersion=$VERSION -c Release -o publish
+          dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
