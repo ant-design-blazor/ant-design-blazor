@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    using GutterType = OneOf<int, Dictionary<string, int>, (int, int)>;
     public class ListGridType
     {
         public int Gutter { get; set; }
@@ -29,19 +28,19 @@ namespace AntDesign
 
         [Parameter] public IEnumerable<TItem> DataSource { get; set; }
 
+        [Parameter] public bool Bordered { get; set; } = false;
+
         [Parameter] public RenderFragment Header { get; set; }
 
         [Parameter] public RenderFragment Footer { get; set; }
 
         [Parameter] public RenderFragment LoadMore { get; set; }
 
-        [Parameter] public AntDirectionVHType ItemLayout { get; set; } = AntDirectionVHType.Horizontal;
+        [Parameter] public AntDirectionVHType ItemLayout { get; set; }
 
         [Parameter] public bool Loading { get; set; } = false;
 
         [Parameter] public string NoResult { get; set; }
-
-        [Parameter] public string Pagination { get; set; }
 
         [Parameter] public string Size { get; set; } = AntSizeLDSType.Default;
 
@@ -51,11 +50,17 @@ namespace AntDesign
 
         [Parameter] public ListGridType Grid { get; set; }
 
+        [Parameter] public List<RenderFragment> Actions { get; set; } = new List<RenderFragment>();
+
+        [Parameter] public RenderFragment Extra { get; set; }
+
+        [Parameter] public PaginationOptions Pagination { get; set; }
+
         private bool IsSomethingAfterLastItem
         {
             get
             {
-                return LoadMore != null || Footer != null || !string.IsNullOrEmpty(Pagination);
+                return LoadMore != null || Footer != null || Pagination != null;
             }
         }
 
@@ -94,7 +99,7 @@ namespace AntDesign
                 .Add(PrefixName)
                 .Add(ClassName)
                 .If($"{PrefixName}-split", () => Split)
-                .Add($"{PrefixName}-bordered")
+                .If($"{PrefixName}-bordered", () => Bordered)
                 .If($"{PrefixName}-{sizeCls}", () => !string.IsNullOrEmpty(sizeCls))
                 .If($"{PrefixName}-vertical", () => ItemLayout == AntDirectionVHType.Vertical)
                 .If($"{PrefixName}-loading", () => (Loading))
