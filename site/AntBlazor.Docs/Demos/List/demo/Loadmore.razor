@@ -1,6 +1,6 @@
 ﻿@inject HttpClient HttpClient
 
-<AntList Class="demo-loadmore-list" DataSource="@Data" ItemLayout="AntDirectionVHType.Horizontal" Loading="@InitLoading">
+<AntList Class="demo-loadmore-list" DataSource="@Data" ItemLayout="AntDirectionVHType.Horizontal" Loading="@InitLoading" Actions="actions">
     <Item Context="item">
         <AntListItemMeta Avatar="avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
             <Title>
@@ -35,69 +35,76 @@
 
 @code {
 
-    RenderFragment avatar = @<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
+    RenderFragment avatar =@<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
 
-    public int count = 3;
+RenderFragment edit = @<a key="list-loadmore-edit">edit</a>;
 
-    public string FakeDataUrl { get { return $"https://randomuser.me/api/?results={count}&inc=name,gender,email,nat&noinfo"; } }
+RenderFragment add = @<a key="list-loadmore-more">more</a>;
 
-    public List<DataModel> Data { get; set; }
 
-    public bool InitLoading { get; set; } = true;
+public List<RenderFragment> actions { get { return new List<RenderFragment> { edit, add }; } }
 
-    public bool Loading { get; set; } = false;
+public int count = 3;
 
-    protected override async Task OnInitializedAsync()
-    {
-        Data = await GetData();
-        InitLoading = false;
-        await base.OnInitializedAsync();
-    }
+public string FakeDataUrl { get { return $"https://randomuser.me/api/?results={count}&inc=name,gender,email,nat&noinfo"; } }
 
-    public async Task OnLoadMore()
-    {
-        Loading = true;
-        var res = await GetData();
-        Data.AddRange(res);
-        Loading = false;
-    }
+public List<DataModel> Data { get; set; }
 
-    public async Task<List<DataModel>> GetData()
-    {
-        try
-        {
-            var res = await HttpClient.GetFromJsonAsync<Response>(FakeDataUrl);
-            return res.Results;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-            return new List<DataModel>();
-        }
-    }
+public bool InitLoading { get; set; } = true;
 
-    public class Response
-    {
-        public List<DataModel> Results { get; set; }
-    }
+public bool Loading { get; set; } = false;
 
-    public class DataModel
-    {
-        public string Gender { get; set; }
+protected override async Task OnInitializedAsync()
+{
+Data = await GetData();
+InitLoading = false;
+await base.OnInitializedAsync();
+}
 
-        public Name Name { get; set; }
+public async Task OnLoadMore()
+{
+Loading = true;
+var res = await GetData();
+Data.AddRange(res);
+Loading = false;
+}
 
-        public string Email { get; set; }
+public async Task<List<DataModel>> GetData()
+{
+try
+{
+var res = await HttpClient.GetFromJsonAsync<Response>(FakeDataUrl);
+return res.Results;
+}
+catch (Exception ex)
+{
+Console.WriteLine(ex);
+return new List<DataModel>();
+}
+}
 
-        public string Nat { get; set; }
-    }
+public class Response
+{
+public List<DataModel> Results { get; set; }
+}
 
-    public class Name
-    {
-        public string Title { get; set; }
+public class DataModel
+{
+public string Gender { get; set; }
 
-        public string First { get; set; }
+public Name Name { get; set; }
 
-        public string Last { get; set; }
-    }
+public string Email { get; set; }
+
+public string Nat { get; set; }
+}
+
+public class Name
+{
+public string Title { get; set; }
+
+public string First { get; set; }
+
+public string Last { get; set; }
+}
 }
