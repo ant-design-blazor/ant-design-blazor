@@ -184,6 +184,8 @@ namespace AntDesign
                 builder.AddAttribute(34, "onclick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
                 {
                     Value = default;//string.Empty;
+                    if (OnChange.HasDelegate)
+                        OnChange.InvokeAsync(Value);
                     ToggleClearBtn();
                 }));
                 builder.CloseComponent();

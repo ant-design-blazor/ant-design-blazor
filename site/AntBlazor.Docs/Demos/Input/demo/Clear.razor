@@ -2,12 +2,12 @@
     <Input Placeholder="input with clear icon" AllowClear="true" OnChange="onChange"  TValue="string"/>
     <br />
     <br />
-    <TextArea Placeholder="textarea with clear icon"  AllowClear="true" OnChange="onChange"  TValue="string"/>
+    <TextArea Placeholder="textarea with clear icon"  AllowClear="true" OnChange="onChange"/>
 </div>
 @code{
 
-    private void onChange()
+    private void onChange(string value)
     {
-       
+        Console.WriteLine("onChange =>" + value);
     }
 }
