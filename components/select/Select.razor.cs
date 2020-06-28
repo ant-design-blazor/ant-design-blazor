@@ -244,6 +244,15 @@ namespace AntDesign
                 _ => SelectMode == SelectMode.Default ? OneOf<string, RenderFragment>.FromT1((option?.ChildContent)) : option?.Label ?? option.Value,
             };
         }
+
+        protected async Task ResetState()
+        {
+            Value = null;
+            SelectedOptions.Clear();
+            OnChange?.Invoke(default, default(SelectOption));
+
+            await InvokeAsync(StateHasChanged);
+        }
         #endregion
 
         #region  Events
@@ -377,11 +386,7 @@ namespace AntDesign
 
         protected async Task OnClearClick(MouseEventArgs _)
         {
-            Value = null;
-            SelectedOptions.Clear();
-            OnChange?.Invoke(default, default(SelectOption));
-
-            await InvokeAsync(StateHasChanged);
+            await ResetState();
         }
 
         protected async void OnInput(ChangeEventArgs e)
@@ -863,6 +868,11 @@ namespace AntDesign
                 }
             }
             return true;
+        }
+
+        public async Task ClearAll()
+        {
+            await ResetState();
         }
         #endregion
         #endregion
