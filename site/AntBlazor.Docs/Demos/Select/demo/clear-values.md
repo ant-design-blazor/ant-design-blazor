@@ -1,34 +1,15 @@
 ---
 order: 55
 title:
-  zh-CN: 无边框
-  en-US: Clear-values
+  zh-CN: 清空已选项
+  en-US: Clear Values
 ---
 
 ## zh-CN
 
-无边框样式。
+调用 `ClearAll()` 方法来清空已选项。
 
 ## en-US
 
-Clear-values style component.
+Call the `ClearAll()` method to clear values.
 
-```jsx
-import { Select } from 'antd';
-
-const { Option } = Select;
-
-ReactDOM.render(
-  <>
-    <Select defaultValue="lucy" style={{ width: 120 }} bordered={false}>
-      <Option value="jack">Jack</Option>
-      <Option value="lucy">Lucy</Option>
-      <Option value="Yiminghe">yiminghe</Option>
-    </Select>
-    <Select defaultValue="lucy" style={{ width: 120 }} disabled bordered={false}>
-      <Option value="lucy">Lucy</Option>
-    </Select>
-  </>,
-  mountNode,
-);
-```
