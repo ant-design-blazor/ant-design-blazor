@@ -215,6 +215,11 @@
             "url": "components/list"
           },
           {
+            "title": "Popover",
+            "type": "menuItem",
+            "url": "components/popover"
+          },
+          {
             "title": "Statistic",
             "type": "menuItem",
             "url": "components/statistic"

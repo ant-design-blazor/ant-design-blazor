@@ -1,0 +1,35 @@
+﻿<Popover Style="{width: 500}" OnVisibleChange="OnHoverVisibleChange" Visible="_hoverVisible" Content="_hoverContent" Title="@("Hover title")" Trigger="@(new AntDesign.TriggerType[] { AntDesign.TriggerType.Hover})">
+    <Popover OnVisibleChange="OnClickVisibleChange" Visible="_clickVisible" Content="_clickContent" Title="@("Click title")" Trigger="@(new AntDesign.TriggerType[] { AntDesign.TriggerType.Click})">
+        <Button>Hover and click / 悬停并单击</Button>
+    </Popover>
+</Popover>
+
+@code{
+
+    private RenderFragment _hoverContent =@<div> This is hover content.</div>;
+    private RenderFragment _clickContent => 
+        @<div>
+            <div>This is click content.</div>
+            <a @onclick="_=>Close()">Close</a>
+        </div>;
+
+    private bool _hoverVisible = false;
+    private bool _clickVisible = false;
+
+    private void OnHoverVisibleChange(bool visible)
+    {
+        _hoverVisible = visible;
+    }
+
+    private void OnClickVisibleChange(bool visible)
+    {
+        _clickVisible = visible;
+        _hoverVisible = false;
+    }
+
+    private void Close()
+    {
+        _hoverVisible = false;
+        _clickVisible = false;
+    }
+}
