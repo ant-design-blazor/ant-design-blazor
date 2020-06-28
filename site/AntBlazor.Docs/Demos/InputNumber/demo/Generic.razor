@@ -10,15 +10,15 @@
     <p>value:@_intNull</p>
     <br />
 
-    @*<Text>decimal</Text>
-        <AntDesign.InputNumber @bind-Value="@_dec" />
-        <p>value:@_dec</p>
-        <br />
+    <Text>decimal</Text>
+    <AntDesign.InputNumber @bind-Value="@_dec" />
+    <p>value:@_dec</p>
+    <br />
 
-        <Text>decimal?</Text>
-        <AntDesign.InputNumber @bind-Value="@_decNull" />
-        <p>value:@_decNull</p>
-        <br />*@
+    <Text>decimal?</Text>
+    <AntDesign.InputNumber @bind-Value="@_decNull" />
+    <p>value:@_decNull</p>
+    <br />
 
     <Text>double</Text>
     <AntDesign.InputNumber @bind-Value="@_double" />
@@ -30,13 +30,12 @@
     <p>value:@_doubleNull</p>
     <br />
 </div>
-<Text>注意：因一些原因暂时不支持decimal类型</Text>
 @code{
 
     int _int;
     int? _intNull;
-    @*decimal _dec;
-        decimal? _decNull;*@
+    decimal _dec;
+    decimal? _decNull;
     double _double;
     double? _doubleNull;
 }

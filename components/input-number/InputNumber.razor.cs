@@ -66,7 +66,7 @@ namespace AntDesign
         private readonly Func<TValue, TValue, TValue> _increaseFunc;
         private readonly Func<TValue, TValue, TValue> _decreaseFunc;
         private readonly Func<TValue, TValue, bool> _greaterThanFunc;
-        private readonly Func<TValue, TValue, bool> _greaterThanOrEqualFunc;
+        //private readonly Func<TValue, TValue, bool> _greaterThanOrEqualFunc;
         private readonly Func<TValue, string, string> _toStringFunc;
         private readonly Func<TValue, int, TValue> _roundFunc;
 
@@ -109,8 +109,8 @@ namespace AntDesign
             ParameterExpression piRight = Expression.Parameter(_surfaceType, "right");
             var fexpGreaterThan = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThan(piLeft, piRight), piLeft, piRight);
             _greaterThanFunc = fexpGreaterThan.Compile();
-            var fexpGreaterThanOrEqual = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThanOrEqual(piLeft, piRight), piLeft, piRight);
-            _greaterThanOrEqualFunc = fexpGreaterThanOrEqual.Compile();
+            //var fexpGreaterThanOrEqual = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThanOrEqual(piLeft, piRight), piLeft, piRight);
+            //_greaterThanOrEqualFunc = fexpGreaterThanOrEqual.Compile();
 
             //格式化
             ParameterExpression format = Expression.Parameter(typeof(string), "format");
@@ -256,11 +256,11 @@ namespace AntDesign
             string cls;
             if (direction == "up")
             {
-                cls = $"ant-input-number-handler ant-input-number-handler-up " + (_greaterThanOrEqualFunc(Value, Max) ? "ant-input-number-handler-up-disabled" : string.Empty);
+                cls = $"ant-input-number-handler ant-input-number-handler-up " + (!_greaterThanFunc(Max, Value) ? "ant-input-number-handler-up-disabled" : string.Empty);
             }
             else
             {
-                cls = $"ant-input-number-handler ant-input-number-handler-down " + (_greaterThanOrEqualFunc(Min, Value) ? "ant-input-number-handler-down-disabled" : string.Empty);
+                cls = $"ant-input-number-handler ant-input-number-handler-down " + (!_greaterThanFunc(Value, Min) ? "ant-input-number-handler-down-disabled" : string.Empty);
             }
 
             return cls;
