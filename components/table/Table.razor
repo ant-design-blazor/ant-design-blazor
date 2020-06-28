@@ -13,9 +13,13 @@
                         OnPageIndexChange="HandlePageIndexChange"
                         OnPageSizeChange="HandlePageSizeChange" />
         }
-
         <CascadingValue Value="@this" TValue="ITable">
             <div class="@ClassMapper.Class">
+                @if (@Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0) || @Title.IsT1 && Title.AsT1 != null) {
+                    <div class="ant-table-title">
+                        @if(Title.IsT0) {@Title.AsT0} else {@Title.AsT1}
+                    </div>
+                }
                 <div class="ant-table-container">
                     @if (ScrollY != null)
                     {
@@ -47,12 +51,17 @@
                                 @colGroup(this)
                                 @header(this)
                                 <tbody class="ant-table-tbody">
-                                    @body(this)
+                                @body(this)
                                 </tbody>
                             </table>
                         </div>
                     }
                 </div>
+                @if (@Footer.IsT0 && !string.IsNullOrEmpty(Footer.AsT0) || @Footer.IsT1 && Footer.AsT1 != null) {
+                    <div class="ant-table-footer">
+                        @if(Footer.IsT0) {@Footer.AsT0} else {@Footer.AsT1}
+                    </div>
+                }
             </div>
         </CascadingValue>
         @if (!HidePagination && PaginationPosition.Contains("bottom"))
