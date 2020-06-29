@@ -26,15 +26,17 @@ namespace AntDesign
 
         internal List<Radio<TValue>> RadioItems { get; set; } = new List<Radio<TValue>>();
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             string prefixCls = "ant-radio-group";
             ClassMapper.Add(prefixCls)
                 .If($"{prefixCls}-large", () => Size == "large")
                 .If($"{prefixCls}-small", () => Size == "small")
-                .If($"{prefixCls}-solid", () => ButtonStyle == "solid");
-            await base.OnInitializedAsync();
+                .If($"{prefixCls}-{ButtonStyle}", () => ButtonStyle.IsIn("outline", "solid"));
+
+            base.OnInitialized();
         }
+
         internal async Task AddRadio(Radio<TValue> radio)
         {
             if (this.Name != null)

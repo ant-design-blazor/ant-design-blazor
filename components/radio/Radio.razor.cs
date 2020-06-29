@@ -77,6 +77,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             SetClass();
+            RadioGroup?.AddRadio(this);
 
             base.OnInitialized();
         }
@@ -87,10 +88,7 @@ namespace AntDesign
             {
                 await this.Focus();
             }
-            if (this is Radio<TValue> radio)
-            {
-                RadioGroup?.AddRadio(radio);
-            }
+
             await base.OnFirstAfterRenderAsync();
         }
 
