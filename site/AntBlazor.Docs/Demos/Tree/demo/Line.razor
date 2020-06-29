@@ -1,0 +1,63 @@
+
+<div>
+    ShowLine <Switch Checked="_showLine" OnChange="(v)=>_showLine = v" />
+    <br />
+    ShowIcon <Switch Checked="_showIcon" OnChange="(v)=>_showIcon = v" />
+    <br />
+    <Tree ShowLine="_showLine" ShowIcon="_showIcon" IconType="carry-out" Nodes="TreeNodes"></Tree>
+</div>
+
+@code{
+
+    bool _showLine { get; set; } = true;
+    bool _showIcon { get; set; }
+
+    List<TreeNode> _treeNodes;
+
+    public List<TreeNode> TreeNodes
+    {
+        get
+        {
+            if (_treeNodes != null)
+                return _treeNodes;
+
+            _treeNodes = new List<TreeNode>(){
+                new TreeNode
+                {
+                    Text = "parent 1",IsExpanded = true,
+                    Nodes ={
+                        new TreeNode
+                        {
+                            Text="parent 1-0",IsDisabled=true,IsExpanded=true,IsChecked=true,
+                            Nodes={
+                                new TreeNode{ Text="leaf" }
+                                ,
+                                new TreeNode{ Text="leaf" }
+                                ,
+                                new TreeNode{ Text="leaf" }
+                            }
+                        },
+                        new TreeNode
+                        {
+                            Text="parent 1-1",IsExpanded=true,
+                            Nodes={
+                                new TreeNode{ Text="leaf"},
+                            }
+                        },
+                        new TreeNode
+                        {
+                            Text="parent 1-2",IsExpanded=true,
+                            Nodes={
+                                new TreeNode{ Text="leaf",SwitcherIcon="form"},
+                            }
+                        }
+                    }
+                }
+            };
+
+            return _treeNodes;
+        }
+    }
+}
+
+

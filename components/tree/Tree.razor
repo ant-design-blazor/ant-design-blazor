@@ -1,0 +1,29 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class">
+    <div class="@($"{PREFIX_CLS}-list")">
+        <div>
+            <div class="@($"{PREFIX_CLS}-list-holder-inner")" style="display:flex;flex-direction:column">
+
+                @if (_nodelist != null)
+                {
+                    if (Checkable)
+                    {
+                        foreach (TreeNode node in _nodelist)
+                        {
+                            node?.UpdateCheckedStateRecursive(CheckStrictly);
+                        }
+                    }
+                    Stack<string> pstack = new Stack<string>();
+                    foreach (TreeNode node in _nodelist)
+                    {
+                        if (node == null || !node.IsVisible)
+                            continue;
+                        @node.RenderRecursive(this, pstack);
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
