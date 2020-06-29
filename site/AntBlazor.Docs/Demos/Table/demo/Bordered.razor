@@ -1,0 +1,55 @@
+@using System.ComponentModel
+
+<Table DataSource="@data" Bordered=@true Title="@title" Footer="@footer" HidePagination="@true">
+    <Column @bind-Field="@context.Name">
+        <a>@context.Name</a>
+    </Column>
+    <Column @bind-Field="@context.Money" Style="text-align: right"></Column>
+    <Column @bind-Field="@context.Address"></Column>
+</Table>
+
+@code{
+
+    string title = "Header";
+    string footer = "Footer";
+
+    Data[] data =
+    {
+        new Data()
+        {
+            Key = "1",
+            Name = "John Brown",
+            Money = "￥300,000.00",
+            Address = "New York No. 1 Lake Park",
+        },
+        new Data()
+        {
+            Key = "2",
+            Name = "Jim Green",
+            Money = "￥1,256,000.00",
+            Address = "London No. 1 Lake Park",
+        },
+        new Data()
+        {
+            Key = "3",
+            Name = "Joe Black",
+            Money = "￥120,000.00",
+            Address = "Sidney No. 1 Lake Park",
+        }
+    };
+
+    public class Data
+    {
+        [DisplayName("Key")]
+        public string Key { get; set; }
+
+        [DisplayName("Name")]
+        public string Name { get; set; }
+
+        [DisplayName("Money")]
+        public string Money { get; set; }
+
+        [DisplayName("Address")]
+        public string Address { get; set; }
+    }
+}
