@@ -1,0 +1,54 @@
+@inject MessageService _message
+
+<div>
+    <div>
+        <Upload FileList="files"
+                Text="点击上传"
+                Url="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                Name="files"
+                OnSingleCompleted="OnSingleCompleted"
+                OnCompleted="OnCompleted"
+                BeforeUpload="BeforeUpload"
+                MaxCount="3" />
+    </div>
+
+</div>
+
+@code
+{
+    List<UploadFileItem> files = new List<UploadFileItem>();
+
+    bool BeforeUpload(UploadFileItem file)
+    {
+        if (file.Size > 1024 * 1024 * 2)
+        {
+            _message.Error("不得大于2M");
+            return false;
+        }
+        if (!new[] { ".jpg", ".png" }.Contains(file.Ext))
+        {
+            _message.Error("仅允许jpg,png格式");
+            return false;
+        }
+        return true;
+    }
+
+    void OnSingleCompleted(UploadFileItem file)
+    {
+        // 用户自定义行为
+        if (file.State == UploadState.Success)
+        {
+            Console.WriteLine($"{file.FileName} 上传成功 返回结果:{file.ResponseText}");
+        }
+        else
+        {
+            Console.WriteLine($"{file.FileName} 上传失败");
+        }
+    }
+
+    void OnCompleted(List<UploadFileItem> fileList)
+    {
+        Console.WriteLine($"全部上传完成\n成功数:{fileList.Count(x => x.State == UploadState.Success)}\n失败数:{fileList.Count(x => x.State == UploadState.Fail)}");
+
+    }
+}
