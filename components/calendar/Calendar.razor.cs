@@ -66,7 +66,7 @@ namespace AntDesign
         public Func<DateTime, bool> DisabledDate { get; set; } = null;
 
         protected string _picker;
-        protected readonly DateTime[] _pickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
+        protected readonly DateTime[] PickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
         protected Stack<string> _prePickerStack = new Stack<string>();
 
         public readonly string PrefixCls = "ant-picker-calendar";
@@ -139,7 +139,7 @@ namespace AntDesign
             _prePickerStack.Push(_picker);
             _picker = mode;
 
-            OnPanelChange?.Invoke(_pickerValues[index], _picker);
+            OnPanelChange?.Invoke(PickerValues[index], _picker);
 
             StateHasChanged();
         }

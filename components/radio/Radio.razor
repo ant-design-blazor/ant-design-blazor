@@ -1,4 +1,5 @@
 @namespace AntDesign
+@typeparam TValue
 @inherits AntDomComponentBase
 
 <label @onclick="_=>OnClick()" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
@@ -18,5 +19,3 @@
         <span>@ChildContent</span>
     }
 </label>
-
-

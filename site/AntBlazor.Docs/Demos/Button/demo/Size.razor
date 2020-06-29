@@ -1,8 +1,8 @@
 ﻿<div>
     <RadioGroup @bind-Value="@size">
-        <Radio RadioButton Value="large">Large</Radio>
-        <Radio RadioButton Value="default">Default</Radio>
-        <Radio RadioButton Value="small">Small</Radio>
+        <Radio RadioButton Value="@("large")">Large</Radio>
+        <Radio RadioButton Value="@("default")">Default</Radio>
+        <Radio RadioButton Value="@("small")">Small</Radio>
     </RadioGroup>
     <br />
     <br />
@@ -22,10 +22,10 @@
     <Button Type="primary" Shape="circle" Icon="download" Size=@size />
     <Button Type="primary" Shape="round" Icon="download" Size=@size />
     <Button Type="primary" Shape="round" Icon="download" Size=@size>
-    Download
+        Download
     </Button>
     <Button Type="primary" Icon="download" Size=@size>
-    Download
+        Download
     </Button>
 </div>
 
