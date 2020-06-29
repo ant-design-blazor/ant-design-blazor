@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntDesign
@@ -120,6 +121,11 @@ namespace AntDesign
                 domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#" + Href.Split('#')[1]);
             }
             return domRect;
+        }
+
+        private async void OnClick(MouseEventArgs args)
+        {
+            await Parent.OnLinkClickAsync(args, this);
         }
     }
 }

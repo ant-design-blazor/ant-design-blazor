@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <div class="@ClassMapper.Class" @ref="@_self" id="@Id">
-    <a title="@Title" class="@_titleClass.Class" href="@Href">@Title</a>
+    <a title="@Title" class="@_titleClass.Class" href="@Href" @onclick="(e)=>OnClick(e)">@Title</a>
     <CascadingValue Value="this">
         @ChildContent
     </CascadingValue>

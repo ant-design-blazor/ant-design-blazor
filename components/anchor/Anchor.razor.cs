@@ -7,6 +7,7 @@ using System.Text.Json;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -69,7 +70,7 @@ namespace AntDesign
         /// set the handler to handle click event
         /// </summary>
         [Parameter]
-        public EventCallback OnClick { get; set; }
+        public EventCallback<Tuple<MouseEventArgs, AnchorLink>> OnClick { get; set; }
 
         /// <summary>
         /// Customize the anchor highlight
@@ -84,7 +85,7 @@ namespace AntDesign
         public int? TargetOffset { get; set; }
 
         [Parameter]
-        public EventCallback OnChange { get; set; }
+        public EventCallback<string> OnChange { get; set; }
 
         #endregion Parameters
 
@@ -139,7 +140,7 @@ namespace AntDesign
                     {
                         if (_linkTops[link.Href] * hrefDom.top <= 0)
                         {
-                            Activate(link, (link.LinkDom.top - _selfDom.top) + link.LinkDom.height / 2 - 2);
+                            await ActivateAsync(link, (link.LinkDom.top - _selfDom.top) + link.LinkDom.height / 2 - 2);
                         }
                         _linkTops[link.Href] = hrefDom.top;
                     }
@@ -150,11 +151,16 @@ namespace AntDesign
             }
         }
 
-        private void Activate(AnchorLink anchorLink, decimal top)
+        private async Task ActivateAsync(AnchorLink anchorLink, decimal top)
         {
             foreach (var link in _flatLinks)
             {
                 link.Activate(link == anchorLink);
+            }
+
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(anchorLink.Href);
             }
 
             if (Affix)
@@ -164,6 +170,14 @@ namespace AntDesign
             }
 
             StateHasChanged();
+        }
+
+        public async Task OnLinkClickAsync(MouseEventArgs args, AnchorLink anchorLink)
+        {
+            if (OnClick.HasDelegate)
+            {
+                await OnClick.InvokeAsync(new Tuple<MouseEventArgs, AnchorLink>(args, anchorLink));
+            }
         }
     }
 }
