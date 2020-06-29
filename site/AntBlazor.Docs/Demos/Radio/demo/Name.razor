@@ -1,12 +1,22 @@
 <div>
-    <RadioGroup @bind-Value="radioValue2" Name="radiogroup">
-        <Radio Value="A">A</Radio>
-        <Radio Value="B">B</Radio>
-        <Radio Value="C">C</Radio>
-        <Radio Value="D">D</Radio>
+    <RadioGroup @bind-Value="radioValue1" Name="radiogroup1">
+        <Radio Value="@("A")">A</Radio>
+        <Radio Value="@("B")">B</Radio>
+        <Radio Value="@("C")">C</Radio>
+        <Radio Value="@("D")">D</Radio>
+    </RadioGroup>
+</div>
+<div>
+    <RadioGroup @bind-Value="radioValue2" Name="radiogroup2">
+        <Radio Value="@("A")">A</Radio>
+        <Radio Value="@("B")">B</Radio>
+        <Radio Value="@("C")">C</Radio>
+        <Radio Value="@("D")">D</Radio>
     </RadioGroup>
 </div>
 @code
 {
+    string radioValue1 = "A";
+
     string radioValue2 = "A";
 }

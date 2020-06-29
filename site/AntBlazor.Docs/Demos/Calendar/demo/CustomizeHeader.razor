@@ -70,7 +70,7 @@
                     </Title>
                     <Row Gutter="8">
                         <AntDesign.Col>
-                            <RadioGroup size="small" OnChange="value => args.OnTypeChange.InvokeAsync(value)" Value="@args.Type">
+                            <RadioGroup size="small" OnChange="value => args.OnTypeChange.InvokeAsync(value)" Value="@args.Type" TValue="string">
                                 <Radio RadioButton Value="@DatePickerType.Month">Month</Radio>
                                 <Radio RadioButton Value="@DatePickerType.Year">Year</Radio>
                             </RadioGroup>
