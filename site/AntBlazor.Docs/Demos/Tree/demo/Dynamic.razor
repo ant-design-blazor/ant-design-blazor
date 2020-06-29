@@ -1,0 +1,35 @@
+
+<div>
+    <Tree Nodes="TreeNodes" OnNodeLoadDelay="NodeLoadDelayAsync"></Tree>
+</div>
+
+@code{
+
+    List<TreeNode> _treeNodes;
+
+    public List<TreeNode> TreeNodes
+    {
+        get
+        {
+            if (_treeNodes != null)
+                return _treeNodes;
+
+            _treeNodes = new List<TreeNode>(){
+                new TreeNode{Text = "Expand to load",LoadDelay = true},
+                new TreeNode{Text = "Expand to load",LoadDelay = true},
+                new TreeNode{Text = "Tree Node"}
+            };
+
+            return _treeNodes;
+        }
+    }
+
+    async Task NodeLoadDelayAsync(TreeEventArgs args)
+    {
+        await Task.Delay(300);
+        args.Node.Nodes.Add(new TreeNode { Text = "Child Node", LoadDelay = true });
+        args.Node.Nodes.Add(new TreeNode { Text = "Child Node", LoadDelay = true });
+    }
+}
+
+
