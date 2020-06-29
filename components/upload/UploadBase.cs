@@ -75,9 +75,11 @@ namespace AntDesign
             var fileName = value.Substring(value.LastIndexOf('\\') + 1);
             var id = Guid.NewGuid().ToString();
             var fileItem = await JSRuntime.InvokeAsync<UploadFileItem>(JSInteropConstants.getFileInfo, _file);
-            if(BeforeUpload != null)
+            
+            fileItem.Ext = fileName.Substring(fileName.LastIndexOf('.'));
+            if (BeforeUpload != null)
             {
-                if(!BeforeUpload.Invoke(fileItem))
+                if (!BeforeUpload.Invoke(fileItem))
                 {
                     return;
                 }

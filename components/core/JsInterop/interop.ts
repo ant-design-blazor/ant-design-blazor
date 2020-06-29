@@ -74,7 +74,7 @@ export function uploadFile(element, fileId, url, name, instance, percentMethod, 
         if (req.readyState === 4) {
             try {
                 const response = JSON.parse(req.responseText)
-                if (response.success) {
+                if (response.status == "done") {
                     instance.invokeMethodAsync(successMethod, fileId, response.url);
                 } else {
                     instance.invokeMethodAsync(errorMethod, fileId, response.code);

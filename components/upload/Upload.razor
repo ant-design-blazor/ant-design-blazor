@@ -34,7 +34,7 @@
                 stateClass = "ant-upload-list-item-done";
                 break;
         }
-        <Tooltip Title="tips">
+        <Tooltip Title="tips" Style=" display: block;">
             <div class="ant-upload-list-item  @stateClass  ant-upload-list-item-list-type-text">
                 <div class="ant-upload-list-item-info">
                     <span>
@@ -62,7 +62,7 @@
 
                         </span>
                         <span class="ant-upload-list-item-card-actions">
-                            @if (file.State == UploadState.Fail)
+                            @if (file.State != UploadState.Uploading)
                             {
                                 <Button OnClick="()=> {
                                                      FileList.Remove(file);
@@ -71,6 +71,7 @@
                                     <Icon Type="delete"></Icon>
                                 </Button>
                             }
+                            
 
                         </span>
                     </span>
