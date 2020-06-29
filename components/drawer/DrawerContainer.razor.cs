@@ -13,35 +13,55 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            DrawerService.OnCreate += DrawerService_OnCreate;
-            DrawerService.OnClose += DrawerService_OnClose;
+            DrawerService.OnCloseEvent += DrawerService_OnClose;
+            DrawerService.OnCreateEvent += DrawerService_OnCreate;
+            DrawerService.OnDestroyEvent += DrawerService_OnDestroy;
         }
 
         protected override void Dispose(bool disposing)
         {
-            DrawerService.OnCreate -= DrawerService_OnCreate;
-            DrawerService.OnClose -= DrawerService_OnClose;
+            DrawerService.OnCloseEvent -= DrawerService_OnClose;
+            DrawerService.OnCreateEvent -= DrawerService_OnCreate;
+            DrawerService.OnDestroyEvent -= DrawerService_OnDestroy;
             base.Dispose(disposing);
         }
 
+        private List<DrawerRef> _drawerRefs = new List<DrawerRef>();
 
-        private List<DrawerConfig> _drawerConfigs = new List<DrawerConfig>();
 
-
-        private async Task DrawerService_OnClose(DrawerConfig arg)
+        /// <summary>
+        /// 创建并打开抽屉
+        /// </summary>
+        private async Task DrawerService_OnCreate(DrawerRef drawerRef)
         {
-            arg.Visible = false;
+            drawerRef.Config.Visible = true;
+            if (!_drawerRefs.Contains(drawerRef))
+            {
+                _drawerRefs.Add(drawerRef);
+            }
             await InvokeAsync(StateHasChanged);
         }
 
-        private async Task DrawerService_OnCreate(DrawerConfig arg)
+        /// <summary>
+        /// 关闭抽屉
+        /// </summary>
+        private async Task DrawerService_OnClose(DrawerRef drawerRef)
         {
-            arg.Visible = true;
-            if (!_drawerConfigs.Contains(arg))
-            {
-                _drawerConfigs.Add(arg);
-            }
+            drawerRef.Config.Visible = false;
+            await InvokeAsync(StateHasChanged);
+        }
 
+
+        /// <summary>
+        /// 销毁抽屉
+        /// </summary>
+        private async Task DrawerService_OnDestroy(DrawerRef drawerRef)
+        {
+            drawerRef.Config.Visible = false;
+            if (!_drawerRefs.Contains(drawerRef))
+            {
+                _drawerRefs.Remove(drawerRef);
+            }
             await InvokeAsync(StateHasChanged);
         }
 

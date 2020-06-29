@@ -1,8 +1,26 @@
 ﻿@namespace AntDesign.Docs.Demos.Drawer.demo
-@inherits DrawerTemplate<string>
+@inherits DrawerTemplate<string, string>
 
 <div>
     <h3>DrawerComponentTemplate</h3>
     <p>@Config</p>
-    <AntDesign.Button Type="primary" OnClick="base.HandleClose">CloseDrawer</AntDesign.Button>
+    <Input @bind-Value="value" />
+    <AntDesign.Button Type="primary" OnClick="OnClose">CloseDrawer</AntDesign.Button>
 </div>
+
+@code{
+
+    string value;
+
+    protected override void OnInitialized()
+    {
+        value = this.Config;
+        base.OnInitialized();
+    }
+
+
+    async void OnClose()
+    {
+        await this.CloseAsync(value);
+    }
+}

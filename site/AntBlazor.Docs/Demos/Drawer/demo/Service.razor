@@ -1,0 +1,76 @@
+﻿@inject DrawerService DrawerService
+
+<Input @bind-Value="@value" />
+
+<AntDesign.Button OnClick="OpenDrawer" Type="primary">OpenDrawer</AntDesign.Button>
+
+<AntDesign.Button OnClick="OpenDrawerAgain" Type="primary">OpenDrawerAgain</AntDesign.Button>
+
+<AntDesign.Button OnClick="OpenComponentTemplate" Type="primary">Using Component</AntDesign.Button>
+
+@code{
+
+  private string value="blazor";
+
+  private DrawerRef _drawerRef;
+
+    private async Task OpenDrawer()
+    {
+        RenderFragment content =@<div><p>@value</p><Button OnClick="CloseDrawer">CloseDrawer</Button></div>;
+
+        var options = new DrawerConfig()
+        {
+            Title = "Drawer",
+            ChildContent = content
+        };
+
+        _drawerRef = await DrawerService.CreateAsync(options);
+
+        _drawerRef.OnClose = () =>
+        {
+            Console.WriteLine("Close Drawer");
+            return Task.CompletedTask;
+        };
+    }
+
+    private async Task CloseDrawer()
+    {
+        if (_drawerRef != null)
+        {
+            await _drawerRef.CloseAsync();
+        }
+    }
+
+    private async Task OpenDrawerAgain()
+    {
+        if (_drawerRef != null)
+        {
+            await _drawerRef.OpenAsync();
+        }
+    }
+
+
+    private async Task OpenComponentTemplate()
+    {
+        var options = new DrawerConfig()
+        {
+            Title = "Component"
+        };
+
+        var drawerRef = await DrawerService.CreateAsync<ComponentTemplate,string, string>(options, value);
+
+        drawerRef.OnOpen = () =>
+        {
+            Console.WriteLine("OnAfterOpen");
+            return Task.CompletedTask;
+        };
+
+        drawerRef.OnClose = async result =>
+        {
+            Console.WriteLine("OnAfterClose:" + result);
+            value= result;
+            await InvokeAsync(StateHasChanged);
+        };
+    }
+
+}
