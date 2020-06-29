@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AntDesign.core.JsInterop.EventArg;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 namespace AntDesign
@@ -138,5 +140,146 @@ else{
 #pragma warning restore CA2012 // Use ValueTasks correctly
             }
         }
+
+        void CalcSwitcherIconOptions(TreeNode node, out string switchericonclass, out string switchericontype, out RenderFragment<TreeNode> switchericonrf)
+        {
+            switchericonclass = null;
+            switchericontype = null;
+            switchericonrf = node.SwitcherIconTemplate ?? this.SwitcherIconTemplate;
+
+            var nodeHCN = node.HasChildNodes;
+
+            if (switchericonrf == null)
+            {
+                switchericontype = node.SwitcherIcon ?? this.SwitcherIcon;
+                switchericonclass = $"{PREFIX_CLS}-switcher-icon";
+
+                if (string.IsNullOrEmpty(switchericontype))
+                {
+                    if (!this.ShowLine)
+                    {
+                        if (nodeHCN || node.LoadDelay)
+                        {
+                            switchericontype = "caret-down";
+                        }
+                        else
+                        {
+                            //noop
+                        }
+                    }
+                    else if (!nodeHCN)
+                    {
+                        switchericontype = "file";
+                        switchericonclass = $"{PREFIX_CLS}-switcher-icon-file";
+                    }
+                    else if (node.IsExpanded)
+                    {
+                        switchericontype = "minus-square";
+                        switchericonclass = $"{PREFIX_CLS}-switcher-icon-file";
+                    }
+                    else
+                    {
+                        switchericontype = "plus-square";
+                        switchericonclass = $"{PREFIX_CLS}-switcher-icon-file";
+                    }
+                }
+            }
+
+            if (_loadDelayNode == node && !nodeHCN)
+            {
+                switchericonclass = $"{PREFIX_CLS}-switcher-loading-icon anticon-spin";
+                switchericontype = "loading";
+                switchericonrf = null;
+            }
+            else if (!nodeHCN && !this.ShowLine && !node.LoadDelay)
+            {
+                switchericonrf = null;
+                switchericontype = null;
+            }
+        }
+
+        string GetCheckStateCls(TreeNode node)
+        {
+            bool? cs = node.CheckedState;
+            if (cs == null)
+                return "indeterminate";
+            if (cs == true)
+                return "checked";
+            return "unchecked";
+        }
+
+        Func<MouseEventArgs, Task> MakeSwitcherClick(TreeNode node)
+        {
+
+            async Task switcherClick(MouseEventArgs args)
+            {
+                if (node.HasChildNodes)
+                {
+                    await node.ToggleExpandedAnimatedAsync();
+                }
+                else if (node.LoadDelay)
+                {
+                    this._loadDelayNode = node;
+                    await this.OnNodeLoadDelay.InvokeAsync(new TreeEventArgs(this, node));
+                    this._loadDelayNode = null;
+                    if (node.HasChildNodes && !node.IsExpanded)
+                    {
+                        //this.CallStateHasChanged();
+                        await node.ToggleExpandedAnimatedAsync();
+                    }
+                }
+            }
+
+            return switcherClick;
+
+        }
+
+        Func<MouseEventArgs, Task> MakeCheckClick(TreeNode node)
+        {
+            async Task checkClick(MouseEventArgs args)
+            {
+                if (node.IsDisabled)
+                    return;
+                if (this.CheckStrictly)
+                    node.IsChecked = !node.IsChecked;
+                else
+                    node.SetCheckedAll(node.CheckedState != true);
+                if (this.OnCheckedStateChanged.HasDelegate)
+                {
+                    await this.OnCheckedStateChanged.InvokeAsync(new TreeEventArgs(this, node));
+                }
+            }
+
+            return checkClick;
+        }
+
+
+        Func<MouseEventArgs, Task> MakeNodeClick(TreeNode node)
+        {
+
+            async Task nodeClick(MouseEventArgs args)
+            {
+                if (node.IsDisabled)
+                    return;
+
+                if (node.IsSelected)
+                {
+                    node.IsSelected = false;
+                }
+                else
+                {
+                    if (!args.CtrlKey)//TODO: ownerTree.MultiSelect ?
+                        this.DeselectAll();
+                    node.IsSelected = true;
+                }
+                if (this.OnNodeSelectedChanged.HasDelegate)
+                {
+                    await this.OnNodeSelectedChanged.InvokeAsync(new TreeEventArgs(this, node));
+                }
+            }
+
+            return nodeClick;
+        }
+
     }
 }
