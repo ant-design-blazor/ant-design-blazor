@@ -39,6 +39,9 @@ namespace AntDesign
         [Parameter]
         public string TabIndex { get; set; }
 
+        [Parameter]
+        public bool StopPropagation { get; set; }
+
         [CascadingParameter]
         public Button Button { get; set; }
 
