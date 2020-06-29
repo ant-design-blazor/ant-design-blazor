@@ -230,6 +230,11 @@
             "url": "components/statistic"
           },
           {
+            "title": "Tree",
+            "type": "menuItem",
+            "url": "components/tree"
+          },
+          {
             "title": "Tooltip",
             "type": "menuItem",
             "url": "components/tooltip"

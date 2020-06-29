@@ -10,17 +10,6 @@ namespace AntDesign
     {
         internal const string PREFIX_CLS = "ant-tree";
 
-        protected override Task OnParametersSetAsync()
-        {
-            ClassMapper.Clear()
-                .Add(PREFIX_CLS)
-                .If($"{PREFIX_CLS}-icon-hide", () => !ShowIcon)
-                .If($"{PREFIX_CLS}-show-line", () => ShowLine)
-            ;
-
-            return base.OnParametersSetAsync();
-        }
-
         internal void CallStateHasChanged()
         {
             StateHasChanged();
@@ -70,8 +59,8 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<TreeNode> NodeTemplate { get; set; }
 
+        private List<TreeNode> _nodelist;
 
-        List<TreeNode> _nodelist;
         public List<TreeNode> NodeList
         {
             get
@@ -109,7 +98,18 @@ namespace AntDesign
                 node?.DeselectAll();
         }
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            ClassMapper.Clear()
+                .Add(PREFIX_CLS)
+                .If($"{PREFIX_CLS}-icon-hide", () => !ShowIcon)
+                .If($"{PREFIX_CLS}-show-line", () => ShowLine)
+                ;
+        }
+
         internal string _expandedAnimateRequested;
+
         protected override void OnAfterRender(bool firstRender)
         {
             base.OnAfterRender(firstRender);
@@ -136,9 +136,7 @@ else{
 "
 );
 #pragma warning restore CA2012 // Use ValueTasks correctly
-
             }
         }
     }
-
 }
