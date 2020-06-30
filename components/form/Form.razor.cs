@@ -57,7 +57,6 @@ namespace AntDesign
             base.OnInitialized();
 
             _editContext = new EditContext(Model);
-            _editContext.OnFieldChanged += HandleFieldChanged;
 
             FieldDefaultValues = Model.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(Model));
         }
@@ -69,25 +68,12 @@ namespace AntDesign
             SetClass();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            _editContext.OnFieldChanged -= HandleFieldChanged;
-        }
-
         protected void SetClass()
         {
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
                 .Add($"{_prefixCls}-{Layout.ToLower()}")
                ;
-        }
-
-        private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
-        {
-            _editContext.Validate();
-            StateHasChanged();
         }
 
         public void HandleValidSubmit()
