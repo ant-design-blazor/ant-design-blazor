@@ -1,13 +1,14 @@
 ﻿---
 order: 10
 title:
-  zh-CN: 使用服务
-  en-US: Using DrawerService
+  zh-CN: 服务方式创建
+  en-US: Drawer's service
 ---
 
 ## zh-CN
-注入DrawerService，使用 DrawerService 的 CreateAsync(DrawerConfig config) 和 CreateAsync<T, TComponentParameter>(DrawerConfig config, TComponentParameter parameter) 创建Drawer，可以从现有的组件模板创建Drawer。
 
+Drawer 的 service 用法，示例中演示了用户自定义模板、自定义component。
 
 ## en-US
-Inject DrawerService, and use the CreateAsync(DrawerConfig config) and CreateAsync<T, TComponentParameter>(DrawerConfig config, TComponentParameter parameter) methods to create a drawer. You can create a drawer from an existing component template.
+
+Usage of Drawer's service, examples demonstrate user-defined templates, custom components.

@@ -6,18 +6,26 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public class DrawerTemplate<TConfig> : TemplateComponentBase<TConfig>
+    public class DrawerTemplate<TContentParams, TResult> : TemplateComponentBase<TContentParams>
     {
         [Parameter]
-        public DrawerConfig DrawerConfig { get; set; }
+        public DrawerRef<TResult> DrawerRef { get; set; }
+
 
         /// <summary>
-        /// close this drawer
+        /// 关闭抽屉
         /// </summary>
         /// <returns></returns>
-        protected async Task HandleClose()
+        protected async Task CloseAsync(TResult result)
         {
-            await DrawerConfig.HandleOnClose();
+            await DrawerRef.CloseAsync(result);
+        }
+
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            DrawerRef.OnOpen.Invoke();
         }
     }
 }
