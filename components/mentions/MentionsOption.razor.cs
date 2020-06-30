@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -26,7 +27,7 @@ namespace AntDesign
         {
             if (this is MentionsOption option)
             {
-                this.Mentions?.AddOption(option);
+                Mentions?.AddOption(option);
             }
 
             SetClassMap();
@@ -44,38 +45,40 @@ namespace AntDesign
                 .If($"{prefixCls}-selected", () => this.Selected)
                 .If($"{prefixCls}-active", () => this.Active)
                 ;
+
+            InvokeStateHasChanged();
         }
 
 
-        private void OnMouseEnter(MouseEventArgs args)
+        protected override Task OnParametersSetAsync()
+        {
+            SetClassMap();          
+            return base.OnParametersSetAsync();
+        }
+
+
+        internal void OnMouseEnter()
         {
 
-            this.Active = true;
+            this.Selected = true;
             SetClassMap();
-            StateHasChanged();
         }
 
-        private void OnMouseLeave(MouseEventArgs args)
+        internal void OnMouseLeave()
         {
-            this.Active = false;
+            this.Selected = false;
             SetClassMap();
-            StateHasChanged();
-
         }
 
 
-        private void OnClick(MouseEventArgs args)
+        internal async Task OnClick(MouseEventArgs args)
         {
             if (args.Button == 0)   //left click
             {
-                this.Selected = true;
+                await Mentions.OnOptionClick(this);
             }
-            else
-            {
-                this.Selected = false;
-            }
-            StateHasChanged();
 
+            InvokeStateHasChanged();
         }
 
     }

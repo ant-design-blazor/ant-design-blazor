@@ -3,34 +3,62 @@
 @inherits AntDomComponentBase
 
 
-    <div class="@ClassMapper.Class" style="@Style" id="@Id">
-        <textarea @bind="Value" @bind:event="oninput" @ref="@Ref"
+    <div class="@ClassMapper.Class" >
+        <textarea  @ref="@Ref"
+                  @bind="@Value"
+                  @attributes="@Attributes"    
+                  style="@Style"          
+                   id="@Id"
                   rows="@Rows"
                   disabled="@Disable"
                   readonly="@Readonly"
-                  placeholder="@Placeholder"
+                  placeholder="@Placeholder"    
                   @onfocus="@Onfocus"
                   @onblur="@Onblur"
-                  @onchange="@OnChange"
-                  @onkeyup="e=>Keyup(e)">
-    </textarea>
-     
-        <CascadingValue Value="this">
-            @if (ShowMentions)
-            {
-            <div class="ant-mentions-measure" style="z-index: 1050">
-                  
-            <div class="ant-mentions-dropdown" style="top:31px;left:20px;display:inline-block;">              
-                <div class="ant-mentions-dropdown-menu" role="menu">
-                 
-                        @ChildContent
-                 
+                  @onkeypress="@OnKeyPress"
+                  @onkeydown="@OnKeyDown"
+                  @onkeyup="@OnKeyUp" />
 
-                </div>            
-            </div>
-            </div>
+
+        <CascadingValue Value="this">
+            @if (ShowSuggestions)
+            {
+                <div class="ant-mentions-measure" style="z-index:1050">
+                    <div >
+                        <div class="ant-mentions-dropdown"  style="@DropdownStyle">
+                            <div class="ant-mentions-dropdown-menu" role="menu">
+                                @if (LstOriginalOptions.Count > 0)
+                                {
+                                    @if (Loading)
+                                    {
+                                        <MentionsOption Value="ANTD_SEARCHING" Disable="true">
+                                            <Spin Size="small"></Spin>
+                                        </MentionsOption>
+                                    }
+                                    else
+                                    {
+                                      
+                                        foreach (var item in LstOriginalOptions)
+                                        {
+                                          
+                                            <MentionsOption Value="@item.Value">@item.ChildContent</MentionsOption>
+                                          
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    @ChildContent
+                                }
+
+
+                            </div>
+                        </div>
+                    </div>
+              
+
+                </div>
             }
-                
-            
         </CascadingValue>
+
     </div>

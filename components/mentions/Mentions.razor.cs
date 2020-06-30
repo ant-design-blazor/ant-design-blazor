@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -23,18 +26,24 @@ namespace AntDesign
         [Parameter] public string Direction { get; set; } = "ltr";
         [Parameter] public int Rows { get; set; } = 1;
         [Parameter] public bool Loading { get; set; } = false;
-        [Parameter] public RenderFragment ChildContent { get; set; }
-        [Parameter] public EventCallback<ChangeEventArgs> ValueChange { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; } 
+        [Parameter] public EventCallback<string> ValueChange { get; set; }
         [Parameter] public EventCallback<FocusEventArgs> OnFocus { get; set; }
         [Parameter] public EventCallback<FocusEventArgs> OnBlur { get; set; }
         [Parameter] public EventCallback<EventArgs> OnSearch { get; set; }
 
-        [Inject]  private DomEventService DomEventService { get; set; }
-        private List<MentionsOption> LstOriginalOptions { get; set; } = new List<MentionsOption>();
-        private List<MentionsOption> LstOptions { get; set; } = new List<MentionsOption>();
+        [Parameter] public RenderFragment NoFoundContent { get; set; }
 
+
+        public Dictionary<string, object> Attributes { get; set; }
+
+        [Inject]  private DomEventService DomEventService { get; set; }
+       internal List<MentionsOption> LstOriginalOptions { get; set; } = new List<MentionsOption>();
+
+
+        private string DropdownStyle { get; set; }
         private bool Focused { get; set; }
-        private bool ShowMentions { get; set; }
+        private bool ShowSuggestions { get; set; }
 
         private void SetClassMap()
         {
@@ -45,52 +54,166 @@ namespace AntDesign
                 .If($"{prefixCls}-focused", () => this.Focused)
                 .If($"{prefixCls}-rtl", () => this.Direction == "rtl")
                 ;
+
+       
+
         }
 
         protected override void OnInitialized()
         {
-            SetClassMap();
             base.OnInitialized();
+
+            string whiteSpace = "white-space:pre-wrap";
+
+            if (Style == null)
+            {
+                Style = whiteSpace;
+            }
+            else
+            {
+                Style = string.Join(";", Style, whiteSpace);
+            }
+
+            SetClassMap();
+            if (!string.IsNullOrEmpty(DefaultValue?.ToString()) && string.IsNullOrEmpty(Value?.ToString()))
+            {
+                Value = DefaultValue;
+            }
+
+            //DomEventService.AddEventListener(Ref, "keyup", OnTextAreaKeyup);
+           // DomEventService.AddEventListener(Ref, "onmouseup", OnTextAreaMouseUp);
+
         }
 
-        private  void Keyup(KeyboardEventArgs args)
+
+       
+ 
+        internal bool FirstTime { get; set; } = true;
+        protected override Task OnFirstAfterRenderAsync()
+        {
+            base.OnFirstAfterRenderAsync();
+            FirstTime = false;
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        ///  After Press keyUP, if a key  is prefix, to popup the suggestion
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private async Task OnKeyUp(KeyboardEventArgs args)
         {
             if (args == null) return;
             if (Prefix.Contains(args.Key, StringComparison.Ordinal))
             {
-                ShowMentions = Prefix.Contains(args.Key, StringComparison.Ordinal);
-                StateHasChanged();
-                return;
+                await SetDropdownStyle();
+                ShowSuggestions = Prefix.Contains(args.Key, StringComparison.Ordinal);
+                await InvokeStateHasChangedAsync();
             }
 
-            if (args.Code == "Space")
+            if (!string.IsNullOrEmpty(Value))
             {
-                ShowMentions = false;
-                StateHasChanged();
-                return;
+                var suggestions = this.Value.Split(Split);
             }
 
 
+             await  ValueChange.InvokeAsync(this.Value);
+
+
         }
 
-        private void OnChange(ChangeEventArgs args)
+
+        private async Task OnKeyDown(KeyboardEventArgs args)
         {
-            Console.WriteLine(this.Value); 
-            return;
+            await InvokeStateHasChangedAsync();
         }
+
+
+        protected async Task SetDropdownStyle()
+        {
+            //get current dom element infomation
+            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, Ref);
+
+            //Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo);
+
+            //get the cursor  x.y
+            //var cursorPoint = await JsInvokeAsync<dynamic>(JSInteropConstants.getCursorXY, Ref);
+
+            var left = Math.Round(domRect.left);
+            var top = Math.Round(domRect.top + domRect.height + 4);
+            //DropdownStyle = $"display:inline-flex;position:fixed;top:{top}px;left:{left}px;transform:translate({cursorPoint.x}px, {cursorPoint.y}0px);";
+            DropdownStyle = $"display:inline-flex;position:fixed;top:{top}px;left:{left}px;transform:translate(0px, 0px);";
+        }
+
+        /// <summary>
+        ///  open or close the list of Suggestion
+        /// </summary>
+        /// <param name="show"></param>
+        /// <returns></returns>
+        internal async Task ShowSuggestion(bool show)
+        {
+            ShowSuggestions = show;
+            await InvokeStateHasChangedAsync();
+
+        }
+
+
+        internal async Task GetSuggestion()
+        {
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="opt"></param>
+        /// <returns></returns>
+        internal async Task OnOptionClick(MentionsOption opt)
+        {
+            // update to status of  all of suggestion to un-selected state
+            foreach (var item in LstOriginalOptions)
+            {
+                item.Selected = false;
+            }
+
+            // when the suggestion clicked is not null and enable, then change the value of textarea.
+            if (opt != null && !opt.Disable) 
+            {
+                if(string.IsNullOrEmpty(this.Value))
+                {
+                    this.Value = opt.Value + this.Split;
+                }
+                else
+                {
+                    this.Value = this.Value + opt.Value + this.Split;
+                }
+            }
+
+            ShowSuggestions = false;
+
+            await InvokeStateHasChangedAsync();
+        }
+
 
         private void OnKeyPress(KeyboardEventArgs args)
         {
-          
+            Console.WriteLine(args.Key);
 
-
-        
-            //this.LstOptions = IsIncluded(this.Value);
-
-          
+            if (args == null) return;
+            if (ValueChange.HasDelegate)
+                ValueChange.InvokeAsync(args.Code);
 
             return;
         }
+
+
+        protected override Task OnParametersSetAsync()
+        {           
+            return base.OnParametersSetAsync();
+        }
+
+
+
+
 
 
         /// <summary>
@@ -122,9 +245,8 @@ namespace AntDesign
         
         public void AddOption(MentionsOption option)
         {
-            if (option == null) return;
-            Console.WriteLine($"id={option.Id}");
-           var opt = LstOriginalOptions.Find(x => x.Id == option.Id);
+            if (option == null) return; 
+           var opt = LstOriginalOptions.Find(x => x.Value == option.Value);
             if (opt == null)
             {
                 LstOriginalOptions.Add(option);
@@ -134,13 +256,8 @@ namespace AntDesign
 
         }
 
-        private void Onchange(ChangeEventArgs args)
-        {
-            if (args == null) return;
-            if (ValueChange.HasDelegate)
-                ValueChange.InvokeAsync(args);
-        }
-        private async void Onfocus(FocusEventArgs args)
+ 
+        internal async void Onfocus(FocusEventArgs args)
         {
             if (args == null) return;
 
@@ -152,7 +269,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        private async void Onblur(FocusEventArgs args)
+        internal async void Onblur(FocusEventArgs args)
         {
             if (args == null) return;
             Focused = false;
