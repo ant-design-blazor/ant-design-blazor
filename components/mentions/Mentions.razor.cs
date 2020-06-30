@@ -26,7 +26,7 @@ namespace AntDesign
         [Parameter] public string Direction { get; set; } = "ltr";
         [Parameter] public int Rows { get; set; } = 1;
         [Parameter] public bool Loading { get; set; } = false;
-        [Parameter] public RenderFragment ChildContent { get; set; } 
+        [Parameter] public RenderFragment ChildContent { get; set; }
         [Parameter] public EventCallback<string> ValueChange { get; set; }
         [Parameter] public EventCallback<FocusEventArgs> OnFocus { get; set; }
         [Parameter] public EventCallback<FocusEventArgs> OnBlur { get; set; }
@@ -34,12 +34,10 @@ namespace AntDesign
 
         [Parameter] public RenderFragment NoFoundContent { get; set; }
 
-
         public Dictionary<string, object> Attributes { get; set; }
 
-        [Inject]  private DomEventService DomEventService { get; set; }
-       internal List<MentionsOption> LstOriginalOptions { get; set; } = new List<MentionsOption>();
-
+        [Inject] private DomEventService DomEventService { get; set; }
+        internal List<MentionsOption> LstOriginalOptions { get; set; } = new List<MentionsOption>();
 
         private string DropdownStyle { get; set; }
         private bool Focused { get; set; }
@@ -54,41 +52,24 @@ namespace AntDesign
                 .If($"{prefixCls}-focused", () => this.Focused)
                 .If($"{prefixCls}-rtl", () => this.Direction == "rtl")
                 ;
-
-       
-
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            string whiteSpace = "white-space:pre-wrap";
-
-            if (Style == null)
-            {
-                Style = whiteSpace;
-            }
-            else
-            {
-                Style = string.Join(";", Style, whiteSpace);
-            }
-
             SetClassMap();
-            if (!string.IsNullOrEmpty(DefaultValue?.ToString()) && string.IsNullOrEmpty(Value?.ToString()))
+            if (string.IsNullOrEmpty(Value))
             {
                 Value = DefaultValue;
             }
 
             //DomEventService.AddEventListener(Ref, "keyup", OnTextAreaKeyup);
-           // DomEventService.AddEventListener(Ref, "onmouseup", OnTextAreaMouseUp);
-
+            // DomEventService.AddEventListener(Ref, "onmouseup", OnTextAreaMouseUp);
         }
 
-
-       
- 
         internal bool FirstTime { get; set; } = true;
+
         protected override Task OnFirstAfterRenderAsync()
         {
             base.OnFirstAfterRenderAsync();
@@ -116,18 +97,13 @@ namespace AntDesign
                 var suggestions = this.Value.Split(Split);
             }
 
-
-             await  ValueChange.InvokeAsync(this.Value);
-
-
+            await ValueChange.InvokeAsync(this.Value);
         }
-
 
         private async Task OnKeyDown(KeyboardEventArgs args)
         {
             await InvokeStateHasChangedAsync();
         }
-
 
         protected async Task SetDropdownStyle()
         {
@@ -154,16 +130,14 @@ namespace AntDesign
         {
             ShowSuggestions = show;
             await InvokeStateHasChangedAsync();
-
         }
-
 
         internal async Task GetSuggestion()
         {
-
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="opt"></param>
         /// <returns></returns>
@@ -176,9 +150,9 @@ namespace AntDesign
             }
 
             // when the suggestion clicked is not null and enable, then change the value of textarea.
-            if (opt != null && !opt.Disable) 
+            if (opt != null && !opt.Disable)
             {
-                if(string.IsNullOrEmpty(this.Value))
+                if (string.IsNullOrEmpty(this.Value))
                 {
                     this.Value = opt.Value + this.Split;
                 }
@@ -193,7 +167,6 @@ namespace AntDesign
             await InvokeStateHasChangedAsync();
         }
 
-
         private void OnKeyPress(KeyboardEventArgs args)
         {
             Console.WriteLine(args.Key);
@@ -205,16 +178,10 @@ namespace AntDesign
             return;
         }
 
-
         protected override Task OnParametersSetAsync()
-        {           
+        {
             return base.OnParametersSetAsync();
         }
-
-
-
-
-
 
         /// <summary>
         /// return a  new list of mentionsOption, when all item included the specificed text
@@ -223,7 +190,6 @@ namespace AntDesign
         /// <returns></returns>
         private List<MentionsOption> IsIncluded(string textValue)
         {
-
             if (string.IsNullOrEmpty(textValue))
             {
                 return LstOriginalOptions;
@@ -240,30 +206,23 @@ namespace AntDesign
             return lst;
         }
 
-
-
-        
         public void AddOption(MentionsOption option)
         {
-            if (option == null) return; 
-           var opt = LstOriginalOptions.Find(x => x.Value == option.Value);
+            if (option == null) return;
+            var opt = LstOriginalOptions.Find(x => x.Value == option.Value);
             if (opt == null)
             {
                 LstOriginalOptions.Add(option);
             }
-
-
-
         }
 
- 
         internal async void Onfocus(FocusEventArgs args)
         {
             if (args == null) return;
 
             Focused = true;
-           if (OnFocus.HasDelegate)
-               await OnFocus.InvokeAsync(args);
+            if (OnFocus.HasDelegate)
+                await OnFocus.InvokeAsync(args);
 
             await JsInvokeAsync(JSInteropConstants.focus, Ref);
             StateHasChanged();
@@ -275,11 +234,8 @@ namespace AntDesign
             Focused = false;
             if (OnBlur.HasDelegate)
                 await OnBlur.InvokeAsync(args);
-                await JsInvokeAsync(JSInteropConstants.blur, Ref);
+            await JsInvokeAsync(JSInteropConstants.blur, Ref);
             StateHasChanged();
         }
-
-
-
     }
 }
