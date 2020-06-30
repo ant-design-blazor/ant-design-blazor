@@ -1,62 +1,66 @@
 ﻿@inject DrawerService DrawerService
 
-<AntDesign.Button OnClick="OpenDrawer" Type="primary">OpenDrawer</AntDesign.Button>
-
-<AntDesign.Button OnClick="OpenComponentTemplate" Type="primary">Using Component</AntDesign.Button>
+<Input @bind-Value="@value" />
+<br/><br />
+<Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
+<Button OnClick="OpenComponent" Type="primary">Use Component</Button>
 
 @code{
-    DrawerRef drawerRef;
-    private async Task OpenDrawer()
+
+    private string value = "blazor";
+
+    private DrawerRef _drawerRef;
+
+    private async Task OpenTemplate()
     {
-        RenderFragment content =@<div><Input Value="@("")" /><Button OnClick="CloseDrawer">CloseDrawer</Button></div>;
+        RenderFragment content = @<div>value: @value <br/><Button OnClick="CloseDrawer">close</Button></div>;
 
         var options = new DrawerConfig()
         {
             Title = "Drawer",
-            ChildContent = content
+            Width = 350,
+            Content = content,
         };
-        
-        options.OnClose = () =>
+
+        _drawerRef = await DrawerService.CreateAsync(options);
+
+        _drawerRef.OnClose = () =>
         {
             Console.WriteLine("Close Drawer");
             return Task.CompletedTask;
         };
-
-        drawerRef = await DrawerService.CreateAsync(options);
     }
 
     private async Task CloseDrawer()
     {
-        if (drawerRef != null)
+        if (_drawerRef != null)
         {
-            await drawerRef.CloseAsync();
+            await _drawerRef.CloseAsync();
         }
     }
 
-    private async Task OpenComponentTemplate()
+    private async Task OpenComponent()
     {
         var options = new DrawerConfig()
         {
-            Title = "Component"
+            Title = "Component",
+            Width = 350,
         };
-        options.OnClose = () =>
+
+        var drawerRef = await DrawerService.CreateAsync<ComponentTemplate, string, string>(options, value);
+
+        drawerRef.OnOpen = () =>
         {
-            Console.WriteLine("Close ComponentTemplate Drawer");
+            Console.WriteLine("OnAfterOpen");
             return Task.CompletedTask;
         };
 
-        //ComponentTemplate.razor
-        //Component ComponentTemplate source code
-        //
-        //@namespace AntDesign.Docs.Demos.Drawer.demo
-        //@inherits DrawerTemplate<string>
-        //<div>
-        //    <h3>Component</h3>
-        //    <p>@Config</p>
-        //    <AntDesign.Button Type="primary" OnClick="base.HandleClose">CloseDrawer</AntDesign.Button>
-        //</div>
-        //
-        await DrawerService.CreateAsync<ComponentTemplate, string>(options, "here is Component paramter");
+        drawerRef.OnClose = async result =>
+        {
+            Console.WriteLine("OnAfterClose:" + result);
+            value = result;
+            await InvokeAsync(StateHasChanged);
+        };
     }
 
 }

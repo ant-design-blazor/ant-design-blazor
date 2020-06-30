@@ -81,6 +81,8 @@ namespace AntDesign.Docs.Routing
         {
             var relativeUri = NavigationManager.ToBaseRelativePath(_location);
 
+            relativeUri = relativeUri.IndexOf('#') >= 0 ? relativeUri.Substring(0, relativeUri.IndexOf('#')) : relativeUri;
+
             var currentCulture = LanguageService.CurrentCulture;
 
             var segment = relativeUri.IndexOf('/') > 0 ? relativeUri.Substring(0, relativeUri.IndexOf('/')) : null;
