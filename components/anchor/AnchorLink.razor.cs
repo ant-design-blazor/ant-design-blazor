@@ -24,9 +24,12 @@ namespace AntDesign
 
         #region Parameters
 
+        [CascadingParameter(Name = "Root")]
+        public Anchor Root { get; set; }
+
         private IAnchor _parent;
 
-        [CascadingParameter]
+        [CascadingParameter(Name = "Parent")]
         public IAnchor Parent
         {
             get => _parent;
@@ -115,14 +118,7 @@ namespace AntDesign
 
         internal void Activate(bool active)
         {
-            if (Active)
-            {
-                Active = false;
-            }
-            else
-            {
-                Active = active;
-            }
+            Active = active;
         }
 
         internal async Task<DomRect> GetHrefDom(bool forced = false)
@@ -137,25 +133,7 @@ namespace AntDesign
 
         private async void OnClick(MouseEventArgs args)
         {
-            await GetRootParent()?.OnLinkClickAsync(args, this);
-        }
-
-        public IAnchor GetParent()
-        {
-            return Parent;
-        }
-
-        private Anchor GetRootParent()
-        {
-            IAnchor parent = GetParent();
-            IAnchor child = this;
-            while (parent != null)
-            {
-                child = parent;
-                parent = parent.GetParent();
-            }
-
-            return child as Anchor;
+            await Root.OnLinkClickAsync(args, this);
         }
     }
 }

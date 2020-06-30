@@ -7,8 +7,10 @@
             <span class="@_ballClass" style="@_ballStyle">
             </span>
         </div>
-        <CascadingValue Value="this">
-            @ChildContent
+        <CascadingValue Value="this" Name="Root">
+            <CascadingValue Value="this" Name="Parent">
+                @ChildContent
+            </CascadingValue>
         </CascadingValue>
     </div>
 </div>

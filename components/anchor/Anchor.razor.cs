@@ -18,6 +18,8 @@ namespace AntDesign
         private ElementReference _self;
         private ElementReference _ink;
         private DomRect _selfDom;
+        private AnchorLink _activeLink;
+        private AnchorLink _lastActiveLink;
         private Dictionary<string, decimal> _linkTops;
         private List<AnchorLink> _flatLinks;
         private List<AnchorLink> _links = new List<AnchorLink>();
@@ -119,9 +121,10 @@ namespace AntDesign
                         DomRect hrefDom = await link.GetHrefDom(true);
                         if (hrefDom != null)
                         {
-                            await ActivateAsync(link, (link.LinkDom.top - _selfDom.top) + link.LinkDom.height / 2 - 2);
+                            await ActivateAsync(link, true);
                             // the offset does not matter, since the dictionary's value will not change any more in case user set up GetCurrentAnchor
                             _linkTops[link.Href] = hrefDom.top;
+                            StateHasChanged();
                         }
                     }
                     catch (Exception ex)
@@ -153,6 +156,9 @@ namespace AntDesign
 
         private async void OnScroll(JsonElement obj)
         {
+            _activeLink = null;
+            _flatLinks.ForEach(l => l.Activate(false));
+
             int offset = OffsetBottom.HasValue ? OffsetBottom.Value : -OffsetTop.Value;
             foreach (var link in _flatLinks)
             {
@@ -161,34 +167,26 @@ namespace AntDesign
                     DomRect hrefDom = await link.GetHrefDom();
                     if (hrefDom != null)
                     {
-                        if (_linkTops[link.Href] * (hrefDom.top + offset) <= 0)
-                        {
-                            await ActivateAsync(link, (link.LinkDom.top - _selfDom.top) + link.LinkDom.height / 2 - 2);
-                        }
                         _linkTops[link.Href] = hrefDom.top + offset;
                     }
                 }
                 catch (Exception ex)
                 {
+                    _linkTops[link.Href] = 1;
                 }
             }
-        }
 
-        private async Task ActivateAsync(AnchorLink anchorLink, decimal top)
-        {
-            foreach (var link in _flatLinks)
+            string activeKey = _linkTops.Where(p => (int)p.Value <= 0).OrderBy(p => p.Value).LastOrDefault().Key;
+            if (!string.IsNullOrEmpty(activeKey))
             {
-                link.Activate(link == anchorLink);
+                _activeLink = _flatLinks.Single(l => l.Href == activeKey);
+                await ActivateAsync(_activeLink, true);
             }
 
-            if (OnChange.HasDelegate)
-            {
-                await OnChange.InvokeAsync(anchorLink.Href);
-            }
-
-            if (Affix && anchorLink.Active)
+            if (Affix && _activeLink != null)
             {
                 _ballClass = "ant-anchor-ink-ball visible";
+                decimal top = (_activeLink.LinkDom.top - _selfDom.top) + _activeLink.LinkDom.height / 2 - 2;
                 _ballStyle = $"top: {top}px;";
             }
             else
@@ -200,19 +198,28 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        private async Task ActivateAsync(AnchorLink anchorLink, bool active)
+        {
+            anchorLink.Activate(active);
+
+            if (active && _activeLink != _lastActiveLink)
+            {
+                _lastActiveLink = _activeLink;
+                if (OnChange.HasDelegate)
+                {
+                    await OnChange.InvokeAsync(anchorLink.Href);
+                }
+            }
+        }
+
         public async Task OnLinkClickAsync(MouseEventArgs args, AnchorLink anchorLink)
         {
             await JsInvokeAsync("window.eval", $"window.location.hash='{anchorLink._hash}'");
-
+            
             if (OnClick.HasDelegate)
             {
                 await OnClick.InvokeAsync(new Tuple<MouseEventArgs, AnchorLink>(args, anchorLink));
             }
-        }
-
-        public IAnchor GetParent()
-        {
-            return null;
         }
     }
 }
