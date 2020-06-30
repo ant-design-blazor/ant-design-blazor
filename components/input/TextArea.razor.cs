@@ -90,7 +90,8 @@ namespace AntDesign
             // do not call base method to avoid lost focus
             //base.OnInputAsync(args);
 
-            CurrentValueAsString = args.Value.ToString();
+            _preInputValue = args?.Value?.ToString();
+
             if (OnChange.HasDelegate)
             {
                 await OnChange.InvokeAsync(CurrentValueAsString);
