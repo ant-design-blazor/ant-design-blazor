@@ -11,7 +11,7 @@ namespace AntDesign
 
         internal DrawerRef(DrawerConfig config, DrawerService service) : base(config, service)
         {
-            base.OnClose = async () => { await this.OnClose.Invoke(default); };
+
         }
 
         /// <summary>
@@ -68,6 +68,19 @@ namespace AntDesign
             await _service.CloseAsync(this);
             if (OnClose != null)
                 await OnClose.Invoke();
+        }
+
+
+        internal async Task HandleOnCancel()
+        {
+            bool isClose = true;
+            if (Config.OnCancel != null)
+            {
+                isClose = Config.OnCancel.Invoke() ?? true;
+            }
+            if (isClose == true)
+                await _service.CloseAsync(this);
+
         }
     }
 }

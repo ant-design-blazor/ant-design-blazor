@@ -18,16 +18,17 @@
     {
         RenderFragment content =@<div><p>@value</p><Button OnClick="CloseDrawer">CloseDrawer</Button></div>;
 
-        var options = new DrawerConfig()
-        {
-            Title = "Drawer",
-            Width=350,
-            ChildContent = content
-        };
+                var options = new DrawerConfig()
+                {
+                    Title = "Drawer",
+                    Width = 350,
+                    ChildContent = content,
+                    OnCancel = () => false,
+            };
 
-        _drawerRef = await DrawerService.CreateAsync(options);
+            _drawerRef = await DrawerService.CreateAsync(options);
 
-        _drawerRef.OnClose = () =>
+            _drawerRef.OnClose = () =>
         {
             Console.WriteLine("Close Drawer");
             return Task.CompletedTask;
