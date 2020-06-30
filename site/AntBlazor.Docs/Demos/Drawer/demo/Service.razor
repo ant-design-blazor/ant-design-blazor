@@ -4,8 +4,8 @@
 
 <AntDesign.Button OnClick="OpenDrawer" Type="primary">OpenDrawer</AntDesign.Button>
 
-<AntDesign.Button OnClick="OpenDrawerAgain" Type="primary">OpenDrawerAgain</AntDesign.Button>
-
+<br />
+<br />
 <AntDesign.Button OnClick="OpenComponentTemplate" Type="primary">Using Component</AntDesign.Button>
 
 @code{
@@ -21,6 +21,7 @@
         var options = new DrawerConfig()
         {
             Title = "Drawer",
+            Width=350,
             ChildContent = content
         };
 
@@ -41,20 +42,12 @@
         }
     }
 
-    private async Task OpenDrawerAgain()
-    {
-        if (_drawerRef != null)
-        {
-            await _drawerRef.OpenAsync();
-        }
-    }
-
-
     private async Task OpenComponentTemplate()
     {
         var options = new DrawerConfig()
         {
-            Title = "Component"
+            Title = "Component",
+            Width = 350,
         };
 
         var drawerRef = await DrawerService.CreateAsync<ComponentTemplate,string, string>(options, value);

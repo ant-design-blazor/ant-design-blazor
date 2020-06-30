@@ -14,15 +14,13 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             DrawerService.OnCloseEvent += DrawerService_OnClose;
-            DrawerService.OnCreateEvent += DrawerService_OnCreate;
-            DrawerService.OnDestroyEvent += DrawerService_OnDestroy;
+            DrawerService.OnOpenEvent += DrawerService_OnCreate;
         }
 
         protected override void Dispose(bool disposing)
         {
             DrawerService.OnCloseEvent -= DrawerService_OnClose;
-            DrawerService.OnCreateEvent -= DrawerService_OnCreate;
-            DrawerService.OnDestroyEvent -= DrawerService_OnDestroy;
+            DrawerService.OnOpenEvent -= DrawerService_OnCreate;
             base.Dispose(disposing);
         }
 
@@ -49,21 +47,13 @@ namespace AntDesign
         {
             drawerRef.Config.Visible = false;
             await InvokeAsync(StateHasChanged);
-        }
-
-
-        /// <summary>
-        /// 销毁抽屉
-        /// </summary>
-        private async Task DrawerService_OnDestroy(DrawerRef drawerRef)
-        {
-            drawerRef.Config.Visible = false;
-            if (!_drawerRefs.Contains(drawerRef))
+            await Task.Delay(300);
+            if (_drawerRefs.Contains(drawerRef))
             {
                 _drawerRefs.Remove(drawerRef);
             }
-            await InvokeAsync(StateHasChanged);
         }
+
 
     }
 }

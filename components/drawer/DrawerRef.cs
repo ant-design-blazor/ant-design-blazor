@@ -69,14 +69,5 @@ namespace AntDesign
             if (OnClose != null)
                 await OnClose.Invoke();
         }
-
-        /// <summary>
-        /// 销毁抽屉
-        /// </summary>
-        /// <returns></returns>
-        public async Task OnDestroy()
-        {
-            await _service.DestroyAsync(this);
-        }
     }
 }

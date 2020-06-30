@@ -8,12 +8,9 @@ namespace AntDesign
 {
     public class DrawerService
     {
-        internal event Func<DrawerRef, Task> OnCreateEvent;
+        internal event Func<DrawerRef, Task> OnOpenEvent;
 
         internal event Func<DrawerRef, Task> OnCloseEvent;
-
-        internal event Func<DrawerRef, Task> OnDestroyEvent;
-
 
         /// <summary>
         /// 创建并打开一个简单抽屉，没有返回值
@@ -24,7 +21,7 @@ namespace AntDesign
         {
             CheckIsNull(config);
             DrawerRef drawerRef = new DrawerRef(config, this);
-            await OnCreateEvent.Invoke(drawerRef);
+            await OnOpenEvent.Invoke(drawerRef);
             return drawerRef;
         }
 
@@ -42,7 +39,7 @@ namespace AntDesign
             CheckIsNull(config);
 
             DrawerRef<TResult> drawerRef = new DrawerRef<TResult>(config, this);
-            await OnCreateEvent.Invoke(drawerRef);
+            await OnOpenEvent.Invoke(drawerRef);
 
             RenderFragment child = (builder) =>
             {
@@ -58,9 +55,9 @@ namespace AntDesign
 
         internal Task OpenAsync(DrawerRef drawerRef)
         {
-            if (OnCreateEvent != null)
+            if (OnOpenEvent != null)
             {
-                return OnCreateEvent.Invoke(drawerRef);
+                return OnOpenEvent.Invoke(drawerRef);
             }
             return Task.CompletedTask;
         }
@@ -75,15 +72,6 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-
-        internal Task DestroyAsync(DrawerRef drawerRef)
-        {
-            if (OnDestroyEvent != null)
-            {
-                return OnDestroyEvent.Invoke(drawerRef);
-            }
-            return Task.CompletedTask;
-        }
 
         private static void CheckIsNull(DrawerConfig options)
         {
