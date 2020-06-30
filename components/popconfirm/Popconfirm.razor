@@ -1,0 +1,95 @@
+﻿@namespace AntDesign
+@inherits OverlayTrigger
+
+@using AntDesign.Internal
+
+<div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-flex; @Style"
+     @onclick="OnClickDiv"
+     @onmouseenter="OnTriggerMouseEnter"
+     @onmouseleave="OnTriggerMouseLeave"
+     @oncontextmenu="OnTriggerContextmenu"
+     @onfocusin="OnTriggerFocusIn"
+     @onfocusout="OnTriggerFocusOut"
+     @oncontextmenu:preventDefault>
+    @ChildContent
+</div>
+
+<CascadingValue Value="this" Name="Trigger">
+    <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
+        <Overlay @ref="_overlay"
+                 OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
+                 OnOverlayMouseEnter="OnOverlayMouseEnter"
+                 OnOverlayMouseLeave="OnOverlayMouseLeave">
+
+            <div class="ant-popover-content">
+                <div class="ant-popover-arrow">
+                    <span class="ant-popover-arrow-content"></span>
+                </div>
+                <div class="ant-popover-inner" role="tooltip">
+                    <div class="ant-popover-inner-content">
+                        <div class="ant-popover-message">
+                            @if (Icon == null)
+                            {
+                                Icon = @<Icon Type="exclamation-circle"/>;
+                            }
+                            @Icon
+                            <div class="ant-popover-message-title">
+                                @if (Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0))
+                                {
+                                    @Title.AsT0
+                                }
+                                else if (Title.IsT1 && (Title.AsT1) != null)
+                                {
+                                    @Title.AsT1
+                                }
+                            </div>
+                        </div>
+                        <div class="ant-popover-buttons">
+                            @if (CancelButtonProps != null)
+                            {
+                                <Button OnClick="@Cancel" Size="@AntSizeLDSType.Small"
+                                        Block="@CancelButtonProps.Block"
+                                        Ghost="@CancelButtonProps.Ghost"
+                                        Search="@CancelButtonProps.Search"
+                                        Loading="@CancelButtonProps.Loading"
+                                        Type="@CancelButtonProps.Type"
+                                        Shape="@CancelButtonProps.Shape"
+                                        Icon="@CancelButtonProps.Icon"
+                                        Disabled="@CancelButtonProps.Disabled"
+                                        Danger="@CancelButtonProps.Danger">
+                                    @CancelText
+                                </Button>
+                            }
+                            else
+                            {
+                                <Button OnClick="@Cancel" Size="@AntSizeLDSType.Small">
+                                    @CancelText
+                                </Button>
+                            }
+                            @if (OkButtonProps != null)
+                            {
+                                <Button OnClick="@Confirm" Size="small" Type="@OkType"
+                                        Block="@OkButtonProps.Block"
+                                        Ghost="@OkButtonProps.Ghost"
+                                        Search="@OkButtonProps.Search"
+                                        Loading="@OkButtonProps.Loading"
+                                        Shape="@OkButtonProps.Shape"
+                                        Icon="@OkButtonProps.Icon"
+                                        Disabled="@OkButtonProps.Disabled"
+                                        Danger="@OkButtonProps.Danger">
+                                    @OkText
+                                </Button>
+                            }
+                            else
+                            {
+                                <Button OnClick="@Confirm" Size="small" type="@OkType">
+                                    @OkText
+                                </Button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Overlay>
+    </CascadingValue>
+</CascadingValue>
