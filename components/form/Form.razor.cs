@@ -43,8 +43,6 @@ namespace AntDesign
         private IList<IFormItem> _formItems = new List<IFormItem>();
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
 
-        internal Dictionary<string, object> FieldDefaultValues { get; private set; }
-
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
         ColLayoutParam IForm.LabelCol => LabelCol;
@@ -56,24 +54,8 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            _editContext = new EditContext(Model);
-            _editContext.OnFieldChanged += HandleFieldChanged;
-
-            FieldDefaultValues = Model.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(Model));
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-
             SetClass();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            _editContext.OnFieldChanged -= HandleFieldChanged;
+            _editContext = new EditContext(Model);
         }
 
         protected void SetClass()
@@ -82,12 +64,6 @@ namespace AntDesign
                 .Add(_prefixCls)
                 .Add($"{_prefixCls}-{Layout.ToLower()}")
                ;
-        }
-
-        private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
-        {
-            _editContext.Validate();
-            StateHasChanged();
         }
 
         public void HandleValidSubmit()
