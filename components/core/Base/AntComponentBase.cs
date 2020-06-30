@@ -63,6 +63,17 @@ namespace AntDesign
             });
         }
 
+        protected async Task InvokeStateHasChangedAsync()
+        {
+          await   InvokeAsync(() =>
+            {
+                if (!IsDisposed)
+                {
+                    StateHasChanged();
+                }
+            });
+        }
+
         [Inject]
         protected IJSRuntime Js { get; set; }
 
