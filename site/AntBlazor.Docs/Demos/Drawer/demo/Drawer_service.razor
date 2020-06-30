@@ -1,33 +1,30 @@
 ﻿@inject DrawerService DrawerService
 
 <Input @bind-Value="@value" />
-
-<AntDesign.Button OnClick="OpenDrawer" Type="primary">OpenDrawer</AntDesign.Button>
-
-<br />
-<br />
-<AntDesign.Button OnClick="OpenComponentTemplate" Type="primary">Using Component</AntDesign.Button>
+<br/><br />
+<Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
+<Button OnClick="OpenComponent" Type="primary">Use Component</Button>
 
 @code{
 
-  private string value="blazor";
+    private string value = "blazor";
 
-  private DrawerRef _drawerRef;
+    private DrawerRef _drawerRef;
 
-    private async Task OpenDrawer()
+    private async Task OpenTemplate()
     {
-        RenderFragment content =@<div><p>@value</p><Button OnClick="CloseDrawer">CloseDrawer</Button></div>;
+        RenderFragment content = @<div>value: @value <br/><Button OnClick="CloseDrawer">close</Button></div>;
 
-                var options = new DrawerConfig()
-                {
-                    Title = "Drawer",
-                    Width = 350,
-                    ChildContent = content,
-            };
+        var options = new DrawerConfig()
+        {
+            Title = "Drawer",
+            Width = 350,
+            Content = content,
+        };
 
-            _drawerRef = await DrawerService.CreateAsync(options);
+        _drawerRef = await DrawerService.CreateAsync(options);
 
-            _drawerRef.OnClose = () =>
+        _drawerRef.OnClose = () =>
         {
             Console.WriteLine("Close Drawer");
             return Task.CompletedTask;
@@ -42,7 +39,7 @@
         }
     }
 
-    private async Task OpenComponentTemplate()
+    private async Task OpenComponent()
     {
         var options = new DrawerConfig()
         {
@@ -50,7 +47,7 @@
             Width = 350,
         };
 
-        var drawerRef = await DrawerService.CreateAsync<ComponentTemplate,string, string>(options, value);
+        var drawerRef = await DrawerService.CreateAsync<ComponentTemplate, string, string>(options, value);
 
         drawerRef.OnOpen = () =>
         {
@@ -61,7 +58,7 @@
         drawerRef.OnClose = async result =>
         {
             Console.WriteLine("OnAfterClose:" + result);
-            value= result;
+            value = result;
             await InvokeAsync(StateHasChanged);
         };
     }
