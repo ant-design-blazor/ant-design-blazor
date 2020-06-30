@@ -13,37 +13,47 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            DrawerService.OnCreate += DrawerService_OnCreate;
-            DrawerService.OnClose += DrawerService_OnClose;
+            DrawerService.OnCloseEvent += DrawerService_OnClose;
+            DrawerService.OnOpenEvent += DrawerService_OnCreate;
         }
 
         protected override void Dispose(bool disposing)
         {
-            DrawerService.OnCreate -= DrawerService_OnCreate;
-            DrawerService.OnClose -= DrawerService_OnClose;
+            DrawerService.OnCloseEvent -= DrawerService_OnClose;
+            DrawerService.OnOpenEvent -= DrawerService_OnCreate;
             base.Dispose(disposing);
         }
 
+        private List<DrawerRef> _drawerRefs = new List<DrawerRef>();
 
-        private List<DrawerConfig> _drawerConfigs = new List<DrawerConfig>();
 
-
-        private async Task DrawerService_OnClose(DrawerConfig arg)
+        /// <summary>
+        /// 创建并打开抽屉
+        /// </summary>
+        private async Task DrawerService_OnCreate(DrawerRef drawerRef)
         {
-            arg.Visible = false;
-            await InvokeAsync(StateHasChanged);
-        }
-
-        private async Task DrawerService_OnCreate(DrawerConfig arg)
-        {
-            arg.Visible = true;
-            if (!_drawerConfigs.Contains(arg))
+            drawerRef.Config.Visible = true;
+            if (!_drawerRefs.Contains(drawerRef))
             {
-                _drawerConfigs.Add(arg);
+                _drawerRefs.Add(drawerRef);
             }
-
             await InvokeAsync(StateHasChanged);
         }
+
+        /// <summary>
+        /// 关闭抽屉
+        /// </summary>
+        private async Task DrawerService_OnClose(DrawerRef drawerRef)
+        {
+            drawerRef.Config.Visible = false;
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(300);
+            if (_drawerRefs.Contains(drawerRef))
+            {
+                _drawerRefs.Remove(drawerRef);
+            }
+        }
+
 
     }
 }
