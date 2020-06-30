@@ -1,0 +1,55 @@
+@inject MessageService _message
+
+<div>
+    <Popconfirm Title="@("Are you sure delete this task?")"
+                Visible="_visible"
+                OnVisibleChange="OnVisibleChange"
+                OnConfirm="Confirm"
+                OnCancel="Cancel"
+                OkText="Yes"
+                CancelText="No">
+        <a>Delete a task</a>
+    </Popconfirm>
+    <br />
+    <br />
+    Whether directly execute£º
+    <Switch Checked="_condition" OnChange="OnConditionChange" />
+</div>
+
+@code{
+    private void Confirm()
+    {
+        _visible = false;
+        _message.Success("Next step.");
+    }
+
+    private void Cancel()
+    {
+        _visible = false;
+        _message.Error("Click on cancel.");
+    }
+
+    private bool _visible = false;
+    private void OnVisibleChange(bool visible)
+    {
+        if (!visible)
+        {
+            _visible = visible;
+            return;
+        }
+        if (_condition)
+        {
+            Confirm();
+        }
+        else
+        {
+            _visible = visible;
+        }
+    }
+
+    private bool _condition = true;
+    private void OnConditionChange(bool condition)
+    {
+        _condition = condition;
+    }
+}
