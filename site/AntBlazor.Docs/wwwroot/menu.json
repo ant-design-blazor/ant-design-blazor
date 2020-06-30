@@ -200,6 +200,11 @@
             "url": "components/collapse"
           },
           {
+            "title": "Comment",
+            "type": "menuItem",
+            "url": "components/comment"
+          },
+          {
             "title": "Card",
             "type": "menuItem",
             "url": "components/card"
@@ -321,6 +326,11 @@
         "title": "Other",
         "type": "itemGroup",
         "children": [
+          {
+            "title": "Anchor",
+            "type": "menuItem",
+            "url": "components/anchor"
+          },
           {
             "title": "Divider",
             "type": "menuItem",

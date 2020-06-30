@@ -23,6 +23,7 @@ Radio: Radio
 DataDisplay: Data Display
 Avatar: Avatar
 Badge: Badge
+Comment: Comment
 Card: Card
 Calendar: Calendar
 Empty: Empty
@@ -57,3 +58,5 @@ Collapse: Collapse
 Table: Table
 Upload: Upload
 AutoComplete: AutoComplete
+Anchor: Anchor
+Affix: Affix

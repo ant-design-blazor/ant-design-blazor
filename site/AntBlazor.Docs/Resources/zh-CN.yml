@@ -24,6 +24,7 @@ Radio: 单选框
 DataDisplay: 数据展示
 Avatar: 头像
 Badge: 徽标数
+Comment: 评论
 Card: 卡片
 Calendar: 日历
 Empty: 空状态
@@ -60,3 +61,5 @@ Select: 选择器
 Table: 表格
 Upload: 文件上传
 AutoComplete: 自动完成
+Anchor: 锚点
+Affix: 固钉
