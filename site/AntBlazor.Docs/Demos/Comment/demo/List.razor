@@ -1,6 +1,6 @@
-﻿<AntList DataSource="@datas" TItem="Data" Header="header">
+﻿<AntList DataSource="@datas" TItem="Data" Header="header" ClassName="comment-list">
     <Item Context="item">
-        <Comment Actions="item.Actions" Avatar="item.Author" Author="item.Author" Datetime="item.Datetime"></Comment>
+        <Comment Actions="item.Actions" Avatar="item.Avatar" Author="item.Author" Datetime="item.Datetime" Content="item.Content"></Comment>
     </Item>
 </AntList>
 
@@ -36,15 +36,16 @@
 
     RenderFragment replyAction =@<span>Reply to</span>;
 
+
     RenderFragment header =>
-        @<template>
+        @<div>
             @if (datas.Any())
             {
                 <span>
                     @($"{datas.Count} {(datas.Count > 1 ? "replies" : "reply")}")
                 </span>
             }
-        </template>;
+        </div>;
 
     class Data
     {

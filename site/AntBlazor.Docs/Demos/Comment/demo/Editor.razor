@@ -1,9 +1,9 @@
 ﻿<div>
     @if (datas.Count > 0)
     {
-        <AntList DataSource="datas" TItem="Data" Header="header">
+        <AntList DataSource="datas" TItem="Data" Header="@header">
             <Item Context="item">
-                <Comment Avatar="item.Author" Author="item.Author" Datetime="item.Datetime"></Comment>
+                <Comment Avatar="item.Avatar" Author="item.Author" Datetime="item.Datetime" Content="item.Content"></Comment>
             </Item>
         </AntList>
     }
@@ -16,14 +16,14 @@
     RenderFragment replyAction =@<span>Reply to</span>;
 
     RenderFragment header =>
-        @<template>
+        @<div>
             @if (datas.Any())
             {
                 <span>
                     @($"{datas.Count} {(datas.Count > 1 ? "replies" : "reply")}")
                 </span>
             }
-        </template>;
+        </div>;
 
     async void onSubmit()
     {
@@ -34,30 +34,31 @@
         {
             Author = "Han Solo",
             Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-            Content = value,
+            Content = _value,
             Datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
         });
         submitting = false;
-        value = "";
+        _value = "";
         await InvokeAsync(StateHasChanged);
     }
 
     bool submitting=false;
-    string value=string.Empty;
+    string _value = "";
 
     //TODO::Form
     RenderFragment GetEditor(Action onSubmit)
     {
         return
             @<div>
-                <TextArea MinRows="4" @bind-Value="@value" />
+                <TextArea MinRows="4" @bind-Value="@_value" />
                 <br/>
                 <br/>
-                <AntButton Loading="@submitting" OnClick="onSubmit " type="primary">
+                <Button Loading="@submitting" OnClick="onSubmit " type="primary">
                     Add Comment
-                </AntButton>
+                </Button>
             </div>;
     }
+
 
     class Data
     {
