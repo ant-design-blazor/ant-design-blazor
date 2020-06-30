@@ -167,6 +167,11 @@
             "title": "Transfer",
             "type": "menuItem",
             "url": "components/transfer"
+          },
+          {
+            "title": "Upload",
+            "type": "menuItem",
+            "url": "components/upload"
           }
         ]
       },
