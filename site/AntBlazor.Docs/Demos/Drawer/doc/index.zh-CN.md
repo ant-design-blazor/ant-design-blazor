@@ -38,14 +38,14 @@ subtitle: 抽屉
 | OnClose        | 点击遮罩层或右上角叉或取消按钮的回调                                   | function(e)     | -         |
 | OnViewInit             | 抽屉显示之前回调事件 | function(e)        | - |
 
-### NzDrawerService
+### DrawerService
 
 | 方法名 | 说明                  | 参数                       | 返回             |
 | ------ | --------------------- | -------------------------- | ---------------- |
 | CreateAsync | 创建并打开一个 Drawer | `DrawerConfig`  | `DrawerRef` |
 | CreateAsync | 创建并打开一个 Drawer | `DrawerConfig` , TContentParams  | `DrawerRef<R>` |
 
-### NzDrawerOptions
+### DrawerConfig
 
 | 参数                | 说明                                                                                                                 | 类型                                                                | 默认值    |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | --------- |
@@ -68,11 +68,9 @@ subtitle: 抽屉
 | OffsetX           | x 坐标移量(px)                                                                                                       | `int`                                                            | `0`       |
 | OffsetY           | y 坐标移量(px), 高度, 只在方向为 `'top'`或`'bottom'` 时生效                                                          | `int`                                                            | `0`       |
 
-### NzDrawerRef
-
-#### 方法
+### DrawerRef
 
 | 名称  | 说明        | 类型                   |
-| ----- | ----------- | ---------------------- |
-| CloseAsync | 关闭 Drawer | `` |
-| OpenAsync  | 打开 Drawer | ``           |
+| ----- | ----------- | ---------------------- | 
+| CloseAsync | 关闭 Drawer |  |
+| OpenAsync  | 打开 Drawer |           | 

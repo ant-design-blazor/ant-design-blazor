@@ -42,14 +42,14 @@ Drawer comes very handy.
 | OnClose        |Specify a callback that will be called when a user clicks mask, close button or Cancel button.                                   | function(e)     | -         |
 | OnViewInit             | Specify a callback that will be called before drawer displayed | function(e)        | - |
 
-### NzDrawerService
+### DrawerService
 
 | 方法名 | 说明                  | 参数                       | 返回             |
 | ------ | --------------------- | -------------------------- | ---------------- |
 | CreateAsync | create and open an Drawer  | `DrawerConfig`  | `DrawerRef` |
 | CreateAsync | create and open an Drawer  | `DrawerConfig` , TContentParams  | `DrawerRef<R>` |
 
-### NzDrawerOptions
+### DrawerConfig
 
 | 参数                | 说明                                                                                                                 | 类型                                                                | 默认值    |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | --------- |
@@ -72,9 +72,7 @@ Drawer comes very handy.
 | OffsetX           |  The the X coordinate offset(px).                     | `int`                                                            | `0`       |
 | OffsetY           | The the Y coordinate offset(px), only when placement is `'top'` or `'bottom'`.    | `int`                                                            | `0`       |
 
-### NzDrawerRef
-
-#### 方法
+### DrawerRef
 
 | 名称  | 说明        | 类型                   |
 | ----- | ----------- | ---------------------- |
