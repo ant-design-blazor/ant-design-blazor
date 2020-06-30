@@ -4,8 +4,6 @@
 <div class="@ClassMapper.Class" style="@Style" @ref="@_self" id="@Id">
     <a title="@Title" class="@_titleClass.Class" href="javascript:void(0)" @onclick="(e)=>OnClick(e)">@Title</a>
     <CascadingValue Value="this" Name="Parent">
-        <CascadingValue Value="@Root" Name="Root">
-            @ChildContent
-        </CascadingValue>
+        @ChildContent
     </CascadingValue>
 </div>
