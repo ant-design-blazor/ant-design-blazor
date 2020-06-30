@@ -29,11 +29,6 @@
             "title": "Typography",
             "type": "menuItem",
             "url": "components/typography"
-          },
-          {
-            "title": "Upload",
-            "type": "menuItem",
-            "url": "components/upload"
           }
         ]
       },
@@ -172,6 +167,11 @@
             "title": "Transfer",
             "type": "menuItem",
             "url": "components/transfer"
+          },
+          {
+            "title": "Upload",
+            "type": "menuItem",
+            "url": "components/upload"
           }
         ]
       },
