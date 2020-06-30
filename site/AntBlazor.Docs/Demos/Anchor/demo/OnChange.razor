@@ -1,0 +1,12 @@
+﻿<Anchor OnChange="(e)=>OnLinkChange(e)">
+    <AnchorLink Href="/en-US/components/anchor#components-anchor-demo-basic" Title="@("Basic demo")" />
+    <AnchorLink Href="/en-US/components/anchor#components-anchor-demo-onClick" Title="@("OnClick demo")" />
+    <AnchorLink Href="/en-US/components/anchor#components-anchor-demo-targetOffset" Title="@("TargetOffset demo")" />
+</Anchor>
+
+@code{
+    public void OnLinkChange(string href)
+    {
+        Console.WriteLine($"changed to {href}");
+    }
+}
