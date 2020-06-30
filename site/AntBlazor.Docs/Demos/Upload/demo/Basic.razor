@@ -2,7 +2,7 @@
 
 <Upload @attributes="attrs"
         OnSingleCompleted="OnSingleCompleted">
-    <Button class="ant-btn" Icon="upload">
+    <Button Icon="upload">
         <span>点击上传</span>
     </Button>
 </Upload>
@@ -20,7 +20,7 @@
     {
         if (fileinfo.File.State == UploadState.Success)
         {
-            var result = System.Text.Json.JsonSerializer.Deserialize<ResponseModel>(fileinfo.File.Response);
+            var result = fileinfo.File.GetResponse<ResponseModel>();
             fileinfo.File.Url = result.url;
         }
     }

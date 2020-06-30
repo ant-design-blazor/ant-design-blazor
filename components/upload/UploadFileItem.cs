@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json;
 
 namespace AntDesign
 {
@@ -26,5 +24,6 @@ namespace AntDesign
 
         public string Type { get; set; }
 
+        public ResponseModel GetResponse<ResponseModel>(JsonSerializerOptions options = null) => JsonSerializer.Deserialize<ResponseModel>(this.Response, options);
     }
 }

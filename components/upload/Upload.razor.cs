@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace AntDesign
 {
-    public partial class UploadBase : AntDomComponentBase
+    public partial class Upload : AntDomComponentBase
     {
-        public delegate bool BeforeUploadDelegate(UploadFileItem file);
-
         [Parameter]
-        public BeforeUploadDelegate BeforeUpload { get; set; }
+        public Func<UploadFileItem, bool> BeforeUpload { get; set; }
 
         [Parameter]
         public string Name { get; set; }
@@ -54,15 +48,13 @@ namespace AntDesign
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
 
-        private DotNetObjectReference<UploadBase> _currentInstance;
+        private DotNetObjectReference<Upload> _currentInstance;
 
-        UploadInfo _uploadInfo = new UploadInfo();
-
+        private UploadInfo _uploadInfo = new UploadInfo();
 
         public int Progress { get; set; }
 
-
-        public ElementReference _file;
+        private ElementReference _file;
 
         protected override Task OnInitializedAsync()
         {
@@ -72,13 +64,13 @@ namespace AntDesign
             return base.OnInitializedAsync();
         }
 
-        public async Task UploadClick()
+        private async Task UploadClick()
         {
             if (!Disabled)
                 _ = await JSRuntime.InvokeAsync<bool>(JSInteropConstants.triggerEvent, _file, "MouseEvent", "click");
         }
 
-        public async Task FileNameChanged(ChangeEventArgs e)
+        private async Task FileNameChanged(ChangeEventArgs e)
         {
             var value = e.Value?.ToString();
             if (string.IsNullOrWhiteSpace(value))
@@ -124,11 +116,10 @@ namespace AntDesign
             {
                 await OnSingleCompleted.InvokeAsync(_uploadInfo);
             }
-            if (OnCompleted.HasDelegate && !FileList.Any(x => !(x.State.Equals(UploadState.Success) || x.State.Equals(UploadState.Fail))))
+            if (OnCompleted.HasDelegate && FileList.All(x => (x.State.Equals(UploadState.Success) || x.State.Equals(UploadState.Fail))))
             {
                 await OnCompleted.InvokeAsync(_uploadInfo);
             }
-
         }
 
         [JSInvokable]
@@ -142,17 +133,16 @@ namespace AntDesign
             file.State = UploadState.Fail;
             file.Progress = 100;
             _uploadInfo.File = file;
-            file.Response = file.Response ?? "error";
+            file.Response ??= "error";
             await InvokeAsync(StateHasChanged);
             if (OnSingleCompleted.HasDelegate)
             {
                 await OnSingleCompleted.InvokeAsync(_uploadInfo);
             }
-            if (OnCompleted.HasDelegate && !FileList.Any(x => !(x.State.Equals(UploadState.Success) || x.State.Equals(UploadState.Fail))))
+            if (OnCompleted.HasDelegate && FileList.All(x => (x.State.Equals(UploadState.Success) || x.State.Equals(UploadState.Fail))))
             {
                 await OnCompleted.InvokeAsync(_uploadInfo);
             }
-
         }
 
         [JSInvokable]
@@ -170,6 +160,5 @@ namespace AntDesign
                 await OnChange.InvokeAsync(_uploadInfo);
             }
         }
-
     }
 }
