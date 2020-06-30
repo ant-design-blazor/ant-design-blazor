@@ -40,15 +40,13 @@ export function clearFile(element) {
 export function getFileInfo(element) {
   if (element.files && element.files.length > 0) {
     var file = element.files[0];
-    var name = file.name;
-    var size = file.size;
     var objectUrl = getObjectURL(element);
     var fileInfo = {
-      fileName: name,
-      size: size,
-      objectURL: objectUrl
+      fileName: file.name,
+      size: file.size,
+      objectURL: objectUrl,
+      type: file.type
     };
-    console.info(fileInfo);
     return fileInfo;
   }
 }
@@ -64,7 +62,7 @@ export function getObjectURL(element) {
   return url;
 }
 
-export function uploadFile(element, fileId, url, name, instance, percentMethod, successMethod, errorMethod) {
+export function uploadFile(element, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod) {
   let formData = new FormData();
   var file = element.files[0];
   var size = file.size;
@@ -72,16 +70,11 @@ export function uploadFile(element, fileId, url, name, instance, percentMethod, 
   const req = new XMLHttpRequest()
   req.onreadystatechange = function () {
     if (req.readyState === 4) {
-      try {
-        const response = JSON.parse(req.responseText)
-        if (response.status == "done") {
-          instance.invokeMethodAsync(successMethod, fileId, response.url);
-        } else {
-          instance.invokeMethodAsync(errorMethod, fileId, response.code);
-        }
-      } catch (e) {
+      if (req.responseText == null || req.responseText.length == 0) {
         instance.invokeMethodAsync(errorMethod, fileId, "error");
+        return;
       }
+      instance.invokeMethodAsync(successMethod, fileId, req.responseText);
     }
   }
   req.upload.onprogress = function (event) {
@@ -92,6 +85,11 @@ export function uploadFile(element, fileId, url, name, instance, percentMethod, 
     instance.invokeMethodAsync(errorMethod, fileId, "error");
   }
   req.open('post', url, true)
+  if (headers != null) {
+    for (var header in headers) {
+      req.setRequestHeader(header, headers[header]);
+    }
+  }
   req.send(formData)
 }
 

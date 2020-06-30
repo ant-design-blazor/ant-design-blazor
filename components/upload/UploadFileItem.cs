@@ -14,13 +14,17 @@ namespace AntDesign
 
         public string ObjectURL { get; set; }
 
-        public string ResponseText { get; set; }
+        public string Url { get; set; }
+
+        public string Response { get; set; }
 
         public UploadState State { get; set; }
 
         public long Size { get; set; }
 
         public string Ext { get; set; }
+
+        public string Type { get; set; }
 
     }
 }

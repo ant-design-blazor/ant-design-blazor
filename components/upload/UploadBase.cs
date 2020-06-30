@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -17,34 +19,44 @@ namespace AntDesign
         public BeforeUploadDelegate BeforeUpload { get; set; }
 
         [Parameter]
-        public string Url { get; set; }
-
-        [Parameter]
-        public List<UploadFileItem> FileList { get; set; }
-
-        [Parameter]
         public string Name { get; set; }
 
         [Parameter]
-        public int MaxCount { get; set; } = 6;
+        public string Action { get; set; }
 
         [Parameter]
-        public string Text { get; set; } = "Click to upload";
+        public bool Disabled { get; set; }
 
         [Parameter]
-        public string Icon { get; set; } = "upload";
+        public string Accept { get; set; }
 
         [Parameter]
-        public EventCallback<UploadFileItem> OnSingleCompleted { get; set; }
+        public List<UploadFileItem> FileList { get; set; } = new List<UploadFileItem>();
 
         [Parameter]
-        public EventCallback<List<UploadFileItem>> OnCompleted { get; set; }
+        public List<UploadFileItem> DefaultFileList { get; set; } = new List<UploadFileItem>();
 
+        [Parameter]
+        public Dictionary<string, string> Headers { get; set; }
+
+        [Parameter]
+        public EventCallback<UploadInfo> OnSingleCompleted { get; set; }
+
+        [Parameter]
+        public EventCallback<UploadInfo> OnCompleted { get; set; }
+
+        [Parameter]
+        public EventCallback<UploadInfo> OnChange { get; set; }
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
 
         private DotNetObjectReference<UploadBase> _currentInstance;
+
+        UploadInfo _uploadInfo = new UploadInfo();
 
 
         public int Progress { get; set; }
@@ -55,19 +67,20 @@ namespace AntDesign
         protected override Task OnInitializedAsync()
         {
             _currentInstance = DotNetObjectReference.Create(this);
-            FileList = FileList ?? new List<UploadFileItem>();
+            _uploadInfo.FileList = FileList;
+            FileList.InsertRange(0, DefaultFileList);
             return base.OnInitializedAsync();
         }
 
         public async Task UploadClick()
         {
-            var result = await JSRuntime.InvokeAsync<bool>(JSInteropConstants.triggerEvent, _file, "MouseEvent", "click");
+            if (!Disabled)
+                _ = await JSRuntime.InvokeAsync<bool>(JSInteropConstants.triggerEvent, _file, "MouseEvent", "click");
         }
 
         public async Task FileNameChanged(ChangeEventArgs e)
         {
             var value = e.Value?.ToString();
-            
             if (string.IsNullOrWhiteSpace(value))
             {
                 return;
@@ -75,7 +88,7 @@ namespace AntDesign
             var fileName = value.Substring(value.LastIndexOf('\\') + 1);
             var id = Guid.NewGuid().ToString();
             var fileItem = await JSRuntime.InvokeAsync<UploadFileItem>(JSInteropConstants.getFileInfo, _file);
-            
+
             fileItem.Ext = fileName.Substring(fileName.LastIndexOf('.'));
             if (BeforeUpload != null)
             {
@@ -85,35 +98,37 @@ namespace AntDesign
                 }
             }
             fileItem.Progress = 0;
-            fileItem.ResponseText = string.Empty;
             fileItem.State = UploadState.Uploading;
             fileItem.Id = id;
             FileList.Add(fileItem);
-            StateHasChanged();
-            await JSRuntime.InvokeVoidAsync(JSInteropConstants.uploadFile, _file, id, Url, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError");
+            await InvokeAsync(StateHasChanged);
+            await JSRuntime.InvokeVoidAsync(JSInteropConstants.uploadFile, _file, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError");
             await JSRuntime.InvokeVoidAsync(JSInteropConstants.clearFile, _file);
         }
 
         [JSInvokable]
-        public async Task UploadSuccess( string id, string returnData)
+        public async Task UploadSuccess(string id, string returnData)
         {
             var file = FileList.FirstOrDefault(x => x.Id.Equals(id));
             if (file == null)
             {
                 return;
             }
+
             file.State = UploadState.Success;
             file.Progress = 100;
-            file.ResponseText = returnData;
+            file.Response = returnData;
+            _uploadInfo.File = file;
+            await InvokeAsync(StateHasChanged);
             if (OnSingleCompleted.HasDelegate)
             {
-                await OnSingleCompleted.InvokeAsync(file);
+                await OnSingleCompleted.InvokeAsync(_uploadInfo);
             }
             if (OnCompleted.HasDelegate && !FileList.Any(x => !(x.State.Equals(UploadState.Success) || x.State.Equals(UploadState.Fail))))
             {
-                await OnCompleted.InvokeAsync(FileList);
+                await OnCompleted.InvokeAsync(_uploadInfo);
             }
-            StateHasChanged();
+
         }
 
         [JSInvokable]
@@ -126,15 +141,18 @@ namespace AntDesign
             }
             file.State = UploadState.Fail;
             file.Progress = 100;
+            _uploadInfo.File = file;
+            file.Response = file.Response ?? "error";
+            await InvokeAsync(StateHasChanged);
             if (OnSingleCompleted.HasDelegate)
             {
-                await OnSingleCompleted.InvokeAsync(file);
+                await OnSingleCompleted.InvokeAsync(_uploadInfo);
             }
             if (OnCompleted.HasDelegate && !FileList.Any(x => !(x.State.Equals(UploadState.Success) || x.State.Equals(UploadState.Fail))))
             {
-                await OnCompleted.InvokeAsync(FileList);
+                await OnCompleted.InvokeAsync(_uploadInfo);
             }
-            StateHasChanged();
+
         }
 
         [JSInvokable]
@@ -146,8 +164,11 @@ namespace AntDesign
                 return;
             }
             file.Progress = progress;
-            Console.WriteLine(progress);
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(_uploadInfo);
+            }
         }
 
     }

@@ -1,4 +1,4 @@
-@inject MessageService _message
+﻿@inject MessageService _message
 
 <Upload @attributes="attrs"
         OnSingleCompleted="OnSingleCompleted">
@@ -11,9 +11,27 @@
 {
 
     Dictionary<string, object> attrs = new Dictionary<string, object>
-    {
+{
         {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" }
+        {"Name", "files" },
+        {"DefaultFileList", new List<UploadFileItem>
+            {
+                new UploadFileItem
+                {
+                    Id = "1",
+                    FileName = "1.jpg",
+                    Url = "https://www.baidu.com/1.jpg",
+                    State = UploadState.Success
+                },
+                new UploadFileItem
+                {
+                    Id = "2",
+                    FileName = "2.jpg",
+                    Response = "网络错误",
+                    State = UploadState.Fail
+                }
+            }
+        }
     };
 
     void OnSingleCompleted(UploadInfo fileinfo)
