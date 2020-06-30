@@ -1,0 +1,62 @@
+@inject MessageService _message
+
+<div class="demo">
+    <div style="margin-left: @($"{ButtonWidth}px"); white-space: nowrap;">
+        <Popconfirm Placement="@PlacementType.TopLeft" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>TL</Button>
+        </Popconfirm>
+        <Popconfirm Placement="@PlacementType.Top" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>Top</Button>
+        </Popconfirm>
+        <Popconfirm Placement="@PlacementType.TopRight" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>TR</Button>
+        </Popconfirm>
+    </div>
+    <div style="width: @($"{ButtonWidth}px"); float: left;">
+        <Popconfirm Placement="@PlacementType.LeftTop" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>LT</Button>
+        </Popconfirm>
+        <Popconfirm Placement="@PlacementType.Left" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>Left</Button>
+        </Popconfirm>
+        <Popconfirm Placement="@PlacementType.LeftBottom" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>LB</Button>
+        </Popconfirm>
+    </div>
+    <div style="width: @($"{ButtonWidth}px"); margin-left: @($"{ButtonWidth * 4 + 24}px");">
+        <Popconfirm Placement="@PlacementType.RightTop" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>RT</Button>
+        </Popconfirm>
+        <Popconfirm Placement="@PlacementType.Right" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>Right</Button>
+        </Popconfirm>
+        <Popconfirm Placement="@PlacementType.RightBottom" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>RB</Button>
+        </Popconfirm>
+    </div>
+    <div style="margin-left: @($"{ButtonWidth}px"); clear: both; white-space: nowrap;">
+        <Popconfirm Placement="@PlacementType.BottomLeft" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>BL</Button>
+        </Popconfirm>
+        <Popconfirm Placement="@PlacementType.Bottom" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>Bottom</Button>
+        </Popconfirm>
+        <Popconfirm Placement="@PlacementType.BottomRight" Title="_title" OkText="@_okText" CancelText="@_cancelText" OnConfirm="Confirm">
+            <Button>BR</Button>
+        </Popconfirm>
+    </div>
+</div>
+
+@code
+{
+
+    const int ButtonWidth = 70;
+
+    private string _cancelText = "No";
+    private string _okText = "Yes";
+    private string _title = "Are you sure to delete this task?";
+    private void Confirm()
+    {
+        _message.Info("Clicked on Yes");
+    }
+}

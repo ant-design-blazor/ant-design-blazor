@@ -306,6 +306,11 @@
             "url": "components/progress"
           },
           {
+            "title": "Popconfirm",
+            "type": "menuItem",
+            "url": "components/popconfirm"
+          },
+          {
             "title": "Result",
             "type": "menuItem",
             "url": "components/result"
