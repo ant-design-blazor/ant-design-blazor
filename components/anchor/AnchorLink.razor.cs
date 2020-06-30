@@ -14,7 +14,8 @@ namespace AntDesign
     public partial class AnchorLink : AntDomComponentBase, IAnchor
     {
         private const string PrefixCls = "ant-anchor-link";
-        private bool _active;
+        internal bool Active { get; private set; }
+
         private bool _hrefDomExist;
         private ClassMapper _titleClass = new ClassMapper();
         private ElementReference _self;
@@ -66,11 +67,11 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add($"{PrefixCls}")
-                .If($"{PrefixCls}-active", () => _active);
+                .If($"{PrefixCls}-active", () => Active);
 
             _titleClass.Clear()
                 .Add($"{PrefixCls}-title")
-                .If($"{PrefixCls}-title-active", () => _active);
+                .If($"{PrefixCls}-title-active", () => Active);
         }
 
         protected async override Task OnFirstAfterRenderAsync()
@@ -110,13 +111,20 @@ namespace AntDesign
 
         internal void Activate(bool active)
         {
-            _active = active;
+            if (Active)
+            {
+                Active = false;
+            }
+            else
+            {
+                Active = active;
+            }
         }
 
-        internal async Task<DomRect> GetHrefDom()
+        internal async Task<DomRect> GetHrefDom(bool forced = false)
         {
             DomRect domRect = null;
-            if (_hrefDomExist)
+            if (forced || _hrefDomExist)
             {
                 domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#" + Href.Split('#')[1]);
             }
@@ -125,7 +133,25 @@ namespace AntDesign
 
         private async void OnClick(MouseEventArgs args)
         {
-            await Parent.OnLinkClickAsync(args, this);
+            await GetRootParent()?.OnLinkClickAsync(args, this);
+        }
+
+        public IAnchor GetParent()
+        {
+            return Parent;
+        }
+
+        private Anchor GetRootParent()
+        {
+            IAnchor parent = GetParent();
+            IAnchor child = this;
+            while (parent != null)
+            {
+                child = parent;
+                parent = parent.GetParent();
+            }
+
+            return child as Anchor;
         }
     }
 }

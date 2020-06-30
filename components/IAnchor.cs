@@ -12,5 +12,7 @@ namespace AntDesign
         void Add(AnchorLink anchorLink);
 
         List<AnchorLink> FlatChildren();
+
+        IAnchor GetParent();
     }
 }

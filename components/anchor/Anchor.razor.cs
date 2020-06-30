@@ -93,23 +93,45 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            DomEventService.AddEventListener("window", "scroll", OnScroll);
+            if (GetCurrentAnchor is null)
+            {
+                DomEventService.AddEventListener("window", "scroll", OnScroll);
+            }
         }
 
-        protected async override void OnAfterRender(bool firstRender)
+        protected override async Task OnFirstAfterRenderAsync()
         {
-            base.OnAfterRender(firstRender);
-
-            if (firstRender)
+            _selfDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ink);
+            _linkTops = new Dictionary<string, decimal>();
+            _flatLinks = FlatChildren();
+            foreach (var link in _flatLinks)
             {
-                _selfDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ink);
-                _linkTops = new Dictionary<string, decimal>();
-                _flatLinks = FlatChildren();
-                foreach (var link in _flatLinks)
+                _linkTops[link.Href] = 1;
+            }
+
+            if (GetCurrentAnchor != null)
+            {
+                AnchorLink link = _flatLinks.SingleOrDefault(l => l.Href == GetCurrentAnchor());
+                if (link != null)
                 {
-                    _linkTops[link.Href] = 1;
+                    try
+                    {
+                        DomRect hrefDom = await link.GetHrefDom(true);
+                        if (hrefDom != null)
+                        {
+                            await ActivateAsync(link, (link.LinkDom.top - _selfDom.top) + link.LinkDom.height / 2 - 2);
+                            // the offset does not matter, since the dictionary's value will not change any more in case user set up GetCurrentAnchor
+                            _linkTops[link.Href] = hrefDom.top;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
+
+            await base.OnFirstAfterRenderAsync();
         }
 
         public void Add(AnchorLink anchorLink)
@@ -131,6 +153,7 @@ namespace AntDesign
 
         private async void OnScroll(JsonElement obj)
         {
+            int offset = OffsetBottom.HasValue ? OffsetBottom.Value : -OffsetTop.Value;
             foreach (var link in _flatLinks)
             {
                 try
@@ -138,11 +161,11 @@ namespace AntDesign
                     DomRect hrefDom = await link.GetHrefDom();
                     if (hrefDom != null)
                     {
-                        if (_linkTops[link.Href] * hrefDom.top <= 0)
+                        if (_linkTops[link.Href] * (hrefDom.top + offset) <= 0)
                         {
                             await ActivateAsync(link, (link.LinkDom.top - _selfDom.top) + link.LinkDom.height / 2 - 2);
                         }
-                        _linkTops[link.Href] = hrefDom.top;
+                        _linkTops[link.Href] = hrefDom.top + offset;
                     }
                 }
                 catch (Exception ex)
@@ -163,10 +186,15 @@ namespace AntDesign
                 await OnChange.InvokeAsync(anchorLink.Href);
             }
 
-            if (Affix)
+            if (Affix && anchorLink.Active)
             {
                 _ballClass = "ant-anchor-ink-ball visible";
                 _ballStyle = $"top: {top}px;";
+            }
+            else
+            {
+                _ballClass = "ant-anchor-ink-ball";
+                _ballStyle = string.Empty;
             }
 
             StateHasChanged();
@@ -178,6 +206,11 @@ namespace AntDesign
             {
                 await OnClick.InvokeAsync(new Tuple<MouseEventArgs, AnchorLink>(args, anchorLink));
             }
+        }
+
+        public IAnchor GetParent()
+        {
+            return null;
         }
     }
 }
