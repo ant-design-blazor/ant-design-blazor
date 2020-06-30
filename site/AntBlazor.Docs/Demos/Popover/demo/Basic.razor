@@ -1,0 +1,11 @@
+﻿<Popover Content="_content" Title="@("Title")">
+    <Button type="primary">Hover me</Button>
+</Popover>
+
+@code{
+    RenderFragment _content =
+    @<div>
+        <p>Content</p>
+        <p>Content</p>
+    </div>;
+}

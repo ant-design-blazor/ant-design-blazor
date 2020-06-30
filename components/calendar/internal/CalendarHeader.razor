@@ -20,7 +20,7 @@
     }
     <Select class=@($"{PrefixCls}-year-select")
             Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
-            DefaultValue=@($"{Calendar.Value.Year}") 
+            DefaultValue=@($"{Calendar.Value.Year}")
             OnChange="async (value, option) => await OnSelectYear(value.AsT0)">
         @for (int year = startYear; year <= endYear; year++)
         {
@@ -46,7 +46,7 @@
 
         <Select class=@($"{PrefixCls}-month-select")
                 Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
-                DefaultValue=@($"{Calendar.Value.Month}") 
+                DefaultValue=@($"{Calendar.Value.Month}")
                 OnChange="async (value, option) => await OnSelectMonth(value.AsT0)">
             @for (int month = startMonth; month <= endMonth; month++)
             {
@@ -57,11 +57,11 @@
             }
         </Select>
     }
-    
+
     <RadioGroup class=@($"{PrefixCls}-mode-switch")
                 Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
                 Value="@Calendar.Mode"
-                OnChange="OnModeChange">
+                OnChange="OnModeChange" TValue="string">
         <Radio RadioButton Value="@DatePickerType.Month">@(Calendar.CultureInfo.GetDateLocale().Month)</Radio>
         <Radio RadioButton Value="@DatePickerType.Year">@(Calendar.CultureInfo.GetDateLocale().Year)</Radio>
     </RadioGroup>

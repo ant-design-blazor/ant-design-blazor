@@ -6,17 +6,17 @@
     <Col Span="9">
     ButtonSize:
     <RadioGroup @bind-Value="@_buttonSize">
-        <Radio Value="default">Default</Radio>
-        <Radio Value="large">Large</Radio>
-        <Radio Value="small">Small</Radio>
+        <Radio Value="@SkeletonElementSize.Default">Default</Radio>
+        <Radio Value="@SkeletonElementSize.Large">Large</Radio>
+        <Radio Value="@SkeletonElementSize.Small">Small</Radio>
     </RadioGroup>
     </Col>
     <Col Span="9">
     ButtonShape:
     <RadioGroup @bind-Value="@_buttonShape">
-        <Radio Value="default">Default</Radio>
-        <Radio Value="circle">Circle</Radio>
-        <Radio Value="round">Round</Radio>
+        <Radio Value="@SkeletonButtonShape.Default">Default</Radio>
+        <Radio Value="@SkeletonButtonShape.Circle">Circle</Radio>
+        <Radio Value="@SkeletonButtonShape.Round">Round</Radio>
     </RadioGroup>
     </Col>
 </Row>
@@ -32,16 +32,16 @@
     <Col Span="9">
     AvatarSize:
     <RadioGroup @bind-Value="@_avatarSize">
-        <Radio Value="default">Default</Radio>
-        <Radio Value="large">Large</Radio>
-        <Radio Value="small">Small</Radio>
+        <Radio Value="@SkeletonElementSize.Default">Default</Radio>
+        <Radio Value="@SkeletonElementSize.Large">Large</Radio>
+        <Radio Value="@SkeletonElementSize.Small">Small</Radio>
     </RadioGroup>
     </Col>
     <Col Span="9">
     AvatarShape:
     <RadioGroup @bind-Value="@_avatarShape">
-        <Radio Value="circle">Circle</Radio>
-        <Radio Value="square">Square</Radio>
+        <Radio Value="@SkeletonAvatarShape.Circle">Circle</Radio>
+        <Radio Value="@SkeletonAvatarShape.Square">Square</Radio>
     </RadioGroup>
     </Col>
 </Row>
@@ -57,9 +57,9 @@
     <Col Span="9">
     InputSize:
     <RadioGroup @bind-Value="@_inputSize">
-        <Radio Value="default">Default</Radio>
-        <Radio Value="large">Large</Radio>
-        <Radio Value="small">Small</Radio>
+        <Radio Value="@SkeletonElementSize.Default">Default</Radio>
+        <Radio Value="@SkeletonElementSize.Large">Large</Radio>
+        <Radio Value="@SkeletonElementSize.Small">Small</Radio>
     </RadioGroup>
     </Col>
 </Row>

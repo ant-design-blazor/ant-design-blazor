@@ -9,29 +9,31 @@
 }
 else
 {
-<AntDesign.Col Flex="1" Style="@ColStyle">
-    <div class="@ClassMapper.Class" style="@Style" Id="@Id">
-        @itemChildren(this)
-    </div>
-</AntDesign.Col>
-
+    <AntDesign.Col Flex="1" Style="@ColStyle">
+        <div class="@ClassMapper.Class" style="@Style" Id="@Id">
+            @itemChildren(this)
+        </div>
+     </AntDesign.Col>
 }
 @code{
     RenderFragment<AntListItem> itemChildren = content =>
     @<Template>
-        @if (content.ItemLayout == AntDirectionVHIType.Vertical && content.Extra != null)
+        @if (content.ItemLayout == AntDirectionVHType.Vertical && content.Extra != null)
         {
-            <div class="@content.PrefixName-item-main">
+            <div class="@content.PrefixName-main">
                 @content.ChildContent
                 @content.actionsContent(content)
             </div>
-            <div class="@content.PrefixName-item-extra">@content.Extra</div>
+            <div class="@content.PrefixName-extra">@content.Extra</div>
         }
         else
         {
             @content.ChildContent
             @content.actionsContent(content)
-            @content.Extra
+            @if (content.Extra != null)
+            {
+                @content.Extra
+            }
         }
     </Template>;
 
@@ -39,22 +41,18 @@ RenderFragment<AntListItem> actionsContent = content =>
 @<Template>
     @if (content.Actions != null && content.Actions.Count > 0)
     {
-        <ul class="@content.PrefixName-item-action" key="actions">
+        <ul class="@content.PrefixName-action" key="actions">
             @for (int i = 0; i < content.Actions.Count; i++)
             {
-                <li key="@content.PrefixName-item-action-@i">
+                <li key="@content.PrefixName-action-@i">
                     @content.Actions[i]
                     @if (i != (content.Actions.Count - 1))
                     {
-                        <em class="@content.PrefixName-item-action-split" />
+                        <em class="@content.PrefixName-action-split" />
                     }
                 </li>
             }
         </ul>
-    }
-    else
-    {
-      
     }
 </Template>;
 }

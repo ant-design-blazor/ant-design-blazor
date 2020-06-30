@@ -29,6 +29,7 @@ Calendar: 日历
 Empty: 空状态
 Descriptions: 描述列表
 List: 列表
+Popover: 气泡卡片
 Tooltip: 文字提示
 Tag: 标签
 Timeline: 时间轴
@@ -58,3 +59,4 @@ Rate: 评分
 Select: 选择器
 Table: 表格
 Upload: 文件上传
+AutoComplete: 自动完成

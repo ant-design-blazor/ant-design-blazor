@@ -1,0 +1,59 @@
+﻿<div class="demo">
+    <div style="margin-left: @($"{ButtonWidth}px"); white-space: nowrap;">
+        <Popover Placement="@PlacementType.TopLeft" Title="_text" Content="_content">
+            <Button>TL</Button>
+        </Popover>
+        <Popover Placement="@PlacementType.Top" Title="_text" Content="_content">
+            <Button>Top</Button>
+        </Popover>
+        <Popover Placement="@PlacementType.TopRight" Title="_text" Content="_content">
+            <Button>TR</Button>
+        </Popover>
+    </div>
+    <div style="width: @($"{ButtonWidth}px"); float: left;">
+        <Popover Placement="@PlacementType.LeftTop" Title="_text" Content="_content">
+            <Button>LT</Button>
+        </Popover>
+        <Popover Placement="@PlacementType.Left" Title="_text" Content="_content">
+            <Button>Left</Button>
+        </Popover>
+        <Popover Placement="@PlacementType.LeftBottom" Title="_text" Content="_content">
+            <Button>LB</Button>
+        </Popover>
+    </div>
+    <div style="width: @($"{ButtonWidth}px"); margin-left: @($"{ButtonWidth * 4 + 24}px");">
+        <Popover Placement="@PlacementType.RightTop" Title="_text" Content="_content">
+            <Button>RT</Button>
+        </Popover>
+        <Popover Placement="@PlacementType.Right" Title="_text" Content="_content">
+            <Button>Right</Button>
+        </Popover>
+        <Popover Placement="@PlacementType.RightBottom" Title="_text" Content="_content">
+            <Button>RB</Button>
+        </Popover>
+    </div>
+    <div style="margin-left: @($"{ButtonWidth}px"); clear: both; white-space: nowrap;">
+        <Popover Placement="@PlacementType.BottomLeft" Title="_text" Content="_content">
+            <Button>BL</Button>
+        </Popover>
+        <Popover Placement="@PlacementType.Bottom" Title="_text" Content="_content">
+            <Button>Bottom</Button>
+        </Popover>
+        <Popover Placement="@PlacementType.BottomRight" Title="_text" Content="_content">
+            <Button>BR</Button>
+        </Popover>
+    </div>
+</div>
+
+@code
+{
+    private RenderFragment _text =@<span>Title</span>;
+        
+    const int ButtonWidth = 70;
+
+    private RenderFragment _content =
+        @<div>
+            <p>Content</p>
+            <p>Content</p>
+        </div>;
+}

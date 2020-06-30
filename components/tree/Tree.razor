@@ -1,0 +1,170 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class">
+    <div class="@($"{PREFIX_CLS}-list")">
+        <div>
+            <div class="@($"{PREFIX_CLS}-list-holder-inner")" style="display:flex;flex-direction:column">
+
+                @if (_nodelist != null)
+                {
+                    if (Checkable)
+                    {
+                        foreach (TreeNode node in _nodelist)
+                        {
+                            node?.UpdateCheckedStateRecursive(CheckStrictly);
+                        }
+                    }
+                    Stack<string> pstack = new Stack<string>();
+                    foreach (TreeNode node in _nodelist)
+                    {
+                        if (node == null || !node.IsVisible)
+                            continue;
+                        @RenderNodeRecursive(node, pstack);
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+
+    RenderFragment RenderNodeRecursive(TreeNode node, Stack<string> pstack)
+    {
+        bool expanded = node._expandedAnimateState.GetValueOrDefault(node.IsExpanded);
+
+        CalcSwitcherIconOptions(node, out string switchericonclass, out string switchericontype, out RenderFragment<TreeNode> switchericonrf);
+
+        return@:@{
+
+        <div @key="node.GetNodeId()" class="@($"{PREFIX_CLS}-treenode {PREFIX_CLS}-treenode-switcher-" + (expanded ? "open" : "close")
+                                              + (node.IsChecked ? $" {PREFIX_CLS}-treenode-checkbox-checked" : "")
+                                              + (node.IsSelected ? $" {PREFIX_CLS}-treenode-selected" : "")
+                                              + (node.IsDisabled ? $" {PREFIX_CLS}-treenode-disabled" : ""))">
+
+            @if (pstack.Count != 0)
+            {
+                <span class="@($"{PREFIX_CLS}-indent")" aria-hidden="true">
+                    @{
+                        foreach (string ptype in pstack.Reverse())
+                        {
+                            <span class="@ptype"></span>
+                        }
+                    }
+                </span>
+            }
+
+            <span class="@($"{PREFIX_CLS}-switcher {PREFIX_CLS}-switcher_"+ ((node.HasChildNodes || node.LoadDelay) ? (expanded ? "open" : "close") : "noop"))" @onclick="MakeSwitcherClick(node)">
+                @if (switchericonrf != null)
+                {
+                    @switchericonrf(node)
+                }
+                else if (switchericontype != null)
+                {
+                    <Icon Class="@switchericonclass" Type="@switchericontype" />
+                }
+            </span>
+
+            @if (this.Checkable)
+            {
+                <span class="@($"{PREFIX_CLS}-checkbox" + (node.IsDisabled ? $" {PREFIX_CLS}-checkbox-disabled" : "") + $" {PREFIX_CLS}-checkbox-" + GetCheckStateCls(node))" @onclick="MakeCheckClick(node)">
+                    <span class='@($"{PREFIX_CLS}-checkbox-inner")'></span>
+                </span>
+            }
+
+            <span class="@($"{PREFIX_CLS}-node-content-wrapper {PREFIX_CLS}-node-content-wrapper-normal" + (node.IsSelected ? $" {PREFIX_CLS}-node-selected" : ""))" @onclick="MakeNodeClick(node)">
+                @if (this.ShowIcon)
+                {
+                    var iconTemplate = node.IconTemplate ?? this.IconTemplate;
+
+                    <span class="@($"{PREFIX_CLS}-iconEle {PREFIX_CLS}-icon__customize")">
+                        @if (iconTemplate != null)
+                        {
+                            @iconTemplate(node)
+                        }
+                        else
+                        {
+                            <Icon Type="@(node.IconType ?? this.IconType ?? "file")" />
+                        }
+                    </span>
+                }
+
+
+                <span class="@($"{PREFIX_CLS}-title")">
+                    @{
+                        var nodeTemplate = node.NodeTemplate ?? this.NodeTemplate;
+                        if (nodeTemplate != null)
+                        {
+                            @nodeTemplate(node)
+                        }
+                        else
+                        {
+                            @node.Text
+                        }
+                    }
+                </span>
+
+            </span>
+
+
+        </div>
+
+        @if ((node.IsExpanded || node._expandedAnimateState != null) && node.HasChildNodes)
+        {
+            List<TreeNode> list = node.Nodes;
+            if (!_nodelist.All(v => v != null && v.IsVisible))
+            {
+                list = _nodelist.Where(v => v != null && v.IsVisible).ToList();
+                if (list.Count == 0)
+                    return;
+            }
+
+            TreeNode last = list[list.Count - 1];
+
+            if (node._expandedAnimateState != null)
+            {
+                string id = "_tree_animate_" + node.GetNodeId();
+                this._expandedAnimateRequested = id;
+
+                <div @key="id" id="@id" class="@($"{PREFIX_CLS}-treenode-motion ant-motion-collapse ant-motion-collapse-{(node._expandedAnimateState == true ? "appear" : "leave")}")" style="@(node._expandedAnimateState == true ? "height:0px" : "")">
+                    @foreach (TreeNode subnode in list)
+                    {
+                        if (subnode == last)
+                            pstack.Push($"{PREFIX_CLS}-indent-unit {PREFIX_CLS}-indent-unit-end");
+                        else if (subnode == list[0])
+                            pstack.Push($"{PREFIX_CLS}-indent-unit {PREFIX_CLS}-indent-unit-start");
+                        else
+                            pstack.Push($"{PREFIX_CLS}-indent-unit");
+
+                        @RenderNodeRecursive(subnode, pstack)
+
+                        pstack.Pop();
+                    }
+                </div>
+            }
+            else
+            {
+                foreach (TreeNode subnode in list)
+                {
+                    if (subnode == last)
+                        pstack.Push($"{PREFIX_CLS}-indent-unit {PREFIX_CLS}-indent-unit-end");
+                    else if (subnode == list[0])
+                        pstack.Push($"{PREFIX_CLS}-indent-unit {PREFIX_CLS}-indent-unit-start");
+                    else
+                        pstack.Push($"{PREFIX_CLS}-indent-unit");
+
+                    @RenderNodeRecursive(subnode, pstack)
+
+                    pstack.Pop();
+                }
+            }
+        }
+
+        }
+
+
+        ;//end return;
+    }
+
+}

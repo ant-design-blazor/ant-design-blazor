@@ -1,8 +1,8 @@
 ﻿@namespace AntDesign
-@inherits Input
+@inherits Input<string>
 <!--TODO: minheight, maxheight, onResize-->
 
-<textarea class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id" placeholder="@Placeholder" @bind="Value"
+<textarea class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id" placeholder="@Placeholder" value="@CurrentValueAsString"
           @ref="Ref"
           @oninput="OnInputAsync"
           @onkeypress="OnPressEnterAsync" />

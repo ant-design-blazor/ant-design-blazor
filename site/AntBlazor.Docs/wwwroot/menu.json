@@ -104,6 +104,11 @@
         "type": "itemGroup",
         "children": [
           {
+            "title": "AutoComplete",
+            "type": "menuItem",
+            "url": "components/autocomplete"
+          },
+          {
             "title": "Checkbox",
             "type": "menuItem",
             "url": "components/checkbox"
@@ -220,9 +225,19 @@
             "url": "components/list"
           },
           {
+            "title": "Popover",
+            "type": "menuItem",
+            "url": "components/popover"
+          },
+          {
             "title": "Statistic",
             "type": "menuItem",
             "url": "components/statistic"
+          },
+          {
+            "title": "Tree",
+            "type": "menuItem",
+            "url": "components/tree"
           },
           {
             "title": "Tooltip",

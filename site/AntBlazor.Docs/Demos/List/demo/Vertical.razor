@@ -1,5 +1,63 @@
-﻿<h3>Vertical</h3>
+﻿@inject HttpClient HttpClient
+
+<AntList DataSource="@ListData" ItemLayout="@AntDirectionVHType.Vertical" Extra="@extra">
+    <Item Context="item">
+        <AntListItemMeta Avatar="@avatar" Description="@item.Description">
+            <Title>
+                <a href="@item.Href">@item.Title</a>
+            </Title>
+        </AntListItemMeta>
+        @item.Content
+    </Item>
+    <Footer>
+        <div>
+            <b>ant design</b> footer part
+        </div>
+    </Footer>
+</AntList>
 
 @code {
+
+    RenderFragment avatar =@<AntAvatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></AntAvatar>;
+
+    RenderFragment extra = @<img width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />;
+
+    public int count = 3;
+
+    public string FakeDataUrl { get { return $"https://randomuser.me/api/?results={count}&inc=name,gender,email,nat&noinfo"; } }
+
+    public List<DataModel> ListData { get; set; } = new List<DataModel>();
+
+    public bool Loading { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            ListData.Add(new DataModel
+            {
+                Href = "http://ant.design",
+                Title = $"ant design part {i}",
+                Avatar = "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+                Description = "Ant Design, a design language for background applications, is refined by Ant UED Team.",
+                Content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+            });
+        }
+        await base.OnInitializedAsync();
+    }
+
+
+    public class DataModel
+    {
+        public string Href { get; set; }
+
+        public string Title { get; set; }
+
+        public string Avatar { get; set; }
+
+        public string Description { get; set; }
+
+        public string Content { get; set; }
+    }
 
 }

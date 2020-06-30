@@ -27,6 +27,7 @@ Card: Card
 Calendar: Calendar
 Empty: Empty
 List: List
+Popover: Popover
 Tooltip: Tooltip
 Tag: Tag
 Timeline: Timeline
@@ -55,3 +56,4 @@ Select: Select
 Collapse: Collapse
 Table: Table
 Upload: Upload
+AutoComplete: AutoComplete

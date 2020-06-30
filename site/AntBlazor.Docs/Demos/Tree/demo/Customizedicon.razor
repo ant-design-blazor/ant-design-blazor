@@ -1,0 +1,50 @@
+
+<div>
+    <Tree ShowIcon="true" Nodes="TreeNodes"></Tree>
+</div>
+
+@code{
+
+
+    List<TreeNode> _treeNodes;
+
+    public List<TreeNode> TreeNodes
+    {
+        get
+        {
+            if (_treeNodes != null)
+                return _treeNodes;
+
+            _treeNodes = new List<TreeNode>()
+            {
+                new TreeNode
+                {
+                    Text="parent 1",IsExpanded=true,
+                    IconTemplate=(node)=>@<Icon Type="smile" />,
+                    Nodes =
+                    {
+                        new TreeNode
+                        {
+                            Text="leaf"
+                            ,
+                            IconTemplate=(node)=>@<Icon Type="smile" />
+                        }
+                        ,
+                        new TreeNode
+                        {
+                            Text="leaf",IsSelected=true
+                            ,
+                            IconTemplate=(node)=> node.IsSelected?(RenderFragment)(@<Icon Type="frown" Theme="fill" />):(@<Icon Type="frown" Theme="outline" />)
+                        }
+                    }
+                }
+            };
+
+            return _treeNodes;
+        }
+    }
+
+
+}
+
+

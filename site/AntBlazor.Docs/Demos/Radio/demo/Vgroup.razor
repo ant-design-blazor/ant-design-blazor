@@ -1,13 +1,13 @@
 <div>
     <RadioGroup @bind-Value="@radioValue">
-        <Radio Style="@style" Value="A">Option A</Radio>
-        <Radio Style="@style" Value="B">Option B</Radio>
-        <Radio Style="@style" Value="C">Option C</Radio>
-        <Radio Style="@style" Value="M">
+        <Radio Style="@style" Value="@("A")">Option A</Radio>
+        <Radio Style="@style" Value="@("B")">Option B</Radio>
+        <Radio Style="@style" Value="@("C")">Option C</Radio>
+        <Radio Style="@style" Value="@("M")">
             More...
             @if (radioValue == "M")
             {
-                <AntDesign.Input type="text" />
+                <AntDesign.Input type="text" TValue="string" />
             }
         </Radio>
     </RadioGroup>

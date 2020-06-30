@@ -20,11 +20,6 @@
         _items.Add(newItem);
     }
 
-    private void OnNameChange(ChangeEventArgs args)
-    {
-        _name = args.Value.ToString();
-    }
-
     private RenderFragment OnDropdownRender(RenderFragment originNode, Properties props)
     {
         RenderFragment customDropdownRender =
@@ -33,7 +28,7 @@
                 @originNode
                 <Divider Style="margin:4px 0"></Divider>
                 <div style="display:flex;flex-wrap:nowrap;padding:8px">
-                    <Input Style="flex:auto" @bind-Value="@_name" OnChange="OnNameChange" />
+                    <Input Style="flex:auto" @bind-Value="@_name"/>
                     <a style="flex:none;padding:8px;display:block;cursor:pointer" @onclick="AddItem">
                         <Icon Type="plus" Theme="outline"></Icon>
                         Add Item

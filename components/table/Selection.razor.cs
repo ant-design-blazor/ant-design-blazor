@@ -71,7 +71,7 @@ namespace AntDesign
             {
                 if (Type == "radio")
                 {
-                    Table?.HeaderSelection.RowSelections.Where(x => x.Index != this.Index).ForEach(x => x.Check(false));
+                    Table?.HeaderSelection.RowSelections.Where(x => x.RowIndex != this.RowIndex).ForEach(x => x.Check(false));
                 }
 
                 Table?.HeaderSelection.Check(@checked);
