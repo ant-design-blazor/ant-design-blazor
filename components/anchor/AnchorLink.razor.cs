@@ -61,6 +61,8 @@ namespace AntDesign
 
         #endregion Parameters
 
+        internal string _hash = string.Empty;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -72,6 +74,8 @@ namespace AntDesign
             _titleClass.Clear()
                 .Add($"{PrefixCls}-title")
                 .If($"{PrefixCls}-title-active", () => Active);
+
+            _hash = Href.Split('#')[1];
         }
 
         protected async override Task OnFirstAfterRenderAsync()

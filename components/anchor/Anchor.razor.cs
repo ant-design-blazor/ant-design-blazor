@@ -202,6 +202,8 @@ namespace AntDesign
 
         public async Task OnLinkClickAsync(MouseEventArgs args, AnchorLink anchorLink)
         {
+            await JsInvokeAsync("window.eval", $"window.location.hash='{anchorLink._hash}'");
+
             if (OnClick.HasDelegate)
             {
                 await OnClick.InvokeAsync(new Tuple<MouseEventArgs, AnchorLink>(args, anchorLink));
