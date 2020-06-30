@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -136,26 +134,17 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            if (this is Col col)
-            {
-                this.Row?.Cols.Add(col);
-            }
-            base.OnInitialized();
-        }
+            this.Row?.Cols.Add(this);
 
-        protected override void OnParametersSet()
-        {
             this.SetHostClassMap();
             this.SetHostFlexStyle();
-            base.OnParametersSet();
+
+            base.OnInitialized();
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (this is Col col)
-            {
-                this.Row?.Cols.Remove(col);
-            }
+            this.Row?.Cols.Remove(this);
 
             base.Dispose(disposing);
         }
