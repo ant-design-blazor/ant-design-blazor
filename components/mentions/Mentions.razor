@@ -3,62 +3,57 @@
 @inherits AntDomComponentBase
 
 
-    <div class="@ClassMapper.Class" >
-        <textarea  @ref="@Ref"
-                  @bind="@Value"
-                  @attributes="@Attributes"    
-                  style="@Style"          
-                   id="@Id"
-                  rows="@Rows"
-                  disabled="@Disable"
-                  readonly="@Readonly"
-                  placeholder="@Placeholder"    
-                  @onfocus="@Onfocus"
-                  @onblur="@Onblur"
-                  @onkeypress="@OnKeyPress"
-                  @onkeydown="@OnKeyDown"
-                  @onkeyup="@OnKeyUp" />
+<div class="@ClassMapper.Class">
+    <textarea @ref="@Ref"
+              @bind="@Value"
+              @attributes="@Attributes"
+              style="white-space: pre-wrap; @Style"
+              id="@Id"
+              rows="@Rows"
+              disabled="@Disable"
+              readonly="@Readonly"
+              placeholder="@Placeholder"
+              @onfocus="@Onfocus"
+              @onblur="@Onblur"
+              @onkeypress="@OnKeyPress"
+              @onkeydown="@OnKeyDown"
+              @onkeyup="@OnKeyUp" />
 
-
-        <CascadingValue Value="this">
-            @if (ShowSuggestions)
-            {
-                <div class="ant-mentions-measure" style="z-index:1050">
-                    <div >
-                        <div class="ant-mentions-dropdown"  style="@DropdownStyle">
-                            <div class="ant-mentions-dropdown-menu" role="menu">
-                                @if (LstOriginalOptions.Count > 0)
+    <CascadingValue Value="this">
+        @if (ShowSuggestions)
+        {
+            <div class="ant-mentions-measure" style="z-index:1050">
+                <div>
+                    <div class="ant-mentions-dropdown" style="@DropdownStyle">
+                        <div class="ant-mentions-dropdown-menu" role="menu">
+                            @if (LstOriginalOptions.Count > 0)
+                            {
+                                @if (Loading)
                                 {
-                                    @if (Loading)
-                                    {
-                                        <MentionsOption Value="ANTD_SEARCHING" Disable="true">
-                                            <Spin Size="small"></Spin>
-                                        </MentionsOption>
-                                    }
-                                    else
-                                    {
-                                      
-                                        foreach (var item in LstOriginalOptions)
-                                        {
-                                          
-                                            <MentionsOption Value="@item.Value">@item.ChildContent</MentionsOption>
-                                          
-                                        }
-                                    }
+                                    <MentionsOption Value="ANTD_SEARCHING" Disable="true">
+                                        <Spin Size="small"></Spin>
+                                    </MentionsOption>
                                 }
                                 else
                                 {
-                                    @ChildContent
+
+                                    foreach (var item in LstOriginalOptions)
+                                    {
+
+                                        <MentionsOption Value="@item.Value">@item.ChildContent</MentionsOption>
+
+                                    }
                                 }
-
-
-                            </div>
+                            }
+                            else
+                            {
+                                @ChildContent
+                            }
                         </div>
                     </div>
-              
-
                 </div>
-            }
-        </CascadingValue>
+            </div>
+        }
+    </CascadingValue>
 
-    </div>
+</div>
