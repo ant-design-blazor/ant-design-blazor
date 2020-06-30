@@ -202,6 +202,7 @@ namespace AntDesign
             }
         }
 
+        protected string _preInputValue;
         /// <summary>
         /// Invoked when user add/remove content
         /// </summary>
@@ -211,7 +212,7 @@ namespace AntDesign
         {
             bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
-            CurrentValueAsString = args.Value.ToString();
+            _preInputValue = args?.Value?.ToString();
 
             if (_allowClear && flag)
             {
@@ -222,6 +223,20 @@ namespace AntDesign
             {
                 await OnInput.InvokeAsync(args);
             }
+        }
+
+        private DateTime _preKeyUpTime = DateTime.Now;
+        protected virtual async void OnKeyUp(KeyboardEventArgs args)
+        {
+            _preKeyUpTime = DateTime.Now;
+
+            // Avoid frequent refreshes
+            while (DateTime.Now.Ticks - _preKeyUpTime.Ticks < 500000)
+            {
+                await Task.Delay(50);
+            }
+
+            CurrentValueAsString = _preInputValue;
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -303,6 +318,7 @@ namespace AntDesign
                 builder.AddAttribute(i++, "oninput", CallbackFactory.Create(this, OnInputAsync));
                 builder.AddAttribute(i++, "onblur", CallbackFactory.Create(this, OnBlurAsync));
                 builder.AddAttribute(i++, "onfocus", CallbackFactory.Create(this, OnFocus));
+                builder.AddAttribute(i++, "onkeyup", CallbackFactory.Create(this, OnKeyUp));
                 builder.AddElementReferenceCapture(i++, r => Ref = r);
                 builder.CloseElement();
 
