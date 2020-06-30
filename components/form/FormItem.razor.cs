@@ -108,8 +108,6 @@ namespace AntDesign
             return wrapperColParameter.ToAttributes();
         }
 
-   
-
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
             this._control = control;
@@ -122,17 +120,13 @@ namespace AntDesign
                 StateHasChanged();
             };
 
-            RenderFragment<FormItem> formValidation = form =>
-              {
-                  return builder =>
-                  {
-                      var i = 0;
-                      builder.OpenComponent<FormValidationMessage<TValue>>(i++);
-                      builder.AddAttribute(i++, "Control", control);
-                      builder.CloseComponent();
-                  };
-              };
-            _formValidationMessages = formValidation(this);
+            _formValidationMessages = builder =>
+            {
+                var i = 0;
+                builder.OpenComponent<FormValidationMessage<TValue>>(i++);
+                builder.AddAttribute(i++, "Control", control);
+                builder.CloseComponent();
+            };
 
             if (control.FieldIdentifier.TryGetValidateProperty(out var propertyInfo))
             {
@@ -143,6 +137,5 @@ namespace AntDesign
                 }
             }
         }
-
     }
 }

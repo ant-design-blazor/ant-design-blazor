@@ -43,8 +43,6 @@ namespace AntDesign
         private IList<IFormItem> _formItems = new List<IFormItem>();
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
 
-        internal Dictionary<string, object> FieldDefaultValues { get; private set; }
-
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
         ColLayoutParam IForm.LabelCol => LabelCol;
@@ -56,16 +54,8 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            _editContext = new EditContext(Model);
-
-            FieldDefaultValues = Model.GetType().GetProperties().ToDictionary(p => p.Name, p => p.GetValue(Model));
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-
             SetClass();
+            _editContext = new EditContext(Model);
         }
 
         protected void SetClass()
