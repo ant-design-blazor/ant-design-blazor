@@ -31,6 +31,75 @@ export function getDomInfo(element) {
   return result;
 }
 
+export function clearFile(element) {
+  element.setAttribute("type", "input");
+  element.value = '';
+  element.setAttribute("type", "file");
+}
+
+export function getFileInfo(element) {
+  if (element.files && element.files.length > 0) {
+    var file = element.files[0];
+    var objectUrl = getObjectURL(element);
+    var fileInfo = {
+      fileName: file.name,
+      size: file.size,
+      objectURL: objectUrl,
+      type: file.type
+    };
+    return fileInfo;
+  }
+}
+
+export function getObjectURL(element) {
+  var url = null;
+  var file = element.files[0];
+  if (window.URL != undefined) {
+    url = window.URL.createObjectURL(file);
+  } else if (window.webkitURL != undefined) {
+    url = window.webkitURL.createObjectURL(file);
+  }
+  return url;
+}
+
+export function uploadFile(element, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod) {
+  let formData = new FormData();
+  var file = element.files[0];
+  var size = file.size;
+  formData.append(name, file)
+  const req = new XMLHttpRequest()
+  req.onreadystatechange = function () {
+    if (req.readyState === 4) {
+      if (req.responseText == null || req.responseText.length == 0) {
+        instance.invokeMethodAsync(errorMethod, fileId, "error");
+        return;
+      }
+      instance.invokeMethodAsync(successMethod, fileId, req.responseText);
+    }
+  }
+  req.upload.onprogress = function (event) {
+    var percent = Math.floor(event.loaded / size * 100);
+    instance.invokeMethodAsync(percentMethod, fileId, percent);
+  }
+  req.onerror = function (e) {
+    instance.invokeMethodAsync(errorMethod, fileId, "error");
+  }
+  req.open('post', url, true)
+  if (headers != null) {
+    for (var header in headers) {
+      req.setRequestHeader(header, headers[header]);
+    }
+  }
+  req.send(formData)
+}
+
+export function triggerEvent(element, eventType, eventName) {
+  var dom = element;
+  var evt = document.createEvent(eventType);
+  evt.initEvent(eventName);
+  return dom.dispatchEvent(evt);
+}
+
 export function getBoundingClientRect(element) {
   let dom = getDom(element);
   return dom.getBoundingClientRect();
@@ -306,10 +375,10 @@ export function createIconFromfontCN(scriptUrl) {
 }
 
 export function getScroll() {
-    return { x: window.pageXOffset, y: window.pageYOffset };
+  return { x: window.pageXOffset, y: window.pageYOffset };
 }
 
 export function getInnerText(element) {
-    let dom = getDom(element);
-    return dom.innerText;
+  let dom = getDom(element);
+  return dom.innerText;
 }

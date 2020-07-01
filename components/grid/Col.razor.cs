@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -94,31 +92,27 @@ namespace AntDesign
                 .If($"{prefixCls}-push-{this.Push.Value}", () => this.Push.Value != null)
                 ;
 
-            string[] listOfSizeInputName = { "xs", "sm", "md", "lg", "xl", "xxl" };
-            var properties = GetType().GetProperties();
-            foreach (var sizeName in listOfSizeInputName)
+            SetSizeClassMapper(prefixCls, Xs, "xs");
+            SetSizeClassMapper(prefixCls, Sm, "sm");
+            SetSizeClassMapper(prefixCls, Md, "md");
+            SetSizeClassMapper(prefixCls, Lg, "lg");
+            SetSizeClassMapper(prefixCls, Xl, "xl");
+            SetSizeClassMapper(prefixCls, Xxl, "xxl");
+        }
+
+        private void SetSizeClassMapper(string prefixCls, OneOf<int, EmbeddedProperty> parameter, string sizeName)
+        {
+            parameter.Switch(strNum =>
             {
-                var property =
-                    properties.FirstOrDefault(f => f.Name.Equals(sizeName, StringComparison.OrdinalIgnoreCase));
-                if (property == null)
-                    continue;
-
-                var fieldValue = (OneOf<int, EmbeddedProperty>)property.GetValue(this);
-                if (fieldValue.Value == null)
-                    continue;
-
-                fieldValue.Switch(strNum =>
-                {
-                    ClassMapper.If($"{prefixCls}-{sizeName}-{strNum}", () => strNum > 0);
-                }, embedded =>
-                {
-                    ClassMapper
-                        .If($"{prefixCls}-{sizeName}-order-{embedded.Order.Value}", () => embedded.Order.Value != null)
-                        .If($"{prefixCls}-{sizeName}-offset-{embedded.Offset.Value}", () => embedded.Offset.Value != null)
-                        .If($"{prefixCls}-{sizeName}-push-{embedded.Push.Value}", () => embedded.Push.Value != null)
-                        .If($"{prefixCls}-{sizeName}-pull-{embedded.Pull.Value}", () => embedded.Pull.Value != null);
-                });
-            }
+                ClassMapper.If($"{prefixCls}-{sizeName}-{strNum}", () => strNum > 0);
+            }, embedded =>
+            {
+                ClassMapper
+                    .If($"{prefixCls}-{sizeName}-order-{embedded.Order.Value}", () => embedded.Order.Value != null)
+                    .If($"{prefixCls}-{sizeName}-offset-{embedded.Offset.Value}", () => embedded.Offset.Value != null)
+                    .If($"{prefixCls}-{sizeName}-push-{embedded.Push.Value}", () => embedded.Push.Value != null)
+                    .If($"{prefixCls}-{sizeName}-pull-{embedded.Pull.Value}", () => embedded.Pull.Value != null);
+            });
         }
 
         private void SetHostFlexStyle()
@@ -140,26 +134,17 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            if (this is Col col)
-            {
-                this.Row?.Cols.Add(col);
-            }
-            base.OnInitialized();
-        }
+            this.Row?.Cols.Add(this);
 
-        protected override void OnParametersSet()
-        {
             this.SetHostClassMap();
             this.SetHostFlexStyle();
-            base.OnParametersSet();
+
+            base.OnInitialized();
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (this is Col col)
-            {
-                this.Row?.Cols.Remove(col);
-            }
+            this.Row?.Cols.Remove(this);
 
             base.Dispose(disposing);
         }

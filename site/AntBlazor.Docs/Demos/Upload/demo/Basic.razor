@@ -1,0 +1,39 @@
+@inject MessageService _message
+
+<Upload @attributes="attrs"
+        OnSingleCompleted="OnSingleCompleted">
+    <Button Icon="upload">
+        <span>点击上传</span>
+    </Button>
+</Upload>
+
+@code
+{
+
+    Dictionary<string, object> attrs = new Dictionary<string, object>
+    {
+        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
+        {"Name", "files" }
+    };
+
+    void OnSingleCompleted(UploadInfo fileinfo)
+    {
+        if (fileinfo.File.State == UploadState.Success)
+        {
+            var result = fileinfo.File.GetResponse<ResponseModel>();
+            fileinfo.File.Url = result.url;
+        }
+    }
+
+    public class ResponseModel
+    {
+        public string name { get; set; }
+
+        public string status { get; set; }
+
+        public string url { get; set; }
+
+        public string thumbUrl { get; set; }
+    }
+
+}

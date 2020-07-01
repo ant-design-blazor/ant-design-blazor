@@ -167,6 +167,11 @@
             "title": "Transfer",
             "type": "menuItem",
             "url": "components/transfer"
+          },
+          {
+            "title": "Upload",
+            "type": "menuItem",
+            "url": "components/upload"
           }
         ]
       },
@@ -195,6 +200,11 @@
             "url": "components/collapse"
           },
           {
+            "title": "Comment",
+            "type": "menuItem",
+            "url": "components/comment"
+          },
+          {
             "title": "Card",
             "type": "menuItem",
             "url": "components/card"
@@ -220,9 +230,19 @@
             "url": "components/list"
           },
           {
+            "title": "Popover",
+            "type": "menuItem",
+            "url": "components/popover"
+          },
+          {
             "title": "Statistic",
             "type": "menuItem",
             "url": "components/statistic"
+          },
+          {
+            "title": "Tree",
+            "type": "menuItem",
+            "url": "components/tree"
           },
           {
             "title": "Tooltip",
@@ -286,6 +306,11 @@
             "url": "components/progress"
           },
           {
+            "title": "Popconfirm",
+            "type": "menuItem",
+            "url": "components/popconfirm"
+          },
+          {
             "title": "Result",
             "type": "menuItem",
             "url": "components/result"
@@ -306,6 +331,11 @@
         "title": "Other",
         "type": "itemGroup",
         "children": [
+          {
+            "title": "Anchor",
+            "type": "menuItem",
+            "url": "components/anchor"
+          },
           {
             "title": "Divider",
             "type": "menuItem",

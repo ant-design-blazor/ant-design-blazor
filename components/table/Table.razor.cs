@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -32,6 +33,18 @@ namespace AntDesign
 
         [Parameter]
         public bool Loading { get; set; }
+
+        [Parameter] 
+        public OneOf<string, RenderFragment> Title { get; set; }
+        
+        [Parameter] 
+        public OneOf<string, RenderFragment> Footer { get; set; }
+        
+        [Parameter] 
+        public TableSize Size { get; set; }
+
+        [Parameter] 
+        public bool Bordered { get; set; } = false;
 
         [Parameter]
         public string ScrollX { get; set; }
@@ -77,6 +90,9 @@ namespace AntDesign
             string prefixCls = "ant-table";
             ClassMapper.Add(prefixCls)
                 .If($"{prefixCls}-fixed-header", () => ScrollY != null)
+                .If($"{prefixCls}-bordered", () => Bordered)
+                .If($"{prefixCls}-small", () => Size == TableSize.Small)
+                .If($"{prefixCls}-middle", () => Size == TableSize.Middle)
                 //.Add( "ant-table ant-table-ping-left ant-table-ping-right ")
                 .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ColumnContext.Columns.Any(x => x.Fixed.IsIn("left", "right")))
                 .If($"{prefixCls}-has-fix-left", () => ColumnContext.Columns.Any(x => x.Fixed == "left"))

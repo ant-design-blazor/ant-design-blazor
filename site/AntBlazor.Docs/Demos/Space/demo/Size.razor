@@ -1,7 +1,7 @@
-﻿<RadioGroup @bind-Value=@size OnChange="e=> setSize(e)">
-    <Radio Value="small">Small</Radio>
-    <Radio Value="middle">Middle</Radio>
-    <Radio Value="large">Large</Radio>
+﻿<RadioGroup @bind-Value=@size OnChange="e=> setSize(e)" TValue="string">
+    <Radio Value="@("small")">Small</Radio>
+    <Radio Value="@("middle")">Middle</Radio>
+    <Radio Value="@("large")">Large</Radio>
 </RadioGroup>
 <br />
 <br />

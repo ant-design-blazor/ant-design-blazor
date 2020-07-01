@@ -8,63 +8,66 @@ namespace AntDesign
 {
     public class DrawerService
     {
-        internal event Func<DrawerConfig, Task> OnCreate;
+        internal event Func<DrawerRef, Task> OnOpenEvent;
 
-        internal event Func<DrawerConfig, Task> OnClose;
+        internal event Func<DrawerRef, Task> OnCloseEvent;
 
         /// <summary>
-        /// Create a drawer from the config
+        /// 创建并打开一个简单抽屉，没有返回值
         /// </summary>
-        /// <param name="config">DrawerConfig</param>
-        /// <returns>DrawerRef object</returns>
+        /// <param name="config">抽屉参数</param>
+        /// <returns></returns>
         public async Task<DrawerRef> CreateAsync(DrawerConfig config)
         {
             CheckIsNull(config);
-            return await HandleCreate(config);
+            DrawerRef drawerRef = new DrawerRef(config, this);
+            await OnOpenEvent.Invoke(drawerRef);
+            return drawerRef;
         }
 
         /// <summary>
-        /// Create a drawer from an existing component template
+        /// 创建并打开一个模板抽屉
         /// </summary>
-        /// <typeparam name="T">Component template type</typeparam>
-        /// <typeparam name="TComponentParameter">Component template parameter object type</typeparam>
-        /// <param name="config">DrawerConfig</param>
-        /// <param name="parameter">Component template parameter object</param>
-        /// <returns>DrawerRef object</returns>
-        public async Task<DrawerRef> CreateAsync<T, TComponentParameter>(DrawerConfig config, TComponentParameter parameter) where T : DrawerTemplate<TComponentParameter>
+        /// <typeparam name="TComponent"></typeparam>
+        /// <typeparam name="TContentParams"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="contentParams"></param>
+        /// <returns></returns>
+        public async Task<DrawerRef<TResult>> CreateAsync<TComponent, TContentParams, TResult>(DrawerConfig config, TContentParams contentParams) where TComponent : DrawerTemplate<TContentParams, TResult>
         {
             CheckIsNull(config);
 
+            DrawerRef<TResult> drawerRef = new DrawerRef<TResult>(config, this);
+            await OnOpenEvent.Invoke(drawerRef);
+
             RenderFragment child = (builder) =>
             {
-                builder.OpenComponent<T>(0);
-                builder.AddAttribute(1, "Config", parameter);
-                builder.AddAttribute(2, "DrawerConfig", config);
+                builder.OpenComponent<TComponent>(0);
+                builder.AddAttribute(1, "DrawerRef", drawerRef);
+                builder.AddAttribute(2, "Config", contentParams);
                 builder.CloseComponent();
             };
             config.ChildContent = child;
 
-            return await HandleCreate(config);
+            return drawerRef;
         }
 
-        private async Task<DrawerRef> HandleCreate(DrawerConfig config)
+        internal Task OpenAsync(DrawerRef drawerRef)
         {
-            if (OnCreate != null)
+            if (OnOpenEvent != null)
             {
-                config.DrawerService = this;
-                await OnCreate.Invoke(config);
-                DrawerRef drawerRef = new DrawerRef(config, this);
-                return drawerRef;
+                return OnOpenEvent.Invoke(drawerRef);
             }
-            return null;
+            return Task.CompletedTask;
         }
 
-        internal Task CloseAsync(DrawerConfig options)
+
+        internal Task CloseAsync(DrawerRef drawerRef)
         {
-            CheckIsNull(options);
-            if (OnClose != null)
+            if (OnCloseEvent != null)
             {
-                return OnClose.Invoke(options);
+                return OnCloseEvent.Invoke(drawerRef);
             }
             return Task.CompletedTask;
         }

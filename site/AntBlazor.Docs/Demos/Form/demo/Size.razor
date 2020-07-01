@@ -1,43 +1,51 @@
 ﻿@using System.Text.Json;
 
-<Form Model="@model"
-      LabelCol="new ColLayoutParam { Span = 8 }"
-      WrapperCol="new ColLayoutParam { Span = 16 }"
-      OnFinish="OnFinish"
-      OnFinishFailed="OnFinishFailed"
-      Size="@model.Size">
-    <FormItem Label="Form Size">
-        <RadioGroup @bind-Value="@context.Size">
-            <Radio RadioButton Value="@AntSizeLDSType.Small">Small</Radio>
-            <Radio RadioButton Value="@AntSizeLDSType.Default">Default</Radio>
-            <Radio RadioButton Value="@AntSizeLDSType.Large">Large</Radio>
-        </RadioGroup>
-    </FormItem>
+    <Form Model="@model"
+          LabelCol="new ColLayoutParam { Span = 8 }"
+          WrapperCol="new ColLayoutParam { Span = 16 }"
+          OnFinish="OnFinish"
+          OnFinishFailed="OnFinishFailed"
+          Size="@model.Size">
+        <FormItem Label="Form Size">
+            <RadioGroup @bind-Value="@context.Size">
+                <Radio RadioButton Value="@AntSizeLDSType.Small">Small</Radio>
+                <Radio RadioButton Value="@AntSizeLDSType.Default">Default</Radio>
+                <Radio RadioButton Value="@AntSizeLDSType.Large">Large</Radio>
+            </RadioGroup>
+        </FormItem>
 
-    <FormItem Label="Input">
-        <Input @bind-Value="@context.Input" />
-    </FormItem>
-    <FormItem Label="InputArea">
-        <TextArea @bind-Value="@context.InputArea" />
-    </FormItem>
-    <FormItem Label="Cascader">
-        <Cascader @bind-Value="@context.Cascader" Options="districts" />
-    </FormItem>
-    <FormItem Label="DatePicker">
-        <DatePicker @bind-Value="@context.DatePicker" />
-    </FormItem>
-    <FormItem Label="InputNumber">
-        <AntDesign.InputNumber @bind-Value="@context.Number" />
-    </FormItem>
-    <FormItem Label="Switch">
-        <Switch @bind-Value="@context.Switch" />
-    </FormItem>
-    <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
-        <Button HtmlType="submit">
-            Button
-        </Button>
-    </FormItem>
-</Form>
+        <FormItem Label="Input">
+            <Input @bind-Value="@context.Input" />
+        </FormItem>
+        <FormItem Label="InputArea">
+            <TextArea @bind-Value="@context.InputArea" />
+        </FormItem>
+        <FormItem Label="Cascader">
+            <Cascader @bind-Value="@context.Cascader" Options="districts" />
+        </FormItem>
+        <FormItem Label="DatePicker">
+            <DatePicker @bind-Value="@context.DatePicker" />
+        </FormItem>
+        <FormItem Label="InputNumber">
+            <AntDesign.InputNumber @bind-Value="@context.Number" />
+        </FormItem>
+        <FormItem Label="Switch">
+            <Switch @bind-Value="@context.Switch" />
+        </FormItem>
+        <FormItem Label="Switch">
+            <RadioGroup @bind-Value="@context.Radio">
+                <Radio RadioButton Value="@("Hangzhou")">Hangzhou</Radio>
+                <Radio RadioButton Value="@("Shanghai")">Shanghai</Radio>
+                <Radio RadioButton Value="@("Beijing")">Beijing</Radio>
+                <Radio RadioButton Value="@("Chengdu")">Chengdu</Radio>
+            </RadioGroup>
+        </FormItem>
+        <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
+            <Button HtmlType="submit">
+                Button
+            </Button>
+        </FormItem>
+    </Form>
 @code
 {
     public class Model
@@ -49,6 +57,7 @@
         public DateTime DatePicker { get; set; }
         public double Number { get; set; }
         public bool Switch { get; set; }
+        public string Radio { get; set; }
     }
 
     private Model model = new Model();
@@ -62,7 +71,7 @@
             Children = new []
             {
                 new CascaderNode {Value = "11", Label = "hangzhou"},
-            }
+            },
         }
     };
 

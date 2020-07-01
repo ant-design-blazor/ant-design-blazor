@@ -1,18 +1,18 @@
 ﻿<div>
     <RadioGroup @bind-Value="placement">
-        <Radio Value="top">top</Radio>
-        <Radio Value="right">right</Radio>
-        <Radio Value="bottom">bottom</Radio>
-        <Radio Value="left">left</Radio>
+        <Radio Value="@("top")">top</Radio>
+        <Radio Value="@("right")">right</Radio>
+        <Radio Value="@("bottom")">bottom</Radio>
+        <Radio Value="@("left")">left</Radio>
     </RadioGroup>
 
     <Button Type="primary" @onclick="_ => open()">Open</Button>
-    <Drawer Closable="true" Visible="@visible" Placement="@placement" Title='("Drawer in different Placement")' OnClose="_ => close()">
+    <Drawer Visible="@visible" Placement="@placement" Title='("Basic Drawer")' OnClose="_ => close()">
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
     </Drawer>
-</div>  
+</div>
 
 @code{
 
