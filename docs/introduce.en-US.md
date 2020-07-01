@@ -57,9 +57,8 @@ WebAssembly static hosting examples:
 
 ## 💿 Current Version
 
-- Development: [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
-
-- 0.1.0：will be released after basic implementation of components
+- Release: [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
+- Development: [![AntDesign](https://img.shields.io/nuget/vpre/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 
 ## 🎨 Design Specification
 
