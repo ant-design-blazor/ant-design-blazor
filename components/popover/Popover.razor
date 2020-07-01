@@ -1,0 +1,55 @@
+﻿@namespace AntDesign
+@inherits OverlayTrigger
+
+@using AntDesign.Internal
+
+<div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-flex; @Style"
+     @onclick="OnClickDiv"
+     @onmouseenter="OnTriggerMouseEnter"
+     @onmouseleave="OnTriggerMouseLeave"
+     @oncontextmenu="OnTriggerContextmenu"
+     @onfocusin="OnTriggerFocusIn"
+     @onfocusout="OnTriggerFocusOut"
+     @oncontextmenu:preventDefault>
+    @ChildContent
+</div>
+
+<CascadingValue Value="this" Name="Trigger">
+    <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
+        <Overlay @ref="_overlay"
+                 HideMillisecondsDelay="10"
+                 WaitForHideAnimMilliseconds="100"
+                 OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
+                 OnOverlayMouseEnter="OnOverlayMouseEnter"
+                 OnOverlayMouseLeave="OnOverlayMouseLeave">
+
+            <div class="ant-popover-content">
+                <div class="ant-popover-arrow">
+                    <span class="ant-popover-arrow-content"></span>
+                </div>
+                <div class="ant-popover-inner" role="tooltip">
+                    <div class="ant-popover-title">
+                        @if (Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0))
+                        {
+                            @Title.AsT0
+                        }
+                        else if (Title.IsT1 && (Title.AsT1) != null)
+                        {
+                            @Title.AsT1
+                        }
+                    </div>
+                    <div class="ant-popover-inner-content">
+                        @if (Content.IsT0 && !string.IsNullOrEmpty(Content.AsT0))
+                        {
+                            @Content.AsT0
+                        }
+                        else if (Content.IsT1 && (Content.AsT1) != null)
+                        {
+                            @Content.AsT1
+                        }
+                    </div>
+                </div>
+            </div>
+        </Overlay>
+    </CascadingValue>
+</CascadingValue>

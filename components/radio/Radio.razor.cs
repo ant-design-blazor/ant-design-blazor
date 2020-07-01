@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class Radio : AntDomComponentBase
+    public partial class Radio<TValue> : AntDomComponentBase
     {
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public string Value { get; set; }
+        public TValue Value { get; set; }
 
         [Parameter]
         public bool AutoFocus { get; set; } = false;
@@ -31,7 +30,7 @@ namespace AntDesign
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
 
-        [CascadingParameter] public RadioGroup RadioGroup { get; set; }
+        [CascadingParameter] public RadioGroup<TValue> RadioGroup { get; set; }
 
         protected ClassMapper RadioClassMapper { get; set; } = new ClassMapper();
 
@@ -78,6 +77,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             SetClass();
+            RadioGroup?.AddRadio(this);
 
             base.OnInitialized();
         }
@@ -88,10 +88,7 @@ namespace AntDesign
             {
                 await this.Focus();
             }
-            if (this is Radio radio)
-            {
-                RadioGroup?.AddRadio(radio);
-            }
+
             await base.OnFirstAfterRenderAsync();
         }
 
@@ -102,11 +99,6 @@ namespace AntDesign
                 this._checked = true;
                 await CheckedChange.InvokeAsync(true);
                 await CheckedChanged.InvokeAsync(true);
-            }
-
-            if (RadioGroup != null)
-            {
-                await RadioGroup.OnRadioChange(this.Value);
             }
         }
 
@@ -123,7 +115,14 @@ namespace AntDesign
 
         public async Task OnClick()
         {
-            await Select();
+            if (RadioGroup != null)
+            {
+                await RadioGroup.OnRadioChange(this.Value);
+            }
+            else
+            {
+                await Select();
+            }
         }
 
         protected async Task Focus()

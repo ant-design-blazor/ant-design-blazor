@@ -54,9 +54,9 @@ title: Ant Design of Blazor
 
 ## 💿 当前版本
 
-- 开发构建： [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
+- 正式发布: [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
+- 开发构建： [![AntDesign](https://img.shields.io/nuget/vpre/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 
-- 0.1.0：基本实现组件后发布
 
 ## 🎨 设计规范
 

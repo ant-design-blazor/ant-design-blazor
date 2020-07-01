@@ -1,7 +1,7 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" @ref="@Ref" style="@DrawerStyle @Style" id="@Id">
+<div class="@ClassMapper.Class" @ref="@Ref" style="@_drawerStyle @Style" id="@Id">
     @if (Mask)
     {
         <div class="ant-drawer-mask" @onclick="_=>MaskClick()" style="@MaskStyle"></div>
@@ -29,7 +29,7 @@
                         @if (Closable)
                         {
                             <button @onclick="_=>CloseClick()" aria-label="Close" class="ant-drawer-close">
-                                <Icon type="close"></Icon>
+                                <Icon Type="close"/>
                             </button>
                         }
                     </div>

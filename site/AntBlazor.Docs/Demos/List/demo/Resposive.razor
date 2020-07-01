@@ -1,5 +1,40 @@
-﻿<h3>Resposive</h3>
+﻿<AntList Grid="gutter" DataSource="@Data">
+    <Item Context="item">
+        <Card Bordered Title="@(item.Title)">
+            <Body>
+            Card context
+            </Body>
+        </Card>
+    </Item>
+</AntList>
 
-@code {
+@code{
+
+    private ListGridType gutter = new ListGridType
+    {
+        Gutter = 16,
+        Xs = 1,
+        Sm = 2,
+        Md = 4,
+        Lg = 4,
+        Xl = 6,
+        Xxl = 3,
+        Column = 3
+    };
+
+    public List<BasicItem> Data = new List<BasicItem>
+    {
+        new BasicItem { Title = "Title 1"},
+        new BasicItem { Title = "Title 2"},
+        new BasicItem { Title = "Title 3"},
+        new BasicItem { Title = "Title 4"},
+        new BasicItem { Title = "Title 5"},
+        new BasicItem { Title = "Title 6"},
+    };
+
+    public class BasicItem
+    {
+        public string Title { get; set; }
+    }
 
 }

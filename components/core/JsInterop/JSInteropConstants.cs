@@ -11,6 +11,16 @@ namespace AntDesign
 
         public static string getDomInfo => $"{FUNC_PREFIX}getDomInfo";
 
+        public static string triggerEvent => $"{FUNC_PREFIX}triggerEvent";
+
+        public static string clearFile => $"{FUNC_PREFIX}clearFile";
+
+        public static string uploadFile => $"{FUNC_PREFIX}uploadFile";
+
+        public static string getObjectURL => $"{FUNC_PREFIX}getObjectURL";
+
+        public static string getFileInfo => $"{FUNC_PREFIX}getFileInfo";
+
         public static string getBoundingClientRect => $"{FUNC_PREFIX}getBoundingClientRect";
 
         public static string addDomEventListener => $"{FUNC_PREFIX}addDomEventListener";

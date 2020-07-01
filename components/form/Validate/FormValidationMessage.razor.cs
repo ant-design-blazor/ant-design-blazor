@@ -3,11 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
@@ -19,6 +17,7 @@ namespace AntDesign
     {
         private EditContext _previousEditContext;
         private Expression<Func<TValue>> _previousFieldAccessor;
+
         //private readonly EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
         private FieldIdentifier _fieldIdentifier;
 
@@ -42,7 +41,7 @@ namespace AntDesign
             }
             set
             {
-                if (_control != value)
+                if (value != null && _control != value)
                 {
                     _control = value;
                     _fieldIdentifier = _control.FieldIdentifier;
@@ -50,21 +49,6 @@ namespace AntDesign
                 }
             }
         }
-
-        /// <inheritdoc />
-        //protected override void BuildRenderTree(RenderTreeBuilder builder)
-        //{
-        //Console.WriteLine("AAAAAAAAAAAAAA");
-        ////foreach (var message in CurrentEditContext.GetValidationMessages(_fieldIdentifier))
-        //foreach (var message in Control.ValidationMessages)
-        //{
-        //    builder.OpenElement(0, "div");
-        //    builder.AddMultipleAttributes(1, AdditionalAttributes);
-        //    builder.AddAttribute(2, "class", "ant-form-item-explain");
-        //    builder.AddContent(3, message);
-        //    builder.CloseElement();
-        //}
-        //}
 
         protected virtual void Dispose(bool disposing)
         {

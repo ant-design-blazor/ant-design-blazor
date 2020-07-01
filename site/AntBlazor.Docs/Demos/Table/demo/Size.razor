@@ -1,0 +1,107 @@
+@using System.ComponentModel
+<p>Middle size table</p>
+<Table DataSource="@data" Bordered=@true Size=@TableSize.Middle>
+    <Column @bind-Field="@context.Name">
+        <a>@context.Name</a>
+    </Column>
+    <Column @bind-Field="@context.Age"></Column>
+    <Column @bind-Field="@context.Address"></Column>
+    <Column @bind-Field="@context.Tags">
+        @foreach (var tag in context.Tags)
+        {
+            var color = tag.Length > 5 ? "geekblue" : "green";
+            if (tag == "loser")
+            {
+                color = "volcano";
+            }
+            <Tag Color="@color">@tag</Tag>
+        }
+    </Column>
+    <ActionColumn Title="Acton">
+        <Space Size="middle">
+            <SpaceItem>
+                <a>Invite @context.Name</a>
+            </SpaceItem>
+            <SpaceItem>
+                <a>Delete</a>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
+</Table>
+<p>Middle size table</p>
+<Table DataSource="@data" Bordered=@true Size=@TableSize.Small>
+    <Column @bind-Field="@context.Name">
+        <a>@context.Name</a>
+    </Column>
+    <Column @bind-Field="@context.Age"></Column>
+    <Column @bind-Field="@context.Address"></Column>
+    <Column @bind-Field="@context.Tags">
+        @foreach (var tag in context.Tags)
+        {
+            var color = tag.Length > 5 ? "geekblue" : "green";
+            if (tag == "loser")
+            {
+                color = "volcano";
+            }
+            <Tag Color="@color">@tag</Tag>
+        }
+    </Column>
+    <ActionColumn Title="Acton">
+        <Space Size="middle">
+            <SpaceItem>
+                <a>Invite @context.Name</a>
+            </SpaceItem>
+            <SpaceItem>
+                <a>Delete</a>
+            </SpaceItem>
+        </Space>
+    </ActionColumn>
+</Table>
+
+@code{
+    Data[] data =
+    {
+        new Data()
+        {
+            Key = "1",
+            Name = "John Brown",
+            Age = 32,
+            Address = "New York No. 1 Lake Park",
+            Tags = new[] {"nice", "developer"}
+        },
+        new Data()
+        {
+            Key = "2",
+            Name = "Jim Green",
+            Age = 42,
+            Address = "London No. 1 Lake Park",
+            Tags = new[] { "loser"}
+        },
+        new Data()
+        {
+            Key = "3",
+            Name = "Joe Black",
+            Age = 32,
+            Address = "Sidney No. 1 Lake Park",
+            Tags = new[] { "cool", "teacher" }
+        }
+    };
+
+    public class Data
+    {
+        [DisplayName("Key")]
+        public string Key { get; set; }
+
+        [DisplayName("Name")]
+        public string Name { get; set; }
+
+        [DisplayName("Age")]
+        public int Age { get; set; }
+
+        [DisplayName("Address")]
+        public string Address { get; set; }
+
+        [DisplayName("Tags")]
+        public string[] Tags { get; set; }
+    }
+}

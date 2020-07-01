@@ -23,10 +23,12 @@ Radio: Radio
 DataDisplay: Data Display
 Avatar: Avatar
 Badge: Badge
+Comment: Comment
 Card: Card
 Calendar: Calendar
 Empty: Empty
 List: List
+Popover: Popover
 Tooltip: Tooltip
 Tag: Tag
 Timeline: Timeline
@@ -47,6 +49,7 @@ Carousel: Carousel
 Message: Message
 Pagination: Pagination
 Progress: Progress
+Popconfirm: Popconfirm
 Transfer: Transfer
 Modal: Modal
 Statistic: Statistic
@@ -55,4 +58,8 @@ Select: Select
 Collapse: Collapse
 Table: Table
 AutoComplete: AutoComplete
+Upload: Upload
+AutoComplete: AutoComplete
+Anchor: Anchor
+Affix: Affix
 DocSearch: Search in Ant Design Blazor
