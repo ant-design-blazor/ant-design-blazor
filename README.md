@@ -23,42 +23,65 @@ An enterprise-class UI components based on Ant Design and Blazor.
 
 English | [简体中文](README-zh_CN.md)
 
-## ✨ Features
+## ✨ Feature Highlights
 
 - 🌈 Enterprise-class UI designed for web applications.
 - 📦 A set of high-quality Blazor components out of the box.
-- 💕 Supports WebAssembly-based client-side and SignalR-based server-side UI event interaction.
-- 🎨 Supports Progressive Web Applications (PWA).
-- 🛡 Build with C#, a multi-paradigm static language for an efficient development experience.
-- ⚙️ .NET Standard 2.1 based, with direct reference to the rich .NET ecosystem.
+- 🎨 Modern UI design which was widely used for practical production.
+- 🛡 Native Blazor implementation, blazor-styled two-way data bindings and blazor-styled API.
 - 🎁 Seamless integration with existing ASP.NET Core MVC and Razor Pages projects.
 
-## 🌈 Online Examples
+## 🌈 Docs & Online Examples
 
-WebAssembly static hosting examples:
+These are the user documents as well as demo sites, which are statically hosted WebAssembly projects:
 
 - [GitHub](https://ant-design-blazor.github.io/)
 - [Gitee](https://ant-design-blazor.gitee.io/)
-
-## 🖥 Environment Support
-
-- .NET Core 3.1
-- Blazor WebAssembly 3.2 Release
-- Supports two-way binding on the server side
-- Supports WebAssembly static file deployment
-- Support 4 major browsers engines, and Internet Explorer 11+ ([Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1) only)
-- Run directly on [Electron](http://electron.atom.io/) and other Web standards-based environments
-
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br> Edge / IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Electron |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                                                                                                 Edge 16 / IE 11†                                                                                                 |                                                                                                        522                                                                                                        |                                                                                                      57                                                                                                       |                                                                                                      11                                                                                                       |                                                                                                    44                                                                                                     |                                                                                                      Chromium 57                                                                                                      |
-
-> Due to [WebAssembly](https://webassembly.org) restriction, Blazor WebAssembly doesn't support IE browser, but Blazor Server supports IE 11† with additional polyfills. See [official documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1)
 
 ## 💿 Current Version
 
 - Release: [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 - Development: [![AntDesign](https://img.shields.io/nuget/vpre/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
+
+## 🖥 Environment / Dependencies (Blazor WebAssembly)
+
+### Development
+
+- [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) (release 3.1.5+, sdk 3.1.300+)
+- Blazor WebAssembly 3.2 (Release)
+- (Optional) Visual Studio 16.6+
+
+### Production
+
+- Any static file web host for production (with the ability to fallback urls)
+
+### User Clients
+
+| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br> Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Electron |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                                                                                 Edge 16                                                                                                  |                                                                                                        522                                                                                                        |                                                                                                      57                                                                                                       |                                                                                                      11                                                                                                       |                                                                                                    44                                                                                                     |                                                                                                      Chromium 57                                                                                                      |
+
+> Due to [WebAssembly](https://webassembly.org) restriction, Blazor WebAssembly doesn't support IE browser.
+
+## 🖥 Environment / Dependencies (Blazor Server)
+
+### Development
+
+- [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) (release 3.1.5+, sdk 3.1.100+)
+- (Optional) Visual Studio 16.4+
+
+### Production
+
+- .NET Core Runtime 3.1.5
+- ASP.NET Core Runtime 3.1.5
+
+### User Clients
+
+| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br> Edge / IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Opera | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/electron/electron_48x48.png" alt="Electron" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Electron |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                                                                                 Edge 16 / IE 11†                                                                                                 |                                                                                                        522                                                                                                        |                                                                                                      57                                                                                                       |                                                                                                      11                                                                                                       |                                                                                                    44                                                                                                     |                                                                                                      Chromium 57                                                                                                      |
+
+> Blazor Server supports IE 11† with additional polyfills. See [official documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1)
 
 ## 🎨 Design Specification
 
@@ -66,12 +89,18 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 ## 📦 Installation Guide
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 or later
+- Install the development environments for [Blazor WebAssembly](#-environment--dependencies-blazor-webassembly) or [Blazer Server](#-environment--dependencies-blazor-server).
 
-- Create Blazor WebAssembly Project
+- Create a Blazor Project, for Blazor WebAssembly
 
   ```bash
   $ dotnet new blazorwasm -o MyAntDesignApp
+  ```
+
+- Or for Blazor Server
+
+  ```bash
+  $ dotnet new blazorserver -o MyAntDesignApp
   ```
 
 - Go to the project folder of the application and install the Nuget package reference
@@ -100,9 +129,9 @@ Regularly synchronize with Official Ant Design specifications, you can check the
   @using AntDesign
   ```
 
-- To display the pop-up component dynamically, you need to add the `<AntContainer />` component in `App.razor`. 
+- To display the pop-up component dynamically, you need to add the `<AntContainer />` component in `App.razor`.
 
-  ```
+  ```xml
   <Router AppAssembly="@typeof(MainLayout).Assembly">
       <Found Context="routeData">
           <RouteView RouteData="routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -123,20 +152,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
   <Button Type="primary">Hello World!</Button>
   ```
 
-## ⌨️ Local Development
-
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 or later.
-- Install Node.js (only for building style files and interoperable TypeScript files)
-- Clone to local development
-
-  ```bash
-  $ git clone git@github.com:ant-design-blazor/ant-design-blazor.git
-  $ cd ant-design-blazor
-  $ npm install
-  $ npm start
-  ```
-
-- Visit https://localhost:5001 in your supported browser and check [local development documentation](https://github.com/ant-design-blazor/ant-design-blazor/wiki) for details.
+- Visit [https://localhost:5001](https://localhost:5001) in your supported browser and check [local development documentation](https://github.com/ant-design-blazor/ant-design-blazor/wiki) for details.
 
   > Visual Studio 2019 is recommended for development.
 
@@ -148,6 +164,19 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 ## 🗺 Roadmap
 
 Check out this [issue](https://github.com/ant-design-blazor/ant-design-blazor/issues/21) to learn about our development plans for 2020.
+
+## ⌨️ Development
+
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) release 3.1.5+
+- Install Node.js (This is needed for transpiling style sheets and interoperable TypeScript codes)
+- Clone the repository
+
+  ```bash
+  $ git clone git@github.com:ant-design-blazor/ant-design-blazor.git
+  $ cd ant-design-blazor
+  $ npm install
+  $ npm start
+  ```
 
 ## 🤝 Contributing
 
