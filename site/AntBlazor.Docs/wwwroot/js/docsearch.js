@@ -7,9 +7,9 @@ window.AntDesign.DocSearch = {
         const lang = locale === 'zh-CN' ? 'cn' : 'en';
         window.AntDesign.DocSearch.instance = docsearch({
             apiKey: '872d29d519c3c2bd32a37398b6a85e0f',
-            indexName: 'ant_design',
+            indexName: 'ant_design_blazor',
             appId: 'V29CUJY3QP',
-            inputSelector: 'span.algolia-autocomplete input',
+            inputSelector: '#search-box input',
             algoliaOptions: { facetFilters: [`tags:${lang}`] },
             transformData(hits) {
                 hits.forEach(hit => {
