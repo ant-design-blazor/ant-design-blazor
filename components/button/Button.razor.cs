@@ -19,7 +19,18 @@ namespace AntDesign
         public bool Search { get; set; } = false;
 
         [Parameter]
-        public bool Loading { get; set; } = false;
+        public bool Loading
+        {
+            get => _loading;
+            set
+            {
+                if (_loading != value)
+                {
+                    _loading = value;
+                    UpdateIconDisplay(_loading);
+                }
+            }
+        }
 
         [Parameter]
         public string Type { get; set; } = ButtonType.Default;
@@ -31,6 +42,7 @@ namespace AntDesign
         public string Shape { get; set; } = null;
 
         private string _formSize;
+
         [CascadingParameter(Name = "FormSize")]
         public string FormSize
         {
@@ -68,29 +80,23 @@ namespace AntDesign
 
         public IList<Icon> Icons { get; set; } = new List<Icon>();
 
-        //public AntNavLink Link { get; set; }
-
         protected string IconStyle { get; set; }
 
-        private readonly bool _isInDropdown = false;
+        private bool _loading = false;
 
         protected void SetClassMap()
         {
             string prefixName = "ant-btn";
-            Hashtable sizeMap = new Hashtable()
-            {
-                ["large"] = "lg",
-                ["small"] = "sm"
-            };
 
             ClassMapper.Clear()
                 .Add("ant-btn")
                 .If($"{prefixName}-{this.Type}", () => !string.IsNullOrEmpty(Type))
                 .If($"{prefixName}-dangerous", () => Danger)
                 .If($"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
-                .If($"{prefixName}-{sizeMap[this.Size]}", () => sizeMap.ContainsKey(Size))
+                .If($"{prefixName}-lg", () => Size == "large")
+                .If($"{prefixName}-sm", () => Size == "small")
                 .If($"{prefixName}-loading", () => Loading)
-                .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && this.ChildContent == null)
+                .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && !this.Search && this.ChildContent == null)
                 .If($"{prefixName}-background-ghost", () => Ghost)
                 .If($"{prefixName}-block", () => this.Block)
                 .If($"ant-input-search-button", () => this.Search)
@@ -100,29 +106,16 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            //if (Link != null && string.IsNullOrEmpty(this.Type))
-            //{
-            //    this.Type = ButtonType.Link;
-            //}      
             SetClassMap();
+            UpdateIconDisplay(_loading);
         }
 
-        protected override void OnParametersSet()
+        private void UpdateIconDisplay(bool loading)
         {
-            base.OnParametersSet();
-            SetClassMap();
-            UpdateIconDisplay(this.Loading);
-            if (Type == "link")
-            {
-            }
+            IconStyle = $"display:{(loading ? "none" : "inline-block")}";
         }
 
-        private void UpdateIconDisplay(bool vlaue)
-        {
-            IconStyle = $"display:{(vlaue ? "none" : "inline-block")}";
-        }
-
-        protected async Task HandleOnClick(MouseEventArgs args)
+        private async Task HandleOnClick(MouseEventArgs args)
         {
             if (OnClick.HasDelegate)
             {
