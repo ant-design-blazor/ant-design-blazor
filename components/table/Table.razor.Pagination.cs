@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
 
@@ -16,7 +14,15 @@ namespace AntDesign
         /// topLeft | topCenter | topRight |bottomLeft | bottomCenter | bottomRight
         /// </summary>
         [Parameter]
-        public string PaginationPosition { get; set; } = "bottomRight";
+        public string PaginationPosition
+        {
+            get => _paginationPosition;
+            set
+            {
+                _paginationPosition = value;
+                SetPaginationClass();
+            }
+        }
 
         [Parameter]
         public int Total { get; set; }
@@ -42,13 +48,18 @@ namespace AntDesign
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
-        private IEnumerable<TItem> ShowItems => Total > 0 ? DataSource : DataSource.Skip((PageIndex - 1) * PageSize).Take(PageSize);
+        private IEnumerable<TItem> ShowItems => Total > _total ? _dataSource : _dataSource.Skip((PageIndex - 1) * PageSize).Take(PageSize);
 
-        private int ActualTotal => Total > 0 ? Total : _total;
+        private int ActualTotal => Total > _total ? Total : _total;
 
         private int _total = 0;
+        private string _paginationPosition = "bottomRight";
+        private string _paginationClass;
 
-        private string PaginationClass => $"ant-table-pagination ant-table-pagination-{Regex.Replace(PaginationPosition, "bottom|top", "").ToLowerInvariant()}";
+        private void SetPaginationClass()
+        {
+            _paginationClass = $"ant-table-pagination ant-table-pagination-{Regex.Replace(_paginationPosition, "bottom|top", "").ToLowerInvariant()}";
+        }
 
         private void HandlePageIndexChange(PaginationEventArgs args)
         {
