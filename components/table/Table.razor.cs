@@ -17,8 +17,8 @@ namespace AntDesign
             get => _dataSource;
             set
             {
-                _total = value.Count();
-                _dataSource = value;
+                _total = value?.Count() ?? 0;
+                _dataSource = value ?? Enumerable.Empty<TItem>();
                 StateHasChanged();
             }
         }
@@ -35,16 +35,16 @@ namespace AntDesign
         [Parameter]
         public bool Loading { get; set; }
 
-        [Parameter] 
+        [Parameter]
         public OneOf<string, RenderFragment> Title { get; set; }
-        
-        [Parameter] 
+
+        [Parameter]
         public OneOf<string, RenderFragment> Footer { get; set; }
-        
-        [Parameter] 
+
+        [Parameter]
         public TableSize Size { get; set; }
 
-        [Parameter] 
+        [Parameter]
         public bool Bordered { get; set; } = false;
 
         [Parameter]
@@ -59,6 +59,7 @@ namespace AntDesign
         public ColumnContext ColumnContext { get; set; } = new ColumnContext();
 
         private IEnumerable<TItem> _dataSource;
+
         private ISelectionColumn _headerSelection;
 
         ISelectionColumn ITable.HeaderSelection
@@ -74,7 +75,7 @@ namespace AntDesign
                 var list = new List<TItem>();
                 foreach (var index in checkedIndex)
                 {
-                    list.Add(DataSource.ElementAt(index));
+                    list.Add(_dataSource.ElementAt(index));
                 }
 
                 SelectedRowsChanged.InvokeAsync(list);
@@ -106,6 +107,7 @@ namespace AntDesign
             base.OnInitialized();
 
             SetClass();
+            SetPaginationClass();
         }
 
         private void ChangeSelection(int[] indexes)
