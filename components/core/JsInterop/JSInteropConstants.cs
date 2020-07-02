@@ -13,6 +13,10 @@ namespace AntDesign
 
         public static string triggerEvent => $"{FUNC_PREFIX}triggerEvent";
 
+        public static string addFileClickEventListener => $"{FUNC_PREFIX}addFileClickEventListener";
+
+        public static string removeFileClickEventListener => $"{FUNC_PREFIX}removeFileClickEventListener";
+
         public static string clearFile => $"{FUNC_PREFIX}clearFile";
 
         public static string uploadFile => $"{FUNC_PREFIX}uploadFile";
