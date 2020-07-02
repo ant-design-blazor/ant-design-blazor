@@ -90,7 +90,7 @@ namespace AntDesign
                 .If($"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
                 .If($"{prefixName}-{sizeMap[this.Size]}", () => sizeMap.ContainsKey(Size))
                 .If($"{prefixName}-loading", () => Loading)
-                .If($"{prefixName}-icon-only", () => Icons.Count == 0 && !this.Search && !this._isInDropdown && this.ChildContent == null)
+                .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && this.ChildContent == null)
                 .If($"{prefixName}-background-ghost", () => Ghost)
                 .If($"{prefixName}-block", () => this.Block)
                 .If($"ant-input-search-button", () => this.Search)
@@ -103,7 +103,7 @@ namespace AntDesign
             //if (Link != null && string.IsNullOrEmpty(this.Type))
             //{
             //    this.Type = ButtonType.Link;
-            //}
+            //}      
             SetClassMap();
         }
 
