@@ -6,8 +6,8 @@
     <Spin Spinning="Loading">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
-            <Pagination Class="@PaginationClass"
-                        Total="Total"
+            <Pagination Class="@_paginationClass"
+                        Total="ActualTotal"
                         PageSize="PageSize"
                         Current="PageIndex"
                         OnPageIndexChange="HandlePageIndexChange"
@@ -66,8 +66,8 @@
         </CascadingValue>
         @if (!HidePagination && PaginationPosition.Contains("bottom"))
         {
-            <Pagination Class="@PaginationClass"
-                        Total="Total"
+            <Pagination Class="@_paginationClass"
+                        Total="ActualTotal"
                         PageSize="PageSize"
                         Current="PageIndex"
                         OnPageIndexChange="HandlePageIndexChange"
