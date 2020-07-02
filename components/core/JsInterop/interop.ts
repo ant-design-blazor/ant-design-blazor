@@ -31,6 +31,20 @@ export function getDomInfo(element) {
   return result;
 }
 
+export function addFileClickEventListener(btn) {
+  (btn as HTMLSpanElement).addEventListener("click", fileClickEvent);
+}
+
+export function removeFileClickEventListener(btn) {
+  (btn as HTMLSpanElement).removeEventListener("click", fileClickEvent);
+}
+
+export function fileClickEvent() {
+  var fileId = this.attributes["data-fileid"].nodeValue;
+  var element = document.getElementById(fileId);
+  (element as HTMLInputElement).click();
+}
+
 export function clearFile(element) {
   element.setAttribute("type", "input");
   element.value = '';
@@ -94,7 +108,7 @@ export function uploadFile(element, headers, fileId, url, name, instance, percen
 }
 
 export function triggerEvent(element, eventType, eventName) {
-  var dom = element;
+  var dom = element as HTMLInputElement;
   var evt = document.createEvent(eventType);
   evt.initEvent(eventName);
   return dom.dispatchEvent(evt);

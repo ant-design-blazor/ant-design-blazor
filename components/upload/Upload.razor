@@ -1,9 +1,11 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
+    
 
 <div class="ant-upload ant-upload-select ant-upload-select-text">
-    <span class="ant-upload" @onclick="UploadClick">
-        <input type="file" @ref="_file" @onchange="FileNameChanged" accept="@Accept" style="display:none;" />
+    <input type="file" @ref="_file" @onchange="FileNameChanged" accept="@Accept" style="display: none;" id="@_fileId" />
+    <span class="ant-upload" @ref="_btn" data-fileid="@_fileId">
+        
         @ChildContent
     </span>
 </div>

@@ -56,18 +56,31 @@ namespace AntDesign
 
         private ElementReference _file;
 
+        private ElementReference _btn;
+
+        private string _fileId = Guid.NewGuid().ToString();
+
         protected override Task OnInitializedAsync()
         {
+            
             _currentInstance = DotNetObjectReference.Create(this);
             _uploadInfo.FileList = FileList;
             FileList.InsertRange(0, DefaultFileList);
             return base.OnInitializedAsync();
         }
 
-        private async Task UploadClick()
+        protected override Task OnAfterRenderAsync(bool firstRender)
         {
-            if (!Disabled)
-                _ = await JSRuntime.InvokeAsync<bool>(JSInteropConstants.triggerEvent, _file, "MouseEvent", "click");
+            if(Disabled)
+            {
+                JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn);
+            }
+            else
+            {
+                JSRuntime.InvokeVoidAsync(JSInteropConstants.addFileClickEventListener, _btn);
+            }
+            
+            return base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task FileNameChanged(ChangeEventArgs e)
