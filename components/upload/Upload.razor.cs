@@ -60,7 +60,6 @@ namespace AntDesign
 
         protected override Task OnInitializedAsync()
         {
-            
             _currentInstance = DotNetObjectReference.Create(this);
             _uploadInfo.FileList = FileList;
             FileList.InsertRange(0, DefaultFileList);
