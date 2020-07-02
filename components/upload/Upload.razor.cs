@@ -56,6 +56,8 @@ namespace AntDesign
 
         private ElementReference _file;
 
+        private ElementReference _btn;
+
         private string _fileId = Guid.NewGuid().ToString();
 
         protected override Task OnInitializedAsync()

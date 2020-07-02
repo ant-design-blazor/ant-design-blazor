@@ -3,7 +3,7 @@
 
 <div class="ant-upload ant-upload-select ant-upload-select-text">
     <input type="file" @ref="_file" @onchange="FileNameChanged" accept="@Accept" style="display: none;" id="@_fileId" />
-    <span class="ant-upload" data-fileid="@_fileId">
+    <span class="ant-upload" @ref="_btn" data-fileid="@_fileId">
         @ChildContent
     </span>
 </div>
