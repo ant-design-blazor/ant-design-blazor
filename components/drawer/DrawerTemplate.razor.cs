@@ -25,7 +25,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            DrawerRef.OnOpen.Invoke();
+            DrawerRef.OnOpen?.Invoke();
         }
     }
 }
