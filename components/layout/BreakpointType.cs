@@ -1,8 +1,6 @@
-﻿using Ardalis.SmartEnum;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
-    public sealed class BreakpointType : SmartEnum<BreakpointType>
+    public sealed class BreakpointType : EnumValue<BreakpointType>
     {
         public static readonly BreakpointType Xs = new BreakpointType(nameof(Xs).ToLowerInvariant(), 1, 480);
         public static readonly BreakpointType Sm = new BreakpointType(nameof(Sm).ToLowerInvariant(), 2, 576);
