@@ -26,6 +26,7 @@ namespace AntDesign
         private string _rightHandleStyle = "left: 0%; right: auto; transform: translateX(-50%);";
         private string _trackStyle = "left: 0%; width: 0%; right: auto;";
         private bool _mouseDown;
+        private bool _mouseMove;
         private bool _right = true;
 
         private string RightHandleStyleFormat
@@ -349,16 +350,35 @@ namespace AntDesign
         {
             if (_mouseDown)
             {
+                _mouseMove = true;
                 await CalculateValueAsync(jsonElement.GetProperty(Vertical ? "clientY" : "clientX").GetDouble());
 
                 OnChange?.Invoke(RightValue);
             }
         }
 
-        private void OnMouseUp(JsonElement jsonElement)
+        private async void OnMouseUp(JsonElement jsonElement)
         {
+            _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _slider);
+            decimal clickX = (decimal)jsonElement.GetProperty("x").GetDouble();
+            decimal clickY = (decimal)jsonElement.GetProperty("y").GetDouble();
+
+            if (!_mouseMove) // click
+            {
+                if (_sliderDom.x <= clickX && clickX <= _sliderDom.x + _sliderDom.width
+                    && _sliderDom.y <= clickY && clickY <= _sliderDom.y + _sliderDom.height)
+                {
+                    // click inside the slider
+                    await CalculateValueAsync(jsonElement.GetProperty(Vertical ? "clientY" : "clientX").GetDouble());
+                    await OnAfterChange.InvokeAsync(Value);
+                }
+            }
+            else // mouse move ending
+            {
+                await OnAfterChange.InvokeAsync(Value);
+            }
             _mouseDown = false;
-            OnAfterChange.InvokeAsync(RightValue);
+            _mouseMove = false;
         }
 
         private async void OnClick(MouseEventArgs args)
