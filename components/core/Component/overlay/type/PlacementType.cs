@@ -1,8 +1,6 @@
-﻿using Ardalis.SmartEnum;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
-    public sealed class PlacementType : SmartEnum<PlacementType>
+    public sealed class PlacementType : EnumValue<PlacementType>
     {
         public static readonly PlacementType TopLeft = new PlacementType("topLeft", "up", "33% 100%", 0);
         public static readonly PlacementType TopCenter = new PlacementType("topCenter", "up", "50% 100%", 1);

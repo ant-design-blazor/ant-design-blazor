@@ -1,12 +1,9 @@
-﻿using System.Globalization;
-using Ardalis.SmartEnum;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
-    public sealed class AntMenuTheme : SmartEnum<AntMenuTheme>
+    public sealed class AntMenuTheme : EnumValue<AntMenuTheme>
     {
-        public static readonly AntMenuTheme Light = new AntMenuTheme(nameof(Light).ToLower(CultureInfo.CurrentCulture), 1);
-        public static readonly AntMenuTheme Dark = new AntMenuTheme(nameof(Dark).ToLower(CultureInfo.CurrentCulture), 2);
+        public static readonly AntMenuTheme Light = new AntMenuTheme(nameof(Light).ToLowerInvariant(), 1);
+        public static readonly AntMenuTheme Dark = new AntMenuTheme(nameof(Dark).ToLowerInvariant(), 2);
 
         private AntMenuTheme(string name, int value) : base(name, value)
         {

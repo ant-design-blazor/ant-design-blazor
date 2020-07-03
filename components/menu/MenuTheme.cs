@@ -1,8 +1,6 @@
-﻿using Ardalis.SmartEnum;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
-    public sealed class MenuTheme : SmartEnum<MenuTheme>
+    public sealed class MenuTheme : EnumValue<MenuTheme>
     {
         public static readonly MenuTheme Light = new MenuTheme(nameof(Light).ToLowerInvariant(), 1);
         public static readonly MenuTheme Dark = new MenuTheme(nameof(Dark).ToLowerInvariant(), 2);
