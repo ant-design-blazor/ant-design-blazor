@@ -1,8 +1,6 @@
-﻿using Ardalis.SmartEnum;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
-    public sealed class TriggerType : SmartEnum<TriggerType>
+    public sealed class TriggerType : EnumValue<TriggerType>
     {
         public static readonly TriggerType Click = new TriggerType(nameof(Click), 0);
         public static readonly TriggerType Hover = new TriggerType(nameof(Hover), 1);
