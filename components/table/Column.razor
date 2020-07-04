@@ -1,5 +1,6 @@
 @namespace AntDesign
 @inherits ColumnBase
+@using AntDesign.Helpers
 @typeparam TData
 
 @if (IsPlaceholder)
@@ -32,7 +33,14 @@ else
         }
         else
         {
-            @Field
+            if (!string.IsNullOrWhiteSpace(Format))
+            {
+                @(Formatter<TData>.Format(Field,Format))
+            }
+            else
+            {
+                @Field
+            }
         }
     </td>
 }
