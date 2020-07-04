@@ -1,5 +1,4 @@
 ﻿@namespace AntDesign
-@using System.Globalization
 @inherits StatisticComponentBase<DateTime>
 
 <div class="ant-statistic" style="@Style" @ref="Ref" id="@Id">
@@ -14,7 +13,7 @@
             </span>
         }
         <span class="ant-statistic-content-value">
-            @_countDown.ToString(_format, CultureInfo.InvariantCulture)
+            @(_countDown.ToString(_format))
         </span>
         @if (@Suffix.IsT0 && !string.IsNullOrEmpty(@Suffix.AsT0) || @Suffix.IsT1 && @Suffix.AsT1 != null)
         {
