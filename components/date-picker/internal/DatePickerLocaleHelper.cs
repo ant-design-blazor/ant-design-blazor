@@ -42,6 +42,7 @@ namespace AntDesign
         string[] ShortWeekDays { get; }
         string Year { get; }
         string Month { get; }
+        string Week => "Week";
         string Today { get; }
         bool MonthBeforeYear { get; }
         string YearFormat { get; }
@@ -62,6 +63,8 @@ namespace AntDesign
         string EndOfMonth { get; }
         string StartOfYear { get; }
         string EndOfYear { get; }
+        string StartOfQuarter { get; }
+        string EndOfQuarter { get; }
     }
 
     class EnUsDateLocale : IDateLocale
@@ -71,6 +74,7 @@ namespace AntDesign
         public string[] ShortWeekDays => new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
         public string Year => "Year";
         public string Month => "Month";
+        public string Week => "Week";
         public string Today => "Today";
         public bool MonthBeforeYear => true;
         public string YearFormat => "yyyy";
@@ -91,6 +95,8 @@ namespace AntDesign
         public string EndOfMonth => "End month";
         public string StartOfYear => "Start year";
         public string EndOfYear => "End year";
+        public string StartOfQuarter => "Start quarter";
+        public string EndOfQuarter => "End quarter";
 
     }
 
@@ -101,6 +107,7 @@ namespace AntDesign
         public string[] ShortWeekDays => new string[] { "一", "二", "三", "四", "五", "六", "日" };
         public string Year => "年";
         public string Month => "月";
+        public string Week => "周";
         public string Today => "今天";
         public bool MonthBeforeYear => false;
         public string YearFormat => "yyyy年";
@@ -121,6 +128,8 @@ namespace AntDesign
         public string EndOfMonth => "结束月份";
         public string StartOfYear => "开始年份";
         public string EndOfYear => "结束年份";
+        public string StartOfQuarter => "开始季度";
+        public string EndOfQuarter => "结束季度";
     }
 }
 

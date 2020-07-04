@@ -14,23 +14,9 @@
                     Trigger="new TriggerType[] { TriggerType.Click }">
         <Overlay>
             <div class="@(PrefixCls)-panel-container">
-                @if (IsRange)
-                {
-                    <div class="@(PrefixCls)-panels">
-                        <div class="@(PrefixCls)-panel">
-                            <DatePickerPanelChooser TValue="DateTime" DatePicker="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelect(date)" />
-                        </div>
-                        <div class="@(PrefixCls)-panel">
-                            <DatePickerPanelChooser TValue="DateTime" DatePicker="@this" PickerIndex="1" OnSelect="async (date, index) => await OnSelect(date)" />
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="@(PrefixCls)-panel">
-                        <DatePickerPanelChooser TValue="DateTime" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)" />
-                    </div>
-                }
+                <div class="@(PrefixCls)-panel">
+                    <DatePickerPanelChooser TValue="DateTime" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)" />
+                </div>
             </div>
         </Overlay>
         <ChildContent>
@@ -49,25 +35,6 @@
                                  OnClick="async e => { await _dropDown.Show(); ChangeFocusTarget(true, false); }"
                                  OnInput="e => OnInput(e, 0)"
                                  ShowTime="@(Picker == DatePickerType.Time)" />
-
-                @if (IsRange)
-                {
-                    <div class="@(PrefixCls)-range-separator"><span aria-label="to" class="@(PrefixCls)-separator"><span role="img" aria-label="swap-right" class="anticon anticon-swap-right"><svg viewBox="0 0 1024 1024" focusable="false" class="" data-icon="swap-right" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M873.1 596.2l-164-208A32 32 0 00684 376h-64.8c-6.7 0-10.4 7.7-6.3 13l144.3 183H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h695.9c26.8 0 41.7-30.8 25.2-51.8z"></path></svg></span></span></div>
-
-                    <DatePickerInput @ref="_inputEnd"
-                                     PrefixCls="@PrefixCls"
-                                     Size="@Size"
-                                     Disabled="@Disabled"
-                                     Value="@GetInputValue(1)"
-                                     Placeholder="@_placeholders[1]"
-                                     ReadOnly="@InputReadOnly"
-                                     AutoFocus="@AutoFocus"
-                                     OnClick="async e => { await _dropDown.Show(); ChangeFocusTarget(false, true); }"
-                                     OnInput="e => OnInput(e, 0)"
-                                     ShowTime="@(Picker == DatePickerType.Time)" />
-
-                    <div class="@(PrefixCls)-active-bar" style="@_activeBarStyle"></div>
-                }
             </div>
         </ChildContent>
     </OverlayTrigger>

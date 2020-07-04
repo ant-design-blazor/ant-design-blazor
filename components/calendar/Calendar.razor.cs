@@ -10,6 +10,7 @@ namespace AntDesign
     public partial class Calendar : AntDomComponentBase, IDatePicker
     {
         DateTime IDatePicker.CurrentDate { get; set; } = DateTime.Now;
+        DateTime? IDatePicker.HoverDateTime { get; set; }
 
         [Parameter]
         public DateTime Value { get; set; } = DateTime.Now;
@@ -151,6 +152,16 @@ namespace AntDesign
 
         public void Close()
         {
+        }
+
+        public int GetOnFocusPickerIndex()
+        {
+            return 0;
+        }
+
+        void IDatePicker.InvokeStateHasChanged()
+        {
+            StateHasChanged();
         }
 
         public string Picker { get { return _picker; } }
