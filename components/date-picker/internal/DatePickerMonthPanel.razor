@@ -23,7 +23,7 @@
                         IsInView="date => true"
                         IsToday="date => DateHelper.IsSameMonth(date, DatePicker.CurrentDate)"
                         IsSelected="date => DateHelper.IsSameMonth(date, Value)"
-                        GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo)'
+                        GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().MonthFormat, this.DatePicker.CultureInfo)'
                         OnValueSelect="date => OnSelectMonth(date)"
                         GetNextColValue="date => date.AddMonths(1)">
         <RenderPickerHeader>

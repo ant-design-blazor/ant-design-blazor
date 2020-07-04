@@ -10,10 +10,6 @@
     DateTime startDate = new DateTime(startYear, 1, 1);
 
     int yearIndex = 0;
-    const int MAX_ROW = 4;
-    const int MAX_COL = 3;
-    const int FIRST_YEAR_INDEX = 0;
-    const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL;
 }
 <div class='@($"{PrefixCls}-panel")'>
     <DatePickerTemplate @attributes="GetAttritubes()"
@@ -21,7 +17,7 @@
                         MaxRow="MAX_ROW"
                         MaxCol="MAX_COL"
                         ViewStartDate="startDate"
-                        IsInView="date => yearIndex != FIRST_YEAR_INDEX && yearIndex != LAST_YEAR_INDEX"
+                        IsInView="date => IsInView(date, startDate)"
                         IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
                         IsSelected="date => DateHelper.IsSameYear(date, Value)"
                         GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo)'
@@ -42,3 +38,16 @@
         </RenderColValue>
     </DatePickerTemplate>
 </div>
+
+@code {
+    private const int MAX_ROW = 4;
+    private const int MAX_COL = 3;
+    private const int FIRST_YEAR_INDEX = 0;
+    private const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL - 1;
+
+    private bool IsInView(DateTime date, DateTime startDate)
+    {
+        return date.Year != startDate.AddYears(FIRST_YEAR_INDEX).Year
+        && date.Year != startDate.AddYears(LAST_YEAR_INDEX).Year;
+    }
+}
