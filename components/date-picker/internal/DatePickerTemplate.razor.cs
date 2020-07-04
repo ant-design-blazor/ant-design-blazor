@@ -127,7 +127,9 @@ namespace AntDesign.Internal
             string rangeHoverCls = GetRangeHoverCls(currentColDate);
             string rangeEdgeCls = GetRangeEdgeCls(currentColDate);
 
-            return $"{PrefixCls}-cell {inViewCls} {todayCls} {selectedCls} {disabledCls} {inRangeCls} {rangeStartCls} {rangeEndCls} {rangeHoverCls} {rangeEdgeCls}";
+            string rangeCls = $"{rangeStartCls} {rangeEndCls} {rangeHoverCls} {rangeEdgeCls}";
+
+            return $"{PrefixCls}-cell {inViewCls} {todayCls} {selectedCls} {disabledCls} {inRangeCls} {rangeCls}";
         }
 
         private string GetInnerCellCls(DateTime currentColDate)
@@ -167,6 +169,8 @@ namespace AntDesign.Internal
             }
 
             DateTime currentDate = FormatDateByPicker(currentColDate);
+            DateTime preDate = GetPreDate(currentDate);
+            DateTime nextDate = GetNextDate(currentDate);
 
             int onfocusPickerIndex = DatePicker.GetOnFocusPickerIndex();
 
@@ -174,52 +178,52 @@ namespace AntDesign.Internal
 
             if (onfocusPickerIndex == 1 && startValue != null)
             {
-                if (currentDate.Date == ((DateTime)startValue).Date)
+                if (startValue != endValue && currentDate == startValue)
                 {
                     cls.Append($" {PrefixCls}-cell-range-hover-start");
                 }
-                else if (currentDate.Date < hoverDateTime.Date)
+                else if (currentDate < hoverDateTime)
                 {
                     cls.Append($"{PrefixCls}-cell-range-hover");
 
                     // when pre day is not inview, then current day is the start.
-                    if (IsInView(currentDate.AddDays(-1)) == false)
+                    if (IsInView(preDate) == false)
                     {
                         cls.Append($" {PrefixCls}-cell-range-hover-start");
                     }
                     // when next day is not inview, then current day is the end.
-                    else if (IsInView(currentDate.AddDays(1)) == false)
+                    else if (IsInView(nextDate) == false)
                     {
                         cls.Append($" {PrefixCls}-cell-range-hover-end");
                     }
                 }
-                else if (currentDate.Date == hoverDateTime.Date)
+                else if (currentDate == hoverDateTime)
                 {
                     cls.Append($" {PrefixCls}-cell-range-hover-end");
                 }
             }
             else if (onfocusPickerIndex == 0 && endValue != null)
             {
-                if (currentDate.Date == ((DateTime)endValue).Date)
+                if (startValue != endValue && currentDate == endValue)
                 {
                     cls.Append($" {PrefixCls}-cell-range-hover-end");
                 }
-                else if (currentDate.Date > hoverDateTime.Date)
+                else if (currentDate > hoverDateTime)
                 {
                     cls.Append($"{PrefixCls}-cell-range-hover");
 
                     // when pre day is not inview, then current day is the start.
-                    if (IsInView(currentDate.AddDays(-1)) == false)
+                    if (IsInView(preDate) == false)
                     {
                         cls.Append($" {PrefixCls}-cell-range-hover-start");
                     }
                     // when next day is not inview, then current day is the end.
-                    else if (IsInView(currentDate.AddDays(1)) == false)
+                    else if (IsInView(nextDate) == false)
                     {
                         cls.Append($" {PrefixCls}-cell-range-hover-end");
                     }
                 }
-                else if (currentDate.Date == hoverDateTime.Date)
+                else if (currentDate == hoverDateTime)
                 {
                     cls.Append($" {PrefixCls}-cell-range-hover-start");
                 }
@@ -235,35 +239,38 @@ namespace AntDesign.Internal
                 return "";
             }
 
-            string cls = "";
-
             DateTime? startDate = FormatDateByPicker(GetIndexValue(0));
 
             if (startDate == null)
             {
-                return cls;
+                return "";
             }
+
+            StringBuilder cls = new StringBuilder();
 
             DateTime? endDate = FormatDateByPicker(GetIndexValue(1));
             DateTime currentDate = FormatDateByPicker(currentColDate);
             DateTime? hoverDateTime = FormatDateByPicker(DatePicker.HoverDateTime);
 
-            if (currentDate.Date == ((DateTime)startDate).Date)
+            if (currentDate == startDate)
             {
                 if (endDate == null)
                 {
-                    cls += $"{PrefixCls}-cell-range-start-single";
+                    cls.Append($"{PrefixCls}-cell-range-start-single");
                 }
 
-                cls += $"{PrefixCls}-cell-range-start";
-
-                if (hoverDateTime != null && currentDate.Date > ((DateTime)hoverDateTime).Date)
+                if (startDate != endDate || currentDate > hoverDateTime)
                 {
-                    cls += $" {PrefixCls}-cell-range-start-near-hover";
+                    cls.Append($"{PrefixCls}-cell-range-start");
+                }
+
+                if (currentDate > hoverDateTime)
+                {
+                    cls.Append($" {PrefixCls}-cell-range-start-near-hover");
                 }
             }
 
-            return cls;
+            return cls.ToString();
         }
 
         private string GetRangeEndCls(DateTime currentColDate)
@@ -273,35 +280,39 @@ namespace AntDesign.Internal
                 return "";
             }
 
-            string cls = "";
-
             DateTime? endDate = FormatDateByPicker(GetIndexValue(1));
 
             if (endDate == null)
             {
-                return cls;
+                return "";
             }
+
+            StringBuilder cls = new StringBuilder();
 
             DateTime? startDate = FormatDateByPicker(GetIndexValue(0));
             DateTime currentDate = FormatDateByPicker(currentColDate);
             DateTime? hoverDateTime = FormatDateByPicker(DatePicker.HoverDateTime);
 
-            if (currentDate.Date == ((DateTime)endDate).Date)
+            if (currentDate == endDate)
             {
                 if (startDate == null)
                 {
-                    cls += $"{PrefixCls}-cell-range-end-single";
+                    cls.Append($" {PrefixCls}-cell-range-end-single");
                 }
 
-                cls += $"{PrefixCls}-cell-range-end";
-
-                if (hoverDateTime != null && currentDate.Date < ((DateTime)hoverDateTime).Date)
+                if (startDate != endDate || currentDate < hoverDateTime)
                 {
-                    cls += $" {PrefixCls}-cell-range-end-near-hover";
+                    cls.Append($" {PrefixCls}-cell-range-end");
+                }
+
+                if (currentDate < hoverDateTime)
+                {
+                    cls.Append($" {PrefixCls}-cell-range-end");
+                    cls.Append($" {PrefixCls}-cell-range-end-near-hover");
                 }
             }
 
-            return cls;
+            return cls.ToString();
         }
 
         private string GetRangeEdgeCls(DateTime currentColDate)
@@ -311,36 +322,23 @@ namespace AntDesign.Internal
                 return "";
             }
 
-            string cls = "";
+            StringBuilder cls = new StringBuilder();
 
             DateTime currentDate = FormatDateByPicker(currentColDate);
             DateTime? hoverDateTime = FormatDateByPicker(DatePicker.HoverDateTime);
 
-            DateTime preDate = Picker switch
-            {
-                DatePickerType.Date => currentDate.AddDays(-1),
-                DatePickerType.Year => currentDate.AddYears(-1),
-                DatePickerType.Month => currentDate.AddMonths(-1),
-                _ => currentDate,
-            };
-
-            DateTime nextDate = Picker switch
-            {
-                DatePickerType.Date => currentDate.AddDays(1),
-                DatePickerType.Year => currentDate.AddYears(1),
-                DatePickerType.Month => currentDate.AddMonths(1),
-                _ => currentDate,
-            };
+            DateTime preDate = GetPreDate(currentDate);
+            DateTime nextDate = GetNextDate(currentDate);
 
             bool isCurrentDateInView = IsInView(currentColDate);
 
             if (isCurrentDateInView && !IsInView(preDate))
             {
-                cls += $"{PrefixCls}-cell-range-hover-edge-start";
+                cls.Append($" {PrefixCls}-cell-range-hover-edge-start");
             }
             else if (isCurrentDateInView && !IsInView(nextDate))
             {
-                cls += $"{PrefixCls}-cell-range-hover-edge-end";
+                cls.Append($" {PrefixCls}-cell-range-hover-edge-end");
             }
 
             DateTime? startDate = FormatDateByPicker(GetIndexValue(0));
@@ -349,17 +347,17 @@ namespace AntDesign.Internal
             {
                 if (preDate == endDate)
                 {
-                    cls += $" {PrefixCls}-cell-range-hover-edge-start";
-                    cls += $" {PrefixCls}-cell-range-hover-edge-start-near-range";
+                    cls.Append($" {PrefixCls}-cell-range-hover-edge-start");
+                    cls.Append($" {PrefixCls}-cell-range-hover-edge-start-near-range");
                 }
                 else if (nextDate == startDate)
                 {
-                    cls += $" {PrefixCls}-cell-range-hover-edge-end";
-                    cls += $" {PrefixCls}-cell-range-hover-edge-end-near-range";
+                    cls.Append($" {PrefixCls}-cell-range-hover-edge-end");
+                    cls.Append($" {PrefixCls}-cell-range-hover-edge-end-near-range");
                 }
             }
 
-            return cls;
+            return cls.ToString();
         }
 
         private DateTime? FormatDateByPicker(DateTime? dateTime)
@@ -370,6 +368,30 @@ namespace AntDesign.Internal
         private DateTime FormatDateByPicker(DateTime value)
         {
             return DateHelper.FormatDateByPicker(value, Picker);
+        }
+
+        private DateTime GetPreDate(DateTime dateTime)
+        {
+            return Picker switch
+            {
+                DatePickerType.Date => dateTime.AddDays(-1),
+                DatePickerType.Year => dateTime.AddYears(-1),
+                DatePickerType.Month => dateTime.AddMonths(-1),
+                DatePickerType.Quarter => dateTime.AddMonths(-3),
+                _ => dateTime,
+            };
+        }
+
+        private DateTime GetNextDate(DateTime dateTime)
+        {
+            return Picker switch
+            {
+                DatePickerType.Date => dateTime.AddDays(1),
+                DatePickerType.Year => dateTime.AddYears(1),
+                DatePickerType.Month => dateTime.AddMonths(1),
+                DatePickerType.Quarter => dateTime.AddMonths(3),
+                _ => dateTime,
+            };
         }
     }
 }
