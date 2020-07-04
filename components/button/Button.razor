@@ -2,7 +2,10 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this">
-    <button class="@ClassMapper.Class" style="@Style" id="@Id" type="@HtmlType" @onclick="HandleOnClick" disabled="@Disabled">
+    <button class="@ClassMapper.Class" style="@Style" id="@Id" type="@HtmlType"
+            @onclick="HandleOnClick" disabled="@Disabled"
+            @onmouseup="OnMouseUp"
+            ant-click-animating-without-extra-node="@_animating.ToString().ToLower()">
         @if (Loading)
         {
             <Icon Type="loading"></Icon>
