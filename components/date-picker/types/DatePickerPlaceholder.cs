@@ -31,6 +31,7 @@ namespace AntDesign
                 DatePickerType.Month => (info.GetDateLocale().StartOfMonth, info.GetDateLocale().EndOfMonth),
                 DatePickerType.Year => (info.GetDateLocale().StartOfYear, info.GetDateLocale().EndOfYear),
                 DatePickerType.Time => (info.GetDateLocale().StartOfDate, info.GetDateLocale().EndOfDate),
+                DatePickerType.Quarter => (info.GetDateLocale().StartOfQuarter, info.GetDateLocale().EndOfQuarter),
                 _ => (info.GetDateLocale().StartOfDate, info.GetDateLocale().EndOfDate),
             };
             return placeholder;

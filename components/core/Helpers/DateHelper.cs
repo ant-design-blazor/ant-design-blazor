@@ -70,15 +70,29 @@ namespace AntDesign
                 .AddHours(hour != null ? (int)hour - date.Hour : 0)
                 .AddMinutes(minute != null ? (int)minute - date.Minute : 0)
                 .AddSeconds(second != null ? (int)second - date.Second : 0);
-            //return new DateTime(
-            //    year ?? date.Year,
-            //    month ?? date.Month,
-            //    day ?? date.Day,
-            //    hour ?? date.Hour,
-            //    minute ?? date.Minute,
-            //    second ?? date.Second
-            //);
         }
 
+        public static DateTime? FormatDateByPicker(DateTime? dateTime, string picker)
+        {
+            if (dateTime == null)
+            {
+                return null;
+            }
+
+            return FormatDateByPicker((DateTime)dateTime, picker);
+        }
+
+        public static DateTime FormatDateByPicker(DateTime dateTime, string picker)
+        {
+            switch (picker)
+            {
+                case DatePickerType.Date: return dateTime.Date;
+                case DatePickerType.Year: return new DateTime(dateTime.Year, 1, 1);
+                case DatePickerType.Month: return new DateTime(dateTime.Year, dateTime.Month, 1);
+                case DatePickerType.Quarter: return new DateTime(dateTime.Year, dateTime.Month, 1);
+            }
+
+            return dateTime;
+        }
     }
 }

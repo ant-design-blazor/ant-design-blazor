@@ -1,11 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    [EventHandler("onmouseleave", typeof(MouseEventArgs))]
-    [EventHandler("onmouseenter", typeof(MouseEventArgs))]
+    [EventHandler("onmouseleave", typeof(EventArgs))]
+    [EventHandler("onmouseenter", typeof(EventArgs))]
 
     public static class EventHandlers
     {
