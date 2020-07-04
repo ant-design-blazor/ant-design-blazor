@@ -23,6 +23,9 @@ namespace AntDesign
         [Parameter]
         public TData Field { get; set; }
 
+        [Parameter]
+        public string Format { get; set; }
+
         private FieldIdentifier? _fieldIdentifier;
 
         public string DisplayName => _fieldIdentifier?.GetDisplayName();
