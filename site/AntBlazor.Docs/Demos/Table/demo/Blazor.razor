@@ -9,9 +9,7 @@
        @bind-SelectedRows="selectedRows">
     <Selection Key="@(context.Id.ToString())" />
     <Column @bind-Field="@context.Id"/>
-    <Column @bind-Field="@context.Date">
-        @context.Date.ToShortDateString()
-    </Column>
+    <Column @bind-Field="@context.Date" Format="yyyy-MM-dd"/>
     <Column @bind-Field="@context.TemperatureC" />
     <Column Title="Temp. (F)" Field="@context.TemperatureF" />
     <Column @bind-Field="@context.Summary" />
