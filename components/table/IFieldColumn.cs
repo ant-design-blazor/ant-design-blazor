@@ -7,5 +7,7 @@ namespace AntDesign
         public string DisplayName { get; }
 
         public string FieldName { get; }
+
+        public string Format { get; set; }
     }
 }
