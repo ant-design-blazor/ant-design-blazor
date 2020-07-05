@@ -41,7 +41,10 @@ namespace AntDesign
 
         [Parameter]
         public string Shape { get; set; } = null;
+
         private bool _animating = false;
+
+        private string _btnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
 
         private string _formSize;
 
@@ -127,12 +130,13 @@ namespace AntDesign
 
         private async Task OnMouseUp(MouseEventArgs args)
         {
-            if (args.Button != 0 || this.Type == ButtonType.Link) return; //remove animating from Link Button
-            _animating = true;
+            if (args.Button != 0 || this.Type == ButtonType.Link) return; //remove animating from Link Button        
+
+            this._animating = true;
             await Task.Run(() =>
             {
                 Thread.Sleep(500);
-                _animating = false;
+                this._animating = false;
             });
 
             StateHasChanged();
