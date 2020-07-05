@@ -9,26 +9,27 @@
                     Disabled="Disabled"
                     PopupContainerSelector="@PopupContainerSelector"
                     OnVisibleChange="visible => AutoFocus = visible"
-                    OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
-                    OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up"
+                    OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up ant-picker-dropdown-range"
+                    OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up up ant-picker-dropdown-range"
                     Trigger="new TriggerType[] { TriggerType.Click }">
         <Overlay>
+            <div class="@(PrefixCls)-range-arrow" style="@(_inputStart.IsOnFocused ? "left: 0px;" : "left: 145px;")"/>
             <div class="@(PrefixCls)-panel-container">
                 @if (IsRange)
                 {
                     <div class="@(PrefixCls)-panels">
                         <div class="@(PrefixCls)-panel">
-                            <DatePickerPanelChooser TValue="DateTime[]" DatePicker="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelect(date)" />
+                            <DatePickerPanelChooser TValue="DateTime[]" DatePicker="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelect(date)"/>
                         </div>
                         <div class="@(PrefixCls)-panel">
-                            <DatePickerPanelChooser TValue="DateTime[]" DatePicker="@this" PickerIndex="1" OnSelect="async (date, index) => await OnSelect(date)" />
+                            <DatePickerPanelChooser TValue="DateTime[]" DatePicker="@this" PickerIndex="1" OnSelect="async (date, index) => await OnSelect(date)"/>
                         </div>
                     </div>
                 }
                 else
                 {
                     <div class="@(PrefixCls)-panel">
-                        <DatePickerPanelChooser TValue="DateTime[]" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)" />
+                        <DatePickerPanelChooser TValue="DateTime[]" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)"/>
                     </div>
                 }
             </div>
@@ -48,7 +49,12 @@
                                  AutoFocus="@AutoFocus"
                                  OnClick="async e => { await OnInputClick(0); }"
                                  OnInput="e => OnInput(e, 0)"
-                                 ShowTime="@(Picker == DatePickerType.Time)" />
+                                 ShowTime="@(Picker == DatePickerType.Time)" 
+                                 ShowSuffixIcon="false"
+                                 IsRange="@IsRange"
+                                 AllowClear="@AllowClear"
+                                 OnClickClear="e => ClearValue(0)"
+                />
 
                 @if (IsRange)
                 {
@@ -64,8 +70,11 @@
                                      AutoFocus="@AutoFocus"
                                      OnClick="async e => { await OnInputClick(1); }"
                                      OnInput="e => OnInput(e, 0)"
-                                     ShowTime="@(Picker == DatePickerType.Time)" />
-
+                                     ShowTime="@(Picker == DatePickerType.Time)"
+                                     IsRange="@IsRange"
+                                     AllowClear="@AllowClear"
+                                     OnClickClear="e => ClearValue(0)"
+                    />
                     <div class="@(PrefixCls)-active-bar" style="@_activeBarStyle"></div>
                 }
             </div>
