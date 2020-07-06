@@ -95,7 +95,7 @@ namespace AntDesign
         }
 
         [Parameter]
-        public bool AllowClear { get; set; } = true; // TODO
+        public bool AllowClear { get; set; } = true;
 
         protected string[] _placeholders = new string[] { "", "" };
         protected OneOf<string, string[]> _placeholder;
@@ -563,6 +563,10 @@ namespace AntDesign
         {
         }
 
+        public virtual void ClearValue(int index = 0)
+        {
+        }
+        
         public virtual DateTime? GetIndexValue(int index)
         {
             return null;
