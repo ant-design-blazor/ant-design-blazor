@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AntDesign.TableModels;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -8,6 +9,10 @@ namespace AntDesign
 
         public string FieldName { get; }
 
-        public string Format { get; set; }
+        public string Format { get; }
+
+        public bool Sortable { get; }
+
+        public ITableSortModel SortModel { get; }
     }
 }

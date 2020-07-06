@@ -1,6 +1,7 @@
 @namespace AntDesign
 @inherits ColumnBase
 @using AntDesign.Helpers
+@using AntDesign.TableModels
 @typeparam TData
 
 @if (IsPlaceholder)
@@ -16,8 +17,23 @@ else if (IsColGroup)
 }
 else if (IsHeader)
 {
-    <th class="@ClassMapper.Class" style="@FixedStyle @Style">
-        @(Title ?? DisplayName ?? FieldName)
+    <th class="@ClassMapper.Class" style="@FixedStyle @Style" @onclick="HandelHeaderClick">
+        @if (Sortable)
+        {
+            <div class="ant-table-column-sorters">
+                <span>@(Title ?? DisplayName ?? FieldName)</span>
+                <span class="ant-table-column-sorter ant-table-column-sorter-full">
+                    <span class="ant-table-column-sorter-inner">
+                        <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up {(SortModel.SortType==SortType.Ascending? "active":"")}") />
+                        <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down {(SortModel.SortType==SortType.Descending? "active":"")}") />
+                    </span>
+                </span>
+            </div>
+        }
+        else
+        {
+            @(Title ?? DisplayName ?? FieldName)
+        }
     </th>
 }
 else

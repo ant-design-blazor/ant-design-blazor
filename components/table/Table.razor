@@ -125,12 +125,12 @@ RenderFragment<Table<TItem>> body = table =>
             </td>
         </tr>
     }
-    else if (table.ShowItems != null && table.ColumnContext.Columns.Count > 0)
+    else if (table._showItems != null && table.ColumnContext.Columns.Count > 0)
     {
-        for (int i = 0; i < table.ShowItems.Count(); i++)
+        for (int i = 0; i < table._showItems.Count(); i++)
         {
             var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
-            var data = table.ShowItems.ElementAt(i);
+            var data = table._showItems.ElementAt(i);
             var @checked = table._headerSelection?.RowSelections.ElementAtOrDefault(i)?.Checked ?? false;
             <CascadingValue Value="@rowIndex" Name="RowIndex">
                 <CascadingValue Value="table.ColumnContext">

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -58,33 +60,48 @@ namespace AntDesign
 
         public ColumnContext ColumnContext { get; set; } = new ColumnContext();
 
+        private IEnumerable<TItem> _showItems;
+
         private IEnumerable<TItem> _dataSource;
 
-        private ISelectionColumn _headerSelection;
-
-        ISelectionColumn ITable.HeaderSelection
+        public void ReloadData()
         {
-            get => _headerSelection;
-            set => _headerSelection = value;
-        }
-
-        void ITable.SelectionChanged(int[] checkedIndex)
-        {
-            if (SelectedRowsChanged.HasDelegate)
+            if (Total > _total)
             {
-                var list = new List<TItem>();
-                foreach (var index in checkedIndex)
+                _showItems = _dataSource;
+            }
+            else
+            {
+                var query = _dataSource.AsQueryable();
+
+                foreach (var col in ColumnContext.Columns)
                 {
-                    list.Add(_dataSource.ElementAt(index));
+                    if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
+                    {
+                        query = fieldColumn.SortModel.Sort(query);
+                    }
                 }
 
-                SelectedRowsChanged.InvokeAsync(list);
+                _showItems = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
             }
+
+            StateHasChanged();
         }
 
         void ITable.Refresh()
         {
             StateHasChanged();
+        }
+
+        private QueryModel _queryModel;
+
+        public QueryModel QueryModel
+        {
+            get => _queryModel;
+            set
+            {
+                _queryModel = value;
+            }
         }
 
         private void SetClass()
@@ -108,40 +125,8 @@ namespace AntDesign
 
             SetClass();
             SetPaginationClass();
-        }
 
-        private void ChangeSelection(int[] indexes)
-        {
-            if(this._headerSelection == null)
-            {
-                return;
-            }
-            if (indexes == null || !indexes.Any())
-            {
-                this._headerSelection.RowSelections.ForEach(x => x.Check(false));
-                this._headerSelection.Check(false);
-            }
-            else
-            {
-                this._headerSelection.RowSelections.Where(x => !x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(false));
-                this._headerSelection.RowSelections.Where(x => x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(true));
-                this._headerSelection.Check(true);
-            }
-        }
-
-        public void SetSelection(string[] keys)
-        {
-            if (keys == null || !keys.Any())
-            {
-                this._headerSelection.RowSelections.ForEach(x => x.Check(false));
-                this._headerSelection.Check(false);
-            }
-            else
-            {
-                this._headerSelection.RowSelections.Where(x => !x.Key.IsIn(keys)).ForEach(x => x.Check(false));
-                this._headerSelection.RowSelections.Where(x => x.Key.IsIn(keys)).ForEach(x => x.Check(true));
-                this._headerSelection.Check(keys.Any());
-            }
+            ReloadData();
         }
     }
 }

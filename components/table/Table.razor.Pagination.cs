@@ -48,8 +48,6 @@ namespace AntDesign
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
-        private IEnumerable<TItem> ShowItems => Total > _total ? _dataSource : _dataSource.Skip((PageIndex - 1) * PageSize).Take(PageSize);
-
         private int ActualTotal => Total > _total ? Total : _total;
 
         private int _total = 0;
@@ -63,6 +61,10 @@ namespace AntDesign
 
         private void HandlePageIndexChange(PaginationEventArgs args)
         {
+            PageIndex = args.PageIndex;
+
+            ReloadData();
+
             PageIndexChanged.InvokeAsync(args.PageIndex);
             OnPageIndexChange.InvokeAsync(args);
 
@@ -71,6 +73,10 @@ namespace AntDesign
 
         private void HandlePageSizeChange(PaginationEventArgs args)
         {
+            PageSize = args.PageSize;
+
+            ReloadData();
+
             PageSizeChanged.InvokeAsync(args.PageSize);
             OnPageSizeChange.InvokeAsync(args);
         }
