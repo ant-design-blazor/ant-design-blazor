@@ -64,5 +64,13 @@ namespace AntDesign
                 Close();
             }
         }
+        
+        public override void ClearValue(int index = 0)
+        {
+            _isSetPicker = false;
+            _pickerStatus[index]._hadSelectValue = false;
+            UpdateCurrentValueAsString();
+            Close();
+        }
     }
 }
