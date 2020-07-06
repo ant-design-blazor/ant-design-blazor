@@ -65,8 +65,9 @@ namespace AntDesign
         {
             if (string.IsNullOrEmpty(Children))
             {
+                await Task.Delay(1);
                 Children = await JsInvokeAsync<string>(JSInteropConstants.getInnerText, _contentRef);
-                await InvokeAsync(StateHasChanged);
+                //await InvokeAsync(StateHasChanged);
             }
         }
 
@@ -74,8 +75,9 @@ namespace AntDesign
         {
             if (!Disabled)
             {
+                await Task.Delay(1);
                 await SelectParent.ToggleOrSetValue(Value);
-                await InvokeAsync(StateHasChanged);
+                //await InvokeAsync(StateHasChanged);
             }
         }
 
@@ -83,14 +85,14 @@ namespace AntDesign
         {
             _isActive = true;
             SetClassMap();
-            await InvokeAsync(StateHasChanged);
+            //await InvokeAsync(StateHasChanged);
         }
 
         protected virtual async Task OnSelectOptionMouseLeave()
         {
             _isActive = false;
             SetClassMap();
-            await InvokeAsync(StateHasChanged);
+            //await InvokeAsync(StateHasChanged);
         }
         #endregion Events
 

@@ -2,16 +2,19 @@
         Style="width: 100%"
         Placeholder="Please select"
         DefaultValue="@_defaultValues"
+        @bind-Value="@_value"
         OnChange="OnChange">
     @foreach (var item in _items)
     {
         <SelectOption Value="@item">@item</SelectOption>
     }
 </Select>
+<label>Selected Values: @_value</label>
 
 @using OneOf;
 @code
 {
+    private string _value;
     private string[] _items;
     private string[] _defaultValues;
 

@@ -6,15 +6,18 @@
         OnFocus="OnFocus"
         OnChange="OnChange"
         OnSearch="OnSearch"
+        @bind-Value="@_value"
         FilterOption="FilterOptionValue">
     <SelectOption Value="jack">Jack</SelectOption>
     <SelectOption Value="lucy">Lucy</SelectOption>
     <SelectOption Value="tom">Tom</SelectOption>
 </Select>
+<label>Selected Values: @_value</label>
 
 @using OneOf;
 @code
 {
+    private string _value;
     private readonly Func<string, SelectOption, bool> FilterOptionValue = FilterOption;
 
     private void OnBlur()
