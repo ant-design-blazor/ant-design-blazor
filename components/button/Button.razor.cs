@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+
 
 namespace AntDesign
 {
@@ -45,6 +48,8 @@ namespace AntDesign
         private bool _animating = false;
 
         private string _btnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
+
+
 
         private string _formSize;
 
@@ -89,6 +94,9 @@ namespace AntDesign
 
         private bool _loading = false;
 
+        private System.Timers.Timer _delayTimer;
+        private static int _timer = 0;   //解决重入的问题
+
         protected void SetClassMap()
         {
             string prefixName = "ant-btn";
@@ -113,6 +121,12 @@ namespace AntDesign
             base.OnInitialized();
             SetClassMap();
             UpdateIconDisplay(_loading);
+            if (this.Type != ButtonType.Link)
+            {
+            _delayTimer = new System.Timers.Timer(1000);
+            _delayTimer.Elapsed += DelayElapsed;
+            }
+
         }
 
         private void UpdateIconDisplay(bool loading)
@@ -130,16 +144,36 @@ namespace AntDesign
 
         private async Task OnMouseUp(MouseEventArgs args)
         {
-            if (args.Button != 0 || this.Type == ButtonType.Link) return; //remove animating from Link Button        
 
+            if (args.Button != 0 || this.Type == ButtonType.Link) return; //remove animating from Link Button   
             this._animating = true;
+
+            //_delayTimer.Start();
+            
+
             await Task.Run(() =>
             {
                 Thread.Sleep(500);
                 this._animating = false;
+            Console.WriteLine("Time 1 end"+ DateTime.Now);
             });
 
-            StateHasChanged();
+
+            await InvokeAsync(StateHasChanged);
+        }
+
+
+
+        private void DelayElapsed(object sender, ElapsedEventArgs args)
+        {
+            if (_timer == 0)
+            {
+                _timer = 1;
+                this._animating = false;        
+                InvokeAsync(StateHasChanged);              
+                _delayTimer.Stop();  
+                _timer = 0;
+            }
         }
     }
 }

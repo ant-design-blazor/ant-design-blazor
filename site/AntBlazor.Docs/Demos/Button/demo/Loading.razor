@@ -29,24 +29,42 @@
     private void enterLoading()
     {
         loading = true;
-        var timer = new Timer(8000);
-        timer.Elapsed += (_, args) =>
+        //var timer = new Timer(8000);
+        //timer.Elapsed += (_, args) =>
+        //{
+        //    loading = false;
+        //    InvokeAsync(StateHasChanged);
+        //    Console.WriteLine("Timer2 ended"+DateTime.Now);
+        //};
+        //timer.Start();
+
+        Task.Run(() =>
         {
+            System.Threading.Thread.Sleep(8000);
             loading = false;
             InvokeAsync(StateHasChanged);
-        };
-        timer.Start();
+            Console.WriteLine("Timer2 ended" + DateTime.Now);
+        });
+
     }
 
     private void enterIconLoading()
     {
         iconLoading = true;
-        var timer = new Timer(8000);
-        timer.Elapsed += (_, args) =>
+        //var timer = new Timer(8000);
+        //timer.Elapsed += (_, args) =>
+        //{
+        //    iconLoading = false;
+        //    InvokeAsync(StateHasChanged);
+        //};
+        //timer.Start();
+
+        Task.Run(() =>
         {
-            iconLoading = false;
+            System.Threading.Thread.Sleep(8000);
+            loading = false;
             InvokeAsync(StateHasChanged);
-        };
-        timer.Start();
+            Console.WriteLine("Timer2 ended" + DateTime.Now);
+        });
     }
 }
