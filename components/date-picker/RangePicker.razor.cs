@@ -115,5 +115,15 @@ namespace AntDesign
                 ChangeFocusTarget(false, true);
             }
         }
+        
+        public override void ClearValue(int index = 0)
+        {
+            _isSetPicker = false;
+            _pickerStatus[0]._hadSelectValue = false;
+            _pickerStatus[1]._hadSelectValue = false;
+            UpdateCurrentValueAsString();
+            Close();
+        }
+
     }
 }
