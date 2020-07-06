@@ -46,8 +46,8 @@
         Task.Run(() =>
         {
             System.Threading.Thread.Sleep(8000);
-            loading = false;
-            InvokeAsync(StateHasChanged);     
+            iconLoading = false;
+            InvokeAsync(StateHasChanged);
         });
     }
 }
