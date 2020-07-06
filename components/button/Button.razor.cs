@@ -121,11 +121,6 @@ namespace AntDesign
             base.OnInitialized();
             SetClassMap();
             UpdateIconDisplay(_loading);
-            if (this.Type != ButtonType.Link)
-            {
-            _delayTimer = new System.Timers.Timer(1000);
-            _delayTimer.Elapsed += DelayElapsed;
-            }
 
         }
 
@@ -148,32 +143,13 @@ namespace AntDesign
             if (args.Button != 0 || this.Type == ButtonType.Link) return; //remove animating from Link Button   
             this._animating = true;
 
-            //_delayTimer.Start();
-            
-
             await Task.Run(() =>
             {
                 Thread.Sleep(500);
                 this._animating = false;
-            Console.WriteLine("Time 1 end"+ DateTime.Now);
+                //Console.WriteLine("Time 1 end"+ DateTime.Now);
             });
-
-
             await InvokeAsync(StateHasChanged);
-        }
-
-
-
-        private void DelayElapsed(object sender, ElapsedEventArgs args)
-        {
-            if (_timer == 0)
-            {
-                _timer = 1;
-                this._animating = false;        
-                InvokeAsync(StateHasChanged);              
-                _delayTimer.Stop();  
-                _timer = 0;
-            }
         }
     }
 }
