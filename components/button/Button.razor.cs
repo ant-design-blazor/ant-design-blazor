@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -40,6 +39,10 @@ namespace AntDesign
 
         [Parameter]
         public string Shape { get; set; } = null;
+
+        private bool _animating = false;
+
+        private string _btnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
 
         private string _formSize;
 
@@ -121,6 +124,20 @@ namespace AntDesign
             {
                 await OnClick.InvokeAsync(args);
             }
+        }
+
+        private async Task OnMouseUp(MouseEventArgs args)
+        {
+            if (args.Button != 0 || this.Type == ButtonType.Link) return; //remove animating from Link Button
+            this._animating = true;
+
+            await Task.Run(() =>
+            {
+                Thread.Sleep(500);
+                this._animating = false;
+
+                InvokeAsync(StateHasChanged);
+            });
         }
     }
 }
