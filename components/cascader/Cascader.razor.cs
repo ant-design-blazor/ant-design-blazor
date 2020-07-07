@@ -326,7 +326,8 @@ namespace AntDesign
             var node = GetNodeByValue(_nodelist, defaultValue);
             SetSelectedNodeWithParent(node, ref _selectedNodes);
             _renderNodes = _selectedNodes;
-            SetValue(node.Value);
+            if (node != null)
+                SetValue(node.Value);
         }
 
         /// <summary>
