@@ -466,7 +466,7 @@ namespace AntDesign
 
         public void Close()
         {
-            _dropDown.Hide();
+            _dropDown?.Hide();
         }
 
         public async Task Focus(int index = 0)
@@ -574,6 +574,11 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        /// <summary>
+        /// 修改值
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="index"></param>
         public virtual void ChangeValue(DateTime value, int index = 0)
         {
         }
