@@ -49,7 +49,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            this._isChecked = Checked;
+            this._isChecked = Value ? Value : Checked;
             base.OnInitialized();
         }
 
