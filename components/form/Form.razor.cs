@@ -96,5 +96,7 @@ namespace AntDesign
         {
             return _editContext.Validate();
         }
+
+        public bool IsModified => _editContext.IsModified();
     }
 }
