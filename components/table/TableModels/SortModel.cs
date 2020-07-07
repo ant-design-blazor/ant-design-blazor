@@ -53,18 +53,7 @@ namespace AntDesign.TableModels
 
         void ITableSortModel.SwitchSortType()
         {
-            if (SortType == SortType.None)
-            {
-                SortType = SortType.Ascending;
-            }
-            else if (SortType == SortType.Ascending)
-            {
-                SortType = SortType.Descending; ;
-            }
-            else
-            {
-                SortType = SortType.None;
-            }
+            SortType = GetNextType();
         }
 
         void ITableSortModel.SetSortType(SortType sortType)
@@ -75,6 +64,27 @@ namespace AntDesign.TableModels
         void ITableSortModel.SetSortType(string sortType)
         {
             this.SortType = SortType.Parse(sortType);
+        }
+
+        SortType ITableSortModel.NextType()
+        {
+            return GetNextType();
+        }
+
+        private SortType GetNextType()
+        {
+            if (SortType == SortType.None)
+            {
+                return SortType.Ascending;
+            }
+            else if (SortType == SortType.Ascending)
+            {
+                return SortType.Descending; ;
+            }
+            else
+            {
+                return SortType.None;
+            }
         }
     }
 }

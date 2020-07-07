@@ -30,6 +30,9 @@ namespace AntDesign
         [Parameter]
         public string Sort { get; set; }
 
+        [Parameter]
+        public bool ShowSorterTooltip { get; set; } = true;
+
         private FieldIdentifier? _fieldIdentifier;
 
         public string DisplayName => _fieldIdentifier?.GetDisplayName();
@@ -63,6 +66,26 @@ namespace AntDesign
             {
                 SortModel.SwitchSortType();
                 Table.ReloadData();
+            }
+        }
+
+        private string SorterTooltip
+        {
+            get
+            {
+                var next = SortModel.NextType();
+                if (next == SortType.None)
+                {
+                    return "取消排序";
+                }
+                else if (next == SortType.Ascending)
+                {
+                    return "点击升序";
+                }
+                else
+                {
+                    return "点击降序";
+                }
             }
         }
     }

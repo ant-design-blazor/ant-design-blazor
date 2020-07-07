@@ -8,9 +8,9 @@ namespace AntDesign.TableModels
     {
         public static readonly SortType None = new SortType(null, 0);
 
-        public static readonly SortType Ascending = new SortType("asc", 1);
+        public static readonly SortType Ascending = new SortType("ascend", 1);
 
-        public static readonly SortType Descending = new SortType("desc", 2);
+        public static readonly SortType Descending = new SortType("descend", 2);
 
         public SortType(string name, int value) : base(name, value)
         {
@@ -20,8 +20,8 @@ namespace AntDesign.TableModels
         {
             return (typeName) switch
             {
-                "acs" => Ascending,
-                "desc" => Descending,
+                "ascend" => Ascending,
+                "descend" => Descending,
                 _ => None
             };
         }

@@ -20,19 +20,18 @@ else if (IsHeader)
     <th class="@ClassMapper.Class" style="@FixedStyle @Style" @onclick="HandelHeaderClick">
         @if (Sortable)
         {
-            <div class="ant-table-column-sorters">
-                <span>@(Title ?? DisplayName ?? FieldName)</span>
-                <span class="ant-table-column-sorter ant-table-column-sorter-full">
-                    <span class="ant-table-column-sorter-inner">
-                        <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up {(SortModel.SortType==SortType.Ascending? "active":"")}") />
-                        <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down {(SortModel.SortType==SortType.Descending? "active":"")}") />
-                    </span>
-                </span>
-            </div>
+            if (ShowSorterTooltip)
+            {
+                @ToolTipSorter(this)
+            }
+            else
+            {
+                @SortHeader(this)
+            }
         }
         else
         {
-            @(Title ?? DisplayName ?? FieldName)
+            @HeaderTitle
         }
     </th>
 }
@@ -59,4 +58,29 @@ else
             }
         }
     </td>
+}
+
+
+@code
+{
+
+    string HeaderTitle => Title ?? DisplayName ?? FieldName;
+
+    readonly RenderFragment<Column<TData>> SortHeader = col =>
+    @<div class="ant-table-column-sorters">
+        <span>@col.HeaderTitle</span>
+        <span class="ant-table-column-sorter ant-table-column-sorter-full">
+            <span class="ant-table-column-sorter-inner">
+                <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up {(col.SortModel.SortType==SortType.Ascending? "active":"")}") />
+                <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down {(col.SortModel.SortType==SortType.Descending? "active":"")}") />
+            </span>
+        </span>
+    </div>;
+
+
+    readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
+        @<Tooltip Class="ant-table-column-sorters-with-tooltip" Title="@col.SorterTooltip">
+            @col.SortHeader(col)
+        </Tooltip>;
+
 }

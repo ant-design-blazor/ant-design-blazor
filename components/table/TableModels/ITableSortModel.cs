@@ -17,5 +17,7 @@ namespace AntDesign.TableModels
         internal void SetSortType(string sortType);
 
         internal void SwitchSortType();
+
+        internal SortType NextType();
     }
 }
