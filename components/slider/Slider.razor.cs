@@ -28,6 +28,7 @@ namespace AntDesign
         private bool _mouseDown;
         private bool _mouseMove;
         private bool _right = true;
+        private bool _initialized = false;
 
         private string RightHandleStyleFormat
         {
@@ -304,10 +305,11 @@ namespace AntDesign
             await base.SetParametersAsync(parameters);
 
             var dict = parameters.ToDictionary();
-            if (dict.ContainsKey(nameof(DefaultValue)) && !dict.ContainsKey(nameof(Value)))
+            if (!_initialized && dict.ContainsKey(nameof(DefaultValue)) && !dict.ContainsKey(nameof(Value)))
             {
                 Value = parameters.GetValueOrDefault(nameof(DefaultValue), SliderValueType.FromT0(0));
             }
+            _initialized = true;
         }
 
         protected override void OnParametersSet()
@@ -359,21 +361,7 @@ namespace AntDesign
 
         private async void OnMouseUp(JsonElement jsonElement)
         {
-            _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _slider);
-            decimal clickX = (decimal)jsonElement.GetProperty("x").GetDouble();
-            decimal clickY = (decimal)jsonElement.GetProperty("y").GetDouble();
-
-            if (!_mouseMove) // click
-            {
-                if (_sliderDom.x <= clickX && clickX <= _sliderDom.x + _sliderDom.width
-                    && _sliderDom.y <= clickY && clickY <= _sliderDom.y + _sliderDom.height)
-                {
-                    // click inside the slider
-                    await CalculateValueAsync(jsonElement.GetProperty(Vertical ? "clientY" : "clientX").GetDouble());
-                    await OnAfterChange.InvokeAsync(Value);
-                }
-            }
-            else // mouse move ending
+            if (_mouseMove) // mouse move ending
             {
                 await OnAfterChange.InvokeAsync(Value);
             }
@@ -386,6 +374,7 @@ namespace AntDesign
             if (!Disabled)
             {
                 await CalculateValueAsync(Vertical ? args.ClientY : args.ClientX);
+                await OnAfterChange.InvokeAsync(Value);
             }
         }
 
