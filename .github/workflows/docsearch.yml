@@ -1,0 +1,18 @@
+name: DocSearch Scraper
+
+on:
+  schedule:
+    - cron: "0/30 * * * *"
+
+jobs:
+  style-sync:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
+
+    steps:
+    - uses: actions/checkout@master
+    - uses: darrenjennings/algolia-docsearch-action@master
+      with:
+        algolia_application_id: ${{ secrets.algolia_application_id }}
+        algolia_api_key: ${{ secrets.algolia_application_id }}
+        file: '.github/workflows/algolia-config.json'
