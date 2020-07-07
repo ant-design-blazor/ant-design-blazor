@@ -112,6 +112,10 @@ namespace AntDesign
 
         private void ChangeSelection(int[] indexes)
         {
+            if(this._headerSelection == null)
+            {
+                return;
+            }
             if (indexes == null || !indexes.Any())
             {
                 this._headerSelection.RowSelections.ForEach(x => x.Check(false));

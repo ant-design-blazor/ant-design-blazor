@@ -11,6 +11,11 @@ namespace AntDesign
 {
     public class DatePickerBase<TValue> : AntInputComponentBase<TValue>, IDatePicker
     {
+        DateTime? IDatePicker.HoverDateTime { get; set; }
+
+        public const int START_PICKER_INDEX = 0;
+        public const int END_PICKER_INDEX = 0;
+
         [Parameter]
         public string PrefixCls { get; set; } = "ant-picker";
 
@@ -90,7 +95,7 @@ namespace AntDesign
         }
 
         [Parameter]
-        public bool AllowClear { get; set; } = true; // TODO
+        public bool AllowClear { get; set; } = true;
 
         protected string[] _placeholders = new string[] { "", "" };
         protected OneOf<string, string[]> _placeholder;
@@ -203,27 +208,6 @@ namespace AntDesign
         // TODO: need locale
         [Parameter]
         public Func<DateTime, RenderFragment> MonthCellRender { get; set; }
-
-        //private readonly DateTime[] _values = new DateTime[2];
-        //private OneOf<DateTime, DateTime[]> _value;
-
-        //[Parameter]
-        //public OneOf<DateTime, DateTime[]> Value
-        //{
-        //    get => _value;
-        //    set
-        //    {
-        //        _value = value;
-        //        value.Switch(single =>
-        //        {
-        //            _values[0] = single;
-        //        }, arr =>
-        //        {
-        //            _values[0] = arr.Length > 0 ? arr[0] : _values[0];
-        //            _values[1] = arr.Length > 1 ? arr[1] : _values[1];
-        //        });
-        //    }
-        //}
 
         public DateTime CurrentDate { get; set; } = DateTime.Now;
 
@@ -355,7 +339,7 @@ namespace AntDesign
             string formater = _pickerStatus[index]._initPicker switch
             {
                 DatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
-                DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}周",
+                DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}{CultureInfo.GetDateLocale().Week}",
                 DatePickerType.Month => "yyyy-MM",
                 DatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
                 DatePickerType.Year => "yyyy",
@@ -376,6 +360,7 @@ namespace AntDesign
             _needRefresh = true;
             _inputStart.IsOnFocused = inputStartFocus;
             _inputEnd.IsOnFocused = inputEndFocus;
+
         }
 
         protected async Task OnSelect(DateTime date)
@@ -578,9 +563,18 @@ namespace AntDesign
         {
         }
 
+        public virtual void ClearValue(int index = 0)
+        {
+        }
+        
         public virtual DateTime? GetIndexValue(int index)
         {
             return null;
+        }
+
+        public void InvokeStateHasChanged()
+        {
+            StateHasChanged();
         }
     }
 }
