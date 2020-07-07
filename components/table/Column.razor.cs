@@ -65,7 +65,7 @@ namespace AntDesign
             if (Sortable)
             {
                 SortModel.SwitchSortType();
-                Table.ReloadData();
+                Table.ReloadAndInvokeChange();
             }
         }
 

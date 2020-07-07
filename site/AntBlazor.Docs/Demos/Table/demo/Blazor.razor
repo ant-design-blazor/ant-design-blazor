@@ -1,8 +1,10 @@
 ﻿@using System.ComponentModel
+@using AntDesign.TableModels
 
 <Table @ref="table"
        DataSource="@forecasts"
        Total="_total"
+       OnChange="@((QueryModel<WeatherForecast> _)=> onChange(_))"
        @bind-PageIndex="_pageIndex"
        @bind-PageSize="_pageSize"
        OnPageIndexChange="async e=>await fetchData(e)"
@@ -52,6 +54,12 @@
     {
         forecasts = await GetForecastAsync(args.PageIndex, args.PageSize);
     }
+
+    void onChange(QueryModel<WeatherForecast> queryModel)
+    {
+        Console.WriteLine(queryModel);
+    }
+
 
     public class WeatherForecast
     {

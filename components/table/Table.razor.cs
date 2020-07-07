@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using OneOf;
@@ -33,6 +32,9 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
+
+        [Parameter]
+        public EventCallback<QueryModel<TItem>> OnChange { get; set; }
 
         [Parameter]
         public bool Loading { get; set; }
@@ -66,6 +68,32 @@ namespace AntDesign
 
         public void ReloadData()
         {
+            this.Reload();
+        }
+
+        void ITable.Refresh()
+        {
+            StateHasChanged();
+        }
+
+        void ITable.ReloadAndInvokeChange()
+        {
+            ReloadAndInvokeChange();
+        }
+
+        private void ReloadAndInvokeChange()
+        {
+            var queryModel = this.Reload();
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(queryModel);
+            }
+        }
+
+        private QueryModel<TItem> Reload()
+        {
+            var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
+
             if (Total > _total)
             {
                 _showItems = _dataSource;
@@ -79,29 +107,19 @@ namespace AntDesign
                     if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
                     {
                         query = fieldColumn.SortModel.Sort(query);
+                        queryModel.AddSortModel(fieldColumn.SortModel);
                     }
                 }
 
-                _showItems = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
+                query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
+                queryModel.SetQueryableLambda(query);
+
+                _showItems = query;
             }
 
             StateHasChanged();
-        }
 
-        void ITable.Refresh()
-        {
-            StateHasChanged();
-        }
-
-        private QueryModel _queryModel;
-
-        public QueryModel QueryModel
-        {
-            get => _queryModel;
-            set
-            {
-                _queryModel = value;
-            }
+            return queryModel;
         }
 
         private void SetClass()
@@ -126,7 +144,7 @@ namespace AntDesign
             SetClass();
             SetPaginationClass();
 
-            ReloadData();
+            ReloadAndInvokeChange();
         }
     }
 }

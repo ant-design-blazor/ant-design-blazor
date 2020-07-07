@@ -11,7 +11,7 @@ namespace AntDesign
 
         internal void Refresh();
 
-        QueryModel QueryModel { get; set; }
+        internal void ReloadAndInvokeChange();
 
         void SetSelection(string[] keys);
 

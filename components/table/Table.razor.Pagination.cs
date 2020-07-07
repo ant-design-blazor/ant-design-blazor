@@ -63,7 +63,7 @@ namespace AntDesign
         {
             PageIndex = args.PageIndex;
 
-            ReloadData();
+            ReloadAndInvokeChange();
 
             PageIndexChanged.InvokeAsync(args.PageIndex);
             OnPageIndexChange.InvokeAsync(args);
@@ -75,7 +75,7 @@ namespace AntDesign
         {
             PageSize = args.PageSize;
 
-            ReloadData();
+            ReloadAndInvokeChange();
 
             PageSizeChanged.InvokeAsync(args.PageSize);
             OnPageSizeChange.InvokeAsync(args);
