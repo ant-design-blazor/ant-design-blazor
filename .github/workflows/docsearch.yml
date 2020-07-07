@@ -14,5 +14,5 @@ jobs:
     - uses: darrenjennings/algolia-docsearch-action@master
       with:
         algolia_application_id: ${{ secrets.algolia_application_id }}
-        algolia_api_key: ${{ secrets.algolia_application_id }}
+        algolia_api_key: ${{ secrets.algolia_api_key }}
         file: '.github/workflows/algolia-config.json'
