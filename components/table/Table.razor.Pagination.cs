@@ -68,7 +68,7 @@ namespace AntDesign
             PageIndexChanged.InvokeAsync(args.PageIndex);
             OnPageIndexChange.InvokeAsync(args);
 
-            ChangeSelection(null);
+            _selection.ChangeOnPaging();
         }
 
         private void HandlePageSizeChange(PaginationEventArgs args)
@@ -79,6 +79,8 @@ namespace AntDesign
 
             PageSizeChanged.InvokeAsync(args.PageSize);
             OnPageSizeChange.InvokeAsync(args);
+
+            _selection.ChangeOnPaging();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
 
@@ -29,20 +30,24 @@ namespace AntDesign
 
         public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
 
+        private int[] _selectedIndexes;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (Table != null)
+            if (Table == null)
             {
-                if (IsHeader)
-                {
-                    Table.HeaderSelection = this;
-                }
-                else
-                {
-                    Table?.HeaderSelection?.RowSelections.Add(this);
-                }
+                return;
+            }
+
+            if (IsHeader)
+            {
+                Table.Selection = this;
+            }
+            else
+            {
+                Table?.Selection?.RowSelections.Add(this);
             }
         }
 
@@ -54,7 +59,7 @@ namespace AntDesign
                 var first = RowSelections.FirstOrDefault(x => x.Checked);
                 if (first != null)
                 {
-                    Table?.HeaderSelection.RowSelections.Where(x => x.Index != first.Index).ForEach(x => x.Check(false));
+                    Table?.Selection.RowSelections.Where(x => x.Index != first.Index).ForEach(x => x.Check(false));
                 }
             }
         }
@@ -71,10 +76,10 @@ namespace AntDesign
             {
                 if (Type == "radio")
                 {
-                    Table?.HeaderSelection.RowSelections.Where(x => x.RowIndex != this.RowIndex).ForEach(x => x.Check(false));
+                    Table?.Selection.RowSelections.Where(x => x.RowIndex != this.RowIndex).ForEach(x => x.Check(false));
                 }
 
-                Table?.HeaderSelection.Check(@checked);
+                Table?.Selection.Check(@checked);
             }
 
             InvokeSelectedRowsChange();
@@ -93,8 +98,45 @@ namespace AntDesign
             if (IsHeader)
             {
                 var checkedIndex = RowSelections.Where(x => x.Checked).Select(x => x.RowIndex - 1).ToArray();
+                _selectedIndexes ??= Array.Empty<int>();
+
                 Table.SelectionChanged(checkedIndex);
             }
+        }
+
+        public void ChangeSelection(int[] indexes)
+        {
+            if (indexes == null || !indexes.Any())
+            {
+                this.Table.Selection.RowSelections.ForEach(x => x.Check(false));
+                this.Table.Selection.Check(false);
+            }
+            else
+            {
+                this.Table.Selection.RowSelections.Where(x => !x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(false));
+                this.Table.Selection.RowSelections.Where(x => x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(true));
+                this.Table.Selection.Check(true);
+            }
+        }
+
+        public void SetSelection(string[] keys)
+        {
+            if (keys == null || !keys.Any())
+            {
+                this.Table.Selection.RowSelections.ForEach(x => x.Check(false));
+                this.Table.Selection.Check(false);
+            }
+            else
+            {
+                this.Table.Selection.RowSelections.Where(x => !x.Key.IsIn(keys)).ForEach(x => x.Check(false));
+                this.Table.Selection.RowSelections.Where(x => x.Key.IsIn(keys)).ForEach(x => x.Check(true));
+                this.Table.Selection.Check(keys.Any());
+            }
+        }
+
+        public void ChangeOnPaging()
+        {
+            this.ChangeSelection(_selectedIndexes);
         }
     }
 }

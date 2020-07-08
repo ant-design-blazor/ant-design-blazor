@@ -5,12 +5,12 @@ namespace AntDesign
 {
     public partial class Table<TItem> : ITable
     {
-        private ISelectionColumn _headerSelection;
+        private ISelectionColumn _selection;
 
-        ISelectionColumn ITable.HeaderSelection
+        ISelectionColumn ITable.Selection
         {
-            get => _headerSelection;
-            set => _headerSelection = value;
+            get => _selection;
+            set => _selection = value;
         }
 
         void ITable.SelectionChanged(int[] checkedIndex)
@@ -31,14 +31,14 @@ namespace AntDesign
         {
             if (indexes == null || !indexes.Any())
             {
-                this._headerSelection.RowSelections.ForEach(x => x.Check(false));
-                this._headerSelection.Check(false);
+                this._selection.RowSelections.ForEach(x => x.Check(false));
+                this._selection.Check(false);
             }
             else
             {
-                this._headerSelection.RowSelections.Where(x => !x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(false));
-                this._headerSelection.RowSelections.Where(x => x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(true));
-                this._headerSelection.Check(true);
+                this._selection.RowSelections.Where(x => !x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(false));
+                this._selection.RowSelections.Where(x => x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(true));
+                this._selection.Check(true);
             }
         }
 
@@ -46,14 +46,14 @@ namespace AntDesign
         {
             if (keys == null || !keys.Any())
             {
-                this._headerSelection.RowSelections.ForEach(x => x.Check(false));
-                this._headerSelection.Check(false);
+                this._selection.RowSelections.ForEach(x => x.Check(false));
+                this._selection.Check(false);
             }
             else
             {
-                this._headerSelection.RowSelections.Where(x => !x.Key.IsIn(keys)).ForEach(x => x.Check(false));
-                this._headerSelection.RowSelections.Where(x => x.Key.IsIn(keys)).ForEach(x => x.Check(true));
-                this._headerSelection.Check(keys.Any());
+                this._selection.RowSelections.Where(x => !x.Key.IsIn(keys)).ForEach(x => x.Check(false));
+                this._selection.RowSelections.Where(x => x.Key.IsIn(keys)).ForEach(x => x.Check(true));
+                this._selection.Check(keys.Any());
             }
         }
     }

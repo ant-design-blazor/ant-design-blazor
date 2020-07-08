@@ -131,7 +131,7 @@ RenderFragment<Table<TItem>> body = table =>
         {
             var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
             var data = table._showItems.ElementAt(i);
-            var @checked = table._headerSelection?.RowSelections.ElementAtOrDefault(i)?.Checked ?? false;
+            var @checked = table._selection?.RowSelections.ElementAtOrDefault(i)?.Checked ?? false;
             <CascadingValue Value="@rowIndex" Name="RowIndex">
                 <CascadingValue Value="table.ColumnContext">
                     <tr data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-0 @(@checked ? "ant-table-row-selected" : "")">

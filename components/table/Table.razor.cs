@@ -28,7 +28,7 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
-        public IEnumerable<TItem> SelectedRows { get; set; } = Array.Empty<TItem>();
+        public IEnumerable<TItem> SelectedRows { get; set; }
 
         [Parameter]
         public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }

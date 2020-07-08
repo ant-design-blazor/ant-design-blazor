@@ -5,7 +5,7 @@ namespace AntDesign
 {
     public interface ITable
     {
-        internal ISelectionColumn HeaderSelection { get; set; }
+        internal ISelectionColumn Selection { get; set; }
 
         internal void SelectionChanged(int[] checkedIndex);
 

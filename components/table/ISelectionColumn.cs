@@ -8,12 +8,18 @@ namespace AntDesign
 
         internal bool Checked { get; set; }
 
-        public void Check(bool @checked);
-
         public string Key { get; set; }
 
         public int RowIndex { get; set; }
 
         public IList<ISelectionColumn> RowSelections { get; set; }
+
+        public void Check(bool @checked);
+
+        public void ChangeSelection(int[] indexes);
+
+        public void SetSelection(string[] keys);
+
+        public void ChangeOnPaging();
     }
 }
