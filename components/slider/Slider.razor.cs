@@ -300,7 +300,6 @@ namespace AntDesign
             base.OnInitialized();
 
             DomEventService.AddEventListener("window", "mousemove", OnMouseMove);
-            DomEventService.AddEventListener("window", "mouseup", OnMouseUp);
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -362,22 +361,28 @@ namespace AntDesign
             }
         }
 
-        private async void OnMouseUp(JsonElement jsonElement)
-        {
-            if (_mouseMove) // mouse move ending
-            {
-                await OnAfterChange.InvokeAsync(Value);
-                await ValueChanged.InvokeAsync(Value);
-            }
-            _mouseDown = false;
-            _mouseMove = false;
-        }
-
         private async void OnClick(MouseEventArgs args)
         {
             if (!Disabled)
             {
-                await CalculateValueAsync(Vertical ? args.ClientY : args.ClientX);
+                //// handle mouseup event in OnClick
+                //// since click event will be triggered as well
+                //// when mouseup
+                //// until we find a way to stop trigger click event after mouseup, leave the mouseup handling here
+                //if (_mouseMove) // mouse move ending
+                //{
+                //    await OnAfterChange.InvokeAsync(Value);
+                //    await ValueChanged.InvokeAsync(Value);
+                //}
+
+                if (!_mouseMove)
+                {
+                    // improve performance since new value has been calculated in OnMouseMove
+                    // calculate new value only when this method is trigger by click instead of mouseup
+                    await CalculateValueAsync(Vertical ? args.ClientY : args.ClientX);
+                }
+                _mouseDown = false;
+                _mouseMove = false;
                 await OnAfterChange.InvokeAsync(Value);
                 await ValueChanged.InvokeAsync(Value);
             }
