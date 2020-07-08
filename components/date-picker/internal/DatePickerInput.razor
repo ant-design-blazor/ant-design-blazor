@@ -123,18 +123,18 @@ else
 
     [Parameter]
     public EventCallback OnKeyUp { get; set; }
-    
+
     [Parameter]
     public EventCallback<ChangeEventArgs> OnInput { get; set; }
 
     [Parameter]
     public bool AllowClear { get; set; } = true;
-    
+
     [Parameter]
     public EventCallback OnClickClear { get; set; }
 
     public bool IsOnFocused { get; set; } = false;
-    
+
     public bool ShowClear() {
         return !Disabled && !String.IsNullOrEmpty(Value) && AllowClear;
     }

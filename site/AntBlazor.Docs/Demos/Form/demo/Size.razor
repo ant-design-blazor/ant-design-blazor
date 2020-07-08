@@ -47,7 +47,6 @@
     </FormItem>
 </Form>
 
-@model.Switch
 @code
 {
     public class Model
@@ -56,10 +55,28 @@
         public string Input { get; set; } = "input";
         public string InputArea { get; set; } = "inputArea";
         public string Cascader { get; set; } = "11";
-        public DateTime DatePicker { get; set; } = DateTime.Now;
+        public DateTime? DatePicker { get; set; } = DateTime.Now;
         public double Number { get; set; } = 1;
         public bool Switch { get; set; } = true;
         public string Radio { get; set; } = "Beijing";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+
+        model = new Model()
+        {
+            DatePicker = DateTime.Now,
+            Cascader = "11",
+            Input = "赋值1",
+            InputArea = "赋值2",
+            Number = 123445,
+            Switch = false,
+            Radio = "Hangzhou",
+            Size = AntSizeLDSType.Large,
+        };
+        await base.OnInitializedAsync();
     }
 
     private Model model = new Model();
@@ -71,7 +88,7 @@
             Value = "1",
             Label = "浙江",
             Children = new []
-        {
+    {
                 new CascaderNode {Value = "11", Label = "杭州"},
                 new CascaderNode {Value = "12", Label = "温州"},
             }
