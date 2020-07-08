@@ -1,18 +1,20 @@
 ﻿@using System.ComponentModel
+@using AntDesign.TableModels
 
 <Table @ref="table"
        DataSource="@forecasts"
        Total="_total"
+       OnChange="@((QueryModel<WeatherForecast> _)=> onChange(_))"
        @bind-PageIndex="_pageIndex"
        @bind-PageSize="_pageSize"
        OnPageIndexChange="async e=>await fetchData(e)"
        @bind-SelectedRows="selectedRows">
     <Selection Key="@(context.Id.ToString())" />
-    <Column @bind-Field="@context.Id"/>
-    <Column @bind-Field="@context.Date" Format="yyyy-MM-dd"/>
-    <Column @bind-Field="@context.TemperatureC" />
+    <Column @bind-Field="@context.Id" Sortable />
+    <Column @bind-Field="@context.Date" Format="yyyy-MM-dd" Sortable/>
+    <Column @bind-Field="@context.TemperatureC" Sortable/>
     <Column Title="Temp. (F)" Field="@context.TemperatureF" />
-    <Column @bind-Field="@context.Summary" />
+    <Column @bind-Field="@context.Summary"Sortable />
 </Table>
 
 <br />
@@ -44,7 +46,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        forecasts = await GetForecastAsync(1, 10);
+        forecasts = await GetForecastAsync(1, 50);
         _total = 50;
     }
 
@@ -52,6 +54,12 @@
     {
         forecasts = await GetForecastAsync(args.PageIndex, args.PageSize);
     }
+
+    void onChange(QueryModel<WeatherForecast> queryModel)
+    {
+        Console.WriteLine(queryModel);
+    }
+
 
     public class WeatherForecast
     {

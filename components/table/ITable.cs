@@ -1,4 +1,7 @@
-﻿namespace AntDesign
+﻿using System.Threading.Tasks;
+using AntDesign.TableModels;
+
+namespace AntDesign
 {
     public interface ITable
     {
@@ -8,6 +11,10 @@
 
         internal void Refresh();
 
+        internal void ReloadAndInvokeChange();
+
         void SetSelection(string[] keys);
+
+        void ReloadData();
     }
 }
