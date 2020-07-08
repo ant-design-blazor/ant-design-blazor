@@ -66,7 +66,10 @@ namespace AntDesign
                 if (_activeKey != value)
                 {
                     _activeKey = value;
-                    ActivatePane(_panes.Single(p => p.Key == _activeKey));
+                    if (_panes.Count == 0) return;
+                    TabPane tabPane = _panes.Find(p => p.Key == _activeKey);
+                    if (tabPane == null) return;
+                    ActivatePane(tabPane);
                 }
             }
         }
