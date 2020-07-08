@@ -1,0 +1,43 @@
+﻿@inject ModalService ModalService
+
+<Input @bind-Value="@value" />
+<br />
+<br />
+<Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
+@*<Button OnClick="OpenComponent" Type="primary">Use Component</Button>*@
+
+@code{
+
+    private string value = "blazor";
+
+    private ModalRef _drawerRef;
+
+    private async Task OpenTemplate()
+    {
+        RenderFragment content =@<div>value: @value <br /><Button OnClick="CloseModal">close</Button></div>;
+
+            var options = new ConfirmOptions()
+            {
+                Title = "Modal",
+                Width = 350,
+                Content = content,
+            };
+
+            _drawerRef = await ModalService.CreateAsync(options);
+
+            _drawerRef.OnClose = () =>
+            {
+                Console.WriteLine("Close Modal");
+                return Task.CompletedTask;
+            };
+        }
+
+        private async Task CloseModal()
+        {
+            if (_drawerRef != null)
+            {
+                await _drawerRef.CloseAsync();
+            }
+        }
+
+    }

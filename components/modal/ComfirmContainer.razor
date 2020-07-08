@@ -1,0 +1,14 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+@foreach (var confirm in _confirms)
+{
+    <ConfirmDialog @key="@confirm" OnRemove="@OnRemove" Config="@confirm" />
+}
+
+
+@foreach (ModalRef modalRef in _modalRefs)
+{
+    var modalConfig = modalRef.Config;
+    <ConfirmDialog @key="@modalConfig" Config="@modalConfig" />
+}

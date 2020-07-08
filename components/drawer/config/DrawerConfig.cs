@@ -12,8 +12,6 @@ namespace AntDesign
     {
         public OneOf<RenderFragment, string> Content { get; set; }
 
-        public RenderFragment ChildContent { get; set; }
-
         public bool Closable { get; set; } = true;
 
         public bool MaskClosable { get; set; } = true;
@@ -49,6 +47,9 @@ namespace AntDesign
 
         public bool Visible { get; set; }
 
+        /// <summary>
+        /// 点击关闭时触发，返回false时，取消关闭动作
+        /// </summary>
         public Func<bool?> OnCancel { get; set; }
 
     }
