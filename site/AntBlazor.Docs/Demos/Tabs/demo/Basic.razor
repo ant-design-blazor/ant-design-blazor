@@ -1,5 +1,5 @@
-﻿<Tabs DefaultActiveKey="1">
-    <TabPane Key="1">
+﻿<Tabs DefaultActiveKey="1"  ActiveKey="@nKey">
+    <TabPane Key="1" >
         <Tab>Tab 1</Tab>
         <ChildContent>Content of Tab Pane 1</ChildContent>
     </TabPane>
@@ -12,3 +12,27 @@
         <ChildContent>Content of Tab Pane 3</ChildContent>
     </TabPane>
 </Tabs>
+
+
+<Button OnClick="OnClickNext">Next</Button>
+<Button OnClick="OnClickPrev">Prev</Button>
+
+
+@code{
+    string nKey { get; set; } = "1";
+
+    void OnClickNext()
+    {
+        var n = Convert.ToInt32(nKey);
+        n++;
+        nKey = n.ToString();
+    }
+
+    void OnClickPrev()
+    {
+        var n = Convert.ToInt32(nKey);
+        n--;
+        nKey = n.ToString();
+    }
+
+}
