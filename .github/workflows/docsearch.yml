@@ -1,7 +1,9 @@
 name: DocSearch Scraper
+
 on:
-  push:
-    branches: [ master ]
+  schedule:
+    - cron: "0 1 * * *"
+
 jobs:
   docsearch-scrape:
     runs-on: ubuntu-latest
