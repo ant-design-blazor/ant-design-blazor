@@ -254,6 +254,9 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public EventCallback<SliderValueType> ValueChanged { get; set; }
+
         /// <summary>
         /// If true, the slider will be vertical.
         /// </summary>
@@ -364,6 +367,7 @@ namespace AntDesign
             if (_mouseMove) // mouse move ending
             {
                 await OnAfterChange.InvokeAsync(Value);
+                await ValueChanged.InvokeAsync(Value);
             }
             _mouseDown = false;
             _mouseMove = false;
@@ -375,6 +379,7 @@ namespace AntDesign
             {
                 await CalculateValueAsync(Vertical ? args.ClientY : args.ClientX);
                 await OnAfterChange.InvokeAsync(Value);
+                await ValueChanged.InvokeAsync(Value);
             }
         }
 
