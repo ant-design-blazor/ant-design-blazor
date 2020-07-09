@@ -6,9 +6,9 @@ window.AntDesign.DocSearch = {
         }
         const lang = locale === 'zh-CN' ? 'cn' : 'en';
         window.AntDesign.DocSearch.instance = docsearch({
-            apiKey: '872d29d519c3c2bd32a37398b6a85e0f',
-            indexName: 'ant_design_blazor',
-            appId: 'V29CUJY3QP',
+            apiKey: '93dc26e7c963c887f9b096b349dd47ce',
+            indexName: 'ant-design-blazor-docs',
+            appId: 'C9UTAZSOWW',
             inputSelector: '#search-box input',
             algoliaOptions: { facetFilters: [`tags:${lang}`] },
             transformData(hits) {
