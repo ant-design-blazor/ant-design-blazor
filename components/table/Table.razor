@@ -1,5 +1,6 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
+@using AntDesign.TableModels
 @typeparam TItem
 
 <div class="ant-table-wrapper">
@@ -7,7 +8,7 @@
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
             <Pagination Class="@_paginationClass"
-                        Total="ActualTotal"
+                        Total="Total"
                         PageSize="PageSize"
                         Current="PageIndex"
                         OnPageIndexChange="HandlePageIndexChange"
@@ -15,9 +16,13 @@
         }
         <CascadingValue Value="@this" TValue="ITable">
             <div class="@ClassMapper.Class">
-                @if (@Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0) || @Title.IsT1 && Title.AsT1 != null) {
+                @if (@Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0) || @Title.IsT1 && Title.AsT1 != null)
+                {
                     <div class="ant-table-title">
-                        @if(Title.IsT0) {@Title.AsT0} else {@Title.AsT1}
+                        @if (Title.IsT0)
+                        {@Title.AsT0}
+                    else
+                    {@Title.AsT1}
                     </div>
                 }
                 <div class="ant-table-container">
@@ -51,15 +56,19 @@
                                 @colGroup(this)
                                 @header(this)
                                 <tbody class="ant-table-tbody">
-                                @body(this)
+                                    @body(this)
                                 </tbody>
                             </table>
                         </div>
                     }
                 </div>
-                @if (@Footer.IsT0 && !string.IsNullOrEmpty(Footer.AsT0) || @Footer.IsT1 && Footer.AsT1 != null) {
+                @if (@Footer.IsT0 && !string.IsNullOrEmpty(Footer.AsT0) || @Footer.IsT1 && Footer.AsT1 != null)
+                {
                     <div class="ant-table-footer">
-                        @if(Footer.IsT0) {@Footer.AsT0} else {@Footer.AsT1}
+                        @if (Footer.IsT0)
+                        {@Footer.AsT0}
+                    else
+                    {@Footer.AsT1}
                     </div>
                 }
             </div>
@@ -67,7 +76,7 @@
         @if (!HidePagination && PaginationPosition.Contains("bottom"))
         {
             <Pagination Class="@_paginationClass"
-                        Total="ActualTotal"
+                        Total="Total"
                         PageSize="PageSize"
                         Current="PageIndex"
                         OnPageIndexChange="HandlePageIndexChange"
@@ -104,7 +113,7 @@ RenderFragment<Table<TItem>> colGroup = table =>
         <colgroup>
             @if (_fieldModel != null)
             {
-                @table.ChildContent(Table<TItem>._fieldModel)
+                @table.ChildContent(_fieldModel)
             }
             @if (table.ScrollY != null)
             {
@@ -117,7 +126,7 @@ RenderFragment<Table<TItem>> colGroup = table =>
 RenderFragment<Table<TItem>> body = table =>
 @<Template>
 
-    @if (table.ActualTotal <= 0)
+    @if (table.Total <= 0)
     {
         <tr class="ant-table-placeholder">
             <td colspan="6" class="ant-table-cell">
@@ -131,6 +140,10 @@ RenderFragment<Table<TItem>> body = table =>
         {
             var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
             var data = table._showItems.ElementAt(i);
+            if (!table._dataSourceCache.ContainsKey(rowIndex))
+            {
+                table._dataSourceCache[rowIndex] = new RowData<TItem>(rowIndex, data);
+            }
             var @checked = table._selection?.RowSelections.ElementAtOrDefault(i)?.Checked ?? false;
             <CascadingValue Value="@rowIndex" Name="RowIndex">
                 <CascadingValue Value="table.ColumnContext">
@@ -140,6 +153,8 @@ RenderFragment<Table<TItem>> body = table =>
                 </CascadingValue>
             </CascadingValue>
         }
+        
+        table.FinishLoadPage();
     }
 </Template>;
 }

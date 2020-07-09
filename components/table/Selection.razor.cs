@@ -66,7 +66,7 @@ namespace AntDesign
 
         private void HandleCheckedChange(bool @checked)
         {
-            this._checked = @checked;
+            Check(@checked);
 
             if (this.IsHeader)
             {
@@ -87,20 +87,25 @@ namespace AntDesign
 
         void ISelectionColumn.Check(bool @checked)
         {
-            this._checked = @checked;
-            StateHasChanged();
+            this.Check(@checked);
+        }
 
-            InvokeSelectedRowsChange();
+        private void Check(bool @checked)
+        {
+            if (this._checked != @checked)
+            {
+                this._checked = @checked;
+                StateHasChanged();
+
+                InvokeSelectedRowsChange();
+            }
         }
 
         private void InvokeSelectedRowsChange()
         {
             if (IsHeader)
             {
-                var checkedIndex = RowSelections.Where(x => x.Checked).Select(x => x.RowIndex - 1).ToArray();
-                _selectedIndexes ??= Array.Empty<int>();
-
-                Table.SelectionChanged(checkedIndex);
+                Table.SelectionChanged();
             }
         }
 
@@ -115,7 +120,6 @@ namespace AntDesign
             {
                 this.Table.Selection.RowSelections.Where(x => !x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(false));
                 this.Table.Selection.RowSelections.Where(x => x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(true));
-                this.Table.Selection.Check(true);
             }
         }
 
@@ -136,7 +140,7 @@ namespace AntDesign
 
         public void ChangeOnPaging()
         {
-            this.ChangeSelection(_selectedIndexes);
+            this.ChangeSelection(Table.GetSelectedIndex());
         }
     }
 }
