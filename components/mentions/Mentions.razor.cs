@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using OneOf;
 
 namespace AntDesign
@@ -105,18 +106,20 @@ namespace AntDesign
             await InvokeStateHasChangedAsync();
         }
 
+        DotNetObjectReference<Mentions> _reference;
+        const string ReferenceName = "mentions";
+
         protected async Task SetDropdownStyle()
         {
+            if (_reference == null)
+            {
+                _reference = DotNetObjectReference.Create<Mentions>(this);
+            }
             //get current dom element infomation
-            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, Ref);
+            var domRect = await JsInvokeAsync<double[]>(JSInteropConstants.getCursorXY, Ref, _reference);
 
-            //Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo);
-
-            //get the cursor  x.y
-            //var cursorPoint = await JsInvokeAsync<dynamic>(JSInteropConstants.getCursorXY, Ref);
-
-            var left = Math.Round(domRect.left);
-            var top = Math.Round(domRect.top + domRect.height + 4);
+            var left = Math.Round(domRect[0]);
+            var top = Math.Round(domRect[1]);
             //DropdownStyle = $"display:inline-flex;position:fixed;top:{top}px;left:{left}px;transform:translate({cursorPoint.x}px, {cursorPoint.y}0px);";
             DropdownStyle = $"display:inline-flex;position:fixed;top:{top}px;left:{left}px;transform:translate(0px, 0px);";
         }
@@ -236,6 +239,20 @@ namespace AntDesign
                 await OnBlur.InvokeAsync(args);
             await JsInvokeAsync(JSInteropConstants.blur, Ref);
             StateHasChanged();
+        }
+
+        [JSInvokable]
+        public void CloseMentionsDropDown()
+        {
+            ShowSuggestions = false;
+            StateHasChanged();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _reference = null;
+            _ = JsInvokeAsync(JSInteropConstants.disposeObj, ReferenceName);
+            base.Dispose(disposing);
         }
     }
 }

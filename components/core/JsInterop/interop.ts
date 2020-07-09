@@ -397,15 +397,31 @@ export function getInnerText(element) {
   return dom.innerText;
 }
 
- // return { x: dom.getCursorPosition.x, y: dom.getCursorPosition.y };
-export function getCursorXY(element) {
-    var rect = getBoundingClientRect(element), 
-        scrollTop = document.body.scrollTop || document.documentElement.scrollTop,
-        scrollLeft = document.body.scrollLeft || document.documentElement.scrollLeft,
-        isIE = !(!document.all) ? 2 : 0;
-    var position;
-    position.left = rect.left - isIE + scrollLeft;
-    position.top = rect.top - isIE + scrollTop;
-    return position;
-    
+const objReferenceDict = {};
+export function disposeObj(objReferenceName) {
+    delete objReferenceDict[objReferenceName];
 }
+
+//#region mentions
+
+import getOffset from "./Caret";
+
+export function getCursorXY(element, objReference) {
+    objReferenceDict["mentions"] = objReference;
+    window.addEventListener("click", mentionsOnWindowClick);
+
+    var offset = getOffset(element);
+
+    return [offset.left, offset.top + offset.height + 14];
+}
+
+function mentionsOnWindowClick(e) {
+    let mentionsObj = objReferenceDict["mentions"];
+    if (mentionsObj) {
+        mentionsObj.invokeMethodAsync("CloseMentionsDropDown");
+    } else {
+        window.removeEventListener("click", mentionsOnWindowClick);
+    }
+}
+
+//#endregion
