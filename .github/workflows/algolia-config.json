@@ -1,0 +1,37 @@
+{
+  "index_name": "ant_design_blazor",
+  "start_urls": [
+    {
+      "url": "https://ant-design-blazor.github.io/zh-CN/",
+      "tags": [
+        "cn"
+      ]
+    },
+    {
+      "url": "https://ant-design-blazor.github.io/en-US/",
+      "tags": [
+        "en"
+      ]
+    }
+  ],
+  "stop_urls": [
+    "/changelog"
+  ],
+  "selectors": {
+    "lvl0": {
+      "selector": ".ant-menu-submenu-selected h4",
+      "global": true,
+      "default_value": "Documentation"
+    },
+    "lvl1": "article h1",
+    "lvl2": "article h2",
+    "lvl3": "article h3",
+    "lvl4": "article h4",
+    "lvl5": "article h5",
+    "text": "article p, article li"
+  },
+  "strip_chars": "#",
+  "min_indexed_level": 1,
+  "js_render": true,
+  "js_wait": 5
+}
