@@ -30,7 +30,7 @@ namespace AntDesign.Docs.Shared
         [Inject]
         public DemoService DemoService { get; set; }
 
-        [Inject] 
+        [Inject]
         public IJSRuntime JsInterop { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -46,7 +46,7 @@ namespace AntDesign.Docs.Shared
                 StateHasChanged();
             };
         }
-        
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -54,7 +54,7 @@ namespace AntDesign.Docs.Shared
                 await JsInterop.InvokeVoidAsync("window.AntDesign.DocSearch.init", CurrentLanguage);
             }
         }
-        
+
         private async ValueTask GetCurrentMenuItems()
         {
             var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
