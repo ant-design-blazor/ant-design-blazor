@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace AntDesign.Docs.Shared
 {
@@ -29,11 +30,13 @@ namespace AntDesign.Docs.Shared
         [Inject]
         public DemoService DemoService { get; set; }
 
+        [Inject] 
+        public IJSRuntime JsInterop { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             //await GetCurrentMenuItems();
             //StateHasChanged();
-
             await DemoService.InitializeDemos();
 
             LanguageService.LanguageChanged += OnLanguageChanged;
@@ -43,7 +46,15 @@ namespace AntDesign.Docs.Shared
                 StateHasChanged();
             };
         }
-
+        
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await JsInterop.InvokeVoidAsync("window.AntDesign.DocSearch.init", CurrentLanguage);
+            }
+        }
+        
         private async ValueTask GetCurrentMenuItems()
         {
             var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
@@ -74,9 +85,10 @@ namespace AntDesign.Docs.Shared
             NavigationManager.NavigateTo($"{language}/{newUrl}");
         }
 
-        private async void OnLanguageChanged(object sender, CultureInfo args)
+        private async void OnLanguageChanged(object sender, CultureInfo culture)
         {
             await GetCurrentMenuItems();
+            await JsInterop.InvokeVoidAsync("window.AntDesign.DocSearch.localeChange", culture.Name);
             await InvokeAsync(StateHasChanged);
         }
 
