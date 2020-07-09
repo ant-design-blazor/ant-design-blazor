@@ -31,6 +31,7 @@ namespace AntDesign.Docs.Pages
             {
                 if (!string.IsNullOrEmpty(Name))
                 {
+                    if (Name.IndexOf('#') > 0) Name = Name.Substring(0, Name.IndexOf('#'));
                     _demoComponent = await DemoService.GetComponentAsync(Name);
                     await InvokeAsync(StateHasChanged);
                 }
@@ -53,6 +54,7 @@ namespace AntDesign.Docs.Pages
         {
             if (!string.IsNullOrEmpty(Name))
             {
+                if (Name.IndexOf('#') > 0) Name = Name.Substring(0, Name.IndexOf('#'));
                 _demoComponent = await DemoService.GetComponentAsync(Name);
             }
         }

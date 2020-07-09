@@ -57,7 +57,9 @@ Rate: Rate
 Select: Select
 Collapse: Collapse
 Table: Table
+AutoComplete: AutoComplete
 Upload: Upload
 AutoComplete: AutoComplete
 Anchor: Anchor
 Affix: Affix
+DocSearch: Search in Ant Design Blazor
