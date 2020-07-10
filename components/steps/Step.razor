@@ -51,15 +51,40 @@
             </div>
             <div class="ant-steps-item-content">
                 <div class="ant-steps-item-title">
-                    @Title
-                    @if (!string.IsNullOrEmpty(Subtitle))
+                    @if (Title.IsT0)
                     {
-                        <div class="ant-steps-item-subtitle">@Subtitle</div>
+                        @Title.AsT0
+                    }
+                    else
+                    {
+                        @Title.AsT1
+                    }
+                    @if (Subtitle.Value != null)
+                    {
+                        <div class="ant-steps-item-subtitle">
+                            @if (Subtitle.IsT0)
+                            {
+                                @Subtitle.AsT0
+                            }
+                            else
+                            {
+                                @Subtitle.AsT1
+                            }
+                        </div>
                     }
                 </div>
-                @if (!string.IsNullOrEmpty(Description))
+                @if (Description.Value != null)
                 {
-                    <div class="ant-steps-item-description">@Description</div>
+                    <div class="ant-steps-item-description">
+                        @if (Description.IsT0)
+                        {
+                            @Description.AsT0
+                        }
+                        else
+                        {
+                            @Description.AsT1
+                        }
+                    </div>
                 }
             </div>
         </div>
