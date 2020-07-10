@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 using System.Collections.Generic;
 
 namespace AntDesign
@@ -53,9 +54,9 @@ namespace AntDesign
             }
         }
 
-        [Parameter] public string Title { get; set; } = string.Empty;
-        [Parameter] public string Subtitle { get; set; } = string.Empty;
-        [Parameter] public string Description { get; set; } = string.Empty;
+        [Parameter] public OneOf<string, RenderFragment> Title { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Subtitle { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Description { get; set; }
         [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
         [Parameter] public bool Disabled { get; set; }
 
