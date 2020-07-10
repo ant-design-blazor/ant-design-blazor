@@ -47,7 +47,7 @@
             Width = 350,
         };
 
-        var drawerRef = await DrawerService.CreateAsync<ComponentTemplate, string, string>(options, value);
+        var drawerRef = await DrawerService.CreateAsync<DrawerTemplateDemo, string, string>(options, value);
 
         drawerRef.OnOpen = () =>
         {
