@@ -15,7 +15,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 关闭抽屉
+        /// 关闭窗体
         /// </summary>
         /// <returns></returns>
         public async Task CloseAsync(TResult result)
@@ -54,7 +54,7 @@ namespace AntDesign
         /// <returns></returns>
         public async Task OpenAsync()
         {
-            await _service.OpenAsync(this);
+            await _service?.OpenAsync(this);
             if (OnOpen != null)
                 await OnOpen.Invoke();
         }
@@ -65,34 +65,21 @@ namespace AntDesign
         /// <returns></returns>
         public async Task CloseAsync()
         {
-            await _service.CloseAsync(this);
+            await _service?.CloseAsync(this);
             if (OnClose != null)
                 await OnClose.Invoke();
         }
 
         public async Task UpdateConfig()
         {
-            await _service.Update(this);
+            await _service?.Update(this);
         }
-
 
         public async Task UpdateConfig(ConfirmOptions config)
         {
             Config = config;
-            await _service.Update(this);
+            await _service?.Update(this);
         }
 
-
-        internal async Task HandleOnCancel()
-        {
-            //bool isClose = true;
-            //if (Config.OnCancel != null)
-            //{
-            //    isClose = Config.OnCancel.Invoke() ?? true;
-            //}
-            //if (isClose == true)
-            //    await _service.CloseAsync(this);
-
-        }
     }
 }

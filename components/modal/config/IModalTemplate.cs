@@ -17,6 +17,5 @@ namespace AntDesign
         /// </summary>
         Task CancelAsync(ModalClosingEventArgs args);
 
-        Task CloseAsync(ModalClosingEventArgs args);
     }
 }

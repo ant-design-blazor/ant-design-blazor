@@ -1,14 +1,14 @@
 ﻿---
-order: 0
+order: 10
 title:
-  zh-CN: 基本
-  en-US: Basic
+  zh-CN: 模板
+  en-US: Template
 ---
 
 ## zh-CN
 
-模板对话框。
+Modal 的 service 用法，示例中演示了用户自定义模板、自定义component。
 
 ## en-US
 
-Template modal.
+Usage of Modal's service, examples demonstrate user-defined templates, custom components.

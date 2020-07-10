@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
-{ 
+{
     public partial class ComfirmContainer
     {
         [Inject]
@@ -43,18 +43,18 @@ namespace AntDesign
         {
             modalRef.Config.Visible = false;
             await InvokeAsync(StateHasChanged);
-            await Task.Delay(300);
+            await Task.Delay(250);
             if (_modalRefs.Contains(modalRef))
             {
                 _modalRefs.Remove(modalRef);
             }
         }
 
-        //private async Task OnRemove(ConfirmOptions obj)
+        //private async Task OnRemove(ModalRef modalRef)
         //{
-        //    await Task.Delay(250);
-        //    _confirms.Remove(obj);
+        //    _modalRefs.Remove(modalRef);
         //    await InvokeAsync(StateHasChanged);
+        //    await Task.Delay(250);
         //}
 
 
@@ -70,7 +70,7 @@ namespace AntDesign
         {
             modalRef.Config.Visible = false;
             await InvokeAsync(StateHasChanged);
-            await Task.Delay(300);
+            await Task.Delay(250);
             if (_modalRefs.Contains(modalRef))
             {
                 _modalRefs.Remove(modalRef);
@@ -84,7 +84,7 @@ namespace AntDesign
                 modalRef.Config.Visible = false;
             }
             await InvokeAsync(StateHasChanged);
-            await Task.Delay(300);
+            await Task.Delay(250);
             _modalRefs.Clear();
         }
 
@@ -97,7 +97,7 @@ namespace AntDesign
             ModalService.OnDestroyAllEvent -= Modal_OnDestroyAll;
             ModalService.OnUpdateEvent -= Modal_OnUpdate;
 
-      
+
             base.Dispose(disposing);
         }
     }

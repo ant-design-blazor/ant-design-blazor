@@ -13,7 +13,7 @@ namespace AntDesign
 
 
         /// <summary>
-        /// 关闭抽屉
+        /// 关闭窗体
         /// </summary>
         /// <returns></returns>
         protected async Task CloseAsync(TResult result)

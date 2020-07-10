@@ -77,26 +77,48 @@ namespace AntDesign
             }
         }
 
+
         private async Task HandleOk(MouseEventArgs e)
         {
+            var args = new ModalClosingEventArgs(e, false);
             if (Config.OnOk != null)
             {
                 Config.OkButtonProps.Loading = true;
                 await InvokeAsync(StateHasChanged);
-                await Config.OnOk.Invoke(e);
+                await Config.OnOk.Invoke(args);
             }
-            await Close();
+
+            if (args.Cancel == true)
+            {
+                Config.OkButtonProps.Loading = false;
+                await InvokeAsync(StateHasChanged);
+            }
+            else
+            {
+                await Close();
+            }
         }
 
         private async Task HandleCancel(MouseEventArgs e)
         {
+            var args = new ModalClosingEventArgs(e, false);
             if (Config.OnCancel != null)
             {
                 Config.CancelButtonProps.Loading = true;
                 await InvokeAsync(StateHasChanged);
-                await Config.OnCancel.Invoke(e);
+                await Config.OnCancel.Invoke(args);
+
             }
-            await Close();
+
+            if (args.Cancel == true)
+            {
+                Config.CancelButtonProps.Loading = false;
+                await InvokeAsync(StateHasChanged);
+            }
+            else
+            {
+                await Close();
+            }
         }
     }
 }

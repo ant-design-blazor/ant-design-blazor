@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -20,10 +21,13 @@ namespace AntDesign
 
         public ModalClosingEventArgs() { }
 
-        public ModalClosingEventArgs(bool cancel)
+        public ModalClosingEventArgs(MouseEventArgs mouseEvent, bool cancel)
         {
             Cancel = cancel;
+            MouseEvent = mouseEvent;
         }
+
+        public MouseEventArgs MouseEvent { get; set; }
 
         /// <summary>
         /// 获取或设置一个值，该值指示是否应取消事件。

@@ -4,7 +4,7 @@
 <br />
 <br />
 <Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
-@*<Button OnClick="OpenComponent" Type="primary">Use Component</Button>*@
+<Button OnClick="OpenComponent" Type="primary">Use Component</Button>
 
 @code{
 
@@ -40,4 +40,27 @@
             }
         }
 
+        private async Task OpenComponent()
+        {
+            var options = new ConfirmOptions()
+            {
+                Title = "Component",
+                Width = 350,
+            };
+
+            var drawerRef = await ModalService.CreateAsync<ModalTemplateDemo, string, string>(options, value);
+
+            drawerRef.OnOpen = () =>
+            {
+                Console.WriteLine("OnAfterOpen");
+                return Task.CompletedTask;
+            };
+
+            drawerRef.OnClose = async result =>
+            {
+                Console.WriteLine("OnAfterClose:" + result);
+                value = result;
+                await InvokeAsync(StateHasChanged);
+            };
+        }
     }
