@@ -21,5 +21,7 @@ namespace AntDesign
         public void SetSelection(string[] keys);
 
         public void ChangeOnPaging();
+
+        public void InvokeSelectedRowsChange();
     }
 }

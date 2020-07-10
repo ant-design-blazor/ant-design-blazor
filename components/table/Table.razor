@@ -144,10 +144,10 @@ RenderFragment<Table<TItem>> body = table =>
             {
                 table._dataSourceCache[rowIndex] = new RowData<TItem>(rowIndex, data);
             }
-            var @checked = table._selection?.RowSelections.ElementAtOrDefault(i)?.Checked ?? false;
+            var selected = table._dataSourceCache[rowIndex].Selected;
             <CascadingValue Value="@rowIndex" Name="RowIndex">
                 <CascadingValue Value="table.ColumnContext">
-                    <tr data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-0 @(@checked ? "ant-table-row-selected" : "")">
+                    <tr data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-0 @(selected ? "ant-table-row-selected" : "")">
                         @table.ChildContent(data)
                     </tr>
                 </CascadingValue>

@@ -79,7 +79,7 @@ namespace AntDesign
                     Table?.Selection.RowSelections.Where(x => x.RowIndex != this.RowIndex).ForEach(x => x.Check(false));
                 }
 
-                Table?.Selection.Check(@checked);
+                Table?.Selection.InvokeSelectedRowsChange();
             }
 
             InvokeSelectedRowsChange();
@@ -95,17 +95,18 @@ namespace AntDesign
             if (this._checked != @checked)
             {
                 this._checked = @checked;
-                StateHasChanged();
 
                 InvokeSelectedRowsChange();
             }
         }
 
-        private void InvokeSelectedRowsChange()
+        public void InvokeSelectedRowsChange()
         {
             if (IsHeader)
             {
                 Table.SelectionChanged();
+
+                StateHasChanged();
             }
         }
 
