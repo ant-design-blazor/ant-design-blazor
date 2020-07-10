@@ -32,10 +32,6 @@
     <Compile Include="..\Shared\DocsFile.cs" Link="Services\DocsFile.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Demos\Mentions\doc\" />
-  </ItemGroup>
-
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
