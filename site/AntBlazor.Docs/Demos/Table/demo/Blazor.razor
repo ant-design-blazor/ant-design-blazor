@@ -52,7 +52,7 @@
 
     async Task fetchData(PaginationEventArgs args)
     {
-        forecasts = await GetForecastAsync(args.PageIndex, args.PageSize);
+        //forecasts = await GetForecastAsync(args.PageIndex, args.PageSize);
     }
 
     void onChange(QueryModel<WeatherForecast> queryModel)
@@ -96,7 +96,9 @@
 
     public void RemoveSelection(int id)
     {
-        var selected = selectedRows.Where(x => x.Id != id).ToList();
-        table.SetSelection(selected.Select(x => x.Id.ToString()).ToArray());
+        var selected = selectedRows.Where(x => x.Id != id);
+        selectedRows = selected;
+
+        //table.SetSelection(selected.Select(x => x.Id.ToString()).ToArray());
     }
 }
