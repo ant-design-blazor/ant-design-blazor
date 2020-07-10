@@ -108,6 +108,7 @@ namespace AntDesign
             }, embedded =>
             {
                 ClassMapper
+                    .If($"{prefixCls}-{sizeName}-{embedded.Span.Value}", () => embedded.Span.Value != null)
                     .If($"{prefixCls}-{sizeName}-order-{embedded.Order.Value}", () => embedded.Order.Value != null)
                     .If($"{prefixCls}-{sizeName}-offset-{embedded.Offset.Value}", () => embedded.Offset.Value != null)
                     .If($"{prefixCls}-{sizeName}-push-{embedded.Push.Value}", () => embedded.Push.Value != null)
