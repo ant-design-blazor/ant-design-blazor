@@ -17,7 +17,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="config">抽屉参数</param>
         /// <returns></returns>
-        public async Task<DrawerRef> CreateAsync(DrawerConfig config)
+        public async Task<DrawerRef> CreateAsync(DrawerOptions config)
         {
             CheckIsNull(config);
             DrawerRef drawerRef = new DrawerRef(config, this);
@@ -34,7 +34,7 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="contentParams"></param>
         /// <returns></returns>
-        public async Task<DrawerRef<TResult>> CreateAsync<TComponent, TContentParams, TResult>(DrawerConfig config, TContentParams contentParams) where TComponent : DrawerTemplate<TContentParams, TResult>
+        public async Task<DrawerRef<TResult>> CreateAsync<TComponent, TContentParams, TResult>(DrawerOptions config, TContentParams contentParams) where TComponent : DrawerTemplate<TContentParams, TResult>
         {
             CheckIsNull(config);
 
@@ -72,7 +72,7 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-        private static void CheckIsNull(DrawerConfig options)
+        private static void CheckIsNull(DrawerOptions options)
         {
             if (options == null)
             {

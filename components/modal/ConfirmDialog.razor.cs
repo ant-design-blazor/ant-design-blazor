@@ -13,10 +13,23 @@ namespace AntDesign
         public ConfirmOptions Config { get; set; }
 
         [Parameter]
+        public ModalRef ModalRef { get; set; }
+
+        [Parameter]
         public EventCallback<ConfirmOptions> OnRemove { get; set; }
 
         private Button _cancelBtn;
         private Button _okBtn;
+
+        DialogOptions _dialogOptions;
+
+        protected override async Task OnInitializedAsync()
+        {
+            _dialogOptions = BuildDialogOptions(Config);
+            if (ModalRef.OnOpen != null)
+                await ModalRef.OnOpen.Invoke();
+            await base.OnInitializedAsync();
+        }
 
         private DialogOptions BuildDialogOptions(ConfirmOptions confirmOptions)
         {
@@ -81,11 +94,17 @@ namespace AntDesign
         private async Task HandleOk(MouseEventArgs e)
         {
             var args = new ModalClosingEventArgs(e, false);
-            if (Config.OnOk != null)
+
+            if (ModalRef.ModalTemplate != null)
+                await ModalRef.ModalTemplate.OkAsync(args);
+            if (args.Cancel == false)
             {
-                Config.OkButtonProps.Loading = true;
-                await InvokeAsync(StateHasChanged);
-                await Config.OnOk.Invoke(args);
+                if (Config.OnOk != null)
+                {
+                    Config.OkButtonProps.Loading = true;
+                    await InvokeAsync(StateHasChanged);
+                    await Config.OnOk.Invoke(args);
+                }
             }
 
             if (args.Cancel == true)
@@ -102,12 +121,17 @@ namespace AntDesign
         private async Task HandleCancel(MouseEventArgs e)
         {
             var args = new ModalClosingEventArgs(e, false);
-            if (Config.OnCancel != null)
-            {
-                Config.CancelButtonProps.Loading = true;
-                await InvokeAsync(StateHasChanged);
-                await Config.OnCancel.Invoke(args);
 
+            if (ModalRef.ModalTemplate != null)
+                await ModalRef.ModalTemplate.CancelAsync(args);
+            if (args.Cancel == false)
+            {
+                if (Config.OnCancel != null)
+                {
+                    Config.CancelButtonProps.Loading = true;
+                    await InvokeAsync(StateHasChanged);
+                    await Config.OnCancel.Invoke(args);
+                }
             }
 
             if (args.Cancel == true)

@@ -48,15 +48,8 @@ namespace AntDesign
             {
                 _modalRefs.Remove(modalRef);
             }
+            modalRef.OnClose?.Invoke();
         }
-
-        //private async Task OnRemove(ModalRef modalRef)
-        //{
-        //    _modalRefs.Remove(modalRef);
-        //    await InvokeAsync(StateHasChanged);
-        //    await Task.Delay(250);
-        //}
-
 
         private async Task Modal_OnUpdate(ModalRef modalRef)
         {
@@ -75,6 +68,7 @@ namespace AntDesign
             {
                 _modalRefs.Remove(modalRef);
             }
+            modalRef.OnDestroy?.Invoke();
         }
 
         private async Task Modal_OnDestroyAll()
@@ -82,6 +76,7 @@ namespace AntDesign
             foreach (var modalRef in _modalRefs)
             {
                 modalRef.Config.Visible = false;
+                modalRef.OnDestroy?.Invoke();
             }
             await InvokeAsync(StateHasChanged);
             await Task.Delay(250);
@@ -96,7 +91,6 @@ namespace AntDesign
             ModalService.OnDestroyEvent -= Modal_OnDestroy;
             ModalService.OnDestroyAllEvent -= Modal_OnDestroyAll;
             ModalService.OnUpdateEvent -= Modal_OnUpdate;
-
 
             base.Dispose(disposing);
         }

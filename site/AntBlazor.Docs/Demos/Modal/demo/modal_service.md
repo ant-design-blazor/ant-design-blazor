@@ -1,5 +1,5 @@
 ﻿---
-order: 10
+order: 12
 title:
   zh-CN: 模板
   en-US: Template

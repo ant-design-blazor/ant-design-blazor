@@ -5,18 +5,15 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public class ModalClosingEventArgs
+    public class DrawerClosingEventArgs
     {
 
-        public ModalClosingEventArgs() { }
+        public DrawerClosingEventArgs() { }
 
-        public ModalClosingEventArgs(MouseEventArgs mouseEvent, bool cancel)
+        public DrawerClosingEventArgs(bool cancel)
         {
             Cancel = cancel;
-            MouseEvent = mouseEvent;
-        }
-
-        public MouseEventArgs MouseEvent { get; set; }
+         }
 
         /// <summary>
         /// 获取或设置一个值，该值指示是否应取消事件。

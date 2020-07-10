@@ -7,7 +7,9 @@ namespace AntDesign
 {
     public class ModalRef<TResult> : ModalRef
     {
-        public new Func<TResult, Task> OnClose { get; set; }
+        public Func<TResult, Task> OnCancel { get; set; }
+
+        public Func<TResult, Task> OnOk { get; set; }
 
         internal ModalRef(ConfirmOptions config, ModalService service) : base(config, service)
         {
@@ -15,15 +17,24 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 关闭窗体
+        /// 确定
         /// </summary>
         /// <returns></returns>
-        public async Task CloseAsync(TResult result)
+        public async Task TriggerOkAsync(TResult result)
         {
-            await _service.CloseAsync(this);
-            await OnClose.Invoke(result);
+            await _service?.CloseAsync(this);
+            await OnOk?.Invoke(result);
         }
 
+        /// <summary>
+        /// 取消
+        /// </summary>
+        /// <returns></returns>
+        public async Task TriggerCancelAsync(TResult result)
+        {
+            await _service?.CloseAsync(this);
+            await OnCancel?.Invoke(result);
+        }
     }
 
     public class ModalRef
@@ -33,9 +44,13 @@ namespace AntDesign
 
         protected ModalService _service;
 
+        internal IModalTemplate ModalTemplate { get; set; }
+
         public Func<Task> OnOpen { get; set; }
 
         public Func<Task> OnClose { get; set; }
+
+        public Func<Task> OnDestroy { get; set; }
 
         internal ModalRef(ConfirmOptions config)
         {
@@ -55,8 +70,6 @@ namespace AntDesign
         public async Task OpenAsync()
         {
             await _service?.OpenAsync(this);
-            if (OnOpen != null)
-                await OnOpen.Invoke();
         }
 
         /// <summary>
@@ -66,8 +79,6 @@ namespace AntDesign
         public async Task CloseAsync()
         {
             await _service?.CloseAsync(this);
-            if (OnClose != null)
-                await OnClose.Invoke();
         }
 
         public async Task UpdateConfig()

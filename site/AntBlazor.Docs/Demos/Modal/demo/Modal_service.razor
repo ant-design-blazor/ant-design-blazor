@@ -21,9 +21,17 @@
                 Title = "Modal",
                 Width = 350,
                 Content = content,
+                OnOk = e => { Console.WriteLine("OnOk"); return Task.CompletedTask; },
+                OnCancel = e => { Console.WriteLine("OnCancel"); return Task.CompletedTask; }
             };
 
             _drawerRef = await ModalService.CreateAsync(options);
+
+            _drawerRef.OnOpen = () =>
+            {
+                Console.WriteLine("Open Modal");
+                return Task.CompletedTask;
+            };
 
             _drawerRef.OnClose = () =>
             {
@@ -45,22 +53,28 @@
             var options = new ConfirmOptions()
             {
                 Title = "Component",
-                Width = 350,
+
             };
 
             var drawerRef = await ModalService.CreateAsync<ModalTemplateDemo, string, string>(options, value);
 
             drawerRef.OnOpen = () =>
             {
-                Console.WriteLine("OnAfterOpen");
+                Console.WriteLine("OnOpen");
                 return Task.CompletedTask;
             };
 
-            drawerRef.OnClose = async result =>
+            drawerRef.OnClose = () =>
             {
-                Console.WriteLine("OnAfterClose:" + result);
-                value = result;
-                await InvokeAsync(StateHasChanged);
+                Console.WriteLine("OnClose");
+                return Task.CompletedTask;
             };
+
+            drawerRef.OnOk = (result) =>
+            {
+                Console.WriteLine($"OnOk:{result}");
+                return Task.CompletedTask;
+            };
+
         }
     }

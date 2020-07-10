@@ -1,25 +1,32 @@
 ﻿@inherits ModalTemplate<string, string>
 
 <div>
-    value: <Input @bind-Value="value" />
-    <br/>
-    <br/>
-    <Button Type="primary" OnClick="OnClose">Confirm</Button>
+    <Text>Please input "@config"</Text>
+    value: <Input @bind-Value="value" Placeholder="@config" />
 </div>
 
 @code{
+
+    string config;
 
     string value;
 
     protected override void OnInitialized()
     {
-        value = this.Config;
+        config = this.Config;
         base.OnInitialized();
     }
 
 
-    async void OnClose()
+    public override async Task OkAsync(ModalClosingEventArgs args)
     {
-        await this.CloseAsync(value);
+        ModalRef.Config.OkButtonProps.Loading = true;
+        await Task.Delay(1000);
+        if (value != config)
+            args.Cancel = true;
+        else
+            await this.OnOkAsync(value);
+
+        await base.OkAsync(args);
     }
 }
