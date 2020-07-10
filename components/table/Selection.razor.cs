@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
 
@@ -71,6 +70,7 @@ namespace AntDesign
             if (this.IsHeader)
             {
                 RowSelections.Where(x => !x.Disabled).ForEach(x => x.Check(@checked));
+                InvokeSelectedRowsChange();
             }
             else
             {
@@ -81,23 +81,24 @@ namespace AntDesign
 
                 Table?.Selection.InvokeSelectedRowsChange();
             }
-
-            InvokeSelectedRowsChange();
         }
 
-        void ISelectionColumn.Check(bool @checked)
+        bool ISelectionColumn.Check(bool @checked)
         {
-            this.Check(@checked);
+            return this.Check(@checked);
         }
 
-        private void Check(bool @checked)
+        private bool Check(bool @checked)
         {
             if (this._checked != @checked)
             {
                 this._checked = @checked;
+                StateHasChanged();
 
-                InvokeSelectedRowsChange();
+                return true;
             }
+
+            return false;
         }
 
         public void InvokeSelectedRowsChange()
@@ -119,8 +120,8 @@ namespace AntDesign
             }
             else
             {
-                this.Table.Selection.RowSelections.Where(x => !x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(false));
-                this.Table.Selection.RowSelections.Where(x => x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(true));
+                this.Table.Selection.RowSelections.ForEach(x => x.Check(x.RowIndex.IsIn(indexes)));
+                this.Table.Selection.StateHasChanged();
             }
         }
 
@@ -133,15 +134,23 @@ namespace AntDesign
             }
             else
             {
-                this.Table.Selection.RowSelections.Where(x => !x.Key.IsIn(keys)).ForEach(x => x.Check(false));
-                this.Table.Selection.RowSelections.Where(x => x.Key.IsIn(keys)).ForEach(x => x.Check(true));
-                this.Table.Selection.Check(keys.Any());
+                this.Table.Selection.RowSelections.ForEach(x => x.Check(x.Key.IsIn(keys)));
+                this.Table.Selection.StateHasChanged();
             }
         }
 
         public void ChangeOnPaging()
         {
             this.ChangeSelection(Table.GetSelectedIndex());
+        }
+
+        void ISelectionColumn.StateHasChanged()
+        {
+            if (IsHeader)
+            {
+                _checked = this.RowSelections.All(x => x.Checked);
+                StateHasChanged();
+            }
         }
     }
 }

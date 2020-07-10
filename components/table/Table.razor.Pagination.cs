@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using AntDesign.TableModels;
+﻿using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -66,14 +64,16 @@ namespace AntDesign
             _paginationClass = $"ant-table-pagination ant-table-pagination-{Regex.Replace(_paginationPosition, "bottom|top", "").ToLowerInvariant()}";
         }
 
-        private void HandlePageIndexChange(PaginationEventArgs args)
+        private async Task HandlePageIndexChange(PaginationEventArgs args)
         {
             PageIndex = args.PageIndex;
 
+            await PageIndexChanged.InvokeAsync(args.PageIndex);
+            await OnPageIndexChange.InvokeAsync(args);
+
             ReloadAndInvokeChange();
 
-            PageIndexChanged.InvokeAsync(args.PageIndex);
-            OnPageIndexChange.InvokeAsync(args);
+            StateHasChanged();
         }
 
         private void HandlePageSizeChange(PaginationEventArgs args)

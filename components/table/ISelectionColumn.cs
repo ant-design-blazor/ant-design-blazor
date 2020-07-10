@@ -14,7 +14,7 @@ namespace AntDesign
 
         public IList<ISelectionColumn> RowSelections { get; set; }
 
-        public void Check(bool @checked);
+        public bool Check(bool @checked);
 
         public void ChangeSelection(int[] indexes);
 
@@ -23,5 +23,7 @@ namespace AntDesign
         public void ChangeOnPaging();
 
         public void InvokeSelectedRowsChange();
+
+        public void StateHasChanged();
     }
 }
