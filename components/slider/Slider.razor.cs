@@ -26,7 +26,9 @@ namespace AntDesign
         private string _rightHandleStyle = "left: 0%; right: auto; transform: translateX(-50%);";
         private string _trackStyle = "left: 0%; width: 0%; right: auto;";
         private bool _mouseDown;
+        private bool _mouseMove;
         private bool _right = true;
+        private bool _initialized = false;
 
         private string RightHandleStyleFormat
         {
@@ -303,10 +305,11 @@ namespace AntDesign
             await base.SetParametersAsync(parameters);
 
             var dict = parameters.ToDictionary();
-            if (dict.ContainsKey(nameof(DefaultValue)) && !dict.ContainsKey(nameof(Value)))
+            if (!_initialized && dict.ContainsKey(nameof(DefaultValue)) && !dict.ContainsKey(nameof(Value)))
             {
                 Value = parameters.GetValueOrDefault(nameof(DefaultValue), SliderValueType.FromT0(0));
             }
+            _initialized = true;
         }
 
         protected override void OnParametersSet()
@@ -349,16 +352,21 @@ namespace AntDesign
         {
             if (_mouseDown)
             {
+                _mouseMove = true;
                 await CalculateValueAsync(jsonElement.GetProperty(Vertical ? "clientY" : "clientX").GetDouble());
 
                 OnChange?.Invoke(RightValue);
             }
         }
 
-        private void OnMouseUp(JsonElement jsonElement)
+        private async void OnMouseUp(JsonElement jsonElement)
         {
+            if (_mouseMove) // mouse move ending
+            {
+                await OnAfterChange.InvokeAsync(Value);
+            }
             _mouseDown = false;
-            OnAfterChange.InvokeAsync(RightValue);
+            _mouseMove = false;
         }
 
         private async void OnClick(MouseEventArgs args)
@@ -366,6 +374,7 @@ namespace AntDesign
             if (!Disabled)
             {
                 await CalculateValueAsync(Vertical ? args.ClientY : args.ClientX);
+                await OnAfterChange.InvokeAsync(Value);
             }
         }
 
