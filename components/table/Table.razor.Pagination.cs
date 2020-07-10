@@ -56,8 +56,6 @@ namespace AntDesign
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
-        public PaginationModel Pagination { get; private set; }
-
         private int _total = 0;
         private int _dataSourceCount = 0;
         private string _paginationPosition = "bottomRight";
@@ -65,19 +63,12 @@ namespace AntDesign
 
         private void InitializePagination()
         {
-            Pagination ??= new PaginationModel()
-            {
-                PageIndex = PageIndex,
-                PageSize = PageSize,
-                Total = Total
-            };
             _paginationClass = $"ant-table-pagination ant-table-pagination-{Regex.Replace(_paginationPosition, "bottom|top", "").ToLowerInvariant()}";
         }
 
         private void HandlePageIndexChange(PaginationEventArgs args)
         {
             PageIndex = args.PageIndex;
-            Pagination.PageIndex = args.PageIndex;
 
             ReloadAndInvokeChange();
 
@@ -88,7 +79,6 @@ namespace AntDesign
         private void HandlePageSizeChange(PaginationEventArgs args)
         {
             PageSize = args.PageSize;
-            Pagination.PageSize = args.PageSize;
 
             ReloadAndInvokeChange();
 

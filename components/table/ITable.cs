@@ -1,12 +1,7 @@
-﻿using System.Threading.Tasks;
-using AntDesign.TableModels;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     public interface ITable
     {
-        PaginationModel Pagination { get; }
-
         internal ISelectionColumn Selection { get; set; }
 
         internal void SelectionChanged();
