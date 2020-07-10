@@ -1,59 +1,60 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
     public partial class Table<TItem> : ITable
     {
-        private ISelectionColumn _headerSelection;
-
-        ISelectionColumn ITable.HeaderSelection
+        [Parameter]
+        public IEnumerable<TItem> SelectedRows
         {
-            get => _headerSelection;
-            set => _headerSelection = value;
-        }
-
-        void ITable.SelectionChanged(int[] checkedIndex)
-        {
-            if (SelectedRowsChanged.HasDelegate)
+            get => _selectedRows;
+            set
             {
-                var list = new List<TItem>();
-                foreach (var index in checkedIndex)
+                if (value != null && value.Any())
                 {
-                    list.Add(_dataSource.ElementAt(index));
+                    _dataSourceCache.Values.ForEach(x => x.Selected = x.Data.IsIn(value));
+                }
+                else if (_selectedRows != null)
+                {
+                    _dataSourceCache.Values.ForEach(x => x.Selected = false);
                 }
 
-                SelectedRowsChanged.InvokeAsync(list);
+                _selectedRows = value;
+
+                StateHasChanged();
             }
         }
 
-        private void ChangeSelection(int[] indexes)
+        [Parameter]
+        public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
+
+        private ISelectionColumn _selection;
+        private IEnumerable<TItem> _selectedRows;
+
+        ISelectionColumn ITable.Selection
         {
-            if (indexes == null || !indexes.Any())
-            {
-                this._headerSelection.RowSelections.ForEach(x => x.Check(false));
-                this._headerSelection.Check(false);
-            }
-            else
-            {
-                this._headerSelection.RowSelections.Where(x => !x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(false));
-                this._headerSelection.RowSelections.Where(x => x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(true));
-                this._headerSelection.Check(true);
-            }
+            get => _selection;
+            set => _selection = value;
         }
 
         public void SetSelection(string[] keys)
         {
-            if (keys == null || !keys.Any())
+            _selection.SetSelection(keys);
+        }
+
+        void ITable.SelectionChanged()
+        {
+            foreach (var selection in _selection.RowSelections)
             {
-                this._headerSelection.RowSelections.ForEach(x => x.Check(false));
-                this._headerSelection.Check(false);
+                _dataSourceCache[selection.RowIndex].Selected = selection.Checked;
             }
-            else
+
+            if (SelectedRowsChanged.HasDelegate)
             {
-                this._headerSelection.RowSelections.Where(x => !x.Key.IsIn(keys)).ForEach(x => x.Check(false));
-                this._headerSelection.RowSelections.Where(x => x.Key.IsIn(keys)).ForEach(x => x.Check(true));
-                this._headerSelection.Check(keys.Any());
+                _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
+                SelectedRowsChanged.InvokeAsync(_selectedRows);
             }
         }
     }
