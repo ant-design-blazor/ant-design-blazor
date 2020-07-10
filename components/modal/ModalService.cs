@@ -8,19 +8,22 @@ namespace AntDesign
 {
     public class ModalService
     {
-        internal event Func<ConfirmOptions, Task> OnOpenConfirm;
-        internal event Func<ConfirmOptions, Task> OnUpdate;
-        internal event Func<ConfirmOptions, Task> OnDestroy;
-        internal event Func<Task> OnDestroyAll;
+        internal event Func<ModalRef, Task> OnOpenEvent;
+        internal event Func<ModalRef, Task> OnCloseEvent;
+        internal event Func<ModalRef, Task> OnUpdateEvent;
+        internal event Func<ModalRef, Task> OnDestroyEvent;
+        internal event Func<Task> OnDestroyAllEvent;
 
         #region SimpleConfirm
 
-        public Task Confirm(ConfirmOptions props)
+        public async Task<ModalRef> Confirm(ConfirmOptions props)
         {
-            return OnOpenConfirm?.Invoke(props);
+            ModalRef modalRef = new ModalRef(props, this);
+            await OnOpenEvent?.Invoke(modalRef);
+            return modalRef;
         }
 
-        public Task Info(ConfirmOptions options)
+        public async Task<ModalRef> Info(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -36,10 +39,10 @@ namespace AntDesign
             options.OkCancel = false;
             options.OkText = "OK";
             options.ConfirmType = "info";
-            return Confirm(options);
+            return await Confirm(options);
         }
 
-        public Task Success(ConfirmOptions options)
+        public async Task<ModalRef> Success(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -55,10 +58,10 @@ namespace AntDesign
             options.OkCancel = false;
             options.OkText = "OK";
             options.ConfirmType = "success";
-            return Confirm(options);
+            return await Confirm(options);
         }
 
-        public Task Error(ConfirmOptions options)
+        public async Task<ModalRef> Error(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -74,10 +77,10 @@ namespace AntDesign
             options.OkCancel = false;
             options.OkText = "OK";
             options.ConfirmType = "error";
-            return Confirm(options);
+            return await Confirm(options);
         }
 
-        public Task Warning(ConfirmOptions options)
+        public async Task<ModalRef> Warning(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -93,30 +96,27 @@ namespace AntDesign
             options.OkCancel = false;
             options.OkText = "OK";
             options.ConfirmType = "warning";
-            return Confirm(options);
+            return await Confirm(options);
         }
 
         #endregion
 
-        public Task Update(ConfirmOptions options)
+        public Task Update(ModalRef modalRef)
         {
-            return OnUpdate?.Invoke(options);
+            return OnUpdateEvent?.Invoke(modalRef);
         }
 
-        public Task Destroy(ConfirmOptions options)
+        public Task Destroy(ModalRef modalRef)
         {
-            return OnDestroy?.Invoke(options);
+            return OnDestroyEvent?.Invoke(modalRef);
         }
 
         public Task DestroyAll()
         {
-            return OnDestroyAll?.Invoke();
+            return OnDestroyAllEvent?.Invoke();
         }
 
 
-        internal event Func<ModalRef, Task> OnOpenEvent;
-
-        internal event Func<ModalRef, Task> OnCloseEvent;
 
         /// <summary>
         /// 创建并打开一个简单窗口

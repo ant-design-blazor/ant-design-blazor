@@ -16,64 +16,22 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            ModalService.OnOpenConfirm += Modal_OnOpenConfirm;
-            ModalService.OnDestroy += Modal_OnDestroy;
-            ModalService.OnDestroyAll += Modal_OnDestroyAll;
-            ModalService.OnUpdate += Modal_OnUpdate;
-
-
-            ModalService.OnCloseEvent += ModalService_OnClose;
-            ModalService.OnOpenEvent += ModalService_OnCreate;
-        }
-
-        private List<ConfirmOptions> _confirms = new List<ConfirmOptions>();
-
-        private async Task OnRemove(ConfirmOptions obj)
-        {
-            await Task.Delay(250);
-            _confirms.Remove(obj);
-            await InvokeAsync(StateHasChanged);
-        }
-
-        private async Task Modal_OnOpenConfirm(ConfirmOptions obj)
-        {
-            _confirms.Add(obj);
-            obj.Visible = true;
-            await InvokeAsync(StateHasChanged);
-        }
-
-        private async Task Modal_OnUpdate(ConfirmOptions props)
-        {
-            if (props.Visible)
-            {
-                await InvokeAsync(StateHasChanged);
-            }
-        }
-
-        private async Task Modal_OnDestroy(ConfirmOptions props)
-        {
-            props.Visible = false;
-            await InvokeAsync(StateHasChanged);
-        }
-
-        private async Task Modal_OnDestroyAll()
-        {
-            foreach (var confirm in _confirms)
-            {
-                confirm.Visible = false;
-            }
-            await InvokeAsync(StateHasChanged);
+            ModalService.OnOpenEvent += Modal_OnOpen;
+            ModalService.OnCloseEvent += Modal_OnClose;
+            ModalService.OnDestroyEvent += Modal_OnDestroy;
+            ModalService.OnDestroyAllEvent += Modal_OnDestroyAll;
+            ModalService.OnUpdateEvent += Modal_OnUpdate;
         }
 
         /// <summary>
         /// 创建并打开窗体
         /// </summary>
-        private async Task ModalService_OnCreate(ModalRef drawerRef)
+        private async Task Modal_OnOpen(ModalRef modalRef)
         {
-            drawerRef.Config.Visible = true;
-            if (!_modalRefs.Contains(drawerRef))
+            modalRef.Config.Visible = true;
+            if (!_modalRefs.Contains(modalRef))
             {
-                _modalRefs.Add(drawerRef);
+                _modalRefs.Add(modalRef);
             }
             await InvokeAsync(StateHasChanged);
         }
@@ -81,26 +39,65 @@ namespace AntDesign
         /// <summary>
         /// 关闭窗体
         /// </summary>
-        private async Task ModalService_OnClose(ModalRef drawerRef)
+        private async Task Modal_OnClose(ModalRef modalRef)
         {
-            drawerRef.Config.Visible = false;
+            modalRef.Config.Visible = false;
             await InvokeAsync(StateHasChanged);
             await Task.Delay(300);
-            if (_modalRefs.Contains(drawerRef))
+            if (_modalRefs.Contains(modalRef))
             {
-                _modalRefs.Remove(drawerRef);
+                _modalRefs.Remove(modalRef);
             }
         }
 
+        //private async Task OnRemove(ConfirmOptions obj)
+        //{
+        //    await Task.Delay(250);
+        //    _confirms.Remove(obj);
+        //    await InvokeAsync(StateHasChanged);
+        //}
+
+
+        private async Task Modal_OnUpdate(ModalRef modalRef)
+        {
+            if (modalRef.Config.Visible)
+            {
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+
+        private async Task Modal_OnDestroy(ModalRef modalRef)
+        {
+            modalRef.Config.Visible = false;
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(300);
+            if (_modalRefs.Contains(modalRef))
+            {
+                _modalRefs.Remove(modalRef);
+            }
+        }
+
+        private async Task Modal_OnDestroyAll()
+        {
+            foreach (var modalRef in _modalRefs)
+            {
+                modalRef.Config.Visible = false;
+            }
+            await InvokeAsync(StateHasChanged);
+            await Task.Delay(300);
+            _modalRefs.Clear();
+        }
+
+
         protected override void Dispose(bool disposing)
         {
-            ModalService.OnOpenConfirm -= Modal_OnOpenConfirm;
-            ModalService.OnDestroy -= OnRemove;
-            ModalService.OnDestroyAll -= Modal_OnDestroyAll;
-            ModalService.OnUpdate -= Modal_OnUpdate;
+            ModalService.OnOpenEvent -= Modal_OnOpen;
+            ModalService.OnCloseEvent -= Modal_OnClose;
+            ModalService.OnDestroyEvent -= Modal_OnDestroy;
+            ModalService.OnDestroyAllEvent -= Modal_OnDestroyAll;
+            ModalService.OnUpdateEvent -= Modal_OnUpdate;
 
-            ModalService.OnCloseEvent -= ModalService_OnClose;
-            ModalService.OnOpenEvent -= ModalService_OnCreate;
+      
             base.Dispose(disposing);
         }
     }

@@ -70,6 +70,18 @@ namespace AntDesign
                 await OnClose.Invoke();
         }
 
+        public async Task UpdateConfig()
+        {
+            await _service.Update(this);
+        }
+
+
+        public async Task UpdateConfig(ConfirmOptions config)
+        {
+            Config = config;
+            await _service.Update(this);
+        }
+
 
         internal async Task HandleOnCancel()
         {
