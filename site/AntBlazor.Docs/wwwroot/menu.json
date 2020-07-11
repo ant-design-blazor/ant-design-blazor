@@ -144,6 +144,11 @@
             "url": "components/inputnumber"
           },
           {
+            "title": "Mentions",
+            "type": "menuItem",
+            "url": "components/mentions"
+          },
+          {
             "title": "Rate",
             "type": "menuItem",
             "url": "components/rate"

@@ -18,20 +18,14 @@ namespace AntDesign
             get => _dataSource;
             set
             {
-                _total = value?.Count() ?? 0;
+                _dataSourceCount = value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
-                StateHasChanged();
+                Reload();
             }
         }
 
         [Parameter]
         public RenderFragment<TItem> ChildContent { get; set; }
-
-        [Parameter]
-        public IEnumerable<TItem> SelectedRows { get; set; } = Array.Empty<TItem>();
-
-        [Parameter]
-        public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 
         [Parameter]
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
@@ -66,8 +60,14 @@ namespace AntDesign
 
         private IEnumerable<TItem> _dataSource;
 
+        private bool ServerSide => _total > _dataSourceCount;
+
         public void ReloadData()
         {
+            PageIndex = 1;
+
+            FlushCache();
+
             this.Reload();
         }
 
@@ -94,7 +94,7 @@ namespace AntDesign
         {
             var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
 
-            if (Total > _total)
+            if (ServerSide)
             {
                 _showItems = _dataSource;
             }
@@ -142,9 +142,22 @@ namespace AntDesign
             base.OnInitialized();
 
             SetClass();
-            SetPaginationClass();
+
+            InitializePagination();
+
+            FlushCache();
 
             ReloadAndInvokeChange();
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+
+            if (!firstRender)
+            {
+                this.FinishLoadPage();
+            }
         }
     }
 }
