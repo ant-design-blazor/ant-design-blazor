@@ -174,7 +174,7 @@ namespace AntDesign
                 builder.OpenComponent<Icon>(31);
                 builder.AddAttribute(32, "Type", "close-circle");
                 builder.AddAttribute(33, "class", GetClearIconCls());
-                if (string.IsNullOrEmpty(_preInputValue?.ToString()))
+                if (string.IsNullOrEmpty(Value?.ToString()))
                 {
                     builder.AddAttribute(34, "Style", "visibility: hidden;");
                 }
@@ -184,8 +184,7 @@ namespace AntDesign
                 }
                 builder.AddAttribute(35, "onclick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
                 {
-                    Value = default;//string.Empty;
-                    _preInputValue = Value;
+                    CurrentValue = default;
                     if (OnChange.HasDelegate)
                         OnChange.InvokeAsync(Value);
                     ToggleClearBtn();
@@ -209,7 +208,6 @@ namespace AntDesign
             return $"{PrefixCls}-clear-icon";
         }
 
-        protected TValue _preInputValue;
         /// <summary>
         /// Invoked when user add/remove content
         /// </summary>
@@ -219,34 +217,15 @@ namespace AntDesign
         {
             bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
-            if (TryParseValueFromString(args?.Value?.ToString(), out _preInputValue, out _))
+            if (_allowClear && flag)
             {
-                if (_allowClear && flag)
-                {
-                    ToggleClearBtn();
-                }
-
-                if (OnInput.HasDelegate)
-                {
-                    await OnInput.InvokeAsync(args);
-                }
-            }
-        }
-
-        private DateTime _preKeyUpTime = DateTime.Now;
-        protected virtual async void OnKeyUp(KeyboardEventArgs args)
-        {
-            _preKeyUpTime = DateTime.Now;
-
-            // Avoid frequent refreshes
-            while (DateTime.Now.Ticks - _preKeyUpTime.Ticks < 500000)
-            {
-                await Task.Delay(50);
+                ToggleClearBtn();
             }
 
-            CurrentValue = _preInputValue;
-
-            StateHasChanged();
+            if (OnInput.HasDelegate)
+            {
+                await OnInput.InvokeAsync(args);
+            }
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -327,7 +306,6 @@ namespace AntDesign
                 builder.AddAttribute(64, "oninput", CallbackFactory.Create(this, OnInputAsync));
                 builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
                 builder.AddAttribute(66, "onfocus", CallbackFactory.Create(this, OnFocus));
-                builder.AddAttribute(67, "onkeyup", CallbackFactory.Create(this, OnKeyUp));
                 builder.AddElementReferenceCapture(68, r => Ref = r);
                 builder.CloseElement();
 
