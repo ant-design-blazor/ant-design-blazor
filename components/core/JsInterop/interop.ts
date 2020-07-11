@@ -336,8 +336,14 @@ export function removeCls(selector: Element | string, clsName: string | Array<st
   }
 }
 
+const oldBodyCache = {};
+
 export function disableBodyScroll() {
-  css(document.body,
+  let body = document.body;
+  ["position", "width", "overflow"].forEach((key) => {
+    oldBodyCache[key] = body.style[key];
+  });
+  css(body,
     {
       "position": "relative",
       "width": "calc(100% - 17px)",
@@ -361,9 +367,9 @@ function enableBodyScroll(selector, filter = null) {
   if (length === 0) {
     css(document.body,
       {
-        "position": null,
-        "width": null,
-        "overflow": null
+        "position": oldBodyCache["position"] ?? null,
+        "width": oldBodyCache["width"] ?? null,
+        "overflow": oldBodyCache["overflow"] ?? null
       });
     removeCls(document.body, "ant-scrolling-effect");
   }
@@ -396,3 +402,32 @@ export function getInnerText(element) {
   let dom = getDom(element);
   return dom.innerText;
 }
+
+const objReferenceDict = {};
+export function disposeObj(objReferenceName) {
+    delete objReferenceDict[objReferenceName];
+}
+
+//#region mentions
+
+import getOffset from "./Caret";
+
+export function getCursorXY(element, objReference) {
+    objReferenceDict["mentions"] = objReference;
+    window.addEventListener("click", mentionsOnWindowClick);
+
+    var offset = getOffset(element);
+
+    return [offset.left, offset.top + offset.height + 14];
+}
+
+function mentionsOnWindowClick(e) {
+    let mentionsObj = objReferenceDict["mentions"];
+    if (mentionsObj) {
+        mentionsObj.invokeMethodAsync("CloseMentionsDropDown");
+    } else {
+        window.removeEventListener("click", mentionsOnWindowClick);
+    }
+}
+
+//#endregion
