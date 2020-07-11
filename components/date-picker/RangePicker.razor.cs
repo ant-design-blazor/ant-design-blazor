@@ -6,23 +6,41 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class RangePicker : DatePickerBase<DateTime[]>
+    public partial class RangePicker<TValue> : DatePickerBase<TValue[]>
     {
         public RangePicker()
         {
             IsRange = true;
 
-            Value = new DateTime[2];
+            Value = new TValue[2];
 
             DisabledDate = (date) =>
             {
                 if (_pickerStatus[0]._hadSelectValue && _inputEnd.IsOnFocused)
                 {
-                    return DateHelper.FormatDateByPicker(date.Date, Picker) < DateHelper.FormatDateByPicker(Value[0].Date, Picker);
+                    DateTime? value = null;
+                    GetIfNotNull(Value[0], notNullValue =>
+                    {
+                        value = notNullValue;
+                    });
+
+                    if (value != null)
+                    {
+                        return DateHelper.FormatDateByPicker(date.Date, Picker) < DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
+                    }
                 }
                 if (_pickerStatus[1]._hadSelectValue && _inputStart.IsOnFocused)
                 {
-                    return DateHelper.FormatDateByPicker(date.Date, Picker) > DateHelper.FormatDateByPicker(Value[1].Date, Picker);
+                    DateTime? value = null;
+                    GetIfNotNull(Value[1], notNullValue =>
+                    {
+                        value = notNullValue;
+                    });
+
+                    if (value != null)
+                    {
+                        return DateHelper.FormatDateByPicker(date.Date, Picker) < DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
+                    }
                 }
 
                 return false;
@@ -36,15 +54,19 @@ namespace AntDesign
                 return;
             }
 
-            if (DateTime.TryParse(args.Value.ToString(), out DateTime changeValue))
+            if (BindConverter.TryConvertTo(args.Value.ToString(), CultureInfo, out TValue changeValue))
             {
                 Value[index] = changeValue;
-                _pickerValues[index] = changeValue;
+
+                GetIfNotNull(changeValue, (notNullValue) =>
+                {
+                    _pickerValues[index] = notNullValue;
+                });
 
                 StateHasChanged();
             }
 
-            UpdateCurrentValueAsString(index);
+            UpdateCurrentValueAsString();
         }
 
         /// <summary>
@@ -56,21 +78,30 @@ namespace AntDesign
         {
             if (_pickerStatus[index]._hadSelectValue)
             {
-                return Value[index];
+                if (Value[index] == null)
+                {
+                    return null;
+                }
+
+                return Convert.ToDateTime(Value[index], this.CultureInfo);
             }
             else if (_defaultValues[index] != null)
             {
                 return (DateTime)_defaultValues[index];
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public override void ChangeValue(DateTime value, int index = 0)
         {
-            Value[index] = value;
+            bool result = BindConverter.TryConvertTo<TValue>(
+               value.ToString(CultureInfo), CultureInfo, out var dateTime);
+
+            if (result)
+            {
+                Value[index] = dateTime;
+            }
 
             _pickerStatus[index]._hadSelectValue = true;
 
@@ -89,6 +120,14 @@ namespace AntDesign
             }
         }
 
+        public override void ClearValue(int index = 0)
+        {
+            _isSetPicker = false;
+            CurrentValue[0] = default;
+            CurrentValue[1] = default;
+            Close();
+        }
+
         private async Task OnInputClick(int index)
         {
             await _dropDown.Show();
@@ -98,7 +137,10 @@ namespace AntDesign
                 // change start picker value
                 if (!_inputStart.IsOnFocused && _pickerStatus[index]._hadSelectValue)
                 {
-                    ChangePickerValue(Value[index], index);
+                    GetIfNotNull(Value[index], notNullValue =>
+                    {
+                        ChangePickerValue(notNullValue, index);
+                    });
                 }
 
                 ChangeFocusTarget(true, false);
@@ -109,20 +151,30 @@ namespace AntDesign
                 // change end picker value
                 if (!_inputEnd.IsOnFocused && _pickerStatus[index]._hadSelectValue)
                 {
-                    ChangePickerValue(Value[index], index);
+                    GetIfNotNull(Value[index], notNullValue =>
+                    {
+                        ChangePickerValue(notNullValue, index);
+                    });
                 }
 
                 ChangeFocusTarget(false, true);
             }
         }
-        
-        public override void ClearValue(int index = 0)
+
+        private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
         {
-            _isSetPicker = false;
-            _pickerStatus[0]._hadSelectValue = false;
-            _pickerStatus[1]._hadSelectValue = false;
-            UpdateCurrentValueAsString();
-            Close();
+            if (!_isNullable)
+            {
+                DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
+                if (dateTime != DateTime.MinValue)
+                {
+                    notNullAction?.Invoke(dateTime);
+                }
+            }
+            if (_isNullable && value != null)
+            {
+                notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
+            }
         }
 
     }
