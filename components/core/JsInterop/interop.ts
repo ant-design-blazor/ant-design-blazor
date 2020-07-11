@@ -336,8 +336,14 @@ export function removeCls(selector: Element | string, clsName: string | Array<st
   }
 }
 
+const oldBodyCache = {};
+
 export function disableBodyScroll() {
-  css(document.body,
+  let body = document.body;
+  ["position", "width", "overflow"].forEach((key) => {
+    oldBodyCache[key] = body.style[key];
+  });
+  css(body,
     {
       "position": "relative",
       "width": "calc(100% - 17px)",
@@ -361,9 +367,9 @@ function enableBodyScroll(selector, filter = null) {
   if (length === 0) {
     css(document.body,
       {
-        "position": null,
-        "width": null,
-        "overflow": null
+        "position": oldBodyCache["position"] ?? null,
+        "width": oldBodyCache["width"] ?? null,
+        "overflow": oldBodyCache["overflow"] ?? null
       });
     removeCls(document.body, "ant-scrolling-effect");
   }
