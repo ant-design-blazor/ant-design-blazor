@@ -363,9 +363,15 @@ namespace AntDesign
             }
         }
 
-        private void OnMouseDown()
+        private async void OnMouseDown(MouseEventArgs args)
         {
-            _mouseDown = true && !Disabled;
+            _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _slider);
+            decimal x = (decimal)args.ClientX;
+            decimal y = (decimal)args.ClientY;
+
+            _mouseDown = !Disabled
+                && _sliderDom.left <= x && x <= _sliderDom.right
+                && _sliderDom.top <= y && y <= _sliderDom.bottom;
         }
 
         private async void OnMouseMove(JsonElement jsonElement)
@@ -379,35 +385,31 @@ namespace AntDesign
             }
         }
 
-        private void OnMouseUp(JsonElement jsonElement)
+        private async void OnMouseUp(JsonElement jsonElement)
         {
-            _mouseDown = false;
+            if (_mouseDown)
+            {
+                _mouseDown = false;
+                await CalculateValueAsync(Vertical ? jsonElement.GetProperty("clientY").GetDouble() : jsonElement.GetProperty("clientX").GetDouble());
+                await OnAfterChange.InvokeAsync(CurrentValue);
+                await ValueChanged.InvokeAsync(CurrentValue);
+            }
         }
 
         private async void OnClick(MouseEventArgs args)
         {
-            if (!Disabled)
-            {
-                //// handle mouseup event in OnClick
-                //// since click event will be triggered as well
-                //// when mouseup
-                //// until we find a way to stop trigger click event after mouseup, leave the mouseup handling here
-                //if (_mouseMove) // mouse move ending
-                //{
-                //    await OnAfterChange.InvokeAsync(Value);
-                //    await ValueChanged.InvokeAsync(Value);
-                //}
-
-                if (!_mouseMove)
-                {
-                    // improve performance since new value has been calculated in OnMouseMove
-                    // calculate new value only when this method is trigger by click instead of mouseup
-                    await CalculateValueAsync(Vertical ? args.ClientY : args.ClientX);
-                }
-                _mouseMove = false;
-                await OnAfterChange.InvokeAsync(CurrentValue);
-                await ValueChanged.InvokeAsync(CurrentValue);
-            }
+            //if (!Disabled)
+            //{
+            //    if (!_mouseMove)
+            //    {
+            //        // improve performance since new value has been calculated in OnMouseMove
+            //        // calculate new value only when this method is trigger by click instead of mouseup
+            //        await CalculateValueAsync(Vertical ? args.ClientY : args.ClientX);
+            //    }
+            //    _mouseMove = false;
+            //    await OnAfterChange.InvokeAsync(CurrentValue);
+            //    await ValueChanged.InvokeAsync(CurrentValue);
+            //}
         }
 
         private async Task CalculateValueAsync(double clickClient)
