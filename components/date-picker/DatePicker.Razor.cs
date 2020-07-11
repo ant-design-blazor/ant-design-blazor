@@ -3,17 +3,20 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class DatePicker : DatePickerBase<DateTime>
+    public partial class DatePicker<TValue> : DatePickerBase<TValue>
     {
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            if (Value != null && Value != DateTime.MinValue)
+
+            if (Value != null)
             {
-                ChangeValue(Value, 0);
+                GetIfNotNull(Value, notNullValue =>
+                {
+                    ChangeValue(notNullValue, 0);
+                });
             }
         }
-
 
         protected void OnInput(ChangeEventArgs args, int index = 0)
         {
@@ -22,10 +25,14 @@ namespace AntDesign
                 return;
             }
 
-            if (DateTime.TryParse(args.Value.ToString(), out DateTime changeValue))
+            if (TryParseValueFromString(args.Value.ToString(), out TValue changeValue, out _))
             {
                 Value = changeValue;
-                _pickerValues[index] = changeValue;
+
+                GetIfNotNull(changeValue, (notNullValue) =>
+                {
+                    _pickerValues[index] = notNullValue;
+                });
 
                 StateHasChanged();
             }
@@ -42,21 +49,30 @@ namespace AntDesign
         {
             if (_pickerStatus[index]._hadSelectValue)
             {
-                return Value;
+                if (Value == null)
+                {
+                    return null;
+                }
+
+                return Convert.ToDateTime(Value, this.CultureInfo);
             }
             else if (_defaultValues[index] != null)
             {
-                return (DateTime)_defaultValues[index];
+                return _defaultValues[index];
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public override void ChangeValue(DateTime value, int index = 0)
         {
-            Value = value;
+            bool result = BindConverter.TryConvertTo<TValue>(
+               value.ToString(CultureInfo), CultureInfo, out var dateTime);
+
+            if (result)
+            {
+                Value = dateTime;
+            }
 
             _pickerStatus[index]._hadSelectValue = true;
 
@@ -74,13 +90,35 @@ namespace AntDesign
                 Close();
             }
         }
-        
+
+        protected override void OnValueChange(TValue value)
+        {
+            base.OnValueChange(value);
+
+            _pickerStatus[0]._hadSelectValue = true;
+        }
+
         public override void ClearValue(int index = 0)
         {
             _isSetPicker = false;
-            _pickerStatus[index]._hadSelectValue = false;
-            UpdateCurrentValueAsString();
+            CurrentValue = default;
             Close();
+        }
+
+        private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
+        {
+            if (!_isNullable)
+            {
+                DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
+                if (dateTime != DateTime.MinValue)
+                {
+                    notNullAction?.Invoke(dateTime);
+                }
+            }
+            if (_isNullable && value != null)
+            {
+                notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
+            }
         }
     }
 }

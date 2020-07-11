@@ -1,19 +1,18 @@
-﻿using System.Threading.Tasks;
-using AntDesign.TableModels;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     public interface ITable
     {
-        internal ISelectionColumn HeaderSelection { get; set; }
+        internal ISelectionColumn Selection { get; set; }
 
-        internal void SelectionChanged(int[] checkedIndex);
+        internal void SelectionChanged();
 
         internal void Refresh();
 
         internal void ReloadAndInvokeChange();
 
         void SetSelection(string[] keys);
+
+        internal int[] GetSelectedIndex();
 
         void ReloadData();
     }

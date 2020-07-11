@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Table<TItem>
+    public partial class Table<TItem> : ITable
     {
         [Parameter]
         public bool HidePagination { get; set; }
@@ -20,12 +19,19 @@ namespace AntDesign
             set
             {
                 _paginationPosition = value;
-                SetPaginationClass();
+                InitializePagination();
             }
         }
 
         [Parameter]
-        public int Total { get; set; }
+        public int Total
+        {
+            get => _total > _dataSourceCount ? _total : _dataSourceCount;
+            set
+            {
+                _total = value;
+            }
+        }
 
         [Parameter]
         public EventCallback<int> TotalChanged { get; set; }
@@ -48,27 +54,26 @@ namespace AntDesign
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
-        private int ActualTotal => Total > _total ? Total : _total;
-
         private int _total = 0;
+        private int _dataSourceCount = 0;
         private string _paginationPosition = "bottomRight";
         private string _paginationClass;
 
-        private void SetPaginationClass()
+        private void InitializePagination()
         {
             _paginationClass = $"ant-table-pagination ant-table-pagination-{Regex.Replace(_paginationPosition, "bottom|top", "").ToLowerInvariant()}";
         }
 
-        private void HandlePageIndexChange(PaginationEventArgs args)
+        private async Task HandlePageIndexChange(PaginationEventArgs args)
         {
             PageIndex = args.PageIndex;
 
+            await PageIndexChanged.InvokeAsync(args.PageIndex);
+            await OnPageIndexChange.InvokeAsync(args);
+
             ReloadAndInvokeChange();
 
-            PageIndexChanged.InvokeAsync(args.PageIndex);
-            OnPageIndexChange.InvokeAsync(args);
-
-            ChangeSelection(null);
+            StateHasChanged();
         }
 
         private void HandlePageSizeChange(PaginationEventArgs args)

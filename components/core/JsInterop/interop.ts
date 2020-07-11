@@ -402,3 +402,32 @@ export function getInnerText(element) {
   let dom = getDom(element);
   return dom.innerText;
 }
+
+const objReferenceDict = {};
+export function disposeObj(objReferenceName) {
+    delete objReferenceDict[objReferenceName];
+}
+
+//#region mentions
+
+import getOffset from "./Caret";
+
+export function getCursorXY(element, objReference) {
+    objReferenceDict["mentions"] = objReference;
+    window.addEventListener("click", mentionsOnWindowClick);
+
+    var offset = getOffset(element);
+
+    return [offset.left, offset.top + offset.height + 14];
+}
+
+function mentionsOnWindowClick(e) {
+    let mentionsObj = objReferenceDict["mentions"];
+    if (mentionsObj) {
+        mentionsObj.invokeMethodAsync("CloseMentionsDropDown");
+    } else {
+        window.removeEventListener("click", mentionsOnWindowClick);
+    }
+}
+
+//#endregion
