@@ -1,10 +1,10 @@
-﻿using AntDesign.JsInterop;
+﻿using AntDesign.core.Extensions;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -198,7 +198,7 @@ namespace AntDesign
                 SetStyle();
 
                 //CurrentValue = TupleToGeneric((_leftValue, RightValue));
-                CurrentValue = Convert<(double, double), T>((_leftValue, RightValue));
+                CurrentValue = DataConvertionExtensions.Convert<(double, double), T>((_leftValue, RightValue));
             }
         }
 
@@ -224,12 +224,12 @@ namespace AntDesign
                 if (Range)
                 {
                     //CurrentValue = TupleToGeneric((LeftValue, _rightValue));
-                    CurrentValue = Convert<(double, double), T>((LeftValue, _rightValue));
+                    CurrentValue = DataConvertionExtensions.Convert<(double, double), T>((LeftValue, _rightValue));
                 }
                 else
                 {
                     //CurrentValue = DoubleToGeneric(_rightValue);
-                    CurrentValue = Convert<double, T>(_rightValue);
+                    CurrentValue = DataConvertionExtensions.Convert<double, T>(_rightValue);
                 }
             }
         }
@@ -305,26 +305,26 @@ namespace AntDesign
                 {
                     if (Range)
                     {
-                        T defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), Convert<(double, double), T>((0, 0)));
-                        LeftValue = Convert<T, (double, double)>(defaultValue).Item1;
-                        RightValue = Convert<T, (double, double)>(defaultValue).Item2;
+                        T defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<(double, double), T>((0, 0)));
+                        LeftValue = DataConvertionExtensions.Convert<T, (double, double)>(defaultValue).Item1;
+                        RightValue = DataConvertionExtensions.Convert<T, (double, double)>(defaultValue).Item2;
                     }
                     else
                     {
-                        T defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), Convert<double, T>(0));
-                        RightValue = Convert<T, double>(defaultValue);
+                        T defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<double, T>(0));
+                        RightValue = DataConvertionExtensions.Convert<T, double>(defaultValue);
                     }
                 }
                 else
                 {
                     if (Range)
                     {
-                        LeftValue = Convert<T, (double, double)>(CurrentValue).Item1;
-                        RightValue = Convert<T, (double, double)>(CurrentValue).Item2;
+                        LeftValue = DataConvertionExtensions.Convert<T, (double, double)>(CurrentValue).Item1;
+                        RightValue = DataConvertionExtensions.Convert<T, (double, double)>(CurrentValue).Item2;
                     }
                     else
                     {
-                        RightValue = Convert<T, double>(CurrentValue);
+                        RightValue = DataConvertionExtensions.Convert<T, double>(CurrentValue);
                     }
                 }
             }
@@ -549,23 +549,6 @@ namespace AntDesign
             {
                 return Marks.Select(m => m.Key).OrderBy(v => Math.Abs(v - value)).First();
             }
-        }
-
-        private TTo Convert<TFrom, TTo>(TFrom fromValue)
-        {
-            // Creating a parameter expression
-            ParameterExpression fromExpression = Expression.Parameter(typeof(TFrom), "from");
-
-            // Creating a parameter express
-            ParameterExpression toExpression = Expression.Parameter(typeof(TTo), "to");
-
-            // Creating a method body
-            BlockExpression blockExpression = Expression.Block(
-                new[] { toExpression },
-                Expression.Assign(toExpression, fromExpression)
-                );
-
-            return Expression.Lambda<Func<TFrom, TTo>>(blockExpression, fromExpression).Compile()(fromValue);
         }
     }
 }
