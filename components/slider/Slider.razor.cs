@@ -1,19 +1,16 @@
 ﻿using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using OneOf;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    using SliderValueType = OneOf<double, (double, double)>;
-
-    public partial class Slider : AntDomComponentBase
+    public partial class Slider<T> : AntInputComponentBase<T>
     {
         private const string PreFixCls = "ant-slider";
         private DomRect _sliderDom;
@@ -126,7 +123,7 @@ namespace AntDesign
         /// The default value of slider. When <see cref="Range"/> is false, use number, otherwise, use [number, number]
         /// </summary>
         [Parameter]
-        public SliderValueType DefaultValue { get; set; } = 0;
+        public T DefaultValue { get; set; }
 
         /// <summary>
         /// If true, the slider will not be interactable
@@ -168,7 +165,7 @@ namespace AntDesign
         /// dual thumb mode
         /// </summary>
         //[Parameter]
-        public bool Range { get; set; }
+        public bool Range { get; private set; }
 
         /// <summary>
         /// reverse the component
@@ -199,6 +196,9 @@ namespace AntDesign
                 _leftValue = Math.Min(_leftValue, RightValue);
                 _leftValue = GetNearestStep(_leftValue);
                 SetStyle();
+
+                //CurrentValue = TupleToGeneric((_leftValue, RightValue));
+                CurrentValue = Convert<(double, double), T>((_leftValue, RightValue));
             }
         }
 
@@ -221,43 +221,19 @@ namespace AntDesign
                 }
                 _rightValue = GetNearestStep(_rightValue);
                 SetStyle();
-            }
-        }
-
-        /// <summary>
-        /// The value of slider. When range is false, use number, otherwise, use [number, number]
-        /// </summary>
-        [Parameter]
-        public SliderValueType Value
-        {
-            get
-            {
                 if (Range)
                 {
-                    return (LeftValue, RightValue);
+                    //CurrentValue = TupleToGeneric((LeftValue, _rightValue));
+                    CurrentValue = Convert<(double, double), T>((LeftValue, _rightValue));
                 }
                 else
                 {
-                    return _rightValue;
+                    //CurrentValue = DoubleToGeneric(_rightValue);
+                    CurrentValue = Convert<double, T>(_rightValue);
                 }
-            }
-            set
-            {
-                value.Switch(d => RightValue = d, l =>
-                {
-                    Range = true;
-
-                    var values = l;
-                    LeftValue = values.Item1;
-                    RightValue = values.Item2;
-                });
             }
         }
 
-        [Parameter]
-        public EventCallback<SliderValueType> ValueChanged { get; set; }
-
-        /// <summary>
         /// If true, the slider will be vertical.
         /// </summary>
         [Parameter]
@@ -267,13 +243,13 @@ namespace AntDesign
         /// Fire when onmouseup is fired.
         /// </summary>
         [Parameter]
-        public EventCallback<SliderValueType> OnAfterChange { get; set; }
+        public EventCallback<T> OnAfterChange { get; set; }
 
         /// <summary>
         /// Callback function that is fired when the user changes the slider's value.
         /// </summary>
         [Parameter]
-        public Action<SliderValueType> OnChange { get; set; }
+        public Action<T> OnChange { get; set; }
 
         /// <summary>
         /// Set Tooltip display position. Ref Tooltip
@@ -299,7 +275,23 @@ namespace AntDesign
         {
             base.OnInitialized();
 
+            Type type = typeof(T);
+            Type doubleType = typeof(double);
+            Type tupleType = typeof((double, double));
+            if (type == doubleType)
+            {
+                Range = false;
+            }
+            else if (type == tupleType)
+            {
+                Range = true;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException($"Type argument of Slider should be either {doubleType} or {tupleType}");
+            }
             DomEventService.AddEventListener("window", "mousemove", OnMouseMove);
+            DomEventService.AddEventListener("window", "mouseup", OnMouseUp);
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -307,10 +299,36 @@ namespace AntDesign
             await base.SetParametersAsync(parameters);
 
             var dict = parameters.ToDictionary();
-            if (!_initialized && dict.ContainsKey(nameof(DefaultValue)) && !dict.ContainsKey(nameof(Value)))
+            if (!_initialized)
             {
-                Value = parameters.GetValueOrDefault(nameof(DefaultValue), SliderValueType.FromT0(0));
+                if (!dict.ContainsKey(nameof(Value)))
+                {
+                    if (Range)
+                    {
+                        T defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), Convert<(double, double), T>((0, 0)));
+                        LeftValue = Convert<T, (double, double)>(defaultValue).Item1;
+                        RightValue = Convert<T, (double, double)>(defaultValue).Item2;
+                    }
+                    else
+                    {
+                        T defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), Convert<double, T>(0));
+                        RightValue = Convert<T, double>(defaultValue);
+                    }
+                }
+                else
+                {
+                    if (Range)
+                    {
+                        LeftValue = Convert<T, (double, double)>(CurrentValue).Item1;
+                        RightValue = Convert<T, (double, double)>(CurrentValue).Item2;
+                    }
+                    else
+                    {
+                        RightValue = Convert<T, double>(CurrentValue);
+                    }
+                }
             }
+
             _initialized = true;
         }
 
@@ -357,8 +375,13 @@ namespace AntDesign
                 _mouseMove = true;
                 await CalculateValueAsync(jsonElement.GetProperty(Vertical ? "clientY" : "clientX").GetDouble());
 
-                OnChange?.Invoke(RightValue);
+                OnChange?.Invoke(CurrentValue);
             }
+        }
+
+        private void OnMouseUp(JsonElement jsonElement)
+        {
+            _mouseDown = false;
         }
 
         private async void OnClick(MouseEventArgs args)
@@ -381,10 +404,9 @@ namespace AntDesign
                     // calculate new value only when this method is trigger by click instead of mouseup
                     await CalculateValueAsync(Vertical ? args.ClientY : args.ClientX);
                 }
-                _mouseDown = false;
                 _mouseMove = false;
-                await OnAfterChange.InvokeAsync(Value);
-                await ValueChanged.InvokeAsync(Value);
+                await OnAfterChange.InvokeAsync(CurrentValue);
+                await ValueChanged.InvokeAsync(CurrentValue);
             }
         }
 
@@ -525,6 +547,23 @@ namespace AntDesign
             {
                 return Marks.Select(m => m.Key).OrderBy(v => Math.Abs(v - value)).First();
             }
+        }
+
+        private TTo Convert<TFrom, TTo>(TFrom fromValue)
+        {
+            // Creating a parameter expression
+            ParameterExpression fromExpression = Expression.Parameter(typeof(TFrom), "from");
+
+            // Creating a parameter express
+            ParameterExpression toExpression = Expression.Parameter(typeof(TTo), "to");
+
+            // Creating a method body
+            BlockExpression blockExpression = Expression.Block(
+                new[] { toExpression },
+                Expression.Assign(toExpression, fromExpression)
+                );
+
+            return Expression.Lambda<Func<TFrom, TTo>>(blockExpression, fromExpression).Compile()(fromValue);
         }
     }
 }
