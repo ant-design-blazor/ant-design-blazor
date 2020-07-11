@@ -58,6 +58,13 @@ namespace AntDesign
             _editContext = new EditContext(Model);
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            SetClass();
+        }
+
         protected void SetClass()
         {
             this.ClassMapper.Clear()
