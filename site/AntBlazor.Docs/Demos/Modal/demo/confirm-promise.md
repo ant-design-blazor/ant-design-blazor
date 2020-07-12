@@ -1,8 +1,8 @@
 ---
 order: 5
 title:
-  zh-CN: 确认对话框
-  en-US: Confirmation modal dialog
+  zh-CN: 异步确认对话框
+  en-US: Promise Confirmation modal dialog
 ---
 
 ## zh-CN
