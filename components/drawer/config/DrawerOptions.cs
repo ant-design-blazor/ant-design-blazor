@@ -8,7 +8,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public class DrawerConfig
+    public class DrawerOptions
     {
         public OneOf<RenderFragment, string> Content { get; set; }
 
@@ -49,7 +49,10 @@ namespace AntDesign
 
         public bool Visible { get; set; }
 
-        public Func<bool?> OnCancel { get; set; }
+        /// <summary>
+        /// 点击关闭时触发，返回false时，取消关闭动作
+        /// </summary>
+        public Func<DrawerClosingEventArgs, Task> OnCancel { get; set; }
 
     }
 }
