@@ -1,12 +1,8 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-@{
-    var dialogOptions = BuildDialogOptions(Config);
-    
-}
 
-<Dialog Config="@dialogOptions" Visible="@Config.Visible" Style="@Config.Style">
+<Dialog Config="@_dialogOptions" Visible="@Config.Visible" Style="@Config.Style">
     <div class="ant-modal-confirm-body-wrapper">
         <div class="ant-modal-confirm-body">
             @if (Config.Icon != null)

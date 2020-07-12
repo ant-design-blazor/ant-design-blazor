@@ -1,0 +1,9 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+
+@foreach (ModalRef modalRef in _modalRefs)
+{
+    var modalConfig = modalRef.Config;
+    <ConfirmDialog @key="@modalConfig" ModalRef="@modalRef" Config="@modalConfig" />
+}
