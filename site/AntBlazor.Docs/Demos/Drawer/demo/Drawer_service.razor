@@ -15,7 +15,7 @@
     {
         RenderFragment content = @<div>value: @value <br/><Button OnClick="CloseDrawer">close</Button></div>;
 
-        var options = new DrawerConfig()
+        var options = new DrawerOptions()
         {
             Title = "Drawer",
             Width = 350,
@@ -41,13 +41,13 @@
 
     private async Task OpenComponent()
     {
-        var options = new DrawerConfig()
+        var options = new DrawerOptions()
         {
             Title = "Component",
             Width = 350,
         };
 
-        var drawerRef = await DrawerService.CreateAsync<ComponentTemplate, string, string>(options, value);
+        var drawerRef = await DrawerService.CreateAsync<DrawerTemplateDemo, string, string>(options, value);
 
         drawerRef.OnOpen = () =>
         {
@@ -61,6 +61,7 @@
             value = result;
             await InvokeAsync(StateHasChanged);
         };
+
     }
 
 }

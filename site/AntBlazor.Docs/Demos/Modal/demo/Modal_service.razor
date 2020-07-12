@@ -1,0 +1,82 @@
+﻿@inject ModalService ModalService
+
+<Input @bind-Value="@value" />
+<br />
+<br />
+<Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
+<Button OnClick="OpenComponent" Type="primary">Use Component</Button>
+
+@code{
+
+    private string value = "blazor";
+
+    private ModalRef _drawerRef;
+
+    private async Task OpenTemplate()
+    {
+        RenderFragment content =@<div>value: @value <br /><Button OnClick="CloseModal">close</Button></div>;
+
+            var options = new ConfirmOptions()
+            {
+                Title = "Modal",
+                Width = 350,
+                Content = content,
+                OnOk = e => { Console.WriteLine("OnOk"); return Task.CompletedTask; },
+                OnCancel = e => { Console.WriteLine("OnCancel"); return Task.CompletedTask; }
+            };
+
+            _drawerRef = await ModalService.CreateAsync(options);
+
+            _drawerRef.OnOpen = () =>
+            {
+                Console.WriteLine("Open Modal");
+                return Task.CompletedTask;
+            };
+
+            _drawerRef.OnClose = () =>
+            {
+                Console.WriteLine("Close Modal");
+                return Task.CompletedTask;
+            };
+        }
+
+        private async Task CloseModal()
+        {
+            if (_drawerRef != null)
+            {
+                await _drawerRef.CloseAsync();
+            }
+        }
+
+        private async Task OpenComponent()
+        {
+            var options = new ConfirmOptions()
+            {
+                Title = "Component",
+
+            };
+
+            var drawerRef = await ModalService.CreateAsync<ModalTemplateDemo, string, string>(options, value);
+
+            drawerRef.OnOpen = () =>
+            {
+                Console.WriteLine("OnOpen");
+                return Task.CompletedTask;
+            };
+
+            drawerRef.OnClose = () =>
+            {
+                Console.WriteLine("OnClose");
+                return Task.CompletedTask;
+            };
+
+            drawerRef.OnOk = (result) =>
+            {
+                Console.WriteLine($"OnOk:{result}");
+                return Task.CompletedTask;
+            };
+
+        }
+
+
+    }
