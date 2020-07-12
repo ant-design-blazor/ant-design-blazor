@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign
-@inherits DatePickerBase<DateTime>
+@inherits DatePickerBase<TValue>
+@typeparam TValue
 @using AntDesign.Internal;
 
 <CascadingValue Value='$"{PrefixCls}-dropdown"' Name="PrefixCls">
@@ -15,7 +16,7 @@
         <Overlay>
             <div class="@(PrefixCls)-panel-container">
                 <div class="@(PrefixCls)-panel">
-                    <DatePickerPanelChooser TValue="DateTime" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)" />
+                    <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)" />
                 </div>
             </div>
         </Overlay>

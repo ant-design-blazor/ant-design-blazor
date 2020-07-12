@@ -10,11 +10,14 @@ namespace AntDesign.Internal
         internal ColLayoutParam LabelCol { get; }
 
         internal EditContext EditContext { get; }
+
         internal string Size { get; }
 
         internal void AddFormItem(IFormItem formItem);
 
         internal void AddControl(IControlValueAccessor valueAccessor);
+
+        bool IsModified { get; }
 
         void Reset();
 

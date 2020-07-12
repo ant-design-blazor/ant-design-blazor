@@ -39,6 +39,8 @@ namespace AntDesign
         [Parameter]
         public EventCallback<EditContext> OnFinishFailed { get; set; }
 
+        public bool IsModified => _editContext.IsModified();
+
         private EditContext _editContext;
         private IList<IFormItem> _formItems = new List<IFormItem>();
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
@@ -48,6 +50,7 @@ namespace AntDesign
         ColLayoutParam IForm.LabelCol => LabelCol;
 
         EditContext IForm.EditContext => _editContext;
+
         string IForm.Size => Size;
 
         protected override void OnInitialized()
@@ -89,5 +92,6 @@ namespace AntDesign
         {
             return _editContext.Validate();
         }
+
     }
 }
