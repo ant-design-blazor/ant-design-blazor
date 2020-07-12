@@ -12,6 +12,8 @@ namespace AntDesign
     {
         public OneOf<RenderFragment, string> Content { get; set; }
 
+        public RenderFragment ChildContent { get; set; }
+
         public bool Closable { get; set; } = true;
 
         public bool MaskClosable { get; set; } = true;

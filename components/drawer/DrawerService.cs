@@ -48,7 +48,7 @@ namespace AntDesign
                 builder.AddAttribute(2, "Config", contentParams);
                 builder.CloseComponent();
             };
-            config.Content = child;
+            config.ChildContent = child;
 
             return drawerRef;
         }

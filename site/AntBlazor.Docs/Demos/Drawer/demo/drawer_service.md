@@ -9,7 +9,9 @@ title:
 
 Drawer 的 service 用法，示例中演示了用户自定义模板、自定义component。
 
-模板代码：Drawer_service.razor
+模板代码：
+Drawer_service.razor
+
 @namespace AntDesign
 @inherits DrawerTemplate<string, string>
 
