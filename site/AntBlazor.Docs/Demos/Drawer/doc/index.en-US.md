@@ -2,6 +2,7 @@
 category: Components
 type: Feedback
 title: Drawer
+cols: 1
 ---
 
 A panel which slides in from the edge of the screen.

@@ -3,6 +3,7 @@ category: Components
 type: 反馈
 title: Drawer
 subtitle: 抽屉
+cols: 1
 ---
 
 屏幕边缘滑出的浮层面板。
@@ -45,7 +46,7 @@ subtitle: 抽屉
 | CreateAsync | 创建并打开一个 Drawer | `DrawerConfig`  | `DrawerRef` |
 | CreateAsync | 创建并打开一个 Drawer | `DrawerConfig` , TContentParams  | `DrawerRef<R>` |
 
-### DrawerConfig
+### DrawerOptions
 
 | 参数                | 说明                                                                                                                 | 类型                                                                | 默认值    |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | --------- |

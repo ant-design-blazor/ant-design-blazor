@@ -3,6 +3,7 @@ type: 反馈
 category: Components
 subtitle: 对话框
 title: Modal
+cols: 1
 ---
 
 模态对话框。
@@ -58,10 +59,11 @@ title: Modal
 - `ModalService.Error`
 - `ModalService.Warning`
 - `ModalService.Confirm`
+- `ModalService.CreateAsync`
 
 > 请确认已经在 `App.Razor` 中添加了 `<AntContainer />` 组件。
 
-以上均为一个函数，参数为 ConfirmOptions，具体属性如下：
+#### ConfirmOptions
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
@@ -84,15 +86,17 @@ title: Modal
 
 以上函数调用后，会返回一个引用，可以通过该引用更新和关闭弹窗。
 
-```c#
+``` c#
 ConfirmOptions config = new ConfirmOptions();
-ModalService.Info(config);
+var modelRef = await ModalService.Info(config);
 
-ModalService.Update(config);
+modelRef.UpdateConfig();
 
-ModalService.Destroy(config);
+ModalService.Destroy(modelRef);
 ```
 
 - `ModalService.DestroyAll`
 
 使用 `ModalService.DestroyAll()` 可以销毁弹出的确认窗（即上述的 ModalService.Info、ModalService.Success、ModalService.Error、ModalService.Warning、ModalService.Confirm）。通常用于路由监听当中，处理路由前进、后退不能销毁确认对话框的问题，而不用各处去使用实例的返回值进行关闭（ModalService.Destroy(config) 适用于主动关闭，而不是路由这样被动关闭）
+
+
