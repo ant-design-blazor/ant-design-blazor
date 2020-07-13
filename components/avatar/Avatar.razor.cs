@@ -59,16 +59,22 @@ namespace AntDesign
                 ;
         }
 
-        protected override async Task OnParametersSetAsync()
+        protected override void OnParametersSet()
         {
-            this._hasText = string.IsNullOrEmpty(this.Src) && !string.IsNullOrEmpty(this.Text);
+            this._hasText = string.IsNullOrEmpty(this.Src) && (!string.IsNullOrEmpty(this.Text) || ChildContent != null);
             this._hasIcon = string.IsNullOrEmpty(this.Src) && !string.IsNullOrEmpty(this.Icon);
             this._hasSrc = !string.IsNullOrEmpty(this.Src);
 
             SetClassMap();
-            await CalcStringSize();
             SetSizeStyle();
-            await base.OnParametersSetAsync();
+            base.OnParametersSetAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await CalcStringSize();
+            StateHasChanged();
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         protected async Task ImgError(ErrorEventArgs args)
