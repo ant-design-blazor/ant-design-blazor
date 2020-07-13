@@ -11,10 +11,18 @@ namespace AntDesign
 {
     public partial class FormItem : AntDomComponentBase, IFormItem
     {
+        private static readonly Dictionary<string, object> _noneColAttributes = new Dictionary<string, object>();
+
         private readonly string _prefixCls = "ant-form-item";
 
         [CascadingParameter(Name = "Form")]
         private IForm Form { get; set; }
+
+        [CascadingParameter(Name = "FormItem")]
+        private IFormItem ParentFormItem { get; set; }
+
+        [CascadingParameter]
+        private EditContext CurrentEditContext { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -28,6 +36,9 @@ namespace AntDesign
         [Parameter]
         public ColLayoutParam WrapperCol { get; set; }
 
+        [Parameter]
+        public bool NoStyle { get; set; } = false;
+
         private EditContext EditContext => Form?.EditContext;
 
         private bool _isValid = true;
@@ -37,9 +48,6 @@ namespace AntDesign
         private IControlValueAccessor _control;
 
         private RenderFragment _formValidationMessages;
-
-        [CascadingParameter]
-        private EditContext CurrentEditContext { get; set; }
 
         protected override void OnInitialized()
         {
@@ -70,6 +78,11 @@ namespace AntDesign
 
         private Dictionary<string, object> GetLabelColAttributes()
         {
+            if (NoStyle || ParentFormItem != null)
+            {
+                return _noneColAttributes;
+            }
+
             ColLayoutParam labelColParameter;
 
             if (LabelCol != null)
@@ -90,6 +103,11 @@ namespace AntDesign
 
         private Dictionary<string, object> GetWrapperColAttributes()
         {
+            if (NoStyle || ParentFormItem != null)
+            {
+                return _noneColAttributes;
+            }
+
             ColLayoutParam wrapperColParameter;
 
             if (WrapperCol != null)
