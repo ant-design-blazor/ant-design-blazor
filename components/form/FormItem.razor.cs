@@ -39,6 +39,9 @@ namespace AntDesign
         [Parameter]
         public bool NoStyle { get; set; } = false;
 
+        [Parameter]
+        public bool Required { get; set; } = false;
+
         private EditContext EditContext => Form?.EditContext;
 
         private bool _isValid = true;
