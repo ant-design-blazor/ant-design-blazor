@@ -90,35 +90,13 @@ namespace AntDesign
                 Close();
             }
         }
-
-        protected override void OnValueChange(TValue value)
-        {
-            base.OnValueChange(value);
-
-            _pickerStatus[0]._hadSelectValue = true;
-        }
-
+        
         public override void ClearValue(int index = 0)
         {
             _isSetPicker = false;
-            CurrentValue = default;
+            _pickerStatus[index]._hadSelectValue = false;
+            UpdateCurrentValueAsString();
             Close();
-        }
-
-        private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
-        {
-            if (!_isNullable)
-            {
-                DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
-                if (dateTime != DateTime.MinValue)
-                {
-                    notNullAction?.Invoke(dateTime);
-                }
-            }
-            if (_isNullable && value != null)
-            {
-                notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
-            }
         }
     }
 }

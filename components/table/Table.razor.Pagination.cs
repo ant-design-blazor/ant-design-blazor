@@ -1,5 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -19,7 +21,7 @@ namespace AntDesign
             set
             {
                 _paginationPosition = value;
-                InitializePagination();
+                SetPaginationClass();
             }
         }
 
@@ -54,12 +56,15 @@ namespace AntDesign
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
+        private IEnumerable<TItem> ShowItems => Total > _total ? _dataSource : _dataSource.Skip((PageIndex - 1) * PageSize).Take(PageSize);
+
+        private int ActualTotal => Total > _total ? Total : _total;
+
         private int _total = 0;
-        private int _dataSourceCount = 0;
         private string _paginationPosition = "bottomRight";
         private string _paginationClass;
 
-        private void InitializePagination()
+        private void SetPaginationClass()
         {
             _paginationClass = $"ant-table-pagination ant-table-pagination-{Regex.Replace(_paginationPosition, "bottom|top", "").ToLowerInvariant()}";
         }

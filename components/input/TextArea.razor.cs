@@ -87,7 +87,13 @@ namespace AntDesign
 
         protected override async void OnInputAsync(ChangeEventArgs args)
         {
+            // do not call base method to avoid lost focus
             base.OnInputAsync(args);
+
+            //if (OnChange.HasDelegate)
+            //{
+            //    await OnChange.InvokeAsync(CurrentValueAsString);
+            //}
 
             if (AutoSize)
             {

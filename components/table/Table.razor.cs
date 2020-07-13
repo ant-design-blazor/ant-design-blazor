@@ -18,9 +18,9 @@ namespace AntDesign
             get => _dataSource;
             set
             {
-                _dataSourceCount = value?.Count() ?? 0;
+                _total = value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
-                Reload();
+                StateHasChanged();
             }
         }
 
@@ -59,6 +59,8 @@ namespace AntDesign
         private IEnumerable<TItem> _showItems;
 
         private IEnumerable<TItem> _dataSource;
+
+        private ISelectionColumn _headerSelection;
 
         private bool ServerSide => _total > _dataSourceCount;
 
@@ -104,11 +106,7 @@ namespace AntDesign
 
                 foreach (var col in ColumnContext.Columns)
                 {
-                    if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
-                    {
-                        query = fieldColumn.SortModel.Sort(query);
-                        queryModel.AddSortModel(fieldColumn.SortModel);
-                    }
+                    list.Add(_dataSource.ElementAt(index));
                 }
 
                 query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
@@ -142,12 +140,26 @@ namespace AntDesign
             base.OnInitialized();
 
             SetClass();
+            SetPaginationClass();
+        }
 
-            InitializePagination();
-
-            FlushCache();
-
-            ReloadAndInvokeChange();
+        private void ChangeSelection(int[] indexes)
+        {
+            if(this._headerSelection == null)
+            {
+                return;
+            }
+            if (indexes == null || !indexes.Any())
+            {
+                this._headerSelection.RowSelections.ForEach(x => x.Check(false));
+                this._headerSelection.Check(false);
+            }
+            else
+            {
+                this._headerSelection.RowSelections.Where(x => !x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(false));
+                this._headerSelection.RowSelections.Where(x => x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(true));
+                this._headerSelection.Check(true);
+            }
         }
 
         protected override void OnAfterRender(bool firstRender)

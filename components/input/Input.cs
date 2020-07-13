@@ -203,11 +203,6 @@ namespace AntDesign
             }
         }
 
-        protected virtual string GetClearIconCls()
-        {
-            return $"{PrefixCls}-clear-icon";
-        }
-
         /// <summary>
         /// Invoked when user add/remove content
         /// </summary>
@@ -216,6 +211,8 @@ namespace AntDesign
         protected virtual async void OnInputAsync(ChangeEventArgs args)
         {
             bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
+
+            CurrentValueAsString = args?.Value?.ToString();
 
             if (_allowClear && flag)
             {
@@ -299,14 +296,14 @@ namespace AntDesign
                     builder.AddAttribute(51, "type", Type);
                 }
 
-                builder.AddAttribute(60, "placeholder", Placeholder);
-                builder.AddAttribute(61, "value", CurrentValue);
-                builder.AddAttribute(62, "onchange", CallbackFactory.Create(this, OnChangeAsync));
-                builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnPressEnterAsync));
-                builder.AddAttribute(64, "oninput", CallbackFactory.Create(this, OnInputAsync));
-                builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
-                builder.AddAttribute(66, "onfocus", CallbackFactory.Create(this, OnFocus));
-                builder.AddElementReferenceCapture(68, r => Ref = r);
+                builder.AddAttribute(i++, "placeholder", Placeholder);
+                builder.AddAttribute(i++, "value", CurrentValueAsString);
+                builder.AddAttribute(i++, "onchange", CallbackFactory.Create(this, OnChangeAsync));
+                builder.AddAttribute(i++, "onkeypress", CallbackFactory.Create(this, OnPressEnterAsync));
+                builder.AddAttribute(i++, "oninput", CallbackFactory.Create(this, OnInputAsync));
+                builder.AddAttribute(i++, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+                builder.AddAttribute(i++, "onfocus", CallbackFactory.Create(this, OnFocus));
+                builder.AddElementReferenceCapture(i++, r => Ref = r);
                 builder.CloseElement();
 
                 if (Suffix != null)

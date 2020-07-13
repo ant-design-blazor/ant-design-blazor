@@ -24,15 +24,6 @@ namespace AntDesign
         [Parameter]
         public string Format { get; set; }
 
-        [Parameter]
-        public bool Sortable { get; set; }
-
-        [Parameter]
-        public string Sort { get; set; }
-
-        [Parameter]
-        public bool ShowSorterTooltip { get; set; } = true;
-
         private FieldIdentifier? _fieldIdentifier;
 
         public string DisplayName => _fieldIdentifier?.GetDisplayName();

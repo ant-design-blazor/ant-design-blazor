@@ -8,7 +8,7 @@
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
             <Pagination Class="@_paginationClass"
-                        Total="Total"
+                        Total="ActualTotal"
                         PageSize="PageSize"
                         Current="PageIndex"
                         OnPageIndexChange="HandlePageIndexChange"
@@ -76,7 +76,7 @@
         @if (!HidePagination && PaginationPosition.Contains("bottom"))
         {
             <Pagination Class="@_paginationClass"
-                        Total="Total"
+                        Total="ActualTotal"
                         PageSize="PageSize"
                         Current="PageIndex"
                         OnPageIndexChange="HandlePageIndexChange"

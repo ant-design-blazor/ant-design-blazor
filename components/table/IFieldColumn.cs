@@ -9,10 +9,6 @@ namespace AntDesign
 
         public string FieldName { get; }
 
-        public string Format { get; }
-
-        public bool Sortable { get; }
-
-        public ITableSortModel SortModel { get; }
+        public string Format { get; set; }
     }
 }

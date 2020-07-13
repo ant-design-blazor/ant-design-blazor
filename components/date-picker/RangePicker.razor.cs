@@ -18,29 +18,11 @@ namespace AntDesign
             {
                 if (_pickerStatus[0]._hadSelectValue && _inputEnd.IsOnFocused)
                 {
-                    DateTime? value = null;
-                    GetIfNotNull(Value[0], notNullValue =>
-                    {
-                        value = notNullValue;
-                    });
-
-                    if (value != null)
-                    {
-                        return DateHelper.FormatDateByPicker(date.Date, Picker) < DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
-                    }
+                    return DateHelper.FormatDateByPicker(date.Date, Picker) < DateHelper.FormatDateByPicker(Value[0].Date, Picker);
                 }
                 if (_pickerStatus[1]._hadSelectValue && _inputStart.IsOnFocused)
                 {
-                    DateTime? value = null;
-                    GetIfNotNull(Value[1], notNullValue =>
-                    {
-                        value = notNullValue;
-                    });
-
-                    if (value != null)
-                    {
-                        return DateHelper.FormatDateByPicker(date.Date, Picker) < DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
-                    }
+                    return DateHelper.FormatDateByPicker(date.Date, Picker) > DateHelper.FormatDateByPicker(Value[1].Date, Picker);
                 }
 
                 return false;
@@ -120,14 +102,6 @@ namespace AntDesign
             }
         }
 
-        public override void ClearValue(int index = 0)
-        {
-            _isSetPicker = false;
-            CurrentValue[0] = default;
-            CurrentValue[1] = default;
-            Close();
-        }
-
         private async Task OnInputClick(int index)
         {
             await _dropDown.Show();
@@ -137,10 +111,7 @@ namespace AntDesign
                 // change start picker value
                 if (!_inputStart.IsOnFocused && _pickerStatus[index]._hadSelectValue)
                 {
-                    GetIfNotNull(Value[index], notNullValue =>
-                    {
-                        ChangePickerValue(notNullValue, index);
-                    });
+                    ChangePickerValue(Value[index], index);
                 }
 
                 ChangeFocusTarget(true, false);
@@ -151,30 +122,20 @@ namespace AntDesign
                 // change end picker value
                 if (!_inputEnd.IsOnFocused && _pickerStatus[index]._hadSelectValue)
                 {
-                    GetIfNotNull(Value[index], notNullValue =>
-                    {
-                        ChangePickerValue(notNullValue, index);
-                    });
+                    ChangePickerValue(Value[index], index);
                 }
 
                 ChangeFocusTarget(false, true);
             }
         }
-
-        private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
+        
+        public override void ClearValue(int index = 0)
         {
-            if (!_isNullable)
-            {
-                DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
-                if (dateTime != DateTime.MinValue)
-                {
-                    notNullAction?.Invoke(dateTime);
-                }
-            }
-            if (_isNullable && value != null)
-            {
-                notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
-            }
+            _isSetPicker = false;
+            _pickerStatus[0]._hadSelectValue = false;
+            _pickerStatus[1]._hadSelectValue = false;
+            UpdateCurrentValueAsString();
+            Close();
         }
 
     }
