@@ -84,8 +84,8 @@ export function uploadFile(element, headers, fileId, url, name, instance, percen
   const req = new XMLHttpRequest()
   req.onreadystatechange = function () {
     if (req.readyState === 4) {
-      if (req.responseText == null || req.responseText.length == 0) {
-        instance.invokeMethodAsync(errorMethod, fileId, "error");
+      if (req.status != 200) {
+        instance.invokeMethodAsync(errorMethod, fileId, `{"status": ${req.status}}`);
         return;
       }
       instance.invokeMethodAsync(successMethod, fileId, req.responseText);
