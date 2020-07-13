@@ -17,7 +17,7 @@ title:
   这个场景还展示了复杂类型的表单验证，Address是一个包含了两个属性的类结构，通过附加ValidateComplexType，表单可以对其所有属性进行验证。详情可参考Blazor文档：[嵌套模型、集合类型和复杂类型](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/forms-validation)
 - `BirthDate`：有两个内联控件，错误信息展示各自控件下，使用两个 `<FormItem />` 分别绑定对应控件，并修改 `style` 使其内联布局。
 
-更复杂的封装复用方式可以参考下面的 `自定义表单控件` 演示（TODO）。
+更复杂的封装复用方式可以参考下面的 `自定义表单控件` 。
 
 ## en-US
 
