@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -9,7 +10,7 @@ namespace AntDesign
     {
         public new Func<TResult, Task> OnClose { get; set; }
 
-        internal DrawerRef(DrawerConfig config, DrawerService service) : base(config, service)
+        internal DrawerRef(DrawerOptions config, DrawerService service) : base(config, service)
         {
 
         }
@@ -28,7 +29,7 @@ namespace AntDesign
 
     public class DrawerRef
     {
-        public DrawerConfig Config { get; set; }
+        public DrawerOptions Config { get; set; }
         public Drawer Drawer { get; set; }
 
         protected DrawerService _service;
@@ -37,12 +38,12 @@ namespace AntDesign
 
         public Func<Task> OnClose { get; set; }
 
-        internal DrawerRef(DrawerConfig config)
+        internal DrawerRef(DrawerOptions config)
         {
             Config = config;
         }
 
-        internal DrawerRef(DrawerConfig config, DrawerService service)
+        internal DrawerRef(DrawerOptions config, DrawerService service)
         {
             Config = config;
             _service = service;
@@ -73,14 +74,13 @@ namespace AntDesign
 
         internal async Task HandleOnCancel()
         {
-            bool isClose = true;
+            var args = new DrawerClosingEventArgs(false);
             if (Config.OnCancel != null)
             {
-                isClose = Config.OnCancel.Invoke() ?? true;
+                await Config.OnCancel.Invoke(args);
             }
-            if (isClose == true)
+            if (args.Cancel == false)
                 await _service.CloseAsync(this);
-
         }
     }
 }
