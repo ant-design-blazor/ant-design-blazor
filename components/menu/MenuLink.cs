@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Routing;
@@ -27,6 +28,9 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
+
+        [Parameter(CaptureUnmatchedValues = true)]
+        public Dictionary<string, object> Attributes { get; set; }
 
         /// <summary>
         /// Gets or sets a value representing the URL matching behavior.
@@ -66,6 +70,7 @@ namespace AntDesign
             if (MenuItem != null && _isActive && !MenuItem.IsSelected)
             {
                 Menu?.SelectItem(MenuItem);
+                Menu?.SelectSubmenu(MenuItem.ParentMenu);
             }
         }
 
@@ -150,7 +155,8 @@ namespace AntDesign
                 builder.AddAttribute(1, "href", Href);
                 builder.AddAttribute(2, "class", ClassMapper.Class);
                 builder.AddAttribute(2, "style", Style);
-                builder.AddContent(3, ChildContent);
+                builder.AddMultipleAttributes(3, Attributes);
+                builder.AddContent(4, ChildContent);
                 builder.CloseElement();
             }
         }
