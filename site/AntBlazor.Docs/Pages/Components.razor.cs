@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Docs.Pages
 {
-    public partial class Components
+    public partial class Components : ComponentBase
     {
         [Parameter]
         public string Name { get; set; }
