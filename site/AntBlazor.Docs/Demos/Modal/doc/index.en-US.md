@@ -2,7 +2,6 @@
 type: Feedback
 category: Components
 title: Modal
-cols: 1
 ---
 
 Modal dialogs.

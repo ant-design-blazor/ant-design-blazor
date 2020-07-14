@@ -3,7 +3,6 @@ type: 反馈
 category: Components
 subtitle: 对话框
 title: Modal
-cols: 1
 ---
 
 模态对话框。

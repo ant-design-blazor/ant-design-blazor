@@ -3,7 +3,6 @@ category: Components
 type: 反馈
 title: Drawer
 subtitle: 抽屉
-cols: 1
 ---
 
 屏幕边缘滑出的浮层面板。

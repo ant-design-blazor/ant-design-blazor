@@ -23,6 +23,8 @@ namespace AntDesign.Docs.Pages
 
         private DemoComponent _demoComponent;
 
+        private bool _expanded;
+
         private string CurrentLanguage => LanguageService.CurrentCulture.Name;
 
         protected override async Task OnInitializedAsync()
