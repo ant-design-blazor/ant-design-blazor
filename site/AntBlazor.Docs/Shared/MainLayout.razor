@@ -19,7 +19,7 @@
                 @*<Menu Mode="MenuMode.Horizontal" Id="nav" Class="menu-site">
                     @foreach (var item in MenuItems)
                     {
-                        <MenuItem Class="ant-menu-item-only-child" Key="@item.Url" OnClicked="async _=> await ChangeMenuItem(item.Url)">
+                        <MenuItem Class="ant-menu-item-only-child" Key="@item.Url" OnClick="async _=> await ChangeMenuItem(item.Url)">
                             <MenuLink href="@($"{CurrentLanguage}/{item.Url}")" Match="NavLinkMatch.Prefix">
                                 <span>@item.Title</span>
                             </MenuLink>

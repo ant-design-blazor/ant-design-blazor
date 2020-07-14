@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Routing;
@@ -14,7 +11,6 @@ namespace AntDesign
         private bool _isActive;
         private string _hrefAbsolute;
         private string _class;
-        internal string Href => _hrefAbsolute;
 
         /// <summary>
         /// Gets or sets the CSS class name applied to the NavLink when the
@@ -23,10 +19,8 @@ namespace AntDesign
         [Parameter]
         public string ActiveClass { get; set; }
 
-        /// <summary>
-        /// Gets or sets the computed CSS class based on whether or not the link is active.
-        /// </summary>
-        protected string CssClass { get; set; }
+        [Parameter]
+        public string Href { get; set; }
 
         /// <summary>
         /// Gets or sets the child content of the component.
@@ -39,9 +33,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public NavLinkMatch Match { get; set; }
-
-        [Parameter(CaptureUnmatchedValues = true)]
-        public Dictionary<string, object> Attributes { get; set; }
 
         [CascadingParameter]
         public MenuItem MenuItem { get; set; }
@@ -59,29 +50,19 @@ namespace AntDesign
         {
             // We'll consider re-rendering on each location change
             NavigationManger.LocationChanged += OnLocationChanged;
-            //if (Button != null)
-            //{
-            //    Button.Link = this;
-            //}
+
+            ClassMapper.If(ActiveClass, () => _isActive)
+                .If(DefaultActiveClass, () => _isActive && string.IsNullOrWhiteSpace(ActiveClass));
         }
 
+        /// <inheritdoc />
         /// <inheritdoc />
         protected override void OnParametersSet()
         {
             // Update computed state
-            string href = (string)null;
-            if (Attributes != null && Attributes.TryGetValue("href", out object obj))
-            {
-                href = Convert.ToString(obj, CultureInfo.CurrentCulture);
-            }
-            _hrefAbsolute = href == null ? null : NavigationManger.ToAbsoluteUri(href).AbsoluteUri;
+            _hrefAbsolute = Href == null ? null : NavigationManger.ToAbsoluteUri(Href).AbsoluteUri;
             _isActive = ShouldMatch(NavigationManger.Uri);
-            _class = (string)null;
-            if (Attributes != null && Attributes.TryGetValue("class", out obj))
-            {
-                _class = Convert.ToString(obj, CultureInfo.CurrentCulture);
-            }
-            UpdateCssClass();
+
             if (MenuItem != null && _isActive && !MenuItem.IsSelected)
             {
                 Menu?.SelectItem(MenuItem);
@@ -96,11 +77,6 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        private void UpdateCssClass()
-        {
-            CssClass = _isActive ? CombineWithSpace(_class, ActiveClass ?? DefaultActiveClass) : _class;
-        }
-
         private void OnLocationChanged(object sender, LocationChangedEventArgs args)
         {
             // We could just re-render always, but for this component we know the
@@ -109,7 +85,7 @@ namespace AntDesign
             if (shouldBeActiveNow != _isActive)
             {
                 _isActive = shouldBeActiveNow;
-                UpdateCssClass();
+
                 if (MenuItem != null)
                 {
                     if (_isActive)
@@ -171,16 +147,13 @@ namespace AntDesign
             if (builder != null)
             {
                 builder.OpenElement(0, "a");
-                builder.AddMultipleAttributes(1, Attributes);
-                builder.AddAttribute(2, "class", CssClass);
+                builder.AddAttribute(1, "href", Href);
+                builder.AddAttribute(2, "class", ClassMapper.Class);
+                builder.AddAttribute(2, "style", Style);
                 builder.AddContent(3, ChildContent);
                 builder.CloseElement();
             }
         }
-
-        private static string CombineWithSpace(string str1, string str2)
-        => str1 == null ? str2
-        : (str2 == null ? str1 : $"{str1} {str2}");
 
         private static bool IsStrictlyPrefixWithSeparator(string value, string prefix)
         {
