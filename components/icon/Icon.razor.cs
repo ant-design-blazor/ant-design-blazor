@@ -70,7 +70,7 @@ namespace AntDesign
                 Button?.Icons.Add(icon);
             }
 
-            ClassMapper.Add("anticon anticon-sync");
+            ClassMapper.Add($"anticon anticon-{Type}");
 
             await base.OnInitializedAsync();
         }
