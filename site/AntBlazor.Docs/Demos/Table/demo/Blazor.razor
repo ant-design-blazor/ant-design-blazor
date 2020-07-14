@@ -11,10 +11,13 @@
        @bind-SelectedRows="selectedRows">
     <Selection Key="@(context.Id.ToString())" />
     <Column @bind-Field="@context.Id" Sortable />
-    <Column @bind-Field="@context.Date" Format="yyyy-MM-dd" Sortable/>
-    <Column @bind-Field="@context.TemperatureC" Sortable/>
+    <Column @bind-Field="@context.Date" Format="yyyy-MM-dd" Sortable />
+    <Column @bind-Field="@context.TemperatureC" Sortable />
     <Column Title="Temp. (F)" Field="@context.TemperatureF" />
-    <Column @bind-Field="@context.Summary"Sortable />
+    <Column Title="Hot" Field="@context.Hot">
+        <Switch @bind-Value="@context.Hot"></Switch>
+    </Column>
+    <Column @bind-Field="@context.Summary" Sortable />
 </Table>
 
 <br />
@@ -75,6 +78,8 @@
         public string Summary { get; set; }
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+
+        public bool Hot { get; set; }
     }
 
     private static readonly string[] Summaries = new[]
@@ -85,12 +90,17 @@
     public Task<WeatherForecast[]> GetForecastAsync(int pageIndex, int pageSize)
     {
         var rng = new Random();
-        return Task.FromResult(Enumerable.Range((pageIndex - 1) * pageSize + 1, pageSize).Select(index => new WeatherForecast
+        return Task.FromResult(Enumerable.Range((pageIndex - 1) * pageSize + 1, pageSize).Select(index =>
         {
-            Id = index,
-            Date = DateTime.Now.AddDays(index),
-            TemperatureC = rng.Next(-20, 55),
-            Summary = Summaries[rng.Next(Summaries.Length)]
+            var temperatureC = rng.Next(-20, 55);
+            return new WeatherForecast
+            {
+                Id = index,
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = temperatureC,
+                Summary = Summaries[rng.Next(Summaries.Length)],
+                Hot = temperatureC > 30,
+            };
         }).ToArray());
     }
 
