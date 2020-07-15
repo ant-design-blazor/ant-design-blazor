@@ -1,8 +1,9 @@
 ﻿@namespace AntDesign
-@inherits AntDomComponentBase
+@typeparam TValue
+@inherits AntInputComponentBase<TValue>
 
 <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="_slider"
-     @onmousedown="(e)=>OnMouseDown()" @onclick="(e)=>OnClick(e)">
+     @onmousedown="(e)=>OnMouseDown(e)">
     <div class="ant-slider-rail">
     </div>
     @if (Included)
