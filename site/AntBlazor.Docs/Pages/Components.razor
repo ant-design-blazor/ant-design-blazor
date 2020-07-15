@@ -5,6 +5,21 @@
     <article>
         @if (_demoComponent != null)
         {
+            var demos = _demoComponent.DemoList.Where(x => !x.Debug).OrderBy(x => x.Order);
+            <div class="toc-affix">
+                <Affix>
+                    <Anchor Key="@_demoComponent.Title">
+                        @foreach (var demo in demos)
+                        {
+                            <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#components-{_demoComponent.Title.ToLower()}-demo-{demo.Name}")" Title="@demo.Name" />
+                        }
+                        @if (!string.IsNullOrEmpty(_demoComponent.ApiDoc))
+                        {
+                            <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#api")" Title="API" />
+                        }
+                    </Anchor>
+                </Affix>
+            </div>
             <section class="markdown">
                 <h1>
                     @_demoComponent.Title
@@ -27,11 +42,11 @@
                         {
                             @if (_expanded)
                             {
-                                <Icon Type="compress" Class="code-box-expand-trigger" OnClick="() => _expanded = false "/>
+                                <Icon Type="compress" Class="code-box-expand-trigger" OnClick="() => _expanded = false " />
                             }
                             else
                             {
-                                <Icon Type="expand" Class="code-box-expand-trigger"  OnClick="() => _expanded = true "/>
+                                <Icon Type="expand" Class="code-box-expand-trigger" OnClick="() => _expanded = true " />
                             }
                         }
                         <Icon Type="code" Class="code-box-expand-trigger" />
@@ -40,10 +55,7 @@
                 </h2>
             </section>
             <Row Style="margin-left: -8px; margin-right: -8px;">
-                @{
-                    var demos = _demoComponent.DemoList.Where(x => !x.Debug).OrderBy(x => x.Order);
-                }
-                @if ( _demoComponent.Cols == 1 || _expanded)
+                @if (_demoComponent.Cols == 1 || _expanded)
                 {
                     foreach (var demo in demos)
                     {
@@ -70,7 +82,6 @@
                         }
                     </AntDesign.Col>
                 }
-
             </Row>
             <section class="markdown api-container">
                 @*<h2 id="API" data-scrollama-index="10">
@@ -81,4 +92,3 @@
         }
     </article>
 </section>
-
