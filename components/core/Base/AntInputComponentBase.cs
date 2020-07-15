@@ -53,6 +53,7 @@ namespace AntDesign
         public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
 
         private TValue _value;
+
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
         /// </summary>
@@ -95,8 +96,6 @@ namespace AntDesign
         /// Gets the <see cref="FieldIdentifier"/> for the bound value.
         /// </summary>
         internal FieldIdentifier FieldIdentifier { get; set; }
-
-        protected Action<TValue> OnPropertyChanged { get; set; }
 
         /// <summary>
         /// Gets or sets the current value of the input.
@@ -223,7 +222,6 @@ namespace AntDesign
 
         protected virtual void OnValueChange(TValue value)
         {
-
         }
 
         protected override void OnInitialized()

@@ -298,7 +298,6 @@ namespace AntDesign
             }
             DomEventService.AddEventListener("window", "mousemove", OnMouseMove);
             DomEventService.AddEventListener("window", "mouseup", OnMouseUp);
-            OnPropertyChanged = (e)=>HandleValueChange(e);
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -540,7 +539,7 @@ namespace AntDesign
         {
             if (Step.HasValue && (Marks == null || Marks.Length == 0))
             {
-                return Math.Round(value / Step.Value, 0) * Step.Value ;
+                return Math.Round(value / Step.Value, 0) * Step.Value;
             }
             else if (Step.HasValue)
             {
@@ -556,8 +555,10 @@ namespace AntDesign
             }
         }
 
-        private void HandleValueChange(TValue value)
+        protected override void OnValueChange(TValue value)
         {
+            base.OnValueChange(value);
+
             if (Range)
             {
                 LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value).Item1;
