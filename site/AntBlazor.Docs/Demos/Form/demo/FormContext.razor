@@ -87,7 +87,7 @@
             // if you can't get the reference of _userForm and _baseFormModel, you should:
             User user = (User)args.FinishForm.Model;
             UserGroup userGroup = (UserGroup)args.Forms["basicForm"].Model;
-            Console.WriteLine($"userGroup:{JsonSerializer.Serialize(userGroup)}");
+ 
             userGroup.Users.Add(new User { Name = user.Name, Age = user.Age });
 
             // if you have the reference of _userForm and _baseFormModel, you can:

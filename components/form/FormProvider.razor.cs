@@ -21,7 +21,6 @@ namespace AntDesign
             _forms.Add(form.Name, form);
 
             form.OnFinishEvent += OnFinish;
-            Console.WriteLine($"------------------AddForm:{_forms.Count}");
         }
 
         void IFormProvider.RemoveForm(IForm form)
@@ -29,12 +28,10 @@ namespace AntDesign
             _forms.Remove(form.Name);
 
             form.OnFinishEvent += OnFinish;
-            Console.WriteLine($"----------------RemoveForm:{_forms.Count}");
         }
 
         private void OnFinish(IForm form)
         {
-            Console.WriteLine("OnFinish");
             var args = new FormProviderFinishEventArgs
             {
                 Forms = _forms,
