@@ -90,6 +90,14 @@ namespace AntDesign
             }
             isCollapsed = Collapsed;
             SetClass();
+
+            OnCollapsed += collapsed =>
+            {
+                if (OnCollapse.HasDelegate)
+                {
+                    OnCollapse.InvokeAsync(collapsed);
+                }
+            };
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
