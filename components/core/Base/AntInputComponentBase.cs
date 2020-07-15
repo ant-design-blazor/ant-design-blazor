@@ -96,6 +96,8 @@ namespace AntDesign
         /// </summary>
         internal FieldIdentifier FieldIdentifier { get; set; }
 
+        protected Action<TValue> OnPropertyChanged { get; set; }
+
         /// <summary>
         /// Gets or sets the current value of the input.
         /// </summary>

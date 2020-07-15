@@ -192,13 +192,16 @@ namespace AntDesign
             get => _leftValue;
             set
             {
-                _leftValue = Math.Max(value, Min);
-                _leftValue = Math.Min(_leftValue, RightValue);
-                _leftValue = GetNearestStep(_leftValue);
-                SetStyle();
+                if (_leftValue != value)
+                {
+                    _leftValue = Math.Max(value, Min);
+                    _leftValue = Math.Min(_leftValue, RightValue);
+                    _leftValue = GetNearestStep(_leftValue);
+                    SetStyle();
 
-                //CurrentValue = TupleToGeneric((_leftValue, RightValue));
-                CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
+                    //CurrentValue = TupleToGeneric((_leftValue, RightValue));
+                    CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
+                }
             }
         }
 
@@ -210,26 +213,29 @@ namespace AntDesign
             get => _rightValue;
             set
             {
-                _rightValue = Math.Min(value, Max);
-                if (Range)
+                if (_rightValue != value)
                 {
-                    _rightValue = Math.Max(LeftValue, _rightValue);
-                }
-                else
-                {
-                    _rightValue = Math.Max(Min, _rightValue);
-                }
-                _rightValue = GetNearestStep(_rightValue);
-                SetStyle();
-                if (Range)
-                {
-                    //CurrentValue = TupleToGeneric((LeftValue, _rightValue));
-                    CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((LeftValue, _rightValue));
-                }
-                else
-                {
-                    //CurrentValue = DoubleToGeneric(_rightValue);
-                    CurrentValue = DataConvertionExtensions.Convert<double, TValue>(_rightValue);
+                    _rightValue = Math.Min(value, Max);
+                    if (Range)
+                    {
+                        _rightValue = Math.Max(LeftValue, _rightValue);
+                    }
+                    else
+                    {
+                        _rightValue = Math.Max(Min, _rightValue);
+                    }
+                    _rightValue = GetNearestStep(_rightValue);
+                    SetStyle();
+                    if (Range)
+                    {
+                        //CurrentValue = TupleToGeneric((LeftValue, _rightValue));
+                        CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((LeftValue, _rightValue));
+                    }
+                    else
+                    {
+                        //CurrentValue = DoubleToGeneric(_rightValue);
+                        CurrentValue = DataConvertionExtensions.Convert<double, TValue>(_rightValue);
+                    }
                 }
             }
         }
@@ -292,6 +298,7 @@ namespace AntDesign
             }
             DomEventService.AddEventListener("window", "mousemove", OnMouseMove);
             DomEventService.AddEventListener("window", "mouseup", OnMouseUp);
+            OnPropertyChanged = (e)=>HandleValueChange(e);
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -533,7 +540,7 @@ namespace AntDesign
         {
             if (Step.HasValue && (Marks == null || Marks.Length == 0))
             {
-                return Math.Round(value / Step.Value, 0) * Step.Value + Min;
+                return Math.Round(value / Step.Value, 0) * Step.Value ;
             }
             else if (Step.HasValue)
             {
@@ -546,6 +553,19 @@ namespace AntDesign
             else
             {
                 return Marks.Select(m => m.Key).OrderBy(v => Math.Abs(v - value)).First();
+            }
+        }
+
+        private void HandleValueChange(TValue value)
+        {
+            if (Range)
+            {
+                LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value).Item1;
+                RightValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value).Item2;
+            }
+            else
+            {
+                RightValue = DataConvertionExtensions.Convert<TValue, double>(value);
             }
         }
     }
