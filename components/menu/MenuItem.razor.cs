@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign
 {
@@ -28,7 +29,13 @@ namespace AntDesign
         public bool Disabled { get; set; }
 
         [Parameter]
-        public EventCallback<MouseEventArgs> OnClicked { get; set; }
+        public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+        [Parameter]
+        public string RouterLink { get; set; }
+
+        [Parameter]
+        public NavLinkMatch RouterMatch { get; set; }
 
         public bool IsSelected { get; private set; }
         private string _key;
@@ -71,8 +78,8 @@ namespace AntDesign
 
             RootMenu.SelectItem(this);
 
-            if (OnClicked.HasDelegate)
-                await OnClicked.InvokeAsync(args);
+            if (OnClick.HasDelegate)
+                await OnClick.InvokeAsync(args);
 
             if (ParentMenu == null)
                 return;
