@@ -11,7 +11,7 @@
                     <Anchor Key="@_demoComponent.Title">
                         @foreach (var demo in demos)
                         {
-                            <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#components-{_demoComponent.Title.ToLower()}-demo-{demo.Name}")" Title="@demo.Name" />
+                            <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#components-{_demoComponent.Title.ToLower()}-demo-{demo.Name}")" Title="@demo.Title" />
                         }
                         @if (!string.IsNullOrEmpty(_demoComponent.ApiDoc))
                         {
