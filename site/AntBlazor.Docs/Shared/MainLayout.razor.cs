@@ -9,7 +9,7 @@ using Microsoft.JSInterop;
 
 namespace AntDesign.Docs.Shared
 {
-    public partial class MainLayout : IDisposable
+    public partial class MainLayout : LayoutComponentBase, IDisposable
     {
         private bool _isCollapsed = true;
 
@@ -35,8 +35,8 @@ namespace AntDesign.Docs.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            //await GetCurrentMenuItems();
-            //StateHasChanged();
+            await GetCurrentMenuItems();
+            StateHasChanged();
             await DemoService.InitializeDemos();
 
             LanguageService.LanguageChanged += OnLanguageChanged;
