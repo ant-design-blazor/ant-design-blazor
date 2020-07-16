@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Docs.Pages
 {
-    public partial class Components
+    public partial class Components : ComponentBase
     {
         [Parameter]
         public string Name { get; set; }
@@ -22,6 +22,8 @@ namespace AntDesign.Docs.Pages
         private NavigationManager NavigationManager { get; set; }
 
         private DemoComponent _demoComponent;
+
+        private bool _expanded;
 
         private string CurrentLanguage => LanguageService.CurrentCulture.Name;
 

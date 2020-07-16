@@ -1,16 +1,16 @@
 ﻿<div>
     <h4>included=true</h4>
-    <Slider Marks="@nMarks" DefaultValue="37" />
-    <Slider Marks="@nMarks" DefaultValue="(26, 37)" />
+    <Slider TValue="double" Marks="@nMarks" DefaultValue="37" />
+    <Slider TValue="(double, double)" Marks="@nMarks" DefaultValue="(26, 37)" />
 
     <h4>included=false</h4>
-    <Slider Marks="@nMarks" Included="false" DefaultValue="37" />
+    <Slider TValue="double" Marks="@nMarks" Included="false" DefaultValue="37" />
 
     <h4>marks & step</h4>
-    <Slider Marks="@nMarks" Step="10" DefaultValue="37" />
+    <Slider TValue="double" Marks="@nMarks" Step="10" DefaultValue="37" />
 
     <h4>step=null</h4>
-    <Slider Marks="@nMarks" Step="null" DefaultValue="37" />
+    <Slider TValue="double" Marks="@nMarks" Step="null" DefaultValue="37" />
 
 </div>
 
