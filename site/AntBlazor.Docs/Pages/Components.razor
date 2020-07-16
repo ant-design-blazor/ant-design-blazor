@@ -7,7 +7,7 @@
         {
             var demos = _demoComponent.DemoList.Where(x => !x.Debug).OrderBy(x => x.Order);
             <div class="toc-affix">
-                <Affix>
+                <Affix OffsetTop="16">
                     <Anchor Key="@_demoComponent.Title">
                         @foreach (var demo in demos)
                         {
