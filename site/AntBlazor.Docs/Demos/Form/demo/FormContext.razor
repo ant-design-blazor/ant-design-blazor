@@ -1,48 +1,134 @@
-﻿@using System.ComponentModel.DataAnnotations;
-@using System.Text.Json;
+﻿@using System.Text.Json;
+@using System.ComponentModel.DataAnnotations;
 
-    <Form @ref="form" Model="@model"
+<FormProvider OnFormFinish="OnFormFinish">
+    <Form Model="@_baseFormModel"
+          Name="basicForm"
+          OnFinish="OnBasicFinish"
           LabelCol="new ColLayoutParam { Span = 8 }"
-          WrapperCol="new ColLayoutParam { Span = 16 }"
-          OnFinish="OnFinish"
-          OnFinishFailed="OnFinishFailed">
-        <FormItem Label="Username">
-            <Input @bind-Value="@context.Username" />
+          WrapperCol="new ColLayoutParam { Span = 16 }">
+        <FormItem Label="Group Name">
+            <Input @bind-Value="context.GroupName" />
         </FormItem>
-        <FormItem Label="Password">
-            <InputPassword @bind-Value="@context.Password" />
+        <FormItem Label="User List">
+            @if (context.Users.Count > 0)
+            {
+                <ul>
+                    @for (int i = 0; i < context.Users.Count; i++)
+                    {
+                        <li class="user">
+                            <Icon Type="user" />
+                            @(context.Users[i].Name) - @(context.Users[i].Age)
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <Paragraph>
+                    <Text Class="ant-form-text">
+                        ( <Icon Type="smile" /> No user yet. )
+                    </Text>
+                </Paragraph>
+            }
         </FormItem>
-        <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
-            <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
-        </FormItem>
-        <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
-            <Button Type="@ButtonType.Primary" HtmlType="submit" Disabled="!form.IsModified">
+        <FormItem WrapperCol="new ColLayoutParam { Offset = 8, Span = 16 }">
+            <Button HtmlType="submit" Type="@ButtonType.Primary">
                 Submit
+            </Button>
+            <Button HtmlType="button" Style="margin: 0 8px" OnClick="ShowUserModal">
+                Add User
             </Button>
         </FormItem>
     </Form>
-@code
-{
-    public class Model
+
+    <Modal Title=@("Basic Drawer")
+           Visible="@_modelVisible"
+           OnOk="@HandleOk"
+           OnCancel="@HideUserModal">
+        <Form @ref="@_userForm" Model="@_userFormModel" Layout="@FormLayout.Vertical" Name="userForm">
+            <FormItem Label="User Name">
+                <Input @bind-Value="@context.Name" />
+            </FormItem>
+            <FormItem Label="User Age">
+                <AntDesign.InputNumber @bind-Value="@context.Age" />
+            </FormItem>
+        </Form>
+    </Modal>
+</FormProvider>
+
+
+@code {
+    public class User
     {
         [Required]
-        public string Username { get; set; }
+        public string Name { get; set; }
         [Required]
-        public string Password { get; set; }
-        public bool RememberMe { get; set; } = true;
+        public int Age { get; set; }
     }
 
-    Form<Model> form;
-
-    private Model model = new Model();
-
-    private void OnFinish(EditContext editContext)
+    public class UserGroup
     {
-        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+        [Required]
+        public string GroupName { get; set; }
+        [ValidateComplexType]
+        public List<User> Users { get; set; } = new List<User>();
     }
 
-    private void OnFinishFailed(EditContext editContext)
+    private Form<User> _userForm;
+    private User _userFormModel = new User();
+    private UserGroup _baseFormModel = new UserGroup();
+    private bool _modelVisible = false;
+
+    private void OnFormFinish(FormProviderFinishEventArgs args)
     {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+        if (args.FinishForm.Name == "userForm")
+        {
+            // if you can't get the reference of _userForm and _baseFormModel, you should:
+            User user = (User)args.FinishForm.Model;
+            UserGroup userGroup = (UserGroup)args.Forms["basicForm"].Model;
+ 
+            userGroup.Users.Add(new User { Name = user.Name, Age = user.Age });
+
+            // if you have the reference of _userForm and _baseFormModel, you can:
+            //_baseFormModel.Users.Add(new User { Name = _userFormModel.Name, Age = _userFormModel.Age });
+        }
+        HideUserModal();
+    }
+
+    private void OnBasicFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(editContext.Model)}");
+    }
+
+    private void HandleOk(MouseEventArgs args)
+    {
+        _userForm.Submit();
+    }
+
+    private void ShowUserModal()
+    {
+        _modelVisible = true;
+    }
+
+    private void HideUserModal()
+    {
+        _modelVisible = false;
+        _userForm.Reset();
     }
 }
+
+<style>
+    #components-form-demo-form-context .user {
+        margin-bottom: 8px;
+    }
+
+        #components-form-demo-form-context .user .ant-avatar {
+            margin-right: 8px;
+        }
+
+    .ant-row-rtl #components-form-demo-form-context .user .ant-avatar {
+        margin-right: 0;
+        margin-left: 8px;
+    }
+</style>
