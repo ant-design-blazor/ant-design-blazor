@@ -81,7 +81,7 @@ namespace AntDesign
 
         protected override void OnParametersSet()
         {
-            this._hasText = string.IsNullOrEmpty(this.Src) && (!string.IsNullOrEmpty(this._text) || ChildContent != null);
+            this._hasText = string.IsNullOrEmpty(this.Src) && (!string.IsNullOrEmpty(this._text) || _childContent != null);
             this._hasIcon = string.IsNullOrEmpty(this.Src) && !string.IsNullOrEmpty(this.Icon);
             this._hasSrc = !string.IsNullOrEmpty(this.Src);
 
