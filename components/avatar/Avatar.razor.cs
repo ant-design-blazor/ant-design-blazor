@@ -10,7 +10,15 @@ namespace AntDesign
     public partial class Avatar : AntDomComponentBase
     {
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public RenderFragment ChildContent
+        {
+            get => _childContent;
+            set
+            {
+                _childContent = value;
+                _waitingCaclSize = true;
+            }
+        }
 
         [Parameter]
         public string Shape { get; set; } = null;
@@ -19,7 +27,18 @@ namespace AntDesign
         public string Size { get; set; } = AntSizeLDSType.Default;
 
         [Parameter]
-        public string Text { get; set; }
+        public string Text
+        {
+            get => _text;
+            set
+            {
+                if (_text != value)
+                {
+                    _text = value;
+                    _waitingCaclSize = true;
+                }
+            }
+        }
 
         [Parameter]
         public string Src { get; set; }
@@ -48,6 +67,56 @@ namespace AntDesign
 
         private readonly Hashtable _sizeMap = new Hashtable() { ["large"] = "lg", ["small"] = "sm" };
 
+        private string _text;
+        private RenderFragment _childContent;
+        private bool _waitingCaclSize;
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            SetClassMap();
+            SetSizeStyle();
+        }
+
+        protected override void OnParametersSet()
+        {
+            this._hasText = string.IsNullOrEmpty(this.Src) && (!string.IsNullOrEmpty(this._text) || _childContent != null);
+            this._hasIcon = string.IsNullOrEmpty(this.Src) && !string.IsNullOrEmpty(this.Icon);
+            this._hasSrc = !string.IsNullOrEmpty(this.Src);
+
+            base.OnParametersSet();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender || _waitingCaclSize)
+            {
+                _waitingCaclSize = false;
+                await CalcStringSize();
+            }
+
+            await base.OnAfterRenderAsync(firstRender);
+        }
+
+        private async Task ImgError(ErrorEventArgs args)
+        {
+            await Error.InvokeAsync(args);
+            this._hasSrc = false;
+            this._hasIcon = false;
+            this._hasText = false;
+            if (!string.IsNullOrEmpty(this.Icon))
+            {
+                this._hasIcon = true;
+            }
+            else if (!string.IsNullOrEmpty(this._text))
+            {
+                this._hasText = true;
+            }
+
+            _waitingCaclSize = true;
+        }
+
         private void SetClassMap()
         {
             ClassMapper.Clear()
@@ -59,48 +128,11 @@ namespace AntDesign
                 ;
         }
 
-        protected override void OnParametersSet()
-        {
-            this._hasText = string.IsNullOrEmpty(this.Src) && (!string.IsNullOrEmpty(this.Text) || ChildContent != null);
-            this._hasIcon = string.IsNullOrEmpty(this.Src) && !string.IsNullOrEmpty(this.Icon);
-            this._hasSrc = !string.IsNullOrEmpty(this.Src);
-
-            SetClassMap();
-            SetSizeStyle();
-            base.OnParametersSetAsync();
-        }
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            await CalcStringSize();
-            StateHasChanged();
-            await base.OnAfterRenderAsync(firstRender);
-        }
-
-        protected async Task ImgError(ErrorEventArgs args)
-        {
-            await Error.InvokeAsync(args);
-            this._hasSrc = false;
-            this._hasIcon = false;
-            this._hasText = false;
-            if (!string.IsNullOrEmpty(this.Icon))
-            {
-                this._hasIcon = true;
-            }
-            else if (!string.IsNullOrEmpty(this.Text))
-            {
-                this._hasText = true;
-            }
-            this.SetClassMap();
-            await CalcStringSize();
-            SetSizeStyle();
-        }
-
         private void SetSizeStyle()
         {
             if (decimal.TryParse(this.Size, out var pxSize))
             {
-                string size = StyleHelper.ToCssPixel(pxSize.ToString(CultureInfo.InvariantCulture));
+                var size = StyleHelper.ToCssPixel(pxSize.ToString(CultureInfo.InvariantCulture));
                 Style += $";width:{size};";
                 Style += $"height:{size};";
                 Style += $"line-height:{size};";
@@ -126,6 +158,8 @@ namespace AntDesign
             {
                 this._textStyles += $"lineHeight:{pxSize}px;";
             }
+
+            StateHasChanged();
         }
     }
 }
