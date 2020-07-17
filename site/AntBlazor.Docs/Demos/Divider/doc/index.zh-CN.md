@@ -1,6 +1,6 @@
 ---
 category: Components
-type: Layout
+type: 其他
 title: Divider
 subtitle: 分割线
 ---
