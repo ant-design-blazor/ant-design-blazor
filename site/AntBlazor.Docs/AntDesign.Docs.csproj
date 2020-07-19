@@ -63,5 +63,5 @@
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:docs" />
   </Target>
 
-  <ProjectExtensions><VisualStudio><UserProperties wwwroot_4menu_1json__JsonSchema="https://json.schemastore.org/azure-iot-edge-deployment-2.0" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties wwwroot_4meta_4menu_1en-us_1json__JsonSchema="https://github.com/fbecart/zinoma/releases/latest/download/zinoma-schema.json" /></VisualStudio></ProjectExtensions>
 </Project>
