@@ -62,6 +62,4 @@
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:docs" />
   </Target>
-
-  <ProjectExtensions><VisualStudio><UserProperties wwwroot_4meta_4menu_1en-us_1json__JsonSchema="https://github.com/fbecart/zinoma/releases/latest/download/zinoma-schema.json" /></VisualStudio></ProjectExtensions>
 </Project>
