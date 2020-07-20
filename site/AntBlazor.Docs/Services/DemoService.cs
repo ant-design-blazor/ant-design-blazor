@@ -119,8 +119,9 @@ namespace AntDesign.Docs.Services
             builder.CloseElement();
         };
 
-        public RenderFragment GetShowCase(string type)
+        public async ValueTask<RenderFragment> GetShowCase(string type)
         {
+            await InitializeDemos();
             return _showCaseCache.TryGetValue(type, out var showCase) ? showCase : _defaultShowCase;
         }
 
@@ -140,7 +141,7 @@ namespace AntDesign.Docs.Services
                 }
             }
 
-            return Array.Empty<DemoMenuItem>();
+            return new DemoMenuItem[] { null, null };
         }
     }
 }

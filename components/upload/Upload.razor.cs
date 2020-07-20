@@ -80,18 +80,14 @@ namespace AntDesign
             return base.OnInitializedAsync();
         }
 
-        protected override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if(Disabled)
+            if (firstRender && !Disabled)
             {
-                JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn);
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.addFileClickEventListener, _btn);
             }
-            else
-            {
-                JSRuntime.InvokeVoidAsync(JSInteropConstants.addFileClickEventListener, _btn);
-            }
-            
-            return base.OnAfterRenderAsync(firstRender);
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task FileNameChanged(ChangeEventArgs e)
@@ -123,7 +119,7 @@ namespace AntDesign
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.uploadFile, _file, index, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError");
                 index++;
             }
-            
+
             await JSRuntime.InvokeVoidAsync(JSInteropConstants.clearFile, _file);
         }
 
@@ -191,6 +187,13 @@ namespace AntDesign
             {
                 await OnChange.InvokeAsync(_uploadInfo);
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            InvokeAsync(async () => await JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn));
+
+            base.Dispose(disposing);
         }
     }
 }
