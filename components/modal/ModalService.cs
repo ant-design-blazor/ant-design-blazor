@@ -37,7 +37,6 @@ namespace AntDesign
                 builder.CloseComponent();
             };
             options.OkCancel = false;
-            options.OkText = "OK";
             options.ConfirmType = "info";
             return await Confirm(options);
         }
@@ -56,7 +55,6 @@ namespace AntDesign
                 builder.CloseComponent();
             };
             options.OkCancel = false;
-            options.OkText = "OK";
             options.ConfirmType = "success";
             return await Confirm(options);
         }
@@ -75,7 +73,6 @@ namespace AntDesign
                 builder.CloseComponent();
             };
             options.OkCancel = false;
-            options.OkText = "OK";
             options.ConfirmType = "error";
             return await Confirm(options);
         }
@@ -94,7 +91,6 @@ namespace AntDesign
                 builder.CloseComponent();
             };
             options.OkCancel = false;
-            options.OkText = "OK";
             options.ConfirmType = "warning";
             return await Confirm(options);
         }
