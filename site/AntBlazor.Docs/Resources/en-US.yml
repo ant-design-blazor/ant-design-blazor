@@ -28,6 +28,7 @@ Card: Card
 Calendar: Calendar
 Empty: Empty
 List: List
+Descriptions: Descriptions
 Popover: Popover
 Tooltip: Tooltip
 Tag: Tag
@@ -41,6 +42,7 @@ BackTop: BackTop
 Tabs: Tabs
 Examples: Examples
 Notification: Notification
+PageHeader:PageHeader
 Result: Result
 Spin: Spin
 Space: Space
@@ -49,6 +51,7 @@ Carousel: Carousel
 Message: Message
 Pagination: Pagination
 Progress: Progress
+Skeleton: Skeleton
 Popconfirm: Popconfirm
 Transfer: Transfer
 Modal: Modal

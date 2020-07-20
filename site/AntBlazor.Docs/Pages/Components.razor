@@ -34,7 +34,7 @@
                 <section class="markdown">
                     @((MarkupString) _demoComponent.Desc)
                 </section>
-
+        
                 <h2 data-scrollama-index="1">
                     @LanguageService.Resources["Examples"]
                     <span class="all-code-box-controls">
@@ -68,7 +68,7 @@
                 {
                     var leftList = demos.Where((_, i) => i % 2 == 0);
                     var rightList = demos.Where((_, i) => i % 2 != 0);
-
+        
                     <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                         @foreach (var demo in leftList)
                         {
@@ -91,4 +91,5 @@
             </section>
         }
     </article>
+    @*<ul class="contributors-list" style="display: flex; list-style: none; margin: 0px; padding: 0px; flex-flow: wrap;"></ul>*@
 </section>

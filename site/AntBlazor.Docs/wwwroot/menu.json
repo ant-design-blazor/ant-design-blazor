@@ -37,6 +37,11 @@
         "type": "itemGroup",
         "children": [
           {
+            "title": "Divider",
+            "type": "menuItem",
+            "url": "components/divider"
+          },
+          {
             "title": "Grid",
             "type": "menuItem",
             "url": "components/grid"
@@ -104,19 +109,14 @@
             "url": "components/autocomplete"
           },
           {
-            "title": "Checkbox",
-            "type": "menuItem",
-            "url": "components/checkbox"
-          },
-          {
             "title": "Cascader",
             "type": "menuItem",
             "url": "components/cascader"
           },
           {
-            "title": "Switch",
+            "title": "Checkbox",
             "type": "menuItem",
-            "url": "components/switch"
+            "url": "components/checkbox"
           },
           {
             "title": "DatePicker",
@@ -127,11 +127,6 @@
             "title": "Form",
             "type": "menuItem",
             "url": "components/form"
-          },
-          {
-            "title": "TimePicker",
-            "type": "menuItem",
-            "url": "components/timePicker"
           },
           {
             "title": "Input",
@@ -159,14 +154,24 @@
             "url": "components/radio"
           },
           {
+            "title": "Select",
+            "type": "menuItem",
+            "url": "components/select"
+          },
+          {
             "title": "Slider",
             "type": "menuItem",
             "url": "components/slider"
           },
           {
-            "title": "Select",
+            "title": "Switch",
             "type": "menuItem",
-            "url": "components/select"
+            "url": "components/switch"
+          },
+          {
+            "title": "TimePicker",
+            "type": "menuItem",
+            "url": "components/timePicker"
           },
           {
             "title": "Transfer",
@@ -340,12 +345,7 @@
             "title": "Anchor",
             "type": "menuItem",
             "url": "components/anchor"
-          },
-          {
-            "title": "Divider",
-            "type": "menuItem",
-            "url": "components/divider"
-          },
+          },        
           {
             "title": "BackTop",
             "type": "menuItem",
