@@ -135,7 +135,7 @@ namespace AntDesign.Docs.Build.CLI.Command
             List<Dictionary<string, DemoMenuItem>> componentMenuList = new List<Dictionary<string, DemoMenuItem>>();
 
             IEnumerable<KeyValuePair<string, DemoComponent>> componentI18N = componentList
-                .SelectMany(x => x);
+                .SelectMany(x => x).OrderBy(x => sortMap[x.Value.Type]);
 
             foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> group in componentI18N.GroupBy(x => x.Value.Type))
             {
@@ -196,6 +196,13 @@ namespace AntDesign.Docs.Build.CLI.Command
             IEnumerable<IGrouping<string, KeyValuePair<string, DemoMenuItem>>> componentMenuI18N = componentMenuList
                 .SelectMany(x => x).GroupBy(x => x.Key);
 
+            var jsonOptions = new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                IgnoreNullValues = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            };
+
             foreach (IGrouping<string, KeyValuePair<string, DemoMenuItem>> menuGroup in menuI18N)
             {
                 var children = menuGroup.Select(x => x.Value).OrderBy(x => x.Order).ToArray();
@@ -226,20 +233,15 @@ namespace AntDesign.Docs.Build.CLI.Command
                     Children = components.ToArray()
                 });
 
-                string json = JsonSerializer.Serialize(menu, new JsonSerializerOptions()
-                {
-                    WriteIndented = true,
-                    IgnoreNullValues = true,
-                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-                });
+                var json = JsonSerializer.Serialize(menu, jsonOptions);
 
-                string configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
+                var configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
                 if (!Directory.Exists(configFileDirectory))
                 {
                     Directory.CreateDirectory(configFileDirectory);
                 }
 
-                string configFilePath = Path.Combine(configFileDirectory, $"menu.{menuGroup.Key}.json");
+                var configFilePath = Path.Combine(configFileDirectory, $"menu.{menuGroup.Key}.json");
                 Console.WriteLine(json);
 
                 if (File.Exists(configFilePath))
@@ -248,7 +250,28 @@ namespace AntDesign.Docs.Build.CLI.Command
                 }
 
                 File.WriteAllText(configFilePath, json);
-                Console.WriteLine("Generate demo file to {0}", configFilePath);
+
+                var demos = componentI18N.Where(x => x.Key == menuGroup.Key).Select(x => x.Value);
+                var demosPath = Path.Combine(configFileDirectory, $"demos.{menuGroup.Key}.json");
+
+                if (File.Exists(demosPath))
+                {
+                    File.Delete(demosPath);
+                }
+
+                json = JsonSerializer.Serialize(demos, jsonOptions);
+                File.WriteAllText(demosPath, json);
+
+                var docs = menuGroup.Where(x => x.Key == menuGroup.Key).Select(x => x.Value);
+                var docsPath = Path.Combine(configFileDirectory, $"docs.{menuGroup.Key}.json");
+
+                if (File.Exists(docsPath))
+                {
+                    File.Delete(docsPath);
+                }
+
+                json = JsonSerializer.Serialize(docs, jsonOptions);
+                File.WriteAllText(docsPath, json);
             }
         }
     }
