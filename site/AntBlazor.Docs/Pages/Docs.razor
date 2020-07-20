@@ -10,15 +10,13 @@
 @inject IPrismHighlighter PrismHighlighter
 @inject HttpClient HttpClient;
 
-<MainContent>
-    <article class="markdown">
-        @if (file != null)
-        {
-            <h1>@file.Title</h1>
-            @((MarkupString) @file.Html)
-        }
-    </article>
-</MainContent>
+<article class="markdown">
+    @if (file != null)
+    {
+        <h1>@file.Title</h1>
+        @((MarkupString) @file.Html)
+    }
+</article>
 
 @code {
 
