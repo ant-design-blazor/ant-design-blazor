@@ -97,7 +97,7 @@ namespace AntDesign.Docs.Shared
                     item.Url = $"{CurrentLanguage}/{this._currentSubmenuUrl}/{item.Title.ToLowerInvariant()}";
                 }
             }
-            PrevNextNav.SetPrevNextNav(prevNext[0], prevNext[1]);
+            PrevNextNav?.SetPrevNextNav(prevNext[0], prevNext[1]);
         }
 
         private async void OnLanguageChanged(object sender, CultureInfo culture)
