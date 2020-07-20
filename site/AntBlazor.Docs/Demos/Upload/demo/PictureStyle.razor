@@ -1,0 +1,97 @@
+@inject MessageService _message
+
+<Upload @attributes="attrs"
+        OnSingleCompleted="OnSingleCompleted">
+    <Button Icon="upload">
+        <span>点击上传</span>
+    </Button>
+</Upload>
+<br />
+<br />
+<Upload @attributes="attrs1"
+        OnSingleCompleted="OnSingleCompleted">
+    <Button Icon="upload">
+        <span>点击上传</span>
+    </Button>
+</Upload>
+
+@code
+{
+
+    static List<UploadFileItem> fileList = new List<UploadFileItem>
+{
+        new UploadFileItem
+        {
+            Id = "1",
+            FileName = "xxx.png",
+            State = UploadState.Success,
+            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+        },
+        new UploadFileItem
+        {
+            Id = "1",
+            FileName = "yyy.png",
+            State = UploadState.Fail
+        }
+    };
+
+    Dictionary<string, object> attrs = new Dictionary<string, object>
+{
+        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
+        {"Name", "files" },
+        {"DefaultFileList", fileList},
+        {"ListType", "picture" }
+    };
+
+    Dictionary<string, object> attrs1 = new Dictionary<string, object>
+{
+        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
+        {"Name", "files" },
+        {"DefaultFileList", fileList},
+        {"ListType", "picture" },
+        {"Class", "upload-list-inline" }
+    };
+
+    void OnSingleCompleted(UploadInfo fileinfo)
+    {
+        if (fileinfo.File.State == UploadState.Success)
+        {
+            var result = fileinfo.File.GetResponse<ResponseModel>
+                ();
+            fileinfo.File.Url = result.url;
+        }
+    }
+
+    public class ResponseModel
+    {
+        public string name { get; set; }
+
+        public string status { get; set; }
+
+        public string url { get; set; }
+
+        public string thumbUrl { get; set; }
+    }
+
+}
+
+<style>
+    /* tile uploaded pictures */
+    .upload-list-inline .ant-upload-list-item {
+        float: left;
+        width: 200px;
+        margin-right: 8px;
+    }
+
+    .upload-list-inline [class*='-upload-list-rtl'] .ant-upload-list-item {
+        float: right;
+    }
+
+    .upload-list-inline .ant-upload-animate-enter {
+        animation-name: uploadAnimateInlineIn;
+    }
+
+    .upload-list-inline .ant-upload-animate-leave {
+        animation-name: uploadAnimateInlineOut;
+    }
+</style>

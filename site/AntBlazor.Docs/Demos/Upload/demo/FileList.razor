@@ -1,0 +1,59 @@
+﻿@inject MessageService _message
+
+<Upload @attributes="attrs"
+        FileList="fileList"
+        OnChange="HandleChange">
+    <Button Icon="upload">
+        <span>点击上传</span>
+    </Button>
+</Upload>
+
+@code
+{
+
+    Upload upload;
+
+    List<UploadFileItem> fileList = new List<UploadFileItem>
+            {
+                new UploadFileItem
+                {
+                    Id = "1",
+                    FileName = "1.jpg",
+                    Url = "https://www.baidu.com/1.jpg",
+                    State = UploadState.Success
+                }
+            };
+
+    Dictionary<string, object> attrs = new Dictionary<string, object>
+    {
+        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
+        {"Name", "files" },
+        {"Multiple", true }
+    };
+
+    void HandleChange(UploadInfo fileinfo)
+    {
+        if(fileList.Count > 2)
+        {
+            fileList.RemoveRange(0, fileList.Count - 2);
+        }
+        fileList.Where(file => file.State == UploadState.Success && !string.IsNullOrWhiteSpace(file.Response)).ForEach(file => {
+            var result = file.GetResponse<ResponseModel>();
+            file.Url = result.url;
+        });
+    }
+
+
+
+    public class ResponseModel
+    {
+        public string name { get; set; }
+
+        public string status { get; set; }
+
+        public string url { get; set; }
+
+        public string thumbUrl { get; set; }
+    }
+
+}
