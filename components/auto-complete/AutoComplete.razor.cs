@@ -219,8 +219,10 @@ namespace AntDesign
             {
                 if (!string.IsNullOrWhiteSpace(_activeOption))
                 {
-                    Value = _activeOption;
+                    CurrentValueAsString = _activeOption;
+                    ValueChanged.InvokeAsync(_activeOption);
                     ToggleState = false;
+
                 }
             }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
@@ -28,6 +29,9 @@ namespace AntDesign
         public string Size { get; set; }
 
         [Parameter]
+        public string Name { get; set; }
+
+        [Parameter]
         public TModel Model { get; set; }
 
         [Parameter]
@@ -38,6 +42,9 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<EditContext> OnFinishFailed { get; set; }
+
+        [CascadingParameter(Name = "FormProvider")]
+        private IFormProvider FormProvider { get; set; }
 
         public bool IsModified => _editContext.IsModified();
 
@@ -52,13 +59,29 @@ namespace AntDesign
         EditContext IForm.EditContext => _editContext;
 
         string IForm.Size => Size;
+        string IForm.Name => Name;
+        object IForm.Model => Model;
+
+        bool IForm.IsModified => throw new NotImplementedException();
+        public event Action<IForm> OnFinishEvent;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            SetClass();
             _editContext = new EditContext(Model);
+
+            if (FormProvider != null)
+            {
+                FormProvider.AddForm(this);
+            }
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            SetClass();
         }
 
         protected void SetClass()
@@ -69,8 +92,16 @@ namespace AntDesign
                ;
         }
 
-        public void HandleValidSubmit()
+        private async Task OnValidSubmit(EditContext editContext)
         {
+            await OnFinish.InvokeAsync(editContext);
+
+            OnFinishEvent.Invoke(this);
+        }
+
+        private async Task OnInvalidSubmit(EditContext editContext)
+        {
+            await OnFinishFailed.InvokeAsync(editContext);
         }
 
         public void Reset()
@@ -88,10 +119,25 @@ namespace AntDesign
             this._controls.Add(valueAccessor);
         }
 
+        public void Submit()
+        {
+            bool isValid = _editContext.Validate();
+
+            if (isValid)
+            {
+                OnFinish.InvokeAsync(_editContext);
+
+                OnFinishEvent.Invoke(this);
+            }
+            else
+            {
+                OnFinishFailed.InvokeAsync(_editContext);
+            }
+        }
+
         public bool Validate()
         {
             return _editContext.Validate();
         }
-
     }
 }
