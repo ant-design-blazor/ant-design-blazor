@@ -1,0 +1,71 @@
+@inject MessageService _message
+
+    <Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            Name="avatar"
+            Class="avatar-uploader"
+            ListType="picture-card"
+            ShowUploadList="false"
+            BeforeUpload="BeforeUpload"
+            OnChange="HandleChange">
+        @if (!string.IsNullOrWhiteSpace(imageUrl))
+        {
+            <img src="@imageUrl" alt="avatar" style="width: 100%" />
+        }
+        else
+        {
+            <div>
+                <Icon Spin="loading" Type="@(loading?"Loading":"plus")" ></Icon>
+                <div className="ant-upload-text">Upload</div>
+            </div>
+        }
+    </Upload>
+
+@code
+{
+    bool loading = false;
+
+    string imageUrl;
+
+    bool BeforeUpload(UploadFileItem file)
+    {
+        var isJpgOrPng = file.Type == "image/jpeg" || file.Type == "image/png";
+        if (!isJpgOrPng)
+        {
+            _message.Error("You can only upload JPG/PNG file!");
+        }
+        var isLt2M = file.Size / 1024 / 1024 < 2;
+        if (!isLt2M)
+        {
+            _message.Error("Image must smaller than 2MB!");
+        }
+        return isJpgOrPng && isLt2M;
+    }
+
+    void HandleChange(UploadInfo fileinfo)
+    {
+        loading = fileinfo.File.State == UploadState.Uploading;
+            
+        if (fileinfo.File.State == UploadState.Success)
+        {
+            imageUrl = fileinfo.File.ObjectURL;
+        }
+        InvokeAsync(StateHasChanged);
+    }
+
+    public class ResponseModel
+    {
+        public string name { get; set; }
+
+        public string status { get; set; }
+
+        public string url { get; set; }
+
+        public string thumbUrl { get; set; }
+    }
+}
+<style>
+    .avatar-uploader > .ant-upload {
+        width: 128px;
+        height: 128px;
+    }
+</style>

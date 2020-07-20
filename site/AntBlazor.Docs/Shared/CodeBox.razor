@@ -10,7 +10,7 @@
         }
         else
         {
-            @demoService.GetShowCase(Demo.Type)
+            @Component
         }
     </section>
     <section class="code-box-meta markdown">
@@ -61,9 +61,18 @@
     [Parameter]
     public DemoItem Demo { get; set; }
 
+    RenderFragment Component;
+
     private bool codeExpand { get; set; }
 
     protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Component = await demoService.GetShowCase(Demo.Type);
+    }
 
     async ValueTask Copy()
     {
