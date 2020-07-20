@@ -1,10 +1,12 @@
 ﻿@page "/docs/{fileName}"
 @page "/docs"
 
-<article class="markdown">
-    @if (_file != null)
-    {
-        <h1>@_file.Title</h1>
-        @((MarkupString) _file.Html)
-    }
-</article>
+<section class="main-container">
+    <article class="markdown">
+        @if (_file != null)
+        {
+            <h1>@_file.Title</h1>
+            @((MarkupString) _file.Html)
+        }
+    </article>
+</section>

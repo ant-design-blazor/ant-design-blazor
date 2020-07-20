@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AntDesign.Docs.Highlight;
 using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
+using AntDesign.Docs.Shared;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Docs.Pages
@@ -15,6 +16,9 @@ namespace AntDesign.Docs.Pages
     public partial class Docs : ComponentBase
     {
         [Parameter] public string FileName { get; set; }
+
+        [CascadingParameter]
+        public MainLayout MainLayout { get; set; }
 
         private DocsFile _file;
 
@@ -57,6 +61,8 @@ namespace AntDesign.Docs.Pages
                 var docUrl = new Uri(baseUrl, $"_content/AntDesign.Docs/docs/{FileName}.{CurrentLanguage}.json").ToString();
                 _file = await HttpClient.GetFromJsonAsync<DocsFile>(docUrl);
                 _waitingHighlight = true;
+
+                await MainLayout.ChangePrevNextNav(FileName);
             }
         }
 
