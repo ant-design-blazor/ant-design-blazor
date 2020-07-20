@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-自动根据路由激活菜单项，使用 `RouterLink` 属性。
+自动根据路由激活菜单项，需要结合 [MenuLink](https://www.angular.cn/api/router/RouterLink) 一起使用。
 
 ## en-US
 
-Automatically activate menu items based on routing, use `MenuLink` property.
+Automatically activate menu items based on routing, should work with [MenuLink](https://angular.io/api/router/RouterLink).

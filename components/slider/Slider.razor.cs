@@ -1,8 +1,9 @@
-﻿using AntDesign.core.Extensions;
-using AntDesign.JsInterop;
+﻿using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
@@ -10,7 +11,9 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public partial class Slider<TValue> : AntInputComponentBase<TValue>
+    using SliderValueType = OneOf<double, (double, double)>;
+
+    public partial class Slider : AntDomComponentBase
     {
         private const string PreFixCls = "ant-slider";
         private DomRect _sliderDom;
@@ -123,7 +126,7 @@ namespace AntDesign
         /// The default value of slider. When <see cref="Range"/> is false, use number, otherwise, use [number, number]
         /// </summary>
         [Parameter]
-        public TValue DefaultValue { get; set; }
+        public SliderValueType DefaultValue { get; set; } = 0;
 
         /// <summary>
         /// If true, the slider will not be interactable
@@ -165,7 +168,7 @@ namespace AntDesign
         /// dual thumb mode
         /// </summary>
         //[Parameter]
-        public bool Range { get; private set; }
+        public bool Range { get; set; }
 
         /// <summary>
         /// reverse the component
@@ -192,16 +195,10 @@ namespace AntDesign
             get => _leftValue;
             set
             {
-                if (_leftValue != value)
-                {
-                    _leftValue = Math.Max(value, Min);
-                    _leftValue = Math.Min(_leftValue, RightValue);
-                    _leftValue = GetNearestStep(_leftValue);
-                    SetStyle();
-
-                    //CurrentValue = TupleToGeneric((_leftValue, RightValue));
-                    CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
-                }
+                _leftValue = Math.Max(value, Min);
+                _leftValue = Math.Min(_leftValue, RightValue);
+                _leftValue = GetNearestStep(_leftValue);
+                SetStyle();
             }
         }
 
@@ -213,33 +210,51 @@ namespace AntDesign
             get => _rightValue;
             set
             {
-                if (_rightValue != value)
+                _rightValue = Math.Min(value, Max);
+                if (Range)
                 {
-                    _rightValue = Math.Min(value, Max);
-                    if (Range)
-                    {
-                        _rightValue = Math.Max(LeftValue, _rightValue);
-                    }
-                    else
-                    {
-                        _rightValue = Math.Max(Min, _rightValue);
-                    }
-                    _rightValue = GetNearestStep(_rightValue);
-                    SetStyle();
-                    if (Range)
-                    {
-                        //CurrentValue = TupleToGeneric((LeftValue, _rightValue));
-                        CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((LeftValue, _rightValue));
-                    }
-                    else
-                    {
-                        //CurrentValue = DoubleToGeneric(_rightValue);
-                        CurrentValue = DataConvertionExtensions.Convert<double, TValue>(_rightValue);
-                    }
+                    _rightValue = Math.Max(LeftValue, _rightValue);
                 }
+                else
+                {
+                    _rightValue = Math.Max(Min, _rightValue);
+                }
+                _rightValue = GetNearestStep(_rightValue);
+                SetStyle();
             }
         }
 
+        /// <summary>
+        /// The value of slider. When range is false, use number, otherwise, use [number, number]
+        /// </summary>
+        [Parameter]
+        public SliderValueType Value
+        {
+            get
+            {
+                if (Range)
+                {
+                    return (LeftValue, RightValue);
+                }
+                else
+                {
+                    return _rightValue;
+                }
+            }
+            set
+            {
+                value.Switch(d => RightValue = d, l =>
+                {
+                    Range = true;
+
+                    var values = l;
+                    LeftValue = values.Item1;
+                    RightValue = values.Item2;
+                });
+            }
+        }
+
+        /// <summary>
         /// If true, the slider will be vertical.
         /// </summary>
         [Parameter]
@@ -249,13 +264,13 @@ namespace AntDesign
         /// Fire when onmouseup is fired.
         /// </summary>
         [Parameter]
-        public Action<TValue> OnAfterChange { get; set; } //use Action here intead of EventCallback, otherwise VS will not complie when user add a delegate
+        public EventCallback<SliderValueType> OnAfterChange { get; set; }
 
         /// <summary>
         /// Callback function that is fired when the user changes the slider's value.
         /// </summary>
         [Parameter]
-        public Action<TValue> OnChange { get; set; }
+        public Action<SliderValueType> OnChange { get; set; }
 
         /// <summary>
         /// Set Tooltip display position. Ref Tooltip
@@ -281,21 +296,6 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            Type type = typeof(TValue);
-            Type doubleType = typeof(double);
-            Type tupleDoubleType = typeof((double, double));
-            if (type == doubleType)
-            {
-                Range = false;
-            }
-            else if (type == tupleDoubleType)
-            {
-                Range = true;
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException($"Type argument of Slider should be one of {doubleType}, {tupleDoubleType}");
-            }
             DomEventService.AddEventListener("window", "mousemove", OnMouseMove);
             DomEventService.AddEventListener("window", "mouseup", OnMouseUp);
         }
@@ -305,51 +305,10 @@ namespace AntDesign
             await base.SetParametersAsync(parameters);
 
             var dict = parameters.ToDictionary();
-            if (!_initialized)
+            if (!_initialized && dict.ContainsKey(nameof(DefaultValue)) && !dict.ContainsKey(nameof(Value)))
             {
-                if (!dict.ContainsKey(nameof(Value)))
-                {
-                    TValue defaultValue;
-                    if (Range)
-                    {
-                        //if (typeof(T) == typeof((int, int)))
-                        //{
-                        //    defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<(int, int), T>((0, 0)));
-                        //}
-                        //else
-                        //{
-                        defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<(double, double), TValue>((0, 0)));
-                        //}
-                        LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(defaultValue).Item1;
-                        RightValue = DataConvertionExtensions.Convert<TValue, (double, double)>(defaultValue).Item2;
-                    }
-                    else
-                    {
-                        //if (typeof(T) == typeof(int))
-                        //{
-                        //    defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<int, T>(0));
-                        //}
-                        //else
-                        //{
-                        defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<double, TValue>(0));
-                        //}
-                        RightValue = DataConvertionExtensions.Convert<TValue, double>(defaultValue);
-                    }
-                }
-                else
-                {
-                    if (Range)
-                    {
-                        LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue).Item1;
-                        RightValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue).Item2;
-                    }
-                    else
-                    {
-                        RightValue = DataConvertionExtensions.Convert<TValue, double>(CurrentValue);
-                    }
-                }
+                Value = parameters.GetValueOrDefault(nameof(DefaultValue), SliderValueType.FromT0(0));
             }
-
             _initialized = true;
         }
 
@@ -384,15 +343,9 @@ namespace AntDesign
             }
         }
 
-        private async void OnMouseDown(MouseEventArgs args)
+        private void OnMouseDown()
         {
-            _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _slider);
-            decimal x = (decimal)args.ClientX;
-            decimal y = (decimal)args.ClientY;
-
-            _mouseDown = !Disabled
-                && _sliderDom.left <= x && x <= _sliderDom.right
-                && _sliderDom.top <= y && y <= _sliderDom.bottom;
+            _mouseDown = true && !Disabled;
         }
 
         private async void OnMouseMove(JsonElement jsonElement)
@@ -402,17 +355,26 @@ namespace AntDesign
                 _mouseMove = true;
                 await CalculateValueAsync(jsonElement.GetProperty(Vertical ? "clientY" : "clientX").GetDouble());
 
-                OnChange?.Invoke(CurrentValue);
+                OnChange?.Invoke(RightValue);
             }
         }
 
         private async void OnMouseUp(JsonElement jsonElement)
         {
-            if (_mouseDown)
+            if (_mouseMove) // mouse move ending
             {
-                _mouseDown = false;
-                await CalculateValueAsync(Vertical ? jsonElement.GetProperty("clientY").GetDouble() : jsonElement.GetProperty("clientX").GetDouble());
-                OnAfterChange?.Invoke(CurrentValue);
+                await OnAfterChange.InvokeAsync(Value);
+            }
+            _mouseDown = false;
+            _mouseMove = false;
+        }
+
+        private async void OnClick(MouseEventArgs args)
+        {
+            if (!Disabled)
+            {
+                await CalculateValueAsync(Vertical ? args.ClientY : args.ClientX);
+                await OnAfterChange.InvokeAsync(Value);
             }
         }
 
@@ -539,7 +501,7 @@ namespace AntDesign
         {
             if (Step.HasValue && (Marks == null || Marks.Length == 0))
             {
-                return Math.Round(value / Step.Value, 0) * Step.Value;
+                return Math.Round(value / Step.Value, 0) * Step.Value + Min;
             }
             else if (Step.HasValue)
             {
@@ -552,21 +514,6 @@ namespace AntDesign
             else
             {
                 return Marks.Select(m => m.Key).OrderBy(v => Math.Abs(v - value)).First();
-            }
-        }
-
-        protected override void OnValueChange(TValue value)
-        {
-            base.OnValueChange(value);
-
-            if (Range)
-            {
-                LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value).Item1;
-                RightValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value).Item2;
-            }
-            else
-            {
-                RightValue = DataConvertionExtensions.Convert<TValue, double>(value);
             }
         }
     }

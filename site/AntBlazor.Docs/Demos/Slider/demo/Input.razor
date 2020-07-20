@@ -1,18 +1,18 @@
 ﻿<div>
     <Row>
         <Col Span="12">
-        <Slider TValue="double" Min="1" Max="20" @bind-Value="@inputValue1" />
+            <Slider Min="1" Max="20" Value="@inputValue1" />
         </Col>
         <Col Span="4">
-        <AntDesign.InputNumber Min="1" Max="20" Style="margin:0 16px;" @bind-Value="@inputValue1" TValue="double" />
+            <AntDesign.InputNumber Min="1" Max="20" Style="margin:0 16px;" Value="@inputValue1" ValueChanged="(e)=>UpdateValue1(e)" TValue="int" />
         </Col>
     </Row>
     <Row>
         <Col Span="12">
-        <Slider TValue="double" Min="0" Max="1" Step="0.01" @bind-Value="@inputValue2" />
+            <Slider Min="0" Max="1" Step="0.01" Value="@inputValue2"  />
         </Col>
         <Col Span="4">
-        <AntDesign.InputNumber Min="0" Max="10" Step="0.1" Style="margin:0 16px;" @bind-Value="@inputValue2" TValue="double" />
+            <AntDesign.InputNumber Min="0" Max="10" Step="0.1" Style="margin:0 16px;" Value="@inputValue2" ValueChanged="(e)=>UpdateValue2(e)" TValue="double" />
         </Col>
     </Row>
 </div>
@@ -20,9 +20,20 @@
 
 @code
 {
-    private double inputValue1 = 1;
+    private int inputValue1 = 1;
 
-    private double inputValue2 = 0.5;
+    private void UpdateValue1(int value)
+    {
+        inputValue1 = value;
+    }
+
+
+    private double inputValue2= 0.5;
+
+    private void UpdateValue2(double value)
+    {
+        inputValue2 =value;
+    }
 }
 
 

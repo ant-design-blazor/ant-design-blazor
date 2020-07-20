@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -12,7 +11,6 @@ using OneOf;
 
 namespace AntDesign
 {
-    [DebuggerDisplay("Href: {Href}")]
     public partial class AnchorLink : AntDomComponentBase, IAnchor
     {
         private const string PrefixCls = "ant-anchor-link";
@@ -79,6 +77,8 @@ namespace AntDesign
             _titleClass.Clear()
                 .Add($"{PrefixCls}-title")
                 .If($"{PrefixCls}-title-active", () => Active);
+
+            _hash = Href.Split('#')[1];
         }
 
         protected async override Task OnFirstAfterRenderAsync()
@@ -96,22 +96,7 @@ namespace AntDesign
 
         public void Add(AnchorLink anchorLink)
         {
-            if (!_links.Where(l => !string.IsNullOrEmpty(l.Href))
-                .Select(l => l.Href)
-                .Contains(anchorLink.Href))
-            {
-                _links.Add(anchorLink);
-            }
-        }
-
-        public void Clear()
-        {
-            foreach (IAnchor link in _links)
-            {
-                link.Clear();
-            }
-
-            _links.Clear();
+            _links.Add(anchorLink);
         }
 
         public List<AnchorLink> FlatChildren()
@@ -120,7 +105,6 @@ namespace AntDesign
 
             if (!string.IsNullOrEmpty(Href))
             {
-                _hash = Href.Contains('#') ? Href.Split('#')[1] : Href;
                 results.Add(this);
             }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using AntDesign.Forms;
+﻿using AntDesign.Forms;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace AntDesign.Internal
@@ -18,16 +17,10 @@ namespace AntDesign.Internal
 
         internal void AddControl(IControlValueAccessor valueAccessor);
 
-        event Action<IForm> OnFinishEvent;
-
         bool IsModified { get; }
-
-        string Name { get; }
-        object Model { get; }
 
         void Reset();
 
-        void Submit();
         bool Validate();
     }
 }

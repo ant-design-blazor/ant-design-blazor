@@ -2,22 +2,21 @@
 @inherits AntInputComponentBase<bool>
 
 <button type="button" role="switch"
-        aria-checked="@(CurrentValue?"true":"false")"
-        disabled="@(Disabled||Loading)"
+        aria-checked="@(_isChecked?"true":"false")"
+        disabled="@Disabled"
         class="@ClassMapper.Class"
         style="@Style"
         ant-click-animating="@(_clickAnimating?"true":"false")"
         @onmouseover="HandleMouseOver"
         @onmouseout="HandleMouseOut"
         @onclick="HandleClick">
-    <div class="@($"{_prefixCls}-handle")">
-        @if (Loading)
-        {
-            <Icon Type="loading" Class="@($"{_prefixCls}-loading-icon")" />
-        }
-    </div>
+    @if (Loading)
+    {
+        <Icon Type="loading" Class="@($"{_prefixCls}-loading-icon")" />
+    }
+    <div class="@($"{_prefixCls}-handle")"></div>
     <span class="@($"{_prefixCls}-inner")">
-        @if (CurrentValue)
+        @if (_isChecked)
         {
             if (CheckedChildren.IsT0)
             {
@@ -42,7 +41,7 @@
     </span>
 
     <!--animation-->
-    @if (CurrentValue)
+    @if (_isChecked)
     {
         <div class="ant-click-animating-node"></div>
     }

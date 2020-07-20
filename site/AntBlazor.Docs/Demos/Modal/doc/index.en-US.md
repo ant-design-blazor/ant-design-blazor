@@ -55,11 +55,10 @@ There are five ways to display the information based on the content's nature:
 - `ModalService.Error`
 - `ModalService.Warning`
 - `ModalService.Confirm`
-- `ModalService.CreateAsync`
 
 > Please confirm that the `<AntContainer />` component has been added to `App.Razor`.
 
-#### ConfirmOptions
+The items listed above are all functions, expecting a settings object as parameter. The properties of the object are follows:
 
 | CancelText        | Text  of the Cancel button with Modal.confirm                | string                         | Cancel  |
 | ----------------- | ------------------------------------------------------------ | ------------------------------ | ------- |
@@ -82,13 +81,13 @@ There are five ways to display the information based on the content's nature:
 
 All the `ModalService.Method`s will return a reference, and then we can update and close the modal dialog by the reference.
 
-``` c#
+```jsx
 ConfirmOptions config = new ConfirmOptions();
-var modelRef = await ModalService.Info(config);
+ModalService.Info(config);
 
-modelRef.UpdateConfig();
+ModalService.Update(config);
 
-ModalService.Destroy(modelRef);
+ModalService.Destroy(config);
 ```
 
 - `ModalService.DestroyAll`

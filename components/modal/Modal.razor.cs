@@ -205,7 +205,7 @@ namespace AntDesign
             }
             else
             {
-                if (_hasAdd && DestroyOnClose)
+                if (DestroyOnClose)
                 {
                     if (_dialog != null)
                     {

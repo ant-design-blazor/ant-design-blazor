@@ -194,6 +194,8 @@ namespace AntDesign
                 {
                     item.Close();
                 }
+
+                HandleOpenChange(Array.Empty<string>());
             }
             else
             {

@@ -21,7 +21,8 @@
             {
                 if (menu.Type == "menuItem")
                 {
-                        <MenuItem RouterLink="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
+                    <MenuItem>
+                        <MenuLink href="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" Match="@NavLinkMatch.All">
                             <span>@menu.Title</span>
                             @if (menu.SubTitle != null)
                             {
@@ -31,7 +32,8 @@
                             {
                                 <span class="chinese">@(context.languageService.Resources[menu.Title])</span>
                             }
-                        </MenuItem>
+                        </MenuLink>
+                    </MenuItem>
                 }
                 else if (menu.Type == "subMenu")
                 {

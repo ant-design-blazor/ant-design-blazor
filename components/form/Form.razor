@@ -9,9 +9,9 @@
               style="@Style"
               id="@Id"
               EditContext="_editContext"
-              OnValidSubmit="OnValidSubmit"
-              OnInvalidSubmit="OnInvalidSubmit">
-        <ObjectGraphDataAnnotationsValidator />
+              OnValidSubmit="OnFinish"
+              OnInvalidSubmit="OnFinishFailed">
+        <DataAnnotationsValidator />
         <CascadingValue Value="this" Name="Form" TValue="IForm">
             @if (!string.IsNullOrEmpty(Size))
             {

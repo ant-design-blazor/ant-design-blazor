@@ -10,16 +10,16 @@
     {
         <img src="@Src" srcset="@SrcSet" alt="@Alt" @onerror="ImgError" />
     }
-    @if (!string.IsNullOrEmpty(_text) && _hasText)
+    @if (!string.IsNullOrEmpty(Text) && _hasText)
     {
         <span class="ant-avatar-string" @ref="TextEl" style="@_textStyles">
-            @_text
+            @Text
         </span>
     }
-    else if (_childContent != null)
+    else if (ChildContent != null)
     {
         <span class="ant-avatar-string" @ref="TextEl" style="@_textStyles">
-            @_childContent
+            @ChildContent
         </span>
     }
 </span>

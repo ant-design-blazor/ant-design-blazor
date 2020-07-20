@@ -128,7 +128,7 @@ namespace AntDesign
             base.OnParametersSet();
             SetClass();
 
-            if (!RootMenu.InlineCollapsed && RootMenu.OpenKeys.Contains(Key))
+            if (RootMenu.OpenKeys.Contains(Key))
                 IsOpen = true;
         }
 
@@ -156,7 +156,10 @@ namespace AntDesign
             }
 
             IsOpen = true;
-            Parent?.Open();
+            if (Parent != null)
+            {
+                Parent.Open();
+            }
         }
 
         public OverlayTrigger GetOverlayTrigger()

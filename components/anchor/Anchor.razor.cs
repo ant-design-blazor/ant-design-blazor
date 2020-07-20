@@ -19,37 +19,15 @@ namespace AntDesign
         private ElementReference _ink;
         private DomRect _selfDom;
         private AnchorLink _activeLink;
-        private bool _activatedByClick = false;
         private AnchorLink _lastActiveLink;
         private Dictionary<string, decimal> _linkTops;
         private List<AnchorLink> _flatLinks;
         private List<AnchorLink> _links = new List<AnchorLink>();
-        private bool _linksChanged = false;
 
         [Inject]
         private DomEventService DomEventService { get; set; }
 
         #region Parameters
-
-        private string _key;
-
-        /// <summary>
-        /// used to refresh links list when the key changed.
-        /// </summary>
-        [Parameter]
-        public string Key
-        {
-            get => _key;
-            set
-            {
-                if (_key != value)
-                {
-                    _key = value;
-                    _linksChanged = true;
-                    Clear();
-                }
-            }
-        }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -123,65 +101,45 @@ namespace AntDesign
             }
         }
 
-        protected async override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnFirstAfterRenderAsync()
         {
-            await base.OnAfterRenderAsync(firstRender);
-
-            if (firstRender || _linksChanged)
+            _selfDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ink);
+            _linkTops = new Dictionary<string, decimal>();
+            _flatLinks = FlatChildren();
+            foreach (var link in _flatLinks)
             {
-                _linksChanged = false;
+                _linkTops[link.Href] = 1;
+            }
 
-                _selfDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ink);
-                _linkTops = new Dictionary<string, decimal>();
-                _flatLinks = FlatChildren();
-                foreach (var link in _flatLinks)
+            if (GetCurrentAnchor != null)
+            {
+                AnchorLink link = _flatLinks.SingleOrDefault(l => l.Href == GetCurrentAnchor());
+                if (link != null)
                 {
-                    _linkTops[link.Href] = 1;
-                }
-
-                if (GetCurrentAnchor != null)
-                {
-                    AnchorLink link = _flatLinks.SingleOrDefault(l => l.Href == GetCurrentAnchor());
-                    if (link != null)
+                    try
                     {
-                        try
+                        DomRect hrefDom = await link.GetHrefDom(true);
+                        if (hrefDom != null)
                         {
-                            DomRect hrefDom = await link.GetHrefDom(true);
-                            if (hrefDom != null)
-                            {
-                                _activatedByClick = false;
-                                await ActivateAsync(link, true);
-                                // the offset does not matter, since the dictionary's value will not change any more in case user set up GetCurrentAnchor
-                                _linkTops[link.Href] = hrefDom.top;
-                                StateHasChanged();
-                            }
+                            await ActivateAsync(link, true);
+                            // the offset does not matter, since the dictionary's value will not change any more in case user set up GetCurrentAnchor
+                            _linkTops[link.Href] = hrefDom.top;
+                            StateHasChanged();
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
+
+            await base.OnFirstAfterRenderAsync();
         }
 
         public void Add(AnchorLink anchorLink)
         {
-            if (!_links.Where(l => !string.IsNullOrEmpty(l.Href))
-                .Select(l => l.Href)
-                .Contains(anchorLink.Href))
-            {
-                _links.Add(anchorLink);
-            }
-        }
-
-        public void Clear()
-        {
-            foreach (IAnchor link in _links)
-            {
-                link.Clear();
-            }
-            _links.Clear();
+            _links.Add(anchorLink);
         }
 
         public List<AnchorLink> FlatChildren()
@@ -193,57 +151,51 @@ namespace AntDesign
                 results.AddRange(child.FlatChildren());
             }
 
-            results.Distinct(new AnchorLinkEqualityComparer());
             return results;
         }
 
         private async void OnScroll(JsonElement obj)
         {
-            if (!_activatedByClick)
+            _activeLink = null;
+            _flatLinks.ForEach(l => l.Activate(false));
+
+            int offset = OffsetBottom.HasValue ? OffsetBottom.Value : -OffsetTop.Value;
+            foreach (var link in _flatLinks)
             {
-                _activeLink = null;
-                _flatLinks.ForEach(l => l.Activate(false));
-
-                int offset = OffsetBottom.HasValue ? OffsetBottom.Value : -OffsetTop.Value;
-                foreach (var link in _flatLinks)
+                try
                 {
-                    try
+                    DomRect hrefDom = await link.GetHrefDom();
+                    if (hrefDom != null)
                     {
-                        DomRect hrefDom = await link.GetHrefDom();
-                        if (hrefDom != null)
-                        {
-                            _linkTops[link.Href] = hrefDom.top + offset;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _linkTops[link.Href] = 1;
+                        _linkTops[link.Href] = hrefDom.top + offset;
                     }
                 }
-
-                string activeKey = _linkTops.Where(p => (int)p.Value <= 0).OrderBy(p => p.Value).LastOrDefault().Key;
-                if (!string.IsNullOrEmpty(activeKey))
+                catch (Exception ex)
                 {
-                    _activeLink = _flatLinks.Single(l => l.Href == activeKey);
-                    await ActivateAsync(_activeLink, true);
+                    _linkTops[link.Href] = 1;
                 }
-
-                if (Affix && _activeLink != null)
-                {
-                    _ballClass = "ant-anchor-ink-ball visible";
-                    decimal top = (_activeLink.LinkDom.top - _selfDom.top) + _activeLink.LinkDom.height / 2 - 2;
-                    _ballStyle = $"top: {top}px;";
-                }
-                else
-                {
-                    _ballClass = "ant-anchor-ink-ball";
-                    _ballStyle = string.Empty;
-                }
-
-                StateHasChanged();
             }
 
-            _activatedByClick = false;
+            string activeKey = _linkTops.Where(p => (int)p.Value <= 0).OrderBy(p => p.Value).LastOrDefault().Key;
+            if (!string.IsNullOrEmpty(activeKey))
+            {
+                _activeLink = _flatLinks.Single(l => l.Href == activeKey);
+                await ActivateAsync(_activeLink, true);
+            }
+
+            if (Affix && _activeLink != null)
+            {
+                _ballClass = "ant-anchor-ink-ball visible";
+                decimal top = (_activeLink.LinkDom.top - _selfDom.top) + _activeLink.LinkDom.height / 2 - 2;
+                _ballStyle = $"top: {top}px;";
+            }
+            else
+            {
+                _ballClass = "ant-anchor-ink-ball";
+                _ballStyle = string.Empty;
+            }
+
+            StateHasChanged();
         }
 
         private async Task ActivateAsync(AnchorLink anchorLink, bool active)
@@ -263,22 +215,11 @@ namespace AntDesign
         public async Task OnLinkClickAsync(MouseEventArgs args, AnchorLink anchorLink)
         {
             await JsInvokeAsync("window.eval", $"window.location.hash='{anchorLink._hash}'");
-
+            
             if (OnClick.HasDelegate)
             {
                 await OnClick.InvokeAsync(new Tuple<MouseEventArgs, AnchorLink>(args, anchorLink));
             }
-
-            // forced to activate the link even the dom is not at the top of the browser
-            // occurs when the dom is located at the bottom of the page
-            _activatedByClick = true;
-            _activeLink = anchorLink;
-            // deactivate everythin else
-            _flatLinks.ForEach(l => l.Activate(false));
-            await ActivateAsync(anchorLink, true);
-
-            // forced to render when user click on another link that is at the same height with the previously activated dom
-            StateHasChanged();
         }
     }
 }

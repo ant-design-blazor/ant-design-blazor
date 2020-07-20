@@ -105,7 +105,7 @@ namespace AntDesign
             {
                 await RenderAffixAsync();
             }
-            else if (!_rootListened && string.IsNullOrEmpty(Target.Id))
+            else
             {
                 DomEventService.AddEventListener(RootScollSelector, "scroll", OnScroll);
                 DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize);
@@ -165,7 +165,7 @@ namespace AntDesign
             }
             else if (OffsetTop.HasValue)
             {
-                if (domRect.top < containerRect.top + OffsetTop.Value)
+                if (domRect.top < containerRect.top)
                 {
                     _affixStyle = _hiddenStyle + $"top: {containerRect.top + OffsetTop}px; position: fixed;";
                     Affixed = true;

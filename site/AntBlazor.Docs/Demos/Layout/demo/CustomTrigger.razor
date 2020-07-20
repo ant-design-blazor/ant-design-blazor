@@ -9,7 +9,7 @@
 }
 
 <Layout>
-    <Sider Collapsible Collapsed=@collapsed NoTrigger OnCollapse="OnCollapse">
+    <Sider Collapsible Collapsed=@collapsed NoTrigger>
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"1"})>
             <MenuItem Key="1">
@@ -66,13 +66,3 @@
         background: #fff;
     }
 </style>
-
-
-@code{
-
-    void OnCollapse(bool isCollapsed)
-    {
-        Console.WriteLine($"Collapsed: {isCollapsed}");
-    }
-
-}

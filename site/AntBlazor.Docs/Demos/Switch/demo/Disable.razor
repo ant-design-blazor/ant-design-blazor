@@ -1,15 +1,16 @@
 ﻿<div>
-    <Switch Checked="switchValue" Disabled="isDisabled"/>
+    <Switch Checked="switchValue2" Disabled="isDisabled2"/>
     <br />
     <br />
-    <Button Type="primary" @onclick="(_)=>isDisabled = !isDisabled">Toggle disabled</Button>
+    <Button Type="primary" @onclick="(_)=>isDisabled2 = !isDisabled2">Toggle disabled</Button>
 </div>
 
 
 @code{
     bool switchValue = false;
 
-    bool isDisabled = true;
+    bool switchValue2 = false;
+    bool isDisabled2 = true;
 
     RenderFragment checkedChildren =@<Icon Type="check"></Icon>;
 

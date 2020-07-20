@@ -45,9 +45,9 @@ namespace AntDesign
             return iconImg;
         }
 
-        public static string GetStyledSvg(string svgImg, string width = "1em", string height = "1em", string fill = "currentColor")
+        public static string GetStyledSvg(string svgImg, string width = "1em", string height = "1em", string fill = "currentColor", int rotate = 0, bool spin = false)
         {
-            var svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\"";
+            var svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? "" : $"style=\"transform: rotate({rotate}deg);\"")}  {(spin ? "class=\"anticon-spin\"" : "")}";
             if (!string.IsNullOrEmpty(svgImg))
             {
                 return svgImg.Insert(svgImg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {svgStyle} ");
