@@ -21,8 +21,8 @@
     "url": "https://github.com/ElderJames/ant-design-blazor/issues"
   },
   "scripts": {
-    "start": "dotnet run -p ./site/AntDesign.Docs.Server",
-    "start:wasm": "dotnet run -p ./site/AntDesign.Docs.Wasm",
+    "start": "dotnet  watch -p ./site/AntDesign.Docs.Server run",
+    "start:wasm": "dotnet watch -p ./site/AntDesign.Docs.Wasm",
     "gulp:components": "gulp --gulpfile ./components/gulpfile.js",
     "gulp:docs": "gulp --gulpfile ./site/AntBlazor.Docs/gulpfile.js"
   },
