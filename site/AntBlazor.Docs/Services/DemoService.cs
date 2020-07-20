@@ -15,6 +15,8 @@ namespace AntDesign.Docs.Services
     {
         private static ConcurrentCache<string, ValueTask<IDictionary<string, DemoComponent>>> _componentCache;
         private static ConcurrentCache<string, ValueTask<DemoMenuItem[]>> _menuCache;
+        private static ConcurrentCache<string, ValueTask<DemoMenuItem[]>> _demoMenuCache;
+        private static ConcurrentCache<string, ValueTask<DemoMenuItem[]>> _docMenuCache;
         private static ConcurrentCache<string, RenderFragment> _showCaseCache;
 
         private readonly ILanguageService _languageService;
@@ -51,6 +53,24 @@ namespace AntDesign.Docs.Services
 
                 return components.ToDictionary(x => x.Title.ToLower(), x => x);
             });
+
+            _demoMenuCache ??= new ConcurrentCache<string, ValueTask<DemoMenuItem[]>>();
+            await _demoMenuCache.GetOrAdd(language, async (currentLanguage) =>
+            {
+                var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
+                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(baseUrl, $"_content/AntDesign.Docs/meta/demos.{language}.json").ToString());
+
+                return menuItems;
+            });
+
+            _docMenuCache ??= new ConcurrentCache<string, ValueTask<DemoMenuItem[]>>();
+            await _docMenuCache.GetOrAdd(language, async (currentLanguage) =>
+            {
+                var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
+                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(baseUrl, $"_content/AntDesign.Docs/meta/docs.{language}.json").ToString());
+
+                return menuItems;
+            });
         }
 
         public async Task InitializeDemos()
@@ -60,7 +80,7 @@ namespace AntDesign.Docs.Services
                 _showCaseCache = new ConcurrentCache<string, RenderFragment>();
 
                 var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
-                var demoTypes = await _httpClient.GetFromJsonAsync<string[]>(new Uri(baseUrl, $"_content/AntDesign.Docs/meta/demos.json").ToString());
+                var demoTypes = await _httpClient.GetFromJsonAsync<string[]>(new Uri(baseUrl, $"_content/AntDesign.Docs/meta/demoTypes.json").ToString());
                 foreach (var type in demoTypes)
                 {
                     _showCaseCache.GetOrAdd(type, t =>
@@ -102,6 +122,25 @@ namespace AntDesign.Docs.Services
         public RenderFragment GetShowCase(string type)
         {
             return _showCaseCache.TryGetValue(type, out var showCase) ? showCase : _defaultShowCase;
+        }
+
+        public async Task<DemoMenuItem[]> GetPrevNextMenu(string type, string currentTitle)
+        {
+            var cache = type.ToLowerInvariant() == "docs" ? _docMenuCache : _demoMenuCache;
+
+            var items = cache.TryGetValue(CurrentLanguage, out var menuItems) ? await menuItems : Array.Empty<DemoMenuItem>();
+
+            for (var i = 0; i < items.Length; i++)
+            {
+                if (currentTitle.Equals(items[i].Title, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var prev = i == 0 ? null : items[i - 1];
+                    var next = i == items.Length ? null : items[i + 1];
+                    return new[] { prev, next };
+                }
+            }
+
+            return Array.Empty<DemoMenuItem>();
         }
     }
 }
