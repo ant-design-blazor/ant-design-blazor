@@ -53,14 +53,19 @@ export function clearFile(element) {
 
 export function getFileInfo(element) {
   if (element.files && element.files.length > 0) {
-    var file = element.files[0];
-    var objectUrl = getObjectURL(element);
-    var fileInfo = {
-      fileName: file.name,
-      size: file.size,
-      objectURL: objectUrl,
-      type: file.type
-    };
+    
+    var fileInfo = [];
+    for (var i = 0; i < element.files.length; i++) {
+      var file = element.files[i];
+      var objectUrl = getObjectURL(element);
+      fileInfo.push({
+        fileName: file.name,
+        size: file.size,
+        objectURL: objectUrl,
+        type: file.type
+      });
+    }
+    
     return fileInfo;
   }
 }
@@ -76,9 +81,9 @@ export function getObjectURL(element) {
   return url;
 }
 
-export function uploadFile(element, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod) {
+export function uploadFile(element, index, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod) {
   let formData = new FormData();
-  var file = element.files[0];
+  var file = element.files[index];
   var size = file.size;
   formData.append(name, file)
   const req = new XMLHttpRequest()
