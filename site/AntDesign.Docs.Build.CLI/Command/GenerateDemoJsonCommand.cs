@@ -171,7 +171,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             });
 
-            string demoFilePath = Path.Combine(configFileDirectory, $"demos.json");
+            string demoFilePath = Path.Combine(configFileDirectory, $"demoTypes.json");
             if (File.Exists(demoFilePath))
             {
                 File.Delete(demoFilePath);

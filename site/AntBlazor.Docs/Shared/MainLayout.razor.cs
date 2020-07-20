@@ -9,7 +9,7 @@ using Microsoft.JSInterop;
 
 namespace AntDesign.Docs.Shared
 {
-    public partial class MainLayout : IDisposable
+    public partial class MainLayout : LayoutComponentBase, IDisposable
     {
         private bool _isCollapsed = true;
 
@@ -33,10 +33,12 @@ namespace AntDesign.Docs.Shared
         [Inject]
         public IJSRuntime JsInterop { get; set; }
 
+        internal PrevNextNav PrevNextNav { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            //await GetCurrentMenuItems();
-            //StateHasChanged();
+            await GetCurrentMenuItems();
+            StateHasChanged();
             await DemoService.InitializeDemos();
 
             LanguageService.LanguageChanged += OnLanguageChanged;
@@ -83,6 +85,19 @@ namespace AntDesign.Docs.Shared
             var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
             NavigationManager.NavigateTo($"{language}/{newUrl}");
+        }
+
+        public async Task ChangePrevNextNav(string currentTitle)
+        {
+            var prevNext = await DemoService.GetPrevNextMenu(_currentSubmenuUrl, currentTitle);
+            foreach (var item in prevNext)
+            {
+                if (item != null)
+                {
+                    item.Url = $"{CurrentLanguage}/{this._currentSubmenuUrl}/{item.Title.ToLowerInvariant()}";
+                }
+            }
+            PrevNextNav.SetPrevNextNav(prevNext[0], prevNext[1]);
         }
 
         private async void OnLanguageChanged(object sender, CultureInfo culture)
