@@ -31,11 +31,13 @@ namespace AntDesign
             }
             set
             {
-
                 _disabledChanged = value != _disabled;
                 _disabled = value;
             }
         }
+
+        [Parameter]
+        public Dictionary<string, object> Data { get; set; }
 
         [Parameter]
         public string ListType { get; set; } = "text";
@@ -143,7 +145,7 @@ namespace AntDesign
                 fileItem.Id = id;
                 FileList.Add(fileItem);
                 await InvokeAsync(StateHasChanged);
-                await JSRuntime.InvokeVoidAsync(JSInteropConstants.uploadFile, _file, index, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError");
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.uploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError");
                 index++;
             }
 
