@@ -80,11 +80,16 @@ export function getObjectURL(element) {
   return url;
 }
 
-export function uploadFile(element, index, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod) {
+export function uploadFile(element, index, data, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod) {
   let formData = new FormData();
   var file = element.files[index];
   var size = file.size;
-  formData.append(name, file)
+  formData.append(name, file);
+  if (data != null) {
+    for (var key in data) {
+      formData.append(key, data[key]);
+    }
+  }
   const req = new XMLHttpRequest()
   req.onreadystatechange = function () {
     if (req.readyState === 4) {
