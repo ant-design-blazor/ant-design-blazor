@@ -209,6 +209,11 @@ namespace AntDesign
             return lst;
         }
 
+        public void RemoveOption(MentionsOption option)
+        {
+            LstOriginalOptions.Remove(option);
+        }
+
         public void AddOption(MentionsOption option)
         {
             if (option == null) return;

@@ -21,6 +21,12 @@ namespace AntDesign
         [CascadingParameter]
         public Descriptions Descriptions { get; set; }
 
+        protected override void Dispose(bool disposing)
+        {
+            this.Descriptions?.Items.Remove(this);
+            base.Dispose(disposing);
+        }
+
         protected override void OnInitialized()
         {
             this.Descriptions?.Items.Add(this);

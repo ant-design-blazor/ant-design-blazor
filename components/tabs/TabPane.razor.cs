@@ -76,5 +76,14 @@ namespace AntDesign
                 .If($"{PrefixCls}-with-remove", () => Closable)
                 .If($"{PrefixCls}-disabled", () => Disabled);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (_parent != null)
+            {
+                _parent._panes.Remove(this);
+            }
+            base.Dispose(disposing);
+        }
     }
 }

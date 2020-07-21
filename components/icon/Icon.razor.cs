@@ -58,6 +58,15 @@ namespace AntDesign
 
         protected string IconStyle => Rotate == 0 ? "" : $"transform: rotate({Rotate}deg);";
 
+        protected override void Dispose(bool disposing)
+        {
+            if (this is Icon icon)
+            {
+                Button?.Icons.Remove(icon);
+            }
+            base.Dispose(disposing);
+        }
+
         protected override async Task OnInitializedAsync()
         {
             if (Type == "loading")
