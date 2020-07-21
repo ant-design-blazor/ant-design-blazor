@@ -45,6 +45,12 @@ namespace AntDesign
 
         #endregion Parameters
 
+        protected override void Dispose(bool disposing)
+        {
+            Parent.RemoveSlick(this);
+            base.Dispose(disposing);
+        }
+
         private void OnParentSet()
         {
             Parent.AddSlick(this);
