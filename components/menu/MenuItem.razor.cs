@@ -51,6 +51,12 @@ namespace AntDesign
                 .If($"{prefixCls}-disabled", () => Disabled);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            RootMenu.MenuItems.Remove(this);
+            base.Dispose(disposing);
+        }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();

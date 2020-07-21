@@ -62,6 +62,12 @@ namespace AntDesign
             Parent.AddOption(option);
         }
 
+        public void RemoveOption(SelectOption option)
+        {
+            SelectOptions.Remove(option);
+            Parent.RemoveOption(option);
+        }
+
         #endregion Methods
 
         #endregion Public

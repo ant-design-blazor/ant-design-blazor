@@ -18,6 +18,12 @@ namespace AntDesign
 
         public bool Active { get; set; }
 
+        protected override void Dispose(bool disposing)
+        {
+            Mentions?.RemoveOption(this);
+            base.Dispose(disposing);
+        }
+
         protected override void OnInitialized()
         {
             Mentions?.AddOption(this);

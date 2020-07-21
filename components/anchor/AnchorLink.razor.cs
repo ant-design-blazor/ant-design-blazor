@@ -68,6 +68,12 @@ namespace AntDesign
 
         internal string _hash = string.Empty;
 
+        protected override void Dispose(bool disposing)
+        {
+            _parent?.Remove(this);
+            base.Dispose(disposing);
+        }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -92,6 +98,11 @@ namespace AntDesign
                 _hrefDomExist = true;
             }
             catch { }
+        }
+
+        public void Remove(AnchorLink anchorLink)
+        {
+            _links.Remove(anchorLink);
         }
 
         public void Add(AnchorLink anchorLink)
