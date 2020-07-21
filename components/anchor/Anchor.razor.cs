@@ -113,19 +113,17 @@ namespace AntDesign
 
         #endregion Parameters
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-
-            if (GetCurrentAnchor is null)
-            {
-                DomEventService.AddEventListener("window", "scroll", OnScroll);
-            }
-        }
-
-        protected async override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
+            {
+                if (GetCurrentAnchor is null)
+                {
+                    DomEventService.AddEventListener("window", "scroll", OnScroll);
+                }
+            }
 
             if (firstRender || _linksChanged)
             {
@@ -285,6 +283,5 @@ namespace AntDesign
             // forced to render when user click on another link that is at the same height with the previously activated dom
             StateHasChanged();
         }
-
     }
 }
