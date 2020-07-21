@@ -82,6 +82,12 @@ namespace AntDesign
             base.OnInitialized();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            RadioGroup?.RadioItems?.Remove(this);
+            base.Dispose(disposing);
+        }
+
         protected override async Task OnFirstAfterRenderAsync()
         {
             if (this.AutoFocus)
