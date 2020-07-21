@@ -74,6 +74,9 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public EventCallback<string> ActiveKeyChanged { get; set; }
+
         /// <summary>
         /// Whether to change tabs with animation. Only works while <see cref="TabPosition"/> = <see cref="TabPosition.Top"/> or <see cref="TabPosition.Bottom"/>
         /// </summary>
@@ -326,12 +329,20 @@ namespace AntDesign
                 }
                 tabPane.IsActive = true;
                 _activePane = tabPane;
-                ActiveKey = _activePane.Key;
+                if (ActiveKey != _activePane.Key)
+                {
+                    ActiveKey = _activePane.Key;
+                    if (ActiveKeyChanged.HasDelegate)
+                    {
+                        ActiveKeyChanged.InvokeAsync(_activePane.Key);
+                    }
+                }
+
                 StateHasChanged();
             }
         }
 
-        protected async override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
 

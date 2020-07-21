@@ -1,9 +1,9 @@
-﻿<Tabs DefaultActiveKey="1" ActiveKey="@nKey">
+﻿<Tabs DefaultActiveKey="1" @bind-ActiveKey="@nKey">
     @foreach (var item in lstTabs)
     {
         <TabPane Key="@item.KeyName">
             <Tab>@item.TabName</Tab>
-            <ChildContent>@item.Content</ChildContent>
+            <ChildContent>@item.Content @nKey</ChildContent>
         </TabPane>
     }
 </Tabs>
@@ -14,8 +14,6 @@
 
 @code{
     string nKey { get; set; } = "1";
-
-
 
     private class TabItem
     {
@@ -28,9 +26,9 @@
 
     protected override void OnInitialized()
     {
-        lstTabs.Add(new TabItem { KeyName = "1", TabName = "Tab 1", Content = "Content of Tab Pane 1" });
-        lstTabs.Add(new TabItem { KeyName = "2", TabName = "Tab 2", Content = "Content of Tab Pane 2" });
-        lstTabs.Add(new TabItem { KeyName = "3", TabName = "Tab 3", Content = "Content of Tab Pane 3" });
+        lstTabs.Add(new TabItem { KeyName = "1", TabName = "Tab 1", Content = "Content of Tab Pane" });
+        lstTabs.Add(new TabItem { KeyName = "2", TabName = "Tab 2", Content = "Content of Tab Pane" });
+        lstTabs.Add(new TabItem { KeyName = "3", TabName = "Tab 3", Content = "Content of Tab Pane" });
 
     }
 
