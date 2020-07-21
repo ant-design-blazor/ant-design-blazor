@@ -165,6 +165,11 @@ namespace AntDesign
             }
         }
 
+        public void Remove(AnchorLink anchorLink)
+        {
+            _links.Remove(anchorLink);
+        }
+
         public void Add(AnchorLink anchorLink)
         {
             if (!_links.Where(l => !string.IsNullOrEmpty(l.Href))
@@ -280,5 +285,6 @@ namespace AntDesign
             // forced to render when user click on another link that is at the same height with the previously activated dom
             StateHasChanged();
         }
+
     }
 }

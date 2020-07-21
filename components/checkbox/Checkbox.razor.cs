@@ -56,6 +56,16 @@ namespace AntDesign
             Value = Checked;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (this is Checkbox checkbox)
+            {
+                CheckboxGroup?.CheckboxItems.Remove(checkbox);
+            }
+
+            base.Dispose(disposing);
+        }
+
         protected void SetClass()
         {
             string prefixName = "ant-checkbox";

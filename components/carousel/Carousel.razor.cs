@@ -123,6 +123,11 @@ namespace AntDesign
             }
         }
 
+        internal void RemoveSlick(CarouselSlick slick)
+        {
+            _slicks.Remove(slick);
+        }
+
         internal void AddSlick(CarouselSlick slick)
         {
             _slicks.Add(slick);

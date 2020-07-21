@@ -41,6 +41,12 @@ namespace AntDesign
             this.Class = @class;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            ParentTimeline._items.Remove(this);
+            base.Dispose(disposing);
+        }
+
         protected override void OnInitialized()
         {
             ParentTimeline.AddItem(this);
