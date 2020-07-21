@@ -9,6 +9,10 @@ namespace AntDesign
 {
     public partial class Upload : AntDomComponentBase
     {
+        private bool _disabled;
+
+        private bool _disabledChanged;
+
         [Parameter]
         public Func<UploadFileItem, bool> BeforeUpload { get; set; }
 
@@ -19,7 +23,19 @@ namespace AntDesign
         public string Action { get; set; }
 
         [Parameter]
-        public bool Disabled { get; set; }
+        public bool Disabled
+        {
+            get
+            {
+                return _disabled;
+            }
+            set
+            {
+
+                _disabledChanged = value != _disabled;
+                _disabled = value;
+            }
+        }
 
         [Parameter]
         public string ListType { get; set; } = "text";
@@ -86,7 +102,18 @@ namespace AntDesign
             {
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.addFileClickEventListener, _btn);
             }
-
+            if (_disabledChanged)
+            {
+                if (Disabled)
+                {
+                    await JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn);
+                }
+                else
+                {
+                    await JSRuntime.InvokeVoidAsync(JSInteropConstants.addFileClickEventListener, _btn);
+                }
+                _disabledChanged = false;
+            }
             await base.OnAfterRenderAsync(firstRender);
         }
 
@@ -187,13 +214,6 @@ namespace AntDesign
             {
                 await OnChange.InvokeAsync(_uploadInfo);
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            InvokeAsync(async () => await JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn));
-
-            base.Dispose(disposing);
         }
     }
 }
