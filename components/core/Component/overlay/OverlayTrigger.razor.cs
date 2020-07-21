@@ -163,7 +163,7 @@ namespace AntDesign.Internal
 
         protected virtual async Task OnTriggerClick()
         {
-            if (IsContainTrigger(TriggerType.Click))
+            if (IsContainTrigger(TriggerType.Click) || IsContainTrigger(TriggerType.ContextMenu))
             {
                 if (_overlay.IsPopup())
                 {
