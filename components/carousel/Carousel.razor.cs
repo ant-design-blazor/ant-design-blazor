@@ -123,6 +123,11 @@ namespace AntDesign
             }
         }
 
+        internal void RemoveSlick(CarouselSlick slick)
+        {
+            _slicks.Remove(slick);
+        }
+
         internal void AddSlick(CarouselSlick slick)
         {
             _slicks.Add(slick);
@@ -151,19 +156,22 @@ namespace AntDesign
                 index = 0;
             }
 
-            CarouselSlick slick = _slicks[index];
-            _slicks.ForEach(s =>
+            if (_slicks.Count > 0)
             {
-                if (s == slick)
+                CarouselSlick slick = _slicks[index];
+                _slicks.ForEach(s =>
                 {
-                    _activeSlick = s;
-                    s.Activate();
-                }
-                else
-                {
-                    s.Deactivate();
-                }
-            });
+                    if (s == slick)
+                    {
+                        _activeSlick = s;
+                        s.Activate();
+                    }
+                    else
+                    {
+                        s.Deactivate();
+                    }
+                });
+            }
 
             return index;
         }

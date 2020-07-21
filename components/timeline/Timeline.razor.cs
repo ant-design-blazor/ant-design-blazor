@@ -43,7 +43,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private IList<TimelineItem> _items = new List<TimelineItem>();
+        internal IList<TimelineItem> _items = new List<TimelineItem>();
 
         protected IList<TimelineItem> DisplayItems
         {
