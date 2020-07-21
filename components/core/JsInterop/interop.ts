@@ -348,13 +348,15 @@ export function removeCls(selector: Element | string, clsName: string | Array<st
   }
 }
 
-const oldBodyCache = {};
+const oldBodyCacheStack = [];
 
 export function disableBodyScroll() {
   let body = document.body;
+  const oldBodyCache = {};
   ["position", "width", "overflow"].forEach((key) => {
     oldBodyCache[key] = body.style[key];
   });
+  oldBodyCacheStack.push(oldBodyCache);
   css(body,
     {
       "position": "relative",
@@ -377,6 +379,8 @@ function enableBodyScroll(selector, filter = null) {
     length = queryElements.length;
   }
   if (length === 0) {
+    let oldBodyCache = oldBodyCacheStack.length > 0 ? oldBodyCacheStack.pop() : {};
+
     css(document.body,
       {
         "position": oldBodyCache["position"] ?? null,
