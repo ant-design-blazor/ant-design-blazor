@@ -104,6 +104,7 @@ namespace AntDesign
             }
             if (_disabledChanged)
             {
+                _disabledChanged = false;
                 if (Disabled)
                 {
                     await JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn);
@@ -112,7 +113,6 @@ namespace AntDesign
                 {
                     await JSRuntime.InvokeVoidAsync(JSInteropConstants.addFileClickEventListener, _btn);
                 }
-                _disabledChanged = false;
             }
             await base.OnAfterRenderAsync(firstRender);
         }
