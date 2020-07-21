@@ -215,5 +215,11 @@ namespace AntDesign
                 await OnChange.InvokeAsync(_uploadInfo);
             }
         }
+        protected override void Dispose(bool disposing)
+        {
+            InvokeAsync(async () => await JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn));
+
+            base.Dispose(disposing);
+        }
     }
 }
