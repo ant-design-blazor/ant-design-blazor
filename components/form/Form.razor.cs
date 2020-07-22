@@ -96,7 +96,7 @@ namespace AntDesign
         {
             await OnFinish.InvokeAsync(editContext);
 
-            OnFinishEvent.Invoke(this);
+            OnFinishEvent?.Invoke(this);
         }
 
         private async Task OnInvalidSubmit(EditContext editContext)
