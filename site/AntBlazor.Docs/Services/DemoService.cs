@@ -75,26 +75,12 @@ namespace AntDesign.Docs.Services
 
         public async Task InitializeDemos()
         {
-            if (_showCaseCache == null)
+            _showCaseCache ??= new ConcurrentCache<string, RenderFragment>();
+            var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
+            var demoTypes = await _httpClient.GetFromJsonAsync<string[]>(new Uri(baseUrl, $"_content/AntDesign.Docs/meta/demoTypes.json").ToString());
+            foreach (var type in demoTypes)
             {
-                _showCaseCache = new ConcurrentCache<string, RenderFragment>();
-
-                var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
-                var demoTypes = await _httpClient.GetFromJsonAsync<string[]>(new Uri(baseUrl, $"_content/AntDesign.Docs/meta/demoTypes.json").ToString());
-                foreach (var type in demoTypes)
-                {
-                    _showCaseCache.GetOrAdd(type, t =>
-                    {
-                        void ShowCase(RenderTreeBuilder builder)
-                        {
-                            var showCase = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{type}");
-                            builder.OpenComponent(0, showCase);
-                            builder.CloseComponent();
-                        }
-
-                        return ShowCase;
-                    });
-                }
+                GetShowCase(type);
             }
         }
 
@@ -112,17 +98,20 @@ namespace AntDesign.Docs.Services
             return _menuCache.TryGetValue(CurrentLanguage, out var menuItems) ? await menuItems : Array.Empty<DemoMenuItem>();
         }
 
-        private static readonly RenderFragment _defaultShowCase = builder =>
+        public RenderFragment GetShowCase(string type)
         {
-            builder.OpenElement(1, "p");
-            builder.AddContent(2, "实例化失败");
-            builder.CloseElement();
-        };
+            _showCaseCache ??= new ConcurrentCache<string, RenderFragment>();
+            return _showCaseCache.GetOrAdd(type, t =>
+            {
+                var showCase = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{type}");
+                void ShowCase(RenderTreeBuilder builder)
+                {
+                    builder.OpenComponent(0, showCase);
+                    builder.CloseComponent();
+                }
 
-        public async ValueTask<RenderFragment> GetShowCase(string type)
-        {
-            await InitializeDemos();
-            return _showCaseCache.TryGetValue(type, out var showCase) ? showCase : _defaultShowCase;
+                return ShowCase;
+            });
         }
 
         public async Task<DemoMenuItem[]> GetPrevNextMenu(string type, string currentTitle)

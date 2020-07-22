@@ -154,7 +154,9 @@ namespace AntDesign.Docs.Build.CLI.Command
                             SubTitle = x.Value.SubTitle,
                             Url = $"components/{x.Value.Title.ToLower()}",
                             Type = "menuItem"
-                        }).ToArray()
+                        })
+                        .OrderBy(x => x.Title, new MenuComparer())
+                        .ToArray(),
                     });
                 }
 
