@@ -14,7 +14,7 @@ namespace AntDesign.Internal
         public string PrefixCls { get; set; } = "ant-dropdown";
 
         [Parameter]
-        public string PopupContainerSelector { get; set; }
+        public string PopupContainerSelector { get; set; } = "body";
 
         [Parameter]
         public string PlacementCls { get; set; }
@@ -76,7 +76,7 @@ namespace AntDesign.Internal
         {
             base.OnInitialized();
 
-            DomEventService.AddEventListener("app", "mouseup", OnMouseUp);
+            DomEventService.AddEventListener("document", "mouseup", OnMouseUp);
         }
 
         protected virtual async Task OnTriggerMouseEnter()
