@@ -6,7 +6,7 @@ Pull request will be merged after one of collaborators approve.
 Please makes sure that these form are filled before submitting your pull request, thank you!
 -->
 
-[[中文版模板 / Chinese template](https://github.com/ant-design/ant-design/blob/master/.github/PULL_REQUEST_TEMPLATE/pr_cn.md)]
+[[中文版模板 / Chinese template](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/.github/PULL_REQUEST_TEMPLATE/pr_cn.md)]
 
 ### 🤔 This is a ...
 
@@ -55,5 +55,4 @@ Describe changes from userside, and list all potential break changes or other ri
 
 - [ ] Doc is updated/provided or not needed
 - [ ] Demo is updated/provided or not needed
-- [ ] TypeScript definition is updated/provided or not needed
 - [ ] Changelog is provided or not needed
