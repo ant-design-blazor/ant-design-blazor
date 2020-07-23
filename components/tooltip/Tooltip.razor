@@ -29,7 +29,14 @@
                             <span class="ant-tooltip-arrow-content"></span>
                         </div>
                         <div class="ant-tooltip-inner" role="tooltip">
-                            @Title.AsT0
+                            @if (IsMarkupString)
+                            {
+                                @((MarkupString)Title.AsT0)
+                            }
+                            else
+                            {
+                                @Title.AsT0
+                            }
                         </div>
                     </div>
                 }

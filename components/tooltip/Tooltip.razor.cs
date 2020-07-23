@@ -12,6 +12,9 @@ namespace AntDesign
         public OneOf<string, RenderFragment> Title { get; set; } = string.Empty;
 
         [Parameter]
+        public bool IsMarkupString { get; set; } = false;
+
+        [Parameter]
         public bool ArrowPointAtCenter { get; set; } = false;
 
         [Parameter]
