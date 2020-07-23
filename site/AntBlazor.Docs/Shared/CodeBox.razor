@@ -71,7 +71,7 @@
     {
         await base.OnInitializedAsync();
 
-        Component = await demoService.GetShowCase(Demo.Type);
+        Component = demoService.GetShowCase(Demo.Type);
     }
 
     async ValueTask Copy()

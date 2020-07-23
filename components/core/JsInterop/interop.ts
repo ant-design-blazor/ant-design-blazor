@@ -80,11 +80,16 @@ export function getObjectURL(element) {
   return url;
 }
 
-export function uploadFile(element, index, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod) {
+export function uploadFile(element, index, data, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod) {
   let formData = new FormData();
   var file = element.files[index];
   var size = file.size;
-  formData.append(name, file)
+  formData.append(name, file);
+  if (data != null) {
+    for (var key in data) {
+      formData.append(key, data[key]);
+    }
+  }
   const req = new XMLHttpRequest()
   req.onreadystatechange = function () {
     if (req.readyState === 4) {
@@ -343,17 +348,25 @@ export function removeCls(selector: Element | string, clsName: string | Array<st
   }
 }
 
-const oldBodyCache = {};
+const oldBodyCacheStack = [];
+
+const hasScrollbar = () => {
+  let overflow = document.body.style.overflow;
+  if (overflow && overflow === "hidden") return false;
+  return document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight);
+}
 
 export function disableBodyScroll() {
   let body = document.body;
+  const oldBodyCache = {};
   ["position", "width", "overflow"].forEach((key) => {
     oldBodyCache[key] = body.style[key];
   });
+  oldBodyCacheStack.push(oldBodyCache);
   css(body,
     {
       "position": "relative",
-      "width": "calc(100% - 17px)",
+      "width": hasScrollbar() ? "calc(100% - 17px)" : null,
       "overflow": "hidden"
     });
   addCls(document.body, "ant-scrolling-effect");
@@ -372,6 +385,8 @@ function enableBodyScroll(selector, filter = null) {
     length = queryElements.length;
   }
   if (length === 0) {
+    let oldBodyCache = oldBodyCacheStack.length > 0 ? oldBodyCacheStack.pop() : {};
+
     css(document.body,
       {
         "position": oldBodyCache["position"] ?? null,
