@@ -52,7 +52,6 @@ namespace AntDesign
         public DropdownButton()
         {
             IsButton = true;
-            Trigger = new TriggerType[] { TriggerType.Click };
         }
     }
 }
