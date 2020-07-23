@@ -1,6 +1,6 @@
-﻿<Dropdown OnVisibleChange="OnVisibleChange" Visible="_visible">
+﻿<Dropdown @ref="@_dropdown">
     <Overlay>
-        <Menu OnMenuItemClicked="HandleMenuClick">
+        <Menu OnMenuItemClicked="HandleMenuClick" AutoCloseDropdown="@false">
             <MenuItem Id="1">Clicking me will not close the menu.</MenuItem>
             <MenuItem Id="2">Clicking me will not close the menu also.</MenuItem>
             <MenuItem Id="3">Clicking me will close the menu.</MenuItem>
@@ -15,18 +15,13 @@
 
 @code
 {
-    private bool _visible = false;
+    private Dropdown _dropdown;
 
-    private void HandleMenuClick(MenuItem item)
+    private async void HandleMenuClick(MenuItem item)
     {
         if (item.Id == "3")
         {
-            _visible = false;
+           await _dropdown.Close();
         }
-    }
-
-    private void OnVisibleChange(bool visible)
-    {
-        _visible = visible;
     }
 }

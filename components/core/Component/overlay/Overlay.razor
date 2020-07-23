@@ -11,16 +11,18 @@
          @ref="Ref"
          @onmouseenter="OnOverlayMouseEnter"
          @onmouseleave="OnOverlayMouseLeave">
-        <CascadingValue Value="Trigger" Name="ParentTrigger">
-            <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
-                @if (ChildContent != null)
-                {
-                    @ChildContent
-                }
-                else
-                {
-                    @Trigger.Overlay
-                }
+        <CascadingValue Value="this" Name="Overlay">
+            <CascadingValue Value="Trigger" Name="ParentTrigger">
+                <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
+                    @if (ChildContent != null)
+                    {
+                        @ChildContent
+                    }
+                    else
+                    {
+                        @Trigger.Overlay
+                    }
+                </CascadingValue>
             </CascadingValue>
         </CascadingValue>
     </div>

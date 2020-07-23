@@ -55,7 +55,7 @@ namespace AntDesign
             Trigger = new[] { TriggerType.Click };
         }
 
-        public override async Task Show(int? overlayLeft = null, int? overlayTop = null)
+        internal override async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
             if (Trigger.Contains(TriggerType.Hover))
             {
@@ -65,7 +65,7 @@ namespace AntDesign
             await base.Show(overlayLeft, overlayTop);
         }
 
-        public override async Task Hide(bool force = false)
+        internal override async Task Hide(bool force = false)
         {
             if (Trigger.Contains(TriggerType.Hover))
             {
