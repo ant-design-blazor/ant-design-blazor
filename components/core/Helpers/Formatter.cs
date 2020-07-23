@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Globalization;
 
 namespace AntDesign.Helpers
 {
@@ -33,6 +34,19 @@ namespace AntDesign.Helpers
                 }
             }
             return Expression.Lambda<Func<T, string, string>>(body, p1, p2).Compile();
+        }
+    }
+
+    internal static class Formatter
+    {
+        /// <summary>
+        /// under WASM mode, when format a double number to percentage, there will be a blank between number and %, '35.00 %'
+        /// use this method instead to avoid the blank space
+        /// </summary>
+        /// <returns></returns>
+        public static string ToPercentWithoutBlank(double num)
+        {
+            return num.ToString("p", CultureInfo.CurrentCulture).Replace(" ", "", StringComparison.Ordinal);
         }
     }
 }
