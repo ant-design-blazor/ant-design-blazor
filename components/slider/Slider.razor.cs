@@ -1,4 +1,5 @@
 ﻿using AntDesign.core.Extensions;
+using AntDesign.Helpers;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -506,17 +507,18 @@ namespace AntDesign
             }
         }
 
+
         private void SetStyle()
         {
-            _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, (RightValue / Max).ToString("p", CultureInfo.CurrentCulture));
+            _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, Formatter.ToPercentWithoutBlank(RightValue / Max));
             if (Range)
             {
-                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, (LeftValue / Max).ToString("p", CultureInfo.CurrentCulture), ((RightValue - LeftValue) / Max).ToString("p", CultureInfo.CurrentCulture));
-                _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, (LeftValue / Max).ToString("p", CultureInfo.CurrentCulture));
+                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, Formatter.ToPercentWithoutBlank(LeftValue / Max), Formatter.ToPercentWithoutBlank((RightValue - LeftValue) / Max));
+                _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, Formatter.ToPercentWithoutBlank(LeftValue / Max));
             }
             else
             {
-                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, "0%", (RightValue / Max).ToString("p", CultureInfo.CurrentCulture));
+                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, "0%", Formatter.ToPercentWithoutBlank(RightValue / Max));
             }
 
             StateHasChanged();
@@ -524,7 +526,7 @@ namespace AntDesign
 
         private string SetMarkPosition(double key)
         {
-            return (key / Max).ToString("p", CultureInfo.CurrentCulture);
+            return Formatter.ToPercentWithoutBlank(key / Max);
         }
 
         private string IsActiveMark(double key)
