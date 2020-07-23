@@ -2,6 +2,9 @@ export function getDom(element) {
   if (!element) {
     element = document.body;
   } else if (typeof element === 'string') {
+    if (element === 'document') {
+      return document;
+    }
     element = document.querySelector(element);
   }
   return element;
