@@ -29,13 +29,6 @@ namespace AntDesign
 
         private readonly string[] _defaultColors = new[] { "blue", "red", "green", "gray" };
 
-        internal TimelineItem(RenderFragment childContent, RenderFragment dot, string @class)
-        {
-            this.ChildContent = childContent;
-            this.Dot = dot;
-            this.Class = @class;
-        }
-
         protected override void Dispose(bool disposing)
         {
             ParentTimeline?._items.Remove(this);
