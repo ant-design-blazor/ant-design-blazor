@@ -2,6 +2,9 @@ export function getDom(element) {
   if (!element) {
     element = document.body;
   } else if (typeof element === 'string') {
+    if (element === 'document') {
+      return document;
+    }
     element = document.querySelector(element);
   }
   return element;
@@ -350,6 +353,12 @@ export function removeCls(selector: Element | string, clsName: string | Array<st
 
 const oldBodyCacheStack = [];
 
+const hasScrollbar = () => {
+  let overflow = document.body.style.overflow;
+  if (overflow && overflow === "hidden") return false;
+  return document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight);
+}
+
 export function disableBodyScroll() {
   let body = document.body;
   const oldBodyCache = {};
@@ -360,7 +369,7 @@ export function disableBodyScroll() {
   css(body,
     {
       "position": "relative",
-      "width": "calc(100% - 17px)",
+      "width": hasScrollbar() ? "calc(100% - 17px)" : null,
       "overflow": "hidden"
     });
   addCls(document.body, "ant-scrolling-effect");
