@@ -22,35 +22,39 @@
                  OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
                  OnOverlayMouseEnter="OnOverlayMouseEnter"
                  OnOverlayMouseLeave="OnOverlayMouseLeave">
-                @if (Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0))
-                {
-                    <div class="ant-tooltip-content">
-                        <div class="ant-tooltip-arrow">
-                            <span class="ant-tooltip-arrow-content"></span>
-                        </div>
-                        <div class="ant-tooltip-inner" role="tooltip">
-                            @if (IsMarkupString)
-                            {
-                                @((MarkupString)Title.AsT0)
-                            }
-                            else
-                            {
-                                @Title.AsT0
-                            }
-                        </div>
+            @if (Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0))
+            {
+                <div class="ant-tooltip-content">
+                    <div class="ant-tooltip-arrow">
+                        <span class="ant-tooltip-arrow-content"></span>
                     </div>
-                }
-                else if (Title.IsT1 && (Title.AsT1)!=null)
-                {
-                    <div class="ant-tooltip-content">
-                        <div class="ant-tooltip-arrow">
-                            <span class="ant-tooltip-arrow-content"></span>
-                        </div>
-                        <div class="ant-tooltip-inner" role="tooltip">
-                            @Title.AsT1
-                        </div>
+                    <div class="ant-tooltip-inner" role="tooltip">
+                        @Title.AsT0
                     </div>
-                }
+                </div>
+            }
+            else if (Title.IsT1 && (Title.AsT1) != null)
+            {
+                <div class="ant-tooltip-content">
+                    <div class="ant-tooltip-arrow">
+                        <span class="ant-tooltip-arrow-content"></span>
+                    </div>
+                    <div class="ant-tooltip-inner" role="tooltip">
+                        @Title.AsT1
+                    </div>
+                </div>
+            }
+            else if (Title.IsT2)
+            {
+                <div class="ant-tooltip-content">
+                    <div class="ant-tooltip-arrow">
+                        <span class="ant-tooltip-arrow-content"></span>
+                    </div>
+                    <div class="ant-tooltip-inner" role="tooltip">
+                        @Title.AsT2
+                    </div>
+                </div>
+            }
         </Overlay>
     </CascadingValue>
 </CascadingValue>

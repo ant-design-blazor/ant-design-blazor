@@ -36,8 +36,7 @@ title: Tooltip
 | Placement              | 气泡框位置，可选 `Top` `Left` `Right` `Bottom` `TopLeft` `TopRight` `BottomLeft` `BottomRight` `LeftTop` `LeftBottom` `RightTop` `RightBottom` | PlacementType       | PlacementType.Top |      |
 | Trigger                | 触发行为，可选 Her/Focus/Click/ContextMenu`，可使用数组设置多个触发行为 | TriggerType[]       | TriggerType.Hover |      |
 | Visible                | 用于手动控制浮层显隐                                         | bool                | false             |      |
-| OnVisibleChange        | 显示隐藏的回调                                               | EventCallback<bool> | -                 |      |
-| IsMarkupString         | 是否以将Title作为HTML字符串渲染                              | bool                | false             |      |
+| OnVisibleChange        | 显示隐藏的回调                                               | EventCallback<bool> | -                 |      |                            | bool                | false             |      |
 
 ## 注意
 

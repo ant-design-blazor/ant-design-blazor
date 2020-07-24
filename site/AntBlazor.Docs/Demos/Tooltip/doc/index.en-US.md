@@ -35,7 +35,6 @@ The following APIs are shared by Tooltip, Popconfirm, Popover.
 | Trigger | Tooltip trigger mode. Could be multiple by passing an array | TriggerType[] | `TriggerType.Hover` |  |
 | Visible | Whether the floating tooltip card is visible or not | bool | `false` |  |
 | OnVisibleChange | Callback executed when visibility of the tooltip card is changed | EventCallback<bool>   | - |  |
-| IsMarkupString | whether render Title as an HTML string | bool                  | false |  |
 
 ## Note
 
