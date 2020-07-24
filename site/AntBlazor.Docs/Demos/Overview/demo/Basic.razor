@@ -1,0 +1,292 @@
+﻿@inject  ILanguageService serviceLanguage 
+
+    <section class="markdown">
+        <div>
+            <AntDesign.Title Level="2">通用<Tag>@GeneralItems.Count</Tag></AntDesign.Title>
+        </div>
+
+        <Row Gutter="24">
+            @foreach (var item in GeneralItems)
+            {
+                string url = $"{CurrentLanguage}/components/{item.Title.ToLower()}";
+                string title = CurrentLanguage == "en-US" ? item.Title : item.Title2;
+                <AntDesign.Col Xl="6">
+                    <a href=@url>
+                        <Card Bordered Title=@(title) Style="width: 320px; height: 240px" Hoverable>
+                            <Body>
+                                <div style="text-align:center;vertical-align:middle;">
+                                    <img src="@item.ImgSrc" style="height:112px; _margin-top: expression(( 196 - this.height ) / 2)" alt="@title">
+                                </div>
+                            </Body>
+                        </Card>
+                    </a>
+                </AntDesign.Col>
+            }
+        </Row>
+
+        <div>
+            <AntDesign.Title Level="2">布局<Tag>@LayoutItems.Count</Tag></AntDesign.Title>
+        </div>
+
+        <Row Gutter="24">
+            @foreach (var item in LayoutItems)
+            {
+                string url = $"{CurrentLanguage}/components/{item.Title.ToLower()}";
+                string title = CurrentLanguage == "en-US" ? item.Title : item.Title2;
+                <AntDesign.Col Xl="6">
+                    <a href=@url>
+                        <Card Bordered Title=@(title) Style="width: 300px; height: 240px" Hoverable>
+                            <Body>
+                                <div style="text-align:center;vertical-align:middle;">
+                                    <img src="@item.ImgSrc" style="height:112px; _margin-top: expression(( 196 - this.height ) / 2)" alt="@title">
+                                </div>
+                            </Body>
+                        </Card>
+                    </a>
+                </AntDesign.Col>
+            }
+        </Row>
+
+
+        <div>
+            <AntDesign.Title Level="2">导航<Tag>@NavigationItems.Count</Tag></AntDesign.Title>
+        </div>
+
+        <Row Gutter="24">
+            @foreach (var item in NavigationItems)
+            {
+                string url = $"{CurrentLanguage}/components/{item.Title.ToLower()}";
+                string title = CurrentLanguage == "en-US" ? item.Title : item.Title2;
+                <AntDesign.Col Xl="6">
+                    <a href=@url>
+                        <Card Bordered Title=@(title) Style="width: 300px; height: 240px" Hoverable>
+                            <Body>
+                                <div style="text-align:center;vertical-align:middle;">
+                                    <img src="@item.ImgSrc" style="height:112px; _margin-top: expression(( 196 - this.height ) / 2)" alt="@title">
+                                </div>
+                            </Body>
+                        </Card>
+                    </a>
+                </AntDesign.Col>
+            }
+        </Row>
+
+
+        <div>
+            <AntDesign.Title Level="2">数据录入<Tag>@DataEntryItems.Count</Tag></AntDesign.Title>
+        </div>
+
+        <Row Gutter="24">
+            @foreach (var item in DataEntryItems)
+            {
+                string url = $"{CurrentLanguage}/components/{item.Title.ToLower()}";
+                string title = CurrentLanguage == "en-US" ? item.Title : item.Title2;
+                <AntDesign.Col Xl="6">
+                    <a href=@url>
+                        <Card Bordered Title=@(title) Style="width: 320px; height: 240px" Hoverable>
+                            <Body>
+                                <div style="text-align:center;vertical-align:middle;">
+                                    <img src="@item.ImgSrc" style="height:112px; _margin-top: expression(( 196 - this.height ) / 2)" alt="@title">
+                                </div>
+                            </Body>
+                        </Card>
+                    </a>
+                </AntDesign.Col>
+            }
+        </Row>
+
+        <div>
+            <AntDesign.Title Level="2">数据展示<Tag>@DataDisplayItems.Count</Tag></AntDesign.Title>
+        </div>
+
+        <Row Gutter="24">
+            @foreach (var item in DataDisplayItems)
+            {
+                string url = $"{CurrentLanguage}/components/{item.Title.ToLower()}";
+                string title = CurrentLanguage == "en-US" ? item.Title : item.Title2;
+                <AntDesign.Col Xl="6">
+                    <a href=@url>
+                        <Card Bordered Title=@(title) Style="width: 320px; height: 240px" Hoverable>
+                            <Body>
+                                <div style="text-align:center;vertical-align:middle;">
+                                    <img src="@item.ImgSrc" style="height:112px; _margin-top: expression(( 196 - this.height ) / 2)" alt="@title">
+                                </div>
+                            </Body>
+                        </Card>
+                    </a>
+                </AntDesign.Col>
+            }
+        </Row>
+
+        <div>
+            <AntDesign.Title Level="2">反馈<Tag>@FeedbackItems.Count</Tag></AntDesign.Title>
+        </div>
+
+        <Row Gutter="24">
+            @foreach (var item in FeedbackItems)
+            {
+                string url = $"{CurrentLanguage}/components/{item.Title.ToLower()}";
+                string title = CurrentLanguage == "en-US" ? item.Title : item.Title2;
+                <AntDesign.Col Xl="6">
+                    <a href=@url>
+                        <Card Bordered Title=@(title) Style="width: 300px; height: 240px" Hoverable>
+                            <Body>
+                                <div style="text-align:center;vertical-align:middle;">
+                                    <img src="@item.ImgSrc" style="height:112px; _margin-top: expression(( 196 - this.height ) / 2)" alt="@title">
+                                </div>
+                            </Body>
+                        </Card>
+                    </a>
+                </AntDesign.Col>
+            }
+        </Row>
+
+        <div>
+            <AntDesign.Title Level="2">其他<Tag>@OtherItems.Count</Tag></AntDesign.Title>
+        </div>
+
+        <Row Gutter="24">
+            @foreach (var item in OtherItems)
+            {
+                string url = $"{CurrentLanguage}/components/{item.Title.ToLower()}";
+                string title = CurrentLanguage == "en-US" ? item.Title : item.Title2;
+                <AntDesign.Col Xl="6">
+                    <a href=@url>
+                        <Card Bordered Title=@(title) Style="width: 300px; height: 240px" Hoverable>
+                            <Body>
+                                <div style="text-align:center;vertical-align:middle;">
+                                    <img src="@item.ImgSrc" style="height:112px; _margin-top: expression(( 196 - this.height ) / 2)" alt="@title">
+                                </div>
+                            </Body>
+                        </Card>
+                    </a>
+                </AntDesign.Col>
+            }
+        </Row>
+    </section>
+
+
+@code{
+
+    private string CurrentLanguage => serviceLanguage.CurrentCulture.Name;
+
+    public class TopicItem
+    {
+        public string Type { get; set; }
+        public List<Item> GeneralItems = new List<Item>();
+    }
+
+    public class Item
+    {
+        public string Title { get; set; }
+        public string Title2 { get; set; }
+        public string ImgSrc { get; set; }
+    }
+
+    public List<Item> GeneralItems = new List<Item>();
+    public List<Item> LayoutItems = new List<Item>();
+    public List<Item> NavigationItems = new List<Item>();
+    public List<Item> DataEntryItems = new List<Item>();
+    public List<Item> DataDisplayItems = new List<Item>();
+    public List<Item> FeedbackItems = new List<Item>();
+    public List<Item> OtherItems = new List<Item>();
+
+
+    public List<TopicItem> NormalItems = new List<TopicItem>();
+
+
+
+    protected override void OnInitialized()
+    {
+
+
+        var topicItem = new TopicItem();
+
+        topicItem.Type = "General";
+        topicItem.GeneralItems.Add(new Item { Title = "Button", Title2 = "按钮", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg" });
+        topicItem.GeneralItems.Add(new Item { Title = "Icon", Title2 = "图标", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg" });
+        topicItem.GeneralItems.Add(new Item { Title = "Typography", Title2 = "排版", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/GOM1KQ24O/Typography.svg" });
+        NormalItems.Add(topicItem);
+
+
+        //General
+        GeneralItems.Add(new Item { Title = "Button", Title2= "按钮", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg" });
+        GeneralItems.Add(new Item { Title = "Icon", Title2 = "图标",  ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg" });
+        GeneralItems.Add(new Item { Title = "Typography", Title2 = "排版", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/GOM1KQ24O/Typography.svg" });
+
+        //Layout
+        LayoutItems.Add(new Item { Title = "Divider", Title2 = "分割线", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/5swjECahe/Divider.svg" });
+        LayoutItems.Add(new Item { Title = "Grid", Title2 = "栅格", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/5rWLU27so/Grid.svg" });
+        LayoutItems.Add(new Item { Title = "Layout", Title2 = "布局", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/hzEndUVEx/Layout.svg" });
+        LayoutItems.Add(new Item { Title = "Space", Title2 = "间距", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/wc6%263gJ0Y8/Space.svg" });
+
+        //Navigation
+        NavigationItems.Add(new Item { Title = "Affix", Title2 = "固钉", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/tX6-md4H6/Affix.svg" });
+        NavigationItems.Add(new Item { Title = "Breadcrumb", Title2 = "面包屑", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/9Ltop8JwH/Breadcrumb.svg" });
+        NavigationItems.Add(new Item { Title = "Dropdown", Title2 = "下拉菜单", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/eedWN59yJ/Dropdown.svg" });
+        NavigationItems.Add(new Item { Title = "Menu", Title2 = "导航菜单", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg" });
+        NavigationItems.Add(new Item { Title = "Pagination", Title2 = "分页", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/1vqv2bj68/Pagination.svg" });
+        NavigationItems.Add(new Item { Title = "PageHeader", Title2 = "页头", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/6bKE0Cq0R/PageHeader.svg" });
+        NavigationItems.Add(new Item { Title = "Steps", Title2 = "步骤条", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/UZYqMizXHaj/Steps.svg" });
+
+
+        //Navigation
+        DataEntryItems.Add(new Item { Title = "AutoComplete", Title2 = "自动完成", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg" });
+        DataEntryItems.Add(new Item { Title = "Checkbox", Title2 = "多选框", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/8nbVbHEm_/CheckBox.svg" });
+        DataEntryItems.Add(new Item { Title = "Cascader", Title2 = "级联选择", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/UdS8y8xyZ/Cascader.svg" });
+        DataEntryItems.Add(new Item { Title = "DatePicker", Title2 = "日期选择框", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg" });
+        DataEntryItems.Add(new Item { Title = "Form", Title2 = "表单", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg" });
+        DataEntryItems.Add(new Item { Title = "InputNumber", Title2 = "数字输入框", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg" });
+        DataEntryItems.Add(new Item { Title = "Input", Title2 = "输入框", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg" });
+        DataEntryItems.Add(new Item { Title = "Mentions", Title2 = "提及", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg" });
+        DataEntryItems.Add(new Item { Title = "Rate", Title2 = "评分", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/R5uiIWmxe/Rate.svg" });
+        DataEntryItems.Add(new Item { Title = "Radio", Title2 = "单选框", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/8cYb5seNB/Radio.svg" });
+        DataEntryItems.Add(new Item { Title = "Switch", Title2 = "开关", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/zNdJQMhfm/Switch.svg" });
+        DataEntryItems.Add(new Item { Title = "Slider", Title2 = "滑动输入条", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/HZ3meFc6W/Silder.svg" });
+        DataEntryItems.Add(new Item { Title = "Select", Title2 = "选择器", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg" });
+        DataEntryItems.Add(new Item { Title = "TreeSelect", Title2 = "树选择", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg" });
+        DataEntryItems.Add(new Item { Title = "Transfer", Title2 = "穿梭框", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg" });
+        DataEntryItems.Add(new Item { Title = "TimePicker", Title2 = "时间选择框", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/h04Zsl98I/TimePicker.svg" });
+        DataEntryItems.Add(new Item { Title = "Upload", Title2 = "上传", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg" });
+
+        //Data dispaly
+        DataDisplayItems.Add(new Item { Title = "Avatar", Title2 = "头像", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/aBcnbw68hP/Avatar.svg" });
+        DataDisplayItems.Add(new Item { Title = "Badge", Title2 = "徽标数", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/6%26GF9WHwvY/Badge.svg" });
+        DataDisplayItems.Add(new Item { Title = "Comment", Title2 = "评论", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/ILhxpGzBO/Comment.svg" });
+        DataDisplayItems.Add(new Item { Title = "Collapse", Title2 = "折叠面板", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg" });
+        DataDisplayItems.Add(new Item { Title = "Carousel", Title2 = "走马灯", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/%24C9tmj978R/Carousel.svg" });
+        DataDisplayItems.Add(new Item { Title = "Card", Title2 = "卡片", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/NqXt8DJhky/Card.svg" });
+        DataDisplayItems.Add(new Item { Title = "Calendar", Title2 = "日历", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/dPQmLq08DI/Calendar.svg" });
+        DataDisplayItems.Add(new Item { Title = "Descriptions", Title2 = "描述列表", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/MjtG9_FOI/Descriptions.svg" });
+        DataDisplayItems.Add(new Item { Title = "Empty", Title2 = "空状态", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/MNbKfLBVb/Empty.svg" });
+        DataDisplayItems.Add(new Item { Title = "List", Title2 = "列表", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/5FrZKStG_/List.svg" });
+        DataDisplayItems.Add(new Item { Title = "Popover", Title2 = "气泡卡片", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/1PNL1p_cO/Popover.svg" });
+        DataDisplayItems.Add(new Item { Title = "Statistic", Title2 = "统计数值", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/rcBNhLBrKbE/Statistic.svg" });
+        DataDisplayItems.Add(new Item { Title = "Tree", Title2 = "树形控件", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg" });
+        DataDisplayItems.Add(new Item { Title = "Tooltip", Title2 = "文字提示", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/Vyyeu8jq2/Tooltp.svg" });
+        DataDisplayItems.Add(new Item { Title = "Timeline", Title2 = "时间轴", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/vJmo00mmgR/Timeline.svg" });
+        DataDisplayItems.Add(new Item { Title = "Tag", Title2 = "标签", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/cH1BOLfxC/Tag.svg" });
+        DataDisplayItems.Add(new Item { Title = "Tabs", Title2 = "标签页", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg" });
+        DataDisplayItems.Add(new Item { Title = "Table", Title2 = "表格", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg" });
+
+        //Feedback
+        FeedbackItems.Add(new Item { Title = "Alert", Title2 = "警告提示", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg" });
+        FeedbackItems.Add(new Item { Title = "Drawer", Title2 = "抽屉", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg" });
+        FeedbackItems.Add(new Item { Title = "Modal", Title2 = "对话框", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg" });
+        FeedbackItems.Add(new Item { Title = "Message", Title2 = "全局提示", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg" });
+        FeedbackItems.Add(new Item { Title = "Notification", Title2 = "通知提醒框", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/Jxm5nw61w/Notification.svg" });
+        FeedbackItems.Add(new Item { Title = "Progress", Title2 = "进度条", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/xqsDu4ZyR/Progress.svg" });
+        FeedbackItems.Add(new Item { Title = "Popconfirm", Title2 = "气泡确认框", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/fjMCD9xRq/Popconfirm.svg" });
+        FeedbackItems.Add(new Item { Title = "Result", Title2 = "结果", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/9nepwjaLa/Result.svg" });
+        FeedbackItems.Add(new Item { Title = "Spin", Title2 = "加载中", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/LBcJqCPRv/Spin.svg" });
+        FeedbackItems.Add(new Item { Title = "Skeleton", Title2 = "骨架屏", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/KpcciCJgv/Skeleton.svg" });
+
+        //Others
+        OtherItems.Add(new Item { Title = "Anchor", Title2 = "锚点", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/_1-C1JwsC/Anchor.svg" });
+        OtherItems.Add(new Item { Title = "BackTop", Title2 = "回到顶部", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/tJZ5jbTwX/BackTop.svg" });
+        OtherItems.Add(new Item { Title = "ConfigProvider", Title2 = "全局化配置", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/kegYxl1wj/ConfigProvider.svg" });
+    }
+
+
+
+}

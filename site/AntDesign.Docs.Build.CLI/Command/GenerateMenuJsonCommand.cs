@@ -83,21 +83,23 @@ namespace AntDesign.Docs.Build.CLI.Command
 
             Dictionary<string, int> sortMap = new Dictionary<string, int>()
             {
-                ["General"] = 0,
-                ["通用"] = 0,
-                ["Layout"] = 1,
-                ["布局"] = 1,
-                ["Navigation"] = 2,
-                ["导航"] = 2,
-                ["Data Entry"] = 3,
-                ["数据录入"] = 3,
-                ["Data Display"] = 4,
-                ["数据展示"] = 4,
-                ["Feedback"] = 5,
-                ["反馈"] = 5,
-                ["Localization"] = 6,
-                ["Other"] = 7,
-                ["其他"] = 7
+                ["Overview"] = 0,
+                ["组件总览"] = 0,
+                ["General"] = 1,
+                ["通用"] = 1,
+                ["Layout"] = 2,
+                ["布局"] = 2,
+                ["Navigation"] = 3,
+                ["导航"] = 3,
+                ["Data Entry"] = 4,
+                ["数据录入"] = 4,
+                ["Data Display"] = 5,
+                ["数据展示"] = 5,
+                ["Feedback"] = 6,
+                ["反馈"] = 6,
+                ["Localization"] = 7,
+                ["Other"] = 8,
+                ["其他"] = 8
             };
 
             foreach (FileSystemInfo component in demoDirectoryInfo.GetFileSystemInfos())
