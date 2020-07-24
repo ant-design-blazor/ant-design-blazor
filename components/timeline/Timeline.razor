@@ -5,7 +5,7 @@
     <ul class="@ClassMapper.Class" style="@Style" id="@Id">
         @ChildContent
 
-        @foreach (var item in DisplayItems)
+        @foreach (var item in _displayItems)
         {
             <li class="@item.ItemClass" @ref="item.Ref" style="@item.Style" id="@item.Id">
                 <div class="ant-timeline-item-tail"></div>
@@ -22,9 +22,3 @@
         }
     </ul>
 </CascadingValue>
-
-@code{
-
-  private RenderFragment _loadingDot = @<Icon type="loading"></Icon>;
-
-}
