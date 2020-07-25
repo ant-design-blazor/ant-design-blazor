@@ -66,8 +66,27 @@ namespace AntDesign
             get { return _value; }
             set
             {
-                _value = value;
+                if (Value == null && value == null)
+                {
+                    return;
+                }
 
+                if (Value is string valStr)
+                {
+                    if (value != null && value is string newValStr && newValStr == valStr)
+                    {
+                        return;
+                    }
+                }
+                else if (Value is ValueType val1 && value is ValueType val2)
+                {
+                    if (val1.Equals(val2))
+                    {
+                        return;
+                    }
+                }
+
+                _value = value;
                 OnValueChange(value);
             }
         }
