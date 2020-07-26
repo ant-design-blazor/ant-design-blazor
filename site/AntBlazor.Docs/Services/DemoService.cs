@@ -4,6 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
@@ -22,6 +25,7 @@ namespace AntDesign.Docs.Services
         private readonly ILanguageService _languageService;
         private readonly HttpClient _httpClient;
         private readonly NavigationManager _navigationManager;
+        private Uri _baseUrl;
 
         private string CurrentLanguage => _languageService.CurrentCulture.Name;
 
@@ -30,6 +34,7 @@ namespace AntDesign.Docs.Services
             _languageService = languageService;
             _httpClient = httpClient;
             _navigationManager = navigationManager;
+            _baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
 
             _languageService.LanguageChanged += async (sender, args) => await InitializeAsync(args.Name);
         }
@@ -39,8 +44,7 @@ namespace AntDesign.Docs.Services
             _menuCache ??= new ConcurrentCache<string, ValueTask<DemoMenuItem[]>>();
             await _menuCache.GetOrAdd(language, async (currentLanguage) =>
             {
-                var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
-                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(baseUrl, $"_content/AntDesign.Docs/meta/menu.{language}.json").ToString());
+                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/menu.{language}.json").ToString());
 
                 return menuItems;
             });
@@ -48,8 +52,7 @@ namespace AntDesign.Docs.Services
             _componentCache ??= new ConcurrentCache<string, ValueTask<IDictionary<string, DemoComponent>>>();
             await _componentCache.GetOrAdd(language, async (currentLanguage) =>
             {
-                var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
-                var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(new Uri(baseUrl, $"_content/AntDesign.Docs/meta/components.{language}.json").ToString());
+                var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/components.{language}.json").ToString());
 
                 return components.ToDictionary(x => x.Title.ToLower(), x => x);
             });
@@ -57,8 +60,7 @@ namespace AntDesign.Docs.Services
             _demoMenuCache ??= new ConcurrentCache<string, ValueTask<DemoMenuItem[]>>();
             await _demoMenuCache.GetOrAdd(language, async (currentLanguage) =>
             {
-                var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
-                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(baseUrl, $"_content/AntDesign.Docs/meta/demos.{language}.json").ToString());
+                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/demos.{language}.json").ToString());
 
                 return menuItems;
             });
@@ -66,9 +68,7 @@ namespace AntDesign.Docs.Services
             _docMenuCache ??= new ConcurrentCache<string, ValueTask<DemoMenuItem[]>>();
             await _docMenuCache.GetOrAdd(language, async (currentLanguage) =>
             {
-                var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
-                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(baseUrl, $"_content/AntDesign.Docs/meta/docs.{language}.json").ToString());
-
+                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/docs.{language}.json").ToString());
                 return menuItems;
             });
         }
@@ -76,8 +76,7 @@ namespace AntDesign.Docs.Services
         public async Task InitializeDemos()
         {
             _showCaseCache ??= new ConcurrentCache<string, RenderFragment>();
-            var baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
-            var demoTypes = await _httpClient.GetFromJsonAsync<string[]>(new Uri(baseUrl, $"_content/AntDesign.Docs/meta/demoTypes.json").ToString());
+            var demoTypes = await _httpClient.GetFromJsonAsync<string[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/demoTypes.json").ToString());
             foreach (var type in demoTypes)
             {
                 GetShowCase(type);
@@ -96,6 +95,20 @@ namespace AntDesign.Docs.Services
         {
             await InitializeAsync(CurrentLanguage);
             return _menuCache.TryGetValue(CurrentLanguage, out var menuItems) ? await menuItems : Array.Empty<DemoMenuItem>();
+        }
+
+        public async ValueTask<DemoMenuItem[]> GetCurrentMenuItems()
+        {
+            var menuItems = await GetMenuAsync();
+            var currentSubmenuUrl = GetCurrentSubMenuUrl();
+            return menuItems.FirstOrDefault(x => x.Url == currentSubmenuUrl)?.Children ?? Array.Empty<DemoMenuItem>();
+        }
+
+        public string GetCurrentSubMenuUrl()
+        {
+            var currentUrl = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);
+            var originalUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
+            return string.IsNullOrEmpty(originalUrl) ? "/" : originalUrl.Split('/')[0];
         }
 
         public RenderFragment GetShowCase(string type)
@@ -131,6 +144,21 @@ namespace AntDesign.Docs.Services
             }
 
             return new DemoMenuItem[] { null, null };
+        }
+
+        public async Task<Recommend[]> GetRecommend()
+        {
+            return await _httpClient.GetFromJsonAsync<Recommend[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/data/recommend.{CurrentLanguage}.json").ToString());
+        }
+
+        public async Task<Product[]> GetProduct()
+        {
+            return await _httpClient.GetFromJsonAsync<Product[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/data/products.json").ToString());
+        }
+
+        public async Task<MoreProps[]> GetMore()
+        {
+            return await _httpClient.GetFromJsonAsync<MoreProps[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/data/more-list.{CurrentLanguage}.json").ToString());
         }
     }
 }

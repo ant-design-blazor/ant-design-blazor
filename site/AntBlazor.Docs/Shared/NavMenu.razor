@@ -1,4 +1,5 @@
-﻿<Menu Class="aside-container menu-site" Theme="MenuTheme.Light" Mode="MenuMode.Inline">
+﻿@using AntDesign.Docs.Services
+<Menu Class="aside-container menu-site" Theme="MenuTheme.Light" Mode="MenuMode.Inline">
     @menuItemTemplate((MenuItems, LanguageService, 1))
 </Menu>
 
@@ -6,6 +7,7 @@
 @inject ILanguageService LanguageService
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
+@inject DemoService DemoService; 
 
 @code {
 
@@ -50,21 +52,5 @@
             }
         </Template>;
 
-    protected override async Task OnInitializedAsync()
-    {
-        @* var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-        MenuItems = await HttpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(baseUrl, "_content/AntDesign.Docs/menu.json").ToString()); *@
 
-        LanguageService.LanguageChanged += (_, args) =>
-        {
-            InvokeAsync(StateHasChanged);
-        };
-
-        NavigationManager.LocationChanged += (_, args) =>
-        {
-            StateHasChanged();
-        };
-        StateHasChanged();
-        await base.OnInitializedAsync();
-    }
 }

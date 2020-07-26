@@ -1,0 +1,23 @@
+﻿[
+  {
+    "title": "从 HelloWorld 到 AntDesign，Blazor 将 .NET 带到现代前端圈",
+    "description": "7月11日，Ant Design Blazor 团队与 Reactor 上海合作的一场 Blazor 专题在线分享。内容从 Blazor 的整体介绍到与其他前端框架的横向对比，从 Hello World 到 Ant Design 入门实战，不要错过了哦！",
+    "img": "https://i1.hdslb.com/bfs/archive/3ea9e957e5e621d9452d9402b5c0bd17c51f7034.jpg",
+    "href": "https://www.bilibili.com/video/BV17z4y1Q7cJ",
+    "popularize": false
+  },
+  {
+    "title": "如何用 Blazor 实现 Ant Design 组件库？",
+    "description": "Ant Design Blazor 是 Ant Design 的 Blazor 实现，希望有一天能在丰富 Blazor 生态的同时，还能成为被 Ant Design 生态认可的框架实现，能成为他们 Design 梦的一个延续。",
+    "img": "https://picb.zhimg.com/v2-320009747fc474ccd71dbd87e5767b64_1440w.jpg?source=172ae18b",
+    "href": "https://zhuanlan.zhihu.com/p/115046252",
+    "popularize": false
+  },
+  {
+    "title": "Blazor 主页",
+    "description": "使用Ant Design Blazor前，建议先通过官方文档熟悉 Blazor 框架，了解 Blazor 的基础使用方法。这样，就可以在之后的 Ant Design Blazor 使用中，更加得心应手。",
+    "img": "https://pic1.zhimg.com/v2-6b030839df798e18440319dae866d367_1440w.jpg",
+    "href": "https://blazor.net",
+    "popularize": false
+  }
+]
