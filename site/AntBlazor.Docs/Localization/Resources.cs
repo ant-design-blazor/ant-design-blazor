@@ -15,8 +15,8 @@ namespace AntDesign.Docs.Localization
 
         private void Initialize(string languageContent)
         {
-            _keyValues = languageContent.Split(Environment.NewLine).Select(line => line.Split(":")).ToList()
-                .ToDictionary(x => x[0].ToLower(), x => x.Length == 2 ? x[1].Trim(' ') : "");
+            _keyValues = languageContent.Split('\n').Select(line => line.Split(":")).ToList()
+                .ToDictionary(x => x[0].ToLower(), x => x.Length == 2 ? x[1].Trim(' ', '\r') : "");
         }
 
         public string this[string key]

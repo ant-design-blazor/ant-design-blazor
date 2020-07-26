@@ -63,6 +63,11 @@ namespace AntDesign
         /// <inheritdoc />
         protected override void OnParametersSet()
         {
+            if (Href == "/" && Match != NavLinkMatch.All)
+            {
+                Match = NavLinkMatch.All;
+            }
+
             // Update computed state
             _hrefAbsolute = Href == null ? null : NavigationManger.ToAbsoluteUri(Href).AbsoluteUri;
             _isActive = ShouldMatch(NavigationManger.Uri);

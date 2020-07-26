@@ -1,8 +1,10 @@
-﻿<footer class="rc-footer rc-footer-dark">
+﻿@inject ILanguageService language
+
+<footer class="rc-footer rc-footer-dark">
     <section class="rc-footer-container">
         <section class="rc-footer-columns">
             <div class="rc-footer-column">
-                <h2>相关资源</h2>
+                <h2>@language.Resources["app.footer.resources"]</h2>
                 <div class="rc-footer-item">
                     <a href="https://ant.design" target="_blank">Ant Design</a>
                 </div>
@@ -24,7 +26,7 @@
                 </div>
             </div>
             <div class="rc-footer-column">
-                <h2>社区</h2>
+                <h2>@language.Resources["app.footer.community"]</h2>
                 <div class="rc-footer-item">
                     <a href="https://github.com/websemantics/awesome-ant-design" target="_blank">
                         <span class="rc-footer-item-icon">
@@ -63,14 +65,14 @@
                 </div>
             </div>
             <div class="rc-footer-column">
-                <h2>帮助</h2>
+                <h2>@language.Resources["app.footer.help"]</h2>
             </div>
             <div class="rc-footer-column">
                 <h2>
                     @*<span class="rc-footer-column-icon">
-                            <img src="https://gw.alipayobjects.com/zos/rmsportal/nBVXkrFdWHxbZlmMbsaH.svg" alt="Ant XTech">
-                        </span>*@
-                    更多产品
+            <img src="https://gw.alipayobjects.com/zos/rmsportal/nBVXkrFdWHxbZlmMbsaH.svg" alt="Ant XTech">
+        </span>*@
+                    @language.Resources["app.footer.more-product"]
                 </h2>
             </div>
         </section>
@@ -81,3 +83,16 @@
         </div>
     </section>
 </footer>
+
+@code{
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        language.LanguageChanged += (sender, args) =>
+        {
+            StateHasChanged();
+        };
+    }
+
+}
