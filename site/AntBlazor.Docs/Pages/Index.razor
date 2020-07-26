@@ -1,0 +1,168 @@
+﻿@layout BlankLayout
+@page "/"
+@inject ILanguageService language
+
+<div id="react-content">
+    <header id="header" class="clearfix home-header">
+        <div class="ant-row" style="flex-flow: nowrap; height: 64px;">
+            <div class="ant-col" style="flex: 0 0 auto;">
+                <h1><a id="logo" href="/">
+                    <img alt="logo" src="/docs/assets/logo.svg">Ant Design Blazor
+                </a></h1>
+            </div>
+            <div class="ant-col menu-row" style="flex: 1 1 auto;">
+                <HeaderMenu />
+            </div>
+        </div>
+    </header>
+    <div class="home-container">
+        <style>
+            .rc-footer-container {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .rc-footer-columns {
+                max-width: 1208px;
+                margin: 0 auto;
+            }
+        </style>
+        <div class="home-banner">
+            <div class="home-banner-background">
+                <img alt="background" src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*kJM2Q6uPXCAAAAAAAAAAAABkARQnAQ">
+                <svg viewBox="0 0 1440 448">
+                    <g transform="translate(388.81209591472725, 12.625704082033366)" opacity="1" frame="477">
+                        <g transform="matrix(1, 0, 0, 1, 0, 0)"><g transform="rotate(0, 170, 170)"><svg><defs><filter id="banner-circle-shadow-1"><feDropShadow dx="10" dy="10" stdDeviation="10" flood-color="rgba(0,0,0,0.05)"></feDropShadow></filter><linearGradient id="banner-circle-fill-1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color: rgb(250, 252, 254);"></stop><stop offset="100%" style="stop-color: rgb(249, 252, 254);"></stop></linearGradient></defs><circle cx="170" cy="170" r="140" fill="url(#banner-circle-fill-1)" filter="url(#banner-circle-shadow-1)"></circle></svg></g></g>
+                    </g>
+                    <g transform="translate(-214.60241042016168, 234.40402566849292)" opacity="1" frame="477">
+                        <g transform="matrix(1, 0, 0, 1, 0, 0)"><g transform="rotate(0, 230, 230)"><svg><defs><filter id="banner-circle-shadow-2"><feDropShadow dx="10" dy="10" stdDeviation="10" flood-color="rgba(0,0,0,0.05)"></feDropShadow></filter><linearGradient id="banner-circle-fill-2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color: rgb(250, 252, 254);"></stop><stop offset="50%" style="stop-color: rgb(243, 249, 252);"></stop></linearGradient></defs><circle cx="230" cy="230" r="200" fill="url(#banner-circle-fill-2)" filter="url(#banner-circle-shadow-2)"></circle></svg></g></g>
+                    </g>
+                    <g transform="translate(1291.4648476694722, 182.0455763805469)" opacity="1" frame="477">
+                        <g transform="matrix(1, 0, 0, 1, 0, 0)"><g transform="rotate(0, 120, 120)"><svg><defs><filter id="banner-rect-shadow-1"><feDropShadow dx="10" dy="10" stdDeviation="10" flood-color="rgba(0,0,0,0.05)"></feDropShadow></filter><linearGradient id="banner-rect-fill-1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="25%" style="stop-color: rgb(248, 252, 255);"></stop><stop offset="100%" style="stop-color: rgb(248, 251, 255);"></stop></linearGradient></defs><rect x="30" y="30" width="180" height="180" fill="url(#banner-rect-fill-1)" filter="url(#banner-rect-shadow-1)"></rect></svg></g></g>
+                    </g>
+                    <g transform="translate(673.9823138574723, -667.8768834546102)" opacity="1" frame="477">
+                        <g transform="matrix(1, 0, 0, 1, 0, 0)"><g transform="rotate(0, 430, 430)"><svg width="860" height="860"><defs><filter id="banner-diamond-shadow-1"><feDropShadow dx="10" dy="10" stdDeviation="10" flood-color="rgba(0,0,0,0.05)"></feDropShadow></filter><linearGradient id="banner-diamond-fill-1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="60%" style="stop-color: rgb(252, 253, 255);"></stop><stop offset="100%" style="stop-color: rgb(252, 253, 254);"></stop></linearGradient></defs><path d="M 30 430 430 30 830 430 430 830 Z" fill="url(#banner-diamond-fill-1)" filter="url(#banner-diamond-shadow-1)"></path></svg></g></g>
+                    </g>
+                </svg>
+            </div>
+            <div class="home-banner-holder">
+                <div class="home-banner-content">
+                    <div>
+                        <div class="home-card-logo">
+                            <h1 class="home-banner-mini">Ant Design Blazor</h1>
+                            <h1 class="home-banner-normal" style="font-size: 3.7em;">Ant Design Blazor</h1>
+                        </div>
+                    </div>
+                    <p>@language.Resources["app.home.introduce"]</p>
+                    <div class="home-banner-content-operations">
+                        <a href="/@language.CurrentCulture.Name/docs/introduce">
+                            <Button Type="primary" Shape="round">@language.Resources["app.home.getting-started"]</Button>
+                        </a>
+                        <a href="/@language.CurrentCulture.Name/docs/components">
+                            <Button Shape="round">@language.Resources["app.home.documentation"]</Button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="max-width: 1256px; margin: 0px auto;">
+            @if (_recommends.Any())
+            {
+                <div class="home-block-content">
+                    <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">@language.Resources["app.home.recommend"]</h2>
+                    <Row Style="margin: -12px -12px -36px;">
+                        <AntDesign.Col Xs="24" Sm="14" Style="padding: 12px;">
+                            <Recommend Data="_recommends[0]" Main />
+                        </AntDesign.Col>
+                        <AntDesign.Col Xs="24" Sm="10" Style="padding: 12px;">
+                            <Row Style="margin: -12px -12px 12px;">
+                                <AntDesign.Col Span="24" Style="padding: 12px;">
+                                    <Recommend Data="_recommends[1]" />
+                                </AntDesign.Col>
+                                <AntDesign.Col Span="24" Style="padding: 12px;">
+                                    <Recommend Data="_recommends[2]" />
+                                </AntDesign.Col>
+                            </Row>
+                        </AntDesign.Col>
+                    </Row>
+                </div>
+            }
+
+            @if (_products.Any())
+            {
+                <div class="home-block-content">
+                    <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">@language.Resources["app.home.products"]</h2>
+                    <div style="margin-bottom: -28px;">
+                        <Row Class="design-mini-panels" Style="margin: 40px -20px 20px;">
+                            @foreach (var item in _products)
+                            {
+                                <AntDesign.Col Xs="24" Sm="8" Style="padding: 20px;">
+                                    <a href="@item.Href" target="_blank" rel="noopener noreferrer">
+                                        <Card Class="design-mini-panel" Hoverable>
+                                            <Cover>
+                                                <img alt="@item.Title" src="@item.Img">
+                                            </Cover>
+                                            <Body>
+                                                <CardMeta>
+                                                    <Title>
+                                                        @item.Title
+                                                    </Title>
+                                                    <Description>
+                                                        @language.Resources[item.Description]
+                                                    </Description>
+                                                </CardMeta>
+                                            </Body>
+                                        </Card>
+                                    </a>
+                                </AntDesign.Col>
+                            }
+                        </Row>
+                    </div>
+                </div>
+            }
+
+            @if (_moreArticles.Any())
+            {
+                <div class="home-block-content">
+                    <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">
+                        @language.Resources["app.home.more"]
+                        @* <div class="home-block-content-extra"><a href="/docs/resources-cn#文章">查看全部</a></div>*@
+                    </h2>
+                    <div class="ant-row" style="margin: -16px -12px 16px;">
+                        @foreach (var item in _moreArticles)
+                        {
+                            <div class="ant-col ant-col-xs-24 ant-col-sm-6" style="padding: 16px 12px;">
+                                <a href="@item.Href" target="_blank" rel="noopener noreferrer">
+                                    <Card Class="more-card" Hoverable>
+                                        <Cover>
+                                            <img alt="@item.Title" src="@item.Img">
+                                        </Cover>
+                                        <Body>
+                                            <CardMeta>
+                                                <Title>
+                                                    @item.Title
+                                                </Title>
+                                                <Description>
+                                                    @item.Description
+                                                </Description>
+                                            </CardMeta>
+                                            <div>
+                                                @item.Date
+                                                <span class="more-card-source">
+                                                    <img src="https://gw.alipayobjects.com/zos/basement_prod/5f4e1fd0-d255-4309-b181-a3715a720ebe.svg" alt="zhihu">
+                                                </span>
+                                            </div>
+                                        </Body>
+                                    </Card>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <MainFooter />
+    </div>
+</div>
