@@ -71,13 +71,6 @@ namespace AntDesign
                 {
                     _value = value;
                     OnValueChange(value);
-
-                    ValueChanged.InvokeAsync(value);
-
-                    if (_isNotifyFieldChanged)
-                    {
-                        EditContext?.NotifyFieldChanged(FieldIdentifier);
-                    }
                 }
             }
         }
@@ -115,7 +108,18 @@ namespace AntDesign
             get => Value;
             set
             {
-                Value = value;
+                var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, Value);
+                if (hasChanged)
+                {
+                    Value = value;
+
+                    ValueChanged.InvokeAsync(value);
+
+                    if (_isNotifyFieldChanged)
+                    {
+                        EditContext?.NotifyFieldChanged(FieldIdentifier);
+                    }
+                }
             }
         }
 
