@@ -60,14 +60,14 @@ namespace AntDesign
             { "xs", 1}
         };
 
-        private static readonly List<Tuple<int, BreakpointEnum>> _descriptionsResponsiveMap = new List<Tuple<int, BreakpointEnum>>()
+        private static readonly List<(int PixelWidth, BreakpointEnum Breakpoint)> _descriptionsResponsiveMap = new List<(int, BreakpointEnum)>()
         {          
-            new Tuple<int, BreakpointEnum>(575,BreakpointEnum.xs),
-            new Tuple<int, BreakpointEnum>( 576,BreakpointEnum.sm),
-            new Tuple<int, BreakpointEnum>(768,BreakpointEnum.md),
-            new Tuple<int, BreakpointEnum>( 992,BreakpointEnum.lg),
-            new Tuple<int, BreakpointEnum>(1200,BreakpointEnum.xl),
-            new Tuple<int, BreakpointEnum>(1600,BreakpointEnum.xxl),
+            (575,BreakpointEnum.xs),
+            (576,BreakpointEnum.sm),
+            (768,BreakpointEnum.md),
+            (992,BreakpointEnum.lg),
+            (1200,BreakpointEnum.xl),
+            (1600,BreakpointEnum.xxl)
         };
 
         private void SetClassMap()
@@ -162,7 +162,8 @@ namespace AntDesign
             else
             {
                 Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _divRef);
-                var bp = _descriptionsResponsiveMap.Where(x => x.Item1 > element.clientWidth).FirstOrDefault()?.Item2 ?? BreakpointEnum.xxl;
+                var breakpointTuple = _descriptionsResponsiveMap.FirstOrDefault(x => x.PixelWidth > element.clientWidth);
+                var bp = breakpointTuple == default ? BreakpointEnum.xxl : breakpointTuple.Breakpoint;
                 _realColumn = Column.AsT1.ContainsKey(bp.ToString()) ? Column.AsT1[bp.ToString()] : _defaultColumnMap[bp.ToString()];
             }
         }
