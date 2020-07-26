@@ -66,28 +66,19 @@ namespace AntDesign
             get { return _value; }
             set
             {
-                if (Value == null && value == null)
+                var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, Value);
+                if (hasChanged)
                 {
-                    return;
-                }
+                    _value = value;
+                    OnValueChange(value);
 
-                if (Value is string valStr)
-                {
-                    if (value != null && value is string newValStr && newValStr == valStr)
+                    ValueChanged.InvokeAsync(value);
+
+                    if (_isNotifyFieldChanged)
                     {
-                        return;
+                        EditContext?.NotifyFieldChanged(FieldIdentifier);
                     }
                 }
-                else if (Value is ValueType val1 && value is ValueType val2)
-                {
-                    if (val1.Equals(val2))
-                    {
-                        return;
-                    }
-                }
-
-                _value = value;
-                OnValueChange(value);
             }
         }
 
@@ -124,18 +115,7 @@ namespace AntDesign
             get => Value;
             set
             {
-                var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, Value);
-                if (hasChanged)
-                {
-                    Value = value;
-
-                    ValueChanged.InvokeAsync(value);
-
-                    if (_isNotifyFieldChanged)
-                    {
-                        EditContext?.NotifyFieldChanged(FieldIdentifier);
-                    }
-                }
+                Value = value;
             }
         }
 
