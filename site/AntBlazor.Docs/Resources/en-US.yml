@@ -1,69 +1,16 @@
-﻿Components: Components
-General: General
-Button: Button
-Icon: Icon
-Typography: Typography
-Layout: Layout
-Grid: Grid
-Navigation: Navigation
-Breadcrumb: Breadcrumb
-Dropdown: Dropdown
-Menu: Menu
-Steps: Steps 
-DataEntry: Data Entry
-Checkbox: Checkbox
-Cascader: Cascader
-Switch: Switch
-DatePicker: DatePicker
-Form: Form
-TimePicker: TimePicker
-Input: Input
-InputNumber: InputNumber
-Radio: Radio
-DataDisplay: Data Display
-Avatar: Avatar
-Badge: Badge
-Comment: Comment
-Card: Card
-Calendar: Calendar
-Empty: Empty
-List: List
-Descriptions: Descriptions
-Popover: Popover
-Tooltip: Tooltip
-Tag: Tag
-Timeline: Timeline
-Feedback: Feedback
-Alert: Alert
-Drawer: Drawer
-Other: Other
-Divider: Divider
-BackTop: BackTop
-Tabs: Tabs
-Examples: Examples
-Notification: Notification
-PageHeader:PageHeader
-Result: Result
-Spin: Spin
-Space: Space
-Slider: Slider
-Carousel: Carousel
-Message: Message
-Pagination: Pagination
-Progress: Progress
-Skeleton: Skeleton
-Popconfirm: Popconfirm
-Transfer: Transfer
-Modal: Modal
-Statistic: Statistic
-Rate: Rate
-Select: Select
-Collapse: Collapse
-Table: Table
-AutoComplete: AutoComplete
-Upload: Upload
-Anchor: Anchor
-Affix: Affix
-DocSearch: Search in Ant Design Blazor
-Mentions: Mentions
-Tree: Tree
+﻿DocSearch: Search in Ant Design Blazor
+app.home.introduce: A set of enterprise-class UI components based on Ant Design and Blazor. Create an efficient and enjoyable work experience.
+app.home.getting-started: Getting Started
+app.home.documentation: Documentation
+app.home.recommend: Recommend
+app.home.popularize: Popularize
+app.home.design-and-framework: Design language and framework
+app.home.products: Ecosystem
+app.home.product-charts-slogan: A new generation of data visualization solution
+app.home.product-pro-slogan: Out-of-box UI solution for enterprise applications
+app.home.product-vditor-slogan: Easy-to-use Markdown editor
+app.home.more: Learn More
+app.footer.resources: Resources
+app.footer.community: Community
+app.footer.help: Help
+app.footer.more-product: More Products

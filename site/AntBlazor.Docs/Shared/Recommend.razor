@@ -1,0 +1,18 @@
+﻿<a class="recommend-block @(Main?"recommend-block-main":"")" href="@Data.Href" target="_blank" rel="noopener noreferrer">
+    <img src="@Data.Img" alt="@Data.Title">
+    @if (Data.Popularize)
+    {
+        <span class="recommend-popularize">推广</span>
+    }
+    <div class="recommend-content">
+        <h4 class="ant-typography" direction="ltr">@Data.Title</h4>
+        <div class="ant-typography" direction="ltr" style="font-size: 13px;">@Data.Description</div>
+    </div>
+</a>
+
+@code
+{
+    [Parameter] public Services.Recommend Data { get; set; }
+
+    [Parameter]public bool Main { get; set; }
+}
