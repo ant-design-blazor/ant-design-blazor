@@ -4,79 +4,12 @@
     <header id="header" class="clearfix">
         <Row Style="flex-flow: nowrap; height: 64px;">
             <Col Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
-            <h1><a id="logo" href="/index-cn"><img alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg">Ant Design</a></h1>
+                <h1><a id="logo" href="/">
+                    <img alt="logo" src="/docs/assets/logo.svg">Ant Design Blazor
+                </a></h1>
             </Col>
             <Col Class="menu-row" Xs="0" Sm="0" Md="18" Lg="18" Xl="19" Xxl="20">
-            <div id="search-box" class="">
-                <Icon Type="search" />
-                <span class="algolia-autocomplete" style="position: relative; display: inline-block; direction: ltr;">
-                    <input placeholder="@(LanguageService.Resources["DocSearch"])" type="text" class="ant-input ds-input" value="" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-label="search input" aria-owns="algolia-autocomplete-listbox-0" dir="auto" style="position: relative; vertical-align: top;">
-                </span>
-            </div>
-            <Menu Mode="MenuMode.Horizontal" Id="nav" Class="menu-site">
-                @foreach (var item in MenuItems)
-                {
-                    <MenuItem Class="ant-menu-item-only-child" Key="@item.Url" OnClick="async _=> await ChangeMenuItem(item.Url)" RouterLink="@($"{CurrentLanguage}/{item.Url}")" RouterMatch="NavLinkMatch.Prefix">
-                        <span>@item.Title</span>
-                    </MenuItem>
-                }
-            </Menu>
-
-                @if (CurrentLanguage != "en-US")
-                {
-                    <Button Class="header-button header-lang-button" Size="small" OnClick="@(_ => ChangeLanguage("en-US"))">English</Button>
-                }
-                else
-                {
-                    <Button Class="header-button header-lang-button" Size="small" OnClick="@(_ => ChangeLanguage("zh-CN"))">简体中文</Button>
-                }
-
-                <GithubButton />
-
-            @*<ul class="ant-menu menu-site ant-menu-light ant-menu-root ant-menu-horizontal" id="nav" direction="ltr" role="menu">
-                    <li class="ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu" role="menuitem" style="display: none;">
-                        <div class="ant-menu-submenu-title" role="button" aria-expanded="false" aria-haspopup="true"><span>···</span><i class="ant-menu-submenu-arrow"></i></div>
-                    </li>
-                    <li class="ant-menu-item ant-menu-item-only-child" role="menuitem"><a href="/docs/spec/introduce-cn">设计</a></li>
-                    <li class="ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu" role="menuitem" style="display: none;">
-                        <div class="ant-menu-submenu-title" role="button" aria-expanded="false" aria-haspopup="true"><span>···</span><i class="ant-menu-submenu-arrow"></i></div>
-                    </li>
-                    <li class="ant-menu-item ant-menu-item-only-child" role="menuitem"><a href="/docs/react/introduce-cn">文档</a></li>
-                    <li class="ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu" role="menuitem" style="display: none;">
-                        <div class="ant-menu-submenu-title" role="button" aria-expanded="false" aria-haspopup="true"><span>···</span><i class="ant-menu-submenu-arrow"></i></div>
-                    </li>
-                    <li class="ant-menu-item ant-menu-item-only-child ant-menu-item-selected" role="menuitem"><a href="/components/overview-cn/">组件</a></li>
-                    <li class="ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu" role="menuitem" style="display: none;">
-                        <div class="ant-menu-submenu-title" role="button" aria-expanded="false" aria-haspopup="true"><span>···</span><i class="ant-menu-submenu-arrow"></i></div>
-                    </li>
-                    <li class="ant-menu-item ant-menu-item-only-child" role="menuitem"><a href="/docs/resources-cn">资源</a></li>
-                    <li class="ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu" role="menuitem" style="display: none;">
-                        <div class="ant-menu-submenu-title" role="button" aria-expanded="false" aria-haspopup="true"><span>···</span><i class="ant-menu-submenu-arrow"></i></div>
-                    </li>
-                    <li class="ant-menu-item ant-menu-item-only-child" role="menuitem"><a href="https://ant-design.gitee.io">国内镜像</a></li>
-                    <li class="ant-menu-submenu ant-menu-submenu-horizontal ant-menu-overflowed-submenu" role="menuitem" style="visibility: hidden; position: absolute; display: none;">
-                        <div class="ant-menu-submenu-title" role="button" aria-expanded="false" aria-haspopup="true"><span>···</span><i class="ant-menu-submenu-arrow"></i></div>
-                    </li>
-                </ul>
-                <div class="ant-select version ant-select-sm ant-select-single ant-select-show-arrow">
-                    <div class="ant-select-selector"><span class="ant-select-selection-search"><input autocomplete="off" class="ant-select-selection-search-input" role="combobox" aria-haspopup="listbox" aria-owns="rc_select_0_list" aria-autocomplete="list" aria-controls="rc_select_0_list" aria-activedescendant="rc_select_0_list_0" readonly="" unselectable="on" value="" id="rc_select_0" style="opacity: 0;"></span><span class="ant-select-selection-item" title="4.4.2">4.4.2</span></div><span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;"><span role="img" aria-label="down" class="anticon anticon-down ant-select-suffix"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg></span></span>
-                </div>
-                <button type="button" class="ant-btn header-button header-lang-button ant-btn-sm">English</button>
-                <button type="button" class="ant-btn header-button header-direction-button ant-btn-sm">
-                    <span>RTL</span>
-                </button>
-                <button type="button" class="ant-btn header-button ant-dropdown-trigger ant-btn-sm">
-                    更多<span role="img" aria-label="down" class="anticon anticon-down" style="font-size: 9px; margin: -1px 0px 0px 2px; vertical-align: middle;">
-                        <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
-                    </span>
-                </button>
-                <span id="github-btn" class="github-btn">
-                    <a class="gh-btn" href="//github.com/ant-design/ant-design/" target="_blank">
-                        <span class="gh-ico" aria-hidden="true"></span>
-                        <span class="gh-text">Star</span>
-                    </a>
-                    <a class="gh-count" target="_blank" href="//github.com/ant-design/ant-design/stargazers/"></a>
-                </span>*@
+                <HeaderMenu />
             </Col>
         </Row>
     </header>
@@ -86,7 +19,7 @@
             <div>
                 <Affix>
                     <section class="main-menu-inner">
-                        <NavMenu MenuItems="SiderMenuItems" IsCollapsed="_isCollapsed" />
+                        <NavMenu IsCollapsed="_isCollapsed" />
                     </section>
                 </Affix>
             </div>
