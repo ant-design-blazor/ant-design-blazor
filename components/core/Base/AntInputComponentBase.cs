@@ -66,9 +66,12 @@ namespace AntDesign
             get { return _value; }
             set
             {
-                _value = value;
-
-                OnValueChange(value);
+                var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, Value);
+                if (hasChanged)
+                {
+                    _value = value;
+                    OnValueChange(value);
+                }
             }
         }
 
