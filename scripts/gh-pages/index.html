@@ -240,6 +240,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.js" integrity="sha256-qybEsgf0PGiQS22AmoozPs09oRnSC7Gu7eBu4fbS2Ac=" crossorigin="anonymous"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
     <script>
         Blazor.start({
             loadBootResource: function (type, name, defaultUri, integrity) {
@@ -265,6 +266,5 @@
             }
         });
     </script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>
 </html>
