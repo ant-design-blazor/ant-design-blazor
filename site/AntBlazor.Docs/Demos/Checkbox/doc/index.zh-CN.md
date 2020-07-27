@@ -3,6 +3,7 @@ category: Components
 type: 数据录入
 title: Checkbox
 subtitle: 多选框
+cover: https://gw.alipayobjects.com/zos/alicdn/8nbVbHEm_/CheckBox.svg
 ---
 
 多选框。

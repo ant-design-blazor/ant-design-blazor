@@ -5,10 +5,10 @@
     <article>
 
         @if (_demoComponent != null)
+        { 
+        if (_demoComponent.Cols<0)
         {
-            if (_demoComponent.Cols < 1)  // cols < 1
-            {
-                var demos = _demoComponent.DemoList.Where(x => !x.Debug).OrderBy(x => x.Order);
+            var demos = _demoComponent.DemoList.Where(x => !x.Debug).OrderBy(x => x.Order);
 
                 <section class="markdown">
                     <h1>

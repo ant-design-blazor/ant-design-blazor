@@ -1,19 +1,20 @@
 ﻿@inject  ILanguageService serviceLanguage     
+@inject AntDesign.Docs.Services.DemoService demoService
+
 
     <section class="markdown">
-
         <Divider />
         <input  placeholder="Search in Components" style="border:none;" @onchange="((e)=>OnSearchEnter(e))" />          
         <Divider />
 
-        @foreach (var topicItem in NormalItems)
+        @foreach (var covers in CoverItems)
         {
             <div>
-                <AntDesign.Title Level="2">@serviceLanguage.Resources[topicItem.Type]<Tag>@topicItem.SubItems.Count</Tag></AntDesign.Title>
+                <AntDesign.Title Level="2">@serviceLanguage.Resources[covers.Type]<Tag>@covers.SubItems.Count</Tag></AntDesign.Title>
             </div>
 
             <Row>
-                @foreach (var item in topicItem.SubItems)
+                @foreach (var item in covers.SubItems)
                 {
                     string url = $"{CurrentLanguage}/components/{item.Title.ToLower()}";
                     string title = serviceLanguage.Resources[item.Title];
@@ -40,7 +41,7 @@
 
     private string CurrentLanguage { get; set; }
 
-    public class TopicItem
+    public class CoverItem
     {
         public string Type { get; set; }
         public List<Item> SubItems = new List<Item>();
@@ -52,159 +53,76 @@
         public string ImgSrc { get; set; }
     }
 
-    public List<TopicItem> NormalItems = new List<TopicItem>();
+    private List<CoverItem> CoverItems = new List<CoverItem>();
 
-
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         serviceLanguage.LanguageChanged += (sender, args) =>
         {
             CurrentLanguage = serviceLanguage.CurrentCulture.Name;
+
             InvokeAsync(StateHasChanged);
         };
 
-        NormalItems = GetListComponent();
+        CoverItems = await InitCoverItem();
+
     }
 
 
-
-
-
-    private void OnSearchEnter(ChangeEventArgs args)
+    private async Task< List<CoverItem>>  InitCoverItem()
     {
+        List<CoverItem> covers = new List<CoverItem>();
 
+        var demoMenuItem = await demoService.GetMenuAsync();
+
+        foreach (var menu in demoMenuItem)
+        {
+            if (menu.Url == "docs") continue;                      // docs
+            for (int i = 1; i < menu.Children.Length; i++)     //components, except for overview component
+            {
+
+                var coverItem = new CoverItem();
+                var groups = menu.Children[i];
+
+                coverItem.Type = groups.Title;                      // first time, it will get the chinese title.
+
+                foreach (var item in groups.Children)
+                {
+                    var demoComponent = await demoService.GetComponentAsync(item.Title);
+                    var imgSrc = demoComponent.Cover;
+                    var title = demoComponent.Title;
+                    coverItem.SubItems.Add(new Item { Title = title, ImgSrc = imgSrc });
+                }
+                covers.Add(coverItem);
+            }
+        }
+        return covers;
+    }
+
+    private async Task OnSearchEnter(ChangeEventArgs args)
+    {
         string word = args.Value.ToString();
 
         // reset all data when word is empty or null
         if (string.IsNullOrEmpty(word))
         {
-            NormalItems = GetListComponent();
+            CoverItems = await InitCoverItem();
             return;
         }
 
-
         // search components with english key words
-        NormalItems.Clear();
-        foreach (var item in GetListComponent())
+        CoverItems.Clear();
+        foreach (var item in await InitCoverItem())
         {
             var lst = item.SubItems.FindAll(x => x.Title.Contains(word, StringComparison.OrdinalIgnoreCase));
-            if (lst.Count>0)
+
+            if (lst.Count < 1) continue;  // count = 0       
+            CoverItems.Add(new CoverItem
             {
-                NormalItems.Add(new TopicItem
-                {
-                    Type = item.Type,
-                    SubItems = lst
-                });
-            }
-
+                Type = item.Type,
+                SubItems = lst
+            });
+          
         }
-
-
     }
-
-    /// <summary>
-    /// initilize list of components
-    /// </summary>
-    /// <returns></returns>
-    private  List<TopicItem> GetListComponent()
-    {
-
-        List<TopicItem> NewItems = new List<TopicItem>();
-
-        var generalItem = new TopicItem();
-        generalItem.Type = "General";  //General
-        generalItem.SubItems.Add(new Item { Title = "Button", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg" });
-        generalItem.SubItems.Add(new Item { Title = "Icon", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg" });
-        generalItem.SubItems.Add(new Item { Title = "Typography", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/GOM1KQ24O/Typography.svg" });
-        NewItems.Add(generalItem);
-
-        var layoutItem = new TopicItem();
-        layoutItem.Type = "Layout";  //Layout
-        layoutItem.SubItems.Add(new Item { Title = "Divider", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/5swjECahe/Divider.svg" });
-        layoutItem.SubItems.Add(new Item { Title = "Grid", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/5rWLU27so/Grid.svg" });
-        layoutItem.SubItems.Add(new Item { Title = "Layout", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/hzEndUVEx/Layout.svg" });
-        layoutItem.SubItems.Add(new Item { Title = "Space", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/wc6%263gJ0Y8/Space.svg" });
-        NewItems.Add(layoutItem);
-
-        var navigationItem = new TopicItem();
-        navigationItem.Type = "Navigation";  //Navigation
-        navigationItem.SubItems.Add(new Item { Title = "Affix", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/tX6-md4H6/Affix.svg" });
-        navigationItem.SubItems.Add(new Item { Title = "Breadcrumb", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/9Ltop8JwH/Breadcrumb.svg" });
-        navigationItem.SubItems.Add(new Item { Title = "Dropdown", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/eedWN59yJ/Dropdown.svg" });
-        navigationItem.SubItems.Add(new Item { Title = "Menu", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg" });
-        navigationItem.SubItems.Add(new Item { Title = "Pagination", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/1vqv2bj68/Pagination.svg" });
-        navigationItem.SubItems.Add(new Item { Title = "PageHeader", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/6bKE0Cq0R/PageHeader.svg" });
-        navigationItem.SubItems.Add(new Item { Title = "Steps", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/UZYqMizXHaj/Steps.svg" });
-        NewItems.Add(navigationItem);
-
-        var dataEntryItem = new TopicItem();
-        dataEntryItem.Type = "DataEntry";  //Data Entry
-        dataEntryItem.SubItems.Add(new Item { Title = "AutoComplete", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Checkbox", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/8nbVbHEm_/CheckBox.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Cascader", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/UdS8y8xyZ/Cascader.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "DatePicker", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Form", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "InputNumber", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Input", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Mentions", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Rate", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/R5uiIWmxe/Rate.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Radio", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/8cYb5seNB/Radio.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Switch", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/zNdJQMhfm/Switch.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Slider", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/HZ3meFc6W/Silder.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Select", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "TreeSelect", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Transfer", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "TimePicker", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/h04Zsl98I/TimePicker.svg" });
-        dataEntryItem.SubItems.Add(new Item { Title = "Upload", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg" });
-        NewItems.Add(dataEntryItem);
-
-        var dataDisplayItem = new TopicItem();
-        dataDisplayItem.Type = "DataDisplay";  //Data display
-        dataDisplayItem.SubItems.Add(new Item { Title = "Avatar", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/aBcnbw68hP/Avatar.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Badge", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/6%26GF9WHwvY/Badge.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Comment", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/ILhxpGzBO/Comment.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Collapse", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Carousel", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/%24C9tmj978R/Carousel.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Card", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/NqXt8DJhky/Card.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Calendar", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/dPQmLq08DI/Calendar.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Descriptions", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/MjtG9_FOI/Descriptions.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Empty", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/MNbKfLBVb/Empty.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "List", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/5FrZKStG_/List.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Popover", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/1PNL1p_cO/Popover.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Statistic", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/rcBNhLBrKbE/Statistic.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Tree", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Tooltip", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/Vyyeu8jq2/Tooltp.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Timeline", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/vJmo00mmgR/Timeline.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Tag", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/cH1BOLfxC/Tag.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Tabs", ImgSrc = "https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg" });
-        dataDisplayItem.SubItems.Add(new Item { Title = "Table", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg" });
-        NewItems.Add(dataDisplayItem);
-
-        var feedBackItem = new TopicItem();
-        feedBackItem.Type = "Feedback";  //Feedback
-        feedBackItem.SubItems.Add(new Item { Title = "Alert", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg" });
-        feedBackItem.SubItems.Add(new Item { Title = "Drawer", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg" });
-        feedBackItem.SubItems.Add(new Item { Title = "Modal", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg" });
-        feedBackItem.SubItems.Add(new Item { Title = "Message", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg" });
-        feedBackItem.SubItems.Add(new Item { Title = "Notification", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/Jxm5nw61w/Notification.svg" });
-        feedBackItem.SubItems.Add(new Item { Title = "Progress", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/xqsDu4ZyR/Progress.svg" });
-        feedBackItem.SubItems.Add(new Item { Title = "Popconfirm", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/fjMCD9xRq/Popconfirm.svg" });
-        feedBackItem.SubItems.Add(new Item { Title = "Result", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/9nepwjaLa/Result.svg" });
-        feedBackItem.SubItems.Add(new Item { Title = "Spin", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/LBcJqCPRv/Spin.svg" });
-        feedBackItem.SubItems.Add(new Item { Title = "Skeleton", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/KpcciCJgv/Skeleton.svg" });
-        NewItems.Add(feedBackItem);
-
-        var othersItem = new TopicItem();
-        othersItem.Type = "Other";  //Others
-        othersItem.SubItems.Add(new Item { Title = "Anchor", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/_1-C1JwsC/Anchor.svg" });
-        othersItem.SubItems.Add(new Item { Title = "BackTop", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/tJZ5jbTwX/BackTop.svg" });
-        othersItem.SubItems.Add(new Item { Title = "ConfigProvider", ImgSrc = "https://gw.alipayobjects.com/zos/alicdn/kegYxl1wj/ConfigProvider.svg" });
-        NewItems.Add(othersItem);
-
-
-        return NewItems;
-    }
-
-
 }

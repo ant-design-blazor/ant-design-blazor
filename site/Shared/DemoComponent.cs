@@ -16,6 +16,8 @@ namespace AntDesign.Docs
 
         public int? Cols { get; set; }
 
+        public string Cover { get; set; }
+
         public List<DemoItem> DemoList { get; set; }
     }
 
