@@ -8,41 +8,49 @@ self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
 
 const cacheNamePrefix = 'offline-cache-';
 const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
-const offlineAssetsInclude = [ /\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpe?g$/, /\.gif$/, /\.ico$/ ];
-const offlineAssetsExclude = [ /^service-worker\.js$/ ];
+const offlineAssetsInclude = [/\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpe?g$/, /\.gif$/, /\.ico$/];
+const offlineAssetsExclude = [/^service-worker\.js$/];
 
 async function onInstall(event) {
-    console.info('Service worker: Install');
+  console.info('Service worker: Install');
 
-    // Fetch and cache all matching items from the assets manifest
-    const assetsRequests = self.assetsManifest.assets
-        .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
-        .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
-        .map(asset => new Request(asset.url, { integrity: asset.hash }));
-    await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
+  // Fetch and cache all matching items from the assets manifest
+  const assetsRequests = self.assetsManifest.assets
+    .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
+    .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
+    .map(asset => {
+      if (asset.url.startsWith('_framework') && asset.url.indexOf('AntDesign.Docs.Wasm.dll') < 0) {
+        return new Request(`https://cdn.jsdelivr.net/npm/ant-design-blazor/${asset.url}`);
+      } else {
+        return new Request(asset.url, {
+          integrity: asset.hash
+        });
+      }
+    });
+  await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
 }
 
 async function onActivate(event) {
-    console.info('Service worker: Activate');
+  console.info('Service worker: Activate');
 
-    // Delete unused caches
-    const cacheKeys = await caches.keys();
-    await Promise.all(cacheKeys
-        .filter(key => key.startsWith(cacheNamePrefix) && key !== cacheName)
-        .map(key => caches.delete(key)));
+  // Delete unused caches
+  const cacheKeys = await caches.keys();
+  await Promise.all(cacheKeys
+    .filter(key => key.startsWith(cacheNamePrefix) && key !== cacheName)
+    .map(key => caches.delete(key)));
 }
 
 async function onFetch(event) {
-    let cachedResponse = null;
-    if (event.request.method === 'GET') {
-        // For all navigation requests, try to serve index.html from cache
-        // If you need some URLs to be server-rendered, edit the following check to exclude those URLs
-        const shouldServeIndexHtml = event.request.mode === 'navigate';
+  let cachedResponse = null;
+  if (event.request.method === 'GET') {
+    // For all navigation requests, try to serve index.html from cache
+    // If you need some URLs to be server-rendered, edit the following check to exclude those URLs
+    const shouldServeIndexHtml = event.request.mode === 'navigate';
 
-        const request = shouldServeIndexHtml ? 'index.html' : event.request;
-        const cache = await caches.open(cacheName);
-        cachedResponse = await cache.match(request);
-    }
+    const request = shouldServeIndexHtml ? 'index.html' : event.request;
+    const cache = await caches.open(cacheName);
+    cachedResponse = await cache.match(request);
+  }
 
-    return cachedResponse || fetch(event.request);
+  return cachedResponse || fetch(event.request);
 }
