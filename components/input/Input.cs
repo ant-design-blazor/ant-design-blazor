@@ -89,6 +89,15 @@ namespace AntDesign
 
         protected virtual void SetClasses()
         {
+            AffixWrapperClass = $"{PrefixCls}-affix-wrapper";
+            GroupWrapperClass = $"{PrefixCls}-group-wrapper";
+
+            if (!string.IsNullOrWhiteSpace(Class))
+            {
+                AffixWrapperClass = string.Join(" ", Class, AffixWrapperClass);
+                ClassMapper.OriginalClass = "";
+            }
+
             ClassMapper.Clear()
                 .If($"{PrefixCls}", () => Type != "number")
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
@@ -96,9 +105,7 @@ namespace AntDesign
 
             Attributes ??= new Dictionary<string, object>();
 
-            AffixWrapperClass = $"{PrefixCls}-affix-wrapper";
-            GroupWrapperClass = $"{PrefixCls}-group-wrapper";
-
+        
             if (MaxLength >= 0)
             {
                 Attributes?.Add("maxlength", MaxLength);
