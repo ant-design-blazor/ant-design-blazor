@@ -21,6 +21,7 @@ namespace AntDesign
 
         protected string _picker;
         protected bool _isSetPicker = false;
+        protected bool _isNullable = false;
 
         [Parameter]
         public string Picker
@@ -255,6 +256,15 @@ namespace AntDesign
                 Picker = DatePickerType.Date;
             }
 
+            if (typeof(TValue).IsAssignableFrom(typeof(DateTime?)))
+            {
+                _isNullable = true;
+            }
+            else
+            {
+                _isNullable = false;
+            }
+
             // Debug.WriteLine(System.Globalization.CultureInfo.CurrentCulture.Name);
 
             this.SetClass();
@@ -331,11 +341,9 @@ namespace AntDesign
 
             if (!string.IsNullOrEmpty(Format))
             {
-                // TODO：Locale
                 return value.ToString(Format, this.CultureInfo);
             }
 
-            // TODO：Locale
             string formater = _pickerStatus[index]._initPicker switch
             {
                 DatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
@@ -451,7 +459,7 @@ namespace AntDesign
 
         public void Close()
         {
-            _dropDown.Hide();
+            _dropDown?.Hide();
         }
 
         public async Task Focus(int index = 0)
@@ -559,6 +567,11 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        /// <summary>
+        /// 修改值
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="index"></param>
         public virtual void ChangeValue(DateTime value, int index = 0)
         {
         }
@@ -566,7 +579,7 @@ namespace AntDesign
         public virtual void ClearValue(int index = 0)
         {
         }
-        
+
         public virtual DateTime? GetIndexValue(int index)
         {
             return null;

@@ -145,6 +145,12 @@ namespace AntDesign
             }
         }
 
+        protected override void OnValueChange(string value)
+        {
+            base.OnValueChange(value);
+
+            RefreshNodeValue(value);
+        }
         #region event
 
         /// <summary>
@@ -315,6 +321,23 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// 刷新选中的内容
+        /// </summary>
+        /// <param name="value"></param>
+        private void RefreshNodeValue(string value)
+        {
+            _selectedNodes.Clear();
+
+            var node = GetNodeByValue(_nodelist, value);
+            SetSelectedNodeWithParent(node, ref _selectedNodes);
+            _renderNodes = _selectedNodes;
+
+            RefreshDisplayValue();
+
+            OnChange?.Invoke(_selectedNodes, value, _displayText);
+        }
+
+        /// <summary>
         /// 设置默认选中
         /// </summary>
         /// <param name="defaultValue"></param>
@@ -326,7 +349,8 @@ namespace AntDesign
             var node = GetNodeByValue(_nodelist, defaultValue);
             SetSelectedNodeWithParent(node, ref _selectedNodes);
             _renderNodes = _selectedNodes;
-            SetValue(node.Value);
+            if (node != null)
+                SetValue(node.Value);
         }
 
         /// <summary>
@@ -334,6 +358,18 @@ namespace AntDesign
         /// </summary>
         /// <param name="value"></param>
         private void SetValue(string value)
+        {
+            RefreshDisplayValue();
+
+            if (Value != value)
+            {
+                CurrentValueAsString = value;
+            }
+
+            OnChange?.Invoke(_selectedNodes, value, _displayText);
+        }
+
+        private void RefreshDisplayValue()
         {
             _selectedNodes.Sort((x, y) => x.Level.CompareTo(y.Level));  //Level 升序排序
             _displayText = string.Empty;
@@ -348,14 +384,6 @@ namespace AntDesign
                     _displayText += node.Label;
                 count++;
             }
-
-            if (Value != value)
-            {
-                CurrentValueAsString = value;
-                ValueChanged.InvokeAsync(Value);
-            }
-
-            OnChange?.Invoke(_selectedNodes, value, _displayText);
         }
 
         /// <summary>

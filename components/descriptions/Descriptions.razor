@@ -5,9 +5,7 @@
     @ChildContent
 </CascadingValue>
 
-<div class="@ClassMapper.Class" style="@Style" id="@Id">
-
-
+<div @ref="@_divRef" class="@ClassMapper.Class" style="@Style" id="@Id">
     @if (Title.Value != null)
     {
 
@@ -22,7 +20,6 @@
             }
         </div>
     }
-
     <div class="ant-descriptions-view">
         <table>
             <tbody>
@@ -75,7 +72,6 @@
                         </tr>
                     }
                 }
-
                 else if (Layout == DescriptionsLayout.Vertical)
                 {
                     if (Bordered == false)

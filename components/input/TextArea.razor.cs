@@ -73,7 +73,7 @@ namespace AntDesign
         }
 
         [Parameter]
-        public EventCallback<object> OnResize { get; set; }
+        public EventCallback<OnResizeEventArgs> OnResize { get; set; }
 
         protected async override Task OnFirstAfterRenderAsync()
         {
@@ -87,13 +87,7 @@ namespace AntDesign
 
         protected override async void OnInputAsync(ChangeEventArgs args)
         {
-            // do not call base method to avoid lost focus
             base.OnInputAsync(args);
-
-            //if (OnChange.HasDelegate)
-            //{
-            //    await OnChange.InvokeAsync(CurrentValueAsString);
-            //}
 
             if (AutoSize)
             {
@@ -112,15 +106,22 @@ namespace AntDesign
             // do not use %mod in case _rowheight is not an integer
             uint rows = (uint)(element.scrollHeight / _rowHeight);
             rows = Math.Max((uint)MinRows, rows);
+
+            int height = 0;
             if (rows > MaxRows)
             {
                 rows = MaxRows;
-                Style = $"height: {rows * _rowHeight + _offsetHeight}px;";
+
+                height = (int)(rows * _rowHeight + _offsetHeight);
+                Style = $"height: {height}px;";
             }
             else
             {
-                Style = $"height: {rows * _rowHeight + _offsetHeight}px;overflow-y: hidden;";
+                height = (int)(rows * _rowHeight + _offsetHeight);
+                Style = $"height: {height}px;overflow-y: hidden;";
             }
+
+            await OnResize.InvokeAsync(new OnResizeEventArgs { Width = element.scrollWidth, Height = height });
         }
 
         private async Task CalculateRowHeightAsync()
@@ -151,6 +152,11 @@ namespace AntDesign
             Value = str;
             StateHasChanged();
             await ChangeSizeAsync();
+        }
+
+        protected override string GetClearIconCls()
+        {
+            return $"{PrefixCls}-textarea-clear-icon";
         }
     }
 }

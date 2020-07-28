@@ -2,164 +2,42 @@
 
 <div id="react-content">
     <header id="header" class="clearfix">
-        <div class="ant-row" style="flex-flow: nowrap; height: 64px;">
-            <div class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-lg-6 ant-col-xl-5 ant-col-xxl-4">
-                <h1>
-                    <a id="logo" href="/">
-                        <img alt="logo" src="https://raw.githubusercontent.com/ant-design-blazor/ant-design-blazor/master/logo.svg">Ant Design Blazor
-                    </a>
-                </h1>
-            </div>
-            <div class="ant-col menu-row ant-col-xs-0 ant-col-sm-0 ant-col-md-18 ant-col-lg-18 ant-col-xl-19 ant-col-xxl-20">
-                <div id="search-box" class="narrow-mode">
-                    <span role="img" aria-label="search" class="anticon anticon-search"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="search" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"></path></svg></span>
-                    <span class="algolia-autocomplete" style="position: relative; display: inline-block; direction: ltr;">
-                        <input placeholder="在 ant.design 中搜索" type="text" class="ant-input ds-input" value="" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-label="search input" aria-owns="algolia-autocomplete-listbox-0" dir="auto" style="position: relative; vertical-align: top;"><pre aria-hidden="true" style="position: absolute; visibility: hidden; white-space: pre; font-family: -apple-system, BlinkMacSystemFont, &quot;segoe ui&quot;, Roboto, &quot;helvetica neue&quot;, Arial, &quot;noto sans&quot;, sans-serif, &quot;apple color emoji&quot;, &quot;segoe ui emoji&quot;, &quot;segoe ui symbol&quot;, &quot;noto color emoji&quot;; font-size: 14px; font-style: normal; font-variant: tabular-nums; font-weight: 400; word-spacing: 0px; letter-spacing: normal; text-indent: 0px; text-rendering: auto; text-transform: none;"></pre>
-                        <span class="ds-dropdown-menu" role="listbox" id="algolia-autocomplete-listbox-0" style="position: absolute; top: 100%; z-index: 100; display: none; left: 0px; right: auto;">
-                            <div class="ds-dataset-1"></div>
-                        </span>
-                    </span>
-                </div>
-
-                @*<Menu Mode="MenuMode.Horizontal" Id="nav" Class="menu-site">
-                    @foreach (var item in MenuItems)
-                    {
-                        <MenuItem Class="ant-menu-item-only-child" Key="@item.Url" OnClicked="async _=> await ChangeMenuItem(item.Url)">
-                            <MenuLink href="@($"{CurrentLanguage}/{item.Url}")" Match="NavLinkMatch.Prefix">
-                                <span>@item.Title</span>
-                            </MenuLink>
-                        </MenuItem>
-                    }
-                </Menu>
-
-                <div class="ant-select version ant-select-sm ant-select-single ant-select-show-arrow">
-                        <div class="ant-select-selector">
-                            <span class="ant-select-selection-search"><input autocomplete="off" class="ant-select-selection-search-input" role="combobox" aria-haspopup="listbox" aria-owns="rc_select_0_list" aria-autocomplete="list" aria-controls="rc_select_0_list" aria-activedescendant="rc_select_0_list_0" readonly="" value="" style="opacity: 0;" id="rc_select_0"></span><span class="ant-select-selection-item">4.2.0</span>
-                        </div>
-                        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">
-                            <span role="img" aria-label="down" class="anticon anticon-down">
-                                <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
-                            </span>
-                        </span>
-                    </div>*@
-                @if (CurrentLanguage != "en-US")
-                {
-                    <Button Class="header-button" Size="small" OnClick="@(_ => ChangeLanguage("en-US"))">English</Button>
-                }
-                else
-                {
-                    <Button Class="header-button" Size="small" OnClick="@(_ => ChangeLanguage("zh-CN"))">简体中文</Button>
-                }
-                @*<button type="button" class="ant-btn header-button header-lang-button ant-btn-sm">English</button>*@
-                @*<button type="button" class="ant-btn header-button header-direction-button ant-btn-sm"><span>RTL</span></button>
-                    <button type="button" class="ant-btn header-button ant-dropdown-trigger ant-btn-sm" ant-click-animating-without-extra-node="false">
-                        更多
-                        <span role="img" aria-label="down" class="anticon anticon-down" style="font-size: 9px; margin: -1px 0px 0px 2px; vertical-align: middle;">
-                            <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="down" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
-                        </span>
-                    </button>*@
-                <GithubButton></GithubButton>
-            </div>
-        </div>
+        <Row Style="flex-flow: nowrap; height: 64px;">
+            <Col Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
+                <h1><a id="logo" href="/">
+                    <img alt="logo" src="/docs/assets/logo.svg">Ant Design Blazor
+                </a></h1>
+            </Col>
+            <Col Class="menu-row" Xs="0" Sm="0" Md="18" Lg="18" Xl="19" Xxl="20">
+                <HeaderMenu />
+            </Col>
+        </Row>
     </header>
     <div class="main-wrapper">
-        <div class="ant-row">
-            <div class="ant-col main-menu ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-lg-6 ant-col-xl-5 ant-col-xxl-4">
-                <div>
-                    <Affix>
-                        <section class="main-menu-inner">
-                            @*<NavMenu MenuItems="SiderMenuItems" IsCollapsed="_isCollapsed" />*@
-                            <NavMenu></NavMenu>
-                        </section>
-                    </Affix>
-                </div>
-            </div>
-            <div class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-18 ant-col-lg-18 ant-col-xl-19 ant-col-xxl-20">
-                <MainContent>@Body</MainContent>
-                <footer class="rc-footer rc-footer-dark">
-                    <section class="rc-footer-container">
-                        <section class="rc-footer-columns">
-                            <div class="rc-footer-column">
-                                <h2>相关资源</h2>
-                                <div class="rc-footer-item">
-                                    <a href="https://ant.design" target="_blank">Ant Design</a>
-                                </div>
-                                <div class="rc-footer-item">
-                                    <a href="https://ng.ant.design" target="_blank">NG-ZORRO</a>
-                                    <span class="rc-footer-item-separator">-</span>
-                                    <span class="rc-footer-item-description">Ant Design of Angular</span>
-                                </div>
-                                <div class="rc-footer-item">
-                                    <a href="https://vue.ant.design" target="_blank">Ant Design Vue</a>
-                                </div>
-                                <div class="rc-footer-item">
-                                    <a href="http://blazor.sdgxgz.com/" target="_blank">Bootstrap Blazor</a>
-                                    <span class="rc-footer-item-separator">-</span>
-                                    <span class="rc-footer-item-description">Bootstrap of Blazor</span>
-                                </div>
-                                <div class="rc-footer-item">
-                                    <a href="https://ant-design-blazor.gitee.io/">国内镜像站点 🇨🇳</a>
-                                </div>
-                            </div>
-                            <div class="rc-footer-column">
-                                <h2>社区</h2>
-                                <div class="rc-footer-item">
-                                    <a href="https://github.com/websemantics/awesome-ant-design" target="_blank">
-                                        <span class="rc-footer-item-icon">
-                                            <span role="img" aria-label="ant-design" class="anticon anticon-ant-design">
-                                                <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="ant-design" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-                                                    <path d="M716.3 313.8c19-18.9 19-49.7 0-68.6l-69.9-69.9.1.1c-18.5-18.5-50.3-50.3-95.3-95.2-21.2-20.7-55.5-20.5-76.5.5L80.9 474.2a53.84 53.84 0 000 76.4L474.6 944a54.14 54.14 0 0076.5 0l165.1-165c19-18.9 19-49.7 0-68.6a48.7 48.7 0 00-68.7 0l-125 125.2c-5.2 5.2-13.3 5.2-18.5 0L189.5 521.4c-5.2-5.2-5.2-13.3 0-18.5l314.4-314.2c.4-.4.9-.7 1.3-1.1 5.2-4.1 12.4-3.7 17.2 1.1l125.2 125.1c19 19 49.8 19 68.7 0zM408.6 514.4a106.3 106.2 0 10212.6 0 106.3 106.2 0 10-212.6 0zm536.2-38.6L821.9 353.5c-19-18.9-49.8-18.9-68.7.1a48.4 48.4 0 000 68.6l83 82.9c5.2 5.2 5.2 13.3 0 18.5l-81.8 81.7a48.4 48.4 0 000 68.6 48.7 48.7 0 0068.7 0l121.8-121.7a53.93 53.93 0 00-.1-76.4z"></path>
-                                                </svg>
-                                            </span>
-                                        </span>
-                                        Awesome Ant Design
-                                    </a>
-                                </div>
-                                <div class="rc-footer-item">
-                                    <a href="https://github.com/AdrienTorris/awesome-blazor" target="_blank">
-                                        <span class="rc-footer-item-icon">
-                                            <span role="img" aria-label="ant-design" class="anticon">
-                                                <svg viewBox="0 0 1133 1024" width="1em" height="1em" fill="currentColor">
-                                                    <path d="M1016.452929 325.008051a563.029686 563.029686 0 0 1-552.102137 474.312222 408.956599 408.956599 0 0 1-80.701003-4.895699 247.31566 247.31566 0 0 1-205.677843-233.140565 240.162284 240.162284 0 0 1 480.256301-3.388954c1.009372 39.804368-16.237724 74.72279-51.682775 75.727285-37.863643 0-55.617863-27.014112-55.617864-63.429525v-101.181016a61.971544 61.971544 0 0 0-61.493676-62.025182H404.612545a147.641388 147.641388 0 1 0 109.056069 246.028345l2.969601-4.422708 2.964726 4.905451a104.443189 104.443189 0 0 0 89.063675 42.413131 117.721064 117.721064 0 0 0 109.056068-123.050744 320.200125 320.200125 0 0 0-8.7869-78.209268A299.651845 299.651845 0 0 0 116.483145 559.543208a303.406514 303.406514 0 0 0 295.711881 299.651845s22.215938 2.018744 47.260068 1.443353a639.542039 639.542039 0 0 0 342.967072-102.322045c1.453106-1.009372 2.906211 1.009372 1.940725 2.486859a503.413344 503.413344 0 0 1-392.158113 160.363377A353.875117 353.875117 0 0 1 52.029619 558.075474a366.216763 366.216763 0 0 1 147.105007-293.288413A358.702549 358.702549 0 0 1 410.746797 194.930713h113.839614a320.302525 320.302525 0 0 0 236.290586-104.321285 4.422708 4.422708 0 0 1 2.403963-1.37021 4.515355 4.515355 0 0 1 4.832308 2.106515 4.57387 4.57387 0 0 1 0.629029 2.71604 321.107097 321.107097 0 0 1-49.673783 143.642909 4.354441 4.354441 0 0 0-0.536382 2.462478 4.442212 4.442212 0 0 0 2.930593 3.827812 4.412955 4.412955 0 0 0 2.506363 0.131657 344.210502 344.210502 0 0 0 239.313826-197.3298 6.29029 6.29029 0 0 1 2.213792-2.130896 6.056232 6.056232 0 0 1 5.948956 0 6.212271 6.212271 0 0 1 2.208916 2.130896 436.224273 436.224273 0 0 1 42.793475 278.211222zM411.902454 467.748865a88.551675 88.551675 0 1 0 88.537046 88.537046V473.629554a6.382937 6.382937 0 0 0-6.061108-6.061108l-82.475938 0.180419z" p-id="3785"></path>
-                                                </svg>
-                                            </span>
-                                        </span>
-                                        Awesome Blazor
-                                    </a>
-                                </div>
-                                <div class="rc-footer-item">
-                                    <a href="https://dotnet9.com/" target="_blank">
-                                        <span class="rc-footer-item-icon">
-                                            <span role="img" aria-label="dotnet9" class="anticon">
-                                                <svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor">
-                                                    <path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path>
-                                                </svg>
-                                            </span>
-                                        </span>
-                                        Dotnet9
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="rc-footer-column">
-                                <h2>帮助</h2>
-                            </div>
-                            <div class="rc-footer-column">
-                                <h2>
-                                    @*<span class="rc-footer-column-icon">
-                                            <img src="https://gw.alipayobjects.com/zos/rmsportal/nBVXkrFdWHxbZlmMbsaH.svg" alt="Ant XTech">
-                                        </span>*@
-                                    更多产品
-                                </h2>
-                            </div>
-                        </section>
+        <Row>
+            <Col Class="main-menu" Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
+            <div>
+                <Affix>
+                    <section class="main-menu-inner">
+                        <NavMenu IsCollapsed="_isCollapsed" />
                     </section>
-                    <section class="rc-footer-bottom">
-                        <div class="rc-footer-bottom-container">
-                            Made with <span style="color: rgb(255, 255, 255);">❤</span> by <a target="_blank" rel="noopener noreferrer" href="https://github.com/ant-design-blazor">ant-design-blazor team</a>
-                        </div>
-                    </section>
-                </footer>
+                </Affix>
             </div>
-        </div>
+            </Col>
+            <Col Xs="24" Sm="24" Md="18" Lg="18" Xl="19" Xxl="20">
+                <CascadingValue Value="this">
+                    @Body
+                    @*<div class="fixed-widgets">
+            <span class="ant-avatar fixed-widgets-avatar ant-dropdown-trigger ant-avatar-circle ant-avatar-icon" style="width: 44px; height: 44px; line-height: 44px; font-size: 22px;">
+                <span role="img" class="anticon">
+                    <svg width="21" height="21" viewBox="0 0 21 21" fill="currentColor"><g fill-rule="evenodd"><g fill-rule="nonzero"><path d="M7.02 3.635l12.518 12.518a1.863 1.863 0 010 2.635l-1.317 1.318a1.863 1.863 0 01-2.635 0L3.068 7.588A2.795 2.795 0 117.02 3.635zm2.09 14.428a.932.932 0 110 1.864.932.932 0 010-1.864zm-.043-9.747L7.75 9.635l9.154 9.153 1.318-1.317-9.154-9.155zM3.52 12.473c.514 0 .931.417.931.931v.932h.932a.932.932 0 110 1.864h-.932v.931a.932.932 0 01-1.863 0l-.001-.931h-.93a.932.932 0 010-1.864h.93v-.932c0-.514.418-.931.933-.931zm15.374-3.727a1.398 1.398 0 110 2.795 1.398 1.398 0 010-2.795zM4.385 4.953a.932.932 0 000 1.317l2.046 2.047L7.75 7 5.703 4.953a.932.932 0 00-1.318 0zM14.701.36a.932.932 0 01.931.932v.931h.932a.932.932 0 010 1.864h-.933l.001.932a.932.932 0 11-1.863 0l-.001-.932h-.93a.932.932 0 110-1.864h.93v-.931a.932.932 0 01.933-.932z"></path></g></g></svg>
+                </span>
+            </span>
+        </div>*@
+                    <PrevNextNav />
+                </CascadingValue>
+                <MainFooter/>
+            </Col>
+        </Row>
     </div>
 </div>

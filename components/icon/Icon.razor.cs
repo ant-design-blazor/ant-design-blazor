@@ -56,6 +56,17 @@ namespace AntDesign
 
         protected string _svgImg;
 
+        protected string IconStyle => Rotate == 0 ? "" : $"transform: rotate({Rotate}deg);";
+
+        protected override void Dispose(bool disposing)
+        {
+            if (this is Icon icon)
+            {
+                Button?.Icons.Remove(icon);
+            }
+            base.Dispose(disposing);
+        }
+
         protected override async Task OnInitializedAsync()
         {
             if (Type == "loading")
@@ -70,7 +81,8 @@ namespace AntDesign
                 Button?.Icons.Add(icon);
             }
 
-            ClassMapper.Add("anticon anticon-sync");
+            ClassMapper.Add($"anticon anticon-{Type}")
+                .If("anticon-spin", () => Spin);
 
             await base.OnInitializedAsync();
         }
@@ -91,12 +103,12 @@ namespace AntDesign
             if (!string.IsNullOrEmpty(IconFont))
             {
                 var svg = $"<svg><use xlink:href=#{IconFont} /></svg>";
-                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate, Spin);
+                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill);
             }
             else
             {
                 var svg = await IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
-                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate, Spin);
+                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill);
             }
 
             StateHasChanged();

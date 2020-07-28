@@ -82,8 +82,9 @@ namespace AntDesign.Docs.Build.CLI.Command
                         SubTitle = docData.Meta.TryGetValue("subtitle", out string subtitle) ? subtitle : null,
                         Type = docData.Meta["type"],
                         Desc = docData.desc,
-                        ApiDoc = docData.apiDoc,
+                        ApiDoc = docData.apiDoc.Replace("<h2>API</h2>", $"<h2 id=\"API\"><span>API</span><a href=\"{language}/components/{docData.Meta["title"].ToLower()}#API\" class=\"anchor\">#</a></h2>"),
                         Cols = docData.Meta.TryGetValue("cols", out var cols) ? int.Parse(cols) : (int?)null,
+                        Cover = docData.Meta.TryGetValue("cover", out var cover) ? cover : null,
                     });
                 }
 
@@ -120,6 +121,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                             Name = descriptionFile?.Name.Replace(".md", ""),
                             Style = descriptionContent.Style,
                             Debug = descriptionContent.Meta.Debug,
+                            Docs = descriptionContent.Meta.Docs,
                             Type = demoType
                         });
                     }
@@ -171,7 +173,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             });
 
-            string demoFilePath = Path.Combine(configFileDirectory, $"demos.json");
+            string demoFilePath = Path.Combine(configFileDirectory, $"demoTypes.json");
             if (File.Exists(demoFilePath))
             {
                 File.Delete(demoFilePath);

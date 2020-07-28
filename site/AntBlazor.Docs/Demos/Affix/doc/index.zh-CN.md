@@ -3,6 +3,7 @@ category: Components
 type: 导航
 title: Affix
 subtitle: 固钉
+cover: https://gw.alipayobjects.com/zos/alicdn/tX6-md4H6/Affix.svg
 ---
 
 将页面元素钉在可视范围。

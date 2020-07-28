@@ -66,10 +66,16 @@ namespace AntDesign
                 if (_activeKey != value)
                 {
                     _activeKey = value;
-                    ActivatePane(_panes.Single(p => p.Key == _activeKey));
+                    if (_panes.Count == 0) return;
+                    TabPane tabPane = _panes.Find(p => p.Key == _activeKey);
+                    if (tabPane == null) return;
+                    ActivatePane(tabPane);
                 }
             }
         }
+
+        [Parameter]
+        public EventCallback<string> ActiveKeyChanged { get; set; }
 
         /// <summary>
         /// Whether to change tabs with animation. Only works while <see cref="TabPosition"/> = <see cref="TabPosition.Top"/> or <see cref="TabPosition.Bottom"/>
@@ -323,12 +329,20 @@ namespace AntDesign
                 }
                 tabPane.IsActive = true;
                 _activePane = tabPane;
-                ActiveKey = _activePane.Key;
+                if (ActiveKey != _activePane.Key)
+                {
+                    ActiveKey = _activePane.Key;
+                    if (ActiveKeyChanged.HasDelegate)
+                    {
+                        ActiveKeyChanged.InvokeAsync(_activePane.Key);
+                    }
+                }
+
                 StateHasChanged();
             }
         }
 
-        protected async override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
 

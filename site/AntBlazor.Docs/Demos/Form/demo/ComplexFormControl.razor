@@ -1,0 +1,77 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using System.Text.Json;
+
+<Form Model="@model"
+      LabelCol="new ColLayoutParam { Span = 8 }"
+      WrapperCol="new ColLayoutParam { Span = 16 }"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed">
+    <FormItem Label="Username">
+        <Input @bind-Value="context.Username" Style="width: 160px" Placeholder="Please input" />
+        <Tooltip Title=@("Useful information")>
+            <a href="#API" Style="margin: 0 8px" }>
+                Need Help?
+            </a>
+        </Tooltip>
+    </FormItem>
+    <FormItem label="Address">
+        <InputGroup Compact>
+            <FormItem NoStyle>
+                <Input @bind-Value="context.Address.Province" Placeholder="Select is not yet" />
+            </FormItem>
+
+            <FormItem NoStyle>
+                <Input @bind-Value="context.Address.Street" Style="width: 50%" Placeholder="Input street" />
+            </FormItem>
+        </InputGroup>
+    </FormItem>
+     <FormItem Label="BirthDate" style="margin-bottom: 0">
+        <FormItem Style="display: inline-block; width: calc(50% - 10px)">
+          <Input @bind-Value="context.Year" Placeholder="Input birth year" />
+        </FormItem> 
+         <FormItem Style="display: inline-block; width: calc(50% - 10px); margin: 0 8px">
+          <Input @bind-Value="context.Month" Placeholder="Input birth month" />
+        </FormItem>
+      </FormItem>
+    <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
+        <Button HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+</Form>
+
+@code
+{
+    public class Address
+    {
+        [Required]
+        public string Province { get; set; }
+        [Required]
+        public string Street { get; set; }
+    }
+
+    public class Model
+    {
+        [Required]
+        public string Username { get; set; }
+        [ValidateComplexType]
+        public Address Address { get; set; } = new Address();
+        [Required]
+        public string Year { get; set; }
+        [Required]
+        public string Month { get; set; }
+    }
+
+    private Model model = new Model();
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+
+}

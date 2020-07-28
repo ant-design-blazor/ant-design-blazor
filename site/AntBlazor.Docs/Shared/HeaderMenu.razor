@@ -1,0 +1,32 @@
+﻿
+<div id="search-box" class="">
+    <Icon Type="search" />
+    <span class="algolia-autocomplete" style="position: relative; display: inline-block; direction: ltr;">
+        <input placeholder="@(LanguageService.Resources["DocSearch"])" type="text" class="ant-input ds-input" value="" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-label="search input" aria-owns="algolia-autocomplete-listbox-0" dir="auto" style="max-width: 210px;
+        min-width: 210px;
+        position: relative;
+        vertical-align: top;
+    ">
+    </span>
+</div>
+<Menu Mode="MenuMode.Horizontal" Id="nav" Class="menu-site">
+    @foreach (var item in _menuItems)
+    {
+        <MenuItem Class="ant-menu-item-only-child" Key="@item.Url" RouterLink="@($"{CurrentLanguage}/{item.Url}")" RouterMatch="NavLinkMatch.Prefix">
+            <span>@item.Title</span>
+        </MenuItem>
+}
+</Menu>
+
+@if (CurrentLanguage != "en-US")
+{
+<Button Class="header-button header-lang-button" Size="small" OnClick="@(_ => ChangeLanguage("en-US"))">English</Button>
+}
+else
+{
+<Button Class="header-button header-lang-button" Size="small" OnClick="@(_ => ChangeLanguage("zh-CN"))">简体中文</Button>
+
+}
+
+<GithubButton />
+

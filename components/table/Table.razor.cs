@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -17,9 +18,9 @@ namespace AntDesign
             get => _dataSource;
             set
             {
-                _total = value?.Count() ?? 0;
+                _dataSourceCount = value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
-                StateHasChanged();
+                Reload();
             }
         }
 
@@ -27,10 +28,7 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
-        public IEnumerable<TItem> SelectedRows { get; set; } = Array.Empty<TItem>();
-
-        [Parameter]
-        public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
+        public EventCallback<QueryModel<TItem>> OnChange { get; set; }
 
         [Parameter]
         public bool Loading { get; set; }
@@ -58,33 +56,70 @@ namespace AntDesign
 
         public ColumnContext ColumnContext { get; set; } = new ColumnContext();
 
+        private IEnumerable<TItem> _showItems;
+
         private IEnumerable<TItem> _dataSource;
 
-        private ISelectionColumn _headerSelection;
+        private bool ServerSide => _total > _dataSourceCount;
 
-        ISelectionColumn ITable.HeaderSelection
+        public void ReloadData()
         {
-            get => _headerSelection;
-            set => _headerSelection = value;
-        }
+            PageIndex = 1;
 
-        void ITable.SelectionChanged(int[] checkedIndex)
-        {
-            if (SelectedRowsChanged.HasDelegate)
-            {
-                var list = new List<TItem>();
-                foreach (var index in checkedIndex)
-                {
-                    list.Add(_dataSource.ElementAt(index));
-                }
+            FlushCache();
 
-                SelectedRowsChanged.InvokeAsync(list);
-            }
+            this.Reload();
         }
 
         void ITable.Refresh()
         {
             StateHasChanged();
+        }
+
+        void ITable.ReloadAndInvokeChange()
+        {
+            ReloadAndInvokeChange();
+        }
+
+        private void ReloadAndInvokeChange()
+        {
+            var queryModel = this.Reload();
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(queryModel);
+            }
+        }
+
+        private QueryModel<TItem> Reload()
+        {
+            var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
+
+            if (ServerSide)
+            {
+                _showItems = _dataSource;
+            }
+            else
+            {
+                var query = _dataSource.AsQueryable();
+
+                foreach (var col in ColumnContext.Columns)
+                {
+                    if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
+                    {
+                        query = fieldColumn.SortModel.Sort(query);
+                        queryModel.AddSortModel(fieldColumn.SortModel);
+                    }
+                }
+
+                query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
+                queryModel.SetQueryableLambda(query);
+
+                _showItems = query;
+            }
+
+            StateHasChanged();
+
+            return queryModel;
         }
 
         private void SetClass()
@@ -107,40 +142,21 @@ namespace AntDesign
             base.OnInitialized();
 
             SetClass();
-            SetPaginationClass();
+
+            InitializePagination();
+
+            FlushCache();
+
+            ReloadAndInvokeChange();
         }
 
-        private void ChangeSelection(int[] indexes)
+        protected override void OnAfterRender(bool firstRender)
         {
-            if(this._headerSelection == null)
-            {
-                return;
-            }
-            if (indexes == null || !indexes.Any())
-            {
-                this._headerSelection.RowSelections.ForEach(x => x.Check(false));
-                this._headerSelection.Check(false);
-            }
-            else
-            {
-                this._headerSelection.RowSelections.Where(x => !x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(false));
-                this._headerSelection.RowSelections.Where(x => x.RowIndex.IsIn(indexes)).ForEach(x => x.Check(true));
-                this._headerSelection.Check(true);
-            }
-        }
+            base.OnAfterRender(firstRender);
 
-        public void SetSelection(string[] keys)
-        {
-            if (keys == null || !keys.Any())
+            if (!firstRender)
             {
-                this._headerSelection.RowSelections.ForEach(x => x.Check(false));
-                this._headerSelection.Check(false);
-            }
-            else
-            {
-                this._headerSelection.RowSelections.Where(x => !x.Key.IsIn(keys)).ForEach(x => x.Check(false));
-                this._headerSelection.RowSelections.Where(x => x.Key.IsIn(keys)).ForEach(x => x.Check(true));
-                this._headerSelection.Check(keys.Any());
+                this.FinishLoadPage();
             }
         }
     }

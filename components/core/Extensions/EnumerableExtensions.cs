@@ -37,5 +37,10 @@ namespace AntDesign
         {
             return array.Contains(source);
         }
+
+        public static bool IsIn<T>(this T source, IEnumerable<T> array)
+        {
+            return array.Contains(source);
+        }
     }
 }

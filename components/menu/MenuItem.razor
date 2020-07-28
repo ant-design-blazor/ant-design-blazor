@@ -3,6 +3,13 @@
 
 <CascadingValue Value="this">
     <li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key">
-        @ChildContent
+        @if (RouterLink == null)
+        {
+            @ChildContent
+        }
+        else
+        {
+            <MenuLink Href="@RouterLink" Match="@RouterMatch">@ChildContent</MenuLink>
+        }
     </li>
 </CascadingValue>

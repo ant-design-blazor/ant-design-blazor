@@ -1,0 +1,22 @@
+﻿@using AntDesign.Docs.Services
+@inherits ComponentBase
+
+@Component
+
+
+@inject DemoService demoService;
+
+@code {
+
+    [Parameter]
+    public DemoItem Demo { get; set; }
+
+    RenderFragment Component;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Component = demoService.GetShowCase(Demo.Type);
+    }
+
+}

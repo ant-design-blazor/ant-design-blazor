@@ -61,5 +61,14 @@ namespace AntDesign
 
             SetClass();
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (Context != null)
+            {
+                Context.Columns.Remove(this);
+            }
+            base.Dispose(disposing);
+        }
     }
 }

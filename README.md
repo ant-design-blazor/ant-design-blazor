@@ -8,7 +8,7 @@
 
 <div align="center">
 
-An enterprise-class UI components based on Ant Design and Blazor.
+A set of enterprise-class UI components based on Ant Design and Blazor.
 
 ![](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
 [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)

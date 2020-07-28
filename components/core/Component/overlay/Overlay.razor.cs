@@ -123,7 +123,7 @@ namespace AntDesign.Internal
             base.Dispose(disposing);
         }
 
-        public async Task Show(int? overlayLeft = null, int? overlayTop = null)
+        internal async Task Show(int? overlayLeft = null, int? overlayTop = null)
         {
             if (_isOverlayShow || Trigger.Disabled)
             {
@@ -164,7 +164,7 @@ namespace AntDesign.Internal
             StateHasChanged();
         }
 
-        public async Task Hide(bool force = false)
+        internal async Task Hide(bool force = false)
         {
             if (!_isOverlayShow)
             {
@@ -200,7 +200,7 @@ namespace AntDesign.Internal
             StateHasChanged();
         }
 
-        public void PreventHide(bool prevent)
+        internal void PreventHide(bool prevent)
         {
             _isPreventHide = prevent;
         }
@@ -210,12 +210,12 @@ namespace AntDesign.Internal
         /// overlay would not hide if any child is showing
         /// </summary>
         /// <param name="isChildOverlayShow"></param>
-        public void UpdateChildState(bool isChildOverlayShow)
+        internal void UpdateChildState(bool isChildOverlayShow)
         {
             _isChildOverlayShow = isChildOverlayShow;
         }
 
-        public bool IsPopup()
+        internal bool IsPopup()
         {
             return _isOverlayShow;
         }
@@ -225,7 +225,7 @@ namespace AntDesign.Internal
         /// when overlay is hiding(playing hide animation), IsPopup return false, IsHiding return true.
         /// </summary>
         /// <returns></returns>
-        public bool IsHiding()
+        internal bool IsHiding()
         {
             return _isOverlayHiding;
         }

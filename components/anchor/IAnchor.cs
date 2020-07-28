@@ -10,6 +10,9 @@ namespace AntDesign
     {
         //List<AnchorLink> Links { get; }
         void Add(AnchorLink anchorLink);
+        void Remove(AnchorLink anchorLink);
+
+        void Clear();
 
         List<AnchorLink> FlatChildren();
     }

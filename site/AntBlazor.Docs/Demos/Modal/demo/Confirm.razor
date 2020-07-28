@@ -13,12 +13,12 @@
     </SpaceItem>
 </Space>
 @code{
-    Func<MouseEventArgs, Task> onOk = (e) =>
+    Func<ModalClosingEventArgs, Task> onOk = (e) =>
     {
         Console.WriteLine("Ok");
         return Task.CompletedTask;
     };
-    Func<MouseEventArgs, Task> onCancel = (e) =>
+    Func<ModalClosingEventArgs, Task> onCancel = (e) =>
     {
         Console.WriteLine("Cancel");
         return Task.CompletedTask;

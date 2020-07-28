@@ -1,4 +1,5 @@
 ﻿@namespace AntDesign.Internal
+@typeparam TValue
 
 <div class="@(DatePicker.PrefixCls)-footer">
     <a class="@(DatePicker.PrefixCls)-today-btn" @onclick="e => DatePicker.ChangePickerValue(DateTime.Now)">
@@ -8,6 +9,6 @@
 
 @code {
     [CascadingParameter]
-    public DatePicker DatePicker { get; set; }
+    public DatePicker<TValue> DatePicker { get; set; }
 
 }

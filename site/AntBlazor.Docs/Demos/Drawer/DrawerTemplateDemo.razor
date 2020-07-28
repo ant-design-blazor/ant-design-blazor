@@ -1,0 +1,26 @@
+﻿@namespace AntDesign
+@inherits DrawerTemplate<string, string>
+
+<div>
+    value: <Input @bind-Value="value" />
+    <br/>
+    <br/>
+    <Button Type="primary" OnClick="OnClose">Confirm</Button>
+</div>
+
+@code{
+
+    string value;
+
+    protected override void OnInitialized()
+    {
+        value = this.Config;
+        base.OnInitialized();
+    }
+
+
+    async void OnClose()
+    {
+        await this.CloseAsync(value);
+    }
+}

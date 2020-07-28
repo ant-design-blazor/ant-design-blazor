@@ -52,6 +52,8 @@ namespace AntDesign
         [Parameter(CaptureUnmatchedValues = true)]
         public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
 
+        private TValue _value;
+
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
         /// </summary>
@@ -59,7 +61,19 @@ namespace AntDesign
         /// @bind-Value="model.PropertyName"
         /// </example>
         [Parameter]
-        public TValue Value { get; set; }
+        public TValue Value
+        {
+            get { return _value; }
+            set
+            {
+                var hasChanged = !EqualityComparer<TValue>.Default.Equals(value, Value);
+                if (hasChanged)
+                {
+                    _value = value;
+                    OnValueChange(value);
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets a callback that updates the bound value.
@@ -98,6 +112,7 @@ namespace AntDesign
                 if (hasChanged)
                 {
                     Value = value;
+
                     ValueChanged.InvokeAsync(value);
 
                     if (_isNotifyFieldChanged)
@@ -206,6 +221,10 @@ namespace AntDesign
 
                 return false;
             }
+        }
+
+        protected virtual void OnValueChange(TValue value)
+        {
         }
 
         protected override void OnInitialized()

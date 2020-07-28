@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AntDesign.Internal;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace AntDesign
 
         [CascadingParameter]
         public Sider Parent { get; set; }
+
+        [CascadingParameter(Name = "Overlay")]
+        private Overlay Overlay { get; set; }
 
         [Parameter]
         public MenuTheme Theme { get; set; } = MenuTheme.Light;
@@ -36,6 +40,9 @@ namespace AntDesign
 
         [Parameter]
         public bool InlineCollapsed { get; set; }
+
+        [Parameter]
+        public bool AutoCloseDropdown { get; set; } = true;
 
         [Parameter]
         public IEnumerable<string> DefaultSelectedKeys { get; set; } = new List<string>();
@@ -110,6 +117,11 @@ namespace AntDesign
             _selectedKeys = MenuItems.Where(x => x.IsSelected).Select(x => x.Key).ToArray();
             if (SelectedKeysChanged.HasDelegate)
                 SelectedKeysChanged.InvokeAsync(_selectedKeys);
+
+            if (Overlay != null && AutoCloseDropdown)
+            {
+                Overlay.Hide(true);
+            }
         }
 
         public void SelectSubmenu(SubMenu menu)
@@ -194,8 +206,6 @@ namespace AntDesign
                 {
                     item.Close();
                 }
-
-                HandleOpenChange(Array.Empty<string>());
             }
             else
             {

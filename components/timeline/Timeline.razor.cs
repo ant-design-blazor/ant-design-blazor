@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -11,31 +12,74 @@ namespace AntDesign
         /// 'left' | 'alternate' | 'right'
         /// </summary>
         [Parameter]
-        public string Mode { get; set; }
-
-        [Parameter]
-        public bool Reverse { get; set; }
-
-        [Parameter]
-        public RenderFragment Pending { get; set; }
-
-        protected virtual RenderFragment LoadingDot { get; }
-
-        private TimelineItem PendingItem
+        public string Mode
         {
-            get
+            get => _mode;
+            set
             {
-                if (this.Pending == null) return null;
-                var item = new TimelineItem(
-                    childContent: !_isPendingBoolean ? Pending : null,
-                    dot: PendingDot ?? LoadingDot,
-                    @class: "ant-timeline-item-pending"
-                );
-
-                item.SetClassMap();
-                return item;
+                if (_mode != value)
+                {
+                    _mode = value;
+                    _waitingItemUpdate = true;
+                }
             }
         }
+
+        [Parameter]
+        public bool Reverse
+        {
+            get => _reverse;
+            set
+            {
+                if (_reverse != value)
+                {
+                    _reverse = value;
+                    _waitingItemUpdate = true;
+                }
+            }
+        }
+
+        [Parameter]
+        public OneOf<string, RenderFragment> Pending
+        {
+            get => _pending;
+            set
+            {
+                if (_pending.Value != value.Value)
+                {
+                    _pending = value;
+
+                    _pendingItem = _pending.Value == null ? null : new TimelineItem()
+                    {
+                        Dot = PendingDot ?? _loadingDot,
+                        Class = "ant-timeline-item-pending"
+                    };
+
+                    _pending.Switch(str =>
+                    {
+                        _pendingItem.ChildContent = b =>
+                        {
+                            b.AddContent(0, str);
+                        };
+                    }, rf =>
+                    {
+                        _pendingItem.ChildContent = rf;
+                    });
+
+                    _pendingItem?.SetClassMap();
+                    _waitingItemUpdate = true;
+                }
+            }
+        }
+
+        private static readonly RenderFragment _loadingDot = builder =>
+        {
+            builder.OpenComponent<Icon>(0);
+            builder.AddAttribute(1, nameof(Icon.Type), "loading");
+            builder.CloseComponent();
+        };
+
+        private TimelineItem _pendingItem;
 
         [Parameter]
         public RenderFragment PendingDot { get; set; }
@@ -43,36 +87,38 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private IList<TimelineItem> _items = new List<TimelineItem>();
+        internal IList<TimelineItem> _items = new List<TimelineItem>();
 
-        protected IList<TimelineItem> DisplayItems
-        {
-            get
-            {
-                var pitems = PendingItem != null ? new[] { PendingItem } : Array.Empty<TimelineItem>();
-                if (Reverse)
-                {
-                    return pitems.Concat(UpdateChildren(_items.Reverse())).ToList();
-                }
-                else
-                {
-                    return UpdateChildren(_items).Concat(pitems).ToList();
-                }
-            }
-        }
+        protected IList<TimelineItem> _displayItems = new List<TimelineItem>();
 
         private readonly bool _isPendingBoolean = false;
+        private OneOf<string, RenderFragment> _pending;
+        private bool _reverse;
+        private bool _waitingItemUpdate = false;
+        private string _mode;
 
         protected override void OnInitialized()
         {
-            SetClassMap();
             base.OnInitialized();
+
+            SetClassMap();
         }
 
-        protected override void OnParametersSet()
+        private void SetItems()
         {
-            SetClassMap();
-            base.OnParametersSet();
+            var pitems = _pendingItem != null ? new[] { _pendingItem } : Array.Empty<TimelineItem>();
+            _displayItems = Reverse ? pitems.Concat(UpdateChildren(_items.Reverse())).ToList() : UpdateChildren(_items).Concat(pitems).ToList();
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+            if (firstRender || _waitingItemUpdate)
+            {
+                _waitingItemUpdate = false;
+                SetItems();
+                StateHasChanged();
+            }
         }
 
         protected void SetClassMap()
@@ -82,7 +128,7 @@ namespace AntDesign
                 .Add(prefix)
                 .If($"{prefix}-right", () => Mode == "right")
                 .If($"{prefix}-alternate", () => Mode == "alternate")
-                .If($"{prefix}-pending", () => Pending != null)
+                .If($"{prefix}-pending", () => Pending.Value != null)
                 .If($"{prefix}-reverse", () => Reverse);
         }
 

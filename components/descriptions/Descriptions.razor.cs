@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -35,6 +36,8 @@ namespace AntDesign
 
         #endregion Parameters
 
+        private ElementReference _divRef;
+
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -57,14 +60,14 @@ namespace AntDesign
             { "xs", 1}
         };
 
-        private static readonly Hashtable _descriptionsResponsiveMap = new Hashtable()
-        {
-            [nameof(BreakpointEnum.xs)] = "(max-width: 575px)",
-            [nameof(BreakpointEnum.sm)] = "(max-width: 576px)",
-            [nameof(BreakpointEnum.md)] = "(max-width: 768px)",
-            [nameof(BreakpointEnum.lg)] = "(max-width: 992px)",
-            [nameof(BreakpointEnum.xl)] = "(max-width: 1200px)",
-            [nameof(BreakpointEnum.xxl)] = "(max-width: 1600px)",
+        private static readonly List<(int PixelWidth, BreakpointEnum Breakpoint)> _descriptionsResponsiveMap = new List<(int, BreakpointEnum)>()
+        {          
+            (575,BreakpointEnum.xs),
+            (576,BreakpointEnum.sm),
+            (768,BreakpointEnum.md),
+            (992,BreakpointEnum.lg),
+            (1200,BreakpointEnum.xl),
+            (1600,BreakpointEnum.xxl)
         };
 
         private void SetClassMap()
@@ -78,6 +81,7 @@ namespace AntDesign
         protected override async Task OnInitializedAsync()
         {
             SetClassMap();
+
 
             if (Column.IsT1)
             {
@@ -150,23 +154,17 @@ namespace AntDesign
 
         private async Task SetRealColumn()
         {
+
             if (Column.IsT0)
             {
                 _realColumn = Column.AsT0 == 0 ? 3 : Column.AsT0;
             }
             else
             {
-                string breakPoint = null;
-
-                await typeof(BreakpointEnum).GetEnumNames().ForEachAsync(async bp =>
-                {
-                    if (await JsInvokeAsync<bool>(JSInteropConstants.matchMedia, _descriptionsResponsiveMap[bp]))
-                    {
-                        breakPoint = bp;
-                    }
-                });
-                if (string.IsNullOrWhiteSpace(breakPoint)) breakPoint = BreakpointEnum.xxl.ToString();
-                _realColumn = Column.AsT1.ContainsKey(breakPoint) ? Column.AsT1[breakPoint] : _defaultColumnMap[breakPoint];
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _divRef);
+                var breakpointTuple = _descriptionsResponsiveMap.FirstOrDefault(x => x.PixelWidth > element.clientWidth);
+                var bp = breakpointTuple == default ? BreakpointEnum.xxl : breakpointTuple.Breakpoint;
+                _realColumn = Column.AsT1.ContainsKey(bp.ToString()) ? Column.AsT1[bp.ToString()] : _defaultColumnMap[bp.ToString()];
             }
         }
     }

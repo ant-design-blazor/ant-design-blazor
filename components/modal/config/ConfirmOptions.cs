@@ -18,9 +18,9 @@ namespace AntDesign
 
         public OneOf<string, RenderFragment> Content { get; set; }
 
-        public Func<MouseEventArgs, Task> OnCancel { get; set; }
+        public Func<ModalClosingEventArgs, Task> OnCancel { get; set; }
 
-        public Func<MouseEventArgs, Task> OnOk { get; set; }
+        public Func<ModalClosingEventArgs, Task> OnOk { get; set; }
 
         public ButtonProps OkButtonProps { get; set; } = new ButtonProps(){ Type = ButtonType.Primary};
 

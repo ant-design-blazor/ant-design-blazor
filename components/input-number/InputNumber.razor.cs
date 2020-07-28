@@ -140,7 +140,7 @@ namespace AntDesign
         {
             base.OnInitialized();
             SetClass();
-            CurrentValue = DefaultValue;
+            CurrentValue = Value ?? DefaultValue;
         }
 
         private void SetClass()

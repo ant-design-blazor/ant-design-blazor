@@ -2,6 +2,7 @@
 type: Feedback
 category: Components
 title: Modal
+cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 ---
 
 Modal dialogs.
@@ -55,10 +56,11 @@ There are five ways to display the information based on the content's nature:
 - `ModalService.Error`
 - `ModalService.Warning`
 - `ModalService.Confirm`
+- `ModalService.CreateAsync`
 
 > Please confirm that the `<AntContainer />` component has been added to `App.Razor`.
 
-The items listed above are all functions, expecting a settings object as parameter. The properties of the object are follows:
+#### ConfirmOptions
 
 | CancelText        | Text  of the Cancel button with Modal.confirm                | string                         | Cancel  |
 | ----------------- | ------------------------------------------------------------ | ------------------------------ | ------- |
@@ -81,13 +83,13 @@ The items listed above are all functions, expecting a settings object as paramet
 
 All the `ModalService.Method`s will return a reference, and then we can update and close the modal dialog by the reference.
 
-```jsx
+``` c#
 ConfirmOptions config = new ConfirmOptions();
-ModalService.Info(config);
+var modelRef = await ModalService.Info(config);
 
-ModalService.Update(config);
+modelRef.UpdateConfig();
 
-ModalService.Destroy(config);
+ModalService.Destroy(modelRef);
 ```
 
 - `ModalService.DestroyAll`

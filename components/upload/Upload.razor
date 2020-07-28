@@ -1,87 +1,107 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
+    <span class="@Class @(ListType.Equals("picture-card")? "ant-upload-picture-card-wrapper" : "")" style="@Style">
+        <div class="ant-upload ant-upload-select ant-upload-select-@(ListType)">
+            <input type="file" webkitdirectory="@Directory" multiple="@(Multiple || Directory)" @ref="_file" @onchange="FileNameChanged" accept="@Accept" style="display: none;" id="@_fileId" />
+            <span class="ant-upload" @ref="_btn" data-fileid="@_fileId">
+                @ChildContent
+            </span>
+        </div>
 
-<div class="ant-upload ant-upload-select ant-upload-select-text">
-    <input type="file" @ref="_file" @onchange="FileNameChanged" accept="@Accept" style="display: none;" id="@_fileId" />
-    <span class="ant-upload" @ref="_btn" data-fileid="@_fileId">
-        @ChildContent
-    </span>
-</div>
-
-
-<div class="ant-upload-list ant-upload-list-text">
-
-    @foreach (var file in FileList)
-    {
-        var tips = string.Empty;
-        var stateClass = string.Empty;
-        switch (file.State)
+        @if (ShowUploadList)
         {
-            case UploadState.Uploading:
-                tips = "上传中";
-                break;
-            case UploadState.Fail:
-                tips = !string.IsNullOrWhiteSpace(file.Response) ? file.Response : "上传失败";
-                stateClass = "ant-upload-list-item-error";
-                break;
-            case UploadState.Success:
-                tips = file.FileName;
-                stateClass = "ant-upload-list-item-done";
-                break;
-        }
-        <Tooltip Title="tips" Style=" display: block;">
-            <div class="ant-upload-list-item  @stateClass  ant-upload-list-item-list-type-text">
-                <div class="ant-upload-list-item-info">
-                    <span>
-                        <div class="ant-upload-text-icon">
-                            @if (file.State == UploadState.Uploading)
-                            {
-                                <Icon Type="loading"></Icon>
-                            }
-                            else
-                            {
-                                <Icon Type="paper-clip"></Icon>
-                            }
+            <div class="ant-upload-list ant-upload-list-@ListType">
 
-                        </div>
-                        <span class="ant-upload-list-item-name ant-upload-list-item-name-icon-count-1">
-                            @if (file.State == UploadState.Uploading || file.State == UploadState.Fail)
-                            {
-                                @file.FileName
-                            }
-                            else
-                            {
-                                <a href="@file.Url">@file.FileName</a>
-                            }
-
-
-                        </span>
-                        <span class="ant-upload-list-item-card-actions">
-                            @if (file.State != UploadState.Uploading)
-                            {
-                                <Button OnClick="()=> {  FileList.Remove(file); StateHasChanged();  }"
-                                        Class="ant-btn ant-upload-list-item-card-actions-btn ant-btn-text ant-btn-sm ant-btn-icon-only">
-                                    <Icon Type="delete"></Icon>
-                                </Button>
-                            }
-
-
-                        </span>
-                    </span>
-
-                    @if (file.State == UploadState.Uploading)
+                @foreach (var file in FileList)
+                {
+                    var tips = string.Empty;
+                    var stateClass = string.Empty;
+                    switch (file.State)
                     {
-                        <div class="ant-upload-list-item-progress">
-                            <Progress Percent="file.Progress" StrokeWidth="2" Type="ProgressType.Line" ShowInfo="false"></Progress>
-                        </div>
+                        case UploadState.Uploading:
+                            tips = "上传中";
+                            break;
+                        case UploadState.Fail:
+                            tips = !string.IsNullOrWhiteSpace(file.Response) ? file.Response : "上传失败";
+                            stateClass = "ant-upload-list-item-error";
+                            break;
+                        case UploadState.Success:
+                            tips = file.FileName;
+                            stateClass = "ant-upload-list-item-done";
+                            break;
                     }
-                </div>
+                    <Tooltip Title="tips" Disabled="file.State != UploadState.Fail" Style=" display: block;">
+                        <div title="@tips" class="ant-upload-list-item  @stateClass  ant-upload-list-item-list-type-@ListType">
+                            <div class="ant-upload-list-item-info">
+                                <span>
+                                    <div class="@(ListType.Equals("text")? "ant-upload-text-icon":"") @(ListType.Equals("picture") && file.State == UploadState.Fail ? "ant-upload-list-item-thumbnail ant-upload-list-item-file":"")">
+                                        @if (file.State == UploadState.Uploading)
+                                        {
+                                            <Icon Type="loading"></Icon>
+                                        }
+                                        else
+                                        {
+                                            if (ListType.Equals("picture"))
+                                            {
+                                                if (file.State == UploadState.Success)
+                                                {
+                                                    <a class="ant-upload-list-item-thumbnail" href="@file.Url" target="_blank" rel="noopener noreferrer">
+                                                        <img src="@(file.ObjectURL??file.Url)" alt="@file.FileName" class="ant-upload-list-item-image" />
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <Icon Type="picture" Height="1em" Width="1em" Fill="currentColor"></Icon>
+                                                }
+
+                                            }
+                                            else if (ListType.Equals("text"))
+                                            {
+                                                <Icon Type="paper-clip"></Icon>
+                                            }
+                                        }
+                                    </div>
+                                    @if (ListType.Equals("text"))
+                                    {
+                                        <span class="ant-upload-list-item-name ant-upload-list-item-name-icon-count-1">
+                                            @if (file.State == UploadState.Uploading || file.State == UploadState.Fail)
+                                            {
+                                                @file.FileName
+                                            }
+                                            else
+                                            {
+                                                <a href="@file.Url">@file.FileName</a>
+                                            }
+                                        </span>
+                                    }
+                                    @if (ListType.Equals("picture"))
+                                    {
+                                        <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name ant-upload-list-item-name-icon-count-1" title="@file.FileName" href="@file.Url">@file.FileName</a>
+                                    }
+
+                                    <span class="ant-upload-list-item-card-actions @(ListType.Equals("picture")?"picture":"")">
+                                        @if (file.State != UploadState.Uploading)
+                                        {
+                                            <Button OnClick="()=> {  FileList.Remove(file); StateHasChanged();  }"
+                                                    Class="ant-btn ant-upload-list-item-card-actions-btn ant-btn-text ant-btn-sm ant-btn-icon-only">
+                                                <Icon Type="delete"></Icon>
+                                            </Button>
+                                        }
+                                    </span>
+                                </span>
+
+                                @if (file.State == UploadState.Uploading)
+                                {
+                                    <div class="ant-upload-list-item-progress">
+                                        <Progress Percent="file.Progress" StrokeWidth="2" Type="ProgressType.Line" ShowInfo="false"></Progress>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </Tooltip>
+                }
+
             </div>
-        </Tooltip>
-
-
-    }
-
-</div>
-
+        }
+    </span>
 

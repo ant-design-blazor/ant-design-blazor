@@ -2,10 +2,39 @@
 @inherits Input<string>
 <!--TODO: minheight, maxheight, onResize-->
 
-<textarea class="@ClassMapper.Class" style="@Style" @attributes="Attributes" id="@Id" placeholder="@Placeholder" value="@CurrentValueAsString"
-          @ref="Ref"
-          @oninput="OnInputAsync"
-          @onkeypress="OnPressEnterAsync" />
+@{
+    Dictionary<string, object> attributes =
+        new Dictionary<string, object>()
+        {
+            { "onchange", CallbackFactory.Create(this, OnChangeAsync) },
+            { "onblur", CallbackFactory.Create(this, OnBlur) },
+            { "oninput", CallbackFactory.Create(this, OnInputAsync) },
+            { "onkeypress", CallbackFactory.Create(this, OnPressEnterAsync) },
+            { "onfocus", CallbackFactory.Create(this, OnFocus) },
+            { "value", CurrentValueAsString },
+            { "placeholder", Placeholder },
+            { "id", Id },
+            { "style", Style },
+            { "class", ClassMapper.Class },
+                    };
+
+    if (Attributes != null)
+    {
+        Attributes.Keys.ForEach(key => { attributes[key] = Attributes[key]; });
+    }
+}
+
+@if (Suffix != null)
+{
+    <span class=@($"{PrefixCls}-affix-wrapper {PrefixCls}-affix-wrapper-textarea-with-clear-btn")>
+        <textarea @ref="Ref" @attributes="attributes" />
+        @Suffix
+    </span>
+}
+else
+{
+    <textarea @ref="Ref" @attributes="attributes" />
+}
 
 @if (AutoSize)
 {

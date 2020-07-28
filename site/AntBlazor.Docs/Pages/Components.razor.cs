@@ -3,11 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
+using AntDesign.Docs.Shared;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Docs.Pages
 {
-    public partial class Components
+    public partial class Components : ComponentBase
     {
         [Parameter]
         public string Name { get; set; }
@@ -21,7 +22,12 @@ namespace AntDesign.Docs.Pages
         [Inject]
         private NavigationManager NavigationManager { get; set; }
 
+        [CascadingParameter]
+        public MainLayout MainLayout { get; set; }
+
         private DemoComponent _demoComponent;
+
+        private bool _expanded;
 
         private string CurrentLanguage => LanguageService.CurrentCulture.Name;
 
@@ -32,6 +38,7 @@ namespace AntDesign.Docs.Pages
                 if (!string.IsNullOrEmpty(Name))
                 {
                     _demoComponent = await DemoService.GetComponentAsync(Name);
+                    await MainLayout.ChangePrevNextNav(Name);
                     await InvokeAsync(StateHasChanged);
                 }
             };
@@ -54,6 +61,7 @@ namespace AntDesign.Docs.Pages
             if (!string.IsNullOrEmpty(Name))
             {
                 _demoComponent = await DemoService.GetComponentAsync(Name);
+                await MainLayout.ChangePrevNextNav(Name);
             }
         }
     }

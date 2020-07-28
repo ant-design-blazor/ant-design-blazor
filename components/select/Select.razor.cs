@@ -670,6 +670,11 @@ namespace AntDesign
             await OnSelectOpenClick(null);
         }
 
+        public void RemoveOption(SelectOption selectOption)
+        {
+            SelectOptions.Remove(selectOption);
+        }
+
         public void AddOption(SelectOption selectOption)
         {
             if (selectOption.IsSearch)

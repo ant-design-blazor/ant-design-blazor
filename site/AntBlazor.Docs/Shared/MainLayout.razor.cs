@@ -5,20 +5,15 @@ using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace AntDesign.Docs.Shared
 {
-    public partial class MainLayout : IDisposable
+    public partial class MainLayout : LayoutComponentBase, IDisposable
     {
         private bool _isCollapsed = true;
 
         private string CurrentLanguage => LanguageService.CurrentCulture.Name;
-
-        private string _currentSubmenuUrl;
-
-        private DemoMenuItem[] MenuItems { get; set; } = { };
-
-        private DemoMenuItem[] SiderMenuItems { get; set; } = { };
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -29,11 +24,14 @@ namespace AntDesign.Docs.Shared
         [Inject]
         public DemoService DemoService { get; set; }
 
+        [Inject]
+        public IJSRuntime JsInterop { get; set; }
+
+        internal PrevNextNav PrevNextNav { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            //await GetCurrentMenuItems();
-            //StateHasChanged();
-
+            StateHasChanged();
             await DemoService.InitializeDemos();
 
             LanguageService.LanguageChanged += OnLanguageChanged;
@@ -44,39 +42,34 @@ namespace AntDesign.Docs.Shared
             };
         }
 
-        private async ValueTask GetCurrentMenuItems()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-            var originalUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
-
-            var shouldNavigate = this._currentSubmenuUrl == null && string.IsNullOrEmpty(originalUrl);
-
-            MenuItems = await DemoService.GetMenuAsync();
-            this._currentSubmenuUrl ??= string.IsNullOrEmpty(originalUrl) ? this.MenuItems[0].Url : originalUrl.Split('/')[0];
-            SiderMenuItems = MenuItems.FirstOrDefault(x => x.Url == this._currentSubmenuUrl)?.Children ?? Array.Empty<DemoMenuItem>();
-
-            if (shouldNavigate)
+            if (firstRender)
             {
-                NavigationManager.NavigateTo($"{CurrentLanguage}/{this._currentSubmenuUrl}");
+                await JsInterop.InvokeVoidAsync("window.AntDesign.DocSearch.init", CurrentLanguage);
             }
         }
 
-        private async ValueTask ChangeMenuItem(string url)
+        public async Task ChangePrevNextNav(string currentTitle)
         {
-            this._currentSubmenuUrl = url;
-            await GetCurrentMenuItems();
+            if (string.IsNullOrWhiteSpace(currentTitle))
+                return;
+
+            var currentSubmenuUrl = DemoService.GetCurrentSubMenuUrl();
+            var prevNext = await DemoService.GetPrevNextMenu(currentSubmenuUrl, currentTitle);
+            foreach (var item in prevNext)
+            {
+                if (item != null)
+                {
+                    item.Url = $"{CurrentLanguage}/{currentSubmenuUrl}/{item.Title.ToLowerInvariant()}";
+                }
+            }
+            PrevNextNav?.SetPrevNextNav(prevNext[0], prevNext[1]);
         }
 
-        private void ChangeLanguage(string language)
+        private async void OnLanguageChanged(object sender, CultureInfo culture)
         {
-            var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-            var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
-            NavigationManager.NavigateTo($"{language}/{newUrl}");
-        }
-
-        private async void OnLanguageChanged(object sender, CultureInfo args)
-        {
-            await GetCurrentMenuItems();
+            await JsInterop.InvokeVoidAsync("window.AntDesign.DocSearch.localeChange", culture.Name);
             await InvokeAsync(StateHasChanged);
         }
 

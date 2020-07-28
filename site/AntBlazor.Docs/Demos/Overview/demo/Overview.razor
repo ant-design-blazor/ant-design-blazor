@@ -1,0 +1,105 @@
+﻿@using AntDesign.Docs.Services
+
+
+<Divider />
+
+<AntDesign.Input TValue="string" Class="components-overview-search" Placeholder="@LanguageService.Resources["app.components.overview.search"]" OnInput="@(args => OnSearchEnter(args.Value?.ToString()))">
+    <Suffix>
+        <Icon Type="search" />
+    </Suffix>
+</AntDesign.Input>
+
+<Divider />
+
+@foreach (var menuGroup in menuItems)
+{
+    if (menuGroup.Order == -1)
+    {
+        continue;
+    }
+
+    <div class="components-overview">
+        <AntDesign.Title Level="2">
+            <Space Align="center">
+                <SpaceItem>@menuGroup.Title</SpaceItem>
+                <SpaceItem>
+                    <Tag Style="display: block;">@(menuGroup.Children?.Length ?? 0)</Tag>
+                </SpaceItem>
+            </Space>
+        </AntDesign.Title>
+
+        <Row>
+            @foreach (var item in menuGroup.Children)
+            {
+                <AntDesign.Col Xl="6" Lg="8" Sm="12" Xs="24" Style="padding:12px">
+                    <a href=@($"/{CurrentLanguage}/{item.Url}")>
+                        <Card Bordered Title="@($"{item.Title} {@item.SubTitle}")" Hoverable>
+                            <Body>
+                                <div class="components-overview-img">
+                                    <img src="@item.Cover" alt="@(item.Title)">
+                                </div>
+                            </Body>
+                        </Card>
+                    </a>
+                </AntDesign.Col>
+            }
+        </Row>
+    </div>
+}
+
+@inject ILanguageService LanguageService
+@inject DemoService demoService
+
+@code{
+
+    private string CurrentLanguage => LanguageService.CurrentCulture.Name;
+    DemoMenuItem[] menuItems = { };
+
+    protected override bool ShouldRender() => menuItems.Any();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var menu = await demoService.GetMenuAsync();
+        menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")?.Children ?? Array.Empty<DemoMenuItem>();
+
+        LanguageService.LanguageChanged += async (sender, args) =>
+        {
+            var menu = await demoService.GetMenuAsync();
+            menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")?.Children ?? Array.Empty<DemoMenuItem>();
+
+            await InvokeAsync(StateHasChanged);
+        };
+    }
+
+    private async Task OnSearchEnter(string value)
+    {
+        var menu = await demoService.GetMenuAsync();
+        menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")?.Children ?? Array.Empty<DemoMenuItem>();
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return;
+        }
+
+        IList<DemoMenuItem> result = new List<DemoMenuItem>();
+
+        foreach (var item in menuItems)
+        {
+            var lst = item.Children.Where(x => x.Title.Contains(value, StringComparison.OrdinalIgnoreCase)).ToArray();
+
+            if (lst.Any())
+            {
+                result.Add(new DemoMenuItem()
+                {
+                    Title = item.Title,
+                    SubTitle = item.SubTitle,
+                    Order = item.Order,
+                    Type = item.Type,
+                    Children = lst,
+                });
+            }
+        }
+
+        menuItems = result.ToArray();
+    }
+}

@@ -53,6 +53,13 @@ namespace AntDesign
         #endregion
 
         #region Events
+        protected override void Dispose(bool disposing)
+        {
+            SelectParent?.RemoveOption(this);
+            SelectOptGroupParent?.RemoveOption(this);
+            base.Dispose(disposing);
+        }
+
         protected override void OnInitialized()
         {
             SetClassMap();
