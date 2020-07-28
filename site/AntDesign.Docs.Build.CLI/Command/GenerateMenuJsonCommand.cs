@@ -83,23 +83,23 @@ namespace AntDesign.Docs.Build.CLI.Command
 
             Dictionary<string, int> sortMap = new Dictionary<string, int>()
             {
-                ["Overview"] = 0,
-                ["组件总览"] = 0,
-                ["General"] = 1,
-                ["通用"] = 1,
-                ["Layout"] = 2,
-                ["布局"] = 2,
-                ["Navigation"] = 3,
-                ["导航"] = 3,
-                ["Data Entry"] = 4,
-                ["数据录入"] = 4,
-                ["Data Display"] = 5,
-                ["数据展示"] = 5,
-                ["Feedback"] = 6,
-                ["反馈"] = 6,
-                ["Localization"] = 7,
-                ["Other"] = 8,
-                ["其他"] = 8
+                ["Overview"] = -1,
+                ["组件总览"] = -1,
+                ["General"] = 0,
+                ["通用"] = 0,
+                ["Layout"] = 1,
+                ["布局"] = 1,
+                ["Navigation"] = 2,
+                ["导航"] = 2,
+                ["Data Entry"] = 3,
+                ["数据录入"] = 3,
+                ["Data Display"] = 4,
+                ["数据展示"] = 4,
+                ["Feedback"] = 5,
+                ["反馈"] = 5,
+                ["Localization"] = 6,
+                ["Other"] = 7,
+                ["其他"] = 7
             };
 
             foreach (FileSystemInfo component in demoDirectoryInfo.GetFileSystemInfos())
@@ -120,10 +120,11 @@ namespace AntDesign.Docs.Build.CLI.Command
                     componentDic.Add(language, new DemoComponent()
                     {
                         Title = docData.Meta["title"],
-                        SubTitle = docData.Meta.TryGetValue("subtitle", out string subtitle) ? subtitle : null,
+                        SubTitle = docData.Meta.TryGetValue("subtitle", out var subtitle) ? subtitle : null,
                         Type = docData.Meta["type"],
                         Desc = docData.Desc,
                         ApiDoc = docData.ApiDoc,
+                        Cover = docData.Meta.TryGetValue("cover", out var cover) ? cover : null,
                     });
                 }
 
@@ -155,7 +156,8 @@ namespace AntDesign.Docs.Build.CLI.Command
                             Title = x.Value.Title,
                             SubTitle = x.Value.SubTitle,
                             Url = $"components/{x.Value.Title.ToLower()}",
-                            Type = "menuItem"
+                            Type = "menuItem",
+                            Cover = x.Value.Cover,
                         })
                         .OrderBy(x => x.Title, new MenuComparer())
                         .ToArray(),

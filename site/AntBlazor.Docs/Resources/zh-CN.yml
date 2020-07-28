@@ -1,4 +1,5 @@
-﻿DocSearch: 在Ant Design Blazor中搜索app.home.introduce: 一套基于 Ant Design 与 Blazor 的企业级组件库，创造高效愉悦的工作体验
+﻿DocSearch: 在Ant Design Blazor中搜索
+app.home.introduce: 一套基于 Ant Design 与 Blazor 的企业级组件库，创造高效愉悦的工作体验
 app.home.getting-started: 开始使用
 app.home.documentation: 组件文档
 app.home.recommend: 精彩推荐
@@ -13,3 +14,4 @@ app.footer.resources: 相关资源
 app.footer.community: 社区
 app.footer.help: 帮助
 app.footer.more-product: 更多产品
+app.components.overview.search: 搜索组件

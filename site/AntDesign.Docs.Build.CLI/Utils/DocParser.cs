@@ -205,5 +205,7 @@ namespace AntDesign.Docs.Build.CLI.Utils
         public Dictionary<string, string> Title { get; set; }
 
         public bool Debug { get; set; }
+
+        public bool? Docs { get; set; }
     }
 }

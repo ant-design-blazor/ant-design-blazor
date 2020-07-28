@@ -39,6 +39,8 @@ namespace AntDesign.Docs
 
         public int? Iframe { get; set; }
 
+        public bool? Docs { get; set; }
+
         public bool Debug { get; set; }
     }
 }

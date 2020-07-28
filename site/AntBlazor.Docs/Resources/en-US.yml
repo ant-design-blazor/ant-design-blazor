@@ -1,4 +1,5 @@
-﻿DocSearch: Search in Ant Design Blazorapp.home.introduce: A set of enterprise-class UI components based on Ant Design and Blazor. Create an efficient and enjoyable work experience.
+﻿DocSearch: Search in Ant Design Blazor
+app.home.introduce: A set of enterprise-class UI components based on Ant Design and Blazor. Create an efficient and enjoyable work experience.
 app.home.getting-started: Getting Started
 app.home.documentation: Documentation
 app.home.recommend: Recommend
@@ -13,3 +14,4 @@ app.footer.resources: Resources
 app.footer.community: Community
 app.footer.help: Help
 app.footer.more-product: More Products
+app.components.overview.search: Search in components

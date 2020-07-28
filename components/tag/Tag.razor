@@ -4,7 +4,7 @@
 @if (!_closed)
 {
  
-    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref" @onclick="ClickTag">
+    <span class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref" @onclick="ClickTag">
         @if (!string.IsNullOrEmpty(Icon))
         {
             <Icon Type="@Icon"></Icon>
@@ -15,6 +15,6 @@
             <Icon Type="close" TabIndex="-1" @onclick="CloseTag" />
         }
 
-    </div>
+    </span>
 
 }
