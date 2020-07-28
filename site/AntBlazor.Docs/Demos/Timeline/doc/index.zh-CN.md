@@ -3,6 +3,7 @@ category: Components
 type: 数据展示
 title: Timeline
 subtitle: 时间轴
+cover: https://gw.alipayobjects.com/zos/antfincdn/vJmo00mmgR/Timeline.svg
 ---
 
 垂直展示的时间流信息。

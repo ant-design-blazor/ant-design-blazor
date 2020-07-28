@@ -3,6 +3,7 @@ category: Components
 subtitle: 全局提示
 type: 反馈
 title: Message
+cover: https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg
 ---
 
 全局展示操作反馈信息。

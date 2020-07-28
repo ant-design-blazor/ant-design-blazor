@@ -16,6 +16,8 @@ namespace AntDesign.Docs
 
         public int? Cols { get; set; }
 
+        public string Cover { get; set; }
+
         public List<DemoItem> DemoList { get; set; }
     }
 
@@ -36,6 +38,8 @@ namespace AntDesign.Docs
         public string Style { get; set; }
 
         public int? Iframe { get; set; }
+
+        public bool? Docs { get; set; }
 
         public bool Debug { get; set; }
     }
