@@ -2,6 +2,7 @@
 category: Components
 type: Data Entry
 title: Mentions
+cover: https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg
 ---
 
 Mention component.

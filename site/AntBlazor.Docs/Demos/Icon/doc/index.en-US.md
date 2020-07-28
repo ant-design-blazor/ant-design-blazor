@@ -2,6 +2,7 @@
 category: Components
 type: General
 title: Icon
+cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 ---
 
 Semantic vector graphics. Before use icons。

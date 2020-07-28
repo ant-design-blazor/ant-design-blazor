@@ -83,6 +83,8 @@ namespace AntDesign.Docs.Build.CLI.Command
 
             Dictionary<string, int> sortMap = new Dictionary<string, int>()
             {
+                ["Overview"] = -1,
+                ["组件总览"] = -1,
                 ["General"] = 0,
                 ["通用"] = 0,
                 ["Layout"] = 1,
@@ -118,10 +120,11 @@ namespace AntDesign.Docs.Build.CLI.Command
                     componentDic.Add(language, new DemoComponent()
                     {
                         Title = docData.Meta["title"],
-                        SubTitle = docData.Meta.TryGetValue("subtitle", out string subtitle) ? subtitle : null,
+                        SubTitle = docData.Meta.TryGetValue("subtitle", out var subtitle) ? subtitle : null,
                         Type = docData.Meta["type"],
                         Desc = docData.Desc,
                         ApiDoc = docData.ApiDoc,
+                        Cover = docData.Meta.TryGetValue("cover", out var cover) ? cover : null,
                     });
                 }
 
@@ -153,7 +156,8 @@ namespace AntDesign.Docs.Build.CLI.Command
                             Title = x.Value.Title,
                             SubTitle = x.Value.SubTitle,
                             Url = $"components/{x.Value.Title.ToLower()}",
-                            Type = "menuItem"
+                            Type = "menuItem",
+                            Cover = x.Value.Cover,
                         })
                         .OrderBy(x => x.Title, new MenuComparer())
                         .ToArray(),

@@ -3,6 +3,7 @@ category: Components
 type: 数据录入
 title: Switch
 subtitle: 开关
+cover: https://gw.alipayobjects.com/zos/alicdn/zNdJQMhfm/Switch.svg
 ---
 
 开关选择器。
