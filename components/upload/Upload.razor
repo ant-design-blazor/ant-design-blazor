@@ -82,7 +82,7 @@
                                     <span class="ant-upload-list-item-card-actions @(ListType.Equals("picture")?"picture":"")">
                                         @if (file.State != UploadState.Uploading)
                                         {
-                                            <Button OnClick="()=> {  FileList.Remove(file); StateHasChanged();  }"
+                                            <Button OnClick="(async ()=> await RemoveFile(file))"
                                                     Class="ant-btn ant-upload-list-item-card-actions-btn ant-btn-text ant-btn-sm ant-btn-icon-only">
                                                 <Icon Type="delete"></Icon>
                                             </Button>
