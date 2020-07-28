@@ -2,6 +2,7 @@
 category: Components
 type: Feedback
 title: Message
+cover: https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg
 ---
 
 Display global messages as feedback in response to user operations.

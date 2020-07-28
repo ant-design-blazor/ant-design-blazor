@@ -3,23 +3,28 @@
 
 <section class="main-container main-container-component">
     <article>
+
         @if (_demoComponent != null)
         {
-            var demos = _demoComponent.DemoList.Where(x => !x.Debug).OrderBy(x => x.Order);
-            <div class="toc-affix">
-                <Affix OffsetTop="16">
-                    <Anchor Key="@_demoComponent.Title">
-                        @foreach (var demo in demos)
-                        {
-                            <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#components-{_demoComponent.Title.ToLower()}-demo-{demo.Name}")" Title="@demo.Title" />
-                        }
-                        @if (!string.IsNullOrEmpty(_demoComponent.ApiDoc))
-                        {
-                            <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#API")" Title="API" />
-                        }
-                    </Anchor>
-                </Affix>
-            </div>
+            var docDemos = _demoComponent.DemoList.Where(x => x.Docs.HasValue && x.Docs.Value);
+            var demos = _demoComponent.DemoList.Where(x => !x.Debug && !x.Docs.HasValue).OrderBy(x => x.Order);
+            @if (demos.Any())
+            {
+                <div class="toc-affix">
+                    <Affix OffsetTop="16">
+                        <Anchor Key="@_demoComponent.Title">
+                            @foreach (var demo in demos)
+                            {
+                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#components-{_demoComponent.Title.ToLower()}-demo-{demo.Name}")" Title="@demo.Title" />
+                            }
+                            @if (!string.IsNullOrEmpty(_demoComponent.ApiDoc))
+                            {
+                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#API")" Title="API" />
+                            }
+                        </Anchor>
+                    </Affix>
+                </div>
+            }
             <section class="markdown">
                 <h1>
                     @_demoComponent.Title
@@ -34,61 +39,71 @@
                 <section class="markdown">
                     @((MarkupString) _demoComponent.Desc)
                 </section>
-        
-                <h2 data-scrollama-index="1">
-                    @LanguageService.Resources["Examples"]
-                    <span class="all-code-box-controls">
-                        @if (_demoComponent.Cols != 1)
-                        {
-                            @if (_expanded)
-                            {
-                                <Icon Type="compress" Class="code-box-expand-trigger" OnClick="() => _expanded = false " />
-                            }
-                            else
-                            {
-                                <Icon Type="expand" Class="code-box-expand-trigger" OnClick="() => _expanded = true " />
-                            }
-                        }
-                        <Icon Type="code" Class="code-box-expand-trigger" />
-                        <Icon Type="bug" Class="code-box-expand-trigger" />
-                    </span>
-                </h2>
-            </section>
-            <Row Style="margin-left: -8px; margin-right: -8px;">
-                @if (_demoComponent.Cols == 1 || _expanded)
+
+                @foreach (var docDemo in docDemos)
                 {
-                    foreach (var demo in demos)
+                    <RazorBox Demo="@docDemo" />
+                }
+
+                @if (demos.Any())
+                {
+                    <h2 data-scrollama-index="1">
+                        @LanguageService.Resources["Examples"]
+                        <span class="all-code-box-controls">
+                            @if (_demoComponent.Cols != 1)
+                            {
+                                @if (_expanded)
+                                {
+                                    <Icon Type="compress" Class="code-box-expand-trigger" OnClick="() => _expanded = false " />
+                                }
+                                else
+                                {
+                                    <Icon Type="expand" Class="code-box-expand-trigger" OnClick="() => _expanded = true " />
+                                }
+                            }
+                            <Icon Type="code" Class="code-box-expand-trigger" />
+                            <Icon Type="bug" Class="code-box-expand-trigger" />
+                        </span>
+                    </h2>
+                }
+            </section>
+            @if (demos.Any())
+            {
+                <Row Style="margin-left: -8px; margin-right: -8px;">
+                    @if (_demoComponent.Cols == 1 || _expanded)
                     {
-                        <AntDesign.Col Span="24" Class="code-boxes-col-1-1" Style="padding-left: 8px; padding-right: 8px;">
-                            <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                        foreach (var demo in demos)
+                        {
+                            <AntDesign.Col Span="24" Class="code-boxes-col-1-1" Style="padding-left: 8px; padding-right: 8px;">
+                                <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                            </AntDesign.Col>
+                        }
+                    }
+                    else
+                    {
+                        var leftList = demos.Where((_, i) => i % 2 == 0);
+                        var rightList = demos.Where((_, i) => i % 2 != 0);
+
+                        <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                            @foreach (var demo in leftList)
+                            {
+                                <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                            }
+                        </AntDesign.Col>
+                        <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                            @foreach (var demo in rightList)
+                            {
+                                <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                            }
                         </AntDesign.Col>
                     }
-                }
-                else
-                {
-                    var leftList = demos.Where((_, i) => i % 2 == 0);
-                    var rightList = demos.Where((_, i) => i % 2 != 0);
-        
-                    <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
-                        @foreach (var demo in leftList)
-                        {
-                            <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
-                        }
-                    </AntDesign.Col>
-                    <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
-                        @foreach (var demo in rightList)
-                        {
-                            <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
-                        }
-                    </AntDesign.Col>
-                }
-            </Row>
+                </Row>
+            }
             <section class="markdown api-container">
-                @*<h2 id="API" data-scrollama-index="10">
-                        <span>API</span><a href="#API" class="anchor">#</a>
-                    </h2>*@
+
                 @((MarkupString) _demoComponent.ApiDoc)
             </section>
+
         }
     </article>
     @*<ul class="contributors-list" style="display: flex; list-style: none; margin: 0px; padding: 0px; flex-flow: wrap;"></ul>*@

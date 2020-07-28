@@ -2,6 +2,7 @@
 category: Components
 type: Data Entry
 title: AutoComplete
+cover: https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg
 ---
 
 Autocomplete function of input field.

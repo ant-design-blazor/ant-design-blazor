@@ -3,6 +3,7 @@ category: Components
 type: 通用
 title: Icon
 subtitle: 图标
+cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 ---
 
 语义化的矢量图形。
