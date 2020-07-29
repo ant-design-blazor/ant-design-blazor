@@ -22,6 +22,8 @@ namespace AntDesign
         //protected string ClearIconClass { get; set; }
         protected static readonly EventCallbackFactory CallbackFactory = new EventCallbackFactory();
 
+        protected virtual bool IgnoreOnChangeAndBlur { get; }
+
         [Parameter]
         public string Type { get; set; } = "text";
 
@@ -75,7 +77,7 @@ namespace AntDesign
 
         public Dictionary<string, object> Attributes { get; set; }
 
-        private string _inputValue;
+        private TValue _inputValue;
 
         protected override void OnInitialized()
         {
@@ -152,10 +154,12 @@ namespace AntDesign
 
         protected virtual async Task OnChangeAsync(ChangeEventArgs args)
         {
-            CurrentValueAsString = args.Value?.ToString();
-            if (OnChange.HasDelegate)
+            if (CurrentValueAsString != args?.Value?.ToString())
             {
-                await OnChange.InvokeAsync(Value);
+                if (OnChange.HasDelegate)
+                {
+                    await OnChange.InvokeAsync(Value);
+                }
             }
         }
 
@@ -169,9 +173,9 @@ namespace AntDesign
 
         protected async Task OnKeyUpAsync(KeyboardEventArgs args)
         {
-            if (CurrentValueAsString != _inputValue)
+            if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
             {
-                CurrentValueAsString = _inputValue;
+                CurrentValue = _inputValue;
                 if (OnChange.HasDelegate)
                 {
                     await OnChange.InvokeAsync(Value);
@@ -231,7 +235,7 @@ namespace AntDesign
         protected override void OnValueChange(TValue value)
         {
             base.OnValueChange(value);
-            _inputValue = CurrentValueAsString;
+            _inputValue = value;
         }
 
         /// <summary>
@@ -243,7 +247,10 @@ namespace AntDesign
         {
             bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
 
-            _inputValue = args.Value.ToString();
+            if (TryParseValueFromString(args?.Value.ToString(), out TValue value, out var error))
+            {
+                _inputValue = value;
+            }
 
             if (_allowClear && flag)
             {
@@ -331,9 +338,11 @@ namespace AntDesign
                 builder.AddAttribute(61, "value", CurrentValue);
 
                 // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
-
-                //builder.AddAttribute(62, "onchange", CallbackFactory.Create(this, OnChangeAsync));
-                //builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+                if (!IgnoreOnChangeAndBlur)
+                {
+                    builder.AddAttribute(62, "onchange", CallbackFactory.Create(this, OnChangeAsync));
+                    builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+                }
 
                 builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
                 builder.AddAttribute(63, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));

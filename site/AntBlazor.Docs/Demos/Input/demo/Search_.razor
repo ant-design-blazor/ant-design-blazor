@@ -6,23 +6,23 @@
     <br />
     <br />
     <Search Placeholder="input search text" Size="@InputSize.Large" EnterButton="@("Search")" @bind-Value="@txtValue" OnSearch="OnSearch"/>
-
-
-
 </div>
 
-    @code{
+@inject MessageService message;
 
-        private string txtValue { get; set; }
+@code{
 
-        private void Handle(string value)
-        {
-            Console.WriteLine(value);
-        }
+    private string txtValue { get; set; }
 
-        public void OnSearch()
-        {
-            Console.WriteLine(txtValue);
-        }
+    private void Handle(string value)
+    {
+        Console.WriteLine(value);
     }
+
+    public async Task OnSearch()
+    {
+        await message.Loading($"searching {txtValue}", 2);
+    }
+
+}
 
