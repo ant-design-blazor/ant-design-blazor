@@ -29,11 +29,11 @@
     private void enterLoading()
     {
         loading = true;
-        Task.Run(() =>
+        Task.Run(async () =>
         {
-            System.Threading.Thread.Sleep(8000);
+            await Task.Delay(8000);
             loading = false;
-            InvokeAsync(StateHasChanged);
+            await InvokeAsync(StateHasChanged);
             Console.WriteLine("Timer2 ended" + DateTime.Now);
         });
 
@@ -43,11 +43,11 @@
     {
         iconLoading = true;
 
-        Task.Run(() =>
+        Task.Run(async () =>
         {
-            System.Threading.Thread.Sleep(8000);
+            await Task.Delay(8000);
             iconLoading = false;
-            InvokeAsync(StateHasChanged);
+            await InvokeAsync(StateHasChanged);
         });
     }
 }
