@@ -1,6 +1,6 @@
 ﻿<Select @ref="select" Mode="tags"
         Style="width: 100%"
-        Placeholder="Tags Mode" Value="@selectedItems" AllowClear=true>
+        Placeholder="Tags Mode" SelectedValue="@selectedItems" AllowClear=true>
     @foreach (var item in _items)
     {
         <SelectOption Value="@item">@item</SelectOption>
