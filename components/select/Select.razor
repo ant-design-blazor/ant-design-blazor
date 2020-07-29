@@ -1,5 +1,5 @@
 ﻿@namespace AntDesign
-@inherits AntDomComponentBase
+@inherits AntInputComponentBase<string>
 
 <CascadingValue Value=this>
     <div class="@ClassMapper.Class" style="@Style" id="@Id" title="@Title" tabindex="-1" @onclick="OnSelectOpenClick" @ref="Ref">
@@ -11,7 +11,7 @@
                     <div class="@ClassPrefix-selector">
                         <span class="@ClassPrefix-selection-search">
                             <input @ref="_inputRef"
-                                   @oninput="OnInput"
+                                   @oninput="OnInput" @onblur="OnInputBlur"
                                    id="@Id"
                                    value="@_searchValue"
                                    role="combobox"
@@ -68,8 +68,7 @@
                                     </span>
 
                                     <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@ClassPrefix-selection-item-remove"
-                                          @onclick:stopPropagation
-                                          @onclick="()=>OnRemoveSelected(option)">
+                                          @onclick="()=>OnRemoveSelected(option)" @onclick:stopPropagation="true">
                                         <Icon Type="close"></Icon>
                                     </span>
                                 </span>
@@ -77,7 +76,7 @@
                         }
                         <span class="@ClassPrefix-selection-search" style="width:@_inputWidth">
                             <input @ref="_inputRef"
-                                   @oninput="OnInput"
+                                   @oninput="OnInput" @onblur="OnInputBlur"
                                    @bind-value="@_searchValue"
                                    id="@Id"
                                    role="combobox"
@@ -137,7 +136,8 @@
     </div>
     <div style="position: absolute; top: 0px; left: 0px; width: 100%;" @ref="_dropdownRef">
         <div>
-            <div class="@(ClassPrefix)-dropdown @_dropdownClassMapper.Class" style="@_dropdownStyle" tabindex="-1" @onblur="OnSelectHideClick">
+            <div class="@(ClassPrefix)-dropdown @_dropdownClassMapper.Class" style="@_dropdownStyle" tabindex="-1"
+                 @onblur="OnSelectHideClick" @onmouseenter="OnSelectMouseEnter" @onmouseleave="OnSelectMouseLeave">
                 <div>
                     @if (IsEmptyOnSearch())
                     {
