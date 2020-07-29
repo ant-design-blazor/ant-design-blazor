@@ -75,6 +75,8 @@ namespace AntDesign
 
         public Dictionary<string, object> Attributes { get; set; }
 
+        private string _inputValue;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -105,7 +107,6 @@ namespace AntDesign
 
             Attributes ??= new Dictionary<string, object>();
 
-        
             if (MaxLength >= 0)
             {
                 Attributes?.Add("maxlength", MaxLength);
@@ -158,11 +159,23 @@ namespace AntDesign
             }
         }
 
-        protected async Task OnPressEnterAsync(KeyboardEventArgs args)
+        protected async Task OnKeyPressAsync(KeyboardEventArgs args)
         {
             if (args != null && args.Key == "Enter" && OnPressEnter.HasDelegate)
             {
                 await OnPressEnter.InvokeAsync(args);
+            }
+        }
+
+        protected async Task OnKeyUpAsync(KeyboardEventArgs args)
+        {
+            if (CurrentValueAsString != _inputValue)
+            {
+                CurrentValueAsString = _inputValue;
+                if (OnChange.HasDelegate)
+                {
+                    await OnChange.InvokeAsync(Value);
+                }
             }
         }
 
@@ -180,7 +193,7 @@ namespace AntDesign
             {
                 builder.OpenComponent<Icon>(31);
                 builder.AddAttribute(32, "Type", "close-circle");
-                builder.AddAttribute(33, "class", GetClearIconCls());
+                builder.AddAttribute(33, "Class", GetClearIconCls());
                 if (string.IsNullOrEmpty(Value?.ToString()))
                 {
                     builder.AddAttribute(34, "Style", "visibility: hidden;");
@@ -189,7 +202,7 @@ namespace AntDesign
                 {
                     builder.AddAttribute(34, "Style", "visibility: visible;");
                 }
-                builder.AddAttribute(35, "onclick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
+                builder.AddAttribute(35, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
                 {
                     CurrentValue = default;
                     if (OnChange.HasDelegate)
@@ -223,6 +236,8 @@ namespace AntDesign
         protected virtual async void OnInputAsync(ChangeEventArgs args)
         {
             bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
+
+            _inputValue = args.Value.ToString();
 
             if (_allowClear && flag)
             {
@@ -309,7 +324,8 @@ namespace AntDesign
                 builder.AddAttribute(60, "placeholder", Placeholder);
                 builder.AddAttribute(61, "value", CurrentValue);
                 builder.AddAttribute(62, "onchange", CallbackFactory.Create(this, OnChangeAsync));
-                builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnPressEnterAsync));
+                builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
+                builder.AddAttribute(63, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
                 builder.AddAttribute(64, "oninput", CallbackFactory.Create(this, OnInputAsync));
                 builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
                 builder.AddAttribute(66, "onfocus", CallbackFactory.Create(this, OnFocus));
