@@ -73,6 +73,9 @@ namespace AntDesign
         public EventCallback<UploadInfo> OnChange { get; set; }
 
         [Parameter]
+        public Func<UploadFileItem, Task<bool>> OnRemove { get; set; }
+
+        [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Inject]
@@ -152,6 +155,16 @@ namespace AntDesign
             await JSRuntime.InvokeVoidAsync(JSInteropConstants.clearFile, _file);
         }
 
+        private async Task RemoveFile(UploadFileItem item)
+        {
+            var canRemove = OnRemove == null || await OnRemove?.Invoke(item);
+            if (canRemove)
+            {
+                this.FileList.Remove(item);
+                StateHasChanged();
+            }
+        }
+
         [JSInvokable]
         public async Task UploadSuccess(string id, string returnData)
         {
@@ -217,6 +230,7 @@ namespace AntDesign
                 await OnChange.InvokeAsync(_uploadInfo);
             }
         }
+       
         protected override void Dispose(bool disposing)
         {
             InvokeAsync(async () => await JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn));
