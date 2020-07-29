@@ -228,6 +228,12 @@ namespace AntDesign
             return $"{PrefixCls}-clear-icon";
         }
 
+        protected override void OnValueChange(TValue value)
+        {
+            base.OnValueChange(value);
+            _inputValue = CurrentValueAsString;
+        }
+
         /// <summary>
         /// Invoked when user add/remove content
         /// </summary>
@@ -323,11 +329,15 @@ namespace AntDesign
 
                 builder.AddAttribute(60, "placeholder", Placeholder);
                 builder.AddAttribute(61, "value", CurrentValue);
-                builder.AddAttribute(62, "onchange", CallbackFactory.Create(this, OnChangeAsync));
+
+                // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
+
+                //builder.AddAttribute(62, "onchange", CallbackFactory.Create(this, OnChangeAsync));
+                //builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+
                 builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
                 builder.AddAttribute(63, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
                 builder.AddAttribute(64, "oninput", CallbackFactory.Create(this, OnInputAsync));
-                builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
                 builder.AddAttribute(66, "onfocus", CallbackFactory.Create(this, OnFocus));
                 builder.AddElementReferenceCapture(68, r => Ref = r);
                 builder.CloseElement();

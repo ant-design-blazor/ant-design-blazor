@@ -93,7 +93,6 @@ namespace AntDesign
         private async void HandleSearch(MouseEventArgs args)
         {
             _isSearching = true;
-            StateHasChanged();
             if (OnSearch.HasDelegate)
             {
                 await OnSearch.InvokeAsync(EventArgs.Empty);
