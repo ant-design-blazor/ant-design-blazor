@@ -1,7 +1,8 @@
 @inject MessageService _message
 
 <Upload @attributes="attrs"
-        OnSingleCompleted="OnSingleCompleted">
+         OnSingleCompleted="OnSingleCompleted"
+         OnRemove="HandleRemove">
     <Button Icon="upload">
         <span>点击上传</span>
     </Button>
@@ -9,7 +10,8 @@
 <br />
 <br />
 <Upload @attributes="attrs1"
-        OnSingleCompleted="OnSingleCompleted">
+         OnSingleCompleted="OnSingleCompleted"
+         OnRemove="HandleRemove">
     <Button Icon="upload">
         <span>点击上传</span>
     </Button>
@@ -56,10 +58,15 @@
     {
         if (fileinfo.File.State == UploadState.Success)
         {
-            var result = fileinfo.File.GetResponse<ResponseModel>
-                ();
+            var result = fileinfo.File.GetResponse<ResponseModel>();
             fileinfo.File.Url = result.url;
         }
+    }
+
+    async Task<bool> HandleRemove(UploadFileItem file)
+    {
+        await _message.Loading($"removing {file.FileName}",2);
+        return await Task.FromResult(true);
     }
 
     public class ResponseModel
