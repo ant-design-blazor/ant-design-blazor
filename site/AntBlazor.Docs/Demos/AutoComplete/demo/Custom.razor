@@ -1,6 +1,6 @@
 ﻿@using Microsoft.Extensions.Primitives
 <div>
-    <AutoComplete @ref="@_autoComplete">
+    <AutoComplete @ref="@_autoComplete" @bind-Value="@txtValue">
         <CustomInput>
             <TextArea Placeholder="input here" AutoSize="true" OnChange="OnChange" @bind-Value="@txtValue" />
         </CustomInput>

@@ -1,10 +1,14 @@
 ﻿<div>
-    <AutoComplete @ref="@_autoComplete" OnChange="OnChange"></AutoComplete>
+    <AutoComplete @ref="@_autoComplete" OnChange="OnChange" @bind-Value="@value"></AutoComplete>
 </div>
+<br />
+<span>bind-Value:@value</span>
 
 @code
 {
     private AutoComplete _autoComplete;
+
+    private string value;
 
     private void OnChange(string value)
     {

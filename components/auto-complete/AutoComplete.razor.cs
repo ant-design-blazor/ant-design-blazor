@@ -147,7 +147,7 @@ namespace AntDesign
         private void OnInputChange(ChangeEventArgs args)
         {
             var v = args?.Value.ToString();
-            Value = v;
+            CurrentValueAsString = v;
 
             if (Options != null)   // Options 参数不为空时，本地过滤选项
             {
