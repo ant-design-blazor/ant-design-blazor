@@ -1,0 +1,103 @@
+@inject MessageService _message
+
+    <Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            Name="avatar"
+            FileList="fileList"
+            ShowButton="fileList.Count < 8"
+            ListType="picture-card"
+            OnPreview="(file)=> {
+                           Console.WriteLine(file.FileName);
+                           Console.WriteLine(file.Url);
+                           previewVisible = true;
+                           previewTitle = file.FileName;
+                           imgUrl = file.Url;
+                       }"
+            OnChange="HandleChange">
+            <div>
+                <Icon Type="plus"></Icon>
+                <div className="ant-upload-text">Upload</div>
+            </div>
+
+    </Upload>
+    <Modal Visible="previewVisible"
+           Title="previewTitle"
+           OnCancel="()=> previewVisible=false">
+        <img style="width: 100%" src="@imgUrl" />
+    </Modal>
+
+@code
+{
+    bool previewVisible = false;
+    string previewTitle = string.Empty;
+    string imgUrl = string.Empty;
+
+    List<UploadFileItem> fileList = new List<UploadFileItem>
+    {
+        new UploadFileItem
+        {
+            Id = "1",
+            FileName = "image.png",
+            State = UploadState.Success,
+            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        },
+        new UploadFileItem
+        {
+            Id = "2",
+            FileName = "image.png",
+            State = UploadState.Success,
+            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        },
+        new UploadFileItem
+        {
+            Id = "3",
+            FileName = "image.png",
+            State = UploadState.Success,
+            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        },
+        new UploadFileItem
+        {
+            Id = "4",
+            FileName = "image.png",
+            State = UploadState.Success,
+            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        },
+         new UploadFileItem
+        {
+            Id = "5",
+            FileName = "image.png",
+            State = UploadState.Fail
+        },
+    };
+
+    void HandleChange(UploadInfo fileinfo)
+    {
+        if (fileinfo.File.State == UploadState.Success)
+        {
+            fileinfo.File.Url = fileinfo.File.ObjectURL;
+        }
+    }
+
+    public class ResponseModel
+    {
+        public string name { get; set; }
+
+        public string status { get; set; }
+
+        public string url { get; set; }
+
+        public string thumbUrl { get; set; }
+    }
+}
+
+<style>
+    /* you can make up upload button and sample style by using stylesheets */
+    .ant-upload-select-picture-card i {
+        color: #999;
+        font-size: 32px;
+    }
+
+    .ant-upload-select-picture-card .ant-upload-text {
+        margin-top: 8px;
+        color: #666;
+    }
+</style>

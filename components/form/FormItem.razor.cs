@@ -131,6 +131,11 @@ namespace AntDesign
 
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
+            if (control.FieldIdentifier.Model == null)
+            {
+                throw new InvalidOperationException($"Please use @bind-Value in the control with generic type `{typeof(TValue)}`.");
+            }
+
             this._control = control;
 
             CurrentEditContext.OnValidationStateChanged += (s, e) =>
@@ -156,6 +161,10 @@ namespace AntDesign
                 {
                     _labelCls = $"{_prefixCls}-required";
                 }
+            }
+            else
+            {
+                throw new InvalidOperationException($"Unable to match property `{control.FieldIdentifier.FieldName}` in Model `{control.FieldIdentifier.Model.GetType()}`, please confirm that the Model contains this property.");
             }
         }
     }
