@@ -131,12 +131,12 @@ namespace AntDesign
             if (args.Button != 0 || this.Type == ButtonType.Link) return; //remove animating from Link Button
             this._animating = true;
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                Thread.Sleep(500);
+                await Task.Delay(500);
                 this._animating = false;
 
-                InvokeAsync(StateHasChanged);
+                await InvokeAsync(StateHasChanged);
             });
         }
     }
