@@ -76,7 +76,13 @@ namespace AntDesign
         public Func<UploadFileItem, Task<bool>> OnRemove { get; set; }
 
         [Parameter]
+        public EventCallback<UploadFileItem> OnPreview { get; set; }
+
+        [Parameter]
         public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public bool ShowButton { get; set; } = true;
 
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
@@ -92,6 +98,8 @@ namespace AntDesign
         private ElementReference _btn;
 
         private string _fileId = Guid.NewGuid().ToString();
+
+
 
         protected override Task OnInitializedAsync()
         {
@@ -230,7 +238,7 @@ namespace AntDesign
                 await OnChange.InvokeAsync(_uploadInfo);
             }
         }
-       
+
         protected override void Dispose(bool disposing)
         {
             InvokeAsync(async () => await JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn));
