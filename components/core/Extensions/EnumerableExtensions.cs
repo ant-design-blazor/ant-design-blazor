@@ -35,12 +35,34 @@ namespace AntDesign
 
         public static bool IsIn<T>(this T source, params T[] array)
         {
+            if (array == null)
+            {
+                return false;
+            }
+
             return array.Contains(source);
         }
 
         public static bool IsIn<T>(this T source, IEnumerable<T> array)
         {
+            if (array == null)
+            {
+                return false;
+            }
+
             return array.Contains(source);
+        }
+
+        public static T[] Append<T>(this T[] array, T item)
+        {
+            if (array == null)
+            {
+                return new[] { item };
+            }
+            Array.Resize(ref array, array.Length + 1);
+            array[^1] = item;
+
+            return array;
         }
     }
 }
