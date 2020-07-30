@@ -16,6 +16,8 @@ namespace AntDesign
         [Parameter]
         public OneOf<bool, string> EnterButton { get; set; } = false;
 
+        protected override bool IgnoreOnChangeAndBlur => OnSearch.HasDelegate;
+
         private int _sequence = 0;
 
         protected override void OnInitialized()
@@ -93,7 +95,6 @@ namespace AntDesign
         private async void HandleSearch(MouseEventArgs args)
         {
             _isSearching = true;
-            StateHasChanged();
             if (OnSearch.HasDelegate)
             {
                 await OnSearch.InvokeAsync(EventArgs.Empty);
