@@ -48,20 +48,17 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            if (this is Checkbox checkbox)
-            {
-                CheckboxGroup?.CheckboxItems.Add(checkbox);
-            }
+            CheckboxGroup?.CheckboxItems.Add(this);
 
-            Value = Checked;
+            if (Checked)
+            {
+                Value = Checked;
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (this is Checkbox checkbox)
-            {
-                CheckboxGroup?.CheckboxItems.Remove(checkbox);
-            }
+            CheckboxGroup?.CheckboxItems.Remove(this);
 
             base.Dispose(disposing);
         }
@@ -109,8 +106,9 @@ namespace AntDesign
             }
         }
 
-        protected void WriteValue(bool value)
+        protected override void OnValueChange(bool value)
         {
+            base.OnValueChange(value);
             this.Checked = value;
         }
     }
