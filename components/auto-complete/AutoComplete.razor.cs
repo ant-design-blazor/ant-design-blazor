@@ -147,7 +147,7 @@ namespace AntDesign
         private void OnInputChange(ChangeEventArgs args)
         {
             var v = args?.Value.ToString();
-            CurrentValueAsString = v;
+            CurrentValue = v;
 
             if (Options != null)   // Options 参数不为空时，本地过滤选项
             {
@@ -193,7 +193,7 @@ namespace AntDesign
 
             if (Value != option)
             {
-                CurrentValueAsString = option;
+                CurrentValue = option;
                 ValueChanged.InvokeAsync(option);
             }
 
@@ -219,7 +219,7 @@ namespace AntDesign
             {
                 if (!string.IsNullOrWhiteSpace(_activeOption))
                 {
-                    CurrentValueAsString = _activeOption;
+                    CurrentValue = _activeOption;
                     ValueChanged.InvokeAsync(_activeOption);
                     ToggleState = false;
 
@@ -238,7 +238,11 @@ namespace AntDesign
             if (args.Code == "ArrowDown") //下键
             {
                 int index = _options.IndexOf(_activeOption);
-                if (index >= _options.Count - 1 || index < 0 || string.IsNullOrWhiteSpace(_activeOption))
+                if (index == -1)
+                {
+                    index = _options.IndexOf(Value);
+                }
+                if (index >= _options.Count - 1 || index < 0)
                     index = -1;
 
                 _activeOption = _options.ElementAt(index + 1);
