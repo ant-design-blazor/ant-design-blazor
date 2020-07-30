@@ -22,6 +22,8 @@ namespace AntDesign
         //protected string ClearIconClass { get; set; }
         protected static readonly EventCallbackFactory CallbackFactory = new EventCallbackFactory();
 
+        protected virtual bool IgnoreOnChangeAndBlur { get; }
+
         [Parameter]
         public string Type { get; set; } = "text";
 
@@ -75,6 +77,8 @@ namespace AntDesign
 
         public Dictionary<string, object> Attributes { get; set; }
 
+        private TValue _inputValue;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -105,7 +109,6 @@ namespace AntDesign
 
             Attributes ??= new Dictionary<string, object>();
 
-        
             if (MaxLength >= 0)
             {
                 Attributes?.Add("maxlength", MaxLength);
@@ -151,18 +154,32 @@ namespace AntDesign
 
         protected virtual async Task OnChangeAsync(ChangeEventArgs args)
         {
-            CurrentValueAsString = args.Value?.ToString();
-            if (OnChange.HasDelegate)
+            if (CurrentValueAsString != args?.Value?.ToString())
             {
-                await OnChange.InvokeAsync(Value);
+                if (OnChange.HasDelegate)
+                {
+                    await OnChange.InvokeAsync(Value);
+                }
             }
         }
 
-        protected async Task OnPressEnterAsync(KeyboardEventArgs args)
+        protected async Task OnKeyPressAsync(KeyboardEventArgs args)
         {
             if (args != null && args.Key == "Enter" && OnPressEnter.HasDelegate)
             {
                 await OnPressEnter.InvokeAsync(args);
+            }
+        }
+
+        protected async Task OnKeyUpAsync(KeyboardEventArgs args)
+        {
+            if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
+            {
+                CurrentValue = _inputValue;
+                if (OnChange.HasDelegate)
+                {
+                    await OnChange.InvokeAsync(Value);
+                }
             }
         }
 
@@ -180,7 +197,7 @@ namespace AntDesign
             {
                 builder.OpenComponent<Icon>(31);
                 builder.AddAttribute(32, "Type", "close-circle");
-                builder.AddAttribute(33, "class", GetClearIconCls());
+                builder.AddAttribute(33, "Class", GetClearIconCls());
                 if (string.IsNullOrEmpty(Value?.ToString()))
                 {
                     builder.AddAttribute(34, "Style", "visibility: hidden;");
@@ -189,7 +206,7 @@ namespace AntDesign
                 {
                     builder.AddAttribute(34, "Style", "visibility: visible;");
                 }
-                builder.AddAttribute(35, "onclick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
+                builder.AddAttribute(35, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
                 {
                     CurrentValue = default;
                     if (OnChange.HasDelegate)
@@ -215,6 +232,12 @@ namespace AntDesign
             return $"{PrefixCls}-clear-icon";
         }
 
+        protected override void OnValueChange(TValue value)
+        {
+            base.OnValueChange(value);
+            _inputValue = value;
+        }
+
         /// <summary>
         /// Invoked when user add/remove content
         /// </summary>
@@ -223,6 +246,11 @@ namespace AntDesign
         protected virtual async void OnInputAsync(ChangeEventArgs args)
         {
             bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
+
+            if (TryParseValueFromString(args?.Value.ToString(), out TValue value, out var error))
+            {
+                _inputValue = value;
+            }
 
             if (_allowClear && flag)
             {
@@ -308,10 +336,17 @@ namespace AntDesign
 
                 builder.AddAttribute(60, "placeholder", Placeholder);
                 builder.AddAttribute(61, "value", CurrentValue);
-                builder.AddAttribute(62, "onchange", CallbackFactory.Create(this, OnChangeAsync));
-                builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnPressEnterAsync));
+
+                // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
+                if (!IgnoreOnChangeAndBlur)
+                {
+                    builder.AddAttribute(62, "onchange", CallbackFactory.Create(this, OnChangeAsync));
+                    builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+                }
+
+                builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
+                builder.AddAttribute(63, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
                 builder.AddAttribute(64, "oninput", CallbackFactory.Create(this, OnInputAsync));
-                builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
                 builder.AddAttribute(66, "onfocus", CallbackFactory.Create(this, OnFocus));
                 builder.AddElementReferenceCapture(68, r => Ref = r);
                 builder.CloseElement();
