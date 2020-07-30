@@ -99,8 +99,6 @@ namespace AntDesign
 
         private string _fileId = Guid.NewGuid().ToString();
 
-
-
         protected override Task OnInitializedAsync()
         {
             _currentInstance = DotNetObjectReference.Create(this);
