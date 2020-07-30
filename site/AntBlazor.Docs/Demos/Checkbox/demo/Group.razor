@@ -1,44 +1,32 @@
+@using System.Text.Json
 <div>
-    <CheckboxGroup Options="@plainOptions" @bind-Value="@checkValue1" />
+    <CheckboxGroup Options="@plainOptions" Value="@(new[]{"Apple"})" OnChange="OnChange"/>
     <br />
     <br />
-    <CheckboxGroup Options="@ckeckAllOptions" @bind-Value="@checkValue2" />
+    <CheckboxGroup Options="@options" Value="@(new[]{"Pear"})"  OnChange="OnChange"/>
     <br />
     <br />
-    <CheckboxGroup Options="@OptionsWithDisable" @bind-Value="@checkValue1" />
+    <CheckboxGroup Options="@OptionsWithDisabled" Disabled Value="@(new[]{"Apple"})"  OnChange="OnChange"/>
 </div>
 @code{
 
-    string[] checkValue1 = {"Apple"};
-    string[] checkValue2 = {"Pear"};
+    string[] plainOptions = {"Apple", "Pear", "Orange"};
 
-    CheckboxOption[] plainOptions = new CheckboxOption[]
+    CheckboxOption[] options = new CheckboxOption[]
     {
         new CheckboxOption {Label = "Apple", Value = "Apple"},
         new CheckboxOption {Label = "Pear", Value = "Pear"},
         new CheckboxOption {Label = "Orange", Value = "Orange"},
     };
 
-    CheckboxOption[] ckeckAllOptions = new CheckboxOption[]
-    {
-        new CheckboxOption {Label = "Apple", Value = "Apple"},
-        new CheckboxOption {Label = "Pear", Value = "Pear", Checked = true},
-        new CheckboxOption {Label = "Orange", Value = "Orange"},
-    };
-
-    CheckboxOption[] OptionsWithDisable = new CheckboxOption[]
+    CheckboxOption[] OptionsWithDisabled = new CheckboxOption[]
     {
         new CheckboxOption {Label = "Apple", Value = "Apple"},
         new CheckboxOption {Label = "Pear", Value = "Pear"},
         new CheckboxOption {Label = "Orange", Value = "Orange", Disabled = true},
     };
 
-    private bool checkAll { get; set; } = false;
-
-    void groupValueChanged()
-    {
-        bool allChecked = checkAll;
-        plainOptions.ForEach(o => o.Checked = !allChecked);
+    void OnChange(string[] checkedValues) {
+        Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }
-
 }
