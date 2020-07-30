@@ -73,13 +73,18 @@ namespace AntDesign
                 .If($"{prefixName}-indeterminate", () => Indeterminate);
         }
 
+        protected override void OnValueChange(bool value)
+        {
+            base.OnValueChange(value);
+            this.Checked = value;
+        }
+
         protected async Task InputCheckedChange(ChangeEventArgs args)
         {
             if (args != null && args.Value is bool value)
             {
+                CurrentValue = value;
                 await InnerCheckedChange(value);
-
-                CurrentValue = Checked;
             }
         }
 
@@ -87,9 +92,12 @@ namespace AntDesign
         {
             if (!this.Disabled)
             {
-                this.Checked = @checked;
+                if (this.CheckedChange.HasDelegate)
+                {
+                    await this.CheckedChange.InvokeAsync(@checked);
+                }
 
-                await this.CheckedChange.InvokeAsync(this.Checked);
+                await this.CheckedChange.InvokeAsync(@checked);
                 CheckboxGroup?.OnCheckboxChange(this);
             }
         }
@@ -104,12 +112,6 @@ namespace AntDesign
             {
                 InputAttributes.Remove("autofocus");
             }
-        }
-
-        protected override void OnValueChange(bool value)
-        {
-            base.OnValueChange(value);
-            this.Checked = value;
         }
     }
 }

@@ -1,19 +1,35 @@
 ﻿@namespace AntDesign
-@inherits AntDomComponentBase
+@inherits AntInputComponentBase<string[]>
 
 <CascadingValue Value="this">
     <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-        @if (Options != null)
+        @if (Options.Value != null)
         {
-            @foreach (var option in Options)
+            if (Options.IsT0)
             {
-                <Checkbox class="ant-checkbox-group-item"
-                             Disabled="option.Disabled || Disabled"
-                             Checked="@(option.Checked)"
-                             Label="@option.Value"
-                             CheckedChange="_=>OnOptionChange()">
-                    <span>@option.Label</span>
-                </Checkbox>
+                @foreach (var option in Options.AsT0)
+                {
+                    <Checkbox class="ant-checkbox-group-item"
+                              Disabled="option.Disabled || Disabled"
+                              Checked="@(option.Checked)"
+                              Label="@option.Value"
+                              CheckedChange="_=>OnCheckedChange()">
+                        <span>@option.Label</span>
+                    </Checkbox>
+                }
+            }
+            else
+            {
+                @foreach (var option in Options.AsT1)
+                {
+                    <Checkbox class="ant-checkbox-group-item"
+                              Disabled="Disabled"
+                              Checked="@option.IsIn(selectedValues)"
+                              Label="@option"
+                              CheckedChange="_=>OnCheckedChange()">
+                        <span>@option</span>
+                    </Checkbox>
+                }
             }
         }
         @ChildContent
