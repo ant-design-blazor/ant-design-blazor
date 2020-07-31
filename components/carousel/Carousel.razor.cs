@@ -188,7 +188,7 @@ namespace AntDesign
 
             if (realIndex == 0 && Effect == CarouselEffect.ScrollX)
             {
-                Thread.Sleep((int)Autoplay.TotalMilliseconds / 2);
+                await Task.Delay((int)Autoplay.TotalMilliseconds / 2);
                 if (IsHorizontal)
                 {
                     _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px);";
