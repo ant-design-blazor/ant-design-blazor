@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using System.Data;
 using Microsoft.AspNetCore.Components.Web;
+using System.Diagnostics;
 
 namespace AntDesign
 {
@@ -96,10 +97,20 @@ namespace AntDesign
         /// </summary>
         private IList<string> _options = new List<string>();
 
+
+        private bool _toggleState;
         /// <summary>
         /// 浮层 展开/折叠状态
         /// </summary>
-        private bool ToggleState { get; set; }
+        private bool ToggleState
+        {
+            get => _toggleState;
+            set
+            {
+                _toggleState = value;
+                if (_toggleState == false) _activeOption = null;
+            }
+        }
 
         /// <summary>
         /// active 状态的 Option
@@ -128,7 +139,10 @@ namespace AntDesign
         private void OnInputFocus()
         {
             if (Value != null || Options != null && Options.Any())
+            {
+                _activeOption = null;
                 ToggleState = true;
+            }
 
             if (!string.IsNullOrWhiteSpace(Value))
                 OnFocus?.Invoke(Value);
@@ -147,7 +161,7 @@ namespace AntDesign
         private void OnInputChange(ChangeEventArgs args)
         {
             var v = args?.Value.ToString();
-            Value = v;
+            CurrentValue = v;
 
             if (Options != null)   // Options 参数不为空时，本地过滤选项
             {
@@ -193,7 +207,7 @@ namespace AntDesign
 
             if (Value != option)
             {
-                CurrentValueAsString = option;
+                CurrentValue = option;
                 ValueChanged.InvokeAsync(option);
             }
 
@@ -210,7 +224,7 @@ namespace AntDesign
             _isOnOptions = false;
         }
 
-        private void OnKeyDown(KeyboardEventArgs args)
+        public void OnKeyDown(KeyboardEventArgs args)
         {
             if (!ToggleState)
                 return;
@@ -219,15 +233,22 @@ namespace AntDesign
             {
                 if (!string.IsNullOrWhiteSpace(_activeOption))
                 {
-                    CurrentValueAsString = _activeOption;
+                    CurrentValue = _activeOption;
                     ValueChanged.InvokeAsync(_activeOption);
                     ToggleState = false;
 
+                }
+                else if (_options.IndexOf(Value) != -1)
+                {
+                    ValueChanged.InvokeAsync(CurrentValue);
+                    ToggleState = false;
                 }
             }
 
             if (args.Code == "ArrowUp") //上键
             {
+                if (_options.Count == 0) return;
+
                 int index = _options.IndexOf(_activeOption);
                 if (string.IsNullOrWhiteSpace(_activeOption) || index <= 0)
                     index = _options.Count;
@@ -237,8 +258,14 @@ namespace AntDesign
 
             if (args.Code == "ArrowDown") //下键
             {
+                if (_options.Count == 0) return;
+
                 int index = _options.IndexOf(_activeOption);
-                if (index >= _options.Count - 1 || index < 0 || string.IsNullOrWhiteSpace(_activeOption))
+                if (index == -1)
+                {
+                    index = _options.IndexOf(Value);
+                }
+                if (index >= _options.Count - 1 || index < 0)
                     index = -1;
 
                 _activeOption = _options.ElementAt(index + 1);
