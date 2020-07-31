@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using System.Data;
 using Microsoft.AspNetCore.Components.Web;
+using System.Diagnostics;
 
 namespace AntDesign
 {
@@ -96,10 +97,20 @@ namespace AntDesign
         /// </summary>
         private IList<string> _options = new List<string>();
 
+
+        private bool _toggleState;
         /// <summary>
         /// 浮层 展开/折叠状态
         /// </summary>
-        private bool ToggleState { get; set; }
+        private bool ToggleState
+        {
+            get => _toggleState;
+            set
+            {
+                _toggleState = value;
+                if (_toggleState == false) _activeOption = null;
+            }
+        }
 
         /// <summary>
         /// active 状态的 Option
@@ -128,7 +139,10 @@ namespace AntDesign
         private void OnInputFocus()
         {
             if (Value != null || Options != null && Options.Any())
+            {
+                _activeOption = null;
                 ToggleState = true;
+            }
 
             if (!string.IsNullOrWhiteSpace(Value))
                 OnFocus?.Invoke(Value);
@@ -224,6 +238,11 @@ namespace AntDesign
                     ToggleState = false;
 
                 }
+                else if (_options.IndexOf(Value) != -1)
+                {
+                    ValueChanged.InvokeAsync(CurrentValue);
+                    ToggleState = false;
+                }
             }
 
             if (args.Code == "ArrowUp") //上键
@@ -248,7 +267,7 @@ namespace AntDesign
                 }
                 if (index >= _options.Count - 1 || index < 0)
                     index = -1;
-                
+
                 _activeOption = _options.ElementAt(index + 1);
             }
         }
