@@ -228,6 +228,8 @@ namespace AntDesign
 
             if (args.Code == "ArrowUp") //上键
             {
+                if (_options.Count == 0) return;
+
                 int index = _options.IndexOf(_activeOption);
                 if (string.IsNullOrWhiteSpace(_activeOption) || index <= 0)
                     index = _options.Count;
@@ -237,6 +239,8 @@ namespace AntDesign
 
             if (args.Code == "ArrowDown") //下键
             {
+                if (_options.Count == 0) return;
+
                 int index = _options.IndexOf(_activeOption);
                 if (index == -1)
                 {
@@ -244,7 +248,7 @@ namespace AntDesign
                 }
                 if (index >= _options.Count - 1 || index < 0)
                     index = -1;
-
+                
                 _activeOption = _options.ElementAt(index + 1);
             }
         }
