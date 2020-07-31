@@ -2,7 +2,7 @@
 <div>
     <AutoComplete @ref="@_autoComplete" @bind-Value="@txtValue">
         <CustomInput>
-            <TextArea Placeholder="input here" AutoSize="true" OnChange="OnChange" @bind-Value="@txtValue" />
+            <TextArea Placeholder="input here" AutoSize="true" OnChange="OnChange" @bind-Value="@txtValue" @onkeydown="(e)=>_autoComplete.OnKeyDown(e)"/>
         </CustomInput>
     </AutoComplete>
 </div>

@@ -210,7 +210,7 @@ namespace AntDesign
             _isOnOptions = false;
         }
 
-        private void OnKeyDown(KeyboardEventArgs args)
+        public void OnKeyDown(KeyboardEventArgs args)
         {
             if (!ToggleState)
                 return;
