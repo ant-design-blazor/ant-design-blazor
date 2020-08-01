@@ -18,6 +18,11 @@
         <Switch @bind-Value="@context.Hot"></Switch>
     </Column>
     <Column @bind-Field="@context.Summary" Sortable />
+    <ActionColumn>
+        <Space>
+            <SpaceItem><Button Danger OnClick="()=>Delete(context.Id)">Delete</Button></SpaceItem>
+        </Space>
+    </ActionColumn>
 </Table>
 
 <br />
@@ -50,7 +55,7 @@
     protected override async Task OnParametersSetAsync()
     {
         forecasts = await GetForecastAsync(1, 50);
-        _total = 50;
+        _total = forecasts.Length;
     }
 
     async Task fetchData(PaginationEventArgs args)
@@ -110,5 +115,11 @@
         selectedRows = selected;
 
         //table.SetSelection(selected.Select(x => x.Id.ToString()).ToArray());
+    }
+
+    private void Delete(int id)
+    {
+        forecasts = forecasts.Where(x => x.Id != id).ToArray();
+        _total = forecasts.Length;
     }
 }
