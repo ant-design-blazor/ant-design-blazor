@@ -20,18 +20,7 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string[]> OnChange { get; set; }
 
-        private string[] selectedValues;
-
-        protected override void OnParametersSet()
-        {
-            //if (Value != null && Options.IsT0)
-            //{
-            //    foreach (var item in Value)
-            //    {
-            //        Options.AsT0.Where(o => o.Value == item).ForEach(o => o.Checked = true);
-            //    }
-            //}
-        }
+        private string[] _selectedValues;
 
         [Parameter]
         public bool Disabled { get; set; }
@@ -52,10 +41,10 @@ namespace AntDesign
 
             if (Value != null)
             {
-                selectedValues = Value;
+                _selectedValues = Value;
             }
 
-            selectedValues ??= Array.Empty<string>();
+            _selectedValues ??= Array.Empty<string>();
         }
 
         internal void OnCheckboxChange(Checkbox checkbox)
@@ -69,20 +58,20 @@ namespace AntDesign
                     opts[index].Checked = checkbox.Checked;
                 }
 
-                selectedValues = Options.AsT0.Where(x => x.Checked).Select(x => x.Value).ToArray();
+                _selectedValues = Options.AsT0.Where(x => x.Checked).Select(x => x.Value).ToArray();
             }, opts =>
             {
-                if (checkbox.Checked && !opts[index].IsIn(selectedValues))
+                if (checkbox.Checked && !opts[index].IsIn(_selectedValues))
                 {
-                    selectedValues = selectedValues.Append(opts[index]);
+                    _selectedValues = _selectedValues.Append(opts[index]);
                 }
                 else
                 {
-                    selectedValues = selectedValues.Except(new[] { opts[index] }).ToArray();
+                    _selectedValues = _selectedValues.Except(new[] { opts[index] }).ToArray();
                 }
             });
 
-            CurrentValue = selectedValues;
+            CurrentValue = _selectedValues;
 
             if (OnChange.HasDelegate)
             {

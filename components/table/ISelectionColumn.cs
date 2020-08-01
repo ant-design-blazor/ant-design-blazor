@@ -4,19 +4,17 @@ namespace AntDesign
 {
     public interface ISelectionColumn : IColumn
     {
-        public bool Disabled { get; set; }
+        public bool Disabled { get; }
 
         internal bool Checked { get; set; }
 
-        public string Key { get; set; }
+        public string Key { get; }
 
-        public int RowIndex { get; set; }
-
-        public IList<ISelectionColumn> RowSelections { get; set; }
+        public IList<ISelectionColumn> RowSelections { get; }
 
         public bool Check(bool @checked);
 
-        public void ChangeSelection(int[] indexes);
+        public void ChangeSelection();
 
         public void SetSelection(string[] keys);
 

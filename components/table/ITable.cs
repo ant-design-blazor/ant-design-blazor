@@ -12,7 +12,7 @@
 
         void SetSelection(string[] keys);
 
-        internal int[] GetSelectedIndex();
+        internal int[] GetSelectedCacheKeys();
 
         void ReloadData();
     }

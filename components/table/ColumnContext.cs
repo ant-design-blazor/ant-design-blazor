@@ -17,7 +17,7 @@ namespace AntDesign
                 return;
             }
 
-            column.Index = CurrentColIndex++;
+            column.ColIndex = CurrentColIndex++;
             Columns.Add(column);
         }
 
@@ -33,7 +33,7 @@ namespace AntDesign
                 CurrentColIndex = 0;
             }
 
-            column.Index = CurrentColIndex;
+            column.ColIndex = CurrentColIndex;
         }
     }
 }

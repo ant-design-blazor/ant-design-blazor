@@ -44,11 +44,13 @@ namespace AntDesign
             _selection.SetSelection(keys);
         }
 
-        void ITable.SelectionChanged()
+        void ITable.SelectionChanged() => SelectionChanged();
+
+        private void SelectionChanged()
         {
             foreach (var selection in _selection.RowSelections)
             {
-                _dataSourceCache[selection.RowIndex].Selected = selection.Checked;
+                _dataSourceCache[selection.CacheKey].Selected = selection.Checked;
             }
 
             if (SelectedRowsChanged.HasDelegate)
