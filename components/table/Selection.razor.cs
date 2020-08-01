@@ -12,9 +12,6 @@ namespace AntDesign
 
         [Parameter] public string Key { get; set; }
 
-        [CascadingParameter(Name = "RowIndex")]
-        public int RowIndex { get; set; }
-
         bool ISelectionColumn.Checked
         {
             get => _checked;
@@ -58,7 +55,7 @@ namespace AntDesign
                 var first = RowSelections.FirstOrDefault(x => x.Checked);
                 if (first != null)
                 {
-                    Table?.Selection.RowSelections.Where(x => x.Index != first.Index).ForEach(x => x.Check(false));
+                    Table?.Selection.RowSelections.Where(x => x.ColIndex != first.ColIndex).ForEach(x => x.Check(false));
                 }
             }
         }
@@ -76,7 +73,7 @@ namespace AntDesign
             {
                 if (Type == "radio")
                 {
-                    Table?.Selection.RowSelections.Where(x => x.RowIndex != this.RowIndex).ForEach(x => x.Check(false));
+                    Table?.Selection.RowSelections.Where(x => x.CacheKey != this.CacheKey).ForEach(x => x.Check(false));
                 }
 
                 Table?.Selection.InvokeSelectedRowsChange();
@@ -111,16 +108,17 @@ namespace AntDesign
             }
         }
 
-        public void ChangeSelection(int[] indexes)
+        public void ChangeSelection()
         {
-            if (indexes == null || !indexes.Any())
+            var cacheKeys = Table.GetSelectedCacheKeys();
+            if (cacheKeys == null || !cacheKeys.Any())
             {
                 this.Table.Selection.RowSelections.ForEach(x => x.Check(false));
-                this.Table.Selection.Check(false);
+                this.Table.Selection.StateHasChanged();
             }
             else
             {
-                this.Table.Selection.RowSelections.ForEach(x => x.Check(x.RowIndex.IsIn(indexes)));
+                this.Table.Selection.RowSelections.ForEach(x => x.Check(x.CacheKey.IsIn(cacheKeys)));
                 this.Table.Selection.StateHasChanged();
             }
         }
@@ -141,7 +139,7 @@ namespace AntDesign
 
         public void ChangeOnPaging()
         {
-            this.ChangeSelection(Table.GetSelectedIndex());
+            this.ChangeSelection();
         }
 
         void ISelectionColumn.StateHasChanged()
@@ -151,6 +149,16 @@ namespace AntDesign
                 _checked = this.RowSelections.All(x => x.Checked);
                 StateHasChanged();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!IsHeader)
+            {
+                Table.Selection.RowSelections.Remove(this);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

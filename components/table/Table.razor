@@ -1,6 +1,7 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 @using AntDesign.TableModels
+@using System.Text.Json
 @typeparam TItem
 
 <div class="ant-table-wrapper">
@@ -20,9 +21,13 @@
                 {
                     <div class="ant-table-title">
                         @if (Title.IsT0)
-                        {@Title.AsT0}
-                    else
-                    {@Title.AsT1}
+                        {
+                            @Title.AsT0
+                        }
+                        else
+                        {
+                            @Title.AsT1
+                        }
                     </div>
                 }
                 <div class="ant-table-container">
@@ -66,9 +71,13 @@
                 {
                     <div class="ant-table-footer">
                         @if (Footer.IsT0)
-                        {@Footer.AsT0}
-                    else
-                    {@Footer.AsT1}
+                        {
+                            @Footer.AsT0
+                        }
+                        else
+                        {
+                            @Footer.AsT1
+                        }
                     </div>
                 }
             </div>
@@ -140,16 +149,19 @@ RenderFragment<Table<TItem>> body = table =>
         {
             var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
             var data = table._showItems.ElementAt(i);
-            if (!table._dataSourceCache.ContainsKey(rowIndex))
+            var cacheKey = data.GetHashCode();
+            if (!table._dataSourceCache.ContainsKey(cacheKey))
             {
-                table._dataSourceCache[rowIndex] = new RowData<TItem>(rowIndex, data);
+                table._dataSourceCache[cacheKey] = new RowData<TItem>(rowIndex,table.PageIndex, data);
             }
-            var selected = table._dataSourceCache[rowIndex].Selected;
+            var selected = table._dataSourceCache[cacheKey].Selected;
             <CascadingValue Value="@rowIndex" Name="RowIndex">
                 <CascadingValue Value="table.ColumnContext">
-                    <tr data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-0 @(selected ? "ant-table-row-selected" : "")">
-                        @table.ChildContent(data)
-                    </tr>
+                    <CascadingValue Value="cacheKey" Name="CacheKey">
+                        <tr data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-0 @(selected ? "ant-table-row-selected" : "")">
+                            @table.ChildContent(data)
+                        </tr>
+                    </CascadingValue>
                 </CascadingValue>
             </CascadingValue>
         }

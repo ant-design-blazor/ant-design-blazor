@@ -17,8 +17,14 @@ namespace AntDesign
         [CascadingParameter(Name = "IsPlaceholder")]
         public bool IsPlaceholder { get; set; }
 
+        [CascadingParameter(Name = "RowIndex")]
+        public int RowIndex { get; set; }
+
         [CascadingParameter]
         public ColumnContext Context { get; set; }
+
+        [CascadingParameter(Name = "CacheKey")]
+        public int CacheKey { get; set; }
 
         [Parameter]
         public string Title { get; set; }
@@ -32,17 +38,17 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        public int Index { get; set; }
+        public int ColIndex { get; set; }
 
-        protected string FixedStyle => Fixed != null ? $"position: sticky; {Fixed}: {Width * (Fixed == "left" ? Index : Context.Columns.Count - Index - 1)}px;" : "";
+        protected string FixedStyle => Fixed != null ? $"position: sticky; {Fixed}: {Width * (Fixed == "left" ? ColIndex : Context.Columns.Count - ColIndex - 1)}px;" : "";
 
         private void SetClass()
         {
             ClassMapper
                 .Add("ant-table-cell")
                 .If($"ant-table-cell-fix-{Fixed}", () => Fixed.IsIn("right", "left"))
-                .If($"ant-table-cell-fix-right-first", () => Fixed == "right" && Context?.Columns.FirstOrDefault(x => x.Fixed == "right")?.Index == this.Index)
-                .If($"ant-table-cell-fix-left-last", () => Fixed == "left" && Context?.Columns.LastOrDefault(x => x.Fixed == "left")?.Index == this.Index)
+                .If($"ant-table-cell-fix-right-first", () => Fixed == "right" && Context?.Columns.FirstOrDefault(x => x.Fixed == "right")?.ColIndex == this.ColIndex)
+                .If($"ant-table-cell-fix-left-last", () => Fixed == "left" && Context?.Columns.LastOrDefault(x => x.Fixed == "left")?.ColIndex == this.ColIndex)
                 ;
         }
 

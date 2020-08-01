@@ -14,9 +14,13 @@ namespace AntDesign
 
         public bool IsColGroup { get; set; }
 
-        public int Index { get; set; }
+        public int ColIndex { get; set; }
+
+        public int RowIndex { get; }
 
         public string Fixed { get; set; }
+
+        public int CacheKey { get; set; }
 
         public string Title { get; set; }
 
