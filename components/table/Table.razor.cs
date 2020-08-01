@@ -20,7 +20,7 @@ namespace AntDesign
             {
                 _dataSourceCount = value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
-                Reload();
+                _waitingReload = true;
             }
         }
 
@@ -59,6 +59,8 @@ namespace AntDesign
         private IEnumerable<TItem> _showItems;
 
         private IEnumerable<TItem> _dataSource;
+
+        private bool _waitingReload = false;
 
         private bool ServerSide => _total > _dataSourceCount;
 
@@ -153,6 +155,12 @@ namespace AntDesign
         protected override void OnAfterRender(bool firstRender)
         {
             base.OnAfterRender(firstRender);
+
+            if (_waitingReload)
+            {
+                _waitingReload = false;
+                Reload();
+            }
 
             if (!firstRender)
             {
