@@ -1,0 +1,110 @@
+@page "/Sparkline"
+@using AntDesign.Charts
+
+<Table DataSource="datas">
+    <AntDesign.Column @bind-Field="@context.id"></AntDesign.Column>
+    <AntDesign.Column TData="string">
+        <TinyColumn Data="@context.trend" Config="trendConfig"></TinyColumn>
+    </AntDesign.Column>
+    <AntDesign.Column TData="string">
+        <TinyLine Data="@context.times" Config="timesConfig"></TinyLine>
+    </AntDesign.Column>
+    <AntDesign.Column TData="string">
+        <RingProgress Data="@context.load" Config="loadConfig"></RingProgress>
+    </AntDesign.Column>
+</Table>
+@code{
+
+    List<DataItem> datas = new List<DataItem>()
+{
+        new DataItem() { id= "local-001" },
+        new DataItem() { id= "local-002" },
+        new DataItem() { id= "local-003" },
+        new DataItem() { id= "local-004" },
+        new DataItem() { id= "local-005" },
+    };
+
+    protected override Task OnInitializedAsync()
+    {
+        Random r = new Random();
+        datas.ForEach(x =>
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                x.trend.Add(new DataValue() { index = i.ToString(), value = r.Next(10, 1000) });
+            }
+            for (int i = 0; i < 20; i++)
+            {
+                x.times.Add(new DataValue() { index = i.ToString(), value = r.Next(200, 400) });
+            }
+            x.load = r.NextDouble();
+        });
+
+        return base.OnInitializedAsync();
+    }
+
+    TinyColumnConfig trendConfig = new TinyColumnConfig()
+    {
+        Width = 200,
+        Height = 50,
+        XField = "index",
+        YField = "value",
+        GuideLine = new object[] {
+            new {
+                Type = "median",
+                Text = new {
+                    Position = "start",
+                    Content = "中位数",
+                    Style = new {
+                        Stroke = "white",
+                        LineWidth = 2,
+                    },
+                },
+            },
+        }
+    };
+
+    TinyLineConfig timesConfig = new TinyLineConfig()
+    {
+        Width = 200,
+        Height = 50,
+        XField = "index",
+        YField = "value",
+        GuideLine = new object[] {
+            new {
+                Type = "mean",
+                Text = new {
+                    Position = "start",
+                    Content = "平均值",
+                    Style = new {
+                        Stroke = "white",
+                        LineWidth = 2,
+                    },
+                },
+            }
+        }
+    };
+
+    RingProgressConfig loadConfig = new RingProgressConfig()
+    {
+        Width = 50,
+        Height = 50,
+
+    };
+
+    public class DataItem
+    {
+        public string id { get; set; }
+        public List<DataValue> times { get; set; } = new List<DataValue>();
+        public List<DataValue> trend { get; set; } = new List<DataValue>();
+        public double load { get; set; }
+    }
+
+    public class DataValue
+    {
+        public string index { get; set; }
+        public int value { get; set; }
+    }
+
+}
+

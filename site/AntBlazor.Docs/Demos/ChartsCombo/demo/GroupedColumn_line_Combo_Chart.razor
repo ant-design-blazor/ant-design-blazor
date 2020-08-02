@@ -1,0 +1,59 @@
+@page "/GroupedColumn_line_Combo_Chart"
+@using AntDesign.Charts
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <GroupedColumnLine Data=@(new object[] {uvBillData,transformData }) Config="config1" />
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+    #region 示例1
+
+    object uvBillData = new object[]{
+        new { time = "2019-03", value = 350, type = "uv" },
+        new { time= "2019-04", value= 900, type= "uv" },
+        new { time= "2019-05", value= 300, type= "uv" },
+        new { time= "2019-06", value= 450, type= "uv" },
+        new { time= "2019-07", value= 470, type= "uv" },
+        new { time= "2019-03", value= 220, type= "bill" },
+        new { time= "2019-04", value= 300, type= "bill" },
+        new { time= "2019-05", value= 250, type= "bill" },
+        new { time= "2019-06", value= 220, type= "bill" },
+        new { time= "2019-07", value= 362, type= "bill" },
+};
+
+    object transformData = new object[]{
+        new { time = "2019-03", count = 800 },
+        new { time= "2019-04", count= 600 },
+        new { time= "2019-05", count= 400 },
+        new { time= "2019-06", count= 380 },
+        new { time= "2019-07", count= 220 },
+    };
+
+    GroupedColumnLineConfig config1 = new GroupedColumnLineConfig()
+    {
+        Title = new Charts.Title()
+        {
+            Visible = true,
+            Text = "分组柱+折线混合图",
+            AlignTo = "middle",
+        },
+        Description = new Description()
+        {
+            Visible = true,
+            Text = "分组柱+折线混合图表",
+            AlignTo = "middle",
+        },
+        XField = "time",
+        YField = new string[] { "value", "count" },
+        ColumnGroupField = "type",
+    };
+
+    #endregion 示例1
+
+}
+

@@ -99,7 +99,9 @@ namespace AntDesign.Docs.Build.CLI.Command
                 ["反馈"] = 5,
                 ["Localization"] = 6,
                 ["Other"] = 7,
-                ["其他"] = 7
+                ["其他"] = 7,
+                ["Charts"] = 8,
+                ["图表"] = 8
             };
 
             foreach (FileSystemInfo component in demoDirectoryInfo.GetFileSystemInfos())

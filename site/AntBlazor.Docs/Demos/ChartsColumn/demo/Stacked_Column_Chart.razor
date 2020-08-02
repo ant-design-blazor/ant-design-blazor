@@ -1,0 +1,133 @@
+@page "/Stacked_Column_Chart"
+@using AntDesign.Charts
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <StackedColumn Data=data1 Config="config1" />
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+    #region 示例1
+
+    object[] data1 = new object[] {
+        new  {
+    year= "1991",
+    value= 3,
+    type= "Lon",
+  },
+        new  {
+    year= "1992",
+    value= 4,
+    type= "Lon",
+  },
+        new  {
+    year= "1993",
+    value= 3.5,
+    type= "Lon",
+  },
+        new  {
+    year= "1994",
+    value= 5,
+    type= "Lon",
+  },
+        new  {
+    year= "1995",
+    value= 4.9,
+    type= "Lon",
+  },
+        new  {
+    year= "1996",
+    value= 6,
+    type= "Lon",
+  },
+        new  {
+    year= "1997",
+    value= 7,
+    type= "Lon",
+  },
+        new  {
+    year= "1998",
+    value= 9,
+    type= "Lon",
+  },
+        new  {
+    year= "1999",
+    value= 13,
+    type= "Lon",
+  },
+        new  {
+    year= "1991",
+    value= 3,
+    type= "Bor",
+  },
+        new  {
+    year= "1992",
+    value= 4,
+    type= "Bor",
+  },
+        new  {
+    year= "1993",
+    value= 3.5,
+    type= "Bor",
+  },
+        new  {
+    year= "1994",
+    value= 5,
+    type= "Bor",
+  },
+        new  {
+    year= "1995",
+    value= 4.9,
+    type= "Bor",
+  },
+        new  {
+    year= "1996",
+    value= 6,
+    type= "Bor",
+  },
+        new  {
+    year= "1997",
+    value= 7,
+    type= "Bor",
+  },
+        new  {
+    year= "1998",
+    value= 9,
+    type= "Bor",
+  },
+        new  {
+    year= "1999",
+    value= 13,
+    type= "Bor",
+  },
+};
+
+    StackedColumnConfig config1 = new StackedColumnConfig()
+    {
+        Title = new Charts.Title()
+        {
+            Visible = true,
+            Text = "堆叠柱状图",
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "year",
+        YField = "value",
+        YAxis = new ValueAxis()
+        {
+            Min = 0,
+        },
+        Color = new string[] { "#ae331b", "#1a6179" },
+        StackField = "type",
+    };
+
+
+    #endregion 示例1
+
+
+}
+

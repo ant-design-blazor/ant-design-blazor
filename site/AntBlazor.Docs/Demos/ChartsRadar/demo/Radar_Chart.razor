@@ -1,0 +1,88 @@
+@page "/Radar_Chart"
+@using AntDesign.Charts
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <Radar Data=data1 Config="config1" />
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+    #region 示例1
+
+    object[] data1 = new object[] {
+        new  {
+    item= "Design",
+    score= 70,
+  },
+        new  {
+    item= "Development",
+    score= 60,
+  },
+        new  {
+    item= "Marketing",
+    score= 60,
+  },
+        new  {
+    item= "Users",
+    score= 40,
+  },
+        new  {
+    item= "Test",
+    score= 60,
+  },
+        new  {
+    item= "Language",
+    score= 70,
+  },
+        new  {
+    item= "Technology",
+    score= 50,
+  },
+        new  {
+    item= "Support",
+    score= 30,
+  },
+        new  {
+    item= "Sales",
+    score= 60,
+  },
+        new  {
+    item= "UX",
+    score= 50,
+  },
+};
+    RadarConfig config1 = new RadarConfig()
+    {
+        Title = new Charts.Title()
+        {
+            Visible = true,
+            Text = "基础雷达图",
+        },
+        AngleField = "item",
+        RadiusField = "score",
+        RadiusAxis = new ValueAxis()
+        {
+            Grid = new BaseAxisGrid()
+            {
+                AlternateColor = new string[] { "rgba(0, 0, 0, 0.04)", null },
+            },
+        },
+        Area = new RadarViewConfigArea()
+        {
+            Visible = false,
+        },
+        Point = new RadarViewConfigPoint()
+        {
+            Visible = true,
+        },
+    };
+
+    #endregion 示例1
+
+
+}
+

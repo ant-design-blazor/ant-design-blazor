@@ -1,0 +1,57 @@
+@page "/Basic_StepLine_Chart"
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@using AntDesign.Charts
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <StepLine @ref="@chart1" Config="config1" Data="data1" />
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+    IChartComponent chart1;
+    FireworksSalesItem[] data1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        data1 = await ChartsDemoData.FireworksSalesAsync(NavigationManager, HttpClient);
+        await chart1.ChangeData(data1);
+
+        await base.OnInitializedAsync();
+    }
+
+
+    #region 示例1
+
+    StepLineConfig config1 = new StepLineConfig()
+    {
+        Title = new Charts.Title()
+        {
+            Visible = true,
+            Text = "单阶梯折线的基础用法",
+        },
+        Description = new Description()
+        {
+            Visible = true,
+            Text = "最基础简单的阶梯图使用方式，显示一个指标的趋势和变化",
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "Date",
+        YField = "scales",
+        XAxis = new ValueCatTimeAxis()
+        {
+            Type = "dateTime",
+            TickCount = 5,
+        },
+    };
+
+    #endregion 示例1
+
+
+}
+

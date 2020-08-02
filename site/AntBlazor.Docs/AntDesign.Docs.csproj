@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AntDesign.Charts" Version="0.1.0" />
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
   </ItemGroup>
 
@@ -30,6 +31,10 @@
     <Compile Include="..\Shared\DemoComponent.cs" Link="Services\DemoComponent.cs" />
     <Compile Include="..\Shared\DemoMenuItem.cs" Link="Services\DemoMenuItem.cs" />
     <Compile Include="..\Shared\DocsFile.cs" Link="Services\DocsFile.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Demos\ChartsCalendar\demo\Calendar_Chart.razor" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">

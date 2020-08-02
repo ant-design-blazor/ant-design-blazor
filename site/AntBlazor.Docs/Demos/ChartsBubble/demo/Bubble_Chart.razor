@@ -1,0 +1,52 @@
+@page "/Bubble_Chart"
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@using AntDesign.Charts
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <Bubble @ref="chart1" Data="data1" Config="config1" />
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+
+
+    IChartComponent chart1;
+    SmokingRateItem[] data1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        data1 = await ChartsDemoData.SmokingRateAsync(NavigationManager, HttpClient);
+        await chart1.ChangeData(data1);
+
+        await base.OnInitializedAsync();
+    }
+
+    #region 示例1
+
+
+    //smoking-rate
+    BubbleConfig config1 = new BubbleConfig()
+    {
+        XField = "change in female rate",
+        YField = "change in male rate",
+        SizeField = "pop",
+        PointSize = new int[] { 4, 30 },
+        ColorField = new string[] { "continent" },
+        Color = new string[] { "#ffd500", "#82cab2", "#193442", "#d18768", "#7e827a" },
+        XAxis = new ValueTimeAxis()
+        {
+            Visible = true,
+            Max = 5,
+            Min = -25,
+        },
+    };
+
+    #endregion 示例1
+
+}
+
