@@ -8,6 +8,7 @@
     <Table @ref="table"
            DataSource="@forecasts"
            Total="_total"
+           Loading="_loading"
            @bind-PageIndex="_pageIndex"
            @bind-PageSize="_pageSize"
            OnPageIndexChange="fetchData"
@@ -21,7 +22,7 @@
     </Table>
 
     <br />
-    <p>pageIndex: @_pageIndex | pageSize: @_pageSize | Total: @_total</p>
+    <p>PageIndex: @_pageIndex | PageSize: @_pageSize | Total: @_total</p>
 </div>
 
 @inject NavigationManager navigation
@@ -36,6 +37,7 @@
     int _pageSize = 5;
     int _total = 0;
     string _url;
+    bool _loading;
 
     protected override async Task OnInitializedAsync()
     {
@@ -43,8 +45,11 @@
         var query = HttpUtility.ParseQueryString(_url);
         _pageIndex = int.TryParse(query["page"], out var index) ? index > 0 ? index : 1 : 1;
         _pageSize = int.TryParse(query["size"], out var size) ? size > 0 ? size : 5 : 5;
+
+        _loading = true;
         forecasts = await GetForecastAsync(_pageIndex, _pageSize);
         _total = 50;
+        _loading = false;
     }
 
     void fetchData(PaginationEventArgs args)
@@ -75,10 +80,11 @@
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
 
-    public Task<WeatherForecast[]> GetForecastAsync(int pageIndex, int pageSize)
+    public async Task<WeatherForecast[]> GetForecastAsync(int pageIndex, int pageSize)
     {
+        await Task.Delay(1000);
         var rng = new Random();
-        return Task.FromResult(Enumerable.Range((pageIndex - 1) * pageSize + 1, pageSize).Select(index =>
+        return await Task.FromResult(Enumerable.Range((pageIndex - 1) * pageSize + 1, pageSize).Select(index =>
         {
             var temperatureC = rng.Next(-20, 55);
             return new WeatherForecast

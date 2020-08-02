@@ -146,7 +146,7 @@ namespace AntDesign
         {
             if (IsHeader)
             {
-                _checked = this.RowSelections.All(x => x.Checked);
+                _checked = this.RowSelections.Any() && this.RowSelections.All(x => x.Checked);
                 StateHasChanged();
             }
         }
