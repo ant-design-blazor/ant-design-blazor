@@ -1,7 +1,7 @@
 ﻿name: Publish Docs
 
 env:
-  Version: 0.2.0
+  Version: 0.3.0
   NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
 
 on:
@@ -54,7 +54,7 @@ jobs:
 
       - name: Package Nightly Nuget 📦
         run: |
-          FULL_VERSION=$Version-nightly-`date "+%y%m%d%H%M%S"`
+          FULL_VERSION=$Version-nightly-`date "+%y%m%d%H%M"`
           echo "Version: ${FULL_VERSION}"
           echo "::set-env name=FULL_VERSION::${FULL_VERSION}"
           dotnet pack components/AntDesign.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish --no-build --no-restore
