@@ -17,6 +17,9 @@
     [Parameter]
     public string Type { get; set; }
 
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string,object> Attributes { get; set; }
+
     RenderFragment ShowCaseContent => (builder) =>
     {
         var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
