@@ -63,6 +63,7 @@ namespace AntDesign
         object IForm.Model => Model;
 
         bool IForm.IsModified => throw new NotImplementedException();
+
         public event Action<IForm> OnFinishEvent;
 
         protected override void OnInitialized()
@@ -121,13 +122,16 @@ namespace AntDesign
 
         public void Submit()
         {
-            bool isValid = _editContext.Validate();
+            var isValid = _editContext.Validate();
 
             if (isValid)
             {
-                OnFinish.InvokeAsync(_editContext);
+                if (OnFinish.HasDelegate)
+                {
+                    OnFinish.InvokeAsync(_editContext);
+                }
 
-                OnFinishEvent.Invoke(this);
+                OnFinishEvent?.Invoke(this);
             }
             else
             {
