@@ -1,67 +1,73 @@
 @page "/Donut_Chart"
 @using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <Donut Data=data1 Config="config1" />
+            <Donut Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
 
 @code{
+
     #region 示例1
 
-    object[] data1 = new object[] {
-        new  {
-    type= "分类一",
-    value= 27,
-  },
-        new  {
-    type= "分类二",
-    value= 25,
-  },
-        new  {
-    type= "分类三",
-    value= 18,
-  },
-        new  {
-    type= "分类四",
-    value= 15,
-  },
-        new  {
-    type= "分类五",
-    value= 10,
-  },
-        new  {
-    type= "其它",
-    value= 5,
-  },
-};
+    readonly object[] data1 =
+    {
+        new
+        {
+            type = "分类一",
+            value = 27
+        },
+        new
+        {
+            type = "分类二",
+            value = 25
+        },
+        new
+        {
+            type = "分类三",
+            value = 18
+        },
+        new
+        {
+            type = "分类四",
+            value = 15
+        },
+        new
+        {
+            type = "分类五",
+            value = 10
+        },
+        new
+        {
+            type = "其它",
+            value = 5
+        }
+    };
 
-    DonutConfig config1 = new DonutConfig()
+    readonly DonutConfig config1 = new DonutConfig
     {
         ForceFit = true,
-        Title = new AntDesign.Charts.Title()
+        Title = new Title
         {
             Visible = true,
-            Text = "环图",
+            Text = "环图"
         },
-        Description = new Description()
+        Description = new Description
         {
             Visible = true,
-            Text = "环图的外半径决定环图的大小，而内半径决定环图的厚度。",
+            Text = "环图的外半径决定环图的大小，而内半径决定环图的厚度。"
         },
         Radius = 0.8,
         Padding = "auto",
         AngleField = "value",
-        ColorField = "type",
+        ColorField = "type"
     };
-
 
     #endregion 示例1
 
-
 }
-

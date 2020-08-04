@@ -1,14 +1,14 @@
 @page "/Stacked_Area_Chart"
+@using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
-@using AntDesign.Charts
-@using System.Text.Json.Serialization
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <StackedArea @ref="chart1" TItem="OilItem" Config="config1" />
+            <StackedArea @ref="chart1" TItem="OilItem" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -27,35 +27,30 @@
 
     #region 示例1
 
-
-    StackedAreaConfig config1 = new StackedAreaConfig()
+    readonly StackedAreaConfig config1 = new StackedAreaConfig
     {
-        Title = new AntDesign.Charts.Title()
+        Title = new Title
         {
             Visible = true,
-            Text = "堆叠面积图",
+            Text = "堆叠面积图"
         },
         XField = "date",
         YField = "value",
         StackField = "country",
-        Color = new string[] { "#6897a7", "#8bc0d6", "#60d7a7", "#dedede", "#fedca9", "#fab36f", "#d96d6f" },
-        XAxis = new ValueCatTimeAxis()
+        Color = new[] {"#6897a7", "#8bc0d6", "#60d7a7", "#dedede", "#fedca9", "#fab36f", "#d96d6f"},
+        XAxis = new ValueCatTimeAxis
         {
             Type = "dateTime",
-            TickCount = 5,
+            TickCount = 5
         },
-        Legend = new Legend()
+        Legend = new Legend
         {
             Visible = true,
-            Position = "right-top",
-        },
+            Position = "right-top"
+        }
         @*responsive = true,*@
     };
-
 
     #endregion 示例1
 
 }
-
-
-

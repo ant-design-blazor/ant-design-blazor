@@ -1,96 +1,98 @@
 @page "/Range_Bar_Chart"
 @using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <RangeBar Data=data1 Config="config1" />
+            <RangeBar Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
     <TabPane Key="2">
         <Tab>示例2</Tab>
         <ChildContent>
-            <RangeBar Data=data2 Config="config2" />
+            <RangeBar Data="data2" Config="config2"/>
         </ChildContent>
     </TabPane>
 </Tabs>
 
 @code{
+
     #region 示例1
 
-    object[] data1 = new object[] {
-        new  { type= "分类一", values=new int []{76, 100 } },
-        new  { type= "分类二", values=new int []{56, 108 } },
-        new  { type= "分类三", values=new int []{38, 129 } },
-        new  { type= "分类四", values=new int []{58, 155 } },
-        new  { type= "分类五", values=new int []{45, 120 } },
-        new  { type= "分类六", values=new int []{23, 99 } },
-        new  { type= "分类七", values=new int []{18, 56 } },
-        new  { type= "分类八", values=new int []{18, 34 } },
-};
-
-    RangeBarConfig config1 = new RangeBarConfig()
+    readonly object[] data1 =
     {
-        Title = new AntDesign.Charts.Title()
+        new {type = "分类一", values = new[] {76, 100}},
+        new {type = "分类二", values = new[] {56, 108}},
+        new {type = "分类三", values = new[] {38, 129}},
+        new {type = "分类四", values = new[] {58, 155}},
+        new {type = "分类五", values = new[] {45, 120}},
+        new {type = "分类六", values = new[] {23, 99}},
+        new {type = "分类七", values = new[] {18, 56}},
+        new {type = "分类八", values = new[] {18, 34}}
+    };
+
+    readonly RangeBarConfig config1 = new RangeBarConfig
+    {
+        Title = new Title
         {
             Visible = true,
-            Text = "区间条形图",
+            Text = "区间条形图"
         },
         XField = "values",
-        YField = "type",
+        YField = "type"
     };
 
     #endregion 示例1
 
     #region 示例2
 
-
-    object[] data2 = new object[] {
-        new  { type= "分类一", values=new int []{76, 100 } },
-        new  { type= "分类二", values=new int []{56, 108 } },
-        new  { type= "分类三", values=new int []{38, 129 } },
-        new  { type= "分类四", values=new int []{58, 155 } },
-        new  { type= "分类五", values=new int []{45, 120 } },
-        new  { type= "分类六", values=new int []{23, 99 } },
-        new  { type= "分类七", values=new int []{18, 56 } },
-        new  { type= "分类八", values=new int []{18, 34 } },
-};
-
-    RangeBarConfig config2 = new RangeBarConfig()
+    readonly object[] data2 =
     {
-        Title = new AntDesign.Charts.Title()
+        new {type = "分类一", values = new[] {76, 100}},
+        new {type = "分类二", values = new[] {56, 108}},
+        new {type = "分类三", values = new[] {38, 129}},
+        new {type = "分类四", values = new[] {58, 155}},
+        new {type = "分类五", values = new[] {45, 120}},
+        new {type = "分类六", values = new[] {23, 99}},
+        new {type = "分类七", values = new[] {18, 56}},
+        new {type = "分类八", values = new[] {18, 34}}
+    };
+
+    readonly RangeBarConfig config2 = new RangeBarConfig
+    {
+        Title = new Title
         {
             Visible = true,
-            Text = "为区间条形图配置label样式",
+            Text = "为区间条形图配置label样式"
         },
-        Description = new Description()
+        Description = new Description
         {
             Visible = true,
-            Text = "使用style配置项配置label整体样式，同时支持通过leftStyle和rightStyle分别配置label样式。",
+            Text = "使用style配置项配置label整体样式，同时支持通过leftStyle和rightStyle分别配置label样式。"
         },
         XField = "values",
         YField = "type",
-        Color = new string[] { "l(0) 0:#3e5bdb 1:#dd3121" },
+        Color = new[] {"l(0) 0:#3e5bdb 1:#dd3121"},
         ColumnStyle = new
         {
-            FillOpacity = 0.8,
+            FillOpacity = 0.8
         },
-        Label = new RangeBarLabelConfig()
+        Label = new RangeBarLabelConfig
         {
             Visible = true,
             LeftStyle = new
             {
-                Fill = "#3e5bdb",
+                Fill = "#3e5bdb"
             },
             RightStyle = new
             {
-                Fill = "#dd3121",
-            },
-        },
+                Fill = "#dd3121"
+            }
+        }
     };
 
     #endregion 示例2
 
 }
-

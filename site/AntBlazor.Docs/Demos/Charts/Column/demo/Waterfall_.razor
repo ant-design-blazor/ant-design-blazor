@@ -1,11 +1,12 @@
 @page "/Waterfall_Chart"
 @using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <Waterfall Data=data1 Config="config1" />
+            <Waterfall Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -14,22 +15,23 @@
 
     #region 示例1
 
-    object[] data1 = new object[] {
-        new  { type= "日用品", money= 120 },
-        new  { type= "伙食费", money= 900 },
-        new  { type= "交通费", money= 200 },
-        new  { type= "水电费", money= 300 },
-        new  { type= "房租", money= 1200 },
-        new  { type= "商场消费", money= 1000 },
-        new  { type= "应酬红包", money= -2000 },
-};
-
-    WaterfallConfig config1 = new WaterfallConfig()
+    readonly object[] data1 =
     {
-        Title = new AntDesign.Charts.Title()
+        new {type = "日用品", money = 120},
+        new {type = "伙食费", money = 900},
+        new {type = "交通费", money = 200},
+        new {type = "水电费", money = 300},
+        new {type = "房租", money = 1200},
+        new {type = "商场消费", money = 1000},
+        new {type = "应酬红包", money = -2000}
+    };
+
+    readonly WaterfallConfig config1 = new WaterfallConfig
+    {
+        Title = new Title
         {
             Visible = true,
-            Text = "每月收支情况（瀑布图）",
+            Text = "每月收支情况（瀑布图）"
         },
         ForceFit = true,
         Padding = "auto",
@@ -39,17 +41,15 @@
         {
             Type = new
             {
-                Alias = "类别",
+                Alias = "类别"
             },
             Money = new
             {
-                Alias = "金额",
-            },
-        },
+                Alias = "金额"
+            }
+        }
     };
-
 
     #endregion 示例1
 
 }
-

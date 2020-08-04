@@ -1,86 +1,101 @@
 @page "/Guideline"
 @using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <AntDesign.Charts.Column Data=data1 Config="config1" />
+            <AntDesign.Charts.Column Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
 
 @code{
+
     #region 示例1
 
-    object[] data1 = new object[] {
-        new  {
-    year= "1991",
-    value= 31,
-  },
-        new  {
-    year= "1992",
-    value= 41,
-  },
-        new  {
-    year= "1993",
-    value= 35,
-  },
-        new  {
-    year= "1994",
-    value= 55,
-  },
-        new  {
-    year= "1995",
-    value= 49,
-  },
-        new  {
-    year= "1996",
-    value= 15,
-  },
-        new  {
-    year= "1997",
-    value= 17,
-  },
-        new  {
-    year= "1998",
-    value= 29,
-  },
-        new  {
-    year= "1999",
-    value= 33,
-  },
-};
-
-    ColumnConfig config1 = new ColumnConfig()
+    object[] data1 =
     {
-        Title = new AntDesign.Charts.Title()
+        new
+        {
+            year = "1991",
+            value = 31
+        },
+        new
+        {
+            year = "1992",
+            value = 41
+        },
+        new
+        {
+            year = "1993",
+            value = 35
+        },
+        new
+        {
+            year = "1994",
+            value = 55
+        },
+        new
+        {
+            year = "1995",
+            value = 49
+        },
+        new
+        {
+            year = "1996",
+            value = 15
+        },
+        new
+        {
+            year = "1997",
+            value = 17
+        },
+        new
+        {
+            year = "1998",
+            value = 29
+        },
+        new
+        {
+            year = "1999",
+            value = 33
+        }
+    };
+
+    ColumnConfig config1 = new ColumnConfig
+    {
+        Title = new Title
         {
             Visible = true,
-            Text = "更改图表辅助线样式",
+            Text = "更改图表辅助线样式"
         },
         XField = "year",
         YField = "value",
-        GuideLine = new GuideLineConfig[]{
-            new GuideLineConfig()   {
-            Type = "mean", // "max" | "min" | "median" |  "mean"
-            LineStyle =new LineStyle() {
-                Stroke = "red",
-                LineDash =new int[] {4, 2 },
-            },
-            Text =new GuideLineConfigText()
+        GuideLine = new[]
+        {
+            new GuideLineConfig
             {
-                Position= "start",
-                Content= "预警线",
-                Style= new TextStyle() {
-                    Fill= "red",
+                Type = "mean", // "max" | "min" | "median" |  "mean"
+                LineStyle = new LineStyle
+                {
+                    Stroke = "red",
+                    LineDash = new[] {4, 2}
                 },
-            },
-            },
-        },
+                Text = new GuideLineConfigText
+                {
+                    Position = "start",
+                    Content = "预警线",
+                    Style = new TextStyle
+                    {
+                        Fill = "red"
+                    }
+                }
+            }
+        }
     };
 
-
     #endregion 示例1
-}
 
+}

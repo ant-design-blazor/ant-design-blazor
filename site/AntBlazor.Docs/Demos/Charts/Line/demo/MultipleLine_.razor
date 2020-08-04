@@ -1,25 +1,26 @@
 @page "/Multiple_Line_Chart"
+@using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
-@using AntDesign.Charts
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <AntDesign.Charts.Line Data=data1 Config="config1" />
+            <AntDesign.Charts.Line Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
     <TabPane Key="2">
         <Tab>示例2</Tab>
         <ChildContent>
-            <AntDesign.Charts.Line @ref="chart2" Data="data2" Config="config2" />
+            <AntDesign.Charts.Line @ref="chart2" Data="data2" Config="config2"/>
         </ChildContent>
     </TabPane>
     <TabPane Key="3">
         <Tab>示例3</Tab>
         <ChildContent>
-            <AntDesign.Charts.Line @ref="chart3" Data="data3" Config="config3" />
+            <AntDesign.Charts.Line @ref="chart3" Data="data3" Config="config3"/>
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -41,355 +42,387 @@
         await base.OnInitializedAsync();
     }
 
-
     #region 示例1
 
-    object[] data1 = new object[] {
-        new  {
-    date= "2018/8/1",
-    type= "download",
-    value= 4623,
-  },
-        new  {
-    date= "2018/8/1",
-    type= "register",
-    value= 2208,
-  },
-        new  {
-    date= "2018/8/1",
-    type= "bill",
-    value= 182,
-  },
-        new  {
-    date= "2018/8/2",
-    type= "download",
-    value= 6145,
-  },
-        new  {
-    date= "2018/8/2",
-    type= "register",
-    value= 2016,
-  },
-        new  {
-    date= "2018/8/2",
-    type= "bill",
-    value= 257,
-  },
-        new  {
-    date= "2018/8/3",
-    type= "download",
-    value= 508,
-  },
-        new  {
-    date= "2018/8/3",
-    type= "register",
-    value= 2916,
-  },
-        new  {
-    date= "2018/8/3",
-    type= "bill",
-    value= 289,
-  },
-        new  {
-    date= "2018/8/4",
-    type= "download",
-    value= 6268,
-  },
-        new  {
-    date= "2018/8/4",
-    type= "register",
-    value= 4512,
-  },
-        new  {
-    date= "2018/8/4",
-    type= "bill",
-    value= 428,
-  },
-        new  {
-    date= "2018/8/5",
-    type= "download",
-    value= 6411,
-  },
-        new  {
-    date= "2018/8/5",
-    type= "register",
-    value= 8281,
-  },
-        new  {
-    date= "2018/8/5",
-    type= "bill",
-    value= 619,
-  },
-        new  {
-    date= "2018/8/6",
-    type= "download",
-    value= 1890,
-  },
-        new  {
-    date= "2018/8/6",
-    type= "register",
-    value= 2008,
-  },
-        new  {
-    date= "2018/8/6",
-    type= "bill",
-    value= 87,
-  },
-        new  {
-    date= "2018/8/7",
-    type= "download",
-    value= 4251,
-  },
-        new  {
-    date= "2018/8/7",
-    type= "register",
-    value= 1963,
-  },
-        new  {
-    date= "2018/8/7",
-    type= "bill",
-    value= 706,
-  },
-        new  {
-    date= "2018/8/8",
-    type= "download",
-    value= 2978,
-  },
-        new  {
-    date= "2018/8/8",
-    type= "register",
-    value= 2367,
-  },
-        new  {
-    date= "2018/8/8",
-    type= "bill",
-    value= 387,
-  },
-        new  {
-    date= "2018/8/9",
-    type= "download",
-    value= 3880,
-  },
-        new  {
-    date= "2018/8/9",
-    type= "register",
-    value= 2956,
-  },
-        new  {
-    date= "2018/8/9",
-    type= "bill",
-    value= 488,
-  },
-        new  {
-    date= "2018/8/10",
-    type= "download",
-    value= 3606,
-  },
-        new  {
-    date= "2018/8/10",
-    type= "register",
-    value= 678,
-  },
-        new  {
-    date= "2018/8/10",
-    type= "bill",
-    value= 507,
-  },
-        new  {
-    date= "2018/8/11",
-    type= "download",
-    value= 4311,
-  },
-        new  {
-    date= "2018/8/11",
-    type= "register",
-    value= 3188,
-  },
-        new  {
-    date= "2018/8/11",
-    type= "bill",
-    value= 548,
-  },
-        new  {
-    date= "2018/8/12",
-    type= "download",
-    value= 4116,
-  },
-        new  {
-    date= "2018/8/12",
-    type= "register",
-    value= 3491,
-  },
-        new  {
-    date= "2018/8/12",
-    type= "bill",
-    value= 456,
-  },
-        new  {
-    date= "2018/8/13",
-    type= "download",
-    value= 6419,
-  },
-        new  {
-    date= "2018/8/13",
-    type= "register",
-    value= 2852,
-  },
-        new  {
-    date= "2018/8/13",
-    type= "bill",
-    value= 689,
-  },
-        new  {
-    date= "2018/8/14",
-    type= "download",
-    value= 1643,
-  },
-        new  {
-    date= "2018/8/14",
-    type= "register",
-    value= 4788,
-  },
-        new  {
-    date= "2018/8/14",
-    type= "bill",
-    value= 280,
-  },
-        new  {
-    date= "2018/8/15",
-    type= "download",
-    value= 445,
-  },
-        new  {
-    date= "2018/8/15",
-    type= "register",
-    value= 4319,
-  },
-        new  {
-    date= "2018/8/15",
-    type= "bill",
-    value= 176,
-  },
-};
-
-    LineConfig config1 = new LineConfig()
+    object[] data1 =
     {
-        Title = new AntDesign.Charts.Title()
+        new
         {
-            Visible = true,
-            Text = "多折线图",
+            date = "2018/8/1",
+            type = "download",
+            value = 4623
         },
-        Description = new Description()
+        new
+        {
+            date = "2018/8/1",
+            type = "register",
+            value = 2208
+        },
+        new
+        {
+            date = "2018/8/1",
+            type = "bill",
+            value = 182
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "download",
+            value = 6145
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "register",
+            value = 2016
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "bill",
+            value = 257
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "download",
+            value = 508
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "register",
+            value = 2916
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "bill",
+            value = 289
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "download",
+            value = 6268
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "register",
+            value = 4512
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "bill",
+            value = 428
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "download",
+            value = 6411
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "register",
+            value = 8281
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "bill",
+            value = 619
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "download",
+            value = 1890
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "register",
+            value = 2008
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "bill",
+            value = 87
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "download",
+            value = 4251
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "register",
+            value = 1963
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "bill",
+            value = 706
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "download",
+            value = 2978
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "register",
+            value = 2367
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "bill",
+            value = 387
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "download",
+            value = 3880
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "register",
+            value = 2956
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "bill",
+            value = 488
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "download",
+            value = 3606
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "register",
+            value = 678
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "bill",
+            value = 507
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "download",
+            value = 4311
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "register",
+            value = 3188
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "bill",
+            value = 548
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "download",
+            value = 4116
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "register",
+            value = 3491
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "bill",
+            value = 456
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "download",
+            value = 6419
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "register",
+            value = 2852
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "bill",
+            value = 689
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "download",
+            value = 1643
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "register",
+            value = 4788
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "bill",
+            value = 280
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "download",
+            value = 445
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "register",
+            value = 4319
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "bill",
+            value = 176
+        }
+    };
+
+    LineConfig config1 = new LineConfig
+    {
+        Title = new Title
         {
             Visible = true,
-            Text = "将数据按照某一字段进行分组，用于比对不同类型数据的趋势。",
+            Text = "多折线图"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "将数据按照某一字段进行分组，用于比对不同类型数据的趋势。"
         },
         Padding = "auto",
         ForceFit = true,
         XField = "date",
         YField = "value",
-        YAxis = new ValueAxis()
+        YAxis = new ValueAxis
         {
             Label = new BaseAxisLabel()
-            {
-                // 数值格式化为千分位
-            },
         },
-        Legend = new Legend()
+        Legend = new Legend
         {
-            Position = "right-top",
+            Position = "right-top"
         },
-        SeriesField = "type",
+        SeriesField = "type"
         @*responsive = true,*@
     };
-
 
     #endregion 示例1
 
     #region 示例2
 
-
-    LineConfig config2 = new LineConfig()
+    LineConfig config2 = new LineConfig
     {
-        Title = new AntDesign.Charts.Title()
+        Title = new Title
         {
             Visible = true,
-            Text = "2000 ~ 2018 年各国家 GDP 趋势对比",
+            Text = "2000 ~ 2018 年各国家 GDP 趋势对比"
         },
-        Description = new Description()
+        Description = new Description
         {
             Visible = true,
-            Text = "图形标签 (label) 位于折线尾部，用于标注整根折线，并有带有排名的含义在其中。",
+            Text = "图形标签 (label) 位于折线尾部，用于标注整根折线，并有带有排名的含义在其中。"
         },
-        Padding = "auto",//new[] { 20, 100, 30, 80 },
+        Padding = "auto", //new[] { 20, 100, 30, 80 },
         ForceFit = true,
         XField = "year",
         YField = "gdp",
         SeriesField = "name",
-        XAxis = new ValueCatTimeAxis()
+        XAxis = new ValueCatTimeAxis
         {
             Type = "dateTime",
-            Label = new BaseAxisLabel()
+            Label = new BaseAxisLabel
             {
                 Visible = true,
-                AutoHide = true,
-            },
+                AutoHide = true
+            }
         },
-        YAxis = new ValueAxis()
+        YAxis = new ValueAxis(),
+        Legend = new Legend
         {
-
+            Visible = false
         },
-        Legend = new Legend()
-        {
-            Visible = false,
-        },
-        Label = new Label()
+        Label = new Label
         {
             Visible = true,
-            Type = "line",
+            Type = "line"
         },
-        Animation = new Animation()
+        Animation = new Animation
         {
-            Appear = new AnimationCfg()
+            Appear = new AnimationCfg
             {
-                Animation = "clipingWithData",
-            },
+                Animation = "clipingWithData"
+            }
         },
-        Smooth = true,
-
+        Smooth = true
     };
 
     #endregion 示例2
 
     #region 示例2
 
-    LineConfig config3 = new LineConfig()
+    LineConfig config3 = new LineConfig
     {
-        Title = new AntDesign.Charts.Title()
+        Title = new Title
         {
             Visible = true,
-            Text = "The causes of CO2 emissions",
+            Text = "The causes of CO2 emissions"
         },
         Padding = "auto",
         ForceFit = true,
         XField = "year",
         YField = "value",
         SeriesField = "category",
-        XAxis = new ValueCatTimeAxis()
+        XAxis = new ValueCatTimeAxis
         {
-            Type = "time",
+            Type = "time"
         },
-        YAxis = new ValueAxis()
+        YAxis = new ValueAxis
         {
             Label = new BaseAxisLabel()
-            {
-                // 数值格式化为千分位
-            },
-        },
+        }
         @*responsive = true,*@
     };
 
     #endregion 示例2
 
 }
-

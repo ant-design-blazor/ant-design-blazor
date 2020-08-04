@@ -5,49 +5,50 @@
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <Treemap Data=data1 Config="config1" />
+            <Treemap Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
 
 @code{
+
     #region 示例1
 
-    Data data1 = new Data()
+    readonly Data data1 = new Data
     {
         Name = "root",
-        Children = new List<TreemapDataItem> {
-                new TreemapDataItem() { Name= "分类 1", Value= 560 },
-                new TreemapDataItem() { Name= "分类 2", Value= 500 },
-                new TreemapDataItem() { Name= "分类 3", Value= 150 },
-                new TreemapDataItem() { Name= "分类 4", Value= 140 },
-                new TreemapDataItem() { Name= "分类 5", Value= 115 },
-                new TreemapDataItem() { Name= "分类 6", Value= 95 },
-                new TreemapDataItem() { Name= "分类 7", Value= 90 },
-                new TreemapDataItem() { Name= "分类 8", Value= 75 },
-                new TreemapDataItem() { Name= "分类 9", Value= 98 },
-                new TreemapDataItem() { Name= "分类 10", Value= 60 },
-                new TreemapDataItem() { Name= "分类 11", Value= 45 },
-                new TreemapDataItem() { Name= "分类 12", Value= 40 },
-                new TreemapDataItem() { Name= "分类 13", Value= 40 },
-                new TreemapDataItem() { Name= "分类 14", Value= 35 },
-                new TreemapDataItem() { Name= "分类 15", Value= 40 },
-                new TreemapDataItem() { Name= "分类 16", Value= 40 },
-                new TreemapDataItem() { Name= "分类 17", Value= 40 },
-                new TreemapDataItem() { Name= "分类 18", Value= 30 },
-                new TreemapDataItem() { Name= "分类 19", Value= 28 },
-                new TreemapDataItem() { Name= "分类 20", Value= 16 },
-            },
-        Value = 2237,
+        Children = new List<TreemapDataItem>
+        {
+            new TreemapDataItem {Name = "分类 1", Value = 560},
+            new TreemapDataItem {Name = "分类 2", Value = 500},
+            new TreemapDataItem {Name = "分类 3", Value = 150},
+            new TreemapDataItem {Name = "分类 4", Value = 140},
+            new TreemapDataItem {Name = "分类 5", Value = 115},
+            new TreemapDataItem {Name = "分类 6", Value = 95},
+            new TreemapDataItem {Name = "分类 7", Value = 90},
+            new TreemapDataItem {Name = "分类 8", Value = 75},
+            new TreemapDataItem {Name = "分类 9", Value = 98},
+            new TreemapDataItem {Name = "分类 10", Value = 60},
+            new TreemapDataItem {Name = "分类 11", Value = 45},
+            new TreemapDataItem {Name = "分类 12", Value = 40},
+            new TreemapDataItem {Name = "分类 13", Value = 40},
+            new TreemapDataItem {Name = "分类 14", Value = 35},
+            new TreemapDataItem {Name = "分类 15", Value = 40},
+            new TreemapDataItem {Name = "分类 16", Value = 40},
+            new TreemapDataItem {Name = "分类 17", Value = 40},
+            new TreemapDataItem {Name = "分类 18", Value = 30},
+            new TreemapDataItem {Name = "分类 19", Value = 28},
+            new TreemapDataItem {Name = "分类 20", Value = 16}
+        },
+        Value = 2237
     };
 
-    TreemapConfig config1 = new TreemapConfig()
+    readonly TreemapConfig config1 = new TreemapConfig
     {
-        ColorField = "name",
+        ColorField = "name"
     };
 
     #endregion 示例1
-
 
     public class Data : ITreemapData<TreemapDataItem>
     {
@@ -61,5 +62,5 @@
         public string Name { get; set; }
         public decimal Value { get; set; }
     }
-}
 
+}

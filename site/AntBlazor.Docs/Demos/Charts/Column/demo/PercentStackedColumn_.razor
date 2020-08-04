@@ -1,143 +1,164 @@
 @page "/Percent_Stacked_Column_Chart"
 @using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <PercentStackedColumn Data=data1 Config="config1" />
+            <PercentStackedColumn Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
 
 @code{
+
     #region 示例1
 
-    object[] data1 = new object[] {
-        new  {
-    country= "Asia",
-    year= "1750",
-    value= 502,
-  },
-        new  {
-    country= "Asia",
-    year= "1800",
-    value= 635,
-  },
-        new  {
-    country= "Asia",
-    year= "1850",
-    value= 809,
-  },
-        new  {
-    country= "Asia",
-    year= "1900",
-    value= 947,
-  },
-        new  {
-    country= "Asia",
-    year= "1950",
-    value= 1402,
-  },
-        new  {
-    country= "Asia",
-    year= "1999",
-    value= 3634,
-  },
-        new  {
-    country= "Asia",
-    year= "2050",
-    value= 5268,
-  },
-        new  {
-    country= "Africa",
-    year= "1750",
-    value= 106,
-  },
-        new  {
-    country= "Africa",
-    year= "1800",
-    value= 107,
-  },
-        new  {
-    country= "Africa",
-    year= "1850",
-    value= 111,
-  },
-        new  {
-    country= "Africa",
-    year= "1900",
-    value= 133,
-  },
-        new  {
-    country= "Africa",
-    year= "1950",
-    value= 221,
-  },
-        new  {
-    country= "Africa",
-    year= "1999",
-    value= 767,
-  },
-        new  {
-    country= "Africa",
-    year= "2050",
-    value= 1766,
-  },
-        new  {
-    country= "Europe",
-    year= "1750",
-    value= 163,
-  },
-        new  {
-    country= "Europe",
-    year= "1800",
-    value= 203,
-  },
-        new  {
-    country= "Europe",
-    year= "1850",
-    value= 276,
-  },
-        new  {
-    country= "Europe",
-    year= "1900",
-    value= 408,
-  },
-        new  {
-    country= "Europe",
-    year= "1950",
-    value= 547,
-  },
-        new  {
-    country= "Europe",
-    year= "1999",
-    value= 729,
-  },
-        new  {
-    country= "Europe",
-    year= "2050",
-    value= 628,
-  },
-};
-
-    PercentStackedColumnConfig config1 = new PercentStackedColumnConfig()
+    readonly object[] data1 =
     {
-        Title = new AntDesign.Charts.Title()
+        new
+        {
+            country = "Asia",
+            year = "1750",
+            value = 502
+        },
+        new
+        {
+            country = "Asia",
+            year = "1800",
+            value = 635
+        },
+        new
+        {
+            country = "Asia",
+            year = "1850",
+            value = 809
+        },
+        new
+        {
+            country = "Asia",
+            year = "1900",
+            value = 947
+        },
+        new
+        {
+            country = "Asia",
+            year = "1950",
+            value = 1402
+        },
+        new
+        {
+            country = "Asia",
+            year = "1999",
+            value = 3634
+        },
+        new
+        {
+            country = "Asia",
+            year = "2050",
+            value = 5268
+        },
+        new
+        {
+            country = "Africa",
+            year = "1750",
+            value = 106
+        },
+        new
+        {
+            country = "Africa",
+            year = "1800",
+            value = 107
+        },
+        new
+        {
+            country = "Africa",
+            year = "1850",
+            value = 111
+        },
+        new
+        {
+            country = "Africa",
+            year = "1900",
+            value = 133
+        },
+        new
+        {
+            country = "Africa",
+            year = "1950",
+            value = 221
+        },
+        new
+        {
+            country = "Africa",
+            year = "1999",
+            value = 767
+        },
+        new
+        {
+            country = "Africa",
+            year = "2050",
+            value = 1766
+        },
+        new
+        {
+            country = "Europe",
+            year = "1750",
+            value = 163
+        },
+        new
+        {
+            country = "Europe",
+            year = "1800",
+            value = 203
+        },
+        new
+        {
+            country = "Europe",
+            year = "1850",
+            value = 276
+        },
+        new
+        {
+            country = "Europe",
+            year = "1900",
+            value = 408
+        },
+        new
+        {
+            country = "Europe",
+            year = "1950",
+            value = 547
+        },
+        new
+        {
+            country = "Europe",
+            year = "1999",
+            value = 729
+        },
+        new
+        {
+            country = "Europe",
+            year = "2050",
+            value = 628
+        }
+    };
+
+    readonly PercentStackedColumnConfig config1 = new PercentStackedColumnConfig
+    {
+        Title = new Title
         {
             Visible = true,
-            Text = "百分比堆叠柱状图",
+            Text = "百分比堆叠柱状图"
         },
         ForceFit = true,
         XField = "year",
         YField = "value",
         StackField = "country",
-        Color = new string[] { "#0f759c", "#26a2cb", "#65d1fc" },
+        Color = new[] {"#0f759c", "#26a2cb", "#65d1fc"}
     };
-
 
     #endregion 示例1
 
-
 }
-

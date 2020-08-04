@@ -1,11 +1,12 @@
 @page "/Bullet_Chart"
 @using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <Bullet TItem="string" Config="config1" />
+            <Bullet TItem="string" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -14,31 +15,30 @@
 
     #region 示例1
 
-    BulletConfig config1 = new BulletConfig()
+    readonly BulletConfig config1 = new BulletConfig
     {
-        Data = new BulletViewConfigData[]
+        Data = new[]
         {
-            new BulletViewConfigData()
+            new BulletViewConfigData
             {
-              Title = "满意度",
-                  Measures = new int[]{83 },
-                  Targets = new int[]{90 },
-            },
-                },
+                Title = "满意度",
+                Measures = new[] {83},
+                Targets = new[] {90}
+            }
+        },
         RangeMax = 100,
-        Title = new AntDesign.Charts.Title()
+        Title = new Title
         {
             Visible = true,
-            Text = "基础子弹图",
+            Text = "基础子弹图"
         },
-        Description = new Description()
+        Description = new Description
         {
             Visible = true,
-            Text = "设定子弹图的目标值(goal)和当前进度(value)，即可展示子弹图进度情况；若没有设置最大值(max)，则最大值等于目标值",
-        },
+            Text = "设定子弹图的目标值(goal)和当前进度(value)，即可展示子弹图进度情况；若没有设置最大值(max)，则最大值等于目标值"
+        }
     };
 
-
     #endregion 示例1
-}
 
+}

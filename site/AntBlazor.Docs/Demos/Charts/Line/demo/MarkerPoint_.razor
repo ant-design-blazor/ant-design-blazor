@@ -1,75 +1,79 @@
 @page "/Marker_Point"
 @using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <AntDesign.Charts.Line Data=data1 Config="config1" OtherConfig="otherConfig1" />
+            <AntDesign.Charts.Line Data="data1" Config="config1" OtherConfig="otherConfig1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
 
 @code{
+
     #region 示例1
 
-    object[] data1 = new object[] {
-        new  { date= "2019-01-01", value= 3 },
-        new  { date= "2019-02-01", value= 4 },
-        new  { date= "2019-03-01", value= 3.5 },
-        new  { date= "2019-04-01", value= 5 },
-        new  { date= "2019-05-01", value= 4.9, festival= "劳动节" },
-        new  { date= "2019-06-01", value= 6 },
-        new  { date= "2019-07-01", value= 7 },
-        new  { date= "2019-08-01", value= 9 },
-        new  { date= "2019-09-01", value= 3 },
-        new  { date= "2019-10-01", value= 13, festival= "国庆节" },
-        new  { date= "2019-11-01", value= 6 },
-        new  { date= "2019-12-01", value= 23 },
-};
-
-    LineConfig config1 = new LineConfig()
+    object[] data1 =
     {
-        Title = new AntDesign.Charts.Title()
+        new {date = "2019-01-01", value = 3},
+        new {date = "2019-02-01", value = 4},
+        new {date = "2019-03-01", value = 3.5},
+        new {date = "2019-04-01", value = 5},
+        new {date = "2019-05-01", value = 4.9, festival = "劳动节"},
+        new {date = "2019-06-01", value = 6},
+        new {date = "2019-07-01", value = 7},
+        new {date = "2019-08-01", value = 9},
+        new {date = "2019-09-01", value = 3},
+        new {date = "2019-10-01", value = 13, festival = "国庆节"},
+        new {date = "2019-11-01", value = 6},
+        new {date = "2019-12-01", value = 23}
+    };
+
+    LineConfig config1 = new LineConfig
+    {
+        Title = new Title
         {
             Visible = true,
-            Text = "带标注点的折线图",
+            Text = "带标注点的折线图"
         },
-        Description = new Description()
+        Description = new Description
         {
             Visible = true,
-            Text = "在折线图上标注重点的数据，如节假日等",
+            Text = "在折线图上标注重点的数据，如节假日等"
         },
         ForceFit = true,
         Padding = "auto",
         XField = "date",
         YField = "value",
-        YAxis = new ValueAxis()
+        YAxis = new ValueAxis
         {
-            Nice = true,
+            Nice = true
         },
-        Label = new Label()
+        Label = new Label
         {
-            Visible = false,
-        },
+            Visible = false
+        }
     };
 
     object otherConfig1 = new
     {
         MarkerPoints = new object[]
         {
-            new{
+            new
+            {
                 Visible = true,
-                data =new object []{new { date = "2019-05-01", value = 4.9 },new  { date = "2019-10-01" } },
-               Label = new
+                data = new object[] {new {date = "2019-05-01", value = 4.9}, new {date = "2019-10-01"}},
+                Label = new
                 {
                     Visible = true,
-                    Field = "festival",
-                },
-            },
-            },
+                    Field = "festival"
+                }
+            }
+        }
     };
 
     #endregion 示例1
-}
 
+}

@@ -1,42 +1,42 @@
 @page "/Gauge_Chart"
 @using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <Gauge TItem="string" Config="config1" />
+            <Gauge TItem="string" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
 
 @code{
+
     #region 示例1
 
-    GaugeConfig config1 = new GaugeConfig()
+    readonly GaugeConfig config1 = new GaugeConfig
     {
-        Title = new AntDesign.Charts.Title()
+        Title = new Title
         {
             Visible = true,
-            Text = "仪表盘",
+            Text = "仪表盘"
         },
         Width = 400,
         Height = 400,
         Value = 64,
         Min = 0,
         Max = 100,
-        Range = new double[] { 0, 25, 50, 75, 100 },
-        Color = new string[] { "#39B8FF", "#52619B", "#43E089", "#C0EDF3" },
-        Statistic = new GaugeStatistic()
+        Range = new double[] {0, 25, 50, 75, 100},
+        Color = new[] {"#39B8FF", "#52619B", "#43E089", "#C0EDF3"},
+        Statistic = new GaugeStatistic
         {
             Visible = true,
             Text = "优",
-            Color = "#30bf78",
-        },
+            Color = "#30bf78"
+        }
     };
 
     #endregion 示例1
 
-
 }
-

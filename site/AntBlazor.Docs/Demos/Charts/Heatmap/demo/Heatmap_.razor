@@ -1,13 +1,13 @@
 @page "/Heatmap_Chart"
+@using AntDesign.Charts
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
-@using AntDesign.Charts
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <Heatmap @ref="chart1" Data="data1" Config="config1" />
+            <Heatmap @ref="chart1" Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -27,7 +27,7 @@
 
     #region 示例1
 
-    HeatmapConfig config1 = new HeatmapConfig()
+    readonly HeatmapConfig config1 = new HeatmapConfig
     {
         ForceFit = false,
         Width = 650,
@@ -36,17 +36,16 @@
         YField = "district",
         ColorField = "aqhi",
         ShapeType = "rect",
-        Color = new string[] { "#174c83", "#7eb6d4", "#efefeb", "#efa759", "#9b4d16" },
+        Color = new[] {"#174c83", "#7eb6d4", "#efefeb", "#efa759", "#9b4d16"},
         Meta = new
         {
             Month_of_Year = new
             {
-                Type = "cat",
-            },
-        },
+                Type = "cat"
+            }
+        }
     };
 
-
     #endregion 示例1
-}
 
+}

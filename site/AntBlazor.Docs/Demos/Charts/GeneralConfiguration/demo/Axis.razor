@@ -1,13 +1,14 @@
 @page "/Axis"
+@using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
-@using AntDesign.Charts
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <Line @ref="chart1" Data="data1" Config="config1" />
+            <Line @ref="chart1" Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -28,27 +29,25 @@
 
     #region 示例1
 
-    LineConfig config1 = new LineConfig()
+    readonly LineConfig config1 = new LineConfig
     {
-        Title = new AntDesign.Charts.Title()
+        Title = new Title
         {
             Visible = true,
-            Text = "配置坐标轴tick数量",
+            Text = "配置坐标轴tick数量"
         },
         ForceFit = true,
         Padding = "auto",
         XField = "year",
         YField = "value",
         SeriesField = "country",
-        XAxis = new ValueCatTimeAxis()
+        XAxis = new ValueCatTimeAxis
         {
             Type = "dateTime",
-            TickCount = 5,
-        },
+            TickCount = 5
+        }
     };
 
     #endregion 示例1
 
-
 }
-
