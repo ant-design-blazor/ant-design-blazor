@@ -1,7 +1,7 @@
 ---
 category: Components
 type: 组件总览
-title: Components Overview
+title: Overview
 subtitle: 组件总览
 ---
 
