@@ -1,3 +1,7 @@
+html.rtl {
+  direction: rtl;
+}
+
 body {
   color: @site-text-color;
   font-size: 14px;
@@ -88,6 +92,7 @@ a {
         padding-left: 16px !important;
       }
     }
+
     // Nest Category > Type > Article
     &.ant-menu-inline {
       .ant-menu-item-group-title {
@@ -122,7 +127,6 @@ a {
 
   .menu-item-link-outside {
     position: relative;
-
     .anticon {
       position: absolute;
       top: 16px;
@@ -132,7 +136,6 @@ a {
       opacity: 0;
       transition: all 0.3s;
     }
-
     &:hover .anticon {
       opacity: 1;
     }
@@ -154,6 +157,11 @@ a {
   margin-left: 5px;
   color: #aaa;
   font-size: 12px;
+  .ant-row-rtl & {
+    margin-right: 5px;
+    margin-left: 0;
+    transform: rotate(180deg);
+  }
 }
 
 // reset menu text color
@@ -173,19 +181,8 @@ a {
   transition: transform 0.3s @ease-in-out-circ;
 }
 
-.page-wrapper {
-  width: 100%;
-  padding: 0;
-  overflow: hidden;
-
-  &-rtl {
-    direction: rtl;
-  }
-}
-
 .drawer-content {
   padding: 40px 0;
-
   &-wrapper {
     background-color: @component-background;
   }
@@ -199,7 +196,6 @@ a {
   .path1::before {
     color: @primary-color !important;
   }
-
   .path2::before {
     color: @body-background !important;
   }
@@ -210,21 +206,28 @@ a {
   right: 32px;
   bottom: 102px;
   z-index: 2147483640;
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
-
   &-tooltip {
     .ant-tooltip-inner {
       min-width: 100px;
     }
   }
-
   & > div {
     display: block;
   }
-
+  &-active {
+    color: @primary-color;
+  }
   & &-avatar {
+    color: #000;
     background-color: #fff;
     box-shadow: @shadow-2;
+    transition: color 0.3s;
+    &:hover {
+      color: @primary-color;
+    }
   }
 }
 
@@ -242,7 +245,13 @@ a {
 #header #nav.ant-menu,
 .main-wrapper,
 .main-wrapper > .ant-row > .main-menu .main-menu-inner > .ant-menu,
-.main-wrapper > .ant-row > .main-menu .main-menu-inner > .ant-menu.aside-container.ant-menu-inline > .ant-menu-item-group > .ant-menu-item-group-title::after,
+.main-wrapper
+  > .ant-row
+  > .main-menu
+  .main-menu-inner
+  > .ant-menu.aside-container.ant-menu-inline
+  > .ant-menu-item-group
+  > .ant-menu-item-group-title::after,
 .main-wrapper .main-container,
 #demo-toc.toc {
   transition: all 0.3s @ease-in-out-circ;
