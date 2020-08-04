@@ -1,3 +1,5 @@
+@import '../../../static/theme.less';
+@import '../../../../../../components/style/themes/default.less';
 @import './index.less';
 
 @search-icon-color: #ced4d9;
@@ -45,6 +47,11 @@
     background: transparent;
     border: 0;
     box-shadow: none;
+
+    .ant-row-rtl & {
+      padding-right: 20px;
+      padding-left: 11px;
+    }
 
     &::placeholder {
       color: #a3b1bf;
