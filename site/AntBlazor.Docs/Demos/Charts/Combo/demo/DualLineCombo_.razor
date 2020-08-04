@@ -1,0 +1,62 @@
+@page "/DualLine_Combo_Chart"
+@inject IJSRuntime JS;
+@using AntDesign.Charts
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <DualLine Data="@(new object[] { data1,data2})" Config="config1" />
+        </ChildContent>
+    </TabPane>
+</Tabs>
+@code{
+
+    #region 示例1
+
+    object data1 = new object[]{
+        new { year = "1991", value = 3 },
+        new  { year= "1992", value= 4 },
+        new  { year= "1993", value= 3.5 },
+        new  { year= "1994", value= 5 },
+        new  { year= "1995", value= 4.9 },
+        new  { year= "1996", value= 6 },
+        new  { year= "1997", value= 7 },
+        new  { year= "1998", value= 9 },
+        new  { year= "1999", value= 13 },
+            };
+
+    object data2 = new object[]{
+        new   { year = "1991", count = 10 },
+        new   { year= "1992", count= 4 },
+        new   { year= "1993", count= 5 },
+        new   { year= "1994", count= 5 },
+        new   { year= "1995", count= 4.9 },
+        new  { year= "1996", count= 35 },
+        new  { year= "1997", count= 7 },
+        new  { year= "1998", count= 1 },
+        new  { year= "1999", count= 20 },
+            };
+
+    DualLineConfig config1 = new DualLineConfig()
+    {
+        Title = new AntDesign.Charts.Title()
+        {
+            Visible = true,
+            Text = "双折线图",
+        },
+
+        Description = new Description()
+        {
+            Visible = true,
+            Text = "双折线混合图表",
+        },
+
+        XField = "year",
+        YField = new string[] { "value", "count" },
+    };
+
+    #endregion 示例1
+
+}
+

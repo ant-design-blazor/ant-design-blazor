@@ -15,6 +15,35 @@ namespace AntDesign.Docs.Build.CLI.Command
     {
         public string Name => "menu2json";
 
+        private static readonly Dictionary<string, int> _sortMap = new Dictionary<string, int>()
+        {
+            ["Overview"] = -1,
+            ["组件总览"] = -1,
+            ["General"] = 0,
+            ["通用"] = 0,
+            ["Layout"] = 1,
+            ["布局"] = 1,
+            ["Navigation"] = 2,
+            ["导航"] = 2,
+            ["Data Entry"] = 3,
+            ["数据录入"] = 3,
+            ["Data Display"] = 4,
+            ["数据展示"] = 4,
+            ["Feedback"] = 5,
+            ["反馈"] = 5,
+            ["Localization"] = 6,
+            ["Other"] = 7,
+            ["其他"] = 7,
+            ["Charts"] = 8,
+            ["图表"] = 8
+        };
+
+        private static readonly Dictionary<string, string> _demoCategoryMap = new Dictionary<string, string>()
+        {
+            ["Components"] = "组件",
+            ["Charts"] = "图表"
+        };
+
         public void Execute(CommandLineApplication command)
         {
             command.Description = "Generate json file for menu";
@@ -77,34 +106,189 @@ namespace AntDesign.Docs.Build.CLI.Command
                 return;
             }
 
-            IList<Dictionary<string, DemoComponent>> componentList = null;
-
-            IList<Dictionary<string, DemoMenuItem>> menuList = null;
-
-            Dictionary<string, int> sortMap = new Dictionary<string, int>()
+            var jsonOptions = new JsonSerializerOptions()
             {
-                ["Overview"] = -1,
-                ["组件总览"] = -1,
-                ["General"] = 0,
-                ["通用"] = 0,
-                ["Layout"] = 1,
-                ["布局"] = 1,
-                ["Navigation"] = 2,
-                ["导航"] = 2,
-                ["Data Entry"] = 3,
-                ["数据录入"] = 3,
-                ["Data Display"] = 4,
-                ["数据展示"] = 4,
-                ["Feedback"] = 5,
-                ["反馈"] = 5,
-                ["Localization"] = 6,
-                ["Other"] = 7,
-                ["其他"] = 7,
-                ["Charts"] = 8,
-                ["图表"] = 8
+                WriteIndented = true,
+                IgnoreNullValues = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             };
 
-            foreach (FileSystemInfo component in demoDirectoryInfo.GetFileSystemInfos())
+            IList<Dictionary<string, DemoMenuItem>> docsMenuList = GetSubMenuList(docsDirectoryInfo, true).ToList();
+
+            Dictionary<string, Dictionary<string, IEnumerable<DemoMenuItem>>> categoryDemoMenuList = new Dictionary<string, Dictionary<string, IEnumerable<DemoMenuItem>>>();
+            List<Dictionary<string, DemoMenuItem>> allComponentMenuList = new List<Dictionary<string, DemoMenuItem>>();
+
+            foreach (var subDemoDirectory in demoDirectoryInfo.GetFileSystemInfos())
+            {
+                var category = subDemoDirectory.Name;
+
+                IList<Dictionary<string, DemoMenuItem>> componentMenuList = GetSubMenuList(subDemoDirectory as DirectoryInfo, false).ToList();
+
+                allComponentMenuList.AddRange(componentMenuList);
+
+                var componentMenuI18N = componentMenuList
+                    .SelectMany(x => x)
+                    .GroupBy(x => x.Key)
+                    .ToDictionary(x => x.Key, x => x.Select(o => o.Value));
+
+                foreach (var component in componentMenuI18N)
+                {
+                    if (!categoryDemoMenuList.ContainsKey(component.Key))
+                    {
+                        categoryDemoMenuList[component.Key] = new Dictionary<string, IEnumerable<DemoMenuItem>>();
+                    }
+                    categoryDemoMenuList[component.Key].Add(category, component.Value);
+                }
+            }
+
+            var docsMenuI18N = docsMenuList
+                .SelectMany(x => x)
+                .GroupBy(x => x.Key)
+                .ToDictionary(x => x.Key, x => x.Select(x => x.Value));
+
+            foreach (var lang in new[] { "zh-CN", "en-US" })
+            {
+                List<DemoMenuItem> menu = new List<DemoMenuItem>();
+
+                var children = docsMenuI18N[lang].OrderBy(x => x.Order).ToArray();
+
+                menu.Add(new DemoMenuItem()
+                {
+                    Order = 0,
+                    Title = lang == "zh-CN" ? "文档" : "Docs",
+                    Type = "subMenu",
+                    Url = "docs",
+                    Children = children
+                });
+
+                var categoryComponent = categoryDemoMenuList[lang];
+
+                foreach (var component in categoryComponent)
+                {
+                    menu.Add(new DemoMenuItem()
+                    {
+                        Order = Array.IndexOf(_demoCategoryMap.Select(x => x.Key).ToArray(), component.Key) + 1,
+                        Title = lang == "zh-CN" ? _demoCategoryMap[component.Key] : component.Key,
+                        Type = "subMenu",
+                        Url = component.Key,
+                        Children = component.Value.OrderBy(x => x.Order).ToArray()
+                    });
+                }
+
+                var json = JsonSerializer.Serialize(menu, jsonOptions);
+
+                var configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
+                if (!Directory.Exists(configFileDirectory))
+                {
+                    Directory.CreateDirectory(configFileDirectory);
+                }
+
+                var configFilePath = Path.Combine(configFileDirectory, $"menu.{lang}.json");
+                Console.WriteLine(json);
+
+                if (File.Exists(configFilePath))
+                {
+                    File.Delete(configFilePath);
+                }
+
+                File.WriteAllText(configFilePath, json);
+
+                var componentI18N = allComponentMenuList
+                    .SelectMany(x => x)
+                    .GroupBy(x => x.Key)
+                    .ToDictionary(x => x.Key, x => x.Select(o => o.Value));
+
+                var demos = componentI18N[lang];
+
+                var demosPath = Path.Combine(configFileDirectory, $"demos.{lang}.json");
+
+                if (File.Exists(demosPath))
+                {
+                    File.Delete(demosPath);
+                }
+
+                json = JsonSerializer.Serialize(demos, jsonOptions);
+                File.WriteAllText(demosPath, json);
+
+                var docs = docsMenuI18N[lang];
+                var docsPath = Path.Combine(configFileDirectory, $"docs.{lang}.json");
+
+                if (File.Exists(docsPath))
+                {
+                    File.Delete(docsPath);
+                }
+
+                json = JsonSerializer.Serialize(docs, jsonOptions);
+                File.WriteAllText(docsPath, json);
+            }
+        }
+
+        private IEnumerable<Dictionary<string, DemoMenuItem>> GetSubMenuList(DirectoryInfo directory, bool isDocs)
+        {
+            if (isDocs)
+            {
+                foreach (FileSystemInfo docItem in directory.GetFileSystemInfos())
+                {
+                    if (docItem.Extension != ".md")
+                        continue;
+
+                    string[] segments = docItem.Name.Split('.');
+                    if (segments.Length != 3)
+                        continue;
+
+                    string language = segments[1];
+                    string content = File.ReadAllText(docItem.FullName);
+                    Dictionary<string, string> docData = DocParser.ParseHeader(content);
+
+                    yield return (new Dictionary<string, DemoMenuItem>()
+                    {
+                        [language] = new DemoMenuItem()
+                        {
+                            Order = int.TryParse(docData["order"], out var order) ? order : 0,
+                            Title = docData["title"],
+                            Url = $"docs/{segments[0]}",
+                            Type = "menuItem"
+                        }
+                    });
+                }
+            }
+            else
+            {
+                var componentI18N = GetComponentI18N(directory);
+                foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> group in componentI18N.GroupBy(x => x.Value.Type))
+                {
+                    Dictionary<string, DemoMenuItem> menu = new Dictionary<string, DemoMenuItem>();
+
+                    foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> component in group.GroupBy(x => x.Key))
+                    {
+                        menu.Add(component.Key, new DemoMenuItem()
+                        {
+                            Order = _sortMap[group.Key],
+                            Title = group.Key,
+                            Type = "itemGroup",
+                            Children = group.Select(x => new DemoMenuItem()
+                            {
+                                Title = x.Value.Title,
+                                SubTitle = x.Value.SubTitle,
+                                Url = $"{directory.Name}/{x.Value.Title.ToLower()}",
+                                Type = "menuItem",
+                                Cover = x.Value.Cover,
+                            })
+                            .OrderBy(x => x.Title, new MenuComparer())
+                            .ToArray(),
+                        });
+                    }
+
+                    yield return menu;
+                }
+            }
+        }
+
+        private IEnumerable<KeyValuePair<string, DemoComponent>> GetComponentI18N(DirectoryInfo directory)
+        {
+            IList<Dictionary<string, DemoComponent>> componentList = null;
+
+            foreach (FileSystemInfo component in directory.GetFileSystemInfos())
             {
                 if (!(component is DirectoryInfo componentDirectory))
                     continue;
@@ -135,152 +319,12 @@ namespace AntDesign.Docs.Build.CLI.Command
             }
 
             if (componentList == null)
-                return;
-
-            List<Dictionary<string, DemoMenuItem>> componentMenuList = new List<Dictionary<string, DemoMenuItem>>();
+                return Enumerable.Empty<KeyValuePair<string, DemoComponent>>();
 
             IEnumerable<KeyValuePair<string, DemoComponent>> componentI18N = componentList
-                .SelectMany(x => x).OrderBy(x => sortMap[x.Value.Type]);
+                .SelectMany(x => x).OrderBy(x => _sortMap[x.Value.Type]);
 
-            foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> group in componentI18N.GroupBy(x => x.Value.Type))
-            {
-                Dictionary<string, DemoMenuItem> menu = new Dictionary<string, DemoMenuItem>();
-
-                foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> component in group.GroupBy(x => x.Key))
-                {
-                    menu.Add(component.Key, new DemoMenuItem()
-                    {
-                        Order = sortMap[group.Key],
-                        Title = group.Key,
-                        Type = "itemGroup",
-                        Children = group.Select(x => new DemoMenuItem()
-                        {
-                            Title = x.Value.Title,
-                            SubTitle = x.Value.SubTitle,
-                            Url = $"components/{x.Value.Title.ToLower()}",
-                            Type = "menuItem",
-                            Cover = x.Value.Cover,
-                        })
-                        .OrderBy(x => x.Title, new MenuComparer())
-                        .ToArray(),
-                    });
-                }
-
-                componentMenuList.Add(menu);
-            }
-
-            foreach (FileSystemInfo docItem in docsDirectoryInfo.GetFileSystemInfos())
-            {
-                if (docItem.Extension != ".md")
-                    continue;
-
-                string[] segments = docItem.Name.Split('.');
-                if (segments.Length != 3)
-                    continue;
-
-                string language = segments[1];
-                string content = File.ReadAllText(docItem.FullName);
-                Dictionary<string, string> docData = DocParser.ParseHeader(content);
-
-                menuList ??= new List<Dictionary<string, DemoMenuItem>>();
-                menuList.Add(new Dictionary<string, DemoMenuItem>()
-                {
-                    [language] = new DemoMenuItem()
-                    {
-                        Order = int.TryParse(docData["order"], out int order) ? order : 0,
-                        Title = docData["title"],
-                        Url = $"docs/{segments[0]}",
-                        Type = "menuItem"
-                    }
-                });
-            }
-
-            if (menuList == null)
-                return;
-
-            IEnumerable<IGrouping<string, KeyValuePair<string, DemoMenuItem>>> menuI18N = menuList
-                .SelectMany(x => x).GroupBy(x => x.Key);
-
-            IEnumerable<IGrouping<string, KeyValuePair<string, DemoMenuItem>>> componentMenuI18N = componentMenuList
-                .SelectMany(x => x).GroupBy(x => x.Key);
-
-            var jsonOptions = new JsonSerializerOptions()
-            {
-                WriteIndented = true,
-                IgnoreNullValues = true,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-            };
-
-            foreach (IGrouping<string, KeyValuePair<string, DemoMenuItem>> menuGroup in menuI18N)
-            {
-                var children = menuGroup.Select(x => x.Value).OrderBy(x => x.Order).ToArray();
-                List<DemoMenuItem> menu = new List<DemoMenuItem>
-                {
-                    new DemoMenuItem()
-                    {
-                        Order = 0,
-                        Title = menuGroup.Key == "zh-CN" ? "文档" : "Docs",
-                        Type = "subMenu",
-                        Url = "docs",
-                        Children = children
-                    }
-                };
-
-                var components = componentMenuI18N.Where(x => x.Key == menuGroup.Key)
-                    .SelectMany(x => x)
-                    .Select(x => x.Value)
-                    .OrderBy(x => x.Order)
-                    .ToArray();
-
-                menu.Add(new DemoMenuItem()
-                {
-                    Order = 999,
-                    Title = menuGroup.Key == "zh-CN" ? "组件" : "Components",
-                    Type = "subMenu",
-                    Url = "components",
-                    Children = components.ToArray()
-                });
-
-                var json = JsonSerializer.Serialize(menu, jsonOptions);
-
-                var configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
-                if (!Directory.Exists(configFileDirectory))
-                {
-                    Directory.CreateDirectory(configFileDirectory);
-                }
-
-                var configFilePath = Path.Combine(configFileDirectory, $"menu.{menuGroup.Key}.json");
-                Console.WriteLine(json);
-
-                if (File.Exists(configFilePath))
-                {
-                    File.Delete(configFilePath);
-                }
-
-                File.WriteAllText(configFilePath, json);
-
-                var demos = componentI18N.Where(x => x.Key == menuGroup.Key).Select(x => x.Value);
-                var demosPath = Path.Combine(configFileDirectory, $"demos.{menuGroup.Key}.json");
-
-                if (File.Exists(demosPath))
-                {
-                    File.Delete(demosPath);
-                }
-
-                json = JsonSerializer.Serialize(demos, jsonOptions);
-                File.WriteAllText(demosPath, json);
-
-                var docs = menuGroup.Where(x => x.Key == menuGroup.Key).Select(x => x.Value);
-                var docsPath = Path.Combine(configFileDirectory, $"docs.{menuGroup.Key}.json");
-
-                if (File.Exists(docsPath))
-                {
-                    File.Delete(docsPath);
-                }
-
-                json = JsonSerializer.Serialize(docs, jsonOptions);
-                File.WriteAllText(docsPath, json);
-            }
+            return componentI18N;
         }
     }
 }

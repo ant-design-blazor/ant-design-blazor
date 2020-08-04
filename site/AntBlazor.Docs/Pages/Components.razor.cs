@@ -43,6 +43,25 @@ namespace AntDesign.Docs.Pages
                 }
             };
 
+            NavigationManager.LocationChanged += async (sender, args) =>
+            {
+                await HandleNavigate();
+            };
+
+            await HandleNavigate();
+        }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            if (!string.IsNullOrEmpty(Name))
+            {
+                _demoComponent = await DemoService.GetComponentAsync(Name);
+                await MainLayout.ChangePrevNextNav(Name);
+            }
+        }
+
+        private async Task HandleNavigate()
+        {
             if (string.IsNullOrEmpty(Name))
             {
                 var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
@@ -53,15 +72,6 @@ namespace AntDesign.Docs.Pages
                 {
                     NavigationManager.NavigateTo($"{CurrentLanguage}/{current.Children[0].Children[0].Url}");
                 }
-            }
-        }
-
-        protected override async Task OnParametersSetAsync()
-        {
-            if (!string.IsNullOrEmpty(Name))
-            {
-                _demoComponent = await DemoService.GetComponentAsync(Name);
-                await MainLayout.ChangePrevNextNav(Name);
             }
         }
     }

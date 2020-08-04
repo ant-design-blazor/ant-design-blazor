@@ -1,0 +1,52 @@
+@page "/Column_line_Combo_Chart"
+@using AntDesign.Charts
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <ColumnLine Data="@(new object[] {uvData, transformData })" Config="config1" />
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+
+    #region 示例1
+
+    object uvData = new object[]{
+        new { time = "2019-03", value = 350 },
+        new { time= "2019-04", value= 900 },
+        new { time= "2019-05", value= 300 },
+        new { time= "2019-06", value= 450 },
+        new { time= "2019-07", value= 470 },
+    };
+
+    object transformData = new object[]{
+         new { time= "2019-04", count= 600 },
+         new { time= "2019-05", count= 400 },
+         new { time= "2019-06", count= 380 },
+         new { time= "2019-07", count= 220 },
+    };
+
+    ColumnLineConfig config1 = new ColumnLineConfig()
+    {
+        Title = new AntDesign.Charts.Title()
+        {
+            Visible = true,
+            Text = "柱线混合图",
+        },
+        Description = new Description()
+        {
+            Visible = true,
+            Text = "柱线混合图表",
+        },
+        XField = "time",
+        YField = new string[] { "value", "count" },
+    };
+
+
+    #endregion 示例1
+
+}
+

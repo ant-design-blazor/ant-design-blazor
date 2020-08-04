@@ -1,0 +1,155 @@
+@page "/Percent_Stacked_Area_Chart"
+@using AntDesign.Charts
+@using System.Text.Json.Serialization
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <PercentStackedArea Data=data1 Config="config1" />
+        </ChildContent>
+    </TabPane>
+
+</Tabs>
+
+@code{
+    #region 示例1
+
+    object[] data1 = new object[] {
+        new  {
+    country= "Asia",
+    year= "1750",
+    value= 502,
+  },
+        new  {
+    country= "Asia",
+    year= "1800",
+    value= 635,
+  },
+        new  {
+    country= "Asia",
+    year= "1850",
+    value= 809,
+  },
+        new  {
+    country= "Asia",
+    year= "1900",
+    value= 947,
+  },
+        new  {
+    country= "Asia",
+    year= "1950",
+    value= 1402,
+  },
+        new  {
+    country= "Asia",
+    year= "1999",
+    value= 3634,
+  },
+        new  {
+    country= "Asia",
+    year= "2050",
+    value= 5268,
+  },
+        new  {
+    country= "Africa",
+    year= "1750",
+    value= 106,
+  },
+        new  {
+    country= "Africa",
+    year= "1800",
+    value= 107,
+  },
+        new  {
+    country= "Africa",
+    year= "1850",
+    value= 111,
+  },
+        new  {
+    country= "Africa",
+    year= "1900",
+    value= 133,
+  },
+        new  {
+    country= "Africa",
+    year= "1950",
+    value= 221,
+  },
+        new  {
+    country= "Africa",
+    year= "1999",
+    value= 767,
+  },
+        new  {
+    country= "Africa",
+    year= "2050",
+    value= 1766,
+  },
+        new  {
+    country= "Europe",
+    year= "1750",
+    value= 163,
+  },
+        new  {
+    country= "Europe",
+    year= "1800",
+    value= 203,
+  },
+        new  {
+    country= "Europe",
+    year= "1850",
+    value= 276,
+  },
+        new  {
+    country= "Europe",
+    year= "1900",
+    value= 408,
+  },
+        new  {
+    country= "Europe",
+    year= "1950",
+    value= 547,
+  },
+        new  {
+    country= "Europe",
+    year= "1999",
+    value= 729,
+  },
+        new  {
+    country= "Europe",
+    year= "2050",
+    value= 628,
+  },
+};
+
+    PercentStackedAreaConfig config1 = new PercentStackedAreaConfig()
+    {
+        Title = new AntDesign.Charts.Title()
+        {
+            Visible = true,
+            Text = "百分比堆叠面积图",
+        },
+        Meta = new
+        {
+            Year = new
+            {
+                Range = new int[] { 0, 1 },
+            },
+        },
+        XField = "year",
+        YField = "value",
+        StackField = "country",
+        Color = new string[] { "#82d1de", "#cb302d", "#e3ca8c" },
+        AreaStyle = new GraphicStyle
+        {
+            FillOpacity = 0.7M,
+        },
+    };
+
+    #endregion 示例1
+
+}
+
+
+

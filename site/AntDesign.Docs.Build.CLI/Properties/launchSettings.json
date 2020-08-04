@@ -3,9 +3,8 @@
     "AntDesign.Docs.Build.CLI": {
       "commandName": "Project",
       //"commandLineArgs": "docs2html ../../../../../docs ./"
-      "commandLineArgs": "menu2json ../../../../AntBlazor.Docs/Demos ../../../../../docs ./"
+      //"commandLineArgs": "menu2json ../../../../AntBlazor.Docs/Demos ../../../../../docs ./"
+      "commandLineArgs": "demo2json ../../../../AntBlazor.Docs/Demos ./"
     }
   }
-
-
 }

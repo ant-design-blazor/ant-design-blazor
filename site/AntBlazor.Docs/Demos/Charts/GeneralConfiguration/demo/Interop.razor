@@ -1,0 +1,149 @@
+﻿@page "/Interop"
+@using AntDesign.Charts
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column @ref="chart1" Data=data1 Config="config1" />
+
+            <Button OnClick="Render">Render</Button>
+            <Button OnClick="Repaint">Repaint</Button>
+            <Button OnClick="UpdateConfig">UpdateConfig</Button>
+            <Button OnClick="ChangeData">ChangeData</Button>
+            <Button OnClick="SetActive">SetActive</Button>
+            <Button OnClick="SetSelected">SetSelected</Button>
+            <Button OnClick="SetDisable">SetDisable</Button>
+            <Button OnClick="SetDefault">SetDefault</Button>
+
+
+        </ChildContent>
+
+    </TabPane>
+</Tabs>
+
+@code{
+
+    IChartComponent chart1;
+
+    public void Render()
+    {
+        chart1.Render();
+    }
+
+    public void Repaint()
+    {
+        chart1.Repaint();
+    }
+    public void UpdateConfig()
+    {
+        ColumnConfig newConfig = new ColumnConfig()
+        {
+            Title = new AntDesign.Charts.Title()
+            {
+                Visible = true,
+                Text = "设置active状态",
+            },
+            Description = new Description()
+            {
+                Visible = true,
+                Text = "已经应用了新配置",
+            },
+            XField = "year",
+            YField = "value",
+            Color = "#CCCCCC"
+        };
+
+        chart1.UpdateConfig(newConfig, true);
+    }
+    public void ChangeData()
+    {
+        var r = new Random();
+        var newData = data1.Select(x => new DataItem() { year = x.year, value = r.Next(100), }).ToArray();
+        chart1.ChangeData(newData, true);
+    }
+    public void SetActive()
+    {
+        chart1.SetActive(new { name = "year", exp = "1994" },
+                new
+                {
+                    FillStyle = "#5AD8A6",
+                    FillOpacity = 0.8,
+                });
+
+        StateHasChanged();
+    }
+    public void SetSelected()
+    {
+        chart1.SetSelected(new { name = "year", exp = "1994" },
+              new
+              {
+                  Stroke = "black",
+                  LineWidth = 2,
+              });
+
+        StateHasChanged();
+    }
+    public void SetDisable()
+    {
+        chart1.SetDisable(new { name = "year", exp = "1994" },
+              new
+              {
+                  FillStyle = "#ccc",
+              });
+
+        StateHasChanged();
+    }
+    public void SetDefault()
+    {
+        chart1.SetDefault(new { name = "year", exp = "1994" },
+              new
+              {
+                  FillOpacity = 1,
+                  stroke = "#ffffff",
+                  LineWidth = 0,
+                  FillStyle = "#6294F9",
+              });
+
+        StateHasChanged();
+    }
+
+
+    #region 示例1
+
+    DataItem[] data1 = new DataItem[] {
+        new DataItem(){ year= "1991",    value= 31,  },
+        new DataItem(){ year= "1992",    value= 41,  },
+        new DataItem(){ year= "1993",    value= 35,  },
+        new DataItem(){ year= "1994",    value= 55,  },
+        new DataItem(){ year= "1995",    value= 49,  },
+        new DataItem(){ year= "1996",    value= 15,  },
+        new DataItem(){ year= "1997",    value= 17,  },
+        new DataItem(){ year= "1998",    value= 29,  },
+        new DataItem(){ year= "1999",    value= 33,  },
+};
+
+    ColumnConfig config1 = new ColumnConfig()
+    {
+        Title = new AntDesign.Charts.Title()
+        {
+            Visible = true,
+            Text = "设置active状态",
+        },
+        Description = new Description()
+        {
+            Visible = true,
+            Text = "设置单值active状态。",
+        },
+        XField = "year",
+        YField = "value",
+    };
+
+    public class DataItem
+    {
+        public string year { get; set; }
+        public int value { get; set; }
+    }
+
+    #endregion 示例1
+}

@@ -1,0 +1,261 @@
+@page "/Line_Chart"
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@using AntDesign.Charts
+@using System.Text.Json.Serialization
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Line @ref="@chart1" Data="data1" Config="config1" />
+        </ChildContent>
+    </TabPane>
+    <TabPane Key="2">
+        <Tab>示例2</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Line Data=data2 Config="config2" />
+        </ChildContent>
+    </TabPane>
+    <TabPane Key="3">
+        <Tab>示例3</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Line Data=data3 Config="config3" />
+        </ChildContent>
+    </TabPane>
+    <TabPane Key="4">
+        <Tab>示例4</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Line Data=data4 Config="config4" />
+        </ChildContent>
+    </TabPane>
+    <TabPane Key="5">
+        <Tab>示例5</Tab>
+        <ChildContent>
+            <Line @ref="@chart5" Data="data5" Config="config5" />
+        </ChildContent>
+    </TabPane>
+</Tabs>
+@code{
+
+    IChartComponent chart1;
+    FireworksSalesItem[] data1;
+    IChartComponent chart5;
+    SalesItem[] data5;
+
+    protected override async Task OnInitializedAsync()
+    {
+        data1 = await ChartsDemoData.FireworksSalesAsync(NavigationManager, HttpClient);
+        await chart1.ChangeData(data1);
+
+        data5 = await ChartsDemoData.SalesAsync(NavigationManager, HttpClient);
+
+        await base.OnInitializedAsync();
+    }
+
+    #region 示例1
+
+    LineConfig config1 = new LineConfig()
+    {
+        Title = new  AntDesign.Charts.Title()
+        {
+            Visible = true,
+            Text = "单折线图的基础用法",
+        },
+        Description = new Description()
+        {
+            Visible = true,
+            Text = "最基础简单的折线图使用方式，显示一个指标的趋势",
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "Date",
+        YField = "scales",
+        XAxis = new ValueCatTimeAxis()
+        {
+            Type = "dateTime",
+            TickCount = 5,
+        }
+    };
+
+    #endregion 示例1
+
+    #region 示例2
+
+    object[] data2 = new object[] {
+        new  { year= "1991", value= 3 },
+        new  { year= "1992", value= 4 },
+        new  { year= "1993", value= 3.5 },
+        new  { year= "1994", value= 5 },
+        new  { year= "1995", value= 4.9 },
+        new  { year= "1996", value= 6 },
+        new  { year= "1997", value= 7 },
+        new  { year= "1998", value= 9 },
+        new  { year= "1999", value= 13 },
+};
+
+    LineConfig config2 = new LineConfig()
+    {
+        Title = new  AntDesign.Charts.Title()
+        {
+            Visible = true,
+            Text = "曲线折线图",
+        },
+        Description = new Description()
+        {
+            Visible = true,
+            Text = "用平滑的曲线代替折线。",
+        },
+        Padding = "auto",
+        ForceFit = true,
+        XField = "year",
+        YField = "value",
+        Smooth = true,
+    };
+
+
+    #endregion 示例2
+
+    #region 示例3
+
+    object[] data3 = new object[] {
+        new  { year= "1991", value= 3 },
+        new  { year= "1992", value= 4 },
+        new  { year= "1993", value= 3.5 },
+        new  { year= "1994", value= 5 },
+        new  { year= "1995", value= 4.9 },
+        new  { year= "1996", value= 6 },
+        new  { year= "1997", value= 7 },
+        new  { year= "1998", value= 9 },
+        new  { year= "1999", value= 13 },
+};
+
+    LineConfig config3 = new LineConfig()
+    {
+        Title = new AntDesign.Charts.Title()
+        {
+            Visible = true,
+            Text = "带数据点的折线图",
+        },
+        Description = new Description()
+        {
+            Visible = true,
+            Text = "将折线图上的每一个数据点显示出来，作为辅助阅读。",
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "year",
+        YField = "value",
+        Point = new LineViewConfigPoint()
+        {
+            Visible = true,
+        },
+        Label = new Label()
+        {
+            Visible = true,
+            Type = "point",
+        },
+    };
+
+    #endregion 示例3
+
+
+    #region 示例4
+
+    object[] data4 = new object[] {
+        new  { year= "1991", value= 3 },
+        new  { year= "1992", value= 4 },
+        new  { year= "1993", value= 3.5 },
+        new  { year= "1994", value= 5 },
+        new  { year= "1995", value= 4.9 },
+        new  { year= "1996", value= 6 },
+        new  { year= "1997", value= 7 },
+        new  { year= "1998", value= 9 },
+        new  { year= "1999", value= 13 },
+};
+
+    LineConfig config4 = new LineConfig()
+    {
+        Title = new AntDesign.Charts.Title()
+        {
+            Visible = true,
+            Text = "配置折线数据点样式",
+        },
+        Description = new Description()
+        {
+            Visible = true,
+            Text = "自定义配置趋势线上数据点的样式",
+        },
+        Padding = "auto",
+        ForceFit = true,
+        XField = "year",
+        YField = "value",
+        Label = new Label()
+        {
+            Visible = true,
+            Type = "point",
+        },
+        Point = new LineViewConfigPoint()
+        {
+            Visible = true,
+            Size = 5,
+            Shape = "diamond",
+            Style = new GraphicStyle()
+            {
+                Fill = "white",
+                Stroke = "#2593fc",
+                LineWidth = 2,
+            },
+        },
+    };
+
+    #endregion 示例4
+
+    #region 示例5
+
+
+    LineConfig config5 = new LineConfig()
+    {
+        Title = new AntDesign.Charts.Title()
+        {
+            Visible = true,
+            Text = "为折线添加缩略轴交互",
+        },
+        Description = new Description()
+        {
+            Visible = true,
+            Text = "缩略轴 (slider) 交互适用于折线数据较多，用户希望关注数据集中某个特殊区间的场景。",
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "城市",
+        XAxis = new ValueCatTimeAxis()
+        {
+            Visible = true,
+            Label = new BaseAxisLabel()
+            {
+                AutoHide = true,
+            },
+        },
+        YField = "销售额",
+        YAxis = new ValueAxis()
+        {
+            Label = new BaseAxisLabel()
+            {
+                // 数值格式化为千分位
+            },
+        },
+        Interactions = new Interaction[] {
+       new Interaction()   {
+            Type= "slider",
+            Cfg=new  {
+                start= 0.1,
+                end= 0.2,
+            },
+        },
+        },
+    };
+
+    #endregion 示例5
+}
+

@@ -1,0 +1,72 @@
+@page "/Pie_Chart"
+@using AntDesign.Charts
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <Pie Data=data1 Config="config1" />
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+
+    #region 示例1
+
+    object[] data1 = new object[] {
+        new  {
+    type= "分类一",
+    value= 27,
+  },
+        new  {
+    type= "分类二",
+    value= 25,
+  },
+        new  {
+    type= "分类三",
+    value= 18,
+  },
+        new  {
+    type= "分类四",
+    value= 15,
+  },
+        new  {
+    type= "分类五",
+    value= 10,
+  },
+        new  {
+    type= "其它",
+    value= 5,
+  },
+};
+
+    PieConfig config1 = new PieConfig()
+    {
+        ForceFit = true,
+        Title = new AntDesign.Charts.Title()
+        {
+            Visible = true,
+            Text = "多色饼图",
+        },
+        Description = new Description()
+        {
+            Visible = true,
+            Text =
+      "指定颜色映射字段(colorField)，饼图切片将根据该字段数据显示为不同的颜色。指定颜色需要将color配置为一个数组。\n当把饼图label的类型设置为inner时，标签会显示在切片内部。设置offset控制标签的偏移值。",
+        },
+        Radius = 0.8,
+        AngleField = "value",
+        ColorField = "type",
+        Label = new PieLabelConfig()
+        {
+            Visible = true,
+            Type = "inner",
+        },
+    };
+
+
+    #endregion 示例1
+
+}
+
