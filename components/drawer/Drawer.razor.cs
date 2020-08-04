@@ -103,6 +103,7 @@ namespace AntDesign
         }
 
         [Parameter] public EventCallback OnClose { get; set; }
+        [Parameter] public RenderFragment Handler { get; set; }
 
         private OneOf<RenderFragment, string> _content;
 
