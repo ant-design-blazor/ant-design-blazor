@@ -56,8 +56,6 @@ namespace AntDesign
 
         protected string _svgImg;
 
-        protected string IconStyle => Rotate == 0 ? "" : $"transform: rotate({Rotate}deg);";
-
         protected override void Dispose(bool disposing)
         {
             if (this is Icon icon)
@@ -103,12 +101,12 @@ namespace AntDesign
             if (!string.IsNullOrEmpty(IconFont))
             {
                 var svg = $"<svg><use xlink:href=#{IconFont} /></svg>";
-                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill);
+                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate);
             }
             else
             {
                 var svg = await IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
-                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill);
+                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate);
             }
 
             StateHasChanged();
