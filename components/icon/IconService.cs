@@ -9,7 +9,7 @@ namespace AntDesign
 {
     public class IconService
     {
-        private static readonly ConcurrentDictionary<string, string> _svgCache = new ConcurrentDictionary<string, string>();
+        private static readonly ConcurrentDictionary<string, ValueTask<string>> _svgCache = new ConcurrentDictionary<string, ValueTask<string>>();
         private readonly HttpClient _httpClient;
         private IJSRuntime _js;
 
@@ -28,28 +28,26 @@ namespace AntDesign
 
         public async ValueTask<string> GetIconImg(string type, string theme)
         {
-            var iconImg = string.Empty;
-            if (_svgCache.TryGetValue($"{theme}-{type}", out var img))
+            var cacheKey = $"{theme}/{type}";
+            var iconImg = await _svgCache.GetOrAdd(cacheKey, async key =>
             {
-                iconImg = img;
-            }
-            else
-            {
-                var res = await _httpClient.GetAsync(new Uri(_baseAddress, $"_content/AntDesign/icons/{theme}/{type}.svg"));
+                var res = await _httpClient.GetAsync(new Uri(_baseAddress, $"_content/AntDesign/icons/{key}.svg"));
                 if (res.IsSuccessStatusCode)
                 {
-                    iconImg = await res.Content.ReadAsStringAsync();
-                    _svgCache.TryAdd($"{theme}-{type}", iconImg);
+                    return await res.Content.ReadAsStringAsync();
                 }
-            }
+
+                return null;
+            });
+
             return iconImg;
         }
 
-        public static string GetStyledSvg(string svgImg, string width = "1em", string height = "1em", string fill = "currentColor")
+        public static string GetStyledSvg(string svgImg, string width = "1em", string height = "1em", string fill = "currentColor", int rotate = 0)
         {
-            var svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\"";
             if (!string.IsNullOrEmpty(svgImg))
             {
+                var svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? "" : $"style=\"transform: rotate({rotate}deg);\"")}";
                 return svgImg.Insert(svgImg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {svgStyle} ");
             }
 
