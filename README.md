@@ -25,7 +25,7 @@ English | [简体中文](README-zh_CN.md)
 
 ## ✨ Features
 
-- 🌈 Enterprise-class UI designed for web applications.
+- 🌈 Enterprise-class UI designed for web applications1.
 - 📦 A set of high-quality Blazor components out of the box.
 - 💕 Supports WebAssembly-based client-side and SignalR-based server-side UI event interaction.
 - 🎨 Supports Progressive Web Applications (PWA).
