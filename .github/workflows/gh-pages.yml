@@ -34,7 +34,7 @@ jobs:
           dotnet build
           dotnet test --collect:"XPlat Code Coverage"
           find ./tests -name "coverage.cobertura.xml" -type f -exec cp {} ./ \;
-          bash <(curl -s https://codecov.io/bash) -Z -f coverage.cobertura.xml
+          bash <(curl -s https://codecov.io/bash) -Z -f coverage.cobertura.xml -t $CODECOV_TOKEN
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
