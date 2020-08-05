@@ -39,4 +39,8 @@ gulp.task('ts', function () {
     .pipe(gulp.dest('wwwroot/js'));
 });
 
-gulp.task('default', gulp.parallel('less', 'ts'), function () { });
+gulp.task('src', function () {
+    return gulp.src(['**/*.less']).pipe(gulp.dest('wwwroot/less'));
+});
+
+gulp.task('default', gulp.parallel('less', 'ts', 'src'), function () { });
