@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -78,8 +77,6 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
-
-        [Inject] private NavigationManager NavigationManger { get; set; }
 
         public IList<Icon> Icons { get; set; } = new List<Icon>();
 
