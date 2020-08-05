@@ -339,6 +339,7 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 package-lock.json
+/components/wwwroot/less
 /components/wwwroot/css/ant-design-blazor.css
 /components/wwwroot/js/ant-design-blazor.js
 /components/wwwroot/js/ant-design-blazor.js.map
@@ -347,3 +348,4 @@ package-lock.json
 /site/AntBlazor.Docs/wwwroot/css/docs.css
 /site/AntBlazor.Docs/wwwroot/meta
 /AntBlazor.Docs/wwwroot/docs
+coverage.cobertura.xml
