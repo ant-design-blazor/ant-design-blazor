@@ -1,0 +1,87 @@
+@using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column Data="data1" Config="config1"/>
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+
+    #region 示例1
+
+    object[] data1 =
+    {
+        new
+        {
+            type = "家具家电",
+            sales = 38
+        },
+        new
+        {
+            type = "粮油副食",
+            sales = 52
+        },
+        new
+        {
+            type = "生鲜水果",
+            sales = 61
+        },
+        new
+        {
+            type = "美容洗护",
+            sales = 145
+        },
+        new
+        {
+            type = "母婴用品",
+            sales = 48
+        },
+        new
+        {
+            type = "进口食品",
+            sales = 38
+        },
+        new
+        {
+            type = "食品饮料",
+            sales = 38
+        },
+        new
+        {
+            type = "家庭清洁",
+            sales = 38
+        }
+    };
+
+    ColumnConfig config1 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "基础柱状图"
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "type",
+        YField = "sales",
+        Meta = new
+        {
+            Type = new
+            {
+                Alias = "类别"
+            },
+            Sales = new
+            {
+                Alias = "销售额(万)"
+            }
+        }
+    };
+
+    #endregion 示例1
+
+}

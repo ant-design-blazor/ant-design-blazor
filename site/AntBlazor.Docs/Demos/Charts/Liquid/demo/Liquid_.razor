@@ -1,0 +1,31 @@
+@using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <Liquid TItem="string" Config="config1"/>
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+
+    #region 示例1
+
+    readonly LiquidConfig config1 = new LiquidConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "水波图"
+        },
+        Min = 0,
+        Max = 10000,
+        Value = 5639
+    };
+
+    #endregion 示例1
+
+}

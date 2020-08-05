@@ -11,8 +11,11 @@
     <base href="~/" />
     <link rel="icon" href="logo.png" type="image/x-icon">
     @*<link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">*@
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.css" />
     <link href="_content/AntDesign.Docs/css/docs.css" rel="stylesheet">
+
+    <script src="@("https://unpkg.com/@antv/g2plot@latest/dist/g2plot.js")"></script>
+    <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
 </head>
 <body>
     <app>
@@ -22,7 +25,8 @@
     <script src="_framework/blazor.server.js"></script>
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
     <script src="_content/AntDesign.Docs/js/prism.js"></script>
-<script>
+
+    <script>
         window.AntDesign.Prism = {};
         window.AntDesign.Prism.highlight = function (code, language) {
             return Prism.highlight(code, Prism.languages[language], language);
@@ -32,7 +36,7 @@
             Prism.highlightAll();
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.js" integrity="sha256-qybEsgf0PGiQS22AmoozPs09oRnSC7Gu7eBu4fbS2Ac=" crossorigin="anonymous"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.js" integrity="sha256-qybEsgf0PGiQS22AmoozPs09oRnSC7Gu7eBu4fbS2Ac=" crossorigin="anonymous"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
 </body>
 </html>
