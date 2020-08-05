@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Docs.Build.CLI", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "hosts", "hosts", "{752F5AE8-BA08-4C41-B9B2-D2ED12727E63}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntDesign.Tests", "tests\AntDesign.Tests.csproj", "{B2DC89BD-838C-459C-A32A-98F877479988}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{5A765767-0766-433D-B78D-97D8F29CA6A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A765767-0766-433D-B78D-97D8F29CA6A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A765767-0766-433D-B78D-97D8F29CA6A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2DC89BD-838C-459C-A32A-98F877479988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2DC89BD-838C-459C-A32A-98F877479988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2DC89BD-838C-459C-A32A-98F877479988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2DC89BD-838C-459C-A32A-98F877479988}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{B8761D43-B253-49FC-B144-A6CCB061951B} = {752F5AE8-BA08-4C41-B9B2-D2ED12727E63}
 		{3F5C09C7-81EB-461C-8E0E-538D3FBAB931} = {752F5AE8-BA08-4C41-B9B2-D2ED12727E63}
 		{5A765767-0766-433D-B78D-97D8F29CA6A6} = {D34F1DE5-ECF7-4CF0-8325-B7A38F41D376}
+		{B2DC89BD-838C-459C-A32A-98F877479988} = {C60BCE84-4AF4-4393-8D3E-1B69E29549C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E124DDCB-1F8D-4F96-BF41-D87019D0A412}
