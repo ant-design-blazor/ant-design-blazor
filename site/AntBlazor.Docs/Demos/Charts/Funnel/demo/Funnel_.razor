@@ -1,0 +1,33 @@
+@using AntDesign.Charts
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <Funnel Data="data1" Config="config1"/>
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+
+    #region 示例1
+
+    readonly object[] data1 =
+    {
+        new {action = "浏览网站", pv = 50000},
+        new {action = "放入购物车", pv = 35000},
+        new {action = "生成订单", pv = 25000},
+        new {action = "支付", pv = 15000},
+        new {action = "成交", pv = 8500}
+    };
+
+    readonly FunnelConfig config1 = new FunnelConfig
+    {
+        XField = "action",
+        YField = "pv"
+    };
+
+    #endregion 示例1
+
+}

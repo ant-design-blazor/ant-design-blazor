@@ -1,0 +1,189 @@
+@using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <StackedColumn Data="data1" Config="config1"/>
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+
+    #region 示例1
+
+    readonly object[] data1 =
+    {
+        new
+        {
+            time = "16 Q1",
+            type = "移动游戏",
+            value = 0
+        },
+        new
+        {
+            time = "16 Q1",
+            type = "移动购物",
+            value = 17.8
+        },
+        new
+        {
+            time = "16 Q1",
+            type = "移动营销",
+            value = 69.4
+        },
+        new
+        {
+            time = "16 Q1",
+            type = "共享单车",
+            value = 12.8
+        },
+        new
+        {
+            time = "16 Q2",
+            type = "移动游戏",
+            value = 0
+        },
+        new
+        {
+            time = "16 Q2",
+            type = "移动购物",
+            value = 18.1
+        },
+        new
+        {
+            time = "16 Q2",
+            type = "移动营销",
+            value = 70.7
+        },
+        new
+        {
+            time = "16 Q2",
+            type = "共享单车",
+            value = 11.2
+        },
+        new
+        {
+            time = "16 Q3",
+            type = "移动游戏",
+            value = 0
+        },
+        new
+        {
+            time = "16 Q3",
+            type = "移动购物",
+            value = 20.8
+        },
+        new
+        {
+            time = "16 Q3",
+            type = "移动营销",
+            value = 67.4
+        },
+        new
+        {
+            time = "16 Q3",
+            type = "共享单车",
+            value = 11.8
+        },
+        new
+        {
+            time = "16 Q4",
+            type = "移动游戏",
+            value = 0.1
+        },
+        new
+        {
+            time = "16 Q4",
+            type = "移动购物",
+            value = 20.3
+        },
+        new
+        {
+            time = "16 Q4",
+            type = "移动营销",
+            value = 69.2
+        },
+        new
+        {
+            time = "16 Q4",
+            type = "共享单车",
+            value = 10.4
+        },
+        new
+        {
+            time = "17 Q1",
+            type = "移动游戏",
+            value = 0.4
+        },
+        new
+        {
+            time = "17 Q1",
+            type = "移动购物",
+            value = 17.3
+        },
+        new
+        {
+            time = "17 Q1",
+            type = "移动营销",
+            value = 68.3
+        },
+        new
+        {
+            time = "17 Q1",
+            type = "共享单车",
+            value = 14
+        },
+        new
+        {
+            time = "17 Q2",
+            type = "移动游戏",
+            value = 1.2
+        },
+        new
+        {
+            time = "17 Q2",
+            type = "移动购物",
+            value = 18.3
+        },
+        new
+        {
+            time = "17 Q2",
+            type = "移动营销",
+            value = 68.6
+        },
+        new
+        {
+            time = "17 Q2",
+            type = "共享单车",
+            value = 11.9
+        }
+    };
+
+    readonly StackedColumnConfig config1 = new StackedColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "指定图例位置"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "图例位置支持12个方位，分别为 left-top,left-center,left-bottom,right-top,right-top,right-bottom,top-left,top-center,top-bottom,bottom-left,bottom-center,bottom-right。"
+        },
+        XField = "time",
+        YField = "value",
+        StackField = "type",
+        Legend = new AntDesign.Charts.Legend
+        {
+            Visible = true,
+            Position = "right-center"
+        }
+    };
+
+    #endregion 示例1
+
+}

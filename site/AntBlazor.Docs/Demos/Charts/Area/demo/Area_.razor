@@ -1,0 +1,47 @@
+@using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <Area @ref="chart1" TItem="FireworksSalesItem" Config="config1"/>
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+
+    IChartComponent chart1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var data1 = await ChartsDemoData.FireworksSalesAsync(NavigationManager, HttpClient);
+        chart1.ChangeData(data1);
+
+        await base.OnInitializedAsync();
+    }
+
+    #region 示例1
+
+    readonly AreaConfig config1 = new AreaConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "基础面积图"
+        },
+        XField = "Date",
+        YField = "scales",
+        XAxis = new ValueCatTimeAxis
+        {
+            Type = "dateTime",
+            TickCount = 5
+        }
+    };
+
+    #endregion 示例1
+
+}
