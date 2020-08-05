@@ -1,0 +1,42 @@
+@using AntDesign.Charts
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <Scatter @ref="chart1" Data="data1" Config="config1"/>
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+
+    IChartComponent chart1;
+    IMDBItem[] data1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        data1 = await ChartsDemoData.IMDBAsync(NavigationManager, HttpClient);
+        await chart1.ChangeData(data1);
+
+        await base.OnInitializedAsync();
+    }
+
+    #region 示例1
+
+    readonly ScatterConfig config1 = new ScatterConfig
+    {
+        XField = "revenue",
+        YField = "rating",
+        XAxis = new ValueTimeAxis
+        {
+            Visible = true,
+            Min = -5
+        }
+    };
+
+    #endregion 示例1
+
+}

@@ -10,7 +10,7 @@
     </span>
 </div>
 <Menu Mode="MenuMode.Horizontal" Id="nav" Class="menu-site">
-    @foreach (var item in _menuItems)
+    @foreach (var item in _menuItems.OrderBy(x=>x.Order))
     {
         <MenuItem Class="ant-menu-item-only-child" Key="@item.Url" RouterLink="@($"{CurrentLanguage}/{item.Url}")" RouterMatch="NavLinkMatch.Prefix">
             <span>@item.Title</span>
