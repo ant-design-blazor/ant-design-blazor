@@ -138,7 +138,7 @@ namespace AntDesign.Docs.Services
                 if (currentTitle.Equals(items[i].Title, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var prev = i == 0 ? null : items[i - 1];
-                    var next = i == items.Length ? null : items[i + 1];
+                    var next = i == items.Length - 1 ? null : items[i + 1];
                     return new[] { prev, next };
                 }
             }
