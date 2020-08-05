@@ -1,0 +1,42 @@
+@using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <RangeColumn Data="data1" Config="config1"/>
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+
+    #region 示例1
+
+    readonly object[] data1 =
+    {
+        new {type = "分类一", values = new[] {76, 100}},
+        new {type = "分类二", values = new[] {56, 108}},
+        new {type = "分类三", values = new[] {38, 129}},
+        new {type = "分类四", values = new[] {58, 155}},
+        new {type = "分类五", values = new[] {45, 120}},
+        new {type = "分类六", values = new[] {23, 99}},
+        new {type = "分类七", values = new[] {18, 56}},
+        new {type = "分类八", values = new[] {18, 34}}
+    };
+
+    readonly RangeColumnConfig config1 = new RangeColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "区间柱状图"
+        },
+        XField = "type",
+        YField = "values"
+    };
+
+    #endregion 示例1
+
+}

@@ -1,0 +1,97 @@
+@using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
+
+<Tabs>
+    <TabPane Key="1">
+        <Tab>示例1</Tab>
+        <ChildContent>
+            <GroupedBar Data="data1" Config="config1"/>
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+@code{
+
+    #region 示例1
+
+    readonly object[] data1 =
+    {
+        new
+        {
+            label = "Mon.",
+            type = "series1",
+            value = 2800
+        },
+        new
+        {
+            label = "Mon.",
+            type = "series2",
+            value = 2260
+        },
+        new
+        {
+            label = "Tues.",
+            type = "series1",
+            value = 1800
+        },
+        new
+        {
+            label = "Tues.",
+            type = "series2",
+            value = 1300
+        },
+        new
+        {
+            label = "Wed.",
+            type = "series1",
+            value = 950
+        },
+        new
+        {
+            label = "Wed.",
+            type = "series2",
+            value = 900
+        },
+        new
+        {
+            label = "Thur.",
+            type = "series1",
+            value = 500
+        },
+        new
+        {
+            label = "Thur.",
+            type = "series2",
+            value = 390
+        },
+        new
+        {
+            label = "Fri.",
+            type = "series1",
+            value = 170
+        },
+        new
+        {
+            label = "Fri.",
+            type = "series2",
+            value = 100
+        }
+    };
+
+    readonly GroupedBarConfig config1 = new GroupedBarConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "分组条形图"
+        },
+        XField = "value",
+        YField = "label",
+        GroupField = "type",
+        Color = new[] {"#1383ab", "#c52125"},
+        Label = new BarViewConfigLabel()
+    };
+
+    #endregion 示例1
+
+}
