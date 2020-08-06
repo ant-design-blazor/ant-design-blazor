@@ -1,0 +1,21 @@
+name: Format Code
+on:
+  pull_request:
+    branches: [master]
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: goit/setup-resharper@v1
+      - name: Format
+        with:
+          version: '2020.1.4'
+        run: CleanupCode AntDesign.sln
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4.1.2
+        with:
+          commit_message: Apply formatting changes
+          branch: ${{ github.head_ref }}
