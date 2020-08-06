@@ -49,6 +49,24 @@ namespace AntDesign
 
         #endregion Parameters
 
+        public void Next() => GoTo(_slicks.IndexOf(_activeSlick) + 1);
+
+        public void Previous() => GoTo(_slicks.IndexOf(_activeSlick) - 1);
+
+        public void GoTo(int index)
+        {
+            if (index >= _slicks.Count)
+            {
+                index = 0;
+            }
+            else if (index < 0)
+            {
+                index = _slicks.Count - 1;
+            }
+
+            Activate(index);
+        }
+
         private void SetClass()
         {
             SlickSliderClassMapper.Clear()
