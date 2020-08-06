@@ -13,7 +13,7 @@ jobs:
       - name: Format
         with:
           version: '2020.1.4'
-        run: CleanupCode AntDesign.sln --profile="Built-in: Reformat Code"
+      - run: 'CleanupCode AntDesign.sln --profile="Built-in: Reformat Code"'
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4.1.2
         with:
