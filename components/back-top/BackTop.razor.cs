@@ -7,8 +7,7 @@ namespace AntDesign
 {
     public partial class BackTop : AntDomComponentBase
     {
-        [Parameter]
-        public string Title { get; set; }
+        [Parameter] public string Title { get; set; }
 
         protected ClassMapper BackTopClassMapper { get; set; } = new ClassMapper();
 

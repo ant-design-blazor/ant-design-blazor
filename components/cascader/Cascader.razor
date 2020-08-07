@@ -7,11 +7,11 @@
         <input autocomplete="off" tabindex="-1" placeholder="@PlaceHolder" class="ant-input ant-cascader-input @_inputSizeClass" readonly="@Readonly" type="text" value="@_displayText">
         @if (string.IsNullOrWhiteSpace(Value) || !ShowClearIcon)
         {
-            <Icon Type="down" Class="@($"ant-cascader-picker-arrow {(ToggleState ? "ant-cascader-picker-arrow-expand" : string.Empty)}")" />
+            <Icon Type="down" Class="@($"ant-cascader-picker-arrow {(ToggleState ? "ant-cascader-picker-arrow-expand" : string.Empty)}")"/>
         }
         else
         {
-            <Icon Type="close-circle" Class="ant-cascader-picker-clear" OnClick="ClearSelected" StopPropagation />
+            <Icon Type="close-circle" Class="ant-cascader-picker-clear" OnClick="ClearSelected" StopPropagation/>
         }
     </span>
 
@@ -31,7 +31,7 @@
                             @if (nd.HasChildren)
                             {
                                 <span class="ant-cascader-menu-item-expand-icon">
-                                    <Icon Type="right" />
+                                    <Icon Type="right"/>
                                 </span>
                             }
                         </li>
@@ -53,7 +53,7 @@
                                     @if (m.HasChildren)
                                     {
                                         <span class="ant-cascader-menu-item-expand-icon">
-                                            <Icon Type="right" />
+                                            <Icon Type="right"/>
                                         </span>
                                     }
                                 </li>

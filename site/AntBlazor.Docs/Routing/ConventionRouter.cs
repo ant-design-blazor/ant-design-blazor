@@ -41,12 +41,14 @@ namespace AntDesign.Docs.Routing
 
             if (Found == null)
             {
-                throw new InvalidOperationException($"The {nameof(ConventionRouter)} component requires a value for the parameter {nameof(Found)}.");
+                throw new InvalidOperationException(
+                    $"The {nameof(ConventionRouter)} component requires a value for the parameter {nameof(Found)}.");
             }
 
             if (NotFound == null)
             {
-                throw new InvalidOperationException($"The {nameof(ConventionRouter)} component requires a value for the parameter {nameof(NotFound)}.");
+                throw new InvalidOperationException(
+                    $"The {nameof(ConventionRouter)} component requires a value for the parameter {nameof(NotFound)}.");
             }
 
             RouteManager.Initialise(AppAssembly);
@@ -81,7 +83,9 @@ namespace AntDesign.Docs.Routing
         {
             var relativeUri = NavigationManager.ToBaseRelativePath(_location);
 
-            relativeUri = relativeUri.IndexOf('#') >= 0 ? relativeUri.Substring(0, relativeUri.IndexOf('#')) : relativeUri;
+            relativeUri = relativeUri.IndexOf('#') >= 0
+                ? relativeUri.Substring(0, relativeUri.IndexOf('#'))
+                : relativeUri;
 
             var currentCulture = LanguageService.CurrentCulture;
 

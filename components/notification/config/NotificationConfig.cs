@@ -93,6 +93,5 @@ namespace AntDesign
         /// 通知提醒框左侧的图标类型
         /// </summary>
         public NotificationType NotificationType { get; set; } = NotificationType.None;
-
     }
 }

@@ -19,37 +19,37 @@
                 switch (Config.NotificationType)
                 {
                     case NotificationType.Success:
-                        {
-                            <span role="img" aria-label="check-circle" class="anticon anticon-check-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-success">
-                                <Icon Type="check-circle" Theme="outline"></Icon>
-                            </span>
+                    {
+                        <span role="img" aria-label="check-circle" class="anticon anticon-check-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-success">
+                            <Icon Type="check-circle" Theme="outline"></Icon>
+                        </span>
 
-                            break;
-                        }
+                        break;
+                    }
                     case NotificationType.Warning:
-                        {
-                            <span role="img" aria-label="exclamation-circle" class="anticon anticon-exclamation-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-warning">
-                                <Icon Type="exclamation-circle" Theme="outline"></Icon>
-                            </span>
+                    {
+                        <span role="img" aria-label="exclamation-circle" class="anticon anticon-exclamation-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-warning">
+                            <Icon Type="exclamation-circle" Theme="outline"></Icon>
+                        </span>
 
-                            break;
-                        }
+                        break;
+                    }
                     case NotificationType.Error:
-                        {
-                            <span role="img" aria-label="close-circle" class="anticon anticon-close-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-error">
-                                <Icon Type="close-circle" Theme="outline"></Icon>
-                            </span>
+                    {
+                        <span role="img" aria-label="close-circle" class="anticon anticon-close-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-error">
+                            <Icon Type="close-circle" Theme="outline"></Icon>
+                        </span>
 
-                            break;
-                        }
+                        break;
+                    }
                     case NotificationType.Info:
-                        {
-                            <span role="img" aria-label="info-circle" class="anticon anticon-info-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-info">
-                                <Icon Type="info-circle" Theme="outline"></Icon>
-                            </span>
+                    {
+                        <span role="img" aria-label="info-circle" class="anticon anticon-info-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-info">
+                            <Icon Type="info-circle" Theme="outline"></Icon>
+                        </span>
 
-                            break;
-                        }
+                        break;
+                    }
                 }
             }
 
@@ -57,7 +57,7 @@
                 @{
                     if (Config.Message.IsT0)
                     {
-                        @((MarkupString)(Config.Message.AsT0))
+                        @((MarkupString) (Config.Message.AsT0))
                     }
                     else
                     {
@@ -70,7 +70,7 @@
                 @{
                     if (Config.Description.IsT0)
                     {
-                        @((MarkupString)(Config.Description.AsT0))
+                        @((MarkupString) (Config.Description.AsT0))
                     }
                     else
                     {

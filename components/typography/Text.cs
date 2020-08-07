@@ -8,8 +8,7 @@ namespace AntDesign
 {
     public class Text : TypographyBase
     {
-        [Parameter]
-        public bool Code { get; set; }
+        [Parameter] public bool Code { get; set; }
 
         protected override void OnInitialized()
         {

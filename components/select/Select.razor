@@ -6,97 +6,97 @@
         @switch (SelectMode)
         {
             case SelectMode.Default:
-                {
-                    var selectedOption = SelectedOptions.FirstOrDefault();
-                    <div class="@ClassPrefix-selector">
-                        <span class="@ClassPrefix-selection-search">
-                            <input @ref="_inputRef"
-                                   @oninput="OnInput" @onblur="OnInputBlur"
-                                   id="@Id"
-                                   value="@_searchValue"
-                                   role="combobox"
-                                   readonly="@(!_isSelectOpened)"
-                                   class="@ClassPrefix-selection-search-input"
-                                   style="@(_isSelectOpened ? "" : "opacity:0")"
-                                   autocomplete="off"
-                                   aria-owns="@(Id)_list"
-                                   aria-expanded="@_isSelectOpened"
-                                   aria-autocomplete="list"
-                                   aria-controls="@(Id)_list" />
-                        </span>
-                        @if (ShowPlaceholder)
+            {
+                var selectedOption = SelectedOptions.FirstOrDefault();
+                <div class="@ClassPrefix-selector">
+                    <span class="@ClassPrefix-selection-search">
+                        <input @ref="_inputRef"
+                                @oninput="OnInput" @onblur="OnInputBlur"
+                                id="@Id"
+                                value="@_searchValue"
+                                role="combobox"
+                                readonly="@(!_isSelectOpened)"
+                                class="@ClassPrefix-selection-search-input"
+                                style="@(_isSelectOpened ? "" : "opacity:0")"
+                                autocomplete="off"
+                                aria-owns="@(Id)_list"
+                                aria-expanded="@_isSelectOpened"
+                                aria-autocomplete="list"
+                                aria-controls="@(Id)_list"/>
+                    </span>
+                    @if (ShowPlaceholder)
+                    {
+                        <span class="ant-select-selection-placeholder">@Placeholder</span>
+                    }
+                    else if (string.IsNullOrEmpty(_searchValue) && selectedOption != null)
+                    {
+                        var showValue = GetShowValue(selectedOption);
+                        @if (showValue.IsT0)
                         {
-                            <span class="ant-select-selection-placeholder">@Placeholder</span>
+                            <span class="ant-select-selection-item">@showValue.AsT0 </span>
                         }
-                        else if (string.IsNullOrEmpty(_searchValue) && selectedOption != null)
+                        else
                         {
-                            var showValue = GetShowValue(selectedOption);
-                            @if (showValue.IsT0)
-                            {
-                                <span class="ant-select-selection-item">@showValue.AsT0 </span>
-                            }
-                            else
-                            {
-                                <span class="ant-select-selection-item">@showValue.AsT1 </span>
-                            }
+                            <span class="ant-select-selection-item">@showValue.AsT1 </span>
                         }
-                    </div>
-                    break;
-                }
+                    }
+                </div>
+                break;
+            }
             default:
-                {
-                    <div class="@ClassPrefix-selector">
-                        @foreach (var option in SelectedOptions)
+            {
+                <div class="@ClassPrefix-selector">
+                    @foreach (var option in SelectedOptions)
+                    {
+                        if (TagRender != null)
                         {
-                            if (TagRender != null)
-                            {
-                                <span>@TagRender(GetProperties(option))</span>
-                            }
-                            else
-                            {
-                                var showValue = GetShowValue(option);
-                                <span class="@ClassPrefix-selection-item">
-                                    <span class="@ClassPrefix-selection-item-content">
-                                        @if (showValue.IsT0)
-                                        {
-                                            @showValue.AsT0
-                                        }
-                                        else
-                                        {
-                                            @showValue.AsT1
-                                        }
-                                    </span>
-
-                                    <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@ClassPrefix-selection-item-remove"
-                                          @onclick="()=>OnRemoveSelected(option)" @onclick:stopPropagation="true">
-                                        <Icon Type="close"></Icon>
-                                    </span>
+                            <span>@TagRender(GetProperties(option))</span>
+                        }
+                        else
+                        {
+                            var showValue = GetShowValue(option);
+                            <span class="@ClassPrefix-selection-item">
+                                <span class="@ClassPrefix-selection-item-content">
+                                    @if (showValue.IsT0)
+                                    {
+                                        @showValue.AsT0
+                                    }
+                                    else
+                                    {
+                                        @showValue.AsT1
+                                    }
                                 </span>
-                            }
+
+                                <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@ClassPrefix-selection-item-remove"
+                                      @onclick="() => OnRemoveSelected(option)" @onclick:stopPropagation="true">
+                                    <Icon Type="close"></Icon>
+                                </span>
+                            </span>
                         }
-                        <span class="@ClassPrefix-selection-search" style="width:@_inputWidth">
-                            <input @ref="_inputRef"
-                                   @oninput="OnInput" @onblur="OnInputBlur"
-                                   @bind-value="@_searchValue"
-                                   id="@Id"
-                                   role="combobox"
-                                   readonly="@(!_isSelectOpened)"
-                                   class="@ClassPrefix-selection-search-input"
-                                   style="@(_isSelectOpened?"":"opacity:0")"
-                                   autocomplete="off"
-                                   aria-owns="@(Id)_list"
-                                   aria-expanded="@_isSelectOpened"
-                                   aria-autocomplete="list"
-                                   aria-controls="@(Id)_list" />
-                            <span class="@ClassPrefix-selection-search-mirror" aria-hidden="true">&nbsp;</span>
-                        </span>
-                        @if (ShowPlaceholder)
-                        {
-                            <span class="ant-select-selection-placeholder">@Placeholder</span>
-                        }
-                    </div>
-                    break;
-                }
+                    }
+                    <span class="@ClassPrefix-selection-search" style="width: @_inputWidth">
+                        <input @ref="_inputRef"
+                                @oninput="OnInput" @onblur="OnInputBlur"
+                                @bind-value="@_searchValue"
+                                id="@Id"
+                                role="combobox"
+                                readonly="@(!_isSelectOpened)"
+                                class="@ClassPrefix-selection-search-input"
+                                style="@(_isSelectOpened ? "" : "opacity:0")"
+                                autocomplete="off"
+                                aria-owns="@(Id)_list"
+                                aria-expanded="@_isSelectOpened"
+                                aria-autocomplete="list"
+                                aria-controls="@(Id)_list"/>
+                        <span class="@ClassPrefix-selection-search-mirror" aria-hidden="true">&nbsp;</span>
+                    </span>
+                    @if (ShowPlaceholder)
+                    {
+                        <span class="ant-select-selection-placeholder">@Placeholder</span>
+                    }
+                </div>
+                break;
+            }
         }
 
         @if (ShowArrow && SelectMode == SelectMode.Default)
@@ -148,7 +148,7 @@
                             }
                             else
                             {
-                                <Empty Image="Empty.PRESENTED_IMAGE_SIMPLE" Small="true" />
+                                <Empty Image="Empty.PRESENTED_IMAGE_SIMPLE" Small="true"/>
                             }
                         </div>
                     }
@@ -161,7 +161,7 @@
                                 <div id="@(Id)_list_@(i)" role="option" aria-label="@selectOption.Value" aria-selected="@GetAriaSelected(selectOption)">@selectOption.Value</div>
                             }
                         </div>
-                        <div class="" style="max-height:256px; overflow-y:auto;">
+                        <div class="" style="max-height: 256px; overflow-y: auto;">
                             <div>
                                 <div class="" style="display: flex; flex-direction: column;">
                                     @if (IsCreatedTagOption())
@@ -193,7 +193,8 @@
 
                         if (DropdownRender != null)
                         {
-                            @DropdownRender(default, default);
+                            @DropdownRender(default, default)
+                            ;
                         }
                     }
                 </div>

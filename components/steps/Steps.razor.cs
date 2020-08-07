@@ -96,7 +96,8 @@ namespace AntDesign
                 .Add(prefixName)
                 .If($"{prefixName}-{Direction}", () => !string.IsNullOrEmpty(Direction))
                 .If($"{prefixName}-label-horizontal", () => Direction == "horizontal")
-                .If($"{prefixName}-label-vertical", () => (_showProgressDot || LabelPlacement == "vertical") && Direction == "horizontal")
+                .If($"{prefixName}-label-vertical",
+                    () => (_showProgressDot || LabelPlacement == "vertical") && Direction == "horizontal")
                 .If($"{prefixName}-dot", () => _showProgressDot)
                 .If($"{prefixName}-small", () => Size == "small")
                 .If($"{prefixName}-navigation", () => Type == "navigation")

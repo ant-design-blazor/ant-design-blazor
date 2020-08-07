@@ -8,17 +8,13 @@ namespace AntDesign
 {
     public partial class Tooltip : OverlayTrigger
     {
-        [Parameter]
-        public OneOf<string, RenderFragment, MarkupString> Title { get; set; } = string.Empty;
+        [Parameter] public OneOf<string, RenderFragment, MarkupString> Title { get; set; } = string.Empty;
 
-        [Parameter]
-        public bool ArrowPointAtCenter { get; set; } = false;
+        [Parameter] public bool ArrowPointAtCenter { get; set; } = false;
 
-        [Parameter]
-        public double MouseEnterDelay { get; set; } = 0.1;
+        [Parameter] public double MouseEnterDelay { get; set; } = 0.1;
 
-        [Parameter]
-        public double MouseLeaveDelay { get; set; } = 0.1;
+        [Parameter] public double MouseLeaveDelay { get; set; } = 0.1;
 
         public Tooltip()
         {
@@ -55,6 +51,5 @@ namespace AntDesign
 
             await base.Hide(force);
         }
-
     }
 }

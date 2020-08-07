@@ -8,11 +8,9 @@ namespace AntDesign
 {
     public partial class FormProvider : AntComponentBase, IFormProvider
     {
-        [Parameter]
-        public EventCallback<FormProviderFinishEventArgs> OnFormFinish { get; set; }
+        [Parameter] public EventCallback<FormProviderFinishEventArgs> OnFormFinish { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         private Dictionary<string, IForm> _forms = new Dictionary<string, IForm>();
 
@@ -32,11 +30,7 @@ namespace AntDesign
 
         private void OnFinish(IForm form)
         {
-            var args = new FormProviderFinishEventArgs
-            {
-                Forms = _forms,
-                FinishForm = form
-            };
+            var args = new FormProviderFinishEventArgs {Forms = _forms, FinishForm = form};
 
             OnFormFinish.InvokeAsync(args);
         }

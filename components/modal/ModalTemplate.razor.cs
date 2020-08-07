@@ -8,8 +8,7 @@ namespace AntDesign
 {
     public class ModalTemplate<TContentParams, TResult> : TemplateComponentBase<TContentParams>, IModalTemplate
     {
-        [Parameter]
-        public ModalRef<TResult> ModalRef { get; set; }
+        [Parameter] public ModalRef<TResult> ModalRef { get; set; }
 
 
         /// <summary>
@@ -56,6 +55,5 @@ namespace AntDesign
         {
             return Task.CompletedTask;
         }
-
     }
 }

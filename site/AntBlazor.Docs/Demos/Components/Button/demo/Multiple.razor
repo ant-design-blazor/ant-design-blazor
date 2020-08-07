@@ -1,15 +1,22 @@
 ﻿@{
     RenderFragment menu = @<Menu>
-        <MenuItem Key="1">1st item</MenuItem>
-        <MenuItem Key="2">2nd item</MenuItem>
-        <MenuItem Key="3">3rd item</MenuItem>
-    </Menu>;
+                          <MenuItem Key="1">1st item</MenuItem>
+                                  < MenuItem
+    Key = "2" > 2
+    nd item</
+    MenuItem >
+    <
+    MenuItem Key = "3" > 3
+    rd item</
+    MenuItem >
+    </
+    Menu >;
 }
 
 <Button Type="primary">primary</Button>
 <Button>secondary</Button>
 <Dropdown Overlay=@menu>
     <Button>
-        Actions <Icon Type="down" />
+        Actions <Icon Type="down"/>
     </Button>
 </Dropdown>

@@ -1,12 +1,12 @@
-﻿<Popover OnVisibleChange="OnVisibleChange" Visible="_visible" Content="_content" Title="@("Title")" Trigger="@(new AntDesign.TriggerType[] { AntDesign.TriggerType.Click})">
-  <Button type="primary">Click me</Button>
+﻿<Popover OnVisibleChange="OnVisibleChange" Visible="_visible" Content="_content" Title="@("Title")" Trigger="@(new AntDesign.TriggerType[] {AntDesign.TriggerType.Click})">
+    <Button type="primary">Click me</Button>
 </Popover>
 
 
 @code{
 
     private RenderFragment _content =>
-        @<a @onclick="_=>this._visible = false">Close</a>;
+        @<a @onclick="_ => this._visible = false">Close</a>;
 
     private bool _visible = false;
 
@@ -14,4 +14,5 @@
     {
         _visible = visible;
     }
+
 }

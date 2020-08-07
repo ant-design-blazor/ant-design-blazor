@@ -12,7 +12,6 @@ namespace AntDesign
 
         internal DrawerRef(DrawerOptions config, DrawerService service) : base(config, service)
         {
-
         }
 
         /// <summary>
@@ -24,7 +23,6 @@ namespace AntDesign
             await _service.CloseAsync(this);
             await OnClose.Invoke(result);
         }
-
     }
 
     public class DrawerRef
@@ -79,6 +77,7 @@ namespace AntDesign
             {
                 await Config.OnCancel.Invoke(args);
             }
+
             if (args.Cancel == false)
                 await _service.CloseAsync(this);
         }

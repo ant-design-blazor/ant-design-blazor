@@ -13,7 +13,6 @@ namespace AntDesign
 
         internal ModalRef(ConfirmOptions config, ModalService service) : base(config, service)
         {
-
         }
 
         /// <summary>
@@ -91,6 +90,5 @@ namespace AntDesign
             Config = config;
             await _service?.Update(this);
         }
-
     }
 }

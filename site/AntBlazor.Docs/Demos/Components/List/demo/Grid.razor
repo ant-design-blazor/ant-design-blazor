@@ -2,7 +2,7 @@
     <Item Context="item">
         <Card Bordered Title="@(item.Title)">
             <Body>
-                Card context
+            Card context
             </Body>
         </Card>
     </Item>
@@ -10,20 +10,19 @@
 
 @code{
 
-    public ListGridType gutter = new ListGridType { Gutter = 16, Column = 4 };
+    public ListGridType gutter = new ListGridType {Gutter = 16, Column = 4};
 
     public List<BasicItem> Data = new List<BasicItem>
     {
-        new BasicItem { Title = "Title 1"},
-        new BasicItem { Title = "Title 2"},
-        new BasicItem { Title = "Title 3"},
-        new BasicItem { Title = "Title 4"},
+        new BasicItem {Title = "Title 1"},
+        new BasicItem {Title = "Title 2"},
+        new BasicItem {Title = "Title 3"},
+        new BasicItem {Title = "Title 4"},
     };
 
     public class BasicItem
     {
         public string Title { get; set; }
     }
+
 }
-
-

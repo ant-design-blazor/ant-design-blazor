@@ -8,14 +8,11 @@
 
 @code {
 
-    private Func<ModalClosingEventArgs, Task> OnOkClick = async (e) =>
-    {
-        await Task.Delay(1000);
-    };
+    private Func<ModalClosingEventArgs, Task> OnOkClick = async (e) => { await Task.Delay(1000); };
 
     private async Task ShowConfirm()
     {
-        RenderFragment icon =@<Icon Type="exclamation-circle" Theme="outline"></Icon>;
+        RenderFragment icon = @<Icon Type="exclamation-circle" Theme="outline"></Icon>;
 
         await _modalService.Confirm(new ConfirmOptions()
         {
@@ -27,7 +24,6 @@
     }
 
 
-
     private Func<ModalClosingEventArgs, Task> OnNotOkClick = async (e) =>
     {
         await Task.Delay(1000);
@@ -36,7 +32,7 @@
 
     private async Task ShowConfirmNotClose()
     {
-        RenderFragment icon =@<Icon Type="exclamation-circle" Theme="outline"></Icon>;
+        RenderFragment icon = @<Icon Type="exclamation-circle" Theme="outline"></Icon>;
 
         await _modalService.Confirm(new ConfirmOptions()
         {
@@ -46,4 +42,5 @@
             OnOk = OnNotOkClick
         });
     }
+
 }

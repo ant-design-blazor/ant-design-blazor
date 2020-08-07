@@ -6,56 +6,39 @@ namespace AntDesign.Internal
 {
     public partial class DatePickerTemplate<TValue> : DatePickerPanelBase<TValue>
     {
-        [Parameter]
-        public RenderFragment RenderPickerHeader { get; set; }
+        [Parameter] public RenderFragment RenderPickerHeader { get; set; }
 
-        [Parameter]
-        public RenderFragment RenderTableHeader { get; set; }
+        [Parameter] public RenderFragment RenderTableHeader { get; set; }
 
-        [Parameter]
-        public RenderFragment<DateTime> RenderFisrtCol { get; set; }
+        [Parameter] public RenderFragment<DateTime> RenderFisrtCol { get; set; }
 
-        [Parameter]
-        public RenderFragment<DateTime> RenderColValue { get; set; }
+        [Parameter] public RenderFragment<DateTime> RenderColValue { get; set; }
 
-        [Parameter]
-        public RenderFragment<DateTime> RenderLastCol { get; set; }
+        [Parameter] public RenderFragment<DateTime> RenderLastCol { get; set; }
 
-        [Parameter]
-        public DateTime ViewStartDate { get; set; }
+        [Parameter] public DateTime ViewStartDate { get; set; }
 
-        [Parameter]
-        public Func<DateTime, string> GetColTitle { get; set; }
+        [Parameter] public Func<DateTime, string> GetColTitle { get; set; }
 
-        [Parameter]
-        public Func<DateTime, string> GetRowClass { get; set; }
+        [Parameter] public Func<DateTime, string> GetRowClass { get; set; }
 
-        [Parameter]
-        public Func<DateTime, DateTime> GetNextColValue { get; set; }
+        [Parameter] public Func<DateTime, DateTime> GetNextColValue { get; set; }
 
-        [Parameter]
-        public Func<DateTime, bool> IsInView { get; set; }
+        [Parameter] public Func<DateTime, bool> IsInView { get; set; }
 
-        [Parameter]
-        public Func<DateTime, bool> IsToday { get; set; }
+        [Parameter] public Func<DateTime, bool> IsToday { get; set; }
 
-        [Parameter]
-        public Func<DateTime, bool> IsSelected { get; set; }
+        [Parameter] public Func<DateTime, bool> IsSelected { get; set; }
 
-        [Parameter]
-        public Action<DateTime> OnRowSelect { get; set; }
+        [Parameter] public Action<DateTime> OnRowSelect { get; set; }
 
-        [Parameter]
-        public Action<DateTime> OnValueSelect { get; set; }
+        [Parameter] public Action<DateTime> OnValueSelect { get; set; }
 
-        [Parameter]
-        public bool ShowFooter { get; set; } = false;
+        [Parameter] public bool ShowFooter { get; set; } = false;
 
-        [Parameter]
-        public int MaxRow { get; set; } = 0;
+        [Parameter] public int MaxRow { get; set; } = 0;
 
-        [Parameter]
-        public int MaxCol { get; set; } = 0;
+        [Parameter] public int MaxCol { get; set; } = 0;
 
         private void DateOnMouseEnter(DateTime hoverDateTime)
         {
@@ -152,7 +135,7 @@ namespace AntDesign.Internal
         private string GetRangeHoverCls(DateTime currentColDate)
         {
             if (!IsRange || DatePicker.HoverDateTime == null
-                || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month) == false)
+                         || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month) == false)
             {
                 return "";
             }

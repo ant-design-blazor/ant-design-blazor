@@ -3,14 +3,14 @@
     <Radio RadioButton Value="@DatePickerSize.Default">Default</Radio>
     <Radio RadioButton Value="@DatePickerSize.Small">Small</Radio>
 </RadioGroup>
-<br />
-<DatePicker TValue="DateTime?" Size="@datePickerSize"   />
-<br />
-<DatePicker TValue="DateTime?" Picker="@DatePickerType.Month" Size="@datePickerSize"  />
-<br />
-<RangePicker TValue="DateTime?" Size="@datePickerSize"  />
-<br />
-<DatePicker TValue="DateTime?" Picker="@DatePickerType.Week" Size="@datePickerSize"  />
+<br/>
+<DatePicker TValue="DateTime?" Size="@datePickerSize"/>
+<br/>
+<DatePicker TValue="DateTime?" Picker="@DatePickerType.Month" Size="@datePickerSize"/>
+<br/>
+<RangePicker TValue="DateTime?" Size="@datePickerSize"/>
+<br/>
+<DatePicker TValue="DateTime?" Picker="@DatePickerType.Week" Size="@datePickerSize"/>
 
 @code {
     private string datePickerSize = DatePickerSize.Default;

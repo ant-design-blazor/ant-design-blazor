@@ -4,11 +4,11 @@
 <span class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
     @if (!string.IsNullOrEmpty(Icon) && _hasIcon)
     {
-        <Icon Type="@Icon" />
+        <Icon Type="@Icon"/>
     }
     @if (!string.IsNullOrEmpty(Src) && _hasSrc)
     {
-        <img src="@Src" srcset="@SrcSet" alt="@Alt" @onerror="ImgError" />
+        <img src="@Src" srcset="@SrcSet" alt="@Alt" @onerror="ImgError"/>
     }
     @if (!string.IsNullOrEmpty(_text) && _hasText)
     {

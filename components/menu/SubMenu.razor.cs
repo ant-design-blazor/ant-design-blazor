@@ -10,17 +10,13 @@ namespace AntDesign
 {
     public partial class SubMenu : AntDomComponentBase
     {
-        [CascadingParameter]
-        public Menu RootMenu { get; set; }
+        [CascadingParameter] public Menu RootMenu { get; set; }
 
-        [CascadingParameter]
-        public SubMenu Parent { get; set; }
+        [CascadingParameter] public SubMenu Parent { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Title { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Parameter]
         public string Key
@@ -29,14 +25,11 @@ namespace AntDesign
             set => _key = value;
         }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool IsOpen { get; set; }
+        [Parameter] public bool IsOpen { get; set; }
 
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnTitleClicked { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> OnTitleClicked { get; set; }
 
         internal int Level => RootMenu.InternalMode == MenuMode.Inline ? (Parent?.Level ?? 0) + 1 : 0;
 
@@ -56,20 +49,21 @@ namespace AntDesign
             string prefixCls = $"{RootMenu.PrefixCls}-submenu";
 
             ClassMapper
-                    .Clear()
-                    .Add(prefixCls)
-                    .Add($"{prefixCls}-{RootMenu?.InternalMode}")
-                    .If($"{prefixCls}-disabled", () => Disabled)
-                    .If($"{prefixCls}-selected", () => _isSelected)
-                    .If($"{prefixCls}-open", () => RootMenu?.InternalMode == MenuMode.Inline && IsOpen)
-                    ;
+                .Clear()
+                .Add(prefixCls)
+                .Add($"{prefixCls}-{RootMenu?.InternalMode}")
+                .If($"{prefixCls}-disabled", () => Disabled)
+                .If($"{prefixCls}-selected", () => _isSelected)
+                .If($"{prefixCls}-open", () => RootMenu?.InternalMode == MenuMode.Inline && IsOpen)
+                ;
 
             SubMenuMapper
                 .Clear()
                 .Add(RootMenu.PrefixCls)
                 .Add($"{RootMenu.PrefixCls}-sub")
                 .Add($"{RootMenu.PrefixCls}-{RootMenu.Theme}")
-                .Add($"{RootMenu.PrefixCls}-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
+                .Add(
+                    $"{RootMenu.PrefixCls}-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
                 //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
                 .If($"{RootMenu.PrefixCls}-hidden", () => RootMenu.InternalMode == MenuMode.Inline && !IsOpen)
                 ;
@@ -83,10 +77,14 @@ namespace AntDesign
 
                 SubMenuMapper
                     .If($"{RootMenu.PrefixCls}-hidden", () => overlay.IsHiding() == false && overlay.IsPopup() == false)
-                    .If($"zoom-big zoom-big-enter zoom-big-enter-active", () => RootMenu.Mode == MenuMode.Vertical && overlay.IsPopup() && !overlay.IsHiding())
-                    .If($"zoom-big zoom-big-leave zoom-big-leave-active", () => RootMenu.Mode == MenuMode.Vertical && overlay.IsHiding())
-                    .If($"slide-up slide-up-enter slide-up-enter-active", () => RootMenu.Mode == MenuMode.Horizontal && overlay.IsPopup() && !overlay.IsHiding())
-                    .If($"slide-up slide-up-leave slide-up-leave-active", () => RootMenu.Mode == MenuMode.Horizontal && overlay.IsHiding())
+                    .If($"zoom-big zoom-big-enter zoom-big-enter-active",
+                        () => RootMenu.Mode == MenuMode.Vertical && overlay.IsPopup() && !overlay.IsHiding())
+                    .If($"zoom-big zoom-big-leave zoom-big-leave-active",
+                        () => RootMenu.Mode == MenuMode.Vertical && overlay.IsHiding())
+                    .If($"slide-up slide-up-enter slide-up-enter-active",
+                        () => RootMenu.Mode == MenuMode.Horizontal && overlay.IsPopup() && !overlay.IsHiding())
+                    .If($"slide-up slide-up-leave slide-up-leave-active",
+                        () => RootMenu.Mode == MenuMode.Horizontal && overlay.IsHiding())
                     ;
             }
         }
@@ -108,6 +106,7 @@ namespace AntDesign
             {
                 await _overlayTrigger.Hide(true);
             }
+
             IsOpen = false;
             StateHasChanged();
         }

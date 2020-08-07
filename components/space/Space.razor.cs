@@ -4,17 +4,13 @@ namespace AntDesign
 {
     public partial class Space : AntDomComponentBase
     {
-        [Parameter]
-        public string Align { get; set; }
+        [Parameter] public string Align { get; set; }
 
-        [Parameter]
-        public string Direction { get; set; } = "horizontal";
+        [Parameter] public string Direction { get; set; } = "horizontal";
 
-        [Parameter]
-        public string Size { get; set; } = "small";
+        [Parameter] public string Size { get; set; } = "small";
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         private bool HasAlign => Align.IsIn("start", "end", "center", "baseline");
 

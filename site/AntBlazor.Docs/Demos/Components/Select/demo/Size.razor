@@ -1,15 +1,9 @@
 <style>
-    .code-box-demo .ant-select {
-        margin: 0 8px 10px 0;
-    }
+    .code-box-demo .ant-select { margin: 0 8px 10px 0; }
 
-    .ant-row-rtl .code-box-demo .ant-select {
-        margin: 0 0 10px 8px;
-    }
+    .ant-row-rtl .code-box-demo .ant-select { margin: 0 0 10px 8px; }
 
-    #components-select-demo-search-box .code-box-demo .ant-select {
-        margin: 0;
-    }
+    #components-select-demo-search-box .code-box-demo .ant-select { margin: 0; }
 </style>
 
 <RadioGroup @bind-Value="@_sizeValue" OnChange="OnChangeSize" TValue="string">
@@ -17,8 +11,8 @@
     <Radio RadioButton Value="@("default")">Default</Radio>
     <Radio RadioButton Value="@("small")">Small</Radio>
 </RadioGroup>
-<br />
-<br />
+<br/>
+<br/>
 
 <Select Size="@_sizeValue"
         DefaultValue="@("0a10")"
@@ -29,8 +23,8 @@
         <SelectOption Value="@item" Title="@item">@item</SelectOption>
     }
 </Select>
-<br />
-<br />
+<br/>
+<br/>
 
 <Select Mode="multiple"
         Size="@_sizeValue"
@@ -43,7 +37,7 @@
         <SelectOption Value="@item">@item</SelectOption>
     }
 </Select>
-<br />
+<br/>
 
 <Select Mode="multiple"
         Size="@_sizeValue"
@@ -56,9 +50,10 @@
         <SelectOption Value="@item">@item</SelectOption>
     }
 </Select>
-<br />
+<br/>
 
 @using OneOf;
+
 @code
 {
     private string[] _items;
@@ -69,7 +64,7 @@
     {
         var min = 10;
         var max = 36;
-        _defaultValues = new[] { "0a10", "0c12" };
+        _defaultValues = new[] {"0a10", "0c12"};
 
         _items = new string[max - min];
         for (var i = min; max > i; i++)

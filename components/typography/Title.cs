@@ -8,8 +8,7 @@ namespace AntDesign
 {
     public class Title : TypographyBase
     {
-        [Parameter]
-        public int Level { get; set; } = 1;
+        [Parameter] public int Level { get; set; } = 1;
 
         protected override void OnInitialized()
         {

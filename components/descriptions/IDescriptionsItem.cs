@@ -8,13 +8,10 @@ namespace AntDesign
 {
     public interface IDescriptionsItem
     {
-        [Parameter]
-        OneOf<string, RenderFragment> Title { get; set; }
+        [Parameter] OneOf<string, RenderFragment> Title { get; set; }
 
-        [Parameter]
-        int Span { get; set; }
+        [Parameter] int Span { get; set; }
 
-        [Parameter]
-        RenderFragment ChildContent { get; set; }
+        [Parameter] RenderFragment ChildContent { get; set; }
     }
 }

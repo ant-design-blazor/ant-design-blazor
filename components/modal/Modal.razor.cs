@@ -19,14 +19,11 @@ namespace AntDesign
 
         [Parameter] public Func<Task> AfterClose { get; set; }
 
-        [Parameter]
-        public string BodyStyle { get; set; }
+        [Parameter] public string BodyStyle { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> CancelText { get; set; } = "Cancel";
+        [Parameter] public OneOf<string, RenderFragment> CancelText { get; set; } = "Cancel";
 
-        [Parameter]
-        public bool Centered { get; set; }
+        [Parameter] public bool Centered { get; set; }
 
         [Parameter] public bool Closable { get; set; } = true;
 
@@ -60,20 +57,15 @@ namespace AntDesign
         [Parameter] public bool Mask { get; set; } = true;
         [Parameter] public bool MaskClosable { get; set; } = true;
 
-        [Parameter]
-        public string MaskStyle { get; set; }
+        [Parameter] public string MaskStyle { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> OkText { get; set; } = "OK";
+        [Parameter] public OneOf<string, RenderFragment> OkText { get; set; } = "OK";
 
-        [Parameter]
-        public string OkType { get; set; } = ButtonType.Primary;
+        [Parameter] public string OkType { get; set; } = ButtonType.Primary;
 
-        [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Title { get; set; }
 
-        [Parameter]
-        public bool Visible { get; set; }
+        [Parameter] public bool Visible { get; set; }
 
         [Parameter] public OneOf<string, double> Width { get; set; } = 520;
 
@@ -89,26 +81,19 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public string WrapClassName { get; set; }
+        [Parameter] public string WrapClassName { get; set; }
 
-        [Parameter]
-        public int ZIndex { get; set; } = 1000;
+        [Parameter] public int ZIndex { get; set; } = 1000;
 
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnCancel { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> OnCancel { get; set; }
 
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnOk { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> OnOk { get; set; }
 
-        [Parameter]
-        public ButtonProps OkButtonProps { get; set; }
+        [Parameter] public ButtonProps OkButtonProps { get; set; }
 
-        [Parameter]
-        public ButtonProps CancelButtonProps { get; set; }
+        [Parameter] public ButtonProps CancelButtonProps { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         [CascadingParameter] public bool Rtl { get; set; } = false;
 
@@ -146,13 +131,11 @@ namespace AntDesign
                 DestroyOnClose = DestroyOnClose,
                 Footer = Footer,
                 ForceRender = ForceRender,
-
                 GetContainer = GetContainer,
                 Keyboard = Keyboard,
                 Mask = Mask,
                 MaskClosable = MaskClosable,
                 MaskStyle = MaskStyle,
-
                 OkText = OkText,
                 OkType = OkType,
                 Title = Title,
@@ -174,7 +157,6 @@ namespace AntDesign
                     }
                 },
                 OkButtonProps = OkButtonProps,
-
                 CancelButtonProps = CancelButtonProps,
                 Rtl = Rtl
             };
@@ -190,6 +172,7 @@ namespace AntDesign
             {
                 _hasAdd = true;
             }
+
             await base.OnParametersSetAsync();
         }
 
@@ -211,11 +194,13 @@ namespace AntDesign
                     {
                         await _dialog.Hide();
                     }
+
                     _hasAdd = false;
                     _hasFocus = false;
                     await InvokeAsync(StateHasChanged);
                 }
             }
+
             await base.OnAfterRenderAsync(isFirst);
         }
     }

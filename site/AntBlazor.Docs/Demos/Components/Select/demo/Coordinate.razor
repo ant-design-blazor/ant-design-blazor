@@ -13,16 +13,17 @@
 </Select>
 
 @using OneOf;
+
 @code
 {
     private string _cityValue;
     private string[] _cities = new string[0];
-    private readonly string[] _provinceData = new[] { "Zhejiang", "Jiangsu" };
+    private readonly string[] _provinceData = new[] {"Zhejiang", "Jiangsu"};
 
     private readonly Dictionary<string, string[]> _cityData = new Dictionary<string, string[]>
     {
-        {"Zhejiang",new[]{ "Hangzhou", "Ningbo", "Wenzhou"}},
-        {"Jiangsu",new[]{"Nanjing","Suzhou","Zhenjiang"}}
+        {"Zhejiang", new[] {"Hangzhou", "Ningbo", "Wenzhou"}},
+        {"Jiangsu", new[] {"Nanjing", "Suzhou", "Zhenjiang"}}
     };
 
     protected override void OnParametersSet()

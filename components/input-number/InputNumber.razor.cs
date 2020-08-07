@@ -14,11 +14,9 @@ namespace AntDesign
         private string _format;
         protected const string PrefixCls = "ant-input-number";
 
-        [Parameter]
-        public Func<TValue, string> Formatter { get; set; }
+        [Parameter] public Func<TValue, string> Formatter { get; set; }
 
-        [Parameter]
-        public Func<string, string> Parser { get; set; }
+        [Parameter] public Func<string, string> Parser { get; set; }
 
         private TValue _step;
 
@@ -49,17 +47,13 @@ namespace AntDesign
 
         private int? _decimalPlaces;
 
-        [Parameter]
-        public TValue DefaultValue { get; set; }
+        [Parameter] public TValue DefaultValue { get; set; }
 
-        [Parameter]
-        public TValue Max { get; set; }
+        [Parameter] public TValue Max { get; set; }
 
-        [Parameter]
-        public TValue Min { get; set; }
+        [Parameter] public TValue Min { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
         private readonly bool _isNullable;
 
@@ -73,18 +67,18 @@ namespace AntDesign
 
         private static readonly Dictionary<Type, object> _defaultMaximum = new Dictionary<Type, object>()
         {
-            { typeof(int),int.MaxValue },
-            { typeof(decimal),decimal.MaxValue },
-            { typeof(double),double.PositiveInfinity },
-            { typeof(float),float.PositiveInfinity },
+            {typeof(int), int.MaxValue},
+            {typeof(decimal), decimal.MaxValue},
+            {typeof(double), double.PositiveInfinity},
+            {typeof(float), float.PositiveInfinity},
         };
 
         private static readonly Dictionary<Type, object> _defaultMinimum = new Dictionary<Type, object>()
         {
-            { typeof(int),int.MinValue },
-            { typeof(decimal),decimal.MinValue },
-            { typeof(double),double.NegativeInfinity },
-            { typeof(float),float.NegativeInfinity},
+            {typeof(int), int.MinValue},
+            {typeof(decimal), decimal.MinValue},
+            {typeof(double), double.NegativeInfinity},
+            {typeof(float), float.NegativeInfinity},
         };
 
         private string _inputString;
@@ -98,15 +92,18 @@ namespace AntDesign
             //递增与递减
             ParameterExpression piValue = Expression.Parameter(_surfaceType, "value");
             ParameterExpression piStep = Expression.Parameter(_surfaceType, "step");
-            var fexpAdd = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Add(piValue, piStep), piValue, piStep);
+            var fexpAdd =
+                Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Add(piValue, piStep), piValue, piStep);
             _increaseFunc = fexpAdd.Compile();
-            var fexpSubtract = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Subtract(piValue, piStep), piValue, piStep);
+            var fexpSubtract =
+                Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Subtract(piValue, piStep), piValue, piStep);
             _decreaseFunc = fexpSubtract.Compile();
 
             //数字比较
             ParameterExpression piLeft = Expression.Parameter(_surfaceType, "left");
             ParameterExpression piRight = Expression.Parameter(_surfaceType, "right");
-            var fexpGreaterThan = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThan(piLeft, piRight), piLeft, piRight);
+            var fexpGreaterThan =
+                Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThan(piLeft, piRight), piLeft, piRight);
             _greaterThanFunc = fexpGreaterThan.Compile();
 
             //格式化
@@ -117,14 +114,17 @@ namespace AntDesign
                 expValue = Expression.Property(value, "Value");
             else
                 expValue = value;
-            MethodCallExpression expToString = Expression.Call(expValue, expValue.Type.GetMethod("ToString", new Type[] { typeof(string), typeof(IFormatProvider) }), format, Expression.Constant(CultureInfo.InvariantCulture));
+            MethodCallExpression expToString = Expression.Call(expValue,
+                expValue.Type.GetMethod("ToString", new Type[] {typeof(string), typeof(IFormatProvider)}), format,
+                Expression.Constant(CultureInfo.InvariantCulture));
             var lambdaToString = Expression.Lambda<Func<TValue, string, string>>(expToString, value, format);
             _toStringFunc = lambdaToString.Compile();
 
             //四舍五入
             ParameterExpression num = Expression.Parameter(_surfaceType, "num");
             ParameterExpression decimalPlaces = Expression.Parameter(typeof(int), "decimalPlaces");
-            MethodCallExpression expRound = Expression.Call(null, typeof(InputNumberMath).GetMethod("Round", new Type[] { _surfaceType, typeof(int) }), num, decimalPlaces);
+            MethodCallExpression expRound = Expression.Call(null,
+                typeof(InputNumberMath).GetMethod("Round", new Type[] {_surfaceType, typeof(int)}), num, decimalPlaces);
             var lambdaRound = Expression.Lambda<Func<TValue, int, TValue>>(expRound, num, decimalPlaces);
             _roundFunc = lambdaRound.Compile();
 
@@ -253,11 +253,15 @@ namespace AntDesign
             string cls;
             if (direction == "up")
             {
-                cls = $"ant-input-number-handler ant-input-number-handler-up " + (!_greaterThanFunc(Max, Value) ? "ant-input-number-handler-up-disabled" : string.Empty);
+                cls = $"ant-input-number-handler ant-input-number-handler-up " + (!_greaterThanFunc(Max, Value)
+                    ? "ant-input-number-handler-up-disabled"
+                    : string.Empty);
             }
             else
             {
-                cls = $"ant-input-number-handler ant-input-number-handler-down " + (!_greaterThanFunc(Value, Min) ? "ant-input-number-handler-down-disabled" : string.Empty);
+                cls = $"ant-input-number-handler ant-input-number-handler-down " + (!_greaterThanFunc(Value, Min)
+                    ? "ant-input-number-handler-down-disabled"
+                    : string.Empty);
             }
 
             return cls;

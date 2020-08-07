@@ -7,8 +7,8 @@
         <span>点击上传</span>
     </Button>
 </Upload>
-<br />
-<br />
+<br/>
+<br/>
 <Upload @attributes="attrs1"
          OnSingleCompleted="OnSingleCompleted"
          OnRemove="HandleRemove">
@@ -21,7 +21,7 @@
 {
 
     static List<UploadFileItem> fileList = new List<UploadFileItem>
-{
+    {
         new UploadFileItem
         {
             Id = "1",
@@ -38,20 +38,20 @@
     };
 
     Dictionary<string, object> attrs = new Dictionary<string, object>
-{
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" },
+    {
+        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76"},
+        {"Name", "files"},
         {"DefaultFileList", fileList},
-        {"ListType", "picture" }
+        {"ListType", "picture"}
     };
 
     Dictionary<string, object> attrs1 = new Dictionary<string, object>
-{
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" },
+    {
+        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76"},
+        {"Name", "files"},
         {"DefaultFileList", fileList},
-        {"ListType", "picture" },
-        {"Class", "upload-list-inline" }
+        {"ListType", "picture"},
+        {"Class", "upload-list-inline"}
     };
 
     void OnSingleCompleted(UploadInfo fileinfo)
@@ -65,7 +65,7 @@
 
     async Task<bool> HandleRemove(UploadFileItem file)
     {
-        await _message.Loading($"removing {file.FileName}",2);
+        await _message.Loading($"removing {file.FileName}", 2);
         return await Task.FromResult(true);
     }
 
@@ -90,15 +90,9 @@
         margin-right: 8px;
     }
 
-    .upload-list-inline [class*='-upload-list-rtl'] .ant-upload-list-item {
-        float: right;
-    }
+    .upload-list-inline [class*='-upload-list-rtl'] .ant-upload-list-item { float: right; }
 
-    .upload-list-inline .ant-upload-animate-enter {
-        animation-name: uploadAnimateInlineIn;
-    }
+    .upload-list-inline .ant-upload-animate-enter { animation-name: uploadAnimateInlineIn; }
 
-    .upload-list-inline .ant-upload-animate-leave {
-        animation-name: uploadAnimateInlineOut;
-    }
+    .upload-list-inline .ant-upload-animate-leave { animation-name: uploadAnimateInlineOut; }
 </style>

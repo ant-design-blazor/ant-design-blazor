@@ -62,7 +62,8 @@ namespace AntDesign.Docs.Routing
             // Parameters will be lazily initialized.
             Dictionary<string, object> querystring = null;
 
-            foreach (string kvp in uri.Substring(uri.IndexOf("?", StringComparison.Ordinal) + 1).Split(new[] { '&' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string kvp in uri.Substring(uri.IndexOf("?", StringComparison.Ordinal) + 1)
+                .Split(new[] {'&'}, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (kvp != "" && kvp.Contains("="))
                 {

@@ -31,13 +31,14 @@ namespace AntDesign.Docs.Routing
                 if (pageType.FullName == null)
                     continue;
 
-                var uriSegments = pageType.FullName.Substring(pageType.FullName.IndexOf("Pages", StringComparison.Ordinal) + 6).Split('.');
+                var uriSegments = pageType.FullName
+                    .Substring(pageType.FullName.IndexOf("Pages", StringComparison.Ordinal) + 6).Split('.');
 
                 var routeAttributes = pageType.GetCustomAttributes<RouteAttribute>(inherit: false);
 
                 if (!routeAttributes.Any())
                 {
-                    routeAttributes = new[] { new RouteAttribute($"/{string.Join("/", uriSegments)}"), };
+                    routeAttributes = new[] {new RouteAttribute($"/{string.Join("/", uriSegments)}"),};
                 }
 
                 var templates = routeAttributes.Select(t => t.Template).ToArray();
@@ -76,11 +77,13 @@ namespace AntDesign.Docs.Routing
                 relativeUri = relativeUri.Substring(0, relativeUri.IndexOf('?'));
             }
 
-            var segments = relativeUri.Trim().Split('/', StringSplitOptions.RemoveEmptyEntries).Select(Uri.UnescapeDataString).ToArray();
+            var segments = relativeUri.Trim().Split('/', StringSplitOptions.RemoveEmptyEntries)
+                .Select(Uri.UnescapeDataString).ToArray();
 
             if (segments.Length == 0)
             {
-                var indexRoute = Routes.SingleOrDefault(x => x.PageType.FullName != null && x.PageType.FullName.ToLower().EndsWith("index"));
+                var indexRoute = Routes.SingleOrDefault(x =>
+                    x.PageType.FullName != null && x.PageType.FullName.ToLower().EndsWith("index"));
 
                 if (indexRoute != null)
                 {

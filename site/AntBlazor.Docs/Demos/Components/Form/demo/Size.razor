@@ -15,22 +15,22 @@
     </FormItem>
 
     <FormItem Label="Input">
-        <Input @bind-Value="@context.Input" />
+        <Input @bind-Value="@context.Input"/>
     </FormItem>
     <FormItem Label="InputArea">
         <TextArea @bind-Value="@context.InputArea" />
     </FormItem>
     <FormItem Label="Cascader">
-        <Cascader @bind-Value="@context.Cascader" Options="districts" />
+        <Cascader @bind-Value="@context.Cascader" Options="districts"/>
     </FormItem>
     <FormItem Label="DatePicker">
-        <DatePicker @bind-Value="@context.DatePicker" />
+        <DatePicker @bind-Value="@context.DatePicker"/>
     </FormItem>
     <FormItem Label="InputNumber">
-        <AntDesign.InputNumber @bind-Value="@context.Number" />
+        <AntDesign.InputNumber @bind-Value="@context.Number"/>
     </FormItem>
     <FormItem Label="Switch">
-        <Switch @bind-Value="@context.Switch" />
+        <Switch @bind-Value="@context.Switch"/>
     </FormItem>
     <FormItem Label="Radio">
         <RadioGroup @bind-Value="@context.Radio">
@@ -44,19 +44,7 @@
         <Button HtmlType="submit">
             Submit
         </Button>
-        <Button OnClick="@(e => {
-                    model = new Model()
-                    {
-                        DatePicker = new DateTime(2000, 1, 1),
-                        Cascader = "11",
-                        Input = "new input value",
-                        InputArea = "new textarea value",
-                        Number = 1111,
-                        Switch = false,
-                        Radio = "Hangzhou",
-                        Size = AntSizeLDSType.Large,
-                    };
-                })">
+        <Button OnClick="@(e => { model = new Model() {DatePicker = new DateTime(2000, 1, 1), Cascader = "11", Input = "new input value", InputArea = "new textarea value", Number = 1111, Switch = false, Radio = "Hangzhou", Size = AntSizeLDSType.Large,}; })">
             New Model
         </Button>
     </FormItem>
@@ -84,7 +72,7 @@
         {
             Value = "1",
             Label = "浙江",
-            Children = new []
+            Children = new[]
             {
                 new CascaderNode {Value = "11", Label = "杭州"},
                 new CascaderNode {Value = "12", Label = "温州"},

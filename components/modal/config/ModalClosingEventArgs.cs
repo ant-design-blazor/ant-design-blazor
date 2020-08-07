@@ -7,7 +7,6 @@ namespace AntDesign
 {
     public class ModalClosingEventArgs
     {
-
         public ModalClosingEventArgs() { }
 
         public ModalClosingEventArgs(MouseEventArgs mouseEvent, bool cancel)

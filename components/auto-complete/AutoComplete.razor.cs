@@ -18,75 +18,88 @@ namespace AntDesign
         /// <summary>
         /// 选项数据
         /// </summary>
-        [Parameter] public IEnumerable<string> Options { get; set; }
+        [Parameter]
+        public IEnumerable<string> Options { get; set; }
 
         /// <summary>
         ///
         /// </summary>
-        [Parameter] public IEnumerable<string> FormatList { get; set; }
+        [Parameter]
+        public IEnumerable<string> FormatList { get; set; }
 
         /// <summary>
         /// 支持清除, 单选模式有效
         /// </summary>
-        [Parameter] public bool AllowClear { get; set; }
+        [Parameter]
+        public bool AllowClear { get; set; }
 
         /// <summary>
         /// 自动获取焦点
         /// </summary>
-        [Parameter] public bool AutoFocus { get; set; }
+        [Parameter]
+        public bool AutoFocus { get; set; }
 
         /// <summary>
         /// 使用键盘选择选项的时候把选中项回填到输入框中
         /// </summary>
-        [Parameter] public bool BackFill { get; set; }
+        [Parameter]
+        public bool BackFill { get; set; }
 
         /// <summary>
         /// 自定义输入框
         /// </summary>
-        [Parameter] public RenderFragment CustomInput { get; set; }
+        [Parameter]
+        public RenderFragment CustomInput { get; set; }
 
         /// <summary>
         /// 是否默认高亮第一个选项
         /// </summary>
-        [Parameter] public bool DefaultActiveFirstOption { get; set; } = true;
+        [Parameter]
+        public bool DefaultActiveFirstOption { get; set; } = true;
 
         /// <summary>
         /// 默认的选中项
         /// </summary>
-        [Parameter] public string DefaultValue { get; set; }
+        [Parameter]
+        public string DefaultValue { get; set; }
 
         /// <summary>
         /// 是否禁用
         /// </summary>
-        [Parameter] public bool Disabled { get; set; }
+        [Parameter]
+        public bool Disabled { get; set; }
 
         /// <summary>
         /// 输入框提示
         /// </summary>
-        [Parameter] public string PlaceHolder { get; set; }
+        [Parameter]
+        public string PlaceHolder { get; set; }
 
         /// <summary>
         /// 获得焦点时的回调
         /// </summary>
-        [Parameter] public Action<string> OnFocus { get; set; }
+        [Parameter]
+        public Action<string> OnFocus { get; set; }
 
         /// <summary>
         /// 失去焦点时的回调
         /// </summary>
-        [Parameter] public Action<string> OnBlur { get; set; }
+        [Parameter]
+        public Action<string> OnBlur { get; set; }
 
         /// <summary>
         /// 选中 option，或 input 的 value 变化时，调用此函数
         /// </summary>
-        [Parameter] public Action<string> OnChange { get; set; }
+        [Parameter]
+        public Action<string> OnChange { get; set; }
 
         /// <summary>
         /// 被选中时调用，参数为选中项的 value 值
         /// </summary>
-        [Parameter] public Action<string> OnSelect { get; set; }
-
         [Parameter]
-        public Func<string, string, bool> FilterOption { get; set; }
+        public Action<string> OnSelect { get; set; }
+
+        [Parameter] public Func<string, string, bool> FilterOption { get; set; }
 
         #endregion parameters
 
@@ -99,6 +112,7 @@ namespace AntDesign
 
 
         private bool _toggleState;
+
         /// <summary>
         /// 浮层 展开/折叠状态
         /// </summary>
@@ -163,10 +177,12 @@ namespace AntDesign
             var v = args?.Value.ToString();
             CurrentValue = v;
 
-            if (Options != null)   // Options 参数不为空时，本地过滤选项
+            if (Options != null) // Options 参数不为空时，本地过滤选项
             {
                 _options.Clear();
-                _options = !string.IsNullOrWhiteSpace(v) ? Options.Where(option => FilterOption(v, option)).ToList() : Options.ToList();
+                _options = !string.IsNullOrWhiteSpace(v)
+                    ? Options.Where(option => FilterOption(v, option)).ToList()
+                    : Options.ToList();
 
                 // 默认选中第一个
                 if (_options.Count > 0)
@@ -174,20 +190,21 @@ namespace AntDesign
                     ToggleState = true;
                 }
             }
-            else if (FormatList != null)   // FormatList 参数不为空时，按照指定 Format 格式添加选项
+            else if (FormatList != null) // FormatList 参数不为空时，按照指定 Format 格式添加选项
             {
                 _options.Clear();
                 if (!string.IsNullOrWhiteSpace(v))
                 {
                     FormatList.ForEach(f => _options.Add(string.Format(f, v)));
                 }
+
                 // 默认选中第一个
                 if (_options.Count > 0)
                 {
                     ToggleState = true;
                 }
             }
-            else  // 一般模式，从远程获取数据添加选项
+            else // 一般模式，从远程获取数据添加选项
             {
                 // 此处暂无需处理
             }
@@ -236,7 +253,6 @@ namespace AntDesign
                     CurrentValue = _activeOption;
                     ValueChanged.InvokeAsync(_activeOption);
                     ToggleState = false;
-
                 }
                 else if (_options.IndexOf(Value) != -1)
                 {
@@ -265,6 +281,7 @@ namespace AntDesign
                 {
                     index = _options.IndexOf(Value);
                 }
+
                 if (index >= _options.Count - 1 || index < 0)
                     index = -1;
 
@@ -278,15 +295,15 @@ namespace AntDesign
 
         public void LoadData(IEnumerable<string> list)
         {
-            if (Options != null)   // Options 参数不为空时，本地过滤
+            if (Options != null) // Options 参数不为空时，本地过滤
             {
                 // 此处暂无需处理
             }
-            else if (FormatList != null)   // FormatList 参数不为空时，按照指定 Format 格式添加选项
+            else if (FormatList != null) // FormatList 参数不为空时，按照指定 Format 格式添加选项
             {
                 // 此处暂无需处理
             }
-            else  // 一般模式，从远程获取数据添加选项
+            else // 一般模式，从远程获取数据添加选项
             {
                 list ??= Enumerable.Empty<string>();
 

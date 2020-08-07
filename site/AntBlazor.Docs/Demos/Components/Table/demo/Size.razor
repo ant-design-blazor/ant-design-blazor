@@ -59,6 +59,7 @@
 </Table>
 
 @code{
+
     Data[] data =
     {
         new Data()
@@ -75,7 +76,7 @@
             Name = "Jim Green",
             Age = 42,
             Address = "London No. 1 Lake Park",
-            Tags = new[] { "loser"}
+            Tags = new[] {"loser"}
         },
         new Data()
         {
@@ -83,7 +84,7 @@
             Name = "Joe Black",
             Age = 32,
             Address = "Sidney No. 1 Lake Park",
-            Tags = new[] { "cool", "teacher" }
+            Tags = new[] {"cool", "teacher"}
         }
     };
 
@@ -104,4 +105,5 @@
         [DisplayName("Tags")]
         public string[] Tags { get; set; }
     }
+
 }

@@ -8,7 +8,8 @@ namespace AntDesign
 {
     internal static class FieldIdentifierExtensions
     {
-        private static readonly ConcurrentDictionary<(Type ModelType, string FieldName), string> _displayNameCache = new ConcurrentDictionary<(Type, string), string>();
+        private static readonly ConcurrentDictionary<(Type ModelType, string FieldName), string> _displayNameCache =
+            new ConcurrentDictionary<(Type, string), string>();
 
         public static string GetDisplayName(this FieldIdentifier fieldIdentifier)
         {

@@ -15,23 +15,17 @@ namespace AntDesign
         [Parameter]
         public string Size { get; set; } = "default";
 
-        [Parameter]
-        public string Tip { get; set; } = null;
+        [Parameter] public string Tip { get; set; } = null;
 
-        [Parameter]
-        public int Delay { get; set; } = 0;
+        [Parameter] public int Delay { get; set; } = 0;
 
-        [Parameter]
-        public bool Spinning { get; set; } = true;
+        [Parameter] public bool Spinning { get; set; } = true;
 
-        [Parameter]
-        public string WrapperClassName { get; set; }
+        [Parameter] public string WrapperClassName { get; set; }
 
-        [Parameter]
-        public RenderFragment Indicator { get; set; }
+        [Parameter] public RenderFragment Indicator { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         private ClassMapper WrapperClassMapper { get; set; } = new ClassMapper();
 

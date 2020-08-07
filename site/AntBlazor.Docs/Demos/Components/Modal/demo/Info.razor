@@ -14,13 +14,15 @@
         <Button OnClick="HandleWarning">Warning</Button>
     </SpaceItem>
 </Space>
+
 @code {
+
     private async Task HandleInfo()
     {
-        RenderFragment content =@<div>
-                <p>some messages...some messages...</p>
-                <p>some messages...some messages...</p>
-            </div>;
+        RenderFragment content = @<div>
+                                     <p>some messages...some messages...</p>
+                                     <p>some messages...some messages...</p>
+                                 </div>;
         await _modalService.Info(new ConfirmOptions()
         {
             Title = "This is a notification message",
@@ -53,4 +55,5 @@
             Content = "some messages...some messages..."
         });
     }
+
 }

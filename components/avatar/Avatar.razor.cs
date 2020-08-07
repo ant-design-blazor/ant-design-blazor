@@ -20,11 +20,9 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public string Shape { get; set; } = null;
+        [Parameter] public string Shape { get; set; } = null;
 
-        [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        [Parameter] public string Size { get; set; } = AntSizeLDSType.Default;
 
         [Parameter]
         public string Text
@@ -40,20 +38,15 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public string Src { get; set; }
+        [Parameter] public string Src { get; set; }
 
-        [Parameter]
-        public string SrcSet { get; set; }
+        [Parameter] public string SrcSet { get; set; }
 
-        [Parameter]
-        public string Alt { get; set; }
+        [Parameter] public string Alt { get; set; }
 
-        [Parameter]
-        public string Icon { get; set; }
+        [Parameter] public string Icon { get; set; }
 
-        [Parameter]
-        public EventCallback<ErrorEventArgs> Error { get; set; }
+        [Parameter] public EventCallback<ErrorEventArgs> Error { get; set; }
 
         private bool _hasText = false;
         private bool _hasSrc = true;
@@ -65,7 +58,7 @@ namespace AntDesign
 
         private string _prefixCls = "ant-avatar";
 
-        private readonly Hashtable _sizeMap = new Hashtable() { ["large"] = "lg", ["small"] = "sm" };
+        private readonly Hashtable _sizeMap = new Hashtable() {["large"] = "lg", ["small"] = "sm"};
 
         private string _text;
         private RenderFragment _childContent;
@@ -81,7 +74,8 @@ namespace AntDesign
 
         protected override void OnParametersSet()
         {
-            this._hasText = string.IsNullOrEmpty(this.Src) && (!string.IsNullOrEmpty(this._text) || _childContent != null);
+            this._hasText = string.IsNullOrEmpty(this.Src) &&
+                            (!string.IsNullOrEmpty(this._text) || _childContent != null);
             this._hasIcon = string.IsNullOrEmpty(this.Src) && !string.IsNullOrEmpty(this.Icon);
             this._hasSrc = !string.IsNullOrEmpty(this.Src);
 
@@ -150,8 +144,10 @@ namespace AntDesign
                 return;
             }
 
-            var childrenWidth = (await this.JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, this.TextEl)).offsetWidth;
-            var avatarWidth = (await this.JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, this.Ref)).width;
+            var childrenWidth = (await this.JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, this.TextEl))
+                .offsetWidth;
+            var avatarWidth = (await this.JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, this.Ref))
+                .width;
             var scale = avatarWidth - 8 < childrenWidth ? (avatarWidth - 8) / childrenWidth : 1;
             this._textStyles = $"transform: scale({scale}) translateX(-50%);";
             if (decimal.TryParse(this.Size, out var pxSize))

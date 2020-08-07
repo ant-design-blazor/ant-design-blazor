@@ -9,8 +9,7 @@ namespace AntDesign
 {
     public partial class Drawer : AntDomComponentBase
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Parameter]
         public OneOf<RenderFragment, string> Content
@@ -23,20 +22,15 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public bool Closable { get; set; } = true;
+        [Parameter] public bool Closable { get; set; } = true;
 
-        [Parameter]
-        public bool MaskClosable { get; set; } = true;
+        [Parameter] public bool MaskClosable { get; set; } = true;
 
-        [Parameter]
-        public bool Mask { get; set; } = true;
+        [Parameter] public bool Mask { get; set; } = true;
 
-        [Parameter]
-        public bool NoAnimation { get; set; } = false;
+        [Parameter] public bool NoAnimation { get; set; } = false;
 
-        [Parameter]
-        public bool Keyboard { get; set; } = true;
+        [Parameter] public bool Keyboard { get; set; } = true;
 
         private RenderFragment TitleTemplate { get; set; }
 
@@ -66,7 +60,8 @@ namespace AntDesign
         /// <summary>
         /// "left" | "right" | "top" | "bottom"
         /// </summary>
-        [Parameter] public string Placement { get; set; } = "right";
+        [Parameter]
+        public string Placement { get; set; } = "right";
 
         [Parameter] public string MaskStyle { get; set; }
 
@@ -98,6 +93,7 @@ namespace AntDesign
                 {
                     _isClosing = false;
                 }
+
                 this._isOpen = value;
             }
         }
@@ -245,6 +241,7 @@ namespace AntDesign
                     {
                         await JsInvokeAsync(JSInteropConstants.disableBodyScroll);
                     }
+
                     StateHasChanged();
                 }
                 else
@@ -263,6 +260,7 @@ namespace AntDesign
                     await HandleClose(true);
                 }
             }
+
             await base.OnAfterRenderAsync(isFirst);
         }
 
@@ -274,11 +272,7 @@ namespace AntDesign
             {
                 this.PlacementChanging = true;
                 InvokeStateHasChanged();
-                _timer = new Timer()
-                {
-                    AutoReset = false,
-                    Interval = 300,
-                };
+                _timer = new Timer() {AutoReset = false, Interval = 300,};
                 _timer.Elapsed += (_, args) =>
                 {
                     this.PlacementChanging = false;
@@ -314,6 +308,7 @@ namespace AntDesign
                 await OnClose.InvokeAsync(this);
                 await Task.Delay(10);
             }
+
             await JsInvokeAsync(JSInteropConstants.enableDrawerBodyScroll);
         }
 
@@ -352,6 +347,7 @@ namespace AntDesign
 
                 style = $"transition:{_transformTransition} {_heightTransition} {_widthTransition};";
             }
+
             _drawerStyle = style;
         }
 

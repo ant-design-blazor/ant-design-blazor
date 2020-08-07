@@ -21,47 +21,33 @@ namespace AntDesign
 
     public partial class Col : AntDomComponentBase
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public StringNumber Flex { get; set; }
+        [Parameter] public StringNumber Flex { get; set; }
 
-        [Parameter]
-        public StringNumber Span { get; set; }
+        [Parameter] public StringNumber Span { get; set; }
 
-        [Parameter]
-        public StringNumber Order { get; set; }
+        [Parameter] public StringNumber Order { get; set; }
 
-        [Parameter]
-        public StringNumber Offset { get; set; }
+        [Parameter] public StringNumber Offset { get; set; }
 
-        [Parameter]
-        public StringNumber Push { get; set; }
+        [Parameter] public StringNumber Push { get; set; }
 
-        [Parameter]
-        public StringNumber Pull { get; set; }
+        [Parameter] public StringNumber Pull { get; set; }
 
-        [Parameter]
-        public OneOf<int, EmbeddedProperty> Xs { get; set; }
+        [Parameter] public OneOf<int, EmbeddedProperty> Xs { get; set; }
 
-        [Parameter]
-        public OneOf<int, EmbeddedProperty> Sm { get; set; }
+        [Parameter] public OneOf<int, EmbeddedProperty> Sm { get; set; }
 
-        [Parameter]
-        public OneOf<int, EmbeddedProperty> Md { get; set; }
+        [Parameter] public OneOf<int, EmbeddedProperty> Md { get; set; }
 
-        [Parameter]
-        public OneOf<int, EmbeddedProperty> Lg { get; set; }
+        [Parameter] public OneOf<int, EmbeddedProperty> Lg { get; set; }
 
-        [Parameter]
-        public OneOf<int, EmbeddedProperty> Xl { get; set; }
+        [Parameter] public OneOf<int, EmbeddedProperty> Xl { get; set; }
 
-        [Parameter]
-        public OneOf<int, EmbeddedProperty> Xxl { get; set; }
+        [Parameter] public OneOf<int, EmbeddedProperty> Xxl { get; set; }
 
-        [CascadingParameter]
-        public Row Row { get; set; }
+        [CascadingParameter] public Row Row { get; set; }
 
         private string _hostFlexStyle = null;
 
@@ -72,11 +58,14 @@ namespace AntDesign
             GutterStyle = "";
             if (gutter.horizontalGutter > 0)
             {
-                GutterStyle = $"padding-left: {gutter.horizontalGutter / 2}px;padding-right: {gutter.horizontalGutter / 2}px;";
+                GutterStyle =
+                    $"padding-left: {gutter.horizontalGutter / 2}px;padding-right: {gutter.horizontalGutter / 2}px;";
             }
+
             if (gutter.verticalGutter > 0)
             {
-                GutterStyle += $"padding-top: {gutter.verticalGutter / 2}px;padding-bottom: {gutter.verticalGutter / 2}px;";
+                GutterStyle +=
+                    $"padding-top: {gutter.verticalGutter / 2}px;padding-bottom: {gutter.verticalGutter / 2}px;";
             }
         }
 

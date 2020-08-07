@@ -12,8 +12,9 @@
 
 
 @code{
-    List<Data> datas=new List<Data>();
-    RenderFragment replyAction =@<span>Reply to</span>;
+    List<Data> datas = new List<Data>();
+
+    RenderFragment replyAction = @<span>Reply to</span>;
 
     RenderFragment header =>
         @<div>
@@ -42,7 +43,7 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    bool submitting=false;
+    bool submitting = false;
     string _value = "";
 
     //TODO::Form
@@ -67,4 +68,5 @@
         public string Content { get; set; }
         public string Datetime;
     }
+
 }

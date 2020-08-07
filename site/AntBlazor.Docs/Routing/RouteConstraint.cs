@@ -20,7 +20,8 @@ namespace AntDesign.Docs.Routing
         {
             if (string.IsNullOrEmpty(constraint))
             {
-                throw new ArgumentException($"Malformed segment '{segment}' in route '{template}' contains an empty constraint.");
+                throw new ArgumentException(
+                    $"Malformed segment '{segment}' in route '{template}' contains an empty constraint.");
             }
 
             if (_cachedConstraints.TryGetValue(constraint, out var cachedInstance))

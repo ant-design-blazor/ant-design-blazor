@@ -8,14 +8,15 @@
               OnScroll="OnScroll"
               OnSelectChange="OnSelectChange"
               Render="Render"
-              Style="width:300px;height:300px;"></Transfer>
+              Style="width: 300px; height: 300px;">
+    </Transfer>
 </div>
 
 @code {
     private List<TransferItem> dataSource = new List<TransferItem>();
     private List<string> targetKeys = new List<string>();
     private string[] selectedKeys = Array.Empty<string>();
-    private string[] titles = { "Source", "Target" };
+    private string[] titles = {"Source", "Target"};
     private bool Disabled = false;
 
     protected override void OnInitialized()
@@ -44,7 +45,7 @@
 
     private OneOf.OneOf<string, RenderFragment> Render(TransferItem item)
     {
-        //return new RenderFragment(buildTree);
+    //return new RenderFragment(buildTree);
         return $"{item.Title} - {item.Description}";
     }
 
@@ -65,4 +66,5 @@
         Console.WriteLine($"SourceSelectedKeys:{string.Join(',', e.SourceSelectedKeys)}");
         Console.WriteLine($"TargetSelectedKeys:{string.Join(',', e.TargetSelectedKeys)}");
     }
+
 }

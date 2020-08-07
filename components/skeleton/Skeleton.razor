@@ -14,14 +14,14 @@
         <div class="ant-skeleton-content">
             @if (Title)
             {
-                <h3 class="ant-skeleton-title" style="width:@ToCSSUnit(TitleWidth)"></h3>
+                <h3 class="ant-skeleton-title" style="width: @ToCSSUnit(TitleWidth)"></h3>
             }
             @if (Paragraph)
             {
                 <ul class="ant-skeleton-paragraph">
                     @foreach (var row in this._paragraphRowsList)
                     {
-                        <li style="width:@ToCSSUnit(row)"></li>
+                        <li style="width: @ToCSSUnit(row)"></li>
                     }
                 </ul>
             }

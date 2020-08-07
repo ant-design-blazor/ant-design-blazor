@@ -1,7 +1,7 @@
 @inject MessageService _message
 
 <Upload @attributes="attrs"
-        OnSingleCompleted="OnSingleCompleted">
+         OnSingleCompleted="OnSingleCompleted">
     <Button Icon="upload">
         <span>点击上传</span>
     </Button>
@@ -12,8 +12,8 @@
 
     Dictionary<string, object> attrs = new Dictionary<string, object>
     {
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" }
+        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76"},
+        {"Name", "files"}
     };
 
     void OnSingleCompleted(UploadInfo fileinfo)

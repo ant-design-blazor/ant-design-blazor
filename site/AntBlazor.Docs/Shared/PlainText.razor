@@ -2,7 +2,7 @@
 @inject HtmlRenderService HtmlRenderService
 
 
-@((MarkupString)text)
+@((MarkupString) text)
 
 @code {
 
@@ -14,7 +14,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        
         if (ChildContent != null)
         {
             text = await HtmlRenderService.RenderAsync(ChildContent);

@@ -39,7 +39,8 @@ namespace AntDesign.Docs.Build.CLI.Utils
                 if (block is YamlFrontMatterBlock)
                     continue;
 
-                if (block is HeadingBlock heading && heading.Level == 2 && heading.Inline.FirstChild.ToString() == "API")
+                if (block is HeadingBlock heading && heading.Level == 2 &&
+                    heading.Inline.FirstChild.ToString() == "API")
                 {
                     isAfterApi = true;
                 }
@@ -63,7 +64,8 @@ namespace AntDesign.Docs.Build.CLI.Utils
             return (meta, descPart, apiPart);
         }
 
-        public static (DescriptionYaml Meta, string Style, Dictionary<string, string> Descriptions) ParseDescription(string input)
+        public static (DescriptionYaml Meta, string Style, Dictionary<string, string> Descriptions) ParseDescription(
+            string input)
         {
             var pipeline = new MarkdownPipelineBuilder()
                 .UseYamlFrontMatter()
@@ -96,7 +98,8 @@ namespace AntDesign.Docs.Build.CLI.Utils
                 if (block is YamlFrontMatterBlock)
                     continue;
 
-                if (block is HeadingBlock heading && heading.Level == 2 && heading.Inline.FirstChild.ToString() == "en-US")
+                if (block is HeadingBlock heading && heading.Level == 2 &&
+                    heading.Inline.FirstChild.ToString() == "en-US")
                 {
                     isAfterEnHeading = true;
                 }
@@ -138,7 +141,7 @@ namespace AntDesign.Docs.Build.CLI.Utils
             }
 
             stylePart = stylePart.Replace("<style>", "").Replace("</style>", "");
-            return (meta, stylePart, new Dictionary<string, string>() { ["zh-CN"] = zhPart, ["en-US"] = enPart });
+            return (meta, stylePart, new Dictionary<string, string>() {["zh-CN"] = zhPart, ["en-US"] = enPart});
         }
 
         public static Dictionary<string, string> ParseHeader(string input)

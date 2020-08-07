@@ -7,7 +7,7 @@
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     <FormItem Label="Username">
-        <Input @bind-Value="context.Username" Style="width: 160px" Placeholder="Please input" />
+        <Input @bind-Value="context.Username" Style="width: 160px" Placeholder="Please input"/>
         <Tooltip Title=@("Useful information")>
             <a href="#API" Style="margin: 0 8px" }>
                 Need Help?
@@ -17,22 +17,22 @@
     <FormItem label="Address">
         <InputGroup Compact>
             <FormItem NoStyle>
-                <Input @bind-Value="context.Address.Province" Placeholder="Select is not yet" />
+                <Input @bind-Value="context.Address.Province" Placeholder="Select is not yet"/>
             </FormItem>
 
             <FormItem NoStyle>
-                <Input @bind-Value="context.Address.Street" Style="width: 50%" Placeholder="Input street" />
+                <Input @bind-Value="context.Address.Street" Style="width: 50%" Placeholder="Input street"/>
             </FormItem>
         </InputGroup>
     </FormItem>
-     <FormItem Label="BirthDate" style="margin-bottom: 0">
+    <FormItem Label="BirthDate" style="margin-bottom: 0">
         <FormItem Style="display: inline-block; width: calc(50% - 10px)">
-          <Input @bind-Value="context.Year" Placeholder="Input birth year" />
-        </FormItem> 
-         <FormItem Style="display: inline-block; width: calc(50% - 10px); margin: 0 8px">
-          <Input @bind-Value="context.Month" Placeholder="Input birth month" />
+            <Input @bind-Value="context.Year" Placeholder="Input birth year"/>
         </FormItem>
-      </FormItem>
+        <FormItem Style="display: inline-block; width: calc(50% - 10px); margin: 0 8px">
+            <Input @bind-Value="context.Month" Placeholder="Input birth month"/>
+        </FormItem>
+    </FormItem>
     <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
         <Button HtmlType="submit">
             Submit
@@ -46,6 +46,7 @@
     {
         [Required]
         public string Province { get; set; }
+
         [Required]
         public string Street { get; set; }
     }
@@ -54,10 +55,13 @@
     {
         [Required]
         public string Username { get; set; }
+
         [ValidateComplexType]
         public Address Address { get; set; } = new Address();
+
         [Required]
         public string Year { get; set; }
+
         [Required]
         public string Month { get; set; }
     }

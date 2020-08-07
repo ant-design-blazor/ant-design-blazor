@@ -9,20 +9,15 @@ namespace AntDesign
 {
     public partial class RadioGroup<TValue> : AntInputComponentBase<TValue>
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public string ButtonStyle { get; set; } = "outline";
+        [Parameter] public string ButtonStyle { get; set; } = "outline";
 
-        [Parameter]
-        public string Name { get; set; }
+        [Parameter] public string Name { get; set; }
 
-        [Parameter]
-        public EventCallback<TValue> OnChange { get; set; }
+        [Parameter] public EventCallback<TValue> OnChange { get; set; }
 
         internal List<Radio<TValue>> RadioItems { get; set; } = new List<Radio<TValue>>();
 
@@ -43,11 +38,13 @@ namespace AntDesign
             {
                 radio._name = Name;
             }
+
             RadioItems.Add(radio);
             if (EqualsValue(this.CurrentValue, radio.Value))
             {
                 await radio.Select();
             }
+
             StateHasChanged();
         }
 
@@ -65,6 +62,7 @@ namespace AntDesign
                     await radio.UnSelect();
                 }
             }
+
             await base.OnParametersSetAsync();
         }
 

@@ -23,7 +23,7 @@
                             {
                                 @pane.Tab
                                 <span class="ant-tabs-tab-remove">
-                                    <Icon Type="close" @onclick="(e)=>RemoveTabPane(pane)" />
+                                    <Icon Type="close" @onclick="(e) => RemoveTabPane(pane)"/>
                                 </span>
                             }
                             else
@@ -36,7 +36,7 @@
                     {
                         <button type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="@pane._classMapper.Class" id="@($"rc-tabs-{Id}-tab-{pane.Key}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")"
                                 disabled="@(pane.Disabled)"
-                                @onclick="(e)=>ActivatePane(pane)"
+                                @onclick="(e) => ActivatePane(pane)"
                                 @onclick:stopPropagation
                                 draggable="@Draggable.ToString()"
                                 ondragover="event.preventDefault();"
@@ -46,7 +46,7 @@
                             {
                                 @pane.Tab
                                 <span class="ant-tabs-tab-remove">
-                                    <Icon Type="close" @onclick="(e)=>RemoveTabPane(pane)" />
+                                    <Icon Type="close" @onclick="(e) => RemoveTabPane(pane)"/>
                                 </span>
                             }
                             else
@@ -58,10 +58,12 @@
                 }
                 @if (Type == TabType.EditableCard && !HideAdd)
                 {
-                    <button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="(e)=>AddTabPane(e)">
+                    <button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="(e) => AddTabPane(e)">
                         <span role="img" aria-label="plus" class="anticon anticon-plus">
                             <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-                                <defs><style></style></defs>
+                                <defs>
+                                    <style></style>
+                                </defs>
                                 <path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path>
                                 <path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z">
                                 </path>
@@ -83,8 +85,10 @@
                 <ul tabindex="0" class="ant-tabs-dropdown-menu ant-tabs-dropdown-menu-root ant-tabs-dropdown-menu-vertical" id="@($"rc-tabs-{Id}-more-popup")" role="listbox" aria-label="expanded dropdown">
                     @foreach (var pane in _panes.Where(p => !p.IsActive))
                     {
-                        <li class="ant-tabs-dropdown-menu-item @(pane.Disabled?$"ant-tabs-dropdown-menu-item-disabled":string.Empty)" id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false" aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
-                            @onclick="(e)=>ActivatePane(pane)">@pane.Tab</li>
+                        <li class="ant-tabs-dropdown-menu-item @(pane.Disabled ? $"ant-tabs-dropdown-menu-item-disabled" : string.Empty)" id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false" aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
+                            @onclick="(e) => ActivatePane(pane)">
+                            @pane.Tab
+                        </li>
                     }
                 </ul>
             </Overlay>
@@ -93,7 +97,9 @@
                     <button tabindex="-1" class="ant-tabs-nav-more" id="rc-tabs-0-more" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true" aria-controls="rc-tabs-0-more-popup"
                             style="@_operationStyle" type="button">
                         <span class="anticon anticon-ellipsis" role="img" aria-label="ellipsis">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="" aria-hidden="true" fill="currentColor" viewBox="64 64 896 896" focusable="false" width="1em" height="1em" data-icon="ellipsis"><path d="M 176 511 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z m 280 0 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z m 280 0 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="" aria-hidden="true" fill="currentColor" viewBox="64 64 896 896" focusable="false" width="1em" height="1em" data-icon="ellipsis">
+                                <path d="M 176 511 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z m 280 0 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z m 280 0 a 56 56 0 1 0 112 0 a 56 56 0 1 0 -112 0 Z"/>
+                            </svg>
                         </span>
                     </button>
                 </div>
@@ -113,7 +119,6 @@
                 {
                     <div tabindex="-1" class="ant-tabs-tabpane" id="@($"rc-tabs-{Id}-panel-{pane.Key}")" role="tabpanel" aria-hidden="true" aria-labelledby="@($"rc-tabs-{Id}-panel-{pane.Key}")" style="display: none;">@pane.ChildContent</div>
                 }
-
             }
         </div>
     </div>

@@ -5,18 +5,18 @@
 
 <CascadingValue Value='$"{PrefixCls}-dropdown"' Name="PrefixCls">
     <OverlayTrigger @ref="@_dropDown"
-                    Visible="Open"
-                    IsButton="@true"
-                    Disabled="Disabled"
-                    PopupContainerSelector="@PopupContainerSelector"
-                    OnVisibleChange="visible => AutoFocus = visible"
-                    OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
-                    OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up"
-                    Trigger="new TriggerType[] { TriggerType.Click }">
+                     Visible="Open"
+                     IsButton="@true"
+                     Disabled="Disabled"
+                     PopupContainerSelector="@PopupContainerSelector"
+                     OnVisibleChange="visible => AutoFocus = visible"
+                     OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
+                     OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up"
+                     Trigger="new TriggerType[] { TriggerType.Click }">
         <Overlay>
             <div class="@(PrefixCls)-panel-container">
                 <div class="@(PrefixCls)-panel">
-                    <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)" />
+                    <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)"/>
                 </div>
             </div>
         </Overlay>
@@ -26,18 +26,18 @@
                  style="@Style"
                  Id="@Id">
                 <DatePickerInput @ref="_inputStart"
-                                 PrefixCls="@PrefixCls"
-                                 Size="@Size"
-                                 Disabled="@Disabled"
-                                 Value="@GetInputValue(0)"
-                                 Placeholder="@_placeholders[0]"
-                                 ReadOnly="@InputReadOnly"
-                                 AutoFocus="@AutoFocus"
-                                 OnClick="async e => { await _dropDown.Show(); ChangeFocusTarget(true, false); }"
-                                 OnInput="e => OnInput(e, 0)"
-                                 ShowTime="@(Picker == DatePickerType.Time)"
-                                 OnClickClear="e => ClearValue(0)"
-                                 AllowClear="@AllowClear"/>
+                                  PrefixCls="@PrefixCls"
+                                  Size="@Size"
+                                  Disabled="@Disabled"
+                                  Value="@GetInputValue(0)"
+                                  Placeholder="@_placeholders[0]"
+                                  ReadOnly="@InputReadOnly"
+                                  AutoFocus="@AutoFocus"
+                                  OnClick="async e => { await _dropDown.Show();ChangeFocusTarget(true, false); }"
+                                  OnInput="e => OnInput(e, 0)"
+                                  ShowTime="@(Picker == DatePickerType.Time)"
+                                  OnClickClear="e => ClearValue(0)"
+                                  AllowClear="@AllowClear"/>
             </div>
         </ChildContent>
     </OverlayTrigger>

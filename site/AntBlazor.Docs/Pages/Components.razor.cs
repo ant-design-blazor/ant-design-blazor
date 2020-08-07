@@ -10,20 +10,15 @@ namespace AntDesign.Docs.Pages
 {
     public partial class Components : ComponentBase
     {
-        [Parameter]
-        public string Name { get; set; }
+        [Parameter] public string Name { get; set; }
 
-        [Inject]
-        private DemoService DemoService { get; set; }
+        [Inject] private DemoService DemoService { get; set; }
 
-        [Inject]
-        private ILanguageService LanguageService { get; set; }
+        [Inject] private ILanguageService LanguageService { get; set; }
 
-        [Inject]
-        private NavigationManager NavigationManager { get; set; }
+        [Inject] private NavigationManager NavigationManager { get; set; }
 
-        [CascadingParameter]
-        public MainLayout MainLayout { get; set; }
+        [CascadingParameter] public MainLayout MainLayout { get; set; }
 
         private DemoComponent _demoComponent;
 
@@ -65,7 +60,9 @@ namespace AntDesign.Docs.Pages
             if (string.IsNullOrEmpty(Name))
             {
                 var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-                var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
+                var newUrl = currentUrl.IndexOf('/') > 0
+                    ? currentUrl.Substring(currentUrl.IndexOf('/') + 1)
+                    : currentUrl;
                 var menus = await DemoService.GetMenuAsync();
                 var current = menus.FirstOrDefault(x => x.Url == newUrl);
                 if (current != null)

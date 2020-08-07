@@ -5,6 +5,7 @@
 </Button>
 
 @code{
+
     private async Task OnClick()
     {
         string key = $"updatable-{DateTime.Now.Ticks}";
@@ -21,4 +22,5 @@
         config.Duration = 2;
         await _message.Success(config);
     }
+
 }

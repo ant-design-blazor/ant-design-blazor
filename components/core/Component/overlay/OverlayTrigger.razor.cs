@@ -13,59 +13,41 @@ namespace AntDesign.Internal
         [CascadingParameter(Name = "PrefixCls")]
         public string PrefixCls { get; set; } = "ant-dropdown";
 
-        [Parameter]
-        public string PopupContainerSelector { get; set; } = "body";
+        [Parameter] public string PopupContainerSelector { get; set; } = "body";
 
-        [Parameter]
-        public string PlacementCls { get; set; }
+        [Parameter] public string PlacementCls { get; set; }
 
-        [Parameter]
-        public string OverlayEnterCls { get; set; }
+        [Parameter] public string OverlayEnterCls { get; set; }
 
-        [Parameter]
-        public string OverlayLeaveCls { get; set; }
+        [Parameter] public string OverlayLeaveCls { get; set; }
 
-        [Parameter]
-        public string OverlayHiddenCls { get; set; }
+        [Parameter] public string OverlayHiddenCls { get; set; }
 
-        [Parameter]
-        public string OverlayClassName { get; set; }
+        [Parameter] public string OverlayClassName { get; set; }
 
-        [Parameter]
-        public string OverlayStyle { get; set; }
+        [Parameter] public string OverlayStyle { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool Visible { get; set; } = false;
+        [Parameter] public bool Visible { get; set; } = false;
 
-        [Parameter]
-        public bool IsButton { get; set; } = false;
+        [Parameter] public bool IsButton { get; set; } = false;
 
-        [Parameter]
-        public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
+        [Parameter] public TriggerType[] Trigger { get; set; } = new TriggerType[] {TriggerType.Hover};
 
-        [Parameter]
-        public PlacementType Placement { get; set; } = PlacementType.BottomLeft;
+        [Parameter] public PlacementType Placement { get; set; } = PlacementType.BottomLeft;
 
-        [Parameter]
-        public EventCallback<bool> OnVisibleChange { get; set; }
+        [Parameter] public EventCallback<bool> OnVisibleChange { get; set; }
 
-        [Parameter]
-        public EventCallback<bool> OnOverlayHiding { get; set; }
+        [Parameter] public EventCallback<bool> OnOverlayHiding { get; set; }
 
-        [Parameter]
-        public RenderFragment Overlay { get; set; }
+        [Parameter] public RenderFragment Overlay { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnClick { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
-        [Inject]
-        private DomEventService DomEventService { get; set; }
+        [Inject] private DomEventService DomEventService { get; set; }
 
         private bool _mouseInTrigger = false;
         private bool _mouseInOverlay = false;
@@ -218,6 +200,7 @@ namespace AntDesign.Internal
             {
                 return PlacementCls;
             }
+
             return $"{PrefixCls}-placement-{Placement.Name}";
         }
 
@@ -227,7 +210,9 @@ namespace AntDesign.Internal
             {
                 return OverlayEnterCls;
             }
-            return $"slide-{Placement.SlideName}-enter slide-{Placement.SlideName}-enter-active slide-{Placement.SlideName}";
+
+            return
+                $"slide-{Placement.SlideName}-enter slide-{Placement.SlideName}-enter-active slide-{Placement.SlideName}";
         }
 
         internal virtual string GetOverlayLeaveClass()
@@ -236,7 +221,9 @@ namespace AntDesign.Internal
             {
                 return OverlayLeaveCls;
             }
-            return $"slide-{Placement.SlideName}-leave slide-{Placement.SlideName}-leave-active slide-{Placement.SlideName}";
+
+            return
+                $"slide-{Placement.SlideName}-leave slide-{Placement.SlideName}-leave-active slide-{Placement.SlideName}";
         }
 
         internal virtual string GetOverlayHiddenClass()
@@ -245,6 +232,7 @@ namespace AntDesign.Internal
             {
                 return OverlayHiddenCls;
             }
+
             return $"{PrefixCls}-hidden";
         }
 

@@ -57,21 +57,17 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Tab { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool Closable { get; set; } = true;
+        [Parameter] public bool Closable { get; set; } = true;
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
 
-            _classMapper.Clear().
-                Add(PrefixCls)
+            _classMapper.Clear().Add(PrefixCls)
                 .If($"{PrefixCls}-active", () => IsActive)
                 .If($"{PrefixCls}-with-remove", () => Closable)
                 .If($"{PrefixCls}-disabled", () => Disabled);
@@ -83,6 +79,7 @@ namespace AntDesign
             {
                 _parent._panes.Remove(this);
             }
+
             base.Dispose(disposing);
         }
     }

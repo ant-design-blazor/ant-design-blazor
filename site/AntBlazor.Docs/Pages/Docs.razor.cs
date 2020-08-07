@@ -17,8 +17,7 @@ namespace AntDesign.Docs.Pages
     {
         [Parameter] public string FileName { get; set; }
 
-        [CascadingParameter]
-        public MainLayout MainLayout { get; set; }
+        [CascadingParameter] public MainLayout MainLayout { get; set; }
 
         private DocsFile _file;
 
@@ -43,7 +42,9 @@ namespace AntDesign.Docs.Pages
             if (string.IsNullOrWhiteSpace(FileName))
             {
                 var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-                var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
+                var newUrl = currentUrl.IndexOf('/') > 0
+                    ? currentUrl.Substring(currentUrl.IndexOf('/') + 1)
+                    : currentUrl;
                 var menus = await DemoService.GetMenuAsync();
                 var current = menus.FirstOrDefault(x => x.Url == newUrl);
                 if (current != null)
@@ -58,7 +59,8 @@ namespace AntDesign.Docs.Pages
             if (!string.IsNullOrEmpty(FileName))
             {
                 var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-                var docUrl = new Uri(baseUrl, $"_content/AntDesign.Docs/docs/{FileName}.{CurrentLanguage}.json").ToString();
+                var docUrl = new Uri(baseUrl, $"_content/AntDesign.Docs/docs/{FileName}.{CurrentLanguage}.json")
+                    .ToString();
                 _file = await HttpClient.GetFromJsonAsync<DocsFile>(docUrl);
                 _waitingHighlight = true;
 

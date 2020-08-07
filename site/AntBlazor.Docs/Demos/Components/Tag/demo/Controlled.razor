@@ -1,14 +1,16 @@
 ﻿<div>
     <Tag Mode="closeable" Visible="bVisible">Movies</Tag>
-    <br />
-    <br />
+    <br/>
+    <br/>
     <Button Size="small" OnClick="onClick">Toggle</Button>
 </div>
 
 @code{
     bool bVisible { get; set; } = true;
+
     void onClick()
     {
         bVisible = !bVisible;
     }
+
 }

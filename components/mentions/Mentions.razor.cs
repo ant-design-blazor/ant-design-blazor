@@ -18,7 +18,7 @@ namespace AntDesign
         [Parameter] public bool AutoFocus { get; set; }
         [Parameter] public bool Disable { get; set; }
         [Parameter] public bool Readonly { get; set; }
-        [Parameter] public string Prefix { get; set; } = "@,#";   //“@，#”
+        [Parameter] public string Prefix { get; set; } = "@,#"; //“@，#”
         [Parameter] public string Split { get; set; } = " ";
         [Parameter] public string DefaultValue { get; set; }
         [Parameter] public string Placeholder { get; set; }
@@ -115,13 +115,15 @@ namespace AntDesign
             {
                 _reference = DotNetObjectReference.Create<Mentions>(this);
             }
+
             //get current dom element infomation
             var domRect = await JsInvokeAsync<double[]>(JSInteropConstants.getCursorXY, Ref, _reference);
 
             var left = Math.Round(domRect[0]);
             var top = Math.Round(domRect[1]);
             //DropdownStyle = $"display:inline-flex;position:fixed;top:{top}px;left:{left}px;transform:translate({cursorPoint.x}px, {cursorPoint.y}0px);";
-            DropdownStyle = $"display:inline-flex;position:fixed;top:{top}px;left:{left}px;transform:translate(0px, 0px);";
+            DropdownStyle =
+                $"display:inline-flex;position:fixed;top:{top}px;left:{left}px;transform:translate(0px, 0px);";
         }
 
         /// <summary>
@@ -206,6 +208,7 @@ namespace AntDesign
                     lst.Add(item);
                 }
             }
+
             return lst;
         }
 

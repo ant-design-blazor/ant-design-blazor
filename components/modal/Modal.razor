@@ -1,9 +1,9 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
-@if(_hasAdd)
+@if (_hasAdd)
 {
-    <Dialog @ref="_dialog" Config="@BuildDialogOptions()" 
-            Visible="@Visible" Style="@Style">
+    <Dialog @ref="_dialog" Config="@BuildDialogOptions()"
+             Visible="@Visible" Style="@Style">
         @ChildContent
     </Dialog>
 }

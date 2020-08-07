@@ -14,30 +14,24 @@ namespace AntDesign
         [Parameter]
         public string Type { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool Active { get; set; }
+        [Parameter] public bool Active { get; set; }
 
-        [Parameter]
-        public int Index { get; set; }
+        [Parameter] public int Index { get; set; }
 
-        [Parameter]
-        public EventCallback<int> DiffIndex { get; set; }
+        [Parameter] public EventCallback<int> DiffIndex { get; set; }
 
-        [Parameter]
-        public EventCallback<int> GotoIndex { get; set; }
+        [Parameter] public EventCallback<int> GotoIndex { get; set; }
 
-        [Parameter]
-        public EventCallback<int> OnClick { get; set; }
+        [Parameter] public EventCallback<int> OnClick { get; set; }
 
-        [CascadingParameter]
-        public Pagination Pagination { get; set; }
+        [CascadingParameter] public Pagination Pagination { get; set; }
 
         private RenderFragment<PaginationItemRenderContext> _itemRender;
 
-        private PaginationItemRenderContext ItemRenderContext => new PaginationItemRenderContext() { Type = Type, Page = Index, DefaultRender = _renderItemTemplate };
+        private PaginationItemRenderContext ItemRenderContext =>
+            new PaginationItemRenderContext() {Type = Type, Page = Index, DefaultRender = _renderItemTemplate};
 
         private string Key => $"{Type}-{Index}";
 

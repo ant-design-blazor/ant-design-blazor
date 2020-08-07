@@ -7,11 +7,9 @@ namespace AntDesign
 {
     public partial class CountDown : StatisticComponentBase<DateTime>
     {
-        [Parameter]
-        public string Format { get; set; } = "hh:mm:ss";
+        [Parameter] public string Format { get; set; } = "hh:mm:ss";
 
-        [Parameter]
-        public EventCallback OnFinish { get; set; }
+        [Parameter] public EventCallback OnFinish { get; set; }
 
         private Timer _timer;
 
@@ -32,6 +30,7 @@ namespace AntDesign
             {
                 return format;
             }
+
             return Regex.Replace(format, "[^d|^h|^m|^s|^f|^F]+", "'$0'");
         }
 

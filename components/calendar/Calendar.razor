@@ -8,21 +8,23 @@
      @ref="@Ref">
     @if (HeaderRender != null)
     {
-        @HeaderRender.Invoke(new CalendarHeaderRenderArgs {
+        @HeaderRender.Invoke(new CalendarHeaderRenderArgs
+        {
             Value = Value,
             Type = Mode,
             OnChange = new EventCallbackFactory().Create<DateTime>(this, ChangeValue),
             OnTypeChange = new EventCallbackFactory().Create<string>(this, ChangePickerType),
-        });
+        })
+        ;
     }
     else
     {
         <CascadingValue Value="this" Name="Calendar">
             <CascadingValue Value="PrefixCls" Name="PrefixCls">
-                <CalendarHeader />
+                <CalendarHeader/>
             </CascadingValue>
         </CascadingValue>
     }
-    
-    <CalendarPanelChooser Calendar="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelectValue(date)" />
+
+    <CalendarPanelChooser Calendar="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelectValue(date)"/>
 </div>

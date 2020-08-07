@@ -6,11 +6,9 @@ namespace AntDesign
 {
     public abstract class AntContainerComponentBase : AntDomComponentBase
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public string Tag { get; set; } = "div";
+        [Parameter] public string Tag { get; set; } = "div";
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

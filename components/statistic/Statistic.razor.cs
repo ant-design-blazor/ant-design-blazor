@@ -34,7 +34,8 @@ namespace AntDesign
                     string tem;
                     if (Precision > 0)
                         tem = Math.Round(Convert.ToDecimal(Value), Precision).ToString().Contains('.')
-                            ? Math.Round(Convert.ToDecimal(Value), Precision).ToString().Split('.').Last().PadRight(Precision, '0')
+                            ? Math.Round(Convert.ToDecimal(Value), Precision).ToString().Split('.').Last()
+                                .PadRight(Precision, '0')
                             : string.Empty.PadRight(Precision, '0');
                     else if (Precision < 0)
                         tem = Value.ToString().Contains('.') ? Value.ToString().Split('.').Last() : null;

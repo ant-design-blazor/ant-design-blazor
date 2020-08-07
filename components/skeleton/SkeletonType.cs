@@ -23,7 +23,6 @@ namespace AntDesign
         public const string Default = "default";
         public const string Circle = "circle";
         public const string Round = "round";
-
     }
 
     public static class SkeletonElementType

@@ -1,12 +1,12 @@
 ﻿<div>
-    <Switch Checked="theme == MenuTheme.Dark" OnChange=changeTheme CheckedChildren=@("Dark") UnCheckedChildren=@("Light") />
-    <br />
-    <br />
+    <Switch Checked="theme == MenuTheme.Dark" OnChange=changeTheme CheckedChildren=@("Dark") UnCheckedChildren=@("Light")/>
+    <br/>
+    <br/>
     <Menu Theme=theme
           OnMenuItemClicked=handleClick
-          Style=" width: 256px "
-          DefaultOpenKeys=@(new []{"sub1"})
-          SelectedKeys=@(new []{current})
+          Style="width: 256px"
+          DefaultOpenKeys=@(new[] {"sub1"})
+          SelectedKeys=@(new[] {current})
           Mode="MenuMode.Inline">
         <SubMenu Key="sub1" Title=sub1Title>
             <MenuItem Key="1">Option 1</MenuItem>

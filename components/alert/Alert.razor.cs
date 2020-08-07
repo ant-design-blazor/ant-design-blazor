@@ -79,10 +79,10 @@ namespace AntDesign
         /// Icon to show.
         /// </summary>
         protected string IconType => !string.IsNullOrEmpty(Icon) ? Icon
-                        : Type == AlertType.Success ? "check-circle"
-                        : Type == AlertType.Info ? "info-circle"
-                        : Type == AlertType.Warning ? "exclamation-circle"
-                        : Type == AlertType.Error ? "close-circle" : null;
+            : Type == AlertType.Success ? "check-circle"
+            : Type == AlertType.Info ? "info-circle"
+            : Type == AlertType.Warning ? "exclamation-circle"
+            : Type == AlertType.Error ? "close-circle" : null;
 
         /// <summary>
         /// Indicator if the component is closed or not.
@@ -150,6 +150,7 @@ namespace AntDesign
             {
                 await OnClose.InvokeAsync(args);
             }
+
             await Task.Delay(300);
             _isClosed = true;
             await AfterCloseHandler(args);

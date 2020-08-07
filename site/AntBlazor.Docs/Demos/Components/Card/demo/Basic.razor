@@ -4,9 +4,9 @@
             <a>More</a>
         </Extra>
         <Body>
-            <p>Card content</p>
-            <p>Card content</p>
-            <p>Card content</p>
+        <p>Card content</p>
+        <p>Card content</p>
+        <p>Card content</p>
         </Body>
     </Card>
 
@@ -15,20 +15,27 @@
             <a>More</a>
         </Extra>
         <Body>
-            <p>Card content</p>
-            <p>Card content</p>
-            <p>Card content</p>
+        <p>Card content</p>
+        <p>Card content</p>
+        <p>Card content</p>
         </Body>
     </Card>
 
 
 </div>
+
 @code
 {
-    private RenderFragment actionSetting =@<Template>  <Icon Type="setting" /></Template>;
+    private RenderFragment actionSetting = @<Template>
+                                               <Icon Type="setting"/>
+                                           </Template>;
 
-    private RenderFragment actionEdit =@<Template><Icon Type="edit" /></Template>;
+    private RenderFragment actionEdit = @<Template>
+                                            <Icon Type="edit"/>
+                                        </Template>;
 
-    private RenderFragment actionEllipsis =@<Template> <Icon Type="ellipsis" /></Template>;
+    private RenderFragment actionEllipsis = @<Template>
+                                                <Icon Type="ellipsis"/>
+                                            </Template>;
 
 }

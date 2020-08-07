@@ -22,7 +22,7 @@ namespace AntDesign
 
         public Func<ModalClosingEventArgs, Task> OnOk { get; set; }
 
-        public ButtonProps OkButtonProps { get; set; } = new ButtonProps(){ Type = ButtonType.Primary};
+        public ButtonProps OkButtonProps { get; set; } = new ButtonProps() {Type = ButtonType.Primary};
 
         public ButtonProps CancelButtonProps { get; set; } = new ButtonProps();
 
@@ -31,7 +31,7 @@ namespace AntDesign
         public bool Centered { get; set; }
 
         public bool Mask { get; set; } = true;
-        
+
         public bool MaskClosable { get; set; } = false;
 
         public string MaskStyle { get; set; }

@@ -8,11 +8,9 @@ namespace AntDesign
 {
     public partial class MessageItem
     {
-        [Parameter]
-        public MessageConfig Config { get; set; }
+        [Parameter] public MessageConfig Config { get; set; }
 
-        [Parameter]
-        public bool IsRtl { get; set; } 
+        [Parameter] public bool IsRtl { get; set; }
 
         private CultureInfo _cultureInfo = new CultureInfo("en-us", false);
 
@@ -24,6 +22,7 @@ namespace AntDesign
             {
                 className += " ant-message-rtl";
             }
+
             return className;
         }
     }

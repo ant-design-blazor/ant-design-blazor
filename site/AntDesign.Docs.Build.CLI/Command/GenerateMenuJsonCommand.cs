@@ -40,8 +40,7 @@ namespace AntDesign.Docs.Build.CLI.Command
 
         private static readonly Dictionary<string, string> _demoCategoryMap = new Dictionary<string, string>()
         {
-            ["Components"] = "组件",
-            ["Charts"] = "图表"
+            ["Components"] = "组件", ["Charts"] = "图表"
         };
 
         public void Execute(CommandLineApplication command)
@@ -108,21 +107,21 @@ namespace AntDesign.Docs.Build.CLI.Command
 
             var jsonOptions = new JsonSerializerOptions()
             {
-                WriteIndented = true,
-                IgnoreNullValues = true,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                WriteIndented = true, IgnoreNullValues = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             };
 
             IList<Dictionary<string, DemoMenuItem>> docsMenuList = GetSubMenuList(docsDirectoryInfo, true).ToList();
 
-            Dictionary<string, Dictionary<string, IEnumerable<DemoMenuItem>>> categoryDemoMenuList = new Dictionary<string, Dictionary<string, IEnumerable<DemoMenuItem>>>();
+            Dictionary<string, Dictionary<string, IEnumerable<DemoMenuItem>>> categoryDemoMenuList =
+                new Dictionary<string, Dictionary<string, IEnumerable<DemoMenuItem>>>();
             List<Dictionary<string, DemoMenuItem>> allComponentMenuList = new List<Dictionary<string, DemoMenuItem>>();
 
             foreach (var subDemoDirectory in demoDirectoryInfo.GetFileSystemInfos())
             {
                 var category = subDemoDirectory.Name;
 
-                IList<Dictionary<string, DemoMenuItem>> componentMenuList = GetSubMenuList(subDemoDirectory as DirectoryInfo, false).ToList();
+                IList<Dictionary<string, DemoMenuItem>> componentMenuList =
+                    GetSubMenuList(subDemoDirectory as DirectoryInfo, false).ToList();
 
                 allComponentMenuList.AddRange(componentMenuList);
 
@@ -137,6 +136,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                     {
                         categoryDemoMenuList[component.Key] = new Dictionary<string, IEnumerable<DemoMenuItem>>();
                     }
+
                     categoryDemoMenuList[component.Key].Add(category, component.Value);
                 }
             }
@@ -146,7 +146,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 .GroupBy(x => x.Key)
                 .ToDictionary(x => x.Key, x => x.Select(x => x.Value));
 
-            foreach (var lang in new[] { "zh-CN", "en-US" })
+            foreach (var lang in new[] {"zh-CN", "en-US"})
             {
                 List<DemoMenuItem> menu = new List<DemoMenuItem>();
 
@@ -255,11 +255,13 @@ namespace AntDesign.Docs.Build.CLI.Command
             else
             {
                 var componentI18N = GetComponentI18N(directory);
-                foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> group in componentI18N.GroupBy(x => x.Value.Type))
+                foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> group in componentI18N.GroupBy(x =>
+                    x.Value.Type))
                 {
                     Dictionary<string, DemoMenuItem> menu = new Dictionary<string, DemoMenuItem>();
 
-                    foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> component in group.GroupBy(x => x.Key))
+                    foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> component in group.GroupBy(x =>
+                        x.Key))
                     {
                         menu.Add(component.Key, new DemoMenuItem()
                         {
@@ -267,15 +269,15 @@ namespace AntDesign.Docs.Build.CLI.Command
                             Title = group.Key,
                             Type = "itemGroup",
                             Children = group.Select(x => new DemoMenuItem()
-                            {
-                                Title = x.Value.Title,
-                                SubTitle = x.Value.SubTitle,
-                                Url = $"{directory.Name}/{x.Value.Title.ToLower()}",
-                                Type = "menuItem",
-                                Cover = x.Value.Cover,
-                            })
-                            .OrderBy(x => x.Title, new MenuComparer())
-                            .ToArray(),
+                                {
+                                    Title = x.Value.Title,
+                                    SubTitle = x.Value.SubTitle,
+                                    Url = $"{directory.Name}/{x.Value.Title.ToLower()}",
+                                    Type = "menuItem",
+                                    Cover = x.Value.Cover,
+                                })
+                                .OrderBy(x => x.Title, new MenuComparer())
+                                .ToArray(),
                         });
                     }
 
@@ -301,7 +303,8 @@ namespace AntDesign.Docs.Build.CLI.Command
                 {
                     string language = docItem.Name.Replace("index.", "").Replace(docItem.Extension, "");
                     string content = File.ReadAllText(docItem.FullName);
-                    (Dictionary<string, string> Meta, string Desc, string ApiDoc) docData = DocParser.ParseDemoDoc(content);
+                    (Dictionary<string, string> Meta, string Desc, string ApiDoc) docData =
+                        DocParser.ParseDemoDoc(content);
 
                     componentDic.Add(language, new DemoComponent()
                     {

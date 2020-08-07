@@ -10,18 +10,18 @@
 
 <Layout>
     <Sider Collapsible Collapsed=@collapsed NoTrigger OnCollapse="OnCollapse">
-        <div class="logo" />
-        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"1"})>
+        <div class="logo"/>
+        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[] {"1"})>
             <MenuItem Key="1">
-                <Icon Type="user" Theme="outline" />
+                <Icon Type="user" Theme="outline"/>
                 <span>nav 1</span>
             </MenuItem>
             <MenuItem Key="2">
-                <Icon Type="video-camera" Theme="outline" />
+                <Icon Type="video-camera" Theme="outline"/>
                 <span>nav 2</span>
             </MenuItem>
             <MenuItem Key="3">
-                <Icon Type="upload" Theme="outline" />
+                <Icon Type="upload" Theme="outline"/>
                 <span>nav 3</span>
             </MenuItem>
         </Menu>
@@ -30,14 +30,14 @@
         <Header Class="site-layout-background" Style="padding: 0;">
             @if (collapsed)
             {
-                <Icon Type="menu-unfold" Theme="outline" Class="trigger" OnClick="toggle" />
+                <Icon Type="menu-unfold" Theme="outline" Class="trigger" OnClick="toggle"/>
             }
             else
             {
-                <Icon Type="menu-fold" Theme="outline" Class="trigger" OnClick="toggle" />
+                <Icon Type="menu-fold" Theme="outline" Class="trigger" OnClick="toggle"/>
             }
         </Header>
-        <Content Class="site-layout-background" Style="margin: 24px 16px;padding: 24px;min-height: 280px;">
+        <Content Class="site-layout-background" Style="margin: 24px 16px; padding: 24px; min-height: 280px;">
             Content
         </Content>
     </Layout>
@@ -52,9 +52,7 @@
         transition: color 0.3s;
     }
 
-        #components-layout-demo-custom-trigger .trigger:hover {
-            color: #1890ff;
-        }
+    #components-layout-demo-custom-trigger .trigger:hover { color: #1890ff; }
 
     #components-layout-demo-custom-trigger .logo {
         height: 32px;
@@ -62,9 +60,7 @@
         margin: 16px;
     }
 
-    .site-layout .site-layout-background {
-        background: #fff;
-    }
+    .site-layout .site-layout-background { background: #fff; }
 </style>
 
 

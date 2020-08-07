@@ -26,9 +26,11 @@ namespace AntDesign
 
                     if (value != null)
                     {
-                        return DateHelper.FormatDateByPicker(date.Date, Picker) < DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
+                        return DateHelper.FormatDateByPicker(date.Date, Picker) <
+                               DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
                     }
                 }
+
                 if (_pickerStatus[1]._hadSelectValue && _inputStart.IsOnFocused)
                 {
                     DateTime? value = null;
@@ -39,7 +41,8 @@ namespace AntDesign
 
                     if (value != null)
                     {
-                        return DateHelper.FormatDateByPicker(date.Date, Picker) > DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
+                        return DateHelper.FormatDateByPicker(date.Date, Picker) >
+                               DateHelper.FormatDateByPicker(((DateTime)value).Date, Picker);
                     }
                 }
 
@@ -96,7 +99,7 @@ namespace AntDesign
         public override void ChangeValue(DateTime value, int index = 0)
         {
             bool result = BindConverter.TryConvertTo<TValue>(
-               value.ToString(CultureInfo), CultureInfo, out var dateTime);
+                value.ToString(CultureInfo), CultureInfo, out var dateTime);
 
             if (result)
             {
@@ -144,7 +147,6 @@ namespace AntDesign
                 }
 
                 ChangeFocusTarget(true, false);
-
             }
             else
             {
@@ -171,11 +173,11 @@ namespace AntDesign
                     notNullAction?.Invoke(dateTime);
                 }
             }
+
             if (_isNullable && value != null)
             {
                 notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
             }
         }
-
     }
 }

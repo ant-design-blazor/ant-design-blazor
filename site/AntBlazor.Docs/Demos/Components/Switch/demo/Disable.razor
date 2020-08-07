@@ -1,8 +1,8 @@
 ﻿<div>
     <Switch Checked="switchValue" Disabled="isDisabled"/>
-    <br />
-    <br />
-    <Button Type="primary" @onclick="(_)=>isDisabled = !isDisabled">Toggle disabled</Button>
+    <br/>
+    <br/>
+    <Button Type="primary" @onclick="(_) => isDisabled = !isDisabled">Toggle disabled</Button>
 </div>
 
 
@@ -11,10 +11,8 @@
 
     bool isDisabled = true;
 
-    RenderFragment checkedChildren =@<Icon Type="check"></Icon>;
+    RenderFragment checkedChildren = @<Icon Type="check"></Icon>;
 
     RenderFragment unCheckedChildren = @<Icon Type="close"></Icon>;
 
 }
-
-

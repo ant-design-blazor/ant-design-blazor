@@ -2,7 +2,7 @@
 @typeparam TValue
 @inherits AntDomComponentBase
 
-<label @onclick="_=>OnClick()" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+<label @onclick="_ => OnClick()" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
     <span class="@RadioClassMapper.Class">
         <input type="radio"
                autofocus="@AutoFocus"
@@ -11,7 +11,7 @@
                checked="@IsChecked"
                name="@_name"
                @bind="@Value"
-               @ref="InputRef" />
+               @ref="InputRef"/>
         <span class="@InnerClassMapper.Class"></span>
     </span>
     @if (ChildContent != null)

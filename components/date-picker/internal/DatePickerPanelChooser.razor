@@ -13,21 +13,21 @@
     Dictionary<string, object> attributes =
         new Dictionary<string, object>()
         {
-            { "PrefixCls", DatePicker.PrefixCls },
-            { "Picker", DatePicker.Picker },
-            { "ClosePanel", ClosePanel },
-            { "ChangePickerValue", ChangePickerValue },
-            { "ChangeValue", ChangeValue },
-            { "ChangePickerType", ChangePickerType },
-            { "GetIndexPickerValue", GetIndexPickerValue },
-            { "GetIndexValue", GetIndexValue },
-            { "DisabledDate", DatePicker.DisabledDate },
-            { "DateRender", DatePicker.DateRender },
-            { "MonthCellRender", DatePicker.MonthCellRender },
-            { "RenderExtraFooter", DatePicker.RenderExtraFooter },
-            { "IsRange", DatePicker.IsRange },
-            { "OnSelect", OnSelect },
-            { "PickerIndex", PickerIndex },
+            {"PrefixCls", DatePicker.PrefixCls},
+            {"Picker", DatePicker.Picker},
+            {"ClosePanel", ClosePanel},
+            {"ChangePickerValue", ChangePickerValue},
+            {"ChangeValue", ChangeValue},
+            {"ChangePickerType", ChangePickerType},
+            {"GetIndexPickerValue", GetIndexPickerValue},
+            {"GetIndexValue", GetIndexValue},
+            {"DisabledDate", DatePicker.DisabledDate},
+            {"DateRender", DatePicker.DateRender},
+            {"MonthCellRender", DatePicker.MonthCellRender},
+            {"RenderExtraFooter", DatePicker.RenderExtraFooter},
+            {"IsRange", DatePicker.IsRange},
+            {"OnSelect", OnSelect},
+            {"PickerIndex", PickerIndex},
         };
 
     Dictionary<string, object> dateAttributes = new Dictionary<string, object>(attributes);
@@ -48,35 +48,35 @@
     {
         @if (DatePicker.IsShowTime)
         {
-            <DatePickerDatetimePanel TValue="TValue" @attributes="dateTimeAttributes" />
+            <DatePickerDatetimePanel TValue="TValue" @attributes="dateTimeAttributes"/>
         }
         else
         {
-            <DatePickerDatePanel TValue="TValue" @attributes="dateAttributes" />
+            <DatePickerDatePanel TValue="TValue" @attributes="dateAttributes"/>
         }
     }
     else if (IsShowQuarterPanel())
     {
-        <DatePickerQuarterPanel TValue="TValue" @attributes="attributes" />
+        <DatePickerQuarterPanel TValue="TValue" @attributes="attributes"/>
     }
     else if (IsShowWeekPanel())
     {
-        <DatePickerDatePanel TValue="TValue" @attributes="dateAttributes" IsWeek="@true" />
+        <DatePickerDatePanel TValue="TValue" @attributes="dateAttributes" IsWeek="@true"/>
     }
     else if (IsShowMonthPanel())
     {
-        <DatePickerMonthPanel TValue="TValue" @attributes="attributes" />
+        <DatePickerMonthPanel TValue="TValue" @attributes="attributes"/>
     }
     else if (IsShowYearPanel())
     {
-        <DatePickerYearPanel TValue="TValue" @attributes="attributes" />
+        <DatePickerYearPanel TValue="TValue" @attributes="attributes"/>
     }
     else if (IsShowDecadePanel())
     {
-        <DatePickerDecadePanel TValue="TValue" @attributes="attributes" />
+        <DatePickerDecadePanel TValue="TValue" @attributes="attributes"/>
     }
     else if (IsShowTimePanel())
     {
-        <DatePickerDatetimePanel TValue="TValue" @attributes="dateTimeAttributes" />
+        <DatePickerDatetimePanel TValue="TValue" @attributes="dateTimeAttributes"/>
     }
 </CascadingValue>

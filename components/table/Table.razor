@@ -13,7 +13,7 @@
                         PageSize="PageSize"
                         Current="PageIndex"
                         OnPageIndexChange="HandlePageIndexChange"
-                        OnPageSizeChange="HandlePageSizeChange" />
+                        OnPageSizeChange="HandlePageSizeChange"/>
         }
         <CascadingValue Value="@this" TValue="ITable">
             <div class="@ClassMapper.Class">
@@ -43,13 +43,13 @@
                             <table style="table-layout: fixed;">
                                 @colGroup(this)
                                 <tbody class="ant-table-tbody">
-                                    <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px;">
-                                        @for (var i = 0; i < ColumnContext.Columns.Count; i++)
-                                        {
-                                            <td style="padding: 0px; border: 0px; height: 0px;"></td>
-                                        }
-                                    </tr>
-                                    @body(this)
+                                <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px;">
+                                    @for (var i = 0; i < ColumnContext.Columns.Count; i++)
+                                    {
+                                        <td style="padding: 0px; border: 0px; height: 0px;"></td>
+                                    }
+                                </tr>
+                                @body(this)
                                 </tbody>
                             </table>
                         </div>
@@ -61,7 +61,7 @@
                                 @colGroup(this)
                                 @header(this)
                                 <tbody class="ant-table-tbody">
-                                    @body(this)
+                                @body(this)
                                 </tbody>
                             </table>
                         </div>
@@ -89,7 +89,7 @@
                         PageSize="PageSize"
                         Current="PageIndex"
                         OnPageIndexChange="HandlePageIndexChange"
-                        OnPageSizeChange="HandlePageSizeChange" />
+                        OnPageSizeChange="HandlePageSizeChange"/>
         }
     </Spin>
 </div>
@@ -97,8 +97,8 @@
 @code
 {
     RenderFragment<Table<TItem>> header = table =>
-    @<Template>
-        <thead class="ant-table-thead">
+        @<Template>
+            <thead class="ant-table-thead">
             <tr>
                 <CascadingValue Name="IsHeader" Value="true">
                     <CascadingValue Value="@table.ColumnContext">
@@ -113,58 +113,58 @@
                     <th class="ant-table-cell ant-table-cell-scrollbar"></th>
                 }
             </tr>
-        </thead>
-    </Template>;
+            </thead>
+        </Template>;
 
-RenderFragment<Table<TItem>> colGroup = table =>
-@<Template>
-    <CascadingValue Name="IsColGroup" Value="true">
-        <colgroup>
-            @if (_fieldModel != null)
-            {
-                @table.ChildContent(_fieldModel)
-            }
-            @if (table.ScrollY != null)
-            {
-                <col style="width: @(table.ScrollBarWidth)px; min-width: @(table.ScrollBarWidth)px;" />
-            }
-        </colgroup>
-    </CascadingValue>
-</Template>;
-
-RenderFragment<Table<TItem>> body = table =>
-@<Template>
-
-    @if (table.Total <= 0)
-    {
-        <tr class="ant-table-placeholder">
-            <td colspan="6" class="ant-table-cell">
-                <Empty Simple />
-            </td>
-        </tr>
-    }
-    else if (table._showItems != null && table.ColumnContext.Columns.Count > 0)
-    {
-        for (int i = 0; i < table._showItems.Count(); i++)
-        {
-            var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
-            var data = table._showItems.ElementAt(i);
-            var cacheKey = data.GetHashCode();
-            if (!table._dataSourceCache.ContainsKey(cacheKey))
-            {
-                table._dataSourceCache[cacheKey] = new RowData<TItem>(rowIndex,table.PageIndex, data);
-            }
-            var selected = table._dataSourceCache[cacheKey].Selected;
-            <CascadingValue Value="@rowIndex" Name="RowIndex">
-                <CascadingValue Value="table.ColumnContext">
-                    <CascadingValue Value="cacheKey" Name="CacheKey">
-                        <tr data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-0 @(selected ? "ant-table-row-selected" : "")">
-                            @table.ChildContent(data)
-                        </tr>
-                    </CascadingValue>
-                </CascadingValue>
+    RenderFragment<Table<TItem>> colGroup = table =>
+        @<Template>
+            <CascadingValue Name="IsColGroup" Value="true">
+                <colgroup>
+                    @if (_fieldModel != null)
+                    {
+                        @table.ChildContent(_fieldModel)
+                    }
+                    @if (table.ScrollY != null)
+                    {
+                        <col style="width: @(table.ScrollBarWidth)px; min-width: @(table.ScrollBarWidth)px;"/>
+                    }
+                </colgroup>
             </CascadingValue>
-        }
-    }
-</Template>;
+        </Template>;
+
+    RenderFragment<Table<TItem>> body = table =>
+        @<Template>
+
+            @if (table.Total <= 0)
+            {
+                <tr class="ant-table-placeholder">
+                    <td colspan="6" class="ant-table-cell">
+                        <Empty Simple/>
+                    </td>
+                </tr>
+            }
+            else if (table._showItems != null && table.ColumnContext.Columns.Count > 0)
+            {
+                for (int i = 0; i < table._showItems.Count(); i++)
+                {
+                    var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
+                    var data = table._showItems.ElementAt(i);
+                    var cacheKey = data.GetHashCode();
+                    if (!table._dataSourceCache.ContainsKey(cacheKey))
+                    {
+                        table._dataSourceCache[cacheKey] = new RowData<TItem>(rowIndex, table.PageIndex, data);
+                    }
+                    var selected = table._dataSourceCache[cacheKey].Selected;
+                    <CascadingValue Value="@rowIndex" Name="RowIndex">
+                        <CascadingValue Value="table.ColumnContext">
+                            <CascadingValue Value="cacheKey" Name="CacheKey">
+                                <tr data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-0 @(selected ? "ant-table-row-selected" : "")">
+                                    @table.ChildContent(data)
+                                </tr>
+                            </CascadingValue>
+                        </CascadingValue>
+                    </CascadingValue>
+                }
+            }
+        </Template>;
 }

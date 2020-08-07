@@ -9,7 +9,7 @@
 
     @if (HasStatusOrColor)
     {
-        <span class="@($"ant-badge-status-dot {(StatusOrPresetColor!=null? $"ant-badge-status-{StatusOrPresetColor}":"")}")" style="@(PresetColor == null && string.IsNullOrWhiteSpace(Color)?$"background:{Color};":"") @Style"></span>
+        <span class="@($"ant-badge-status-dot {(StatusOrPresetColor != null ? $"ant-badge-status-{StatusOrPresetColor}" : "")}")" style="@(PresetColor == null && string.IsNullOrWhiteSpace(Color) ? $"background:{Color};" : "") @Style"></span>
 
         @if (!string.IsNullOrEmpty(Text))
         {
@@ -22,7 +22,6 @@
     }
     else
     {
-
         @if (!string.IsNullOrEmpty(Text))
         {
             <span class="ant-badge-status-text">@Text</span>

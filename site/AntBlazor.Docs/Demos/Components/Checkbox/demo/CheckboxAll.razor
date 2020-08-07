@@ -1,17 +1,18 @@
 <div>
     <Checkbox Indeterminate="@indeterminate" Checked="@checkAll" CheckedChange="@CheckAllChanged">
-    Check all
+        Check all
     </Checkbox>
-    <br />
+    <br/>
     <AntDesign.CheckboxGroup Options="@ckeckAllOptions" ValueChanged="@OnChanged"/>
 </div>
 
 @code{
 
-    static CheckboxOption[] ckeckAllOptions = new CheckboxOption[]{
-        new CheckboxOption{ Label="Apple",Value="Apple" ,Checked=true},
-        new CheckboxOption{ Label="Pear", Value="Pear" },
-        new CheckboxOption{ Label="Orange", Value="Orange",Checked=true },
+    static CheckboxOption[] ckeckAllOptions = new CheckboxOption[]
+    {
+        new CheckboxOption {Label = "Apple", Value = "Apple", Checked = true},
+        new CheckboxOption {Label = "Pear", Value = "Pear"},
+        new CheckboxOption {Label = "Orange", Value = "Orange", Checked = true},
     };
 
     void CheckAllChanged()
@@ -22,7 +23,6 @@
 
     void OnChanged()
     {
-
     }
 
     bool indeterminate => ckeckAllOptions.Count(o => o.Checked) > 0 && ckeckAllOptions.Count(o => o.Checked) < ckeckAllOptions.Count();

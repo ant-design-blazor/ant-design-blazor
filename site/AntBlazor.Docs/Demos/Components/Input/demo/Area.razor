@@ -2,11 +2,11 @@
 
 <div>
     <TextArea Placeholder="Autosize height based on content lines" AutoSize="true" OnResize="OnResize" @bind-Value="@txtValue"/>
-    <br />
-    <br />
+    <br/>
+    <br/>
     <TextArea Placeholder="Autosize height based on content lines" MinRows="2" MaxRows="6" OnResize="OnResize" @bind-Value="@txtValue"/>
-    <br />
-    <br />
+    <br/>
+    <br/>
     <TextArea Placeholder="Autosize height based on content lines" MinRows="3" MaxRows="5" OnResize="OnResize" @bind-Value="@txtValue"/>
 </div>
 
@@ -17,4 +17,5 @@
     {
         Console.WriteLine($"OnResizeEvent width:{args.Width},height:{args.Height}");
     }
+
 }

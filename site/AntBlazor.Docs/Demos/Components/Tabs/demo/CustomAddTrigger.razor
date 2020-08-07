@@ -1,6 +1,6 @@
 ﻿<div>
     <div style="margin-bottom: 16px;">
-        <Button @onclick="(e)=>Add()">ADD</Button>
+        <Button @onclick="(e) => Add()">ADD</Button>
     </div>
     <Tabs Type="@TabType.EditableCard" HideAdd>
         @foreach (var temp in _panes)
@@ -17,6 +17,7 @@
 @code{
     private List<TabPane> _panes = new List<TabPane>();
     private static int btnIndex = 1;
+
     private void Add()
     {
         int index = ++btnIndex;
@@ -24,7 +25,7 @@
             key: index.ToString(),
             tab: (b) => b.AddContent(0, $"Tab {index}"),
             childContent: (b) => b.AddContent(0, $"Content of Tab Pane {index}")
-        ));
+            ));
 
         StateHasChanged();
     }
@@ -39,7 +40,8 @@
                 key: index.ToString(),
                 tab: (b) => b.AddContent(0, $"Tab {index}"),
                 childContent: (b) => b.AddContent(0, $"Content of Tab Pane {index}")
-            ));
+                ));
         }
     }
+
 }

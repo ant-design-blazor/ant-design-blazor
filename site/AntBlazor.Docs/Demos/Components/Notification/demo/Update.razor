@@ -1,10 +1,11 @@
 ﻿@inject NotificationService _notice
 
-    <Button Type="@ButtonType.Primary" OnClick="@OnClick">
-        Open the notification box
-    </Button>
+<Button Type="@ButtonType.Primary" OnClick="@OnClick">
+    Open the notification box
+</Button>
 
 @code{
+
     private async Task OnClick()
     {
         string key = $"open{DateTime.Now}";
@@ -22,4 +23,5 @@
             Description = "New description.",
         });
     }
+
 }

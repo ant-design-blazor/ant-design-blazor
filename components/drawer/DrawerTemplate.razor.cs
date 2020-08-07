@@ -8,8 +8,7 @@ namespace AntDesign
 {
     public class DrawerTemplate<TContentParams, TResult> : TemplateComponentBase<TContentParams>
     {
-        [Parameter]
-        public DrawerRef<TResult> DrawerRef { get; set; }
+        [Parameter] public DrawerRef<TResult> DrawerRef { get; set; }
 
 
         /// <summary>

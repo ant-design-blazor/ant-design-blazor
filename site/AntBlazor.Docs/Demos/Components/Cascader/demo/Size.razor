@@ -1,7 +1,7 @@
 ﻿<div>
-    <Cascader Options="@sizeNodes" Size="large" Style="margin:15px 0;"></Cascader>
-    <Cascader Options="@sizeNodes" Size="middle" Style="margin:15px 0"></Cascader>
-    <Cascader Options="@sizeNodes" Size="small" Style="margin:15px 0"></Cascader>
+    <Cascader Options="@sizeNodes" Size="large" Style="margin: 15px 0;"></Cascader>
+    <Cascader Options="@sizeNodes" Size="middle" Style="margin: 15px 0"></Cascader>
+    <Cascader Options="@sizeNodes" Size="small" Style="margin: 15px 0"></Cascader>
 </div>
 
 @code {
@@ -9,32 +9,43 @@
 
     private static List<CascaderNode> GetSizeNodes()
     {
-        List<CascaderNode> list = new List<CascaderNode>() {
-        new CascaderNode()
+        List<CascaderNode> list = new List<CascaderNode>()
         {
-            Value = "1",
-            Label = "Size1",
-            Children = new CascaderNode[] {
-                    new CascaderNode{ Value = "11", Label="Size11", Children = new CascaderNode[]{
-                        new CascaderNode{ Value = "111", Label="Size111" },
-                        new CascaderNode{ Value = "112", Label="Size112"}
-                    } },
-                    new CascaderNode{ Value = "12", Label="Size12"},
-                    new CascaderNode{ Value = "13", Label="Size13"}
+            new CascaderNode()
+            {
+                Value = "1",
+                Label = "Size1",
+                Children = new CascaderNode[]
+                {
+                    new CascaderNode
+                    {
+                        Value = "11", Label = "Size11", Children = new CascaderNode[]
+                        {
+                            new CascaderNode {Value = "111", Label = "Size111"},
+                            new CascaderNode {Value = "112", Label = "Size112"}
+                        }
+                    },
+                    new CascaderNode {Value = "12", Label = "Size12"},
+                    new CascaderNode {Value = "13", Label = "Size13"}
                 }
-        }, new CascaderNode()
-        {
-            Value = "2",
-            Label = "Size2",
-            Children = new CascaderNode[] {
-                    new CascaderNode{ Value = "21", Label="Size21"},
-                    new CascaderNode{ Value = "22", Label="Size22"}
+            },
+            new CascaderNode()
+            {
+                Value = "2",
+                Label = "Size2",
+                Children = new CascaderNode[]
+                {
+                    new CascaderNode {Value = "21", Label = "Size21"},
+                    new CascaderNode {Value = "22", Label = "Size22"}
                 }
-        }, new CascaderNode()
-        {
-            Value = "3",
-            Label = "Size3",
-        }};
+            },
+            new CascaderNode()
+            {
+                Value = "3",
+                Label = "Size3",
+            }
+        };
         return list;
     }
+
 }

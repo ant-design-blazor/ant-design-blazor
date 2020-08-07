@@ -7,25 +7,21 @@ using OneOf;
 
 namespace AntDesign
 {
-
     public partial class Skeleton : AntDomComponentBase
     {
         #region Parameters
 
+        [Parameter] public bool Active { get; set; }
 
-        [Parameter]
-        public bool Active { get; set; }
-
-        [Parameter]
-        public bool Loading { get; set; } = true;
+        [Parameter] public bool Loading { get; set; } = true;
 
         /// <summary>
         /// 是否显示标题占位图
         /// </summary>
         [Parameter]
         public bool Title { get; set; } = true;
-        [Parameter]
-        public OneOf<int?, string> TitleWidth { get; set; }
+
+        [Parameter] public OneOf<int?, string> TitleWidth { get; set; }
 
 
         /// <summary>
@@ -34,11 +30,9 @@ namespace AntDesign
         [Parameter]
         public bool Avatar { get; set; }
 
-        [Parameter]
-        public OneOf<int?, string> AvatarSize { get; set; }
+        [Parameter] public OneOf<int?, string> AvatarSize { get; set; }
 
-        [Parameter]
-        public string AvatarShape { get; set; }
+        [Parameter] public string AvatarShape { get; set; }
 
 
         /// <summary>
@@ -46,15 +40,13 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Paragraph { get; set; } = true;
-        [Parameter]
-        public int? ParagraphRows { get; set; }
-        [Parameter]
-        public OneOf<int?, string, IList<OneOf<int?, string>>> ParagraphWidth { get; set; }
+
+        [Parameter] public int? ParagraphRows { get; set; }
+        [Parameter] public OneOf<int?, string, IList<OneOf<int?, string>>> ParagraphWidth { get; set; }
 
         #endregion Parameters
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         private IList<OneOf<int?, string>> _paragraphRowsList;
 
@@ -108,7 +100,6 @@ namespace AntDesign
                     TitleWidth = "";
                 }
             }
-
         }
 
         public void SetAvatarProps()
@@ -151,9 +142,9 @@ namespace AntDesign
             else
             {
                 _paragraphRowsList = ParagraphWidth.Match(
-                      f0 => CreateRowsList(rows, f0),
-                      f1 => CreateRowsList(rows, f1),
-                      f2 => f2);
+                    f0 => CreateRowsList(rows, f0),
+                    f1 => CreateRowsList(rows, f1),
+                    f2 => f2);
             }
         }
 
@@ -164,9 +155,9 @@ namespace AntDesign
             {
                 rowlist.Add("");
             }
+
             rowlist.Add(lastWidth);
             return rowlist;
         }
-
     }
 }

@@ -19,7 +19,7 @@ namespace AntDesign
 
         #region API
 
-        public Task Open([NotNull]MessageConfig config)
+        public Task Open([NotNull] MessageConfig config)
         {
             if (config == null)
             {
@@ -30,38 +30,46 @@ namespace AntDesign
             return task;
         }
 
-        public Task Success(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null)
+        public Task Success(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null,
+            Action onClose = null)
         {
             return PreOpen(MessageType.Success, content, duration, onClose);
         }
 
-        public Task Error(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null)
+        public Task Error(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null,
+            Action onClose = null)
         {
             return PreOpen(MessageType.Error, content, duration, onClose);
         }
 
-        public Task Info(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null)
+        public Task Info(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null,
+            Action onClose = null)
         {
             var task = PreOpen(MessageType.Info, content, duration, onClose);
             return task;
         }
 
-        public Task Warning(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null)
+        public Task Warning(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null,
+            Action onClose = null)
         {
-            return PreOpen(MessageType.Warning, content, duration, onClose); ;
+            return PreOpen(MessageType.Warning, content, duration, onClose);
+            ;
         }
 
-        public Task Warn(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null)
+        public Task Warn(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null,
+            Action onClose = null)
         {
             return Warning(content, duration, onClose);
         }
 
-        public Task Loading(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null)
+        public Task Loading(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null,
+            Action onClose = null)
         {
             return PreOpen(MessageType.Loading, content, duration, onClose);
         }
 
-        private Task PreOpen(MessageType type, OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null)
+        private Task PreOpen(MessageType type, OneOf<string, RenderFragment, MessageConfig> content,
+            double? duration = null, Action onClose = null)
         {
             MessageConfig config;
             if (content.IsT2)
@@ -102,6 +110,7 @@ namespace AntDesign
             {
                 throw new ArgumentNullException(nameof(config));
             }
+
             OnConfig?.Invoke(config);
         }
 

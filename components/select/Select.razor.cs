@@ -17,12 +17,16 @@ namespace AntDesign
     public partial class Select : AntInputComponentBase<string>
     {
         #region Private
+
         #region Constants
+
         private const string ClassPrefix = "ant-select";
         private const string InputDefaultWidth = "4px";
+
         #endregion
 
         #region Fields
+
         private bool _isSelectOpened = false;
         private bool _isOverSelectOption = false;
         private string _inputWidth = InputDefaultWidth;
@@ -38,30 +42,37 @@ namespace AntDesign
         private readonly List<SelectOption> _tagSelectOptions = new List<SelectOption>();
         private readonly SortedSet<string> _tokenSelectOptions = new SortedSet<string>();
         private OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>>? _value;
+
         #endregion
 
         #region Properties
-        [Inject]
-        private DomEventService DomEventService { get; set; }
+
+        [Inject] private DomEventService DomEventService { get; set; }
 
         private bool IsTagMode => SelectMode == SelectMode.Tags;
 
         private bool IsDefaultMode => SelectMode == SelectMode.Default;
 
         private bool IsComplexMode => SelectMode != SelectMode.Default;
+
         #endregion
 
         #region Methods
+
         private static bool DefaultFilterOption(string value, SelectOption option)
         {
             var optionContent = option.Children.ToUpperInvariant();
             return optionContent.Contains(value, StringComparison.OrdinalIgnoreCase);
         }
+
         #endregion
+
         #endregion
 
         #region Protected
+
         #region Properties
+
         public string Title
         {
             get
@@ -70,6 +81,7 @@ namespace AntDesign
                 {
                     return SelectedOptions.First().Title;
                 }
+
                 return null;
             }
         }
@@ -115,13 +127,7 @@ namespace AntDesign
 
         protected Properties GetProperties(SelectOption option)
         {
-            return new Properties
-            {
-                Closable = true,
-                Value = option.Value,
-                Label = option.Label,
-                OnClose = Action
-            };
+            return new Properties {Closable = true, Value = option.Value, Label = option.Label, OnClose = Action};
 
             void Action(MouseEventArgs e) => OnRemoveSelected(option);
         }
@@ -132,11 +138,14 @@ namespace AntDesign
             {
                 return ShowSearch;
             }
+
             return true;
         }
+
         #endregion
 
         #region Methods
+
         protected void SetClassMap()
         {
             ClassMapper.Clear()
@@ -179,6 +188,7 @@ namespace AntDesign
                         return false;
                     }
                 }
+
                 return true;
             }
 
@@ -193,6 +203,7 @@ namespace AntDesign
             {
                 return true;
             }
+
             return false;
         }
 
@@ -222,6 +233,7 @@ namespace AntDesign
                     return values.Where(v => !optionValues.Contains(v));
                 }
             }
+
             return Array.Empty<string>();
         }
 
@@ -242,7 +254,9 @@ namespace AntDesign
                 "children" => option?.ChildContent,
                 "value" => option?.Value ?? option.Label,
                 "label" => option?.Label ?? option.Value,
-                _ => SelectMode == SelectMode.Default ? OneOf<string, RenderFragment>.FromT1((option?.ChildContent)) : option?.Label ?? option.Value,
+                _ => SelectMode == SelectMode.Default
+                    ? OneOf<string, RenderFragment>.FromT1((option?.ChildContent))
+                    : option?.Label ?? option.Value,
             };
         }
 
@@ -256,16 +270,20 @@ namespace AntDesign
 
             //await InvokeAsync(StateHasChanged);
         }
+
         #endregion
 
-        #region  Events
+        #region Events
+
         protected override void OnInitialized()
         {
             SetClassMap();
 
             #region Init Values
+
             if (DefaultValue.HasValue)
-            {// Set default value
+            {
+                // Set default value
                 switch (SelectMode)
                 {
                     case SelectMode.Default:
@@ -289,6 +307,7 @@ namespace AntDesign
                                 CurrentValueAsString = DefaultValue.Value.AsT0;
                             }
                         }
+
                         break;
                     default:
                         if (LabelInValue)
@@ -311,10 +330,12 @@ namespace AntDesign
                                 CurrentValueAsString = string.Join(",", DefaultValue.Value.AsT1);
                             }
                         }
+
                         break;
                 }
             }
-            #endregion 
+
+            #endregion
 
             base.OnInitialized();
         }
@@ -359,6 +380,7 @@ namespace AntDesign
                 {
                     await JsInvokeAsync(JSInteropConstants.focus, _inputRef);
                 }
+
                 OnDropdownVisibleChange?.Invoke(true);
             }
             else
@@ -460,6 +482,7 @@ namespace AntDesign
             {
                 _tagSelectOptions.Remove(option);
             }
+
             SelectedOptions.Remove(option);
 
             if (LabelInValue)
@@ -477,6 +500,7 @@ namespace AntDesign
                     values = new List<string>(SelectedValues.Value.AsT1);
                     SelectedValues = values;
                 }
+
                 values.Remove(value);
 
                 // Value 赋值
@@ -486,13 +510,19 @@ namespace AntDesign
             OnChange?.Invoke(SelectedValues.Value, SelectedOptions);
             //await InvokeAsync(StateHasChanged);
         }
-        #endregion 
+
+        #endregion
+
         #endregion
 
         #region Public
+
         #region Properties
+
         #region Parameters(51)
+
         #region Boolean(15)
+
         [Parameter] public bool AutoFocus { get; set; } = false;
 
         [Parameter] public bool AllowClear { get; set; } = false;
@@ -520,9 +550,11 @@ namespace AntDesign
         [Parameter] public bool DefaultOpen { get; set; } = false;
 
         [Parameter] public bool HideSelected { get; set; } = false;
+
         #endregion
 
         #region String(7)
+
         [Parameter] public string Mode { get; set; }
 
         [Parameter] public string Placeholder { get; set; }
@@ -538,14 +570,17 @@ namespace AntDesign
         #endregion
 
         #region Number(3)
+
         [Parameter] public int? MaxTagCount { get; set; }
 
         [Parameter] public int? MaxTagTextLength { get; set; }
 
         [Parameter] public int ListHeight { get; set; } = 256;
+
         #endregion
 
         #region Array(2)
+
         [Parameter] public IEnumerable<LabeledValue> Options { get; set; }
 
         [Parameter]
@@ -557,9 +592,11 @@ namespace AntDesign
                 _tokenSeparators = value.ToArray();
             }
         }
+
         #endregion
 
         #region Complex(5)
+
         [Parameter] public OneOf<bool, int>? DropdownMatchSelectWidth { get; set; }
 
         [Parameter]
@@ -602,14 +639,17 @@ namespace AntDesign
             }
         }
 
-        [Parameter] public OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>>? DefaultValue { get; set; }
+        [Parameter]
+        public OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>>? DefaultValue { get; set; }
 
         [Parameter] public OneOf<bool, Func<string, SelectOption, bool>> FilterOption { get; set; } = true;
 
         [Parameter] public OneOf<RenderFragment, Func<string[], RenderFragment>>? MaxTagPlaceholder { get; set; }
+
         #endregion
 
         #region RenderFragment(6)
+
         [Parameter] public RenderFragment ClearIcon { get; set; }
 
         [Parameter] public RenderFragment RemoveIcon { get; set; }
@@ -621,9 +661,11 @@ namespace AntDesign
         [Parameter] public RenderFragment NotFoundContent { get; set; }
 
         [Parameter] public RenderFragment MenuItemSelectedIcon { get; set; }
+
         #endregion
 
         #region Function(14)
+
         [Parameter] public Action OnBlur { get; set; }
 
         [Parameter] public Action OnFocus { get; set; }
@@ -650,16 +692,24 @@ namespace AntDesign
 
         [Parameter] public Func<RenderFragment, Properties, RenderFragment> DropdownRender { get; set; }
 
-        [Parameter] public Action<OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>>, OneOf<SelectOption, IEnumerable<SelectOption>>> OnChange { get; set; }
+        [Parameter]
+        public Action<OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>>,
+            OneOf<SelectOption, IEnumerable<SelectOption>>> OnChange { get; set; }
+
         #endregion
+
         #endregion
 
         #region Generals
+
         public SelectMode SelectMode => Mode.ToSelectMode();
+
         #endregion
+
         #endregion
 
         #region Methods
+
         public void Blur()
         {
             OnSelectHideClick();
@@ -718,6 +768,7 @@ namespace AntDesign
                                 //StateHasChanged();
                             }
                         }
+
                         break;
                     default:
                         if (LabelInValue)
@@ -738,6 +789,7 @@ namespace AntDesign
                                 //StateHasChanged();
                             }
                         }
+
                         break;
                 }
             }
@@ -894,6 +946,7 @@ namespace AntDesign
             {
                 _searchValue = string.Empty;
             }
+
             await InvokeAsync(StateHasChanged);
         }
 
@@ -915,6 +968,7 @@ namespace AntDesign
                     return FilterOption.AsT1.Invoke(_searchValue, option);
                 }
             }
+
             return true;
         }
 
@@ -922,7 +976,9 @@ namespace AntDesign
         {
             await ResetState();
         }
+
         #endregion
+
         #endregion
     }
 }

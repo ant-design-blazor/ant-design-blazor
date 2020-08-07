@@ -49,11 +49,9 @@ namespace AntDesign
                 {
                     _pending = value;
 
-                    _pendingItem = _pending.Value == null ? null : new TimelineItem()
-                    {
-                        Dot = PendingDot ?? _loadingDot,
-                        Class = "ant-timeline-item-pending"
-                    };
+                    _pendingItem = _pending.Value == null
+                        ? null
+                        : new TimelineItem() {Dot = PendingDot ?? _loadingDot, Class = "ant-timeline-item-pending"};
 
                     _pending.Switch(str =>
                     {
@@ -81,11 +79,9 @@ namespace AntDesign
 
         private TimelineItem _pendingItem;
 
-        [Parameter]
-        public RenderFragment PendingDot { get; set; }
+        [Parameter] public RenderFragment PendingDot { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         internal IList<TimelineItem> _items = new List<TimelineItem>();
 
@@ -106,8 +102,10 @@ namespace AntDesign
 
         private void SetItems()
         {
-            var pitems = _pendingItem != null ? new[] { _pendingItem } : Array.Empty<TimelineItem>();
-            _displayItems = Reverse ? pitems.Concat(UpdateChildren(_items.Reverse())).ToList() : UpdateChildren(_items).Concat(pitems).ToList();
+            var pitems = _pendingItem != null ? new[] {_pendingItem} : Array.Empty<TimelineItem>();
+            _displayItems = Reverse
+                ? pitems.Concat(UpdateChildren(_items.Reverse())).ToList()
+                : UpdateChildren(_items).Concat(pitems).ToList();
         }
 
         protected override void OnAfterRender(bool firstRender)

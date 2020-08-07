@@ -12,8 +12,7 @@ namespace AntDesign.Docs.Shared
         private string _repo = "ant-design-blazor";
         private int _starCount = 0;
 
-        [Parameter]
-        public string Responsive { get; set; }
+        [Parameter] public string Responsive { get; set; }
 
         [Inject] public HttpClient HttpClient { get; set; }
 
@@ -32,8 +31,7 @@ namespace AntDesign.Docs.Shared
 
         private class GithubResponse
         {
-            [JsonPropertyName("stargazers_count")]
-            public int StargazersCount { get; set; }
+            [JsonPropertyName("stargazers_count")] public int StargazersCount { get; set; }
         }
     }
 }

@@ -4,7 +4,7 @@
         <p>Card content</p>
         <p>Card content</p>
     </Card>
-    <Button Style="margin-top: 16px"  OnClick="handleClick">
+    <Button Style="margin-top: 16px" OnClick="handleClick">
         Toggle loading
     </Button>
 </div>
@@ -12,11 +12,9 @@
 @code
 {
     bool loading { get; set; } = true;
+
     void handleClick()
     {
         loading = !loading;
     }
 }
-
-
-  

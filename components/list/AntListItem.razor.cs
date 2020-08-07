@@ -29,8 +29,7 @@ namespace AntDesign
 
         [Parameter] public int ItemCount { get; set; }
 
-        [Inject]
-        public DomEventService DomEventService { get; set; }
+        [Inject] public DomEventService DomEventService { get; set; }
 
         public bool IsVerticalAndExtra()
         {
@@ -99,6 +98,7 @@ namespace AntDesign
                 int.TryParse(value, out column);
                 return column;
             }
+
             return column;
         }
 
@@ -124,7 +124,9 @@ namespace AntDesign
             try
             {
                 if (obj == null || string.IsNullOrEmpty(fieldName)) return null;
-                var o = obj.GetType().GetProperty(fieldName, BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.Instance).GetValue(obj, null);
+                var o = obj.GetType()
+                    .GetProperty(fieldName, BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.Instance)
+                    .GetValue(obj, null);
                 var value = o?.ToString() ?? null;
                 if (string.IsNullOrEmpty(value)) return null;
                 return value;

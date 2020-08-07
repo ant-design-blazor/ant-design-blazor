@@ -23,13 +23,14 @@
             {
                 if (menu.Type == "menuItem")
                 {
-                        <MenuItem RouterLink="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
-                            <span>@menu.Title</span>
-                            @if (menu.SubTitle != null)
-                            {
-                                <span class="chinese">@menu.SubTitle</span>
-                            }
-                        </MenuItem>
+                    <MenuItem RouterLink="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
+                    <span>@menu.Title</span>
+    @if (menu.SubTitle != null)
+    {
+        <span class="chinese">@menu.SubTitle</span>
+    }
+    </
+                    MenuItem >
                 }
                 else if (menu.Type == "subMenu")
                 {

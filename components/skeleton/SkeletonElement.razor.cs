@@ -10,17 +10,14 @@ namespace AntDesign
     public partial class SkeletonElement : AntDomComponentBase
     {
         #region Parameters
-        [Parameter]
-        public bool Active { get; set; } = false;
 
-        [Parameter]
-        public string Type { get; set; }
+        [Parameter] public bool Active { get; set; } = false;
 
-        [Parameter]
-        public OneOf<int?, string> Size { get; set; } = "default";
+        [Parameter] public string Type { get; set; }
 
-        [Parameter]
-        public string Shape { get; set; } = SkeletonButtonShape.Default;
+        [Parameter] public OneOf<int?, string> Size { get; set; } = "default";
+
+        [Parameter] public string Shape { get; set; } = SkeletonButtonShape.Default;
 
         #endregion Parameters
 
@@ -68,8 +65,8 @@ namespace AntDesign
         private void SetInputMap()
         {
             _spanClassMapper.Clear().If("ant-skeleton-input", () => true)
-               .If("ant-skeleton-input-lg", () => Size.AsT1 == SkeletonElementSize.Large)
-               .If("ant-skeleton-input-sm", () => Size.AsT1 == SkeletonElementSize.Small);
+                .If("ant-skeleton-input-lg", () => Size.AsT1 == SkeletonElementSize.Large)
+                .If("ant-skeleton-input-sm", () => Size.AsT1 == SkeletonElementSize.Small);
         }
 
 
@@ -83,6 +80,7 @@ namespace AntDesign
                     Style = $"width: {sideLength}, height: {sideLength}, 'line-height': {sideLength} ";
                 }
             }
+
             StateHasChanged();
             base.OnParametersSet();
         }

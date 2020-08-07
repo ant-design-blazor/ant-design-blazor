@@ -6,44 +6,31 @@ namespace AntDesign
 {
     public partial class Card : AntDomComponentBase
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public RenderFragment Body { get; set; }
+        [Parameter] public RenderFragment Body { get; set; }
 
-        [Parameter]
-        public bool Bordered { get; set; } = false;
+        [Parameter] public bool Bordered { get; set; } = false;
 
-        [Parameter]
-        public bool Hoverable { get; set; } = false;
+        [Parameter] public bool Hoverable { get; set; } = false;
 
-        [Parameter]
-        public bool Loading { get; set; } = false;
+        [Parameter] public bool Loading { get; set; } = false;
 
-        [Parameter]
-        public string BodyStyle { get; set; }
+        [Parameter] public string BodyStyle { get; set; }
 
-        [Parameter]
-        public RenderFragment Cover { get; set; }
+        [Parameter] public RenderFragment Cover { get; set; }
 
-        [Parameter]
-        public IList<RenderFragment> Actions { get; set; } = new List<RenderFragment>();
+        [Parameter] public IList<RenderFragment> Actions { get; set; } = new List<RenderFragment>();
 
-        [Parameter]
-        public string Type { get; set; }
+        [Parameter] public string Type { get; set; }
 
-        [Parameter]
-        public string Size { get; set; }
+        [Parameter] public string Size { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Title { get; set; }
 
-        [Parameter]
-        public RenderFragment Extra { get; set; }
+        [Parameter] public RenderFragment Extra { get; set; }
 
-        [Parameter]
-        public RenderFragment AntCardTab { get; set; }
+        [Parameter] public RenderFragment AntCardTab { get; set; }
 
         internal IList<CardGrid> Grids { get; set; } = new List<CardGrid>();
 

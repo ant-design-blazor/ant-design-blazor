@@ -8,7 +8,7 @@
           LabelCol="new ColLayoutParam { Span = 8 }"
           WrapperCol="new ColLayoutParam { Span = 16 }">
         <FormItem Label="Group Name">
-            <Input @bind-Value="context.GroupName" />
+            <Input @bind-Value="context.GroupName"/>
         </FormItem>
         <FormItem Label="User List">
             @if (context.Users.Count > 0)
@@ -17,7 +17,7 @@
                     @for (int i = 0; i < context.Users.Count; i++)
                     {
                         <li class="user">
-                            <Icon Type="user" />
+                            <Icon Type="user"/>
                             @(context.Users[i].Name) - @(context.Users[i].Age)
                         </li>
                     }
@@ -27,7 +27,7 @@
             {
                 <Paragraph>
                     <Text Class="ant-form-text">
-                        ( <Icon Type="smile" /> No user yet. )
+                        ( <Icon Type="smile"/> No user yet. )
                     </Text>
                 </Paragraph>
             }
@@ -48,10 +48,10 @@
            OnCancel="@HideUserModal">
         <Form @ref="@_userForm" Model="@_userFormModel" Layout="@FormLayout.Vertical" Name="userForm">
             <FormItem Label="User Name">
-                <Input @bind-Value="@context.Name" />
+                <Input @bind-Value="@context.Name"/>
             </FormItem>
             <FormItem Label="User Age">
-                <AntDesign.InputNumber @bind-Value="@context.Age" />
+                <AntDesign.InputNumber @bind-Value="@context.Age"/>
             </FormItem>
         </Form>
     </Modal>
@@ -59,10 +59,12 @@
 
 
 @code {
+
     public class User
     {
         [Required]
         public string Name { get; set; }
+
         [Required]
         public int Age { get; set; }
     }
@@ -71,6 +73,7 @@
     {
         [Required]
         public string GroupName { get; set; }
+
         [ValidateComplexType]
         public List<User> Users { get; set; } = new List<User>();
     }
@@ -84,14 +87,14 @@
     {
         if (args.FinishForm.Name == "userForm")
         {
-            // if you can't get the reference of _userForm and _baseFormModel, you should:
-            User user = (User)args.FinishForm.Model;
-            UserGroup userGroup = (UserGroup)args.Forms["basicForm"].Model;
- 
-            userGroup.Users.Add(new User { Name = user.Name, Age = user.Age });
+    // if you can't get the reference of _userForm and _baseFormModel, you should:
+            User user = (User) args.FinishForm.Model;
+            UserGroup userGroup = (UserGroup) args.Forms["basicForm"].Model;
 
-            // if you have the reference of _userForm and _baseFormModel, you can:
-            //_baseFormModel.Users.Add(new User { Name = _userFormModel.Name, Age = _userFormModel.Age });
+            userGroup.Users.Add(new User {Name = user.Name, Age = user.Age});
+
+    // if you have the reference of _userForm and _baseFormModel, you can:
+    //_baseFormModel.Users.Add(new User { Name = _userFormModel.Name, Age = _userFormModel.Age });
         }
         HideUserModal();
     }
@@ -116,16 +119,13 @@
         _modelVisible = false;
         _userForm.Reset();
     }
+
 }
 
 <style>
-    #components-form-demo-form-context .user {
-        margin-bottom: 8px;
-    }
+    #components-form-demo-form-context .user { margin-bottom: 8px; }
 
-        #components-form-demo-form-context .user .ant-avatar {
-            margin-right: 8px;
-        }
+    #components-form-demo-form-context .user .ant-avatar { margin-right: 8px; }
 
     .ant-row-rtl #components-form-demo-form-context .user .ant-avatar {
         margin-right: 0;

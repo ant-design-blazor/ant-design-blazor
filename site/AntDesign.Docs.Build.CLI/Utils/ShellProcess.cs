@@ -38,7 +38,7 @@ namespace AntDesign.Docs.Build.CLI.Utils
                 processStartInfo.Arguments = argument;
             }
 
-            _process = new Process { StartInfo = processStartInfo };
+            _process = new Process {StartInfo = processStartInfo};
         }
 
         public void Exec(string command)

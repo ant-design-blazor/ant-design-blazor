@@ -8,10 +8,13 @@ namespace AntDesign
     public partial class SelectOptGroup : AntDomComponentBase
     {
         #region Private
+
         private const string ClassNamePrefix = "ant-select-item-group";
+
         #endregion
 
         #region Protected
+
         #region Properties
 
         protected IList<SelectOption> SelectOptions { get; set; } = new List<SelectOption>();
@@ -42,6 +45,7 @@ namespace AntDesign
         #region Properties
 
         #region Parameters
+
         [Parameter] public string Key { get; set; }
 
         [Parameter] public string Label { get; set; }

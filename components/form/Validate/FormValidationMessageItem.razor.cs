@@ -7,10 +7,8 @@ namespace AntDesign
 {
     public partial class FormValidationMessageItem
     {
-        [Parameter]
-        public string Message { get; set; }
+        [Parameter] public string Message { get; set; }
 
-        [Parameter]
-        public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
+        [Parameter] public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
     }
 }

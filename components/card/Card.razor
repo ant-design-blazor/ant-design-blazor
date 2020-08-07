@@ -9,7 +9,6 @@
                 <div class="ant-card-head-wrapper">
                     @if (Title.Value != null)
                     {
-
                         <div class="ant-card-head-title">
                             @if (Title.IsT0)
                             {
@@ -59,7 +58,7 @@
             <ul class="ant-card-actions">
                 @foreach (var action in Actions)
                 {
-                    <li style="@($"width:{100 / Actions.Count}%") ">
+                    <li style="@($"width:{100 / Actions.Count}%")">
                         <span>@action</span>
                     </li>
                 }

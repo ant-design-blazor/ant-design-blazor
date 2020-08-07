@@ -1,157 +1,159 @@
 ﻿<div>
-        <AntList DataSource="datasource">
-                    <Item Context="item">
-                        <AntListItemMeta Avatar=@("https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png")
-                                         Description="Progresser XTech">
-                            <Title>
-                                @item.Title
-                            </Title>                            
-                      
-                        </AntListItemMeta>
+    <AntList DataSource="datasource">
+        <Item Context="item">
+            <AntListItemMeta Avatar=@("https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png")
+                             Description="Progresser XTech">
+                <Title>
+                    @item.Title
+                </Title>
 
-                        <Button Type="@ButtonType.Link" OnClick="(e)=>open(e, item.Title)">View Profile</Button>
-                    </Item>
-        </AntList>
+            </AntListItemMeta>
 
-        <Drawer Width="640" Closable="true" Visible="visible" Title='("User Profile")' OnClose="_=>close()">
-            <Text Strong="true">Personal</Text>
-            <Row></Row>
-            <Row Gutter="12">
-                <Col Span="4">
-                    <Text Strong="true">Full Name:</Text>
-                </Col>
-                <Col Span="8">
-                    <Text>Henry</Text>
-                </Col>
-                <Col Span="4">
-                    <Text Strong="true">Account:</Text>
-                </Col>
-                <Col Span="8">
-                    <Text>AntDesign@example.com</Text>
-                </Col>
-            </Row>
-            <Row Gutter="12">
-                <Col Span="4">
-                    <Text Strong="true">City:</Text>
-                </Col>
-                <Col Span="8">
-                    <Text>HangZhou</Text>
-                </Col>
-                <Col Span="4">
-                    <Text Strong="true">Country:</Text>
-                </Col>
-                <Col Span="8">
-                    <Text>China</Text>
-                </Col>
-            </Row>
-            <Row Gutter="12">
-                <Col Span="4">
-                    <Text Strong="true">Birthday:</Text>
-                </Col>
-                <Col Span="8">
-                    <Text>February 2,1900</Text>
-                </Col>
-                <Col Span="4">
-                    <Text Strong="true">Website:</Text>
-                </Col>
-                <Col Span="8">
-                    <Text>www.baidu.com</Text>
-                </Col>
-            </Row>
+            <Button Type="@ButtonType.Link" OnClick="(e) => open(e, item.Title)">View Profile</Button>
+        </Item>
+    </AntList>
 
-            <Divider></Divider>
-            <Text Strong="true">Company</Text>
-            <Row></Row>
-            <Row>
-                <Col Span="4">
-                    <Text Strong="true">Position:</Text>
-                </Col>
-                <Col Span="8">
-                    <Text Strong="false">Programmer</Text>
-                </Col>
-                <Col Span="6">
-                    <Text Strong="true">Responsibilities:</Text>
-                </Col>
-                <Col Span="6">
-                    <Text Strong="false">Coding</Text>
-                </Col>
-            </Row>
-            <Row>
-                <Col Span="4">
-                    <Text Strong="true">Department:</Text>
-                </Col>
-                <Col Span="8">
-                    <Text Strong="false">XTech</Text>
-                </Col>
-                <Col Span="4">
-                    <Text Strong="true">Supervisor:</Text>
-                </Col>
-                <Col Span="8">
-                    <Text Strong="false">Lin</Text>
-                </Col>
-            </Row>
-            <Row>
-                <Col Span="4">
-                    <Text Strong="true">Skills:</Text>
-                </Col>
-                <Col Span="20">
-                    <Text Strong="false">
-                        C / C + +, data structures, software engineering, operating systems, computer networks, databases, compiler theory, computer architecture, Microcomputer Principle and Interface Technology, Computer English, Java, ASP, etc.
-                    </Text>
-                </Col>
+    <Drawer Width="640" Closable="true" Visible="visible" Title='("User Profile")' OnClose="_=>close()">
+        <Text Strong="true">Personal</Text>
+        <Row></Row>
+        <Row Gutter="12">
+            <Col Span="4">
+                <Text Strong="true">Full Name:</Text>
+            </Col>
+            <Col Span="8">
+                <Text>Henry</Text>
+            </Col>
+            <Col Span="4">
+                <Text Strong="true">Account:</Text>
+            </Col>
+            <Col Span="8">
+                <Text>AntDesign@example.com</Text>
+            </Col>
+        </Row>
+        <Row Gutter="12">
+            <Col Span="4">
+                <Text Strong="true">City:</Text>
+            </Col>
+            <Col Span="8">
+                <Text>HangZhou</Text>
+            </Col>
+            <Col Span="4">
+                <Text Strong="true">Country:</Text>
+            </Col>
+            <Col Span="8">
+                <Text>China</Text>
+            </Col>
+        </Row>
+        <Row Gutter="12">
+            <Col Span="4">
+                <Text Strong="true">Birthday:</Text>
+            </Col>
+            <Col Span="8">
+                <Text>February 2,1900</Text>
+            </Col>
+            <Col Span="4">
+                <Text Strong="true">Website:</Text>
+            </Col>
+            <Col Span="8">
+                <Text>www.baidu.com</Text>
+            </Col>
+        </Row>
 
-            </Row>
+        <Divider></Divider>
+        <Text Strong="true">Company</Text>
+        <Row></Row>
+        <Row>
+            <Col Span="4">
+                <Text Strong="true">Position:</Text>
+            </Col>
+            <Col Span="8">
+                <Text Strong="false">Programmer</Text>
+            </Col>
+            <Col Span="6">
+                <Text Strong="true">Responsibilities:</Text>
+            </Col>
+            <Col Span="6">
+                <Text Strong="false">Coding</Text>
+            </Col>
+        </Row>
+        <Row>
+            <Col Span="4">
+                <Text Strong="true">Department:</Text>
+            </Col>
+            <Col Span="8">
+                <Text Strong="false">XTech</Text>
+            </Col>
+            <Col Span="4">
+                <Text Strong="true">Supervisor:</Text>
+            </Col>
+            <Col Span="8">
+                <Text Strong="false">Lin</Text>
+            </Col>
+        </Row>
+        <Row>
+            <Col Span="4">
+                <Text Strong="true">Skills:</Text>
+            </Col>
+            <Col Span="20">
+                <Text Strong="false">
+                    C / C + +, data structures, software engineering, operating systems, computer networks, databases, compiler theory, computer architecture, Microcomputer Principle and Interface Technology, Computer English, Java, ASP, etc.
+                </Text>
+            </Col>
 
-            <Divider ></Divider>
-            <Text Strong="true">Contacts</Text>
-            <Row></Row>
-            <Row>
-                <Col Span="4">
-                    <Text Strong="true">Email:</Text>
-                </Col>
-                <Col Span="8">
-                    <Text Strong="false"> ant-design-Blazor@example.com</Text>
-                </Col>
-                <Col Span="4">
-                    <Text Strong="true">    Phone Number:     </Text>
-                </Col>
-                <Col Span="8">
-                    <Text Strong="false">+86 181 0000 0000 </Text>
-                </Col>
-            </Row>
-            <Row>
-                <Col Span="4">
-                    <Text Strong="true">Github:</Text>
-                </Col>
-                <Col Span="20">
-                    <Text Strong="false">https://ant-design-blazor.gitee.io/ </Text>
-                </Col>
-            </Row>
-        </Drawer>   
+        </Row>
+
+        <Divider ></Divider>
+        <Text Strong="true">Contacts</Text>
+        <Row></Row>
+        <Row>
+            <Col Span="4">
+                <Text Strong="true">Email:</Text>
+            </Col>
+            <Col Span="8">
+                <Text Strong="false"> ant-design-Blazor@example.com</Text>
+            </Col>
+            <Col Span="4">
+                <Text Strong="true"> Phone Number: </Text>
+            </Col>
+            <Col Span="8">
+                <Text Strong="false">+86 181 0000 0000 </Text>
+            </Col>
+        </Row>
+        <Row>
+            <Col Span="4">
+                <Text Strong="true">Github:</Text>
+            </Col>
+            <Col Span="20">
+                <Text Strong="false">https://ant-design-blazor.gitee.io/ </Text>
+            </Col>
+        </Row>
+    </Drawer>
 </div>
 
-   @code{
+@code{
 
-       public class ListDataSource
-       {
-           public string Title { get; set; }
-       };
-
-       List<ListDataSource> datasource = new List<ListDataSource>() {
-        new ListDataSource(){Title="Henry"},
-        new ListDataSource(){Title="Henry"}
+    public class ListDataSource
+    {
+        public string Title { get; set; }
     };
-       bool visible = false;
+
+    List<ListDataSource> datasource = new List<ListDataSource>()
+    {
+        new ListDataSource() {Title = "Henry"},
+        new ListDataSource() {Title = "Henry"}
+    };
+
+    bool visible = false;
 
 
-       void open(MouseEventArgs arg, string Title)
-       {
-           this.visible = true;
-       }
+    void open(MouseEventArgs arg, string Title)
+    {
+        this.visible = true;
+    }
 
-       void close()
-       {
-           this.visible = false;
-       }
+    void close()
+    {
+        this.visible = false;
+    }
 
 }

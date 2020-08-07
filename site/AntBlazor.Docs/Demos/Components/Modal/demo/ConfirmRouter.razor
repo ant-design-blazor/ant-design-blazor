@@ -12,12 +12,11 @@
 
     private async Task ShowConfirm()
     {
-        RenderFragment icon =@<Icon Type="exclamation-circle" Theme="outline"></Icon>;
+        RenderFragment icon = @<Icon Type="exclamation-circle" Theme="outline"></Icon>;
         RenderFragment content = @<Button OnClick="DestroyAll"> Click to destroy all </Button>;
 
         for (int i = 0; i < 3; i++)
         {
-
             await _modalService.Confirm(new ConfirmOptions()
             {
                 Icon = icon,
@@ -26,4 +25,5 @@
             await Task.Delay(500);
         }
     }
+
 }

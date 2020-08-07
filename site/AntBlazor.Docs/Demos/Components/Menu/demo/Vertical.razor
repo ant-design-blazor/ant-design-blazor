@@ -1,29 +1,30 @@
-﻿<Menu OnMenuItemClicked=handleClick Style=" width: 256px" Mode=MenuMode.Vertical>
+﻿<Menu OnMenuItemClicked=handleClick Style="width: 256px" Mode=MenuMode.Vertical>
     <SubMenu Key="sub1" Title=sub1Title>
-    <MenuItemGroup Title=@("Item 1")>
-        <MenuItem Key="1">Option 1</MenuItem>
-        <MenuItem Key="2">Option 2</MenuItem>
-    </MenuItemGroup>
-    <MenuItemGroup Title=@("Item 2")>
-        <MenuItem Key="3">Option 3</MenuItem>
-        <MenuItem Key="4">Option 4</MenuItem>
-    </MenuItemGroup>
+        <MenuItemGroup Title=@("Item 1")>
+            <MenuItem Key="1">Option 1</MenuItem>
+            <MenuItem Key="2">Option 2</MenuItem>
+        </MenuItemGroup>
+        <MenuItemGroup Title=@("Item 2")>
+            <MenuItem Key="3">Option 3</MenuItem>
+            <MenuItem Key="4">Option 4</MenuItem>
+        </MenuItemGroup>
     </SubMenu>
-    <SubMenu Key="sub2"  Title=sub2Title >
-    <MenuItem Key="5">Option 5</MenuItem>
-    <MenuItem Key="6">Option 6</MenuItem>
-    <SubMenu Key="sub3" Title=@("Submenu")>
-        <MenuItem Key="7">Option 7</MenuItem>
-        <MenuItem Key="8">Option 8</MenuItem>
+    <SubMenu Key="sub2" Title=sub2Title>
+        <MenuItem Key="5">Option 5</MenuItem>
+        <MenuItem Key="6">Option 6</MenuItem>
+        <SubMenu Key="sub3" Title=@("Submenu")>
+            <MenuItem Key="7">Option 7</MenuItem>
+            <MenuItem Key="8">Option 8</MenuItem>
+        </SubMenu>
     </SubMenu>
-    </SubMenu>
-    <SubMenu Key="sub4" Title=sub4Title >
-    <MenuItem Key="9">Option 9</MenuItem>
-    <MenuItem Key="10">Option 10</MenuItem>
-    <MenuItem Key="11">Option 11</MenuItem>
-    <MenuItem Key="12">Option 12</MenuItem>
+    <SubMenu Key="sub4" Title=sub4Title>
+        <MenuItem Key="9">Option 9</MenuItem>
+        <MenuItem Key="10">Option 10</MenuItem>
+        <MenuItem Key="11">Option 11</MenuItem>
+        <MenuItem Key="12">Option 12</MenuItem>
     </SubMenu>
 </Menu>
+
 @code {
 
     RenderFragment sub1Title =
@@ -47,6 +48,6 @@
 
     void handleClick()
     {
-
     }
+
 }

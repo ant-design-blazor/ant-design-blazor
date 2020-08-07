@@ -6,8 +6,9 @@
     @if (!string.IsNullOrEmpty(Label))
     {
         <AntDesign.Col @attributes="GetLabelColAttributes()" class=@($"{_prefixCls}-label")>
-            <label class=@(Required ? $"{_prefixCls}-required" : _labelCls)> @(Label)</label>
-        </AntDesign.Col>
+        <label class=@(Required ? $"{_prefixCls}-required" : _labelCls)> @(Label)</label>
+        </AntDesign.
+        Col >
     }
     <AntDesign.Col @attributes="GetWrapperColAttributes()" class=@($"{_prefixCls}-control")>
         <div class=@($"{_prefixCls}-control-input")>

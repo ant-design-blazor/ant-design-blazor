@@ -1,4 +1,4 @@
-﻿<Comment Actions="@(new []{likeAction,dislikeAction,replyAction})"
+﻿<Comment Actions="@(new[] {likeAction, dislikeAction, replyAction})"
          Author="@("Han Solo")"
          Avatar="@(@"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png")"
          Content="@("We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.")"
@@ -10,23 +10,23 @@
     bool like = false;
     bool dislike = false;
 
-    RenderFragment likeAction=>
+    RenderFragment likeAction =>
         @<span>
             <Tooltip Title="@("Like")">
-                <Icon Type="like" Theme="@(like ? "fill" : "outline")" OnClick="SetLike" />
+                <Icon Type="like" Theme="@(like ? "fill" : "outline")" OnClick="SetLike"/>
             </Tooltip>
             <span>@(like ? 1 : 0)</span>
         </span>;
 
-    RenderFragment dislikeAction=>
+    RenderFragment dislikeAction =>
         @<span>
             <Tooltip Title="@("Dislike")">
-                <Icon Type="dislike" Theme="@(dislike ? "fill" : "outline")" OnClick="SetDislike" />
+                <Icon Type="dislike" Theme="@(dislike ? "fill" : "outline")" OnClick="SetDislike"/>
             </Tooltip>
-            <span>@(dislike ? 1:0)</span>
+            <span>@(dislike ? 1 : 0)</span>
         </span>;
 
-    RenderFragment replyAction =@<span>Reply to</span>;
+    RenderFragment replyAction = @<span>Reply to</span>;
 
     RenderFragment dateTime =
         @<Tooltip Title="@(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))">

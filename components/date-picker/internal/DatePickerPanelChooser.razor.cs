@@ -5,14 +5,11 @@ namespace AntDesign.Internal
 {
     public partial class DatePickerPanelChooser<TValue> : AntDomComponentBase
     {
-        [Parameter]
-        public DatePickerBase<TValue> DatePicker { get; set; }
+        [Parameter] public DatePickerBase<TValue> DatePicker { get; set; }
 
-        [Parameter]
-        public Action<DateTime, int> OnSelect { get; set; }
+        [Parameter] public Action<DateTime, int> OnSelect { get; set; }
 
-        [Parameter]
-        public int PickerIndex { get; set; }
+        [Parameter] public int PickerIndex { get; set; }
 
         private bool IsShowDatePanel()
         {
@@ -20,6 +17,7 @@ namespace AntDesign.Internal
             {
                 return false;
             }
+
             return DatePicker.Picker == DatePickerType.Date;
         }
 

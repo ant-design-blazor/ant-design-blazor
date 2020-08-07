@@ -2,7 +2,7 @@
     <Steps Current="current">
         @foreach (var item in steps)
         {
-            <Step Title="@item.Title" Subtitle="@item.Content" />
+            <Step Title="@item.Title" Subtitle="@item.Content"/>
         }
     </Steps>
 
@@ -38,12 +38,11 @@
         padding-top: 80px;
     }
 
-    .steps-action {
-        margin-top: 24px;
-    }
+    .steps-action { margin-top: 24px; }
 </style>
 
 @inject MessageService message
+
 @code {
 
     public class StepItem
@@ -71,4 +70,5 @@
     {
         current++;
     }
+
 }

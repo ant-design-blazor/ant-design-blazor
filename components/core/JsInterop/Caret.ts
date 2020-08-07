@@ -7,15 +7,15 @@ class InputCaret {
         this.domInputor = inputor;
     }
 
-    getPos = function () {
+    getPos = function() {
         return this.domInputor.selectionStart;
     };
 
-    getPosition = function (pos) {
+    getPosition = function(pos) {
         var domInputor, end_range, format, html, mirror, start_range;
         domInputor = this.domInputor;
 
-        format = function (value) {
+        format = function(value) {
             value = value.replace(/<|>|`|"|&/g, '?').replace(/\r\n|\r|\n/g, "<br/>");
             if (/firefox/i.test(navigator.userAgent)) {
                 value = value.replace(/\s/g, '&nbsp;');
@@ -35,7 +35,7 @@ class InputCaret {
         return mirror.create(html).rect();
     };
 
-    getOffset = function (pos = null) {
+    getOffset = function(pos = null) {
         var offset, position, domInputor;
         domInputor = this.domInputor;
 
@@ -45,11 +45,11 @@ class InputCaret {
             left: rect.left,
             top: rect.top
         };
-     
+
         position = this.getPosition(pos);
         return offset = {
-            left: offset.left + position.left - domInputor.scrollLeft, 
-            top: offset.top + position.top - domInputor.scrollTop, 
+            left: offset.left + position.left - domInputor.scrollLeft,
+            top: offset.top + position.top - domInputor.scrollTop,
             height: position.height
         };
     };
@@ -59,12 +59,13 @@ class InputCaret {
 class Mirror {
     domInputor: any;
     css_attr: any;
+
     constructor(inputor) {
         this.domInputor = inputor;
         this.css_attr = [];
     }
 
-    create = function (html) {
+    create = function(html) {
         this.$mirror = document.createElement("div");
 
         (<any>window).AntDesign.interop.css(this.$mirror, this.mirrorCss());
@@ -75,7 +76,7 @@ class Mirror {
         return this;
     };
 
-    mirrorCss = function () {
+    mirrorCss = function() {
         var css, _this = this;
         css = {
             position: 'absolute',
@@ -87,13 +88,13 @@ class Mirror {
         this.css_attr.push('width');
 
         this.css_attr.forEach((p) => {
-            return css[p] = _this.domInputor.style[p]//_this.$inputor.css(p);
+            return css[p] = _this.domInputor.style[p] //_this.$inputor.css(p);
         })
-        
+
         return css;
     };
 
-    rect = function () {
+    rect = function() {
         var flag, pos, rect;
         flag = this.$mirror.querySelector("#caret");
         var oRect = flag.getBoundingClientRect();

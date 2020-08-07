@@ -8,16 +8,16 @@
         box-sizing: border-box;
     }
 
-        #components-select-demo-debug .debug-align:after {
-            position: absolute;
-            content: '';
-            border: 1px solid green;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            pointer-events: none;
-        }
+    #components-select-demo-debug .debug-align:after {
+        position: absolute;
+        content: '';
+        border: 1px solid green;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        pointer-events: none;
+    }
 
     #SelectDemoDebugContainer {
         z-index: 1;
@@ -29,7 +29,7 @@
 </style>
 
 <div id="SelectDemoDebugContainer">
-    <Input Style="width: 100px" Value="222" />
+    <Input Style="width: 100px" Value="222"/>
     <Select ShowSearch
             Placeholder="233"
             OnChange="@OnChange"
@@ -43,7 +43,7 @@
     <Select ShowSearch
             Mode="multiple"
             Style="width: 120px"
-            DefaultValue="@(new[]{"lucy"})"
+            DefaultValue="@(new[] {"lucy"})"
             OnChange="@OnChange"
             Placeholder="233">
         <SelectOption Value="jack">Jack</SelectOption>
@@ -57,6 +57,7 @@
 </div>
 
 @using OneOf;
+
 @code
 {
     private void OnChange(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value, OneOf<SelectOption, IEnumerable<SelectOption>> option)

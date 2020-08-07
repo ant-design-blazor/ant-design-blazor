@@ -11,60 +11,34 @@
     <div class="@(PrefixCls)-body">
         <table class="@(PrefixCls)-content">
             <thead>
-                @RenderTableHeader
+            @RenderTableHeader
             </thead>
             <tbody>
-                @{ var startDate = ViewStartDate; }
-                @for (int row = 1; row <= MaxRow; row++)
-                {
-                    var startColDate = startDate;
-                    <tr class="@(GetRowClass?.Invoke(startColDate))"
-                        @onclick="e => OnRowSelect?.Invoke(startColDate)">
+            @{ var startDate = ViewStartDate; }
+            @for (int row = 1; row <= MaxRow; row++)
+            {
+                var startColDate = startDate;
+                <tr class="@(GetRowClass?.Invoke(startColDate))"
+                    @onclick="e => OnRowSelect ? .Invoke(startColDate)">
 
-                        @RenderFisrtCol?.Invoke(startColDate)
+                    @RenderFisrtCol?.Invoke(startColDate)
 
-                        @for (int col = 1; col <= MaxCol; col++)
-                        {
-                            var currentColDate = startDate;
+                    @for (int col = 1; col <= MaxCol; col++)
+                    {
+                        var currentColDate = startDate;
 
-                            string cellCls = GetCellCls(currentColDate);
-                            string innerCellCls = GetInnerCellCls(currentColDate);
+                        string cellCls = GetCellCls(currentColDate);
+                        string innerCellCls = GetInnerCellCls(currentColDate);
 
-                            <td title="@GetColTitle?.Invoke(currentColDate)"
-                                class="@cellCls"
-                                @onmouseenter="e => DateOnMouseEnter(currentColDate)"
-                                @onmouseleave="e => DateOnMouseLeave()">
-                                <div class="@innerCellCls"
-                                     @onclick="e => OnValueSelect?.Invoke(currentColDate)">
-                                    @if (IsCalendar)
-                                    {
-                                        <div class="@(PrefixCls)-calendar-date-value">
-                                            @if (Picker == DatePickerType.Date && DateRender != null)
-                                            {
-                                                @(DateRender(currentColDate, DatePicker.CurrentDate))
-                                            }
-                                            else if (Picker == DatePickerType.Month && MonthCellRender != null)
-                                            {
-                                                @(MonthCellRender(currentColDate))
-                                            }
-                                            else
-                                            {
-                                                @RenderColValue(currentColDate)
-                                            }
-                                        </div>
-                                        <div class="@(PrefixCls)-calendar-date-content">
-                                            @if (Picker == DatePickerType.Date && CalendarDateRender != null)
-                                            {
-                                                @(CalendarDateRender(currentColDate))
-                                            }
-                                            else if (Picker == DatePickerType.Month && CalendarMonthCellRender != null)
-                                            {
-                                                @(CalendarMonthCellRender(currentColDate))
-                                            }
-                                        </div>
-                                    }
-                                    else
-                                    {
+                        <td title="@GetColTitle?.Invoke(currentColDate)"
+                            class="@cellCls"
+                            @onmouseenter="e => DateOnMouseEnter(currentColDate)"
+                            @onmouseleave="e => DateOnMouseLeave()">
+                            <div class="@innerCellCls"
+                                 @onclick="e => OnValueSelect ? .Invoke(currentColDate)">
+                                @if (IsCalendar)
+                                {
+                                    <div class="@(PrefixCls)-calendar-date-value">
                                         @if (Picker == DatePickerType.Date && DateRender != null)
                                         {
                                             @(DateRender(currentColDate, DatePicker.CurrentDate))
@@ -77,17 +51,43 @@
                                         {
                                             @RenderColValue(currentColDate)
                                         }
+                                    </div>
+                                    <div class="@(PrefixCls)-calendar-date-content">
+                                        @if (Picker == DatePickerType.Date && CalendarDateRender != null)
+                                        {
+                                            @(CalendarDateRender(currentColDate))
+                                        }
+                                        else if (Picker == DatePickerType.Month && CalendarMonthCellRender != null)
+                                        {
+                                            @(CalendarMonthCellRender(currentColDate))
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    @if (Picker == DatePickerType.Date && DateRender != null)
+                                    {
+                                        @(DateRender(currentColDate, DatePicker.CurrentDate))
                                     }
-                                </div>
-                            </td>
+                                    else if (Picker == DatePickerType.Month && MonthCellRender != null)
+                                    {
+                                        @(MonthCellRender(currentColDate))
+                                    }
+                                    else
+                                    {
+                                        @RenderColValue(currentColDate)
+                                    }
+                                }
+                            </div>
+                        </td>
 
-                            startDate = @GetNextColValue(currentColDate);
-                        }
+                        startDate = @GetNextColValue(currentColDate);
+                    }
 
-                        @{ var endColDate = startDate;}
-                        @RenderLastCol?.Invoke(endColDate)
-                    </tr>
-                }
+                    @{ var endColDate = startDate; }
+                    @RenderLastCol?.Invoke(endColDate)
+                </tr>
+            }
             </tbody>
         </table>
     </div>

@@ -11,11 +11,9 @@ namespace AntDesign
 
     public partial class Row : AntDomComponentBase
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public string Type { get; set; }
+        [Parameter] public string Type { get; set; }
 
         /// <summary>
         /// 'top' | 'middle' | 'bottom'
@@ -29,11 +27,9 @@ namespace AntDesign
         [Parameter]
         public string Justify { get; set; }
 
-        [Parameter]
-        public GutterType Gutter { get; set; }
+        [Parameter] public GutterType Gutter { get; set; }
 
-        [Inject]
-        public DomEventService DomEventService { get; set; }
+        [Inject] public DomEventService DomEventService { get; set; }
 
         private string GutterStyle { get; set; }
 
@@ -87,11 +83,14 @@ namespace AntDesign
             GutterStyle = "";
             if (gutter.horizontalGutter > 0)
             {
-                GutterStyle = $"margin-left: -{gutter.horizontalGutter / 2}px;margin-right: -{gutter.horizontalGutter / 2}px;";
+                GutterStyle =
+                    $"margin-left: -{gutter.horizontalGutter / 2}px;margin-right: -{gutter.horizontalGutter / 2}px;";
             }
+
             if (gutter.verticalGutter > 0)
             {
-                GutterStyle += $"margin-top: -{gutter.verticalGutter / 2}px;margin-bottom: -{gutter.verticalGutter / 2}px;";
+                GutterStyle +=
+                    $"margin-top: -{gutter.verticalGutter / 2}px;margin-bottom: -{gutter.verticalGutter / 2}px;";
             }
 
             InvokeStateHasChanged();

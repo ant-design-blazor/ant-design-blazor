@@ -17,7 +17,7 @@ else if (IsHeader)
     <th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key">
         @if (Type == "checkbox")
         {
-            <Checkbox @bind-Checked="_checked" CheckedChange="HandleCheckedChange" Indeterminate="Indeterminate" />
+            <Checkbox @bind-Checked="_checked" CheckedChange="HandleCheckedChange" Indeterminate="Indeterminate"/>
         }
     </th>
 }
@@ -26,11 +26,11 @@ else
     <td class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key">
         @if (Type == "checkbox")
         {
-            <Checkbox @bind-Checked="_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" />
+            <Checkbox @bind-Checked="_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange"/>
         }
         else if (Type == "radio")
         {
-            <Radio @bind-Checked="_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" TValue="bool" />
+            <Radio @bind-Checked="_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" TValue="bool"/>
         }
     </td>
 }

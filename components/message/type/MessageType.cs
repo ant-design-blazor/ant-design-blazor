@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public enum MessageType:byte
+    public enum MessageType : byte
     {
         Info = 0,
         Success = 1,

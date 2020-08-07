@@ -17,56 +17,55 @@
         </button>
     }
 
-<div class="@(PrefixCls)-header-view">
-    @if (this.DatePicker.CultureInfo.GetDateLocale().MonthBeforeYear)
-    {
-        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
+    <div class="@(PrefixCls)-header-view">
+        @if (this.DatePicker.CultureInfo.GetDateLocale().MonthBeforeYear)
         {
-            <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
-                @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().MonthFormat, this.DatePicker.CultureInfo))
-            </button>
+            @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
+            {
+                <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
+                    @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().MonthFormat, this.DatePicker.CultureInfo))
+                </button>
+            }
+            @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
+            {
+                <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
+                    @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo))
+                </button>
+            }
         }
-        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
+        else
         {
-            <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
-                @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo))
-            </button>
-        }
-    }
-    else
-    {
-        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
-        {
-            <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
-                @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo))
-            </button>
-        }
-        @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
-        {
-            <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
-                @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().MonthFormat, this.DatePicker.CultureInfo))
-            </button>
+            @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
+            {
+                <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
+                    @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo))
+                </button>
+            }
+            @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
+            {
+                <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
+                    @(PickerValue.ToString(this.DatePicker.CultureInfo.GetDateLocale().MonthFormat, this.DatePicker.CultureInfo))
+                </button>
+            }
         }
 
-    }
+        @if (Picker.IsIn(DatePickerType.Year))
+        {
+            int startYear = PickerValue.Year / 10 * 10;
 
-    @if (Picker.IsIn(DatePickerType.Year))
-    {
-        int startYear = PickerValue.Year / 10 * 10;
+            <button type="button" class="@(PrefixCls)-decade-btn" @onclick="e => PopUpPicker(DatePickerType.Decade)">
+                @(startYear)-@(startYear + 9)
+            </button>
+        }
+        @if (Picker.IsIn(DatePickerType.Decade))
+        {
+            int startYear = PickerValue.Year / 100 * 100;
 
-        <button type="button" class="@(PrefixCls)-decade-btn" @onclick="e => PopUpPicker(DatePickerType.Decade)">
-            @(startYear)-@(startYear + 9)
-        </button>
-    }
-    @if (Picker.IsIn(DatePickerType.Decade))
-    {
-        int startYear = PickerValue.Year / 100 * 100;
-
-        <button type="button" class="@(PrefixCls)-decade-btn">
-            @(startYear)-@(startYear + 99)
-        </button>
-    }
-</div>
+            <button type="button" class="@(PrefixCls)-decade-btn">
+                @(startYear)-@(startYear + 99)
+            </button>
+        }
+    </div>
 
     @if (ShowNextChange)
     {
@@ -83,16 +82,23 @@
 </div>
 
 @code {
+
     [Parameter]
     public int SuperChangeDateInterval { get; set; } = 1;
+
     [Parameter]
     public int ChangeDateInterval { get; set; } = 1;
+
     [Parameter]
     public bool ShowSuperPreChange { get; set; } = true;
+
     [Parameter]
     public bool ShowPreChange { get; set; } = true;
+
     [Parameter]
     public bool ShowNextChange { get; set; } = true;
+
     [Parameter]
     public bool ShowSuperNextChange { get; set; } = true;
+
 }

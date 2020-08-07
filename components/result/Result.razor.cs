@@ -7,14 +7,11 @@ namespace AntDesign
 {
     public partial class Result : AntDomComponentBase
     {
-        [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Title { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> SubTitle { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> SubTitle { get; set; }
 
-        [Parameter]
-        public RenderFragment Extra { get; set; }
+        [Parameter] public RenderFragment Extra { get; set; }
 
         /// <summary>
         /// success | error | info | warning | 404 | 403 | 500
@@ -23,14 +20,11 @@ namespace AntDesign
         [Parameter]
         public string Status { get; set; } = "info";
 
-        [Parameter]
-        public string Icon { get; set; }
+        [Parameter] public string Icon { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Inject]
-        public IconService IconService { get; set; }
+        [Inject] public IconService IconService { get; set; }
 
         private const string PrefixCls = "ant-result";
         private string _svgImage;

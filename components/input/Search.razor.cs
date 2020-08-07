@@ -10,11 +10,9 @@ namespace AntDesign
     {
         private bool _isSearching;
 
-        [Parameter]
-        public EventCallback<EventArgs> OnSearch { get; set; }
+        [Parameter] public EventCallback<EventArgs> OnSearch { get; set; }
 
-        [Parameter]
-        public OneOf<bool, string> EnterButton { get; set; } = false;
+        [Parameter] public OneOf<bool, string> EnterButton { get; set; } = false;
 
         protected override bool IgnoreOnChangeAndBlur => OnSearch.HasDelegate;
 
@@ -99,6 +97,7 @@ namespace AntDesign
             {
                 await OnSearch.InvokeAsync(EventArgs.Empty);
             }
+
             _isSearching = false;
             StateHasChanged();
         }

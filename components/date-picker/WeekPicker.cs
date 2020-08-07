@@ -1,5 +1,4 @@
-﻿
-namespace AntDesign
+﻿namespace AntDesign
 {
     public class WeekPicker<TValue> : DatePicker<TValue>
     {

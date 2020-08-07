@@ -39,20 +39,23 @@ namespace AntDesign.Docs.Localization
                 .Select(x => (CultureName: x.Groups[1].Value, ResourceName: x.Value))
                 .ToList();
 
-            var (_, resourceName) = availableResources.FirstOrDefault(x => x.CultureName.Equals(culture.Name, StringComparison.OrdinalIgnoreCase));
+            var (_, resourceName) = availableResources.FirstOrDefault(x =>
+                x.CultureName.Equals(culture.Name, StringComparison.OrdinalIgnoreCase));
 
             if (resourceName == null)
             {
-                (_, resourceName) = availableResources.FirstOrDefault(x => x.CultureName.Equals("en-US", StringComparison.OrdinalIgnoreCase));
+                (_, resourceName) = availableResources.FirstOrDefault(x =>
+                    x.CultureName.Equals("en-US", StringComparison.OrdinalIgnoreCase));
                 culture = CultureInfo.GetCultureInfo("en-US");
             }
 
             CultureInfo.CurrentCulture = culture;
             CurrentCulture = culture;
             Resources = GetKeysFromCulture(culture.Name, resourceName);
-            
+
             if (Resources == null)
-                throw new FileNotFoundException($"There is no language files existing in the Resource folder within '{_resourcesAssembly.GetName().Name}' assembly");
+                throw new FileNotFoundException(
+                    $"There is no language files existing in the Resource folder within '{_resourcesAssembly.GetName().Name}' assembly");
         }
 
         public void SetLanguage(CultureInfo culture)
@@ -70,7 +73,8 @@ namespace AntDesign.Docs.Localization
                 Resources = GetKeysFromCulture(culture.Name, fileName);
 
                 if (Resources == null)
-                    throw new FileNotFoundException($"There is no language files for '{culture.Name}' existing in the Resources folder within '{_resourcesAssembly.GetName().Name}' assembly");
+                    throw new FileNotFoundException(
+                        $"There is no language files for '{culture.Name}' existing in the Resources folder within '{_resourcesAssembly.GetName().Name}' assembly");
 
                 LanguageChanged?.Invoke(this, culture);
             }

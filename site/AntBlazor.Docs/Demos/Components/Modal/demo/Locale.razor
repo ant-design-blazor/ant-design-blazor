@@ -22,6 +22,7 @@
 
 @code {
     private bool _visible = false;
+
     private void ShowModal()
     {
         _visible = true;
@@ -37,10 +38,11 @@
         await _modalService.Confirm(new ConfirmOptions()
         {
             Title = "Confirm",
-            Icon =@<Icon Type="exclamation-circle" Theme="Outline"></Icon>,
+            Icon = @<Icon Type="exclamation-circle" Theme="Outline"></Icon>,
             Content = "Bla bla ...",
             OkText = "确认",
             CancelText = "取消"
         });
     }
+
 }

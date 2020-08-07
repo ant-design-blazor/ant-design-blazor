@@ -8,8 +8,7 @@ namespace AntDesign
 {
     public partial class DrawerContainer
     {
-        [Inject]
-        private DrawerService DrawerService { get; set; }
+        [Inject] private DrawerService DrawerService { get; set; }
 
         protected override void OnInitialized()
         {
@@ -37,6 +36,7 @@ namespace AntDesign
             {
                 _drawerRefs.Add(drawerRef);
             }
+
             await InvokeAsync(StateHasChanged);
         }
 
@@ -53,7 +53,5 @@ namespace AntDesign
                 _drawerRefs.Remove(drawerRef);
             }
         }
-
-
     }
 }

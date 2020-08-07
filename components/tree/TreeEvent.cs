@@ -14,7 +14,12 @@ namespace AntDesign
     {
         public TreeEventArgs() { }
         public TreeEventArgs(Tree tree) { Tree = tree; }
-        public TreeEventArgs(Tree tree, TreeNode node) { Tree = tree; Node = node; }
+
+        public TreeEventArgs(Tree tree, TreeNode node)
+        {
+            Tree = tree;
+            Node = node;
+        }
 
         public Tree Tree { get; set; }
         public TreeNode Node { get; set; }

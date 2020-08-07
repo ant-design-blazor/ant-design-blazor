@@ -17,9 +17,9 @@
 @code{
     private string mode = TabPosition.Top;
 
-    RenderFragment<int> template = (i) =>@<TabPane Key="@i.ToString()">
-        <Tab>Tab-@i</Tab>
-        <ChildContent>Content of tab Pane @i</ChildContent>
-    </TabPane>;
+    RenderFragment<int> template = (i) => @<TabPane Key="@i.ToString()">
+                                              <Tab>Tab-@i</Tab>
+                                              <ChildContent>Content of tab Pane @i</ChildContent>
+                                          </TabPane>;
 
 }

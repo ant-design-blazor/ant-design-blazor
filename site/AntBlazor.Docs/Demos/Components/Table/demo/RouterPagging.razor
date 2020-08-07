@@ -4,28 +4,29 @@
 
 
 <div class="router-pagging-table">
-    <Input @bind-Value="_url" OnPressEnter="()=> navigation.NavigateTo(_url,true)" />
+    <Input @bind-Value="_url" OnPressEnter="()=> navigation.NavigateTo(_url,true)"/>
     <Table @ref="table"
-           DataSource="@forecasts"
-           Total="_total"
-           Loading="_loading"
-           @bind-PageIndex="_pageIndex"
-           @bind-PageSize="_pageSize"
-           OnPageIndexChange="fetchData"
-           @bind-SelectedRows="selectedRows">
-        <Selection Key="@(context.Id.ToString())" />
-        <Column @bind-Field="@context.Id" Sortable />
-        <Column @bind-Field="@context.Date" Format="yyyy-MM-dd" Sortable />
-        <Column @bind-Field="@context.TemperatureC" Sortable />
-        <Column Title="Temp. (F)" Field="@context.TemperatureF" />
-        <Column @bind-Field="@context.Summary" Sortable />
+            DataSource="@forecasts"
+            Total="_total"
+            Loading="_loading"
+            @bind-PageIndex="_pageIndex"
+            @bind-PageSize="_pageSize"
+            OnPageIndexChange="fetchData"
+            @bind-SelectedRows="selectedRows">
+        <Selection Key="@(context.Id.ToString())"/>
+        <Column @bind-Field="@context.Id" Sortable/>
+        <Column @bind-Field="@context.Date" Format="yyyy-MM-dd" Sortable/>
+        <Column @bind-Field="@context.TemperatureC" Sortable/>
+        <Column Title="Temp. (F)" Field="@context.TemperatureF"/>
+        <Column @bind-Field="@context.Summary" Sortable/>
     </Table>
 
-    <br />
+    <br/>
     <p>PageIndex: @_pageIndex | PageSize: @_pageSize | Total: @_total</p>
 </div>
 
 @inject NavigationManager navigation
+
 @code {
 
     WeatherForecast[] forecasts;
@@ -70,7 +71,7 @@
         [DisplayName("Summary")]
         public string Summary { get; set; }
 
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        public int TemperatureF => 32 + (int) (TemperatureC / 0.5556);
 
         public bool Hot { get; set; }
     }
@@ -97,15 +98,12 @@
             };
         }).ToArray());
     }
+
 }
 
 
 <style>
-    .router-pagging-table {
-        padding: 1em;
-    }
+    .router-pagging-table { padding: 1em; }
 
-        .router-pagging-table input {
-            margin-bottom: 1em;
-        }
+    .router-pagging-table input { margin-bottom: 1em; }
 </style>

@@ -1,4 +1,4 @@
-﻿<Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+﻿<Button Type="primary" OnClick="@(() => { _visible = true; })">
     Open Modal
 </Button>
 <Modal Title="@title"
@@ -9,6 +9,7 @@
     <p>Some contents...</p>
     <p>Some contents...</p>
 </Modal>
+
 @code{
     string title = "BasicModal";
     bool _visible = false;
@@ -24,4 +25,5 @@
         Console.WriteLine(e);
         _visible = false;
     }
+
 }

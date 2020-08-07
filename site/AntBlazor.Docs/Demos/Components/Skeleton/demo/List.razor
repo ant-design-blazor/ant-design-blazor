@@ -16,16 +16,15 @@
 @code{
     bool _loading = true;
 
-    List<DataItem> _listData = new List<int>() { 1, 2, 3 }.Select(x => new DataItem()
+    List<DataItem> _listData = new List<int>() {1, 2, 3}.Select(x => new DataItem()
     {
-
         Href = "http://ng.ant.design",
         Title = $"ant design part {x}",
         Avatar = "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
         Description = "Ant Design, a design language for background applications, is refined by Ant UED Team.",
         Content =
-                  "We supply a series of design principles, practical patterns and high quality design resources " +
-                  "(Sketch and Axure), to help people create their product prototypes beautifully and efficiently."
+            "We supply a series of design principles, practical patterns and high quality design resources " +
+            "(Sketch and Axure), to help people create their product prototypes beautifully and efficiently."
     }).ToList();
 
 
@@ -36,7 +35,6 @@
         public string Avatar { get; set; }
         public string Description { get; set; }
         public string Content { get; set; }
-
     }
-}
 
+}

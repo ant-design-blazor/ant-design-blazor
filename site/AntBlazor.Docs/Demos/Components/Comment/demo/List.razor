@@ -14,27 +14,27 @@
             Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
             Content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
             Datetime = @<Tooltip Title="@(DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss"))">
-                               <span>
-                                   @(MomentHelper.FromNow(DateTime.Now.AddDays(-1)))
-                               </span>
-                            </Tooltip>,
-                Actions = new List<RenderFragment>() {replyAction}
-            },
-            new Data()
-            {
-                Author = "Han Solo",
-                Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-                Content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-                Datetime = @<Tooltip Title="@(DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd HH:mm:ss"))">
-                               <span>
-                                   @(MomentHelper.FromNow(DateTime.Now.AddDays(-2)))
-                               </span>
-                            </Tooltip>,
-                Actions = new List<RenderFragment>() {replyAction}
-            }
-        };
+                           <span>
+                               @(MomentHelper.FromNow(DateTime.Now.AddDays(-1)))
+                           </span>
+                       </Tooltip>,
+            Actions = new List<RenderFragment>() {replyAction}
+        },
+        new Data()
+        {
+            Author = "Han Solo",
+            Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+            Content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+            Datetime = @<Tooltip Title="@(DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd HH:mm:ss"))">
+                           <span>
+                               @(MomentHelper.FromNow(DateTime.Now.AddDays(-2)))
+                           </span>
+                       </Tooltip>,
+            Actions = new List<RenderFragment>() {replyAction}
+        }
+    };
 
-    RenderFragment replyAction =@<span>Reply to</span>;
+    RenderFragment replyAction = @<span>Reply to</span>;
 
 
     RenderFragment header =>
@@ -55,5 +55,5 @@
         public List<RenderFragment> Actions;
         public RenderFragment Datetime;
     }
-}
 
+}

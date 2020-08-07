@@ -6,7 +6,7 @@
     "sourceMap": true,
     "target": "es2015"
   },
-  "files": [ "main.ts" ],
+  "files": ["main.ts"],
   "exclude": [
     "node_modules",
     "wwwroot"

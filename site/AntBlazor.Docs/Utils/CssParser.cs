@@ -58,7 +58,8 @@ namespace AntDesign.Docs.Utils
             MatchCollection matchList = rStyles.Matches(Regex.Replace(cascadingStyleSheet, CssComments, string.Empty));
             foreach (Match item in matchList)
             {
-                if (item?.Groups[SelectorKey]?.Captures?[0] != null && !string.IsNullOrEmpty(item.Groups[SelectorKey].Value))
+                if (item?.Groups[SelectorKey]?.Captures?[0] != null &&
+                    !string.IsNullOrEmpty(item.Groups[SelectorKey].Value))
                 {
                     string strSelector = item.Groups[SelectorKey].Captures[0].Value.Trim();
                     var style = new List<KeyValuePair<string, string>>();
@@ -91,7 +92,8 @@ namespace AntDesign.Docs.Utils
             {
                 if (classes == null || classes.Count == 0)
                 {
-                    this.classes = this.Where(cl => cl.Key.StartsWith(".")).ToDictionary(cl => cl.Key.Trim(new Char[] { '.' }), cl => cl.Value.ToDictionary(p => p.Key, p => p.Value));
+                    this.classes = this.Where(cl => cl.Key.StartsWith(".")).ToDictionary(
+                        cl => cl.Key.Trim(new Char[] {'.'}), cl => cl.Value.ToDictionary(p => p.Key, p => p.Value));
                 }
 
                 return classes;
@@ -104,8 +106,10 @@ namespace AntDesign.Docs.Utils
             {
                 if (elements == null || elements.Count == 0)
                 {
-                    elements = this.Where(el => !el.Key.StartsWith(".")).ToDictionary(el => el.Key, el => el.Value.ToDictionary(p => p.Key, p => p.Value));
+                    elements = this.Where(el => !el.Key.StartsWith(".")).ToDictionary(el => el.Key,
+                        el => el.Value.ToDictionary(p => p.Key, p => p.Value));
                 }
+
                 return elements;
             }
         }
@@ -129,6 +133,7 @@ namespace AntDesign.Docs.Utils
                 {
                     sb.Append(property.Key).Append(":").Append(property.Value).Append(";");
                 }
+
                 sb.Append("}");
             }
 
@@ -151,10 +156,12 @@ namespace AntDesign.Docs.Utils
                 {
                     sb.Append($"#{scopeId} {item.Key} {{");
                 }
+
                 foreach (var property in item.Value)
                 {
                     sb.Append($"{property.Key}:{property.Value};");
                 }
+
                 sb.Append("}");
             }
 

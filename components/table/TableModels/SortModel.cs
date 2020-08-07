@@ -79,7 +79,8 @@ namespace AntDesign.TableModels
             }
             else if (SortType == SortType.Ascending)
             {
-                return SortType.Descending; ;
+                return SortType.Descending;
+                ;
             }
             else
             {

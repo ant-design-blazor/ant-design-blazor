@@ -17,49 +17,36 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        [Inject]
-        public IJSRuntime JSRuntime { get; set; }
+        [Inject] public IJSRuntime JSRuntime { get; set; }
 
         //[Parameter]
         //public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public bool Checkable { get; set; }
+        [Parameter] public bool Checkable { get; set; }
 
-        [Parameter]
-        public bool CheckStrictly { get; set; } = false;
+        [Parameter] public bool CheckStrictly { get; set; } = false;
 
-        [Parameter]
-        public bool ShowIcon { get; set; }
+        [Parameter] public bool ShowIcon { get; set; }
 
-        [Parameter]
-        public bool ShowLine { get; set; }
+        [Parameter] public bool ShowLine { get; set; }
 
-        [Parameter]
-        public string SwitcherIcon { get; set; }
+        [Parameter] public string SwitcherIcon { get; set; }
 
-        [Parameter]
-        public RenderFragment<TreeNode> SwitcherIconTemplate { get; set; }
+        [Parameter] public RenderFragment<TreeNode> SwitcherIconTemplate { get; set; }
 
-        [Parameter]
-        public string IconType { get; set; }
+        [Parameter] public string IconType { get; set; }
 
-        [Parameter]
-        public EventCallback<TreeEventArgs> OnCheckedStateChanged { get; set; }
+        [Parameter] public EventCallback<TreeEventArgs> OnCheckedStateChanged { get; set; }
 
-        [Parameter]
-        public EventCallback<TreeEventArgs> OnNodeSelectedChanged { get; set; }
+        [Parameter] public EventCallback<TreeEventArgs> OnNodeSelectedChanged { get; set; }
 
-        [Parameter]
-        public EventCallback<TreeEventArgs> OnNodeLoadDelay { get; set; }
+        [Parameter] public EventCallback<TreeEventArgs> OnNodeLoadDelay { get; set; }
 
         internal TreeNode _loadDelayNode;
 
-        [Parameter]
-        public RenderFragment<TreeNode> IconTemplate { get; set; }
+        [Parameter] public RenderFragment<TreeNode> IconTemplate { get; set; }
 
-        [Parameter]
-        public RenderFragment<TreeNode> NodeTemplate { get; set; }
+        [Parameter] public RenderFragment<TreeNode> NodeTemplate { get; set; }
 
         private List<TreeNode> _nodelist;
 
@@ -88,6 +75,7 @@ namespace AntDesign
                     _nodelist = null;
                     return;
                 }
+
                 if (_nodelist == null) _nodelist = new List<TreeNode>();
                 else if (_nodelist.Count != 0) _nodelist.Clear();
                 _nodelist.AddRange(value);
@@ -123,7 +111,7 @@ namespace AntDesign
 
 #pragma warning disable CA2012 // Use ValueTasks correctly
                 _ = JSRuntime.InvokeVoidAsync("eval", "var div=document.getElementById('" + id + "');"
-                    + @"
+                                                      + @"
 if(div.style.height=='0px'){
     div.style.height=div.scrollHeight+'px';
     div.classList.add('ant-motion-collapse-appear-active')
@@ -136,12 +124,13 @@ else{
     },16);
 }
 "
-);
+                );
 #pragma warning restore CA2012 // Use ValueTasks correctly
             }
         }
 
-        void CalcSwitcherIconOptions(TreeNode node, out string switchericonclass, out string switchericontype, out RenderFragment<TreeNode> switchericonrf)
+        void CalcSwitcherIconOptions(TreeNode node, out string switchericonclass, out string switchericontype,
+            out RenderFragment<TreeNode> switchericonrf)
         {
             switchericonclass = null;
             switchericontype = null;
@@ -210,7 +199,6 @@ else{
 
         Func<MouseEventArgs, Task> MakeSwitcherClick(TreeNode node)
         {
-
             async Task switcherClick(MouseEventArgs args)
             {
                 if (node.HasChildNodes)
@@ -231,7 +219,6 @@ else{
             }
 
             return switcherClick;
-
         }
 
         Func<MouseEventArgs, Task> MakeCheckClick(TreeNode node)
@@ -256,7 +243,6 @@ else{
 
         Func<MouseEventArgs, Task> MakeNodeClick(TreeNode node)
         {
-
             async Task nodeClick(MouseEventArgs args)
             {
                 if (node.IsDisabled)
@@ -268,10 +254,11 @@ else{
                 }
                 else
                 {
-                    if (!args.CtrlKey)//TODO: ownerTree.MultiSelect ?
+                    if (!args.CtrlKey) //TODO: ownerTree.MultiSelect ?
                         this.DeselectAll();
                     node.IsSelected = true;
                 }
+
                 if (this.OnNodeSelectedChanged.HasDelegate)
                 {
                     await this.OnNodeSelectedChanged.InvokeAsync(new TreeEventArgs(this, node));
@@ -280,6 +267,5 @@ else{
 
             return nodeClick;
         }
-
     }
 }

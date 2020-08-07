@@ -10,8 +10,7 @@ namespace AntDesign
 {
     public partial class Tag : AntDomComponentBase
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         /// <summary>
         ///  'default' | 'closeable' | 'checkable'
@@ -19,35 +18,25 @@ namespace AntDesign
         [Parameter]
         public string Mode { get; set; } = "default";
 
-        [Parameter]
-        public string Color { get; set; }
+        [Parameter] public string Color { get; set; }
 
-        [Parameter]
-        public bool Closable { get; set; }
+        [Parameter] public bool Closable { get; set; }
 
-        [Parameter]
-        public bool Visible { get; set; } = true;
+        [Parameter] public bool Visible { get; set; } = true;
 
-        [Parameter]
-        public bool Checked { get; set; }
+        [Parameter] public bool Checked { get; set; }
 
-        [Parameter]
-        public string Icon { get; set; }
+        [Parameter] public string Icon { get; set; }
 
-        [Parameter]
-        public bool NoAnimation { get; set; }
+        [Parameter] public bool NoAnimation { get; set; }
 
-        [Parameter]
-        public EventCallback AfterClose { get; set; }
+        [Parameter] public EventCallback AfterClose { get; set; }
 
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnClose { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> OnClose { get; set; }
 
-        [Parameter]
-        public EventCallback<bool> CheckedChange { get; set; }
+        [Parameter] public EventCallback<bool> CheckedChange { get; set; }
 
-        [Parameter]
-        public EventCallback OnClick { get; set; }
+        [Parameter] public EventCallback OnClick { get; set; }
 
         private bool _presetColor;
         private bool _closed;
@@ -71,7 +60,8 @@ namespace AntDesign
                 return false;
             }
 
-            bool result = Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime)(-inverse)?$");
+            bool result = Regex.IsMatch(color,
+                "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime)(-inverse)?$");
             if (!result) result = Regex.IsMatch(color, "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$");
             return result;
         }

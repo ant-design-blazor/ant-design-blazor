@@ -9,17 +9,13 @@ namespace AntDesign
 {
     public partial class DescriptionsItem : AntDomComponentBase, IDescriptionsItem
     {
-        [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; } = "";
+        [Parameter] public OneOf<string, RenderFragment> Title { get; set; } = "";
 
-        [Parameter]
-        public int Span { get; set; } = 1;
+        [Parameter] public int Span { get; set; } = 1;
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [CascadingParameter]
-        public Descriptions Descriptions { get; set; }
+        [CascadingParameter] public Descriptions Descriptions { get; set; }
 
         protected override void Dispose(bool disposing)
         {

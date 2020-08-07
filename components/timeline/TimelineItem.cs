@@ -5,14 +5,11 @@ namespace AntDesign
 {
     public partial class TimelineItem : AntDomComponentBase
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public RenderFragment Dot { get; set; }
+        [Parameter] public RenderFragment Dot { get; set; }
 
-        [Parameter]
-        public string Color { get; set; } = "blue";
+        [Parameter] public string Color { get; set; } = "blue";
 
         [CascadingParameter] public Timeline ParentTimeline { get; set; }
 
@@ -27,7 +24,7 @@ namespace AntDesign
 
         internal string ItemClass => ClassMapper.Class;
 
-        private readonly string[] _defaultColors = new[] { "blue", "red", "green", "gray" };
+        private readonly string[] _defaultColors = new[] {"blue", "red", "green", "gray"};
 
         protected override void Dispose(bool disposing)
         {

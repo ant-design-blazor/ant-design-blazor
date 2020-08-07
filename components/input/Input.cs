@@ -24,56 +24,39 @@ namespace AntDesign
 
         protected virtual bool IgnoreOnChangeAndBlur { get; }
 
-        [Parameter]
-        public string Type { get; set; } = "text";
+        [Parameter] public string Type { get; set; } = "text";
 
-        [Parameter]
-        public RenderFragment AddOnBefore { get; set; }
+        [Parameter] public RenderFragment AddOnBefore { get; set; }
 
-        [Parameter]
-        public RenderFragment AddOnAfter { get; set; }
+        [Parameter] public RenderFragment AddOnAfter { get; set; }
 
-        [Parameter]
-        public string Placeholder { get; set; }
+        [Parameter] public string Placeholder { get; set; }
 
-        [Parameter]
-        public bool AutoFocus { get; set; }
+        [Parameter] public bool AutoFocus { get; set; }
 
-        [Parameter]
-        public TValue DefaultValue { get; set; }
+        [Parameter] public TValue DefaultValue { get; set; }
 
-        [Parameter]
-        public int MaxLength { get; set; } = -1;
+        [Parameter] public int MaxLength { get; set; } = -1;
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool AllowClear { get; set; }
+        [Parameter] public bool AllowClear { get; set; }
 
-        [Parameter]
-        public RenderFragment Prefix { get; set; }
+        [Parameter] public RenderFragment Prefix { get; set; }
 
-        [Parameter]
-        public RenderFragment Suffix { get; set; }
+        [Parameter] public RenderFragment Suffix { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public EventCallback<TValue> OnChange { get; set; }
+        [Parameter] public EventCallback<TValue> OnChange { get; set; }
 
-        [Parameter]
-        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
+        [Parameter] public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
 
-        [Parameter]
-        public EventCallback<ChangeEventArgs> OnInput { get; set; }
+        [Parameter] public EventCallback<ChangeEventArgs> OnInput { get; set; }
 
-        [Parameter]
-        public EventCallback<FocusEventArgs> OnBlur { get; set; }
+        [Parameter] public EventCallback<FocusEventArgs> OnBlur { get; set; }
 
-        [Parameter]
-        public EventCallback<FocusEventArgs> OnFocus { get; set; }
+        [Parameter] public EventCallback<FocusEventArgs> OnFocus { get; set; }
 
         public Dictionary<string, object> Attributes { get; set; }
 
@@ -206,6 +189,7 @@ namespace AntDesign
                 {
                     builder.AddAttribute(34, "Style", "visibility: visible;");
                 }
+
                 builder.AddAttribute(35, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
                 {
                     CurrentValue = default;
@@ -245,7 +229,8 @@ namespace AntDesign
         /// <returns></returns>
         protected virtual async void OnInputAsync(ChangeEventArgs args)
         {
-            bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null && !string.IsNullOrEmpty(args.Value.ToString()));
+            bool flag = !(!string.IsNullOrEmpty(Value?.ToString()) && args != null &&
+                          !string.IsNullOrEmpty(args.Value.ToString()));
 
             if (TryParseValueFromString(args?.Value.ToString(), out TValue value, out var error))
             {

@@ -1,17 +1,19 @@
 <Title Level="4">@_options.Length Items</Title>
 
 <Select Mode="multiple"
-        Style="width:100%"
+        Style="width: 100%"
         Placeholder="Please select"
-        DefaultValue="@(new[] { "a10", "c12", })"
+        DefaultValue="@(new[] {"a10", "c12",})"
         OnChange="@OnChange"
         Options="@_options">
 </Select>
 
 @using OneOf;
+
 @code
 {
     private LabeledValue[] _options;
+
     protected override void OnInitialized()
     {
         const int min = 0;

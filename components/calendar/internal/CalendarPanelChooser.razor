@@ -12,24 +12,24 @@
     Dictionary<string, object> attributes =
         new Dictionary<string, object>()
         {
-            { "PrefixCls", "ant-picker" },
-            { "Picker", Calendar.Picker },
-            { "ClosePanel", ClosePanel },
-            { "ChangePickerValue", ChangePickerValue },
-            { "ChangeValue", ChangeValue },
-            { "ChangePickerType", ChangePickerType },
-            { "GetIndexPickerValue", GetIndexPickerValue },
-            { "GetIndexValue", GetIndexValue },
-            { "DisabledDate", Calendar.DisabledDate },
-            { "DateRender", Calendar.DateFullCellRender },
-            { "MonthCellRender", Calendar.MonthFullCellRender },
-            { "CalendarDateRender", Calendar.DateCellRender },
-            { "CalendarMonthCellRender", Calendar.MonthCellRender },
-            { "OnSelect", OnSelect },
-            { "PickerIndex", 0 },
-            { "IsCalendar", true },
-            { "IsShowHeader", false },
-                };
+            {"PrefixCls", "ant-picker"},
+            {"Picker", Calendar.Picker},
+            {"ClosePanel", ClosePanel},
+            {"ChangePickerValue", ChangePickerValue},
+            {"ChangeValue", ChangeValue},
+            {"ChangePickerType", ChangePickerType},
+            {"GetIndexPickerValue", GetIndexPickerValue},
+            {"GetIndexValue", GetIndexValue},
+            {"DisabledDate", Calendar.DisabledDate},
+            {"DateRender", Calendar.DateFullCellRender},
+            {"MonthCellRender", Calendar.MonthFullCellRender},
+            {"CalendarDateRender", Calendar.DateCellRender},
+            {"CalendarMonthCellRender", Calendar.MonthCellRender},
+            {"OnSelect", OnSelect},
+            {"PickerIndex", 0},
+            {"IsCalendar", true},
+            {"IsShowHeader", false},
+        };
 
     Dictionary<string, object> dateAttributes = new Dictionary<string, object>(attributes);
     dateAttributes.Add("ShowToday", false);
@@ -38,26 +38,26 @@
 <CascadingValue Value=@Calendar>
     @if (IsShowDatePanel())
     {
-        <DatePickerDatePanel TValue="DateTime" @attributes="dateAttributes" />
+        <DatePickerDatePanel TValue="DateTime" @attributes="dateAttributes"/>
     }
     else if (IsShowQuarterPanel())
     {
-        <DatePickerQuarterPanel TValue="DateTime" @attributes="attributes" />
+        <DatePickerQuarterPanel TValue="DateTime" @attributes="attributes"/>
     }
     else if (IsShowWeekPanel())
     {
-        <DatePickerDatePanel TValue="DateTime" @attributes="dateAttributes" IsWeek="@true" />
+        <DatePickerDatePanel TValue="DateTime" @attributes="dateAttributes" IsWeek="@true"/>
     }
     else if (IsShowMonthPanel())
     {
-        <DatePickerMonthPanel TValue="DateTime" @attributes="attributes" />
+        <DatePickerMonthPanel TValue="DateTime" @attributes="attributes"/>
     }
     else if (IsShowYearPanel())
     {
-        <DatePickerYearPanel TValue="DateTime" @attributes="attributes" />
+        <DatePickerYearPanel TValue="DateTime" @attributes="attributes"/>
     }
     else if (IsShowDecadePanel())
     {
-        <DatePickerDecadePanel TValue="DateTime" @attributes="attributes" />
+        <DatePickerDecadePanel TValue="DateTime" @attributes="attributes"/>
     }
 </CascadingValue>

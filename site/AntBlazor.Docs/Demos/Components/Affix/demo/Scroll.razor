@@ -1,26 +1,26 @@
-
 <style>
-	.scrollable-container{
-		height: 100px;
-		overflow-y: scroll;
-	}
-	.background {
-		padding-top: 60px;
-		height: 300px;
-		background-image: url("https://zos.alipayobjects.com/rmsportal/RmjwQiJorKyobvI.jpg")
-	}
+    .scrollable-container {
+        height: 100px;
+        overflow-y: scroll;
+    }
+
+    .background {
+        padding-top: 60px;
+        height: 300px;
+        background-image: url("https://zos.alipayobjects.com/rmsportal/RmjwQiJorKyobvI.jpg")
+    }
 </style>
 <div class="scrollable-container" @ref="_container">
-	<div class="background">
-		<Affix Target="@_container">
-			<Button Type="@ButtonType.Primary">
-				Fixed at the top of container
-			</Button>
-		</Affix>
-	</div>
+    <div class="background">
+        <Affix Target="@_container">
+            <Button Type="@ButtonType.Primary">
+                Fixed at the top of container
+            </Button>
+        </Affix>
+    </div>
 </div>
 
 @code{
 
-        private ElementReference _container;
-	}
+    private ElementReference _container;
+}

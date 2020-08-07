@@ -1,10 +1,10 @@
 ﻿<div>
-    <div style="height:200px;overflow:hidden;position:relative;border:1px solid #ebedf0; border-radius:2px;padding:48px;text-align:center;background:#fafafa">
+    <div style="height: 200px; overflow: hidden; position: relative; border: 1px solid #ebedf0; border-radius: 2px; padding: 48px; text-align: center; background: #fafafa">
         Render in this
         <div style="margin-top: 16px">
-            <Button Type="primary" @onclick="_=>open()">Open</Button>
+            <Button Type="primary" @onclick="_ => open()">Open</Button>
         </div>
-        <Drawer Style="position:absolute" Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
+        <Drawer Style="position: absolute" Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
 
             <p>Some contents...</p>
             <p>Some contents...</p>
@@ -18,10 +18,8 @@
     bool visible = false;
 
 
-
     void open()
     {
-
         this.visible = true;
     }
 

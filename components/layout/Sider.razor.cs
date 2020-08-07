@@ -52,11 +52,9 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public EventCallback<bool> OnCollapse { get; set; }
+        [Parameter] public EventCallback<bool> OnCollapse { get; set; }
 
-        [Parameter]
-        public EventCallback<bool> OnBreakpoint { get; set; }
+        [Parameter] public EventCallback<bool> OnBreakpoint { get; set; }
 
         [Inject] public DomEventService DomEventService { get; set; }
 
@@ -88,6 +86,7 @@ namespace AntDesign
             {
                 Trigger = defaultTrigger;
             }
+
             isCollapsed = Collapsed;
             SetClass();
 

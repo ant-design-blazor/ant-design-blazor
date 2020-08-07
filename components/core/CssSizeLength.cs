@@ -51,10 +51,10 @@ namespace AntDesign
             value = value?.ToLowerInvariant() ?? throw new ArgumentNullException(nameof(value));
 
             var index = value
-                .Select((c, i) => ((char c, int i)?)(c, i))
-                .FirstOrDefault(x => !(x.Value.c == '.' || x.Value.c >= '0' && x.Value.c <= '9'))
-                ?.i
-                ?? value.Length;
+                            .Select((c, i) => ((char c, int i)?)(c, i))
+                            .FirstOrDefault(x => !(x.Value.c == '.' || x.Value.c >= '0' && x.Value.c <= '9'))
+                            ?.i
+                        ?? value.Length;
 
             if (index == 0)
             {

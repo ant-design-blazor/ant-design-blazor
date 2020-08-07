@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this">
-    <li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key">
+    <li class="@ClassMapper.Class" role="menuitem" style="@(PaddingLeft > 0 ? $"padding-left:{PaddingLeft}px;" : "") @Style" @onclick="HandleOnClick" @key="Key">
         @if (RouterLink == null)
         {
             @ChildContent

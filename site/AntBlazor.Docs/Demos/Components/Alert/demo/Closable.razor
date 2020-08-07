@@ -1,17 +1,19 @@
 ﻿<Alert Type="@AlertType.Warning"
-          Message="Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text"
-          Closable
-          OnClose="LogSomething" />
+       Message="Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text"
+       Closable
+       OnClose="LogSomething"/>
 
 <Alert Type="@AlertType.Error"
-          Message="Error Text"
-          Description="Error Description Error Description Error Description Error Description Error Description Error Description"
-          Closable
-          OnClose="LogSomething" />
+       Message="Error Text"
+       Description="Error Description Error Description Error Description Error Description Error Description Error Description"
+       Closable
+       OnClose="LogSomething"/>
 
 @code{
+
     private void LogSomething()
     {
         Console.WriteLine("Logging Something...");
     }
+
 }

@@ -6,14 +6,11 @@ namespace AntDesign
 {
     public partial class Icon : AntDomComponentBase
     {
-        [Parameter]
-        public bool Spin { get; set; }
+        [Parameter] public bool Spin { get; set; }
 
-        [Parameter]
-        public int Rotate { get; set; } = 0;
+        [Parameter] public int Rotate { get; set; } = 0;
 
-        [Parameter]
-        public string Type { get; set; }
+        [Parameter] public string Type { get; set; }
 
         /// <summary>
         /// 'fill' | 'outline' | 'twotone';
@@ -21,38 +18,27 @@ namespace AntDesign
         [Parameter]
         public string Theme { get; set; } = IconThemeType.Outline;
 
-        [Parameter]
-        public string TwotoneColor { get; set; }
+        [Parameter] public string TwotoneColor { get; set; }
 
-        [Parameter]
-        public string IconFont { get; set; }
+        [Parameter] public string IconFont { get; set; }
 
-        [Parameter]
-        public string Width { get; set; } = "1em";
+        [Parameter] public string Width { get; set; } = "1em";
 
-        [Parameter]
-        public string Height { get; set; } = "1em";
+        [Parameter] public string Height { get; set; } = "1em";
 
-        [Parameter]
-        public string Fill { get; set; } = "currentColor";
+        [Parameter] public string Fill { get; set; } = "currentColor";
 
-        [Parameter]
-        public string TabIndex { get; set; }
+        [Parameter] public string TabIndex { get; set; }
 
-        [Parameter]
-        public bool StopPropagation { get; set; }
+        [Parameter] public bool StopPropagation { get; set; }
 
-        [CascadingParameter]
-        public Button Button { get; set; }
+        [CascadingParameter] public Button Button { get; set; }
 
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnClick { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
-        [Inject]
-        public IconService IconService { get; set; }
+        [Inject] public IconService IconService { get; set; }
 
-        [Parameter]
-        public RenderFragment Component { get; set; }
+        [Parameter] public RenderFragment Component { get; set; }
 
         protected string _svgImg;
 
@@ -62,6 +48,7 @@ namespace AntDesign
             {
                 Button?.Icons.Remove(icon);
             }
+
             base.Dispose(disposing);
         }
 

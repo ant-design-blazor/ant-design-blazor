@@ -9,8 +9,7 @@ namespace AntDesign
 {
     public partial class ModalFooter
     {
-        [CascadingParameter]
-        public DialogOptions ModalProps { get; set; }
+        [CascadingParameter] public DialogOptions ModalProps { get; set; }
 
         private async Task HandleCancel(MouseEventArgs e)
         {

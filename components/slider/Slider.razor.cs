@@ -115,8 +115,7 @@ namespace AntDesign
             }
         }
 
-        [Inject]
-        private DomEventService DomEventService { get; set; }
+        [Inject] private DomEventService DomEventService { get; set; }
 
         #region Parameters
 
@@ -225,12 +224,14 @@ namespace AntDesign
                     {
                         _rightValue = Math.Max(Min, _rightValue);
                     }
+
                     _rightValue = GetNearestStep(_rightValue);
                     SetStyle();
                     if (Range)
                     {
                         //CurrentValue = TupleToGeneric((LeftValue, _rightValue));
-                        CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((LeftValue, _rightValue));
+                        CurrentValue =
+                            DataConvertionExtensions.Convert<(double, double), TValue>((LeftValue, _rightValue));
                     }
                     else
                     {
@@ -250,7 +251,12 @@ namespace AntDesign
         /// Fire when onmouseup is fired.
         /// </summary>
         [Parameter]
-        public Action<TValue> OnAfterChange { get; set; } //use Action here intead of EventCallback, otherwise VS will not complie when user add a delegate
+        public Action<TValue>
+            OnAfterChange
+        {
+            get;
+            set;
+        } //use Action here intead of EventCallback, otherwise VS will not complie when user add a delegate
 
         /// <summary>
         /// Callback function that is fired when the user changes the slider's value.
@@ -295,8 +301,10 @@ namespace AntDesign
             }
             else
             {
-                throw new ArgumentOutOfRangeException($"Type argument of Slider should be one of {doubleType}, {tupleDoubleType}");
+                throw new ArgumentOutOfRangeException(
+                    $"Type argument of Slider should be one of {doubleType}, {tupleDoubleType}");
             }
+
             DomEventService.AddEventListener("window", "mousemove", OnMouseMove);
             DomEventService.AddEventListener("window", "mouseup", OnMouseUp);
         }
@@ -319,7 +327,8 @@ namespace AntDesign
                         //}
                         //else
                         //{
-                        defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<(double, double), TValue>((0, 0)));
+                        defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue),
+                            DataConvertionExtensions.Convert<(double, double), TValue>((0, 0)));
                         //}
                         LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(defaultValue).Item1;
                         RightValue = DataConvertionExtensions.Convert<TValue, (double, double)>(defaultValue).Item2;
@@ -332,7 +341,8 @@ namespace AntDesign
                         //}
                         //else
                         //{
-                        defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConvertionExtensions.Convert<double, TValue>(0));
+                        defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue),
+                            DataConvertionExtensions.Convert<double, TValue>(0));
                         //}
                         RightValue = DataConvertionExtensions.Convert<TValue, double>(defaultValue);
                     }
@@ -371,7 +381,8 @@ namespace AntDesign
         {
             if (Step == null && Marks == null)
             {
-                throw new ArgumentOutOfRangeException(nameof(Step), $"{nameof(Step)} can only be null when {nameof(Marks)} is not null.");
+                throw new ArgumentOutOfRangeException(nameof(Step),
+                    $"{nameof(Step)} can only be null when {nameof(Marks)} is not null.");
             }
 
             if (Step <= 0)
@@ -392,8 +403,8 @@ namespace AntDesign
             decimal y = (decimal)args.ClientY;
 
             _mouseDown = !Disabled
-                && _sliderDom.left <= x && x <= _sliderDom.right
-                && _sliderDom.top <= y && y <= _sliderDom.bottom;
+                         && _sliderDom.left <= x && x <= _sliderDom.right
+                         && _sliderDom.top <= y && y <= _sliderDom.bottom;
         }
 
         private async void OnMouseMove(JsonElement jsonElement)
@@ -412,7 +423,9 @@ namespace AntDesign
             if (_mouseDown)
             {
                 _mouseDown = false;
-                await CalculateValueAsync(Vertical ? jsonElement.GetProperty("clientY").GetDouble() : jsonElement.GetProperty("clientX").GetDouble());
+                await CalculateValueAsync(Vertical
+                    ? jsonElement.GetProperty("clientY").GetDouble()
+                    : jsonElement.GetProperty("clientX").GetDouble());
                 OnAfterChange?.Invoke(CurrentValue);
             }
         }
@@ -427,8 +440,10 @@ namespace AntDesign
             {
                 if (_rightHandleDom == null)
                 {
-                    _rightHandleDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _rightHandle);
+                    _rightHandleDom =
+                        await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _rightHandle);
                 }
+
                 double handleLength = (double)(Vertical ? _rightHandleDom.height : _rightHandleDom.width);
                 if (Reverse)
                 {
@@ -468,8 +483,10 @@ namespace AntDesign
             {
                 if (_leftHandleDom == null)
                 {
-                    _leftHandleDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _leftHandle);
+                    _leftHandleDom =
+                        await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _leftHandle);
                 }
+
                 double handleLength = (double)(Vertical ? _rightHandleDom.height : _rightHandleDom.width);
                 if (Reverse)
                 {
@@ -510,15 +527,20 @@ namespace AntDesign
 
         private void SetStyle()
         {
-            _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, Formatter.ToPercentWithoutBlank(RightValue / Max));
+            _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat,
+                Formatter.ToPercentWithoutBlank(RightValue / Max));
             if (Range)
             {
-                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, Formatter.ToPercentWithoutBlank(LeftValue / Max), Formatter.ToPercentWithoutBlank((RightValue - LeftValue) / Max));
-                _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, Formatter.ToPercentWithoutBlank(LeftValue / Max));
+                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat,
+                    Formatter.ToPercentWithoutBlank(LeftValue / Max),
+                    Formatter.ToPercentWithoutBlank((RightValue - LeftValue) / Max));
+                _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat,
+                    Formatter.ToPercentWithoutBlank(LeftValue / Max));
             }
             else
             {
-                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, "0%", Formatter.ToPercentWithoutBlank(RightValue / Max));
+                _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, "0%",
+                    Formatter.ToPercentWithoutBlank(RightValue / Max));
             }
 
             StateHasChanged();
@@ -532,7 +554,7 @@ namespace AntDesign
         private string IsActiveMark(double key)
         {
             bool active = (Range && key >= LeftValue && key <= RightValue)
-                || (!Range && key <= RightValue);
+                          || (!Range && key <= RightValue);
 
             return active ? "ant-slider-dot-active" : string.Empty;
         }
@@ -545,7 +567,10 @@ namespace AntDesign
             }
             else if (Step.HasValue)
             {
-                return new double[2] { Math.Round(value / Step.Value) * Step.Value, Math.Round(value / Step.Value + 1) * Step.Value }.Union(Marks.Select(m => m.Key)).OrderBy(v => Math.Abs(v - value)).First();
+                return new double[2]
+                {
+                    Math.Round(value / Step.Value) * Step.Value, Math.Round(value / Step.Value + 1) * Step.Value
+                }.Union(Marks.Select(m => m.Key)).OrderBy(v => Math.Abs(v - value)).First();
             }
             else if (Marks.Length == 0)
             {

@@ -1,5 +1,4 @@
-﻿
-namespace AntDesign.Internal
+﻿namespace AntDesign.Internal
 {
     public class DatePickerStatus
     {

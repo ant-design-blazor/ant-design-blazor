@@ -61,6 +61,7 @@ namespace AntDesign
                 return _nodelist?.Count > 0;
             }
         }
+
         public int ChildNodeCount
         {
             get
@@ -70,6 +71,7 @@ namespace AntDesign
         }
 
         List<TreeNode> _nodelist;
+
         public List<TreeNode> Nodes
         {
             get
@@ -118,6 +120,7 @@ namespace AntDesign
         }
 
         bool? _checkstate;
+
         public bool? CheckedState
         {
             get
@@ -185,12 +188,10 @@ namespace AntDesign
                 _checkstate = null;
             else if (checkedCount != 0)
                 _checkstate = true;
-            else    // if (uncheckedCount != 0)
+            else // if (uncheckedCount != 0)
                 _checkstate = false;
 
             IsChecked = _checkstate == true;
         }
-
     }
-
 }

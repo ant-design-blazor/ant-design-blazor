@@ -53,6 +53,5 @@ namespace AntDesign
         /// 点击关闭时触发，返回false时，取消关闭动作
         /// </summary>
         public Func<DrawerClosingEventArgs, Task> OnCancel { get; set; }
-
     }
 }

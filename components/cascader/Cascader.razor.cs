@@ -13,7 +13,8 @@ namespace AntDesign
         /// <summary>
         /// 是否支持清除
         /// </summary>
-        [Parameter] public bool AllowClear { get; set; } = true;
+        [Parameter]
+        public bool AllowClear { get; set; } = true;
 
         /// <summary>
         /// 是否显示关闭图标
@@ -23,37 +24,44 @@ namespace AntDesign
         /// <summary>
         /// 当此项为 true 时，点选每级菜单选项值都会发生变化
         /// </summary>
-        [Parameter] public bool ChangeOnSelect { get; set; }
+        [Parameter]
+        public bool ChangeOnSelect { get; set; }
 
         /// <summary>
         /// 默认的选中项
         /// </summary>
-        [Parameter] public string DefaultValue { get; set; }
+        [Parameter]
+        public string DefaultValue { get; set; }
 
         /// <summary>
         /// 次级菜单的展开方式，可选 'click' 和 'hover'
         /// </summary>
-        [Parameter] public string ExpandTrigger { get; set; }
+        [Parameter]
+        public string ExpandTrigger { get; set; }
 
         /// <summary>
         /// 当下拉列表为空时显示的内容
         /// </summary>
-        [Parameter] public string NotFoundContent { get; set; } = "Not Found";
+        [Parameter]
+        public string NotFoundContent { get; set; } = "Not Found";
 
         /// <summary>
         /// 输入框占位文本
         /// </summary>
-        [Parameter] public string PlaceHolder { get; set; } = "请选择";
+        [Parameter]
+        public string PlaceHolder { get; set; } = "请选择";
 
         /// <summary>
         /// 在选择框中显示搜索框
         /// </summary>
-        [Parameter] public bool ShowSearch { get; set; }
+        [Parameter]
+        public bool ShowSearch { get; set; }
 
         /// <summary>
         /// 选择完成后的回调(参数为选中的节点集合及选中值)
         /// </summary>
-        [Parameter] public Action<List<CascaderNode>, string, string> OnChange { get; set; }
+        [Parameter]
+        public Action<List<CascaderNode>, string, string> OnChange { get; set; }
 
         [Parameter]
         public IReadOnlyCollection<CascaderNode> Options
@@ -71,6 +79,7 @@ namespace AntDesign
                     _nodelist = null;
                     return;
                 }
+
                 if (_nodelist == null) _nodelist = new List<CascaderNode>();
                 else if (_nodelist.Count != 0) _nodelist.Clear();
                 _nodelist.AddRange(value);
@@ -127,11 +136,7 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            Hashtable sizeMap = new Hashtable()
-            {
-                ["large"] = "lg",
-                ["small"] = "sm"
-            };
+            Hashtable sizeMap = new Hashtable() {["large"] = "lg", ["small"] = "sm"};
 
             if (sizeMap.ContainsKey(Size))
             {
@@ -151,6 +156,7 @@ namespace AntDesign
 
             RefreshNodeValue(value);
         }
+
         #region event
 
         /// <summary>
@@ -278,7 +284,8 @@ namespace AntDesign
                 SetSelectedNodeWithParent(cascaderNode, ref _hoverSelectedNodes);
                 _renderNodes = _hoverSelectedNodes;
             }
-            _renderNodes.Sort((x, y) => x.Level.CompareTo(y.Level));  //Level 升序排序
+
+            _renderNodes.Sort((x, y) => x.Level.CompareTo(y.Level)); //Level 升序排序
 
             if (!cascaderNode.HasChildren)
             {
@@ -371,7 +378,7 @@ namespace AntDesign
 
         private void RefreshDisplayValue()
         {
-            _selectedNodes.Sort((x, y) => x.Level.CompareTo(y.Level));  //Level 升序排序
+            _selectedNodes.Sort((x, y) => x.Level.CompareTo(y.Level)); //Level 升序排序
             _displayText = string.Empty;
             int count = 0;
             foreach (var node in _selectedNodes)
@@ -409,6 +416,7 @@ namespace AntDesign
                         result = nd;
                 }
             }
+
             return result;
         }
     }

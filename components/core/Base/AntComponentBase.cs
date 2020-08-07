@@ -8,8 +8,7 @@ namespace AntDesign
 {
     public abstract class AntComponentBase : ComponentBase, IDisposable
     {
-        [Parameter]
-        public ForwardRef RefBack { get; set; }
+        [Parameter] public ForwardRef RefBack { get; set; }
 
         private readonly Queue<Func<Task>> _afterRenderCallQuene = new Queue<Func<Task>>();
 
@@ -65,7 +64,7 @@ namespace AntDesign
 
         protected async Task InvokeStateHasChangedAsync()
         {
-          await   InvokeAsync(() =>
+            await InvokeAsync(() =>
             {
                 if (!IsDisposed)
                 {
@@ -74,8 +73,7 @@ namespace AntDesign
             });
         }
 
-        [Inject]
-        protected IJSRuntime Js { get; set; }
+        [Inject] protected IJSRuntime Js { get; set; }
 
         protected async Task<T> JsInvokeAsync<T>(string code, params object[] args)
         {

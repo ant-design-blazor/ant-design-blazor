@@ -9,14 +9,11 @@ namespace AntDesign
 {
     public partial class MenuItem : AntDomComponentBase
     {
-        [CascadingParameter]
-        public Menu RootMenu { get; set; }
+        [CascadingParameter] public Menu RootMenu { get; set; }
 
-        [CascadingParameter]
-        public SubMenu ParentMenu { get; set; }
+        [CascadingParameter] public SubMenu ParentMenu { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Parameter]
         public string Key
@@ -25,17 +22,13 @@ namespace AntDesign
             set => _key = value;
         }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnClick { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
-        [Parameter]
-        public string RouterLink { get; set; }
+        [Parameter] public string RouterLink { get; set; }
 
-        [Parameter]
-        public NavLinkMatch RouterMatch { get; set; }
+        [Parameter] public NavLinkMatch RouterMatch { get; set; }
 
         public bool IsSelected { get; private set; }
         private string _key;

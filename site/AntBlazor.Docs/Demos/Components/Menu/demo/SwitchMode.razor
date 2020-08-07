@@ -1,12 +1,12 @@
 ﻿<div>
-    <Switch OnChange=changeMode /> Change Mode
+    <Switch OnChange=changeMode/> Change Mode
     <div class="ant-divider ant-divider-vertical" role="separator"></div>
     <Switch OnChange=changeTheme/> Change Style
-    <br />
-    <br />
-    <Menu Style=" width: 256px ;"
-          DefaultSelectedKeys=@(new[]{"1"})
-          DefaultOpenKeys=@(new[]{"sub1"})
+    <br/>
+    <br/>
+    <Menu Style="width: 256px;"
+          DefaultSelectedKeys=@(new[] {"1"})
+          DefaultOpenKeys=@(new[] {"sub1"})
           Mode=this.mode
           Theme=this.theme>
         <MenuItem Key="1">

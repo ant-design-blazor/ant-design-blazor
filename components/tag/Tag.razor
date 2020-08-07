@@ -3,7 +3,6 @@
 
 @if (!_closed)
 {
- 
     <span class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref" @onclick="ClickTag">
         @if (!string.IsNullOrEmpty(Icon))
         {
@@ -12,9 +11,8 @@
         @ChildContent
         @if (Mode == "closeable" || Closable)
         {
-            <Icon Type="close" TabIndex="-1" @onclick="CloseTag" />
+            <Icon Type="close" TabIndex="-1" @onclick="CloseTag"/>
         }
 
     </span>
-
 }

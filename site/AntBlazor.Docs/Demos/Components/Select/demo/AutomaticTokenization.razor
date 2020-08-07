@@ -1,7 +1,7 @@
 <Select Mode="tags"
-        Style="width:100%"
+        Style="width: 100%"
         OnChange="OnChange"
-        TokenSeparators="@(new[] { "," })">
+        TokenSeparators="@(new[] {","})">
     @foreach (var item in _items)
     {
         <SelectOption Value="@item">@item</SelectOption>
@@ -9,9 +9,11 @@
 </Select>
 
 @using OneOf;
+
 @code
 {
     private string[] _items;
+
     protected override void OnInitialized()
     {
         const int min = 10;

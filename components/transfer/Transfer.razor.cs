@@ -15,50 +15,35 @@ namespace AntDesign
         private const string DisabledClass = "ant-transfer-list-content-item-disabled";
         private const string FooterClass = "ant-transfer-list-with-footer";
 
-        [Parameter]
-        public IList<TransferItem> DataSource { get; set; }
+        [Parameter] public IList<TransferItem> DataSource { get; set; }
 
-        [Parameter]
-        public string[] Titles { get; set; } = new string[2];
+        [Parameter] public string[] Titles { get; set; } = new string[2];
 
-        [Parameter]
-        public string[] Operations { get; set; } = new string[2];
+        [Parameter] public string[] Operations { get; set; } = new string[2];
 
-        [Parameter]
-        public bool Disabled { get; set; } = false;
+        [Parameter] public bool Disabled { get; set; } = false;
 
-        [Parameter]
-        public bool ShowSearch { get; set; } = false;
+        [Parameter] public bool ShowSearch { get; set; } = false;
 
-        [Parameter]
-        public bool ShowSelectAll { get; set; } = true;
+        [Parameter] public bool ShowSelectAll { get; set; } = true;
 
-        [Parameter]
-        public string[] TargetKeys { get; set; }
+        [Parameter] public string[] TargetKeys { get; set; }
 
-        [Parameter]
-        public string[] SelectedKeys { get; set; }
+        [Parameter] public string[] SelectedKeys { get; set; }
 
-        [Parameter]
-        public EventCallback<TransferChangeArgs> OnChange { get; set; }
+        [Parameter] public EventCallback<TransferChangeArgs> OnChange { get; set; }
 
-        [Parameter]
-        public EventCallback<TransferScrollArgs> OnScroll { get; set; }
+        [Parameter] public EventCallback<TransferScrollArgs> OnScroll { get; set; }
 
-        [Parameter]
-        public EventCallback<TransferSearchArgs> OnSearch { get; set; }
+        [Parameter] public EventCallback<TransferSearchArgs> OnSearch { get; set; }
 
-        [Parameter]
-        public EventCallback<TransferSelectChangeArgs> OnSelectChange { get; set; }
+        [Parameter] public EventCallback<TransferSelectChangeArgs> OnSelectChange { get; set; }
 
-        [Parameter]
-        public Func<TransferItem, OneOf<string, RenderFragment>> Render { get; set; }
+        [Parameter] public Func<TransferItem, OneOf<string, RenderFragment>> Render { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> Footer { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Footer { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         private List<string> _targetKeys;
 
@@ -103,10 +88,14 @@ namespace AntDesign
         private void MathTitleCount()
         {
             _rightButtonDisabled = _sourceSelectedKeys.Count == 0;
-            _leftCountText = _sourceSelectedKeys.Count == 0 ? $"{_leftDataSource.Count()}" : $"{_sourceSelectedKeys.Count}/{_leftDataSource.Count()}";
+            _leftCountText = _sourceSelectedKeys.Count == 0
+                ? $"{_leftDataSource.Count()}"
+                : $"{_sourceSelectedKeys.Count}/{_leftDataSource.Count()}";
 
             _leftButtonDisabled = _targetSelectedKeys.Count == 0;
-            _rightCountText = _targetSelectedKeys.Count == 0 ? $"{_rightDataSource.Count()}" : $"{_targetSelectedKeys.Count}/{_rightDataSource.Count()}";
+            _rightCountText = _targetSelectedKeys.Count == 0
+                ? $"{_rightDataSource.Count()}"
+                : $"{_targetSelectedKeys.Count}/{_rightDataSource.Count()}";
 
             CheckAllState();
         }
@@ -119,6 +108,7 @@ namespace AntDesign
             {
                 holder.RemoveAt(index);
             }
+
             if (isCheck)
                 holder.Add(key);
 
@@ -128,7 +118,8 @@ namespace AntDesign
 
             if (OnSelectChange.HasDelegate)
             {
-                await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
+                await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(),
+                    _targetSelectedKeys.ToArray()));
             }
         }
 
@@ -140,13 +131,16 @@ namespace AntDesign
                 list = _rightDataSource;
             }
 
-            var holder = isCheck ? list.Where(a => !a.Disabled).Select(a => a.Key).ToList() : new List<string>(list.Count());
+            var holder = isCheck
+                ? list.Where(a => !a.Disabled).Select(a => a.Key).ToList()
+                : new List<string>(list.Count());
             HandleSelect(direction, holder);
 
             MathTitleCount();
             if (OnSelectChange.HasDelegate)
             {
-                await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(), _targetSelectedKeys.ToArray()));
+                await OnSelectChange.InvokeAsync(new TransferSelectChangeArgs(_sourceSelectedKeys.ToArray(),
+                    _targetSelectedKeys.ToArray()));
             }
         }
 
@@ -172,13 +166,15 @@ namespace AntDesign
 
             InitData();
 
-            string oppositeDirection = direction == TransferDirection.Right ? TransferDirection.Left : TransferDirection.Right;
+            string oppositeDirection =
+                direction == TransferDirection.Right ? TransferDirection.Left : TransferDirection.Right;
             HandleSelect(oppositeDirection, new List<string>());
 
             MathTitleCount();
             if (OnChange.HasDelegate)
             {
-                await OnChange.InvokeAsync(new TransferChangeArgs(_targetKeys.ToArray(), direction, moveKeys.ToArray()));
+                await OnChange.InvokeAsync(new TransferChangeArgs(_targetKeys.ToArray(), direction,
+                    moveKeys.ToArray()));
             }
         }
 
@@ -202,9 +198,11 @@ namespace AntDesign
         private async Task HandleSearch(ChangeEventArgs e, string direction)
         {
             if (direction == TransferDirection.Left)
-                _leftDataSource = DataSource.Where(a => !TargetKeys.Contains(a.Key) && a.Title.Contains(e.Value.ToString())).ToList();
+                _leftDataSource = DataSource
+                    .Where(a => !TargetKeys.Contains(a.Key) && a.Title.Contains(e.Value.ToString())).ToList();
             else
-                _rightDataSource = DataSource.Where(a => TargetKeys.Contains(a.Key) && a.Title.Contains(e.Value.ToString())).ToList();
+                _rightDataSource = DataSource
+                    .Where(a => TargetKeys.Contains(a.Key) && a.Title.Contains(e.Value.ToString())).ToList();
 
             if (OnSearch.HasDelegate)
             {

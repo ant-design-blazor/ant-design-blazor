@@ -15,6 +15,7 @@
 </Select>
 
 @using OneOf;
+
 @code
 {
     private RenderFragment _syncIcon;
@@ -22,8 +23,8 @@
 
     protected override void OnParametersSet()
     {
-        _syncIcon =@<Icon Type="sync" Theme="true"></Icon>;
-        _smileIcon =@<Icon Type="smile" Theme="outline" Rotate="180"></Icon>;
+        _syncIcon = @<Icon Type="sync" Theme="true"></Icon>;
+        _smileIcon = @<Icon Type="smile" Theme="outline" Rotate="180"></Icon>;
         base.OnParametersSet();
     }
 

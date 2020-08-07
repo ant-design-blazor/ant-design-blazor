@@ -1,4 +1,4 @@
-<Select Style="width:240px"
+<Select Style="width: 240px"
         Placeholder="custom dropdown render"
         DropdownRender="@OnDropdownRender">
     @foreach (var item in _items)
@@ -10,7 +10,7 @@
 @code{
     private int _index = 0;
     private string _name = "";
-    private List<string> _items = new List<string> { "jack", "lucy" };
+    private List<string> _items = new List<string> {"jack", "lucy"};
 
     private void AddItem(MouseEventArgs args)
     {
@@ -23,19 +23,20 @@
     private RenderFragment OnDropdownRender(RenderFragment originNode, Properties props)
     {
         RenderFragment customDropdownRender =
-        @<Template>
-            <div>
-                @originNode
-                <Divider Style="margin:4px 0"></Divider>
-                <div style="display:flex;flex-wrap:nowrap;padding:8px">
-                    <Input Style="flex:auto" @bind-Value="@_name"/>
-                    <a style="flex:none;padding:8px;display:block;cursor:pointer" @onclick="AddItem">
-                        <Icon Type="plus" Theme="outline"></Icon>
-                        Add Item
-                    </a>
+            @<Template>
+                <div>
+                    @originNode
+                    <Divider Style="margin: 4px 0"></Divider>
+                    <div style="display: flex; flex-wrap: nowrap; padding: 8px">
+                        <Input Style="flex: auto" @bind-Value="@_name"/>
+                        <a style="flex: none; padding: 8px; display: block; cursor: pointer" @onclick="AddItem">
+                            <Icon Type="plus" Theme="outline"></Icon>
+                            Add Item
+                        </a>
+                    </div>
                 </div>
-            </div>
-        </Template>;
+            </Template>;
         return customDropdownRender;
     }
+
 }

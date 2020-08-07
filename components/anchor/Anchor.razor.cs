@@ -26,8 +26,7 @@ namespace AntDesign
         private List<AnchorLink> _links = new List<AnchorLink>();
         private bool _linksChanged = false;
 
-        [Inject]
-        private DomEventService DomEventService { get; set; }
+        [Inject] private DomEventService DomEventService { get; set; }
 
         #region Parameters
 
@@ -51,8 +50,7 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// Fixed mode of Anchor
@@ -108,8 +106,7 @@ namespace AntDesign
         [Parameter]
         public int? TargetOffset { get; set; }
 
-        [Parameter]
-        public EventCallback<string> OnChange { get; set; }
+        [Parameter] public EventCallback<string> OnChange { get; set; }
 
         #endregion Parameters
 
@@ -184,6 +181,7 @@ namespace AntDesign
             {
                 link.Clear();
             }
+
             _links.Clear();
         }
 

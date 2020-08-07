@@ -19,7 +19,8 @@ namespace AntDesign.Docs.Routing
                 var tokens = segment.Split(':');
                 if (tokens[0].Length == 0)
                 {
-                    throw new ArgumentException($"Malformed parameter '{segment}' in route '{template}' has no name before the constraints list.");
+                    throw new ArgumentException(
+                        $"Malformed parameter '{segment}' in route '{template}' has no name before the constraints list.");
                 }
 
                 Value = tokens[0];

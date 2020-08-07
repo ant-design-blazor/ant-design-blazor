@@ -89,10 +89,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        language.LanguageChanged += (sender, args) =>
-        {
-            StateHasChanged();
-        };
+        language.LanguageChanged += (sender, args) => { StateHasChanged(); };
     }
 
 }

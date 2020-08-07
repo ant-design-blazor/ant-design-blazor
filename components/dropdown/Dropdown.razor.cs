@@ -10,8 +10,7 @@ namespace AntDesign
 {
     public partial class Dropdown : OverlayTrigger
     {
-        [Parameter]
-        public Func<RenderFragment, RenderFragment, RenderFragment> ButtonsRender { get; set; }
+        [Parameter] public Func<RenderFragment, RenderFragment, RenderFragment> ButtonsRender { get; set; }
 
         private string _rightButtonIcon = "ellipsis";
         private string _buttonSize = AntSizeLDSType.Default;
@@ -20,8 +19,7 @@ namespace AntDesign
         private RenderFragment _leftButton;
         private RenderFragment _rightButton;
 
-        [Inject]
-        private DomEventService DomEventService { get; set; }
+        [Inject] private DomEventService DomEventService { get; set; }
 
         protected void ChangeRightButtonIcon(string icon)
         {

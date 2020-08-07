@@ -42,8 +42,7 @@ namespace AntDesign
         [Parameter]
         public int OverflowCount { get; set; } = 99;
 
-        [Parameter]
-        public bool ShowDot { get; set; } = true;
+        [Parameter] public bool ShowDot { get; set; } = true;
 
         /// <summary>
         /// Whether to show badge when count is zero
@@ -83,7 +82,7 @@ namespace AntDesign
 
         private int[] _countArray = Array.Empty<int>();
 
-        private readonly int[] _countSingleArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        private readonly int[] _countSingleArray = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
         private char[] _maxNumberArray = Array.Empty<char>();
 
@@ -93,7 +92,9 @@ namespace AntDesign
 
         private bool HasStatusOrColor => !string.IsNullOrWhiteSpace(Status) || !string.IsNullOrWhiteSpace(Color);
 
-        private string CountStyle => Offset == default ? null : $"{(Offset.Item1 > 0 ? $"right:-{Offset.Item1}px" : "")};{(Offset.Item2 > 0 ? $"margin-top:{Offset.Item2}px" : "")};";
+        private string CountStyle => Offset == default
+            ? null
+            : $"{(Offset.Item1 > 0 ? $"right:-{Offset.Item1}px" : "")};{(Offset.Item2 > 0 ? $"margin-top:{Offset.Item2}px" : "")};";
 
         private bool ShowSup => (this.ShowDot && this.Dot) || this.CountNumber > 0 ||
                                 (this.CountNumber == 0 && this.ShowZero);
@@ -133,7 +134,8 @@ namespace AntDesign
         {
             base.OnInitialized();
             if (!string.IsNullOrEmpty(Color) && !string.IsNullOrEmpty(Status))
-                throw new ArgumentException($"You cannot provide a {nameof(Status)} and a {nameof(Color)}, choose one.");
+                throw new ArgumentException(
+                    $"You cannot provide a {nameof(Status)} and a {nameof(Color)}, choose one.");
 
             GenerateMaxNumberArray();
 
@@ -235,28 +237,10 @@ namespace AntDesign
 
         private readonly string[] _badgePresetColors =
         {
-            "pink",
-            "red",
-            "yellow",
-            "orange",
-            "cyan",
-            "green",
-            "blue",
-            "purple",
-            "geekblue",
-            "magenta",
-            "volcano",
-            "gold",
-            "lime"
+            "pink", "red", "yellow", "orange", "cyan", "green", "blue", "purple", "geekblue", "magenta", "volcano",
+            "gold", "lime"
         };
 
-        private readonly string[] _badgeStatusTypes =
-        {
-            "success",
-            "processing",
-            "default",
-            "error",
-            "warning"
-        };
+        private readonly string[] _badgeStatusTypes = {"success", "processing", "default", "error", "warning"};
     }
 }

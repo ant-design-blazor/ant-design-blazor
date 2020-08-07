@@ -1,13 +1,13 @@
-﻿<Layout Style="min-height: 100vh; ">
+﻿<Layout Style="min-height: 100vh;">
     <Sider Collapsible Collapsed=@collapsed OnCollapse=@onCollapse>
-        <div class="logo" />
-        <Menu Theme="MenuTheme.Dark" DefaultSelectedKeys=@(new[]{"1"}) Mode="MenuMode.Inline">
+        <div class="logo"/>
+        <Menu Theme="MenuTheme.Dark" DefaultSelectedKeys=@(new[] {"1"}) Mode="MenuMode.Inline">
             <MenuItem Key="1">
-                <Icon Type="pie-chart" Theme="outline" />
+                <Icon Type="pie-chart" Theme="outline"/>
                 <span>Option 1</span>
             </MenuItem>
             <MenuItem Key="2">
-                <Icon Type="desktop" Theme="outline" />
+                <Icon Type="desktop" Theme="outline"/>
                 <span>Option 2</span>
             </MenuItem>
             @{
@@ -30,18 +30,18 @@
                     </span>;
             }
             <SubMenu Key="sub2" Title=sub2Title>
-            <MenuItem Key="6">Team 1</MenuItem>
-            <MenuItem Key="8">Team 2</MenuItem>
+                <MenuItem Key="6">Team 1</MenuItem>
+                <MenuItem Key="8">Team 2</MenuItem>
             </SubMenu>
             <MenuItem Key="9">
                 <Icon Type="file" Theme="outline"/>
             </MenuItem>
         </Menu>
     </Sider>
-    <Layout Class="site-layout" >
-        <Header Class="site-layout-background" Style=" padding: 0 ;" ></Header>
-        <Content Style="margin:0 16px;" >
-            <Breadcrumb Style="margin:16px 0;">
+    <Layout Class="site-layout">
+        <Header Class="site-layout-background" Style="padding: 0;"></Header>
+        <Content Style="margin: 0 16px;">
+            <Breadcrumb Style="margin: 16px 0;">
                 <BreadcrumbItem>User</BreadcrumbItem>
                 <BreadcrumbItem>Bill</BreadcrumbItem>
             </Breadcrumb>
@@ -49,7 +49,7 @@
                 Bill is a cat.
             </div>
         </Content>
-        <Footer Style="text-align:center ">Ant Design ©2018 Created by Ant UED</Footer>
+        <Footer Style="text-align: center">Ant Design ©2018 Created by Ant UED</Footer>
     </Layout>
 </Layout>
 
@@ -57,10 +57,12 @@
 @code {
     bool collapsed;
 
-   void onCollapse(bool collapsed) {
+    void onCollapse(bool collapsed)
+    {
         Console.WriteLine(collapsed);
-        this.collapsed =collapsed;
+        this.collapsed = collapsed;
     }
+
 }
 
 
@@ -71,7 +73,5 @@
         margin: 16px;
     }
 
-    .site-layout .site-layout-background {
-        background: #fff;
-    }
+    .site-layout .site-layout-background { background: #fff; }
 </style>

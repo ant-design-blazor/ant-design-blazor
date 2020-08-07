@@ -1,15 +1,17 @@
 <Select LabelInValue
         DefaultValue="_defaultValue"
-        Style="width:120px"
+        Style="width: 120px"
         OnChange="OnChange">
     <SelectOption Value="jack">Jack (100)</SelectOption>
     <SelectOption Value="lucy">Lucy (101)</SelectOption>
 </Select>
 
 @using OneOf;
+
 @code
 {
     private LabeledValue _defaultValue = new LabeledValue("jack", "Jack (100)");
+
     private void OnChange(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value, OneOf<SelectOption, IEnumerable<SelectOption>> option)
     {
         Console.WriteLine($"selected: ${value}");

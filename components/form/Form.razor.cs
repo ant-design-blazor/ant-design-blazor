@@ -13,35 +13,25 @@ namespace AntDesign
     {
         private readonly string _prefixCls = "ant-form";
 
-        [Parameter]
-        public string Layout { get; set; } = FormLayout.Horizontal;
+        [Parameter] public string Layout { get; set; } = FormLayout.Horizontal;
 
-        [Parameter]
-        public RenderFragment<TModel> ChildContent { get; set; }
+        [Parameter] public RenderFragment<TModel> ChildContent { get; set; }
 
-        [Parameter]
-        public ColLayoutParam LabelCol { get; set; }
+        [Parameter] public ColLayoutParam LabelCol { get; set; }
 
-        [Parameter]
-        public ColLayoutParam WrapperCol { get; set; }
+        [Parameter] public ColLayoutParam WrapperCol { get; set; }
 
-        [Parameter]
-        public string Size { get; set; }
+        [Parameter] public string Size { get; set; }
 
-        [Parameter]
-        public string Name { get; set; }
+        [Parameter] public string Name { get; set; }
 
-        [Parameter]
-        public TModel Model { get; set; }
+        [Parameter] public TModel Model { get; set; }
 
-        [Parameter]
-        public bool Loading { get; set; }
+        [Parameter] public bool Loading { get; set; }
 
-        [Parameter]
-        public EventCallback<EditContext> OnFinish { get; set; }
+        [Parameter] public EventCallback<EditContext> OnFinish { get; set; }
 
-        [Parameter]
-        public EventCallback<EditContext> OnFinishFailed { get; set; }
+        [Parameter] public EventCallback<EditContext> OnFinishFailed { get; set; }
 
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
@@ -90,7 +80,7 @@ namespace AntDesign
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
                 .Add($"{_prefixCls}-{Layout.ToLower()}")
-               ;
+                ;
         }
 
         private async Task OnValidSubmit(EditContext editContext)

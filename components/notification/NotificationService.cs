@@ -24,12 +24,13 @@ namespace AntDesign
         /// Open a notification box
         /// </summary>
         /// <param name="config"></param>
-        public async Task Open([NotNull]NotificationConfig config)
+        public async Task Open([NotNull] NotificationConfig config)
         {
             if (config == null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
+
             var task = OnNoticing?.Invoke(config);
             if (task != null)
             {
@@ -120,7 +121,5 @@ namespace AntDesign
         }
 
         #endregion
-
     }
-
 }

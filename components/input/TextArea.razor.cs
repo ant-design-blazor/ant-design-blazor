@@ -23,8 +23,7 @@ namespace AntDesign
 
         private ElementReference _hiddenEle;
 
-        [Parameter]
-        public bool AutoSize { get; set; }
+        [Parameter] public bool AutoSize { get; set; }
 
         private uint _minRows = DEFAULT_MIN_ROWS;
 
@@ -44,7 +43,8 @@ namespace AntDesign
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException(nameof(MinRows), $"Please enter a value between {DEFAULT_MIN_ROWS} and {MaxRows}");
+                    throw new ArgumentOutOfRangeException(nameof(MinRows),
+                        $"Please enter a value between {DEFAULT_MIN_ROWS} and {MaxRows}");
                 }
             }
         }
@@ -67,13 +67,13 @@ namespace AntDesign
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException($"Please enter a value between {MinRows} and {uint.MaxValue}");
+                    throw new ArgumentOutOfRangeException(
+                        $"Please enter a value between {MinRows} and {uint.MaxValue}");
                 }
             }
         }
 
-        [Parameter]
-        public EventCallback<OnResizeEventArgs> OnResize { get; set; }
+        [Parameter] public EventCallback<OnResizeEventArgs> OnResize { get; set; }
 
         protected async override Task OnFirstAfterRenderAsync()
         {
@@ -121,7 +121,7 @@ namespace AntDesign
                 Style = $"height: {height}px;overflow-y: hidden;";
             }
 
-            await OnResize.InvokeAsync(new OnResizeEventArgs { Width = element.scrollWidth, Height = height });
+            await OnResize.InvokeAsync(new OnResizeEventArgs {Width = element.scrollWidth, Height = height});
         }
 
         private async Task CalculateRowHeightAsync()

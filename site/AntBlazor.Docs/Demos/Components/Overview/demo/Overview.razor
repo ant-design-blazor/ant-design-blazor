@@ -1,15 +1,15 @@
 ﻿@using AntDesign.Docs.Services
 
 
-<Divider />
+<Divider/>
 
 <AntDesign.Input TValue="string" Class="components-overview-search" Placeholder="@LanguageService.Resources["app.components.overview.search"]" OnInput="@(args => OnSearchEnter(args.Value?.ToString()))">
     <Suffix>
-        <Icon Type="search" />
+        <Icon Type="search"/>
     </Suffix>
 </AntDesign.Input>
 
-<Divider />
+<Divider/>
 
 @foreach (var menuGroup in menuItems)
 {
@@ -31,17 +31,18 @@
         <Row>
             @foreach (var item in menuGroup.Children)
             {
-                <AntDesign.Col Xl="6" Lg="8" Sm="12" Xs="24" Style="padding:12px">
-                    <a href=@($"/{CurrentLanguage}/{item.Url}")>
-                        <Card Bordered Title="@($"{item.Title} {@item.SubTitle}")" Hoverable>
-                            <Body>
-                                <div class="components-overview-img">
-                                    <img src="@item.Cover" alt="@(item.Title)">
-                                </div>
-                            </Body>
-                        </Card>
-                    </a>
-                </AntDesign.Col>
+                <AntDesign.Col Xl="6" Lg="8" Sm="12" Xs="24" Style="padding: 12px">
+                <a href=@($"/{CurrentLanguage}/{item.Url}")>
+                    <Card Bordered Title="@($"{item.Title} {@item.SubTitle}")" Hoverable>
+                        <Body>
+                        <div class="components-overview-img">
+                            <img src="@item.Cover" alt="@(item.Title)">
+                        </div>
+                        </Body>
+                    </Card>
+                </a>
+                </AntDesign.
+                Col >
             }
         </Row>
     </div>
@@ -53,7 +54,7 @@
 @code{
 
     private string CurrentLanguage => LanguageService.CurrentCulture.Name;
-    DemoMenuItem[] menuItems = { };
+    DemoMenuItem[] menuItems = {};
 
     protected override bool ShouldRender() => menuItems.Any();
 
@@ -102,4 +103,5 @@
 
         menuItems = result.ToArray();
     }
+
 }

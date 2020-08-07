@@ -9,7 +9,7 @@
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     DayOfWeek monthFirstDayOfWeek = calendar.GetDayOfWeek(monthFirstDayDate);
 
-    int diffDay = (int)this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - (int)monthFirstDayOfWeek;
+    int diffDay = (int) this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - (int) monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 
 }
@@ -17,7 +17,7 @@
 <div class='@($"{PrefixCls}-datetime-panel")'>
     @if (IsShowTime)
     {
-        <DatePickerTemplate TValue="TValue" 
+        <DatePickerTemplate TValue="TValue"
                             @attributes="GetAttritubes()"
                             MaxRow="6"
                             MaxCol="7"
@@ -31,11 +31,11 @@
                             GetNextColValue="date => date.AddDays(1)">
             <RenderPickerHeader>
                 <DatePickerHeader TValue="TValue"
-                                  @attributes="GetAttritubes()" />
+                                  @attributes="GetAttritubes()"/>
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
-                    @foreach(string weekDay in this.DatePicker.CultureInfo.GetDateLocale().ShortWeekDays)
+                    @foreach (string weekDay in this.DatePicker.CultureInfo.GetDateLocale().ShortWeekDays)
                     {
                         <th>@weekDay</th>
                     }
@@ -59,15 +59,15 @@
         DatePickerDisabledTime disabledTime = GetDisabledTime();
     }
     <div class="@(PrefixCls)-time-panel">
-        @if(Picker == DatePickerType.Date)
+        @if (Picker == DatePickerType.Date)
         {
             <div class="@(PrefixCls)-header">
                 <div class="@(PrefixCls)-header-view">
-                    @Value.ToString(timeFormat) <br />
+                    @Value.ToString(timeFormat) <br/>
                 </div>
             </div>
         }
-        
+
         <div class="@(PrefixCls)-content">
             @if (timeFormat.ToLower().Contains("hh"))
             {
@@ -149,13 +149,13 @@
     <ul class="@(PrefixCls)-ranges">
         <li class="@(PrefixCls)-now">
             <a class="@(PrefixCls)-now-btn"
-               @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
+               @onclick="e => { OnSelectTime(DateTime.Now);Close(); }">
                 @this.DatePicker.CultureInfo.GetDateLocale().Now
             </a>
         </li>
         <li class="@(PrefixCls)-ok">
             <Button Type="@ButtonType.Primary"
-                       OnClick="e => DatePicker.Close()">
+                    OnClick="e => DatePicker.Close()">
                 @this.DatePicker.CultureInfo.GetDateLocale().Ok
             </Button>
         </li>

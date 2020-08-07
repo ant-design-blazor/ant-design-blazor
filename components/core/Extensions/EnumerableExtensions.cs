@@ -57,8 +57,9 @@ namespace AntDesign
         {
             if (array == null)
             {
-                return new[] { item };
+                return new[] {item};
             }
+
             Array.Resize(ref array, array.Length + 1);
             array[^1] = item;
 

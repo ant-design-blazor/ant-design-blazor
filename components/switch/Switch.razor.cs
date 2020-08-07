@@ -9,26 +9,19 @@ namespace AntDesign
     {
         protected string _prefixCls = "ant-switch";
 
-        [Parameter]
-        public bool Checked { get; set; }
+        [Parameter] public bool Checked { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool Loading { get; set; }
+        [Parameter] public bool Loading { get; set; }
 
-        [Parameter]
-        public bool Control { get; set; }
+        [Parameter] public bool Control { get; set; }
 
-        [Parameter]
-        public EventCallback<bool> OnChange { get; set; }
+        [Parameter] public EventCallback<bool> OnChange { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> CheckedChildren { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> CheckedChildren { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> UnCheckedChildren { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> UnCheckedChildren { get; set; }
 
         private bool _clickAnimating = false;
 

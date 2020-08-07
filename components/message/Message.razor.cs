@@ -12,14 +12,14 @@ namespace AntDesign
 {
     public partial class Message
     {
-        [Inject]
-        private MessageService MessageService { get; set; }
+        [Inject] private MessageService MessageService { get; set; }
 
         protected override void OnInitialized()
         {
             if (MessageService != null)
             {
-                MessageService.OnOpening += NotifyAsync; ;
+                MessageService.OnOpening += NotifyAsync;
+                ;
                 MessageService.OnDestroy += Destroy;
                 MessageService.OnConfig += Config;
             }
@@ -27,7 +27,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            MessageService.OnOpening -= NotifyAsync; ;
+            MessageService.OnOpening -= NotifyAsync;
+            ;
             MessageService.OnDestroy -= Destroy;
             MessageService.OnConfig -= Config;
             base.Dispose(disposing);
@@ -58,6 +59,7 @@ namespace AntDesign
             {
                 config.Key = Guid.NewGuid().ToString();
             }
+
             return config;
         }
 
@@ -117,12 +119,12 @@ namespace AntDesign
                 var task = Task.Delay(TimeSpan.FromSeconds(config.Duration.Value), cts.Token);
 
                 return task.ContinueWith((result) =>
+                {
+                    if (!cts.IsCancellationRequested)
                     {
-                        if (!cts.IsCancellationRequested)
-                        {
-                            RemoveItem(config);
-                        }
-                    }, TaskScheduler.Current);
+                        RemoveItem(config);
+                    }
+                }, TaskScheduler.Current);
             }
             else
             {
@@ -149,7 +151,6 @@ namespace AntDesign
                         _configs.Remove(config);
                         InvokeAsync(StateHasChanged);
                     }, TaskScheduler.Current);
-
             }
 
             return Task.CompletedTask;
@@ -161,6 +162,5 @@ namespace AntDesign
             _configs.Clear();
             InvokeAsync(StateHasChanged);
         }
-
     }
 }

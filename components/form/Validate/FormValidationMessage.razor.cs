@@ -27,8 +27,7 @@ namespace AntDesign
         [Parameter(CaptureUnmatchedValues = true)]
         public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
 
-        [CascadingParameter]
-        private EditContext CurrentEditContext { get; set; }
+        [CascadingParameter] private EditContext CurrentEditContext { get; set; }
 
         public AntInputComponentBase<TValue> _control;
 

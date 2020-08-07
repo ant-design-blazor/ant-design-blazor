@@ -12,16 +12,31 @@ namespace AntDesign
 {
     public class HtmlRenderer : Renderer
     {
-        private static readonly HashSet<string> _selfClosingElements = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"
-        };
+        private static readonly HashSet<string> _selfClosingElements =
+            new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "area",
+                "base",
+                "br",
+                "col",
+                "embed",
+                "hr",
+                "img",
+                "input",
+                "link",
+                "meta",
+                "param",
+                "source",
+                "track",
+                "wbr"
+            };
 
         private static readonly Task _canceledRenderTask = Task.FromCanceled(new CancellationToken(canceled: true));
 
         private readonly Func<string, string> _htmlEncoder;
 
-        public HtmlRenderer(IServiceProvider serviceProvider, ILoggerFactory loggerFactory, Func<string, string> htmlEncoder)
+        public HtmlRenderer(IServiceProvider serviceProvider, ILoggerFactory loggerFactory,
+            Func<string, string> htmlEncoder)
             : base(serviceProvider, loggerFactory)
         {
             _htmlEncoder = htmlEncoder;
@@ -47,7 +62,8 @@ namespace AntDesign
             return _canceledRenderTask;
         }
 
-        public async Task<ComponentRenderedText> RenderComponentAsync(IComponent component, ParameterView initialParameters)
+        public async Task<ComponentRenderedText> RenderComponentAsync(IComponent component,
+            ParameterView initialParameters)
         {
             var (componentId, frames) = await CreateInitialRenderAsync(component, initialParameters);
 
@@ -57,7 +73,8 @@ namespace AntDesign
             return new ComponentRenderedText(componentId, context.Result);
         }
 
-        public async Task<ComponentRenderedText> RenderComponentAsync(Type componentType, ParameterView initialParameters)
+        public async Task<ComponentRenderedText> RenderComponentAsync(Type componentType,
+            ParameterView initialParameters)
         {
             var (componentId, frames) = await CreateInitialRenderAsync(componentType, initialParameters);
 
@@ -67,7 +84,8 @@ namespace AntDesign
             return new ComponentRenderedText(componentId, context.Result);
         }
 
-        public Task<ComponentRenderedText> RenderComponentAsync<TComponent>(ParameterView initialParameters) where TComponent : IComponent
+        public Task<ComponentRenderedText> RenderComponentAsync<TComponent>(ParameterView initialParameters)
+            where TComponent : IComponent
         {
             return RenderComponentAsync(typeof(TComponent), initialParameters);
         }
@@ -76,7 +94,8 @@ namespace AntDesign
         protected override void HandleException(Exception exception)
             => ExceptionDispatchInfo.Capture(exception).Throw();
 
-        private int RenderFrames(HtmlRenderingContext context, ArrayRange<RenderTreeFrame> frames, int position, int maxElements)
+        private int RenderFrames(HtmlRenderingContext context, ArrayRange<RenderTreeFrame> frames, int position,
+            int maxElements)
         {
             var nextPosition = position;
             var endPosition = position + maxElements;
@@ -87,6 +106,7 @@ namespace AntDesign
                 {
                     throw new InvalidOperationException("We didn't consume any input.");
                 }
+
                 position = nextPosition;
             }
 
@@ -105,7 +125,8 @@ namespace AntDesign
                     return RenderElement(context, frames, position);
 
                 case RenderTreeFrameType.Attribute:
-                    throw new InvalidOperationException($"Attributes should only be encountered within {nameof(RenderElement)}");
+                    throw new InvalidOperationException(
+                        $"Attributes should only be encountered within {nameof(RenderElement)}");
                 case RenderTreeFrameType.Text:
                     context.Result.Add(_htmlEncoder(frame.TextContent));
                     return ++position;
@@ -149,7 +170,8 @@ namespace AntDesign
             var result = context.Result;
             result.Add("<");
             result.Add(frame.ElementName);
-            var afterAttributes = RenderAttributes(context, frames, position + 1, frame.ElementSubtreeLength - 1, out var capturedValueAttribute);
+            var afterAttributes = RenderAttributes(context, frames, position + 1, frame.ElementSubtreeLength - 1,
+                out var capturedValueAttribute);
 
             // When we see an <option> as a descendant of a <select>, and the option's "value" attribute matches the
             // "value" attribute on the <select>, then we auto-add the "selected" attribute to that option. This is
@@ -200,12 +222,14 @@ namespace AntDesign
                     result.Add(frame.ElementName);
                     result.Add(">");
                 }
+
                 Debug.Assert(afterAttributes == position + frame.ElementSubtreeLength);
                 return afterAttributes;
             }
         }
 
-        private int RenderChildren(HtmlRenderingContext context, ArrayRange<RenderTreeFrame> frames, int position, int maxElements)
+        private int RenderChildren(HtmlRenderingContext context, ArrayRange<RenderTreeFrame> frames, int position,
+            int maxElements)
         {
             if (maxElements == 0)
             {
@@ -266,7 +290,8 @@ namespace AntDesign
             return position + maxElements;
         }
 
-        private async Task<(int, ArrayRange<RenderTreeFrame>)> CreateInitialRenderAsync(Type componentType, ParameterView initialParameters)
+        private async Task<(int, ArrayRange<RenderTreeFrame>)> CreateInitialRenderAsync(Type componentType,
+            ParameterView initialParameters)
         {
             var component = InstantiateComponent(componentType);
             var componentId = AssignRootComponentId(component);
@@ -276,7 +301,8 @@ namespace AntDesign
             return (componentId, GetCurrentRenderTreeFrames(componentId));
         }
 
-        private async Task<(int, ArrayRange<RenderTreeFrame>)> CreateInitialRenderAsync(IComponent component, ParameterView initialParameters)
+        private async Task<(int, ArrayRange<RenderTreeFrame>)> CreateInitialRenderAsync(IComponent component,
+            ParameterView initialParameters)
         {
             var componentId = AssignRootComponentId(component);
 

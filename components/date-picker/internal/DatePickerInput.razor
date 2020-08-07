@@ -75,10 +75,10 @@ else
             }
         </span>
     }
-
 }
 
 @code {
+
     [Parameter]
     public string PrefixCls { get; set; } = "ant-picker";
 
@@ -135,7 +135,9 @@ else
 
     public bool IsOnFocused { get; set; } = false;
 
-    public bool ShowClear() {
+    public bool ShowClear()
+    {
         return !Disabled && !String.IsNullOrEmpty(Value) && AllowClear;
     }
+
 }

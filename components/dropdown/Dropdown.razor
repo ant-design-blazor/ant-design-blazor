@@ -19,7 +19,7 @@
                     <Button @key="1" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled">@ChildContent</Button>
                 </LeftButton>
                 <RightButton>
-                    <Button @key="2" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled" OnClick="OnTriggerClick" Class="ant-dropdown-trigger" Icon="@_rightButtonIcon" />
+                    <Button @key="2" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled" OnClick="OnTriggerClick" Class="ant-dropdown-trigger" Icon="@_rightButtonIcon"/>
                 </RightButton>
             </DropdownGroupButton>
         </CascadingValue>
@@ -32,7 +32,7 @@
 
 <CascadingValue Value="this" Name="Trigger">
     <Overlay @ref="_overlay"
-             OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
-             OnOverlayMouseEnter="OnOverlayMouseEnter"
-             OnOverlayMouseLeave="OnOverlayMouseLeave" />
+              OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
+              OnOverlayMouseEnter="OnOverlayMouseEnter"
+              OnOverlayMouseLeave="OnOverlayMouseLeave"/>
 </CascadingValue>

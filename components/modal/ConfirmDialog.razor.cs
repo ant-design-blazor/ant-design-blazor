@@ -9,14 +9,11 @@ namespace AntDesign
 {
     public partial class ConfirmDialog
     {
-        [Parameter]
-        public ConfirmOptions Config { get; set; }
+        [Parameter] public ConfirmOptions Config { get; set; }
 
-        [Parameter]
-        public ModalRef ModalRef { get; set; }
+        [Parameter] public ModalRef ModalRef { get; set; }
 
-        [Parameter]
-        public EventCallback<ConfirmOptions> OnRemove { get; set; }
+        [Parameter] public EventCallback<ConfirmOptions> OnRemove { get; set; }
 
         private Button _cancelBtn;
         private Button _okBtn;
@@ -53,7 +50,6 @@ namespace AntDesign
                 Footer = null,
                 TransitionName = confirmOptions.TransitionName,
                 MaskTransitionName = confirmOptions.MaskTransitionName,
-
                 ClassName = confirmOptions.ClassName,
             };
 

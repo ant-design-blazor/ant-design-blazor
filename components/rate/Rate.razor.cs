@@ -8,38 +8,43 @@ namespace AntDesign
 {
     public partial class Rate : AntDomComponentBase
     {
-
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// 是否允许再次点击后清除
         /// </summary>
-        [Parameter] public bool AllowClear { get; set; } = true;
+        [Parameter]
+        public bool AllowClear { get; set; } = true;
 
         /// <summary>
         /// 是否允许半选
         /// </summary>
-        [Parameter] public bool AllowHalf { get; set; } = false;
+        [Parameter]
+        public bool AllowHalf { get; set; } = false;
 
         /// <summary>
         /// 是否禁止用户交互
         /// </summary>
-        [Parameter] public bool Disabled { get; set; } = false;
+        [Parameter]
+        public bool Disabled { get; set; } = false;
 
         /// <summary>
         /// 是否可获得输入焦点
         /// </summary>
-        [Parameter] public bool AutoFocus { get; set; } = true;
+        [Parameter]
+        public bool AutoFocus { get; set; } = true;
 
         /// <summary>
         /// 自定义字符,星星可以被自定义字符替代
         /// </summary>
-        [Parameter] public RenderFragment<RateItemRenderContext> Character { get; set; }
+        [Parameter]
+        public RenderFragment<RateItemRenderContext> Character { get; set; }
 
         /// <summary>
         /// 组件要呈现的星星数目
         /// </summary>
-        [Parameter] public int Count { get; set; } = 5;
+        [Parameter]
+        public int Count { get; set; } = 5;
 
         /// <summary>
         /// 当前值--被选中的星星数量
@@ -60,18 +65,19 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public EventCallback<decimal> ValueChanged { get; set; }
+        [Parameter] public EventCallback<decimal> ValueChanged { get; set; }
 
         /// <summary>
         /// 默认当前被选中的星星数量,如果被设置为小数位不为0的，则组件默认含有半星并且允许半星
         /// </summary>
-        [Parameter] public decimal DefaultValue { get; set; }
+        [Parameter]
+        public decimal DefaultValue { get; set; }
 
         /// <summary>
         /// 自定义每项的提示信息（存储每个子元素的提醒框内容文本）
         /// </summary>
-        [Parameter] public string[] Tooltips { get; set; }
+        [Parameter]
+        public string[] Tooltips { get; set; }
 
         [Parameter] public EventCallback<FocusEventArgs> OnBlur { get; set; }
 
@@ -83,6 +89,7 @@ namespace AntDesign
         /// 是否允许半选
         /// </summary>
         private bool _hasHalf = false;
+
         /// <summary>
         /// 鼠标悬停时从最左到光标位置的星星数。
         /// </summary>
@@ -102,13 +109,14 @@ namespace AntDesign
         {
             this._isFocused = false;
             OnBlur.InvokeAsync(e);
-
         }
+
         private void Focus(FocusEventArgs e)
         {
             this._isFocused = true;
             OnFocus.InvokeAsync(e);
         }
+
         private void KeyDown(KeyboardEventArgs e)
         {
             decimal oldVal = this.Value;
@@ -121,12 +129,14 @@ namespace AntDesign
             {
                 this.Value -= this.AllowHalf ? 0.5M : 1M;
             }
+
             if (oldVal != this.Value)
             {
                 this._hasHalf = !(this.Value == (int)this.Value);
                 this._hoverValue = (int)Math.Ceiling(this.Value);
             }
         }
+
         private void MouseLeave()
         {
             this._hasHalf = !(this.Value == (int)this.Value);
@@ -174,13 +184,16 @@ namespace AntDesign
             }
 
             SetClass();
-            RateMetaDatas = Enumerable.Range(1, Count).Select(c => new RateMetaData() { SerialNumber = c - 1, ToolTipText = this.Tooltips?[c - 1] });
+            RateMetaDatas = Enumerable.Range(1, Count).Select(c =>
+                new RateMetaData() {SerialNumber = c - 1, ToolTipText = this.Tooltips?[c - 1]});
             base.OnInitialized();
         }
+
         protected override void OnParametersSet()
         {
             if (RateMetaDatas == null)
-                RateMetaDatas = Enumerable.Range(1, Count).Select(c => new RateMetaData() { SerialNumber = c - 1, ToolTipText = this.Tooltips?[c - 1] });
+                RateMetaDatas = Enumerable.Range(1, Count).Select(c =>
+                    new RateMetaData() {SerialNumber = c - 1, ToolTipText = this.Tooltips?[c - 1]});
             SetClass();
             base.OnParametersSet();
         }
@@ -191,7 +204,7 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(clsPrefix)
-            .If("ant-rate-disabled", () => Disabled);
+                .If("ant-rate-disabled", () => Disabled);
         }
     }
 
@@ -200,7 +213,6 @@ namespace AntDesign
         public int SerialNumber { get; set; }
 
         public string ToolTipText { get; set; }
-
     }
 
     public class RateItemRenderContext

@@ -12,10 +12,10 @@ namespace AntDesign
         DateTime IDatePicker.CurrentDate { get; set; } = DateTime.Now;
         DateTime? IDatePicker.HoverDateTime { get; set; }
 
-        [Parameter]
-        public DateTime Value { get; set; } = DateTime.Now;
+        [Parameter] public DateTime Value { get; set; } = DateTime.Now;
 
         private DateTime _defaultValue;
+
         [Parameter]
         public DateTime DefaultValue
         {
@@ -30,44 +30,32 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public DateTime[] ValidRange { get; set; }
+        [Parameter] public DateTime[] ValidRange { get; set; }
 
-        [Parameter]
-        public string Mode { get; set; } = DatePickerType.Month;
+        [Parameter] public string Mode { get; set; } = DatePickerType.Month;
 
-        [Parameter]
-        public bool FullScreen { get; set; } = true;
+        [Parameter] public bool FullScreen { get; set; } = true;
 
-        [Parameter]
-        public EventCallback<DateTime> OnSelect { get; set; }
+        [Parameter] public EventCallback<DateTime> OnSelect { get; set; }
 
-        [Parameter]
-        public EventCallback<DateTime> OnChange { get; set; }
+        [Parameter] public EventCallback<DateTime> OnChange { get; set; }
 
-        [Parameter]
-        public Func<CalendarHeaderRenderArgs, RenderFragment> HeaderRender { get; set; }
+        [Parameter] public Func<CalendarHeaderRenderArgs, RenderFragment> HeaderRender { get; set; }
 
-        [Parameter]
-        public Func<DateTime, RenderFragment> DateCellRender { get; set; }
+        [Parameter] public Func<DateTime, RenderFragment> DateCellRender { get; set; }
 
-        [Parameter]
-        public Func<DateTime, RenderFragment> DateFullCellRender { get; set; }
+        [Parameter] public Func<DateTime, RenderFragment> DateFullCellRender { get; set; }
 
-        [Parameter]
-        public Func<DateTime, RenderFragment> MonthCellRender { get; set; }
+        [Parameter] public Func<DateTime, RenderFragment> MonthCellRender { get; set; }
 
-        [Parameter]
-        public Func<DateTime, RenderFragment> MonthFullCellRender { get; set; }
+        [Parameter] public Func<DateTime, RenderFragment> MonthFullCellRender { get; set; }
 
-        [Parameter]
-        public Action<DateTime, string> OnPanelChange { get; set; }
+        [Parameter] public Action<DateTime, string> OnPanelChange { get; set; }
 
-        [Parameter]
-        public Func<DateTime, bool> DisabledDate { get; set; } = null;
+        [Parameter] public Func<DateTime, bool> DisabledDate { get; set; } = null;
 
         protected string _picker;
-        protected readonly DateTime[] PickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
+        protected readonly DateTime[] PickerValues = new DateTime[] {DateTime.Now, DateTime.Now};
         protected Stack<string> _prePickerStack = new Stack<string>();
 
         public readonly string PrefixCls = "ant-picker-calendar";
@@ -108,7 +96,7 @@ namespace AntDesign
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-full", () => FullScreen)
-               ;
+                ;
         }
 
         protected async Task OnSelectValue(DateTime date)

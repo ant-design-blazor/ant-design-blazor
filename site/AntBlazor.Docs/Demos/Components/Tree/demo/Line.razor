@@ -1,9 +1,8 @@
-
 <div>
-    ShowLine <Switch Checked="_showLine" OnChange="(v)=>_showLine = v" />
-    <br />
-    ShowIcon <Switch Checked="_showIcon" OnChange="(v)=>_showIcon = v" />
-    <br />
+    ShowLine <Switch Checked="_showLine" OnChange="(v) => _showLine = v"/>
+    <br/>
+    ShowIcon <Switch Checked="_showIcon" OnChange="(v) => _showIcon = v"/>
+    <br/>
     <Tree ShowLine="_showLine" ShowIcon="_showIcon" IconType="carry-out" Nodes="TreeNodes"></Tree>
 </div>
 
@@ -21,34 +20,39 @@
             if (_treeNodes != null)
                 return _treeNodes;
 
-            _treeNodes = new List<TreeNode>(){
+            _treeNodes = new List<TreeNode>()
+            {
                 new TreeNode
                 {
-                    Text = "parent 1",IsExpanded = true,
-                    Nodes ={
+                    Text = "parent 1", IsExpanded = true,
+                    Nodes =
+                    {
                         new TreeNode
                         {
-                            Text="parent 1-0",IsExpanded=true,
-                            Nodes={
-                                new TreeNode{ Text="leaf" }
+                            Text = "parent 1-0", IsExpanded = true,
+                            Nodes =
+                            {
+                                new TreeNode {Text = "leaf"}
                                 ,
-                                new TreeNode{ Text="leaf" }
+                                new TreeNode {Text = "leaf"}
                                 ,
-                                new TreeNode{ Text="leaf" }
+                                new TreeNode {Text = "leaf"}
                             }
                         },
                         new TreeNode
                         {
-                            Text="parent 1-1",
-                            Nodes={
-                                new TreeNode{ Text="leaf"},
+                            Text = "parent 1-1",
+                            Nodes =
+                            {
+                                new TreeNode {Text = "leaf"},
                             }
                         },
                         new TreeNode
                         {
-                            Text="parent 1-2",
-                            Nodes={
-                                new TreeNode{ Text="leaf",SwitcherIcon="form"},
+                            Text = "parent 1-2",
+                            Nodes =
+                            {
+                                new TreeNode {Text = "leaf", SwitcherIcon = "form"},
                             }
                         }
                     }
@@ -58,6 +62,5 @@
             return _treeNodes;
         }
     }
+
 }
-
-

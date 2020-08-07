@@ -1,14 +1,14 @@
 ﻿<Layout>
     <Header Class="header">
-        <div class="logo" />
-        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Horizontal" DefaultSelectedKeys=@(new []{"2"})>
+        <div class="logo"/>
+        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Horizontal" DefaultSelectedKeys=@(new[] {"2"})>
             <MenuItem Key="1">nav 1</MenuItem>
             <MenuItem Key="2">nav 2</MenuItem>
             <MenuItem Key="3">nav 3</MenuItem>
         </Menu>
     </Header>
     <Content Style="padding: 0 50px">
-        <Breadcrumb Style=" margin: 16px 0">
+        <Breadcrumb Style="margin: 16px 0">
             <BreadcrumbItem>Home</BreadcrumbItem>
             <BreadcrumbItem>List</BreadcrumbItem>
             <BreadcrumbItem>App</BreadcrumbItem>
@@ -19,33 +19,39 @@
                       DefaultSelectedKeys=@(new[] {"1"})
                       DefaultOpenKeys=@(new[] {"sub1"})
                       Style="height: 100%;">
-                    @{ RenderFragment sub1Title =
-                        @<span>
-                            <Icon Type="user" Theme="outline" />
-                            subnav 1
-                        </span>; }
+                    @{
+                        RenderFragment sub1Title =
+                            @<span>
+                                <Icon Type="user" Theme="outline"/>
+                                subnav 1
+                            </span>;
+                    }
                     <SubMenu Key="sub1" Title=sub1Title>
                         <MenuItem Key="1">option1</MenuItem>
                         <MenuItem Key="2">option2</MenuItem>
                         <MenuItem Key="3">option3</MenuItem>
                         <MenuItem Key="4">option4</MenuItem>
                     </SubMenu>
-                    @{ RenderFragment sub2Title =
-                        @<span>
-                            <Icon Type="laptop" Theme="outline" />
-                            subnav 2
-                        </span>; }
+                    @{
+                        RenderFragment sub2Title =
+                            @<span>
+                                <Icon Type="laptop" Theme="outline"/>
+                                subnav 2
+                            </span>;
+                    }
                     <SubMenu Key="sub2" Title=sub2Title>
                         <MenuItem Key="5">option5</MenuItem>
                         <MenuItem Key="6">option6</MenuItem>
                         <MenuItem Key="7">option7</MenuItem>
                         <MenuItem Key="8">option8</MenuItem>
                     </SubMenu>
-                    @{ RenderFragment sub3Title =
-                        @<span>
-                            <Icon Type="notification" Theme="outline" />
-                            subnav 3
-                        </span>; }
+                    @{
+                        RenderFragment sub3Title =
+                            @<span>
+                                <Icon Type="notification" Theme="outline"/>
+                                subnav 3
+                            </span>;
+                    }
                     <SubMenu Key="sub3" Title=sub3Title>
                         <MenuItem Key="9">option9</MenuItem>
                         <MenuItem Key="10">option10</MenuItem>
@@ -54,10 +60,10 @@
                     </SubMenu>
                 </Menu>
             </Sider>
-            <Content Style="padding:0 24px; min-height: 280px;">Content</Content>
+            <Content Style="padding: 0 24px; min-height: 280px;">Content</Content>
         </Layout>
     </Content>
-    <Footer Style="text-align: center; ">Ant Design ©2018 Created by Ant UED</Footer>
+    <Footer Style="text-align: center;">Ant Design ©2018 Created by Ant UED</Footer>
 </Layout>
 
 <style>
@@ -69,7 +75,5 @@
         float: left;
     }
 
-    .site-layout-background {
-        background: #fff;
-    }
+    .site-layout-background { background: #fff; }
 </style>

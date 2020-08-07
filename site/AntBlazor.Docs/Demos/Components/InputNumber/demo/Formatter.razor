@@ -16,7 +16,7 @@
 
     private string Parse1(string value)
     {
-       return Regex.Replace(value, @"\$\s?|(,*)", "");
+        return Regex.Replace(value, @"\$\s?|(,*)", "");
     }
 
     private string Format2(double value)
@@ -28,4 +28,5 @@
     {
         return value.Replace("%", "");
     }
-}		
+
+}

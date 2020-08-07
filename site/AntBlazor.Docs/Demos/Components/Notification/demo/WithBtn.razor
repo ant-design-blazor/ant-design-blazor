@@ -10,14 +10,15 @@
     {
         string key = $"open{DateTime.Now}";
         RenderFragment btn = @<Button Type="@ButtonType.Primary" OnClick="() => { _notice.Close(key); }">
-                                confirm
-                            </Button>;
+                                 confirm
+                             </Button>;
         await _notice.Open(new NotificationConfig()
         {
             Message = "Notification Title",
             Key = key,
             Description = "A function will be be called after the notification is closed (automatically after the \"duration\" time of manually).",
-            Btn = btn 
+            Btn = btn
         });
     }
+
 }

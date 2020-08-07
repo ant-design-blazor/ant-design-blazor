@@ -6,14 +6,11 @@ namespace AntDesign.Docs.Shared
     {
         private ClassMapper ClassMapper { get; set; } = new ClassMapper();
 
-        [Parameter]
-        public int Height { get; set; }
+        [Parameter] public int Height { get; set; }
 
-        [Parameter]
-        public string WithUrl { get; set; }
+        [Parameter] public string WithUrl { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         protected override void OnInitialized()
         {

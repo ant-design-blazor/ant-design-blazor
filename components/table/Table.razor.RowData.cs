@@ -33,7 +33,8 @@ namespace AntDesign
 
             // Clear cached items that are not on current page
             var currentPageCacheKeys = _selection.RowSelections.Select(x => x.CacheKey);
-            var deletedCaches = _dataSourceCache.Where(x => x.Value.PageIndex == PageIndex && !x.Key.IsIn(currentPageCacheKeys));
+            var deletedCaches =
+                _dataSourceCache.Where(x => x.Value.PageIndex == PageIndex && !x.Key.IsIn(currentPageCacheKeys));
             var needInvokeChange = deletedCaches.Any(x => x.Value.Selected);
             deletedCaches.ForEach(x => _dataSourceCache.Remove(x));
 

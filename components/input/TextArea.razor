@@ -6,18 +6,18 @@
     Dictionary<string, object> attributes =
         new Dictionary<string, object>()
         {
-            { "onchange", CallbackFactory.Create(this, OnChangeAsync) },
-            { "onblur", CallbackFactory.Create(this, OnBlur) },
-            { "oninput", CallbackFactory.Create(this, OnInputAsync) },
-            { "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync) },
-            { "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync) },
-            { "onfocus", CallbackFactory.Create(this, OnFocus) },
-            { "value", CurrentValueAsString },
-            { "placeholder", Placeholder },
-            { "id", Id },
-            { "style", Style },
-            { "class", ClassMapper.Class },
-                    };
+            {"onchange", CallbackFactory.Create(this, OnChangeAsync)},
+            {"onblur", CallbackFactory.Create(this, OnBlur)},
+            {"oninput", CallbackFactory.Create(this, OnInputAsync)},
+            {"onkeypress", CallbackFactory.Create(this, OnKeyPressAsync)},
+            {"onkeyup", CallbackFactory.Create(this, OnKeyUpAsync)},
+            {"onfocus", CallbackFactory.Create(this, OnFocus)},
+            {"value", CurrentValueAsString},
+            {"placeholder", Placeholder},
+            {"id", Id},
+            {"style", Style},
+            {"class", ClassMapper.Class},
+        };
 
     if (Attributes != null)
     {
@@ -39,5 +39,5 @@ else
 
 @if (AutoSize)
 {
-    <textarea class="@ClassMapper.Class" style="position:absolute;z-index:-1; visibility: hidden;height: 0px;overflow-y:hidden; @_hiddenWidth" @ref="_hiddenEle">@Value</textarea>
+    <textarea class="@ClassMapper.Class" style="position: absolute; z-index: -1; visibility: hidden; height: 0px; overflow-y: hidden; @_hiddenWidth" @ref="_hiddenEle">@Value</textarea>
 }

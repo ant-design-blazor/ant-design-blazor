@@ -26,8 +26,7 @@ namespace AntDesign
 
         #region Parameters
 
-        [CascadingParameter(Name = "Root")]
-        public Anchor Root { get; set; }
+        [CascadingParameter(Name = "Root")] public Anchor Root { get; set; }
 
         private IAnchor _parent;
 
@@ -43,8 +42,7 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// target of hyperlink
@@ -153,8 +151,10 @@ namespace AntDesign
             DomRect domRect = null;
             if (forced || _hrefDomExist)
             {
-                domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#" + Href.Split('#')[1]);
+                domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect,
+                    "#" + Href.Split('#')[1]);
             }
+
             return domRect;
         }
 

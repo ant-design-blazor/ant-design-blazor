@@ -82,7 +82,8 @@ namespace AntDesign
         {
             if (effect == CarouselEffect.Fade)
             {
-                return $"outline: none; width: {width}px; position: relative; left: {-width * index}px; opacity: {(Active ? 1 : 0)}; transition: opacity 500ms ease 0s, visibility 500ms ease 0s;";
+                return
+                    $"outline: none; width: {width}px; position: relative; left: {-width * index}px; opacity: {(Active ? 1 : 0)}; transition: opacity 500ms ease 0s, visibility 500ms ease 0s;";
             }
             else
             {

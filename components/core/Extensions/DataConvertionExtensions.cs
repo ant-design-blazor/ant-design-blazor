@@ -19,9 +19,9 @@ namespace AntDesign.core.Extensions
 
             // Creating a method body
             BlockExpression blockExpression = Expression.Block(
-                new[] { toExpression },
+                new[] {toExpression},
                 Expression.Assign(toExpression, fromExpression)
-                );
+            );
 
             return Expression.Lambda<Func<TFrom, TTo>>(blockExpression, fromExpression).Compile()(fromValue);
         }

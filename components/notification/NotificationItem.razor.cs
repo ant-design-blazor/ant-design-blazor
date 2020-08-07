@@ -9,11 +9,9 @@ namespace AntDesign
 {
     public partial class NotificationItem
     {
-        [Parameter]
-        public NotificationConfig Config { get; set; }
+        [Parameter] public NotificationConfig Config { get; set; }
 
-        [Parameter]
-        public Func<NotificationConfig, Task> OnClose { get; set; }
+        [Parameter] public Func<NotificationConfig, Task> OnClose { get; set; }
 
         private string GetIconClassName()
         {
@@ -33,6 +31,7 @@ namespace AntDesign
             {
                 return Config.ClassName + Config.AnimationClass;
             }
+
             return Config.AnimationClass;
         }
 

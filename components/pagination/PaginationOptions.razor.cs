@@ -11,7 +11,8 @@ namespace AntDesign
         /// <summary>
         /// 'default' | 'small' = 'default';
         /// </summary>
-        [Parameter] public string Size { get; set; } = "default";
+        [Parameter]
+        public string Size { get; set; } = "default";
 
         [Parameter] public bool Disabled { get; set; } = false;
 

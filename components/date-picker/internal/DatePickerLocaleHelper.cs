@@ -18,6 +18,7 @@ namespace AntDesign
                 {
                     _locales[info.Name] = GenerateDateLocale(info.Name);
                 }
+
                 return _locales[info.Name];
             }
         }
@@ -36,10 +37,12 @@ namespace AntDesign
     interface IDateLocale
     {
         string DateFormat { get; }
+
         /// <summary>
         /// The start day of week should be either Monday or Sunday according to the CultureInfo
         /// </summary>
         string[] ShortWeekDays { get; }
+
         string Year { get; }
         string Month { get; }
         string Week => "Week";
@@ -71,7 +74,7 @@ namespace AntDesign
     {
         private string _locale = "en-US";
         public string DateFormat => "yyyy-MM-dd";
-        public string[] ShortWeekDays => new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
+        public string[] ShortWeekDays => new string[] {"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
         public string Year => "Year";
         public string Month => "Month";
         public string Week => "Week";
@@ -97,14 +100,13 @@ namespace AntDesign
         public string EndOfYear => "End year";
         public string StartOfQuarter => "Start quarter";
         public string EndOfQuarter => "End quarter";
-
     }
 
     class ZhCnLocale : IDateLocale
     {
         private string _locale = "zh-CN";
         public string DateFormat => "yyyy年M月d日";
-        public string[] ShortWeekDays => new string[] { "一", "二", "三", "四", "五", "六", "日" };
+        public string[] ShortWeekDays => new string[] {"一", "二", "三", "四", "五", "六", "日"};
         public string Year => "年";
         public string Month => "月";
         public string Week => "周";
@@ -132,4 +134,3 @@ namespace AntDesign
         public string EndOfQuarter => "结束季度";
     }
 }
-

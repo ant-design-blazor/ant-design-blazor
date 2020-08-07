@@ -11,28 +11,21 @@ namespace AntDesign
     {
         #region Parameter
 
-        [Parameter]
-        public bool Accordion { get; set; }
+        [Parameter] public bool Accordion { get; set; }
 
-        [Parameter]
-        public bool Bordered { get; set; } = true;
+        [Parameter] public bool Bordered { get; set; } = true;
 
-        [Parameter]
-        public string ExpandIconPosition { get; set; } = CollapseExpandIconPosition.Left;
+        [Parameter] public string ExpandIconPosition { get; set; } = CollapseExpandIconPosition.Left;
 
-        [Parameter]
-        public string[] DefaultActiveKey { get; set; } = Array.Empty<string>();
+        [Parameter] public string[] DefaultActiveKey { get; set; } = Array.Empty<string>();
 
-        [Parameter]
-        public EventCallback<string[]> OnChange { get; set; }
+        [Parameter] public EventCallback<string[]> OnChange { get; set; }
 
-        [Parameter]
-        public OneOf<bool, RenderFragment<bool>> ExpandIcon { get; set; } = true;
+        [Parameter] public OneOf<bool, RenderFragment<bool>> ExpandIcon { get; set; } = true;
 
         #endregion Parameter
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         private IList<Panel> Items { get; } = new List<Panel>();
 

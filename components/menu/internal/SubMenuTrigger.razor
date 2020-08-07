@@ -6,7 +6,7 @@
 }
 <li class="@TriggerClass"
     role="menuitem"
-    style="position:relative;@SubMenuComponent.Style"
+    style="position: relative; @SubMenuComponent.Style"
     @key="SubMenuComponent.Key"
     @ref="@Ref"
     @onclick="OnClickDiv"
@@ -19,7 +19,7 @@
 
 <CascadingValue Value="this" Name="Trigger">
     <Overlay @ref="_overlay"
-             OverlayChildPrefixCls="@($"{prefixCls}-menu")"
-             OnOverlayMouseEnter="OnOverlayMouseEnter"
-             OnOverlayMouseLeave="OnOverlayMouseLeave" />
+              OverlayChildPrefixCls="@($"{prefixCls}-menu")"
+              OnOverlayMouseEnter="OnOverlayMouseEnter"
+              OnOverlayMouseLeave="OnOverlayMouseLeave"/>
 </CascadingValue>

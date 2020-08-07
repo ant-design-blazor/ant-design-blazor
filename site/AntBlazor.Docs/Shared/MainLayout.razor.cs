@@ -15,17 +15,13 @@ namespace AntDesign.Docs.Shared
 
         private string CurrentLanguage => LanguageService.CurrentCulture.Name;
 
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        [Inject] public NavigationManager NavigationManager { get; set; }
 
-        [Inject]
-        public ILanguageService LanguageService { get; set; }
+        [Inject] public ILanguageService LanguageService { get; set; }
 
-        [Inject]
-        public DemoService DemoService { get; set; }
+        [Inject] public DemoService DemoService { get; set; }
 
-        [Inject]
-        public IJSRuntime JsInterop { get; set; }
+        [Inject] public IJSRuntime JsInterop { get; set; }
 
         internal PrevNextNav PrevNextNav { get; set; }
 
@@ -64,6 +60,7 @@ namespace AntDesign.Docs.Shared
                     item.Url = $"{CurrentLanguage}/{currentSubmenuUrl}/{item.Title.ToLowerInvariant()}";
                 }
             }
+
             PrevNextNav?.SetPrevNextNav(prevNext[0], prevNext[1]);
         }
 

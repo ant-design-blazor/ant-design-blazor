@@ -11,7 +11,9 @@
             <div class="main">
                 <Descriptions Size="small" Column="2">
                     <DescriptionsItem Title="@("Created")" Span="1">Lili Qu</DescriptionsItem>
-                    <DescriptionsItem Title="@("Association")" Span="1"><a>421421</a></DescriptionsItem>
+                    <DescriptionsItem Title="@("Association")" Span="1">
+                        <a>421421</a>
+                    </DescriptionsItem>
                     <DescriptionsItem Title="@("Creation Time")" Span="1">2017-01-10</DescriptionsItem>
                     <DescriptionsItem Title="@("Effective Time")" Span="1">2017-10-10</DescriptionsItem>
                     <DescriptionsItem Title="@("Remarks")" Span="2">
@@ -40,9 +42,7 @@
 </PageHeader>
 
 <style>
-    .content {
-        display: flex;
-    }
+    .content { display: flex; }
 
     .extra div {
         display: flex;
@@ -51,9 +51,7 @@
     }
 
     @@media (max-width: 576px) {
-        .content {
-            display: block;
-        }
+        .content { display: block; }
 
         .main {
             width: 100%;

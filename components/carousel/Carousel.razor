@@ -35,7 +35,7 @@
                     for (int i = 0; i < _slicks.Count; i++)
                     {
                         int index = i;
-                        <div data-index="@(i+_slicks.Count)" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@_slickClonedStyle">
+                        <div data-index="@(i + _slicks.Count)" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@_slickClonedStyle">
                             <div>
                                 <div tabindex="-1" style="width: 100%; display: inline-block;">
                                     @_slicks[index].ChildContent
@@ -50,8 +50,8 @@
             @for (int i = 0; i < _slicks.Count; i++)
             {
                 int index = i;
-                <li class="@(_slicks[index].Active?"slick-active":string.Empty)">
-                    <button @onclick="(e)=>Activate(index)">@(index + 1)</button>
+                <li class="@(_slicks[index].Active ? "slick-active" : string.Empty)">
+                    <button @onclick="(e) => Activate(index)">@(index + 1)</button>
                 </li>
             }
         </ul>

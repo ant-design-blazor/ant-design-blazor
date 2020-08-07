@@ -7,17 +7,16 @@
     <Button Type="primary" Size="small" Loading>
         Loading
     </Button>
-    <br />
+    <br/>
     <Button Type="primary" Loading="loading" OnClick=enterLoading>
         Click me!
     </Button>
     <Button
         Type="primary"
         Icon="poweroff"
-    Loading="iconLoading"
-    OnClick="enterIconLoading"
-    >
-    Click me!
+        Loading="iconLoading"
+        OnClick="enterIconLoading">
+        Click me!
     </Button>
 </div>
 
@@ -36,7 +35,6 @@
             await InvokeAsync(StateHasChanged);
             Console.WriteLine("Timer2 ended" + DateTime.Now);
         });
-
     }
 
     private void enterIconLoading()

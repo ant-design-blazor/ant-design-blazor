@@ -4,8 +4,7 @@ namespace AntDesign
 {
     public abstract class AntDomComponentBase : AntComponentBase
     {
-        [Parameter]
-        public string Id { get; set; } = IdGeneratorHelper.Generate("ant-blazor-");
+        [Parameter] public string Id { get; set; } = IdGeneratorHelper.Generate("ant-blazor-");
 
         //[Parameter(CaptureUnmatchedValues = true)]
         //public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();

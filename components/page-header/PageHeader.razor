@@ -14,7 +14,7 @@
                 {
                     <div @onclick="OnBackClick" class="ant-page-header-back">
                         <div role="button" tabindex="0" class="ant-page-header-back-button">
-                            <Icon Type="@BackIcon.AsT0" Theme="outline" />
+                            <Icon Type="@BackIcon.AsT0" Theme="outline"/>
                         </div>
                     </div>
                 }
@@ -27,7 +27,7 @@
             {
                 <div @onclick="OnBackClick" class="ant-page-header-back">
                     <div role="button" tabindex="0" class="ant-page-header-back-button">
-                        <Icon Type="arrow-left" Theme="outline" />
+                        <Icon Type="arrow-left" Theme="outline"/>
                     </div>
                 </div>
             }
@@ -38,7 +38,6 @@
             <!--title-->
             @if (Title.Value != null)
             {
-
                 <span class="ant-page-header-heading-title">
                     @if (Title.IsT0)
                     {
@@ -63,7 +62,6 @@
             <!--subtitle-->
             @if (Subtitle.Value != null)
             {
-
                 <span class="ant-page-header-heading-sub-title">
                     @if (Subtitle.IsT0)
                     {
@@ -83,7 +81,6 @@
                         @PageHeaderSubtitle
                     </div>
                 }
-
             }
             @if (PageHeaderTags != null)
             {

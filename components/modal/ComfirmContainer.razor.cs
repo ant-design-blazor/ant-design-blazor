@@ -9,8 +9,7 @@ namespace AntDesign
 {
     public partial class ComfirmContainer
     {
-        [Inject]
-        private ModalService ModalService { get; set; }
+        [Inject] private ModalService ModalService { get; set; }
 
         private List<ModalRef> _modalRefs = new List<ModalRef>();
 
@@ -33,6 +32,7 @@ namespace AntDesign
             {
                 _modalRefs.Add(modalRef);
             }
+
             await InvokeAsync(StateHasChanged);
         }
 
@@ -48,6 +48,7 @@ namespace AntDesign
             {
                 _modalRefs.Remove(modalRef);
             }
+
             modalRef.OnClose?.Invoke();
         }
 
@@ -68,6 +69,7 @@ namespace AntDesign
             {
                 _modalRefs.Remove(modalRef);
             }
+
             modalRef.OnDestroy?.Invoke();
         }
 
@@ -78,6 +80,7 @@ namespace AntDesign
                 modalRef.Config.Visible = false;
                 modalRef.OnDestroy?.Invoke();
             }
+
             await InvokeAsync(StateHasChanged);
             await Task.Delay(250);
             _modalRefs.Clear();

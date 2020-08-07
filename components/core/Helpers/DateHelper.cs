@@ -20,25 +20,25 @@ namespace AntDesign
         public static bool IsSameMonth(DateTime date, DateTime compareDate)
         {
             return IsSameYear(date, compareDate)
-                && date.Month == compareDate.Month;
+                   && date.Month == compareDate.Month;
         }
 
         public static bool IsSameDay(DateTime date, DateTime compareDate)
         {
             return IsSameYear(date, compareDate)
-                && _calendar.GetDayOfYear(date) == _calendar.GetDayOfYear(compareDate);
+                   && _calendar.GetDayOfYear(date) == _calendar.GetDayOfYear(compareDate);
         }
 
         public static bool IsSameWeak(DateTime date, DateTime compareDate)
         {
             return IsSameYear(date, compareDate)
-                && GetWeekOfYear(date) == GetWeekOfYear(compareDate);
+                   && GetWeekOfYear(date) == GetWeekOfYear(compareDate);
         }
 
         public static bool IsSameQuarter(DateTime date, DateTime compareDate)
         {
             return IsSameYear(date, compareDate)
-                && GetDayOfQuarter(date) == GetDayOfQuarter(compareDate);
+                   && GetDayOfQuarter(date) == GetDayOfQuarter(compareDate);
         }
 
         public static string GetDayOfQuarter(DateTime date)

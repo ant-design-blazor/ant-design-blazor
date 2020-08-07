@@ -1,5 +1,5 @@
 <Select ShowSearch
-        Style="width:200px"
+        Style="width: 200px"
         Placeholder="input search text"
         ShowArrow="false"
         FilterOption="false"
@@ -16,6 +16,7 @@
 @using System.Web;
 @using System.Text.Json;
 @inject HttpClient Http
+
 @code
 {
     private Task<string> _oldTask;

@@ -32,11 +32,14 @@
 @code{
     public string PrefixName { get; set; } = "ant-list-item-meta";
 
-    [Parameter] public RenderFragment Title { get; set; }
+    [Parameter]
+    public RenderFragment Title { get; set; }
 
-    [Parameter] public OneOf.OneOf<string, RenderFragment> Avatar { get; set; }
+    [Parameter]
+    public OneOf.OneOf<string, RenderFragment> Avatar { get; set; }
 
-    [Parameter] public string Description { get; set; }
+    [Parameter]
+    public string Description { get; set; }
 
     protected override void OnInitialized()
     {
@@ -55,4 +58,5 @@
         ClassMapper.Clear()
             .Add(PrefixName);
     }
+
 }

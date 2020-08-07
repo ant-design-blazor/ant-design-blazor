@@ -14,23 +14,23 @@
 
 <div class='@($"{PrefixCls}-panel")'>
     <DatePickerTemplate @attributes="GetAttritubes()"
-                        TValue="TValue"
-                        MaxRow="MAX_ROW"
-                        MaxCol="MAX_COL"
-                        ViewStartDate="startDate"
-                        IsInView="date => true"
-                        IsToday="date => DateHelper.IsSameQuarter(date, DatePicker.CurrentDate)"
-                        IsSelected="date => DateHelper.IsSameQuarter(date, Value)"
-                        GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo)'
-                        OnValueSelect="date => OnSelectQuarter(date)"
-                        GetNextColValue="date => date.AddMonths(3)">
+                         TValue="TValue"
+                         MaxRow="MAX_ROW"
+                         MaxCol="MAX_COL"
+                         ViewStartDate="startDate"
+                         IsInView="date => true"
+                         IsToday="date => DateHelper.IsSameQuarter(date, DatePicker.CurrentDate)"
+                         IsSelected="date => DateHelper.IsSameQuarter(date, Value)"
+                         GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo)'
+                         OnValueSelect="date => OnSelectQuarter(date)"
+                         GetNextColValue="date => date.AddMonths(3)">
         <RenderPickerHeader>
             <DatePickerHeader @attributes="GetAttritubes()"
-                              TValue="TValue"
-                              ShowPreChange="@false"
-                              ShowNextChange="@false"
-                              ShowSuperPreChange="@(!(IsRange && PickerIndex == 1))"
-                              ShowSuperNextChange="@(!(IsRange && PickerIndex == 0))" />
+                               TValue="TValue"
+                               ShowPreChange="@false"
+                               ShowNextChange="@false"
+                               ShowSuperPreChange="@(!(IsRange && PickerIndex == 1))"
+                               ShowSuperNextChange="@(!(IsRange && PickerIndex == 0))"/>
         </RenderPickerHeader>
         <RenderColValue Context="currentColDate">
             @DateHelper.GetDayOfQuarter(currentColDate)

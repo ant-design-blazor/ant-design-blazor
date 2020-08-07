@@ -64,17 +64,14 @@ namespace AntDesign.Docs.Build.CLI.Command
                 var fileName = docs.Name.Replace(docs.Extension, "");
                 var content = File.ReadAllText(docs.FullName);
                 var docInfo = DocParser.ParseDocs(content);
-                var json = JsonSerializer.Serialize(new DocsFile
-                {
-                    Order = docInfo.order,
-                    Title = docInfo.title,
-                    Html = docInfo.html
-                }, new JsonSerializerOptions()
-                {
-                    WriteIndented = true,
-                    IgnoreNullValues = true,
-                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-                });
+                var json = JsonSerializer.Serialize(
+                    new DocsFile {Order = docInfo.order, Title = docInfo.title, Html = docInfo.html},
+                    new JsonSerializerOptions()
+                    {
+                        WriteIndented = true,
+                        IgnoreNullValues = true,
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                    });
 
                 var configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
                 if (!Directory.Exists(configFileDirectory))

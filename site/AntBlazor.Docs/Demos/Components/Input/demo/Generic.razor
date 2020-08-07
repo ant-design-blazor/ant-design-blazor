@@ -1,48 +1,49 @@
 ﻿<div>
     <Text>string</Text>
-    <Input @bind-Value="@_str" />
+    <Input @bind-Value="@_str"/>
     <p>value:@_str</p>
-    <br />
+    <br/>
 
     <Text>int</Text>
-    <Input @bind-Value="@_int" />
+    <Input @bind-Value="@_int"/>
     <p>value:@_int</p>
-    <br />
+    <br/>
 
     <Text>int?</Text>
-    <Input Placeholder="Null" @bind-Value="@_intNull" />
+    <Input Placeholder="Null" @bind-Value="@_intNull"/>
     <p>value:@_intNull</p>
-    <br />
+    <br/>
 
     <Text>decimal</Text>
-    <Input @bind-Value="@_dec" />
+    <Input @bind-Value="@_dec"/>
     <p>value:@_dec</p>
-    <br />
+    <br/>
 
     <Text>decimal?</Text>
-    <Input Placeholder="Null " @bind-Value="@_decNull" />
+    <Input Placeholder="Null " @bind-Value="@_decNull"/>
     <p>value:@_decNull</p>
-    <br />
+    <br/>
 
     <Text>double</Text>
-    <Input @bind-Value="@_double" />
+    <Input @bind-Value="@_double"/>
     <p>value:@_double</p>
-    <br />
+    <br/>
 
     <Text>double?</Text>
-    <Input Placeholder="Null " @bind-Value="@_doubleNull" />
+    <Input Placeholder="Null " @bind-Value="@_doubleNull"/>
     <p>value:@_doubleNull</p>
-    <br />
+    <br/>
 
     <Text>DateTime</Text>
-    <Input @bind-Value="@_date" />
+    <Input @bind-Value="@_date"/>
     <p>value:@_date</p>
-    <br />
+    <br/>
 
     <Text>DateTime?</Text>
-    <Input Placeholder="Null" @bind-Value="@_dateNull" />
+    <Input Placeholder="Null" @bind-Value="@_dateNull"/>
     <p>value:@_dateNull</p>
 </div>
+
 @code{
     string _str;
     int _int;

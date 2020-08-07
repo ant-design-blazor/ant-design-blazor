@@ -2,9 +2,9 @@
 
 <Button OnClick="@OnSuccessClick">
     success
-</Button>   
+</Button>
 
- <Button OnClick="@OnInfoClick">
+<Button OnClick="@OnInfoClick">
     info
 </Button>
 
@@ -17,6 +17,7 @@
 </Button>
 
 @code{
+
     private async Task NoticeWithIcon(NotificationType type)
     {
         await _notice.Open(new NotificationConfig()

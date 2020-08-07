@@ -14,8 +14,9 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddHttpClient("AntDesign");
             services.TryAddScoped<DomEventService>();
-            services.TryAddScoped(sp => new HtmlRenderService(new HtmlRenderer(sp, sp.GetRequiredService<ILoggerFactory>(),
-                        s => HtmlEncoder.Default.Encode(s)))
+            services.TryAddScoped(sp => new HtmlRenderService(new HtmlRenderer(sp,
+                sp.GetRequiredService<ILoggerFactory>(),
+                s => HtmlEncoder.Default.Encode(s)))
             );
 
             services.TryAddScoped<IconService>();

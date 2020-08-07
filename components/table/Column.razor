@@ -50,7 +50,7 @@ else
         {
             if (!string.IsNullOrWhiteSpace(Format))
             {
-                @(Formatter<TData>.Format(Field,Format))
+                @(Formatter<TData>.Format(Field, Format))
             }
             else
             {
@@ -67,15 +67,15 @@ else
     string HeaderTitle => Title ?? DisplayName ?? FieldName;
 
     readonly RenderFragment<Column<TData>> SortHeader = col =>
-    @<div class="ant-table-column-sorters">
-        <span>@col.HeaderTitle</span>
-        <span class="ant-table-column-sorter ant-table-column-sorter-full">
-            <span class="ant-table-column-sorter-inner">
-                <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up {(col.SortModel.SortType==SortType.Ascending? "active":"")}") />
-                <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down {(col.SortModel.SortType==SortType.Descending? "active":"")}") />
+        @<div class="ant-table-column-sorters">
+            <span>@col.HeaderTitle</span>
+            <span class="ant-table-column-sorter ant-table-column-sorter-full">
+                <span class="ant-table-column-sorter-inner">
+                    <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up {(col.SortModel.SortType == SortType.Ascending ? "active" : "")}")/>
+                    <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down {(col.SortModel.SortType == SortType.Descending ? "active" : "")}")/>
+                </span>
             </span>
-        </span>
-    </div>;
+        </div>;
 
 
     readonly RenderFragment<Column<TData>> ToolTipSorter = col =>

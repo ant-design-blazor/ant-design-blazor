@@ -10,17 +10,19 @@
               OnScroll="OnScroll"
               OnSelectChange="OnSelectChange"
               Render="Render"
-              Style="width:300px;height:300px;"></Transfer>
+              Style="width: 300px; height: 300px;">
+    </Transfer>
 </div>
 
 @code {
     private List<TransferItem> dataSource = new List<TransferItem>();
     private List<string> targetKeys = new List<string>();
     private string[] selectedKeys = Array.Empty<string>();
-    private string[] titles = { "Source", "Target" };
-    private string[] operations = { "to right", "to left" };
+    private string[] titles = {"Source", "Target"};
+    private string[] operations = {"to right", "to left"};
     private bool Disabled = false;
-    private RenderFragment footer =@<Button Type="@ButtonType.Default" Size="@ButtonSize.Small" Style="float: right; margin: 5px;">reload</Button>;
+
+    private RenderFragment footer = @<Button Type="@ButtonType.Default" Size="@ButtonSize.Small" Style="float: right; margin: 5px;">reload</Button>;
 
     protected override void OnInitialized()
     {
@@ -34,7 +36,7 @@
                 Description = $"description of content{i + 1}",
                 ["Chosen"] = random.Next(0, 100) * 2 > 100
             };
-          
+
             if (data["Chosen"] is bool _bool && _bool)
             {
                 targetKeys.Add(data.Key);
@@ -47,7 +49,7 @@
 
     private OneOf.OneOf<string, RenderFragment> Render(TransferItem item)
     {
-        //return new RenderFragment(buildTree);
+    //return new RenderFragment(buildTree);
         return $"{item.Title} - {item.Description}";
     }
 
@@ -68,4 +70,5 @@
         Console.WriteLine($"SourceSelectedKeys:{string.Join(',', e.SourceSelectedKeys)}");
         Console.WriteLine($"TargetSelectedKeys:{string.Join(',', e.TargetSelectedKeys)}");
     }
+
 }

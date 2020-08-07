@@ -1,70 +1,70 @@
 ﻿<Row Align="middle" Gutter="8">
     <Col Span="5">
-    ButtonActive:
-    <Switch @bind-Value="@_buttonActive"></Switch>
+        ButtonActive:
+        <Switch @bind-Value="@_buttonActive"></Switch>
     </Col>
     <Col Span="9">
-    ButtonSize:
-    <RadioGroup @bind-Value="@_buttonSize">
-        <Radio Value="@SkeletonElementSize.Default">Default</Radio>
-        <Radio Value="@SkeletonElementSize.Large">Large</Radio>
-        <Radio Value="@SkeletonElementSize.Small">Small</Radio>
-    </RadioGroup>
+        ButtonSize:
+        <RadioGroup @bind-Value="@_buttonSize">
+            <Radio Value="@SkeletonElementSize.Default">Default</Radio>
+            <Radio Value="@SkeletonElementSize.Large">Large</Radio>
+            <Radio Value="@SkeletonElementSize.Small">Small</Radio>
+        </RadioGroup>
     </Col>
     <Col Span="9">
-    ButtonShape:
-    <RadioGroup @bind-Value="@_buttonShape">
-        <Radio Value="@SkeletonButtonShape.Default">Default</Radio>
-        <Radio Value="@SkeletonButtonShape.Circle">Circle</Radio>
-        <Radio Value="@SkeletonButtonShape.Round">Round</Radio>
-    </RadioGroup>
+        ButtonShape:
+        <RadioGroup @bind-Value="@_buttonShape">
+            <Radio Value="@SkeletonButtonShape.Default">Default</Radio>
+            <Radio Value="@SkeletonButtonShape.Circle">Circle</Radio>
+            <Radio Value="@SkeletonButtonShape.Round">Round</Radio>
+        </RadioGroup>
     </Col>
 </Row>
-<br />
+<br/>
 <SkeletonElement Type="button" Active="@_buttonActive" Size="@_buttonSize" Shape="@_buttonShape"></SkeletonElement>
-<br />
-<br />
+<br/>
+<br/>
 <Row Align="middle" Gutter="8">
     <Col Span="5">
-    AvatarActive:
-    <Switch @bind-Value="@_avatarActive"></Switch>
+        AvatarActive:
+        <Switch @bind-Value="@_avatarActive"></Switch>
     </Col>
     <Col Span="9">
-    AvatarSize:
-    <RadioGroup @bind-Value="@_avatarSize">
-        <Radio Value="@SkeletonElementSize.Default">Default</Radio>
-        <Radio Value="@SkeletonElementSize.Large">Large</Radio>
-        <Radio Value="@SkeletonElementSize.Small">Small</Radio>
-    </RadioGroup>
+        AvatarSize:
+        <RadioGroup @bind-Value="@_avatarSize">
+            <Radio Value="@SkeletonElementSize.Default">Default</Radio>
+            <Radio Value="@SkeletonElementSize.Large">Large</Radio>
+            <Radio Value="@SkeletonElementSize.Small">Small</Radio>
+        </RadioGroup>
     </Col>
     <Col Span="9">
-    AvatarShape:
-    <RadioGroup @bind-Value="@_avatarShape">
-        <Radio Value="@SkeletonAvatarShape.Circle">Circle</Radio>
-        <Radio Value="@SkeletonAvatarShape.Square">Square</Radio>
-    </RadioGroup>
+        AvatarShape:
+        <RadioGroup @bind-Value="@_avatarShape">
+            <Radio Value="@SkeletonAvatarShape.Circle">Circle</Radio>
+            <Radio Value="@SkeletonAvatarShape.Square">Square</Radio>
+        </RadioGroup>
     </Col>
 </Row>
-<br />
+<br/>
 <SkeletonElement Type="avatar" Active="@_avatarActive" Size="@_avatarSize" Shape="@_avatarShape"></SkeletonElement>
-<br />
-<br />
+<br/>
+<br/>
 <Row Align="middle" Gutter="8">
     <Col Span="5">
-    InputActive:
-    <Switch @bind-Value="@_inputActive"></Switch>
+        InputActive:
+        <Switch @bind-Value="@_inputActive"></Switch>
     </Col>
     <Col Span="9">
-    InputSize:
-    <RadioGroup @bind-Value="@_inputSize">
-        <Radio Value="@SkeletonElementSize.Default">Default</Radio>
-        <Radio Value="@SkeletonElementSize.Large">Large</Radio>
-        <Radio Value="@SkeletonElementSize.Small">Small</Radio>
-    </RadioGroup>
+        InputSize:
+        <RadioGroup @bind-Value="@_inputSize">
+            <Radio Value="@SkeletonElementSize.Default">Default</Radio>
+            <Radio Value="@SkeletonElementSize.Large">Large</Radio>
+            <Radio Value="@SkeletonElementSize.Small">Small</Radio>
+        </RadioGroup>
     </Col>
 </Row>
-<br />
-<SkeletonElement Type="input" Active="@_inputActive" Size="@_inputSize" style="width:300px"></SkeletonElement>
+<br/>
+<SkeletonElement Type="input" Active="@_inputActive" Size="@_inputSize" style="width: 300px"></SkeletonElement>
 
 @code{
     bool _buttonActive = false;

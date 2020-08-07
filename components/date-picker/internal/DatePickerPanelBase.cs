@@ -7,44 +7,31 @@ namespace AntDesign
 {
     public class DatePickerPanelBase<TValue> : PickerPanelBase
     {
-        [CascadingParameter]
-        public IDatePicker DatePicker { get; set; }
+        [CascadingParameter] public IDatePicker DatePicker { get; set; }
 
-        [Parameter]
-        public string PrefixCls { get; set; }
+        [Parameter] public string PrefixCls { get; set; }
 
-        [Parameter]
-        public string Picker { get; set; }
+        [Parameter] public string Picker { get; set; }
 
-        [Parameter]
-        public bool IsRange { get; set; } = false;
+        [Parameter] public bool IsRange { get; set; } = false;
 
-        [Parameter]
-        public bool IsCalendar { get; set; } = false;
+        [Parameter] public bool IsCalendar { get; set; } = false;
 
-        [Parameter]
-        public bool IsShowHeader { get; set; } = true;
+        [Parameter] public bool IsShowHeader { get; set; } = true;
 
-        [Parameter]
-        public Action ClosePanel { get; set; }
+        [Parameter] public Action ClosePanel { get; set; }
 
-        [Parameter]
-        public Action<DateTime, int> ChangePickerValue { get; set; }
+        [Parameter] public Action<DateTime, int> ChangePickerValue { get; set; }
 
-        [Parameter]
-        public Action<DateTime, int> ChangeValue { get; set; }
+        [Parameter] public Action<DateTime, int> ChangeValue { get; set; }
 
-        [Parameter]
-        public Action<string, int> ChangePickerType { get; set; }
+        [Parameter] public Action<string, int> ChangePickerType { get; set; }
 
-        [Parameter]
-        public Func<int, DateTime> GetIndexPickerValue { get; set; }
+        [Parameter] public Func<int, DateTime> GetIndexPickerValue { get; set; }
 
-        [Parameter]
-        public Func<int, DateTime?> GetIndexValue { get; set; }
+        [Parameter] public Func<int, DateTime?> GetIndexValue { get; set; }
 
-        [Parameter]
-        public Func<DateTime, bool> DisabledDate { get; set; } = null;
+        [Parameter] public Func<DateTime, bool> DisabledDate { get; set; } = null;
 
         /// <summary>
         /// for Calendar.DateFullCellRender、DatePicker.DateRender
@@ -70,31 +57,30 @@ namespace AntDesign
         [Parameter]
         public Func<DateTime, RenderFragment> CalendarMonthCellRender { get; set; }
 
-        [Parameter]
-        public RenderFragment RenderExtraFooter { get; set; }
+        [Parameter] public RenderFragment RenderExtraFooter { get; set; }
 
         protected Dictionary<string, object> GetAttritubes()
         {
             return new Dictionary<string, object>()
             {
-                { "PrefixCls", PrefixCls },
-                { "Picker", Picker },
-                { "ClosePanel", ClosePanel },
-                { "ChangePickerValue", ChangePickerValue },
-                { "ChangeValue", ChangeValue },
-                { "ChangePickerType", ChangePickerType },
-                { "GetIndexPickerValue", GetIndexPickerValue },
-                { "GetIndexValue", GetIndexValue },
-                { "DisabledDate", DisabledDate },
-                { "DateRender", DateRender },
-                { "MonthCellRender", MonthCellRender },
-                { "CalendarDateRender", CalendarDateRender },
-                { "CalendarMonthCellRender", CalendarMonthCellRender },
-                { "RenderExtraFooter", RenderExtraFooter },
-                { "IsRange", IsRange },
-                { "PickerIndex", PickerIndex },
-                { "IsCalendar", IsCalendar },
-                { "IsShowHeader", IsShowHeader },
+                {"PrefixCls", PrefixCls},
+                {"Picker", Picker},
+                {"ClosePanel", ClosePanel},
+                {"ChangePickerValue", ChangePickerValue},
+                {"ChangeValue", ChangeValue},
+                {"ChangePickerType", ChangePickerType},
+                {"GetIndexPickerValue", GetIndexPickerValue},
+                {"GetIndexValue", GetIndexValue},
+                {"DisabledDate", DisabledDate},
+                {"DateRender", DateRender},
+                {"MonthCellRender", MonthCellRender},
+                {"CalendarDateRender", CalendarDateRender},
+                {"CalendarMonthCellRender", CalendarMonthCellRender},
+                {"RenderExtraFooter", RenderExtraFooter},
+                {"IsRange", IsRange},
+                {"PickerIndex", PickerIndex},
+                {"IsCalendar", IsCalendar},
+                {"IsShowHeader", IsShowHeader},
             };
         }
 
@@ -174,7 +160,7 @@ namespace AntDesign
                 hour,
                 minute,
                 second
-                );
+            );
         }
 
         protected void ChangePickerYearValue(int interval)

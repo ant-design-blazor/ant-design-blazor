@@ -1,24 +1,24 @@
 @inject MessageService _message
 
-    <Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            Name="avatar"
-            Class="avatar-uploader"
-            ListType="picture-card"
-            ShowUploadList="false"
-            BeforeUpload="BeforeUpload"
-            OnChange="HandleChange">
-        @if (!string.IsNullOrWhiteSpace(imageUrl))
-        {
-            <img src="@imageUrl" alt="avatar" style="width: 100%" />
-        }
-        else
-        {
-            <div>
-                <Icon Spin="loading" Type="@(loading?"Loading":"plus")" ></Icon>
-                <div className="ant-upload-text">Upload</div>
-            </div>
-        }
-    </Upload>
+<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        Name="avatar"
+        Class="avatar-uploader"
+        ListType="picture-card"
+        ShowUploadList="false"
+        BeforeUpload="BeforeUpload"
+        OnChange="HandleChange">
+    @if (!string.IsNullOrWhiteSpace(imageUrl))
+    {
+        <img src="@imageUrl" alt="avatar" style="width: 100%"/>
+    }
+    else
+    {
+        <div>
+            <Icon Spin="loading" Type="@(loading ? "Loading" : "plus")"></Icon>
+            <div className="ant-upload-text">Upload</div>
+        </div>
+    }
+</Upload>
 
 @code
 {
@@ -44,7 +44,7 @@
     void HandleChange(UploadInfo fileinfo)
     {
         loading = fileinfo.File.State == UploadState.Uploading;
-            
+
         if (fileinfo.File.State == UploadState.Success)
         {
             imageUrl = fileinfo.File.ObjectURL;
@@ -63,6 +63,7 @@
         public string thumbUrl { get; set; }
     }
 }
+
 <style>
     .avatar-uploader > .ant-upload {
         width: 128px;

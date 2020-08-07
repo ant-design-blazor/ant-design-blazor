@@ -1,6 +1,6 @@
 <div>
     <Text>int:@_intValue</Text>
-    <br />
+    <br/>
     <RadioGroup @bind-Value="@_intValue">
         <Radio Value="1">1</Radio>
         <Radio Value="2">2</Radio>
@@ -9,10 +9,10 @@
     </RadioGroup>
 
 </div>
-<br />
+<br/>
 <div>
     <Text>string:@_strValue</Text>
-    <br />
+    <br/>
     <RadioGroup @bind-Value="@_strValue">
         <Radio Value="@("A")">A</Radio>
         <Radio Value="@("B")">B</Radio>
@@ -20,25 +20,26 @@
         <Radio Value="@("D")">D</Radio>
     </RadioGroup>
 </div>
-<br />
+<br/>
 <div>
     <Text>bool:@_boolValue</Text>
-    <br />
+    <br/>
     <RadioGroup @bind-Value="@_boolValue">
         <Radio Value="true">Yes</Radio>
         <Radio Value="false">No</Radio>
     </RadioGroup>
 </div>
-<br />
+<br/>
 <div>
     <Text>bool?:@_nullBoolValue</Text>
-    <br />
+    <br/>
     <RadioGroup @bind-Value="@_nullBoolValue">
         <Radio Value="@(true)" TValue="bool?">Yes</Radio>
         <Radio Value="@(false)" TValue="bool?">No</Radio>
         <Radio Value="@(null)" TValue="bool?">Unknown</Radio>
     </RadioGroup>
 </div>
+
 @code{
 
     int _intValue = 1;

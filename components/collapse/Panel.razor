@@ -7,7 +7,7 @@
         {
             @if (Collapse.ExpandIcon.IsT0 && Collapse.ExpandIcon.AsT0)
             {
-                <Icon Type="right" Theme="outline" Class="ant-collapse-arrow" Rotate="@(Active ? 90 : 0)" />
+                <Icon Type="right" Theme="outline" Class="ant-collapse-arrow" Rotate="@(Active ? 90 : 0)"/>
             }
             else if (Collapse.ExpandIcon.AsT1 != null)
             {
@@ -38,7 +38,7 @@
             </div>
         }
     </div>
-    <div class="ant-collapse-content @(Active?"":"ant-collapse-content-inactive")">
+    <div class="ant-collapse-content @(Active ? "" : "ant-collapse-content-inactive")">
         <div class="ant-collapse-content-box">
             @ChildContent
         </div>

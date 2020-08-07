@@ -13,14 +13,11 @@ namespace AntDesign
 
         private bool _disabledChanged;
 
-        [Parameter]
-        public Func<UploadFileItem, bool> BeforeUpload { get; set; }
+        [Parameter] public Func<UploadFileItem, bool> BeforeUpload { get; set; }
 
-        [Parameter]
-        public string Name { get; set; }
+        [Parameter] public string Name { get; set; }
 
-        [Parameter]
-        public string Action { get; set; }
+        [Parameter] public string Action { get; set; }
 
         [Parameter]
         public bool Disabled
@@ -36,56 +33,39 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public Dictionary<string, object> Data { get; set; }
+        [Parameter] public Dictionary<string, object> Data { get; set; }
 
-        [Parameter]
-        public string ListType { get; set; } = "text";
+        [Parameter] public string ListType { get; set; } = "text";
 
-        [Parameter]
-        public bool Directory { get; set; }
+        [Parameter] public bool Directory { get; set; }
 
-        [Parameter]
-        public bool Multiple { get; set; }
+        [Parameter] public bool Multiple { get; set; }
 
-        [Parameter]
-        public string Accept { get; set; }
+        [Parameter] public string Accept { get; set; }
 
-        [Parameter]
-        public bool ShowUploadList { get; set; } = true;
+        [Parameter] public bool ShowUploadList { get; set; } = true;
 
-        [Parameter]
-        public List<UploadFileItem> FileList { get; set; } = new List<UploadFileItem>();
+        [Parameter] public List<UploadFileItem> FileList { get; set; } = new List<UploadFileItem>();
 
-        [Parameter]
-        public List<UploadFileItem> DefaultFileList { get; set; } = new List<UploadFileItem>();
+        [Parameter] public List<UploadFileItem> DefaultFileList { get; set; } = new List<UploadFileItem>();
 
-        [Parameter]
-        public Dictionary<string, string> Headers { get; set; }
+        [Parameter] public Dictionary<string, string> Headers { get; set; }
 
-        [Parameter]
-        public EventCallback<UploadInfo> OnSingleCompleted { get; set; }
+        [Parameter] public EventCallback<UploadInfo> OnSingleCompleted { get; set; }
 
-        [Parameter]
-        public EventCallback<UploadInfo> OnCompleted { get; set; }
+        [Parameter] public EventCallback<UploadInfo> OnCompleted { get; set; }
 
-        [Parameter]
-        public EventCallback<UploadInfo> OnChange { get; set; }
+        [Parameter] public EventCallback<UploadInfo> OnChange { get; set; }
 
-        [Parameter]
-        public Func<UploadFileItem, Task<bool>> OnRemove { get; set; }
+        [Parameter] public Func<UploadFileItem, Task<bool>> OnRemove { get; set; }
 
-        [Parameter]
-        public EventCallback<UploadFileItem> OnPreview { get; set; }
+        [Parameter] public EventCallback<UploadFileItem> OnPreview { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public bool ShowButton { get; set; } = true;
+        [Parameter] public bool ShowButton { get; set; } = true;
 
-        [Inject]
-        public IJSRuntime JSRuntime { get; set; }
+        [Inject] public IJSRuntime JSRuntime { get; set; }
 
         private DotNetObjectReference<Upload> _currentInstance;
 
@@ -113,6 +93,7 @@ namespace AntDesign
             {
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.addFileClickEventListener, _btn);
             }
+
             if (_disabledChanged)
             {
                 _disabledChanged = false;
@@ -125,6 +106,7 @@ namespace AntDesign
                     await JSRuntime.InvokeVoidAsync(JSInteropConstants.addFileClickEventListener, _btn);
                 }
             }
+
             await base.OnAfterRenderAsync(firstRender);
         }
 
@@ -135,6 +117,7 @@ namespace AntDesign
             {
                 return;
             }
+
             var flist = await JSRuntime.InvokeAsync<List<UploadFileItem>>(JSInteropConstants.getFileInfo, _file);
             var index = 0;
             foreach (var fileItem in flist)
@@ -149,12 +132,14 @@ namespace AntDesign
                         return;
                     }
                 }
+
                 fileItem.Progress = 0;
                 fileItem.State = UploadState.Uploading;
                 fileItem.Id = id;
                 FileList.Add(fileItem);
                 await InvokeAsync(StateHasChanged);
-                await JSRuntime.InvokeVoidAsync(JSInteropConstants.uploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError");
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.uploadFile, _file, index, Data, Headers, id, Action,
+                    Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError");
                 index++;
             }
 
@@ -190,7 +175,9 @@ namespace AntDesign
             {
                 await OnSingleCompleted.InvokeAsync(_uploadInfo);
             }
-            if (OnCompleted.HasDelegate && FileList.All(x => (x.State.Equals(UploadState.Success) || x.State.Equals(UploadState.Fail))))
+
+            if (OnCompleted.HasDelegate &&
+                FileList.All(x => (x.State.Equals(UploadState.Success) || x.State.Equals(UploadState.Fail))))
             {
                 await OnCompleted.InvokeAsync(_uploadInfo);
             }
@@ -204,6 +191,7 @@ namespace AntDesign
             {
                 return;
             }
+
             file.State = UploadState.Fail;
             file.Progress = 100;
             _uploadInfo.File = file;
@@ -214,7 +202,9 @@ namespace AntDesign
             {
                 await OnSingleCompleted.InvokeAsync(_uploadInfo);
             }
-            if (OnCompleted.HasDelegate && FileList.All(x => (x.State.Equals(UploadState.Success) || x.State.Equals(UploadState.Fail))))
+
+            if (OnCompleted.HasDelegate &&
+                FileList.All(x => (x.State.Equals(UploadState.Success) || x.State.Equals(UploadState.Fail))))
             {
                 await OnCompleted.InvokeAsync(_uploadInfo);
             }
@@ -228,6 +218,7 @@ namespace AntDesign
             {
                 return;
             }
+
             file.Progress = progress;
             _uploadInfo.File = file;
             await InvokeAsync(StateHasChanged);
@@ -239,7 +230,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            InvokeAsync(async () => await JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn));
+            InvokeAsync(async () =>
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn));
 
             base.Dispose(disposing);
         }

@@ -6,49 +6,34 @@ namespace AntDesign
 {
     public abstract class TypographyBase : AntDomComponentBase
     {
-        [Inject]
-        public HtmlRenderService Service { get; set; }
+        [Inject] public HtmlRenderService Service { get; set; }
 
-        [Parameter]
-        public bool Copyable { get; set; } = false;
-        [Parameter]
-        public TypographyCopyableConfig CopyConfig { get; set; }
+        [Parameter] public bool Copyable { get; set; } = false;
+        [Parameter] public TypographyCopyableConfig CopyConfig { get; set; }
 
-        [Parameter]
-        public bool Delete { get; set; } = false;
+        [Parameter] public bool Delete { get; set; } = false;
 
-        [Parameter]
-        public bool Disabled { get; set; } = false;
+        [Parameter] public bool Disabled { get; set; } = false;
 
-        [Parameter]
-        public bool Editable { get; set; } = false;
+        [Parameter] public bool Editable { get; set; } = false;
 
-        [Parameter]
-        public TypographyEditableConfig EditConfig { get; set; }
+        [Parameter] public TypographyEditableConfig EditConfig { get; set; }
 
-        [Parameter]
-        public bool Ellipsis { get; set; } = false;
+        [Parameter] public bool Ellipsis { get; set; } = false;
 
-        [Parameter]
-        public TypographyEllipsisConfig EllipsisConfig { get; set; }
+        [Parameter] public TypographyEllipsisConfig EllipsisConfig { get; set; }
 
-        [Parameter]
-        public bool Mark { get; set; } = false;
+        [Parameter] public bool Mark { get; set; } = false;
 
-        [Parameter]
-        public bool Underline { get; set; } = false;
+        [Parameter] public bool Underline { get; set; } = false;
 
-        [Parameter]
-        public bool Strong { get; set; } = false;
+        [Parameter] public bool Strong { get; set; } = false;
 
-        [Parameter]
-        public Action OnChange { get; set; }
+        [Parameter] public Action OnChange { get; set; }
 
-        [Parameter]
-        public string Type { get; set; } = string.Empty;
+        [Parameter] public string Type { get; set; } = string.Empty;
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         public async Task Copy()
         {

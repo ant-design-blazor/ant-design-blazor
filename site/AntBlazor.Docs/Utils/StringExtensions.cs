@@ -10,7 +10,8 @@ namespace AntDesign.Docs.Utils
             {
                 return null;
             }
-            char[] whiteSpace = { '\r', '\n', '\f', '\t', '\v' };
+
+            char[] whiteSpace = {'\r', '\n', '\f', '\t', '\v'};
             return str.Trim(whiteSpace).Trim();
         }
 

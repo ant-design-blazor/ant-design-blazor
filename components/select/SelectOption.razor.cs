@@ -10,6 +10,7 @@ namespace AntDesign
     public partial class SelectOption : AntDomComponentBase
     {
         #region Private
+
         private string _label = null;
         private bool _isActive = false;
         private const string ClassPrefix = "ant-select-item-option";
@@ -19,6 +20,7 @@ namespace AntDesign
         #endregion Private
 
         #region Protected
+
         protected void SetClassMap()
         {
             ClassMapper.Clear()
@@ -32,6 +34,7 @@ namespace AntDesign
         }
 
         #region Properties
+
         protected string InnerStyle
         {
             get
@@ -50,9 +53,11 @@ namespace AntDesign
                 }
             }
         }
+
         #endregion
 
         #region Events
+
         protected override void Dispose(bool disposing)
         {
             SelectParent?.RemoveOption(this);
@@ -101,9 +106,11 @@ namespace AntDesign
             SetClassMap();
             //await InvokeAsync(StateHasChanged);
         }
+
         #endregion Events
 
         #region Methods
+
         internal void SearchToTag()
         {
             if (IsSearch)
@@ -112,16 +119,23 @@ namespace AntDesign
                 IsSearch = false;
             }
         }
+
         #endregion
+
         #endregion Protected
 
         #region Public
+
         #region Properties
+
         #region Generals
+
         public string Children { get; private set; } = string.Empty;
+
         #endregion
 
         #region Paramters
+
         [Parameter] public bool IsTag { get; set; } = false;
 
         [Parameter] public bool IsSearch { get; set; } = false;
@@ -141,8 +155,11 @@ namespace AntDesign
         [CascadingParameter] public SelectOptGroup SelectOptGroupParent { get; set; }
 
         [Parameter] public string Label { get => _label ?? Children; set => _label = value; }
+
         #endregion
+
         #endregion
+
         #endregion
     }
 }

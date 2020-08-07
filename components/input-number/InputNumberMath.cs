@@ -32,6 +32,7 @@ namespace AntDesign
         {
             return Math.Round(value, digits);
         }
+
         public static double? Round(double? value, int digits)
         {
             if (value.HasValue == false) return value;
@@ -42,6 +43,7 @@ namespace AntDesign
         {
             return value;
         }
+
         public static int? Round(int? value, int digits)
         {
             return value;

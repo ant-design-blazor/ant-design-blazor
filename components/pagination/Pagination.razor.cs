@@ -6,26 +6,24 @@ namespace AntDesign
 {
     public partial class Pagination : AntDomComponentBase
     {
-        [Parameter]
-        public EventCallback<int> PageSizeChanged { get; set; }
+        [Parameter] public EventCallback<int> PageSizeChanged { get; set; }
+
+        [Parameter] public EventCallback<int> PageIndexChanged { get; set; }
+
+        [Parameter] public EventCallback<PaginationEventArgs> OnPageIndexChange { get; set; }
+
+        [Parameter] public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
         [Parameter]
-        public EventCallback<int> PageIndexChanged { get; set; }
+        public OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>> ShowTotal
+        {
+            get;
+            set;
+        }
 
-        [Parameter]
-        public EventCallback<PaginationEventArgs> OnPageIndexChange { get; set; }
+        [Parameter] public int Current { get; set; }
 
-        [Parameter]
-        public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
-
-        [Parameter]
-        public OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>> ShowTotal { get; set; }
-
-        [Parameter]
-        public int Current { get; set; }
-
-        [Parameter]
-        public EventCallback<int> CurrentChanged { get; set; }
+        [Parameter] public EventCallback<int> CurrentChanged { get; set; }
 
         /// <summary>
         /// 'default' | 'small'
@@ -33,28 +31,21 @@ namespace AntDesign
         [Parameter]
         public string Size { get; set; } = "default";
 
-        [Parameter]
-        public int[] PageSizeOptions { get; set; } = { 10, 20, 30, 40 };
+        [Parameter] public int[] PageSizeOptions { get; set; } = {10, 20, 30, 40};
 
         [Parameter] public RenderFragment<PaginationItemRenderContext> ItemRender { get; set; } = null;
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool ShowSizeChanger { get; set; }
+        [Parameter] public bool ShowSizeChanger { get; set; }
 
-        [Parameter]
-        public bool HideOnSinglePage { get; set; }
+        [Parameter] public bool HideOnSinglePage { get; set; }
 
-        [Parameter]
-        public bool ShowQuickJumper { get; set; }
+        [Parameter] public bool ShowQuickJumper { get; set; }
 
-        [Parameter]
-        public bool Simple { get; set; }
+        [Parameter] public bool Simple { get; set; }
 
-        [Parameter]
-        public bool Responsive { get; set; }
+        [Parameter] public bool Responsive { get; set; }
 
         [Parameter]
         public int Total
@@ -70,11 +61,9 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public int PageIndex { get; set; } = 1;
+        [Parameter] public int PageIndex { get; set; } = 1;
 
-        [Parameter]
-        public int PageSize { get; set; } = 10;
+        [Parameter] public int PageSize { get; set; } = 10;
 
         [Parameter] public int DefaultCurrent { get; set; } = 1;
 
@@ -139,10 +128,7 @@ namespace AntDesign
                 this.CurrentChanged.InvokeAsync(this.PageIndex);
                 this.OnPageIndexChange.InvokeAsync(new PaginationEventArgs()
                 {
-                    PageCount = lastIndex,
-                    PageIndex = PageIndex,
-                    PageSize = PageSize,
-                    Total = Total
+                    PageCount = lastIndex, PageIndex = PageIndex, PageSize = PageSize, Total = Total
                 });
             }
         }
@@ -160,10 +146,7 @@ namespace AntDesign
             {
                 this.OnPageSizeChange.InvokeAsync(new PaginationEventArgs()
                 {
-                    PageCount = lastIndex,
-                    PageIndex = PageIndex,
-                    PageSize = PageSize,
-                    Total = Total
+                    PageCount = lastIndex, PageIndex = PageIndex, PageSize = PageSize, Total = Total
                 });
             }
         }

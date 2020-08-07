@@ -41,8 +41,7 @@ namespace AntDesign
         private string _hiddenStyle;
         private string _affixStyle;
 
-        [Inject]
-        private DomEventService DomEventService { get; set; }
+        [Inject] private DomEventService DomEventService { get; set; }
 
         #region Parameters
 
@@ -64,11 +63,9 @@ namespace AntDesign
         [Parameter]
         public ElementReference Target { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public EventCallback<bool> OnChange { get; set; }
+        [Parameter] public EventCallback<bool> OnChange { get; set; }
 
         #endregion Parameters
 
@@ -148,13 +145,15 @@ namespace AntDesign
             {
                 containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, Target);
             }
+
             // become affixed
             if (OffsetBottom.HasValue)
             {
                 // domRect.bottom / domRect.top have the identical value here.
                 if (domRect.top > containerRect.height + containerRect.top)
                 {
-                    _affixStyle = _hiddenStyle + $"bottom: { appRect.height - containerRect.bottom + OffsetBottom}px; position: fixed;";
+                    _affixStyle = _hiddenStyle +
+                                  $"bottom: {appRect.height - containerRect.bottom + OffsetBottom}px; position: fixed;";
                     Affixed = true;
                 }
                 else

@@ -10,13 +10,14 @@
                 CancelText="No">
         <a>Delete a task</a>
     </Popconfirm>
-    <br />
-    <br />
-    Whether directly execute£º
-    <Switch Checked="_condition" OnChange="OnConditionChange" />
+    <br/>
+    <br/>
+    Whether directly executeï¿½ï¿½
+    <Switch Checked="_condition" OnChange="OnConditionChange"/>
 </div>
 
 @code{
+
     private void Confirm()
     {
         _visible = false;
@@ -30,6 +31,7 @@
     }
 
     private bool _visible = false;
+
     private void OnVisibleChange(bool visible)
     {
         if (!visible)
@@ -48,8 +50,10 @@
     }
 
     private bool _condition = true;
+
     private void OnConditionChange(bool condition)
     {
         _condition = condition;
     }
+
 }

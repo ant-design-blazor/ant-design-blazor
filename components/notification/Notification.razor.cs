@@ -10,8 +10,7 @@ namespace AntDesign
 {
     public partial class Notification
     {
-        [Inject]
-        private NotificationService NotificationService { get; set; }
+        [Inject] private NotificationService NotificationService { get; set; }
 
         #region override
 
@@ -96,7 +95,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="defaultConfig"></param>
         private void Config(
-            [NotNull]NotificationGlobalConfig defaultConfig)
+            [NotNull] NotificationGlobalConfig defaultConfig)
         {
             if (defaultConfig == null)
             {
@@ -107,22 +106,27 @@ namespace AntDesign
             {
                 _bottom = defaultConfig.Bottom.Value;
             }
+
             if (defaultConfig.Top != null)
             {
                 _top = defaultConfig.Top.Value;
             }
+
             if (defaultConfig.Rtl != null)
             {
                 _isRtl = defaultConfig.Rtl.Value;
             }
+
             if (defaultConfig.Placement != null)
             {
                 _defaultPlacement = defaultConfig.Placement.Value;
             }
+
             if (defaultConfig.Duration != null)
             {
                 _defaultDuration = defaultConfig.Duration.Value;
             }
+
             if (defaultConfig.CloseIcon != null)
             {
                 _defaultCloseIcon = defaultConfig.CloseIcon;
@@ -146,6 +150,7 @@ namespace AntDesign
             {
                 return;
             }
+
             option = ExtendConfig(option);
 
             Debug.Assert(option.Placement != null, "option.Placement != null");
@@ -155,6 +160,7 @@ namespace AntDesign
             {
                 canAdd = _configDict.TryAdd(placement, new List<NotificationConfig>());
             }
+
             if (canAdd)
             {
                 if (!string.IsNullOrWhiteSpace(option.Key))
@@ -166,6 +172,7 @@ namespace AntDesign
                         await InvokeAsync(StateHasChanged);
                         return;
                     }
+
                     canAdd = _configKeyDict.TryAdd(option.Key, option);
                 }
 

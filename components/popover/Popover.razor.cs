@@ -11,20 +11,15 @@ namespace AntDesign
 {
     public partial class Popover : OverlayTrigger
     {
-        [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; } = string.Empty;
+        [Parameter] public OneOf<string, RenderFragment> Title { get; set; } = string.Empty;
 
-        [Parameter]
-        public OneOf<string, RenderFragment> Content { get; set; } = string.Empty;
+        [Parameter] public OneOf<string, RenderFragment> Content { get; set; } = string.Empty;
 
-        [Parameter]
-        public bool ArrowPointAtCenter { get; set; } = false;
+        [Parameter] public bool ArrowPointAtCenter { get; set; } = false;
 
-        [Parameter]
-        public double MouseEnterDelay { get; set; } = 0.1;
+        [Parameter] public double MouseEnterDelay { get; set; } = 0.1;
 
-        [Parameter]
-        public double MouseLeaveDelay { get; set; } = 0.1;
+        [Parameter] public double MouseLeaveDelay { get; set; } = 0.1;
 
         public Popover()
         {
@@ -61,6 +56,5 @@ namespace AntDesign
 
             await base.Hide(force);
         }
-
     }
 }

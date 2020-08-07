@@ -1,10 +1,11 @@
 ﻿<Table DataSource="data" ScrollY="240px" PageSize="50">
-    <Column @bind-Field="@context.Name" Width="150" />
-    <Column @bind-Field="@context.Age"  Width="150" />
-    <Column @bind-Field="@context.Address" />
+    <Column @bind-Field="@context.Name" Width="150"/>
+    <Column @bind-Field="@context.Age" Width="150"/>
+    <Column @bind-Field="@context.Address"/>
 </Table>
 
 @code {
+
     class Column
     {
         public string Name { get; set; }

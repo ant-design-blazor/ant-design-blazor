@@ -22,7 +22,8 @@ namespace AntDesign.Docs.Services
         public TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory)
         {
             return this._dictionary
-                .GetOrAdd(key, k => new Lazy<TValue>(() => valueFactory(k), LazyThreadSafetyMode.ExecutionAndPublication))
+                .GetOrAdd(key,
+                    k => new Lazy<TValue>(() => valueFactory(k), LazyThreadSafetyMode.ExecutionAndPublication))
                 .Value;
         }
 
@@ -62,7 +63,7 @@ namespace AntDesign.Docs.Services
             {
                 _dictionary.AddOrUpdate(key,
                     k => new Lazy<TValue>(() => value, LazyThreadSafetyMode.ExecutionAndPublication),
-                (k, v) => new Lazy<TValue>(() => value, LazyThreadSafetyMode.ExecutionAndPublication));
+                    (k, v) => new Lazy<TValue>(() => value, LazyThreadSafetyMode.ExecutionAndPublication));
             }
         }
 

@@ -5,6 +5,7 @@ namespace AntDesign
     public class DropdownButton : Dropdown
     {
         private string _icon = "ellipsis";
+
         [Parameter]
         public string Icon
         {
@@ -20,6 +21,7 @@ namespace AntDesign
         }
 
         private string _size = AntSizeLDSType.Default;
+
         [Parameter]
         public string Size
         {
@@ -35,6 +37,7 @@ namespace AntDesign
         }
 
         private string _type = ButtonType.Default;
+
         [Parameter]
         public string Type
         {

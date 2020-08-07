@@ -4,8 +4,6 @@ namespace AntDesign
 {
     internal class DatePickerPlaceholder
     {
-
-
         public static string GetPlaceholderByType(string pickerType, CultureInfo info)
         {
             var placeholder = pickerType switch

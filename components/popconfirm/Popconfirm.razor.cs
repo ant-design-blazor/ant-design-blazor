@@ -12,47 +12,35 @@ namespace AntDesign
 {
     public partial class Popconfirm : OverlayTrigger
     {
-        [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; } = string.Empty;
+        [Parameter] public OneOf<string, RenderFragment> Title { get; set; } = string.Empty;
 
-        [Parameter]
-        public string CancelText { get; set; } = "Cancel";
+        [Parameter] public string CancelText { get; set; } = "Cancel";
 
-        [Parameter]
-        public string OkText { get; set; } = "OK";
+        [Parameter] public string OkText { get; set; } = "OK";
 
-        [Parameter]
-        public string OkType { get; set; } = "primary";
+        [Parameter] public string OkType { get; set; } = "primary";
 
-        [Parameter]
-        public ButtonProps OkButtonProps { get; set; }
+        [Parameter] public ButtonProps OkButtonProps { get; set; }
 
-        [Parameter]
-        public ButtonProps CancelButtonProps { get; set; }
+        [Parameter] public ButtonProps CancelButtonProps { get; set; }
 
-        [Parameter]
-        public RenderFragment Icon { get; set; }
+        [Parameter] public RenderFragment Icon { get; set; }
 
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnCancel { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> OnCancel { get; set; }
 
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnConfirm { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> OnConfirm { get; set; }
 
-        [Parameter]
-        public bool ArrowPointAtCenter { get; set; } = false;
+        [Parameter] public bool ArrowPointAtCenter { get; set; } = false;
 
-        [Parameter]
-        public double MouseEnterDelay { get; set; } = 0.1;
+        [Parameter] public double MouseEnterDelay { get; set; } = 0.1;
 
-        [Parameter]
-        public double MouseLeaveDelay { get; set; } = 0.1;
+        [Parameter] public double MouseLeaveDelay { get; set; } = 0.1;
 
         public Popconfirm()
         {
             PrefixCls = "ant-popover";
             Placement = PlacementType.Top;
-            Trigger = new[] { TriggerType.Click };
+            Trigger = new[] {TriggerType.Click};
         }
 
         internal override async Task Show(int? overlayLeft = null, int? overlayTop = null)
@@ -81,6 +69,7 @@ namespace AntDesign
             {
                 await OnCancel.InvokeAsync(args);
             }
+
             await base.Hide();
         }
 
@@ -90,6 +79,7 @@ namespace AntDesign
             {
                 await OnConfirm.InvokeAsync(args);
             }
+
             await base.Hide();
         }
     }

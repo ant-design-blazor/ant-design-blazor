@@ -19,7 +19,7 @@
     }
     else
     {
-        <div style="min-height:53px" />
+        <div style="min-height: 53px"/>
     }
 
     @if (Footer != null)
@@ -32,57 +32,56 @@
     {
         @LoadMore
     }
-    
+
 </div>
 
 @code{
 
     RenderFragment<AntList<TItem>> childrenContent = content =>
-    @<Template>
+        @<Template>
 
-        @if (content.Grid != null)
-        {
-            <Row Gutter="content.Grid.Gutter">
-                @foreach (var item in content.DataSource)
-                {
-                    @if (content.Extra != null)
+            @if (content.Grid != null)
+            {
+                <Row Gutter="content.Grid.Gutter">
+                    @foreach (var item in content.DataSource)
                     {
-                        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Grid="content.Grid" Actions="content.Actions" Extra="content.Extra">
-                            @content.Item(item)
-                        </AntListItem>
+    @if (content.Extra != null)
+    {
+        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Grid="content.Grid" Actions="content.Actions" Extra="content.Extra">
+            @content.Item(item)
+        </AntListItem>
+    }
+    else
+    {
+        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Grid="content.Grid" Actions="content.Actions">
+            @content.Item(item)
+        </AntListItem>
+    }
                     }
-                    else
+                </Row>
+            }
+            else
+            {
+                <ul class="ant-list-items">
+                    @foreach (var item in content.DataSource)
                     {
-                        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Grid="content.Grid" Actions="content.Actions">
-                            @content.Item(item)
-                        </AntListItem>
+    @if (content.Extra != null)
+    {
+        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Actions="content.Actions" Extra="content.Extra">
+            @content.Item(item)
+        </AntListItem>
+    }
+    else
+    {
+        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Actions="content.Actions">
+            @content.Item(item)
+        </AntListItem>
+    }
                     }
+                </ul>
+            }
 
-                }
-            </Row>
-        }
-        else
-        {
-            <ul class="ant-list-items">
-                @foreach (var item in content.DataSource)
-                {
-                    @if (content.Extra != null)
-                    {
-                        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Actions="content.Actions" Extra="content.Extra">
-                            @content.Item(item)
-                        </AntListItem>
-                    }
-                    else
-                    {
-                        <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Actions="content.Actions">
-                            @content.Item(item)
-                        </AntListItem>
-                    }
-                }
-            </ul>
-        }
-
-    </Template>;
+        </Template>;
 
 
 }

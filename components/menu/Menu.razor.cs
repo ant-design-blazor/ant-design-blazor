@@ -11,44 +11,31 @@ namespace AntDesign
         [CascadingParameter(Name = "PrefixCls")]
         public string PrefixCls { get; set; } = "ant-menu";
 
-        [CascadingParameter]
-        public Sider Parent { get; set; }
+        [CascadingParameter] public Sider Parent { get; set; }
 
-        [CascadingParameter(Name = "Overlay")]
-        private Overlay Overlay { get; set; }
+        [CascadingParameter(Name = "Overlay")] private Overlay Overlay { get; set; }
 
-        [Parameter]
-        public MenuTheme Theme { get; set; } = MenuTheme.Light;
+        [Parameter] public MenuTheme Theme { get; set; } = MenuTheme.Light;
 
-        [Parameter]
-        public MenuMode Mode { get; set; } = MenuMode.Vertical;
+        [Parameter] public MenuMode Mode { get; set; } = MenuMode.Vertical;
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public EventCallback<SubMenu> OnSubmenuClicked { get; set; }
+        [Parameter] public EventCallback<SubMenu> OnSubmenuClicked { get; set; }
 
-        [Parameter]
-        public EventCallback<MenuItem> OnMenuItemClicked { get; set; }
+        [Parameter] public EventCallback<MenuItem> OnMenuItemClicked { get; set; }
 
-        [Parameter]
-        public bool Accordion { get; set; }
+        [Parameter] public bool Accordion { get; set; }
 
-        [Parameter]
-        public bool Selectable { get; set; } = true;
+        [Parameter] public bool Selectable { get; set; } = true;
 
-        [Parameter]
-        public bool InlineCollapsed { get; set; }
+        [Parameter] public bool InlineCollapsed { get; set; }
 
-        [Parameter]
-        public bool AutoCloseDropdown { get; set; } = true;
+        [Parameter] public bool AutoCloseDropdown { get; set; } = true;
 
-        [Parameter]
-        public IEnumerable<string> DefaultSelectedKeys { get; set; } = new List<string>();
+        [Parameter] public IEnumerable<string> DefaultSelectedKeys { get; set; } = new List<string>();
 
-        [Parameter]
-        public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
+        [Parameter] public IEnumerable<string> DefaultOpenKeys { get; set; } = new List<string>();
 
         [Parameter]
         public string[] OpenKeys
@@ -61,11 +48,9 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public EventCallback<string[]> OpenKeysChanged { get; set; }
+        [Parameter] public EventCallback<string[]> OpenKeysChanged { get; set; }
 
-        [Parameter]
-        public EventCallback<string[]> OnOpenChange { get; set; }
+        [Parameter] public EventCallback<string[]> OnOpenChange { get; set; }
 
         [Parameter]
         public string[] SelectedKeys
@@ -77,8 +62,7 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public EventCallback<string[]> SelectedKeysChanged { get; set; }
+        [Parameter] public EventCallback<string[]> SelectedKeysChanged { get; set; }
 
         internal MenuMode InternalMode { get; private set; }
         private bool _collapsed;
@@ -192,6 +176,7 @@ namespace AntDesign
             {
                 this._collapsed = InlineCollapsed;
             }
+
             Update(_collapsed);
             SetClass();
         }

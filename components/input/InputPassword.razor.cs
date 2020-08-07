@@ -8,8 +8,7 @@ namespace AntDesign
         private bool _visible = false;
         private string _eyeIcon;
 
-        [Parameter]
-        public bool VisibilityToggle { get; set; } = true;
+        [Parameter] public bool VisibilityToggle { get; set; } = true;
 
         protected override void OnInitialized()
         {

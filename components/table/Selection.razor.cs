@@ -55,7 +55,8 @@ namespace AntDesign
                 var first = RowSelections.FirstOrDefault(x => x.Checked);
                 if (first != null)
                 {
-                    Table?.Selection.RowSelections.Where(x => x.ColIndex != first.ColIndex).ForEach(x => x.Check(false));
+                    Table?.Selection.RowSelections.Where(x => x.ColIndex != first.ColIndex)
+                        .ForEach(x => x.Check(false));
                 }
             }
         }

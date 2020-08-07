@@ -12,14 +12,11 @@ namespace AntDesign
     {
         private const string IdPrefix = "Ant-Design-";
 
-        [Parameter]
-        public DialogOptions Config { get; set; }
+        [Parameter] public DialogOptions Config { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public bool Visible { get; set; }
+        [Parameter] public bool Visible { get; set; }
 
         private string _maskAnimation = "";
         private string _modalAnimation = "";
@@ -98,9 +95,10 @@ namespace AntDesign
         /// TAB keyboard control
         /// </summary>
         private readonly string _sentinelStart = IdPrefix + Guid.NewGuid().ToString();
+
         private readonly string _sentinelEnd = IdPrefix + Guid.NewGuid().ToString();
 
-        public string SentinelStart=> _sentinelStart;
+        public string SentinelStart => _sentinelStart;
 
         private async Task OnKeyDown(KeyboardEventArgs e)
         {
@@ -109,6 +107,7 @@ namespace AntDesign
                 await CloseAsync();
                 return;
             }
+
             if (Visible)
             {
                 if (e.Key == "Tab")
@@ -143,6 +142,7 @@ namespace AntDesign
             {
                 return;
             }
+
             if (Config.OnCancel != null)
             {
                 await Config.OnCancel.Invoke(null);
@@ -167,7 +167,6 @@ namespace AntDesign
 
                 _hasShow = true;
             }
-
         }
 
         public async Task Hide()
@@ -191,7 +190,6 @@ namespace AntDesign
                     await Config.OnClosed.Invoke();
                 }
             }
-
         }
 
         #endregion
@@ -231,6 +229,7 @@ namespace AntDesign
             {
                 await Hide();
             }
+
             await base.OnParametersSetAsync();
         }
 
@@ -261,8 +260,10 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.enableModalBodyScroll);
                 }
             }
+
             await base.OnAfterRenderAsync(isFirst);
         }
+
         #endregion
     }
 }

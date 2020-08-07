@@ -5,7 +5,7 @@ namespace AntDesign.Tests
     public class TestNavigationManager : NavigationManager
     {
         public delegate void NavigatedCallback(string uri, bool forceLoad);
-        
+
         public TestNavigationManager()
         {
             Initialize("http://localhost/", "http://localhost/");

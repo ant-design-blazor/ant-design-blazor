@@ -1,7 +1,7 @@
 ﻿<Layout>
     <Header Class="header">
-        <div class="logo" />
-        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Horizontal" DefaultSelectedKeys=@(new []{"2"})>
+        <div class="logo"/>
+        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Horizontal" DefaultSelectedKeys=@(new[] {"2"})>
             <MenuItem Key="1">nav 1</MenuItem>
             <MenuItem Key="2">nav 2</MenuItem>
             <MenuItem Key="3">nav 3</MenuItem>
@@ -15,10 +15,10 @@
                   Style="height: 100%; border-right: 0;">
                 @{
                     RenderFragment sub1Title =
-                    @<span>
-                        <Icon Type="user" Theme="outline" />
-                        subnav 1
-                    </span>;
+                        @<span>
+                            <Icon Type="user" Theme="outline"/>
+                            subnav 1
+                        </span>;
                 }
                 <SubMenu Key="sub1" Title=sub1Title>
                     <MenuItem Key="1">option1</MenuItem>
@@ -28,10 +28,10 @@
                 </SubMenu>
                 @{
                     RenderFragment sub2Title =
-                    @<span>
-                        <Icon Type="laptop" Theme="outline" />
-                        subnav 2
-                    </span>;
+                        @<span>
+                            <Icon Type="laptop" Theme="outline"/>
+                            subnav 2
+                        </span>;
                 }
                 <SubMenu Key="sub2" Title=sub2Title>
                     <MenuItem Key="5">option5</MenuItem>
@@ -41,10 +41,10 @@
                 </SubMenu>
                 @{
                     RenderFragment sub3Title =
-                    @<span>
-                        <Icon Type="notification" Theme="outline" />
-                        subnav 3
-                    </span>;
+                        @<span>
+                            <Icon Type="notification" Theme="outline"/>
+                            subnav 3
+                        </span>;
                 }
                 <SubMenu Key="sub3" Title=sub3Title>
                     <MenuItem Key="9">option9</MenuItem>
@@ -54,13 +54,13 @@
                 </SubMenu>
             </Menu>
         </Sider>
-        <Layout Style=" padding: 0 24px 24px;">
+        <Layout Style="padding: 0 24px 24px;">
             <Breadcrumb Style="margin: 16px 0;">
                 <BreadcrumbItem>Home</BreadcrumbItem>
                 <BreadcrumbItem>List</BreadcrumbItem>
                 <BreadcrumbItem>App</BreadcrumbItem>
             </Breadcrumb>
-            <Content Class="site-layout-background" Style=" padding: 24px; margin: 0; min-height: 280px;">
+            <Content Class="site-layout-background" Style="padding: 24px; margin: 0; min-height: 280px;">
                 Content
             </Content>
         </Layout>
@@ -76,7 +76,5 @@
         float: left;
     }
 
-    .site-layout-background {
-        background: #fff;
-    }
+    .site-layout-background { background: #fff; }
 </style>

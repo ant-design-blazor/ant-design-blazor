@@ -13,7 +13,7 @@ namespace AntDesign.Tests.Button
                 <button class=""ant-btn ant-btn-default"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
             ");
         }
-        
+
         [Fact]
         public void Renders_a_button_with_contents()
         {
@@ -25,7 +25,7 @@ namespace AntDesign.Tests.Button
                 <button class=""ant-btn ant-btn-default"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false"">Save</button>
             ");
         }
-        
+
         [Fact]
         public void Renders_a_disabled_the_button()
         {
@@ -37,7 +37,7 @@ namespace AntDesign.Tests.Button
                 <button class=""ant-btn ant-btn-default"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false"" disabled></button>
             ");
         }
-        
+
         [Theory]
         [InlineData(ButtonType.Dashed)]
         [InlineData(ButtonType.Default)]
@@ -46,14 +46,14 @@ namespace AntDesign.Tests.Button
         public void Renders_buttons_of_different_types(string type)
         {
             var cut = Context.RenderComponent<AntDesign.Button>(p =>
-                p.Add(x => x.Type, type )
+                p.Add(x => x.Type, type)
             );
 
             cut.MarkupMatches($@"
                 <button class=""ant-btn ant-btn-{type.ToLower()}"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
             ");
         }
-        
+
         [Fact]
         public void Should_fire_OnClick_when_clicked()
         {
@@ -68,7 +68,7 @@ namespace AntDesign.Tests.Button
 
             Assert.True(clicked);
         }
-        
+
         [Fact]
         public void Renders_loading_icon()
         {

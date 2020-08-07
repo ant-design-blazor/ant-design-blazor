@@ -12,8 +12,7 @@ namespace AntDesign.TableModels
 
         public IList<ITableSortModel> SortModel { get; private set; }
 
-        [JsonIgnore]
-        public IQueryable<TItem> QueryableLambda { get; private set; }
+        [JsonIgnore] public IQueryable<TItem> QueryableLambda { get; private set; }
 
         internal QueryModel(int pageIndex, int pageSize)
         {

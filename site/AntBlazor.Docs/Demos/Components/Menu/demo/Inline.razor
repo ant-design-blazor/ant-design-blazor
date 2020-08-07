@@ -1,6 +1,6 @@
 ﻿<Menu Style="width: 256px;"
-      DefaultSelectedKeys=@(new[]{"1"})
-      DefaultOpenKeys=@(new[]{"sub1"})
+      DefaultSelectedKeys=@(new[] {"1"})
+      DefaultOpenKeys=@(new[] {"sub1"})
       Mode=@MenuMode.Inline>
     <SubMenu Key="sub1" Title=sub1Title>
         <MenuItemGroup Key="g1" Title=@("Item 1")>
@@ -31,20 +31,20 @@
 @code
 {
     RenderFragment sub1Title =
-    @<span>
-        <Icon Type="mail" Theme="outline"></Icon>
-        <span>Navigation One</span>
-    </span>;
+        @<span>
+            <Icon Type="mail" Theme="outline"></Icon>
+            <span>Navigation One</span>
+        </span>;
 
-RenderFragment sub2Title =
-@<span>
-    <Icon Type="appstore" Theme="outline"></Icon>
-    <span>Navigation Two</span>
-</span>;
+    RenderFragment sub2Title =
+        @<span>
+            <Icon Type="appstore" Theme="outline"></Icon>
+            <span>Navigation Two</span>
+        </span>;
 
-RenderFragment sub4Title =
-@<span>
-    <Icon Type="setting" Theme="outline"></Icon>
-    <span>Navigation Three</span>
-</span>;
+    RenderFragment sub4Title =
+        @<span>
+            <Icon Type="setting" Theme="outline"></Icon>
+            <span>Navigation Three</span>
+        </span>;
 }

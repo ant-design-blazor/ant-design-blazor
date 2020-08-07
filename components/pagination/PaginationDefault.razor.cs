@@ -9,38 +9,27 @@ namespace AntDesign
 {
     public partial class PaginationDefault : AntDomComponentBase
     {
-        [Parameter]
-        public string Size { get; set; }
+        [Parameter] public string Size { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool ShowSizeChanger { get; set; }
+        [Parameter] public bool ShowSizeChanger { get; set; }
 
-        [Parameter]
-        public bool ShowQuickJumper { get; set; }
+        [Parameter] public bool ShowQuickJumper { get; set; }
 
-        [Parameter]
-        public int Total { get; set; } = 0;
+        [Parameter] public int Total { get; set; } = 0;
 
-        [Parameter]
-        public int PageIndex { get; set; } = 1;
+        [Parameter] public int PageIndex { get; set; } = 1;
 
-        [Parameter]
-        public int PageSize { get; set; } = 10;
+        [Parameter] public int PageSize { get; set; } = 10;
 
-        [Parameter]
-        public int[] PageSizeOptions { get; set; } = { 10, 20, 30, 40 };
+        [Parameter] public int[] PageSizeOptions { get; set; } = {10, 20, 30, 40};
 
-        [Parameter]
-        public EventCallback<int> PageIndexChange { get; set; }
+        [Parameter] public EventCallback<int> PageIndexChange { get; set; }
 
-        [Parameter]
-        public EventCallback<int> PageSizeChange { get; set; }
+        [Parameter] public EventCallback<int> PageSizeChange { get; set; }
 
-        [CascadingParameter]
-        public Pagination Pagination { get; set; }
+        [CascadingParameter] public Pagination Pagination { get; set; }
 
         private OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>> _showTotal;
 
@@ -48,7 +37,7 @@ namespace AntDesign
 
         private IEnumerable<PaginationItem> _listOfPageItem = Enumerable.Empty<PaginationItem>();
 
-        private PaginationTotalContext TotalContext => new PaginationTotalContext { Total = Total, Range = _ranges };
+        private PaginationTotalContext TotalContext => new PaginationTotalContext {Total = Total, Range = _ranges};
 
         protected override void OnInitialized()
         {
@@ -62,7 +51,8 @@ namespace AntDesign
 
         protected override void OnParametersSet()
         {
-            this._ranges = ((this.PageIndex - 1) * this.PageSize + 1, Math.Min(this.PageIndex * this.PageSize, this.Total));
+            this._ranges = ((this.PageIndex - 1) * this.PageSize + 1,
+                Math.Min(this.PageIndex * this.PageSize, this.Total));
             this.BuildIndexes();
 
             base.OnParametersSet();
@@ -103,14 +93,15 @@ namespace AntDesign
         {
             IEnumerable<PaginationItem> ConcatWithPrevNext(IEnumerable<PaginationItem> listOfPage)
             {
-                var prevItem = new PaginationItem() { Type = "prev", Disabled = pageIndex == 1 };
-                var nextItem = new PaginationItem() { Type = "next", Disabled = pageIndex == lastIndex };
-                return new[] { prevItem }.Concat(listOfPage).Concat(new[] { nextItem });
+                var prevItem = new PaginationItem() {Type = "prev", Disabled = pageIndex == 1};
+                var nextItem = new PaginationItem() {Type = "next", Disabled = pageIndex == lastIndex};
+                return new[] {prevItem}.Concat(listOfPage).Concat(new[] {nextItem});
             }
 
             IEnumerable<PaginationItem> GeneratePage(int start, int end)
             {
-                return Enumerable.Range(start, end - start + 1).Select(x => new PaginationItem() { Index = x, Type = "page" });
+                return Enumerable.Range(start, end - start + 1)
+                    .Select(x => new PaginationItem() {Index = x, Type = "page"});
             }
 
             if (lastIndex <= 9)
@@ -122,8 +113,8 @@ namespace AntDesign
                 IEnumerable<PaginationItem> GenerateRangeItem(int selected, int last)
                 {
                     var listOfRange = Enumerable.Empty<PaginationItem>();
-                    var prevFiveItem = new[] { new PaginationItem() { Type = "prev_5" } };
-                    var nextFiveItem = new[] { new PaginationItem() { Type = "next_5" } };
+                    var prevFiveItem = new[] {new PaginationItem() {Type = "prev_5"}};
+                    var nextFiveItem = new[] {new PaginationItem() {Type = "next_5"}};
                     var firstPageItem = GeneratePage(1, 1);
                     var lastPageItem = GeneratePage(lastIndex, lastIndex);
                     if (selected < 4)

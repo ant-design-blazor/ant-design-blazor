@@ -1,4 +1,3 @@
-
 <div>
     <Tree Checkable="true" Nodes="TreeNodes"></Tree>
 </div>
@@ -14,32 +13,37 @@
             if (_treeNodes != null)
                 return _treeNodes;
 
-            _treeNodes = new List<TreeNode>(){
+            _treeNodes = new List<TreeNode>()
+            {
                 new TreeNode
                 {
-                    Text = "parent 1",IsExpanded = true,
-                    Nodes ={
+                    Text = "parent 1", IsExpanded = true,
+                    Nodes =
+                    {
                         new TreeNode
                         {
-                            Text="parent 1-0",IsDisabled=true,IsExpanded=true,IsChecked=true,
-                            Nodes={
-                                new TreeNode{ Text="leaf",IsDisabled=true }
+                            Text = "parent 1-0", IsDisabled = true, IsExpanded = true, IsChecked = true,
+                            Nodes =
+                            {
+                                new TreeNode {Text = "leaf", IsDisabled = true}
                                 ,
-                                new TreeNode{ Text="leaf" }
+                                new TreeNode {Text = "leaf"}
                             }
                         },
                         new TreeNode
                         {
-                            Text="parent 1-1",IsExpanded=true,
-                            Nodes={
-                                new TreeNode{ Text="sss"},
+                            Text = "parent 1-1", IsExpanded = true,
+                            Nodes =
+                            {
+                                new TreeNode {Text = "sss"},
                             }
                         },
                         new TreeNode
                         {
-                            Text="parent 1-2",IsExpanded=true,
-                            Nodes={
-                                new TreeNode{ Text="ttt"},
+                            Text = "parent 1-2", IsExpanded = true,
+                            Nodes =
+                            {
+                                new TreeNode {Text = "ttt"},
                             }
                         }
                     }
@@ -49,6 +53,5 @@
             return _treeNodes;
         }
     }
+
 }
-
-

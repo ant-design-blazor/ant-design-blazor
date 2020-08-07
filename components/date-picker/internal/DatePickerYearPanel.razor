@@ -13,41 +13,42 @@
 }
 <div class='@($"{PrefixCls}-panel")'>
     <DatePickerTemplate @attributes="GetAttritubes()"
-                        TValue="TValue"
-                        MaxRow="MAX_ROW"
-                        MaxCol="MAX_COL"
-                        ViewStartDate="startDate"
-                        IsInView="date => IsInView(date, startDate)"
-                        IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
-                        IsSelected="date => DateHelper.IsSameYear(date, Value)"
-                        GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo)'
-                        OnValueSelect="date => OnSelectYear(date)"
-                        GetNextColValue="date => date.AddYears(1)">
+                         TValue="TValue"
+                         MaxRow="MAX_ROW"
+                         MaxCol="MAX_COL"
+                         ViewStartDate="startDate"
+                         IsInView="date => IsInView(date, startDate)"
+                         IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
+                         IsSelected="date => DateHelper.IsSameYear(date, Value)"
+                         GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo)'
+                         OnValueSelect="date => OnSelectYear(date)"
+                         GetNextColValue="date => date.AddYears(1)">
         <RenderPickerHeader>
             <DatePickerHeader @attributes="GetAttritubes()"
-                              TValue="TValue"
-                              SuperChangeDateInterval="10"
-                              ShowPreChange="@false"
-                              ShowNextChange="@false"
-                              ShowSuperPreChange="@(!(IsRange && PickerIndex == 1))"
-                              ShowSuperNextChange="@(!(IsRange && PickerIndex == 0))" />
+                               TValue="TValue"
+                               SuperChangeDateInterval="10"
+                               ShowPreChange="@false"
+                               ShowNextChange="@false"
+                               ShowSuperPreChange="@(!(IsRange && PickerIndex == 1))"
+                               ShowSuperNextChange="@(!(IsRange && PickerIndex == 0))"/>
         </RenderPickerHeader>
         <RenderColValue Context="currentColDate">
-            @{yearIndex++;}
+            @{ yearIndex++; }
             @currentColDate.Year
         </RenderColValue>
     </DatePickerTemplate>
 </div>
 
 @code {
-    private const int MAX_ROW = 4;
-    private const int MAX_COL = 3;
-    private const int FIRST_YEAR_INDEX = 0;
-    private const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL - 1;
+        private const int MAX_ROW = 4;
+        private const int MAX_COL = 3;
+        private const int FIRST_YEAR_INDEX = 0;
+        private const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL - 1;
 
     private bool IsInView(DateTime date, DateTime startDate)
     {
         return date.Year != startDate.AddYears(FIRST_YEAR_INDEX).Year
-        && date.Year != startDate.AddYears(LAST_YEAR_INDEX).Year;
+               && date.Year != startDate.AddYears(LAST_YEAR_INDEX).Year;
     }
+
 }

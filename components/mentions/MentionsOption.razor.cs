@@ -58,7 +58,7 @@ namespace AntDesign
 
         internal async Task OnClick(MouseEventArgs args)
         {
-            if (args.Button == 0)   //left click
+            if (args.Button == 0) //left click
             {
                 await Mentions.OnOptionClick(this);
             }

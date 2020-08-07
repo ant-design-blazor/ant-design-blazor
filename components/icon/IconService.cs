@@ -9,7 +9,9 @@ namespace AntDesign
 {
     public class IconService
     {
-        private static readonly ConcurrentDictionary<string, ValueTask<string>> _svgCache = new ConcurrentDictionary<string, ValueTask<string>>();
+        private static readonly ConcurrentDictionary<string, ValueTask<string>> _svgCache =
+            new ConcurrentDictionary<string, ValueTask<string>>();
+
         private readonly HttpClient _httpClient;
         private IJSRuntime _js;
 
@@ -43,11 +45,13 @@ namespace AntDesign
             return iconImg;
         }
 
-        public static string GetStyledSvg(string svgImg, string width = "1em", string height = "1em", string fill = "currentColor", int rotate = 0)
+        public static string GetStyledSvg(string svgImg, string width = "1em", string height = "1em",
+            string fill = "currentColor", int rotate = 0)
         {
             if (!string.IsNullOrEmpty(svgImg))
             {
-                var svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? "" : $"style=\"transform: rotate({rotate}deg);\"")}";
+                var svgStyle =
+                    $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? "" : $"style=\"transform: rotate({rotate}deg);\"")}";
                 return svgImg.Insert(svgImg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {svgStyle} ");
             }
 

@@ -1,22 +1,24 @@
 <Select Mode="multiple"
-        Style="width:100%"
+        Style="width: 100%"
         TagRender="TagRender"
-        DefaultValue="@(new[]{"gold","cyan"})"
+        DefaultValue="@(new[] {"gold", "cyan"})"
         Options="@_options">
 </Select>
 
 @using OneOf;
+
 @code
 {
     private LabeledValue[] _options;
+
     protected override void OnInitialized()
     {
         _options = new LabeledValue[]
         {
-            new LabeledValue("gold","gold"),
-            new LabeledValue("lime","lime"),
-            new LabeledValue("green","green"),
-            new LabeledValue("cyan","cyan")
+            new LabeledValue("gold", "gold"),
+            new LabeledValue("lime", "lime"),
+            new LabeledValue("green", "green"),
+            new LabeledValue("cyan", "cyan")
         };
     }
 
@@ -27,7 +29,7 @@
 
     private RenderFragment TagRender(Properties props)
     {
-        RenderFragment tag =@<Tag Color=@props.Value Closable=@props.Closable Style="margin-right:3px" OnClose="@props.OnClose">@props.Value</Tag>;
+        RenderFragment tag = @<Tag Color=@props.Value Closable=@props.Closable Style="margin-right: 3px" OnClose="@props.OnClose">@props.Value</Tag>;
         return tag;
     }
 }

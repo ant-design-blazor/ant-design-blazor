@@ -1,16 +1,16 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 
-<Form Loading="loading" Model="@model" 
+<Form Loading="loading" Model="@model"
       LabelCol="new ColLayoutParam { Span = 8 }"
       WrapperCol="new ColLayoutParam { Span = 16 }"
-      OnFinish="OnFinish" 
+      OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
-    <FormItem Label="Username" >
+    <FormItem Label="Username">
         <Input @bind-Value="@context.Username"/>
     </FormItem>
     <FormItem Label="Password">
-        <InputPassword @bind-Value="@context.Password" />
+        <InputPassword @bind-Value="@context.Password"/>
     </FormItem>
     <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
         <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
@@ -23,16 +23,19 @@
 </Form>
 <div style="margin-top: 16px">
     Loading state：
-    <Switch Checked=loading OnChange=toggle />
+    <Switch Checked=loading OnChange=toggle/>
 </div>
+
 @code
 {
     public class Model
     {
         [Required]
         public string Username { get; set; }
+
         [Required]
         public string Password { get; set; }
+
         public bool RememberMe { get; set; } = true;
     }
 

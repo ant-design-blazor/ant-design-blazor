@@ -32,7 +32,8 @@ namespace AntDesign.Docs.Build.CLI.Utils
 
         public string GetAdditonalDepsPath(string additonalName, string frameworkVersion)
         {
-            return Path.Combine(GetAdditonalDepsDirectory(additonalName), "shared", "Microsoft.NETCore.App", frameworkVersion);
+            return Path.Combine(GetAdditonalDepsDirectory(additonalName), "shared", "Microsoft.NETCore.App",
+                frameworkVersion);
         }
 
         public string GetAdditonalDepsDirectory(string additonalName)

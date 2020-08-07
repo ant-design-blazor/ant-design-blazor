@@ -6,8 +6,7 @@ namespace AntDesign
 {
     public class Paragraph : TypographyBase
     {
-        [Parameter]
-        public bool Code { get; set; } = false;
+        [Parameter] public bool Code { get; set; } = false;
 
         protected override void OnInitialized()
         {
@@ -60,6 +59,7 @@ namespace AntDesign
                     builder.CloseComponent();
                     builder.CloseElement();
                 }
+
                 builder.CloseElement();
             }
         }

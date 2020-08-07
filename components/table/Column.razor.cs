@@ -9,29 +9,21 @@ namespace AntDesign
 {
     public partial class Column<TData> : ColumnBase, IFieldColumn
     {
-        [Parameter]
-        public EventCallback<TData> FieldChanged { get; set; }
+        [Parameter] public EventCallback<TData> FieldChanged { get; set; }
 
-        [Parameter]
-        public Expression<Func<TData>> FieldExpression { get; set; }
+        [Parameter] public Expression<Func<TData>> FieldExpression { get; set; }
 
-        [Parameter]
-        public RenderFragment<TData> CellRender { get; set; }
+        [Parameter] public RenderFragment<TData> CellRender { get; set; }
 
-        [Parameter]
-        public TData Field { get; set; }
+        [Parameter] public TData Field { get; set; }
 
-        [Parameter]
-        public string Format { get; set; }
+        [Parameter] public string Format { get; set; }
 
-        [Parameter]
-        public bool Sortable { get; set; }
+        [Parameter] public bool Sortable { get; set; }
 
-        [Parameter]
-        public string Sort { get; set; }
+        [Parameter] public string Sort { get; set; }
 
-        [Parameter]
-        public bool ShowSorterTooltip { get; set; } = true;
+        [Parameter] public bool ShowSorterTooltip { get; set; } = true;
 
         private FieldIdentifier? _fieldIdentifier;
 
@@ -57,7 +49,8 @@ namespace AntDesign
 
             ClassMapper
                 .If("ant-table-column-has-sorters", () => Sortable)
-                .If($"ant-table-column-sort", () => Sortable && SortModel.SortType.IsIn(SortType.Ascending, SortType.Descending));
+                .If($"ant-table-column-sort",
+                    () => Sortable && SortModel.SortType.IsIn(SortType.Ascending, SortType.Descending));
         }
 
         private void HandelHeaderClick()

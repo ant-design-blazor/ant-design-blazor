@@ -15,32 +15,24 @@ namespace AntDesign
 
         private readonly string _prefixCls = "ant-form-item";
 
-        [CascadingParameter(Name = "Form")]
-        private IForm Form { get; set; }
+        [CascadingParameter(Name = "Form")] private IForm Form { get; set; }
 
         [CascadingParameter(Name = "FormItem")]
         private IFormItem ParentFormItem { get; set; }
 
-        [CascadingParameter]
-        private EditContext CurrentEditContext { get; set; }
+        [CascadingParameter] private EditContext CurrentEditContext { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public string Label { get; set; }
+        [Parameter] public string Label { get; set; }
 
-        [Parameter]
-        public ColLayoutParam LabelCol { get; set; }
+        [Parameter] public ColLayoutParam LabelCol { get; set; }
 
-        [Parameter]
-        public ColLayoutParam WrapperCol { get; set; }
+        [Parameter] public ColLayoutParam WrapperCol { get; set; }
 
-        [Parameter]
-        public bool NoStyle { get; set; } = false;
+        [Parameter] public bool NoStyle { get; set; } = false;
 
-        [Parameter]
-        public bool Required { get; set; } = false;
+        [Parameter] public bool Required { get; set; } = false;
 
         private EditContext EditContext => Form?.EditContext;
 
@@ -76,7 +68,7 @@ namespace AntDesign
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
-               ;
+                ;
         }
 
         private Dictionary<string, object> GetLabelColAttributes()
@@ -133,14 +125,16 @@ namespace AntDesign
         {
             if (control.FieldIdentifier.Model == null)
             {
-                throw new InvalidOperationException($"Please use @bind-Value in the control with generic type `{typeof(TValue)}`.");
+                throw new InvalidOperationException(
+                    $"Please use @bind-Value in the control with generic type `{typeof(TValue)}`.");
             }
 
             this._control = control;
 
             CurrentEditContext.OnValidationStateChanged += (s, e) =>
             {
-                control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).ToArray();
+                control.ValidationMessages =
+                    CurrentEditContext.GetValidationMessages(control.FieldIdentifier).ToArray();
                 this._isValid = !control.ValidationMessages.Any();
 
                 StateHasChanged();
@@ -164,7 +158,8 @@ namespace AntDesign
             }
             else
             {
-                throw new InvalidOperationException($"Unable to match property `{control.FieldIdentifier.FieldName}` in Model `{control.FieldIdentifier.Model.GetType()}`, please confirm that the Model contains this property.");
+                throw new InvalidOperationException(
+                    $"Unable to match property `{control.FieldIdentifier.FieldName}` in Model `{control.FieldIdentifier.Model.GetType()}`, please confirm that the Model contains this property.");
             }
         }
     }

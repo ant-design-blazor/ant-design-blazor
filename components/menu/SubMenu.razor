@@ -8,8 +8,8 @@
 
 @if (RootMenu.InternalMode == MenuMode.Inline)
 {
-    <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="position:relative;@Style">
-        <div class="@(prefixCls)-title" style="padding-left: @(PaddingLeft)px; " role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
+    <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="position: relative; @Style">
+        <div class="@(prefixCls)-title" style="padding-left: @(PaddingLeft)px;" role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
 
             @if (Title.IsT0)
             {
@@ -35,16 +35,16 @@ else
 
     <CascadingValue Value="this" Name="SubMenu">
         <SubMenuTrigger @ref="_overlayTrigger"
-                        TriggerClass="@ClassMapper.Class"
-                        Visible="IsOpen"
-                        Disabled="Disabled"
-                        Placement="@(RootMenu.Mode == MenuMode.Horizontal ? PlacementType.BottomLeft : PlacementType.RightTop)"
-                        OnVisibleChange="OnOverlayVisibleChange"
-                        OnOverlayHiding="OnOverlayHiding"
-                        PlacementCls="@($"{prefixCls}-placement-{placementName} {prefixCls}-popup")"
-                        OverlayEnterCls="@($"{prefixCls}-{RootMenu.Theme} ")"
-                        OverlayLeaveCls="@($"{prefixCls}-{RootMenu.Theme} ")"
-                        OverlayHiddenCls="@($"{RootMenu.PrefixCls}-hidden")">
+                         TriggerClass="@ClassMapper.Class"
+                         Visible="IsOpen"
+                         Disabled="Disabled"
+                         Placement="@(RootMenu.Mode == MenuMode.Horizontal ? PlacementType.BottomLeft : PlacementType.RightTop)"
+                         OnVisibleChange="OnOverlayVisibleChange"
+                         OnOverlayHiding="OnOverlayHiding"
+                         PlacementCls="@($"{prefixCls}-placement-{placementName} {prefixCls}-popup")"
+                         OverlayEnterCls="@($"{prefixCls}-{RootMenu.Theme} ")"
+                         OverlayLeaveCls="@($"{prefixCls}-{RootMenu.Theme} ")"
+                         OverlayHiddenCls="@($"{RootMenu.PrefixCls}-hidden")">
             <ChildContent>
                 <div class="@(prefixCls)-title" role="button">
                     @if (Title.IsT0)
@@ -73,9 +73,7 @@ else
 <style>
 
     .ant-menu-vertical.ant-menu-sub,
-    .ant-menu-vertical.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active), .ant-menu-vertical-left.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active), .ant-menu-vertical-right.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active) {
-        overflow: initial;
-    }
+    .ant-menu-vertical.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active), .ant-menu-vertical-left.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active), .ant-menu-vertical-right.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active) { overflow: initial; }
 
     .ant-menu.ant-menu-sub.ant-menu-vertical.ant-menu-submenu-popup {
         top: 0;
@@ -97,14 +95,14 @@ else
         if (RootMenu.PrefixCls.Contains("dropdown"))
         {
             return@<span class="@(prefixCls)-arrow">
-                        <span role="img" aria-label="right" class="anticon anticon-right @(prefixCls)-arrow-icon">
-                            <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-                                <path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path>
-                            </svg>
-                        </span>
-                    </span>;
-         }
+                      <span role="img" aria-label="right" class="anticon anticon-right @(prefixCls)-arrow-icon">
+                          <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="right" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                              <path d="M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z"></path>
+                          </svg>
+                      </span>
+                  </span>;
+        }
 
-         return @<i class="@(prefixCls)-arrow"></i>;
+        return @<i class="@(prefixCls)-arrow"></i>;
     }
 }

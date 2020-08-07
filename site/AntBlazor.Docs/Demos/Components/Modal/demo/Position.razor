@@ -6,14 +6,13 @@
            Style="top: 20px"
            Visible="_visible1"
            OnOk="@HideModal1"
-           OnCancel="@HideModal1"
-           >
+           OnCancel="@HideModal1">
         <p>some contents...</p>
         <p>some contents...</p>
         <p>some contents...</p>
     </Modal>
-    <br />
-    <br />
+    <br/>
+    <br/>
     <Button Type="primary" OnClick="@SetModal2Visible">
         Vertically centered modal dialog
     </Button>
@@ -21,13 +20,13 @@
            Centered="true"
            Visible="_visible2"
            OnOk="@HideModal2"
-           OnCancel="@HideModal2"
-           >
+           OnCancel="@HideModal2">
         <p>some contents...</p>
         <p>some contents...</p>
         <p>some contents...</p>
     </Modal>
 </div>
+
 @code {
     string title = "BasicModal";
     bool _visible1 = false;
@@ -53,8 +52,10 @@
     {
         _visible1 = true;
     }
+
     private void SetModal2Visible()
     {
         _visible2 = true;
     }
+
 }

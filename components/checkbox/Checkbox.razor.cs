@@ -8,35 +8,26 @@ namespace AntDesign
 {
     public partial class Checkbox : AntInputComponentBase<bool>
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         private ElementReference _inputElement;
         private ElementReference _contentElement;
 
-        [Parameter]
-        public EventCallback<bool> CheckedChange { get; set; }
+        [Parameter] public EventCallback<bool> CheckedChange { get; set; }
 
-        [Parameter]
-        public Expression<Func<bool>> CheckedExpression { get; set; }
+        [Parameter] public Expression<Func<bool>> CheckedExpression { get; set; }
 
-        [Parameter]
-        public bool AutoFocus { get; set; }
+        [Parameter] public bool AutoFocus { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool Indeterminate { get; set; }
+        [Parameter] public bool Indeterminate { get; set; }
 
-        [Parameter]
-        public bool Checked { get; set; }
+        [Parameter] public bool Checked { get; set; }
 
-        [Parameter]
-        public string Label { get; set; }
+        [Parameter] public string Label { get; set; }
 
-        [CascadingParameter]
-        public CheckboxGroup CheckboxGroup { get; set; }
+        [CascadingParameter] public CheckboxGroup CheckboxGroup { get; set; }
 
         protected Dictionary<string, object> InputAttributes { get; set; }
 

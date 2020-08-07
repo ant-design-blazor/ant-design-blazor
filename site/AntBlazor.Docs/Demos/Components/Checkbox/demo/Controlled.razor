@@ -1,62 +1,61 @@
 <div>
     <p style="margin-bottom: 20px">
-        <Checkbox Checked="@checkValue"  
-                    Disabled="@disableValue" 
-                    CheckedChange="CheckChanged">
-        @label
+        <Checkbox Checked="@checkValue"
+                  Disabled="@disableValue"
+                  CheckedChange="CheckChanged">
+            @label
         </Checkbox>
-    </p>     
-        <p>
-        <Button Type="primary" Size="small"  @onclick="@CheckClick">@checkTitle</Button>
-        <Button Type="primary" Size="small"  @onclick="@DisableClick">@disableTitle</Button>
-      </p>     
-  </div>
+    </p>
+    <p>
+        <Button Type="primary" Size="small" @onclick="@CheckClick">@checkTitle</Button>
+        <Button Type="primary" Size="small" @onclick="@DisableClick">@disableTitle</Button>
+    </p>
+</div>
 
-  @code{
+@code{
 
-      private bool checkValue { get; set; } = false;
-      private bool disableValue { get; set; } = false;
-      private string label { get; set; } = "Check-Enable";
-      private string checkTitle { get; set; } = "Check";
-      private string disableTitle { get; set; } = "Enable";
+    private bool checkValue { get; set; } = false;
+    private bool disableValue { get; set; } = false;
+    private string label { get; set; } = "Check-Enable";
+    private string checkTitle { get; set; } = "Check";
+    private string disableTitle { get; set; } = "Enable";
 
-      void CheckChanged()
-      {
-          CheckClick();
-      }
-
-
-
-      void CheckClick()
-      {
-          if (checkValue)
-          {
-              checkTitle = "Check";
-              checkValue = false;
-          }
-          else
-          {
-              checkTitle = "Uncheck";
-              checkValue = true;
-          }
-
-          label = $"{checkTitle}-{disableTitle}";
-      }
+    void CheckChanged()
+    {
+        CheckClick();
+    }
 
 
+    void CheckClick()
+    {
+        if (checkValue)
+        {
+            checkTitle = "Check";
+            checkValue = false;
+        }
+        else
+        {
+            checkTitle = "Uncheck";
+            checkValue = true;
+        }
 
-      void DisableClick()
-      {
-          if (disableValue)
-          {
-              disableTitle = "Enabled";
-              disableValue = false;
-          }
-          else
-          {
-              disableTitle = "Disabled";
-              disableValue = true;
-          }
-          label = $"{checkTitle}-{disableTitle}";
-      }
-  }
+        label = $"{checkTitle}-{disableTitle}";
+    }
+
+
+    void DisableClick()
+    {
+        if (disableValue)
+        {
+            disableTitle = "Enabled";
+            disableValue = false;
+        }
+        else
+        {
+            disableTitle = "Disabled";
+            disableValue = true;
+        }
+        label = $"{checkTitle}-{disableTitle}";
+    }
+
+}

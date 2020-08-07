@@ -67,7 +67,7 @@ namespace AntDesign
         public override void ChangeValue(DateTime value, int index = 0)
         {
             bool result = BindConverter.TryConvertTo<TValue>(
-               value.ToString(CultureInfo), CultureInfo, out var dateTime);
+                value.ToString(CultureInfo), CultureInfo, out var dateTime);
 
             if (result)
             {
@@ -115,6 +115,7 @@ namespace AntDesign
                     notNullAction?.Invoke(dateTime);
                 }
             }
+
             if (_isNullable && value != null)
             {
                 notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));

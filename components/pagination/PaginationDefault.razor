@@ -10,7 +10,8 @@
         }
         else
         {
-            @_showTotal.AsT1(TotalContext);
+            @_showTotal.AsT1(TotalContext)
+            ;
         }
     </li>
 }
@@ -23,8 +24,7 @@
         Disabled=page.Disabled
         Active=@(PageIndex == page.Index)
         GotoIndex=JumpPage
-        DiffIndex=JumpDiff
-     />
+        DiffIndex=JumpDiff/>
 }
 
 @if (ShowQuickJumper || ShowSizeChanger)

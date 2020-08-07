@@ -25,11 +25,12 @@ namespace AntDesign
 
         public string Type { get; set; }
 
-        public ResponseModel GetResponse<ResponseModel>(JsonSerializerOptions options = null) => JsonSerializer.Deserialize<ResponseModel>(this.Response, options);
+        public ResponseModel GetResponse<ResponseModel>(JsonSerializerOptions options = null) =>
+            JsonSerializer.Deserialize<ResponseModel>(this.Response, options);
 
         public bool IsPicture()
         {
-            string[] imageTypes = new[] { ".jpg", ".png", ".gif", ".ico" };
+            string[] imageTypes = new[] {".jpg", ".png", ".gif", ".ico"};
             Ext = FileName.Substring(FileName.LastIndexOf('.'));
             return imageTypes.Contains(Ext);
         }

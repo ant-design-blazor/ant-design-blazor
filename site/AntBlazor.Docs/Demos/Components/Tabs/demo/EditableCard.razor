@@ -15,14 +15,16 @@
 
 @code{
     private static int addedIndex = 3;
+
     private readonly Func<TabPane> Create = () =>
-        {
-            addedIndex++;
-            int temp = addedIndex;
-            return new TabPane(
-                key: temp.ToString(),
-                childContent: (b) => { b.AddContent(0, $"Content of Tab Pane {temp}"); },
-                tab: (b) => { b.AddContent(0, $"Tab {temp}"); }
+    {
+        addedIndex++;
+        int temp = addedIndex;
+        return new TabPane(
+            key: temp.ToString(),
+            childContent: (b) => { b.AddContent(0, $"Content of Tab Pane {temp}"); },
+            tab: (b) => { b.AddContent(0, $"Tab {temp}"); }
             );
-        };
+    };
+
 }

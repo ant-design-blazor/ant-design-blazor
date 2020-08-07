@@ -5,14 +5,11 @@ namespace AntDesign.Internal
 {
     public partial class CalendarPanelChooser : AntDomComponentBase
     {
-        [Parameter]
-        public Calendar Calendar { get; set; }
+        [Parameter] public Calendar Calendar { get; set; }
 
-        [Parameter]
-        public Action<DateTime, int> OnSelect { get; set; }
+        [Parameter] public Action<DateTime, int> OnSelect { get; set; }
 
-        [Parameter]
-        public int PickerIndex { get; set; }
+        [Parameter] public int PickerIndex { get; set; }
 
         private bool IsShowDatePanel()
         {

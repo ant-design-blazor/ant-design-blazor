@@ -29,6 +29,7 @@ namespace AntDesign
             {
                 throw new ArgumentNullException(nameof(options));
             }
+
             options.Icon = (builder) =>
             {
                 builder.OpenComponent<Icon>(0);
@@ -47,6 +48,7 @@ namespace AntDesign
             {
                 throw new ArgumentNullException(nameof(options));
             }
+
             options.Icon = (builder) =>
             {
                 builder.OpenComponent<Icon>(0);
@@ -65,6 +67,7 @@ namespace AntDesign
             {
                 throw new ArgumentNullException(nameof(options));
             }
+
             options.Icon = (builder) =>
             {
                 builder.OpenComponent<Icon>(0);
@@ -83,6 +86,7 @@ namespace AntDesign
             {
                 throw new ArgumentNullException(nameof(options));
             }
+
             options.Icon = (builder) =>
             {
                 builder.OpenComponent<Icon>(0);
@@ -113,7 +117,6 @@ namespace AntDesign
         }
 
 
-
         /// <summary>
         /// 创建并打开一个简单窗口
         /// </summary>
@@ -136,7 +139,8 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="contentParams"></param>
         /// <returns></returns>
-        public async Task<ModalRef<TResult>> CreateAsync<TComponent, TContentParams, TResult>(ConfirmOptions config, TContentParams contentParams) where TComponent : ModalTemplate<TContentParams, TResult>
+        public async Task<ModalRef<TResult>> CreateAsync<TComponent, TContentParams, TResult>(ConfirmOptions config,
+            TContentParams contentParams) where TComponent : ModalTemplate<TContentParams, TResult>
         {
             CheckIsNull(config);
 
@@ -161,6 +165,7 @@ namespace AntDesign
             {
                 return OnOpenEvent.Invoke(modalRef);
             }
+
             return Task.CompletedTask;
         }
 
@@ -171,6 +176,7 @@ namespace AntDesign
             {
                 return OnCloseEvent.Invoke(modalRef);
             }
+
             return Task.CompletedTask;
         }
 
@@ -181,6 +187,5 @@ namespace AntDesign
                 throw new ArgumentNullException(nameof(options));
             }
         }
-
     }
 }

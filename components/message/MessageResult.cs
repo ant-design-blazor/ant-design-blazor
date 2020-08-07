@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-
     public class MessageResult
     {
         public MessageResult(Task task)
@@ -25,6 +24,5 @@ namespace AntDesign
             }, TaskScheduler.Current);
             return new MessageResult(t);
         }
-
     }
 }

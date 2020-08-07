@@ -5,7 +5,7 @@ namespace AntDesign.Docs.Routing
     internal class TemplateParser
     {
         public static readonly char[] InvalidParameterNameCharacters =
-            new char[] { '*', '?', '{', '}', '=', '.' };
+            new char[] {'*', '?', '{', '}', '=', '.'};
 
         internal static RouteTemplate ParseTemplate(string template)
         {
@@ -35,6 +35,7 @@ namespace AntDesign.Docs.Routing
                         throw new InvalidOperationException(
                             $"Invalid template '{template}'. Missing '{{' in parameter segment '{segment}'.");
                     }
+
                     templateSegments[i] = new TemplateSegment(originalTemplate, segment, isParameter: false);
                 }
                 else
@@ -58,7 +59,8 @@ namespace AntDesign.Docs.Routing
                             $"Invalid template '{template}'. The character '{segment[invalidCharacter]}' in parameter segment '{segment}' is not allowed.");
                     }
 
-                    templateSegments[i] = new TemplateSegment(originalTemplate, segment.Substring(1, segment.Length - 2), isParameter: true);
+                    templateSegments[i] = new TemplateSegment(originalTemplate,
+                        segment.Substring(1, segment.Length - 2), isParameter: true);
                 }
             }
 

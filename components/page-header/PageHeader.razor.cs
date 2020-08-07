@@ -8,44 +8,31 @@ namespace AntDesign
     {
         #region Parameters
 
-        [Parameter]
-        public bool Ghost { get; set; }
+        [Parameter] public bool Ghost { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> BackIcon { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> BackIcon { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Title { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> Subtitle { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Subtitle { get; set; }
 
-        [Parameter]
-        public EventCallback OnBack { get; set; }
+        [Parameter] public EventCallback OnBack { get; set; }
 
-        [Parameter]
-        public RenderFragment PageHeaderContent { get; set; }
+        [Parameter] public RenderFragment PageHeaderContent { get; set; }
 
-        [Parameter]
-        public RenderFragment PageHeaderFooter { get; set; }
+        [Parameter] public RenderFragment PageHeaderFooter { get; set; }
 
-        [Parameter]
-        public RenderFragment PageHeaderBreadcrumb { get; set; }
+        [Parameter] public RenderFragment PageHeaderBreadcrumb { get; set; }
 
-        [Parameter]
-        public RenderFragment PageHeaderAvatar { get; set; }
+        [Parameter] public RenderFragment PageHeaderAvatar { get; set; }
 
-        [Parameter]
-        public RenderFragment PageHeaderTitle { get; set; }
+        [Parameter] public RenderFragment PageHeaderTitle { get; set; }
 
-        [Parameter]
-        public RenderFragment PageHeaderSubtitle { get; set; }
+        [Parameter] public RenderFragment PageHeaderSubtitle { get; set; }
 
-        [Parameter]
-        public RenderFragment PageHeaderTags { get; set; }
+        [Parameter] public RenderFragment PageHeaderTags { get; set; }
 
-        [Parameter]
-        public RenderFragment PageHeaderExtra { get; set; }
+        [Parameter] public RenderFragment PageHeaderExtra { get; set; }
 
         #endregion Parameters
 

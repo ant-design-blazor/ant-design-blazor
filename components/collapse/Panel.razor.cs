@@ -9,34 +9,25 @@ namespace AntDesign
     {
         #region Parameter
 
-        [Parameter]
-        public bool Active { get; set; }
+        [Parameter] public bool Active { get; set; }
 
-        [Parameter]
-        public string Key { get; set; }
+        [Parameter] public string Key { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool ShowArrow { get; set; } = true;
+        [Parameter] public bool ShowArrow { get; set; } = true;
 
-        [Parameter]
-        public OneOf<string, RenderFragment> Extra { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Extra { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> Header { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Header { get; set; }
 
-        [Parameter]
-        public EventCallback<bool> OnActiveChange { get; set; }
+        [Parameter] public EventCallback<bool> OnActiveChange { get; set; }
 
         #endregion Parameter
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [CascadingParameter]
-        public Collapse Collapse { get; set; }
+        [CascadingParameter] public Collapse Collapse { get; set; }
 
         private void SetClassMap()
         {

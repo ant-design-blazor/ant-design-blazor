@@ -27,6 +27,7 @@
 </div>
 
 @code {
+
     private async Task OpenWithPlacement(NotificationPlacement placement)
     {
         await _notice.Open(new NotificationConfig()
@@ -56,4 +57,5 @@
     {
         await OpenWithPlacement(NotificationPlacement.BottomRight);
     }
+
 }

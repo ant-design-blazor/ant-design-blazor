@@ -8,22 +8,17 @@ namespace AntDesign
 {
     public partial class CheckboxGroup : AntInputComponentBase<string[]>
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public IList<Checkbox> CheckboxItems { get; set; } = new List<Checkbox>();
+        [Parameter] public IList<Checkbox> CheckboxItems { get; set; } = new List<Checkbox>();
 
-        [Parameter]
-        public OneOf<CheckboxOption[], string[]> Options { get; set; }
+        [Parameter] public OneOf<CheckboxOption[], string[]> Options { get; set; }
 
-        [Parameter]
-        public EventCallback<string[]> OnChange { get; set; }
+        [Parameter] public EventCallback<string[]> OnChange { get; set; }
 
         private string[] _selectedValues;
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
         public CheckboxGroup()
         {
@@ -67,7 +62,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    _selectedValues = _selectedValues.Except(new[] { opts[index] }).ToArray();
+                    _selectedValues = _selectedValues.Except(new[] {opts[index]}).ToArray();
                 }
             });
 

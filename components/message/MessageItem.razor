@@ -8,43 +8,45 @@
                 switch (Config.Type)
                 {
                     case MessageType.Success:
-                        {
-                            <Icon Type="check-circle" Theme="fill" Class="anticon anticon-check-circle" ></Icon>
+                    {
+                        <Icon Type="check-circle" Theme="fill" Class="anticon anticon-check-circle"></Icon>
 
-                            break;
-                        }
+                        break;
+                    }
                     case MessageType.Warning:
-                        {
-                            <Icon Type="exclamation-circle" Theme="fill" Class="anticon anticon-exclamation-circle"></Icon>
-                            break;
-                        }
+                    {
+                        <Icon Type="exclamation-circle" Theme="fill" Class="anticon anticon-exclamation-circle"></Icon>
+                        break;
+                    }
                     case MessageType.Error:
-                        {
-                            <Icon Type="close-circle" Theme="fill"  Class="anticon anticon-close-circle"></Icon>
-                            break;
-                        }
+                    {
+                        <Icon Type="close-circle" Theme="fill" Class="anticon anticon-close-circle"></Icon>
+                        break;
+                    }
                     case MessageType.Info:
-                        {
-                            <Icon Type="info-circle" Theme="fill" Class="anticon anticon-info-circle"></Icon>
-                            break;
-                        }
+                    {
+                        <Icon Type="info-circle" Theme="fill" Class="anticon anticon-info-circle"></Icon>
+                        break;
+                    }
                     default:
-                        {
-                            <Icon Type="loading" Theme="outline" Class="anticon anticon-loading"></Icon>
-                            break;
-                        }
+                    {
+                        <Icon Type="loading" Theme="outline" Class="anticon anticon-loading"></Icon>
+                        break;
+                    }
                 }
             }
-        <span>
-            @if (Config.Content.IsT0)
-            {
-                @Config.Content.AsT0;
-            }
-            else
-            {
-                @Config.Content.AsT1;
-            }
-        </span>
+            <span>
+                @if (Config.Content.IsT0)
+                {
+                    @Config.Content.AsT0
+                    ;
+                }
+                else
+                {
+                    @Config.Content.AsT1
+                    ;
+                }
+            </span>
         </div>
     </div>
 </div>

@@ -1,22 +1,22 @@
 ﻿<div>
     <div>
         <Badge Count="@count">
-            <a href="#" class="head-example" />
+            <a href="#" class="head-example"/>
         </Badge>
         <ButtonGroup>
-            <Button @onclick="_=>decline()">
+            <Button @onclick="_ => decline()">
                 <Icon Type="minus"></Icon>
             </Button>
-            <Button @onclick="_=>increase()">
+            <Button @onclick="_ => increase()">
                 <Icon Type="plus"></Icon>
             </Button>
         </ButtonGroup>
     </div>
     <div style="margin-top: 10px">
         <Badge Dot="@show">
-            <a href="#" class="head-example" />
+            <a href="#" class="head-example"/>
         </Badge>
-        <Switch OnChange="onChange" Checked="@show" />
+        <Switch OnChange="onChange" Checked="@show"/>
     </div>
 </div>
 
@@ -42,4 +42,5 @@
     {
         this.show = show;
     }
+
 }

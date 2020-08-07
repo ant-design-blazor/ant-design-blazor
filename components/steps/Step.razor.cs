@@ -26,8 +26,10 @@ namespace AntDesign
                 _groupCurrent = value;
                 if (!_isCustomStatus)
                 {
-                    this._status = value > this.Index ? "finish" : value == this.Index ? GroupStatus ?? string.Empty : "wait";
+                    this._status = value > this.Index ? "finish" :
+                        value == this.Index ? GroupStatus ?? string.Empty : "wait";
                 }
+
                 SetClassMap();
             }
         }
@@ -36,11 +38,9 @@ namespace AntDesign
         internal RenderFragment ProgressDot { get; set; }
         internal string Direction { get; set; } = "horizontal";
 
-        [CascadingParameter]
-        public Steps Parent { get; set; }
+        [CascadingParameter] public Steps Parent { get; set; }
 
-        [Parameter]
-        public string Icon { get; set; }
+        [Parameter] public string Icon { get; set; }
 
         [Parameter]
         public string Status

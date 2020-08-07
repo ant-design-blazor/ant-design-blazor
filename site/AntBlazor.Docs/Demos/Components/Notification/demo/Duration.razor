@@ -5,6 +5,7 @@
 </Button>
 
 @code{
+
     private async Task OnClick()
     {
         await _notice.Open(new NotificationConfig()
@@ -14,4 +15,5 @@
             Description = "This notification box will not close automatically"
         });
     }
+
 }

@@ -6,8 +6,7 @@ namespace AntDesign
 {
     public partial class Table<TItem> : ITable
     {
-        [Parameter]
-        public bool HidePagination { get; set; }
+        [Parameter] public bool HidePagination { get; set; }
 
         /// <summary>
         /// topLeft | topCenter | topRight |bottomLeft | bottomCenter | bottomRight
@@ -33,26 +32,19 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public EventCallback<int> TotalChanged { get; set; }
+        [Parameter] public EventCallback<int> TotalChanged { get; set; }
 
-        [Parameter]
-        public int PageIndex { get; set; } = 1;
+        [Parameter] public int PageIndex { get; set; } = 1;
 
-        [Parameter]
-        public EventCallback<int> PageIndexChanged { get; set; }
+        [Parameter] public EventCallback<int> PageIndexChanged { get; set; }
 
-        [Parameter]
-        public int PageSize { get; set; } = 10;
+        [Parameter] public int PageSize { get; set; } = 10;
 
-        [Parameter]
-        public EventCallback<int> PageSizeChanged { get; set; }
+        [Parameter] public EventCallback<int> PageSizeChanged { get; set; }
 
-        [Parameter]
-        public EventCallback<PaginationEventArgs> OnPageIndexChange { get; set; }
+        [Parameter] public EventCallback<PaginationEventArgs> OnPageIndexChange { get; set; }
 
-        [Parameter]
-        public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
+        [Parameter] public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
         private int _total = 0;
         private int _dataSourceCount = 0;
@@ -61,7 +53,8 @@ namespace AntDesign
 
         private void InitializePagination()
         {
-            _paginationClass = $"ant-table-pagination ant-table-pagination-{Regex.Replace(_paginationPosition, "bottom|top", "").ToLowerInvariant()}";
+            _paginationClass =
+                $"ant-table-pagination ant-table-pagination-{Regex.Replace(_paginationPosition, "bottom|top", "").ToLowerInvariant()}";
         }
 
         private async Task HandlePageIndexChange(PaginationEventArgs args)

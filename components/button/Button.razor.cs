@@ -7,14 +7,11 @@ namespace AntDesign
 {
     public partial class Button : AntDomComponentBase
     {
-        [Parameter]
-        public bool Block { get; set; } = false;
+        [Parameter] public bool Block { get; set; } = false;
 
-        [Parameter]
-        public bool Ghost { get; set; } = false;
+        [Parameter] public bool Ghost { get; set; } = false;
 
-        [Parameter]
-        public bool Search { get; set; } = false;
+        [Parameter] public bool Search { get; set; } = false;
 
         [Parameter]
         public bool Loading
@@ -30,14 +27,11 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public string Type { get; set; } = ButtonType.Default;
+        [Parameter] public string Type { get; set; } = ButtonType.Default;
 
-        [Parameter]
-        public string HtmlType { get; set; } = "button";
+        [Parameter] public string HtmlType { get; set; } = "button";
 
-        [Parameter]
-        public string Shape { get; set; } = null;
+        [Parameter] public string Shape { get; set; } = null;
 
         private bool _animating = false;
 
@@ -60,23 +54,17 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        [Parameter] public string Size { get; set; } = AntSizeLDSType.Default;
 
-        [Parameter]
-        public string Icon { get; set; }
+        [Parameter] public string Icon { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool Danger { get; set; }
+        [Parameter] public bool Danger { get; set; }
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnClick { get; set; }
+        [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         public IList<Icon> Icons { get; set; } = new List<Icon>();
 
@@ -96,7 +84,8 @@ namespace AntDesign
                 .If($"{prefixName}-lg", () => Size == "large")
                 .If($"{prefixName}-sm", () => Size == "small")
                 .If($"{prefixName}-loading", () => Loading)
-                .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && !this.Search && this.ChildContent == null)
+                .If($"{prefixName}-icon-only",
+                    () => !string.IsNullOrEmpty(this.Icon) && !this.Search && this.ChildContent == null)
                 .If($"{prefixName}-background-ghost", () => Ghost)
                 .If($"{prefixName}-block", () => this.Block)
                 .If($"ant-input-search-button", () => this.Search)

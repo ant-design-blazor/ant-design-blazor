@@ -22,12 +22,13 @@ namespace AntDesign
         private CarouselSlick _activeSlick;
         private Timer _timer;
         private ClassMapper SlickSliderClassMapper { get; } = new ClassMapper();
-        private bool IsHorizontal => DotPosition == CarouselDotPosition.Top || DotPosition == CarouselDotPosition.Bottom;
+
+        private bool IsHorizontal =>
+            DotPosition == CarouselDotPosition.Top || DotPosition == CarouselDotPosition.Bottom;
 
         #region Parameters
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// The position of the dots, which can be one of Top, Bottom, Left or Right, <see cref="CarouselDotPosition"/>
@@ -86,13 +87,15 @@ namespace AntDesign
 
             if (Effect != CarouselEffect.ScrollX && Effect != CarouselEffect.Fade)
             {
-                throw new ArgumentOutOfRangeException($"{nameof(Effect)} must be one of {nameof(CarouselEffect)}.{nameof(CarouselEffect.ScrollX)} or {nameof(CarouselEffect)}.{nameof(CarouselEffect.Fade)}.");
+                throw new ArgumentOutOfRangeException(
+                    $"{nameof(Effect)} must be one of {nameof(CarouselEffect)}.{nameof(CarouselEffect.ScrollX)} or {nameof(CarouselEffect)}.{nameof(CarouselEffect.Fade)}.");
             }
 
             _timer?.Dispose();
             if (Autoplay != TimeSpan.Zero)
             {
-                _timer = new Timer(AutoplaySlick, null, (int)Autoplay.TotalMilliseconds, (int)Autoplay.TotalMilliseconds);
+                _timer = new Timer(AutoplaySlick, null, (int)Autoplay.TotalMilliseconds,
+                    (int)Autoplay.TotalMilliseconds);
             }
         }
 
@@ -114,11 +117,13 @@ namespace AntDesign
                 {
                     if (IsHorizontal)
                     {
-                        _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px); transition: -webkit-transform 500ms ease 0s;";
+                        _trackStyle =
+                            $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px); transition: -webkit-transform 500ms ease 0s;";
                     }
                     else
                     {
-                        _trackStyle = $"height: {_totalHeight}px; opacity: 1; transform: translate3d(0px, -{_slickHeight}px, 0px); transition: -webkit-transform 500ms ease 0s;";
+                        _trackStyle =
+                            $"height: {_totalHeight}px; opacity: 1; transform: translate3d(0px, -{_slickHeight}px, 0px); transition: -webkit-transform 500ms ease 0s;";
                     }
                 }
                 else
@@ -161,11 +166,13 @@ namespace AntDesign
             {
                 if (IsHorizontal)
                 {
-                    _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth * (index + 1)}px, 0px, 0px);{transition}";
+                    _trackStyle =
+                        $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth * (index + 1)}px, 0px, 0px);{transition}";
                 }
                 else
                 {
-                    _trackStyle = $"height: {_totalHeight}px; opacity: 1; transform: translate3d(0px, -{_slickHeight * (index + 1)}px, 0px);{transition}";
+                    _trackStyle =
+                        $"height: {_totalHeight}px; opacity: 1; transform: translate3d(0px, -{_slickHeight * (index + 1)}px, 0px);{transition}";
                 }
             }
 
@@ -209,11 +216,13 @@ namespace AntDesign
                 await Task.Delay((int)Autoplay.TotalMilliseconds / 2);
                 if (IsHorizontal)
                 {
-                    _trackStyle = $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px);";
+                    _trackStyle =
+                        $"width: {_totalWidth}px; opacity: 1; transform: translate3d(-{_slickWidth}px, 0px, 0px);";
                 }
                 else
                 {
-                    _trackStyle = $"height: {_totalHeight}px; opacity: 1; transform: translate3d(0px, -{_slickHeight}px, 0px);";
+                    _trackStyle =
+                        $"height: {_totalHeight}px; opacity: 1; transform: translate3d(0px, -{_slickHeight}px, 0px);";
                 }
             }
 

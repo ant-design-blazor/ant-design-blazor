@@ -3,12 +3,12 @@
 @inherits AntInputComponentBase<TValue>
 
 <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="_slider"
-     @onmousedown="(e)=>OnMouseDown(e)">
+     @onmousedown="(e) => OnMouseDown(e)">
     <div class="ant-slider-rail">
     </div>
     @if (Included)
     {
-        <div class="ant-slider-track @(Range?"ant-slider-track-1":string.Empty)" style="@_trackStyle">
+        <div class="ant-slider-track @(Range ? "ant-slider-track-1" : string.Empty)" style="@_trackStyle">
         </div>
     }
     <div class="ant-slider-step">
@@ -16,7 +16,7 @@
         {
             @foreach (SliderMark mark in Marks)
             {
-                <span class="ant-slider-dot @IsActiveMark(mark.Key)" style=@($"{(Vertical?"bottom":"left")}: {SetMarkPosition(mark.Key)};")></span>
+                <span class="ant-slider-dot @IsActiveMark(mark.Key)" style=@($"{(Vertical ? "bottom" : "left")}: {SetMarkPosition(mark.Key)};")></span>
             }
         }
     </div>
@@ -37,7 +37,7 @@
         {
             @foreach (SliderMark mark in Marks)
             {
-                <span class="ant-slider-mark-text ant-slider-mark-text-active" style=@($"{(Vertical?"bottom":"left")}: {SetMarkPosition(mark.Key)}; {(Vertical?"margin-bottom: -50%;":"transform: translateX(-50%);")}" + mark.Style)>@mark.Value</span>
+                <span class="ant-slider-mark-text ant-slider-mark-text-active" style=@($"{(Vertical ? "bottom" : "left")}: {SetMarkPosition(mark.Key)}; {(Vertical ? "margin-bottom: -50%;" : "transform: translateX(-50%);")}" + mark.Style)>@mark.Value</span>
             }
         }
     </div>

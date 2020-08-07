@@ -6,20 +6,15 @@ namespace AntDesign
 {
     public partial class Breadcrumb : AntDomComponentBase
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public bool AutoGenerate { get; set; } = false;
+        [Parameter] public bool AutoGenerate { get; set; } = false;
 
-        [Parameter]
-        public string Separator { get; set; } = "/";
+        [Parameter] public string Separator { get; set; } = "/";
 
-        [Parameter]
-        public string RouteLabel { get; set; } = "breadcrumb";
+        [Parameter] public string RouteLabel { get; set; } = "breadcrumb";
 
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        [Inject] public NavigationManager NavigationManager { get; set; }
 
         private readonly BreadcrumbOption[] _breadcrumbs = Array.Empty<BreadcrumbOption>();
 

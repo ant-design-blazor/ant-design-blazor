@@ -6,7 +6,7 @@
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     <FormItem Label="Input">
-        <PriceInput @bind-Value="context.Price" />
+        <PriceInput @bind-Value="context.Price"/>
     </FormItem>
     <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
         <Button HtmlType="submit">Submit</Button>
@@ -17,7 +17,8 @@
 {
     public class Model
     {
-        public Price Price { get; set; } = new Price() { 
+        public Price Price { get; set; } = new Price()
+        {
             Number = 0,
             Currency = "rmb"
         };

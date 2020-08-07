@@ -34,7 +34,8 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="contentParams"></param>
         /// <returns></returns>
-        public async Task<DrawerRef<TResult>> CreateAsync<TComponent, TContentParams, TResult>(DrawerOptions config, TContentParams contentParams) where TComponent : DrawerTemplate<TContentParams, TResult>
+        public async Task<DrawerRef<TResult>> CreateAsync<TComponent, TContentParams, TResult>(DrawerOptions config,
+            TContentParams contentParams) where TComponent : DrawerTemplate<TContentParams, TResult>
         {
             CheckIsNull(config);
 
@@ -59,6 +60,7 @@ namespace AntDesign
             {
                 return OnOpenEvent.Invoke(drawerRef);
             }
+
             return Task.CompletedTask;
         }
 
@@ -69,6 +71,7 @@ namespace AntDesign
             {
                 return OnCloseEvent.Invoke(drawerRef);
             }
+
             return Task.CompletedTask;
         }
 

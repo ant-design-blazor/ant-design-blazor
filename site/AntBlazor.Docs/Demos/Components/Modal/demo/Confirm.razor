@@ -12,17 +12,21 @@
         <Button OnClick="@ShowPropsConfirm" Type="dashed"> With extra props</Button>
     </SpaceItem>
 </Space>
+
 @code{
+
     Func<ModalClosingEventArgs, Task> onOk = (e) =>
     {
         Console.WriteLine("Ok");
         return Task.CompletedTask;
     };
+
     Func<ModalClosingEventArgs, Task> onCancel = (e) =>
     {
         Console.WriteLine("Cancel");
         return Task.CompletedTask;
     };
+
     RenderFragment icon = @<Icon Type="exclamation-circle" Theme="outline"></Icon>;
 
     private void ShowConfirm()
@@ -49,7 +53,6 @@
             OkText = "Yes",
             OkType = "danger",
             CancelText = "No",
-
         });
     }
 
@@ -71,4 +74,5 @@
             }
         });
     }
+
 }

@@ -25,8 +25,7 @@ namespace AntDesign
         [CascadingParameter(Name = "FormItem")]
         private IFormItem FormItem { get; set; }
 
-        [CascadingParameter(Name = "Form")]
-        protected IForm Form { get; set; }
+        [CascadingParameter(Name = "Form")] protected IForm Form { get; set; }
 
         public string[] ValidationMessages { get; set; } = Array.Empty<string>();
 
@@ -87,8 +86,7 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<TValue>> ValueExpression { get; set; }
 
-        [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        [Parameter] public string Size { get; set; } = AntSizeLDSType.Default;
 
         /// <summary>
         /// Gets the associated <see cref="EditContext"/>.
@@ -202,10 +200,11 @@ namespace AntDesign
         /// <param name="result">An instance of <typeparamref name="TValue"/>.</param>
         /// <param name="validationErrorMessage">If the value could not be parsed, provides a validation error message.</param>
         /// <returns>True if the value could be parsed; otherwise false.</returns>
-        protected virtual bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
+        protected virtual bool TryParseValueFromString(string value, out TValue result,
+            out string validationErrorMessage)
         {
             var success = BindConverter.TryConvertTo<TValue>(
-               value, CultureInfo.CurrentCulture, out var parsedValue);
+                value, CultureInfo.CurrentCulture, out var parsedValue);
 
             if (success)
             {
@@ -271,7 +270,7 @@ namespace AntDesign
                 // handlers for the previous one, and there's no strong use case. If a strong use case
                 // emerges, we can consider changing this.
                 throw new InvalidOperationException($"{GetType()} does not support changing the " +
-                    $"{nameof(EditContext)} dynamically.");
+                                                    $"{nameof(EditContext)} dynamically.");
             }
 
             // For derived components, retain the usual lifecycle with OnInit/OnParametersSet/etc.

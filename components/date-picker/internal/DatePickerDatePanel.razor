@@ -7,7 +7,7 @@
     var calendar = this.DatePicker.CultureInfo.Calendar;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
-    int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
+    int monthFirstDayOfWeek = (int) calendar.GetDayOfWeek(monthFirstDayDate);
 
     // sunday should be 7
     if (monthFirstDayOfWeek == 0)
@@ -15,25 +15,25 @@
         monthFirstDayOfWeek = 7;
     }
 
-    int diffDay = (int)this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - monthFirstDayOfWeek;
+    int diffDay = (int) this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
 
 <div class='@($"{PrefixCls}-panel")'>
-    <DatePickerTemplate TValue="TValue" 
+    <DatePickerTemplate TValue="TValue"
                         @attributes="GetAttritubes()"
-                           MaxRow="6"
-                           MaxCol="7"
-                           ViewStartDate="startDate"
-                           ShowFooter="@ShowToday"
-                           GetRowClass="GetRowClass"
-                           IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
-                           IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
-                           IsSelected="date => !IsWeek && DateHelper.IsSameDay(date, Value)"
-                           GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().DateFormat, this.DatePicker.CultureInfo)'
-                           OnRowSelect="OnRowSelect"
-                           OnValueSelect="OnValueSelect"
-                           GetNextColValue="date => date.AddDays(1)">
+                        MaxRow="6"
+                        MaxCol="7"
+                        ViewStartDate="startDate"
+                        ShowFooter="@ShowToday"
+                        GetRowClass="GetRowClass"
+                        IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
+                        IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
+                        IsSelected="date => !IsWeek && DateHelper.IsSameDay(date, Value)"
+                        GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().DateFormat, this.DatePicker.CultureInfo)'
+                        OnRowSelect="OnRowSelect"
+                        OnValueSelect="OnValueSelect"
+                        GetNextColValue="date => date.AddDays(1)">
         <RenderPickerHeader>
             <DatePickerHeader TValue="TValue"
                               @attributes="GetAttritubes()"
@@ -48,7 +48,7 @@
                 {
                     <th></th>
                 }
-                @foreach(string weekDay in this.DatePicker.CultureInfo.GetDateLocale().ShortWeekDays)
+                @foreach (string weekDay in this.DatePicker.CultureInfo.GetDateLocale().ShortWeekDays)
                 {
                     <th>@(weekDay)</th>
                 }
@@ -80,8 +80,8 @@
 @if (ShowToday && !IsRange && Picker != DatePickerType.Time)
 {
     <div class="@(PrefixCls)-footer">
-        <a class="@(PrefixCls)-today-btn" 
-           @onclick="e => { OnSelectDate(DateTime.Now); Close(); }">
+        <a class="@(PrefixCls)-today-btn"
+           @onclick="e => { OnSelectDate(DateTime.Now);Close(); }">
             @this.DatePicker.CultureInfo.GetDateLocale().Today
         </a>
     </div>
@@ -89,6 +89,7 @@
 
 
 @code {
+
     [Parameter]
     public bool IsWeek { get; set; } = false;
 
@@ -118,4 +119,5 @@
             OnSelectDate(viewDate);
         }
     }
+
 }

@@ -2,33 +2,35 @@
 @using AntDesign.TableModels
 
 <Table @ref="table"
-       DataSource="@forecasts"
-       Total="_total"
-       OnChange="@((QueryModel<WeatherForecast> _)=> onChange(_))"
-       @bind-PageIndex="_pageIndex"
-       @bind-PageSize="_pageSize"
-       OnPageIndexChange="async e=>await fetchData(e)"
-       @bind-SelectedRows="selectedRows">
-    <Selection Key="@(context.Id.ToString())" />
-    <Column @bind-Field="@context.Id" Sortable />
-    <Column @bind-Field="@context.Date" Format="yyyy-MM-dd" Sortable />
-    <Column @bind-Field="@context.TemperatureC" Sortable />
-    <Column Title="Temp. (F)" Field="@context.TemperatureF" />
+        DataSource="@forecasts"
+        Total="_total"
+        OnChange="@((QueryModel<WeatherForecast> _) => onChange(_))"
+        @bind-PageIndex="_pageIndex"
+        @bind-PageSize="_pageSize"
+        OnPageIndexChange="async e=>await fetchData(e)"
+        @bind-SelectedRows="selectedRows">
+    <Selection Key="@(context.Id.ToString())"/>
+    <Column @bind-Field="@context.Id" Sortable/>
+    <Column @bind-Field="@context.Date" Format="yyyy-MM-dd" Sortable/>
+    <Column @bind-Field="@context.TemperatureC" Sortable/>
+    <Column Title="Temp. (F)" Field="@context.TemperatureF"/>
     <Column Title="Hot" Field="@context.Hot">
         <Switch @bind-Value="@context.Hot"></Switch>
     </Column>
-    <Column @bind-Field="@context.Summary" Sortable />
+    <Column @bind-Field="@context.Summary" Sortable/>
     <ActionColumn>
         <Space>
-            <SpaceItem><Button Danger OnClick="()=>Delete(context.Id)">Delete</Button></SpaceItem>
+            <SpaceItem>
+                <Button Danger OnClick="() => Delete(context.Id)">Delete</Button>
+            </SpaceItem>
         </Space>
     </ActionColumn>
 </Table>
 
-<br />
+<br/>
 <p>PageIndex: @_pageIndex | PageSize: @_pageSize | Total: @_total</p>
 
-<br />
+<br/>
 <h5>selections:</h5>
 @if (selectedRows != null && selectedRows.Any())
 {
@@ -60,7 +62,7 @@
 
     async Task fetchData(PaginationEventArgs args)
     {
-        //forecasts = await GetForecastAsync(args.PageIndex, args.PageSize);
+    //forecasts = await GetForecastAsync(args.PageIndex, args.PageSize);
     }
 
     void onChange(QueryModel<WeatherForecast> queryModel)
@@ -82,7 +84,7 @@
         [DisplayName("Summary")]
         public string Summary { get; set; }
 
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        public int TemperatureF => 32 + (int) (TemperatureC / 0.5556);
 
         public bool Hot { get; set; }
     }
@@ -114,7 +116,7 @@
         var selected = selectedRows.Where(x => x.Id != id);
         selectedRows = selected;
 
-        //table.SetSelection(selected.Select(x => x.Id.ToString()).ToArray());
+    //table.SetSelection(selected.Select(x => x.Id.ToString()).ToArray());
     }
 
     private void Delete(int id)
@@ -122,4 +124,5 @@
         forecasts = forecasts.Where(x => x.Id != id).ToArray();
         _total = forecasts.Length;
     }
+
 }

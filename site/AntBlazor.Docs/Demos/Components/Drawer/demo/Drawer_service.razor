@@ -1,7 +1,7 @@
 ﻿@inject DrawerService DrawerService
 
-<Input @bind-Value="@value" />
-<br/><br />
+<Input @bind-Value="@value"/>
+<br/><br/>
 <Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
 <Button OnClick="OpenComponent" Type="primary">Use Component</Button>
 
@@ -61,7 +61,6 @@
             value = result;
             await InvokeAsync(StateHasChanged);
         };
-
     }
 
 }

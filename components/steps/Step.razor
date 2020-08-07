@@ -2,90 +2,88 @@
 @inherits AntDomComponentBase
 
 
-    <div class="@ClassMapper.Class" style="@Style"id="@Id">
-        <div class="ant-steps-item-container" @onclick="@OnClick" tabindex="@GetTabIndex()" @attributes="@_containerAttributes">
-            @if (!Last)
+<div class="@ClassMapper.Class" style="@Style"id="@Id">
+    <div class="ant-steps-item-container" @onclick="@OnClick" tabindex="@GetTabIndex()" @attributes="@_containerAttributes">
+        @if (!Last)
+        {
+            <div class="ant-steps-item-tail"></div>
+        }
+        <div class="ant-steps-item-icon">
+            @if (!ShowProcessDot)
             {
-                <div class="ant-steps-item-tail"></div>
-            }
-            <div class="ant-steps-item-icon">
-                @if (!ShowProcessDot)
-                {
-                    <span class="ant-steps-icon">
-                        @if (string.IsNullOrEmpty(Icon))
-                        {
-                            if (Status == "finish")
-                            {
-                                <Icon type="check"></Icon>
-                            }
-                            else if (Status == "error")
-                            {
-                                <Icon type="close"></Icon>
-                            }
-                            else if (Status == "process" || Status == "wait")
-                            {
-                                @(Index+1)
-                            }
-                        }
-                        else
-                        {
-                            if (Status == "error")
-                            {
-                                <Icon type="close"></Icon>
-                            }
-                            else
-                            {
-                                <Icon type="@Icon"></Icon>
-                            }
-
-                        }
-                    </span>
-                    
-                }
-                else
-                {
-                    <span class="ant-steps-icon">
-                        <span class="ant-steps-icon-dot"></span>
-                    </span>
-                }
-            </div>
-            <div class="ant-steps-item-content">
-                <div class="ant-steps-item-title">
-                    @if (Title.IsT0)
+                <span class="ant-steps-icon">
+                    @if (string.IsNullOrEmpty(Icon))
                     {
-                        @Title.AsT0
+                        if (Status == "finish")
+                        {
+                            <Icon type="check"></Icon>
+                        }
+                        else if (Status == "error")
+                        {
+                            <Icon type="close"></Icon>
+                        }
+                        else if (Status == "process" || Status == "wait")
+                        {
+                            @(Index + 1)
+                        }
                     }
                     else
                     {
-                        @Title.AsT1
-                    }
-                    @if (Subtitle.Value != null)
-                    {
-                        <div class="ant-steps-item-subtitle">
-                            @if (Subtitle.IsT0)
-                            {
-                                @Subtitle.AsT0
-                            }
-                            else
-                            {
-                                @Subtitle.AsT1
-                            }
-                        </div>
-                    }
-                </div>
-                @if (Description.Value != null)
-                {
-                    <div class="ant-steps-item-description">
-                        @if (Description.IsT0)
+                        if (Status == "error")
                         {
-                            @Description.AsT0
+                            <Icon type="close"></Icon>
                         }
                         else
                         {
-                            @Description.AsT1
+                            <Icon type="@Icon"></Icon>
+                        }
+                    }
+                </span>
+            }
+            else
+            {
+                <span class="ant-steps-icon">
+                    <span class="ant-steps-icon-dot"></span>
+                </span>
+            }
+        </div>
+        <div class="ant-steps-item-content">
+            <div class="ant-steps-item-title">
+                @if (Title.IsT0)
+                {
+                    @Title.AsT0
+                }
+                else
+                {
+                    @Title.AsT1
+                }
+                @if (Subtitle.Value != null)
+                {
+                    <div class="ant-steps-item-subtitle">
+                        @if (Subtitle.IsT0)
+                        {
+                            @Subtitle.AsT0
+                        }
+                        else
+                        {
+                            @Subtitle.AsT1
                         }
                     </div>
                 }
             </div>
+            @if (Description.Value != null)
+            {
+                <div class="ant-steps-item-description">
+                    @if (Description.IsT0)
+                    {
+                        @Description.AsT0
+                    }
+                    else
+                    {
+                        @Description.AsT1
+                    }
+                </div>
+            }
         </div>
     </div>
+</div>

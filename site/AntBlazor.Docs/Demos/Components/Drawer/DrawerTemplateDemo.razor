@@ -2,7 +2,7 @@
 @inherits DrawerTemplate<string, string>
 
 <div>
-    value: <Input @bind-Value="value" />
+    value: <Input @bind-Value="value"/>
     <br/>
     <br/>
     <Button Type="primary" OnClick="OnClose">Confirm</Button>
@@ -23,4 +23,5 @@
     {
         await this.CloseAsync(value);
     }
+
 }

@@ -11,7 +11,11 @@ namespace AntDesign
     public partial class Tabs : AntDomComponentBase
     {
         private const string PrefixCls = "ant-tabs";
-        private bool IsHorizontal { get => TabPosition == AntDesign.TabPosition.Top || TabPosition == AntDesign.TabPosition.Bottom; }
+
+        private bool IsHorizontal
+        {
+            get => TabPosition == AntDesign.TabPosition.Top || TabPosition == AntDesign.TabPosition.Bottom;
+        }
 
         //private ClassMapper _barClassMapper = new ClassMapper();
         //private ClassMapper _prevClassMapper = new ClassMapper();
@@ -46,8 +50,7 @@ namespace AntDesign
 
         #region Parameters
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         private string _activeKey;
 
@@ -74,8 +77,7 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public EventCallback<string> ActiveKeyChanged { get; set; }
+        [Parameter] public EventCallback<string> ActiveKeyChanged { get; set; }
 
         /// <summary>
         /// Whether to change tabs with animation. Only works while <see cref="TabPosition"/> = <see cref="TabPosition.Top"/> or <see cref="TabPosition.Bottom"/>
@@ -173,11 +175,9 @@ namespace AntDesign
         [Parameter]
         public bool Keyboard { get; set; } = true;
 
-        [Parameter]
-        public Func<TabPane> CreateTabPane { get; set; }
+        [Parameter] public Func<TabPane> CreateTabPane { get; set; }
 
-        [Parameter]
-        public bool Draggable { get; set; }
+        [Parameter] public bool Draggable { get; set; }
 
         #endregion Parameters
 
@@ -327,6 +327,7 @@ namespace AntDesign
                 {
                     _activePane.IsActive = false;
                 }
+
                 tabPane.IsActive = true;
                 _activePane = tabPane;
                 if (ActiveKey != _activePane.Key)
@@ -348,7 +349,8 @@ namespace AntDesign
 
             if (_activePane == null)
             {
-                throw new ArgumentNullException($"One of {nameof(ActiveKey)} and {nameof(DefaultActiveKey)} should be set");
+                throw new ArgumentNullException(
+                    $"One of {nameof(ActiveKey)} and {nameof(DefaultActiveKey)} should be set");
             }
 
             await TryRenderInk();
@@ -360,7 +362,8 @@ namespace AntDesign
         private async Task TryRenderNavOperation()
         {
             int navWidth = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-            int navTotalWidth = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+            int navTotalWidth = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar))
+                .clientWidth;
             if (navTotalWidth < navWidth)
             {
                 _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
@@ -410,6 +413,7 @@ namespace AntDesign
                         _navStyle = $"transform: translate(0px, -{_scrollOffset}px);";
                     }
                 }
+
                 StateHasChanged();
                 _renderedActivePane = _activePane;
             }

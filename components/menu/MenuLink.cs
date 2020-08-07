@@ -20,8 +20,7 @@ namespace AntDesign
         [Parameter]
         public string ActiveClass { get; set; }
 
-        [Parameter]
-        public string Href { get; set; }
+        [Parameter] public string Href { get; set; }
 
         /// <summary>
         /// Gets or sets the child content of the component.
@@ -38,14 +37,11 @@ namespace AntDesign
         [Parameter]
         public NavLinkMatch Match { get; set; }
 
-        [CascadingParameter]
-        public MenuItem MenuItem { get; set; }
+        [CascadingParameter] public MenuItem MenuItem { get; set; }
 
-        [CascadingParameter]
-        public Menu Menu { get; set; }
+        [CascadingParameter] public Menu Menu { get; set; }
 
-        [CascadingParameter]
-        public Button Button { get; set; }
+        [CascadingParameter] public Button Button { get; set; }
 
         [Inject] private NavigationManager NavigationManger { get; set; }
 
@@ -119,11 +115,13 @@ namespace AntDesign
             {
                 return true;
             }
+
             if (Match == NavLinkMatch.Prefix
-            && IsStrictlyPrefixWithSeparator(currentUriAbsolute, _hrefAbsolute))
+                && IsStrictlyPrefixWithSeparator(currentUriAbsolute, _hrefAbsolute))
             {
                 return true;
             }
+
             return false;
         }
 
@@ -133,6 +131,7 @@ namespace AntDesign
             {
                 return true;
             }
+
             if (currentUriAbsolute.Length == _hrefAbsolute.Length - 1)
             {
                 // Special case: highlight links to http://host/path/ even if you're
@@ -144,11 +143,12 @@ namespace AntDesign
                 // for http://host/vdir as they do for host://host/vdir/ as it's no
                 // good to display a blank page in that case.
                 if (_hrefAbsolute[^1] == '/'
-                && _hrefAbsolute.StartsWith(currentUriAbsolute, StringComparison.OrdinalIgnoreCase))
+                    && _hrefAbsolute.StartsWith(currentUriAbsolute, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -172,15 +172,15 @@ namespace AntDesign
             if (value.Length > prefixLength)
             {
                 return value.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
-                && (
-                // Only match when there's a separator character either at the end of the
-                // prefix or right after it.
-                // Example: "/abc" is treated as a prefix of "/abc/def" but not "/abcdef"
-                // Example: "/abc/" is treated as a prefix of "/abc/def" but not "/abcdef"
-                prefixLength == 0
-                || !char.IsLetterOrDigit(prefix[prefixLength - 1])
-                || !char.IsLetterOrDigit(value[prefixLength])
-                );
+                       && (
+                           // Only match when there's a separator character either at the end of the
+                           // prefix or right after it.
+                           // Example: "/abc" is treated as a prefix of "/abc/def" but not "/abcdef"
+                           // Example: "/abc/" is treated as a prefix of "/abc/def" but not "/abcdef"
+                           prefixLength == 0
+                           || !char.IsLetterOrDigit(prefix[prefixLength - 1])
+                           || !char.IsLetterOrDigit(value[prefixLength])
+                       );
             }
             else
             {

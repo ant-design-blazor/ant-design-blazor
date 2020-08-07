@@ -20,10 +20,11 @@ namespace AntDesign.JsInterop
         {
             if (!_domEventListeners.ContainsKey($"{dom}-{eventName}"))
             {
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
-                {
-                    callback?.Invoke(p);
-                })));
+                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, dom, eventName,
+                    DotNetObjectReference.Create(new Invoker<T>((p) =>
+                    {
+                        callback?.Invoke(p);
+                    })));
             }
         }
 
@@ -31,10 +32,11 @@ namespace AntDesign.JsInterop
         {
             if (!_domEventListeners.ContainsKey($"{dom}-{eventName}"))
             {
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListenerToFirstChild, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
-                {
-                    callback?.Invoke(p);
-                })));
+                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListenerToFirstChild, dom, eventName,
+                    DotNetObjectReference.Create(new Invoker<T>((p) =>
+                    {
+                        callback?.Invoke(p);
+                    })));
             }
         }
 

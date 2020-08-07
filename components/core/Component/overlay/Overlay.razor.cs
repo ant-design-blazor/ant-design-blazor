@@ -7,32 +7,25 @@ namespace AntDesign.Internal
 {
     public sealed partial class Overlay : AntDomComponentBase
     {
-        [CascadingParameter(Name = "Trigger")]
-        public OverlayTrigger Trigger { get; set; }
+        [CascadingParameter(Name = "Trigger")] public OverlayTrigger Trigger { get; set; }
 
         [CascadingParameter(Name = "ParentTrigger")]
         public OverlayTrigger ParentTrigger { get; set; }
 
-        [Parameter]
-        public string OverlayChildPrefixCls { get; set; } = "";
+        [Parameter] public string OverlayChildPrefixCls { get; set; } = "";
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public EventCallback OnOverlayMouseEnter { get; set; }
+        [Parameter] public EventCallback OnOverlayMouseEnter { get; set; }
 
-        [Parameter]
-        public EventCallback OnOverlayMouseLeave { get; set; }
+        [Parameter] public EventCallback OnOverlayMouseLeave { get; set; }
 
         [CascadingParameter(Name = "ArrowPointAtCenter")]
         public bool ArrowPointAtCenter { get; set; }
 
-        [Parameter]
-        public int HideMillisecondsDelay { get; set; } = 100;
+        [Parameter] public int HideMillisecondsDelay { get; set; } = 100;
 
-        [Parameter]
-        public int WaitForHideAnimMilliseconds { get; set; } = 200;
+        [Parameter] public int WaitForHideAnimMilliseconds { get; set; } = 200;
 
         /// <summary>
         /// vertical offset between Trigger and Overlay, default is 4
@@ -106,6 +99,7 @@ namespace AntDesign.Internal
                 _overlayLeft = null;
                 _overlayTop = null;
             }
+
             await base.OnAfterRenderAsync(firstRender);
         }
 
@@ -150,7 +144,8 @@ namespace AntDesign.Internal
 
             Element trigger = await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Trigger.Ref);
             Element overlayElement = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Ref);
-            Element containerElement = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Trigger.PopupContainerSelector);
+            Element containerElement =
+                await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Trigger.PopupContainerSelector);
 
             int left = GetOverlayLeft(trigger, overlayElement, containerElement);
             int top = GetOverlayTop(trigger, overlayElement, containerElement);
@@ -173,7 +168,8 @@ namespace AntDesign.Internal
 
             await Task.Delay(HideMillisecondsDelay);
 
-            if (!force && !IsContainTrigger(TriggerType.Click) && (_isPreventHide || _mouseInOverlay || _isChildOverlayShow))
+            if (!force && !IsContainTrigger(TriggerType.Click) &&
+                (_isPreventHide || _mouseInOverlay || _isChildOverlayShow))
             {
                 return;
             }
@@ -276,11 +272,13 @@ namespace AntDesign.Internal
                     top += VERTICAL_ARROW_SHIFT + ARROW_SIZE / 2 - triggerHeight / 2;
                 }
             }
-            else if (Trigger.Placement.IsIn(PlacementType.BottomLeft, PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.BottomRight))
+            else if (Trigger.Placement.IsIn(PlacementType.BottomLeft, PlacementType.BottomCenter, PlacementType.Bottom,
+                PlacementType.BottomRight))
             {
                 top = triggerTop + triggerHeight + VerticalOffset;
             }
-            else if (Trigger.Placement.IsIn(PlacementType.TopLeft, PlacementType.TopCenter, PlacementType.Top, PlacementType.TopRight))
+            else if (Trigger.Placement.IsIn(PlacementType.TopLeft, PlacementType.TopCenter, PlacementType.Top,
+                PlacementType.TopRight))
             {
                 top = triggerTop - overlay.clientHeight - VerticalOffset;
             }
@@ -318,7 +316,8 @@ namespace AntDesign.Internal
                     left += -HORIZONTAL_ARROW_SHIFT - ARROW_SIZE / 2 + triggerWidth / 2;
                 }
             }
-            else if (Trigger.Placement.IsIn(PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.TopCenter, PlacementType.Top))
+            else if (Trigger.Placement.IsIn(PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.TopCenter,
+                PlacementType.Top))
             {
                 left = triggerLeft + triggerWidth / 2 - overlay.clientWidth / 2;
             }

@@ -4,14 +4,13 @@
 <div class="@ClassMapper.Class" @ref="@Ref" style="@_drawerStyle @Style" id="@Id">
     @if (Mask)
     {
-        <div class="ant-drawer-mask" @onclick="_=>MaskClick()" style="@MaskStyle"></div>
+        <div class="ant-drawer-mask" @onclick="_ => MaskClick()" style="@MaskStyle"></div>
     }
     <div class="ant-drawer-content-wrapper @WrapClassName " style="@WrapperStyle">
         <div class="ant-drawer-content">
-            <div class="ant-drawer-wrapper-body" style="@(IsLeftOrRight?"height:100%":"")">
+            <div class="ant-drawer-wrapper-body" style="@(IsLeftOrRight ? "height:100%" : "")">
                 @if (_title.Value != null || Closable)
                 {
-
                     <div class="@TitleClassMapper.Class">
                         @if (_title.Value != null)
                         {
@@ -22,13 +21,13 @@
                                 }
                                 @if (!string.IsNullOrEmpty(TitleString))
                                 {
-                                    @((MarkupString)TitleString)
+                                    @((MarkupString) TitleString)
                                 }
                             </div>
                         }
                         @if (Closable)
                         {
-                            <button @onclick="_=>CloseClick()" aria-label="Close" class="ant-drawer-close">
+                            <button @onclick="_ => CloseClick()" aria-label="Close" class="ant-drawer-close">
                                 <Icon Type="close"/>
                             </button>
                         }
@@ -41,7 +40,7 @@
                     }
                     @if (string.IsNullOrEmpty(ContentString))
                     {
-                        @((MarkupString)ContentString)
+                        @((MarkupString) ContentString)
                     }
                     @ChildContent
                 </div>

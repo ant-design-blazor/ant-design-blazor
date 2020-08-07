@@ -1,4 +1,3 @@
-
 <div>
     @* or use template *@
     @*
@@ -23,35 +22,33 @@
                 return _treeNodes;
 
             _treeNodes = new List<TreeNode>()
-{
+            {
                 new TreeNode
                 {
-                    Text="parent 1",IsExpanded=true,
-                    IconTemplate=(node)=>@<Icon Type="smile" />,
+                    Text = "parent 1", IsExpanded = true,
+                    IconTemplate = (node) => @<Icon Type="smile"/>,
                     Nodes =
                     {
                         new TreeNode
                         {
-                            Text="leaf"
+                            Text = "leaf"
                             ,
-                            IconTemplate=(node)=>@<Icon Type="smile" />
+                            IconTemplate = (node) => @<Icon Type="smile"/>
                         }
                         ,
                         new TreeNode
                         {
-                            Text="leaf"
+                            Text = "leaf"
                             ,
-                            IconTemplate=(node)=> node.IsSelected?(RenderFragment)(@<Icon Type="frown" Theme="fill" />):(@<Icon Type="frown" Theme="outline" />)
+                            IconTemplate = (node) => node.IsSelected ? (RenderFragment) (@<Icon Type="frown" Theme="fill"/>) : (@<Icon Type="frown" Theme="outline"/>)
                         }
                     }
                 }
             };
 
-                return _treeNodes;
-            }
+            return _treeNodes;
         }
+    }
 
 
 }
-
-

@@ -16,6 +16,5 @@ namespace AntDesign
         /// 点击确定按钮时调用，可以重写它来放入自己的逻辑
         /// </summary>
         Task CancelAsync(ModalClosingEventArgs args);
-
     }
 }

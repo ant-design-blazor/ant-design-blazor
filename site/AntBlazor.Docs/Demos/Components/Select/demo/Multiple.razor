@@ -12,6 +12,7 @@
 <label>Selected Values: @_value</label>
 
 @using OneOf;
+
 @code
 {
     private string _value;
@@ -22,7 +23,7 @@
     {
         const int min = 10;
         const int max = 36;
-        _defaultValues = new[] { "0a10", "0c12" };
+        _defaultValues = new[] {"0a10", "0c12"};
 
         _items = new string[max - min];
         for (var i = min; max > i; i++)

@@ -27,8 +27,7 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
+        [Parameter] public EventCallback<IEnumerable<TItem>> SelectedRowsChanged { get; set; }
 
         private ISelectionColumn _selection;
         private IEnumerable<TItem> _selectedRows;

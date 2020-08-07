@@ -6,29 +6,21 @@ namespace AntDesign
 {
     public partial class Radio<TValue> : AntDomComponentBase
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter]
-        public TValue Value { get; set; }
+        [Parameter] public TValue Value { get; set; }
 
-        [Parameter]
-        public bool AutoFocus { get; set; } = false;
+        [Parameter] public bool AutoFocus { get; set; } = false;
 
-        [Parameter]
-        public bool RadioButton { get; set; }
+        [Parameter] public bool RadioButton { get; set; }
 
-        [Parameter]
-        public bool Checked { get => _checked ?? false; set { _checked = value; } }
+        [Parameter] public bool Checked { get => _checked ?? false; set { _checked = value; } }
 
-        [Parameter]
-        public EventCallback<bool> CheckedChanged { get; set; }
+        [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
 
-        [Parameter]
-        public bool Disabled { get; set; }
+        [Parameter] public bool Disabled { get; set; }
 
-        [Parameter]
-        public EventCallback<bool> CheckedChange { get; set; }
+        [Parameter] public EventCallback<bool> CheckedChange { get; set; }
 
         [CascadingParameter] public RadioGroup<TValue> RadioGroup { get; set; }
 
@@ -116,6 +108,7 @@ namespace AntDesign
                 await CheckedChange.InvokeAsync(false);
                 await CheckedChanged.InvokeAsync(false);
             }
+
             await Task.CompletedTask;
         }
 

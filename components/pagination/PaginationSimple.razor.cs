@@ -5,26 +5,19 @@ namespace AntDesign
 {
     public partial class PaginationSimple
     {
-        [Parameter]
-        public bool Disabled { get; set; } = false;
+        [Parameter] public bool Disabled { get; set; } = false;
 
-        [Parameter]
-        public object Locale { get; set; } = false;
+        [Parameter] public object Locale { get; set; } = false;
 
-        [Parameter]
-        public int Total { get; set; } = 0;
+        [Parameter] public int Total { get; set; } = 0;
 
-        [Parameter]
-        public int PageIndex { get; set; } = 1;
+        [Parameter] public int PageIndex { get; set; } = 1;
 
-        [Parameter]
-        public int PageSize { get; set; } = 10;
+        [Parameter] public int PageSize { get; set; } = 10;
 
-        [Parameter]
-        public EventCallback<int> PageIndexChange { get; set; }
+        [Parameter] public EventCallback<int> PageIndexChange { get; set; }
 
-        [CascadingParameter]
-        public Pagination Pagination { get; set; }
+        [CascadingParameter] public Pagination Pagination { get; set; }
 
         private string _inputValue;
 

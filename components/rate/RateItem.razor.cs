@@ -5,7 +5,6 @@ namespace AntDesign
 {
     public partial class RateItem
     {
-
         [CascadingParameter(Name = "Character")]
         public RenderFragment<RateItemRenderContext> Character { get; set; }
 
@@ -31,6 +30,7 @@ namespace AntDesign
         {
             await OnItemHover.InvokeAsync(isHalf && this.AllowHalf);
         }
+
         private async Task OnClick(bool isHalf)
         {
             await OnItemClick.InvokeAsync(isHalf && this.AllowHalf);
@@ -48,14 +48,13 @@ namespace AntDesign
             string prefixName = "ant-rate-star";
 
             _starClassMapper.Clear()
-              .Add(prefixName)
-          .If($"{prefixName}-full", () => val < hoverValue || (!hasHalf && val == hoverValue))
-          .If($"{prefixName}-half", () => hasHalf && val == hoverValue)
-          .If($"{prefixName}-active", () => hasHalf && val == hoverValue)
-          .If($"{prefixName}-zero", () => val > hoverValue)
-          .If($"{prefixName}-focused", () => hasHalf && val == hoverValue && isFocused)
-          ;
-
+                .Add(prefixName)
+                .If($"{prefixName}-full", () => val < hoverValue || (!hasHalf && val == hoverValue))
+                .If($"{prefixName}-half", () => hasHalf && val == hoverValue)
+                .If($"{prefixName}-active", () => hasHalf && val == hoverValue)
+                .If($"{prefixName}-zero", () => val > hoverValue)
+                .If($"{prefixName}-focused", () => hasHalf && val == hoverValue && isFocused)
+                ;
         }
     }
 }

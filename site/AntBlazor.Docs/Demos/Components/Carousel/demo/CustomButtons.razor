@@ -15,14 +15,14 @@
     </Carousel>
 </div>
 <div class="button-container">
-    <Button OnClick="@( _=>_carousel.Previous())" Size="small">Prev</Button>
+    <Button OnClick="@(_ => _carousel.Previous())" Size="small">Prev</Button>
     <div>
         @foreach (int i in Enumerable.Range(0, 4))
         {
-            <Button OnClick="@( _=>_carousel.GoTo(i))" Size="small">@(i+1)</Button>
+            <Button OnClick="@(_ => _carousel.GoTo(i))" Size="small">@(i + 1)</Button>
         }
     </div>
-    <Button OnClick="@( _=>_carousel.Next())" Size="small">Next</Button>
+    <Button OnClick="@(_ => _carousel.Next())" Size="small">Next</Button>
 
 </div>
 
@@ -30,7 +30,7 @@
     .button-container {
         display: flex;
         justify-content: space-between;
-        padding-top:4px;
+        padding-top: 4px;
     }
 
     .ant-carousel .slick-slide {
@@ -41,9 +41,7 @@
         overflow: hidden;
     }
 
-    .ant-carousel .slick-slide h3 {
-        color: #fff;
-    }
+    .ant-carousel .slick-slide h3 { color: #fff; }
 </style>
 
 @code{

@@ -24,35 +24,25 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public RenderFragment<TItem> ChildContent { get; set; }
+        [Parameter] public RenderFragment<TItem> ChildContent { get; set; }
 
-        [Parameter]
-        public EventCallback<QueryModel<TItem>> OnChange { get; set; }
+        [Parameter] public EventCallback<QueryModel<TItem>> OnChange { get; set; }
 
-        [Parameter]
-        public bool Loading { get; set; }
+        [Parameter] public bool Loading { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Title { get; set; }
 
-        [Parameter]
-        public OneOf<string, RenderFragment> Footer { get; set; }
+        [Parameter] public OneOf<string, RenderFragment> Footer { get; set; }
 
-        [Parameter]
-        public TableSize Size { get; set; }
+        [Parameter] public TableSize Size { get; set; }
 
-        [Parameter]
-        public bool Bordered { get; set; } = false;
+        [Parameter] public bool Bordered { get; set; } = false;
 
-        [Parameter]
-        public string ScrollX { get; set; }
+        [Parameter] public string ScrollX { get; set; }
 
-        [Parameter]
-        public string ScrollY { get; set; }
+        [Parameter] public string ScrollY { get; set; }
 
-        [Parameter]
-        public int ScrollBarWidth { get; set; } = 17;
+        [Parameter] public int ScrollBarWidth { get; set; } = 17;
 
         public ColumnContext ColumnContext { get; set; } = new ColumnContext();
 
@@ -133,9 +123,11 @@ namespace AntDesign
                 .If($"{prefixCls}-small", () => Size == TableSize.Small)
                 .If($"{prefixCls}-middle", () => Size == TableSize.Middle)
                 //.Add( "ant-table ant-table-ping-left ant-table-ping-right ")
-                .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ColumnContext.Columns.Any(x => x.Fixed.IsIn("left", "right")))
+                .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal",
+                    () => ColumnContext.Columns.Any(x => x.Fixed.IsIn("left", "right")))
                 .If($"{prefixCls}-has-fix-left", () => ColumnContext.Columns.Any(x => x.Fixed == "left"))
-                .If($"{prefixCls}-has-fix-right {prefixCls}-ping-right ", () => ColumnContext.Columns.Any(x => x.Fixed == "right"))
+                .If($"{prefixCls}-has-fix-right {prefixCls}-ping-right ",
+                    () => ColumnContext.Columns.Any(x => x.Fixed == "right"))
                 ;
         }
 

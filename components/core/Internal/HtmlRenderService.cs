@@ -14,7 +14,8 @@ namespace AntDesign
 
         public async ValueTask<string> RenderAsync(RenderFragment renderFragment)
         {
-            var text = await _htmlRenderer.Dispatcher.InvokeAsync(() => _htmlRenderer.RenderComponentAsync(new EmptyComponent(renderFragment), ParameterView.Empty));
+            var text = await _htmlRenderer.Dispatcher.InvokeAsync(() =>
+                _htmlRenderer.RenderComponentAsync(new EmptyComponent(renderFragment), ParameterView.Empty));
             return string.Join("", text.Tokens);
         }
 
