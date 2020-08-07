@@ -1,0 +1,27 @@
+name: Format Code
+
+on: [push]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Format
+        uses: goit/setup-resharper@v1.0.0
+        with:
+          version: '2020.1.4'
+      - run: 'cleanupcode.sh AntDesign.sln --profile="Built-in: Reformat Code"'
+        
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4.1.2
+        with:
+          commit_message: 'chore: apply formatting changes'
+          branch: ${{ github.head_ref }}
+          commit_user_name: Code Cleanup Bot
+          commit_user_email: actions@github.com
+          commit_author: Code Cleanup Bot <actions@github.com>
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
