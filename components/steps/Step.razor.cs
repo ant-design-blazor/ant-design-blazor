@@ -33,6 +33,8 @@ namespace AntDesign
         }
 
         internal int Index { get; set; }
+        internal double? Percent { get; set; }
+        internal string Size { get; set; } = "default";
         internal RenderFragment ProgressDot { get; set; }
         internal string Direction { get; set; } = "horizontal";
 
