@@ -116,6 +116,8 @@ namespace AntDesign
             {
                 await Close();
             }
+
+            ModalRef.TaskCompletionSource?.SetResult(true);
         }
 
         private async Task HandleCancel(MouseEventArgs e)
@@ -143,6 +145,8 @@ namespace AntDesign
             {
                 await Close();
             }
+
+            ModalRef.TaskCompletionSource?.SetResult(false);
         }
     }
 }

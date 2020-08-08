@@ -92,5 +92,8 @@ namespace AntDesign
             await _service?.Update(this);
         }
 
+        internal TaskCompletionSource<bool> TaskCompletionSource { get; set; }
+
+        public Task<bool> ConfirmResult => TaskCompletionSource?.Task ?? null;
     }
 }

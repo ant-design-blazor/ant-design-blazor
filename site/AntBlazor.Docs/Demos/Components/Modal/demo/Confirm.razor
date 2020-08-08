@@ -1,5 +1,5 @@
 ﻿@inject ModalService _modalService
-
+@inject MessageService _message
 <Space>
     <SpaceItem>
         <Button OnClick="@ShowConfirm">Confirm</Button>
@@ -10,6 +10,13 @@
 
     <SpaceItem>
         <Button OnClick="@ShowPropsConfirm" Type="dashed"> With extra props</Button>
+    </SpaceItem>
+</Space>
+<br />
+<br />
+<Space>
+    <SpaceItem>
+        <Button OnClick="@BlockingConfirm">Blocking Confirm</Button>
     </SpaceItem>
 </Space>
 @code{
@@ -25,9 +32,9 @@
     };
     RenderFragment icon = @<Icon Type="exclamation-circle" Theme="outline"></Icon>;
 
-    private void ShowConfirm()
+    private async Task ShowConfirm()
     {
-        _modalService.Confirm(new ConfirmOptions()
+        await _modalService.Confirm(new ConfirmOptions()
         {
             Title = "Do you Want to delete these items?",
             Icon = icon,
@@ -37,9 +44,9 @@
         });
     }
 
-    private void ShowDeleteConfirm()
+    private async Task ShowDeleteConfirm()
     {
-        _modalService.Confirm(new ConfirmOptions()
+        await _modalService.Confirm(new ConfirmOptions()
         {
             Title = "Are you sure delete this task?",
             Icon = icon,
@@ -49,13 +56,12 @@
             OkText = "Yes",
             OkType = "danger",
             CancelText = "No",
-
         });
     }
 
-    private void ShowPropsConfirm()
+    private async Task ShowPropsConfirm()
     {
-        _modalService.Confirm(new ConfirmOptions()
+        await _modalService.Confirm(new ConfirmOptions()
         {
             Title = "Are you sure delete this task?",
             Icon = icon,
@@ -70,5 +76,29 @@
                 Disabled = true,
             }
         });
+    }
+
+
+    private async Task BlockingConfirm()
+    {
+        var confirmRef = await _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Here is a blocking confirm, you can get OK or cancel button is click",
+            Icon = icon,
+            Content = "Some descriptions",
+            OnOk = onOk,
+            OnCancel = onCancel
+        });
+
+        var confirmResult = await confirmRef.ConfirmResult;
+
+        if (confirmResult)
+        {
+            await _message.Info("OK button is clicked");
+        }
+        else
+        {
+            await _message.Info("cancel button is clicked");
+        }
     }
 }

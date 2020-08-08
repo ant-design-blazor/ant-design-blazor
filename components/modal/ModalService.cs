@@ -19,6 +19,7 @@ namespace AntDesign
         public async Task<ModalRef> Confirm(ConfirmOptions props)
         {
             ModalRef modalRef = new ModalRef(props, this);
+            modalRef.TaskCompletionSource = new TaskCompletionSource<bool>();
             await OnOpenEvent?.Invoke(modalRef);
             return modalRef;
         }
