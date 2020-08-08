@@ -13,7 +13,7 @@ namespace AntDesign
 
         internal List<Step> _children = new List<Step>();
         [Parameter] public int Current { get; set; }
-
+        [Parameter] public double? Percent { get; set; }
         [Parameter]
         public RenderFragment ProgressDot
         {
@@ -67,6 +67,8 @@ namespace AntDesign
                 _children[i].Direction = this.Direction;
                 _children[i].Index = i + this.StartIndex;
                 _children[i].GroupCurrentIndex = this.Current;
+                _children[i].Percent = this.Percent;
+                _children[i].Size = this.Size;
                 _children[i].Last = _children.Count == i + 1;
                 Step.MarkForCheck();
             }
