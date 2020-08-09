@@ -20,6 +20,6 @@ app.components.icon.direction: Directional Icons
 app.components.icon.suggestion: Suggested Icons
 app.components.icon.edit: Editor Icons
 app.components.icon.data: Data Icons
-app.components.icon.log: Brand and Logos
+app.components.icon.logo: Brand and Logos
 app.components.icon.other: Application Icons
 Examples: Examples

@@ -14,8 +14,8 @@
                     <Icon Component="TwoToneSvg" Style="font-size:16px" />TwoTone
                 </Radio>
             </RadioGroup>
-            <Search Class="IconList-Search" Size="@InputSize.Large" 
-                    Placeholder="@LanguageService.Resources["app.components.icon.search"]"   
+            <Search Class="IconList-Search" Size="@InputSize.Large"
+                    Placeholder="@LanguageService.Resources["app.components.icon.search"]"
                     OnInput="@(args => OnSearching(args.Value?.ToString()))" />
         </div>
     </AntDesign.Col>
@@ -29,17 +29,17 @@
             foreach (var item in lstIcons)
             {
                 <Row>
-                    <Title Level="4">@LanguageService.Resources["app.components.icon."+ @item.Category]</Title>
+                    <Title Level="4">@LanguageService.Resources["app.components.icon." + @item.Category]</Title>
                 </Row>
                 <Row>
 
                     @foreach (var name in item.IconNames)
                     {
                         <AntDesign.Col Span="4">
-                            <span class="IconList-Item">
+                            <div class="IconList-Item" @ondblclick="(()=>OnCopyClick(currentTheme, name))">
                                 <div><Icon Type="@name" Theme="@currentTheme" Style="font-size:36px"></Icon></div>
                                 <div class="anticon-class"><Badge>@name</Badge></div>
-                            </span>
+                            </div>
                         </AntDesign.Col>
                     }
                 </Row>
@@ -53,6 +53,8 @@
 
 @inject AntDesign.Docs.Services.IconsService iconsService
 @inject ILanguageService LanguageService
+@inject MessageService messageService
+@inject IJSRuntime JsRuntime
 
 @code{
 
@@ -88,6 +90,18 @@
         return lstIcons.Any();
     }
 
-
-
+    /// <summary>
+    ///  copy function
+    /// </summary>
+    /// <param name="theme"></param>
+    /// <param name="iconName"></param>
+    private void OnCopyClick(string theme, string iconName)
+    {
+        string htmlIcon = $"<Icon Type=\"{iconName}\" Theme=\"{theme}\"/>";
+        JsRuntime.InvokeAsync<object>(JSInteropConstants.copy, htmlIcon);
+        messageService.Success(htmlIcon);
     }
+
+
+
+}

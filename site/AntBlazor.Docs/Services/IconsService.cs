@@ -81,7 +81,8 @@ namespace AntDesign.Docs.Services
                             "radius-upleft",
                             "radius-upright",
                             "fullscreen",
-                            "fullscreen-exit"
+                            "fullscreen-exit",
+                            "star"
                     }
             };
 

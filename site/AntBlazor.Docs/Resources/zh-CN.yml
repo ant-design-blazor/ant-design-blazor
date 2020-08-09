@@ -15,11 +15,11 @@ app.footer.community: 社区
 app.footer.help: 帮助
 app.footer.more-product: 更多产品
 app.components.overview.search: 搜索组件
-app.components.icon.search:搜索图标
-app.components.icon.direction:方向性图标
-app.components.icon.suggestion:提示建议性图标
+app.components.icon.search: 搜索图标
+app.components.icon.direction: 方向性图标
+app.components.icon.suggestion: 提示建议性图标
 app.components.icon.edit: 编辑类图标
-app.components.icon.data:数据类图标
-app.components.icon.logo:品牌和标识
-app.components.icon.other:网站通用图标
+app.components.icon.data: 数据类图标
+app.components.icon.logo: 品牌和标识
+app.components.icon.other: 网站通用图标
 Examples: 代码演示
