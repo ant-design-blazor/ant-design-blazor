@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign.Docs.Services
 {
-   public  class IconsService
+   public  class IconListService
     {
         public async  Task<List<IconItem>> GetIconsAsync()
         {
@@ -81,8 +81,7 @@ namespace AntDesign.Docs.Services
                             "radius-upleft",
                             "radius-upright",
                             "fullscreen",
-                            "fullscreen-exit",
-                            "star"
+                            "fullscreen-exit"
                     }
             };
 
