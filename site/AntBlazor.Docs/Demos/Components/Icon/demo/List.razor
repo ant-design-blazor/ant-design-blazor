@@ -43,7 +43,6 @@
                 </Row>
             }
         }
-
     </AntDesign.Col>
 </Row>
 
@@ -72,7 +71,6 @@
         lstIcons = await iconListService.GetIconsAsync();
     }
 
-
     private async Task OnSearching(string word)
     {
         lstIcons = await iconListService.FindAll(word);
@@ -83,7 +81,6 @@
         return lstIcons.Any();
     }
 
-
     private  bool IsNotExistedIcon(string theme, string type)
     {
         var svg  =Task.Run(async()=>await  IconService.GetIconImg(type.ToLower(), theme.ToLower()));
@@ -91,18 +88,10 @@
         return res;
     }
 
-    /// <summary>
-    ///  copy function
-    /// </summary>
-    /// <param name="theme"></param>
-    /// <param name="iconName"></param>
     private void OnCopyClick(string theme, string iconName)
     {
         string htmlIcon = $"<Icon Type=\"{iconName}\" Theme=\"{theme}\"/>";
         JsRuntime.InvokeAsync<object>(JSInteropConstants.copy, htmlIcon);
         messageService.Success(htmlIcon);
     }
-
-
-
 }
