@@ -26,14 +26,14 @@ namespace AntDesign
         /// <summary>
         /// 创建并打开窗体
         /// </summary>
-        private async Task Modal_OnOpen(ModalRef modalRef)
+        private void Modal_OnOpen(ModalRef modalRef)
         {
             modalRef.Config.Visible = true;
             if (!_modalRefs.Contains(modalRef))
             {
                 _modalRefs.Add(modalRef);
             }
-            await InvokeAsync(StateHasChanged);
+            InvokeAsync(StateHasChanged);
         }
 
         /// <summary>

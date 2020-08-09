@@ -32,9 +32,9 @@
     };
     RenderFragment icon = @<Icon Type="exclamation-circle" Theme="outline"></Icon>;
 
-    private async Task ShowConfirm()
+    private void ShowConfirm()
     {
-        await _modalService.Confirm(new ConfirmOptions()
+        _modalService.Confirm(new ConfirmOptions()
         {
             Title = "Do you Want to delete these items?",
             Icon = icon,
@@ -44,9 +44,9 @@
         });
     }
 
-    private async Task ShowDeleteConfirm()
+    private void ShowDeleteConfirm()
     {
-        await _modalService.Confirm(new ConfirmOptions()
+        _modalService.Confirm(new ConfirmOptions()
         {
             Title = "Are you sure delete this task?",
             Icon = icon,
@@ -59,9 +59,9 @@
         });
     }
 
-    private async Task ShowPropsConfirm()
+    private void ShowPropsConfirm()
     {
-        await _modalService.Confirm(new ConfirmOptions()
+        _modalService.Confirm(new ConfirmOptions()
         {
             Title = "Are you sure delete this task?",
             Icon = icon,
@@ -81,7 +81,7 @@
 
     private async Task BlockingConfirm()
     {
-        var confirmRef = await _modalService.Confirm(new ConfirmOptions()
+        var confirmResult = await _modalService.ConfirmAsync(new ConfirmOptions()
         {
             Title = "Here is a blocking confirm, you can get OK or cancel button is click",
             Icon = icon,
@@ -89,8 +89,6 @@
             OnOk = onOk,
             OnCancel = onCancel
         });
-
-        var confirmResult = await confirmRef.ConfirmResult;
 
         if (confirmResult)
         {

@@ -93,7 +93,5 @@ namespace AntDesign
         }
 
         internal TaskCompletionSource<bool> TaskCompletionSource { get; set; }
-
-        public Task<bool> ConfirmResult => TaskCompletionSource?.Task ?? null;
     }
 }
