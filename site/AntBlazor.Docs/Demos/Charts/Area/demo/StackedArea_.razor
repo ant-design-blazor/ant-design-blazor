@@ -3,25 +3,69 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 
-<Tabs>
+<Tabs ActiveKeyChanged="OnTabChanged">
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <StackedArea @ref="chart1" TItem="OilItem" Config="config1"/>
+            <StackedArea @ref="chart1" TItem="OilItem" Config="config1" />
         </ChildContent>
     </TabPane>
+    <TabPane Key="2">
+        <Tab>示例2</Tab>
+        <ChildContent>
+            <StackedArea @ref="chart2" TItem="OilItem" Config="config2" />
+        </ChildContent>
+    </TabPane>
+    <TabPane Key="3">
+        <Tab>示例3</Tab>
+        <ChildContent>
+            <StackedArea @ref="chart3" TItem="OilItem" Config="config3" />
+        </ChildContent>
+    </TabPane>
+    <TabPane Key="4">
+        <Tab>示例4</Tab>
+        <ChildContent>
+            <StackedArea @ref="chart4" TItem="EmissionsItem" Config="config4" />
+        </ChildContent>
+    </TabPane>
+
 </Tabs>
 
 @code{
 
     IChartComponent chart1;
+    IChartComponent chart2;
+    IChartComponent chart3;
+    IChartComponent chart4;
+
 
     protected override async Task OnInitializedAsync()
     {
-        var data1 = await ChartsDemoData.OilAsync(NavigationManager, HttpClient);
-        chart1.ChangeData(data1);
-
         await base.OnInitializedAsync();
+        OnTabChanged("1");
+    }
+
+    private async void OnTabChanged(string activeKey)
+    {
+        if (activeKey == "1")
+        {
+            var data1 = await ChartsDemoData.OilAsync(NavigationManager, HttpClient);
+            chart1.ChangeData(data1);
+        } else if (activeKey=="2")
+        {
+            var data1 = await ChartsDemoData.OilAsync(NavigationManager, HttpClient);
+            chart2.ChangeData(data1);
+        }
+        else if (activeKey=="3")
+        {
+            var data1 = await ChartsDemoData.OilAsync(NavigationManager, HttpClient);
+            chart3.ChangeData(data1);
+        }
+        else
+        {
+            var data4= await ChartsDemoData.EmissionsAsync(NavigationManager, HttpClient);
+            chart4.ChangeData(data4);
+        }
     }
 
     #region 示例1
@@ -36,7 +80,7 @@
         XField = "date",
         YField = "value",
         StackField = "country",
-        Color = new[] {"#6897a7", "#8bc0d6", "#60d7a7", "#dedede", "#fedca9", "#fab36f", "#d96d6f"},
+        Color = new[] { "#6897a7", "#8bc0d6", "#60d7a7", "#dedede", "#fedca9", "#fab36f", "#d96d6f" },
         XAxis = new ValueCatTimeAxis
         {
             Type = "dateTime",
@@ -51,5 +95,97 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly StackedAreaConfig config2 = new StackedAreaConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "堆叠面积图-areaLabel"
+        },
+
+        Description = new Description
+        {
+            Visible=true,
+            Text= "堆叠面积图中，将label type设置为area时，label显示在堆叠区域内，使用户能够更容易的通过视觉将label和对应图形产生联系。autoScale配置项设置为true时，label会自适应堆叠区域的大小。"
+        },
+
+        XField = "date",
+        YField = "value",
+        StackField = "country",
+        Color = new[] { "#6897a7", "#8bc0d6", "#60d7a7", "#dedede", "#fedca9", "#fab36f", "#d96d6f" },
+        XAxis = new ValueCatTimeAxis
+        {
+            Type = "dateTime",
+            TickCount = 5
+        },
+        Legend = new Legend
+        {
+            Visible = true,
+            Position = "right-top"
+        }
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+    readonly StackedAreaConfig config3 = new StackedAreaConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "堆叠面积图 - lineLabel"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "当label类型设置为line时，label与面积区域尾端顶部对齐。"
+        },
+        XField = "date",
+        YField = "value",
+        StackField = "country",
+        Color = new[] { "#6897a7", "#8bc0d6", "#60d7a7", "#dedede", "#fedca9", "#fab36f", "#d96d6f" },
+        XAxis = new ValueCatTimeAxis
+        {
+            Type = "dateTime",
+            TickCount = 5
+        },
+        Label = new StackedAreaLabel
+        {
+            Visible=true,
+            Type="line",
+        },
+        Legend = new Legend
+        {
+            Visible = false,
+        }
+    };
+
+    #endregion 示例3
+
+    #region 示例4
+
+    readonly StackedAreaConfig config4 = new StackedAreaConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "The causes of CO2 emissions"
+        },
+        XField = "year",
+        YField = "value",
+        SeriesField= "category",     
+        Color = new[] { "#6897a7", "#8bc0d6", "#60d7a7", "#dedede", "#fedca9", "#fab36f", "#d96d6f" },
+        XAxis = new ValueCatTimeAxis
+        {
+            Type = "time",
+            Mask = "YYYY",
+        }, 
+    };
+
+    #endregion 示例4
 
 }
