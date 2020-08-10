@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Globalization;
+using AntDesign.Core.Reflection;
+using System.Collections.Generic;
 
 namespace AntDesign.Helpers
 {
@@ -19,20 +21,28 @@ namespace AntDesign.Helpers
             var p1 = Expression.Parameter(typeof(T));
             var p2 = Expression.Parameter(typeof(string));
 
+            Expression variable = p1;
             Expression body = p2;
+
+            if (TypeDefined<T>.IsNullable)
+            {
+                type = TypeDefined<T>.NullableType;
+            }
+
             if (type.IsSubclassOf(typeof(IFormattable)))
             {
                 var method = type.GetMethod("ToString", new[] { typeof(string), typeof(IFormatProvider) });
-                body = Expression.Call(Expression.Convert(p1, type), method, p2, Expression.Constant(null));
+                body = Expression.Call(Expression.Convert(variable, type), method, p2, Expression.Constant(null));
             }
             else
             {
                 var method = type.GetMethod("ToString", new[] { typeof(string) });
                 if (method != null)
                 {
-                    body = Expression.Call(Expression.Convert(p1, type), method, p2);
+                    body = Expression.Call(Expression.Convert(variable, type), method, p2);
                 }
             }
+
             return Expression.Lambda<Func<T, string, string>>(body, p1, p2).Compile();
         }
     }
