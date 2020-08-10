@@ -18,9 +18,11 @@
         </div>
     </AntDesign.Col>
     <AntDesign.Col Span="24">
-        @if (displayIcons == null)
+        @if (displayIcons == null||displayIcons.Count==0)
         {
-            <Skeleton Loading="true" ParagraphRows="10"></Skeleton>
+        <div style="text-align:center">
+            <Spin Size="large" Tip="Loading..." />
+        </div>
         }
         else
         {
@@ -86,37 +88,36 @@ RenderFragment TwoToneSvg =@<svg width="1em" height="1em" fill="currentColor" ar
     private async Task OnThemeChanged(string newTheme)
     {
         displayIcons = null;
-        displayIcons = new List<Services.IconItem>();
-        Stopwatch sw = new Stopwatch();
-        sw.Start();   
 
-        foreach (var categorys in lstIcons)
+        await Task.Run(() =>
         {
-            var itemIcons = new AntDesign.Docs.Services.IconItem();
-            itemIcons.Category = categorys.Category;
-            itemIcons.IconNames = new List<string>();
-            foreach (var item in categorys.IconNames)
+            displayIcons = new List<Services.IconItem>();
+            foreach (var categorys in lstIcons)
             {
-                if (!IsNotExistedIcon(currentTheme, item))
+                var itemIcons = new AntDesign.Docs.Services.IconItem();
+                itemIcons.Category = categorys.Category;
+                itemIcons.IconNames = new List<string>();
+                foreach (var item in categorys.IconNames)
                 {
-                    itemIcons.IconNames.Add(item);
+                    if (!IsNotExistedIcon(currentTheme, item))
+                    {
+                        itemIcons.IconNames.Add(item);
+                    }
+                }
+
+                if (itemIcons.IconNames.Count > 0)
+                {
+                    displayIcons.Add(itemIcons);
                 }
             }
+        });
 
-            if (itemIcons.IconNames.Count > 0)
-            {
-                displayIcons.Add(itemIcons);
-            }
-        }
-
-
-        Console.WriteLine(sw.ElapsedMilliseconds);
-        return;
+        await InvokeAsync(StateHasChanged);
     }
 
     protected override bool ShouldRender()
     {
-        return lstIcons.Any();
+        return displayIcons.Any();
     }
 
     private bool IsNotExistedIcon(string theme, string type)
