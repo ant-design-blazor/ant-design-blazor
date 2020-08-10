@@ -13,16 +13,6 @@ Badge normally appears in proximity to notifications or user avatars with eye-ca
 
 ## API
 
-```jsx
-<Badge count={5}>
-  <a href="#" className="head-example" />
-</Badge>
-```
-
-```jsx
-<Badge count={5} />
-```
-
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | Color | Customize Badge dot color | string | - |  |
@@ -34,3 +24,12 @@ Badge normally appears in proximity to notifications or user avatars with eye-ca
 | Status | Set Badge as a status dot | `success` \| `processing` \| `default` \| `error` \| `warning` | `''` |  |
 | Text | If `status` is set, `text` sets the display text of the status `dot` | string | `''` |  |
 | Title | Text to show when hovering over the badge | string | `count` |  |
+
+
+### Badge.Ribbon
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| Color | Customize Ribbon color | string | - |  |
+| Placement | The placement of the Ribbon  | `start` \| `end` | `end` |  |
+| Text | Content inside the Ribbon | String or RenderFragment | - |  |
