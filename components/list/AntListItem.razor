@@ -3,14 +3,14 @@
 
 @if (Grid == null)
 {
-    <li class="@ClassMapper.Class" style="@Style" Id="@Id">
+    <li class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation>
         @itemChildren(this)
     </li>
 }
 else
 {
     <AntDesign.Col Flex="1" Style="@ColStyle">
-        <div class="@ClassMapper.Class" style="@Style" Id="@Id">
+        <div class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation>
             @itemChildren(this)
         </div>
      </AntDesign.Col>

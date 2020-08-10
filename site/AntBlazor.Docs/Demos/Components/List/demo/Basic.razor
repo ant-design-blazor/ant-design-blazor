@@ -1,4 +1,4 @@
-﻿<AntList DataSource="@data" TItem="BasicItem">
+﻿<AntList DataSource="@data" TItem="BasicItem" OnItemClick="ItemClick">
     <Item Context="item">
         <AntListItemMeta  Avatar="avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
             <Title>
@@ -25,5 +25,10 @@
         new BasicItem { Title = "Ant Design Title 3"},
         new BasicItem { Title = "Ant Design Title 4"},
     };
+
+    public void ItemClick(BasicItem item)
+    {
+        Console.WriteLine($"item was clicked: {item.Title}");
+    }
 }
 
