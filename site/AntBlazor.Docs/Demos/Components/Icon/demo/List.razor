@@ -20,7 +20,7 @@
     <AntDesign.Col Span="24">
         @if (displayIcons == null||displayIcons.Count==0)
         {
-        <div style="text-align:center">
+        <div style="text-align:center; margin-top:20px;">
             <Spin Size="large" Tip="Loading..." />
         </div>
         }
@@ -99,7 +99,9 @@ RenderFragment TwoToneSvg =@<svg width="1em" height="1em" fill="currentColor" ar
                 itemIcons.IconNames = new List<string>();
                 foreach (var item in categorys.IconNames)
                 {
-                    if (!IsNotExistedIcon(currentTheme, item))
+                    var isExist = iconListService.IsExistedIcon(currentTheme, item);
+
+                    if (isExist)
                     {
                         itemIcons.IconNames.Add(item);
                     }
@@ -120,12 +122,6 @@ RenderFragment TwoToneSvg =@<svg width="1em" height="1em" fill="currentColor" ar
         return displayIcons.Any();
     }
 
-    private bool IsNotExistedIcon(string theme, string type)
-    {
-        var svg = Task.Run(async () => await IconService.GetIconImg(type.ToLower(), theme.ToLower()));
-        var res = string.IsNullOrEmpty(svg.Result?.ToString());
-        return res;
-    }
 
     private void OnCopyClick(string theme, string iconName)
     {
