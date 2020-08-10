@@ -13,6 +13,8 @@ Badge normally appears in proximity to notifications or user avatars with eye-ca
 
 ## API
 
+### Badge
+
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | Color | Customize Badge dot color | string | - |  |
