@@ -1,10 +1,10 @@
-﻿using AntDesign.JsInterop;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -65,10 +65,14 @@ namespace AntDesign
             {
                 if (_activeKey != value)
                 {
-                    _activeKey = value;
-                    if (_panes.Count == 0) return;
-                    TabPane tabPane = _panes.Find(p => p.Key == _activeKey);
-                    if (tabPane == null) return;
+                    if (_panes.Count == 0)
+                        return;
+
+                    TabPane tabPane = _panes.Find(p => p.Key == value);
+
+                    if (tabPane == null)
+                        return;
+
                     ActivatePane(tabPane);
                 }
             }
@@ -141,13 +145,13 @@ namespace AntDesign
         /// Callback executed when active tab is changed
         /// </summary>
         [Parameter]
-        public EventCallback<object> OnChange { get; set; }
+        public EventCallback<string> OnChange { get; set; }
 
         /// <summary>
         /// Callback executed when tab is added or removed. Only works while <see cref="Type"/> = <see cref="TabType.EditableCard"/>
         /// </summary>
         [Parameter]
-        public EventCallback<object> OnEdit { get; set; }
+        public Func<string, Task<bool>> OnEdit { get; set; } = key => Task.FromResult(true);
 
         /// <summary>
         /// Callback executed when next button is clicked
@@ -165,7 +169,7 @@ namespace AntDesign
         /// Callback executed when tab is clicked
         /// </summary>
         [Parameter]
-        public EventCallback<object> OnTabClick { get; set; }
+        public EventCallback<string> OnTabClick { get; set; }
 
         /// <summary>
         /// Whether to turn on keyboard navigation
@@ -289,34 +293,52 @@ namespace AntDesign
             }
         }
 
-        private void AddTabPane(MouseEventArgs args)
+        private async Task AddTabPane(MouseEventArgs args)
         {
             if (CreateTabPane != null)
             {
                 TabPane pane = CreateTabPane();
-                Dictionary<string, object> properties = new Dictionary<string, object>
+
+                if (await OnEdit.Invoke(pane.Key))
                 {
-                    //[nameof(TabPane.Parent)] = this,
-                    [nameof(TabPane.ForceRender)] = pane.ForceRender,
-                    [nameof(TabPane.Key)] = pane.Key,
-                    [nameof(TabPane.Tab)] = pane.Tab,
-                    [nameof(TabPane.ChildContent)] = pane.ChildContent,
-                    [nameof(TabPane.Disabled)] = pane.Disabled
-                };
-                pane.SetParametersAsync(ParameterView.FromDictionary(properties));
-                pane.Parent = this;
-                ActivatePane(pane);
+                    Dictionary<string, object> properties = new Dictionary<string, object>
+                    {
+                        //[nameof(TabPane.Parent)] = this,
+                        [nameof(TabPane.ForceRender)] = pane.ForceRender,
+                        [nameof(TabPane.Key)] = pane.Key,
+                        [nameof(TabPane.Tab)] = pane.Tab,
+                        [nameof(TabPane.ChildContent)] = pane.ChildContent,
+                        [nameof(TabPane.Disabled)] = pane.Disabled
+                    };
+
+                    await pane.SetParametersAsync(ParameterView.FromDictionary(properties));
+                    pane.Parent = this;
+                    ActivatePane(pane);
+                }
             }
         }
 
-        public void RemoveTabPane(TabPane pane)
+        public async Task RemoveTabPane(TabPane pane)
         {
-            _needRefresh = true;
-            _panes.Remove(pane);
-            if (pane != null && pane.IsActive && _panes.Count > 0)
+            if (await OnEdit.Invoke(pane.Key))
             {
-                ActivatePane(_panes[0]);
+                _needRefresh = true;
+                _panes.Remove(pane);
+                if (pane != null && pane.IsActive && _panes.Count > 0)
+                {
+                    ActivatePane(_panes[0]);
+                }
             }
+        }
+
+        private void HandleTabClick(TabPane tabPane, MouseEventArgs args)
+        {
+            if (OnTabClick.HasDelegate)
+            {
+                OnTabClick.InvokeAsync(tabPane.Key);
+            }
+
+            ActivatePane(tabPane);
         }
 
         private void ActivatePane(TabPane tabPane)
@@ -329,13 +351,22 @@ namespace AntDesign
                 }
                 tabPane.IsActive = true;
                 _activePane = tabPane;
-                if (ActiveKey != _activePane.Key)
+                if (_activeKey != _activePane.Key)
                 {
-                    ActiveKey = _activePane.Key;
-                    if (ActiveKeyChanged.HasDelegate)
+                    if (!string.IsNullOrEmpty(_activeKey))
                     {
-                        ActiveKeyChanged.InvokeAsync(_activePane.Key);
+                        if (ActiveKeyChanged.HasDelegate)
+                        {
+                            ActiveKeyChanged.InvokeAsync(_activePane.Key);
+                        }
+
+                        if (OnChange.HasDelegate)
+                        {
+                            OnChange.InvokeAsync(_activePane.Key);
+                        }
                     }
+
+                    _activeKey = _activePane.Key;
                 }
 
                 StateHasChanged();
