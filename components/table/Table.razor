@@ -138,7 +138,7 @@ RenderFragment<Table<TItem>> body = table =>
     @if (table.Total <= 0)
     {
         <tr class="ant-table-placeholder">
-            <td colspan="6" class="ant-table-cell">
+            <td colspan="@table.ColumnContext.Columns.Count" class="ant-table-cell">
                 <Empty Simple />
             </td>
         </tr>
