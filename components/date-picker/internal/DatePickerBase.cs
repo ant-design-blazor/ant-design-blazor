@@ -450,7 +450,7 @@ namespace AntDesign
             }
         }
 
-        protected void UpdateCurrentValueAsString(int index = 0)
+        protected virtual void UpdateCurrentValueAsString(int index = 0)
         {
             if (EditContext != null)
             {

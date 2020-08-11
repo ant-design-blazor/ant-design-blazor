@@ -72,7 +72,19 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (Value == null)
+            if (Value != null)
+            {
+                GetIfNotNull(Value, 0, notNullValue =>
+                {
+                    ChangeValue(notNullValue, 0);
+                });
+
+                GetIfNotNull(Value, 1, notNullValue =>
+                {
+                    ChangeValue(notNullValue, 1);
+                });
+            }
+            else
             {
                 Value = CreateInstance();
             }
@@ -203,40 +215,49 @@ namespace AntDesign
             }
         }
 
+        protected override void UpdateCurrentValueAsString(int index = 0)
+        {
+            if (EditContext != null)
+            {
+                CurrentValueAsString = $"{GetInputValue(0)},{GetInputValue(1)}";
+            }
+        }
+
         protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
         {
-            var success = BindConverter.TryConvertTo<DateTime>(
-               value, CultureInfo, out var dateTime);
+            result = default;
+            validationErrorMessage = $"{FieldIdentifier.FieldName} field isn't valid.";
 
-            if (success)
+            if (string.IsNullOrEmpty(value))
             {
-                int focusIndex = GetOnFocusPickerIndex();
+                return false;
+            }
 
+            string[] values = value.Split(",");
+
+            if (values.Length != 2)
+            {
+                return false;
+            }
+
+            var success0 = BindConverter.TryConvertTo<DateTime>(values[0], CultureInfo, out var dateTime0);
+            var success1 = BindConverter.TryConvertTo<DateTime>(values[1], CultureInfo, out var dateTime1);
+
+            if (success0 && success1)
+            {
                 result = CreateInstance();
 
                 var array = result as Array;
-                if (focusIndex == 0)
-                {
-                    array.SetValue(dateTime, 0);
-                    array.SetValue(GetIndexValue(1), 1);
-                }
-                else
-                {
-                    array.SetValue(GetIndexValue(0), 0);
-                    array.SetValue(dateTime, 1);
-                }
+
+                array.SetValue(dateTime0, 0);
+                array.SetValue(dateTime1, 1);
 
                 validationErrorMessage = null;
 
                 return true;
             }
-            else
-            {
-                result = default;
-                validationErrorMessage = $"{FieldIdentifier.FieldName} field isn't valid.";
 
-                return false;
-            }
+            return false;
         }
     }
 }
