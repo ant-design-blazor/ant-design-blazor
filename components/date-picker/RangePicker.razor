@@ -1,5 +1,5 @@
 ﻿@namespace AntDesign
-@inherits DatePickerBase<TValue[]>
+@inherits DatePickerBase<TValue>
 @typeparam TValue
 @using AntDesign.Internal;
 
@@ -20,17 +20,17 @@
                 {
                     <div class="@(PrefixCls)-panels">
                         <div class="@(PrefixCls)-panel">
-                            <DatePickerPanelChooser TValue="TValue[]" DatePicker="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelect(date)"/>
+                            <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelect(date)"/>
                         </div>
                         <div class="@(PrefixCls)-panel">
-                            <DatePickerPanelChooser TValue="TValue[]" DatePicker="@this" PickerIndex="1" OnSelect="async (date, index) => await OnSelect(date)"/>
+                            <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="1" OnSelect="async (date, index) => await OnSelect(date)"/>
                         </div>
                     </div>
                 }
                 else
                 {
                     <div class="@(PrefixCls)-panel">
-                        <DatePickerPanelChooser TValue="TValue[]" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)"/>
+                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)"/>
                     </div>
                 }
             </div>

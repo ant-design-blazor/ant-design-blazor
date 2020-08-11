@@ -256,7 +256,8 @@ namespace AntDesign
                 Picker = DatePickerType.Date;
             }
 
-            if (typeof(TValue).IsAssignableFrom(typeof(DateTime?)))
+            Type type = typeof(TValue);
+            if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[])))
             {
                 _isNullable = true;
             }
