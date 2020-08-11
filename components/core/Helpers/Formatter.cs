@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq.Expressions;
-using System.Globalization;
-using AntDesign.Core.Reflection;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq.Expressions;
+using AntDesign.Core.Reflection;
 
 namespace AntDesign.Helpers
 {
@@ -23,10 +23,13 @@ namespace AntDesign.Helpers
 
             Expression variable = p1;
             Expression body = p2;
+            Expression hasValueExpression = type.IsValueType ? (Expression)Expression.Constant(true) : Expression.NotEqual(p1, Expression.Default(type));
 
             if (TypeDefined<T>.IsNullable)
             {
                 type = TypeDefined<T>.NullableType;
+                hasValueExpression = Expression.Equal(Expression.Property(p1, "HasValue"), Expression.Constant(true));
+                variable = Expression.Condition(hasValueExpression, Expression.Property(p1, "Value"), Expression.Default(type));
             }
 
             if (type.IsSubclassOf(typeof(IFormattable)))
@@ -43,7 +46,8 @@ namespace AntDesign.Helpers
                 }
             }
 
-            return Expression.Lambda<Func<T, string, string>>(body, p1, p2).Compile();
+            var condition = Expression.Condition(hasValueExpression, body, Expression.Constant(string.Empty));
+            return Expression.Lambda<Func<T, string, string>>(condition, p1, p2).Compile();
         }
     }
 
