@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using System;
 
 namespace AntDesign
 {
@@ -34,16 +34,19 @@ namespace AntDesign
         {
             if (builder != null)
             {
+                int i = 0;
+
                 base.BuildRenderTree(builder);
-                builder.OpenElement(0, "div");
-                builder.AddAttribute(1, "class", this.ClassMapper.Class);
-                builder.OpenElement(2, "span");
-                if (Mark) builder.OpenElement(3, "mark");
-                if (Delete) builder.OpenElement(4, "del");
-                if (Underline) builder.OpenElement(5, "u");
-                if (Code) builder.OpenElement(6, "code");
-                if (Strong) builder.OpenElement(7, "strong");
-                builder.AddContent(8, ChildContent);
+                builder.OpenElement(i++, "div");
+                builder.AddAttribute(i++, "class", this.ClassMapper.Class);
+                builder.AddAttribute(i++, "style", Style);
+                builder.OpenElement(i++, "span");
+                if (Mark) builder.OpenElement(i++, "mark");
+                if (Delete) builder.OpenElement(i++, "del");
+                if (Underline) builder.OpenElement(i++, "u");
+                if (Code) builder.OpenElement(i++, "code");
+                if (Strong) builder.OpenElement(i++, "strong");
+                builder.AddContent(i++, ChildContent);
                 if (Strong) builder.CloseElement();
                 if (Code) builder.CloseElement();
                 if (Underline) builder.CloseElement();
@@ -52,11 +55,11 @@ namespace AntDesign
                 builder.CloseElement();
                 if (Copyable)
                 {
-                    builder.OpenElement(9, "a");
-                    builder.AddAttribute(10, "onclick", (Action)(async () => await Copy()));
-                    builder.OpenComponent<Icon>(10);
-                    builder.AddAttribute(11, "type", "copy");
-                    builder.AddAttribute(12, "theme", IconThemeType.Outline);
+                    builder.OpenElement(i++, "a");
+                    builder.AddAttribute(i++, "onclick", (Action)(async () => await Copy()));
+                    builder.OpenComponent<Icon>(i++);
+                    builder.AddAttribute(i++, "type", "copy");
+                    builder.AddAttribute(i++, "theme", IconThemeType.Outline);
                     builder.CloseComponent();
                     builder.CloseElement();
                 }
