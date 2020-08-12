@@ -124,19 +124,16 @@ namespace AntDesign
             array.SetValue(value, index);
 
             _pickerStatus[index]._hadSelectValue = true;
+            _pickerStatus[index]._currentShowHadSelectValue = true;
 
             UpdateCurrentValueAsString(index);
 
-            if (IsRange && !IsShowTime && Picker != DatePickerType.Time)
+            if (!IsShowTime && Picker != DatePickerType.Time)
             {
-                if (_pickerStatus[0]._hadSelectValue && _pickerStatus[1]._hadSelectValue)
+                if (_pickerStatus[0]._currentShowHadSelectValue && _pickerStatus[1]._currentShowHadSelectValue)
                 {
                     Close();
                 }
-            }
-            else if (!IsShowTime && Picker != DatePickerType.Time)
-            {
-                Close();
             }
         }
 
@@ -148,12 +145,19 @@ namespace AntDesign
             array.SetValue(default, 0);
             array.SetValue(default, 1);
 
+            _pickerStatus[0]._hadSelectValue = false;
+            _pickerStatus[1]._hadSelectValue = false;
+
             Close();
         }
 
         private async Task OnInputClick(int index)
         {
             await _dropDown.Show();
+
+            // clear status
+            _pickerStatus[0]._currentShowHadSelectValue = false;
+            _pickerStatus[1]._currentShowHadSelectValue = false;
 
             if (index == 0)
             {
@@ -167,7 +171,6 @@ namespace AntDesign
                 }
 
                 ChangeFocusTarget(true, false);
-
             }
             else
             {

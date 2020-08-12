@@ -240,6 +240,7 @@ namespace AntDesign
         protected OverlayTrigger _dropDown;
 
         protected string _activeBarStyle = "";
+        protected string _rangeArrowStyle = "";
 
         protected DatePickerStatus[] _pickerStatus
             = new DatePickerStatus[] { new DatePickerStatus(), new DatePickerStatus() };
@@ -312,11 +313,13 @@ namespace AntDesign
                 {
                     Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputStart.Ref);
                     _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d(0px, 0px, 0px);";
+                    _rangeArrowStyle = $"left: 0";
                 }
                 else if (_inputEnd.IsOnFocused)
                 {
                     Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputStart.Ref);
                     _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d({element.clientWidth + 16}px, 0px, 0px);";
+                    _rangeArrowStyle = $"left: {element.clientWidth + 25}px";
                 }
                 else
                 {
@@ -392,12 +395,12 @@ namespace AntDesign
                 // auto focus the other input
                 if (IsRange && (!IsShowTime || Picker == DatePickerType.Time))
                 {
-                    if (index == 0 && !_pickerStatus[1]._hadSelectValue && !_inputEnd.IsOnFocused)
+                    if (index == 0 && !_pickerStatus[1]._currentShowHadSelectValue && !_inputEnd.IsOnFocused)
                     {
                         await Blur(0);
                         await Focus(1);
                     }
-                    if (index == 1 && !_pickerStatus[0]._hadSelectValue && !_inputStart.IsOnFocused)
+                    else if (index == 1 && !_pickerStatus[0]._currentShowHadSelectValue && !_inputStart.IsOnFocused)
                     {
                         await Blur(1);
                         await Focus(0);
