@@ -74,7 +74,8 @@ namespace AntDesign
         {
             ClassMapper.Clear()
                 .Add(_prefixCls)
-                .Add($"{_prefixCls}-{Theme}")
+                .If($"{_prefixCls}-dark", () => Theme == SiderTheme.Dark)
+                .If($"{_prefixCls}-light", () => Theme == SiderTheme.Light)
                 .If($"{_prefixCls}-has-trigger", () => Collapsible)
                 .If($"{_prefixCls}-collapsed", () => isCollapsed)
                 .If($"{_prefixCls}-zero-width", () => CollapsedWidth == 0 && isCollapsed);
