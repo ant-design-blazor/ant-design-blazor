@@ -1,33 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Docs.Services
 {
-   public  class IconListService
+    public class IconListService
     {
-       private  IconService IconService { get; set; }
+        private IList<IconItem> _icons;
 
-        public IconListService(IconService iconService)
+        public IList<IconItem> GetIcons()
         {
-            IconService = iconService;
+            _icons ??= Icons();
+            return _icons;
         }
-        public async Task<List<IconItem>> GetIconsAsync()
-        {
-            List<IconItem> icons = new List<IconItem>();
 
-            await Task.Run(() =>
+        private IList<IconItem> Icons()
+        {
+            IList<IconItem> icons = new List<IconItem>();
+
+            var item1 = new IconItem()
             {
-                var item1 = new IconItem()
-                {
-                    Category = "direction",
-                    IconNames = new List<string> {
+                Category = "direction",
+                IconNames = new List<string> {
                                 "step-backward",
                                 "step-forward",
                                 "fast-backward",
@@ -92,12 +85,12 @@ namespace AntDesign.Docs.Services
                                 "fullscreen",
                                 "fullscreen-exit"
                         }
-                };
+            };
 
-                var item2 = new IconItem()
-                {
-                    Category = "suggestion",
-                    IconNames = new List<string>{
+            var item2 = new IconItem()
+            {
+                Category = "suggestion",
+                IconNames = new List<string>{
                                                 "question",
                                                 "question-circle",
                                                 "plus",
@@ -123,12 +116,12 @@ namespace AntDesign.Docs.Services
                                                 "issues-close",
                                                 "stop"
                                             }
-                };
+            };
 
-                var item3 = new IconItem()
-                {
-                    Category = "edit",
-                    IconNames = new List<string>
+            var item3 = new IconItem()
+            {
+                Category = "edit",
+                IconNames = new List<string>
                             {
                                 "edit",
                                 "form",
@@ -165,12 +158,12 @@ namespace AntDesign.Docs.Services
                                 "radius-setting",
                                 "column-width"
                             }
-                };
+            };
 
-                var item4 = new IconItem()
-                {
-                    Category = "data",
-                    IconNames = new List<string>
+            var item4 = new IconItem()
+            {
+                Category = "data",
+                IconNames = new List<string>
                     {
                           "area-chart",
                             "pie-chart",
@@ -186,12 +179,12 @@ namespace AntDesign.Docs.Services
                             "fund",
                             "sliders"
                     }
-                };
+            };
 
-                var item5 = new IconItem()
-                {
-                    Category = "logo",
-                    IconNames = new List<string>
+            var item5 = new IconItem()
+            {
+                Category = "logo",
+                IconNames = new List<string>
                     {
                         "android",
                         "apple",
@@ -244,48 +237,36 @@ namespace AntDesign.Docs.Services
                         "reddit",
                         "sketch"
                     }
-                };
+            };
 
-                icons.Add(item1);
-                icons.Add(item2);
-                icons.Add(item3);
-                icons.Add(item4);
-                icons.Add(item5);
-            });
+            icons.Add(item1);
+            icons.Add(item2);
+            icons.Add(item3);
+            icons.Add(item4);
+            icons.Add(item5);
 
             return icons;
         }
 
-        public async Task<List<IconItem>> FindAll(string word)
+        public List<IconItem> Search(string word)
         {
-            var listOfIcons = await GetIconsAsync();
+            var listOfIcons = GetIcons();
             List<IconItem> lstNewIcons = new List<IconItem>();
-            await Task.Run(() => {
-                //List<IconItem> list = new List<IconItem>();
-                foreach (var item in listOfIcons)
-                {
-                    var icons = item.IconNames.FindAll(a => a.ToLower().Contains(word));
-                    if (icons.Count == 0) continue;
 
-                     lstNewIcons.Add(new IconItem
-                    {
-                        Category = item.Category,
-                        IconNames = icons
-                    });
-                }
-            });
+            foreach (var item in listOfIcons)
+            {
+                var icons = item.IconNames.FindAll(a => a.ToLower().Contains(word));
+                if (icons.Count == 0) continue;
+
+                lstNewIcons.Add(new IconItem
+                {
+                    Category = item.Category,
+                    IconNames = icons
+                });
+            }
 
             return lstNewIcons;
         }
-
-
-        public bool IsExistedIcon(string theme, string type)
-        {
-            var svg = Task.Run(async () => await IconService.GetIconImg(type.ToLower(), theme.ToLower()));
-            var res = !string.IsNullOrEmpty(svg.Result?.ToString());
-            return res;
-        }
-
     }
 
     public class IconItem
@@ -293,6 +274,4 @@ namespace AntDesign.Docs.Services
         public string Category { get; set; }
         public List<string> IconNames { get; set; }
     }
-
-
 }

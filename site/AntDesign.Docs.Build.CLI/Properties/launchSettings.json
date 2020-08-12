@@ -4,7 +4,8 @@
       "commandName": "Project",
       //"commandLineArgs": "docs2html ../../../../../docs ./"
       //"commandLineArgs": "menu2json ../../../../AntBlazor.Docs/Demos ../../../../../docs ./"
-      "commandLineArgs": "demo2json ../../../../AntBlazor.Docs/Demos ./"
+      //"commandLineArgs": "demo2json ../../../../AntBlazor.Docs/Demos ./"
+      "commandLineArgs": "icons2json ../../../../../components/wwwroot/icons ./"
     }
   }
 }

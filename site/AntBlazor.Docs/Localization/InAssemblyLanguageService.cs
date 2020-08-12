@@ -34,7 +34,7 @@ namespace AntDesign.Docs.Localization
         {
             var availableResources = _resourcesAssembly
                 .GetManifestResourceNames()
-                .Select(x => Regex.Match(x, @"^.*Resources\.(.+)\.yml$"))
+                .Select(x => Regex.Match(x, @"^.*Resources\.(.+)\.json"))
                 .Where(x => x.Success)
                 .Select(x => (CultureName: x.Groups[1].Value, ResourceName: x.Value))
                 .ToList();
@@ -50,7 +50,7 @@ namespace AntDesign.Docs.Localization
             CultureInfo.CurrentCulture = culture;
             CurrentCulture = culture;
             Resources = GetKeysFromCulture(culture.Name, resourceName);
-            
+
             if (Resources == null)
                 throw new FileNotFoundException($"There is no language files existing in the Resource folder within '{_resourcesAssembly.GetName().Name}' assembly");
         }
@@ -65,7 +65,7 @@ namespace AntDesign.Docs.Localization
             if (CurrentCulture == null || !CurrentCulture.Equals(culture))
             {
                 CurrentCulture = culture;
-                string fileName = $"{_resourcesAssembly.GetName().Name}.Resources.{culture.Name}.yml";
+                string fileName = $"{_resourcesAssembly.GetName().Name}.Resources.{culture.Name}.json";
 
                 Resources = GetKeysFromCulture(culture.Name, fileName);
 
