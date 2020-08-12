@@ -111,6 +111,12 @@ namespace AntDesign
             }
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            SetClass();
+        }
+
         private void ToggleCollapsed()
         {
             isCollapsed = !isCollapsed;
