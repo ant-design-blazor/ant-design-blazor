@@ -6,7 +6,16 @@
     <div data-show="@(!_isClosing||_isClosed?"true":"false")" class="@ClassMapper.Class" style="@_innerStyle @Style " Id="@Id" @ref="Ref">
         @if (ShowIcon)
         {
-                <Icon Type="@IconType" Class="ant-alert-icon"/>
+            @if (Icon!=null)
+            {
+                <div class="ant-alert-icon">
+                    @Icon
+                </div>
+            }
+            else
+            {
+                <Icon Type="@IconType" Theme="@(string.IsNullOrWhiteSpace(Description)?"fill":"outline")" Class="ant-alert-icon" />
+            }
         }
         @if (!string.IsNullOrEmpty(Message))
         {

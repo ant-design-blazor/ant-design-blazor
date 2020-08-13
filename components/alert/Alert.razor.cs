@@ -44,7 +44,7 @@ namespace AntDesign
         /// Custom icon, effective when showIcon is true
         /// </summary>
         [Parameter]
-        public string Icon { get; set; }
+        public RenderFragment Icon { get; set; }
 
         /// <summary>
         /// Content of Aler
@@ -79,8 +79,8 @@ namespace AntDesign
         /// <summary>
         /// Icon to show.
         /// </summary>
-        protected string IconType => !string.IsNullOrEmpty(Icon) ? Icon
-                        : Type == AlertType.Success ? "check-circle"
+        protected string IconType =>
+                         Type == AlertType.Success ? "check-circle"
                         : Type == AlertType.Info ? "info-circle"
                         : Type == AlertType.Warning ? "exclamation-circle"
                         : Type == AlertType.Error ? "close-circle" : null;
@@ -127,16 +127,12 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (Banner && string.IsNullOrEmpty(Type))
+            if (Banner && string.IsNullOrEmpty(Type) && Icon == null)
             {
                 ShowIcon = false;
             }
 
             SetClassMap();
-        }
-
-        protected override void OnAfterRender(bool firstRender)
-        {
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
