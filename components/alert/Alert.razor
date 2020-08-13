@@ -3,7 +3,7 @@
 
 @if (!_isClosed)
 {
-    <div class="@ClassMapper.Class" style="@Style" Id="@Id">
+    <div data-show="@(!_isClosing||_isClosed?"true":"false")" class="@ClassMapper.Class" style="@_innerStyle @Style " Id="@Id" @ref="Ref">
         @if (ShowIcon)
         {
                 <Icon Type="@IconType" Class="ant-alert-icon"/>
