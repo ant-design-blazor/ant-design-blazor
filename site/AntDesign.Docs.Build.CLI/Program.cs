@@ -46,6 +46,7 @@ namespace AntDesign.Docs.Build.CLI
             services.AddSingleton<IAppCommand, GenerateDemoJsonCommand>();
             services.AddSingleton<IAppCommand, GenerateMenuJsonCommand>();
             services.AddSingleton<IAppCommand, GenerateDocsToHtmlCommand>();
+            services.AddSingleton<IAppCommand, GenerateIconsToJsonCommand>();
             return services.BuildServiceProvider();
         }
     }

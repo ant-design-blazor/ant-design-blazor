@@ -23,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Resources\*.yml" />
-    <EmbeddedResource Include="Resources\*.yml" />
+    <None Remove="Resources\*.json" />
+    <EmbeddedResource Include="Resources\*.json" />
   </ItemGroup>
 
   <ItemGroup>

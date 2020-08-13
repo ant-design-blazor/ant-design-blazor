@@ -2,19 +2,19 @@
   {
     "img": "https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*ZhzDQLMyYlYAAAAAAAAAAABkARQnAQ",
     "title": "Ant Design Charts Blazor",
-    "description": "app.home.product-charts-slogan",
-    "href": "https://antv.vision"
+    "description": "app.home.product-antv-slogan",
+    "href": "https://github.com/ant-design-blazor/ant-design-charts-blazor"
   },
   {
     "img": "https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*I-ygS5prYksAAAAAAAAAAABkARQnAQ",
     "title": "Ant Design Pro Blazor",
     "description": "app.home.product-pro-slogan",
-    "href": "https://pro.ant.design/"
+    "href": "https://github.com/ant-design-blazor/ant-design-pro-blazor"
   },
   {
     "img": "https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*mb-WQILTlSEAAAAAAAAAAABkARQnAQ",
     "title": "Vditor Blazor",
     "description": "app.home.product-vditor-slogan",
-    "href": "https://mobile.ant.design/"
+    "href": "https://github.com/ant-design-blazor/vditor-blazor"
   }
 ]

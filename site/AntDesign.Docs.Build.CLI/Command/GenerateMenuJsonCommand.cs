@@ -170,7 +170,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                         Order = Array.IndexOf(_demoCategoryMap.Select(x => x.Key).ToArray(), component.Key) + 1,
                         Title = lang == "zh-CN" ? _demoCategoryMap[component.Key] : component.Key,
                         Type = "subMenu",
-                        Url = component.Key,
+                        Url = component.Key.ToLowerInvariant(),
                         Children = component.Value.OrderBy(x => x.Order).ToArray()
                     });
                 }
@@ -270,7 +270,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                             {
                                 Title = x.Value.Title,
                                 SubTitle = x.Value.SubTitle,
-                                Url = $"{directory.Name}/{x.Value.Title.ToLower()}",
+                                Url = $"{directory.Name.ToLowerInvariant()}/{x.Value.Title.ToLower()}",
                                 Type = "menuItem",
                                 Cover = x.Value.Cover,
                             })
