@@ -79,6 +79,11 @@ namespace AntDesign
             SetClass();
             RadioGroup?.AddRadio(this);
 
+            if (RadioGroup != null && RadioGroup.Disabled)
+            {
+                Disabled = true;
+            }
+
             base.OnInitialized();
         }
 
@@ -110,17 +115,21 @@ namespace AntDesign
 
         internal async Task UnSelect()
         {
-            if (this.IsChecked)
+            if (!Disabled && this.IsChecked)
             {
                 this._checked = false;
                 await CheckedChange.InvokeAsync(false);
                 await CheckedChanged.InvokeAsync(false);
             }
-            await Task.CompletedTask;
         }
 
         public async Task OnClick()
         {
+            if (Disabled)
+            {
+                return;
+            }
+
             if (RadioGroup != null)
             {
                 await RadioGroup.OnRadioChange(this.Value);

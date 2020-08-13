@@ -14,15 +14,7 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/6%26GF9WHwvY/Badge.svg
 
 ## API
 
-```jsx
-<Badge count={5}>
-  <a href="#" className="head-example" />
-</Badge>
-```
-
-```jsx
-<Badge count={5} />
-```
+### Badge
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
@@ -35,3 +27,11 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/6%26GF9WHwvY/Badge.svg
 | Status | 设置 Badge 为状态点 | `success` \| `processing` \| `default` \| `error` \| `warning` | '' |  |
 | Text | 在设置了 `status` 的前提下有效，设置状态点的文本 | string | '' |  |
 | Title | 设置鼠标放在状态点上时显示的文字 | string | `count` |  |
+
+### Badge.Ribbon
+
+| 参数 | 说明 | 类型 | 默认值 | 版本 |
+| --- | --- | --- | --- | --- |
+| Color | 自定义缎带的颜色 | string | - |  |
+| Placement | 缎带的位置 | `start` \| `end` | `end` |  |
+| Text | 缎带中填入的内容 | ReactNode | - |  |
