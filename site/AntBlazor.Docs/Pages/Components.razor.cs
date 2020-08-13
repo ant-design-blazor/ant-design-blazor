@@ -37,8 +37,7 @@ namespace AntDesign.Docs.Pages
             {
                 if (!string.IsNullOrEmpty(Name))
                 {
-                    _demoComponent = await DemoService.GetComponentAsync(Name);
-                    await MainLayout.ChangePrevNextNav(Name);
+                    await HandleNavigate();
                     await InvokeAsync(StateHasChanged);
                 }
             };
@@ -53,11 +52,8 @@ namespace AntDesign.Docs.Pages
 
         protected override async Task OnParametersSetAsync()
         {
-            if (!string.IsNullOrEmpty(Name))
-            {
-                _demoComponent = await DemoService.GetComponentAsync(Name);
-                await MainLayout.ChangePrevNextNav(Name);
-            }
+            await base.OnParametersSetAsync();
+            await HandleNavigate();
         }
 
         private async Task HandleNavigate()
@@ -67,11 +63,16 @@ namespace AntDesign.Docs.Pages
                 var currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
                 var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
                 var menus = await DemoService.GetMenuAsync();
-                var current = menus.FirstOrDefault(x => x.Url == newUrl);
+                var current = menus.FirstOrDefault(x => x.Url == newUrl.ToLowerInvariant());
                 if (current != null)
                 {
                     NavigationManager.NavigateTo($"{CurrentLanguage}/{current.Children[0].Children[0].Url}");
                 }
+            }
+            else
+            {
+                await MainLayout.ChangePrevNextNav(Name);
+                _demoComponent = await DemoService.GetComponentAsync(Name);
             }
         }
     }

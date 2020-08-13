@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AntDesign.Docs.Localization
 {
     public class Resources
     {
-        private Dictionary<string, string> _keyValues = null;
+        private IDictionary<string, string> _keyValues = null;
 
         public Resources(string languageContent)
         {
@@ -15,8 +14,7 @@ namespace AntDesign.Docs.Localization
 
         private void Initialize(string languageContent)
         {
-            _keyValues = languageContent.Split('\n').Select(line => line.Split(":")).ToList()
-                .ToDictionary(x => x[0].ToLower(), x => x.Length == 2 ? x[1].Trim(' ', '\r') : "");
+            _keyValues = System.Text.Json.JsonSerializer.Deserialize<IDictionary<string, string>>(languageContent);
         }
 
         public string this[string key]
