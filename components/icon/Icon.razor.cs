@@ -102,14 +102,18 @@ namespace AntDesign
             {
                 var svg = $"<svg><use xlink:href=#{IconFont} /></svg>";
                 _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate);
+
+                StateHasChanged();
             }
             else
             {
-                var svg = await IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
-                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate);
+                Task.Run(async () =>
+                {
+                    var svg = await IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
+                    _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate);
+                    await InvokeAsync(StateHasChanged);
+                });
             }
-
-            StateHasChanged();
         }
 
         private async Task HandleOnClick(MouseEventArgs args)
