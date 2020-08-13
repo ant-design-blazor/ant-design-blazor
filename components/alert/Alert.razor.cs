@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Threading.Tasks;
+using AntDesign.JsInterop;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System.Threading.Tasks;
 
 namespace AntDesign
 {
@@ -43,7 +44,7 @@ namespace AntDesign
         /// Custom icon, effective when showIcon is true
         /// </summary>
         [Parameter]
-        public string Icon { get; set; }
+        public RenderFragment Icon { get; set; }
 
         /// <summary>
         /// Content of Aler
@@ -78,8 +79,8 @@ namespace AntDesign
         /// <summary>
         /// Icon to show.
         /// </summary>
-        protected string IconType => !string.IsNullOrEmpty(Icon) ? Icon
-                        : Type == AlertType.Success ? "check-circle"
+        protected string IconType =>
+                         Type == AlertType.Success ? "check-circle"
                         : Type == AlertType.Info ? "info-circle"
                         : Type == AlertType.Warning ? "exclamation-circle"
                         : Type == AlertType.Error ? "close-circle" : null;
@@ -94,6 +95,12 @@ namespace AntDesign
         /// </summary>
         private bool _isClosing = false;
 
+        private int _motionStage = 0;
+
+        private int _height = 0;
+
+        private string _innerStyle = string.Empty;
+
         /// <summary>
         /// Sets the default classes.
         /// </summary>
@@ -107,17 +114,10 @@ namespace AntDesign
                 .If($"{prefixName}-closable", () => Closable)
                 .If($"{prefixName}-banner", () => Banner)
                 .If($"{prefixName}-with-description", () => !string.IsNullOrEmpty(Description))
-                .If($"{prefixName}-slide-up-leave", () => _isClosing)
+                .If($"{prefixName}-motion", () => _isClosing)
+                .If($"{prefixName}-motion-leave", () => _isClosing)
+                .If($"{prefixName}-motion-leave-active", () => _isClosing && _motionStage == 1)
                 ;
-        }
-
-        /// <summary>
-        /// Triggered each time a parameter is changed.
-        /// </summary>
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            SetClassMap();
         }
 
         /// <summary>
@@ -126,15 +126,23 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            CheckBannerMode();
+
+            if (Banner && string.IsNullOrEmpty(Type) && Icon == null)
+            {
+                ShowIcon = false;
+            }
+
             SetClassMap();
         }
 
-        private void CheckBannerMode()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (Banner && string.IsNullOrEmpty(Type))
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
             {
-                ShowIcon = false;
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Ref);
+                _height = element.clientHeight;
             }
         }
 
@@ -145,27 +153,35 @@ namespace AntDesign
         /// <returns></returns>
         protected async Task OnCloseHandler(MouseEventArgs args)
         {
-            _isClosing = true;
             if (OnClose.HasDelegate)
             {
                 await OnClose.InvokeAsync(args);
             }
-            await Task.Delay(300);
-            _isClosed = true;
-            await AfterCloseHandler(args);
-        }
 
-        /// <summary>
-        /// Handles the after close callback.
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        protected async Task AfterCloseHandler(MouseEventArgs args)
-        {
+            await PlayMotion();
+
             if (AfterClose.HasDelegate)
             {
                 await AfterClose.InvokeAsync(args);
             }
+        }
+
+        private async Task PlayMotion()
+        {
+            _isClosing = true;
+            _innerStyle = $"max-height:{_height}px;";
+            await InvokeAsync(StateHasChanged);
+
+            _motionStage = 1;
+            await InvokeAsync(StateHasChanged);
+
+            await Task.Delay(50);
+
+            _innerStyle = string.Empty;
+            await InvokeAsync(StateHasChanged);
+
+            await Task.Delay(300);
+            _isClosed = true;
         }
     }
 }
