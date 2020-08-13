@@ -701,7 +701,7 @@ namespace AntDesign.Docs.Services
                         "zoom-out"
                     }
             };
-
+            //remove the exist icon from existed catogory if duplicated
             var it1 = item6.IconNames.RemoveAll(it => item5.IconNames.Contains(it));
             var it2 = item6.IconNames.RemoveAll(it => item4.IconNames.Contains(it));
             var it3 = item6.IconNames.RemoveAll(it => item3.IconNames.Contains(it));
