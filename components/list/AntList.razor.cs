@@ -48,6 +48,8 @@ namespace AntDesign
 
         [Parameter] public string ClassName { get; set; }
 
+        [Parameter] public EventCallback<TItem> OnItemClick { get; set; }
+
         [Parameter] public ListGridType Grid { get; set; }
 
         [Parameter] public List<RenderFragment> Actions { get; set; } = new List<RenderFragment>();
@@ -55,6 +57,8 @@ namespace AntDesign
         [Parameter] public RenderFragment Extra { get; set; }
 
         [Parameter] public PaginationOptions Pagination { get; set; }
+
+        private static readonly EventCallbackFactory CallbackFactory = new EventCallbackFactory();
 
         private bool IsSomethingAfterLastItem
         {
@@ -105,8 +109,14 @@ namespace AntDesign
                 .If($"{PrefixName}-loading", () => (Loading))
                 .If($"{PrefixName}-grid", () => Grid != null)
                 .If($"{PrefixName}-something-after-last-item", () => IsSomethingAfterLastItem);
-
         }
 
+        private void HandleItemClick(TItem item)
+        {
+            if (OnItemClick.HasDelegate)
+            {
+                OnItemClick.InvokeAsync(item);
+            }
+        }
     }
 }

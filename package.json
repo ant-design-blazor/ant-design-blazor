@@ -24,7 +24,8 @@
     "start": "dotnet  watch -p ./site/AntDesign.Docs.Server run",
     "start:wasm": "dotnet watch -p ./site/AntDesign.Docs.Wasm run",
     "gulp:components": "gulp --gulpfile ./components/gulpfile.js",
-    "gulp:docs": "gulp --gulpfile ./site/AntBlazor.Docs/gulpfile.js"
+    "gulp:docs": "gulp --gulpfile ./site/AntBlazor.Docs/gulpfile.js",
+    "preinstall": "dotnet tool restore"
   },
   "dependencies": {},
   "devDependencies": {
@@ -43,6 +44,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
     "husky": "^4.2.3",
+    "lint-staged": "^10.2.11",
     "tsify": "^4.0.1",
     "typescript": "^3.8.3",
     "vinyl-buffer": "^1.0.1",
@@ -50,7 +52,13 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged -r"
     }
+  },
+  "lint-staged": {
+    "*.cs": [
+      "dotnet dotnet-format --include"
+    ]
   }
 }
