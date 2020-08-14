@@ -313,13 +313,13 @@ namespace AntDesign
                 {
                     Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputStart.Ref);
                     _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d(0px, 0px, 0px);";
-                    _rangeArrowStyle = $"left: 0";
+                    _rangeArrowStyle = $"left: 12px";
                 }
                 else if (_inputEnd.IsOnFocused)
                 {
-                    Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputStart.Ref);
+                    Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputEnd.Ref);
                     _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d({element.clientWidth + 16}px, 0px, 0px);";
-                    _rangeArrowStyle = $"left: {element.clientWidth + 25}px";
+                    _rangeArrowStyle = $"left: {element.clientWidth + 30}px";
                 }
                 else
                 {
