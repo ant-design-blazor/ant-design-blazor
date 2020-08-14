@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -162,6 +163,16 @@ namespace AntDesign
         void IDatePicker.InvokeStateHasChanged()
         {
             StateHasChanged();
+        }
+
+        string IDatePicker.GetFormatValue(DateTime value, int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IDatePicker.ChangePlaceholder(string placeholder, int index)
+        {
+            throw new NotImplementedException();
         }
 
         public string Picker { get { return _picker; } }

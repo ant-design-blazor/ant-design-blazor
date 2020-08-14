@@ -65,6 +65,11 @@ namespace AntDesign.Internal
 
                 DatePicker.InvokeStateHasChanged();
             }
+
+            int focusIndex = DatePicker.GetOnFocusPickerIndex();
+            string placeholder = DatePicker.GetFormatValue(hoverDateTime, focusIndex);
+
+            DatePicker.ChangePlaceholder(placeholder, focusIndex);
         }
 
         private void DateOnMouseLeave()
@@ -73,6 +78,30 @@ namespace AntDesign.Internal
             {
                 DatePicker.HoverDateTime = null;
             }
+
+            string placeholder;
+
+            if (IsRange)
+            {
+                var (startPlaceholder, endPlaceholder) = DatePickerPlaceholder.GetRangePlaceHolderByType(Picker, DatePicker.CultureInfo);
+
+                if (DatePicker.GetOnFocusPickerIndex() == 0)
+                {
+                    placeholder = startPlaceholder;
+                }
+                else
+                {
+                    placeholder = endPlaceholder;
+                }
+            }
+            else
+            {
+                placeholder = DatePickerPlaceholder.GetPlaceholderByType(Picker, DatePicker.CultureInfo);
+            }
+
+            int focusIndex = DatePicker.GetOnFocusPickerIndex();
+
+            DatePicker.ChangePlaceholder(placeholder, focusIndex);
         }
 
         private bool IsDateInRange(DateTime currentColDate)
