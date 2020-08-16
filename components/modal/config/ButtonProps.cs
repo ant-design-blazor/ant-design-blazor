@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -26,6 +27,18 @@ namespace AntDesign
 
         public bool Disabled { get; set; }
 
-        public bool Danger { get; set; }
+        private bool? _danger;
+        public bool? Danger { get => _danger; set => _danger = value; }
+
+        internal bool IsDanger
+        {
+            get
+            {
+                if (Danger.HasValue) return Danger.Value;
+                return false;
+            }
+        }
+
+        public OneOf<string, RenderFragment> ChildContent { get; set; } = "";
     }
 }

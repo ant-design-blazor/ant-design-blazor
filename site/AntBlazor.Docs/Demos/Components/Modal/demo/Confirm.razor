@@ -81,22 +81,15 @@
 
     private async Task BlockingConfirm()
     {
-        var confirmResult = await _modalService.ConfirmAsync(new ConfirmOptions()
+        var content = "Here is a blocking confirm, you can get OK or cancel button is click";
+        var title = "Info";
+
+        var isTrue = await _modalService.ConfirmAsync(new ConfirmOptions()
         {
-            Title = "Here is a blocking confirm, you can get OK or cancel button is click",
-            Icon = icon,
-            Content = "Some descriptions",
-            OnOk = onOk,
-            OnCancel = onCancel
+            Content = content,
+            Title = title
         });
 
-        if (confirmResult)
-        {
-            await _message.Info("OK button is clicked");
-        }
-        else
-        {
-            await _message.Info("cancel button is clicked");
-        }
+        await _message.Info($"The confirm return {isTrue}");
     }
 }

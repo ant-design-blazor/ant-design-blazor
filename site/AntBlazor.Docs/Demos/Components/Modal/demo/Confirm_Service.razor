@@ -1,0 +1,81 @@
+﻿@inject MessageService _message
+@inject ConfirmService _confirmService
+<Space>
+    <SpaceItem>
+        <Button OnClick="@(async ()=> { await ShowConfirm(ConfirmButtons.OK); })">OK</Button>
+    </SpaceItem>
+    <SpaceItem>
+        <Button OnClick="@(async ()=> { await ShowConfirm(ConfirmButtons.OKCancel); })">OKCancel</Button>
+    </SpaceItem>
+</Space>
+
+<br />
+<br />
+
+<Space>
+    <SpaceItem>
+        <Button OnClick="@(async ()=> { await ShowConfirm(ConfirmButtons.YesNo); })">YesNo</Button>
+    </SpaceItem>
+
+    <SpaceItem>
+        <Button OnClick="@(async ()=> { await ShowConfirm(ConfirmButtons.YesNoCancel); })">YesNoCancel</Button>
+    </SpaceItem>
+</Space>
+
+<br />
+<br />
+
+<Space>
+    <SpaceItem>
+        <Button OnClick="@(async ()=> { await ShowConfirm(ConfirmButtons.RetryCancel); })">RetryCancel</Button>
+    </SpaceItem>
+    <SpaceItem>
+        <Button OnClick="@(async ()=> { await ShowAbortRetryIgnore(); })">AbortRetryIgnore</Button>
+    </SpaceItem>
+
+</Space>
+
+@code{
+
+    private async Task ShowConfirm(ConfirmButtons confirmButtons)
+    {
+        var content = "Here is a blocking confirm, you can get OK or cancel button is click";
+        var title = "Info";
+        var confirmResult = await _confirmService.Show(content, title, confirmButtons);
+
+        var _ = _message.Info($"{confirmResult} button is clicked", 2);
+    }
+
+    private async Task ShowAbortRetryIgnore()
+    {
+        var content = "Here is from ConfirmService, you can get which button is click from result";
+        var title = "Info";
+        var confirmResult =
+            await _confirmService.Show(
+                content,
+                title,
+                ConfirmButtons.AbortRetryIgnore,
+                ConfirmIcon.Error,
+                new ConfirmButtonOptions()
+                {
+                    Button1Props = new AntDesign.ButtonProps()
+                    {
+                        Type = AntDesign.ButtonType.Dashed,
+                        ChildContent = "中止"
+                    },
+                    Button2Props = new AntDesign.ButtonProps()
+                    {
+                        Type = AntDesign.ButtonType.Primary,
+                        Disabled = true,
+                        ChildContent = "重试"
+                    },
+                    Button3Props = new AntDesign.ButtonProps()
+                    {
+                        ChildContent = "忽略"
+                    }
+                }
+            );
+
+        var _ = _message.Info($"{confirmResult} button is clicked", 2);
+    }
+}

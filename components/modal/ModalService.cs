@@ -8,7 +8,7 @@ namespace AntDesign
 {
     public class ModalService
     {
-        internal event Action<ModalRef> OnOpenEvent;
+        internal event Func<ModalRef, Task> OnOpenEvent;
         internal event Func<ModalRef, Task> OnCloseEvent;
         internal event Func<ModalRef, Task> OnUpdateEvent;
         internal event Func<ModalRef, Task> OnDestroyEvent;
@@ -19,7 +19,7 @@ namespace AntDesign
         public ModalRef Confirm(ConfirmOptions props)
         {
             ModalRef modalRef = new ModalRef(props, this);
-            modalRef.TaskCompletionSource = new TaskCompletionSource<bool>();
+            modalRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
             OnOpenEvent?.Invoke(modalRef);
             return modalRef;
         }
@@ -30,15 +30,8 @@ namespace AntDesign
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            options.Icon = (builder) =>
-            {
-                builder.OpenComponent<Icon>(0);
-                builder.AddAttribute(1, "Type", "info-circle");
-                builder.AddAttribute(2, "Theme", "outline");
-                builder.CloseComponent();
-            };
+            options.ConfirmIcon = ConfirmIcon.Info;
             options.OkCancel = false;
-            options.ConfirmType = "info";
             return Confirm(options);
         }
 
@@ -48,15 +41,8 @@ namespace AntDesign
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            options.Icon = (builder) =>
-            {
-                builder.OpenComponent<Icon>(0);
-                builder.AddAttribute(1, "Type", "check-circle");
-                builder.AddAttribute(2, "Theme", "outline");
-                builder.CloseComponent();
-            };
+            options.ConfirmIcon = ConfirmIcon.Success;
             options.OkCancel = false;
-            options.ConfirmType = "success";
             return Confirm(options);
         }
 
@@ -66,15 +52,8 @@ namespace AntDesign
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            options.Icon = (builder) =>
-            {
-                builder.OpenComponent<Icon>(0);
-                builder.AddAttribute(1, "Type", "close-circle");
-                builder.AddAttribute(2, "Theme", "outline");
-                builder.CloseComponent();
-            };
+            options.ConfirmIcon = ConfirmIcon.Error;
             options.OkCancel = false;
-            options.ConfirmType = "error";
             return Confirm(options);
         }
 
@@ -84,55 +63,69 @@ namespace AntDesign
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            options.Icon = (builder) =>
-            {
-                builder.OpenComponent<Icon>(0);
-                builder.AddAttribute(1, "Type", "exclamation-circle");
-                builder.AddAttribute(2, "Theme", "outline");
-                builder.CloseComponent();
-            };
+            options.ConfirmIcon = ConfirmIcon.Warning;
             options.OkCancel = false;
-            options.ConfirmType = "warning";
             return Confirm(options);
         }
 
-        #endregion
-
-        #region
-
-        public Task<bool> ConfirmAsync(ConfirmOptions props)
+        public async Task<bool> ConfirmAsync(ConfirmOptions props)
         {
-            ModalRef modalRef = Confirm(props);
-            return modalRef.TaskCompletionSource.Task;
+            ModalRef modalRef = new ModalRef(props, this);
+            modalRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
+            await OnOpenEvent?.Invoke(modalRef);
+
+            return await modalRef.TaskCompletionSource.Task
+                .ContinueWith(t =>
+                {
+                    return t.Result == ConfirmResult.OK;
+                }, TaskScheduler.Default);
         }
 
         public Task<bool> InfoAsync(ConfirmOptions options)
         {
-            ModalRef modalRef = Info(options);
-            return modalRef.TaskCompletionSource.Task;
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+            options.ConfirmIcon = ConfirmIcon.Info;
+            options.OkCancel = false;
+            return ConfirmAsync(options);
         }
 
         public Task<bool> SuccessAsync(ConfirmOptions options)
         {
-            ModalRef modalRef = Success(options);
-            return modalRef.TaskCompletionSource.Task;
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+            options.ConfirmIcon = ConfirmIcon.Success;
+            options.OkCancel = false;
+            return ConfirmAsync(options);
         }
 
         public Task<bool> ErrorAsync(ConfirmOptions options)
         {
-            ModalRef modalRef = Error(options);
-            return modalRef.TaskCompletionSource.Task;
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+            options.ConfirmIcon = ConfirmIcon.Error;
+            options.OkCancel = false;
+            return ConfirmAsync(options);
         }
 
         public Task<bool> WarningAsync(ConfirmOptions options)
         {
-            ModalRef modalRef = Warning(options);
-            return modalRef.TaskCompletionSource.Task;
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+            options.ConfirmIcon = ConfirmIcon.Warning;
+            options.OkCancel = false;
+            return ConfirmAsync(options);
         }
 
-
         #endregion
-
 
         public Task Update(ModalRef modalRef)
         {
