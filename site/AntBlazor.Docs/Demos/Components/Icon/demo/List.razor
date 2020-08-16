@@ -70,13 +70,13 @@ else
             await InvokeAsync(StateHasChanged);
         };
 
-        lstIcons = iconListService.GetIcons();      
+        lstIcons = await iconListService.GetIcons();      
         await OnThemeChanged(currentTheme);
     }
 
     private async Task OnSearching(string word)
     {
-        lstIcons = iconListService.Search(word);
+        lstIcons =await iconListService.Search(word);
         await OnThemeChanged(currentTheme);
 
     }

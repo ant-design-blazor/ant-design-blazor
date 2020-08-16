@@ -8,7 +8,6 @@ namespace AntDesign.Docs.Services
     public class IconListService
     {
         private IList<IconItem> _icons;
-        private IList<string> _otherItems;
         private readonly IconService _iconService;
 
         public IconListService(IconService iconService)
@@ -16,13 +15,13 @@ namespace AntDesign.Docs.Services
             _iconService = iconService;
         }
 
-        public IList<IconItem> GetIcons()
+        public async Task<IList<IconItem>> GetIcons()
         {
-            _icons ??= Icons();
+            _icons ??= await Icons();
             return _icons;
         }
 
-        private IList<IconItem> Icons()
+        private async Task<IList<IconItem>> Icons()
         {
             IList<IconItem> icons = new List<IconItem>();
 
@@ -251,7 +250,7 @@ namespace AntDesign.Docs.Services
             var item6 = new IconItem()
             {
                 Category = "other",
-                IconNames = GetOtherItems()
+                IconNames = (List<string>)await GetOtherItems()
             };
             //remove the exist icon from existed catogory if duplicated
             var it1 = item6.IconNames.RemoveAll(it => item5.IconNames.Contains(it));
@@ -270,30 +269,28 @@ namespace AntDesign.Docs.Services
             return icons;
         }
 
-        public List<string> GetOtherItems()
+        private async Task<IList<string>> GetOtherItems()
         {
             List<string> icons = new List<string>();
-            var tsk = Task.Run(async () =>
-              {
-                  IDictionary<string, string[]> iconfiles = await _iconService.GetAllIcons();
-                  foreach (var item in iconfiles)
-                  {
-                      icons.AddRange(item.Value);
-                  }
-              });
-            tsk.Wait();
+
+            IDictionary<string, string[]> iconfiles = await _iconService.GetAllIcons();
+            foreach (var item in iconfiles)
+            {
+                icons.AddRange(item.Value);
+            }
+
             return icons.Distinct().OrderBy(x => x).ToList();
         }
 
-        public List<IconItem> Search(string word)
+        public async Task<List<IconItem>> Search(string word)
         {
-            var listOfIcons = GetIcons();
+            var listOfIcons = await GetIcons();
             List<IconItem> lstNewIcons = new List<IconItem>();
 
             foreach (var item in listOfIcons)
             {
                 var icons = item.IconNames.FindAll(a => a.ToLower().Contains(word));
-                if (icons.Count == 0) continue;
+                if (icons?.Count == 0) continue;
 
                 lstNewIcons.Add(new IconItem
                 {
