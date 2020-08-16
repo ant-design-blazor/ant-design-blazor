@@ -29,6 +29,11 @@ namespace AntDesign
 
         [Parameter] public int ItemCount { get; set; }
 
+        [CascadingParameter(Name = "ItemClickCallback")]
+        public EventCallback ItemClickCallback { get; set; }
+
+        [Parameter] public EventCallback OnClick { get; set; }
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -132,6 +137,18 @@ namespace AntDesign
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        private void HandleClick()
+        {
+            if (OnClick.HasDelegate)
+            {
+                OnClick.InvokeAsync(this);
+            }
+            if (ItemClickCallback.HasDelegate)
+            {
+                ItemClickCallback.InvokeAsync(this);
             }
         }
     }

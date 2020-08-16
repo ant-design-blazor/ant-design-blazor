@@ -32,6 +32,7 @@ A list can be used to display content related to a single subject. The content c
 | split | Toggles rendering of the split under the list item | boolean | true |  |
 | dataSource | dataSource array for list | any[] | - |  |
 | renderItem | customize list item when using `dataSource` | `item => ReactNode` | - |  |
+| OnItemClick | onclick callback of list items  | `item => void` | - |  |
 
 ### pagination
 
