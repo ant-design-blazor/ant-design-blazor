@@ -72,9 +72,16 @@ namespace AntDesign
             await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, scriptUrl);
         }
 
-        public async ValueTask<bool> IconExists(string theme, string type)
+
+        public async Task<IDictionary<string, string[]>> GetAllIcons()
         {
             _iconfiles ??= await _httpClient.GetFromJsonAsync<IDictionary<string, string[]>>(new Uri(_baseAddress, $"_content/AntDesign/icons/icons.json").ToString());
+            return _iconfiles;
+        }
+
+        public async ValueTask<bool> IconExists(string theme, string type)
+        {
+            _iconfiles ??= await GetAllIcons();
 
             if (!_iconfiles.TryGetValue(theme, out var files))
             {
