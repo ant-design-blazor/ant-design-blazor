@@ -38,7 +38,7 @@ namespace AntDesign
         [Parameter]
         public EventCallback<MouseEventArgs> OnTitleClicked { get; set; }
 
-        internal int Level => RootMenu.InternalMode == MenuMode.Inline ? (Parent?.Level ?? 0) + 1 : 0;
+        internal int Level => RootMenu?.InternalMode == MenuMode.Inline ? (Parent?.Level ?? 0) + 1 : 0;
 
         private int PaddingLeft => Level * 24;
 
@@ -66,41 +66,41 @@ namespace AntDesign
 
             SubMenuMapper
                 .Clear()
-                .Add(RootMenu.PrefixCls)
-                .Add($"{RootMenu.PrefixCls}-sub")
-                .Add($"{RootMenu.PrefixCls}-{RootMenu.Theme}")
-                .Add($"{RootMenu.PrefixCls}-{(RootMenu.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu.InternalMode)}")
+                .Add(RootMenu?.PrefixCls)
+                .Add($"{RootMenu?.PrefixCls}-sub")
+                .Add($"{RootMenu?.PrefixCls}-{RootMenu?.Theme}")
+                .Add($"{RootMenu?.PrefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
                 //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
-                .If($"{RootMenu.PrefixCls}-hidden", () => RootMenu.InternalMode == MenuMode.Inline && !IsOpen)
+                .If($"{RootMenu?.PrefixCls}-hidden", () => RootMenu?.InternalMode == MenuMode.Inline && !IsOpen)
                 ;
 
-            if (RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
+            if (RootMenu?.InternalMode != MenuMode.Inline && _overlayTrigger != null)
             {
                 Overlay overlay = _overlayTrigger.GetOverlayComponent();
 
                 ClassMapper
-                    .If($"{prefixCls}-selected", () => overlay.IsPopup());
+                    .If($"{prefixCls}-selected", () => overlay != null && overlay.IsPopup());
 
                 SubMenuMapper
-                    .If($"{RootMenu.PrefixCls}-hidden", () => overlay.IsHiding() == false && overlay.IsPopup() == false)
-                    .If($"zoom-big zoom-big-enter zoom-big-enter-active", () => RootMenu.Mode == MenuMode.Vertical && overlay.IsPopup() && !overlay.IsHiding())
-                    .If($"zoom-big zoom-big-leave zoom-big-leave-active", () => RootMenu.Mode == MenuMode.Vertical && overlay.IsHiding())
-                    .If($"slide-up slide-up-enter slide-up-enter-active", () => RootMenu.Mode == MenuMode.Horizontal && overlay.IsPopup() && !overlay.IsHiding())
-                    .If($"slide-up slide-up-leave slide-up-leave-active", () => RootMenu.Mode == MenuMode.Horizontal && overlay.IsHiding())
+                    .If($"{RootMenu?.PrefixCls}-hidden", () => overlay != null && overlay.IsHiding() == false && overlay.IsPopup() == false)
+                    .If($"zoom-big zoom-big-enter zoom-big-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsPopup() && !overlay.IsHiding())
+                    .If($"zoom-big zoom-big-leave zoom-big-leave-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsHiding())
+                    .If($"slide-up slide-up-enter slide-up-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Horizontal && overlay.IsPopup() && !overlay.IsHiding())
+                    .If($"slide-up slide-up-leave slide-up-leave-active", () => overlay != null && RootMenu?.Mode == MenuMode.Horizontal && overlay.IsHiding())
                     ;
             }
         }
 
         private async Task HandleOnTitleClick(MouseEventArgs args)
         {
-            RootMenu.SelectSubmenu(this);
+            RootMenu?.SelectSubmenu(this);
             if (OnTitleClicked.HasDelegate)
                 await OnTitleClicked.InvokeAsync(args);
         }
 
         public async Task Collapse()
         {
-            if (RootMenu.InternalMode == MenuMode.Inline)
+            if (RootMenu?.InternalMode == MenuMode.Inline)
             {
                 await Task.Delay(300);
             }
@@ -117,7 +117,7 @@ namespace AntDesign
             base.OnInitialized();
             SetClass();
 
-            RootMenu.Submenus.Add(this);
+            RootMenu?.Submenus.Add(this);
 
             if (RootMenu.DefaultOpenKeys.Contains(Key))
                 IsOpen = true;

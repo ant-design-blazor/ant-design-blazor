@@ -64,5 +64,17 @@ namespace AntDesign
 
             return array;
         }
+
+        public static T[] Remove<T>(this T[] array, T item)
+        {
+            if (array == null)
+            {
+                return new[] { item };
+            }
+
+            array = array.Where(x => !x.Equals(item)).ToArray();
+
+            return array;
+        }
     }
 }
