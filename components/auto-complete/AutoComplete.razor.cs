@@ -8,294 +8,204 @@ using AntDesign.JsInterop;
 using System.Data;
 using Microsoft.AspNetCore.Components.Web;
 using System.Diagnostics;
-
+using OneOf;
+#pragma warning disable IDE1006 // 命名样式
 namespace AntDesign
 {
-    public partial class AutoComplete : AntInputComponentBase<string>
+    public partial class AutoComplete : AntDomComponentBase
     {
-        #region parameters
+        #region Parameters
 
-        /// <summary>
-        /// 选项数据
-        /// </summary>
-        [Parameter] public IEnumerable<string> Options { get; set; }
-
-        /// <summary>
-        ///
-        /// </summary>
-        [Parameter] public IEnumerable<string> FormatList { get; set; }
-
-        /// <summary>
-        /// 支持清除, 单选模式有效
-        /// </summary>
-        [Parameter] public bool AllowClear { get; set; }
-
-        /// <summary>
-        /// 自动获取焦点
-        /// </summary>
-        [Parameter] public bool AutoFocus { get; set; }
-
-        /// <summary>
-        /// 使用键盘选择选项的时候把选中项回填到输入框中
-        /// </summary>
-        [Parameter] public bool BackFill { get; set; }
-
-        /// <summary>
-        /// 自定义输入框
-        /// </summary>
-        [Parameter] public RenderFragment CustomInput { get; set; }
-
-        /// <summary>
-        /// 是否默认高亮第一个选项
-        /// </summary>
-        [Parameter] public bool DefaultActiveFirstOption { get; set; } = true;
-
-        /// <summary>
-        /// 默认的选中项
-        /// </summary>
-        [Parameter] public string DefaultValue { get; set; }
-
-        /// <summary>
-        /// 是否禁用
-        /// </summary>
-        [Parameter] public bool Disabled { get; set; }
-
-        /// <summary>
-        /// 输入框提示
-        /// </summary>
-        [Parameter] public string PlaceHolder { get; set; }
-
-        /// <summary>
-        /// 获得焦点时的回调
-        /// </summary>
-        [Parameter] public Action<string> OnFocus { get; set; }
-
-        /// <summary>
-        /// 失去焦点时的回调
-        /// </summary>
-        [Parameter] public Action<string> OnBlur { get; set; }
-
-        /// <summary>
-        /// 选中 option，或 input 的 value 变化时，调用此函数
-        /// </summary>
-        [Parameter] public Action<string> OnChange { get; set; }
-
-        /// <summary>
-        /// 被选中时调用，参数为选中项的 value 值
-        /// </summary>
-        [Parameter] public Action<string> OnSelect { get; set; }
 
         [Parameter]
-        public Func<string, string, bool> FilterOption { get; set; }
+        public bool DefaultActiveFirstOption { get; set; } = true;
+        [Parameter]
+        public bool Backfill { get; set; } = false;
 
-        #endregion parameters
+        [Parameter]
+        public OneOf<IList<AutocompleteDataSourceItem>, IList<string>, IList<int>> DataSource { get; set; }
+        [Parameter]
+        public EventCallback<AutoCompleteOption> OnSelectionChange { get; set; }
+        [Parameter]
+        public EventCallback<ChangeEventArgs> OnInput { get; set; }
 
-        #region variable
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public RenderFragment<List<AutoCompleteOption>> AutoCompleteOptions { get; set; }
+
+        #endregion Parameters
+
+        internal object SelectedValue;
+        /// <summary>
+        /// 选择的项
+        /// </summary>
+        [Parameter]
+        public AutoCompleteOption SelectedItem { get; set; }
 
         /// <summary>
-        /// 浮层 数据
+        /// 高亮的项目
         /// </summary>
-        private IList<string> _options = new List<string>();
+        internal AutoCompleteOption ActiveItem { get; set; }
+
+        [Parameter]
+        public bool ShowPanel { get; set; } = false;
+
+        private IAutoCompleteInput InputComponent;
+
+        public void SetInputComponent(IAutoCompleteInput input)
+        {
+            InputComponent = input;
+        }
 
 
-        private bool _toggleState;
+        #region 子控件触发事件
+        public async Task InputFocus(FocusEventArgs e)
+        {
+            this.OpenPanel();
+            StateHasChanged();
+        }
+
+        public async Task InputBlur(FocusEventArgs e)
+        {
+            this.ShowPanel = false;
+        }
+
+        public async Task InputInput(ChangeEventArgs args)
+        {
+            SelectedValue = args.Value;
+            if (OnInput.HasDelegate) await OnInput.InvokeAsync(args);
+            StateHasChanged();
+        }
+
+        public async Task InputKeyDown(KeyboardEventArgs args)
+        {
+            var key = args.Key;
+
+            if (this.ShowPanel)
+            {
+                if (key == "Escape" || key == "Tab")
+                {
+                    this.ClosePanel();
+                }
+                else if (key == "Enter" && this.ActiveItem != null)
+                {
+                    await SetSelectedItem(this.ActiveItem);
+                }
+            }
+            else
+            {
+                this.OpenPanel();
+            }
+            if (key == "ArrowUp")
+            {
+                this.SetPreviousItemActive();
+            }
+            else if (key == "ArrowDown")
+            {
+                this.SetNextItemActive();
+            }
+        }
+
+        #endregion
+
         /// <summary>
-        /// 浮层 展开/折叠状态
+        /// 对象集合
         /// </summary>
-        private bool ToggleState
+        public List<AutoCompleteOption> Options = new List<AutoCompleteOption>();
+
+        public void AddOption(AutoCompleteOption option)
         {
-            get => _toggleState;
-            set
+            Options.Add(option);
+        }
+
+        public void RemoveOption(AutoCompleteOption option)
+        {
+            if (Options?.Contains(option) == true)
+                Options?.Remove(option);
+        }
+
+        /// <summary>
+        /// 打开面板
+        /// </summary>
+        public void OpenPanel()
+        {
+            if (this.ShowPanel == false)
             {
-                _toggleState = value;
-                if (_toggleState == false) _activeOption = null;
+                this.ShowPanel = true;
+
             }
         }
 
         /// <summary>
-        /// active 状态的 Option
+        /// 关闭面板
         /// </summary>
-        private string _activeOption;
-
-        /// <summary>
-        /// 鼠标是否在 Option 上
-        /// </summary>
-        private bool _isOnOptions;
-
-        #endregion variable
-
-        #region init
-
-        protected override void OnInitialized()
+        public void ClosePanel()
         {
-            FilterOption ??= (value, option) => option.Contains(value, StringComparison.InvariantCulture);
-            base.OnInitialized();
-        }
-
-        #endregion init
-
-        #region event
-
-        private void OnInputFocus()
-        {
-            if (Value != null || Options != null && Options.Any())
+            if (this.ShowPanel == true)
             {
-                _activeOption = null;
-                ToggleState = true;
-            }
-
-            if (!string.IsNullOrWhiteSpace(Value))
-                OnFocus?.Invoke(Value);
-        }
-
-        private void OnInputBlur()
-        {
-            if (_isOnOptions) return;
-
-            ToggleState = false;
-
-            if (!string.IsNullOrWhiteSpace(Value))
-                OnBlur?.Invoke(Value);
-        }
-
-        private void OnInputChange(ChangeEventArgs args)
-        {
-            var v = args?.Value.ToString();
-            CurrentValue = v;
-
-            if (Options != null)   // Options 参数不为空时，本地过滤选项
-            {
-                _options.Clear();
-                _options = !string.IsNullOrWhiteSpace(v) ? Options.Where(option => FilterOption(v, option)).ToList() : Options.ToList();
-
-                // 默认选中第一个
-                if (_options.Count > 0)
-                {
-                    ToggleState = true;
-                }
-            }
-            else if (FormatList != null)   // FormatList 参数不为空时，按照指定 Format 格式添加选项
-            {
-                _options.Clear();
-                if (!string.IsNullOrWhiteSpace(v))
-                {
-                    FormatList.ForEach(f => _options.Add(string.Format(f, v)));
-                }
-                // 默认选中第一个
-                if (_options.Count > 0)
-                {
-                    ToggleState = true;
-                }
-            }
-            else  // 一般模式，从远程获取数据添加选项
-            {
-                // 此处暂无需处理
-            }
-
-            OnChange?.Invoke(v);
-        }
-
-        private void OnOptionMouseOver(string option)
-        {
-            _activeOption = option;
-        }
-
-        private void OnOptionClick(string option)
-        {
-            ToggleState = false;
-            _isOnOptions = false;
-
-            if (Value != option)
-            {
-                CurrentValue = option;
-                ValueChanged.InvokeAsync(option);
-            }
-
-            OnSelect?.Invoke(option);
-        }
-
-        private void OnOptionsMouseOver()
-        {
-            _isOnOptions = true;
-        }
-
-        private void OnOptionsMouseOut()
-        {
-            _isOnOptions = false;
-        }
-
-        public void OnKeyDown(KeyboardEventArgs args)
-        {
-            if (!ToggleState)
-                return;
-
-            if (args.Code == "NumpadEnter" || args.Code == "Enter") //Enter
-            {
-                if (!string.IsNullOrWhiteSpace(_activeOption))
-                {
-                    CurrentValue = _activeOption;
-                    ValueChanged.InvokeAsync(_activeOption);
-                    ToggleState = false;
-
-                }
-                else if (_options.IndexOf(Value) != -1)
-                {
-                    ValueChanged.InvokeAsync(CurrentValue);
-                    ToggleState = false;
-                }
-            }
-
-            if (args.Code == "ArrowUp") //上键
-            {
-                if (_options.Count == 0) return;
-
-                int index = _options.IndexOf(_activeOption);
-                if (string.IsNullOrWhiteSpace(_activeOption) || index <= 0)
-                    index = _options.Count;
-
-                _activeOption = _options.ElementAt(index - 1);
-            }
-
-            if (args.Code == "ArrowDown") //下键
-            {
-                if (_options.Count == 0) return;
-
-                int index = _options.IndexOf(_activeOption);
-                if (index == -1)
-                {
-                    index = _options.IndexOf(Value);
-                }
-                if (index >= _options.Count - 1 || index < 0)
-                    index = -1;
-
-                _activeOption = _options.ElementAt(index + 1);
+                this.ShowPanel = false;
             }
         }
 
-        #endregion event
-
-        #region public
-
-        public void LoadData(IEnumerable<string> list)
+        //设置高亮的对象
+        public void SetActiveItem(AutoCompleteOption item)
         {
-            if (Options != null)   // Options 参数不为空时，本地过滤
-            {
-                // 此处暂无需处理
-            }
-            else if (FormatList != null)   // FormatList 参数不为空时，按照指定 Format 格式添加选项
-            {
-                // 此处暂无需处理
-            }
-            else  // 一般模式，从远程获取数据添加选项
-            {
-                list ??= Enumerable.Empty<string>();
-
-                ToggleState = list.Any();
-
-                _options = list.ToList();
-            }
+            this.ActiveItem = item;
+            StateHasChanged();
         }
 
-        #endregion public
+        //设置下一个激活
+        public void SetNextItemActive()
+        {
+            var nextItem = Options.IndexOf(ActiveItem);
+            if (nextItem == -1 || nextItem == Options.Count - 1)
+                SetActiveItem(Options.FirstOrDefault());
+            else
+                SetActiveItem(Options[nextItem + 1]);
+
+            StateHasChanged();
+        }
+
+        //设置上一个激活
+        public void SetPreviousItemActive()
+        {
+            var nextItem = Options.IndexOf(ActiveItem);
+            if (nextItem == -1 || nextItem == 0)
+                SetActiveItem(Options.LastOrDefault());
+            else
+                SetActiveItem(Options[nextItem - 1]);
+        }
+
+        private void ResetActiveItem()
+        {
+            this.ActiveItem = null;
+        }
+
+        public async Task SetSelectedItem(AutoCompleteOption item)
+        {
+            this.SelectedValue = item?.Value;
+            this.SelectedItem = item;
+            InputComponent?.SetValue(this.SelectedValue);
+
+            if (OnSelectionChange.HasDelegate) await OnSelectionChange.InvokeAsync(this.SelectedItem);
+            this.ClosePanel();
+        }
+    }
+
+    public class AutocompleteDataSourceItem
+    {
+        public AutocompleteDataSourceItem() { }
+
+        public AutocompleteDataSourceItem(string value, string label)
+        {
+            Value = value;
+            Label = label;
+        }
+
+        public string Value { get; set; }
+        public string Label { get; set; }
     }
 }
+#pragma warning restore IDE1006 // 命名样式

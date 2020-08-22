@@ -1,0 +1,63 @@
+﻿@namespace AntDesign
+@inherits AntInputComponentBase<string>
+
+<div class="ant-select ant-select-auto-complete ant-select-single ant-select-show-search @Class" style="@(string.IsNullOrWhiteSpace(Style) ? "width:200px" : Style)">
+    <div class="ant-select-selector" style="@(CustomInput != null ? "border:0;" : string.Empty)">
+        <span class="ant-select-selection-search" style="@(CustomInput != null ? "left:0;right:0;" : string.Empty)">
+            @if (CustomInput == null)
+            {
+                <input autocomplete="off" class="ant-select-selection-search-input"
+                       @onfocus="OnInputFocus" @onblur="OnInputBlur" @oninput="OnInputChange" @onkeydown="OnKeyDown"
+                       role="combobox" aria-haspopup="listbox" aria-owns="rc_select_1_list" aria-autocomplete="list"
+                       aria-controls="rc_select_1_list" aria-activedescendant="rc_select_1_list_0"
+                       value="@Value" aria-expanded="false">
+
+            }
+            else
+            {
+                @CustomInput
+            }
+        </span>
+        @if (string.IsNullOrWhiteSpace(Value))
+        {
+            <span class="ant-select-selection-placeholder">@PlaceHolder</span>
+        }
+    </div>
+
+    @if (ToggleState && _options != null && _options.Count > 0)
+    {
+        <div style="position: absolute; top: 0px; left: 0px; width: 100%;" @onmouseover="OnOptionsMouseOver" @onmouseout="OnOptionsMouseOut">
+            <div>
+                <div class="ant-select-dropdown ant-select-dropdown-placement-bottomLeft @(ToggleState ? string.Empty : "ant-select-dropdown-hidden")" style="min-width: 200px; width: 200px; left: 0px; top: 32px;">
+                    <div>
+                        <div role="listbox" id="rc_select_1_list" style="height: 0px; width: 0px; overflow: hidden;">
+                            <div role="option" id="rc_select_1_list_0" aria-selected="true">@Value</div>
+                            @*<div role="option" id="rc_select_1_list_1" aria-selected="false">sfsf</div>*@
+                        </div>
+                        <div class="" style="max-height: 256px; overflow-y: auto; overflow-anchor: none;">
+                            <div>
+                                <div class="" style="display: flex; flex-direction: column;">
+                                    @foreach (string option in _options)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(option))
+                                        {
+                                            string activeClass = "ant-select-item-option-active";
+                                            string selectedClass = "ant-select-item-option-selected";
+                                            bool isSelected = option == Value;
+                                            <div aria-selected="@isSelected" class="ant-select-item ant-select-item-option @(isSelected ? selectedClass : string.Empty) @(option == _activeOption ? activeClass : string.Empty)"
+                                                 @onclick="@(e => OnOptionClick(option))" @onmouseover="@(e => OnOptionMouseOver(option))">
+                                                <div class="ant-select-item-option-content">@option</div>
+                                                <span class="ant-select-item-option-state" unselectable="on" aria-hidden="true" style="user-select: none;"></span>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>

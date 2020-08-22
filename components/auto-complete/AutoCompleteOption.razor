@@ -1,0 +1,8 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style" id="@Id" @onclick="@OnClick" @onmouseenter="@OnMouseEnter"@onmousedown:preventDefault >
+    <div class="ant-select-item-option-content">
+        @ChildContent
+    </div>
+</div>
