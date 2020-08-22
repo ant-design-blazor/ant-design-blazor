@@ -20,7 +20,7 @@
                Size="@cancelProps.Size"
                Icon="@cancelProps.Icon"
                Disabled="@cancelProps.Disabled"
-               Danger="@cancelProps.Danger"
+               Danger="@cancelProps.IsDanger"
                >
         @{
            if (ModalProps.CancelText.IsT0)
@@ -46,7 +46,7 @@
             Size="@okProps.Size"
             Icon="@okProps.Icon"
             Disabled="@okProps.Disabled"
-            Danger="@okProps.Danger"
+            Danger="@okProps.IsDanger"
                >
         @{
             if (ModalProps.OkText.IsT0)

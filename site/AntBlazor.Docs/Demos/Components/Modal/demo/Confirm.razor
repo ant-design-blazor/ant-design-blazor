@@ -1,5 +1,5 @@
 ﻿@inject ModalService _modalService
-
+@inject MessageService _message
 <Space>
     <SpaceItem>
         <Button OnClick="@ShowConfirm">Confirm</Button>
@@ -10,6 +10,13 @@
 
     <SpaceItem>
         <Button OnClick="@ShowPropsConfirm" Type="dashed"> With extra props</Button>
+    </SpaceItem>
+</Space>
+<br />
+<br />
+<Space>
+    <SpaceItem>
+        <Button OnClick="@BlockingConfirm">Blocking Confirm</Button>
     </SpaceItem>
 </Space>
 @code{
@@ -49,7 +56,6 @@
             OkText = "Yes",
             OkType = "danger",
             CancelText = "No",
-
         });
     }
 
@@ -70,5 +76,20 @@
                 Disabled = true,
             }
         });
+    }
+
+
+    private async Task BlockingConfirm()
+    {
+        var content = "Here is a blocking confirm, you can get OK or cancel button is click";
+        var title = "Info";
+
+        var isTrue = await _modalService.ConfirmAsync(new ConfirmOptions()
+        {
+            Content = content,
+            Title = title
+        });
+
+        await _message.Info($"The confirm return {isTrue}");
     }
 }
