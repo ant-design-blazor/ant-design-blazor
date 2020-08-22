@@ -13,7 +13,7 @@
             Title = "This is a notification message",
             Content = $"This modal will be destroyed after {secondsToGo} second."
         };
-        var modelRef = await _modalService.Success(props);
+        var modelRef = _modalService.Success(props);
         while (secondsToGo > 0)
         {
             secondsToGo -= 1;

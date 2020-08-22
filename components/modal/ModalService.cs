@@ -16,83 +16,113 @@ namespace AntDesign
 
         #region SimpleConfirm
 
-        public async Task<ModalRef> Confirm(ConfirmOptions props)
+        public ModalRef Confirm(ConfirmOptions props)
         {
             ModalRef modalRef = new ModalRef(props, this);
-            await OnOpenEvent?.Invoke(modalRef);
+            modalRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
+            OnOpenEvent?.Invoke(modalRef);
             return modalRef;
         }
 
-        public async Task<ModalRef> Info(ConfirmOptions options)
+        public ModalRef Info(ConfirmOptions options)
         {
             if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            options.Icon = (builder) =>
-            {
-                builder.OpenComponent<Icon>(0);
-                builder.AddAttribute(1, "Type", "info-circle");
-                builder.AddAttribute(2, "Theme", "outline");
-                builder.CloseComponent();
-            };
+            options.ConfirmIcon = ConfirmIcon.Info;
             options.OkCancel = false;
-            options.ConfirmType = "info";
-            return await Confirm(options);
+            return Confirm(options);
         }
 
-        public async Task<ModalRef> Success(ConfirmOptions options)
+        public ModalRef Success(ConfirmOptions options)
         {
             if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            options.Icon = (builder) =>
-            {
-                builder.OpenComponent<Icon>(0);
-                builder.AddAttribute(1, "Type", "check-circle");
-                builder.AddAttribute(2, "Theme", "outline");
-                builder.CloseComponent();
-            };
+            options.ConfirmIcon = ConfirmIcon.Success;
             options.OkCancel = false;
-            options.ConfirmType = "success";
-            return await Confirm(options);
+            return Confirm(options);
         }
 
-        public async Task<ModalRef> Error(ConfirmOptions options)
+        public ModalRef Error(ConfirmOptions options)
         {
             if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            options.Icon = (builder) =>
-            {
-                builder.OpenComponent<Icon>(0);
-                builder.AddAttribute(1, "Type", "close-circle");
-                builder.AddAttribute(2, "Theme", "outline");
-                builder.CloseComponent();
-            };
+            options.ConfirmIcon = ConfirmIcon.Error;
             options.OkCancel = false;
-            options.ConfirmType = "error";
-            return await Confirm(options);
+            return Confirm(options);
         }
 
-        public async Task<ModalRef> Warning(ConfirmOptions options)
+        public ModalRef Warning(ConfirmOptions options)
         {
             if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
-            options.Icon = (builder) =>
-            {
-                builder.OpenComponent<Icon>(0);
-                builder.AddAttribute(1, "Type", "exclamation-circle");
-                builder.AddAttribute(2, "Theme", "outline");
-                builder.CloseComponent();
-            };
+            options.ConfirmIcon = ConfirmIcon.Warning;
             options.OkCancel = false;
-            options.ConfirmType = "warning";
-            return await Confirm(options);
+            return Confirm(options);
+        }
+
+        public async Task<bool> ConfirmAsync(ConfirmOptions props)
+        {
+            ModalRef modalRef = new ModalRef(props, this);
+            modalRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
+            await OnOpenEvent?.Invoke(modalRef);
+
+            return await modalRef.TaskCompletionSource.Task
+                .ContinueWith(t =>
+                {
+                    return t.Result == ConfirmResult.OK;
+                }, TaskScheduler.Default);
+        }
+
+        public Task<bool> InfoAsync(ConfirmOptions options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+            options.ConfirmIcon = ConfirmIcon.Info;
+            options.OkCancel = false;
+            return ConfirmAsync(options);
+        }
+
+        public Task<bool> SuccessAsync(ConfirmOptions options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+            options.ConfirmIcon = ConfirmIcon.Success;
+            options.OkCancel = false;
+            return ConfirmAsync(options);
+        }
+
+        public Task<bool> ErrorAsync(ConfirmOptions options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+            options.ConfirmIcon = ConfirmIcon.Error;
+            options.OkCancel = false;
+            return ConfirmAsync(options);
+        }
+
+        public Task<bool> WarningAsync(ConfirmOptions options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+            options.ConfirmIcon = ConfirmIcon.Warning;
+            options.OkCancel = false;
+            return ConfirmAsync(options);
         }
 
         #endregion
@@ -123,7 +153,7 @@ namespace AntDesign
         {
             CheckIsNull(config);
             ModalRef modalRef = new ModalRef(config, this);
-            await OnOpenEvent.Invoke(modalRef);
+            OnOpenEvent.Invoke(modalRef);
             return modalRef;
         }
 
@@ -141,7 +171,7 @@ namespace AntDesign
             CheckIsNull(config);
 
             ModalRef<TResult> modalRef = new ModalRef<TResult>(config, this);
-            await OnOpenEvent.Invoke(modalRef);
+            OnOpenEvent.Invoke(modalRef);
 
             RenderFragment child = (builder) =>
             {
@@ -159,7 +189,7 @@ namespace AntDesign
         {
             if (OnOpenEvent != null)
             {
-                return OnOpenEvent.Invoke(modalRef);
+                OnOpenEvent.Invoke(modalRef);
             }
             return Task.CompletedTask;
         }

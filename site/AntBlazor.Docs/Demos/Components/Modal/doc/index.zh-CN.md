@@ -60,8 +60,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 - `ModalService.Warning`
 - `ModalService.Confirm`
 - `ModalService.CreateAsync`
+- `ModalService.ConfirmAsync`
+- `ModalService.InfoAsync`
+- `ModalService.SuccessAsync`
+- `ModalService.ErrorAsync`
+- `ModalService.WarningAsync`
 
 > 请确认已经在 `App.Razor` 中添加了 `<AntContainer />` 组件。
+> `ConfirmAsync`、`InfoAsync`、`SuccessAsync`、`ErrorAsync`、`WarningAsync` 返回值为Task<bool>，可用于判断用户点击的按钮是 OK按钮(true) 还是 Cancel按钮(false)
 
 #### ConfirmOptions
 
