@@ -1,5 +1,5 @@
 ---
-order: 4
+order: 5
 title:
   zh-CN: 使用 iconfont.cn 的多个资源
   en-US: Multiple resources from iconfont.cn

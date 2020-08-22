@@ -1,8 +1,8 @@
-﻿using AntDesign.Internal;
-using Microsoft.AspNetCore.Components;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AntDesign.Internal;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -21,7 +21,18 @@ namespace AntDesign
         public MenuTheme Theme { get; set; } = MenuTheme.Light;
 
         [Parameter]
-        public MenuMode Mode { get; set; } = MenuMode.Vertical;
+        public MenuMode Mode
+        {
+            get => _mode;
+            set
+            {
+                if (_mode != value)
+                {
+                    _mode = value;
+                    CollapseUpdated(_collapsed);
+                }
+            }
+        }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -39,7 +50,23 @@ namespace AntDesign
         public bool Selectable { get; set; } = true;
 
         [Parameter]
-        public bool InlineCollapsed { get; set; }
+        public bool InlineCollapsed
+        {
+            get => _inlineCollapsed;
+            set
+            {
+                if (_inlineCollapsed != value)
+                {
+                    _inlineCollapsed = value;
+                    if (Parent == null)
+                    {
+                        this._collapsed = _inlineCollapsed;
+                    }
+
+                    CollapseUpdated(_collapsed);
+                }
+            }
+        }
 
         [Parameter]
         public bool AutoCloseDropdown { get; set; } = true;
@@ -84,6 +111,8 @@ namespace AntDesign
         private bool _collapsed;
         private string[] _openKeys;
         private string[] _selectedKeys;
+        private bool _inlineCollapsed;
+        private MenuMode _mode = MenuMode.Vertical;
 
         public List<SubMenu> Submenus { get; set; } = new List<SubMenu>();
         public List<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
@@ -163,8 +192,11 @@ namespace AntDesign
                 .Clear()
                 .Add(PrefixCls)
                 .Add($"{PrefixCls}-root")
-                .Add($"{PrefixCls}-{Theme}")
-                .Add($"{PrefixCls}-{InternalMode}")
+                .If($"{PrefixCls}-{MenuTheme.Dark}", () => Theme == MenuTheme.Dark)
+                .If($"{PrefixCls}-{MenuTheme.Light}", () => Theme == MenuTheme.Light)
+                .If($"{PrefixCls}-{MenuMode.Inline}", () => InternalMode == MenuMode.Inline)
+                .If($"{PrefixCls}-{MenuMode.Vertical}", () => InternalMode == MenuMode.Vertical)
+                .If($"{PrefixCls}-{MenuMode.Horizontal}", () => InternalMode == MenuMode.Horizontal)
                 .If($"{PrefixCls}-inline-collapsed", () => _collapsed)
                 .If($"{PrefixCls}-unselectable", () => !Selectable);
         }
@@ -179,24 +211,13 @@ namespace AntDesign
             InternalMode = Mode;
             if (Parent != null)
             {
-                Parent.OnCollapsed += Update;
+                Parent.OnCollapsed += CollapseUpdated;
             }
 
             SetClass();
         }
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            if (Parent == null)
-            {
-                this._collapsed = InlineCollapsed;
-            }
-            Update(_collapsed);
-            SetClass();
-        }
-
-        public void Update(bool collapsed)
+        public void CollapseUpdated(bool collapsed)
         {
             this._collapsed = collapsed;
             if (collapsed)
@@ -243,7 +264,7 @@ namespace AntDesign
         {
             if (Parent != null)
             {
-                Parent.OnCollapsed -= Update;
+                Parent.OnCollapsed -= CollapseUpdated;
             }
 
             base.Dispose(disposing);

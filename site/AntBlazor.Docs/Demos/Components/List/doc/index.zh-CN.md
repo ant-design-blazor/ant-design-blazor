@@ -32,6 +32,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/5FrZKStG_/List.svg
 | split | 是否展示分割线 | boolean | true |  |
 | dataSource | 列表数据源 | any[] | - |  |
 | renderItem | 当使用 dataSource 时，可以用 `renderItem` 自定义渲染列表项 | `item => ReactNode` | - |  |
+| OnItemClick | 列表项点击事件 | `item => void` | - |  |
 
 ### pagination
 

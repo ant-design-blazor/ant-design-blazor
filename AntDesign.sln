@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Docs.Build.CLI", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "hosts", "hosts", "{752F5AE8-BA08-4C41-B9B2-D2ED12727E63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntDesign.Tests", "tests\AntDesign.Tests.csproj", "{B2DC89BD-838C-459C-A32A-98F877479988}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Tests", "tests\AntDesign.Tests.csproj", "{B2DC89BD-838C-459C-A32A-98F877479988}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

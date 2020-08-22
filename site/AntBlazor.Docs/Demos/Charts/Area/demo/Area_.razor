@@ -3,11 +3,17 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 
-<Tabs>
+<Tabs ActiveKeyChanged="OnTabChanged">
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <Area @ref="chart1" TItem="FireworksSalesItem" Config="config1"/>
+            <Area @ref="chart1" TItem="FireworksSalesItem" Config="config1" />
+        </ChildContent>
+    </TabPane>
+    <TabPane Key="2">
+        <Tab>示例2</Tab>
+        <ChildContent>
+            <Area @ref="chart2" TItem="SalesItem" Config="config2" />
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -15,13 +21,27 @@
 @code{
 
     IChartComponent chart1;
+    IChartComponent chart2;
 
     protected override async Task OnInitializedAsync()
     {
-        var data1 = await ChartsDemoData.FireworksSalesAsync(NavigationManager, HttpClient);
-        chart1.ChangeData(data1);
-
         await base.OnInitializedAsync();
+        OnTabChanged("1");
+    }
+
+
+    private async void OnTabChanged(string activeKey)
+    {
+        if (activeKey == "1")
+        {
+            var data1 = await ChartsDemoData.FireworksSalesAsync(NavigationManager, HttpClient);
+            chart1.ChangeData(data1);
+        }
+        else
+        {
+            var data2 = await ChartsDemoData.SalesAsync(NavigationManager, HttpClient);
+            chart2.ChangeData(data2);
+        }
     }
 
     #region 示例1
@@ -43,5 +63,50 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly AreaConfig config2 = new AreaConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "基础面积图 - 缩略轴"
+        },
+
+        Description = new Description
+        {
+            Visible = true,
+            Text = "缩略轴 (slider) 交互适用于数据较多，用户希望关注数据集中某个特殊区间的场景。"
+        },
+
+        XField = "城市",
+        XAxis = new ValueCatTimeAxis
+        {
+            Visible = true,
+            Label = new BaseAxisLabel
+            {
+                Visible = true,
+                AutoHide = true,
+            }
+        },
+        YField = "销售额",
+
+        Interactions = new Interaction[]
+        {
+            new Interaction
+            {
+                Type="slider",
+                Cfg = new
+                {
+                    start =0.5,
+                    end =0.55
+                }
+            }
+            }
+
+    };
+
+    #endregion 示例2
 
 }

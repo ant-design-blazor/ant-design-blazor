@@ -1,5 +1,5 @@
 ---
-order: 1
+order: 2
 title:
   zh-CN: 多色图标
   en-US: Two-tone icon and colorful icon

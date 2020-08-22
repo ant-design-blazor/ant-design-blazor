@@ -1,5 +1,5 @@
 ---
-order: 3
+order: 4
 title:
   zh-CN: 使用 iconfont.cn
   en-US: Use iconfont.cn

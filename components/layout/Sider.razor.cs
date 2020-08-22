@@ -9,17 +9,13 @@ namespace AntDesign
     {
         private static string _prefixCls = "ant-layout-sider";
 
-        private string SiderStyles =>
-            $"flex: 0 0 {width}px;" +
-            $"max-width: {width}px;" +
-            $"min-width: {width}px;" +
-            $"width: {width}px;" +
-            (isCollapsed ? "overflow:initial;" : "");
-
         [Parameter] public bool Collapsible { get; set; }
 
         [Parameter] public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// When Trigger is null, `OnCollapse` won't be invoked after `Collapsed` was changed.
+        /// </summary>
         [Parameter] public RenderFragment Trigger { get; set; }
 
         [Parameter] public bool NoTrigger { get; set; }
@@ -34,21 +30,17 @@ namespace AntDesign
 
         [Parameter] public int CollapsedWidth { get; set; } = 80;
 
-        public event Action<bool> OnCollapsed;
-
-        private bool isCollapsed;
-
         [Parameter]
         public bool Collapsed
         {
-            get => isCollapsed;
+            get => _isCollapsed;
             set
             {
-                if (isCollapsed == value)
+                if (_isCollapsed == value)
                     return;
 
-                isCollapsed = value;
-                OnCollapsed?.Invoke(isCollapsed);
+                _isCollapsed = value;
+                OnCollapsed?.Invoke(_isCollapsed);
             }
         }
 
@@ -60,12 +52,27 @@ namespace AntDesign
 
         [Inject] public DomEventService DomEventService { get; set; }
 
-        private int width => isCollapsed ? CollapsedWidth : Width;
+        private int ComputedWidth => _isCollapsed ? CollapsedWidth : Width;
 
-        private RenderFragment defaultTrigger => builder =>
+        /// <summary>
+        /// param1: collapsed or not
+        /// param2: call inside sider or not
+        /// </summary>
+        public event Action<bool> OnCollapsed;
+
+        private bool _isCollapsed;
+
+        private string SiderStyles =>
+            $"flex: 0 0 {ComputedWidth}px;" +
+            $"max-width: {ComputedWidth}px;" +
+            $"min-width: {ComputedWidth}px;" +
+            $"width: {ComputedWidth}px;" +
+            (_isCollapsed ? "overflow:initial;" : "");
+
+        private RenderFragment DefaultTrigger => builder =>
         {
             builder.OpenComponent<Icon>(1);
-            builder.AddAttribute(2, "Type", isCollapsed ? "right" : "left");
+            builder.AddAttribute(2, "Type", _isCollapsed ? "right" : "left");
             builder.AddAttribute(3, "Theme", "outline");
             builder.CloseComponent();
         };
@@ -74,36 +81,30 @@ namespace AntDesign
         {
             ClassMapper.Clear()
                 .Add(_prefixCls)
-                .Add($"{_prefixCls}-{Theme}")
+                .If($"{_prefixCls}-dark", () => Theme == SiderTheme.Dark)
+                .If($"{_prefixCls}-light", () => Theme == SiderTheme.Light)
                 .If($"{_prefixCls}-has-trigger", () => Collapsible)
-                .If($"{_prefixCls}-collapsed", () => isCollapsed)
-                .If($"{_prefixCls}-zero-width", () => CollapsedWidth == 0 && isCollapsed);
+                .If($"{_prefixCls}-collapsed", () => _isCollapsed)
+                .If($"{_prefixCls}-zero-width", () => CollapsedWidth == 0 && _isCollapsed);
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
             Parent?.HasSider();
+
             if (Trigger == null && !NoTrigger)
             {
-                Trigger = defaultTrigger;
+                Trigger = DefaultTrigger;
             }
-            isCollapsed = Collapsed;
-            SetClass();
 
-            OnCollapsed += collapsed =>
-            {
-                if (OnCollapse.HasDelegate)
-                {
-                    OnCollapse.InvokeAsync(collapsed);
-                }
-            };
+            SetClass();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
-            if (firstRender)
+            if (firstRender && Breakpoint != null)
             {
                 var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.getWindow);
                 DomEventService.AddEventListener<Window>("window", "resize", args => OptimizeSize(args.innerWidth));
@@ -113,21 +114,31 @@ namespace AntDesign
 
         private void ToggleCollapsed()
         {
-            isCollapsed = !isCollapsed;
-            OnCollapsed?.Invoke(isCollapsed);
+            _isCollapsed = !_isCollapsed;
+            OnCollapsed?.Invoke(_isCollapsed);
+
+            if (OnCollapse.HasDelegate)
+            {
+                OnCollapse.InvokeAsync(_isCollapsed);
+            }
         }
 
         private void OptimizeSize(decimal windowWidth)
         {
             if (windowWidth < Breakpoint?.Width)
             {
-                isCollapsed = true;
+                _isCollapsed = true;
                 OnBreakpoint.InvokeAsync(true);
             }
             else
-                isCollapsed = false;
+                _isCollapsed = false;
 
-            OnCollapsed?.Invoke(isCollapsed);
+            OnCollapsed?.Invoke(_isCollapsed);
+            if (OnCollapse.HasDelegate)
+            {
+                OnCollapse.InvokeAsync(_isCollapsed);
+            }
+
             StateHasChanged();
         }
     }

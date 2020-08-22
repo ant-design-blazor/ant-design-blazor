@@ -240,6 +240,7 @@ namespace AntDesign
         protected OverlayTrigger _dropDown;
 
         protected string _activeBarStyle = "";
+        protected string _rangeArrowStyle = "";
 
         protected DatePickerStatus[] _pickerStatus
             = new DatePickerStatus[] { new DatePickerStatus(), new DatePickerStatus() };
@@ -256,7 +257,8 @@ namespace AntDesign
                 Picker = DatePickerType.Date;
             }
 
-            if (typeof(TValue).IsAssignableFrom(typeof(DateTime?)))
+            Type type = typeof(TValue);
+            if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[])))
             {
                 _isNullable = true;
             }
@@ -311,11 +313,13 @@ namespace AntDesign
                 {
                     Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputStart.Ref);
                     _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d(0px, 0px, 0px);";
+                    _rangeArrowStyle = $"left: 12px";
                 }
                 else if (_inputEnd.IsOnFocused)
                 {
-                    Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputStart.Ref);
+                    Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _inputEnd.Ref);
                     _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d({element.clientWidth + 16}px, 0px, 0px);";
+                    _rangeArrowStyle = $"left: {element.clientWidth + 30}px";
                 }
                 else
                 {
@@ -339,23 +343,7 @@ namespace AntDesign
 
             DateTime value = (DateTime)tryGetValue;
 
-            if (!string.IsNullOrEmpty(Format))
-            {
-                return value.ToString(Format, this.CultureInfo);
-            }
-
-            string formater = _pickerStatus[index]._initPicker switch
-            {
-                DatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
-                DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}{CultureInfo.GetDateLocale().Week}",
-                DatePickerType.Month => "yyyy-MM",
-                DatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
-                DatePickerType.Year => "yyyy",
-                DatePickerType.Time => "HH:mm:dd",
-                _ => "yyyy-MM-dd",
-            };
-
-            return value.ToString(formater, this.CultureInfo);
+            return GetFormatValue(value, index);
         }
 
         protected void ChangeFocusTarget(bool inputStartFocus, bool inputEndFocus)
@@ -391,12 +379,12 @@ namespace AntDesign
                 // auto focus the other input
                 if (IsRange && (!IsShowTime || Picker == DatePickerType.Time))
                 {
-                    if (index == 0 && !_pickerStatus[1]._hadSelectValue && !_inputEnd.IsOnFocused)
+                    if (index == 0 && !_pickerStatus[1]._currentShowHadSelectValue && !_inputEnd.IsOnFocused)
                     {
                         await Blur(0);
                         await Focus(1);
                     }
-                    if (index == 1 && !_pickerStatus[0]._hadSelectValue && !_inputStart.IsOnFocused)
+                    else if (index == 1 && !_pickerStatus[0]._currentShowHadSelectValue && !_inputStart.IsOnFocused)
                     {
                         await Blur(1);
                         await Focus(0);
@@ -449,7 +437,7 @@ namespace AntDesign
             }
         }
 
-        protected void UpdateCurrentValueAsString(int index = 0)
+        protected virtual void UpdateCurrentValueAsString(int index = 0)
         {
             if (EditContext != null)
             {
@@ -528,6 +516,35 @@ namespace AntDesign
         {
             return _pickerValues[index];
         }
+
+        public void ChangePlaceholder(string placeholder, int index = 0)
+        {
+            _placeholders[index] = placeholder;
+
+            StateHasChanged();
+        }
+
+        public string GetFormatValue(DateTime value, int index)
+        {
+            if (!string.IsNullOrEmpty(Format))
+            {
+                return value.ToString(Format, this.CultureInfo);
+            }
+
+            string formater = _pickerStatus[index]._initPicker switch
+            {
+                DatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
+                DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}{CultureInfo.GetDateLocale().Week}",
+                DatePickerType.Month => "yyyy-MM",
+                DatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
+                DatePickerType.Year => "yyyy",
+                DatePickerType.Time => "HH:mm:dd",
+                _ => "yyyy-MM-dd",
+            };
+
+            return value.ToString(formater, this.CultureInfo);
+        }
+
 
         internal void ChangePickerValue(DateTime date, int index = 0)
         {

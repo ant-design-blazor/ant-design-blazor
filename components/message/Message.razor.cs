@@ -147,10 +147,9 @@ namespace AntDesign
                     {
                         _configDict.Remove(config.Key);
                         _configs.Remove(config);
+                        InvokeAsync(StateHasChanged);
                     }, TaskScheduler.Current);
 
-                //when next message item fade out or add new message item, item will toggle StateHasChanged
-                //StateHasChanged();
             }
 
             return Task.CompletedTask;

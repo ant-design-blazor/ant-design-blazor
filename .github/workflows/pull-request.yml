@@ -1,0 +1,38 @@
+﻿name: Pull Request Checks
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.300
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+
+      - name: Check Building ⚙
+        run: |
+          npm install
+          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
+          dotnet build
+          dotnet publish -c Release -o cargo
+
+      - name: Test And Coverage Report 📝
+        run: |
+          dotnet build
+          dotnet test --collect:"XPlat Code Coverage"
+          find ./tests -name "coverage.cobertura.xml" -type f -exec cp {} ./ \;
+          bash <(curl -s https://codecov.io/bash) -Z -f coverage.cobertura.xml -t $CODECOV_TOKEN
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

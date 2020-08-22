@@ -1,4 +1,4 @@
-﻿<Tabs DefaultActiveKey="1" @bind-ActiveKey="@nKey">
+﻿<Tabs DefaultActiveKey="1" @bind-ActiveKey="@nKey" OnChange="OnTabChange">
     @foreach (var item in lstTabs)
     {
         <TabPane Key="@item.KeyName">
@@ -48,6 +48,9 @@
         nKey = n.ToString();
     }
 
-
+    void OnTabChange(string key)
+    {
+        Console.WriteLine($"tab change:{key}");
+    }
 
 }

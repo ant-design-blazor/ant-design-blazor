@@ -63,7 +63,7 @@ namespace AntDesign
             config.Title = null;
             config.CloseIcon = null;
             config.OnClosed = Close;
-            config.OnCancel = HandleCancel;
+            config.OnCancel = ModalRef.IsCreateByModalService ? HandleCancel : new Func<MouseEventArgs, Task>(async (e) => await Close());
             return config;
         }
 
@@ -74,7 +74,10 @@ namespace AntDesign
                 var element = Config.AutoFocusButton == ConfirmAutoFocusButton.Cancel
                     ? _cancelBtn
                     : _okBtn;
-                await JsInvokeAsync(JSInteropConstants.focusDialog, $"#{element.Id}");
+                if (element != null)
+                {
+                    await JsInvokeAsync(JSInteropConstants.focusDialog, $"#{element.Id}");
+                }
             }
 
             await base.OnAfterRenderAsync(firstRender);
@@ -90,24 +93,21 @@ namespace AntDesign
             }
         }
 
-
         private async Task HandleOk(MouseEventArgs e)
         {
             var args = new ModalClosingEventArgs(e, false);
 
             if (ModalRef.ModalTemplate != null)
                 await ModalRef.ModalTemplate.OkAsync(args);
-            if (args.Cancel == false)
+
+            if (!args.Cancel && Config.OnOk != null)
             {
-                if (Config.OnOk != null)
-                {
-                    Config.OkButtonProps.Loading = true;
-                    await InvokeAsync(StateHasChanged);
-                    await Config.OnOk.Invoke(args);
-                }
+                Config.OkButtonProps.Loading = true;
+                await InvokeAsync(StateHasChanged);
+                await Config.OnOk.Invoke(args);
             }
 
-            if (args.Cancel == true)
+            if (args.Cancel)
             {
                 Config.OkButtonProps.Loading = false;
                 await InvokeAsync(StateHasChanged);
@@ -115,26 +115,25 @@ namespace AntDesign
             else
             {
                 await Close();
+                ModalRef.TaskCompletionSource?.SetResult(ConfirmResult.OK);
             }
         }
 
         private async Task HandleCancel(MouseEventArgs e)
         {
+
             var args = new ModalClosingEventArgs(e, false);
 
             if (ModalRef.ModalTemplate != null)
                 await ModalRef.ModalTemplate.CancelAsync(args);
-            if (args.Cancel == false)
+            if (!args.Cancel && Config.OnCancel != null)
             {
-                if (Config.OnCancel != null)
-                {
-                    Config.CancelButtonProps.Loading = true;
-                    await InvokeAsync(StateHasChanged);
-                    await Config.OnCancel.Invoke(args);
-                }
+                Config.CancelButtonProps.Loading = true;
+                await InvokeAsync(StateHasChanged);
+                await Config.OnCancel.Invoke(args);
             }
 
-            if (args.Cancel == true)
+            if (args.Cancel)
             {
                 Config.CancelButtonProps.Loading = false;
                 await InvokeAsync(StateHasChanged);
@@ -142,7 +141,46 @@ namespace AntDesign
             else
             {
                 await Close();
+                ModalRef.TaskCompletionSource?.SetResult(ConfirmResult.Cancel);
             }
+        }
+
+        private async Task HandleBtn1Click(MouseEventArgs e, ConfirmResult confirmResult)
+        {
+            if (ModalRef.IsCreateByModalService)
+            {
+                await HandleOk(e);
+            }
+            else
+            {
+                Config.Button1Props.Loading = false;
+                await InvokeAsync(StateHasChanged);
+                await Close();
+                ModalRef.TaskCompletionSource?.SetResult(confirmResult);
+            }
+        }
+
+        private async Task HandleBtn2Click(MouseEventArgs e, ConfirmResult confirmResult)
+        {
+            if (ModalRef.IsCreateByModalService)
+            {
+                await HandleCancel(e);
+            }
+            else
+            {
+                Config.Button2Props.Loading = false;
+                await InvokeAsync(StateHasChanged);
+                await Close();
+                ModalRef.TaskCompletionSource?.SetResult(confirmResult);
+            }
+        }
+
+        private async Task HandleBtn3Click(MouseEventArgs e, ConfirmResult confirmResult)
+        {
+            Config.Button3Props.Loading = false;
+            await InvokeAsync(StateHasChanged);
+            await Close();
+            ModalRef.TaskCompletionSource?.SetResult(confirmResult);
         }
     }
 }
