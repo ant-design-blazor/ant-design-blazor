@@ -435,7 +435,7 @@ export function disposeObj(objReferenceName) {
 
 //#region mentions
 
-import getOffset from "./Caret";
+import getOffset from "./modules/Caret";
 
 export function getCursorXY(element, objReference) {
   objReferenceDict["mentions"] = objReference;
@@ -456,3 +456,5 @@ function mentionsOnWindowClick(e) {
 }
 
 //#endregion
+
+export { enableDraggable, disableDraggable } from "./modules/dragHelper";

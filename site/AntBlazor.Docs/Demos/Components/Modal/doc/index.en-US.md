@@ -42,6 +42,8 @@ When requiring users to interact with the application, but without jumping to a 
 | ZIndex            | The z-index of the Modal                                     | int                           | 1000          |
 | OnCancel          | Specify a function that will  be called when a user clicks mask, close button on top right or Cancel button | EventCallback<MouseEventArgs> | -             |
 | OnOk              | Specify a function that will  be called when a user clicks the OK button | EventCallback<MouseEventArgs> | -             |
+| Draggable | Is it allowed to drag Modal through its Header | bool | - |
+| DragInViewport | If Draggable is true, and is it only allowed drag Modal in the viewport | bool | - |
 
 #### Note
 

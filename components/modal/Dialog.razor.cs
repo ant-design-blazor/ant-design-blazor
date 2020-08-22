@@ -35,6 +35,12 @@ namespace AntDesign
         /// </summary>
         private ElementReference _element;
 
+        private ElementReference _dialogHeader;
+
+        private ElementReference _modal;
+
+        private bool _isFirstRender = true;
+
         /// <summary>
         /// ant-modal style
         /// </summary>
@@ -46,6 +52,21 @@ namespace AntDesign
             if (!string.IsNullOrWhiteSpace(Style))
             {
                 style += Style + ";";
+            }
+
+            if (Config.Draggable && _isFirstRender)
+            {
+                string left = "";
+                if (Config.Width.IsT1)
+                {
+                    left = $"margin: 0; padding-bottom:0; left: calc(50% - {Config.Width.AsT1 / 2});";
+                }
+                else
+                {
+                    // TODO 提取数字
+                }
+
+                style += left;
             }
 
             return style;
@@ -100,7 +121,7 @@ namespace AntDesign
         private readonly string _sentinelStart = IdPrefix + Guid.NewGuid().ToString();
         private readonly string _sentinelEnd = IdPrefix + Guid.NewGuid().ToString();
 
-        public string SentinelStart=> _sentinelStart;
+        public string SentinelStart => _sentinelStart;
 
         private async Task OnKeyDown(KeyboardEventArgs e)
         {
@@ -160,7 +181,22 @@ namespace AntDesign
 
             if (Visible)
             {
-                _wrapStyle = "";
+                if (Config.Draggable)
+                {
+                    _wrapStyle = "display:flex;justify-content: center;";
+                    if (Config.Centered)
+                    {
+                        _wrapStyle += "align-items: center;";
+                    }
+                    else
+                    {
+                        _wrapStyle += "align-items: flex-start;";
+                    }
+                }
+                else
+                {
+                    _wrapStyle = "";
+                }
                 _maskHideClsName = "";
                 _maskAnimation = ModalAnimation.MaskEnter;
                 _modalAnimation = ModalAnimation.ModalEnter;
@@ -236,6 +272,8 @@ namespace AntDesign
 
         protected override async Task OnAfterRenderAsync(bool isFirst)
         {
+            _isFirstRender = isFirst;
+
             if (Visible)
             {
                 if (_hasDestroy)
@@ -251,6 +289,11 @@ namespace AntDesign
                     _disableBodyScroll = true;
                     await JsInvokeAsync(JSInteropConstants.disableBodyScroll);
                 }
+
+                if (Config.Draggable)
+                {
+                    await JsInvokeAsync(JSInteropConstants.enableDraggable, _dialogHeader, _modal, Config.DragInViewport);
+                }
             }
             else
             {
@@ -259,6 +302,11 @@ namespace AntDesign
                     _disableBodyScroll = false;
                     await Task.Delay(250);
                     await JsInvokeAsync(JSInteropConstants.enableModalBodyScroll);
+                }
+
+                if (Config.Draggable)
+                {
+                    await JsInvokeAsync(JSInteropConstants.disableDraggable, _dialogHeader);
                 }
             }
             await base.OnAfterRenderAsync(isFirst);

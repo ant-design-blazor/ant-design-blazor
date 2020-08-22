@@ -28,7 +28,14 @@ namespace AntDesign
         [Parameter]
         public bool Centered { get; set; }
 
-        [Parameter] public bool Closable { get; set; } = true;
+        [Parameter]
+        public bool Closable { get; set; } = true;
+
+        [Parameter]
+        public bool Draggable { get; set; }
+
+        [Parameter]
+        public bool DragInViewport { get; set; } = true;
 
         private static readonly RenderFragment _defaultCloseIcon = (builder) =>
         {
@@ -141,6 +148,8 @@ namespace AntDesign
                 CancelText = CancelText,
                 Centered = Centered,
                 Closable = Closable,
+                Draggable = Draggable,
+                DragInViewport = DragInViewport,
                 CloseIcon = CloseIcon,
                 ConfirmLoading = ConfirmLoading,
                 DestroyOnClose = DestroyOnClose,
