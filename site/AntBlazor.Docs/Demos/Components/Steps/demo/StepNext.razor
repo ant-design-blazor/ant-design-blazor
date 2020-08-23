@@ -10,6 +10,10 @@
         @steps[current].Content
     </div>
     <div class="steps-action">
+        @if (current > 0)
+        {
+            <Button Type="primary" OnClick="OnPreClick">Previous</Button>
+        }
         @if (current < steps.Length - 1)
         {
             <Button Type="primary" OnClick="OnNextClick">Next</Button>
@@ -20,10 +24,7 @@
                 Done
             </Button>
         }
-        @if (current > 0)
-        {
-            <Button Type="primary" OnClick="OnPreClick">Previous</Button>
-        }
+
     </div>
 </div>
 
