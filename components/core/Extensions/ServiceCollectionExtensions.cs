@@ -24,6 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<MessageService>();
             services.TryAddScoped<ModalService>();
             services.TryAddScoped<DrawerService>();
+            services.TryAddScoped<ConfirmService>();
 
             return services;
         }
