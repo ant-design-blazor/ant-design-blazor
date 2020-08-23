@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AntDesign.core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
@@ -10,6 +12,7 @@ namespace AntDesign
     public class IconService
     {
         private static readonly ConcurrentDictionary<string, ValueTask<string>> _svgCache = new ConcurrentDictionary<string, ValueTask<string>>();
+        private static IDictionary<string, string[]> _iconfiles;
         private readonly HttpClient _httpClient;
         private IJSRuntime _js;
 
@@ -28,6 +31,11 @@ namespace AntDesign
 
         public async ValueTask<string> GetIconImg(string type, string theme)
         {
+            if (!await IconExists(theme, type))
+            {
+                return null;
+            }
+
             var cacheKey = $"{theme}/{type}";
             var iconImg = await _svgCache.GetOrAdd(cacheKey, async key =>
             {
@@ -48,7 +56,7 @@ namespace AntDesign
             if (!string.IsNullOrEmpty(svgImg))
             {
                 var svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? "" : $"style=\"transform: rotate({rotate}deg);\"")}";
-                return svgImg.Insert(svgImg.IndexOf("svg", StringComparison.Ordinal) + 3, $" {svgStyle} ");
+                return svgImg.Insert(svgImg.IndexOf("<svg", StringComparison.Ordinal) + 4, $" {svgStyle} ");
             }
 
             return null;
@@ -62,6 +70,25 @@ namespace AntDesign
             }
 
             await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, scriptUrl);
+        }
+
+
+        public async Task<IDictionary<string, string[]>> GetAllIcons()
+        {
+            _iconfiles ??= await _httpClient.GetFromJsonAsync<IDictionary<string, string[]>>(new Uri(_baseAddress, $"_content/AntDesign/icons/icons.json").ToString());
+            return _iconfiles;
+        }
+
+        public async ValueTask<bool> IconExists(string theme, string type)
+        {
+            _iconfiles ??= await GetAllIcons();
+
+            if (!_iconfiles.TryGetValue(theme, out var files))
+            {
+                return false;
+            }
+
+            return type.IsIn(files);
         }
     }
 }

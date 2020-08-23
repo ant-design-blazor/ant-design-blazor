@@ -40,7 +40,7 @@ gulp.task('ts', function () {
 });
 
 gulp.task('src', function () {
-    return gulp.src(['**/*.less']).pipe(gulp.dest('wwwroot/less'));
+  return gulp.src(['**/*.less', '!wwwroot/**']).pipe(gulp.dest('wwwroot/less'));
 });
 
 gulp.task('default', gulp.parallel('less', 'ts', 'src'), function () { });

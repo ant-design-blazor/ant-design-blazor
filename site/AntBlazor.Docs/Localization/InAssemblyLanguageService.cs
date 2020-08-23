@@ -3,6 +3,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace AntDesign.Docs.Localization
 {
@@ -30,24 +32,24 @@ namespace AntDesign.Docs.Localization
 
         private void SetDefaultLanguage(CultureInfo culture)
         {
-            CurrentCulture = culture;
-            CultureInfo.CurrentCulture = culture;
+            var availableResources = _resourcesAssembly
+                .GetManifestResourceNames()
+                .Select(x => Regex.Match(x, @"^.*Resources\.(.+)\.json"))
+                .Where(x => x.Success)
+                .Select(x => (CultureName: x.Groups[1].Value, ResourceName: x.Value))
+                .ToList();
 
-            string[] languageFileNames = _resourcesAssembly.GetManifestResourceNames().Where(s => s.Contains("Resources") && s.Contains(".yml") && s.Contains("-")).ToArray();
+            var (_, resourceName) = availableResources.FirstOrDefault(x => x.CultureName.Equals(culture.Name, StringComparison.OrdinalIgnoreCase));
 
-            Resources = GetKeysFromCulture(culture.Name, languageFileNames.SingleOrDefault(n => n.Contains($"{culture.Name}.yml")));
-
-            if (Resources == null)
+            if (resourceName == null)
             {
-                string language = culture.Name.Split('-')[0];
-                Resources = GetKeysFromCulture(culture.Name, languageFileNames.FirstOrDefault(n => n.Contains(language)));
+                (_, resourceName) = availableResources.FirstOrDefault(x => x.CultureName.Equals("en-US", StringComparison.OrdinalIgnoreCase));
+                culture = CultureInfo.GetCultureInfo("en-US");
             }
 
-            if (Resources == null && culture.Name != "en-US")
-                Resources = GetKeysFromCulture("en-US", languageFileNames.SingleOrDefault(n => n.Contains($"en-US.yml")));
-
-            if (Resources == null)
-                Resources = GetKeysFromCulture("en-US", languageFileNames.FirstOrDefault());
+            CultureInfo.CurrentCulture = culture;
+            CurrentCulture = culture;
+            Resources = GetKeysFromCulture(culture.Name, resourceName);
 
             if (Resources == null)
                 throw new FileNotFoundException($"There is no language files existing in the Resource folder within '{_resourcesAssembly.GetName().Name}' assembly");
@@ -63,7 +65,7 @@ namespace AntDesign.Docs.Localization
             if (CurrentCulture == null || !CurrentCulture.Equals(culture))
             {
                 CurrentCulture = culture;
-                string fileName = $"{_resourcesAssembly.GetName().Name}.Resources.{culture.Name}.yml";
+                string fileName = $"{_resourcesAssembly.GetName().Name}.Resources.{culture.Name}.json";
 
                 Resources = GetKeysFromCulture(culture.Name, fileName);
 

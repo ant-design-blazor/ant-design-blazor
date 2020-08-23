@@ -2,11 +2,11 @@
 <br />
 <DatePicker TValue="DateTime?" ShowTime="@true" RenderExtraFooter="extraFooter"/>
 <br />
-<RangePicker TValue="DateTime?" RenderExtraFooter="extraFooter" />
+<RangePicker TValue="DateTime?[]" RenderExtraFooter="extraFooter" />
 <br />
-<RangePicker TValue="DateTime?" ShowTime="@true" RenderExtraFooter="extraFooter"/>
+<RangePicker TValue="DateTime?[]" ShowTime="@true" RenderExtraFooter="extraFooter"/>
 <br />
-<DatePicker TValue="DateTime?" Picker="@DatePickerType.Month" RenderExtraFooter="extraFooter"/>
+<DatePicker TValue="DateTime?[]" Picker="@DatePickerType.Month" RenderExtraFooter="extraFooter"/>
 
 @code {
     private RenderFragment extraFooter =@<span>extra footer</span>;

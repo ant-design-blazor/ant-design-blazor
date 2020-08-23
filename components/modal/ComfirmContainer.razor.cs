@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -12,6 +13,9 @@ namespace AntDesign
         [Inject]
         private ModalService ModalService { get; set; }
 
+        [Inject]
+        private ConfirmService ConfirmService { get; set; }
+
         private List<ModalRef> _modalRefs = new List<ModalRef>();
 
         protected override void OnInitialized()
@@ -21,6 +25,8 @@ namespace AntDesign
             ModalService.OnDestroyEvent += Modal_OnDestroy;
             ModalService.OnDestroyAllEvent += Modal_OnDestroyAll;
             ModalService.OnUpdateEvent += Modal_OnUpdate;
+
+            ConfirmService.OnOpenEvent += Modal_OnOpen;
         }
 
         /// <summary>
@@ -31,6 +37,7 @@ namespace AntDesign
             modalRef.Config.Visible = true;
             if (!_modalRefs.Contains(modalRef))
             {
+                modalRef.Config.BuildButtonsDefaultOptions();
                 _modalRefs.Add(modalRef);
             }
             await InvokeAsync(StateHasChanged);
@@ -91,6 +98,8 @@ namespace AntDesign
             ModalService.OnDestroyEvent -= Modal_OnDestroy;
             ModalService.OnDestroyAllEvent -= Modal_OnDestroyAll;
             ModalService.OnUpdateEvent -= Modal_OnUpdate;
+
+            ConfirmService.OnOpenEvent -= Modal_OnOpen;
 
             base.Dispose(disposing);
         }

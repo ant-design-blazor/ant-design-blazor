@@ -1,11 +1,11 @@
 ﻿@using System.Text.Json;
 
 <Form Model="@model"
-      LabelCol="new ColLayoutParam { Span = 8 }"
-      WrapperCol="new ColLayoutParam { Span = 16 }"
-      OnFinish="OnFinish"
-      OnFinishFailed="OnFinishFailed"
-      Size="@model.Size">
+        LabelCol="new ColLayoutParam { Span = 8 }"
+        WrapperCol="new ColLayoutParam { Span = 16 }"
+        OnFinish="OnFinish"
+        OnFinishFailed="OnFinishFailed"
+        Size="@model.Size">
     <FormItem Label="Form Size">
         <RadioGroup @bind-Value="@context.Size">
             <Radio RadioButton Value="@AntSizeLDSType.Small">Small</Radio>
@@ -26,6 +26,9 @@
     <FormItem Label="DatePicker">
         <DatePicker @bind-Value="@context.DatePicker" />
     </FormItem>
+    <FormItem Label="RangePicker">
+        <RangePicker @bind-Value="@context.RangePicker" />
+    </FormItem>
     <FormItem Label="InputNumber">
         <AntDesign.InputNumber @bind-Value="@context.Number" />
     </FormItem>
@@ -44,21 +47,6 @@
         <Button HtmlType="submit">
             Submit
         </Button>
-        <Button OnClick="@(e => {
-                    model = new Model()
-                    {
-                        DatePicker = new DateTime(2000, 1, 1),
-                        Cascader = "11",
-                        Input = "new input value",
-                        InputArea = "new textarea value",
-                        Number = 1111,
-                        Switch = false,
-                        Radio = "Hangzhou",
-                        Size = AntSizeLDSType.Large,
-                    };
-                })">
-            New Model
-        </Button>
     </FormItem>
 </Form>
 
@@ -71,6 +59,7 @@
         public string InputArea { get; set; } = "inputArea";
         public string Cascader { get; set; } = "11";
         public DateTime? DatePicker { get; set; } = DateTime.Now;
+        public DateTime?[] RangePicker { get; set; } = new DateTime?[] { DateTime.Now, DateTime.Now.AddDays(10) };
         public double Number { get; set; } = 1;
         public bool Switch { get; set; } = true;
         public string Radio { get; set; } = "Beijing";

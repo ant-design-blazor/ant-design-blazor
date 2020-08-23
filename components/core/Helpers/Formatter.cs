@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Linq.Expressions;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq.Expressions;
+using AntDesign.Core.Reflection;
 
 namespace AntDesign.Helpers
 {
@@ -19,21 +21,33 @@ namespace AntDesign.Helpers
             var p1 = Expression.Parameter(typeof(T));
             var p2 = Expression.Parameter(typeof(string));
 
+            Expression variable = p1;
             Expression body = p2;
+            Expression hasValueExpression = type.IsValueType ? (Expression)Expression.Constant(true) : Expression.NotEqual(p1, Expression.Default(type));
+
+            if (TypeDefined<T>.IsNullable)
+            {
+                type = TypeDefined<T>.NullableType;
+                hasValueExpression = Expression.Equal(Expression.Property(p1, "HasValue"), Expression.Constant(true));
+                variable = Expression.Condition(hasValueExpression, Expression.Property(p1, "Value"), Expression.Default(type));
+            }
+
             if (type.IsSubclassOf(typeof(IFormattable)))
             {
                 var method = type.GetMethod("ToString", new[] { typeof(string), typeof(IFormatProvider) });
-                body = Expression.Call(Expression.Convert(p1, type), method, p2, Expression.Constant(null));
+                body = Expression.Call(Expression.Convert(variable, type), method, p2, Expression.Constant(null));
             }
             else
             {
                 var method = type.GetMethod("ToString", new[] { typeof(string) });
                 if (method != null)
                 {
-                    body = Expression.Call(Expression.Convert(p1, type), method, p2);
+                    body = Expression.Call(Expression.Convert(variable, type), method, p2);
                 }
             }
-            return Expression.Lambda<Func<T, string, string>>(body, p1, p2).Compile();
+
+            var condition = Expression.Condition(hasValueExpression, body, Expression.Constant(string.Empty));
+            return Expression.Lambda<Func<T, string, string>>(condition, p1, p2).Compile();
         }
     }
 

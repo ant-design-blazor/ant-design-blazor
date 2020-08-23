@@ -1,0 +1,16 @@
+﻿<div>
+    @if (visible)
+    {
+        <Alert Message="Alert Message Text" Type="success" Closable AfterClose="handleClose" />
+    }
+    <p>placeholder text here</p>
+</div>
+
+@code{
+    bool visible = true;
+
+    void handleClose()
+    {
+        visible = false;
+    }
+}
