@@ -3,7 +3,7 @@
 
 
 <div class="@ClassMapper.Class" style="@Style"id="@Id">
-    <div class="ant-steps-item-container" @onclick="@OnClick" tabindex="@GetTabIndex()" @attributes="@_containerAttributes">
+    <div class="ant-steps-item-container" @onclick="@HandleClick" tabindex="@GetTabIndex()" @attributes="@_containerAttributes">
         @if (!Last)
         {
             <div class="ant-steps-item-tail"></div>
