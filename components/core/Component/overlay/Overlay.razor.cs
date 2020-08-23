@@ -130,6 +130,17 @@ namespace AntDesign.Internal
                 return;
             }
 
+            Element trigger = await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Trigger.Ref);
+
+            // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
+            // I try to render Overlay when OvelayTrigger’s OnAfterRender is called, but is still get negative absoluteLeft
+            // This may be a bad solution, but for now I can only do it this way.
+            while (trigger.absoluteLeft <= 0)
+            {
+                await Task.Delay(50);
+                trigger = await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Trigger.Ref);
+            }
+
             _overlayLeft = overlayLeft;
             _overlayTop = overlayTop;
 
@@ -148,7 +159,6 @@ namespace AntDesign.Internal
 
             await AddOverlayToBody();
 
-            Element trigger = await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Trigger.Ref);
             Element overlayElement = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Ref);
             Element containerElement = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Trigger.PopupContainerSelector);
 
