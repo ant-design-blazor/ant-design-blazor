@@ -9,13 +9,12 @@ using System.Data;
 using Microsoft.AspNetCore.Components.Web;
 using System.Diagnostics;
 using OneOf;
-#pragma warning disable IDE1006 // 命名样式
+
 namespace AntDesign
 {
     public partial class AutoComplete : AntDomComponentBase
     {
         #region Parameters
-
 
         [Parameter]
         public bool DefaultActiveFirstOption { get; set; } = true;
@@ -44,6 +43,15 @@ namespace AntDesign
         [Parameter]
         public Func<AutoCompleteDataItem, bool> FilterOption { get; set; }
 
+        [Parameter]
+        public OneOf<int?, string> Width { get; set; }
+
+        [Parameter]
+        public string OverlayClassName { get; set; }
+
+        [Parameter]
+        public string OverlayStyle { get; set; }
+
         #endregion Parameters
 
         private ElementReference _divRef;
@@ -64,11 +72,11 @@ namespace AntDesign
         [Parameter]
         public bool ShowPanel { get; set; } = false;
 
-        private IAutoCompleteInput InputComponent;
+        private IAutoCompleteInput _inputComponent;
 
         public void SetInputComponent(IAutoCompleteInput input)
         {
-            InputComponent = input;
+            _inputComponent = input;
         }
 
 
@@ -137,17 +145,17 @@ namespace AntDesign
         /// <summary>
         /// 对象集合
         /// </summary>
-        public List<AutoCompleteOption> Options = new List<AutoCompleteOption>();
+        public List<AutoCompleteOption> _options = new List<AutoCompleteOption>();
 
         public void AddOption(AutoCompleteOption option)
         {
-            Options.Add(option);
+            _options.Add(option);
         }
 
         public void RemoveOption(AutoCompleteOption option)
         {
-            if (Options?.Contains(option) == true)
-                Options?.Remove(option);
+            if (_options?.Contains(option) == true)
+                _options?.Remove(option);
         }
 
         public IList<AutoCompleteDataItem> GetOptionItems()
@@ -163,9 +171,9 @@ namespace AntDesign
                 else
                     return opts;
             }
-            else if (Options.Count > 0)
+            else if (_options.Count > 0)
             {
-                var opts = Options.Select(x => new AutoCompleteDataItem(x.Value, x.Label)).ToList();
+                var opts = _options.Select(x => new AutoCompleteDataItem(x.Value, x.Label)).ToList();
                 return opts;
             }
             else
@@ -201,7 +209,7 @@ namespace AntDesign
 
         public AutoCompleteOption GetActiveItem()
         {
-            return Options.FirstOrDefault(x => CompareWith(x.Value, this.ActiveValue));
+            return _options.FirstOrDefault(x => CompareWith(x.Value, this.ActiveValue));
         }
 
         //设置高亮的对象
@@ -215,23 +223,29 @@ namespace AntDesign
         //设置下一个激活
         public void SetNextItemActive()
         {
-            var nextItem = Options.IndexOf(GetActiveItem());
-            if (nextItem == -1 || nextItem == Options.Count - 1)
-                SetActiveItem(Options.FirstOrDefault());
+            var opts = _options.Where(x => x.Disabled == false).ToList();
+            var nextItem = opts.IndexOf(GetActiveItem());
+            if (nextItem == -1 || nextItem == opts.Count - 1)
+                SetActiveItem(opts.FirstOrDefault());
             else
-                SetActiveItem(Options[nextItem + 1]);
+                SetActiveItem(opts[nextItem + 1]);
 
-            StateHasChanged();
+            if (Backfill)
+                _inputComponent.SetValue(this.ActiveValue);
         }
 
         //设置上一个激活
         public void SetPreviousItemActive()
         {
-            var nextItem = Options.IndexOf(GetActiveItem());
+            var opts = _options.Where(x => x.Disabled == false).ToList();
+            var nextItem = opts.IndexOf(GetActiveItem());
             if (nextItem == -1 || nextItem == 0)
-                SetActiveItem(Options.LastOrDefault());
+                SetActiveItem(opts.LastOrDefault());
             else
-                SetActiveItem(Options[nextItem - 1]);
+                SetActiveItem(opts[nextItem - 1]);
+
+            if (Backfill)
+                _inputComponent.SetValue(this.ActiveValue);
         }
 
         private void ResetActiveItem()
@@ -261,19 +275,28 @@ namespace AntDesign
             {
                 this.SelectedValue = item?.Value;
                 this.SelectedItem = item;
-                InputComponent?.SetValue(this.SelectedItem.Label);
+                _inputComponent?.SetValue(this.SelectedItem.Label);
 
                 if (OnSelectionChange.HasDelegate) await OnSelectionChange.InvokeAsync(this.SelectedItem);
             }
             this.ClosePanel();
         }
 
-        private string minWidth = "";
+        private string _minWidth = "";
         private async Task SetOverlayWidth()
         {
-            Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _divRef);
-            var newWidth = $"min-width:{element.clientWidth}px";
-            if (newWidth != minWidth) minWidth = newWidth;
+            string newWidth;
+            if (Width.Value != null)
+            {
+                var w = Width.Match<string>(f0 => $"{f0}px", f1 => f1);
+                newWidth = $"min-width:{w}";
+            }
+            else
+            {
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _divRef);
+                newWidth = $"min-width:{element.clientWidth}px";
+            }
+            if (newWidth != _minWidth) _minWidth = newWidth;
         }
     }
 
@@ -289,6 +312,8 @@ namespace AntDesign
 
         public object Value { get; set; }
         public string Label { get; set; }
+
+        public bool IsDisabled { get; set; }
     }
 }
-#pragma warning restore IDE1006 // 命名样式
+

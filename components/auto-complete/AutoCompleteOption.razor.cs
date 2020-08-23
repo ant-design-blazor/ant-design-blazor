@@ -25,6 +25,7 @@ namespace AntDesign
 
         [Parameter]
         public bool Disabled { get; set; } = false;
+
         [Parameter]
 
         [CascadingParameter]
@@ -61,6 +62,7 @@ namespace AntDesign
 
         public async Task OnClick()
         {
+            if (Disabled) return;
             await AutoComplete.SetSelectedItem(this);
         }
 

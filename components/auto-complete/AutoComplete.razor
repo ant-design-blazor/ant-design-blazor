@@ -10,16 +10,18 @@
                         Disabled="false"
                         Trigger="new TriggerType[] { TriggerType.Click }"
                         OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
-                        OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up">
+                        OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up"
+                        OverlayClassName="@OverlayClassName"
+                        OverlayStyle="@OverlayStyle">
             <Overlay>
                 <CascadingValue Value="this">
-                    <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @minWidth">
+                    <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @_minWidth">
                         <div style="display: flex;flex-direction: column;">
                             @if (DataSource.Value != null)
                             {
                                 foreach (var option in GetOptionItems())
                                 {
-                                    <AutoCompleteOption Value="@option.Value" Label="@option.Label">
+                                    <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
                                         @option.Label
                                     </AutoCompleteOption>
                                 }
