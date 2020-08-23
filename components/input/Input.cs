@@ -98,7 +98,7 @@ namespace AntDesign
 
             SetClasses();
 
-            AutoComplete?.SetInputComponent(this);
+            if (AutoComplete != null) AutoComplete?.SetInputComponent(this);
         }
 
         protected virtual void SetClasses()
@@ -197,14 +197,14 @@ namespace AntDesign
 
         protected async Task OnkeyDownAsync(KeyboardEventArgs args)
         {
-            await AutoComplete?.InputKeyDown(args);
-
             if (OnkeyDown.HasDelegate) await OnkeyDown.InvokeAsync(args);
+
+            if (AutoComplete != null) await AutoComplete?.InputKeyDown(args);
         }
 
-        private async Task OnBlurAsync(FocusEventArgs e)
+        internal async Task OnBlurAsync(FocusEventArgs e)
         {
-            await AutoComplete?.InputBlur(e);
+            if (AutoComplete != null) await AutoComplete?.InputBlur(e);
 
             if (OnBlur.HasDelegate)
             {
@@ -212,9 +212,9 @@ namespace AntDesign
             }
         }
 
-        private async Task OnFocusAsync(FocusEventArgs e)
+        internal async Task OnFocusAsync(FocusEventArgs e)
         {
-            await AutoComplete?.InputFocus(e);
+            if (AutoComplete != null) await AutoComplete?.InputFocus(e);
 
             if (OnFocus.HasDelegate)
             {
@@ -292,7 +292,7 @@ namespace AntDesign
                 await OnInput.InvokeAsync(args);
             }
 
-            await AutoComplete?.InputInput(args);
+            if (AutoComplete != null) await AutoComplete?.InputInput(args);
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)

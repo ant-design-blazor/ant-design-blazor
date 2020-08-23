@@ -2,9 +2,10 @@
 @inherits AntDomComponentBase
 @using AntDesign.Internal
 
-<div style="@Style" id="@Id">
+<div @ref="@_divRef" style="@Style" id="@Id">
     <CascadingValue Value='$"ant-select-dropdown"' Name="PrefixCls">
-        <OverlayTrigger Visible="@ShowPanel"
+        <OverlayTrigger Style="display: inline"
+                        Visible="@ShowPanel"
                         IsButton="@true"
                         Disabled="false"
                         Trigger="new TriggerType[] { TriggerType.Click }"
@@ -12,14 +13,11 @@
                         OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up">
             <Overlay>
                 <CascadingValue Value="this">
-                    <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none;">
-                        <div style="display: flex; flex-direction: column;">
+                    <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @minWidth">
+                        <div style="display: flex;flex-direction: column;">
                             @if (DataSource.Value != null)
                             {
-                                foreach (var option in DataSource.Match<IList<AutocompleteDataSourceItem>>(
-                                    f0 => f0,
-                                    f1 => f1.Select(x => new AutocompleteDataSourceItem(x, x)).ToList(),
-                                    f2 => f2.Select(x => new AutocompleteDataSourceItem(x.ToString(), x.ToString())).ToList()))
+                                foreach (var option in GetOptionItems())
                                 {
                                     <AutoCompleteOption Value="@option.Value" Label="@option.Label">
                                         @option.Label
@@ -38,7 +36,6 @@
                 <CascadingValue Value="this">
                     @ChildContent
                 </CascadingValue>
-
             </ChildContent>
         </OverlayTrigger>
     </CascadingValue>

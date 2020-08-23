@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-#pragma warning disable IDE1006 // 命名样式
 namespace AntDesign
 {
     public partial class AutoCompleteOption : AntDomComponentBase
@@ -15,8 +14,15 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
         [Parameter]
         public object Value { get; set; }
+
+        private string _label;
         [Parameter]
-        public string Label { get; set; }
+        public string Label
+        {
+            get { return _label ?? Value?.ToString(); }
+            set { _label = value; }
+        }
+
         [Parameter]
         public bool Disabled { get; set; } = false;
         [Parameter]
@@ -59,26 +65,17 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 获得标题
-        /// </summary>
-        /// <returns></returns>
-        public string GetLabel()
-        {
-            return this.Label ?? this.Value?.ToString();
-        }
-
-        /// <summary>
         /// 计算当前计算选择状态
         /// </summary>
         /// <returns></returns>
         private bool CalcSelected()
         {
-            return AutoComplete?.SelectedValue?.ToString() == Value.ToString();
+            return AutoComplete.CompareWith(AutoComplete?.SelectedValue, Value);
         }
 
         private bool CalcActive()
         {
-            return AutoComplete?.ActiveItem == this;
+            return AutoComplete.CompareWith(AutoComplete?.ActiveValue, Value);
         }
     }
 
@@ -97,4 +94,3 @@ namespace AntDesign
     }
 
 }
-#pragma warning restore IDE1006 // 命名样式

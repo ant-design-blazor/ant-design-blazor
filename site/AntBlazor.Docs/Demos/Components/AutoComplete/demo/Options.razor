@@ -1,10 +1,28 @@
 ﻿<div>
-    <AutoComplete FormatList="@_formatList" @bind-Value="_value"></AutoComplete>
+    <AutoComplete DataSource="@options" OnInput="OnInput">
+        <Input @bind-Value="@value" />
+    </AutoComplete>
 </div>
+<Divider></Divider>
+<span>bind-Value:@value</span>
 
 @code
 {
-    private string _value;
+    private string value;
 
-    private List<string> _formatList = new List<string>() { "{0}@gmail.com", "{0}@163.com", "{0}@qq.com" };
+    List<string> options = new List<string>();
+
+
+    void OnInput(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString() ?? "";
+        if (string.IsNullOrWhiteSpace(value) || value.IndexOf("@") >= 0)
+        {
+            this.options = new List<string>();
+        }
+        else
+        {
+            this.options = new List<string>() { "gmail.com", "163.com", "qq.com" }.Select(x => $"{value}@{x}").ToList();
+        }
+    }
 }

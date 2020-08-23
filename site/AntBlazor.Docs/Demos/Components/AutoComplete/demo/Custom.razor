@@ -1,25 +1,35 @@
-﻿@using Microsoft.Extensions.Primitives
-<div>
-    <AutoComplete @ref="@_autoComplete" @bind-Value="@txtValue">
-        <CustomInput>
-            <TextArea Placeholder="input here" AutoSize="true" OnChange="OnChange" @bind-Value="@txtValue" @onkeydown="(e)=>_autoComplete.OnKeyDown(e)"/>
-        </CustomInput>
-    </AutoComplete>
-</div>
+﻿<div>Search</div>
+<AutoComplete DataSource="@options" OnInput="OnInput">
+    <Search Placeholder="input here" @bind-Value="@value" />
+</AutoComplete>
+<div>TextArea</div>
+<AutoComplete DataSource="@options" OnInput="OnInput">
+    <TextArea Placeholder="input here" AutoSize="true" @bind-Value="@value" />
+</AutoComplete>
+
+<Divider></Divider>
+<span>bind-Value:@value</span>
+
 
 @code
 {
-    private AutoComplete _autoComplete;
-    private string txtValue;
+    private string value;
 
-    private void OnChange(string value)
+    List<string> options = new List<string>();
+
+    void OnInput(ChangeEventArgs e)
     {
-        var list = string.IsNullOrWhiteSpace(value) ? Array.Empty<string>() : new[]
-        {
-            value,
-            value + value,
-            value + value + value
-        };
-        _autoComplete.LoadData(list);
+        var v = e.Value.ToString();
+        if (string.IsNullOrWhiteSpace(v))
+            options = new List<string>();
+        else
+            options = new List<string>()
+{
+                v, v + "1", v + "2"
+            };
+    }
+    void AAAA(KeyboardEventArgs e)
+    {
+        Console.WriteLine(e.Key);
     }
 }

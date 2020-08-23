@@ -1,0 +1,16 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="ant-select-item ant-select-item-group">
+    @if (LabelFragment == null)
+    {
+        @Label
+    }
+    else
+    {
+        @LabelFragment
+    }
+</div>
+@ChildContent
+
+

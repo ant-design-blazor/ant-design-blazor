@@ -1,8 +1,26 @@
-﻿<div>
-    <AutoComplete Options="@options" PlaceHolder="try to type 'b'" FilterOption="(value,option)=>option.Contains(value,StringComparison.InvariantCultureIgnoreCase)"></AutoComplete>
-</div>
+﻿<span>DataSource</span>
+<AutoComplete DataSource="@options" FilterOption="@(option=>option.Label.Contains(value??"",StringComparison.InvariantCultureIgnoreCase))">
+    <Input @bind-Value="@value" Placeholder="try to type 'b'" />
+</AutoComplete>
+<span>AutoCompleteOptions</span>
+<AutoComplete>
+    <ChildContent>
+        <Input @bind-Value="@value" Placeholder="try to type 'b'" />
+    </ChildContent>
+    <AutoCompleteOptions>
+        @foreach (var option in options.Where(x=>x.Contains(value ?? "", StringComparison.InvariantCultureIgnoreCase)))
+        {
+            <AutoCompleteOption Value="option"></AutoCompleteOption>
+        }
+    </AutoCompleteOptions>
+</AutoComplete>
+
+<Divider></Divider>
+<span>bind-Value:@value</span>
 
 @code
 {
+    private string value;
+
     private List<string> options = new List<string>() { "Burns Bay Road", "Downing Street", "Wall Street" };
 }
