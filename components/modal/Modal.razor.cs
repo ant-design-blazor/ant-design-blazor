@@ -206,6 +206,11 @@ namespace AntDesign
         {
             if (Visible)
             {
+                if (_dialog != null)
+                {
+                    _dialog.TryResetModalStyle();
+                }
+
                 if (!_hasFocus)
                 {
                     await JsInvokeAsync(JSInteropConstants.focusDialog, $"#{_dialog.SentinelStart}");

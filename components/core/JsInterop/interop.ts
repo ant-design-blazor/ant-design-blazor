@@ -457,4 +457,4 @@ function mentionsOnWindowClick(e) {
 
 //#endregion
 
-export { enableDraggable, disableDraggable } from "./modules/dragHelper";
+export { enableDraggable, disableDraggable, resetModalPosition } from "./modules/dragHelper";

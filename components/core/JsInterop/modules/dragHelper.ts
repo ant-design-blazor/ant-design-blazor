@@ -21,7 +21,7 @@ const throttle = (fn, threshold = 160) => {
     };
 }
 
-const eventMap = new WeakMap<HTMLElement, Dragger>();
+const eventMap = new Map<HTMLElement, Dragger>();
 
 const defaultOptions = {
     inViewport: true
@@ -34,7 +34,7 @@ class Dragger {
     private _options: any = null;
     private _state: any = null;
     private _isFirst: boolean = true;
-
+    private _style: string = "";
 
     constructor(triggler: HTMLElement, container: HTMLElement, dragInViewport: boolean) {
         this._triggler = triggler;
@@ -68,6 +68,10 @@ class Dragger {
         const { left, top } = this.getContainerPos();
 
         if (this._isFirst) {
+            if (!this._style) {
+                this._style = this._container.getAttribute("style");
+            }
+
             state.domMaxY = document.documentElement.clientHeight
                 - this._container.offsetHeight - 1;
             state.domMaxX = document.documentElement.clientWidth
@@ -166,22 +170,34 @@ class Dragger {
             window.removeEventListener("resize", this.onResize, false);
         }
     }
+
+    resetContainerStyle() {
+        this._isFirst = true;
+        this._container.setAttribute("style", this._style);
+    }
 }
 
 function enableDraggable(triggler: HTMLElement, container: HTMLElement, dragInViewport: boolean = true) {
-    if (!eventMap.has(triggler)) {
-        const dragger = new Dragger(triggler, container, dragInViewport);
-        dragger.bindDrag();
+    let dragger = eventMap.get(triggler);
+    if (!dragger) {
+        dragger = new Dragger(triggler, container, dragInViewport);
         eventMap.set(triggler, dragger);
-    }
+    } 
+    dragger.bindDrag();
 }
 
 function disableDraggable(triggler: HTMLElement) {
     const dragger = eventMap.get(triggler);
     if (dragger) {
         dragger.unbindDrag();
-        eventMap.delete(triggler);
     }
 }
 
-export { enableDraggable, disableDraggable };
+function resetModalPosition(triggler: HTMLElement) {
+    const dragger = eventMap.get(triggler);
+    if (dragger) {
+        dragger.resetContainerStyle();
+    }
+}
+
+export { enableDraggable, disableDraggable, resetModalPosition };

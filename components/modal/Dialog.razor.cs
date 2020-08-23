@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -29,6 +29,8 @@ namespace AntDesign
         private bool _hasDestroy = true;
         private string _wrapStyle = "";
         private bool _disableBodyScroll;
+        private bool _doDragable = false;
+
 
         /// <summary>
         /// dialog root container
@@ -40,6 +42,8 @@ namespace AntDesign
         private ElementReference _modal;
 
         private bool _isFirstRender = true;
+
+        #region ant-modal style
 
         /// <summary>
         /// ant-modal style
@@ -57,13 +61,27 @@ namespace AntDesign
             if (Config.Draggable && _isFirstRender)
             {
                 string left = "";
+                var width = 0.0d;
                 if (Config.Width.IsT1)
+                {
+                    width = Config.Width.AsT1 / 2;
+                }
+                else
+                {
+                    Regex reg = new Regex(@"\d+[\.\d]*");
+                    var match = reg.Match(Config.Width.AsT0);
+                    if (match.Success)
+                    {
+                        width = Convert.ToDouble(match.Value, CultureInfo.CurrentCulture) / 2;
+                    }
+                }
+                if (width > 0)
                 {
                     left = $"margin: 0; padding-bottom:0; left: calc(50% - {Config.Width.AsT1 / 2});";
                 }
                 else
                 {
-                    // TODO 提取数字
+                    left = $"margin: 0; padding-bottom:0;";
                 }
 
                 style += left;
@@ -71,6 +89,19 @@ namespace AntDesign
 
             return style;
         }
+
+        /// <summary>
+        /// if Modal is draggable, reset the position style similar with the first show
+        /// </summary>
+        internal void TryResetModalStyle()
+        {
+            if (Config.Draggable)
+            {
+                _ = JsInvokeAsync(JSInteropConstants.resetModalPosition, _dialogHeader);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         ///  append To body
@@ -290,8 +321,9 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.disableBodyScroll);
                 }
 
-                if (Config.Draggable)
+                if (Config.Draggable && !_doDragable)
                 {
+                    _doDragable = true;
                     await JsInvokeAsync(JSInteropConstants.enableDraggable, _dialogHeader, _modal, Config.DragInViewport);
                 }
             }
@@ -304,8 +336,9 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.enableModalBodyScroll);
                 }
 
-                if (Config.Draggable)
+                if (Config.Draggable && _doDragable)
                 {
+                    _doDragable = false;
                     await JsInvokeAsync(JSInteropConstants.disableDraggable, _dialogHeader);
                 }
             }

@@ -77,8 +77,15 @@ namespace AntDesign
 
         public static string disposeObj => $"{FUNC_PREFIX}disposeObj";
 
+        #region Draggable Modal
+
         public static string enableDraggable => $"{FUNC_PREFIX}enableDraggable";
 
         public static string disableDraggable => $"{FUNC_PREFIX}disableDraggable";
+
+        public static string resetModalPosition => $"{FUNC_PREFIX}resetModalPosition";
+
+        #endregion
+
     }
 }
