@@ -9,9 +9,11 @@
             {
                 @foreach (var option in Options.AsT0)
                 {
+                    option.Checked = option.Value.IsIn(_selectedValues);
+
                     <Checkbox class="ant-checkbox-group-item"
                               Disabled="option.Disabled || Disabled"
-                              Checked="@(option.Checked)"
+                              Checked="@option.Checked"
                               Label="@option.Value"
                               CheckedChange="_=>OnCheckedChange()">
                         <span>@option.Label</span>
