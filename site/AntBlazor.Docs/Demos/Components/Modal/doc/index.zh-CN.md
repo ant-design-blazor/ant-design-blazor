@@ -45,8 +45,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | ZIndex | 设置 Modal 的 `z-index` | int | 1000 |
 | OnCancel | 点击遮罩层或右上角叉或取消按钮的回调 | EventCallback<MouseEventArgs> | - |
 | OnOk | 点击确定回调 | EventCallback<MouseEventArgs> | - |
-| Draggable | 是否允许通过 Modal的 Header 拖动 Modal | bool | - |
-| DragInViewport | 如果 Draggable 为 true，是否仅在视窗内拖动Modal | bool | - |
+| Draggable | 是否允许通过 Modal的 Header 拖动 Modal | bool | false |
+| DragInViewport | 如果 Draggable 为 true，是否仅在视窗内拖动Modal | bool | true |
 
 #### 注意
 
