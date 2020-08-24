@@ -1,23 +1,17 @@
-﻿<div>
-    <AutoComplete CompareWith="CompareWith" OnSelectionChange="OnSelectionChange">
-        <ChildContent>
-            <Input @bind-Value="@value" />
-        </ChildContent>
+﻿<AutoComplete @bind-Value="@value" CompareWith="CompareWith" OnSelectionChange="OnSelectionChange">
+    <AutoCompleteOptions>
+        @foreach (var option in options)
+        {
+            <AutoCompleteOption Value="@option" Label="@option.label">
+            </AutoCompleteOption>
+        }
+    </AutoCompleteOptions>
 
-        <AutoCompleteOptions>
-            @foreach (var option in options)
-            {
-                <AutoCompleteOption Value="@option" Label="@option.label">
-                </AutoCompleteOption>
-            }
-        </AutoCompleteOptions>
-
-    </AutoComplete>
-    <Divider></Divider>
-    <span>bind-Value:@value</span>
-    <br />
-    <span>SelectedValue:@(System.Text.Json.JsonSerializer.Serialize(selectItem?.Value))</span>
-</div>
+</AutoComplete>
+<Divider></Divider>
+<span>bind-Value:@value</span>
+<br />
+<span>SelectedValue:@(System.Text.Json.JsonSerializer.Serialize(selectItem?.Value))</span>
 
 
 

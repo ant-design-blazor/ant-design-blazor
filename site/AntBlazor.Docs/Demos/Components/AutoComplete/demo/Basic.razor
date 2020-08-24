@@ -1,7 +1,4 @@
-﻿<AutoComplete DataSource="@options" OnInput="OnInput" OnSelectionChange="OnSelectionChange" OnActiveChange="OnActiveChange">
-    <Input @bind-Value="@value" />
-</AutoComplete>
-
+﻿<AutoComplete @bind-Value="@value" DataSource="@options" OnInput="OnInput" OnSelectionChange="OnSelectionChange" OnActiveChange="OnActiveChange"/>
 <Divider></Divider>
 <span>bind-Value:@value</span>
 <br />

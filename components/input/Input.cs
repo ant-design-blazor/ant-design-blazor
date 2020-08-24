@@ -11,7 +11,7 @@ namespace AntDesign
     /// <summary>
     ///
     /// </summary>
-    public class Input<TValue> : AntInputComponentBase<TValue>, IAutoCompleteInput
+    public class Input<TValue> : AntInputComponentBase<TValue>
     {
         protected const string PrefixCls = "ant-input";
 
@@ -84,9 +84,6 @@ namespace AntDesign
 
         private TValue _inputValue;
 
-        [CascadingParameter]
-        public AutoComplete AutoComplete { get; set; }
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -97,8 +94,6 @@ namespace AntDesign
             }
 
             SetClasses();
-
-            if (AutoComplete != null) AutoComplete?.SetInputComponent(this);
         }
 
         protected virtual void SetClasses()
@@ -195,27 +190,21 @@ namespace AntDesign
             if (OnkeyUp.HasDelegate) await OnkeyUp.InvokeAsync(args);
         }
 
-        protected async Task OnkeyDownAsync(KeyboardEventArgs args)
+        protected virtual async Task OnkeyDownAsync(KeyboardEventArgs args)
         {
             if (OnkeyDown.HasDelegate) await OnkeyDown.InvokeAsync(args);
-
-            if (AutoComplete != null) await AutoComplete?.InputKeyDown(args);
         }
 
-        internal async Task OnBlurAsync(FocusEventArgs e)
+        internal virtual async Task OnBlurAsync(FocusEventArgs e)
         {
-            if (AutoComplete != null) await AutoComplete?.InputBlur(e);
-
             if (OnBlur.HasDelegate)
             {
                 await OnBlur.InvokeAsync(e);
             }
         }
 
-        internal async Task OnFocusAsync(FocusEventArgs e)
+        internal virtual async Task OnFocusAsync(FocusEventArgs e)
         {
-            if (AutoComplete != null) await AutoComplete?.InputFocus(e);
-
             if (OnFocus.HasDelegate)
             {
                 await OnFocus.InvokeAsync(e);
@@ -292,7 +281,6 @@ namespace AntDesign
                 await OnInput.InvokeAsync(args);
             }
 
-            if (AutoComplete != null) await AutoComplete?.InputInput(args);
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -414,15 +402,5 @@ namespace AntDesign
                 }
             }
         }
-
-
-        #region IAutoCompleteInput
-
-        public void SetValue(object value)
-        {
-            this.CurrentValue = (TValue)value;
-        }
-
-        #endregion
     }
 }

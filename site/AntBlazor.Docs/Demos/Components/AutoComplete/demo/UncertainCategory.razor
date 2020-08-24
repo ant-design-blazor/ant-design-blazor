@@ -1,6 +1,6 @@
 ﻿<AutoComplete OnInput="OnInput">
     <ChildContent>
-        <Search Placeholder="input here" @bind-Value="@value" />
+        <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" />
     </ChildContent>
     <AutoCompleteOptions>
         @foreach (var option in options)

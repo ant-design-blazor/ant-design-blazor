@@ -8,6 +8,8 @@ namespace AntDesign
 {
     public interface IAutoCompleteInput
     {
+        [CascadingParameter]
+        public IAutoCompleteRef AutoComplete { get; set; }
         public void SetValue(object value);
     }
 }

@@ -1,11 +1,9 @@
 ﻿<span>DataSource</span>
-<AutoComplete DataSource="@options" FilterOption="@(option=>option.Label.Contains(value??"",StringComparison.InvariantCultureIgnoreCase))">
-    <Input @bind-Value="@value" Placeholder="try to type 'b'" />
-</AutoComplete>
+<AutoComplete @bind-Value="@value" DataSource="@options" FilterOption="@(option=>option.Label.Contains(value??"",StringComparison.InvariantCultureIgnoreCase))"/>
 <span>AutoCompleteOptions</span>
 <AutoComplete>
     <ChildContent>
-        <Input @bind-Value="@value" Placeholder="try to type 'b'" />
+        <AutoCompleteInput @bind-Value="@value" Placeholder="try to type 'b'" />
     </ChildContent>
     <AutoCompleteOptions>
         @foreach (var option in options.Where(x=>x.Contains(value ?? "", StringComparison.InvariantCultureIgnoreCase)))

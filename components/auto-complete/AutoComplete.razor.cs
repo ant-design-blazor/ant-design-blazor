@@ -12,7 +12,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public partial class AutoComplete : AntDomComponentBase
+    public partial class AutoComplete : AntInputComponentBase<string>, IAutoCompleteRef
     {
         #region Parameters
 

@@ -1,7 +1,5 @@
 ﻿<div>
-    <AutoComplete DataSource="@options" OnInput="OnInput">
-        <Input @bind-Value="@value" />
-    </AutoComplete>
+    <AutoComplete @bind-Value="@value" DataSource="@options" OnInput="OnInput"/>
 </div>
 <Divider></Divider>
 <span>bind-Value:@value</span>

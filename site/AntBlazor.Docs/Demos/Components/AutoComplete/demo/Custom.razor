@@ -1,10 +1,11 @@
-﻿<div>Search</div>
+﻿
+<div>Input</div>
 <AutoComplete DataSource="@options" OnInput="OnInput">
-    <Search Placeholder="input here" @bind-Value="@value" />
+    <AutoCompleteInput Placeholder="input here" @bind-Value="@value" />
 </AutoComplete>
-<div>TextArea</div>
+<div>Search</div>
 <AutoComplete DataSource="@options" OnInput="OnInput">
-    <TextArea Placeholder="input here" AutoSize="true" @bind-Value="@value" />
+    <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" />
 </AutoComplete>
 
 <Divider></Divider>

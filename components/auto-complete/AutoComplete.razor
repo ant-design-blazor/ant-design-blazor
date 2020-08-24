@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign
-@inherits AntDomComponentBase
+@inherits AntInputComponentBase<string>
+
 @using AntDesign.Internal
 
 <div @ref="@_divRef" style="@Style" id="@Id">
@@ -36,7 +37,14 @@
             </Overlay>
             <ChildContent>
                 <CascadingValue Value="this">
-                    @ChildContent
+                    @if (ChildContent == null)
+                    {
+                        <AutoCompleteInput @bind-Value="@CurrentValue" />
+                    }
+                    else
+                    {
+                        @ChildContent
+                    }
                 </CascadingValue>
             </ChildContent>
         </OverlayTrigger>
