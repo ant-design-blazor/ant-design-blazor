@@ -34,7 +34,7 @@ class Dragger {
     private _options: any = null;
     private _state: any = null;
     private _isFirst: boolean = true;
-    private _style: string = "";
+    private _style: string = null;
 
     constructor(triggler: HTMLElement, container: HTMLElement, dragInViewport: boolean) {
         this._triggler = triggler;
@@ -172,8 +172,10 @@ class Dragger {
     }
 
     resetContainerStyle() {
-        this._isFirst = true;
-        this._container.setAttribute("style", this._style);
+        if (this._style !== null) {
+            this._isFirst = true;
+            this._container.setAttribute("style", this._style);
+        }
     }
 }
 
