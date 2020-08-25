@@ -6,22 +6,38 @@ namespace AntDesign
 {
     public interface ILocale
     {
-        public string locale { get; set; }
+        public string Locale { get; set; }
+
         public IPaginationLocale Pagination { get; set; }
-        public object DatePicker { get; set; }
-        public object TimePicker { get; set; }
-        public object Calendar { get; set; }
-        public object Table { get; set; }
-        public object Modal { get; set; }
-        public object Popconfirm { get; set; }
-        public object Transfer { get; set; }
-        public object Select { get; set; }
-        public object Upload { get; set; }
-        public object Empty { get; set; }
-        public object global { get; set; }
-        public object PageHeader { get; set; }
-        public object Icon { get; set; }
-        public object Text { get; set; }
-        public object Form { get; set; }
+
+        public IDateLocale DatePicker { get; set; }
+
+        public IDateLocale TimePicker { get; set; }
+
+        public IDateLocale Calendar { get; set; }
+
+        public ITableLocale Table { get; set; }
+
+        public IModalLocale Modal { get; set; }
+
+        public IPopconfirmLocale Popconfirm { get; set; }
+
+        public ITransferLocale Transfer { get; set; }
+
+        public ISelectLocale Select { get; set; }
+
+        public IUploadLocale Upload { get; set; }
+
+        public IEmptyLocale Empty { get; set; }
+
+        public object Global { get; set; }
+
+        public IPageHeaderLocale PageHeader { get; set; }
+
+        public IIconLocale Icon { get; set; }
+
+        public ITextLocale Text { get; set; }
+
+        public IFormLocale Form { get; set; }
     }
 }
