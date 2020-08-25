@@ -68,9 +68,6 @@ class Dragger {
         const { left, top } = this.getContainerPos();
 
         if (this._isFirst) {
-            if (!this._style) {
-                this._style = this._container.getAttribute("style");
-            }
 
             state.domMaxY = document.documentElement.clientHeight
                 - this._container.offsetHeight - 1;
@@ -79,6 +76,10 @@ class Dragger {
 
             this._container.style.left = left + 'px';
             this._container.style.top = top + 'px';
+
+            if (!this._style) {
+                this._style = this._container.getAttribute("style");
+            }
 
             this._isFirst = false;
         }

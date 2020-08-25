@@ -45,59 +45,40 @@ namespace AntDesign
 
         #region ant-modal style
 
+        private string _modalStyle = null;
         /// <summary>
         /// ant-modal style
         /// </summary>
         /// <returns></returns>
         private string GetStyle()
         {
-            var style = $"{Config.GetWidth()};";
+            if (_modalStyle == null)
+            {
+                var style = $"{Config.GetWidth()};";
+
+                if (Config.Draggable)
+                {
+                    string left = $"margin: 0; padding-bottom:0;";
+                    style += left;
+                }
+                _modalStyle = style;
+            }
 
             if (!string.IsNullOrWhiteSpace(Style))
             {
-                style += Style + ";";
+                return _modalStyle + Style + ";";
             }
-
-            if (Config.Draggable && _isFirstRender)
-            {
-                string left = "";
-                var width = 0.0d;
-                if (Config.Width.IsT1)
-                {
-                    width = Config.Width.AsT1 / 2;
-                }
-                else
-                {
-                    Regex reg = new Regex(@"\d+[\.\d]*");
-                    var match = reg.Match(Config.Width.AsT0);
-                    if (match.Success)
-                    {
-                        width = Convert.ToDouble(match.Value, CultureInfo.CurrentCulture) / 2;
-                    }
-                }
-                if (width > 0)
-                {
-                    left = $"margin: 0; padding-bottom:0; left: calc(50% - {Config.Width.AsT1 / 2});";
-                }
-                else
-                {
-                    left = $"margin: 0; padding-bottom:0;";
-                }
-
-                style += left;
-            }
-
-            return style;
+            return _modalStyle;
         }
 
         /// <summary>
         /// if Modal is draggable, reset the position style similar with the first show
         /// </summary>
-        internal void TryResetModalStyle()
+        internal async Task TryResetModalStyle()
         {
             if (Config.Draggable)
             {
-                _ = JsInvokeAsync(JSInteropConstants.resetModalPosition, _dialogHeader);
+                await JsInvokeAsync(JSInteropConstants.resetModalPosition, _dialogHeader);
             }
         }
 
