@@ -1,5 +1,5 @@
 ---
-order: 14
+order: 11
 title:
   zh-CN: 可拖拽的Modal
   en-US: Draggable Modal
