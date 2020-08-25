@@ -12,7 +12,7 @@
          @onmouseup="@OnMaskMouseUp"
          @onkeydown="@OnKeyDown"
          style="@_wrapStyle">
-        <div role="document" class="ant-modal @GetModalClsName()"
+        <div  @ref="@_modal" role="document" class="ant-modal @GetModalClsName()"
              @onmousedown="@OnDialogMouseDown"
              style="@GetStyle()">
             <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
@@ -32,7 +32,7 @@
                 {
                     var titleValue = Config.Title.Value;
 
-                    <div class="ant-modal-header">
+                    <div @ref="@_dialogHeader" class="ant-modal-header" style="@Config.GetHeaderStyle()">
                         <div class="ant-modal-title" id="rcDialogTitle0">
                             @if (titleValue.IsT0)
                             {
