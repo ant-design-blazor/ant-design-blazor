@@ -69,16 +69,37 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 - Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 or later
 
-- Create Blazor WebAssembly Project
+### Create a new project from the dotnet new template
+
+We provide the Dotnet New template to create a [Boilerplate](https://github.com/ant-design-blazor/ant-design-pro-blazor) project out of the box：
+
+- Install the template
 
   ```bash
-  $ dotnet new blazorwasm -o MyAntDesignApp
+  $ dotnet new --install AntDesign.Templates::0.1.0-*
   ```
+
+- Create the Boilerplate project with the template
+
+  ```bash
+  $ dotnet new antdesign -o MyAntDesignApp
+  ```
+
+Options for the template：
+
+| Options          | Description                                         | Type     | Default    |
+| ---------------- | -------------------------------------------- | ------ |  --------- |
+| `-f` \| `--full`  | Generate all pages or not | bool  |  false    |
+| `-ho` \| `--host`   | Specify the hosting model  | 'wasm' \| 'server' \| 'hosted'    |'wasm'      |
+| `--no-restore` | Whether to automatically restore package references  | bool    | true |
+
+
+
+### Import Ant Design Blazor into an existing project
 
 - Go to the project folder of the application and install the Nuget package reference
 
   ```bash
-  $ cd MyAntDesignApp
   $ dotnet add package AntDesign
   ```
 
@@ -88,7 +109,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
   services.AddAntDesign();
   ```
 
-- Link the static files in `wwwroot/index.html` (WebAssembly) or `Pages/_Host.razor` (Server)
+- Link the static files in `wwwroot/index.html` (WebAssembly) or `Pages/_Host.cshtml` (Server)
 
   ```html
   <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />

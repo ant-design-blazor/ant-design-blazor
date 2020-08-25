@@ -66,16 +66,37 @@ title: Ant Design of Blazor
 
 - 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 以上版本
 
-- 创建 Blazor WebAssembly 项目
+### 从模板创建一个新项目
 
+我们提供了 dotnet new 模板来创建一个开箱即用的 [Ant Design Pro](https://github.com/ant-design-blazor/ant-design-pro-blazor) 新项目：
+
+- 安装模板
+
+  ```bash
+  $ dotnet new --install AntDesign.Templates::0.1.0-*
   ```
-  $ dotnet new blazorwasm -o MyAntDesignApp
+
+- 从模板创建 Ant Design Blazor Pro 项目
+
+  ```bash
+  $ dotnet new antdesign -o MyAntDesignApp
   ```
+
+模板的参数：
+
+| 参数             | 说明                                         | 类型          | 认  值    |
+| ---------------- | -------------------------------------------- | ------------- |  --------- |
+| `-f` \| `--full`  | 如果设置这个参数，会生成所有 Ant Design Pro 页面  | bool      |  false    |
+| `-ho` \| `--host`   | 指定托管模型  | 'wasm' \| 'server' \| 'hosted'        |'wasm'      |
+| `--no-restore` | 如果设置这个参数，不会自动恢复包引用         | bool       | true |
+
+
+
+### 在已有项目中引入 Ant Design Blazor
 
 - 进入应用的项目文件夹，安装 Nuget 包引用
 
   ```bash
-  $ cd MyAntDesignApp
   $ dotnet add package AntDesign --version 0.1.0-*
   ```
 
@@ -85,7 +106,7 @@ title: Ant Design of Blazor
   services.AddAntDesign();
   ```
 
-- 在 `wwwroot/index.html`(WebAssembly) 或 `Pages/_Host.razor`(Server) 中引入静态文件:
+- 在 `wwwroot/index.html`(WebAssembly) 或 `Pages/_Host.cshtml`(Server) 中引入静态文件:
 
   ```
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
