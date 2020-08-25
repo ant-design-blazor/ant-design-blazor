@@ -72,6 +72,8 @@ namespace AntDesign
         [Parameter]
         public bool ShowPanel { get; set; } = false;
 
+        private bool _isOptionsZero = true;
+
         private IAutoCompleteInput _inputComponent;
 
         public void SetInputComponent(IAutoCompleteInput input)
@@ -251,7 +253,7 @@ namespace AntDesign
         private void ResetActiveItem()
         {
             var items = GetOptionItems();
-
+            _isOptionsZero = items.Count == 0 && DataSource.Value != null;
             if (items.Any(x => CompareWith(x.Value, this.ActiveValue)) == false)
             {//如果当前激活项找在列表中不存在，那么我们需要做一些处理
                 if (items.Any(x => CompareWith(x.Value, this.SelectedValue)))

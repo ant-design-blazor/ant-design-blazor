@@ -6,7 +6,7 @@
 <div @ref="@_divRef" style="@Style" id="@Id">
     <CascadingValue Value='$"ant-select-dropdown"' Name="PrefixCls">
         <OverlayTrigger Style="display: inline"
-                        Visible="@ShowPanel"
+                        Visible="@(ShowPanel && !_isOptionsZero)"
                         IsButton="@true"
                         Disabled="false"
                         Trigger="new TriggerType[] { TriggerType.Click }"
