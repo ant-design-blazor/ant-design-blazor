@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using Microsoft.JSInterop;
 
@@ -7,7 +9,7 @@ namespace AntDesign.JsInterop
 {
     public class DomEventService
     {
-        private Dictionary<string, Func<object>> _domEventListeners = new Dictionary<string, Func<object>>();
+        private ConcurrentDictionary<string, List<DomEventSubscription>> _domEventListeners = new ConcurrentDictionary<string, List<DomEventSubscription>>();
 
         private readonly IJSRuntime _jsRuntime;
 
@@ -16,20 +18,9 @@ namespace AntDesign.JsInterop
             _jsRuntime = jsRuntime;
         }
 
-        private void AddEventListenerInternal<T>(object dom, string eventName, Action<T> callback)
-        {
-            if (!_domEventListeners.ContainsKey($"{dom}-{eventName}"))
-            {
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
-                {
-                    callback?.Invoke(p);
-                })));
-            }
-        }
-
         private void AddEventListenerToFirstChildInternal<T>(object dom, string eventName, Action<T> callback)
         {
-            if (!_domEventListeners.ContainsKey($"{dom}-{eventName}"))
+            if (!_domEventListeners.ContainsKey(FormatKey(dom, eventName)))
             {
                 _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListenerToFirstChild, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
                 {
@@ -38,22 +29,37 @@ namespace AntDesign.JsInterop
             }
         }
 
-        public void AddEventListener(object dom, string eventName, Action<JsonElement> callback)
+        public void AddEventListener(object dom, string eventName, Action<JsonElement> callback, bool exclusive = true)
         {
-            AddEventListenerInternal<string>(dom, eventName, (e) =>
-            {
-                JsonElement jsonElement = JsonDocument.Parse(e).RootElement;
-                callback(jsonElement);
-            });
+            AddEventListener<JsonElement>(dom, eventName, callback, exclusive);
         }
 
-        public void AddEventListener<T>(object dom, string eventName, Action<T> callback)
+        public void AddEventListener<T>(object dom, string eventName, Action<T> callback, bool exclusive = true)
         {
-            AddEventListenerInternal<string>(dom, eventName, (e) =>
+            if (exclusive)
             {
-                T obj = JsonSerializer.Deserialize<T>(e);
-                callback(obj);
-            });
+                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
+                {
+                    callback(p);
+                })));
+            }
+            else
+            {
+                string key = FormatKey(dom, eventName);
+                if (!_domEventListeners.ContainsKey(key))
+                {
+                    _domEventListeners[key] = new List<DomEventSubscription>();
+
+                    _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
+                    {
+                        foreach (var subscription in _domEventListeners[key])
+                        {
+                            subscription.Delegate.DynamicInvoke(p);
+                        }
+                    })));
+                }
+                _domEventListeners[key].Add(new DomEventSubscription(callback));
+            }
         }
 
         public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback)
@@ -72,6 +78,21 @@ namespace AntDesign.JsInterop
                 T obj = JsonSerializer.Deserialize<T>(e);
                 callback(obj);
             });
+        }
+
+        private static string FormatKey(object dom, string eventName) => $"{dom}-{eventName}";
+
+        public void RemoveEventListerner<T>(object dom, string eventName, Action<T> callback)
+        {
+            string key = FormatKey(dom, eventName);
+            if (_domEventListeners.ContainsKey(key))
+            {
+                var subscription = _domEventListeners[key].SingleOrDefault(s => s.Delegate == (Delegate)callback);
+                if (subscription != null)
+                {
+                    _domEventListeners[key].Remove(subscription);
+                }
+            }
         }
     }
 

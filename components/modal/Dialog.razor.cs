@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -29,27 +29,60 @@ namespace AntDesign
         private bool _hasDestroy = true;
         private string _wrapStyle = "";
         private bool _disableBodyScroll;
+        private bool _doDragable = false;
+
 
         /// <summary>
         /// dialog root container
         /// </summary>
         private ElementReference _element;
 
+        private ElementReference _dialogHeader;
+
+        private ElementReference _modal;
+
+        private bool _isFirstRender = true;
+
+        #region ant-modal style
+
+        private string _modalStyle = null;
         /// <summary>
         /// ant-modal style
         /// </summary>
         /// <returns></returns>
         private string GetStyle()
         {
-            var style = $"{Config.GetWidth()};";
+            if (_modalStyle == null)
+            {
+                var style = $"{Config.GetWidth()};";
+
+                if (Config.Draggable)
+                {
+                    string left = $"margin: 0; padding-bottom:0;";
+                    style += left;
+                }
+                _modalStyle = style;
+            }
 
             if (!string.IsNullOrWhiteSpace(Style))
             {
-                style += Style + ";";
+                return _modalStyle + Style + ";";
             }
-
-            return style;
+            return _modalStyle;
         }
+
+        /// <summary>
+        /// if Modal is draggable, reset the position style similar with the first show
+        /// </summary>
+        internal async Task TryResetModalStyle()
+        {
+            if (Config.Draggable)
+            {
+                await JsInvokeAsync(JSInteropConstants.resetModalPosition, _dialogHeader);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         ///  append To body
@@ -100,7 +133,7 @@ namespace AntDesign
         private readonly string _sentinelStart = IdPrefix + Guid.NewGuid().ToString();
         private readonly string _sentinelEnd = IdPrefix + Guid.NewGuid().ToString();
 
-        public string SentinelStart=> _sentinelStart;
+        public string SentinelStart => _sentinelStart;
 
         private async Task OnKeyDown(KeyboardEventArgs e)
         {
@@ -160,7 +193,22 @@ namespace AntDesign
 
             if (Visible)
             {
-                _wrapStyle = "";
+                if (Config.Draggable)
+                {
+                    _wrapStyle = "display:flex;justify-content: center;";
+                    if (Config.Centered)
+                    {
+                        _wrapStyle += "align-items: center;";
+                    }
+                    else
+                    {
+                        _wrapStyle += "align-items: flex-start;";
+                    }
+                }
+                else
+                {
+                    _wrapStyle = "";
+                }
                 _maskHideClsName = "";
                 _maskAnimation = ModalAnimation.MaskEnter;
                 _modalAnimation = ModalAnimation.ModalEnter;
@@ -236,6 +284,8 @@ namespace AntDesign
 
         protected override async Task OnAfterRenderAsync(bool isFirst)
         {
+            _isFirstRender = isFirst;
+
             if (Visible)
             {
                 if (_hasDestroy)
@@ -251,6 +301,12 @@ namespace AntDesign
                     _disableBodyScroll = true;
                     await JsInvokeAsync(JSInteropConstants.disableBodyScroll);
                 }
+
+                if (Config.Draggable && !_doDragable)
+                {
+                    _doDragable = true;
+                    await JsInvokeAsync(JSInteropConstants.enableDraggable, _dialogHeader, _modal, Config.DragInViewport);
+                }
             }
             else
             {
@@ -259,6 +315,12 @@ namespace AntDesign
                     _disableBodyScroll = false;
                     await Task.Delay(250);
                     await JsInvokeAsync(JSInteropConstants.enableModalBodyScroll);
+                }
+
+                if (Config.Draggable && _doDragable)
+                {
+                    _doDragable = false;
+                    await JsInvokeAsync(JSInteropConstants.disableDraggable, _dialogHeader);
                 }
             }
             await base.OnAfterRenderAsync(isFirst);
