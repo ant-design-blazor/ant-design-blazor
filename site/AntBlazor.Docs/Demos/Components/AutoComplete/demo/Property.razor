@@ -1,0 +1,29 @@
+﻿<AutoComplete  @bind-Value="@value" Options="@options" Backfill="switchBackfill" DefaultActiveFirstOption="switchDefaultActiveFirstOption" Width="120"/>
+<Divider Text="属性"></Divider>
+
+<div>
+    <Switch @bind-Value="switchBackfill" />Backfill
+    <br />
+    <Switch @bind-Value="switchDefaultActiveFirstOption" />DefaultActiveFirstOption
+
+</div>
+
+<Divider></Divider>
+<span>bind-Value:@value</span>
+
+
+@code
+{
+    private string value;
+
+    List<AutoCompleteDataItem> options = new List<AutoCompleteDataItem>() {
+        new AutoCompleteDataItem("Burns Bay Road","Burns Bay Road"),
+        new AutoCompleteDataItem("Downing Street","Downing Street"){ IsDisabled=true },
+        new AutoCompleteDataItem("Wall Street","Wall Street")
+        };
+
+    bool switchBackfill { get; set; } = false;
+
+    bool switchDefaultActiveFirstOption { get; set; } = true;
+
+}
