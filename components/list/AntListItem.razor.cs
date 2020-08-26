@@ -49,10 +49,15 @@ namespace AntDesign
             if (Grid != null)
             {
                 await this.SetGutterStyle();
-                DomEventService.AddEventListener<object>("window", "resize", async _ => await this.SetGutterStyle());
+                DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
             }
 
             await base.OnInitializedAsync();
+        }
+
+        private async void OnResize(object o)
+        {
+            await SetGutterStyle();
         }
 
         protected override void OnParametersSet()
@@ -150,6 +155,13 @@ namespace AntDesign
             {
                 ItemClickCallback.InvokeAsync(this);
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            DomEventService.RemoveEventListerner<object>("window", "resize", OnResize);
         }
     }
 }

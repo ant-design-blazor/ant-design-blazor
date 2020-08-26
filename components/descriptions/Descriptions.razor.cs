@@ -61,7 +61,7 @@ namespace AntDesign
         };
 
         private static readonly List<(int PixelWidth, BreakpointEnum Breakpoint)> _descriptionsResponsiveMap = new List<(int, BreakpointEnum)>()
-        {          
+        {
             (575,BreakpointEnum.xs),
             (576,BreakpointEnum.sm),
             (768,BreakpointEnum.md),
@@ -85,14 +85,16 @@ namespace AntDesign
 
             if (Column.IsT1)
             {
-                DomEventService.AddEventListener<object>("window", "resize", async _ =>
-                {
-                    await this.SetRealColumn();
-                    PrepareMatrix();
-                    await InvokeAsync(StateHasChanged);
-                });
+                DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
             }
             await base.OnInitializedAsync();
+        }
+
+        private async void OnResize(object o)
+        {
+            await SetRealColumn();
+            PrepareMatrix();
+            await InvokeAsync(StateHasChanged);
         }
 
         protected override async Task OnFirstAfterRenderAsync()
@@ -166,6 +168,13 @@ namespace AntDesign
                 var bp = breakpointTuple == default ? BreakpointEnum.xxl : breakpointTuple.Breakpoint;
                 _realColumn = Column.AsT1.ContainsKey(bp.ToString()) ? Column.AsT1[bp.ToString()] : _defaultColumnMap[bp.ToString()];
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            DomEventService.RemoveEventListerner<object>("window", "resize", OnResize);
         }
     }
 }
