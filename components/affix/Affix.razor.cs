@@ -107,8 +107,8 @@ namespace AntDesign
             }
             else if (!_rootListened && string.IsNullOrEmpty(Target.Id))
             {
-                DomEventService.AddEventListener(RootScollSelector, "scroll", OnScroll);
-                DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize);
+                DomEventService.AddEventListener(RootScollSelector, "scroll", OnScroll, false);
+                DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize, false);
                 _rootListened = true;
             }
         }
@@ -178,6 +178,14 @@ namespace AntDesign
             }
 
             StateHasChanged();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "scroll", OnScroll);
+            DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "resize", OnWindowResize);
         }
     }
 }

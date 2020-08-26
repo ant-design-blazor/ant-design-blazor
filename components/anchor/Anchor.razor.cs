@@ -121,7 +121,7 @@ namespace AntDesign
             {
                 if (GetCurrentAnchor is null)
                 {
-                    DomEventService.AddEventListener("window", "scroll", OnScroll);
+                    DomEventService.AddEventListener("window", "scroll", OnScroll, false);
                 }
             }
 
@@ -282,6 +282,13 @@ namespace AntDesign
 
             // forced to render when user click on another link that is at the same height with the previously activated dom
             StateHasChanged();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            DomEventService.RemoveEventListerner<JsonElement>("window", "scroll", OnScroll);
         }
     }
 }

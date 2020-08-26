@@ -107,9 +107,14 @@ namespace AntDesign
             if (firstRender && Breakpoint != null)
             {
                 var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.getWindow);
-                DomEventService.AddEventListener<Window>("window", "resize", args => OptimizeSize(args.innerWidth));
+                DomEventService.AddEventListener<Window>("window", "resize", OnResize, false);
                 OptimizeSize(dimensions.innerWidth);
             }
+        }
+
+        private void OnResize(Window window)
+        {
+            OptimizeSize(window.innerWidth);
         }
 
         private void ToggleCollapsed()
@@ -140,6 +145,13 @@ namespace AntDesign
             }
 
             StateHasChanged();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            DomEventService.RemoveEventListerner<Window>("window", "resize", OnResize);
         }
     }
 }
