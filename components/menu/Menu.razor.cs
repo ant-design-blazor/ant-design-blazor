@@ -153,16 +153,19 @@ namespace AntDesign
             }
         }
 
-        /// <summary>
-        /// 点击下级菜单或“SubMenu”的Titile时触发
-        /// </summary>
-        /// <param name="menu"></param>
-        /// <param name="isTitleClick">是否是点击SubMenu的Titile触发的本事件</param>
         public void SelectSubmenu(SubMenu menu, bool isTitleClick = false)
         {
             if (menu == null)
             {
                 return;
+            }
+
+            if (Accordion)
+            {
+                foreach (SubMenu item in Submenus.Where(x => x != menu && x != menu.Parent))
+                {
+                    item.Close();
+                }
             }
 
             if (isTitleClick && menu.IsOpen)
@@ -172,15 +175,6 @@ namespace AntDesign
             else
             {
                 menu.Open();
-                Accordion = true;
-            }
-
-            if (Accordion)
-            {
-                foreach (SubMenu item in Submenus.Where(x => x != menu && x != menu.Parent))
-                {
-                    item.Close();
-                }
             }
 
             if (OnSubmenuClicked.HasDelegate)
