@@ -64,9 +64,14 @@ namespace AntDesign
                 ;
 
             await this.SetGutterStyle();
-            DomEventService.AddEventListener<object>("window", "resize", async _ => await this.SetGutterStyle());
+            DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
 
             await base.OnInitializedAsync();
+        }
+
+        private async void OnResize(object o)
+        {
+            await SetGutterStyle();
         }
 
         private async Task SetGutterStyle()
@@ -108,6 +113,13 @@ namespace AntDesign
                 dic => breakPoint != null && dic.ContainsKey(breakPoint) ? (dic[breakPoint], 0) : (0, 0),
                 tuple => tuple
             );
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            DomEventService.RemoveEventListerner<object>("window", "resize", OnResize);
         }
     }
 
