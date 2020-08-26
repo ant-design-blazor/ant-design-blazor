@@ -22,6 +22,19 @@ namespace AntDesign
 
         public bool Closable { get; set; } = true;
 
+        public bool Draggable { get; set; }
+
+        public bool DragInViewport { get; set; } = true;
+
+        internal string GetHeaderStyle()
+        {
+            if (Draggable)
+            {
+                return "cursor: move;";
+            }
+            return "";
+        }
+
         private static readonly RenderFragment _defaultCloseIcon = (builder) =>
         {
             builder.OpenComponent<Icon>(0);

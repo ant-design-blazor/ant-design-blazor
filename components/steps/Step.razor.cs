@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
-using System.Collections.Generic;
 
 namespace AntDesign
 {
@@ -14,8 +14,11 @@ namespace AntDesign
         private readonly Dictionary<string, object> _containerAttributes = new Dictionary<string, object>();
 
         internal bool Clickable { get; set; }
+
         internal bool Last { get; set; }
+
         internal bool ShowProcessDot { get; set; }
+
         internal string GroupStatus { get; set; } = string.Empty;
 
         internal int GroupCurrentIndex
@@ -50,22 +53,29 @@ namespace AntDesign
             get => _status;
             set
             {
-                _status = value;
-                _isCustomStatus = true;
-                SetClassMap();
+                if (_status != value)
+                {
+                    _status = value;
+                    _isCustomStatus = true;
+                    SetClassMap();
+                }
             }
         }
 
         [Parameter] public OneOf<string, RenderFragment> Title { get; set; }
+
         [Parameter] public OneOf<string, RenderFragment> Subtitle { get; set; }
+
         [Parameter] public OneOf<string, RenderFragment> Description { get; set; }
+
         [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+
         [Parameter] public bool Disabled { get; set; }
 
         protected override void OnInitialized()
         {
-            Parent._children.Add(this);
-            this.Index = Parent._children.Count - 1;
+            Parent?.AddStep(this);
+
             SetClassMap();
             if (Clickable && !Disabled)
             {
@@ -103,6 +113,18 @@ namespace AntDesign
         {
             base.OnParametersSet();
             SetClassMap();
+        }
+
+        private void HandleClick(MouseEventArgs args)
+        {
+            if (Clickable && !Disabled)
+            {
+                Parent.NavigateTo(Index);
+                if (OnClick.HasDelegate)
+                {
+                    OnClick.InvokeAsync(args);
+                }
+            }
         }
 
         internal static void MarkForCheck()
