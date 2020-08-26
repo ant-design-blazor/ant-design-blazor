@@ -1,5 +1,5 @@
 ﻿<span>DataSource</span>
-<AutoComplete @bind-Value="@value" DataSource="@options" FilterOption="@(option=>option.Label.Contains(value??"",StringComparison.InvariantCultureIgnoreCase))"/>
+<AutoComplete @bind-Value="@value" Options="@options" FilterOption="@(option=>option.Label.Contains(value??"",StringComparison.InvariantCultureIgnoreCase))"/>
 <span>AutoCompleteOptions</span>
 <AutoComplete>
     <ChildContent>

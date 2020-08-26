@@ -22,7 +22,7 @@ namespace AntDesign
         public bool Backfill { get; set; } = false;
 
         [Parameter]
-        public OneOf<IList<AutoCompleteDataItem>, IList<string>, IList<int>> DataSource { get; set; }
+        public OneOf<IList<AutoCompleteDataItem>, IList<string>, IList<int>> Options { get; set; }
         [Parameter]
         public EventCallback<AutoCompleteOption> OnSelectionChange { get; set; }
         [Parameter]
@@ -162,9 +162,9 @@ namespace AntDesign
 
         public IList<AutoCompleteDataItem> GetOptionItems()
         {
-            if (DataSource.Value != null)
+            if (Options.Value != null)
             {
-                var opts = DataSource.Match<IList<AutoCompleteDataItem>>(
+                var opts = Options.Match<IList<AutoCompleteDataItem>>(
                                           f0 => f0,
                                           f1 => f1.Select(x => new AutoCompleteDataItem(x, x)).ToList(),
                                           f2 => f2.Select(x => new AutoCompleteDataItem(x, x.ToString())).ToList());
@@ -253,7 +253,7 @@ namespace AntDesign
         private void ResetActiveItem()
         {
             var items = GetOptionItems();
-            _isOptionsZero = items.Count == 0 && DataSource.Value != null;
+            _isOptionsZero = items.Count == 0 && Options.Value != null;
             if (items.Any(x => CompareWith(x.Value, this.ActiveValue)) == false)
             {//如果当前激活项找在列表中不存在，那么我们需要做一些处理
                 if (items.Any(x => CompareWith(x.Value, this.SelectedValue)))

@@ -1,10 +1,10 @@
 ﻿
 <div>Input</div>
-<AutoComplete DataSource="@options" OnInput="OnInput">
+<AutoComplete Options="@options" OnInput="OnInput">
     <AutoCompleteInput Placeholder="input here" @bind-Value="@value" />
 </AutoComplete>
 <div>Search</div>
-<AutoComplete DataSource="@options" OnInput="OnInput">
+<AutoComplete Options="@options" OnInput="OnInput">
     <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" />
 </AutoComplete>
 
