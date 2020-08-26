@@ -42,6 +42,8 @@ When requiring users to interact with the application, but without jumping to a 
 | ZIndex            | The z-index of the Modal                                     | int                           | 1000          |
 | OnCancel          | Specify a function that will  be called when a user clicks mask, close button on top right or Cancel button | EventCallback<MouseEventArgs> | -             |
 | OnOk              | Specify a function that will  be called when a user clicks the OK button | EventCallback<MouseEventArgs> | -             |
+| Draggable | Is it allowed to drag Modal through its Header | bool | false |
+| DragInViewport | If Draggable is true, and is it only allowed drag Modal in the viewport | bool | true |
 
 #### Note
 
@@ -57,8 +59,14 @@ There are five ways to display the information based on the content's nature:
 - `ModalService.Warning`
 - `ModalService.Confirm`
 - `ModalService.CreateAsync`
+- `ModalService.ConfirmAsync`
+- `ModalService.InfoAsync`
+- `ModalService.SuccessAsync`
+- `ModalService.ErrorAsync`
+- `ModalService.WarningAsync`
 
 > Please confirm that the `<AntContainer />` component has been added to `App.Razor`.
+> `ConfirmAsync`、`InfoAsync`、`SuccessAsync`、`ErrorAsync`、`WarningAsync` will return Task<bool>，it can be used to determine whether the button the user clicks is an OK button (true) or a cancel button (false)
 
 #### ConfirmOptions
 

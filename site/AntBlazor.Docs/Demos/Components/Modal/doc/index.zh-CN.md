@@ -45,6 +45,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | ZIndex | 设置 Modal 的 `z-index` | int | 1000 |
 | OnCancel | 点击遮罩层或右上角叉或取消按钮的回调 | EventCallback<MouseEventArgs> | - |
 | OnOk | 点击确定回调 | EventCallback<MouseEventArgs> | - |
+| Draggable | 是否允许通过 Modal的 Header 拖动 Modal | bool | false |
+| DragInViewport | 如果 Draggable 为 true，是否仅在视窗内拖动Modal | bool | true |
 
 #### 注意
 
@@ -60,8 +62,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 - `ModalService.Warning`
 - `ModalService.Confirm`
 - `ModalService.CreateAsync`
+- `ModalService.ConfirmAsync`
+- `ModalService.InfoAsync`
+- `ModalService.SuccessAsync`
+- `ModalService.ErrorAsync`
+- `ModalService.WarningAsync`
 
 > 请确认已经在 `App.Razor` 中添加了 `<AntContainer />` 组件。
+> `ConfirmAsync`、`InfoAsync`、`SuccessAsync`、`ErrorAsync`、`WarningAsync` 返回值为Task<bool>，可用于判断用户点击的按钮是 OK按钮(true) 还是 Cancel按钮(false)
 
 #### ConfirmOptions
 

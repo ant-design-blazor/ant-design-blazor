@@ -32,9 +32,9 @@
         _visible = false;
     }
 
-    private async Task HandleConfirm()
+    private void HandleConfirm()
     {
-        await _modalService.Confirm(new ConfirmOptions()
+        _modalService.Confirm(new ConfirmOptions()
         {
             Title = "Confirm",
             Icon =@<Icon Type="exclamation-circle" Theme="Outline"></Icon>,

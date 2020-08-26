@@ -1,36 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using System.Linq.Expressions;
 
 namespace AntDesign
 {
     public partial class Checkbox : AntInputComponentBase<bool>
     {
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         private ElementReference _inputElement;
         private ElementReference _contentElement;
+        private bool _checked;
+
+        [Parameter] public EventCallback<bool> CheckedChange { get; set; }
+
+        [Parameter] public Expression<Func<bool>> CheckedExpression { get; set; }
+
+        [Parameter] public bool AutoFocus { get; set; }
+
+        [Parameter] public bool Disabled { get; set; }
+
+        [Parameter] public bool Indeterminate { get; set; }
 
         [Parameter]
-        public EventCallback<bool> CheckedChange { get; set; }
-
-        [Parameter]
-        public Expression<Func<bool>> CheckedExpression { get; set; }
-
-        [Parameter]
-        public bool AutoFocus { get; set; }
-
-        [Parameter]
-        public bool Disabled { get; set; }
-
-        [Parameter]
-        public bool Indeterminate { get; set; }
-
-        [Parameter]
-        public bool Checked { get; set; }
+        public bool Checked
+        {
+            get => _checked;
+            set
+            {
+                if (_checked != value)
+                {
+                    _checked = value;
+                    CurrentValue = value;
+                }
+            }
+        }
 
         [Parameter]
         public string Label { get; set; }
@@ -76,7 +82,7 @@ namespace AntDesign
         protected override void OnValueChange(bool value)
         {
             base.OnValueChange(value);
-            this.Checked = value;
+            this._checked = value;
         }
 
         protected async Task InputCheckedChange(ChangeEventArgs args)
@@ -97,7 +103,6 @@ namespace AntDesign
                     await this.CheckedChange.InvokeAsync(@checked);
                 }
 
-                await this.CheckedChange.InvokeAsync(@checked);
                 CheckboxGroup?.OnCheckboxChange(this);
             }
         }

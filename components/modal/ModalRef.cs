@@ -52,6 +52,8 @@ namespace AntDesign
 
         public Func<Task> OnDestroy { get; set; }
 
+        internal bool IsCreateByModalService => _service != null;
+
         internal ModalRef(ConfirmOptions config)
         {
             Config = config;
@@ -92,5 +94,6 @@ namespace AntDesign
             await _service?.Update(this);
         }
 
+        internal TaskCompletionSource<ConfirmResult> TaskCompletionSource { get; set; }
     }
 }

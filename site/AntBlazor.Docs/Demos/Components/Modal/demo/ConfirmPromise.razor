@@ -13,11 +13,11 @@
         await Task.Delay(1000);
     };
 
-    private async Task ShowConfirm()
+    private void ShowConfirm()
     {
         RenderFragment icon =@<Icon Type="exclamation-circle" Theme="outline"></Icon>;
 
-        await _modalService.Confirm(new ConfirmOptions()
+        _modalService.Confirm(new ConfirmOptions()
         {
             Title = "Do you want to delete these items?",
             Icon = icon,
@@ -34,11 +34,11 @@
         e.Cancel = true;
     };
 
-    private async Task ShowConfirmNotClose()
+    private void ShowConfirmNotClose()
     {
         RenderFragment icon =@<Icon Type="exclamation-circle" Theme="outline"></Icon>;
 
-        await _modalService.Confirm(new ConfirmOptions()
+        _modalService.Confirm(new ConfirmOptions()
         {
             Title = "Do you want to delete these items?",
             Icon = icon,
