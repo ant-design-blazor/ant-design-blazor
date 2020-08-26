@@ -153,7 +153,7 @@ namespace AntDesign
             }
         }
 
-        public void SelectSubmenu(SubMenu menu)
+        public void SelectSubmenu(SubMenu menu, bool isTitleClick = false)
         {
             if (menu == null)
             {
@@ -168,7 +168,7 @@ namespace AntDesign
                 }
             }
 
-            if (menu.IsOpen)
+            if (isTitleClick && menu.IsOpen)
             {
                 menu.Close();
             }
