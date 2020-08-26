@@ -93,7 +93,7 @@ namespace AntDesign
 
         private async Task HandleOnTitleClick(MouseEventArgs args)
         {
-            RootMenu?.SelectSubmenu(this);
+            RootMenu?.SelectSubmenu(this,true);
             if (OnTitleClicked.HasDelegate)
                 await OnTitleClicked.InvokeAsync(args);
         }
