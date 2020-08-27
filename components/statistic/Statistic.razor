@@ -2,9 +2,13 @@
 @inherits StatisticComponentBase<TValue>
 @typeparam TValue
 
+@{
+    var SeparatedDecimal = SeparateDecimal();
+}
+
 <div class="ant-statistic" style="@Style" @ref="Ref" id="@Id">
     <div class="ant-statistic-title">
-        @if(Title.IsT0) @Title.AsT0 else @Title.AsT1
+        @if (Title.IsT0)@Title.AsT0 else @Title.AsT1
     </div>
     <div class="ant-statistic-content" style="@ValueStyle">
         @if (@Prefix.IsT0 && !string.IsNullOrEmpty(Prefix.AsT0) || @Prefix.IsT1 && Prefix.AsT1 != null)
@@ -13,14 +17,15 @@
                 @if (@Prefix.IsT0)@Prefix.AsT0 else @Prefix.AsT1
             </span>
         }
+
         <span class="ant-statistic-content-value">
             <span class="ant-statistic-content-value-int">
-                @IntegerPart
+                @SeparatedDecimal.integerPart
             </span>
-            @if (!string.IsNullOrEmpty(@FractionalPart))
+            @if (!string.IsNullOrEmpty(SeparatedDecimal.fractionalPart))
             {
                 <span class="ant-statistic-content-value-decimal">
-                    @FractionalPart
+                    @SeparatedDecimal.fractionalPart
                 </span>
             }
         </span>
