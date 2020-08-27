@@ -1,14 +1,35 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <Gauge TItem="string" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <Gauge TItem="string" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <Gauge TItem="string" Config="config2" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="3">
+            <Tab>示例3</Tab>
+            <ChildContent>
+                <Gauge TItem="string" Config="config3" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="4">
+            <Tab>示例4</Tab>
+            <ChildContent>
+                <Gauge TItem="string" Config="config4" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
@@ -37,5 +58,116 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly GaugeConfig config2 = new GaugeConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "仪表盘个性化配置"
+        },
+        Width = 400,
+        Height = 400,
+        Value = 75,
+        Min = 0,
+        Max = 100,
+        Range = new double[] { 0, 75 },
+        Color = new[] { "#5d7cef", "#e35767" },
+        Axis = new GaugeAxis
+        {
+            Offset = -15,
+            TickLine = new GaugeAxisTickLine
+            {
+                Visible = true,
+                Length = 10,
+            },
+            Label = new GaugeAxisLabel
+            {
+                Visible = false,
+            },
+        },
+        Pivot = new GaugePivot
+        {
+            Visible = true,
+            Thickness = 10,
+            Pointer = new GaugePivotPointer
+            {
+                Visible = true,
+                Style = new GraphicStyle
+                {
+                    Fill = "#e25869"
+                }
+            },
+            Pin = new GaugePivotPin
+            {
+                Visible = true,
+                Style = new GraphicStyle
+                {
+                    Fill = "#e8e6ea"
+                }
+            }
+        },
+        Statistic = new GaugeStatistic
+        {
+            Visible = true,
+            Position = new string[]{ "50%", "100%" },
+            Text = "26/48",
+            Color = "#2e3033",
+            Size = 40,
+        }
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+    readonly GaugeConfig config3 = new GaugeConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "刻度仪表盘"
+        },
+        Width = 400,
+        Height = 400,
+        Value = 40,
+        Min = 0,
+        Max = 100,
+        Range = new double[] { 0, 25, 50, 75, 100 },    
+        
+        
+        Statistic = new GaugeStatistic
+        {
+            Visible = true,
+            Text = "良",
+            Color = "#faad14",
+        },
+        Color = new[] { "#39B8FF", "#52619B", "#43E089", "#C0EDF3" },
+    };
+
+    #endregion 示例3
+
+    #region 示例4
+
+    readonly GaugeConfig config4 = new GaugeConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "扇形仪表盘"
+        },
+        Width = 400,
+        Height = 400,
+        Value = 34,
+        Min = 0,
+        Max = 100,
+        Range = new double[] { 0, 70 },
+        Format = "",    //???
+        Color = new[] { "#b0d0ff", "#5f92f9" },
+    };
+
+    #endregion 示例4
 
 }

@@ -1,21 +1,40 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <StackedColumn Data="data1" Config="config1"/>
+            <StackedColumn Data="data1" Config="config1" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="2">
+        <Tab>示例2</Tab>
+        <ChildContent>
+            <StackedColumn Data="data2" Config="config2" />
         </ChildContent>
     </TabPane>
 </Tabs>
 
 @code{
 
+    object[] data2;
+
+    protected override async Task OnInitializedAsync()
+    {
+        data2 = await ChartsDemoData.FertilityItemAsync(NavigationManager, HttpClient);
+
+        await base.OnInitializedAsync();
+
+    }
+
     #region 示例1
 
     readonly object[] data1 =
-    {
+{
         new
         {
             time = "16 Q1",
@@ -185,5 +204,40 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly StackedColumnConfig config2 = new StackedColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "设置legend是否翻页"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "当legend数量过多时，默认进行翻页，给图表留出更多的展示空间。此功能可以通过配置项关闭。"
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "year",
+        YField = "value",
+        //seriesField ???
+        //smooth ???
+        XAxis = new CatAxis
+        {
+            Visible = true,
+            Type = "time"
+        },
+        StackField = "type",
+        Legend = new AntDesign.Charts.Legend
+        {
+            Visible = true,
+            FlipPage = false,
+        }
+    };
+
+    #endregion 示例2
 
 }

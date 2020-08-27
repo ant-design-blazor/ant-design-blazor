@@ -1,15 +1,42 @@
 @using AntDesign.Charts
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <Treemap Data="data1" Config="config1"/>
+            <Treemap Data="data1" Config="config1" />
         </ChildContent>
     </TabPane>
+
+    @*<TabPane Key="2">
+        <Tab>示例2</Tab>
+        <ChildContent>
+            <Treemap Data="data2" Config="config2" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="3">
+        <Tab>示例3</Tab>
+        <ChildContent>
+            <Treemap Data="data3" Config="config3" />
+        </ChildContent>
+    </TabPane>*@
 </Tabs>
 
 @code{
+
+    BasementProdItem[] data2;
+    BasementProdItem[] data3;
+
+    protected override async Task OnInitializedAsync()
+    {
+        data2 = await ChartsDemoData.BasementProdAsync(NavigationManager, HttpClient);
+        data3 = await ChartsDemoData.BasementProdAsync(NavigationManager, HttpClient);
+
+        await base.OnInitializedAsync();
+    }
 
     #region 示例1
 
@@ -17,7 +44,7 @@
     {
         Name = "root",
         Children = new List<TreemapDataItem>
-        {
+    {
             new TreemapDataItem {Name = "分类 1", Value = 560},
             new TreemapDataItem {Name = "分类 2", Value = 500},
             new TreemapDataItem {Name = "分类 3", Value = 150},
@@ -48,6 +75,56 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+
+    readonly TreemapConfig config2 = new TreemapConfig
+    {
+        ColorField = "brand"
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+
+    readonly TreemapConfig config3 = new TreemapConfig
+    {
+
+        ColorField = "name",
+        Interactions = new Interaction[]
+        {
+            new Interaction
+            {
+                  Type =  "drilldown",
+                  Cfg =  new
+                  {
+                        mapping =  new
+                        {
+                              //1 =  new
+                              //{
+                              //  field =  "name",
+                              //},
+                              //2 = new
+                              //{
+                              //      field =  "name",
+                              //      values =  ["#f5bc32", "#e66557", "#71c8ea", "#9362b7", "#fd984f", "#279493", "#fd9bc3"],
+                              // },
+                              // 3 = new
+                              // {
+                              //      field =  "value",
+                              //      //values =  (parent) => {
+                              //      //  return ["#ffffff", parent.color];
+                              //      //},
+                              // },
+                        },
+                  },
+            }
+        }
+    };
+
+    #endregion 示例3
 
     public class Data : ITreemapData<TreemapDataItem>
     {
