@@ -7,17 +7,18 @@
         new Dictionary<string, object>()
         {
             { "onchange", CallbackFactory.Create(this, OnChangeAsync) },
-            { "onblur", CallbackFactory.Create(this, OnBlur) },
+            { "onblur", CallbackFactory.Create(this, OnBlurAsync) },
             { "oninput", CallbackFactory.Create(this, OnInputAsync) },
             { "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync) },
             { "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync) },
-            { "onfocus", CallbackFactory.Create(this, OnFocus) },
+            { "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync) },
+            { "onfocus", CallbackFactory.Create(this, OnFocusAsync) },
             { "value", CurrentValueAsString },
             { "placeholder", Placeholder },
             { "id", Id },
             { "style", Style },
             { "class", ClassMapper.Class },
-                    };
+                            };
 
     if (Attributes != null)
     {

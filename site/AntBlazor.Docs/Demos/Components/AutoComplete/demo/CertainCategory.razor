@@ -1,1 +1,91 @@
 ﻿
+<AutoComplete>
+    <ChildContent>
+        <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" />
+    </ChildContent>
+
+    <AutoCompleteOptions>
+        @foreach (var group in optionGroups)
+        {
+            <AutoCompleteOptGroup>
+                <LabelFragment>
+                    <span>
+                        @group.title<a style="float: right;" href="https://www.google.com/search?q=ng+zorro" target="_blank">更多</a>
+                    </span>
+                </LabelFragment>
+                <ChildContent>
+                    @foreach (var option in group.children)
+                    {
+                        <AutoCompleteOption Value="@option.title" Label="@option.title">
+                            @option.title
+                            <span style="position: absolute; color: #999; right: 16px;">@option.count 人 关注</span>
+                        </AutoCompleteOption>
+                    }
+
+                </ChildContent>
+            </AutoCompleteOptGroup>
+        }
+    </AutoCompleteOptions>
+
+</AutoComplete>
+
+@code
+{
+
+    private string value;
+
+    CertainCategoryGroup[] optionGroups = new CertainCategoryGroup[] {
+    new CertainCategoryGroup() {
+        title= "话题",
+        children=new CertainCategoryOption[]{
+            new CertainCategoryOption() {
+                title= "Ant Design",
+                count= 10000
+            },
+            new CertainCategoryOption()  {
+                title= "Ant Design Blazor",
+                count= 10600
+            }
+        },
+    },
+    new CertainCategoryGroup() {
+        title= "问题",
+        children= new CertainCategoryOption[]{
+            new CertainCategoryOption()   {
+                title= "Ant Design Blazor 有多好",
+                count= 60100
+            },
+            new CertainCategoryOption()     {
+                title= "Ant Design 是啥",
+                count= 30010
+            }
+
+        },
+    },
+    new CertainCategoryGroup() {
+        title = "文章",
+        children =new CertainCategoryOption[]{
+            new CertainCategoryOption()   {
+                title = "Ant Design 是一个设计语言",
+                count = 100000
+            }
+        }
+    }
+};
+
+
+    public class CertainCategoryGroup
+    {
+        public string title { get; set; }
+
+        public CertainCategoryOption[] children { get; set; }
+
+    }
+
+    public class CertainCategoryOption
+    {
+        public string title { get; set; }
+        public int count { get; set; }
+    }
+
+}

@@ -10,10 +10,6 @@
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\components\AntDesign.csproj" />
-  </ItemGroup>
-
   <PropertyGroup Condition=" '$(SolutionDir)'==''">
     <SolutionDir>../../</SolutionDir>
   </PropertyGroup>
@@ -31,6 +27,10 @@
     <Compile Include="..\Shared\DemoComponent.cs" Link="Services\DemoComponent.cs" />
     <Compile Include="..\Shared\DemoMenuItem.cs" Link="Services\DemoMenuItem.cs" />
     <Compile Include="..\Shared\DocsFile.cs" Link="Services\DocsFile.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\components\AntDesign.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">

@@ -67,6 +67,11 @@ namespace AntDesign
         public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
 
         [Parameter]
+        public EventCallback<KeyboardEventArgs> OnkeyUp { get; set; }
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
+
+        [Parameter]
         public EventCallback<ChangeEventArgs> OnInput { get; set; }
 
         [Parameter]
@@ -181,9 +186,16 @@ namespace AntDesign
                     await OnChange.InvokeAsync(Value);
                 }
             }
+
+            if (OnkeyUp.HasDelegate) await OnkeyUp.InvokeAsync(args);
         }
 
-        private async Task OnBlurAsync(FocusEventArgs e)
+        protected virtual async Task OnkeyDownAsync(KeyboardEventArgs args)
+        {
+            if (OnkeyDown.HasDelegate) await OnkeyDown.InvokeAsync(args);
+        }
+
+        internal virtual async Task OnBlurAsync(FocusEventArgs e)
         {
             if (OnBlur.HasDelegate)
             {
@@ -191,6 +203,13 @@ namespace AntDesign
             }
         }
 
+        internal virtual async Task OnFocusAsync(FocusEventArgs e)
+        {
+            if (OnFocus.HasDelegate)
+            {
+                await OnFocus.InvokeAsync(e);
+            }
+        }
         private void ToggleClearBtn()
         {
             Suffix = (builder) =>
@@ -261,6 +280,7 @@ namespace AntDesign
             {
                 await OnInput.InvokeAsync(args);
             }
+
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -345,9 +365,10 @@ namespace AntDesign
                 }
 
                 builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
+                builder.AddAttribute(63, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
                 builder.AddAttribute(63, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
                 builder.AddAttribute(64, "oninput", CallbackFactory.Create(this, OnInputAsync));
-                builder.AddAttribute(66, "onfocus", CallbackFactory.Create(this, OnFocus));
+                builder.AddAttribute(66, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
                 builder.AddElementReferenceCapture(68, r => Ref = r);
                 builder.CloseElement();
 

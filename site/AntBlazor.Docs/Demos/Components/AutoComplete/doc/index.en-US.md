@@ -13,32 +13,24 @@ When there is a need for autocomplete functionality.
 
 ## API
 
-| Property | Description | Type | Default | Version |
+### AutoComplete
+
+| 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| allowClear | Show clear button, effective in multiple mode only. | boolean | false |  |
-| autoFocus | get focus when component mounted | boolean | false |  |
-| backfill | backfill selected item the input when using keyboard | boolean | false |  |
-| children (for customize input element) | customize input element | HTMLInputElement <br /><br /> HTMLTextAreaElement <br /><br /> `React.ReactElement<InputProps>` | `<Input />` |  |
-| children (for dataSource) | Data source to auto complete | `React.ReactElement<OptionProps>` <br /><br /> `Array<React.ReactElement<OptionProps>>` | - |  |
-| defaultActiveFirstOption | Whether active first option by default | boolean | true |  |
-| defaultValue | Initial selected option. | string | - |  |
-| disabled | Whether disabled select | boolean | false |  |
-| filterOption | If true, filter options by input, if function, filter options against it. The function will receive two arguments, `inputValue` and `option`, if the function returns `true`, the option will be included in the filtered set; Otherwise, it will be excluded. | boolean or function(inputValue, option) | true |  |
-| placeholder | placeholder of input | string | - |  |
-| value | selected option | string | - |  |
-| onBlur | Called when leaving the component. | function() | - |  |
-| onChange | Called when select an option or input value change, or value of input is changed | function(value) | - |  |
-| onFocus | Called when entering the component | function() | - |  |
-| onSearch | Called when searching items. | function(value) | - |  |
-| onSelect | Called when a option is selected. param is option's value and option instance. | function(value, option) | - |  |
-| defaultOpen | Initial open state of dropdown | boolean | - |  |
-| open | Controlled open state of dropdown | boolean | - |  |
-| onDropdownVisibleChange | Call when dropdown open | function(open) | - |  |
-| notFoundContent | Specify content to show when no result matches.. | string | 'Not Found' |  |
+| `Backfill` | backfill selected item the input when using keyboard | `boolean` | `false` |
+| `DataSource` | Data source for autocomplete | `AutocompleteDataSource` | - |
+| `DefaultActiveFirstOption` | Whether active first option by default | `boolean` | `true` |
+| `Width` | Custom width, unit px | `int` | 触发元素宽度 |
+| `OverlayClassName` | Class name of the dropdown root element | `string` | - |
+| `OverlayStyle` | Style of the dropdown root element | `object` | - |
+| `CompareWith` | `(o1: object, o2: object) => bool` | `(o1: object, o2: object) => o1===o2` |
 
-## Methods
 
-| Name    | Description  | Version |
-| ------- | ------------ | ------- |
-| blur()  | remove focus |         |
-| focus() | get focus    |         |
+### AutoCompleteOption
+
+| 属性 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Value` | bind ngModel of the trigger element | `object` | - |
+| `Label` | display value of the trigger element | `string` | - |
+| `Disabled` | disabled option | `boolean` | `false` |
+
