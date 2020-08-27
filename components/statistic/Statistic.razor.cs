@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
 
@@ -10,39 +11,51 @@ namespace AntDesign
 
         [Parameter] public string GroupSeparator { get; set; } = ",";
 
-        [Parameter] public int Precision { get; set; } = -1;
+        [Parameter] public int Precision { get; set; }
 
-        private string IntegerPart
+        private (string integerPart, string fractionalPart) SeparateDecimal()
         {
-            get
+            var decimalValue = 0m;
+            if (Value is decimal d)
             {
-                if (typeof(TValue).IsAssignableFrom(typeof(string))) return Value.ToString();
-                else return Convert.ToDecimal(Value).ToString($"###{GroupSeparator}###");
+                decimalValue = d;
             }
-        }
-
-        private string FractionalPart
-        {
-            get
+            else if (Value is string value && decimal.TryParse(value, out var @decimal))
             {
-                if (typeof(TValue).IsAssignableFrom(typeof(string)))
+                decimalValue = @decimal;
+            }
+            else
+            {
+                decimalValue = Convert.ToDecimal(Value, CultureInfo.InvariantCulture);
+            }
+
+            var intValue = (int)decimalValue;
+
+            var intString = intValue == 0 ? (decimalValue >= 0 ? "0" : "-0") : intValue.ToString($"###{GroupSeparator}###", CultureInfo.InvariantCulture);
+
+            decimalValue = Math.Abs(decimalValue - intValue);
+
+            var fractionalPart = "";
+            if (decimalValue == 0 && Precision > 0)
+            {
+                fractionalPart = ".".PadRight(Precision + 1, '0');
+            }
+            if (decimalValue != 0)
+            {
+                if (Precision <= 0)
                 {
-                    return null;
+                    fractionalPart = decimalValue.ToString(CultureInfo.InvariantCulture);
                 }
                 else
                 {
-                    string tem;
-                    if (Precision > 0)
-                        tem = Math.Round(Convert.ToDecimal(Value), Precision).ToString().Contains('.')
-                            ? Math.Round(Convert.ToDecimal(Value), Precision).ToString().Split('.').Last().PadRight(Precision, '0')
-                            : string.Empty.PadRight(Precision, '0');
-                    else if (Precision < 0)
-                        tem = Value.ToString().Contains('.') ? Value.ToString().Split('.').Last() : null;
-                    else
-                        tem = null;
-                    return string.IsNullOrEmpty(tem) ? null : DecimalSeparator + tem;
+                    decimalValue = Math.Round(decimalValue, Precision);
+                    fractionalPart = decimalValue.ToString(CultureInfo.InvariantCulture)
+                        .Replace("0.", DecimalSeparator, true, CultureInfo.InvariantCulture)
+                        .PadRight(Precision + 1, '0');
                 }
             }
+
+            return (intString, fractionalPart);
         }
     }
 }
