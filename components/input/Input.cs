@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading.Tasks;
+using AntDesign.JsInterop;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
 
 namespace AntDesign
 {
@@ -23,6 +23,9 @@ namespace AntDesign
         protected static readonly EventCallbackFactory CallbackFactory = new EventCallbackFactory();
 
         protected virtual bool IgnoreOnChangeAndBlur { get; }
+
+        [Inject]
+        public DomEventService DomEventService { get; set; }
 
         [Parameter]
         public string Type { get; set; } = "text";
@@ -68,6 +71,7 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<KeyboardEventArgs> OnkeyUp { get; set; }
+
         [Parameter]
         public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
 
@@ -83,6 +87,7 @@ namespace AntDesign
         public Dictionary<string, object> Attributes { get; set; }
 
         private TValue _inputValue;
+        private bool _compositionInputting = false;
 
         protected override void OnInitialized()
         {
@@ -180,10 +185,13 @@ namespace AntDesign
         {
             if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
             {
-                CurrentValue = _inputValue;
-                if (OnChange.HasDelegate)
+                if (!_compositionInputting)
                 {
-                    await OnChange.InvokeAsync(Value);
+                    CurrentValue = _inputValue;
+                    if (OnChange.HasDelegate)
+                    {
+                        await OnChange.InvokeAsync(Value);
+                    }
                 }
             }
 
@@ -210,6 +218,17 @@ namespace AntDesign
                 await OnFocus.InvokeAsync(e);
             }
         }
+
+        internal virtual void OnCompositionStart(JsonElement e)
+        {
+            _compositionInputting = true;
+        }
+
+        internal virtual void OnCompositionEnd(JsonElement e)
+        {
+            _compositionInputting = false;
+        }
+
         private void ToggleClearBtn()
         {
             Suffix = (builder) =>
@@ -240,10 +259,24 @@ namespace AntDesign
         {
             await base.OnAfterRenderAsync(firstRender);
 
-            if (this.AutoFocus)
+            if (firstRender)
             {
-                await this.Focus();
+                DomEventService.AddEventListener(Ref, "compositionstart", OnCompositionStart);
+                DomEventService.AddEventListener(Ref, "compositionend", OnCompositionEnd);
+
+                if (this.AutoFocus)
+                {
+                    await this.Focus();
+                }
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionstart", OnCompositionStart);
+            DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionend", OnCompositionEnd);
+
+            base.Dispose(disposing);
         }
 
         protected virtual string GetClearIconCls()
@@ -280,7 +313,6 @@ namespace AntDesign
             {
                 await OnInput.InvokeAsync(args);
             }
-
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
