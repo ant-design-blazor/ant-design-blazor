@@ -64,7 +64,6 @@ namespace AntDesign.Internal
         private string _overlayStyle = "";
         private string _overlayCls = "";
 
-
         private const int ARROW_SIZE = 13;
         private const int HORIZONTAL_ARROW_SHIFT = 13;
         private const int VERTICAL_ARROW_SHIFT = 5;
@@ -135,7 +134,7 @@ namespace AntDesign.Internal
             // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
             // I try to render Overlay when OvelayTrigger’s OnAfterRender is called, but is still get negative absoluteLeft
             // This may be a bad solution, but for now I can only do it this way.
-            while (trigger.absoluteLeft <= 0)
+            while (trigger.absoluteLeft <= 0 && trigger.clientWidth <= 0)
             {
                 await Task.Delay(50);
                 trigger = await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Trigger.Ref);
