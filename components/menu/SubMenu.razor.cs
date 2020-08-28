@@ -134,7 +134,7 @@ namespace AntDesign
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
+            if (RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null && IsOpen)
             {
                 var domInfo = await _overlayTrigger.GetTriggerDomInfo();
                 _popupMinWidthStyle = $"min-width: {domInfo.clientWidth}px";
