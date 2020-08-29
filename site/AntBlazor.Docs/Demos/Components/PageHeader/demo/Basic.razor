@@ -1,9 +1,10 @@
-﻿<PageHeader Class="site-page-header" Title="@_title" Subtitle="@("默认样式")" />
+﻿<PageHeader Class="site-page-header" Title="@_title" Subtitle="@("默认样式不显示返回按钮")" />
 <br />
 <PageHeader Class="site-page-header" Title="@_title" Subtitle="@("自定义返回按钮事件")" OnBack="@(()=> { Console.WriteLine("OnBack");})" />
 <br />
 <PageHeader Class="site-page-header" Title="@_title" Subtitle="@("自定义返回按钮图标")" BackIcon="@("backward")" />
-
+<br />
+<PageHeader Class="site-page-header" Title="@_title" Subtitle="@("自定义返回按钮图标和回调事件")" BackIcon="@("backward")" OnBack="@(()=> { Console.WriteLine("OnBack");})" />
 @code{
     private string _title = "Title";
 }

@@ -21,7 +21,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/6bKE0Cq0R/PageHeader.svg
 | `Ghost` | 使背景色透明 | `boolean` | `true` | - |
 | `Title` | title 文字 | `string \| RenderFragment` | - | - |
 | `Subtitle` | subTitle 文字 | `string \| RenderFragment` | - | - |
-| `BackIcon` | 自定义 back icon | `bool \| string \| RenderFragment` | - | - |
+| `BackIcon` | 自定义 back icon | `bool? \| string \| RenderFragment` | - | - |
 | `OnBack` | 返回按钮的点击事件 | `EventCallback` | 未订阅该事件时默认调用 history.back| - |
 
 ### Page Header 组成部分
