@@ -10,11 +10,11 @@
             <!--back-->
             @if (BackIcon.Value != null)
             {
-                @if (BackIcon.IsT0)
+                @if (BackIcon.IsT0 || BackIcon.IsT1)
                 {
                     <div @onclick="OnBackClick" class="ant-page-header-back">
                         <div role="button" tabindex="0" class="ant-page-header-back-button">
-                            <Icon Type="@BackIcon.AsT0" Theme="outline" />
+                            <Icon Type="@(BackIcon.IsT1?BackIcon.AsT1:"arrow-left")" Theme="outline" />
                         </div>
                     </div>
                 }
@@ -23,7 +23,7 @@
                     @BackIcon.AsT1
                 }
             }
-            else
+            else if (OnBack.HasDelegate)
             {
                 <div @onclick="OnBackClick" class="ant-page-header-back">
                     <div role="button" tabindex="0" class="ant-page-header-back-button">

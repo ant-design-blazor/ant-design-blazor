@@ -1,16 +1,9 @@
-﻿<PageHeader Class="site-page-header" Title="@_title" Subtitle="@_subtitle"/>
-
+﻿<PageHeader Class="site-page-header" Title="@_title" Subtitle="@("默认样式")" />
+<br />
+<PageHeader Class="site-page-header" Title="@_title" Subtitle="@("自定义返回按钮事件")" OnBack="@(()=> { Console.WriteLine("OnBack");})" />
+<br />
+<PageHeader Class="site-page-header" Title="@_title" Subtitle="@("自定义返回按钮图标")" BackIcon="@("backward")" />
 
 @code{
-
     private string _title = "Title";
-
-    private string _subtitle = "This is a subtitle";
-
-    void OnBack()
-    {
-        Console.WriteLine("onBack");
-        // OnBack="OnBack"
-    }
-
 }

@@ -26,7 +26,14 @@ namespace AntDesign
             }
             else
             {
-                decimalValue = Convert.ToDecimal(Value, CultureInfo.InvariantCulture);
+                try
+                {
+                    decimalValue = Convert.ToDecimal(Value, CultureInfo.InvariantCulture);
+                }
+                catch (FormatException)
+                {
+                    return (Value?.ToString() ?? "", "");
+                }
             }
 
             var intValue = (int)decimalValue;
