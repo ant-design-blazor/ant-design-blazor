@@ -1,14 +1,21 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <RangeColumn Data="data1" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <RangeColumn Data="data1" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <RangeColumn Data="data2" Config="config2" OtherConfig="config2_1" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
@@ -38,5 +45,63 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly object[] data2 =
+    {
+                new {type = "分类一", values = new[] {76, 100}},
+                new {type = "分类二", values = new[] {56, 108}},
+                new {type = "分类三", values = new[] {38, 129}},
+                new {type = "分类四", values = new[] {58, 155}},
+                new {type = "分类五", values = new[] {45, 120}},
+                new {type = "分类六", values = new[] {23, 99}},
+                new {type = "分类七", values = new[] {18, 56}},
+                new {type = "分类八", values = new[] {18, 34}}
+            };
+
+    readonly RangeColumnConfig config2 = new RangeColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "为区间柱状图配置label样式"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "使用style配置项配置label整体样式，同时支持通过topStyle和bottomStyle分别配置label样式。"
+        },
+        XField = "type",
+        YField = "values",
+        Color = new[] { "#3e5bdb", "#b4d9e4" },
+        ColumnStyle = new GraphicStyle
+        {
+            FillOpacity = Convert.ToDecimal(0.8),
+        },
+
+    };
+
+    object config2_1 = new
+    {
+        label = new
+        {
+            visible = true,
+            topStyle = new
+            {
+                fill = "#3e5bdb",
+
+            },
+            bottomStyle = new
+            {
+                fill = "#b4d9e4",
+
+            },
+        }
+
+
+    };
+
+    #endregion 示例2
 
 }

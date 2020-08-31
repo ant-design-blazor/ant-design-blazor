@@ -1,14 +1,21 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <StackedColumnLine Data="@(new[] {uvBillData, transformData})" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <StackedColumnLine Data="@(new[] {uvBillData, transformData})" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <StackedColumnLine Data="@(new[] {uvBillData_2, transformData_2})" Config="config2" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
@@ -57,5 +64,62 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly object uvBillData_2 = new object[]
+    {
+        new {time = "2019-03", value = 350, type = "uv"},
+        new {time = "2019-04", value = 900, type = "uv"},
+        new {time = "2019-05", value = 300, type = "uv"},
+        new {time = "2019-06", value = 450, type = "uv"},
+        new {time = "2019-07", value = 470, type = "uv"},
+        new {time = "2019-03", value = 220, type = "bill"},
+        new {time = "2019-04", value = 300, type = "bill"},
+        new {time = "2019-05", value = 250, type = "bill"},
+        new {time = "2019-06", value = 220, type = "bill"},
+        new {time = "2019-07", value = 362, type = "bill"}
+    };
+
+    readonly object transformData_2 = new object[]
+    {
+          new { time =  "2019-03", count =  800, name =  "a" },
+          new { time =  "2019-04", count =  600, name =  "a" },
+          new { time =  "2019-05", count =  400, name =  "a" },
+          new { time =  "2019-06", count =  380, name =  "a" },
+          new { time =  "2019-07", count =  220, name =  "a" },
+          new { time =  "2019-03", count =  750, name =  "b" },
+          new { time =  "2019-04", count =  650, name =  "b" },
+          new { time =  "2019-05", count =  450, name =  "b" },
+          new { time =  "2019-06", count =  400, name =  "b" },
+          new { time =  "2019-07", count =  320, name =  "b" },
+          new { time =  "2019-03", count =  900, name =  "c" },
+          new { time =  "2019-04", count =  600, name =  "c" },
+          new { time =  "2019-05", count =  450, name =  "c" },
+          new { time =  "2019-06", count =  300, name =  "c" },
+          new { time =  "2019-07", count =  200, name =  "c" },
+    };
+
+    readonly StackedColumnLineConfig config2 = new StackedColumnLineConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "分组柱+折线混合图",
+            AlignTo = "middle"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "配置多折线",
+            AlignTo = "middle"
+        },
+        XField = "time",
+        YField = new[] { "value", "count" },
+        ColumnStackField = "type",
+        LineSeriesField = "name"
+    };
+
+    #endregion 示例2
 
 }

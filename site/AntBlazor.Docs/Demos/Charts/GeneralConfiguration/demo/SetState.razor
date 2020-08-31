@@ -6,9 +6,45 @@
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <AntDesign.Charts.Column Data="data1" Config="config1" OnCreateAfter="onCreateAfter1"/>
+            <AntDesign.Charts.Column Data="data1" Config="config1" OnCreateAfter="onCreateAfter1" />
         </ChildContent>
     </TabPane>
+
+    <TabPane Key="2">
+        <Tab>示例2</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column Data="data2" Config="config2" OnCreateAfter="onCreateAfter2" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="3">
+        <Tab>示例3</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column Data="data3" Config="config3" OnCreateAfter="onCreateAfter3" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="4">
+        <Tab>示例4</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column Data="data4" Config="config4" OnCreateAfter="onCreateAfter4" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="5">
+        <Tab>示例5</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column Data="data5" Config="config5" OnCreateAfter="onCreateAfter5" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="6">
+        <Tab>示例6</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column Data="data6" Config="config6" OnCreateAfter="onCreateAfter6" />
+        </ChildContent>
+    </TabPane>
+
 </Tabs>
 
 @code{
@@ -91,5 +127,399 @@
     }
 
     #endregion 示例1
+
+    #region 示例2
+
+    object[] data2 =
+    {
+        new
+        {
+            year = "1991",
+            value = 31
+        },
+        new
+        {
+            year = "1992",
+            value = 41
+        },
+        new
+        {
+            year = "1993",
+            value = 35
+        },
+        new
+        {
+            year = "1994",
+            value = 55
+        },
+        new
+        {
+            year = "1995",
+            value = 49
+        },
+        new
+        {
+            year = "1996",
+            value = 15
+        },
+        new
+        {
+            year = "1997",
+            value = 17
+        },
+        new
+        {
+            year = "1998",
+            value = 29
+        },
+        new
+        {
+            year = "1999",
+            value = 33
+        }
+    };
+
+    ColumnConfig config2 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "设置active状态"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "批量（多值）设置active状态。"
+        },
+        XField = "year",
+        YField = "value"
+    };
+
+    public void onCreateAfter2(IChartComponent chart)
+    {
+        chart.SetActive(new { name = "year", exp = "1994" },
+            new
+            {
+                FillStyle = "#5AD8A6",
+                FillOpacity = 0.8
+            });
+    }
+
+    #endregion 示例2
+
+    #region 示例3
+
+    object[] data3 =
+    {
+        new
+        {
+            year = "1991",
+            value = 31
+        },
+        new
+        {
+            year = "1992",
+            value = 41
+        },
+        new
+        {
+            year = "1993",
+            value = 35
+        },
+        new
+        {
+            year = "1994",
+            value = 55
+        },
+        new
+        {
+            year = "1995",
+            value = 49
+        },
+        new
+        {
+            year = "1996",
+            value = 15
+        },
+        new
+        {
+            year = "1997",
+            value = 17
+        },
+        new
+        {
+            year = "1998",
+            value = 29
+        },
+        new
+        {
+            year = "1999",
+            value = 33
+        }
+    };
+
+    ColumnConfig config3 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "设置disable状态"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "批量（多值）设置disable状态。。"
+        },
+        XField = "year",
+        YField = "value"
+    };
+
+    public void onCreateAfter3(IChartComponent chart)
+    {
+        chart.SetActive(new { name = "year", exp = "1994" },
+            new
+            {
+                FillStyle = "#ccc",
+            });
+    }
+
+    #endregion 示例3
+
+    #region 示例4
+
+    object[] data4 =
+    {
+        new
+        {
+            year = "1991",
+            value = 31
+        },
+        new
+        {
+            year = "1992",
+            value = 41
+        },
+        new
+        {
+            year = "1993",
+            value = 35
+        },
+        new
+        {
+            year = "1994",
+            value = 55
+        },
+        new
+        {
+            year = "1995",
+            value = 49
+        },
+        new
+        {
+            year = "1996",
+            value = 15
+        },
+        new
+        {
+            year = "1997",
+            value = 17
+        },
+        new
+        {
+            year = "1998",
+            value = 29
+        },
+        new
+        {
+            year = "1999",
+            value = 33
+        }
+    };
+
+    ColumnConfig config4 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "设置disable状态"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "设置单值disable状态。"
+        },
+        XField = "year",
+        YField = "value"
+    };
+
+    public void onCreateAfter4(IChartComponent chart)
+    {
+        chart.SetActive(new { name = "year", exp = "1994" },
+            new
+            {
+                FillStyle = "#ccc",
+            });
+    }
+
+    #endregion 示例4
+
+    #region 示例5
+
+    object[] data5 =
+    {
+        new
+        {
+            year = "1991",
+            value = 31
+        },
+        new
+        {
+            year = "1992",
+            value = 41
+        },
+        new
+        {
+            year = "1993",
+            value = 35
+        },
+        new
+        {
+            year = "1994",
+            value = 55
+        },
+        new
+        {
+            year = "1995",
+            value = 49
+        },
+        new
+        {
+            year = "1996",
+            value = 15
+        },
+        new
+        {
+            year = "1997",
+            value = 17
+        },
+        new
+        {
+            year = "1998",
+            value = 29
+        },
+        new
+        {
+            year = "1999",
+            value = 33
+        }
+    };
+
+    ColumnConfig config5 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "设置selected状态"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "设置单值selected状态。"
+        },
+        XField = "year",
+        YField = "value"
+    };
+
+    public void onCreateAfter5(IChartComponent chart)
+    {
+        chart.SetActive(new { name = "year", exp = "1994" },
+            new
+            {
+                Stroke = "black",
+                LineWidth = 2,
+                
+            });
+    }
+
+    #endregion 示例5
+
+    #region 示例6
+
+    object[] data6 =
+    {
+        new
+        {
+            year = "1991",
+            value = 31
+        },
+        new
+        {
+            year = "1992",
+            value = 41
+        },
+        new
+        {
+            year = "1993",
+            value = 35
+        },
+        new
+        {
+            year = "1994",
+            value = 55
+        },
+        new
+        {
+            year = "1995",
+            value = 49
+        },
+        new
+        {
+            year = "1996",
+            value = 15
+        },
+        new
+        {
+            year = "1997",
+            value = 17
+        },
+        new
+        {
+            year = "1998",
+            value = 29
+        },
+        new
+        {
+            year = "1999",
+            value = 33
+        }
+    };
+
+    ColumnConfig config6 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "设置selected状态"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "设置单值selected状态。"
+        },
+        XField = "year",
+        YField = "value"
+    };
+
+    public void onCreateAfter6(IChartComponent chart)
+    {
+        chart.SetActive(new { name = "year", exp = "1994" },
+            new
+            {
+                Stroke = "black",
+                LineWidth = 2,
+            });
+    }
+
+    #endregion 示例6
 
 }

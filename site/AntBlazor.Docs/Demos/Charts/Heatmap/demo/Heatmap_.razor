@@ -2,14 +2,35 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <Heatmap @ref="chart1" Data="data1" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <Heatmap @ref="chart1" Data="data1" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <Heatmap  Data="data2" Config="config2" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="3">
+            <Tab>示例3</Tab>
+            <ChildContent>
+                <Heatmap  Data="data3" Config="config3" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="4">
+            <Tab>示例4</Tab>
+            <ChildContent>
+                <Heatmap  Data="data4" Config="config4" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
@@ -35,7 +56,7 @@
         YField = "district",
         ColorField = "aqhi",
         ShapeType = "rect",
-        Color = new[] {"#174c83", "#7eb6d4", "#efefeb", "#efa759", "#9b4d16"},
+        Color = new[] { "#174c83", "#7eb6d4", "#efefeb", "#efa759", "#9b4d16" },
         Meta = new
         {
             Month_of_Year = new
@@ -46,5 +67,373 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly object[] data2 = new object[]
+    {
+          new { name =  "hot dog", value =  70, country =  "AD" },
+          new { name =  "burger", value =  54, country =  "AD" },
+          new { name =  "sandwich", value =  49, country =  "AD" },
+          new { name =  "kebab", value =  4, country =  "AD" },
+          new { name =  "fries", value =  11, country =  "AD" },
+          new { name =  "donut", value =  68, country =  "AD" },
+          new { name =  "junk", value =  49, country =  "AD" },
+          new { name =  "sushi", value =  47, country =  "AD" },
+          new { name =  "ramen", value =  64, country =  "AD" },
+          new { name =  "curry", value =  51, country =  "AD" },
+          new { name =  "udon", value =  6, country =  "AD" },
+          new { name =  "hot dog", value =  45, country =  "AE" },
+          new { name =  "burger", value =  97, country =  "AE" },
+          new { name =  "sandwich", value =  69, country =  "AE" },
+          new { name =  "kebab", value =  68, country =  "AE" },
+          new { name =  "fries", value =  14, country =  "AE" },
+          new { name =  "donut", value =  93, country =  "AE" },
+          new { name =  "junk", value =  0, country =  "AE" },
+          new { name =  "sushi", value =  84, country =  "AE" },
+          new { name =  "ramen", value =  57, country =  "AE" },
+          new { name =  "curry", value =  73, country =  "AE" },
+          new { name =  "udon", value =  73, country =  "AE" },
+          new { name =  "hot dog", value =  43, country =  "AF" },
+          new { name =  "burger", value =  61, country =  "AF" },
+          new { name =  "sandwich", value =  28, country =  "AF" },
+          new { name =  "kebab", value =  12, country =  "AF" },
+          new { name =  "fries", value =  22, country =  "AF" },
+          new { name =  "donut", value =  54, country =  "AF" },
+          new { name =  "junk", value =  90, country =  "AF" },
+          new { name =  "sushi", value =  24, country =  "AF" },
+          new { name =  "ramen", value =  72, country =  "AF" },
+          new { name =  "curry", value =  40, country =  "AF" },
+          new { name =  "udon", value =  78, country =  "AF" },
+          new { name =  "hot dog", value =  35, country =  "AG" },
+          new { name =  "burger", value =  6, country =  "AG" },
+          new { name =  "sandwich", value =  64, country =  "AG" },
+          new { name =  "kebab", value =  92, country =  "AG" },
+          new { name =  "fries", value =  45, country =  "AG" },
+          new { name =  "donut", value =  88, country =  "AG" },
+          new { name =  "junk", value =  44, country =  "AG" },
+          new { name =  "sushi", value =  16, country =  "AG" },
+          new { name =  "ramen", value =  0, country =  "AG" },
+          new { name =  "curry", value =  75, country =  "AG" },
+          new { name =  "udon", value =  57, country =  "AG" },
+          new { name =  "hot dog", value =  3, country =  "AI" },
+          new { name =  "burger", value =  6, country =  "AI" },
+          new { name =  "sandwich", value =  34, country =  "AI" },
+          new { name =  "kebab", value =  72, country =  "AI" },
+          new { name =  "fries", value =  21, country =  "AI" },
+          new { name =  "donut", value =  30, country =  "AI" },
+          new { name =  "junk", value =  99, country =  "AI" },
+          new { name =  "sushi", value =  40, country =  "AI" },
+          new { name =  "ramen", value =  1, country =  "AI" },
+          new { name =  "curry", value =  70, country =  "AI" },
+          new { name =  "udon", value =  58, country =  "AI" },
+          new { name =  "hot dog", value =  40, country =  "AL" },
+          new { name =  "burger", value =  90, country =  "AL" },
+          new { name =  "sandwich", value =  24, country =  "AL" },
+          new { name =  "kebab", value =  69, country =  "AL" },
+          new { name =  "fries", value =  97, country =  "AL" },
+          new { name =  "donut", value =  70, country =  "AL" },
+          new { name =  "junk", value =  49, country =  "AL" },
+          new { name =  "sushi", value =  90, country =  "AL" },
+          new { name =  "ramen", value =  92, country =  "AL" },
+          new { name =  "curry", value =  90, country =  "AL" },
+          new { name =  "udon", value =  65, country =  "AL" },
+          new { name =  "hot dog", value =  72, country =  "AM" },
+          new { name =  "burger", value =  47, country =  "AM" },
+          new { name =  "sandwich", value =  30, country =  "AM" },
+          new { name =  "kebab", value =  51, country =  "AM" },
+          new { name =  "fries", value =  23, country =  "AM" },
+          new { name =  "donut", value =  63, country =  "AM" },
+          new { name =  "junk", value =  30, country =  "AM" },
+          new { name =  "sushi", value =  43, country =  "AM" },
+          new { name =  "ramen", value =  8, country =  "AM" },
+          new { name =  "curry", value =  49, country =  "AM" },
+          new { name =  "udon", value =  61, country =  "AM" },
+          new { name =  "hot dog", value =  83, country =  "AO" },
+          new { name =  "burger", value =  6, country =  "AO" },
+          new { name =  "sandwich", value =  17, country =  "AO" },
+          new { name =  "kebab", value =  40, country =  "AO" },
+          new { name =  "fries", value =  61, country =  "AO" },
+          new { name =  "donut", value =  72, country =  "AO" },
+          new { name =  "junk", value =  61, country =  "AO" },
+          new { name =  "sushi", value =  50, country =  "AO" },
+          new { name =  "ramen", value =  77, country =  "AO" },
+          new { name =  "curry", value =  97, country =  "AO" },
+          new { name =  "udon", value =  17, country =  "AO" },
+          new { name =  "hot dog", value =  15, country =  "AQ" },
+          new { name =  "burger", value =  34, country =  "AQ" },
+          new { name =  "sandwich", value =  26, country =  "AQ" },
+          new { name =  "kebab", value =  80, country =  "AQ" },
+          new { name =  "fries", value =  100, country =  "AQ" },
+          new { name =  "donut", value =  97, country =  "AQ" },
+          new { name =  "junk", value =  34, country =  "AQ" },
+          new { name =  "sushi", value =  81, country =  "AQ" },
+          new { name =  "ramen", value =  25, country =  "AQ" },
+          new { name =  "curry", value =  100, country =  "AQ" },
+          new { name =  "udon", value =  56, country =  "AQ" },
+    };
+
+    readonly HeatmapConfig config2 = new HeatmapConfig
+    {
+        Title = new AntDesign.Charts.Title
+        {
+            Visible = true,
+            Text = "指定色块热力图形状"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "色块热力图支持 rect 和 circle两种形状，通过shapeType配置项指定，默认为rect。"
+        },
+        XField = "name",
+        YField = "country",
+        ColorField = "value",
+        ShapeType = "circle",
+        Color = new[] { "#0d5fbb", "#7eadfc", "#fd8b6f", "#aa3523" },
+
+
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+    readonly object[] data3 = new object[]
+    {
+          new { name =  "hot dog", value =  70, country =  "AD" },
+          new { name =  "burger", value =  54, country =  "AD" },
+          new { name =  "sandwich", value =  49, country =  "AD" },
+          new { name =  "kebab", value =  4, country =  "AD" },
+          new { name =  "fries", value =  11, country =  "AD" },
+          new { name =  "donut", value =  68, country =  "AD" },
+          new { name =  "junk", value =  49, country =  "AD" },
+          new { name =  "sushi", value =  47, country =  "AD" },
+          new { name =  "ramen", value =  64, country =  "AD" },
+          new { name =  "curry", value =  51, country =  "AD" },
+          new { name =  "udon", value =  6, country =  "AD" },
+          new { name =  "hot dog", value =  45, country =  "AE" },
+          new { name =  "burger", value =  97, country =  "AE" },
+          new { name =  "sandwich", value =  69, country =  "AE" },
+          new { name =  "kebab", value =  68, country =  "AE" },
+          new { name =  "fries", value =  14, country =  "AE" },
+          new { name =  "donut", value =  93, country =  "AE" },
+          new { name =  "junk", value =  0, country =  "AE" },
+          new { name =  "sushi", value =  84, country =  "AE" },
+          new { name =  "ramen", value =  57, country =  "AE" },
+          new { name =  "curry", value =  73, country =  "AE" },
+          new { name =  "udon", value =  73, country =  "AE" },
+          new { name =  "hot dog", value =  43, country =  "AF" },
+          new { name =  "burger", value =  61, country =  "AF" },
+          new { name =  "sandwich", value =  28, country =  "AF" },
+          new { name =  "kebab", value =  12, country =  "AF" },
+          new { name =  "fries", value =  22, country =  "AF" },
+          new { name =  "donut", value =  54, country =  "AF" },
+          new { name =  "junk", value =  90, country =  "AF" },
+          new { name =  "sushi", value =  24, country =  "AF" },
+          new { name =  "ramen", value =  72, country =  "AF" },
+          new { name =  "curry", value =  40, country =  "AF" },
+          new { name =  "udon", value =  78, country =  "AF" },
+          new { name =  "hot dog", value =  35, country =  "AG" },
+          new { name =  "burger", value =  6, country =  "AG" },
+          new { name =  "sandwich", value =  64, country =  "AG" },
+          new { name =  "kebab", value =  92, country =  "AG" },
+          new { name =  "fries", value =  45, country =  "AG" },
+          new { name =  "donut", value =  88, country =  "AG" },
+          new { name =  "junk", value =  44, country =  "AG" },
+          new { name =  "sushi", value =  16, country =  "AG" },
+          new { name =  "ramen", value =  0, country =  "AG" },
+          new { name =  "curry", value =  75, country =  "AG" },
+          new { name =  "udon", value =  57, country =  "AG" },
+          new { name =  "hot dog", value =  3, country =  "AI" },
+          new { name =  "burger", value =  6, country =  "AI" },
+          new { name =  "sandwich", value =  34, country =  "AI" },
+          new { name =  "kebab", value =  72, country =  "AI" },
+          new { name =  "fries", value =  21, country =  "AI" },
+          new { name =  "donut", value =  30, country =  "AI" },
+          new { name =  "junk", value =  99, country =  "AI" },
+          new { name =  "sushi", value =  40, country =  "AI" },
+          new { name =  "ramen", value =  1, country =  "AI" },
+          new { name =  "curry", value =  70, country =  "AI" },
+          new { name =  "udon", value =  58, country =  "AI" },
+          new { name =  "hot dog", value =  40, country =  "AL" },
+          new { name =  "burger", value =  90, country =  "AL" },
+          new { name =  "sandwich", value =  24, country =  "AL" },
+          new { name =  "kebab", value =  69, country =  "AL" },
+          new { name =  "fries", value =  97, country =  "AL" },
+          new { name =  "donut", value =  70, country =  "AL" },
+          new { name =  "junk", value =  49, country =  "AL" },
+          new { name =  "sushi", value =  90, country =  "AL" },
+          new { name =  "ramen", value =  92, country =  "AL" },
+          new { name =  "curry", value =  90, country =  "AL" },
+          new { name =  "udon", value =  65, country =  "AL" },
+          new { name =  "hot dog", value =  72, country =  "AM" },
+          new { name =  "burger", value =  47, country =  "AM" },
+          new { name =  "sandwich", value =  30, country =  "AM" },
+          new { name =  "kebab", value =  51, country =  "AM" },
+          new { name =  "fries", value =  23, country =  "AM" },
+          new { name =  "donut", value =  63, country =  "AM" },
+          new { name =  "junk", value =  30, country =  "AM" },
+          new { name =  "sushi", value =  43, country =  "AM" },
+          new { name =  "ramen", value =  8, country =  "AM" },
+          new { name =  "curry", value =  49, country =  "AM" },
+          new { name =  "udon", value =  61, country =  "AM" },
+          new { name =  "hot dog", value =  83, country =  "AO" },
+          new { name =  "burger", value =  6, country =  "AO" },
+          new { name =  "sandwich", value =  17, country =  "AO" },
+          new { name =  "kebab", value =  40, country =  "AO" },
+          new { name =  "fries", value =  61, country =  "AO" },
+          new { name =  "donut", value =  72, country =  "AO" },
+          new { name =  "junk", value =  61, country =  "AO" },
+          new { name =  "sushi", value =  50, country =  "AO" },
+          new { name =  "ramen", value =  77, country =  "AO" },
+          new { name =  "curry", value =  97, country =  "AO" },
+          new { name =  "udon", value =  17, country =  "AO" },
+          new { name =  "hot dog", value =  15, country =  "AQ" },
+          new { name =  "burger", value =  34, country =  "AQ" },
+          new { name =  "sandwich", value =  26, country =  "AQ" },
+          new { name =  "kebab", value =  80, country =  "AQ" },
+          new { name =  "fries", value =  100, country =  "AQ" },
+          new { name =  "donut", value =  97, country =  "AQ" },
+          new { name =  "junk", value =  34, country =  "AQ" },
+          new { name =  "sushi", value =  81, country =  "AQ" },
+          new { name =  "ramen", value =  25, country =  "AQ" },
+          new { name =  "curry", value =  100, country =  "AQ" },
+          new { name =  "udon", value =  56, country =  "AQ" },
+    };
+
+    readonly HeatmapConfig config3 = new HeatmapConfig
+    {
+        Title = new AntDesign.Charts.Title
+        {
+            Visible = true,
+            Text = "热力图形状大小映射"
+        },
+        XField = "name",
+        YField = "country",
+        ColorField = "value",
+        SizeField = "value",
+        Color = new[] { "#dddddd", "#9ec8e0", "#5fa4cd", "#2e7ab6", "#114d90" },
+    };
+
+    #endregion 示例3
+
+    #region 示例4
+    readonly object[] data4 = new object[]
+    {
+          new { name =  "hot dog", value =  70, country =  "AD" },
+          new { name =  "burger", value =  54, country =  "AD" },
+          new { name =  "sandwich", value =  49, country =  "AD" },
+          new { name =  "kebab", value =  4, country =  "AD" },
+          new { name =  "fries", value =  11, country =  "AD" },
+          new { name =  "donut", value =  68, country =  "AD" },
+          new { name =  "junk", value =  49, country =  "AD" },
+          new { name =  "sushi", value =  47, country =  "AD" },
+          new { name =  "ramen", value =  64, country =  "AD" },
+          new { name =  "curry", value =  51, country =  "AD" },
+          new { name =  "udon", value =  6, country =  "AD" },
+          new { name =  "hot dog", value =  45, country =  "AE" },
+          new { name =  "burger", value =  97, country =  "AE" },
+          new { name =  "sandwich", value =  69, country =  "AE" },
+          new { name =  "kebab", value =  68, country =  "AE" },
+          new { name =  "fries", value =  14, country =  "AE" },
+          new { name =  "donut", value =  93, country =  "AE" },
+          new { name =  "junk", value =  0, country =  "AE" },
+          new { name =  "sushi", value =  84, country =  "AE" },
+          new { name =  "ramen", value =  57, country =  "AE" },
+          new { name =  "curry", value =  73, country =  "AE" },
+          new { name =  "udon", value =  73, country =  "AE" },
+          new { name =  "hot dog", value =  43, country =  "AF" },
+          new { name =  "burger", value =  61, country =  "AF" },
+          new { name =  "sandwich", value =  28, country =  "AF" },
+          new { name =  "kebab", value =  12, country =  "AF" },
+          new { name =  "fries", value =  22, country =  "AF" },
+          new { name =  "donut", value =  54, country =  "AF" },
+          new { name =  "junk", value =  90, country =  "AF" },
+          new { name =  "sushi", value =  24, country =  "AF" },
+          new { name =  "ramen", value =  72, country =  "AF" },
+          new { name =  "curry", value =  40, country =  "AF" },
+          new { name =  "udon", value =  78, country =  "AF" },
+          new { name =  "hot dog", value =  35, country =  "AG" },
+          new { name =  "burger", value =  6, country =  "AG" },
+          new { name =  "sandwich", value =  64, country =  "AG" },
+          new { name =  "kebab", value =  92, country =  "AG" },
+          new { name =  "fries", value =  45, country =  "AG" },
+          new { name =  "donut", value =  88, country =  "AG" },
+          new { name =  "junk", value =  44, country =  "AG" },
+          new { name =  "sushi", value =  16, country =  "AG" },
+          new { name =  "ramen", value =  0, country =  "AG" },
+          new { name =  "curry", value =  75, country =  "AG" },
+          new { name =  "udon", value =  57, country =  "AG" },
+          new { name =  "hot dog", value =  3, country =  "AI" },
+          new { name =  "burger", value =  6, country =  "AI" },
+          new { name =  "sandwich", value =  34, country =  "AI" },
+          new { name =  "kebab", value =  72, country =  "AI" },
+          new { name =  "fries", value =  21, country =  "AI" },
+          new { name =  "donut", value =  30, country =  "AI" },
+          new { name =  "junk", value =  99, country =  "AI" },
+          new { name =  "sushi", value =  40, country =  "AI" },
+          new { name =  "ramen", value =  1, country =  "AI" },
+          new { name =  "curry", value =  70, country =  "AI" },
+          new { name =  "udon", value =  58, country =  "AI" },
+          new { name =  "hot dog", value =  40, country =  "AL" },
+          new { name =  "burger", value =  90, country =  "AL" },
+          new { name =  "sandwich", value =  24, country =  "AL" },
+          new { name =  "kebab", value =  69, country =  "AL" },
+          new { name =  "fries", value =  97, country =  "AL" },
+          new { name =  "donut", value =  70, country =  "AL" },
+          new { name =  "junk", value =  49, country =  "AL" },
+          new { name =  "sushi", value =  90, country =  "AL" },
+          new { name =  "ramen", value =  92, country =  "AL" },
+          new { name =  "curry", value =  90, country =  "AL" },
+          new { name =  "udon", value =  65, country =  "AL" },
+          new { name =  "hot dog", value =  72, country =  "AM" },
+          new { name =  "burger", value =  47, country =  "AM" },
+          new { name =  "sandwich", value =  30, country =  "AM" },
+          new { name =  "kebab", value =  51, country =  "AM" },
+          new { name =  "fries", value =  23, country =  "AM" },
+          new { name =  "donut", value =  63, country =  "AM" },
+          new { name =  "junk", value =  30, country =  "AM" },
+          new { name =  "sushi", value =  43, country =  "AM" },
+          new { name =  "ramen", value =  8, country =  "AM" },
+          new { name =  "curry", value =  49, country =  "AM" },
+          new { name =  "udon", value =  61, country =  "AM" },
+          new { name =  "hot dog", value =  83, country =  "AO" },
+          new { name =  "burger", value =  6, country =  "AO" },
+          new { name =  "sandwich", value =  17, country =  "AO" },
+          new { name =  "kebab", value =  40, country =  "AO" },
+          new { name =  "fries", value =  61, country =  "AO" },
+          new { name =  "donut", value =  72, country =  "AO" },
+          new { name =  "junk", value =  61, country =  "AO" },
+          new { name =  "sushi", value =  50, country =  "AO" },
+          new { name =  "ramen", value =  77, country =  "AO" },
+          new { name =  "curry", value =  97, country =  "AO" },
+          new { name =  "udon", value =  17, country =  "AO" },
+          new { name =  "hot dog", value =  15, country =  "AQ" },
+          new { name =  "burger", value =  34, country =  "AQ" },
+          new { name =  "sandwich", value =  26, country =  "AQ" },
+          new { name =  "kebab", value =  80, country =  "AQ" },
+          new { name =  "fries", value =  100, country =  "AQ" },
+          new { name =  "donut", value =  97, country =  "AQ" },
+          new { name =  "junk", value =  34, country =  "AQ" },
+          new { name =  "sushi", value =  81, country =  "AQ" },
+          new { name =  "ramen", value =  25, country =  "AQ" },
+          new { name =  "curry", value =  100, country =  "AQ" },
+          new { name =  "udon", value =  56, country =  "AQ" },
+    };
+
+    readonly HeatmapConfig config4 = new HeatmapConfig
+    {
+        Title = new AntDesign.Charts.Title
+        {
+            Visible = true,
+            Text = "热力图模式切换"
+        },
+        XField = "name",
+        YField = "country",
+        ColorField = "value",
+        //ShapeSize = "circle",
+        Color = new[] { "#0d5fbb", "#7eadfc", "#fd8b6f", "#aa3523" },
+    };
+
+    #endregion 示例4
 
 }
