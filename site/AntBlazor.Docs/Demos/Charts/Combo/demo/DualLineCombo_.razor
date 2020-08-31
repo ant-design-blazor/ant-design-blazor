@@ -2,14 +2,28 @@
 @using Title = AntDesign.Charts.Title
 @inject IJSRuntime JS;
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <DualLine Data="@(new[] {data1, data2})" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <DualLine Data="@(new[] {data1, data2})" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <DualLine Data="@(new[] {data1_2, data2_2})" Config="config2" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="3">
+            <Tab>示例3</Tab>
+            <ChildContent>
+                <DualLine Data="@(new[] {data1_3, data2_3})" Config="config3" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
@@ -58,5 +72,131 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly object data1_2 = new object[]
+    {
+        new {year = "1991", value = 3},
+        new {year = "1992", value = 4},
+        new {year = "1993", value = 3.5},
+        new {year = "1994", value = 5},
+        new {year = "1995", value = 4.9},
+        new {year = "1996", value = 6},
+        new {year = "1997", value = 7},
+        new {year = "1998", value = 9},
+        new {year = "1999", value = 13}
+    };
+
+    readonly object data2_2 = new object[]
+    {
+        new {year = "1991", count = 10},
+        new {year = "1992", count = 4},
+        new {year = "1993", count = 5},
+        new {year = "1994", count = 5},
+        new {year = "1995", count = 4.9},
+        new {year = "1996", count = 35},
+        new {year = "1997", count = 7},
+        new {year = "1998", count = 1},
+        new {year = "1999", count = 20}
+    };
+
+    readonly DualLineConfig config2 = new DualLineConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "双折线图"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "自定义双折线的样式，突出主要折线"
+        },
+        XField = "year",
+        YField = new[] { "value", "count" },
+        LineConfigs = new LineConfig[]
+        {
+            new LineConfig
+            {
+              Color = "#29cae4",
+              Smooth = false,
+            },
+
+            new LineConfig
+            {
+              Color = "#586bce",
+              Smooth = true,
+              Point = new LineViewConfigPoint
+              {
+                  Visible = true,
+              },
+              Label = new Label
+              {
+                  Visible = true,
+              },
+              LineStyle = new LineStyle
+              {
+                  LineOpacity = 5,
+              }
+            },
+        }
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+    readonly object data1_3 = new object[]
+    {
+        new {year = "1991", value = 3},
+        new {year = "1992", value = 4},
+        new {year = "1993", value = 3.5},
+        new {year = "1994", value = 5},
+        new {year = "1995", value = 4.9},
+        new {year = "1996", value = 6},
+        new {year = "1997", value = 7},
+        new {year = "1998", value = 9},
+        new {year = "1999", value = 13}
+    };
+
+    readonly object data2_3 = new object[]
+    {
+        new {year = "1991", count = 10},
+        new {year = "1992", count = 4},
+        new {year = "1993", count = 5},
+        new {year = "1994", count = 5},
+        new {year = "1995", count = 4.9},
+        new {year = "1996", count = 35},
+        new {year = "1997", count = 7},
+        new {year = "1998", count = 1},
+        new {year = "1999", count = 20}
+    };
+
+    readonly DualLineConfig config3 = new DualLineConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "统一双折线度量"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "统一双折线度量，隐藏右轴"
+        },
+        XField = "year",
+        YField = new[] { "value", "count" },
+        YAxis = new ComboYAxis
+        {
+            Max = 35,
+            RightConfig = new ComboYAxisConfig
+            {
+                Visible = false,
+            }
+        }
+    };
+
+    #endregion 示例3
 
 }

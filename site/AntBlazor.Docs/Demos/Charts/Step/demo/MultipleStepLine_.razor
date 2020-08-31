@@ -1,21 +1,40 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
 
 <Tabs>
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <StepLine Data="data1" Config="config1"/>
+            <StepLine Data="data1" Config="config1" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="2">
+        <Tab>示例2</Tab>
+        <ChildContent>
+            <StepLine Data="data2" Config="config2" />
         </ChildContent>
     </TabPane>
 </Tabs>
 
 @code{
 
+        GDPItem[] data2;
+
+protected override async Task OnInitializedAsync()
+    {
+        data2 = await ChartsDemoData.GDPAsync(NavigationManager, HttpClient);
+
+        await base.OnInitializedAsync();
+    }
+
+
     #region 示例1
 
     readonly object[] data1 =
-    {
+{
         new
         {
             date = "2018/8/1",
@@ -317,5 +336,51 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly StepLineConfig config2 = new StepLineConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "2000 ~ 2018 年各国家 GDP 趋势对比"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "图形标签 (label) 位于折线尾部，用于标注整根阶梯折线，并有带有排名的含义在其中。"
+        },
+        Padding = new int[] { 20, 100, 30, 80 },
+        ForceFit = true,
+        XField = "year",
+        YField = "gdp",
+        SeriesField = "name",
+        XAxis = new ValueCatTimeAxis
+        {
+            Type = "dateTime",
+            Label = new BaseAxisLabel
+            {
+                Visible = true,
+                AutoHide = true,
+            }
+        },
+        YAxis = new ValueAxis
+        {
+            // formatter
+        },
+        Legend = new Legend
+        {
+            Visible = false,
+        },
+        Label = new Label
+        {
+            Visible = true,
+            Type = "line",
+        }
+
+    };
+
+    #endregion 示例2
 
 }

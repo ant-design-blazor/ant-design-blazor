@@ -3,23 +3,48 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <StepLine @ref="@chart1" Config="config1" Data="data1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <StepLine @ref="@chart1" Config="config1" Data="data1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <StepLine Config="config2" Data="data2" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="3">
+            <Tab>示例3</Tab>
+            <ChildContent>
+                <StepLine Config="config3" Data="data3" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="4">
+            <Tab>示例4</Tab>
+            <ChildContent>
+                <StepLine Config="config4" Data="data4" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
     IChartComponent chart1;
     FireworksSalesItem[] data1;
 
+    SalesItem[] data3;
+
     protected override async Task OnInitializedAsync()
     {
         data1 = await ChartsDemoData.FireworksSalesAsync(NavigationManager, HttpClient);
         await chart1.ChangeData(data1);
+
+        data3 = await ChartsDemoData.SalesAsync(NavigationManager, HttpClient);
 
         await base.OnInitializedAsync();
     }
@@ -50,5 +75,154 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly object[] data2 = new object[]
+    {
+          new { year =  "1991", value =  3 },
+          new { year =  "1992", value =  4 },
+          new { year =  "1993", value =  3.5 },
+          new { year =  "1994", value =  5 },
+          new { year =  "1995", value =  4.9 },
+          new { year =  "1996", value =  6 },
+          new { year =  "1997", value =  7 },
+          new { year =  "1998", value =  9 },
+          new { year =  "1999", value =  13 },
+    };
+
+
+    readonly StepLineConfig config2 = new StepLineConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "配置折线数据点样式"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "自定义配置趋势线上数据点的样式"
+        },
+        Padding = "auto",
+        ForceFit = true,
+        XField = "year",
+        YField = "value",
+        Label = new Label
+        {
+            Visible = true,
+            Type = "point"
+        },
+        Point = new LineViewConfigPoint
+        {
+            Visible = true,
+            Size = 5,
+            Shape = "diamond",
+            Style = new GraphicStyle
+            {
+                Fill = "white",
+                Stroke = "#2593fc",
+                LineWidth = 2,
+            }
+        },
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+    readonly StepLineConfig config3 = new StepLineConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "为阶梯图添加缩略轴交互"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "缩略轴 (slider) 交互适用于数据较多，用户希望关注数据集中某个特殊区间的场景。"
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "城市",
+        XAxis = new ValueCatTimeAxis
+        {
+            Visible = true,
+            Label = new BaseAxisLabel
+            {
+                Visible = true,
+                AutoHide = true,
+            },
+        },
+        YField = "销售额",
+        YAxis = new ValueAxis
+        {
+            Label = new BaseAxisLabel
+            {
+
+            }
+        },
+        Interactions = new Interaction[]
+        {
+            new Interaction
+            {
+                Type = "slider",
+                Cfg = new
+                {
+                    start= 0.1,
+                    end= 0.2,
+                }
+            }
+        }
+    };
+
+    #endregion 示例3
+
+    #region 示例4
+
+    readonly object[] data4 = new object[]
+    {
+          new { year =  "1991", value =  3 },
+          new { year =  "1992", value =  4 },
+          new { year =  "1993", value =  3.5 },
+          new { year =  "1994", value =  5 },
+          new { year =  "1995", value =  4.9 },
+          new { year =  "1996", value =  6 },
+          new { year =  "1997", value =  7 },
+          new { year =  "1998", value =  9 },
+          new { year =  "1999", value =  13 },
+    };
+
+    readonly StepLineConfig config4 = new StepLineConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "带数据点的折线图"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "将折线图上的每一个数据点显示出来，作为辅助阅读。"
+        },
+        ForceFit = true,
+        Padding = "auto",        
+        XField = "year",
+        YField = "value",
+        Step = "hvh", // 可以选择 hv, vh, hvh, vhv
+        Point = new LineViewConfigPoint
+        {
+            Visible = true,        
+        },
+        Label = new Label
+        {
+            Visible = true,
+            Type = "point"
+        },
+        
+    };
+
+    #endregion 示例4
 
 }

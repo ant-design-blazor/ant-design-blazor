@@ -1,21 +1,55 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <Pie Data="data1" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <Pie Data="data1" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <Pie Data="data2" Config="config2" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="3">
+            <Tab>示例3</Tab>
+            <ChildContent>
+                <Pie Data="data3" Config="config3" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="4">
+            <Tab>示例4</Tab>
+            <ChildContent>
+                <Pie Data="data4" Config="config4" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
+    object[] data3 = new object[49];
+
+    protected override async Task OnInitializedAsync()
+    {
+        for (int i = 1; i < 50; i++)
+        {
+            Random rd = new Random();
+            data3[i - 1] = new { type = $"分类 {i}", value = rd.Next(0, 10) + 1 };
+        }
+
+        await base.OnInitializedAsync();
+
+    }
 
     #region 示例1
 
     readonly object[] data1 =
-    {
+{
         new
         {
             type = "分类一",
@@ -73,5 +107,159 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly object[] data2 =
+    {
+        new
+        {
+            type = "分类一",
+            value = 27
+        },
+        new
+        {
+            type = "分类二",
+            value = 25
+        },
+        new
+        {
+            type = "分类三",
+            value = 18
+        },
+        new
+        {
+            type = "分类四",
+            value = 15
+        },
+        new
+        {
+            type = "分类五",
+            value = 10
+        },
+        new
+        {
+            type = "其它",
+            value = 5
+        }
+    };
+
+    readonly PieConfig config2 = new PieConfig
+    {
+        ForceFit = true,
+        Title = new Title
+        {
+            Visible = true,
+            Text = "饼图-外部图形标签(outer label)"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text =
+                "当把饼图label的类型设置为outer时，标签在切片外部拉线显示。设置offset控制标签的偏移值。"
+        },
+        Radius = 0.8,
+        AngleField = "value",
+        ColorField = "type",
+        Label = new PieLabelConfig
+        {
+            Visible = true,
+            Type = "outer",
+            Offset = 20,
+        }
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+
+    readonly PieConfig config3 = new PieConfig
+    {
+        ForceFit = true,
+        Title = new Title
+        {
+            Visible = true,
+            Text = "饼图-外部圆形图形标签(outer-center label)"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text =
+                "当把饼图label的类型设置为outer-center时，标签在切片外部拉线显示。outer-center布局的label发生遮挡会直接隐藏而不偏移躲避，相对于outer label布局来说，更美观"
+        },
+        Radius = 0.8,
+        AngleField = "value",
+        ColorField = "type",
+        Label = new PieLabelConfig
+        {
+            Visible = true,
+            Type = "outer-center",
+        }
+    };
+
+    #endregion 示例3
+
+    #region 示例4
+
+    readonly object[] data4 =
+    {
+        new
+        {
+            type = "分类一",
+            value = 27
+        },
+        new
+        {
+            type = "分类二",
+            value = 25
+        },
+        new
+        {
+            type = "分类三",
+            value = 18
+        },
+        new
+        {
+            type = "分类四",
+            value = 15
+        },
+        new
+        {
+            type = "分类五",
+            value = 10
+        },
+        new
+        {
+            type = "其它",
+            value = 5
+        }
+    };
+
+    readonly PieConfig config4 = new PieConfig
+    {
+        ForceFit = true,
+        Title = new Title
+        {
+            Visible = true,
+            Text = "饼图-图形标签蜘蛛布局"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text =
+                "当把饼图label的类型设置为spider时，标签分为两组，在图表两侧拉线对齐显示。一般来说，蜘蛛布局的label更不容易相互遮挡。"
+        },
+        Radius = 0.8,
+        AngleField = "value",
+        ColorField = "type",
+        Label = new PieLabelConfig
+        {
+            Visible = true,
+            Type = "spider"
+        }
+    };
+
+    #endregion 示例4
 
 }

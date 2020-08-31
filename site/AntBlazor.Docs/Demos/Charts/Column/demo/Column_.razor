@@ -1,21 +1,94 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
 
-<Tabs>
+<Tabs ActiveKeyChanged="OnTabChanged">
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <AntDesign.Charts.Column Data="data1" Config="config1"/>
+            <AntDesign.Charts.Column Data="data1" Config="config1" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="2">
+        <Tab>示例2</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column Data="data2" Config="config2" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="3">
+        <Tab>示例3</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column Data="data3" Config="config3" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="4">
+        <Tab>示例4</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column Data="data4" Config="config4" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="5">
+        <Tab>示例5</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column @ref="chart5" TItem="SalesItem"  Config="config5" OtherConfig="config5_2" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="6">
+        <Tab>示例6</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column @ref="chart6" TItem="SalesItem" Config="config6" OtherConfig="config6_2" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="7">
+        <Tab>示例7</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Column Data="data7" Config="config7" />
         </ChildContent>
     </TabPane>
 </Tabs>
 
 @code{
 
+    IChartComponent chart5;
+
+    IChartComponent chart6;
+   
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    private async void OnTabChanged(string activeKey)
+    {
+        if (activeKey == "5")
+        {
+            var data5 = await ChartsDemoData.SalesAsync(NavigationManager, HttpClient);
+            chart5.ChangeData(data5);
+        }
+        else if (activeKey == "6")
+        {
+            var data6 = await ChartsDemoData.SalesAsync(NavigationManager, HttpClient);
+            chart6.ChangeData(data6);
+        }
+        else
+        {
+
+        }
+    }
+
     #region 示例1
 
     object[] data1 =
-    {
+{
         new
         {
             type = "家具家电",
@@ -83,5 +156,423 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    object[] data2 =
+    {
+        new
+        {
+            type = "家具家电",
+            sales = 38
+        },
+        new
+        {
+            type = "粮油副食",
+            sales = 52
+        },
+        new
+        {
+            type = "生鲜水果",
+            sales = 61
+        },
+        new
+        {
+            type = "美容洗护",
+            sales = 145
+        },
+        new
+        {
+            type = "母婴用品",
+            sales = 48
+        },
+        new
+        {
+            type = "进口食品",
+            sales = 38
+        },
+        new
+        {
+            type = "食品饮料",
+            sales = 38
+        },
+        new
+        {
+            type = "家庭清洁",
+            sales = 38
+        }
+    };
+
+    ColumnConfig config2 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "基础柱状图-图形标签"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "基础柱状图图形标签默认位置在柱形上部。",
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "type",
+        YField = "sales",
+        Meta = new
+        {
+            Type = new
+            {
+                Alias = "类别"
+            },
+            Sales = new
+            {
+                Alias = "销售额(万)"
+            }
+        },
+        Label = new ColumnViewConfigLabel
+        {
+            Visible = true,
+            Style = new TextStyle
+            {
+                FontSize = 12,
+                FontWeight = 600,
+                Opacity = 0.6,
+            }
+
+        }
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+    object[] data3 =
+    {
+        new
+        {
+            type = "家具家电",
+            sales = 38
+        },
+        new
+        {
+            type = "粮油副食",
+            sales = 52
+        },
+        new
+        {
+            type = "生鲜水果",
+            sales = 61
+        },
+        new
+        {
+            type = "美容洗护",
+            sales = 145
+        },
+        new
+        {
+            type = "母婴用品",
+            sales = 48
+        },
+        new
+        {
+            type = "进口食品",
+            sales = 38
+        },
+        new
+        {
+            type = "食品饮料",
+            sales = 38
+        },
+        new
+        {
+            type = "家庭清洁",
+            sales = 38
+        }
+    };
+
+    ColumnConfig config3 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "基础柱状图-图形标签位置"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "基础柱状图的图形标签位置可以指定为top-柱形上部，middle-柱形中心，bottom-柱形底部。",
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "type",
+        YField = "sales",
+        Meta = new
+        {
+            Type = new
+            {
+                Alias = "类别"
+            },
+            Sales = new
+            {
+                Alias = "销售额(万)"
+            }
+        },
+        Label = new ColumnViewConfigLabel
+        {
+            Visible = true,
+            Position = "middle"  // option: middle / top / bottom
+        }
+    };
+
+    #endregion 示例3
+
+    #region 示例4
+
+    object[] data4 =
+    {
+        new
+        {
+            type = "家具家电",
+            sales = 38
+        },
+        new
+        {
+            type = "粮油副食",
+            sales = 52
+        },
+        new
+        {
+            type = "生鲜水果",
+            sales = 61
+        },
+        new
+        {
+            type = "美容洗护",
+            sales = 145
+        },
+        new
+        {
+            type = "母婴用品",
+            sales = 48
+        },
+        new
+        {
+            type = "进口食品",
+            sales = 38
+        },
+        new
+        {
+            type = "食品饮料",
+            sales = 38
+        },
+        new
+        {
+            type = "家庭清洁",
+            sales = 38
+        }
+    };
+
+    ColumnConfig config4 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "基础柱状图label颜色自动调整"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "图形标签(label)的adjustColor配置项设置为true时，位于柱形的内部的label颜色会根据柱形颜色自动调整，保证可读性。"
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "type",
+        YField = "sales",
+        Meta = new
+        {
+            Type = new
+            {
+                Alias = "类别"
+            },
+            Sales = new
+            {
+                Alias = "销售额(万)"
+            }
+        },
+        ColorField = "type",
+        Color = new string[] { "#55A6F3", "#55A6F3", "#55A6F3", "#CED4DE", "#55A6F3", "#55A6F3", "#55A6F3", "#55A6F3" },
+        Label = new ColumnViewConfigLabel
+        {
+            Visible = true,
+            Position = "middle",
+            AdjustColor = true,
+        }
+    };
+
+    #endregion 示例4
+
+    #region 示例5
+
+
+
+    ColumnConfig config5 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "基础柱状图-缩略轴"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "缩略轴 (slider) 交互适用于数据较多，用户希望关注数据集中某个特殊区间的场景。"
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "城市",
+        YField = "销售额",
+        Interactions = new Interaction[]
+    {
+            new Interaction
+            {
+                Type = "slider",
+                Cfg = new
+                {
+                    start = 0.4,
+                    end = 0.45,
+                }
+            }
+        },
+    };
+
+    object config5_2 = new
+    {
+        xAxis = new
+        {
+            visible = true,
+            label = new
+            {
+                visible = true,
+                autoHide = true
+            }
+        },
+
+        yAxis = new
+        {
+            visible = true,
+        },
+    };
+
+    #endregion 示例5
+
+    #region 示例6
+
+
+    ColumnConfig config6 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "基础柱状图-滚动条"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "当数据过多时，推荐使用滚动条一次只浏览一部分数据。"
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "城市",
+        YField = "销售额",
+        Interactions = new Interaction[]
+        {
+            new Interaction
+            {
+                Type = "scrollbar",
+            }
+            },
+
+    };
+
+    object config6_2 = new
+    {
+        xAxis = new
+        {
+            visible = true,
+            label = new
+            {
+                autoHide = true
+            }
+        },
+
+        yAxis = new
+        {
+            visible = true,
+            label = new
+            {
+                visible = true,
+                //formatter
+            }
+        },
+    };
+
+    #endregion 示例6
+
+    #region 示例7
+
+    object[] data7 =
+{
+        new
+        {
+            action =  "浏览网站",
+            pv= 50000
+        },
+        new
+        {
+            action =  "放入购物车",
+            pv= 35000
+        },
+        new
+        {
+            action =  "生成订单",
+            pv= 25000
+        },
+        new
+        {
+            action =  "支付订单",
+            pv= 15000
+        },
+        new
+        {
+            action =  "完成交易",
+            pv= 8500
+        },
+
+    };
+
+    ColumnConfig config7 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "基础柱状图-转化率组件"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "基础柱状图的图形之间添加转化率标签图形，用户希望关注从左到右的数据变化比例"
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "action",
+        YField = "pv",
+        ConversionTag = new ConversionTagOptions
+        {
+            Visible = true,
+        },
+    };
+
+    #endregion 示例7
 
 }

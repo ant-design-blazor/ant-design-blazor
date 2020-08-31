@@ -1,14 +1,28 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <AntDesign.Charts.Column Data="data1" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <AntDesign.Charts.Column Data="data1" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <AntDesign.Charts.Column Data="data2" Config="config2" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="3">
+            <Tab>示例3</Tab>
+            <ChildContent>
+                <AntDesign.Charts.Column Data="data3" Config="config3" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
@@ -96,5 +110,162 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    object[] data2 =
+    {
+        new
+        {
+            year = "1991",
+            value = 31
+        },
+        new
+        {
+            year = "1992",
+            value = 41
+        },
+        new
+        {
+            year = "1993",
+            value = 35
+        },
+        new
+        {
+            year = "1994",
+            value = 55
+        },
+        new
+        {
+            year = "1995",
+            value = 49
+        },
+        new
+        {
+            year = "1996",
+            value = 15
+        },
+        new
+        {
+            year = "1997",
+            value = 17
+        },
+        new
+        {
+            year = "1998",
+            value = 29
+        },
+        new
+        {
+            year = "1999",
+            value = 33
+        }
+    };
+
+    ColumnConfig config2 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "统计值图表辅助线"
+        },
+        XField = "year",
+        YField = "value",
+        GuideLine = new[]
+        {
+            new GuideLineConfig
+            {
+                Type = "mean", // "max" | "min" | "median" |  "mean"
+                Text = new GuideLineConfigText
+                {
+                    Position = "start",
+                    Content = "中位数",
+
+                }
+
+
+            }
+        }
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+    object[] data3 =
+    {
+        new
+        {
+            year = "1991",
+            value = 31
+        },
+        new
+        {
+            year = "1992",
+            value = 41
+        },
+        new
+        {
+            year = "1993",
+            value = 35
+        },
+        new
+        {
+            year = "1994",
+            value = 55
+        },
+        new
+        {
+            year = "1995",
+            value = 49
+        },
+        new
+        {
+            year = "1996",
+            value = 15
+        },
+        new
+        {
+            year = "1997",
+            value = 17
+        },
+        new
+        {
+            year = "1998",
+            value = 29
+        },
+        new
+        {
+            year = "1999",
+            value = 33
+        }
+    };
+
+    ColumnConfig config3 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "自定义图表辅助线"
+        },
+        XField = "year",
+        YField = "value",
+        GuideLine = new[]
+        {
+            new GuideLineConfig
+            {
+                Start = new[] {"0%", "50%"},
+                End = new[] {"100%", "50%"},
+                Text = new GuideLineConfigText
+                {
+                    Position = "start",
+                    Content = "自定义位置辅助线",
+                },
+                
+            }
+        }
+    };
+
+    #endregion 示例3
 
 }
