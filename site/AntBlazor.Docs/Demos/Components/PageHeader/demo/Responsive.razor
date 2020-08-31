@@ -1,4 +1,4 @@
-﻿<PageHeader Class="site-page-header">
+﻿<PageHeader BackIcon="true" Class="site-page-header">
     <PageHeaderTitle>Title</PageHeaderTitle>
     <PageHeaderSubtitle>This is a subtitle</PageHeaderSubtitle>
     <PageHeaderExtra>
@@ -7,8 +7,8 @@
         <Button Type="@ButtonType.Primary">Primary</Button>
     </PageHeaderExtra>
     <PageHeaderContent>
-        <div class="content">
-            <div class="main">
+        <div class="pageheader-content">
+            <div class="pageheader-main">
                 <Descriptions Size="small" Column="2">
                     <DescriptionsItem Title="@("Created")" Span="1">Lili Qu</DescriptionsItem>
                     <DescriptionsItem Title="@("Association")" Span="1"><a>421421</a></DescriptionsItem>
@@ -19,9 +19,9 @@
                     </DescriptionsItem>
                 </Descriptions>
             </div>
-            <div class="extra">
+            <div class="pageheader-extra">
                 <div>
-                    <Statistic Title="@("Status")" Value="@("Pending")"></Statistic>
+                    <Statistic Title="@("Status")" Value=@("Pending")></Statistic>
                     <Statistic Title="@("Price")" Value="568.08" Prefix="@("$")" Style="margin: 0 32px"></Statistic>
                 </div>
             </div>
@@ -40,27 +40,27 @@
 </PageHeader>
 
 <style>
-    .content {
+    .pageheader-content {
         display: flex;
     }
 
-    .extra div {
+    .pageheader-extra div {
         display: flex;
         width: max-content;
         justify-content: flex-end;
     }
 
     @@media (max-width: 576px) {
-        .content {
+        .pageheader-content {
             display: block;
         }
 
-        .main {
+        .pageheader-main {
             width: 100%;
             margin-bottom: 12px;
         }
 
-        .extra {
+        .pageheader-extra {
             width: 100%;
             margin-left: 0;
             text-align: left;

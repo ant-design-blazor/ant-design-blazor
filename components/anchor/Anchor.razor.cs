@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
+using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
@@ -202,7 +202,7 @@ namespace AntDesign
 
         private async void OnScroll(JsonElement obj)
         {
-            if (!_activatedByClick)
+            if (!_activatedByClick && _flatLinks != null)
             {
                 _activeLink = null;
                 _flatLinks.ForEach(l => l.Activate(false));
