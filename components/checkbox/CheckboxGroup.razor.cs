@@ -12,15 +12,14 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public IList<Checkbox> CheckboxItems { get; set; } = new List<Checkbox>();
-
-        [Parameter]
         public OneOf<CheckboxOption[], string[]> Options { get; set; }
 
         [Parameter]
         public EventCallback<string[]> OnChange { get; set; }
 
         private string[] _selectedValues;
+
+        private IList<Checkbox> _checkboxItems;
 
         [Parameter]
         public bool Disabled { get; set; }
@@ -30,9 +29,15 @@ namespace AntDesign
             ClassMapper.Add("ant-checkbox-group");
         }
 
-        public async void OnCheckedChange()
+        internal void AddItem(Checkbox checkbox)
         {
-            //StateHasChanged();
+            this._checkboxItems ??= new List<Checkbox>();
+            this._checkboxItems?.Add(checkbox);
+        }
+
+        internal void RemoveItem(Checkbox checkbox)
+        {
+            this._checkboxItems?.Remove(checkbox);
         }
 
         protected override void OnInitialized()
@@ -42,6 +47,10 @@ namespace AntDesign
             if (Value != null)
             {
                 _selectedValues = Value;
+                if (Options.IsT0)
+                {
+                    Options.AsT0.ForEach(opt => opt.Checked = opt.Value.IsIn(_selectedValues));
+                }
             }
 
             _selectedValues ??= Array.Empty<string>();
@@ -49,7 +58,7 @@ namespace AntDesign
 
         internal void OnCheckboxChange(Checkbox checkbox)
         {
-            var index = CheckboxItems.IndexOf(checkbox);
+            var index = _checkboxItems.IndexOf(checkbox);
 
             Options.Switch(opts =>
             {
@@ -58,7 +67,7 @@ namespace AntDesign
                     opts[index].Checked = checkbox.Checked;
                 }
 
-                _selectedValues = Options.AsT0.Where(x => x.Checked).Select(x => x.Value).ToArray();
+                CurrentValue = Options.AsT0.Where(x => x.Checked).Select(x => x.Value).ToArray();
             }, opts =>
             {
                 if (checkbox.Checked && !opts[index].IsIn(_selectedValues))
@@ -69,9 +78,9 @@ namespace AntDesign
                 {
                     _selectedValues = _selectedValues.Except(new[] { opts[index] }).ToArray();
                 }
-            });
 
-            CurrentValue = _selectedValues;
+                CurrentValue = _selectedValues;
+            });
 
             if (OnChange.HasDelegate)
             {
