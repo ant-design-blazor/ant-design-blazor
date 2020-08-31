@@ -1,14 +1,28 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <Donut Data="data1" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <Donut Data="data1" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <Donut Data="data2" Config="config2" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="3">
+            <Tab>示例3</Tab>
+            <ChildContent>
+                <Donut Data="data3" Config="config3" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
@@ -68,5 +82,131 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly object[] data2 =
+    {
+        new
+        {
+            type = "分类一",
+            value = 27
+        },
+        new
+        {
+            type = "分类二",
+            value = 25
+        },
+        new
+        {
+            type = "分类三",
+            value = 18
+        },
+        new
+        {
+            type = "分类四",
+            value = 15
+        },
+        new
+        {
+            type = "分类五",
+            value = 10
+        },
+        new
+        {
+            type = "其它",
+            value = 5
+        }
+    };
+
+    readonly DonutConfig config2 = new DonutConfig
+    {
+        ForceFit = true,
+        Title = new Title
+        {
+            Visible = true,
+            Text = "环图-指标卡"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "环图指标卡能够代替tooltip，在环图中心挖空部分显示各分类的详细信息。"
+        },
+        Radius = 0.8,
+        Padding = "auto",
+        AngleField = "value",
+        ColorField = "type",
+        Statistic = new DonutViewConfigStatistic
+        {
+            Visible = true,
+        }
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+    readonly object[] data3 =
+    {
+        new
+        {
+            type = "分类一",
+            value = 15
+        },
+        new
+        {
+            type = "分类二",
+            value = 14
+        },
+        new
+        {
+            type = "分类三",
+            value = 18
+        },
+        new
+        {
+            type = "分类四",
+            value = 27
+        },
+
+    };
+
+    readonly DonutConfig config3 = new DonutConfig
+    {
+        Theme = new
+        {
+            backgroundStyle= new
+            {
+                fill = "#2d74f7",
+            },
+        },
+        ForceFit = true,
+
+        Radius = 0.8,
+        Padding = "auto",
+        Color = new string[] { "#5a93fc", "#90b6fd", "#c8dbfe", "#ffffff" },
+        AngleField = "value",
+        ColorField = "type",
+        Statistic = new DonutViewConfigStatistic
+        {
+            Visible = true,
+            Content = new DonutStatisticContent
+            {
+                Value = "32%",
+                Name = "Texi & delivery"
+            }
+        },
+        Label = new PieLabelConfig
+        {
+            Visible = true,
+        },
+        Legend = new Legend
+        {
+            Visible = true,
+            Position = "bottom-center"
+        },
+    };
+
+    #endregion 示例3
 
 }
