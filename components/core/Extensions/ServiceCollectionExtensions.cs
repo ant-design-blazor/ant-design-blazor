@@ -12,7 +12,6 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddAntDesign(this IServiceCollection services)
         {
-            services.AddHttpClient("AntDesign");
             services.TryAddScoped<DomEventService>();
             services.TryAddScoped(sp => new HtmlRenderService(new HtmlRenderer(sp, sp.GetRequiredService<ILoggerFactory>(),
                         s => HtmlEncoder.Default.Encode(s)))
