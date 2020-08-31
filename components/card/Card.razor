@@ -3,21 +3,21 @@
 
 <CascadingValue Value="this">
     <div class="@ClassMapper.Class" style="@Style" id="@Id">
-        @if (Title.Value != null || Extra != null || AntCardTab != null)
+        @if (TitleTemplate != null || Title != null || Extra != null || AntCardTab != null)
         {
             <div class="ant-card-head">
                 <div class="ant-card-head-wrapper">
-                    @if (Title.Value != null)
+                    @if (TitleTemplate != null || Title != null)
                     {
 
                         <div class="ant-card-head-title">
-                            @if (Title.IsT0)
+                            @if (TitleTemplate == null)
                             {
-                                @Title.AsT0
+                                @Title
                             }
                             else
                             {
-                                @Title.AsT1
+                                @TitleTemplate
                             }
                         </div>
                     }
