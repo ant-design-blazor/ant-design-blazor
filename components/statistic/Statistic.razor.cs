@@ -20,9 +20,16 @@ namespace AntDesign
             {
                 decimalValue = d;
             }
-            else if (Value is string value && decimal.TryParse(value, out var @decimal))
+            else if (Value is string value)
             {
-                decimalValue = @decimal;
+                if (decimal.TryParse(value, out var @decimal))
+                {
+                    decimalValue = @decimal;
+                }
+                else
+                {
+                    return (value ?? "", "");
+                }
             }
             else
             {
