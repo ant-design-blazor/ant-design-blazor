@@ -24,7 +24,6 @@ namespace AntDesign
             await _service.CloseAsync(this);
             await OnClose.Invoke(result);
         }
-
     }
 
     public class DrawerRef
@@ -66,13 +65,20 @@ namespace AntDesign
         /// <returns></returns>
         public async Task CloseAsync()
         {
+            await _service.CloseAsync(this);
+            if (OnClose != null)
+                await OnClose.Invoke(new DrawerClosingEventArgs(false));
+        }
+
+        internal async Task HandleOnCancel()
+        {
+            var args = new DrawerClosingEventArgs(false);
             if (OnClose != null)
             {
-                var args = new DrawerClosingEventArgs(false);
                 await OnClose.Invoke(args);
-                if (!args.Cancel)
-                    await _service.CloseAsync(this);
             }
+            if (!args.Cancel)
+                await _service.CloseAsync(this);
         }
     }
 }
