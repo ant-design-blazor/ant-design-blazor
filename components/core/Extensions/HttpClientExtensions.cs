@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace AntDesign.core.Extensions
 {
-    public static class HttpClientExtensions
+    internal static class HttpClientExtensions
     {
         public static async Task<TValue> GetFromJsonAsync<TValue>(this HttpClient client, string requestUri, CancellationToken cancellationToken = default)
         {
@@ -14,11 +15,14 @@ namespace AntDesign.core.Extensions
                 throw new ArgumentNullException(nameof(client));
             }
 
-            var res = await client.GetAsync(requestUri);
+            var res = await client.GetAsync(requestUri, cancellationToken);
             if (res.IsSuccessStatusCode)
             {
                 var json = await res.Content.ReadAsStreamAsync();
-                return await System.Text.Json.JsonSerializer.DeserializeAsync<TValue>(json);
+                return await JsonSerializer.DeserializeAsync<TValue>(json, new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true,
+                }, cancellationToken);
             }
 
             return default;
