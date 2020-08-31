@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign.core.Extensions
 {
-    public static class HttpClientExtensions
+    internal static class HttpClientExtensions
     {
         public static async Task<TValue> GetFromJsonAsync<TValue>(this HttpClient client, string requestUri, CancellationToken cancellationToken = default)
         {

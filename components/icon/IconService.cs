@@ -13,18 +13,15 @@ namespace AntDesign
     {
         private static readonly ConcurrentDictionary<string, ValueTask<string>> _svgCache = new ConcurrentDictionary<string, ValueTask<string>>();
         private static IDictionary<string, string[]> _iconfiles;
-        private readonly HttpClient _httpClient;
+        private readonly static HttpClient _httpClient = new HttpClient();
         private IJSRuntime _js;
 
         private Uri _baseAddress;
 
-        public IconService(IHttpClientFactory httpClientFactory, NavigationManager navigationManager, IJSRuntime js)
+        public IconService(NavigationManager navigationManager, IJSRuntime js)
         {
             if (navigationManager != null)
                 _baseAddress = new Uri(navigationManager.BaseUri);
-
-            if (httpClientFactory != null)
-                _httpClient = httpClientFactory.CreateClient("AntDesign");
 
             _js = js;
         }
@@ -71,7 +68,6 @@ namespace AntDesign
 
             await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, scriptUrl);
         }
-
 
         public async Task<IDictionary<string, string[]>> GetAllIcons()
         {
