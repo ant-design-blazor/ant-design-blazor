@@ -1,32 +1,34 @@
-@using System.Text.Json
 <div>
-    <CheckboxGroup Options="@plainOptions" Value="@(new[]{"Apple"})" OnChange="OnChange"/>
+    <CheckboxGroup Options="@plainOptions" Value="@(new[]{"Apple"})" OnChange="OnChange" />
     <br />
     <br />
-    <CheckboxGroup Options="@options" Value="@(new[]{"Pear"})"  OnChange="OnChange"/>
+    <CheckboxGroup Options="@options" Value="@(new[]{"Pear"})" OnChange="OnChange" />
     <br />
     <br />
-    <CheckboxGroup Options="@OptionsWithDisabled" Disabled Value="@(new[]{"Apple"})"  OnChange="OnChange"/>
+    <CheckboxGroup Options="@OptionsWithDisabled" Disabled Value="@(new[]{"Apple"})" OnChange="OnChange" />
 </div>
+
+@using System.Text.Json
 @code{
 
-    string[] plainOptions = {"Apple", "Pear", "Orange"};
+    string[] plainOptions = { "Apple", "Pear", "Orange" };
 
     CheckboxOption[] options = new CheckboxOption[]
     {
         new CheckboxOption {Label = "Apple", Value = "Apple"},
         new CheckboxOption {Label = "Pear", Value = "Pear"},
         new CheckboxOption {Label = "Orange", Value = "Orange"},
-    };
+        };
 
     CheckboxOption[] OptionsWithDisabled = new CheckboxOption[]
     {
         new CheckboxOption {Label = "Apple", Value = "Apple"},
         new CheckboxOption {Label = "Pear", Value = "Pear"},
         new CheckboxOption {Label = "Orange", Value = "Orange", Disabled = true},
-    };
+        };
 
-    void OnChange(string[] checkedValues) {
+    void OnChange(string[] checkedValues)
+    {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }
 }
