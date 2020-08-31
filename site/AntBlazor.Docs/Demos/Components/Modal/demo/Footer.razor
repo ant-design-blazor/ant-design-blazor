@@ -4,11 +4,13 @@
 </Button>
 @{
     RenderFragment footer = @<Template>
-        <Button OnClick="@HandleCancel" @key="@( "back" )">Return</Button>
-        <Button OnClick="@HandleOk" @key="@( "submit" )"
-                   Type="primary"
-                   Loading="@_loading">Submit</Button>
-    </Template>;
+    <Button OnClick="@HandleOk" @key="@( "submit" )"
+            Type="primary"
+            Loading="@_loading">
+        Submit
+    </Button>
+    <Button OnClick="@HandleCancel" @key="@( "back" )">Return</Button>
+</Template>;
 }
 
 <Modal Title="@("Title")"
