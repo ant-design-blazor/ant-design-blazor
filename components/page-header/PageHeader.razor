@@ -12,7 +12,7 @@
             {
                 <div @onclick="OnBackClick" class="ant-page-header-back">
                     <div role="button" tabindex="0" class="ant-page-header-back-button">
-                        @if (BackIcon.IsT0 || OnBack.HasDelegate)
+                        @if (BackIcon.IsT0)
                         {
                             <Icon Type="arrow-left" Theme="outline" />
                         }
@@ -22,7 +22,7 @@
                         }
                         else
                         {
-                            @BackIcon.AsT1
+                            @BackIcon.AsT2
                         }
                     </div>
                 </div>
