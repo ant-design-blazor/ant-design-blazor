@@ -54,7 +54,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            CheckboxGroup?.CheckboxItems.Add(this);
+            CheckboxGroup?.AddItem(this);
 
             if (Checked)
             {
@@ -64,7 +64,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            CheckboxGroup?.CheckboxItems.Remove(this);
+            CheckboxGroup?.RemoveItem(this);
 
             base.Dispose(disposing);
         }
