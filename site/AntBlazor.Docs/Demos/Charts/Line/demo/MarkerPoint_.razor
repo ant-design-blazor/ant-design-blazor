@@ -1,21 +1,49 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <AntDesign.Charts.Line Data="data1" Config="config1" OtherConfig="otherConfig1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <AntDesign.Charts.Line Data="data1" Config="config1" OtherConfig="otherConfig1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <AntDesign.Charts.Line Data="data2" Config="config2" OtherConfig="otherConfig2" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="3">
+            <Tab>示例3</Tab>
+            <ChildContent>
+                <AntDesign.Charts.Line Data="data3" Config="config3" OtherConfig="otherConfig3" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="4">
+            <Tab>示例4</Tab>
+            <ChildContent>
+                <AntDesign.Charts.Line Data="data4" Config="config4" OtherConfig="otherConfig4" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="5">
+            <Tab>示例5</Tab>
+            <ChildContent>
+                <AntDesign.Charts.Line Data="data5" Config="config5" OtherConfig="otherConfig5" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
-    #region 示例1
+        #region 示例1
 
-    object[] data1 =
-    {
+        object[] data1 =
+        {
         new {date = "2019-01-01", value = 3},
         new {date = "2019-02-01", value = 4},
         new {date = "2019-03-01", value = 3.5},
@@ -30,36 +58,36 @@
         new {date = "2019-12-01", value = 23}
     };
 
-    LineConfig config1 = new LineConfig
-    {
-        Title = new Title
+        LineConfig config1 = new LineConfig
         {
-            Visible = true,
-            Text = "带标注点的折线图"
-        },
-        Description = new Description
-        {
-            Visible = true,
-            Text = "在折线图上标注重点的数据，如节假日等"
-        },
-        ForceFit = true,
-        Padding = "auto",
-        XField = "date",
-        YField = "value",
-        YAxis = new ValueAxis
-        {
-            Nice = true
-        },
-        Label = new Label
-        {
-            Visible = false
-        }
-    };
+            Title = new Title
+            {
+                Visible = true,
+                Text = "带标注点的折线图"
+            },
+            Description = new Description
+            {
+                Visible = true,
+                Text = "在折线图上标注重点的数据，如节假日等"
+            },
+            ForceFit = true,
+            Padding = "auto",
+            XField = "date",
+            YField = "value",
+            YAxis = new ValueAxis
+            {
+                Nice = true
+            },
+            Label = new Label
+            {
+                Visible = false
+            }
+        };
 
-    object otherConfig1 = new
-    {
-        MarkerPoints = new object[]
+        object otherConfig1 = new
         {
+            MarkerPoints = new object[]
+            {
             new
             {
                 Visible = true,
@@ -70,9 +98,324 @@
                     Field = "festival"
                 }
             }
+            }
+        };
+
+        #endregion 示例1
+
+        #region 示例2
+
+        object[] data2 =
+        {
+        new { date =  "2019-01-01", value =  3 },
+          new { date =  "2019-02-01", value =  4 },
+          new { date =  "2019-03-01", value =  3.5 },
+          new { date =  "2019-04-01", value =  5 },
+          new { date =  "2019-05-01", value =  4.9, festival =  "劳动节" },
+          new { date =  "2019-06-01", value =  6 },
+          new { date =  "2019-07-01", value =  7 },
+          new { date =  "2019-08-01", value =  9 },
+          new { date =  "2019-09-01", value =  -7, error =  "异常" },
+          new { date =  "2019-10-01", value =  13, festival =  "国庆节" },
+          new { date =  "2019-11-01", value =  13 },
+          new { date =  "2019-12-01", value =  13 },
+    };
+
+        LineConfig config2 = new LineConfig
+        {
+            Title = new Title
+            {
+                Visible = true,
+                Text = "多种类型标注点"
+            },
+            Description = new Description
+            {
+                Visible = true,
+                Text = "在折线图上标注重点的数据，如节假日、异常点等"
+            },
+            ForceFit = true,
+            Padding = "auto",
+            XField = "date",
+            YField = "value",
+            YAxis = new ValueAxis
+            {
+                Nice = true
+            },
+            Label = new Label
+            {
+                Visible = false
+            }
+        };
+
+        object otherConfig2 = new
+        {
+            MarkerPoints = new object[]
+            {
+            new
+            {
+                Visible = true,
+                data = new object[] {new {date = "2019-05-01", value = 4.9}, new {date = "2019-10-01"}},
+                Label = new
+                {
+                    Visible = true,
+                    Field = "festival"
+                }
+            },
+            new
+            {
+                Visible = true,
+                data = new object[] { new {date = "2019-09-01"}},
+                symbol = "cross",
+                Label = new
+                {
+                    Visible = true,
+                    Field = "festival",
+                    position = "bottom",
+                    offsetY = 8,
+                },
+                Style = new
+                {
+                    normal = new{stroke= "rgba(255, 0, 0, 0.65)", lineWidth= 2}
+                }
+            },
+            }
+        };
+
+        #endregion 示例2
+
+        #region 示例3
+
+        object[] data3 =
+        {
+        new { date =  "2019-01-01", value =  3 },
+          new { date =  "2019-02-01", value =  4 },
+          new { date =  "2019-03-01", value =  3.5 },
+          new { date =  "2019-04-01", value =  5 },
+          new { date =  "2019-05-01", value =  4.9 },
+          new { date =  "2019-06-01", value =  6 },
+          new { date =  "2019-07-01", value =  7 },
+          new { date =  "2019-08-01", value =  9 },
+          new { date =  "2019-09-01", value =  3 },
+          new { date =  "2019-10-01", value =  16 },
+          new { date =  "2019-11-01", value =  6 },
+          new { date =  "2019-12-01", value =  8 },
+    };
+
+        LineConfig config3 = new LineConfig
+        {
+            Title = new Title
+            {
+                Visible = true,
+                Text = "标注最大值（带动画）"
+            },
+            Description = new Description
+            {
+                Visible = true,
+                Text = "可通过 animation 配置标注点的动画"
+            },
+            ForceFit = true,
+            Padding = "auto",
+            XField = "date",
+            YField = "value",
+            YAxis = new ValueAxis
+            {
+                Nice = true
+            },
+            Label = new Label
+            {
+                Visible = false
+            }
+        };
+
+        object otherConfig3 = new
+        {
+            MarkerPoints = new object[]
+            {
+            new
+            {
+                Visible = true,
+                data = new object[] {new { value = "maxValue"} },
+                Label = new
+                {
+                    Visible = true,
+                    formatter = "最大值",
+                },
+                style = new
+                {
+                    normal = new { fill =  "rgba(255, 0, 0, 0.65)" },
+                },
+                animation = new
+                {
+                    endState = new
+                    {
+                      size =  4,
+                      opacity =  0.3
+                    },
+                    animateCfg = new
+                    {
+                      duration =  1500,
+                      easing =  "easeLinear",
+                      repeat =  true,
+                      delay =  1200,
+                    },
+                },
+            }
+    }
+        };
+
+        #endregion 示例3
+
+        #region 示例4
+
+        object[] data4 =
+        {
+        new { date =  "2019-01-01", value =  3 },
+          new { date =  "2019-02-01", value =  4 },
+          new { date =  "2019-03-01", value =  3.5 },
+          new { date =  "2019-04-01", value =  5 },
+          new { date =  "2019-05-01", value =  4.9 },
+          new { date =  "2019-06-01", value =  6 },
+          new { date =  "2019-07-01", value =  7 },
+          new { date =  "2019-08-01", value =  9 },
+          new { date =  "2019-09-01", value =  3 },
+          new { date =  "2019-10-01", value =  23 },
+          new { date =  "2019-11-01", value =  6 },
+          new { date =  "2019-12-01", value =  8 },
+    };
+
+        LineConfig config4 = new LineConfig
+        {
+            Title = new Title
+            {
+                Visible = true,
+                Text = "自定义标注点 symbol"
+            },
+            Description = new Description
+            {
+                Visible = true,
+                Text = "内置 symbol 类型有：cross, hexagon, bowtie, tick, plus, hyphen, line"
+            },
+            ForceFit = true,
+            Padding = "auto",
+            XField = "date",
+            YField = "value",
+            YAxis = new ValueAxis
+            {
+                Nice = true
+            },
+            Label = new Label
+            {
+                Visible = false
+            }
+        };
+
+        object otherConfig4 = new
+        {
+            MarkerPoints = new object[]
+            {
+            new
+            {
+                visible =  true,
+                data = new object[] {new { value =  23 } },
+                label = new
+                {
+                    visible =  true,
+                    formatter =   "最大值",
+                },
+                size =  12,
+                style = new
+                {
+                    normal = new { fill =  "rgba(255, 255, 0, 0.85)", stroke =  "rgba(0,0,0,0.65)", lineWidth =  1 },
+                },
+                animation = new
+                {
+                    endState = new { size =  4, opacity =  0.3 },
+                    animateCfg = new
+                    {
+                        duration =  1500,
+                        easing =  "easeLinear",
+                        repeat =  true,
+                        delay =  1200,
+                    },
+                },
+            },
+            },
+        };
+
+
+        #endregion 示例4
+
+        #region 示例5
+
+        object[] data5 =
+        {
+        new { date =  "2019-01-01", value =  3 },
+          new { date =  "2019-02-01", value =  4 },
+          new { date =  "2019-03-01", value =  3.5 },
+          new { date =  "2019-04-01", value =  5 },
+          new { date =  "2019-05-01", value =  4.9 },
+          new { date =  "2019-06-01", value =  6 },
+          new { date =  "2019-07-01", value =  7 },
+          new { date =  "2019-08-01", value =  9 },
+          new { date =  "2019-09-01", value =  7 },
+          new { date =  "2019-10-01", value =  13 },
+          new { date =  "2019-11-01", value =  13 },
+          new { date =  "2019-12-01", value =  13 },
+    };
+
+        LineConfig config5 = new LineConfig
+        {
+            Title = new Title
+            {
+                Visible = true,
+                Text = "使用 image 定义标注点"
+            },
+            Description = new Description
+            {
+                Visible = true,
+                Text = "除了内置 symbol，还可以通过 'image://url' 设置为图片，其中 url 为图片的链接"
+            },
+            ForceFit = true,
+            Padding = "auto",
+            XField = "date",
+            YField = "value",
+            YAxis = new ValueAxis
+            {
+                Nice = true
+            },
+            Label = new Label
+            {
+                Visible = false
+            }
+        };
+
+        object otherConfig5 = new
+        {
+            MarkerPoints = new object[]
+            {
+            new
+            {
+                visible =  true,
+                data = new object[] {new{ date =  "2019-09-01" } },
+                size =  20,
+                symbol =  "image://https://gw.alipayobjects.com/mdn/rms_a30de3/afts/img/A*66RtR4cXNWoAAAAAAAAAAABkARQnAQ",
+                label =  new
+                {
+                    visible =  true,
+                    position =  "bottom",
+                    offsetY =  8,
+                },
+                style =  new
+                {
+                // 关闭动态样式
+                normal = new { lineWidth =  0, fill =  "transparent" },
+                active = new { lineWidth =  0, fill =  "transparent" },
+                selected = new { lineWidth =  0, fill =  "transparent" },
+                },
+            },
         }
     };
 
-    #endregion 示例1
+    #endregion 示例5
 
 }

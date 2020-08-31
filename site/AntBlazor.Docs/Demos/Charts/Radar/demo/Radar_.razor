@@ -1,14 +1,21 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <Radar Data="data1" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <Radar Data="data1" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <Radar Data="data2" Config="config2" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
@@ -95,5 +102,150 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly object[] data2 =
+    {
+          new {
+            item =  "Design",
+            user =  "a",
+            score =  70,
+          },
+          new {
+            item =  "Design",
+            user =  "b",
+            score =  30,
+          },
+          new {
+            item =  "Development",
+            user =  "a",
+            score =  60,
+          },
+          new {
+            item =  "Development",
+            user =  "b",
+            score =  70,
+          },
+          new {
+            item =  "Marketing",
+            user =  "a",
+            score =  60,
+          },
+          new {
+            item =  "Marketing",
+            user =  "b",
+            score =  50,
+          },
+          new {
+            item =  "Users",
+            user =  "a",
+            score =  40,
+          },
+          new {
+            item =  "Users",
+            user =  "b",
+            score =  50,
+          },
+          new {
+            item =  "Test",
+            user =  "a",
+            score =  60,
+          },
+          new {
+            item =  "Test",
+            user =  "b",
+            score =  70,
+          },
+          new {
+            item =  "Language",
+            user =  "a",
+            score =  70,
+          },
+          new {
+            item =  "Language",
+            user =  "b",
+            score =  50,
+          },
+          new {
+            item =  "Technology",
+            user =  "a",
+            score =  50,
+          },
+          new {
+            item =  "Technology",
+            user =  "b",
+            score =  40,
+          },
+          new {
+            item =  "Support",
+            user =  "a",
+            score =  30,
+          },
+          new {
+            item =  "Support",
+            user =  "b",
+            score =  40,
+          },
+          new {
+            item =  "Sales",
+            user =  "a",
+            score =  60,
+          },
+          new {
+            item =  "Sales",
+            user =  "b",
+            score =  40,
+          },
+          new {
+            item =  "UX",
+            user =  "a",
+            score =  50,
+          },
+          new {
+            item =  "UX",
+            user =  "b",
+            score =  60,
+          },
+    };
+
+    readonly RadarConfig config2 = new RadarConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "多组雷达图"
+        },
+        AngleField = "item",
+        RadiusField = "score",
+        SeriesField = "user",
+        RadiusAxis = new ValueAxis
+        {
+            Grid = new BaseAxisGrid
+            {
+                Line = new BaseAxisGridLine
+                {
+                    Type = "line"
+                }
+            }
+        },
+        Line = new RadarViewConfigLine
+        {
+            Visible = true,
+        },
+        Point = new RadarViewConfigPoint
+        {
+            Visible = true,
+            Shape = "circle"
+        },
+        Legend = new Legend
+        {
+            Visible = true,
+            Position = "bottom-center"
+        },
+
+    };
+
+    #endregion 示例2
 
 }

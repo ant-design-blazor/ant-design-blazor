@@ -4,7 +4,42 @@
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <Funnel Data="data1" Config="config1"/>
+            <Funnel Data="data1" Config="config1" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="2">
+        <Tab>示例2</Tab>
+        <ChildContent>
+            <Funnel Data="data2" Config="config2" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="3">
+        <Tab>示例3</Tab>
+        <ChildContent>
+            <Funnel Data="data3" Config="config3" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="4">
+        <Tab>示例4</Tab>
+        <ChildContent>
+            <Funnel Data="data4" Config="config4" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="5">
+        <Tab>示例5</Tab>
+        <ChildContent>
+            <Funnel Data="data5" Config="config5" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="6">
+        <Tab>示例6</Tab>
+        <ChildContent>
+            <Funnel Data="data6" Config="config6" />
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -29,5 +64,121 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly object[] data2 =
+    {
+        new {action = "浏览网站", pv = 50000},
+        new {action = "放入购物车", pv = 35000},
+        new {action = "生成订单", pv = 25000},
+        new {action = "支付", pv = 15000},
+        new {action = "成交", pv = 8500}
+    };
+
+    readonly FunnelConfig config2 = new FunnelConfig
+    {
+        XField = "action",
+        YField = "pv",
+        DynamicHeight = true,
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+    readonly object[] data3 =
+    {
+          new { action =  "浏览网站", pv =  50000, quarter =  "2020Q1" },
+          new { action =  "浏览网站", pv =  50000, quarter =  "2020Q1" },
+          new { action =  "浏览网站", pv =  50000, quarter =  "2020Q1" },
+          new { action =  "放入购物车", pv =  35000, quarter =  "2020Q1" },
+          new { action =  "生成订单", pv =  25000, quarter =  "2020Q1" },
+          new { action =  "支付订单", pv =  15000, quarter =  "2020Q1" },
+          new { action =  "完成交易", pv =  11500, quarter =  "2020Q1" },
+          new { action =  "浏览网站", pv =  80000, quarter =  "2020Q2" },
+          new { action =  "放入购物车", pv =  63000, quarter =  "2020Q2" },
+          new { action =  "生成订单", pv =  47000, quarter =  "2020Q2" },
+          new { action =  "支付订单", pv =  24000, quarter =  "2020Q2" },
+          new { action =  "完成交易", pv =  17500, quarter =  "2020Q2" },
+    };
+
+    readonly FunnelConfig config3 = new FunnelConfig
+    {
+        XField = "action",
+        YField = "pv",
+        CompareField = "quarter"
+    };
+
+    #endregion 示例3
+
+    #region 示例4
+
+    readonly object[] data4 =
+    {
+        new {action = "浏览网站", pv = 50000},
+        new {action = "放入购物车", pv = 35000},
+        new {action = "生成订单", pv = 25000},
+        new {action = "支付", pv = 15000},
+        new {action = "成交", pv = 8500}
+    };
+
+    readonly FunnelConfig config4 = new FunnelConfig
+    {
+        XField = "action",
+        YField = "pv",
+        Transpose = true,
+    };
+
+    #endregion 示例4
+
+    #region 示例5
+
+    readonly object[] data5 =
+    {
+        new {action = "浏览网站", pv = 50000},
+        new {action = "放入购物车", pv = 35000},
+        new {action = "生成订单", pv = 25000},
+        new {action = "支付", pv = 15000},
+        new {action = "成交", pv = 8500}
+    };
+
+    readonly FunnelConfig config5 = new FunnelConfig
+    {
+        XField = "action",
+        YField = "pv",
+        DynamicHeight = true,
+        Transpose = true,
+    };
+
+    #endregion 示例5
+
+    #region 示例6
+
+    readonly object[] data6 =
+    {
+          new { action =  "浏览网站", pv =  50000, quarter =  "2020Q1" },
+          new { action =  "浏览网站", pv =  50000, quarter =  "2020Q1" },
+          new { action =  "浏览网站", pv =  50000, quarter =  "2020Q1" },
+          new { action =  "放入购物车", pv =  35000, quarter =  "2020Q1" },
+          new { action =  "生成订单", pv =  25000, quarter =  "2020Q1" },
+          new { action =  "支付订单", pv =  15000, quarter =  "2020Q1" },
+          new { action =  "完成交易", pv =  11500, quarter =  "2020Q1" },
+          new { action =  "浏览网站", pv =  80000, quarter =  "2020Q2" },
+          new { action =  "放入购物车", pv =  63000, quarter =  "2020Q2" },
+          new { action =  "生成订单", pv =  47000, quarter =  "2020Q2" },
+          new { action =  "支付订单", pv =  24000, quarter =  "2020Q2" },
+          new { action =  "完成交易", pv =  17500, quarter =  "2020Q2" },
+    };
+
+    readonly FunnelConfig config6 = new FunnelConfig
+    {
+        XField = "action",
+        YField = "pv",
+        CompareField = "quarter",
+        Transpose = true,
+    };
+
+    #endregion 示例6
 
 }

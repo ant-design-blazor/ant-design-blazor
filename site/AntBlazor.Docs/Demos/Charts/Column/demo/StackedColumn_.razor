@@ -1,14 +1,42 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <StackedColumn Data="data1" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <StackedColumn Data="data1" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <StackedColumn Data="data2" Config="config2" OtherConfig="config2_2" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="3">
+            <Tab>示例3</Tab>
+            <ChildContent>
+                <StackedColumn Data="data3" Config="config3" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="4">
+            <Tab>示例4</Tab>
+            <ChildContent>
+                <StackedColumn Data="data4" Config="config4" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="5">
+            <Tab>示例5</Tab>
+            <ChildContent>
+                <StackedColumn Data="data5" Config="config5" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
@@ -146,5 +174,425 @@
     };
 
     #endregion 示例1
+
+
+    #region 示例2
+
+    readonly object[] data2 =
+    {
+          new  { year =  "2006", type =  "redDeliciou", value =  10 },
+          new  { year =  "2006", type =  "mcintosh", value =  15 },
+          new  { year =  "2006", type =  "oranges", value =  9 },
+          new  { year =  "2006", type =  "pears", value =  6 },
+          new  { year =  "2007", type =  "redDeliciou", value =  12 },
+          new  { year =  "2007", type =  "mcintosh", value =  18 },
+          new  { year =  "2007", type =  "oranges", value =  9 },
+          new  { year =  "2007", type =  "pears", value =  4 },
+          new  { year =  "2008", type =  "redDeliciou", value =  5 },
+          new  { year =  "2008", type =  "mcintosh", value =  20 },
+          new  { year =  "2008", type =  "oranges", value =  8 },
+          new  { year =  "2008", type =  "pears", value =  2 },
+          new  { year =  "2009", type =  "redDeliciou", value =  1 },
+          new  { year =  "2009", type =  "mcintosh", value =  15 },
+          new  { year =  "2009", type =  "oranges", value =  5 },
+          new  { year =  "2009", type =  "pears", value =  4 },
+          new  { year =  "2010", type =  "redDeliciou", value =  2 },
+          new  { year =  "2010", type =  "mcintosh", value =  10 },
+          new  { year =  "2010", type =  "oranges", value =  4 },
+          new  { year =  "2010", type =  "pears", value =  2 },
+          new  { year =  "2011", type =  "redDeliciou", value =  3 },
+          new  { year =  "2011", type =  "mcintosh", value =  12 },
+          new  { year =  "2011", type =  "oranges", value =  6 },
+          new  { year =  "2011", type =  "pears", value =  3 },
+          new  { year =  "2012", type =  "redDeliciou", value =  4 },
+          new  { year =  "2012", type =  "mcintosh", value =  15 },
+          new  { year =  "2012", type =  "oranges", value =  8 },
+          new  { year =  "2012", type =  "pears", value =  1 },
+          new  { year =  "2013", type =  "redDeliciou", value =  6 },
+          new  { year =  "2013", type =  "mcintosh", value =  11 },
+          new  { year =  "2013", type =  "oranges", value =  9 },
+          new  { year =  "2013", type =  "pears", value =  4 },
+          new  { year =  "2014", type =  "redDeliciou", value =  10 },
+          new  { year =  "2014", type =  "mcintosh", value =  13 },
+          new  { year =  "2014", type =  "oranges", value =  9 },
+          new  { year =  "2014", type =  "pears", value =  5 },
+    };
+
+    readonly StackedColumnConfig config2 = new StackedColumnConfig
+    {
+        ForceFit = true,
+        Title = new Title
+        {
+            Visible = true,
+            Text = "区域联通组件"
+        },
+        Description = new Description
+        {
+            Visible=true,
+            Text = "联通区域组件通过绘制同一字段的联通区域提供视觉上的辅助识别,方便进行数据对比。",
+        },
+
+        Padding = "auto",
+        XField = "year",
+        YField = "value",
+        StackField = "type",
+        Color = new[] { "#ae331b", "#f27957", "#dadada", "#609db7", "#1a6179" },
+        YAxis = new ValueAxis
+        {
+            Min = 0
+        },
+        Label = new ColumnViewConfigLabel
+        {
+            Visible = true,
+        },
+        ConnectedArea = new
+        {
+            visible= true,
+            triggerOn= false,
+        }
+
+
+    };
+
+    object config2_2 = new
+    {
+
+    };
+
+    #endregion 示例2
+
+
+    #region 示例3
+
+    readonly object[] data3 =
+    {
+          new  { year =  "2006", type =  "redDeliciou", value =  10 },
+          new  { year =  "2006", type =  "mcintosh", value =  15 },
+          new  { year =  "2006", type =  "oranges", value =  9 },
+          new  { year =  "2006", type =  "pears", value =  6 },
+          new  { year =  "2007", type =  "redDeliciou", value =  12 },
+          new  { year =  "2007", type =  "mcintosh", value =  18 },
+          new  { year =  "2007", type =  "oranges", value =  9 },
+          new  { year =  "2007", type =  "pears", value =  4 },
+          new  { year =  "2008", type =  "redDeliciou", value =  5 },
+          new  { year =  "2008", type =  "mcintosh", value =  20 },
+          new  { year =  "2008", type =  "oranges", value =  8 },
+          new  { year =  "2008", type =  "pears", value =  2 },
+          new  { year =  "2009", type =  "redDeliciou", value =  1 },
+          new  { year =  "2009", type =  "mcintosh", value =  15 },
+          new  { year =  "2009", type =  "oranges", value =  5 },
+          new  { year =  "2009", type =  "pears", value =  4 },
+          new  { year =  "2010", type =  "redDeliciou", value =  2 },
+          new  { year =  "2010", type =  "mcintosh", value =  10 },
+          new  { year =  "2010", type =  "oranges", value =  4 },
+          new  { year =  "2010", type =  "pears", value =  2 },
+          new  { year =  "2011", type =  "redDeliciou", value =  3 },
+          new  { year =  "2011", type =  "mcintosh", value =  12 },
+          new  { year =  "2011", type =  "oranges", value =  6 },
+          new  { year =  "2011", type =  "pears", value =  3 },
+          new  { year =  "2012", type =  "redDeliciou", value =  4 },
+          new  { year =  "2012", type =  "mcintosh", value =  15 },
+          new  { year =  "2012", type =  "oranges", value =  8 },
+          new  { year =  "2012", type =  "pears", value =  1 },
+          new  { year =  "2013", type =  "redDeliciou", value =  6 },
+          new  { year =  "2013", type =  "mcintosh", value =  11 },
+          new  { year =  "2013", type =  "oranges", value =  9 },
+          new  { year =  "2013", type =  "pears", value =  4 },
+          new  { year =  "2014", type =  "redDeliciou", value =  10 },
+          new  { year =  "2014", type =  "mcintosh", value =  13 },
+          new  { year =  "2014", type =  "oranges", value =  9 },
+          new  { year =  "2014", type =  "pears", value =  5 },
+    };
+
+    readonly StackedColumnConfig config3 = new StackedColumnConfig
+    {
+        ForceFit = true,
+        Title = new Title
+        {
+            Visible = true,
+            Text = "联通区域组件交互"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "联通区域组件可以经由交互触发。通过triggerOn配置项设置联通区域组件的触发事件。一次只显示一个堆叠字段的联通区域。",
+        },
+
+        Padding = "auto",
+        XField = "year",
+        YField = "value",
+        YAxis = new ValueAxis
+        {
+            Min = 0
+        },
+        Label = new ColumnViewConfigLabel
+        {
+            Visible = false,
+        },
+        StackField = "type",
+        Color = new[] { "#ae331b", "#f27957", "#dadada", "#609db7", "#1a6179" },
+
+        ConnectedArea = new
+        {
+            visible = true,
+            triggerOn= "mouseenter",
+        }
+    };
+
+    #endregion 示例3
+
+    #region 示例4
+
+    readonly object[] data4 =
+    {
+        new  { year =  "2006", type =  "redDeliciou", value =  10 },
+          new  { year =  "2006", type =  "mcintosh", value =  15 },
+          new  { year =  "2006", type =  "oranges", value =  9 },
+          new  { year =  "2006", type =  "pears", value =  6 },
+          new  { year =  "2007", type =  "redDeliciou", value =  12 },
+          new  { year =  "2007", type =  "mcintosh", value =  18 },
+          new  { year =  "2007", type =  "oranges", value =  9 },
+          new  { year =  "2007", type =  "pears", value =  4 },
+          new  { year =  "2008", type =  "redDeliciou", value =  5 },
+          new  { year =  "2008", type =  "mcintosh", value =  20 },
+          new  { year =  "2008", type =  "oranges", value =  8 },
+          new  { year =  "2008", type =  "pears", value =  2 },
+          new  { year =  "2009", type =  "redDeliciou", value =  1 },
+          new  { year =  "2009", type =  "mcintosh", value =  15 },
+          new  { year =  "2009", type =  "oranges", value =  5 },
+          new  { year =  "2009", type =  "pears", value =  4 },
+          new  { year =  "2010", type =  "redDeliciou", value =  2 },
+          new  { year =  "2010", type =  "mcintosh", value =  10 },
+          new  { year =  "2010", type =  "oranges", value =  4 },
+          new  { year =  "2010", type =  "pears", value =  2 },
+          new  { year =  "2011", type =  "redDeliciou", value =  3 },
+          new  { year =  "2011", type =  "mcintosh", value =  12 },
+          new  { year =  "2011", type =  "oranges", value =  6 },
+          new  { year =  "2011", type =  "pears", value =  3 },
+          new  { year =  "2012", type =  "redDeliciou", value =  4 },
+          new  { year =  "2012", type =  "mcintosh", value =  15 },
+          new  { year =  "2012", type =  "oranges", value =  8 },
+          new  { year =  "2012", type =  "pears", value =  1 },
+          new  { year =  "2013", type =  "redDeliciou", value =  6 },
+          new  { year =  "2013", type =  "mcintosh", value =  11 },
+          new  { year =  "2013", type =  "oranges", value =  9 },
+          new  { year =  "2013", type =  "pears", value =  4 },
+          new  { year =  "2014", type =  "redDeliciou", value =  10 },
+          new  { year =  "2014", type =  "mcintosh", value =  13 },
+          new  { year =  "2014", type =  "oranges", value =  9 },
+          new  { year =  "2014", type =  "pears", value =  5 },
+    };
+
+    readonly StackedColumnConfig config4 = new StackedColumnConfig
+    {
+        ForceFit = true,
+        Title = new Title
+        {
+            Visible = true,
+            Text = "配置联通区域组件样式"
+        },
+        Padding = "auto",
+        XField = "year",
+        YField = "value",
+        StackField = "type",
+        Color = new[] { "#ae331b", "#f27957", "#dadada", "#609db7", "#1a6179" },
+        YAxis = new ValueAxis
+        {
+            Min = 0
+        },
+        Label = new ColumnViewConfigLabel
+        {
+            Visible = true,
+        },
+        ConnectedArea = new
+        {
+            visible = true,
+            triggerOn = false,
+            lineStyle = new
+            {
+                stroke =  "#afb1b5",
+                opacity =  0.8,
+            },
+            areaStyle =  new
+            {
+                fill =  "#e8e8e8",
+                opacity =  0.5,
+            },
+        }
+    };
+
+    #endregion 示例4
+
+    #region 示例5
+
+    readonly object[] data5 =
+    {
+          new {
+            year =  "1991",
+            value =  3,
+            type =  "Lon",
+          },
+          new {
+            year =  "1992",
+            value =  4,
+            type =  "Lon",
+          },
+          new {
+            year =  "1993",
+            value =  7,
+            type =  "Lon",
+          },
+          new {
+            year =  "1994",
+            value =  0.5,
+            type =  "Lon",
+          },
+          new {
+            year =  "1995",
+            value =  4.9,
+            type =  "Lon",
+          },
+          new {
+            year =  "1996",
+            value =  6,
+            type =  "Lon",
+          },
+          new {
+            year =  "1997",
+            value =  7,
+            type =  "Lon",
+          },
+          new {
+            year =  "1998",
+            value =  9,
+            type =  "Lon",
+          },
+          new {
+            year =  "1999",
+            value =  0.5,
+            type =  "Lon",
+          },
+          new {
+            year =  "1991",
+            value =  0.3,
+            type =  "Bor",
+          },
+          new {
+            year =  "1992",
+            value =  4,
+            type =  "Bor",
+          },
+          new {
+            year =  "1993",
+            value =  0.5,
+            type =  "Bor",
+          },
+          new {
+            year =  "1994",
+            value =  5,
+            type =  "Bor",
+          },
+          new {
+            year =  "1995",
+            value =  4.9,
+            type =  "Bor",
+          },
+          new {
+            year =  "1996",
+            value =  6,
+            type =  "Bor",
+          },
+          new {
+            year =  "1997",
+            value =  0.5,
+            type =  "Bor",
+          },
+          new {
+            year =  "1998",
+            value =  9,
+            type =  "Bor",
+          },
+          new {
+            year =  "1999",
+            value =  13,
+            type =  "Bor",
+          },
+          new {
+            year =  "1991",
+            value =  1,
+            type =  "Wiz",
+          },
+          new {
+            year =  "1992",
+            value =  2,
+            type =  "Wiz",
+          },
+          new {
+            year =  "1993",
+            value =  5,
+            type =  "Wiz",
+          },
+          new {
+            year =  "1994",
+            value =  4,
+            type =  "Wiz",
+          },
+          new {
+            year =  "1995",
+            value =  6,
+            type =  "Wiz",
+          },
+          new {
+            year =  "1996",
+            value =  2,
+            type =  "Wiz",
+          },
+          new {
+            year =  "1997",
+            value =  10,
+            type =  "Wiz",
+          },
+          new {
+            year =  "1998",
+            value =  12,
+            type =  "Wiz",
+          },
+          new {
+            year =  "1999",
+            value =  3,
+            type =  "Wiz",
+          },
+    };
+
+    readonly StackedColumnConfig config5 = new StackedColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "堆叠柱状图：label自动隐藏"
+        },
+        Description  = new Description
+        {
+            Visible = true,
+            Text = "在堆叠柱状图中，如果label的位置被设定为middle，即显示在柱形中间。在对应柱形大小不够摆放label的情况下，label会被自动隐藏。"
+        },
+        XField = "year",
+        YField = "value",
+        YAxis = new ValueAxis
+        {
+            Min = 0
+        },
+        StackField = "type",
+        Color = new[] { "#ae331b", "#dadada", "#609db7", "#1a6179" },
+        Label = new ColumnViewConfigLabel
+        {
+            Visible = true,
+            Position = "middle"
+        }
+
+
+    };
+
+    #endregion 示例5
 
 }
