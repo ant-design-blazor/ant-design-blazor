@@ -19,11 +19,11 @@ namespace AntDesign.TableModels
         {
             this.PageSize = pageSize;
             this.PageIndex = pageIndex;
+            this.SortModel = new List<ITableSortModel>();
         }
 
         internal void AddSortModel(ITableSortModel model)
         {
-            SortModel ??= new List<ITableSortModel>();
             SortModel.Add(model);
         }
 

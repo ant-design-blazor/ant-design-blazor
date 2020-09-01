@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Text.Encodings.Web;
+﻿using System.Text.Encodings.Web;
 using AntDesign;
 using AntDesign.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;
