@@ -4,16 +4,17 @@ namespace AntDesign.Core.Reflection
 {
     internal static class TypeDefined<T>
     {
-        public static bool IsNullable;
+        public static bool IsNullable { get; }
 
-        public static bool IsGenericType => typeof(T).IsGenericType;
+        public static bool IsGenericType { get; }
 
-        public static Type NullableType;
+        public static Type NullableType { get; }
 
         static TypeDefined()
         {
             IsNullable = IsNullableType(typeof(T));
             NullableType = GetNullableGenericType(typeof(T));
+            IsGenericType = typeof(T).IsGenericType;
         }
 
         private static bool IsNullableType(Type type)

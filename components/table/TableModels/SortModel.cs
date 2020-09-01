@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using AntDesign.Internal;
-using Microsoft.AspNetCore.Components.Forms;
+using System.Reflection;
 
 namespace AntDesign.TableModels
 {
     public class SortModel<TField> : ITableSortModel
     {
-        private readonly FieldIdentifier _fieldIdentifier;
+        private PropertyInfo _propertyInfo;
 
         public SortType SortType { get; private set; }
 
@@ -16,11 +15,11 @@ namespace AntDesign.TableModels
 
         public string FieldName { get; }
 
-        public SortModel(FieldIdentifier fieldIdentifier, int priority, string sort)
+        public SortModel(PropertyInfo propertyInfo, int priority, string sort)
         {
-            this._fieldIdentifier = fieldIdentifier;
-            this.FieldName = fieldIdentifier.FieldName;
+            this._propertyInfo = propertyInfo;
             this.Priority = priority;
+            this.FieldName = propertyInfo?.Name;
             this.SortType = SortType.Parse(sort) ?? SortType.None;
         }
 
@@ -32,23 +31,19 @@ namespace AntDesign.TableModels
             }
 
             var sourceExpression = Expression.Parameter(typeof(TItem));
-            if (_fieldIdentifier.TryGetValidateProperty(out var property))
+
+            var propertyExpression = Expression.Property(sourceExpression, _propertyInfo);
+
+            var lambda = Expression.Lambda<Func<TItem, TField>>(propertyExpression, sourceExpression);
+
+            if (SortType == SortType.Ascending)
             {
-                var propertyExpression = Expression.Property(sourceExpression, property);
-
-                var lambda = Expression.Lambda<Func<TItem, TField>>(propertyExpression, sourceExpression);
-
-                if (SortType == SortType.Ascending)
-                {
-                    return source.OrderBy(lambda);
-                }
-                else
-                {
-                    return source.OrderByDescending(lambda);
-                }
+                return source.OrderBy(lambda);
             }
-
-            return source as IOrderedQueryable<TItem>;
+            else
+            {
+                return source.OrderByDescending(lambda);
+            }
         }
 
         void ITableSortModel.SwitchSortType()
