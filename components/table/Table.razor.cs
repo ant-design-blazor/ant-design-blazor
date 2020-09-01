@@ -96,6 +96,14 @@ namespace AntDesign
         {
             var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
 
+            foreach (var col in ColumnContext.Columns)
+            {
+                if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
+                {
+                    queryModel.AddSortModel(fieldColumn.SortModel);
+                }
+            }
+
             if (ServerSide)
             {
                 _showItems = _dataSource;
@@ -103,14 +111,9 @@ namespace AntDesign
             else
             {
                 var query = _dataSource.AsQueryable();
-
-                foreach (var col in ColumnContext.Columns)
+                foreach (var sort in queryModel.SortModel)
                 {
-                    if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
-                    {
-                        query = fieldColumn.SortModel.Sort(query);
-                        queryModel.AddSortModel(fieldColumn.SortModel);
-                    }
+                    sort.Sort(query);
                 }
 
                 query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
