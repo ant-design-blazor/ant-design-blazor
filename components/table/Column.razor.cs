@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Linq.Expressions;
+using AntDesign.Core.Reflection;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace AntDesign
 {
@@ -33,11 +32,11 @@ namespace AntDesign
         [Parameter]
         public bool ShowSorterTooltip { get; set; } = true;
 
-        private FieldIdentifier? _fieldIdentifier;
+        private PropertyReflector? _propertyReflector;
 
-        public string DisplayName => _fieldIdentifier?.GetDisplayName();
+        public string DisplayName => _propertyReflector?.DisplayName;
 
-        public string FieldName => _fieldIdentifier?.FieldName;
+        public string FieldName => _propertyReflector?.PropertyName;
 
         public ITableSortModel SortModel { get; private set; }
 
@@ -47,11 +46,10 @@ namespace AntDesign
 
             if (FieldExpression != null)
             {
-                _fieldIdentifier = FieldIdentifier.Create(FieldExpression);
-
+                _propertyReflector = PropertyReflector.Create(FieldExpression);
                 if (Sortable)
                 {
-                    SortModel = new SortModel<TData>(_fieldIdentifier.Value, 1, Sort);
+                    SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, 1, Sort);
                 }
             }
 
