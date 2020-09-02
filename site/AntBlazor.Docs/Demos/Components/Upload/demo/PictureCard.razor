@@ -2,8 +2,8 @@
 
     <Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
             Name="avatar"
-            FileList="fileList"
-            ShowButton="fileList.Count < 8"
+            @bind-FileList="fileList"
+            ShowButton="fileList?.Count < 8"
             ListType="picture-card"
             OnPreview="(file)=> {
                            Console.WriteLine(file.FileName);
