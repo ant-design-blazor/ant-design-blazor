@@ -12,7 +12,7 @@ namespace AntDesign
         public bool Ghost { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> BackIcon { get; set; }
+        public OneOf<bool?, string, RenderFragment> BackIcon { get; set; }
 
         [Parameter]
         public OneOf<string, RenderFragment> Title { get; set; }

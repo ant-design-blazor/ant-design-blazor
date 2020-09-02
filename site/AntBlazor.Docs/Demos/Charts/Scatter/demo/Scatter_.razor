@@ -2,24 +2,53 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <Scatter @ref="chart1" Data="data1" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <Scatter @ref="chart1" Data="data1" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <Scatter @ref="chart2" Data="data2" Config="config2" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="3">
+            <Tab>示例3</Tab>
+            <ChildContent>
+                <Scatter  Data="data3" Config="config3" />
+            </ChildContent>
+        </TabPane>
+
+        @*<TabPane Key="4">
+            <Tab>示例4</Tab>
+            <ChildContent>
+                <Scatter @ref="chart4" Data="data4" Config="config4" />
+            </ChildContent>
+        </TabPane>*@
+    </Tabs>
 
 @code{
 
     IChartComponent chart1;
     IMDBItem[] data1;
 
+    IChartComponent chart2;
+    BasementProdItem[] data2;
+
+    //IChartComponent chart4;
+    //IMDBItem[] data4;
+
     protected override async Task OnInitializedAsync()
     {
         data1 = await ChartsDemoData.IMDBAsync(NavigationManager, HttpClient);
         await chart1.ChangeData(data1);
+
+        data2 = await ChartsDemoData.BasementProdAsync(NavigationManager, HttpClient);
 
         await base.OnInitializedAsync();
     }
@@ -38,5 +67,99 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly ScatterConfig config2 = new ScatterConfig
+    {
+        XField = "Revenue (Millions)",
+        YField = "Rating",
+        ColorField = "Genre",
+        Color = new string[] { "#d62728", "#2ca02c", "#000000", "#9467bd", "#ffd500", "#1f77b4", "#00518a", "#ffbc69", "#9bd646" },
+        PointStyle = new GraphicStyle
+        {
+            FillOpacity = 1,
+        },
+        XAxis = new ValueTimeAxis
+        {
+            Visible = true,
+            Min = -5
+        }
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+    object[] data3 = new object[]
+    {
+          new { x =  1, y =  4.181 },
+          new { x =  2, y =  4.665 },
+          new { x =  3, y =  5.296 },
+          new { x =  4, y =  5.365 },
+          new { x =  5, y =  5.448 },
+          new { x =  6, y =  5.744 },
+          new { x =  7, y =  5.653 },
+          new { x =  8, y =  5.844 },
+          new { x =  9, y =  6.362 },
+          new { x =  10, y =  6.38 },
+          new { x =  11, y =  6.311 },
+          new { x =  12, y =  6.457 },
+          new { x =  13, y =  6.479 },
+          new { x =  14, y =  6.59 },
+          new { x =  15, y =  6.74 },
+          new { x =  16, y =  6.58 },
+          new { x =  17, y =  6.852 },
+          new { x =  18, y =  6.531 },
+          new { x =  19, y =  6.682 },
+          new { x =  20, y =  7.013 },
+          new { x =  21, y =  6.82 },
+          new { x =  22, y =  6.647 },
+          new { x =  23, y =  6.951 },
+          new { x =  24, y =  7.121 },
+          new { x =  25, y =  7.143 },
+          new { x =  26, y =  6.914 },
+          new { x =  27, y =  6.941 },
+          new { x =  28, y =  7.226 },
+          new { x =  29, y =  6.898 },
+          new { x =  30, y =  7.392 },
+          new { x =  31, y =  6.938 },
+    };
+
+    readonly ScatterConfig config3 = new ScatterConfig
+    {
+        Padding = "auto",
+
+        XField = "x",
+        YField = "y",
+        PointStyle = new GraphicStyle
+        {
+            Stroke = "#777777",
+            LineWidth = 1,
+        },
+        Trendline = new TrendlineConfig
+        {
+            Visible = true,
+            Type = "quad",
+            ShowConfidence = true,
+        },
+    };
+
+    #endregion 示例3
+
+    #region 示例4
+
+    //readonly ScatterConfig config4 = new ScatterConfig
+    //{
+    //    XField = "revenue",
+    //    YField = "rating",
+    //    XAxis = new ValueTimeAxis
+    //    {
+    //        Visible = true,
+    //        Min = -5
+    //    }
+    //};
+
+    #endregion 示例4
 
 }
