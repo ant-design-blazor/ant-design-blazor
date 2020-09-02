@@ -85,15 +85,16 @@
                     }
                 case ConfirmButtons.OKCancel:
                     {
-                        @BuildButton(Config.Button2Props, async (e) =>
-                        {
-                            await HandleBtn2Click(e, ConfirmResult.Cancel);
-                        }, out _cancelBtn);
 
                         @BuildButton(Config.Button1Props, async (e) =>
                         {
                             await HandleBtn1Click(e, ConfirmResult.OK);
                         }, out _okBtn);
+
+                        @BuildButton(Config.Button2Props, async (e) =>
+                        {
+                            await HandleBtn2Click(e, ConfirmResult.Cancel);
+                        }, out _cancelBtn);
 
                         break;
                     }
