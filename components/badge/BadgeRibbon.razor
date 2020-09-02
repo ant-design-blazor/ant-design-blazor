@@ -6,15 +6,15 @@
     {
         @ChildContent
     }
-    <div class="@ClassMapper.Class" style="@colorStyle">
-        @if (Text.IsT0)
+    <div class="@ClassMapper.Class" style="@_colorStyle">
+        @if (TextTemplate != null)
         {
-            @Text.AsT0
+            @TextTemplate
         }
         else
         {
-            @Text.AsT1
+            @Text
         }
-        <div class="ant-ribbon-corner" style="@cornerColorStyle"/>
+        <div class="ant-ribbon-corner" style="@_cornerColorStyle" />
     </div>
 </div>
