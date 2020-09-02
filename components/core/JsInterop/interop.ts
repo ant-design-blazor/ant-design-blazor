@@ -35,11 +35,13 @@ export function getDomInfo(element) {
 }
 
 export function addFileClickEventListener(btn) {
-  (btn as HTMLSpanElement).addEventListener("click", fileClickEvent);
+  if ((btn as HTMLElement).addEventListener) {
+    (btn as HTMLElement).addEventListener("click", fileClickEvent);
+  }
 }
 
 export function removeFileClickEventListener(btn) {
-  (btn as HTMLSpanElement).removeEventListener("click", fileClickEvent);
+  (btn as HTMLElement).removeEventListener("click", fileClickEvent);
 }
 
 export function fileClickEvent() {

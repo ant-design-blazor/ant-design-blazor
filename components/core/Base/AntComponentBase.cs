@@ -65,7 +65,7 @@ namespace AntDesign
 
         protected async Task InvokeStateHasChangedAsync()
         {
-          await   InvokeAsync(() =>
+            await InvokeAsync(() =>
             {
                 if (!IsDisposed)
                 {
