@@ -1,9 +1,9 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 <span class="@Class @(ListType.Equals("picture-card")? "ant-upload-picture-card-wrapper" : "")" style="@Style">
-    @if (!ListType.Equals("picture-card") && ShowButton)
+    @if (!ListType.Equals("picture-card"))
     {
-        <div class="ant-upload ant-upload-select ant-upload-select-@(ListType)">
+        <div class="ant-upload ant-upload-select ant-upload-select-@(ListType)" style="@(!ShowButton?"display:none;":"")">
             <input type="file" webkitdirectory="@Directory" multiple="@(Multiple || Directory)" @ref="_file" @onchange="FileNameChanged" accept="@Accept" style="display: none;" id="@_fileId" />
             <span class="ant-upload" @ref="_btn" data-fileid="@_fileId">
                 @ChildContent
@@ -148,9 +148,9 @@
         </div>
 
     }
-    @if (ListType.Equals("picture-card") && ShowButton)
+    @if (ListType.Equals("picture-card"))
     {
-        <div class="ant-upload ant-upload-select ant-upload-select-@(ListType)">
+        <div class="ant-upload ant-upload-select ant-upload-select-@(ListType)" style="@(!ShowButton?"display:none;":"")">
             <input type="file" webkitdirectory="@Directory" multiple="@(Multiple || Directory)" @ref="_file" @onchange="FileNameChanged" accept="@Accept" style="display: none;" id="@_fileId" />
             <span class="ant-upload" @ref="_btn" data-fileid="@_fileId">
                 @ChildContent
