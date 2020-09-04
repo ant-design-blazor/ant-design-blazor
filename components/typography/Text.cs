@@ -11,6 +11,9 @@ namespace AntDesign
         [Parameter]
         public bool Code { get; set; }
 
+        [Parameter]
+        public bool Keyboard { get; set; }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -47,10 +50,12 @@ namespace AntDesign
                 if (Delete) builder.OpenElement(i++, "del");
                 if (Underline) builder.OpenElement(i++, "u");
                 if (Code) builder.OpenElement(i++, "code");
+                if (Keyboard) builder.OpenElement(i++, "kbd");
                 if (Strong) builder.OpenElement(i++, "strong");
                 builder.AddContent(i++, ChildContent);
                 if (Strong) builder.CloseElement();
                 if (Code) builder.CloseElement();
+                if (Keyboard) builder.CloseElement();
                 if (Underline) builder.CloseElement();
                 if (Delete) builder.CloseElement();
                 if (Mark) builder.CloseElement();
