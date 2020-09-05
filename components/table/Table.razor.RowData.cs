@@ -1,7 +1,7 @@
 ﻿using System;
-using AntDesign.TableModels;
 using System.Collections.Generic;
 using System.Linq;
+using AntDesign.TableModels;
 
 namespace AntDesign
 {
@@ -32,8 +32,8 @@ namespace AntDesign
                 return;
 
             // Clear cached items that are not on current page
-            var currentPageCacheKeys = _selection.RowSelections.Select(x => x.CacheKey);
-            var deletedCaches = _dataSourceCache.Where(x => x.Value.PageIndex == PageIndex && !x.Key.IsIn(currentPageCacheKeys));
+            var currentPageCacheKeys = _selection.RowSelections.Select(x => x.CacheKey).ToHashSet();
+            var deletedCaches = _dataSourceCache.Where(x => x.Value.PageIndex == PageIndex && !currentPageCacheKeys.Contains(x.Key)).ToList();
             var needInvokeChange = deletedCaches.Any(x => x.Value.Selected);
             deletedCaches.ForEach(x => _dataSourceCache.Remove(x));
 

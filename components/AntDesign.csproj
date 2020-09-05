@@ -15,6 +15,7 @@
     <Copyright>James Yeung</Copyright>
     <Authors>James Yeung</Authors>
     <PackageIcon>logo.png</PackageIcon>
+    <NoWarn>CA2007</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
