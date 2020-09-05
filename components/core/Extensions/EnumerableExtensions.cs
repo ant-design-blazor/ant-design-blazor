@@ -27,10 +27,7 @@ namespace AntDesign
                 return;
             }
 
-            for (int i = 0; i < items.Count(); i++)
-            {
-                await func(items.ElementAt(i));
-            }
+            foreach (var item in items) await func(item);
         }
 
         public static bool IsIn<T>(this T source, params T[] array)
