@@ -15,7 +15,7 @@
         }
     </span>
 
-    @if (ToggleState)
+    @if (ToggleState && _nodelist != null && _nodelist.Any())
     {
         <div class="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" tabindex="-1" @onblur="CascaderOnBlur">
             <div @onmouseover="NodesOnMouseOver" @onmouseout="NodesOnMouseOut">
