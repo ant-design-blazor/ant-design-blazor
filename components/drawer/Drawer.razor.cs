@@ -314,7 +314,7 @@ namespace AntDesign
                 await OnClose.InvokeAsync(this);
                 await Task.Delay(10);
             }
-            await JsInvokeAsync(JSInteropConstants.enableDrawerBodyScroll);
+            await JsInvokeAsync(JSInteropConstants.enableBodyScroll);
         }
 
         private void CalcAnimation()
