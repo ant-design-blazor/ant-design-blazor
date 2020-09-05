@@ -314,7 +314,7 @@ namespace AntDesign
                 {
                     _disableBodyScroll = false;
                     await Task.Delay(250);
-                    await JsInvokeAsync(JSInteropConstants.enableModalBodyScroll);
+                    await JsInvokeAsync(JSInteropConstants.enableBodyScroll);
                 }
 
                 if (Config.Draggable && _doDragable)
