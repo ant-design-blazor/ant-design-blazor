@@ -110,16 +110,19 @@ namespace AntDesign
             }
             else
             {
-                var query = _dataSource.AsQueryable();
-                foreach (var sort in queryModel.SortModel)
+                if (_dataSource != null)
                 {
-                    sort.Sort(query);
+                    var query = _dataSource.AsQueryable();
+                    foreach (var sort in queryModel.SortModel)
+                    {
+                        sort.Sort(query);
+                    }
+
+                    query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
+                    queryModel.SetQueryableLambda(query);
+
+                    _showItems = query;
                 }
-
-                query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
-                queryModel.SetQueryableLambda(query);
-
-                _showItems = query;
             }
 
             StateHasChanged();
