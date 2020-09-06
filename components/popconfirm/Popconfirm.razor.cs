@@ -13,7 +13,10 @@ namespace AntDesign
     public partial class Popconfirm : OverlayTrigger
     {
         [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
+
+        [Parameter]
+        public RenderFragment TitleTemplate { get; set; }
 
         [Parameter]
         public string CancelText { get; set; } = "Cancel";
@@ -31,7 +34,10 @@ namespace AntDesign
         public ButtonProps CancelButtonProps { get; set; }
 
         [Parameter]
-        public RenderFragment Icon { get; set; }
+        public string Icon { get; set; } = "exclamation-circle";
+
+        [Parameter]
+        public RenderFragment IconTemplate { get; set; }
 
         [Parameter]
         public EventCallback<MouseEventArgs> OnCancel { get; set; }
