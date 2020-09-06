@@ -34,10 +34,16 @@ namespace AntDesign
         public bool Loading { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        public string Title { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Footer { get; set; }
+        public RenderFragment TitleTemplate { get; set; }
+
+        [Parameter]
+        public string Footer { get; set; }
+
+        [Parameter]
+        public RenderFragment FooterTemplate { get; set; }
 
         [Parameter]
         public TableSize Size { get; set; }
