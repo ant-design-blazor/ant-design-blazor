@@ -3,7 +3,25 @@
 
 <div class="@ClassMapper.Class" @ref="@Ref" style="@Style" id="@Id">
     <div class="@(PrefixCls)-image" style="@ImageStyle">
-        @if (Image.IsT0 && !string.IsNullOrEmpty(Image.AsT0))
+        @if (ImageTemplate != null)
+        {
+            @ImageTemplate
+        }
+        else if (Image == EmptyImage.PresentedImageDefault)
+        {
+            <EmptyDefaultImg />
+        }
+        else if (Image == EmptyImage.PresentedImageSimple)
+        {
+            <EmptySimpleImg />
+        }
+        else if (string.IsNullOrEmpty(Image) == false)
+        {
+            Description.TryPickT0(out string des, out _);
+            string alt = !string.IsNullOrEmpty(des) ? des : "empty";
+            <img alt="@alt" src="@Image" />
+        }
+        @*@if (Image.IsT0 && !string.IsNullOrEmpty(Image.AsT0))
         {
             Description.TryPickT0(out string des, out _);
             string alt = !string.IsNullOrEmpty(des) ? des : "empty";
@@ -20,25 +38,25 @@
         else
         {
             @PRESENTED_IMAGE_DEFAULT
-        }
+        }*@
     </div>
 
-    @if (Description.IsT0 && !string.IsNullOrEmpty(Description.AsT0))
+    @if (DescriptionTemplate != null)
+    {
+        <p class="@(PrefixCls)-description">@DescriptionTemplate</p>
+    }
+    else if (Description.IsT1 == false || Description.AsT1 == true)
     {
         <p class="@(PrefixCls)-description">@Description.AsT0</p>
-    }
-    @if (Description.IsT2 && Description.AsT2 != null)
-    {
-        <p class="@(PrefixCls)-description">@Description.AsT2</p>
     }
     <div class="@(PrefixCls)-footer">
         @ChildContent
     </div>
 </div>
 
-@code
-{
+@*@code
+    {
     public static RenderFragment PRESENTED_IMAGE_DEFAULT =@<EmptyDefaultImg />;
 
     public static RenderFragment PRESENTED_IMAGE_SIMPLE = @<EmptySimpleImg />;
-}
+    }*@
