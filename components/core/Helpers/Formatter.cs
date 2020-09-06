@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using AntDesign.Core.Reflection;
 
-namespace AntDesign.Helpers
+namespace AntDesign.Core.Helpers
 {
     internal static class Formatter<T>
     {
