@@ -40,14 +40,7 @@
             {
 
                 <span class="ant-page-header-heading-title">
-                    @if (TitleTemplate != null)
-                    {
-                        @TitleTemplate
-                    }
-                    else
-                    {
-                        @Title
-                    }
+                    @if (TitleTemplate != null)@TitleTemplate else @Title
                 </span>
             }
             else
@@ -65,14 +58,7 @@
             {
 
                 <span class="ant-page-header-heading-sub-title">
-                    @if (SubtitleTemplate != null)
-                    {
-                        @SubtitleTemplate
-                    }
-                    else
-                    {
-                        @Subtitle
-                    }
+                    @if (SubtitleTemplate != null)@SubtitleTemplate else @Subtitle
                 </span>
             }
             else

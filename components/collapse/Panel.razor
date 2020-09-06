@@ -15,26 +15,12 @@
             }
         }
 
-        @if (HeaderTemplate != null)
-        {
-            @HeaderTemplate
-        }
-        else
-        {
-            @Header
-        }
+        @if (HeaderTemplate != null)@HeaderTemplate else @Header
 
         @if (Extra != null || ExtraTemplate != null)
         {
             <div class="ant-collapse-extra">
-                @if (ExtraTemplate != null)
-                {
-                    @ExtraTemplate
-                }
-                else
-                {
-                    @Extra
-                }
+                @if (ExtraTemplate != null)@ExtraTemplate else @Extra
             </div>
         }
     </div>

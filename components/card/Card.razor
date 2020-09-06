@@ -11,14 +11,7 @@
                     {
 
                         <div class="ant-card-head-title">
-                            @if (TitleTemplate == null)
-                            {
-                                @Title
-                            }
-                            else
-                            {
-                                @TitleTemplate
-                            }
+                            @if (TitleTemplate != null)@TitleTemplate else @Title
                         </div>
                     }
                     @if (Extra != null)

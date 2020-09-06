@@ -3,14 +3,7 @@
 
 <li class="@(RootMenu.PrefixCls)-item-group" style="@Style" @key="Key">
     <div class="@(RootMenu.PrefixCls)-item-group-title">
-        @if (TitleTemplate != null)
-        {
-            @TitleTemplate
-        }
-        else
-        {
-            @Title
-        }
+        @if (TitleTemplate != null)@TitleTemplate else @Title
     </div>
     <ul class="@(RootMenu.PrefixCls)-item-group-list">
         @ChildContent
