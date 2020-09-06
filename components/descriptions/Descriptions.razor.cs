@@ -29,7 +29,10 @@ namespace AntDesign
         public string Size { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        public string Title { get; set; }
+
+        [Parameter]
+        public RenderFragment TitleTemplate { get; set; }
 
         [Parameter]
         public bool Colon { get; set; }

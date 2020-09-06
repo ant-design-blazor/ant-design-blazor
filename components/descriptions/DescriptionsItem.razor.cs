@@ -10,7 +10,10 @@ namespace AntDesign
     public partial class DescriptionsItem : AntDomComponentBase, IDescriptionsItem
     {
         [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; } = "";
+        public string Title { get; set; } = "";
+
+        [Parameter]
+        public RenderFragment TitleTemplate { get; set; }
 
         [Parameter]
         public int Span { get; set; } = 1;
