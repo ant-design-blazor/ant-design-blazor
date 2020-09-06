@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public interface ITextLocale
+    public class TextLocale
     {
         public string Edit { get; }
         public string Copy { get; }

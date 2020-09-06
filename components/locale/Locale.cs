@@ -1,14 +1,11 @@
 ﻿using AntDesign.Form.Locale;
 using AntDesign.pagination.locale;
-using Microsoft.Extensions.Localization;
 
-namespace AntDesign
+namespace AntDesign.Locale
 {
-    public interface ILocale
+    public class Locale
     {
-        public string Locale { get; }
-
-        public IStringLocalizer<PaginationLocale> Pagination { get; }
+        public PaginationLocale Pagination { get; }
 
         public DatePickerLocale DatePicker { get; }
 
@@ -27,8 +24,6 @@ namespace AntDesign
         public SelectLocale Select { get; }
 
         public UploadLocale Upload { get; }
-
-        public EmptyLocale Empty { get; }
 
         public GlobalLocale Global { get; }
 

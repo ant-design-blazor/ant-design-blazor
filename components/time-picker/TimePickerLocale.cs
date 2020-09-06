@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public interface ITimePickerLocale
+    public class TimePickerLocale
     {
         public string Placeholder { get; }
 

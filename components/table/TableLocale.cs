@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public interface ITableLocale
+    public class TableLocale
     {
         public string FilterTitle { get; }
 

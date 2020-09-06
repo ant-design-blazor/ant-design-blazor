@@ -4,10 +4,10 @@ using System.Text;
 
 namespace AntDesign
 {
-    public interface IDatePickerLocale
+    public class DatePickerLocale
     {
         public IDateLocale Lang { get; }
 
-        public ITimePickerLocale TimePickerLocale { get; }
+        public TimePickerLocale TimePickerLocale { get; }
     }
 }

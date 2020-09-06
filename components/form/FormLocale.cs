@@ -4,29 +4,29 @@ using System.Text;
 
 namespace AntDesign.Form.Locale
 {
-    public interface IFormLocale
+    public class FormLocale
     {
-        public IDefaultValidateMessages DefaultValidateMessages { get; }
+        public DefaultValidateMessages DefaultValidateMessages { get; }
     }
 
-    public interface IDefaultValidateMessages
+    public class DefaultValidateMessages
     {
         public string Default { get; }
         public string Required { get; }
         public string Enum { get; }
         public string Whitespace { get; }
-        public IDateLocale Date { get; }
-        public ITypesLocale Types { get; }
+        public DateLocale Date { get; }
+        public TypesLocale Types { get; }
     }
 
-    public interface IDateLocale
+    public class DateLocale
     {
         public string Format { get; }
         public string Parse { get; }
         public string Invalid { get; }
     }
 
-    public interface ITypesLocale
+    public class TypesLocale
     {
         public string String { get; }
         public string Method { get; }

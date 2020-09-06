@@ -4,8 +4,8 @@ using System.Text;
 
 namespace AntDesign
 {
-    public interface ISelectLocale
+    public class GlobalLocale
     {
-        public string NotFoundContent { get; }
+        public string Placeholder { get; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace AntDesign
 {
-    public class PaginationLocale
+    public interface IPaginationLocale
     {
         public string ItemsPerPage { get; }
 

@@ -48,6 +48,9 @@ namespace AntDesign.Docs.Localization
             }
 
             CultureInfo.CurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+
             CurrentCulture = culture;
             Resources = GetKeysFromCulture(culture.Name, resourceName);
 
@@ -65,6 +68,9 @@ namespace AntDesign.Docs.Localization
             if (CurrentCulture == null || !CurrentCulture.Equals(culture))
             {
                 CurrentCulture = culture;
+                CultureInfo.DefaultThreadCurrentCulture = culture;
+                CultureInfo.DefaultThreadCurrentUICulture = culture;
+
                 string fileName = $"{_resourcesAssembly.GetName().Name}.Resources.{culture.Name}.json";
 
                 Resources = GetKeysFromCulture(culture.Name, fileName);

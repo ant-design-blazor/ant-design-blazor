@@ -4,12 +4,10 @@ using System.Text;
 
 namespace AntDesign
 {
-    public interface IModalLocale
+    public class PopconfirmLocale
     {
-        public string OkText { get; }
-
         public string CancelText { get; }
 
-        public string JustOkText { get; }
+        public string OkText { get; }
     }
 }

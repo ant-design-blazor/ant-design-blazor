@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public interface IIconLocale
+    public class IconLocale
     {
         public string Icon { get; }
     }

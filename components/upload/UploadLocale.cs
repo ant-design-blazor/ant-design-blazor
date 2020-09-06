@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public interface IUploadLocale
+    public class UploadLocale
     {
         public string Uploading { get; }
 

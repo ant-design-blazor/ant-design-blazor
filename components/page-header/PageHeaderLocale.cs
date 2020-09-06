@@ -4,8 +4,8 @@ using System.Text;
 
 namespace AntDesign
 {
-    public interface IEmptyLocale
+    public class PageHeaderLocale
     {
-        public string Description { get; }
+        public string Back { get; }
     }
 }
