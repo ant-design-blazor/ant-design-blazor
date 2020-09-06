@@ -1,8 +1,8 @@
 ﻿<AntList Grid="gutter" DataSource="@Data">
     <Item Context="item">
-        <Card Bordered Title="@(item.Title)">
+        <Card Bordered Title="@item.Title">
             <Body>
-            Card context
+                Card context
             </Body>
         </Card>
     </Item>
@@ -23,7 +23,7 @@
     };
 
     public List<BasicItem> Data = new List<BasicItem>
-    {
+{
         new BasicItem { Title = "Title 1"},
         new BasicItem { Title = "Title 2"},
         new BasicItem { Title = "Title 3"},

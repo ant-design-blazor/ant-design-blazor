@@ -3,17 +3,16 @@
 
 <div class="@ClassMapper.Class" style="@Style">
 
-    @if (Avatar.IsT0 && Avatar.AsT0 != "")
+    @if (AvatarTemplate != null)
     {
         <div class="ant-list-item-meta-avatar">
-            <Avatar Src="@Avatar.AsT0"></Avatar>
+            @AvatarTemplate
         </div>
     }
-
-    @if (Avatar.IsT1 && Avatar.AsT1 != null)
+    else if (Avatar == null)
     {
         <div class="ant-list-item-meta-avatar">
-            @Avatar.AsT1
+            <Avatar Src="@Avatar"></Avatar>
         </div>
     }
 
@@ -29,30 +28,3 @@
     </div>
 </div>
 
-@code{
-    public string PrefixName { get; set; } = "ant-list-item-meta";
-
-    [Parameter] public RenderFragment Title { get; set; }
-
-    [Parameter] public OneOf.OneOf<string, RenderFragment> Avatar { get; set; }
-
-    [Parameter] public string Description { get; set; }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        SetClassMap();
-    }
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        SetClassMap();
-    }
-
-    protected void SetClassMap()
-    {
-        ClassMapper.Clear()
-            .Add(PrefixName);
-    }
-}
