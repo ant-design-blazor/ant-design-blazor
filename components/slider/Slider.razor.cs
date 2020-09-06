@@ -1,5 +1,5 @@
 ﻿using AntDesign.core.Extensions;
-using AntDesign.Helpers;
+using AntDesign.Core.Helpers;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -506,7 +506,6 @@ namespace AntDesign
                 }
             }
         }
-
 
         private void SetStyle()
         {
