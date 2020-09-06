@@ -6,5 +6,6 @@ namespace AntDesign
 {
     public interface ISelectLocale
     {
+        public string NotFoundContent { get; }
     }
 }

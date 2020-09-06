@@ -6,5 +6,8 @@ namespace AntDesign
 {
     public interface IPopconfirmLocale
     {
+        public string CancelText { get; }
+
+        public string OkText { get; }
     }
 }

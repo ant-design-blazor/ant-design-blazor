@@ -6,5 +6,6 @@ namespace AntDesign
 {
     public interface IEmptyLocale
     {
+        public string Description { get; }
     }
 }

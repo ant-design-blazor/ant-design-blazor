@@ -6,5 +6,9 @@ namespace AntDesign
 {
     public interface ITextLocale
     {
+        public string Edit { get; }
+        public string Copy { get; }
+        public string Copied { get; }
+        public string Expand { get; }
     }
 }

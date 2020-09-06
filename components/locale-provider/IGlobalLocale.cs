@@ -4,8 +4,8 @@ using System.Text;
 
 namespace AntDesign
 {
-    public interface IIconLocale
+    public interface IGlobalLocale
     {
-        public string Icon { get; }
+        public string Placeholder { get; }
     }
 }

@@ -6,5 +6,6 @@ namespace AntDesign
 {
     public interface IPageHeaderLocale
     {
+        public string Back { get; }
     }
 }

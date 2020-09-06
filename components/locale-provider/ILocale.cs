@@ -1,43 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using AntDesign.Form.Locale;
 
 namespace AntDesign
 {
     public interface ILocale
     {
-        public string Locale { get; set; }
+        public string Locale { get; }
 
-        public IPaginationLocale Pagination { get; set; }
+        public PaginationLocale Pagination { get; }
 
-        public IDateLocale DatePicker { get; set; }
+        public IDatePickerLocale DatePicker { get; }
 
-        public IDateLocale TimePicker { get; set; }
+        public ITimePickerLocale TimePicker { get; }
 
-        public IDateLocale Calendar { get; set; }
+        public IDatePickerLocale Calendar { get; }
 
-        public ITableLocale Table { get; set; }
+        public ITableLocale Table { get; }
 
-        public IModalLocale Modal { get; set; }
+        public IModalLocale Modal { get; }
 
-        public IPopconfirmLocale Popconfirm { get; set; }
+        public IPopconfirmLocale Popconfirm { get; }
 
-        public ITransferLocale Transfer { get; set; }
+        public ITransferLocale Transfer { get; }
 
-        public ISelectLocale Select { get; set; }
+        public ISelectLocale Select { get; }
 
-        public IUploadLocale Upload { get; set; }
+        public IUploadLocale Upload { get; }
 
-        public IEmptyLocale Empty { get; set; }
+        public IEmptyLocale Empty { get; }
 
-        public object Global { get; set; }
+        public IGlobalLocale Global { get; }
 
-        public IPageHeaderLocale PageHeader { get; set; }
+        public IPageHeaderLocale PageHeader { get; }
 
-        public IIconLocale Icon { get; set; }
+        public IIconLocale Icon { get; }
 
-        public ITextLocale Text { get; set; }
+        public ITextLocale Text { get; }
 
-        public IFormLocale Form { get; set; }
+        public IFormLocale Form { get; }
     }
 }
