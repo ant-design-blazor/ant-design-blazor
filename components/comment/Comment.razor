@@ -4,55 +4,60 @@
 <CascadingValue Value="this">
     <div class="@ClassMapper.Class" style="@Style" id="@Id">
         <div class="ant-comment-inner">
-            @if (Avatar.Value != null && Content.Value != null)
+            @if ((Avatar != null || AvatarTemplate != null) && (Content != null || ContentTemplate != null))
             {
                 <div class="ant-comment-avatar">
-                    @if (Avatar.IsT0)
+                    @if (AvatarTemplate != null)
                     {
-                        <Avatar Src="@Avatar.AsT0" />
+                        @AvatarTemplate
                     }
                     else
                     {
-                        @Avatar.AsT1
+                        <Avatar Src="@Avatar" />
+
                     }
                 </div>
                 <div class="ant-comment-content">
                     <div class="ant-comment-content-author">
-                        @if (Author.Value != null)
+                        @if (Author != null || AuthorTemplate != null)
                         {
                             <span class="ant-comment-content-author-name">
-                                @if (Author.IsT0)
+
+                                @if (AuthorTemplate != null)
                                 {
-                                    <a>@Author.AsT0</a>
+                                    @AuthorTemplate
+
                                 }
                                 else
                                 {
-                                    @Author.AsT1
+                                    <a>@Author</a>
                                 }
                             </span>
                         }
-                        @if (Datetime.Value != null)
+
+                        @if (Datetime != null || DatetimeTemplate != null)
                         {
                             <span class="ant-comment-content-author-time">
-                                @if (Datetime.IsT0)
+                                @if (DatetimeTemplate != null)
                                 {
-                                    <span>@Datetime.AsT0</span>
+                                    @DatetimeTemplate
                                 }
                                 else
                                 {
-                                    @Datetime.AsT1
+                                    <span>@Datetime</span>
                                 }
                             </span>
                         }
                     </div>
                     <div class="ant-comment-content-detail">
-                        @if (Content.IsT0)
+                        @if (ContentTemplate != null)
                         {
-                            <p>@Content.AsT0</p>
+                            @ContentTemplate
+
                         }
                         else
                         {
-                            @Content.AsT1
+                            <p>@Content</p>
                         }
                     </div>
                     @if (Actions.Count > 0)

@@ -3,11 +3,15 @@
     {
         <AntList DataSource="datas" TItem="Data" Header="@header">
             <Item Context="item">
-                <Comment Avatar="item.Avatar" Author="item.Author" Datetime="item.Datetime" Content="item.Content"></Comment>
+                <Comment Avatar="@item.Avatar" Author="@item.Author" Datetime="@item.Datetime" Content="@item.Content"></Comment>
             </Item>
         </AntList>
     }
-    <Comment Avatar="@(@"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png")" Content="@(GetEditor(@onSubmit))"></Comment>
+    <Comment Avatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png">
+        <ContentTemplate>
+            @GetEditor(@onSubmit)
+        </ContentTemplate>
+    </Comment>
 </div>
 
 
