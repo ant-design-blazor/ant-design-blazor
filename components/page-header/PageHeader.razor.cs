@@ -12,13 +12,22 @@ namespace AntDesign
         public bool Ghost { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> BackIcon { get; set; }
+        public string BackIcon { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        public RenderFragment BackIconTemplate { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Subtitle { get; set; }
+        public string Title { get; set; }
+
+        [Parameter]
+        public RenderFragment TitleTemplate { get; set; }
+
+        [Parameter]
+        public string Subtitle { get; set; }
+
+        [Parameter]
+        public RenderFragment SubtitleTemplate { get; set; }
 
         [Parameter]
         public EventCallback OnBack { get; set; }

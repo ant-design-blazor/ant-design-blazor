@@ -8,19 +8,19 @@
     <div class="ant-page-header-heading">
         <div class="ant-page-header-heading-left">
             <!--back-->
-            @if (BackIcon.Value != null)
+            @if (BackIconTemplate != null || BackIcon != null)
             {
-                @if (BackIcon.IsT0)
+                @if (BackIconTemplate != null)
                 {
-                    <div @onclick="OnBackClick" class="ant-page-header-back">
-                        <div role="button" tabindex="0" class="ant-page-header-back-button">
-                            <Icon Type="@BackIcon.AsT0" Theme="outline" />
-                        </div>
-                    </div>
+                    @BackIconTemplate
                 }
                 else
                 {
-                    @BackIcon.AsT1
+                    <div @onclick="OnBackClick" class="ant-page-header-back">
+                        <div role="button" tabindex="0" class="ant-page-header-back-button">
+                            <Icon Type="@BackIcon" Theme="outline" />
+                        </div>
+                    </div>
                 }
             }
             else
@@ -36,17 +36,17 @@
             @PageHeaderAvatar
 
             <!--title-->
-            @if (Title.Value != null)
+            @if (TitleTemplate != null || Title != null)
             {
 
                 <span class="ant-page-header-heading-title">
-                    @if (Title.IsT0)
+                    @if (TitleTemplate != null)
                     {
-                        @Title.AsT0
+                        @TitleTemplate
                     }
                     else
                     {
-                        @Title.AsT1
+                        @Title
                     }
                 </span>
             }
@@ -61,17 +61,17 @@
             }
 
             <!--subtitle-->
-            @if (Subtitle.Value != null)
+            @if (SubtitleTemplate != null || Subtitle != null)
             {
 
                 <span class="ant-page-header-heading-sub-title">
-                    @if (Subtitle.IsT0)
+                    @if (SubtitleTemplate != null)
                     {
-                        @Subtitle.AsT0
+                        @SubtitleTemplate
                     }
                     else
                     {
-                        @Subtitle.AsT1
+                        @Subtitle
                     }
                 </span>
             }
