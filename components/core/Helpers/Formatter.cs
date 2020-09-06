@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using AntDesign.Core.Reflection;
 
 namespace AntDesign.Helpers
@@ -17,37 +18,58 @@ namespace AntDesign.Helpers
 
         private static Func<T, string, string> GetFormatLambda()
         {
-            var type = typeof(T);
-            var p1 = Expression.Parameter(typeof(T));
-            var p2 = Expression.Parameter(typeof(string));
+            var sourceType = typeof(T);
+            var sourceProperty = Expression.Parameter(typeof(T));
+            var formatString = Expression.Parameter(typeof(string));
 
-            Expression variable = p1;
-            Expression body = p2;
-            Expression hasValueExpression = type.IsValueType ? (Expression)Expression.Constant(true) : Expression.NotEqual(p1, Expression.Default(type));
+            Expression variable = sourceProperty;
+            Expression body = Expression.Call(sourceProperty, typeof(object).GetMethod(nameof(ToString)));
+            Expression hasValueExpression = sourceType.IsValueType ? (Expression)Expression.Constant(true) : Expression.NotEqual(sourceProperty, Expression.Default(sourceType));
+            Expression parsedFormatString = formatString;
+
+            if (sourceType == typeof(TimeSpan))
+            {
+                parsedFormatString = Expression.Call(typeof(Formatter<TimeSpan>).GetMethod(nameof(ParseSpanTimeFormatString), BindingFlags.NonPublic | BindingFlags.Static), formatString);
+            }
 
             if (TypeDefined<T>.IsNullable)
             {
-                type = TypeDefined<T>.NullableType;
-                hasValueExpression = Expression.Equal(Expression.Property(p1, "HasValue"), Expression.Constant(true));
-                variable = Expression.Condition(hasValueExpression, Expression.Property(p1, "Value"), Expression.Default(type));
+                sourceType = TypeDefined<T>.NullableType;
+                hasValueExpression = Expression.Equal(Expression.Property(sourceProperty, "HasValue"), Expression.Constant(true));
+                variable = Expression.Condition(hasValueExpression, Expression.Property(sourceProperty, "Value"), Expression.Default(sourceType));
             }
 
-            if (type.IsSubclassOf(typeof(IFormattable)))
+            if (sourceType.IsSubclassOf(typeof(IFormattable)))
             {
-                var method = type.GetMethod("ToString", new[] { typeof(string), typeof(IFormatProvider) });
-                body = Expression.Call(Expression.Convert(variable, type), method, p2, Expression.Constant(null));
+                var method = sourceType.GetMethod(nameof(ToString), new[] { typeof(string), typeof(IFormatProvider) });
+                body = Expression.Call(Expression.Convert(variable, sourceType), method, parsedFormatString, Expression.Constant(null));
             }
             else
             {
-                var method = type.GetMethod("ToString", new[] { typeof(string) });
+                var method = sourceType.GetMethod(nameof(ToString), new[] { typeof(string) });
                 if (method != null)
                 {
-                    body = Expression.Call(Expression.Convert(variable, type), method, p2);
+                    body = Expression.Call(Expression.Convert(variable, sourceType), method, parsedFormatString);
                 }
             }
 
             var condition = Expression.Condition(hasValueExpression, body, Expression.Constant(string.Empty));
-            return Expression.Lambda<Func<T, string, string>>(condition, p1, p2).Compile();
+            return Expression.Lambda<Func<T, string, string>>(condition, sourceProperty, formatString).Compile();
+        }
+
+        /// <summary>
+        /// parse other characters in format string.
+        /// </summary>
+        /// <remarks>refer to https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-timespan-format-strings#other-characters</remarks>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        private static string ParseSpanTimeFormatString(string format)
+        {
+            if (string.IsNullOrWhiteSpace(format))
+            {
+                return format;
+            }
+            return Regex.Replace(format, "[^d|^h|^m|^s|^f|^F]+", "'$0'");
         }
     }
 
@@ -60,7 +82,7 @@ namespace AntDesign.Helpers
         /// <returns></returns>
         public static string ToPercentWithoutBlank(double num)
         {
-            return num.ToString("p", CultureInfo.CurrentCulture).Replace(" ", "", StringComparison.Ordinal);
+            return num.ToString("p", CultureInfo.InvariantCulture).Replace(" ", "", StringComparison.Ordinal);
         }
     }
 }

@@ -18,26 +18,9 @@ namespace AntDesign
         private const int REFRESH_INTERVAL = 1000 / 30;
 
         private TimeSpan _countDown = TimeSpan.Zero;
-        private string _format = "";
-
-        /// <summary>
-        /// parse other characters in format string.
-        /// </summary>
-        /// <remarks>refer to https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-timespan-format-strings#other-characters</remarks>
-        /// <param name="format"></param>
-        /// <returns></returns>
-        private static string ParseSpanTimeFormatString(string format)
-        {
-            if (string.IsNullOrWhiteSpace(format))
-            {
-                return format;
-            }
-            return Regex.Replace(format, "[^d|^h|^m|^s|^f|^F]+", "'$0'");
-        }
 
         protected override void OnInitialized()
         {
-            _format = ParseSpanTimeFormatString(Format);
             _countDown = Value - DateTime.Now;
             _timer = new Timer(StartCountDownForTimeSpan);
             _timer.Change(0, REFRESH_INTERVAL);
