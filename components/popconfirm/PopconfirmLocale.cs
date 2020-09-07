@@ -6,8 +6,8 @@ namespace AntDesign
 {
     public class PopconfirmLocale
     {
-        public string CancelText { get; }
+        public string CancelText { get; set; }
 
-        public string OkText { get; }
+        public string OkText { get; set; }
     }
 }

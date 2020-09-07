@@ -6,6 +6,6 @@ namespace AntDesign
 {
     public class SelectLocale
     {
-        public string NotFoundContent { get; }
+        public string NotFoundContent { get; set; }
     }
 }

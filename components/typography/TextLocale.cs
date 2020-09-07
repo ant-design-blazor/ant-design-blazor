@@ -6,9 +6,9 @@ namespace AntDesign
 {
     public class TextLocale
     {
-        public string Edit { get; }
-        public string Copy { get; }
-        public string Copied { get; }
-        public string Expand { get; }
+        public string Edit { get; set; }
+        public string Copy { get; set; }
+        public string Copied { get; set; }
+        public string Expand { get; set; }
     }
 }

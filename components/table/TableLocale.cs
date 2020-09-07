@@ -6,30 +6,30 @@ namespace AntDesign
 {
     public class TableLocale
     {
-        public string FilterTitle { get; }
+        public string FilterTitle { get; set; }
 
-        public string FilterConfirm { get; }
+        public string FilterConfirm { get; set; }
 
-        public string FilterReset { get; }
+        public string FilterReset { get; set; }
 
-        public string FilterEmptyText { get; }
+        public string FilterEmptyText { get; set; }
 
-        public string SelectAll { get; }
+        public string SelectAll { get; set; }
 
-        public string SelectInvert { get; }
+        public string SelectInvert { get; set; }
 
-        public string SelectionAll { get; }
+        public string SelectionAll { get; set; }
 
-        public string SortTitle { get; }
+        public string SortTitle { get; set; }
 
-        public string Expand { get; }
+        public string Expand { get; set; }
 
-        public string Collapse { get; }
+        public string Collapse { get; set; }
 
-        public string TriggerDesc { get; }
+        public string TriggerDesc { get; set; }
 
-        public string TriggerAsc { get; }
+        public string TriggerAsc { get; set; }
 
-        public string CancelSort { get; }
+        public string CancelSort { get; set; }
     }
 }

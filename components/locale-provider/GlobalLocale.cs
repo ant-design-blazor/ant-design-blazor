@@ -6,6 +6,6 @@ namespace AntDesign
 {
     public class GlobalLocale
     {
-        public string Placeholder { get; }
+        public string Placeholder { get; set; }
     }
 }

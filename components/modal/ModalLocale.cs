@@ -6,10 +6,10 @@ namespace AntDesign
 {
     public class ModalLocale
     {
-        public string OkText { get; }
+        public string OkText { get; set; }
 
-        public string CancelText { get; }
+        public string CancelText { get; set; }
 
-        public string JustOkText { get; }
+        public string JustOkText { get; set; }
     }
 }

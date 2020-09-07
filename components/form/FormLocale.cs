@@ -6,40 +6,40 @@ namespace AntDesign.Form.Locale
 {
     public class FormLocale
     {
-        public DefaultValidateMessages DefaultValidateMessages { get; }
+        public DefaultValidateMessages DefaultValidateMessages { get; set; }
     }
 
     public class DefaultValidateMessages
     {
-        public string Default { get; }
-        public string Required { get; }
-        public string Enum { get; }
-        public string Whitespace { get; }
-        public DateLocale Date { get; }
-        public TypesLocale Types { get; }
+        public string Default { get; set; }
+        public string Required { get; set; }
+        public string Enum { get; set; }
+        public string Whitespace { get; set; }
+        public DateLocale Date { get; set; }
+        public TypesLocale Types { get; set; }
     }
 
     public class DateLocale
     {
-        public string Format { get; }
-        public string Parse { get; }
-        public string Invalid { get; }
+        public string Format { get; set; }
+        public string Parse { get; set; }
+        public string Invalid { get; set; }
     }
 
     public class TypesLocale
     {
-        public string String { get; }
-        public string Method { get; }
-        public string Array { get; }
-        public string Object { get; }
-        public string Number { get; }
-        public string Date { get; }
-        public string Boolean { get; }
-        public string Integer { get; }
-        public string Float { get; }
-        public string Regexp { get; }
-        public string Email { get; }
-        public string Url { get; }
-        public string Hex { get; }
+        public string String { get; set; }
+        public string Method { get; set; }
+        public string Array { get; set; }
+        public string Object { get; set; }
+        public string Number { get; set; }
+        public string Date { get; set; }
+        public string Boolean { get; set; }
+        public string Integer { get; set; }
+        public string Float { get; set; }
+        public string Regexp { get; set; }
+        public string Email { get; set; }
+        public string Url { get; set; }
+        public string Hex { get; set; }
     }
 }

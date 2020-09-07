@@ -6,8 +6,8 @@ namespace AntDesign
 {
     public class TimePickerLocale
     {
-        public string Placeholder { get; }
+        public string Placeholder { get; set; }
 
-        public string[] RangePlaceholder { get; }
+        public string[] RangePlaceholder { get; set; }
     }
 }

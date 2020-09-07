@@ -6,14 +6,14 @@ namespace AntDesign
 {
     public class UploadLocale
     {
-        public string Uploading { get; }
+        public string Uploading { get; set; }
 
-        public string RemoveFile { get; }
+        public string RemoveFile { get; set; }
 
-        public string UploadError { get; }
+        public string UploadError { get; set; }
 
-        public string PreviewFile { get; }
+        public string PreviewFile { get; set; }
 
-        public string DownloadFile { get; }
+        public string DownloadFile { get; set; }
     }
 }
