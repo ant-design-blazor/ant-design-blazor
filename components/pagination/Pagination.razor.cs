@@ -80,6 +80,8 @@ namespace AntDesign
 
         [Parameter] public int DefaultPageSize { get; set; } = 10;
 
+        [Parameter] public PaginationLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Pagination;
+
         private bool _showPagination = true;
 
         private string _size = "default";

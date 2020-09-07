@@ -33,6 +33,8 @@ namespace AntDesign
 
         [Parameter] public EventCallback<int> PageSizeChange { get; set; }
 
+        [CascadingParameter] public Pagination Pagination { get; set; }
+
         private string _inputValue;
 
         private (int value, string label)[] _listOfPageSizeOption = Array.Empty<(int, string)>();
