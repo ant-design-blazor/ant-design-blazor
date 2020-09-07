@@ -20,8 +20,4 @@
     <ProjectReference Include="..\components\AntDesign.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="$Recorded" />
-  </ItemGroup>
-
 </Project>
