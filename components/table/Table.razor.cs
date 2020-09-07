@@ -43,6 +43,9 @@ namespace AntDesign
         public TableSize Size { get; set; }
 
         [Parameter]
+        public TableLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Table;
+
+        [Parameter]
         public bool Bordered { get; set; } = false;
 
         [Parameter]

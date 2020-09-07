@@ -27,7 +27,7 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public OneOf<string, bool, RenderFragment> Description { get; set; }
+        public OneOf<string, bool, RenderFragment> Description { get; set; } = LocaleProvider.CurrentLocale.Empty.Description;
 
         [Parameter]
         public OneOf<string, RenderFragment> Image { get; set; } = Empty.PRESENTED_IMAGE_DEFAULT;
