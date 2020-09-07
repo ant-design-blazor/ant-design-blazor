@@ -63,9 +63,7 @@ namespace AntDesign
 
         public static string disableBodyScroll => $"{FUNC_PREFIX}disableBodyScroll";
 
-        public static string enableModalBodyScroll => $"{FUNC_PREFIX}enableModalBodyScroll";
-
-        public static string enableDrawerBodyScroll => $"{FUNC_PREFIX}enableDrawerBodyScroll";
+        public static string enableBodyScroll => $"{FUNC_PREFIX}enableBodyScroll";
 
         public static string CreateIconFromfontCN => $"{FUNC_PREFIX}createIconFromfontCN";
 
