@@ -56,14 +56,14 @@ namespace AntDesign
         [Parameter]
         public bool ShowToday { get; set; } = true;
 
-
         private CultureInfo? _cultureInfo;
+
         [Parameter]
         public CultureInfo CultureInfo
         {
             get
             {
-                return this._cultureInfo ?? CultureInfo.CurrentCulture;
+                return this._cultureInfo ?? CultureInfo.DefaultThreadCurrentUICulture; ;
             }
             set
             {
@@ -356,7 +356,6 @@ namespace AntDesign
             _needRefresh = true;
             _inputStart.IsOnFocused = inputStartFocus;
             _inputEnd.IsOnFocused = inputEndFocus;
-
         }
 
         protected async Task OnSelect(DateTime date)
@@ -544,7 +543,6 @@ namespace AntDesign
 
             return value.ToString(formater, this.CultureInfo);
         }
-
 
         internal void ChangePickerValue(DateTime date, int index = 0)
         {
