@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <!-- ignore the tsconfig.json file in package -->
-
     <Content Remove="tsconfig.json" />
     <None Include="tsconfig.json" CopyToOutputDirectory="Never"></None>
   </ItemGroup>
@@ -46,7 +45,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="3.1.7" />
     <PackageReference Include="OneOf" Version="2.1.151" />
   </ItemGroup>
 
