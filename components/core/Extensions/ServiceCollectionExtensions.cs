@@ -1,4 +1,5 @@
-﻿using System.Text.Encodings.Web;
+﻿using System.Globalization;
+using System.Text.Encodings.Web;
 using AntDesign;
 using AntDesign.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -22,6 +23,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ModalService>();
             services.TryAddScoped<DrawerService>();
             services.TryAddScoped<ConfirmService>();
+
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
 
             return services;
         }
