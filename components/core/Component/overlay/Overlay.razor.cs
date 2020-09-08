@@ -87,11 +87,11 @@ namespace AntDesign.Internal
         {
             if (firstRender)
             {
-                await JsInvokeAsync(JSInteropConstants.addClsToFirstChild, Ref, $"{Trigger.PrefixCls}-trigger");
+                await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"{Trigger.PrefixCls}-trigger");
 
                 if (Trigger.Disabled)
                 {
-                    await JsInvokeAsync(JSInteropConstants.addClsToFirstChild, Ref, $"disabled");
+                    await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"disabled");
                 }
             }
 
@@ -115,7 +115,7 @@ namespace AntDesign.Internal
                 _ = InvokeAsync(async () =>
                 {
                     await Task.Delay(100);
-                    await JsInvokeAsync(JSInteropConstants.delElementFrom, Ref, Trigger.PopupContainerSelector);
+                    await JsInvokeAsync(JSInteropConstants.DelElementFrom, Ref, Trigger.PopupContainerSelector);
                 });
             }
 
@@ -129,7 +129,7 @@ namespace AntDesign.Internal
                 return;
             }
 
-            Element trigger = await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Trigger.Ref);
+            Element trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
 
             // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
             // I try to render Overlay when OvelayTrigger’s OnAfterRender is called, but is still get negative absoluteLeft
@@ -137,7 +137,7 @@ namespace AntDesign.Internal
             while (trigger.absoluteLeft <= 0 && trigger.clientWidth <= 0)
             {
                 await Task.Delay(50);
-                trigger = await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Trigger.Ref);
+                trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
             }
 
             _overlayLeft = overlayLeft;
@@ -158,8 +158,8 @@ namespace AntDesign.Internal
 
             await AddOverlayToBody();
 
-            Element overlayElement = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Ref);
-            Element containerElement = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Trigger.PopupContainerSelector);
+            Element overlayElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
+            Element containerElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.PopupContainerSelector);
 
             int left = GetOverlayLeft(trigger, overlayElement, containerElement);
             int top = GetOverlayTop(trigger, overlayElement, containerElement);
@@ -243,7 +243,7 @@ namespace AntDesign.Internal
         {
             if (!_hasAddOverlayToBody)
             {
-                await JsInvokeAsync(JSInteropConstants.addElementTo, Ref, Trigger.PopupContainerSelector);
+                await JsInvokeAsync(JSInteropConstants.AddElementTo, Ref, Trigger.PopupContainerSelector);
 
                 _hasAddOverlayToBody = true;
             }

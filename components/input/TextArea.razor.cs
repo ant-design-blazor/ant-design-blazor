@@ -1,7 +1,7 @@
-﻿using AntDesign.JsInterop;
-using Microsoft.AspNetCore.Components;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -100,7 +100,7 @@ namespace AntDesign
             // Ant-design use a hidden textarea to calculate row height, totalHeight = rows * rowHeight
             // TODO: compare with maxheight
 
-            Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _hiddenEle);
+            Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _hiddenEle);
             System.Diagnostics.Debug.WriteLine($"hidden\t{element.scrollHeight}");
 
             // do not use %mod in case _rowheight is not an integer
@@ -126,7 +126,7 @@ namespace AntDesign
 
         private async Task CalculateRowHeightAsync()
         {
-            Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Ref);
+            Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
             element.ToString();
             _hiddenWidth = $"width: {element.offsetWidth}px;";
 
@@ -136,13 +136,13 @@ namespace AntDesign
             // total height of 1 row
             Value = " ";
             StateHasChanged();
-            element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _hiddenEle);
+            element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _hiddenEle);
             double rHeight = element.scrollHeight;
 
             // total height of 2 rows
             Value = " \r\n ";
             StateHasChanged();
-            element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _hiddenEle);
+            element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _hiddenEle);
             double rrHeight = element.scrollHeight;
 
             _rowHeight = rrHeight - rHeight;
