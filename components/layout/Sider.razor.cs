@@ -106,7 +106,7 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender && Breakpoint != null)
             {
-                var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.getWindow);
+                var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow);
                 DomEventService.AddEventListener<Window>("window", "resize", OnResize, false);
                 OptimizeSize(dimensions.innerWidth);
             }

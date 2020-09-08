@@ -129,7 +129,7 @@ namespace AntDesign
             {
                 _linksChanged = false;
 
-                _selfDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ink);
+                _selfDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _ink);
                 _linkTops = new Dictionary<string, decimal>();
                 _flatLinks = FlatChildren();
                 foreach (var link in _flatLinks)

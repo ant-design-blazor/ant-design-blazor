@@ -390,8 +390,8 @@ namespace AntDesign
 
         private async Task TryRenderNavOperation()
         {
-            int navWidth = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars)).clientWidth;
-            int navTotalWidth = (await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar)).clientWidth;
+            int navWidth = (await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tabBars)).clientWidth;
+            int navTotalWidth = (await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _scrollTabBar)).clientWidth;
             if (navTotalWidth < navWidth)
             {
                 _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
@@ -415,9 +415,9 @@ namespace AntDesign
                 // TODO: slide to activated tab
                 // animate Active Ink
                 // ink bar
-                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _activeTabBar);
-                Element navSection = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _tabBars);
-                Element navScroll = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _scrollTabBar);
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _activeTabBar);
+                Element navSection = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tabBars);
+                Element navScroll = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _scrollTabBar);
                 if (IsHorizontal)
                 {
                     //_inkStyle = "left: 0px; width: 0px;";

@@ -78,7 +78,7 @@ namespace AntDesign
         {
             if (Config.Draggable)
             {
-                await JsInvokeAsync(JSInteropConstants.resetModalPosition, _dialogHeader);
+                await JsInvokeAsync(JSInteropConstants.ResetModalPosition, _dialogHeader);
             }
         }
 
@@ -90,7 +90,7 @@ namespace AntDesign
         /// <returns></returns>
         private async Task AppendToContainer()
         {
-            await JsInvokeAsync(JSInteropConstants.addElementTo, _element, Config.GetContainer);
+            await JsInvokeAsync(JSInteropConstants.AddElementTo, _element, Config.GetContainer);
         }
 
         #region mask and dialog click event
@@ -146,17 +146,17 @@ namespace AntDesign
             {
                 if (e.Key == "Tab")
                 {
-                    var activeElement = await JsInvokeAsync<string>(JSInteropConstants.getActiveElement, _sentinelEnd);
+                    var activeElement = await JsInvokeAsync<string>(JSInteropConstants.GetActiveElement, _sentinelEnd);
                     if (e.ShiftKey)
                     {
                         if (activeElement == _sentinelStart)
                         {
-                            await JsInvokeAsync(JSInteropConstants.focus, "#" + _sentinelEnd);
+                            await JsInvokeAsync(JSInteropConstants.Focus, "#" + _sentinelEnd);
                         }
                     }
                     else if (activeElement == _sentinelEnd)
                     {
-                        await JsInvokeAsync(JSInteropConstants.focus, "#" + _sentinelStart);
+                        await JsInvokeAsync(JSInteropConstants.Focus, "#" + _sentinelStart);
                     }
                 }
             }
@@ -299,13 +299,13 @@ namespace AntDesign
                 if (!_disableBodyScroll)
                 {
                     _disableBodyScroll = true;
-                    await JsInvokeAsync(JSInteropConstants.disableBodyScroll);
+                    await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
                 }
 
                 if (Config.Draggable && !_doDragable)
                 {
                     _doDragable = true;
-                    await JsInvokeAsync(JSInteropConstants.enableDraggable, _dialogHeader, _modal, Config.DragInViewport);
+                    await JsInvokeAsync(JSInteropConstants.EnableDraggable, _dialogHeader, _modal, Config.DragInViewport);
                 }
             }
             else
@@ -314,13 +314,13 @@ namespace AntDesign
                 {
                     _disableBodyScroll = false;
                     await Task.Delay(250);
-                    await JsInvokeAsync(JSInteropConstants.enableBodyScroll);
+                    await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
                 }
 
                 if (Config.Draggable && _doDragable)
                 {
                     _doDragable = false;
-                    await JsInvokeAsync(JSInteropConstants.disableDraggable, _dialogHeader);
+                    await JsInvokeAsync(JSInteropConstants.DisableDraggable, _dialogHeader);
                 }
             }
             await base.OnAfterRenderAsync(isFirst);
