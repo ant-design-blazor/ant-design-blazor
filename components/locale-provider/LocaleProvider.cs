@@ -27,13 +27,18 @@ namespace AntDesign
 
         public static Locale GetCurrentLocale()
         {
-            var currentCulture = CultureInfo.DefaultThreadCurrentCulture?.Name;
+            var currentCulture = CultureInfo.DefaultThreadCurrentUICulture?.Name;
             if (string.IsNullOrWhiteSpace(currentCulture) || !_availableResources.ContainsKey(currentCulture))
             {
                 currentCulture = DefaultLanguage;
             }
 
-            return _localeCache.GetOrAdd(currentCulture, key =>
+            return GetLocale(currentCulture);
+        }
+
+        public static Locale GetLocale(string cultureName)
+        {
+            return _localeCache.GetOrAdd(cultureName, key =>
             {
                 string fileName = _availableResources[key];
                 using var fileStream = _resourcesAssembly.GetManifestResourceStream(fileName);
@@ -48,9 +53,19 @@ namespace AntDesign
             });
         }
 
-        private static void SetLocale(string cultureName, Locale locale)
+        private static void SetLocale(string cultureName, Locale locale = null)
         {
-            _localeCache.AddOrUpdate(cultureName, locale, (name, original) => locale);
+            var culture = CultureInfo.GetCultureInfo(cultureName);
+
+            if (culture != null)
+            {
+                CultureInfo.DefaultThreadCurrentUICulture = culture;
+            }
+
+            if (locale != null)
+            {
+                _localeCache.AddOrUpdate(cultureName, locale, (name, original) => locale);
+            }
         }
     }
 }
