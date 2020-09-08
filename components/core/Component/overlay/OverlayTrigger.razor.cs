@@ -265,7 +265,7 @@ namespace AntDesign.Internal
 
         internal async Task<Element> GetTriggerDomInfo()
         {
-            return await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Ref);
+            return await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Ref);
         }
 
         public async Task Close()

@@ -159,7 +159,7 @@ namespace AntDesign
 
         public async Task Focus()
         {
-            await JsInvokeAsync(JSInteropConstants.focus, Ref);
+            await JsInvokeAsync(JSInteropConstants.Focus, Ref);
         }
 
         protected virtual async Task OnChangeAsync(ChangeEventArgs args)

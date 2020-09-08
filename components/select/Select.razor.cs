@@ -198,8 +198,8 @@ namespace AntDesign
 
         protected async Task SetDropdownStyle()
         {
-            var scrollPoint = await JsInvokeAsync<Point>(JSInteropConstants.getScroll);
-            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, Ref);
+            var scrollPoint = await JsInvokeAsync<Point>(JSInteropConstants.GetScroll);
+            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
 
             var left = Math.Round(domRect.left + scrollPoint.x);
             var top = Math.Round(domRect.top + scrollPoint.y + domRect.height + 4);
@@ -353,11 +353,11 @@ namespace AntDesign
                 OnFocus?.Invoke();
                 await SetDropdownStyle();
                 //await InvokeAsync(StateHasChanged);
-                await JsInvokeAsync(JSInteropConstants.addElementToBody, _dropdownRef);
+                await JsInvokeAsync(JSInteropConstants.AddElementToBody, _dropdownRef);
 
                 if (IsShowSearch())
                 {
-                    await JsInvokeAsync(JSInteropConstants.focus, _inputRef);
+                    await JsInvokeAsync(JSInteropConstants.Focus, _inputRef);
                 }
                 OnDropdownVisibleChange?.Invoke(true);
             }
