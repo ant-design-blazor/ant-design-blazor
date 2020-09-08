@@ -1,9 +1,13 @@
-﻿using AntDesign.Form.Locale;
+﻿using System.Text.Json.Serialization;
+using AntDesign.Form.Locale;
 
 namespace AntDesign.Locales
 {
     public class Locale
     {
+        [JsonPropertyName("locale")]
+        public string LocaleName { get; set; }
+
         public PaginationLocale Pagination { get; set; }
 
         public DatePickerLocale DatePicker { get; set; }
