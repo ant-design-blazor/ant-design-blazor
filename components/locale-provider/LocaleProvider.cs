@@ -47,5 +47,10 @@ namespace AntDesign
                 });
             });
         }
+
+        private static void SetLocale(string cultureName, Locale locale)
+        {
+            _localeCache.AddOrUpdate(cultureName, locale, (name, original) => locale);
+        }
     }
 }
