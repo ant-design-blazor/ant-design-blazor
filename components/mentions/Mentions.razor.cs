@@ -116,7 +116,7 @@ namespace AntDesign
                 _reference = DotNetObjectReference.Create<Mentions>(this);
             }
             //get current dom element infomation
-            var domRect = await JsInvokeAsync<double[]>(JSInteropConstants.getCursorXY, Ref, _reference);
+            var domRect = await JsInvokeAsync<double[]>(JSInteropConstants.GetCursorXY, Ref, _reference);
 
             var left = Math.Round(domRect[0]);
             var top = Math.Round(domRect[1]);
@@ -232,7 +232,7 @@ namespace AntDesign
             if (OnFocus.HasDelegate)
                 await OnFocus.InvokeAsync(args);
 
-            await JsInvokeAsync(JSInteropConstants.focus, Ref);
+            await JsInvokeAsync(JSInteropConstants.Focus, Ref);
             StateHasChanged();
         }
 
@@ -242,7 +242,7 @@ namespace AntDesign
             Focused = false;
             if (OnBlur.HasDelegate)
                 await OnBlur.InvokeAsync(args);
-            await JsInvokeAsync(JSInteropConstants.blur, Ref);
+            await JsInvokeAsync(JSInteropConstants.Blur, Ref);
             StateHasChanged();
         }
 
@@ -256,7 +256,7 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             _reference = null;
-            _ = JsInvokeAsync(JSInteropConstants.disposeObj, ReferenceName);
+            _ = JsInvokeAsync(JSInteropConstants.DisposeObj, ReferenceName);
             base.Dispose(disposing);
         }
     }
