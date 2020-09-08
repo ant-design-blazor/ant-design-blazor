@@ -131,8 +131,8 @@ namespace AntDesign
         [Parameter]
         public string Format { get; set; }
 
-        protected readonly DateTime?[] _defaultValues = new DateTime?[2];
-        protected OneOf<DateTime, DateTime[]> _defaultValue;
+        protected readonly DateTime?[] DefaultValues = new DateTime?[2];
+        private OneOf<DateTime, DateTime[]> _defaultValue;
 
         [Parameter]
         public OneOf<DateTime, DateTime[]> DefaultValue
@@ -143,11 +143,11 @@ namespace AntDesign
                 _defaultValue = value;
                 value.Switch(single =>
                 {
-                    _defaultValues[0] = single;
+                    DefaultValues[0] = single;
                 }, arr =>
                 {
-                    _defaultValues[0] = arr.Length > 0 ? arr[0] : _defaultValues[0];
-                    _defaultValues[1] = arr.Length > 1 ? arr[1] : _defaultValues[1];
+                    DefaultValues[0] = arr.Length > 0 ? arr[0] : DefaultValues[0];
+                    DefaultValues[1] = arr.Length > 1 ? arr[1] : DefaultValues[1];
                 });
             }
         }
@@ -212,7 +212,7 @@ namespace AntDesign
 
         public DateTime CurrentDate { get; set; } = DateTime.Now;
 
-        protected readonly DateTime[] _pickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
+        protected readonly DateTime[] PickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
         protected OneOf<DateTime, DateTime[]> _pickerValue;
 
         [Parameter]
@@ -224,11 +224,11 @@ namespace AntDesign
                 _pickerValue = value;
                 value.Switch(single =>
                 {
-                    _pickerValues[0] = single;
+                    PickerValues[0] = single;
                 }, arr =>
                 {
-                    _pickerValues[0] = arr.Length > 0 ? arr[0] : _pickerValues[0];
-                    _pickerValues[1] = arr.Length > 1 ? arr[1] : _pickerValues[1];
+                    PickerValues[0] = arr.Length > 0 ? arr[0] : PickerValues[0];
+                    PickerValues[1] = arr.Length > 1 ? arr[1] : PickerValues[1];
                 });
             }
         }
@@ -423,7 +423,7 @@ namespace AntDesign
             if (IsRange)
             {
                 DateTime now = DateTime.Now;
-                _pickerValues[1] = picker switch
+                PickerValues[1] = picker switch
                 {
                     DatePickerType.Date => now.AddMonths(1),
                     DatePickerType.Week => now.AddMonths(1),
@@ -513,7 +513,7 @@ namespace AntDesign
         /// <returns></returns>
         public DateTime GetIndexPickerValue(int index)
         {
-            return _pickerValues[index];
+            return PickerValues[index];
         }
 
         public void ChangePlaceholder(string placeholder, int index = 0)
@@ -546,23 +546,23 @@ namespace AntDesign
 
         internal void ChangePickerValue(DateTime date, int index = 0)
         {
-            TimeSpan interval = date - _pickerValues[index];
+            TimeSpan interval = date - PickerValues[index];
 
-            _pickerValues[index] = date;
+            PickerValues[index] = date;
 
             if (IsRange)
             {
                 if (index == 0)
                 {
-                    _pickerValues[1] = _pickerValues[1].Add(interval);
+                    PickerValues[1] = PickerValues[1].Add(interval);
                 }
                 else
                 {
-                    _pickerValues[0] = _pickerValues[0].Add(interval);
+                    PickerValues[0] = PickerValues[0].Add(interval);
                 }
             }
 
-            OnPanelChange?.Invoke(_pickerValues[index], _picker);
+            OnPanelChange?.Invoke(PickerValues[index], _picker);
 
             StateHasChanged();
         }
@@ -577,7 +577,7 @@ namespace AntDesign
             _prePickerStack.Push(_picker);
             _picker = type;
 
-            OnPanelChange?.Invoke(_pickerValues[index], _picker);
+            OnPanelChange?.Invoke(PickerValues[index], _picker);
 
             StateHasChanged();
         }

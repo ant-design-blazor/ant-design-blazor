@@ -31,7 +31,7 @@ namespace AntDesign
 
                 GetIfNotNull(changeValue, (notNullValue) =>
                 {
-                    _pickerValues[index] = notNullValue;
+                    PickerValues[index] = notNullValue;
                 });
 
                 StateHasChanged();
@@ -56,9 +56,9 @@ namespace AntDesign
 
                 return Convert.ToDateTime(Value, this.CultureInfo);
             }
-            else if (_defaultValues[index] != null)
+            else if (DefaultValues[index] != null)
             {
-                return _defaultValues[index];
+                return DefaultValues[index];
             }
 
             return null;

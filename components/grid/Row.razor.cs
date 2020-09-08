@@ -63,10 +63,19 @@ namespace AntDesign
                 .If($"{prefixCls}-space-between", () => Justify == "space-between")
                 ;
 
-            await this.SetGutterStyle();
-            DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
-
             await base.OnInitializedAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
+
+                await this.SetGutterStyle();
+            }
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         private async void OnResize(object o)
