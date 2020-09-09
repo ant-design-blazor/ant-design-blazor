@@ -438,3 +438,23 @@ function mentionsOnWindowClick(e) {
 //#endregion
 
 export { enableDraggable, disableDraggable, resetModalPosition } from "./modules/dragHelper";
+
+export function setPointerCapture(el, p) {
+  if (el !== null) {
+    el.setPointerCapture(p);
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+export function releasePointerCapture(el, p) {
+  if (el !== null) {
+    el.releasePointerCapture(p);
+    return true;
+  }
+  else {
+    return false;
+  }
+}

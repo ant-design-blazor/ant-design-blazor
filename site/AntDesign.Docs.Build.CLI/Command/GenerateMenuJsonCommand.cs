@@ -41,7 +41,8 @@ namespace AntDesign.Docs.Build.CLI.Command
         private static readonly Dictionary<string, string> _demoCategoryMap = new Dictionary<string, string>()
         {
             ["Components"] = "组件",
-            ["Charts"] = "图表"
+            ["Charts"] = "图表",
+            ["Experimental"] = "实验性功能",
         };
 
         public void Execute(CommandLineApplication command)

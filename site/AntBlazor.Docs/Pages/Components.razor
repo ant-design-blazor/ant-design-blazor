@@ -2,6 +2,8 @@
 @page "/components"
 @page "/charts/{name}"
 @page "/charts"
+@page "/experimental"
+@page "/experimental/{name}"
 
 <section class="main-container main-container-component">
     <article>
@@ -44,7 +46,7 @@
 
                 @foreach (var docDemo in docDemos)
                 {
-                    <RazorBox Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Title}")"/>
+                    <RazorBox Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Title}")" />
                 }
 
                 @if (demos.Any())

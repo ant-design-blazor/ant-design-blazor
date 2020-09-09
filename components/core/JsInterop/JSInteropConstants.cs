@@ -84,5 +84,9 @@ namespace AntDesign
         public static string ResetModalPosition => $"{FUNC_PREFIX}resetModalPosition";
 
         #endregion Draggable Modal
+
+        public static string SetPointerCapture => $"{FUNC_PREFIX}setPointerCapture";
+
+        internal static string ReleasePointerCapture => $"{FUNC_PREFIX}releasePointerCapture";
     }
 }
