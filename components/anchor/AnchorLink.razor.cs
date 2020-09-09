@@ -91,10 +91,10 @@ namespace AntDesign
         {
             await base.OnFirstAfterRenderAsync();
 
-            LinkDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _self);
+            LinkDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _self);
             try
             {
-                await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#" + Href.Split('#')[1]);
+                await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, "#" + Href.Split('#')[1]);
                 _hrefDomExist = true;
             }
             catch { }
@@ -153,7 +153,7 @@ namespace AntDesign
             DomRect domRect = null;
             if (forced || _hrefDomExist)
             {
-                domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, "#" + Href.Split('#')[1]);
+                domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, "#" + Href.Split('#')[1]);
             }
             return domRect;
         }

@@ -73,7 +73,7 @@ namespace AntDesign
             if (string.IsNullOrEmpty(Children))
             {
                 await Task.Delay(1);
-                Children = await JsInvokeAsync<string>(JSInteropConstants.getInnerText, _contentRef);
+                Children = await JsInvokeAsync<string>(JSInteropConstants.GetInnerText, _contentRef);
                 //await InvokeAsync(StateHasChanged);
             }
         }

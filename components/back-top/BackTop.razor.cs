@@ -1,7 +1,7 @@
-﻿using AntDesign.JsInterop;
+﻿using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System.Threading.Tasks;
 
 namespace AntDesign
 {
@@ -18,7 +18,7 @@ namespace AntDesign
 
         protected async Task OnClick()
         {
-            await JsInvokeAsync<DomRect>(JSInteropConstants.backTop, "BodyContainer");
+            await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop, "BodyContainer");
         }
 
         protected override void OnInitialized()
