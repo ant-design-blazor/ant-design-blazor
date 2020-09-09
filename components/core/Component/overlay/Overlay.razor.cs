@@ -25,6 +25,12 @@ namespace AntDesign.Internal
         [Parameter]
         public EventCallback OnOverlayMouseLeave { get; set; }
 
+        [Parameter]
+        public Action OnShow { get; set; }
+
+        [Parameter]
+        public Action OnHide { get; set; }
+
         [CascadingParameter(Name = "ArrowPointAtCenter")]
         public bool ArrowPointAtCenter { get; set; }
 
@@ -45,6 +51,9 @@ namespace AntDesign.Internal
         /// </summary>
         [Parameter]
         public int HorizontalOffset { get; set; } = 4;
+
+        [Parameter]
+        public bool HiddenMode { get; set; } = false;
 
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
@@ -171,6 +180,8 @@ namespace AntDesign.Internal
             await Trigger.OnVisibleChange.InvokeAsync(true);
 
             StateHasChanged();
+
+            OnShow?.Invoke();
         }
 
         internal async Task Hide(bool force = false)
@@ -207,6 +218,8 @@ namespace AntDesign.Internal
             await Trigger.OnVisibleChange.InvokeAsync(false);
 
             StateHasChanged();
+
+            OnHide?.Invoke();
         }
 
         internal void PreventHide(bool prevent)
