@@ -50,13 +50,12 @@ Drawer comes very handy.
 | CreateAsync | create and open an Drawer  | `DrawerConfig`  | `DrawerRef` |
 | CreateAsync | create and open an Drawer  | `DrawerConfig` , TContentParams  | `DrawerRef<R>` |
 
-### DrawerConfig
+### DrawerOptions
 
 | 参数                | 说明                                                                                                                 | 类型                                                                | 默认值    |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | --------- |
 | Content           | The drawer body content.                                                                                                | `OneOf<RenderFragment, string>`       | -         |
 | ContentParams     | The component inputs the param / The Template context.                                                                            | `D`                                                                 | -         |
-| OnCancel          | Execute when click on the mask or the upper cancel button (return false to prevent closing)    | -         |
 | Closable          | Whether a close (x) button is visible on top right of the Drawer dialog or not.              | `boolean`                                                           | `true`    |
 | MaskClosable      | Clicking on the mask (area outside the Drawer) to close the Drawer or not.                                                                                            | `boolean`                                                           | `true`    |
 | Mask              | Whether to show mask or not.                         | `boolean`                                                           | `true`    |
