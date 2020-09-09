@@ -24,7 +24,7 @@
 
         _drawerRef = await DrawerService.CreateAsync(options);
 
-        _drawerRef.OnClose = () =>
+        _drawerRef.OnClose = (args) =>
         {
             Console.WriteLine("Close Drawer");
             return Task.CompletedTask;

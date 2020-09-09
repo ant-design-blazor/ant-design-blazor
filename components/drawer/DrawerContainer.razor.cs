@@ -53,7 +53,5 @@ namespace AntDesign
                 _drawerRefs.Remove(drawerRef);
             }
         }
-
-
     }
 }
