@@ -44,6 +44,12 @@ namespace AntDesign.Internal
         public bool IsButton { get; set; } = false;
 
         [Parameter]
+        public bool InlineFlexMode { get; set; } = false;
+
+        [Parameter]
+        public bool HiddenMode { get; set; } = false;
+
+        [Parameter]
         public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
 
         [Parameter]
@@ -212,6 +218,9 @@ namespace AntDesign.Internal
             await OnOverlayHiding.InvokeAsync(visible);
         }
 
+        protected virtual void OnOverlayShow() { }
+        protected virtual void OnOverlayHide() { }
+
         internal virtual string GetPlacementClass()
         {
             if (!string.IsNullOrEmpty(PlacementCls))
@@ -271,6 +280,11 @@ namespace AntDesign.Internal
         public async Task Close()
         {
             await _overlay.Hide(true);
+        }
+
+        public bool IsOverlayShow()
+        {
+            return _overlay != null ? _overlay.IsPopup() : false;
         }
     }
 }

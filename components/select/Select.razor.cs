@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -14,7 +15,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public partial class Select : AntInputComponentBase<string>
+    public partial class Select : SelectBase
     {
         #region Private
         #region Constants
@@ -23,21 +24,17 @@ namespace AntDesign
         #endregion
 
         #region Fields
-        private bool _isSelectOpened = false;
-        private bool _isOverSelectOption = false;
         private string _inputWidth = InputDefaultWidth;
 
         private string _searchValue;
         private string _dropdownStyle;
-        private string[] _tokenSeparators;
         private SelectOption _searchOption;
-        private ElementReference _inputRef;
-        private ElementReference _dropdownRef;
-        private readonly ClassMapper _dropdownClassMapper = new ClassMapper();
+        internal ElementReference _inputRef;
 
         private readonly List<SelectOption> _tagSelectOptions = new List<SelectOption>();
         private readonly SortedSet<string> _tokenSelectOptions = new SortedSet<string>();
-        private OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>>? _value;
+
+        protected OverlayTrigger _dropDown;
         #endregion
 
         #region Properties
@@ -54,13 +51,17 @@ namespace AntDesign
         #region Methods
         private static bool DefaultFilterOption(string value, SelectOption option)
         {
+            if (option.Children == null)
+            {
+                return false;
+            }
+
             var optionContent = option.Children.ToUpperInvariant();
             return optionContent.Contains(value, StringComparison.OrdinalIgnoreCase);
         }
         #endregion
         #endregion
 
-        #region Protected
         #region Properties
         public string Title
         {
@@ -74,7 +75,7 @@ namespace AntDesign
             }
         }
 
-        protected bool HasValue
+        internal bool HasValue
         {
             get
             {
@@ -82,19 +83,10 @@ namespace AntDesign
                 {
                     if (SelectMode != SelectMode.Default)
                     {
-                        if (LabelInValue)
-                        {
-                            return SelectedValues.Value.AsT3.Any();
-                        }
-                        else
-                        {
-                            return SelectedValues.Value.AsT1.Any();
-                        }
+                        return LabelInValue ? SelectedValues.Value.AsT3.Any() : SelectedValues.Value.AsT1.Any();
                     }
-                    else
-                    {
-                        return true;
-                    }
+
+                    return true;
                 }
 
                 return false;
@@ -111,20 +103,7 @@ namespace AntDesign
 
         protected List<SelectOption> SelectOptions { get; } = new List<SelectOption>();
 
-        protected List<SelectOption> SelectedOptions { get; } = new List<SelectOption>();
-
-        protected Properties GetProperties(SelectOption option)
-        {
-            return new Properties
-            {
-                Closable = true,
-                Value = option.Value,
-                Label = option.Label,
-                OnClose = Action
-            };
-
-            void Action(MouseEventArgs e) => OnRemoveSelected(option);
-        }
+        internal List<SelectOption> SelectedOptions { get; } = new List<SelectOption>();
 
         protected bool IsShowSearch()
         {
@@ -141,6 +120,8 @@ namespace AntDesign
         {
             ClassMapper.Clear()
                 .Add($"{ClassPrefix}")
+                .If($"{ClassPrefix}-open", () => _dropDown != null ? _dropDown.Visible : false)
+                .If($"{ClassPrefix}-focused", () => IsShowSearch())
                 .If($"{ClassPrefix}-single", () => SelectMode == SelectMode.Default)
                 .If($"{ClassPrefix}-multiple", () => SelectMode != SelectMode.Default)
                 .If($"{ClassPrefix}-sm", () => Size == AntSizeLDSType.Small)
@@ -151,16 +132,6 @@ namespace AntDesign
                 .If($"{ClassPrefix}-bordered", () => Bordered)
                 .If($"{ClassPrefix}-loading", () => Loading)
                 .If($"{ClassPrefix}-disabled", () => Disabled);
-
-            _dropdownClassMapper.Clear()
-                .Add($"{ClassPrefix}-dropdown-hidden")
-                .Add($"{ClassPrefix}-placement-bottomLeft");
-        }
-
-        protected void SetHideClass()
-        {
-            SetClassMap();
-            _isSelectOpened = false;
         }
 
         protected bool IsEmptyOnSearch()
@@ -198,12 +169,9 @@ namespace AntDesign
 
         protected async Task SetDropdownStyle()
         {
-            var scrollPoint = await JsInvokeAsync<Point>(JSInteropConstants.GetScroll);
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
 
-            var left = Math.Round(domRect.left + scrollPoint.x);
-            var top = Math.Round(domRect.top + scrollPoint.y + domRect.height + 4);
-            _dropdownStyle = $"min-width: {domRect.width}px; width: {domRect.width}px; left: {left}px; top: {top}px;";
+            _dropdownStyle = $"min-width: {domRect.width}px; width: {domRect.width}px;";
         }
 
         protected IEnumerable<string> GetTagOptions()
@@ -246,26 +214,26 @@ namespace AntDesign
             };
         }
 
-        protected async Task ResetState()
+        internal async Task ResetState()
         {
             await Task.Delay(1);
             Value = null;
             SelectedValues = null;
             SelectedOptions.Clear();
             OnChange?.Invoke(default, default(SelectOption));
-
-            //await InvokeAsync(StateHasChanged);
         }
         #endregion
 
         #region  Events
         protected override void OnInitialized()
         {
+
             SetClassMap();
 
             #region Init Values
             if (DefaultValue.HasValue)
-            {// Set default value
+            {
+                // Set default value
                 switch (SelectMode)
                 {
                     case SelectMode.Default:
@@ -339,50 +307,41 @@ namespace AntDesign
             }
         }
 
-        protected async Task OnSelectOpenClick(MouseEventArgs _)
+        protected async Task OnVisibleChange(bool visible)
         {
-            if (!_isSelectOpened && !Disabled)
-            {
-                _isSelectOpened = true;
-                ClassMapper
-                    .Add($"{ClassPrefix}-open")
-                    .If($"{ClassPrefix}-focused", () => IsShowSearch());
-                _dropdownClassMapper.Clear()
-                    .Add($"{ClassPrefix}-placement-bottomLeft");
+            OnDropdownVisibleChange?.Invoke(visible);
 
+            SetClassMap();
+
+            if (visible)
+            {
                 OnFocus?.Invoke();
-                await SetDropdownStyle();
-                //await InvokeAsync(StateHasChanged);
-                await JsInvokeAsync(JSInteropConstants.AddElementToBody, _dropdownRef);
 
                 if (IsShowSearch())
                 {
                     await JsInvokeAsync(JSInteropConstants.Focus, _inputRef);
+
+                    StateHasChanged();
                 }
-                OnDropdownVisibleChange?.Invoke(true);
             }
             else
             {
-                OnSelectHideClick();
+                OnOverlayHide();
             }
         }
 
-        public async Task OnInputBlur()
+        protected async void OnOverlayHide()
         {
-            await Task.Delay(1);
-            if (_isOverSelectOption) return;
-
-            SetHideClass();
-            SetClassMap();
+            await TransSearchValueToTag();
         }
 
-        protected async void OnSelectHideClick()
+        internal async Task TransSearchValueToTag()
         {
             if (IsShowSearch())
             {
                 if (IsTagMode && !string.IsNullOrEmpty(_searchValue) && !OptionIsSelected(_searchValue))
                 {
-                    await ToggleOrSetValue(_searchValue, false);
+                    await ToggleOrSetValue(_searchValue, true);
                 }
 
                 if (AutoClearSearchValue)
@@ -391,26 +350,7 @@ namespace AntDesign
                 }
             }
 
-            SetHideClass();
             OnBlur?.Invoke();
-            //await InvokeAsync(StateHasChanged);
-        }
-
-        private async Task OnSelectMouseEnter()
-        {
-            await Task.Delay(1);
-            _isOverSelectOption = true;
-        }
-
-        private async Task OnSelectMouseLeave()
-        {
-            await Task.Delay(1);
-            _isOverSelectOption = false;
-        }
-
-        protected async Task OnClearClick(MouseEventArgs _)
-        {
-            await ResetState();
         }
 
         protected async void OnInput(ChangeEventArgs e)
@@ -448,7 +388,6 @@ namespace AntDesign
                 }
 
                 OnSearch?.Invoke(_searchValue);
-                //await InvokeAsync(StateHasChanged);
             }
         }
 
@@ -487,189 +426,13 @@ namespace AntDesign
             //await InvokeAsync(StateHasChanged);
         }
         #endregion 
-        #endregion
 
         #region Public
         #region Properties
-        #region Parameters(51)
-        #region Boolean(15)
-        [Parameter] public bool AutoFocus { get; set; } = false;
 
-        [Parameter] public bool AllowClear { get; set; } = false;
-
-        [Parameter] public bool AutoClearSearchValue { get; set; } = true;
-
-        [Parameter] public bool DefaultActiveFirstOption { get; set; } = true;
-
-        [Parameter] public bool Disabled { get; set; } = false;
-
-        [Parameter] public bool LabelInValue { get; set; } = false;
-
-        [Parameter] public bool ShowArrow { get; set; } = true;
-
-        [Parameter] public bool ShowSearch { get; set; } = false;
-
-        [Parameter] public bool Virtual { get; set; } = true;
-
-        [Parameter] public bool Loading { get; set; } = false;
-
-        [Parameter] public bool Bordered { get; set; } = true;
-
-        [Parameter] public bool Open { get; set; } = false;
-
-        [Parameter] public bool DefaultOpen { get; set; } = false;
-
-        [Parameter] public bool HideSelected { get; set; } = false;
-        #endregion
-
-        #region String(7)
-        [Parameter] public string Mode { get; set; }
-
-        [Parameter] public string Placeholder { get; set; }
-
-        [Parameter] public string DropdownStyle { get; set; }
-
-        [Parameter] public string OptionLabelProp { get; set; }
-
-        [Parameter] public string DropdownClassName { get; set; }
-
-        [Parameter] public string OptionFilterProp { get; set; } = "value";
-
-        #endregion
-
-        #region Number(3)
-        [Parameter] public int? MaxTagCount { get; set; }
-
-        [Parameter] public int? MaxTagTextLength { get; set; }
-
-        [Parameter] public int ListHeight { get; set; } = 256;
-        #endregion
-
-        #region Array(2)
-        [Parameter] public IEnumerable<LabeledValue> Options { get; set; }
-
-        [Parameter]
-        public IEnumerable<string> TokenSeparators
-        {
-            get => _tokenSeparators;
-            set
-            {
-                _tokenSeparators = value.ToArray();
-            }
-        }
-        #endregion
-
-        #region Complex(5)
-        [Parameter] public OneOf<bool, int>? DropdownMatchSelectWidth { get; set; }
-
-        [Parameter]
-        public OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>>? SelectedValues
-        {
-            get => _value;
-            set
-            {
-                if (value.HasValue)
-                {
-                    if (SelectMode == SelectMode.Default)
-                    {
-                        if (LabelInValue)
-                        {
-                            if (value.Value.AsT2 != null)
-                            {
-                                _value = value;
-                            }
-                        }
-                        else if (value.Value.AsT0 != null)
-                        {
-                            _value = value;
-                        }
-                    }
-                    else
-                    {
-                        if (LabelInValue)
-                        {
-                            if (value.Value.AsT3 != null)
-                            {
-                                _value = value;
-                            }
-                        }
-                        else if (value.Value.AsT1 != null)
-                        {
-                            _value = value;
-                        }
-                    }
-                }
-            }
-        }
-
-        [Parameter] public OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>>? DefaultValue { get; set; }
-
-        [Parameter] public OneOf<bool, Func<string, SelectOption, bool>> FilterOption { get; set; } = true;
-
-        [Parameter] public OneOf<RenderFragment, Func<string[], RenderFragment>>? MaxTagPlaceholder { get; set; }
-        #endregion
-
-        #region RenderFragment(6)
-        [Parameter] public RenderFragment ClearIcon { get; set; }
-
-        [Parameter] public RenderFragment RemoveIcon { get; set; }
-
-        [Parameter] public RenderFragment SuffixIcon { get; set; }
-
-        [Parameter] public RenderFragment ChildContent { get; set; }
-
-        [Parameter] public RenderFragment NotFoundContent { get; set; }
-
-        [Parameter] public RenderFragment MenuItemSelectedIcon { get; set; }
-        #endregion
-
-        #region Function(14)
-        [Parameter] public Action OnBlur { get; set; }
-
-        [Parameter] public Action OnFocus { get; set; }
-
-        [Parameter] public Action OnMouseEnter { get; set; }
-
-        [Parameter] public Action OnMouseLeave { get; set; }
-
-        [Parameter] public Action OnPopupScroll { get; set; }
-
-        [Parameter] public Action OnInputKeyDown { get; set; }
-
-        [Parameter] public Action<string> OnSearch { get; set; }
-
-        [Parameter] public Action<bool> OnDropdownVisibleChange { get; set; }
-
-        [Parameter] public Action<OneOf<string, LabeledValue>> OnDeselect { get; set; }
-
-        [Parameter] public Action<OneOf<string, LabeledValue>, SelectOption> OnSelect { get; set; }
-
-        [Parameter] public Func<Properties, RenderFragment> TagRender { get; set; }
-
-        [Parameter] public Func<ElementReference, ElementReference> GetPopupContainer { get; set; }
-
-        [Parameter] public Func<RenderFragment, Properties, RenderFragment> DropdownRender { get; set; }
-
-        [Parameter] public Action<OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>>, OneOf<SelectOption, IEnumerable<SelectOption>>> OnChange { get; set; }
-        #endregion
-        #endregion
-
-        #region Generals
-        public SelectMode SelectMode => Mode.ToSelectMode();
-        #endregion
         #endregion
 
         #region Methods
-        public void Blur()
-        {
-            OnSelectHideClick();
-        }
-
-        public async void Focus()
-        {
-            await OnSelectOpenClick(null);
-        }
-
         public void RemoveOption(SelectOption selectOption)
         {
             SelectOptions.Remove(selectOption);
@@ -679,7 +442,7 @@ namespace AntDesign
         {
             if (selectOption.IsSearch)
             {
-                _searchOption = selectOption;
+                //_searchOption = selectOption;
                 return;
             }
 
@@ -687,8 +450,10 @@ namespace AntDesign
             {
                 if (!_tagSelectOptions.Contains(selectOption))
                 {
-                    SelectedOptions.Add(selectOption);
+                    AddSelectedOption(selectOption);
                     _tagSelectOptions.Add(selectOption);
+
+                    StateHasChanged();
                 }
 
                 return;
@@ -705,8 +470,7 @@ namespace AntDesign
                             var value = SelectedValues.Value.AsT2;
                             if (value?.Key == selectOption?.Value)
                             {
-                                SelectedOptions.Add(selectOption);
-                                //StateHasChanged();
+                                AddSelectedOption(selectOption);
                             }
                         }
                         else
@@ -714,8 +478,7 @@ namespace AntDesign
                             var value = SelectedValues.Value.AsT0;
                             if (value == selectOption?.Value)
                             {
-                                SelectedOptions.Add(selectOption);
-                                //StateHasChanged();
+                                AddSelectedOption(selectOption);
                             }
                         }
                         break;
@@ -725,8 +488,7 @@ namespace AntDesign
                             var values = SelectedValues.Value.AsT3;
                             if (values != null && values.Any(value => value.Key == selectOption?.Value))
                             {
-                                SelectedOptions.Add(selectOption);
-                                //StateHasChanged();
+                                AddSelectedOption(selectOption);
                             }
                         }
                         else
@@ -734,12 +496,21 @@ namespace AntDesign
                             var values = SelectedValues.Value.AsT1;
                             if (values != null && values.Any(value => value == selectOption?.Value))
                             {
-                                SelectedOptions.Add(selectOption);
-                                //StateHasChanged();
+                                AddSelectedOption(selectOption);
                             }
                         }
                         break;
                 }
+            }
+
+            StateHasChanged();
+        }
+
+        private void AddSelectedOption(SelectOption selectOption)
+        {
+            if (!SelectedOptions.Contains(selectOption))
+            {
+                SelectedOptions.Add(selectOption);
             }
         }
 
@@ -791,7 +562,6 @@ namespace AntDesign
                 // Value 赋值
                 CurrentValueAsString = value;
 
-                SetHideClass();
                 SelectedOptions.Clear();
                 SelectedOptions.Add(currentOption);
             }
@@ -910,7 +680,7 @@ namespace AntDesign
                 {
                     return DefaultFilterOption(_searchValue, option);
                 }
-                else
+                else if (FilterOption.IsT1)
                 {
                     return FilterOption.AsT1.Invoke(_searchValue, option);
                 }
@@ -924,5 +694,10 @@ namespace AntDesign
         }
         #endregion
         #endregion
+
+        internal async Task Close()
+        {
+            await _dropDown.Hide(true);
+        }
     }
 }
