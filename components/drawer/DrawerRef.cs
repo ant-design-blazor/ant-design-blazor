@@ -24,7 +24,6 @@ namespace AntDesign
             await _service.CloseAsync(this);
             await OnClose.Invoke(result);
         }
-
     }
 
     public class DrawerRef
@@ -36,7 +35,7 @@ namespace AntDesign
 
         public Func<Task> OnOpen { get; set; }
 
-        public Func<Task> OnClose { get; set; }
+        public Func<DrawerClosingEventArgs, Task> OnClose { get; set; }
 
         internal DrawerRef(DrawerOptions config)
         {
@@ -50,7 +49,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 打开抽屉
+        /// open a drawer
         /// </summary>
         /// <returns></returns>
         public async Task OpenAsync()
@@ -61,25 +60,24 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 关闭抽屉无返回值
+        /// close the drawer without return value
         /// </summary>
         /// <returns></returns>
         public async Task CloseAsync()
         {
             await _service.CloseAsync(this);
             if (OnClose != null)
-                await OnClose.Invoke();
+                await OnClose.Invoke(new DrawerClosingEventArgs(false));
         }
-
 
         internal async Task HandleOnCancel()
         {
             var args = new DrawerClosingEventArgs(false);
-            if (Config.OnCancel != null)
+            if (OnClose != null)
             {
-                await Config.OnCancel.Invoke(args);
+                await OnClose.Invoke(args);
             }
-            if (args.Cancel == false)
+            if (!args.Cancel)
                 await _service.CloseAsync(this);
         }
     }
