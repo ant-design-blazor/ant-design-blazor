@@ -52,7 +52,6 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 | ------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | --------- |
 | Content           | Drawer body 的内容                                                                                                   | `OneOf<RenderFragment, string>`       | -         |
 | ContentParams     | 内容组件的输入参数 / Template的 context                                                                              | `D`                                                                 | -         |
-| OnCancel          | 点击遮罩层或右上角叉时执行,将自动关闭对话框（返回false可阻止关闭） | `() => Promise<any>`                              `Func<bool?>`                                                        | -         |
 | Closable          | 是否显示右上角的关闭按钮                                                                                             | `boolean`                                                           | `true`    |
 | MaskClosable      | 点击蒙层是否允许关闭                                                                                                 | `boolean`                                                           | `true`    |
 | Mask              | 是否展示遮罩                                                                                                         | `boolean`                                                           | `true`    |

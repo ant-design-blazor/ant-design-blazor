@@ -208,7 +208,7 @@ namespace AntDesign
             {
                 if (!_hasFocus)
                 {
-                    await JsInvokeAsync(JSInteropConstants.focusDialog, $"#{_dialog.SentinelStart}");
+                    await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{_dialog.SentinelStart}");
                     _hasFocus = true;
                 }
             }
