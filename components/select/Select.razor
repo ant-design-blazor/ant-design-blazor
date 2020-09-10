@@ -11,7 +11,8 @@
                             Trigger="new TriggerType[] { TriggerType.Click }"
                             HiddenMode
                             OnVisibleChange="OnVisibleChange"
-                            Placement="@(PlacementType.BottomLeft)">
+                            OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
+                            OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up">
                 <Overlay>
                     <div style="@_dropdownStyle">
                         <div role="listbox" id="@(Id)_list" style="height: 0px; width: 0px; overflow: hidden;">
