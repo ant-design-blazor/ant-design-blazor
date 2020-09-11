@@ -19,7 +19,7 @@
 </head>
 <body>
     <app>
-        @(await Html.RenderComponentAsync<App>(RenderMode.Server))
+        <component type="typeof(App)" render-mode="ServerPrerendered"/>
     </app>
 
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>

@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -170,7 +170,7 @@ namespace AntDesign
         private async Task SetFocus()
         {
             _focused = true;
-            await JsInvokeAsync(JSInteropConstants.focus, _inputRef);
+            await JsInvokeAsync(JSInteropConstants.Focus, _inputRef);
         }
 
         private void OnInput(ChangeEventArgs args)

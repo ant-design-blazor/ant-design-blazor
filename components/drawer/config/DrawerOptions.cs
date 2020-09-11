@@ -48,11 +48,5 @@ namespace AntDesign
         public int OffsetY { get; set; } = 0;
 
         public bool Visible { get; set; }
-
-        /// <summary>
-        /// 点击关闭时触发，返回false时，取消关闭动作
-        /// </summary>
-        public Func<DrawerClosingEventArgs, Task> OnCancel { get; set; }
-
     }
 }

@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -82,7 +82,7 @@ namespace AntDesign
 
             await typeof(BreakpointEnum).GetEnumNames().ForEachAsync(async bp =>
             {
-                if (await JsInvokeAsync<bool>(JSInteropConstants.matchMedia, _gridResponsiveMap[bp]))
+                if (await JsInvokeAsync<bool>(JSInteropConstants.MatchMedia, _gridResponsiveMap[bp]))
                 {
                     Console.WriteLine(bp);
                     breakPoint = bp;

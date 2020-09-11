@@ -43,6 +43,9 @@ namespace AntDesign
         public TableSize Size { get; set; }
 
         [Parameter]
+        public TableLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Table;
+
+        [Parameter]
         public bool Bordered { get; set; } = false;
 
         [Parameter]
@@ -115,7 +118,7 @@ namespace AntDesign
                     var query = _dataSource.AsQueryable();
                     foreach (var sort in queryModel.SortModel)
                     {
-                        sort.Sort(query);
+                        query = sort.Sort(query);
                     }
 
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);

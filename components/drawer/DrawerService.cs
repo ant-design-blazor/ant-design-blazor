@@ -62,7 +62,6 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-
         internal Task CloseAsync(DrawerRef drawerRef)
         {
             if (OnCloseEvent != null)

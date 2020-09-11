@@ -17,6 +17,7 @@ namespace AntDesign
         public DateTime Value { get; set; } = DateTime.Now;
 
         private DateTime _defaultValue;
+
         [Parameter]
         public DateTime DefaultValue
         {
@@ -177,6 +178,6 @@ namespace AntDesign
 
         public string Picker { get { return _picker; } }
 
-        public CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
+        public CultureInfo CultureInfo { get; set; } = CultureInfo.DefaultThreadCurrentUICulture;
     }
 }

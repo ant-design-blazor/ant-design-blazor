@@ -16,7 +16,6 @@ namespace AntDesign
             {
                 var array = Value as Array;
 
-
                 if (_pickerStatus[0]._hadSelectValue && _inputEnd.IsOnFocused)
                 {
                     DateTime? value = null;
@@ -60,7 +59,7 @@ namespace AntDesign
             if (BindConverter.TryConvertTo(args.Value.ToString(), CultureInfo, out DateTime changeValue))
             {
                 array.SetValue(changeValue, index);
-                _pickerValues[index] = changeValue;
+                PickerValues[index] = changeValue;
 
                 StateHasChanged();
             }
@@ -109,9 +108,9 @@ namespace AntDesign
 
                 return Convert.ToDateTime(indexValue, this.CultureInfo);
             }
-            else if (_defaultValues[index] != null)
+            else if (DefaultValues[index] != null)
             {
-                return (DateTime)_defaultValues[index];
+                return (DateTime)DefaultValues[index];
             }
 
             return null;

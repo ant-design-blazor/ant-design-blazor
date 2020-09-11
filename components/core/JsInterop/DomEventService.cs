@@ -22,7 +22,7 @@ namespace AntDesign.JsInterop
         {
             if (!_domEventListeners.ContainsKey(FormatKey(dom, eventName)))
             {
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListenerToFirstChild, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
+                _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListenerToFirstChild, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
                 {
                     callback?.Invoke(p);
                 })));
@@ -38,7 +38,7 @@ namespace AntDesign.JsInterop
         {
             if (exclusive)
             {
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
+                _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
                 {
                     callback(p);
                 })));
@@ -50,7 +50,7 @@ namespace AntDesign.JsInterop
                 {
                     _domEventListeners[key] = new List<DomEventSubscription>();
 
-                    _jsRuntime.InvokeAsync<string>(JSInteropConstants.addDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
+                    _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
                     {
                         foreach (var subscription in _domEventListeners[key])
                         {
