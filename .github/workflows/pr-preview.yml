@@ -25,7 +25,8 @@ jobs:
           github_token: ${{secrets.GH_PUSH_TOKEN}}
           build: |
             npm install
-            ls
+            ls scripts
+            ls ./scripts/gh-pages
             cp -rf ./scripts/gh-pages/* ./scripts/gh-pages/.nojekyll ./scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
             dotnet build
             dotnet publish -c Release -o cargo
