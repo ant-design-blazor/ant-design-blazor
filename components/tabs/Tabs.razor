@@ -105,15 +105,23 @@
         <div class="ant-tabs-content ant-tabs-content-@TabPosition">
             @foreach (var pane in _panes)
             {
-                @if (pane.IsActive)
+                if (pane.IsActive || pane.ForceRender || pane.HasRendered)
                 {
-                    <div tabindex="0" class="ant-tabs-tabpane ant-tabs-tabpane-active" id="@($"rc-tabs-{Id}-panel-{pane.Key}")" role="tabpanel" aria-hidden="false" aria-labelledby="@($"rc-tabs-{Id}-panel-{pane.Key}")">@pane.ChildContent</div>
-                }
-                else
-                {
-                    <div tabindex="-1" class="ant-tabs-tabpane" id="@($"rc-tabs-{Id}-panel-{pane.Key}")" role="tabpanel" aria-hidden="true" aria-labelledby="@($"rc-tabs-{Id}-panel-{pane.Key}")" style="display: none;">@pane.ChildContent</div>
-                }
+                    pane.HasRendered = true;
 
+                    <div
+                        @key="pane.Id"
+                         tabindex="@(pane.IsActive ? "0" : "-1")"
+                         class="ant-tabs-tabpane @(pane.IsActive ? "ant-tabs-tabpane-active" : "")"
+                         id="@($"rc-tabs-{Id}-panel-{pane.Key}")"
+                         role="tabpanel" aria-hidden="@(pane.IsActive ? "false" : "true")"
+                         aria-labelledby="@($"rc-tabs-{Id}-panel-{pane.Key}")"
+                         style="@(pane.IsActive ? "" : "display: none;")">
+                        
+                        @pane.ChildContent
+                    </div>
+                    
+                }
             }
         </div>
     </div>
