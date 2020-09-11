@@ -19,29 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-=======================================================================
-ant-design-blazor LICENSE 3rd party:
-
-The ant-design-blazor project contains LICENSE 3rd party with separate copyright
-notices and license terms. Your use of the source code for the these
-LICENSE is subject to the terms and conditions of the following
-licenses.
-
-========================================================================
-MIT licenses
-========================================================================
-
-The following components are provided under the MIT License.
-     
-    less files from ant-design/ant-design: https://github.com/ant-design/ant-design MIT
-    md files from ant-design/ant-design: https://github.com/ant-design/ant-design MIT
-    svg files from ant-design/ant-design-icons: https://github.com/ant-design/ant-design-icons MIT
-
-========================================================================
-Apache licenses
-========================================================================
-
-The following components are provided under the Apache License 2.0.
-
-	dotnet/aspnetcore : https://github.com/dotnet/aspnetcore Apache 2.0
