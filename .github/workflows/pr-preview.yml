@@ -1,42 +1,12 @@
-name: Create Preview Pages
+name: 🔂 Surge PR Preview
 
-on:
-  issue_comment:
-    types: [created]
+on: [push, pull_request]
 
 jobs:
   preview:
-    name: Preview
-    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/preview')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-script@0.9.0
-        name: Prepare preview ⛏
-        env:
-          RUN_PATH: https://github.com/ant-design-blazor/ant-design-blazor/actions/runs/${{ github.run_id }}
-        with:
-          github-token: ${{ github.token }}
-          script: |
-            const REPLACE_MARK = '<!-- PREVIEW_UPDATE_COMMENT -->';
-            const comment = `[<img width="306" src="https://user-images.githubusercontent.com/5378891/72351368-2c979e00-371b-11ea-9652-eb4e825d745e.gif">](${process.env.RUN_PATH})`;
-            const wrappedComment = `
-              ${REPLACE_MARK}
-              ${comment}
-              `.trim();
-              
-            let comments = await github.issues.listComments(context.issue);
-            // Find my comment
-            const updateComment = comments.data.find(({ body }) => body.includes(REPLACE_MARK));
-            // eslint-disable-next-line no-console
-            console.log('Origin comment:', updateComment);
-            let res;
-            if (!updateComment) {
-              res = await github.issues.createComment({...context.issue, body: wrappedComment })
-            } else {
-              res = await github.issues.updateComment({...context.issue, comment_id: updateComment.id, body: wrappedComment })
-            }
-
-            console.log(res);
+      - uses: actions/checkout@v2
 
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -48,59 +18,14 @@ jobs:
         with:
           node-version: "10.x"
 
-      - name: Checkout & Building ⚙
-        env:
-          PULL_NUMBER: ${{ github.event.issue.number }}
-        run: |
-          git init
-          git remote add origin https://github.com/ant-design-blazor/ant-design-blazor.git
-          git fetch origin pull/$PULL_NUMBER/head:fork
-          git checkout fork
-          npm install
-          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
-          dotnet build
-          dotnet publish -c Release -o cargo
-
-      - name: Deploy Preview 🚀
-        env:
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-          DEPLOY_DOMAIN: preview-${{ github.run_id }}-ant-design-blazor.surge.sh
-        run: |
-          npm install -g surge
-          surge --project ./cargo/wwwroot --domain $DEPLOY_DOMAIN
-
-      - uses: actions/github-script@0.9.0
-        name: Show preview ⛏
-        env:
-          DEPLOY_DOMAIN: https://preview-${{ github.run_id }}-ant-design-blazor.surge.sh
+      - uses: afc163/surge-preview@v1
+        name: Deploy Preview 🚀
         with:
-          github-token: ${{ github.token }}
-          script: |
-            const REPLACE_MARK = '<!-- PREVIEW_UPDATE_COMMENT -->';
-            const comment = `[<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">](${process.env.DEPLOY_DOMAIN})`;
-            const wrappedComment = `
-              ${REPLACE_MARK}
-              ${comment}
-              `.trim();
-              
-            let comments = await github.issues.listComments(context.issue);
-            // Find my comment
-            const updateComment = comments.data.find(({ body }) => body.includes(REPLACE_MARK));
-            // eslint-disable-next-line no-console
-            console.log('Origin comment:', updateComment);
-            let res;
-            if (!updateComment) {
-              res = await github.issues.createComment({...context.issue, body: wrappedComment })
-            } else {
-              res = await github.issues.updateComment({...context.issue, comment_id: updateComment.id, body: wrappedComment })
-            }
-
-            console.log(res);
-
-  # https://github.community/t5/GitHub-Actions/Workflow-is-failing-if-no-job-can-be-ran-due-to-condition/m-p/38186#M3250
-  always_job:
-    name: Always run job
-    runs-on: ubuntu-latest
-    steps:
-      - name: Always run
-        run: echo "This job is used to prevent the workflow to fail when all other jobs are skipped."
+          surge_token: ${{ secrets.SURGE_TOKEN }}
+          github_token: ${{secrets.GH_PUSH_TOKEN}}
+          build: |
+            npm install
+            cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
+            dotnet build
+            dotnet publish -c Release -o cargo
+          dist: cargo
