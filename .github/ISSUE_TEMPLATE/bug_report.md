@@ -7,7 +7,7 @@ about: Create a report about something that is not working
 ### Describe the bug
 A clear and concise description of what the bug is.
 
-### To Reproduce
+### Steps to reproduce (please include code)
 <!--
 We ❤ code! Point us to a minimalistic repro project hosted in a GitHub repo.
 For a repro project, create a new ASP.NET Core project using the template of your your choice, apply the minimum required code to result in the issue you're observing.
