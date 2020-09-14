@@ -13,7 +13,9 @@ namespace AntDesign
         public DrawerClosingEventArgs(bool cancel)
         {
             Cancel = cancel;
-         }
+        }
+
+
 
         /// <summary>
         /// 获取或设置一个值，该值指示是否应取消事件。

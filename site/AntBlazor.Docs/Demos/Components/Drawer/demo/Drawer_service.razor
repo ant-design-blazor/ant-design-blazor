@@ -1,67 +1,96 @@
 ﻿@inject DrawerService DrawerService
 
 <Input @bind-Value="@value" />
-<br/><br />
-<Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
+<br />
+<br />
+<Button OnClick="OpenContent" Type="primary">Use Template</Button>
 <Button OnClick="OpenComponent" Type="primary">Use Component</Button>
+<Button OnClick="OpenDialogMode" Type="primary">Use Dialog Mode</Button>
 
 @code{
 
     private string value = "blazor";
 
-    private DrawerRef _drawerRef;
+    //简单抽屉
+    private IDrawerRef _drawerRef;
 
-    private async Task OpenTemplate()
+    private async Task OpenContent()
     {
-        RenderFragment content = @<div>value: @value <br/><Button OnClick="CloseDrawer">close</Button></div>;
+        RenderFragment content =@<div><Input @bind-Value="@value" /><br /><Button OnClick="CloseDrawer">close</Button><br />输入“blazor is good”才能关闭抽屉</div>;
 
-        var options = new DrawerOptions()
+            var options = new DrawerOptions()
+            {
+                Title = "Drawer",
+                Width = 350,
+                Content = content,
+            };
+
+            _drawerRef = await DrawerService.CreateAsync(options);
+
+            _drawerRef.OnClosing = (args) =>
+            {
+                Console.WriteLine("Closing Drawer");
+                if (value.ToLower() != "blazor is good")
+                    args.Cancel = true;
+
+                return Task.CompletedTask;
+            };
+        }
+
+        private async Task CloseDrawer()
         {
-            Title = "Drawer",
-            Width = 350,
-            Content = content,
-        };
+            if (_drawerRef != null)
+            {
+                await _drawerRef.CloseAsync();
+            }
+        }
 
-        _drawerRef = await DrawerService.CreateAsync(options);
 
-        _drawerRef.OnClose = (args) =>
+        // 使用自定义组件
+        private async Task OpenComponent()
         {
-            Console.WriteLine("Close Drawer");
-            return Task.CompletedTask;
-        };
-    }
+            var options = new DrawerOptions()
+            {
+                Title = "Component",
+                Width = 350,
+            };
 
-    private async Task CloseDrawer()
-    {
-        if (_drawerRef != null)
+            var drawerRef = await DrawerService.CreateAsync<DrawerTemplateDemo, string, string>(options, value);
+
+            drawerRef.OnOpen = () =>
+            {
+                Console.WriteLine("OnAfterOpen");
+                return Task.CompletedTask;
+            };
+
+            drawerRef.OnClosing = args =>
+            {
+                Console.WriteLine("OnAfterClosing:");
+                return Task.CompletedTask;
+            };
+
+            drawerRef.OnClosed = async result =>
+            {
+                Console.WriteLine("OnAfterClosed:" + result);
+                if (result != null)
+                    value = result;
+                await InvokeAsync(StateHasChanged);
+            };
+
+        }
+
+        //模式对话框方式
+        private async Task OpenDialogMode()
         {
-            await _drawerRef.CloseAsync();
+            var options = new DrawerOptions()
+            {
+                Title = "Component",
+                Width = 350,
+            };
+
+            var result = await DrawerService.CreateDialogAsync<DrawerTemplateDemo, string, string>(options, value);
+
+            if (result != null)
+                value = result;
         }
     }
-
-    private async Task OpenComponent()
-    {
-        var options = new DrawerOptions()
-        {
-            Title = "Component",
-            Width = 350,
-        };
-
-        var drawerRef = await DrawerService.CreateAsync<DrawerTemplateDemo, string, string>(options, value);
-
-        drawerRef.OnOpen = () =>
-        {
-            Console.WriteLine("OnAfterOpen");
-            return Task.CompletedTask;
-        };
-
-        drawerRef.OnClose = async result =>
-        {
-            Console.WriteLine("OnAfterClose:" + result);
-            value = result;
-            await InvokeAsync(StateHasChanged);
-        };
-
-    }
-
-}
