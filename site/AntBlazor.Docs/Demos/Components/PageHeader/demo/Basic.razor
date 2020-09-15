@@ -1,10 +1,10 @@
-<PageHeader Class="site-page-header" Title="@_title" Subtitle="@("This is a subtitle")" />
+<PageHeader Class="site-page-header" Title="@_title" Subtitle="This is a subtitle" />
 <br />
-<PageHeader Class="site-page-header" Title="@_title" Subtitle="@("Custom `OnBack` callback")" OnBack="@(()=> { Console.WriteLine("OnBack");})" />
+<PageHeader Class="site-page-header" Title="@_title" Subtitle="Custom `OnBack` callback" OnBack="@(()=> { Console.WriteLine("OnBack");})" />
 <br />
-<PageHeader Class="site-page-header" Title="@_title" Subtitle="@("Custom Icon")" BackIcon="@("backward")" />
+<PageHeader Class="site-page-header" Title="@_title" Subtitle="Custom Icon" BackIcon="@("backward")" />
 <br />
-<PageHeader Class="site-page-header" Title="@_title" Subtitle="@("Custom Icon and `OnBack` callback")" BackIcon="icon" OnBack="@(()=> { Console.WriteLine("OnBack");})" />
+<PageHeader Class="site-page-header" Title="@_title" Subtitle="Custom Icon and `OnBack` callback" BackIconTemplate="icon" OnBack="@(()=> { Console.WriteLine("OnBack");})" />
 @code{
     private string _title = "Title";
 
