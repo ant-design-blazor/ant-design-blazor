@@ -7,19 +7,47 @@
     <TabPane Key="1">
         <Tab>示例1</Tab>
         <ChildContent>
-            <AntDesign.Charts.Line Data="data1" Config="config1"/>
+            <AntDesign.Charts.Line Data="data1" Config="config1" />
         </ChildContent>
     </TabPane>
     <TabPane Key="2">
         <Tab>示例2</Tab>
         <ChildContent>
-            <AntDesign.Charts.Line @ref="chart2" Data="data2" Config="config2"/>
+            <AntDesign.Charts.Line @ref="chart2" Data="data2" Config="config2" />
         </ChildContent>
     </TabPane>
     <TabPane Key="3">
         <Tab>示例3</Tab>
         <ChildContent>
-            <AntDesign.Charts.Line @ref="chart3" Data="data3" Config="config3"/>
+            <AntDesign.Charts.Line @ref="chart3" Data="data3" Config="config3" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="4">
+        <Tab>示例4</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Line Data="data4" Config="config4" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="5">
+        <Tab>示例5</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Line Data="data5" Config="config5" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="6">
+        <Tab>示例6</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Line Data="data6" Config="config6" />
+        </ChildContent>
+    </TabPane>
+
+    <TabPane Key="7">
+        <Tab>示例7</Tab>
+        <ChildContent>
+            <AntDesign.Charts.Line @ref ="chart7" Data="data7" Config="config7" />
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -30,6 +58,8 @@
     GDPItem[] data2;
     IChartComponent chart3;
     EmissionsItem[] data3;
+    IChartComponent chart7;
+    EmissionsItem[] data7;
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,6 +67,8 @@
         await chart2.ChangeData(data2);
 
         data3 = await ChartsDemoData.EmissionsAsync(NavigationManager, HttpClient);
+
+        data7 = await ChartsDemoData.EmissionsAsync(NavigationManager, HttpClient);
 
         await base.OnInitializedAsync();
     }
@@ -397,7 +429,7 @@
 
     #endregion 示例2
 
-    #region 示例2
+    #region 示例3
 
     LineConfig config3 = new LineConfig
     {
@@ -422,6 +454,1010 @@
         @*responsive = true,*@
     };
 
-    #endregion 示例2
+        #endregion 示例3
 
-}
+
+        #region 示例4
+
+        object[] data4 =
+        {
+        new
+        {
+            date = "2018/8/1",
+            type = "download",
+            value = 4623
+        },
+        new
+        {
+            date = "2018/8/1",
+            type = "register",
+            value = 2208
+        },
+        new
+        {
+            date = "2018/8/1",
+            type = "bill",
+            value = 182
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "download",
+            value = 6145
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "register",
+            value = 2016
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "bill",
+            value = 257
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "download",
+            value = 508
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "register",
+            value = 2916
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "bill",
+            value = 289
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "download",
+            value = 6268
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "register",
+            value = 4512
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "bill",
+            value = 428
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "download",
+            value = 6411
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "register",
+            value = 8281
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "bill",
+            value = 619
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "download",
+            value = 1890
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "register",
+            value = 2008
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "bill",
+            value = 87
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "download",
+            value = 4251
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "register",
+            value = 1963
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "bill",
+            value = 706
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "download",
+            value = 2978
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "register",
+            value = 2367
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "bill",
+            value = 387
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "download",
+            value = 3880
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "register",
+            value = 2956
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "bill",
+            value = 488
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "download",
+            value = 3606
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "register",
+            value = 678
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "bill",
+            value = 507
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "download",
+            value = 4311
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "register",
+            value = 3188
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "bill",
+            value = 548
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "download",
+            value = 4116
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "register",
+            value = 3491
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "bill",
+            value = 456
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "download",
+            value = 6419
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "register",
+            value = 2852
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "bill",
+            value = 689
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "download",
+            value = 1643
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "register",
+            value = 4788
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "bill",
+            value = 280
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "download",
+            value = 445
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "register",
+            value = 4319
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "bill",
+            value = 176
+        }
+    };
+
+        LineConfig config4 = new LineConfig
+        {
+            Title = new Title
+            {
+                Visible = true,
+                Text = "多折线图"
+            },
+            Description = new Description
+            {
+                Visible = true,
+                Text = "指定折线颜色"
+            },
+            Padding = "auto",
+            ForceFit = true,
+            XField = "date",
+            YField = "value",
+            YAxis = new ValueAxis
+            {
+                Label = new BaseAxisLabel()
+            },
+            Legend = new Legend
+            {
+                Position = "right-top"
+            },
+            SeriesField = "type",
+            Color = new string[] { "#1979C9", "#D62A0D", "#FAA219" },
+            Responsive = true,
+        };
+
+        #endregion 示例4
+
+        #region 示例5
+
+        object[] data5 =
+        {
+        new
+        {
+            date = "2018/8/1",
+            type = "download",
+            value = 4623
+        },
+        new
+        {
+            date = "2018/8/1",
+            type = "register",
+            value = 2208
+        },
+        new
+        {
+            date = "2018/8/1",
+            type = "bill",
+            value = 182
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "download",
+            value = 6145
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "register",
+            value = 2016
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "bill",
+            value = 257
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "download",
+            value = 508
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "register",
+            value = 2916
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "bill",
+            value = 289
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "download",
+            value = 6268
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "register",
+            value = 4512
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "bill",
+            value = 428
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "download",
+            value = 6411
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "register",
+            value = 8281
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "bill",
+            value = 619
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "download",
+            value = 1890
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "register",
+            value = 2008
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "bill",
+            value = 87
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "download",
+            value = 4251
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "register",
+            value = 1963
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "bill",
+            value = 706
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "download",
+            value = 2978
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "register",
+            value = 2367
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "bill",
+            value = 387
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "download",
+            value = 3880
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "register",
+            value = 2956
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "bill",
+            value = 488
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "download",
+            value = 3606
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "register",
+            value = 678
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "bill",
+            value = 507
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "download",
+            value = 4311
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "register",
+            value = 3188
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "bill",
+            value = 548
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "download",
+            value = 4116
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "register",
+            value = 3491
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "bill",
+            value = 456
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "download",
+            value = 6419
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "register",
+            value = 2852
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "bill",
+            value = 689
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "download",
+            value = 1643
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "register",
+            value = 4788
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "bill",
+            value = 280
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "download",
+            value = 445
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "register",
+            value = 4319
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "bill",
+            value = 176
+        }
+    };
+
+        LineConfig config5 = new LineConfig
+        {
+            Title = new Title
+            {
+                Visible = true,
+                Text = "多折线图"
+            },
+            Description = new Description
+            {
+                Visible = true,
+                Text = "通过回调函数指定折线颜色"
+            },
+            Padding = "auto",
+            ForceFit = true,
+            XField = "date",
+            YField = "value",
+            YAxis = new ValueAxis
+            {
+                Label = new BaseAxisLabel()
+            },
+            Legend = new Legend
+            {
+                Position = "right-top"
+            },
+            SeriesField = "type",
+            Color = "#93D072",
+            Responsive = true,
+        };
+
+        #endregion 示例5
+
+        #region 示例6
+
+        object[] data6 =
+        {
+        new
+        {
+            date = "2018/8/1",
+            type = "download",
+            value = 4623
+        },
+        new
+        {
+            date = "2018/8/1",
+            type = "register",
+            value = 2208
+        },
+        new
+        {
+            date = "2018/8/1",
+            type = "bill",
+            value = 182
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "download",
+            value = 6145
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "register",
+            value = 2016
+        },
+        new
+        {
+            date = "2018/8/2",
+            type = "bill",
+            value = 257
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "download",
+            value = 508
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "register",
+            value = 2916
+        },
+        new
+        {
+            date = "2018/8/3",
+            type = "bill",
+            value = 289
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "download",
+            value = 6268
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "register",
+            value = 4512
+        },
+        new
+        {
+            date = "2018/8/4",
+            type = "bill",
+            value = 428
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "download",
+            value = 6411
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "register",
+            value = 8281
+        },
+        new
+        {
+            date = "2018/8/5",
+            type = "bill",
+            value = 619
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "download",
+            value = 1890
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "register",
+            value = 2008
+        },
+        new
+        {
+            date = "2018/8/6",
+            type = "bill",
+            value = 87
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "download",
+            value = 4251
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "register",
+            value = 1963
+        },
+        new
+        {
+            date = "2018/8/7",
+            type = "bill",
+            value = 706
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "download",
+            value = 2978
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "register",
+            value = 2367
+        },
+        new
+        {
+            date = "2018/8/8",
+            type = "bill",
+            value = 387
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "download",
+            value = 3880
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "register",
+            value = 2956
+        },
+        new
+        {
+            date = "2018/8/9",
+            type = "bill",
+            value = 488
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "download",
+            value = 3606
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "register",
+            value = 678
+        },
+        new
+        {
+            date = "2018/8/10",
+            type = "bill",
+            value = 507
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "download",
+            value = 4311
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "register",
+            value = 3188
+        },
+        new
+        {
+            date = "2018/8/11",
+            type = "bill",
+            value = 548
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "download",
+            value = 4116
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "register",
+            value = 3491
+        },
+        new
+        {
+            date = "2018/8/12",
+            type = "bill",
+            value = 456
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "download",
+            value = 6419
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "register",
+            value = 2852
+        },
+        new
+        {
+            date = "2018/8/13",
+            type = "bill",
+            value = 689
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "download",
+            value = 1643
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "register",
+            value = 4788
+        },
+        new
+        {
+            date = "2018/8/14",
+            type = "bill",
+            value = 280
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "download",
+            value = 445
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "register",
+            value = 4319
+        },
+        new
+        {
+            date = "2018/8/15",
+            type = "bill",
+            value = 176
+        }
+    };
+
+        LineConfig config6 = new LineConfig
+        {
+            Title = new Title
+            {
+                Visible = true,
+                Text = "多折线图"
+            },
+            Description = new Description
+            {
+                Visible = true,
+                Text = "指定折线颜色"
+            },
+            Padding = "auto",
+            ForceFit = true,
+            XField = "date",
+            YField = "value",
+            YAxis = new ValueAxis
+            {
+                Label = new BaseAxisLabel()
+            },
+            Legend = new Legend
+            {
+                Position = "right-top"
+            },
+            SeriesField = "type",
+            Color= new string[] {"#1979C9", "#D62A0D", "#FAA219"},
+            Responsive = true,
+        };
+
+        #endregion 示例6
+
+        #region 示例7
+
+        LineConfig config7 = new LineConfig
+        {
+            Title = new Title
+            {
+                Visible = true,
+                Text = "自定义 marker point 激活样式"
+            },
+            Padding = "auto",
+            ForceFit = true,
+            XField = "year",
+            YField = "value",
+            SeriesField = "category",
+            YAxis = new ValueAxis
+            {
+                Label = new BaseAxisLabel()
+            },
+            Legend = new Legend
+            {
+                Position = "right-top"
+            },
+            Color = new string[]
+            {
+            "#5B8FF9",
+            "#5AD8A6",
+            "#5D7092",
+            "#F6BD16",
+            "#E8684A",
+            "#6DC8EC",
+            "#9270CA",
+            "#FF9D4D",
+            "#269A99",
+            "#FF99C3",
+            },
+            Point = new LineViewConfigPoint
+            {
+                Visible = true,
+            },
+            Interactions = new Interaction[] 
+            { 
+                new Interaction { Type= "marker-active" }, 
+                new Interaction { Type= "element-active" } 
+            },
+            Responsive = true,
+            Theme = new
+            {
+                pointStyle = new
+                {
+                    normal = new { },
+                    active = new
+                    {
+                        stroke = "rgba(0, 0, 0, 0.85)",
+                        //r =  markerSize / 2,  //???
+                        lineWidth = 1,
+                    },
+                },
+
+                geometries = new
+                {
+                    point = new
+                    {
+                        square = new
+                        {
+                            active = new
+                            {
+                                style = new
+                                {
+                                    stroke = "rgba(0, 0, 0, 0.85)",
+                                    lineWidth = 1,
+                                    //r =  markerSize / 2, ???
+                                },
+                            },
+                        },
+                    },
+                },
+            }
+
+        };
+
+        #endregion 示例7
+
+    }

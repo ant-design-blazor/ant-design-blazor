@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -58,17 +58,17 @@ namespace AntDesign
             }
             else if (CopyConfig is null)
             {
-                await this.JsInvokeAsync<object>(JSInteropConstants.copy, await Service.RenderAsync(ChildContent));
+                await this.JsInvokeAsync<object>(JSInteropConstants.Copy, await Service.RenderAsync(ChildContent));
             }
             else if (CopyConfig.OnCopy is null)
             {
                 if (string.IsNullOrEmpty(CopyConfig.Text))
                 {
-                    await this.JsInvokeAsync<object>(JSInteropConstants.copy, await Service.RenderAsync(ChildContent));
+                    await this.JsInvokeAsync<object>(JSInteropConstants.Copy, await Service.RenderAsync(ChildContent));
                 }
                 else
                 {
-                    await this.JsInvokeAsync<object>(JSInteropConstants.copy, CopyConfig.Text);
+                    await this.JsInvokeAsync<object>(JSInteropConstants.Copy, CopyConfig.Text);
                 }
             }
             else

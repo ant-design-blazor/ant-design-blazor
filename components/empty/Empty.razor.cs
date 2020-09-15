@@ -27,7 +27,7 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public OneOf<string, bool?> Description { get; set; } = "暂无数据";
+        public OneOf<string, bool?> Description { get; set; } = LocaleProvider.CurrentLocale.Empty.Description;
 
         [Parameter]
         public RenderFragment DescriptionTemplate { get; set; }

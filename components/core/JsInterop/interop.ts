@@ -35,11 +35,13 @@ export function getDomInfo(element) {
 }
 
 export function addFileClickEventListener(btn) {
-  (btn as HTMLSpanElement).addEventListener("click", fileClickEvent);
+  if ((btn as HTMLElement).addEventListener) {
+    (btn as HTMLElement).addEventListener("click", fileClickEvent);
+  }
 }
 
 export function removeFileClickEventListener(btn) {
-  (btn as HTMLSpanElement).removeEventListener("click", fileClickEvent);
+  (btn as HTMLElement).removeEventListener("click", fileClickEvent);
 }
 
 export function fileClickEvent() {
@@ -375,38 +377,16 @@ export function disableBodyScroll() {
   addCls(document.body, "ant-scrolling-effect");
 }
 
-function enableBodyScroll(selector, filter = null) {
-  let length = 0;
-  let queryElements = document.querySelectorAll(selector);
-  if (typeof filter === "function") {
-    queryElements.forEach((value, key, parent) => {
-      if (!filter(value, key, parent)) {
-        length += 1;
-      }
+export function enableBodyScroll() {
+  let oldBodyCache = oldBodyCacheStack.length > 0 ? oldBodyCacheStack.pop() : {};
+
+  css(document.body,
+    {
+      "position": oldBodyCache["position"] ?? null,
+      "width": oldBodyCache["width"] ?? null,
+      "overflow": oldBodyCache["overflow"] ?? null
     });
-  } else {
-    length = queryElements.length;
-  }
-  if (length === 0) {
-    let oldBodyCache = oldBodyCacheStack.length > 0 ? oldBodyCacheStack.pop() : {};
-
-    css(document.body,
-      {
-        "position": oldBodyCache["position"] ?? null,
-        "width": oldBodyCache["width"] ?? null,
-        "overflow": oldBodyCache["overflow"] ?? null
-      });
-    removeCls(document.body, "ant-scrolling-effect");
-  }
-}
-
-export function enableModalBodyScroll() {
-  enableBodyScroll(".ant-modal-mask:not(.ant-modal-mask-hidden)");
-}
-
-export function enableDrawerBodyScroll() {
-  enableBodyScroll(".ant-drawer-open",
-    (value, key, parent) => { return value.style.position === "absolute" });
+  removeCls(document.body, "ant-scrolling-effect");
 }
 
 export function createIconFromfontCN(scriptUrl) {

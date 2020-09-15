@@ -8,26 +8,21 @@
     <div class="ant-page-header-heading">
         <div class="ant-page-header-heading-left">
             <!--back-->
-            @if (BackIconTemplate != null || BackIcon != null)
-            {
                 @if (BackIconTemplate != null)
                 {
                     @BackIconTemplate
                 }
-                else
-                {
-                    <div @onclick="OnBackClick" class="ant-page-header-back">
-                        <div role="button" tabindex="0" class="ant-page-header-back-button">
-                            <Icon Type="@BackIcon" Theme="outline" />
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
+                else if (BackIcon.Value != null || OnBack.HasDelegate)
+           {
                 <div @onclick="OnBackClick" class="ant-page-header-back">
                     <div role="button" tabindex="0" class="ant-page-header-back-button">
-                        <Icon Type="arrow-left" Theme="outline" />
+                        @if (BackIcon.IsT1)
+                        {
+                            <Icon Type="@BackIcon.AsT1" Theme="outline" />
+                        }else
+                        {
+                            <Icon Type="arrow-left" Theme="outline" />
+                        }
                     </div>
                 </div>
             }

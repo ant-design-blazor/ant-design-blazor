@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using System.Linq;
 
 namespace AntDesign
 {
@@ -51,6 +51,8 @@ namespace AntDesign
         private IControlValueAccessor _control;
 
         private RenderFragment _formValidationMessages;
+
+        private PropertyReflector _propertyReflector;
 
         protected override void OnInitialized()
         {
@@ -154,17 +156,11 @@ namespace AntDesign
                 builder.CloseComponent();
             };
 
-            if (control.FieldIdentifier.TryGetValidateProperty(out var propertyInfo))
+            _propertyReflector = PropertyReflector.Create(control.ValueExpression);
+
+            if (_propertyReflector.RequiredAttributes.Any())
             {
-                var requiredAttribute = propertyInfo.GetCustomAttributes(typeof(RequiredAttribute), true);
-                if (requiredAttribute.Length > 0)
-                {
-                    _labelCls = $"{_prefixCls}-required";
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unable to match property `{control.FieldIdentifier.FieldName}` in Model `{control.FieldIdentifier.Model.GetType()}`, please confirm that the Model contains this property.");
+                _labelCls = $"{_prefixCls}-required";
             }
         }
     }

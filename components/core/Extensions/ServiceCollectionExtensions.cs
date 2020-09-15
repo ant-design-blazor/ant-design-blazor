@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Globalization;
 using System.Text.Encodings.Web;
 using AntDesign;
 using AntDesign.JsInterop;
@@ -12,7 +11,6 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddAntDesign(this IServiceCollection services)
         {
-            services.AddHttpClient("AntDesign");
             services.TryAddScoped<DomEventService>();
             services.TryAddScoped(sp => new HtmlRenderService(new HtmlRenderer(sp, sp.GetRequiredService<ILoggerFactory>(),
                         s => HtmlEncoder.Default.Encode(s)))
@@ -25,6 +23,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ModalService>();
             services.TryAddScoped<DrawerService>();
             services.TryAddScoped<ConfirmService>();
+
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
 
             return services;
         }

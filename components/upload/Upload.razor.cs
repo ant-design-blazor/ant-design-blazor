@@ -58,6 +58,9 @@ namespace AntDesign
         public List<UploadFileItem> FileList { get; set; } = new List<UploadFileItem>();
 
         [Parameter]
+        public EventCallback<List<UploadFileItem>> FileListChanged { get; set; }
+
+        [Parameter]
         public List<UploadFileItem> DefaultFileList { get; set; } = new List<UploadFileItem>();
 
         [Parameter]
@@ -99,6 +102,8 @@ namespace AntDesign
 
         private string _fileId = Guid.NewGuid().ToString();
 
+        private bool _beforeTheFirstRender = false;
+
         protected override Task OnInitializedAsync()
         {
             _currentInstance = DotNetObjectReference.Create(this);
@@ -109,20 +114,26 @@ namespace AntDesign
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            if (firstRender)
+            {
+                _beforeTheFirstRender = true;
+            }
+
             if (firstRender && !Disabled)
             {
-                await JSRuntime.InvokeVoidAsync(JSInteropConstants.addFileClickEventListener, _btn);
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.AddFileClickEventListener, _btn);
             }
-            if (_disabledChanged)
+
+            if (_beforeTheFirstRender && _disabledChanged)
             {
                 _disabledChanged = false;
                 if (Disabled)
                 {
-                    await JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn);
+                    await JSRuntime.InvokeVoidAsync(JSInteropConstants.RemoveFileClickEventListener, _btn);
                 }
                 else
                 {
-                    await JSRuntime.InvokeVoidAsync(JSInteropConstants.addFileClickEventListener, _btn);
+                    await JSRuntime.InvokeVoidAsync(JSInteropConstants.AddFileClickEventListener, _btn);
                 }
             }
             await base.OnAfterRenderAsync(firstRender);
@@ -135,7 +146,7 @@ namespace AntDesign
             {
                 return;
             }
-            var flist = await JSRuntime.InvokeAsync<List<UploadFileItem>>(JSInteropConstants.getFileInfo, _file);
+            var flist = await JSRuntime.InvokeAsync<List<UploadFileItem>>(JSInteropConstants.GetFileInfo, _file);
             var index = 0;
             foreach (var fileItem in flist)
             {
@@ -153,12 +164,14 @@ namespace AntDesign
                 fileItem.State = UploadState.Uploading;
                 fileItem.Id = id;
                 FileList.Add(fileItem);
+                await this.FileListChanged.InvokeAsync(this.FileList);
+
                 await InvokeAsync(StateHasChanged);
-                await JSRuntime.InvokeVoidAsync(JSInteropConstants.uploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError");
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError");
                 index++;
             }
 
-            await JSRuntime.InvokeVoidAsync(JSInteropConstants.clearFile, _file);
+            await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
         }
 
         private async Task RemoveFile(UploadFileItem item)
@@ -167,6 +180,8 @@ namespace AntDesign
             if (canRemove)
             {
                 this.FileList.Remove(item);
+                await this.FileListChanged.InvokeAsync(this.FileList);
+
                 StateHasChanged();
             }
         }
@@ -239,7 +254,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            InvokeAsync(async () => await JSRuntime.InvokeVoidAsync(JSInteropConstants.removeFileClickEventListener, _btn));
+            InvokeAsync(async () => await JSRuntime.InvokeVoidAsync(JSInteropConstants.RemoveFileClickEventListener, _btn));
 
             base.Dispose(disposing);
         }

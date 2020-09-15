@@ -50,20 +50,28 @@ namespace AntDesign.Docs.Routing
             }
 
             RouteManager.Initialise(AppAssembly);
-            Refresh();
+
+            try
+            {
+                Refresh();
+            }
+            catch
+            {
+                // In the server prerendering mode, it will throw an expection.
+            }
 
             return Task.CompletedTask;
         }
 
-        public Task OnAfterRenderAsync()
+        public async Task OnAfterRenderAsync()
         {
             if (!_navigationInterceptionEnabled)
             {
                 _navigationInterceptionEnabled = true;
-                return NavigationInterception.EnableNavigationInterceptionAsync();
-            }
+                await NavigationInterception.EnableNavigationInterceptionAsync();
 
-            return Task.CompletedTask;
+                Refresh();
+            }
         }
 
         public void Dispose()

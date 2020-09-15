@@ -49,6 +49,9 @@ namespace AntDesign
         public TableSize Size { get; set; }
 
         [Parameter]
+        public TableLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Table;
+
+        [Parameter]
         public bool Bordered { get; set; } = false;
 
         [Parameter]
@@ -102,27 +105,33 @@ namespace AntDesign
         {
             var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
 
+            foreach (var col in ColumnContext.Columns)
+            {
+                if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
+                {
+                    queryModel.AddSortModel(fieldColumn.SortModel);
+                }
+            }
+
             if (ServerSide)
             {
                 _showItems = _dataSource;
             }
             else
             {
-                var query = _dataSource.AsQueryable();
-
-                foreach (var col in ColumnContext.Columns)
+                if (_dataSource != null)
                 {
-                    if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
+                    var query = _dataSource.AsQueryable();
+                    foreach (var sort in queryModel.SortModel)
                     {
-                        query = fieldColumn.SortModel.Sort(query);
-                        queryModel.AddSortModel(fieldColumn.SortModel);
+                        query = sort.Sort(query);
                     }
+
+                    query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
+                    queryModel.SetQueryableLambda(query);
+
+                    _showItems = query;
                 }
-
-                query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
-                queryModel.SetQueryableLambda(query);
-
-                _showItems = query;
             }
 
             StateHasChanged();

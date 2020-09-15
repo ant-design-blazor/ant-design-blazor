@@ -1,14 +1,21 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <AntDesign.Charts.Column Data="data1" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <AntDesign.Charts.Column Data="data1" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <AntDesign.Charts.Column Data="data2" Config="config2" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
@@ -80,5 +87,83 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    object[] data2 =
+    {
+        new
+        {
+            year = "1991",
+            value = 31
+        },
+        new
+        {
+            year = "1992",
+            value = 41
+        },
+        new
+        {
+            year = "1993",
+            value = 35
+        },
+        new
+        {
+            year = "1994",
+            value = 55
+        },
+        new
+        {
+            year = "1995",
+            value = 49
+        },
+        new
+        {
+            year = "1996",
+            value = 15
+        },
+        new
+        {
+            year = "1997",
+            value = 17
+        },
+        new
+        {
+            year = "1998",
+            value = 29
+        },
+        new
+        {
+            year = "1999",
+            value = 33
+        }
+    };
+
+    ColumnConfig config2 = new ColumnConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "图表标题及描述",
+            Style = new TextStyle
+            {
+                Fill = "#1c3747"
+            }
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "这是一个配置图表标题和描述文本样式的demo",
+            Style = new TextStyle
+            {
+                Fill = "#177ca6",
+                FontSize = 14,
+            }
+        },
+        XField = "year",
+        YField = "value"
+    };
+
+    #endregion 示例2
 
 }

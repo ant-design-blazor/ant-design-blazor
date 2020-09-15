@@ -1,4 +1,4 @@
-name: Create Preview Pages
+name: 🔂 Surge PR Preview
 
 on:
   issue_comment:

@@ -15,6 +15,7 @@
     <Copyright>James Yeung</Copyright>
     <Authors>James Yeung</Authors>
     <PackageIcon>logo.png</PackageIcon>
+    <NoWarn>CA2007</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -33,6 +34,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="locales\*.json" />
+    <EmbeddedResource Include="locales\*.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.DataAnnotations.Validation" Version="3.2.0-rc1.20223.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
@@ -40,7 +46,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="OneOf" Version="2.1.151" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.0" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' And '$(SolutionDir)'==''">

@@ -14,10 +14,9 @@
 
     private void AddItem(MouseEventArgs args)
     {
-        Console.WriteLine("Add item");
-        _name = null;
         var newItem = !string.IsNullOrWhiteSpace(_name) ? _name : $"New Item {_index++}";
         _items.Add(newItem);
+        _name = "";
     }
 
     private RenderFragment OnDropdownRender(RenderFragment originNode, Properties props)

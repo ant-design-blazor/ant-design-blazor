@@ -15,7 +15,7 @@ namespace AntDesign.JsInterop
 
         public async ValueTask Copy(string text)
         {
-            await this.JsInvokeAsync(JSInteropConstants.copy, text);
+            await this.JsInvokeAsync(JSInteropConstants.Copy, text);
         }
 
         private async Task<T> JsInvokeAsync<T>(string code, params object[] args)

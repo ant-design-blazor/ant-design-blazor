@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -48,6 +49,8 @@ namespace AntDesign
         public string Effect { get; set; } = CarouselEffect.ScrollX;
 
         #endregion Parameters
+
+        [Inject] public DomEventService DomEventService { get; set; }
 
         public void Next() => GoTo(_slicks.IndexOf(_activeSlick) + 1);
 
@@ -99,8 +102,16 @@ namespace AntDesign
         protected async override Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                Resize();
+                DomEventService.AddEventListener("window", "resize", Resize, false);
+            }
+        }
 
-            DomRect listRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ref);
+        private async void Resize(JsonElement e = default)
+        {
+            DomRect listRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _ref);
             if ((_slickWidth != (int)listRect.width && IsHorizontal)
                 || (_slickHeight != (int)listRect.height && !IsHorizontal)
                 || IsHorizontal && !string.IsNullOrEmpty(_slickListStyle)
@@ -218,6 +229,15 @@ namespace AntDesign
             }
 
             await InvokeAsync(() => StateHasChanged());
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", Resize);
+
+            _slicks.Clear();
+
+            base.Dispose(disposing);
         }
     }
 }

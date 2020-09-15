@@ -12,3 +12,26 @@ cover: https://gw.alipayobjects.com/zos/alicdn/6bKE0Cq0R/PageHeader.svg
 ## 何时使用
 
 当需要使用户快速理解当前页是什么以及方便用户使用页面功能时使用，通常也可被用作页面间导航。
+
+## API
+
+### PageHeader
+| 参数 | 说明 | 类型 | 默认值 | 全局配置 |
+| --- | --- | --- | --- | --- |
+| `Ghost` | 使背景色透明 | `boolean` | `true` | - |
+| `Title` | title 文字 | `string \| RenderFragment` | - | - |
+| `Subtitle` | subTitle 文字 | `string \| RenderFragment` | - | - |
+| `BackIcon` | 自定义 back icon | `bool? \| string \| RenderFragment` | - | - |
+| `OnBack` | 返回按钮的点击事件 | `EventCallback` | 未订阅该事件时默认调用 history.back| - |
+
+### Page Header 组成部分
+| 元素 | 说明 |
+| ----- | ----------- | ---- | ------------- |
+| `PageHeaderTitle` | title 部分，`Title` 优先级更高 |
+| `PageHeaderSubtitle` | subtitle 部分，`Subtitle` 优先级更高 |
+| `PageHeaderContent` | 内容部分 |
+| `PageHeaderFooter` | 底部部分 |
+| `PageHeaderTags` |  title 旁的 tag 列表容器 |
+| `PageHeaderExtra` | title 的行尾操作区部分 |
+| `PageHeaderBreadcrumb` | 面包屑部分 |
+| `PageHeaderAvatar` | 头像部分 |

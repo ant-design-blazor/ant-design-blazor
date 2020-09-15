@@ -86,13 +86,13 @@ namespace AntDesign
 
         protected void SetClassMap()
         {
-            string prefixName = "ant-btn";
+            const string prefixName = "ant-btn";
 
             ClassMapper.Clear()
                 .Add("ant-btn")
-                .If($"{prefixName}-{this.Type}", () => !string.IsNullOrEmpty(Type))
+                .GetIf(() => $"{prefixName}-{this.Type}", () => !string.IsNullOrEmpty(Type))
                 .If($"{prefixName}-dangerous", () => Danger)
-                .If($"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
+                .GetIf(() => $"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
                 .If($"{prefixName}-lg", () => Size == "large")
                 .If($"{prefixName}-sm", () => Size == "small")
                 .If($"{prefixName}-loading", () => Loading)

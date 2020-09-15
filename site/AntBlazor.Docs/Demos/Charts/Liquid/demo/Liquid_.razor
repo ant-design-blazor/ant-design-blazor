@@ -1,14 +1,21 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <Liquid TItem="string" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs>
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <Liquid TItem="string" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <Liquid TItem="string" Config="config2" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
@@ -27,5 +34,30 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly LiquidConfig config2 = new LiquidConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "水波图"
+        },
+        Description = new Description
+        {
+            Visible = true,
+            Text = "水波图 - 百分比显示"
+        },
+        Min = 0,
+        Max = 10000,
+        Value = 5639,
+        Statistic = new LiquidStatisticStyle
+        {
+            //Formatter
+        }
+    };
+
+    #endregion 示例2
 
 }

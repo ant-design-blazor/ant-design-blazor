@@ -1,13 +1,13 @@
-﻿using AntDesign.core.Extensions;
-using AntDesign.Helpers;
-using AntDesign.JsInterop;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.core.Extensions;
+using AntDesign.Core.Helpers;
+using AntDesign.JsInterop;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -387,7 +387,7 @@ namespace AntDesign
 
         private async void OnMouseDown(MouseEventArgs args)
         {
-            _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _slider);
+            _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _slider);
             decimal x = (decimal)args.ClientX;
             decimal y = (decimal)args.ClientY;
 
@@ -419,7 +419,7 @@ namespace AntDesign
 
         private async Task CalculateValueAsync(double clickClient)
         {
-            _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _slider);
+            _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _slider);
             double sliderOffset = (double)(Vertical ? _sliderDom.top : _sliderDom.left);
             double sliderLength = (double)(Vertical ? _sliderDom.height : _sliderDom.width);
             double handleNewPosition;
@@ -427,7 +427,7 @@ namespace AntDesign
             {
                 if (_rightHandleDom == null)
                 {
-                    _rightHandleDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _rightHandle);
+                    _rightHandleDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _rightHandle);
                 }
                 double handleLength = (double)(Vertical ? _rightHandleDom.height : _rightHandleDom.width);
                 if (Reverse)
@@ -468,7 +468,7 @@ namespace AntDesign
             {
                 if (_leftHandleDom == null)
                 {
-                    _leftHandleDom = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _leftHandle);
+                    _leftHandleDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _leftHandle);
                 }
                 double handleLength = (double)(Vertical ? _rightHandleDom.height : _rightHandleDom.width);
                 if (Reverse)
@@ -506,7 +506,6 @@ namespace AntDesign
                 }
             }
         }
-
 
         private void SetStyle()
         {

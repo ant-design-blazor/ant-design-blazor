@@ -5,9 +5,9 @@ using System.Globalization;
 
 namespace AntDesign
 {
-    static class DatePickerLocaleHelper
+    internal static class DatePickerLocaleHelper
     {
-        static readonly Dictionary<string, IDateLocale> _locales = new Dictionary<string, IDateLocale>();
+        private static readonly Dictionary<string, IDateLocale> _locales = new Dictionary<string, IDateLocale>();
 
         public static IDateLocale GetDateLocale(this CultureInfo info)
         {
@@ -33,41 +33,7 @@ namespace AntDesign
         }
     }
 
-    interface IDateLocale
-    {
-        string DateFormat { get; }
-        /// <summary>
-        /// The start day of week should be either Monday or Sunday according to the CultureInfo
-        /// </summary>
-        string[] ShortWeekDays { get; }
-        string Year { get; }
-        string Month { get; }
-        string Week => "Week";
-        string Today { get; }
-        bool MonthBeforeYear { get; }
-        string YearFormat { get; }
-        string MonthFormat { get; }
-        string Ok { get; }
-        string Now { get; }
-        string SelectDate { get; }
-        string SelectWeek { get; }
-        string SelectMonth { get; }
-        string SelectQuarter { get; }
-        string SelectYear { get; }
-        string SelectTime { get; }
-        string StartOfDate { get; }
-        string EndOfDate { get; }
-        string StartOfWeek { get; }
-        string EndOfWeek { get; }
-        string StartOfMonth { get; }
-        string EndOfMonth { get; }
-        string StartOfYear { get; }
-        string EndOfYear { get; }
-        string StartOfQuarter { get; }
-        string EndOfQuarter { get; }
-    }
-
-    class EnUsDateLocale : IDateLocale
+    internal class EnUsDateLocale : IDateLocale
     {
         private string _locale = "en-US";
         public string DateFormat => "yyyy-MM-dd";
@@ -97,10 +63,9 @@ namespace AntDesign
         public string EndOfYear => "End year";
         public string StartOfQuarter => "Start quarter";
         public string EndOfQuarter => "End quarter";
-
     }
 
-    class ZhCnLocale : IDateLocale
+    internal class ZhCnLocale : IDateLocale
     {
         private string _locale = "zh-CN";
         public string DateFormat => "yyyy年M月d日";
@@ -132,4 +97,3 @@ namespace AntDesign
         public string EndOfQuarter => "结束季度";
     }
 }
-

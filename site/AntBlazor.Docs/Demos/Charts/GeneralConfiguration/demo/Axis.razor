@@ -3,27 +3,83 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 
-<Tabs>
-    <TabPane Key="1">
-        <Tab>示例1</Tab>
-        <ChildContent>
-            <Line @ref="chart1" Data="data1" Config="config1"/>
-        </ChildContent>
-    </TabPane>
-</Tabs>
+    <Tabs ActiveKeyChanged="OnTabChanged">
+        <TabPane Key="1">
+            <Tab>示例1</Tab>
+            <ChildContent>
+                <Line @ref="chart1" Data="data1" Config="config1" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="2">
+            <Tab>示例2</Tab>
+            <ChildContent>
+                <Line @ref="chart2" Data="data2" Config="config2" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="3">
+            <Tab>示例3</Tab>
+            <ChildContent>
+                <Line @ref="chart3" Data="data3" Config="config3" />
+            </ChildContent>
+        </TabPane>
+
+        <TabPane Key="4">
+            <Tab>示例4</Tab>
+            <ChildContent>
+                <Line @ref="chart4" Data="data4" Config="config4" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
 
 @code{
 
     IChartComponent chart1;
     FertilityItem[] data1;
 
+    IChartComponent chart2;
+    FertilityItem[] data2;
+
+    IChartComponent chart3;
+    FertilityItem[] data3;
+
+    IChartComponent chart4;
+    FertilityItem[] data4;
+
 
     protected override async Task OnInitializedAsync()
     {
-        data1 = await ChartsDemoData.FertilityItemAsync(NavigationManager, HttpClient);
-        await chart1.ChangeData(data1);
-
         await base.OnInitializedAsync();
+        OnTabChanged("1");
+    }
+
+    private async void OnTabChanged(string activeKey)
+    {
+        if (activeKey == "1")
+        {
+            data1 = await ChartsDemoData.FertilityItemAsync(NavigationManager, HttpClient);
+            await chart1.ChangeData(data1);
+        }
+        else if(activeKey == "2")
+        {
+            data2 = await ChartsDemoData.FertilityItemAsync(NavigationManager, HttpClient);
+            await chart2.ChangeData(data2);
+        }
+        else if (activeKey == "3")
+        {
+            data3 = await ChartsDemoData.FertilityItemAsync(NavigationManager, HttpClient);
+            await chart3.ChangeData(data3);
+        }
+        else if (activeKey == "4")
+        {
+            data4 = await ChartsDemoData.FertilityItemAsync(NavigationManager, HttpClient);
+            await chart4.ChangeData(data4);
+        }
+        else
+        {
+
+        }
     }
 
     #region 示例1
@@ -48,5 +104,161 @@
     };
 
     #endregion 示例1
+
+    #region 示例2
+
+    readonly LineConfig config2 = new LineConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "配置坐标轴最大值和最小值"
+        },
+        Description = new Description
+        {
+            Visible = true,
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "year",
+        YField = "value",
+        SeriesField = "country",
+        XAxis = new ValueCatTimeAxis
+        {
+            Visible = true,
+            Type = "dateTime",
+            TickCount = 5
+        },
+        YAxis = new ValueAxis
+        {
+            Visible = true,
+            Min = 3,
+            Max = 7,
+        }
+    };
+
+    #endregion 示例2
+
+    #region 示例3
+
+    readonly LineConfig config3 = new LineConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "配置坐标轴标题"
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "year",
+        YField = "value",
+        SeriesField = "country",
+        XAxis = new ValueCatTimeAxis
+        {
+            Visible = true,
+            Type = "dateTime",
+            Title = new BaseAxisTitle
+            {
+                Text = "x轴标题",
+            },
+        },
+        YAxis = new ValueAxis
+        {
+            Visible = true,
+            Title = new BaseAxisTitle
+            {
+                Text = "y轴标题"
+            }
+        }
+    };
+
+    #endregion 示例3
+
+    #region 示例4
+
+    readonly LineConfig config4 = new LineConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "配置坐标轴样式"
+        },
+        Description = new Description
+        {
+            Visible = true,
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "year",
+        YField = "value",
+        SeriesField = "country",
+        XAxis = new ValueCatTimeAxis
+        {
+            Visible = true,
+            Type = "time",
+            Mask = "YYYY",
+            Grid = new BaseAxisGrid
+            {
+                Visible = true,
+                //style ???
+            },
+            Line = new BaseAxisLine
+            {
+                Visible = true,
+                Style = new LineStyle
+                {
+                    Stroke = "black",
+                    LineWidth = 1,
+                },
+            },
+            TickLine = new BaseAxisTickLine
+            {
+                Visible = true,
+                Style = new LineStyle
+                {
+                    Stroke = "black",
+                    LineWidth = 1,
+                }
+            },
+        },
+        YAxis = new ValueAxis
+        {
+            Visible = true,
+            Grid = new BaseAxisGrid
+            {
+                Visible = true,
+                //style ???
+            },
+            Line = new BaseAxisLine
+            {
+                Visible = true,
+                Style = new LineStyle
+                {
+                    Stroke = "black",
+                    LineWidth = 1,
+                },
+            },
+            TickLine = new BaseAxisTickLine
+            {
+                Visible = true,
+                Style = new LineStyle
+                {
+                    Stroke = "black",
+                    LineWidth = 1,
+                }
+            },
+            Label = new BaseAxisLabel
+            {
+                Visible = true,
+                Style = new TextStyle
+                {
+                    Fill = "black"
+                }
+            }
+        },
+
+    };
+
+    #endregion 示例4
 
 }
