@@ -33,7 +33,7 @@ namespace AntDesign
         public RenderFragment DescriptionTemplate { get; set; }
 
         [Parameter]
-        public string Image { get; set; } = EmptyImage.PresentedImageSimple;
+        public string Image { get; set; }
 
         [Parameter]
         public RenderFragment ImageTemplate { get; set; }
@@ -42,8 +42,8 @@ namespace AntDesign
         {
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
-                .If($"{PrefixCls}-normal", () => Image == EmptyImage.PresentedImageSimple)
-                .If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
+                .If($"{PrefixCls}-normal", () => Simple)
+                .GetIf(() => $"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                 .If($"{PrefixCls}-small", () => Small)
                 ;
         }
@@ -52,12 +52,5 @@ namespace AntDesign
         {
             this.SetClass();
         }
-
-        protected override void OnParametersSet()
-        {
-            this.SetClass();
-        }
-
-
     }
 }
