@@ -7,17 +7,14 @@
 }
 
 <div class="ant-statistic" style="@Style" @ref="Ref" id="@Id">
-    @if (Title.Value != null)
-    {
-        <div class="ant-statistic-title">
-            @if (Title.IsT0)@Title.AsT0 else @Title.AsT1
-        </div>
-    }
+    <div class="ant-statistic-title">
+        @if (TitleTemplate != null)@TitleTemplate else @Title
+    </div>
     <div class="ant-statistic-content" style="@ValueStyle">
-        @if (@Prefix.IsT0 && !string.IsNullOrEmpty(Prefix.AsT0) || @Prefix.IsT1 && Prefix.AsT1 != null)
+        @if (PrefixTemplate != null || Prefix != null)
         {
             <span class="ant-statistic-content-prefix">
-                @if (@Prefix.IsT0)@Prefix.AsT0 else @Prefix.AsT1
+                @if (PrefixTemplate != null)@PrefixTemplate else @Prefix
             </span>
         }
         <span class="ant-statistic-content-value">
@@ -31,10 +28,10 @@
                 </span>
             }
         </span>
-        @if (@Suffix.IsT0 && !string.IsNullOrEmpty(@Suffix.AsT0) || @Suffix.IsT1 && @Suffix.AsT1 != null)
+        @if (SuffixTemplate != null || Suffix != null)
         {
             <span class="ant-statistic-content-suffix">
-                @if (@Suffix.IsT0)@Suffix.AsT0 else @Suffix.AsT1
+                @if (SuffixTemplate != null)@SuffixTemplate else @Suffix
             </span>
         }
     </div>

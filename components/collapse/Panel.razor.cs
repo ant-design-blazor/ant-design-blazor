@@ -22,10 +22,16 @@ namespace AntDesign
         public bool ShowArrow { get; set; } = true;
 
         [Parameter]
-        public OneOf<string, RenderFragment> Extra { get; set; }
+        public string Extra { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Header { get; set; }
+        public RenderFragment ExtraTemplate { get; set; }
+
+        [Parameter]
+        public string Header { get; set; }
+
+        [Parameter]
+        public RenderFragment HeaderTemplate { get; set; }
 
         [Parameter]
         public EventCallback<bool> OnActiveChange { get; set; }

@@ -25,10 +25,16 @@ namespace AntDesign
         public EventCallback<bool> OnChange { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> CheckedChildren { get; set; }
+        public string CheckedChildren { get; set; } = string.Empty;
 
         [Parameter]
-        public OneOf<string, RenderFragment> UnCheckedChildren { get; set; }
+        public RenderFragment CheckedChildrenTemplate { get; set; }
+
+        [Parameter]
+        public string UnCheckedChildren { get; set; } = string.Empty;
+
+        [Parameter]
+        public RenderFragment UnCheckedChildrenTemplate { get; set; }
 
         private bool _clickAnimating = false;
 

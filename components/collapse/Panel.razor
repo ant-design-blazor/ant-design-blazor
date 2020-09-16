@@ -5,36 +5,22 @@
     <div class="ant-collapse-header" @onclick="OnClickHeader">
         @if (ShowArrow)
         {
-            @if (Collapse.ExpandIcon.IsT0 && Collapse.ExpandIcon.AsT0)
+            @if (Collapse.ExpandIconTemplate != null)
             {
-                <Icon Type="right" Theme="outline" Class="ant-collapse-arrow" Rotate="@(Active ? 90 : 0)" />
+                @Collapse.ExpandIconTemplate(Active)
             }
-            else if (Collapse.ExpandIcon.AsT1 != null)
+            else
             {
-                @Collapse.ExpandIcon.AsT1(Active)
+                <Icon Type="@Collapse.ExpandIcon" Class="ant-collapse-arrow" Rotate="@(Active ? 90 : 0)" />
             }
         }
 
-        @if (Header.IsT0)
-        {
-            @Header.AsT0
-        }
-        else
-        {
-            @Header.AsT1
-        }
+        @if (HeaderTemplate != null)@HeaderTemplate else @Header
 
-        @if (Extra.Value != null)
+        @if (Extra != null || ExtraTemplate != null)
         {
             <div class="ant-collapse-extra">
-                @if (Extra.IsT0)
-                {
-                    @Extra.AsT0
-                }
-                else
-                {
-                    @Extra.AsT1
-                }
+                @if (ExtraTemplate != null)@ExtraTemplate else @Extra
             </div>
         }
     </div>

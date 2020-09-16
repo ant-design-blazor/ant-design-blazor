@@ -27,16 +27,12 @@
         {
             <span class="ant-badge-status-text">@Text</span>
         }
-        @if (CountTemplate != null)
+        if (_showSup)
         {
-            @CountTemplate
-        }
-        else if (_showSup)
-        {
-            <sup class="@CountClassMapper.Class" style="@CountStyle @Style" title="@CountNumber">
+            <sup class="@CountClassMapper.Class" style="@CountStyle @Style" title="@Count">
                 @if (!Dot)
                 {
-                    @if (CountNumber <= OverflowCount)
+                    @if (Count <= OverflowCount)
                     {
                         @for (int i = 0; i < _maxNumberArray.Length; i++)
                         {
