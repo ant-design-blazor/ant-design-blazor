@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
@@ -10,19 +10,31 @@ namespace AntDesign
     public partial class Comment : AntDomComponentBase
     {
         [Parameter]
-        public OneOf<string, RenderFragment> Author { get; set; }
+        public string Author { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Avatar { get; set; }
+        public RenderFragment AuthorTemplate { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Content { get; set; }
+        public string Avatar { get; set; }
+
+        [Parameter]
+        public RenderFragment AvatarTemplate { get; set; }
+
+        [Parameter]
+        public string Content { get; set; }
+
+        [Parameter]
+        public RenderFragment ContentTemplate { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Datetime { get; set; }
+        public string Datetime { get; set; }
+
+        [Parameter]
+        public RenderFragment DatetimeTemplate { get; set; }
 
         [Parameter]
         public IList<RenderFragment> Actions { get; set; } = new List<RenderFragment>();

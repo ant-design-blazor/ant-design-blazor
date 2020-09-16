@@ -1,12 +1,12 @@
 ﻿<Row Gutter="16">
     <Col Span="12">
-    <CountDown Title="@("Countdown")" Value="@deadline" OnFinish="OnFinish" />
+        <CountDown Title="Countdown" Value="@deadline" OnFinish="OnFinish" />
     </Col>
     <Col Span="12">
-    <CountDown Title="@("Million")" Value="@deadline" Format="hh:mm:ss:fff" />
+        <CountDown Title="Million" Value="@deadline" Format="hh:mm:ss:fff" />
     </Col>
     <Col Span="24">
-    <CountDown Title="@("Day Level")" Value="@deadline" Format="dd 天 h 时 m 分 s 秒" />
+        <CountDown Title="Day Level" Value="@deadline" Format="dd 天  h 小时 m 分钟 s 秒" />
     </Col>
 </Row>
 

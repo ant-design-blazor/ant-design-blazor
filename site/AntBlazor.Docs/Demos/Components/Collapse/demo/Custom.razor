@@ -1,20 +1,23 @@
-<Collapse
-    Bordered="false"
-    DefaultActiveKey="@(new[]{"1"})" 
-    ExpandIcon="expandIcon"
-    Class="site-collapse-custom-collapse">
-    <Panel Header=@("This is panel header 1") Key="1"
-           Class="site-collapse-custom-panel">
-        <p>@text</p>
-    </Panel>
-    <Panel Header=@("This is panel header 2") Key="2"
-           Class="site-collapse-custom-panel">
-        <p>@text</p>
-    </Panel>
-    <Panel Header=@("This is panel header 3") Key="3" 
-           Class="site-collapse-custom-panel">
-        <p>@text</p>
-    </Panel>
+<Collapse Bordered="false"
+          DefaultActiveKey="@(new[]{"1"})"
+          Class="site-collapse-custom-collapse">
+    <ExpandIconTemplate>
+        <Icon Type="caret-right" Rotate="@(context ? 90 : 0)"></Icon>
+    </ExpandIconTemplate>
+    <ChildContent>
+        <Panel Header="This is panel header 1" Key="1"
+               Class="site-collapse-custom-panel">
+            <p>@text</p>
+        </Panel>
+        <Panel Header="This is panel header 2" Key="2"
+               Class="site-collapse-custom-panel">
+            <p>@text</p>
+        </Panel>
+        <Panel Header="This is panel header 3" Key="3"
+               Class="site-collapse-custom-panel">
+            <p>@text</p>
+        </Panel>
+    </ChildContent>
 </Collapse>
 
 @code{
@@ -24,8 +27,6 @@ A dog is a type of domesticated animal.
 Known for its loyalty and faithfulness,
 it can be found as a welcome guest in many households across the world.
 ";
-
-    RenderFragment<bool> expandIcon = isActive => @<Icon Type="caret-right" Rotate="@(isActive ? 90 : 0)"></Icon>;
 
 }
 

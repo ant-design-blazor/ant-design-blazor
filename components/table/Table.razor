@@ -17,17 +17,10 @@
         }
         <CascadingValue Value="@this" TValue="ITable">
             <div class="@ClassMapper.Class">
-                @if (@Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0) || @Title.IsT1 && Title.AsT1 != null)
+                @if (TitleTemplate != null || Title != null)
                 {
                     <div class="ant-table-title">
-                        @if (Title.IsT0)
-                        {
-                            @Title.AsT0
-                        }
-                        else
-                        {
-                            @Title.AsT1
-                        }
+                        @if (TitleTemplate != null)@TitleTemplate else @Title
                     </div>
                 }
                 <div class="ant-table-container">
@@ -67,17 +60,10 @@
                         </div>
                     }
                 </div>
-                @if (@Footer.IsT0 && !string.IsNullOrEmpty(Footer.AsT0) || @Footer.IsT1 && Footer.AsT1 != null)
+                @if (FooterTemplate != null || Footer != null)
                 {
                     <div class="ant-table-footer">
-                        @if (Footer.IsT0)
-                        {
-                            @Footer.AsT0
-                        }
-                        else
-                        {
-                            @Footer.AsT1
-                        }
+                        @if (FooterTemplate != null)@FooterTemplate else @Footer
                     </div>
                 }
             </div>
@@ -152,7 +138,7 @@ RenderFragment<Table<TItem>> body = table =>
             var cacheKey = data.GetHashCode();
             if (!table._dataSourceCache.ContainsKey(cacheKey))
             {
-                table._dataSourceCache[cacheKey] = new RowData<TItem>(rowIndex,table.PageIndex, data);
+                table._dataSourceCache[cacheKey] = new RowData<TItem>(rowIndex, table.PageIndex, data);
             }
             var selected = table._dataSourceCache[cacheKey].Selected;
             <CascadingValue Value="@rowIndex" Name="RowIndex">

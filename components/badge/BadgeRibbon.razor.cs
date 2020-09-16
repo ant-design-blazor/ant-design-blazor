@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
@@ -18,7 +18,10 @@ namespace AntDesign
         /// Set text contents of ribbon.
         /// </summary>
         [Parameter]
-        public OneOf<string, RenderFragment> Text { get; set; }
+        public string Text { get; set; }
+
+        [Parameter]
+        public RenderFragment TextTemplate { get; set; }
 
         /// <summary>
         /// Set placement of ribbon.
@@ -35,9 +38,9 @@ namespace AntDesign
 
         private string PresetColor => Color.IsIn(_badgePresetColors) ? Color : null;
 
-        private string colorStyle;
+        private string _colorStyle;
 
-        private string cornerColorStyle;
+        private string _cornerColorStyle;
 
         /// <summary>
         /// Sets the default CSS classes.
@@ -58,13 +61,13 @@ namespace AntDesign
         {
             if (PresetColor == null && !string.IsNullOrWhiteSpace(Color))
             {
-                colorStyle = $"background:{Color}; {Style}";
-                cornerColorStyle = $"color:{Color}; {Style}";
+                _colorStyle = $"background:{Color}; {Style}";
+                _cornerColorStyle = $"color:{Color}; {Style}";
             }
             else
             {
-                colorStyle = Style;
-                cornerColorStyle = Style;
+                _colorStyle = Style;
+                _cornerColorStyle = Style;
             }
         }
 

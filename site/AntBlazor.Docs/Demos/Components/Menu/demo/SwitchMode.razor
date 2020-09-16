@@ -17,15 +17,15 @@
             <Icon Type="calendar" Theme="outline"></Icon>
             Navigation Two
         </MenuItem>
-        <SubMenu Key="sub1" Title=sub1Title>
+        <SubMenu Key="sub1" TitleTemplate=@sub1Title>
             <MenuItem Key="3">Option 3</MenuItem>
             <MenuItem Key="4">Option 4</MenuItem>
-            <SubMenu Key="sub1-2" Title=@("Submenu")>
+            <SubMenu Key="sub1-2" Title="Submenu">
                 <MenuItem Key="5">Option 5</MenuItem>
                 <MenuItem Key="6">Option 6</MenuItem>
             </SubMenu>
         </SubMenu>
-        <SubMenu Key="sub2" Title=sub2Title>
+        <SubMenu Key="sub2" TitleTemplate=@sub2Title>
             <MenuItem Key="7">Option 7</MenuItem>
             <MenuItem Key="8">Option 8</MenuItem>
             <MenuItem Key="9">Option 9</MenuItem>
