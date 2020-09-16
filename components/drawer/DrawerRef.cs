@@ -2,19 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-
-
-
     public class DrawerRef<TResult> : IDrawerRef
     {
-        public DrawerOptions Config { get; set; }
-        public Drawer Drawer { get; set; }
+        public DrawerOptions Options { get; set; }
 
-        private DrawerService _service;
+        public Drawer Drawer { get; set; }
 
         public Func<Task> OnOpen { get; set; }
 
@@ -22,14 +17,16 @@ namespace AntDesign
 
         public Func<TResult, Task> OnClosed { get; set; }
 
-        internal DrawerRef(DrawerOptions config)
+        private DrawerService _service;
+
+        internal DrawerRef(DrawerOptions options)
         {
-            Config = config;
+            Options = options;
         }
 
-        internal DrawerRef(DrawerOptions config, DrawerService service)
+        internal DrawerRef(DrawerOptions options, DrawerService service)
         {
-            Config = config;
+            Options = options;
             _service = service;
         }
 
@@ -60,12 +57,18 @@ namespace AntDesign
         public async Task CloseAsync(TResult result)
         {
             var closeEventArgs = new DrawerClosingEventArgs();
-            if (OnClosing != null)//before close 
+
+            if (OnClosing != null)//before close
                 await OnClosing.Invoke(closeEventArgs);
-            if (closeEventArgs.Cancel == true) return;
+
+            if (closeEventArgs.Rejected)
+                return;
+
             await _service.CloseAsync(this);
-            if (OnClosed != null)//after close 
+
+            if (OnClosed != null)//after close
                 await OnClosed.Invoke(result);
+
             if (TaskCompletionSource != null)//dialog close
                 TaskCompletionSource.SetResult(result);
         }

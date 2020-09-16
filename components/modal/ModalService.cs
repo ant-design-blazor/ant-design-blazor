@@ -9,9 +9,13 @@ namespace AntDesign
     public class ModalService
     {
         internal event Func<ModalRef, Task> OnOpenEvent;
+
         internal event Func<ModalRef, Task> OnCloseEvent;
+
         internal event Func<ModalRef, Task> OnUpdateEvent;
+
         internal event Func<ModalRef, Task> OnDestroyEvent;
+
         internal event Func<Task> OnDestroyAllEvent;
 
         #region SimpleConfirm
@@ -125,7 +129,7 @@ namespace AntDesign
             return ConfirmAsync(options);
         }
 
-        #endregion
+        #endregion SimpleConfirm
 
         public Task Update(ModalRef modalRef)
         {
@@ -142,12 +146,10 @@ namespace AntDesign
             return OnDestroyAllEvent?.Invoke();
         }
 
-
-
         /// <summary>
-        /// 创建并打开一个简单窗口
+        /// Create and open a Moal
         /// </summary>
-        /// <param name="config">抽屉参数</param>
+        /// <param name="config">Options</param>
         /// <returns></returns>
         public async Task<ModalRef> CreateAsync(ConfirmOptions config)
         {
@@ -158,15 +160,15 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 创建并打开一个模板窗口
+        /// Create and open template modal
         /// </summary>
         /// <typeparam name="TComponent"></typeparam>
-        /// <typeparam name="TContentParams"></typeparam>
+        /// <typeparam name="TComponentOptions"></typeparam>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="config"></param>
-        /// <param name="contentParams"></param>
+        /// <param name="componentOptions"></param>
         /// <returns></returns>
-        public async Task<ModalRef<TResult>> CreateAsync<TComponent, TContentParams, TResult>(ConfirmOptions config, TContentParams contentParams) where TComponent : ModalTemplate<TContentParams, TResult>
+        public async Task<ModalRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : ModalTemplate<TComponentOptions, TResult>
         {
             CheckIsNull(config);
 
@@ -177,7 +179,7 @@ namespace AntDesign
             {
                 builder.OpenComponent<TComponent>(0);
                 builder.AddAttribute(1, "ModalRef", modalRef);
-                builder.AddAttribute(2, "Config", contentParams);
+                builder.AddAttribute(2, "Options", componentOptions);
                 builder.CloseComponent();
             };
             config.Content = child;
@@ -193,7 +195,6 @@ namespace AntDesign
             }
             return Task.CompletedTask;
         }
-
 
         internal Task CloseAsync(ModalRef modalRef)
         {
@@ -211,6 +212,5 @@ namespace AntDesign
                 throw new ArgumentNullException(nameof(options));
             }
         }
-
     }
 }

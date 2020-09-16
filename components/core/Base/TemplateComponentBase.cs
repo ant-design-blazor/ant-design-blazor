@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public abstract class TemplateComponentBase<TConfig> : AntComponentBase
+    public abstract class TemplateComponentBase<TComponentOptions> : AntComponentBase
     {
         /// <summary>
-        /// The component Parameter object
+        /// The options that allow you to pass in templates from the outside
         /// </summary>
         [Parameter]
-        public TConfig Config { get; set; }
+        public TComponentOptions Options { get; set; }
     }
 }

@@ -7,20 +7,23 @@ namespace AntDesign
 {
     public class DrawerClosingEventArgs
     {
+        private bool _rejected;
 
         public DrawerClosingEventArgs() { }
 
-        public DrawerClosingEventArgs(bool cancel)
+        public DrawerClosingEventArgs(bool reject)
         {
-            Cancel = cancel;
+            _rejected = reject;
         }
 
-
+        internal bool Rejected { get => _rejected; }
 
         /// <summary>
-        /// 获取或设置一个值，该值指示是否应取消事件。
-        /// 返回结果: true 如果应取消事件;否则为 false。
+        /// Reject to close 
         /// </summary>
-        public bool Cancel { get; set; }
+        public void Reject()
+        {
+            _rejected = true;
+        }
     }
 }

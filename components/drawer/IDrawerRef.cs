@@ -7,7 +7,8 @@ namespace AntDesign
 {
     public interface IDrawerRef
     {
-        DrawerOptions Config { get; set; }
+        DrawerOptions Options { get; set; }
+
         Drawer Drawer { get; set; }
 
         Task CloseAsync();

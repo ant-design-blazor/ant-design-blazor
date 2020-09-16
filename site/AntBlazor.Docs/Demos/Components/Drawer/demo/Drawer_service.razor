@@ -7,90 +7,97 @@
 <Button OnClick="OpenComponent" Type="primary">Use Component</Button>
 <Button OnClick="OpenDialogMode" Type="primary">Use Dialog Mode</Button>
 
+@inject ModalService confirm
 @code{
 
     private string value = "blazor";
 
-    //简单抽屉
     private IDrawerRef _drawerRef;
-
+   
     private async Task OpenContent()
     {
-        RenderFragment content =@<div><Input @bind-Value="@value" /><br /><Button OnClick="CloseDrawer">close</Button><br />输入“blazor is good”才能关闭抽屉</div>;
+        RenderFragment content = @<div>
+                        <Input @bind-Value="@value" /><br />
+                        <Button OnClick="CloseDrawer">close</Button>
+                    </div>;
 
-            var options = new DrawerOptions()
-            {
-                Title = "Drawer",
-                Width = 350,
-                Content = content,
-            };
-
-            _drawerRef = await DrawerService.CreateAsync(options);
-
-            _drawerRef.OnClosing = (args) =>
-            {
-                Console.WriteLine("Closing Drawer");
-                if (value.ToLower() != "blazor is good")
-                    args.Cancel = true;
-
-                return Task.CompletedTask;
-            };
-        }
-
-        private async Task CloseDrawer()
+        var options = new DrawerOptions()
         {
-            if (_drawerRef != null)
+            Title = "Drawer",
+            Width = 350,
+            Content = content,
+        };
+
+        _drawerRef = await DrawerService.CreateAsync(options);
+
+        _drawerRef.OnClosing = async (handle) =>
+        {
+            Console.WriteLine("Closing Drawer");
+
+            if (!(await confirm.ConfirmAsync(new ConfirmOptions
             {
-                await _drawerRef.CloseAsync();
+                Title = "Confirm to close?"
+            })))
+            {
+                handle.Reject();
             }
-        }
+        };
+    }
 
-
-        // 使用自定义组件
-        private async Task OpenComponent()
+    private async Task CloseDrawer()
+    {
+        if (_drawerRef != null)
         {
-            var options = new DrawerOptions()
-            {
-                Title = "Component",
-                Width = 350,
-            };
-
-            var drawerRef = await DrawerService.CreateAsync<DrawerTemplateDemo, string, string>(options, value);
-
-            drawerRef.OnOpen = () =>
-            {
-                Console.WriteLine("OnAfterOpen");
-                return Task.CompletedTask;
-            };
-
-            drawerRef.OnClosing = args =>
-            {
-                Console.WriteLine("OnAfterClosing:");
-                return Task.CompletedTask;
-            };
-
-            drawerRef.OnClosed = async result =>
-            {
-                Console.WriteLine("OnAfterClosed:" + result);
-                if (result != null)
-                    value = result;
-                await InvokeAsync(StateHasChanged);
-            };
-
-        }
-
-        //模式对话框方式
-        private async Task OpenDialogMode()
-        {
-            var options = new DrawerOptions()
-            {
-                Title = "Component",
-                Width = 350,
-            };
-
-            var result = await DrawerService.CreateDialogAsync<DrawerTemplateDemo, string, string>(options, value);
-
-            if (result != null)
-                value = result;
+            await _drawerRef.CloseAsync();
         }
     }
+
+
+    // use custom component
+    private async Task OpenComponent()
+    {
+        var options = new DrawerOptions()
+        {
+            Title = "Component",
+            Width = 350,
+        };
+
+        var drawerRef = await DrawerService.CreateAsync<DrawerTemplateDemo, string, string>(options, value);
+
+        drawerRef.OnOpen = () =>
+        {
+            Console.WriteLine("OnAfterOpen");
+            return Task.CompletedTask;
+        };
+
+        drawerRef.OnClosing = args =>
+        {
+            Console.WriteLine("OnAfterClosing:");
+            return Task.CompletedTask;
+        };
+
+        drawerRef.OnClosed = async result =>
+        {
+            Console.WriteLine("OnAfterClosed:" + result);
+            if (result != null)
+                value = result;
+            await InvokeAsync(StateHasChanged);
+        };
+
+    }
+
+    // dialog mode
+    private async Task OpenDialogMode()
+    {
+        var options = new DrawerOptions()
+        {
+            Title = "Component",
+            Width = 350,
+        };
+
+        var result = await DrawerService.CreateDialogAsync<DrawerTemplateDemo, string, string>(options, value);
+
+        if (result != null)
+            value = result;
+    }
+}
