@@ -8,33 +8,33 @@ namespace AntDesign
 {
     public class DrawerService
     {
-        internal event Func<DrawerRef, Task> OnOpenEvent;
+        internal event Func<IDrawerRef, Task> OnOpenEvent;
 
-        internal event Func<DrawerRef, Task> OnCloseEvent;
+        internal event Func<IDrawerRef, Task> OnCloseEvent;
 
         /// <summary>
-        /// 创建并打开一个简单抽屉，没有返回值
+        /// Create and open a simple drawer without result
         /// </summary>
-        /// <param name="config">抽屉参数</param>
-        /// <returns></returns>
-        public async Task<DrawerRef> CreateAsync(DrawerOptions config)
+        /// <param name="options">drawer options</param>
+        /// <returns>The reference of drawer</returns>
+        public async Task<IDrawerRef> CreateAsync(DrawerOptions options)
         {
-            CheckIsNull(config);
-            DrawerRef drawerRef = new DrawerRef(config, this);
+            CheckIsNull(options);
+            IDrawerRef drawerRef = new DrawerRef<object>(options, this);
             await OnOpenEvent.Invoke(drawerRef);
             return drawerRef;
         }
 
         /// <summary>
-        /// 创建并打开一个模板抽屉
+        /// Create and open a drawer with the template
         /// </summary>
-        /// <typeparam name="TComponent"></typeparam>
-        /// <typeparam name="TContentParams"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
+        /// <typeparam name="TComponent">The type of DrawerTemplate implement</typeparam>
+        /// <typeparam name="TComponentOptions">The </typeparam>
+        /// <typeparam name="TResult">The type of return value</typeparam>
         /// <param name="config"></param>
-        /// <param name="contentParams"></param>
-        /// <returns></returns>
-        public async Task<DrawerRef<TResult>> CreateAsync<TComponent, TContentParams, TResult>(DrawerOptions config, TContentParams contentParams) where TComponent : DrawerTemplate<TContentParams, TResult>
+        /// <param name="options"></param>
+        /// <returns>The reference of drawer</returns>
+        public async Task<DrawerRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>(DrawerOptions config, TComponentOptions options) where TComponent : DrawerTemplate<TComponentOptions, TResult>
         {
             CheckIsNull(config);
 
@@ -45,7 +45,7 @@ namespace AntDesign
             {
                 builder.OpenComponent<TComponent>(0);
                 builder.AddAttribute(1, "DrawerRef", drawerRef);
-                builder.AddAttribute(2, "Config", contentParams);
+                builder.AddAttribute(2, "Options", options);
                 builder.CloseComponent();
             };
             config.ChildContent = child;
@@ -53,7 +53,27 @@ namespace AntDesign
             return drawerRef;
         }
 
-        internal Task OpenAsync(DrawerRef drawerRef)
+        public async Task<TResult> CreateDialogAsync<TComponent, TComponentOptions, TResult>(DrawerOptions config, TComponentOptions options) where TComponent : DrawerTemplate<TComponentOptions, TResult>
+        {
+            CheckIsNull(config);
+            DrawerRef<TResult> drawerRef = new DrawerRef<TResult>(config, this);
+
+            drawerRef.TaskCompletionSource = new TaskCompletionSource<TResult>(); ;
+            await OnOpenEvent.Invoke(drawerRef);
+
+            RenderFragment child = (builder) =>
+            {
+                builder.OpenComponent<TComponent>(0);
+                builder.AddAttribute(1, "DrawerRef", drawerRef);
+                builder.AddAttribute(2, "Options", options);
+                builder.CloseComponent();
+            };
+            config.ChildContent = child;
+
+            return await drawerRef.TaskCompletionSource.Task;
+        }
+
+        internal Task OpenAsync(IDrawerRef drawerRef)
         {
             if (OnOpenEvent != null)
             {
@@ -62,7 +82,7 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-        internal Task CloseAsync(DrawerRef drawerRef)
+        internal Task CloseAsync(IDrawerRef drawerRef)
         {
             if (OnCloseEvent != null)
             {

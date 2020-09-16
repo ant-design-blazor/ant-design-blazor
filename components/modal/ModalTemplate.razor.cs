@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public class ModalTemplate<TContentParams, TResult> : TemplateComponentBase<TContentParams>, IModalTemplate
+    public class ModalTemplate<TComponentOptions, TResult> : TemplateComponentBase<TComponentOptions>, IModalTemplate
     {
         [Parameter]
         public ModalRef<TResult> ModalRef { get; set; }
 
 
         /// <summary>
-        /// 确定并返回值
+        /// Emit Ok and return values
         /// </summary>
         /// <returns></returns>
         public async Task OnOkAsync(TResult result)
@@ -22,7 +22,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 取消并返回值
+        /// Emit Cancel and return values
         /// </summary>
         /// <returns></returns>
         public async Task OnCancelAsync(TResult result)
@@ -32,7 +32,7 @@ namespace AntDesign
 
 
         /// <summary>
-        /// 关闭窗体
+        /// Close the Modal
         /// </summary>
         /// <returns></returns>
         protected async Task CloseAsync()
