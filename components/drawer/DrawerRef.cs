@@ -2,49 +2,31 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public class DrawerRef<TResult> : DrawerRef
+    public class DrawerRef<TResult> : IDrawerRef
     {
-        public new Func<TResult, Task> OnClose { get; set; }
+        public DrawerOptions Options { get; set; }
 
-        internal DrawerRef(DrawerOptions config, DrawerService service) : base(config, service)
-        {
-
-        }
-
-        /// <summary>
-        /// 关闭抽屉
-        /// </summary>
-        /// <returns></returns>
-        public async Task CloseAsync(TResult result)
-        {
-            await _service.CloseAsync(this);
-            await OnClose.Invoke(result);
-        }
-    }
-
-    public class DrawerRef
-    {
-        public DrawerOptions Config { get; set; }
         public Drawer Drawer { get; set; }
-
-        protected DrawerService _service;
 
         public Func<Task> OnOpen { get; set; }
 
-        public Func<DrawerClosingEventArgs, Task> OnClose { get; set; }
+        public Func<DrawerClosingEventArgs, Task> OnClosing { get; set; }
 
-        internal DrawerRef(DrawerOptions config)
+        public Func<TResult, Task> OnClosed { get; set; }
+
+        private DrawerService _service;
+
+        internal DrawerRef(DrawerOptions options)
         {
-            Config = config;
+            Options = options;
         }
 
-        internal DrawerRef(DrawerOptions config, DrawerService service)
+        internal DrawerRef(DrawerOptions options, DrawerService service)
         {
-            Config = config;
+            Options = options;
             _service = service;
         }
 
@@ -65,20 +47,32 @@ namespace AntDesign
         /// <returns></returns>
         public async Task CloseAsync()
         {
-            await _service.CloseAsync(this);
-            if (OnClose != null)
-                await OnClose.Invoke(new DrawerClosingEventArgs(false));
+            await CloseAsync(default);
         }
 
-        internal async Task HandleOnCancel()
+        /// <summary>
+        /// 关闭抽屉
+        /// </summary>
+        /// <returns></returns>
+        public async Task CloseAsync(TResult result)
         {
-            var args = new DrawerClosingEventArgs(false);
-            if (OnClose != null)
-            {
-                await OnClose.Invoke(args);
-            }
-            if (!args.Cancel)
-                await _service.CloseAsync(this);
+            var closeEventArgs = new DrawerClosingEventArgs();
+
+            if (OnClosing != null)//before close
+                await OnClosing.Invoke(closeEventArgs);
+
+            if (closeEventArgs.Rejected)
+                return;
+
+            await _service.CloseAsync(this);
+
+            if (OnClosed != null)//after close
+                await OnClosed.Invoke(result);
+
+            if (TaskCompletionSource != null)//dialog close
+                TaskCompletionSource.SetResult(result);
         }
+
+        internal TaskCompletionSource<TResult> TaskCompletionSource { get; set; }
     }
 }
