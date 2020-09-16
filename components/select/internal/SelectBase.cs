@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -56,6 +56,7 @@ namespace AntDesign.Internal
 
         [Parameter] public string OptionFilterProp { get; set; } = "value";
 
+        [Parameter] public string PopupContainerSelector { get; set; }
         #endregion
 
         #region Number(3)
