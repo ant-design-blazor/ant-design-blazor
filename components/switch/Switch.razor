@@ -19,25 +19,11 @@
     <span class="@($"{_prefixCls}-inner")">
         @if (CurrentValue)
         {
-            if (CheckedChildren.IsT0)
-            {
-                @(CheckedChildren.AsT0)
-            }
-            else
-            {
-                @(CheckedChildren.AsT1)
-            }
+            if (CheckedChildrenTemplate != null)@CheckedChildrenTemplate else @CheckedChildren
         }
         else
         {
-            if (UnCheckedChildren.IsT0)
-            {
-                @(UnCheckedChildren.AsT0)
-            }
-            else
-            {
-                @(UnCheckedChildren.AsT1)
-            }
+            if (UnCheckedChildrenTemplate != null)@UnCheckedChildrenTemplate else @UnCheckedChildren
         }
     </span>
 

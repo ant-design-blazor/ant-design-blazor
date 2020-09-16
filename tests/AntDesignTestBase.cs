@@ -20,7 +20,7 @@ namespace AntDesign.Tests
             Context.Services.AddScoped<NavigationManager>(sp => NavigationManager);
             Context.Services.AddAntDesign();
 
-            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
         }
 
         public void Dispose()

@@ -1,14 +1,9 @@
 ﻿<Result Status="success"
-        Title=@("Successfully Purchased Cloud Server ECS!")
-        SubTitle=@("Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait.")
-        Extra=extra />
-
-@code
-{
-    RenderFragment extra =
-    @<Template>
+        Title="Successfully Purchased Cloud Server ECS!"
+        SubTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait.">
+    <Extra>
         <Button Type="primary">Go Console</Button>
         <Button>Buy Again</Button>
-    </Template>
-    ;
-}
+    </Extra>
+
+</Result>

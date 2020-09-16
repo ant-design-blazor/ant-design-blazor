@@ -6,22 +6,28 @@ using OneOf;
 
 namespace AntDesign
 {
-   public abstract class StatisticComponentBase<T>:AntDomComponentBase
+    public abstract class StatisticComponentBase<T> : AntDomComponentBase
     {
         /// <summary>
         /// 设置数值的前缀
         /// </summary>
-        [Parameter] public OneOf<string, RenderFragment> Prefix { get; set; } = string.Empty;
+        [Parameter] public string Prefix { get; set; }
+
+        [Parameter] public RenderFragment PrefixTemplate { get; set; }
 
         /// <summary>
         /// 设置数值的后缀
         /// </summary>
-        [Parameter] public OneOf<string, RenderFragment> Suffix { get; set; } = string.Empty;
+        [Parameter] public string Suffix { get; set; }
+
+        [Parameter] public RenderFragment SuffixTemplate { get; set; }
 
         /// <summary>
         /// 数值的标题
         /// </summary>
-        [Parameter] public OneOf<string, RenderFragment> Title { get; set; } = string.Empty;
+        [Parameter] public string Title { get; set; }
+
+        [Parameter] public RenderFragment TitleTemplate { get; set; }
 
         /// <summary>
         /// 数值内容

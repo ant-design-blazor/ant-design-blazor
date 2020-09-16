@@ -14,7 +14,8 @@ namespace AntDesign
         Info = 1,
         Warning = 2,
         Error = 3,
-        Success = 4
+        Success = 4,
+        Question = 5,
     }
 
     internal static class ConfirmIconRenderFragments
@@ -51,6 +52,15 @@ namespace AntDesign
             builder.CloseComponent();
         };
 
+        public static RenderFragment Question = (builder) =>
+        {
+            builder.OpenComponent<Icon>(0);
+            builder.AddAttribute(1, "Type", "question-circle");
+            builder.AddAttribute(2, "Theme", "outline");
+            builder.CloseComponent();
+        };
+
+
         public static RenderFragment GetByConfirmIcon(ConfirmIcon confirmIcon)
         {
             switch (confirmIcon)
@@ -59,6 +69,7 @@ namespace AntDesign
                 case ConfirmIcon.Warning: return Warning;
                 case ConfirmIcon.Error: return Error;
                 case ConfirmIcon.Success: return Success;
+                case ConfirmIcon.Question: return Question;
                 default: return null;
             }
         }

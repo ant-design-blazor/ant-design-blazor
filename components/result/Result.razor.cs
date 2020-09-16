@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.AspNetCore.Components;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
@@ -8,10 +8,16 @@ namespace AntDesign
     public partial class Result : AntDomComponentBase
     {
         [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         [Parameter]
-        public OneOf<string, RenderFragment> SubTitle { get; set; }
+        public RenderFragment TitleTemplate { get; set; }
+
+        [Parameter]
+        public string SubTitle { get; set; } = string.Empty;
+
+        [Parameter]
+        public RenderFragment SubTitleTemplate { get; set; }
 
         [Parameter]
         public RenderFragment Extra { get; set; }
@@ -25,6 +31,12 @@ namespace AntDesign
 
         [Parameter]
         public string Icon { get; set; }
+
+        /// <summary>
+        /// 是否显示图标，默认显示
+        /// </summary>
+        [Parameter]
+        public bool IsShowIcon { get; set; } = true;
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }

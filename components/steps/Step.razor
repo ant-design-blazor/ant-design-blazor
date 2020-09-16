@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 
-<div class="@ClassMapper.Class" style="@Style"id="@Id">
+<div class="@ClassMapper.Class" style="@Style" id="@Id">
     <div class="ant-steps-item-container" @onclick="@HandleClick" tabindex="@GetTabIndex()" @attributes="@_containerAttributes">
         @if (!Last)
         {
@@ -14,12 +14,11 @@
                 @if (Percent != null && Parent.Current == Index)
                 {
                     <div class="ant-steps-progress-icon">
-                        <Progress
-                            Percent="@((double) Percent)"
-                            Width=@(Size == "small" ? 30 : 38)
-                            Type=ProgressType.Circle
-                            StrokeWidth="4"
-                            Format=@((p) => "")/>
+                        <Progress Percent="@((double) Percent)"
+                                  Width=@(Size == "small" ? 30 : 38)
+                                  Type=ProgressType.Circle
+                                  StrokeWidth="4"
+                                  Format=@((p) => "") />
                         <span class="ant-steps-icon">
 
                             @if (string.IsNullOrEmpty(Icon))
@@ -93,39 +92,19 @@
         </div>
         <div class="ant-steps-item-content">
             <div class="ant-steps-item-title">
-                @if (Title.IsT0)
-                {
-                    @Title.AsT0
-                }
-                else
-                {
-                    @Title.AsT1
-                }
-                @if (Subtitle.Value != null)
+                @if (TitleTemplate != null)@TitleTemplate else @Title
+
+                @if (SubtitleTemplate != null || Subtitle != null)
                 {
                     <div class="ant-steps-item-subtitle">
-                        @if (Subtitle.IsT0)
-                        {
-                            @Subtitle.AsT0
-                        }
-                        else
-                        {
-                            @Subtitle.AsT1
-                        }
+                        @if (SubtitleTemplate != null)@SubtitleTemplate else @Subtitle
                     </div>
                 }
             </div>
-            @if (Description.Value != null)
+            @if (DescriptionTemplate != null || Description != null)
             {
                 <div class="ant-steps-item-description">
-                    @if (Description.IsT0)
-                    {
-                        @Description.AsT0
-                    }
-                    else
-                    {
-                        @Description.AsT1
-                    }
+                    @if (DescriptionTemplate != null)@DescriptionTemplate else @Description
                 </div>
             }
         </div>
