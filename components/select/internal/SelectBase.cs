@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -56,7 +56,9 @@ namespace AntDesign.Internal
 
         [Parameter] public string OptionFilterProp { get; set; } = "value";
 
-        [Parameter] public string PopupContainerSelector { get; set; }
+        [Parameter]
+        public string PopupContainerSelector { get; set; } = "body";
+
         #endregion
 
         #region Number(3)
@@ -167,8 +169,6 @@ namespace AntDesign.Internal
         [Parameter] public Action<OneOf<string, LabeledValue>, SelectOption> OnSelect { get; set; }
 
         [Parameter] public Func<Properties, RenderFragment> TagRender { get; set; }
-
-        [Parameter] public Func<ElementReference, ElementReference> GetPopupContainer { get; set; }
 
         [Parameter] public Func<RenderFragment, Properties, RenderFragment> DropdownRender { get; set; }
 

@@ -55,6 +55,10 @@ namespace AntDesign.Internal
         [Parameter]
         public PlacementType Placement { get; set; } = PlacementType.BottomLeft;
 
+        [Parameter] public Action OnMouseEnter { get; set; }
+
+        [Parameter] public Action OnMouseLeave { get; set; }
+
         [Parameter]
         public EventCallback<bool> OnVisibleChange { get; set; }
 
@@ -95,6 +99,8 @@ namespace AntDesign.Internal
 
                 await Show();
             }
+
+            OnMouseEnter?.Invoke();
         }
 
         protected virtual async Task OnTriggerMouseLeave()
@@ -107,6 +113,8 @@ namespace AntDesign.Internal
 
                 await Hide();
             }
+
+            OnMouseLeave?.Invoke();
         }
 
         protected virtual async Task OnTriggerFocusIn()
