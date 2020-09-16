@@ -2,35 +2,24 @@
 @inherits AntDomComponentBase
 
 <div class="@ClassMapper.Class">
-    <div class="@IconClassMapper.Class">
-        @if (IsImage)
-        {
-            @((MarkupString)_svgImage)
-        }
-        else
-        {
-            @BuildIcon
-        }
-    </div>
+    @if (IsShowIcon)
+    {
+        <div class="@IconClassMapper.Class">
+            @if (IsImage)
+            {
+                @((MarkupString)_svgImage)
+            }
+            else
+            {
+                @BuildIcon
+            }
+        </div>
+    }
     <div class="ant-result-title">
-        @if (Title.IsT0)
-        {
-            @Title.AsT0
-        }
-        else
-        {
-            @Title.AsT1
-        }
+        @if (TitleTemplate != null)@TitleTemplate else @Title
     </div>
     <div class="ant-result-subtitle">
-        @if (SubTitle.IsT0)
-        {
-            @SubTitle.AsT0
-        }
-        else
-        {
-            @SubTitle.AsT1
-        }
+        @if (SubTitleTemplate != null)@SubTitleTemplate else @SubTitle
     </div>
     @if (ChildContent != null)
     {

@@ -1,16 +1,14 @@
 ﻿<div>
-    <Switch Checked="true" CheckedChildren='@("开")' UnCheckedChildren='@("关")' />
+    <Switch Checked="true" CheckedChildren="开" UnCheckedChildren="关" />
     <br />
-    <Switch Checked="false" CheckedChildren='@("开")' UnCheckedChildren='@("关")' />
+    <Switch Checked="false" CheckedChildren="开" UnCheckedChildren="关" />
     <br />
-    <Switch Checked="true"
-               CheckedChildren="checkedChildren"
-               UnCheckedChildren="unCheckedChildren" />
+    <Switch Checked="true">
+        <CheckedChildrenTemplate>
+            <Icon Type="check"></Icon>
+        </CheckedChildrenTemplate>
+        <UnCheckedChildrenTemplate>
+            <Icon Type="close"></Icon>
+        </UnCheckedChildrenTemplate>
+    </Switch>
 </div>
-
-
-@code{
-    RenderFragment checkedChildren = @<Icon Type="check"></Icon>;
-
-    RenderFragment unCheckedChildren = @<Icon Type="close"></Icon>;
-}

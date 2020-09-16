@@ -1,11 +1,11 @@
 ﻿using System;
-using Microsoft.AspNetCore.Components;
-using System.Threading.Tasks;
-using OneOf;
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Components.Web;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -55,7 +55,10 @@ namespace AntDesign
         public Func<TransferItem, OneOf<string, RenderFragment>> Render { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Footer { get; set; }
+        public string Footer { get; set; } = string.Empty;
+
+        [Parameter]
+        public RenderFragment FooterTemplate { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }

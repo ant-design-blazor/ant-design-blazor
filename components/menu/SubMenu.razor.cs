@@ -17,7 +17,10 @@ namespace AntDesign
         public SubMenu Parent { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        public string Title { get; set; }
+
+        [Parameter]
+        public RenderFragment TitleTemplate { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }

@@ -27,7 +27,10 @@ namespace AntDesign
         public EventCallback<string[]> OnChange { get; set; }
 
         [Parameter]
-        public OneOf<bool, RenderFragment<bool>> ExpandIcon { get; set; } = true;
+        public string ExpandIcon { get; set; } = "right";
+
+        [Parameter]
+        public RenderFragment<bool> ExpandIconTemplate { get; set; }
 
         #endregion Parameter
 

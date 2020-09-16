@@ -1,11 +1,16 @@
 <Collapse DefaultActiveKey="@(new[]{"1"})" OnChange="Callback">
-    <Panel Header=@("This is panel header 1") Key="1">
+    <Panel Header="This is panel header 1" Key="1">
         <p>@text</p>
     </Panel>
-    <Panel Header=@("This is panel header 2") Key="2">
-        <p>@text</p>
+    <Panel Key="2">
+        <HeaderTemplate>
+            This is panel header 2
+        </HeaderTemplate>
+        <ChildContent>
+            <p>@text</p>
+        </ChildContent>
     </Panel>
-    <Panel Header=@("This is panel header 3") Key="3" Disabled>
+    <Panel Header="This is panel header 3" Key="3" Disabled>
         <p>@text</p>
     </Panel>
 </Collapse>
