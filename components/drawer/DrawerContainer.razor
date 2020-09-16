@@ -1,9 +1,9 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-@foreach (DrawerRef drawerRef in _drawerRefs)
+@foreach (IDrawerRef drawerRef in _drawerRefs)
 {
-    var drawerConfig = drawerRef.Config;
+    var drawerConfig = drawerRef.Options;
     <Drawer @ref="@drawerRef.Drawer"
             @key="@drawerConfig"
             Content="@drawerConfig.Content"
@@ -23,7 +23,7 @@
             OffsetX="@drawerConfig.OffsetX"
             OffsetY="@drawerConfig.OffsetY"
             Visible="@drawerConfig.Visible"
-            OnClose="@drawerRef.HandleOnCancel">
+            OnClose="@drawerRef.CloseAsync">
         @drawerConfig.ChildContent
     </Drawer>
 }

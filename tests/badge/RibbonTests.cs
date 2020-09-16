@@ -1,4 +1,4 @@
-using Bunit;
+﻿using Bunit;
 using Microsoft.AspNetCore.Components;
 using Xunit;
 
@@ -119,7 +119,7 @@ namespace AntDesign.Tests.Badge
                 </div>
             ");
         }
-        
+
         [Fact(DisplayName = "Works with RenderFragment")]
         public void TestRibbonRenderFragment()
         {
@@ -133,7 +133,7 @@ namespace AntDesign.Tests.Badge
             };
             var cut = Context.RenderComponent<BadgeRibbon>(p =>
                 {
-                    p.Add(x => x.Text, fragment);
+                    p.Add(x => x.TextTemplate, fragment);
                     p.AddChildContent("<div />");
                 }
             );

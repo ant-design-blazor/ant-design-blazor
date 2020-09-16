@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
-using OneOf;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -22,7 +22,10 @@ namespace AntDesign
         /// Number to show in badge
         /// </summary>
         [Parameter]
-        public OneOf<int?, RenderFragment> Count { get; set; }
+        public int? Count { get; set; }
+
+        [Parameter]
+        public RenderFragment CountTemplate { get; set; }
 
         /// <summary>
         /// Whether to display a red dot instead of count
@@ -75,10 +78,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private int? CountNumber { get; set; }
-
-        private RenderFragment CountTemplate { get; set; }
-
         private ClassMapper CountClassMapper { get; set; } = new ClassMapper();
 
         private int[] _countArray = Array.Empty<int>();
@@ -95,8 +94,8 @@ namespace AntDesign
 
         private string CountStyle => Offset == default ? null : $"{(Offset.Item1 > 0 ? $"right:-{Offset.Item1}px" : "")};{(Offset.Item2 > 0 ? $"margin-top:{Offset.Item2}px" : "")};";
 
-        private bool ShowSup => (this.ShowDot && this.Dot) || this.CountNumber > 0 ||
-                                (this.CountNumber == 0 && this.ShowZero);
+        private bool ShowSup => (this.ShowDot && this.Dot) || this.Count > 0 ||
+                                (this.Count == 0 && this.ShowZero);
 
         private bool _dotEnter;
 
@@ -193,17 +192,10 @@ namespace AntDesign
             base.OnParametersSet();
             SetClassMap();
 
-            Count.Switch(count =>
+            if (Count.HasValue)
             {
-                this.CountNumber = count;
-                if (count != null)
-                {
-                    this._countArray = DigitsFromInteger(count.Value);
-                }
-            }, template =>
-            {
-                this.CountTemplate = template;
-            });
+                this._countArray = DigitsFromInteger(Count.Value);
+            }
 
             if (OverflowCount > 0)
             {

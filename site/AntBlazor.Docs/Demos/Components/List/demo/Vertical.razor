@@ -2,7 +2,7 @@
 
 <AntList DataSource="@ListData" ItemLayout="@AntDirectionVHType.Vertical" Extra="@extra">
     <Item Context="item">
-        <AntListItemMeta Avatar="@avatar" Description="@item.Description">
+        <AntListItemMeta Avatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" Description="@item.Description">
             <Title>
                 <a href="@item.Href">@item.Title</a>
             </Title>
@@ -17,8 +17,6 @@
 </AntList>
 
 @code {
-
-    RenderFragment avatar =@<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
 
     RenderFragment extra = @<img width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />;
 

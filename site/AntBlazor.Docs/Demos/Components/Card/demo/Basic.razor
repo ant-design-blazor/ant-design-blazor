@@ -1,34 +1,45 @@
 ﻿<div>
-    <Card Bordered Title=@("Default size card")>
+    <Card Bordered Title="Default size card">
         <Extra>
             <a>More</a>
         </Extra>
         <Body>
             <p>Card content</p>
-            <p>Card content</p>
-            <p>Card content</p>
         </Body>
     </Card>
-
-    <Card Bordered Size="small" Title=@("Small size card")>
+    <br />
+    <Card Bordered Size="small" Title="Small size card">
         <Extra>
             <a>More</a>
         </Extra>
         <Body>
             <p>Card content</p>
-            <p>Card content</p>
+        </Body>
+    </Card>
+    <br />
+    <Card Bordered>
+        <TitleTemplate>
+            <Icon Type="credit-card" Theme="outline" /> Title is Template
+        </TitleTemplate>
+        <Extra>
+            <a>More</a>
+        </Extra>
+        <Body>
             <p>Card content</p>
         </Body>
     </Card>
-
-
+    <br />
+    <Card Bordered Size="small" TitleTemplate="titleTemplate">
+        <Extra>
+            <a>More</a>
+        </Extra>
+        <Body>
+            <p>Card content</p>
+        </Body>
+    </Card>
 </div>
-@code
-{
-    private RenderFragment actionSetting =@<Template>  <Icon Type="setting" /></Template>;
 
-    private RenderFragment actionEdit =@<Template><Icon Type="edit" /></Template>;
-
-    private RenderFragment actionEllipsis =@<Template> <Icon Type="ellipsis" /></Template>;
+@code{
+    RenderFragment titleTemplate =@<div><Icon Type="credit-card" Theme="outline" /> Title is Template</div>;
 
 }

@@ -1,9 +1,12 @@
-﻿<Empty Image='"https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"'
+﻿<Empty Image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
           ImageStyle='@("height: 60px")'
-          Description="customDescription">
-    <Button type="@ButtonType.Primary">Create Now</Button>
+        >
+    <DescriptionTemplate>
+        <span>Customize <a>Description</a></span>
+    </DescriptionTemplate>
+    <ChildContent>
+        <Button type="@ButtonType.Primary">Create Now</Button>
+    </ChildContent>
+
 </Empty>
 
-@code {
-    private RenderFragment customDescription =@<span>Customize <a>Description</a></span>;
-}

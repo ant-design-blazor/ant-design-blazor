@@ -28,20 +28,16 @@
                 <div class="ant-popover-inner" role="tooltip">
                     <div class="ant-popover-inner-content">
                         <div class="ant-popover-message">
-                            @if (Icon == null)
+                            @if (IconTemplate != null)
                             {
-                                Icon = @<Icon Type="exclamation-circle"/>;
+                                @IconTemplate
                             }
-                            @Icon
+                            else
+                            {
+                                <Icon Type="@Icon" />
+                            }
                             <div class="ant-popover-message-title">
-                                @if (Title.IsT0 && !string.IsNullOrEmpty(Title.AsT0))
-                                {
-                                    @Title.AsT0
-                                }
-                                else if (Title.IsT1 && (Title.AsT1) != null)
-                                {
-                                    @Title.AsT1
-                                }
+                                @if (TitleTemplate != null)@TitleTemplate else @Title
                             </div>
                         </div>
                         <div class="ant-popover-buttons">

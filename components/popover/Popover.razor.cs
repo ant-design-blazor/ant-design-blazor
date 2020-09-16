@@ -12,10 +12,16 @@ namespace AntDesign
     public partial class Popover : OverlayTrigger
     {
         [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
 
         [Parameter]
-        public OneOf<string, RenderFragment> Content { get; set; } = string.Empty;
+        public RenderFragment TitleTemplate { get; set; }
+
+        [Parameter]
+        public string Content { get; set; } = string.Empty;
+
+        [Parameter]
+        public RenderFragment ContentTemplate { get; set; }
 
         [Parameter]
         public bool ArrowPointAtCenter { get; set; } = false;
