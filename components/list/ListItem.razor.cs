@@ -19,8 +19,6 @@ namespace AntDesign
 
         [Parameter] public RenderFragment[] Actions { get; set; }
 
-        [Parameter] public AntDirectionVHType ItemLayout { get; set; }
-
         [Parameter] public ListGridType Grid { get; set; }
 
         [Parameter] public RenderFragment ChildContent { get; set; }
@@ -33,6 +31,8 @@ namespace AntDesign
 
         [Parameter] public bool NoFlex { get; set; }
 
+        [CascadingParameter] public ListItemLayout ItemLayout { get; set; }
+
         [CascadingParameter(Name = "ItemClick")] public Action ItemClick { get; set; }
 
         [Inject]
@@ -40,31 +40,30 @@ namespace AntDesign
 
         public bool IsVerticalAndExtra()
         {
-            return this.ItemLayout == AntDirectionVHType.Vertical && this.Extra != null;
+            return this.ItemLayout == ListItemLayout.Vertical && this.Extra != null;
         }
 
         protected override async Task OnInitializedAsync()
         {
             SetClassMap();
 
-            if (Grid != null)
+            await base.OnInitializedAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender && Grid != null)
             {
                 await this.SetGutterStyle();
                 DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
             }
 
-            await base.OnInitializedAsync();
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         private async void OnResize(object o)
         {
             await SetGutterStyle();
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            SetClassMap();
         }
 
         private static Hashtable _gridResponsiveMap = new Hashtable()
@@ -122,7 +121,7 @@ namespace AntDesign
 
         private bool IsFlexMode()
         {
-            if (ItemLayout == AntDirectionVHType.Vertical)
+            if (ItemLayout == ListItemLayout.Vertical)
             {
                 return Extra != null;
             }
