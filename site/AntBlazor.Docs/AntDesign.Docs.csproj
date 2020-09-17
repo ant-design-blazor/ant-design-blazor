@@ -49,7 +49,7 @@
 
   <PropertyGroup>
     <CLIProjectDir>site/AntDesign.Docs.Build.CLI</CLIProjectDir>
-    <CLIPath>$(CLIProjectDir)/bin/Debug/netcoreapp3.1/AntDesign.Docs.Build.CLI.dll</CLIPath>
+    <CLIPath>$(CLIProjectDir)/bin/Debug/net5.0/AntDesign.Docs.Build.CLI.dll</CLIPath>
   </PropertyGroup>
 
   <Target Name="RunCli" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug'">
