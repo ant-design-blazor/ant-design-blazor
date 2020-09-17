@@ -1,16 +1,18 @@
 ﻿<Switch Checked="@_loading" @bind-Value="@_loading"></Switch>
 
 <AntList DataSource="@_listData">
-    <Item Context="item">
-        <Skeleton Loading="@_loading" Active="true" Avatar="true">
-            <AntListItemMeta Avatar="@item.Avatar" Description="@item.Description">
-                <Title>
-                    <a href="@item.Href">@item.Title</a>
-                </Title>
-            </AntListItemMeta>
-            @item.Content
-        </Skeleton>
-    </Item>
+    <ChildContent Context="item">
+        <ListItem>
+            <Skeleton Loading="@_loading" Active Avatar>
+                <ListItemMeta Avatar="@item.Avatar" Description="@item.Description">
+                    <Title>
+                        <a href="@item.Href">@item.Title</a>
+                    </Title>
+                </ListItemMeta>
+                @item.Content
+            </Skeleton>
+        </ListItem>
+    </ChildContent>
 </AntList>
 
 @code{

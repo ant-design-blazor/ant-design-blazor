@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class AntListItemMeta
+    public partial class ListItemMeta : AntDomComponentBase
     {
-
         public string PrefixName { get; set; } = "ant-list-item-meta";
 
-        [Parameter] public RenderFragment Title { get; set; }
+        [Parameter] public string Title { get; set; }
+
+        [Parameter] public RenderFragment TitleTemplate { get; set; }
 
         [Parameter] public string Avatar { get; set; }
 
@@ -18,15 +16,11 @@ namespace AntDesign
 
         [Parameter] public string Description { get; set; }
 
+        [CascadingParameter] public ListItem ListItem { get; set; }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            SetClassMap();
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
             SetClassMap();
         }
 
@@ -35,6 +29,5 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add(PrefixName);
         }
-
     }
 }

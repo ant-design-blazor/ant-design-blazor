@@ -1,7 +1,7 @@
-﻿<AntList DataSource="@datas" TItem="Data" Header="header" ClassName="comment-list">
-    <Item Context="item">
-        <Comment Actions="@item.Actions" Avatar="@item.Avatar" Author="@item.Author" DatetimeTemplate="@item.Datetime" Content="@item.Content"></Comment>
-    </Item>
+﻿<AntList DataSource="@datas" TItem="Data" Header="header" Class="comment-list">
+    <ListItem >
+        <Comment Actions="context.Actions" Avatar="context.Avatar" Author="context.Author" Datetime="context.Datetime" Content="context.Content"></Comment>
+    </ListItem>
 </AntList>
 
 @code{
