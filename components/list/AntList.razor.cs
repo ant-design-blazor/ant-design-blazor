@@ -56,18 +56,12 @@ namespace AntDesign
             }
         }
 
-        protected override void OnParametersSet()
+        protected override void OnInitialized()
         {
-            base.OnParametersSet();
             SetClassMap();
-        }
 
-        protected override async Task OnParametersSetAsync()
-        {
-            await base.OnParametersSetAsync();
-            SetClassMap();
+            base.OnInitialized();
         }
-
         protected void SetClassMap()
         {
             // large => lg

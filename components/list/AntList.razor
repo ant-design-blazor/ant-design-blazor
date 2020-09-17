@@ -18,9 +18,11 @@
             {
                 <Row Gutter="Grid.Gutter">
                     @foreach (var item in DataSource)
-                    {
-                        <CascadingValue Value="()=>HandleItemClick(item)" TValue="Action" Name="ItemClick">
-                            @ChildContent(item)
+                    { 
+                        <CascadingValue Value="ItemLayout">
+                            <CascadingValue Value="()=>HandleItemClick(item)" TValue="Action" Name="ItemClick">
+                                @ChildContent(item)
+                            </CascadingValue>
                         </CascadingValue>
                     }
                 </Row>
@@ -30,8 +32,10 @@
                 <ul class="ant-list-items">
                     @foreach (var item in DataSource)
                     {
-                        <CascadingValue Value="()=>HandleItemClick(item)" TValue="Action" Name="ItemClick">
-                            @ChildContent(item)
+                        <CascadingValue Value="ItemLayout">
+                            <CascadingValue Value="()=>HandleItemClick(item)" TValue="Action" Name="ItemClick">
+                                @ChildContent(item)
+                            </CascadingValue>
                         </CascadingValue>
                     }
                 </ul>
