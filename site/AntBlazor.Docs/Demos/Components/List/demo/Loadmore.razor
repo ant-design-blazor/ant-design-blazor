@@ -1,14 +1,16 @@
 ﻿@inject HttpClient HttpClient
 
-<AntList Class="demo-loadmore-list" DataSource="@Data" ItemLayout="AntDirectionVHType.Horizontal" Loading="@InitLoading" Actions="actions">
-    <Item Context="item">
-        <AntListItemMeta Avatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
-            <Title>
-                <a href="https://ant.design">@item.Name.Last</a>
-            </Title>
-        </AntListItemMeta>
-        <div>content</div>
-    </Item>
+<AntList Class="demo-loadmore-list" DataSource="@Data" ItemLayout="ListItemLayout.Horizontal" Loading="@InitLoading">
+    <ChildContent Context="item">
+        <ListItem Actions="actions">
+            <ListItemMeta Avatar="avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
+                <TitleTemplate>
+                    <a href="https://ant.design">@item.Name.Last</a>
+                </TitleTemplate>
+            </ListItemMeta>
+            <div>content</div>
+        </ListItem>
+    </ChildContent>
     <LoadMore>
         @if (!InitLoading && !Loading)
         {
@@ -35,75 +37,76 @@
 
 @code {
 
+    static RenderFragment avatar =@<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
 
-    RenderFragment edit = @<a key="list-loadmore-edit">edit</a>;
+static RenderFragment edit = @<a key="list-loadmore-edit">edit</a>;
 
-    RenderFragment add = @<a key="list-loadmore-more">more</a>;
+static RenderFragment add = @<a key="list-loadmore-more">more</a>;
 
 
-        public List<RenderFragment> actions { get { return new List<RenderFragment> { edit, add }; } }
+public RenderFragment[] actions = new[] { edit, add };
 
-        public int count = 3;
+public int count = 3;
 
-        public string FakeDataUrl { get { return $"https://randomuser.me/api/?results={count}&inc=name,gender,email,nat&noinfo"; } }
+public string FakeDataUrl { get { return $"https://randomuser.me/api/?results={count}&inc=name,gender,email,nat&noinfo"; } }
 
-        public List<DataModel> Data { get; set; }
+public List<DataModel> Data { get; set; }
 
-        public bool InitLoading { get; set; } = true;
+public bool InitLoading { get; set; } = true;
 
-        public bool Loading { get; set; } = false;
+public bool Loading { get; set; } = false;
 
-        protected override async Task OnInitializedAsync()
-        {
-            Data = await GetData();
-            InitLoading = false;
-            await base.OnInitializedAsync();
-        }
+protected override async Task OnInitializedAsync()
+{
+Data = await GetData();
+InitLoading = false;
+await base.OnInitializedAsync();
+}
 
-        public async Task OnLoadMore()
-        {
-            Loading = true;
-            var res = await GetData();
-            Data.AddRange(res);
-            Loading = false;
-        }
+public async Task OnLoadMore()
+{
+Loading = true;
+var res = await GetData();
+Data.AddRange(res);
+Loading = false;
+}
 
-        public async Task<List<DataModel>> GetData()
-        {
-            try
-            {
-                var res = await HttpClient.GetFromJsonAsync<Response>(FakeDataUrl);
-                return res.Results;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return new List<DataModel>();
-            }
-        }
+public async Task<List<DataModel>> GetData()
+{
+try
+{
+var res = await HttpClient.GetFromJsonAsync<Response>(FakeDataUrl);
+return res.Results;
+}
+catch (Exception ex)
+{
+Console.WriteLine(ex);
+return new List<DataModel>();
+}
+}
 
-        public class Response
-        {
-            public List<DataModel> Results { get; set; }
-        }
+public class Response
+{
+public List<DataModel> Results { get; set; }
+}
 
-        public class DataModel
-        {
-            public string Gender { get; set; }
+public class DataModel
+{
+public string Gender { get; set; }
 
-            public Name Name { get; set; }
+public Name Name { get; set; }
 
-            public string Email { get; set; }
+public string Email { get; set; }
 
-            public string Nat { get; set; }
-        }
+public string Nat { get; set; }
+}
 
-        public class Name
-        {
-            public string Title { get; set; }
+public class Name
+{
+public string Title { get; set; }
 
-            public string First { get; set; }
+public string First { get; set; }
 
-            public string Last { get; set; }
-        }
-    }
+public string Last { get; set; }
+}
+}
