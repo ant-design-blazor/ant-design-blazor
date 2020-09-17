@@ -26,8 +26,6 @@ namespace AntDesign.Docs.Routing
 
         [Parameter] public string DefaultUrl { get; set; }
 
-        private static CultureInfo[] AllCultureInfos => CultureInfo.GetCultures(CultureTypes.AllCultures);
-
         public void Attach(RenderHandle renderHandle)
         {
             _renderHandle = renderHandle;
@@ -93,18 +91,22 @@ namespace AntDesign.Docs.Routing
 
             var currentCulture = LanguageService.CurrentCulture;
 
-            var segment = relativeUri.IndexOf('/') > 0 ? relativeUri.Substring(0, relativeUri.IndexOf('/')) : null;
+            var segment = relativeUri.IndexOf('/') > 0 ? relativeUri.Substring(0, relativeUri.IndexOf('/')) : relativeUri;
 
-            if (segment == null)
+            if (string.IsNullOrWhiteSpace(segment))
             {
                 NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}", true);
                 return;
             }
             else
             {
-                if (AllCultureInfos.Any(x => x.Name == segment))
+                if (segment.IsIn("zh-CN", "en-US"))
                 {
                     LanguageService.SetLanguage(CultureInfo.GetCultureInfo(segment));
+                }
+                else if (currentCulture.Name.IsIn("zh-CN", "en-US"))
+                {
+                    NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}", true);
                 }
                 else
                 {
