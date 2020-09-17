@@ -1,6 +1,6 @@
 @namespace AntDesign
 @inherits ColumnBase
-@using AntDesign.Helpers
+@using AntDesign.Core.Helpers
 @using AntDesign.TableModels
 @typeparam TData
 
@@ -37,7 +37,7 @@ else if (IsHeader)
 }
 else
 {
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style">
+    <td class="@ClassMapper.Class" style='@FixedStyle @Style @DisplayStyle' rowspan="@(RowSpan==0?1:RowSpan)" colspan="@(ColSpan==0?1:ColSpan)">
         @if (CellRender != null)
         {
             @CellRender(Field)
@@ -60,7 +60,6 @@ else
     </td>
 }
 
-
 @code
 {
 
@@ -77,10 +76,9 @@ else
         </span>
     </div>;
 
-
-    readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
-        @<Tooltip Class="ant-table-column-sorters-with-tooltip" Title="@col.SorterTooltip">
-            @col.SortHeader(col)
-        </Tooltip>;
+readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
+@<Tooltip Class="ant-table-column-sorters-with-tooltip" Title="@col.SorterTooltip">
+    @col.SortHeader(col)
+</Tooltip>;
 
 }

@@ -33,6 +33,12 @@ namespace AntDesign
         public int Width { get; set; }
 
         [Parameter]
+        public int RowSpan { get; set; } = 1;
+
+        [Parameter]
+        public int ColSpan { get; set; } = 1;
+
+        [Parameter]
         public string Fixed { get; set; }
 
         [Parameter]
@@ -41,6 +47,8 @@ namespace AntDesign
         public int ColIndex { get; set; }
 
         protected string FixedStyle => Fixed != null ? $"position: sticky; {Fixed}: {Width * (Fixed == "left" ? ColIndex : Context.Columns.Count - ColIndex - 1)}px;" : "";
+
+        protected string DisplayStyle => (RowSpan == 0 || ColSpan == 0) ? " display:none;" : "";
 
         private void SetClass()
         {
