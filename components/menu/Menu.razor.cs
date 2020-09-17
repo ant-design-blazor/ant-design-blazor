@@ -124,14 +124,14 @@ namespace AntDesign
                 return;
             }
 
+            foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
+            {
+                menuitem.Deselect();
+            }
+
             if (!item.IsSelected)
             {
                 item.Select();
-
-                foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
-                {
-                    menuitem.Deselect();
-                }
             }
 
             StateHasChanged();
