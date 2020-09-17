@@ -35,9 +35,37 @@ else if (IsHeader)
         }
     </th>
 }
+else if(RowSpan==0 || ColSpan == 0)
+{
+    //Do not generate TD
+}
+else if (RowSpan == 1 && ColSpan == 1)
+{
+    <td class="@ClassMapper.Class" style="@FixedStyle @Style">
+        @if (CellRender != null)
+        {
+            @CellRender(Field)
+        }
+        else if (ChildContent != null)
+        {
+            @ChildContent
+        }
+        else
+        {
+            if (!string.IsNullOrWhiteSpace(Format))
+            {
+                @(Formatter<TData>.Format(Field,Format))
+            }
+            else
+            {
+                @Field
+            }
+        }
+    </td>
+}
 else
 {
-    <td class="@ClassMapper.Class" style='@FixedStyle @Style @DisplayStyle' rowspan="@(RowSpan==0?1:RowSpan)" colspan="@(ColSpan==0?1:ColSpan)">
+    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan">
         @if (CellRender != null)
         {
             @CellRender(Field)
