@@ -169,16 +169,9 @@ namespace AntDesign
 
         protected async Task SetDropdownStyle()
         {
-            if (string.IsNullOrEmpty(Style))
-            {
-                var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
+            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
 
-                _dropdownStyle = $"min-width: {domRect.width}px; width: {domRect.width}px;";
-            }
-            else
-            {
-                _dropdownStyle = Style;
-            }
+            _dropdownStyle = $"min-width: {domRect.width}px; width: {domRect.width}px;";
         }
 
         protected IEnumerable<string> GetTagOptions()
