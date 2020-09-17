@@ -1,0 +1,73 @@
+﻿<div style="margin: 10px; overflow: scroll; height: 200px">
+    <div style="padding: 100px; height: 1000px; background: #eee; position: relative " id="area">
+        <Dropdown PopupContainerSelector="#area" Placement="@PlacementType.BottomLeft">
+            <Overlay>
+                @_overlayMenu
+            </Overlay>
+            <ChildContent>
+                <Button>BottomLeft</Button>
+            </ChildContent>
+        </Dropdown>
+        <Dropdown PopupContainerSelector="#area" Placement="@PlacementType.BottomCenter">
+            <Overlay>
+                @_overlayMenu
+            </Overlay>
+            <ChildContent>
+                <Button>BottomCenter</Button>
+            </ChildContent>
+        </Dropdown>
+        <Dropdown PopupContainerSelector="#area" Placement="@PlacementType.BottomRight">
+            <Overlay>
+                @_overlayMenu
+            </Overlay>
+            <ChildContent>
+                <Button>BottomRight</Button>
+            </ChildContent>
+        </Dropdown>
+        <Dropdown PopupContainerSelector="#area" Placement="@PlacementType.TopLeft">
+            <Overlay>
+                @_overlayMenu
+            </Overlay>
+            <ChildContent>
+                <Button>TopLeft</Button>
+            </ChildContent>
+        </Dropdown>
+        <Dropdown PopupContainerSelector="#area" Placement="@PlacementType.TopCenter">
+            <Overlay>
+                @_overlayMenu
+            </Overlay>
+            <ChildContent>
+                <Button>TopCenter</Button>
+            </ChildContent>
+        </Dropdown>
+        <Dropdown PopupContainerSelector="#area" Placement="@PlacementType.TopRight">
+            <Overlay>
+                @_overlayMenu
+            </Overlay>
+            <ChildContent>
+                <Button>TopRight</Button>
+            </ChildContent>
+        </Dropdown>
+    </div>
+</div>
+
+@code
+{
+    private RenderFragment _overlayMenu =@<Menu>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                1st menu item
+            </a>
+        </MenuItem>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+                2nd menu item
+            </a>
+        </MenuItem>
+        <MenuItem>
+            <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+                3rd menu item
+            </a>
+        </MenuItem>
+    </Menu>;
+}
