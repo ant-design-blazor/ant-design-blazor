@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class AntListItem : AntDomComponentBase
+    public partial class ListItem : AntDomComponentBase
     {
         public string PrefixName { get; set; } = "ant-list-item";
 
@@ -17,7 +17,7 @@ namespace AntDesign
 
         [Parameter] public RenderFragment Extra { get; set; }
 
-        [Parameter] public List<RenderFragment> Actions { get; set; }
+        [Parameter] public RenderFragment[] Actions { get; set; }
 
         [Parameter] public AntDirectionVHType ItemLayout { get; set; }
 
@@ -29,10 +29,11 @@ namespace AntDesign
 
         [Parameter] public int ItemCount { get; set; }
 
-        [CascadingParameter(Name = "ItemClickCallback")]
-        public EventCallback ItemClickCallback { get; set; }
-
         [Parameter] public EventCallback OnClick { get; set; }
+
+        [Parameter] public bool NoFlex { get; set; }
+
+        [CascadingParameter(Name = "ItemClick")] public Action ItemClick { get; set; }
 
         [Inject]
         public DomEventService DomEventService { get; set; }
@@ -116,7 +117,7 @@ namespace AntDesign
         {
             ClassMapper.Clear()
                 .Add(PrefixName)
-                .If($"{PrefixName}-no-flex", () => !IsFlexMode());
+                .If($"{PrefixName}-no-flex", () => NoFlex);
         }
 
         private bool IsFlexMode()
@@ -151,10 +152,9 @@ namespace AntDesign
             {
                 OnClick.InvokeAsync(this);
             }
-            if (ItemClickCallback.HasDelegate)
-            {
-                ItemClickCallback.InvokeAsync(this);
-            }
+
+            ItemClick?.Invoke();
+
         }
 
         protected override void Dispose(bool disposing)

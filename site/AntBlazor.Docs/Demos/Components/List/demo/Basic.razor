@@ -1,15 +1,17 @@
 ﻿<AntList DataSource="@data" TItem="BasicItem" OnItemClick="ItemClick">
-    <Item Context="item">
-        <AntListItemMeta Avatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
-            <Title>
-                <a href="https://ng.ant.design">@item.Title</a>
-            </Title>
-        </AntListItemMeta>
-    </Item>
+    <ListItem>
+        <ListItemMeta Avatar="avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
+            <TitleTemplate>
+                <a href="https://ng.ant.design">@context.Title</a>
+            </TitleTemplate>
+        </ListItemMeta>
+    </ListItem>
 </AntList>
 
 
 @code{
+
+    RenderFragment avatar = @<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
 
     public class BasicItem
     {
@@ -17,7 +19,7 @@
     }
 
     public List<BasicItem> data = new List<BasicItem>
-{
+    {
         new BasicItem { Title = "Ant Design Title 1"},
         new BasicItem { Title = "Ant Design Title 2"},
         new BasicItem { Title = "Ant Design Title 3"},
