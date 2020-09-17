@@ -422,9 +422,6 @@ namespace AntDesign
             }
 
             OnChange?.Invoke(SelectedValues.Value, SelectedOptions);
-
-            //StateHasChanged();
-            //await InvokeAsync(StateHasChanged);
         }
         #endregion 
 
