@@ -52,6 +52,9 @@ namespace AntDesign
         [Parameter]
         public string OverlayStyle { get; set; }
 
+        [Parameter]
+        public string PopupContainerSelector { get; set; } = "body";
+
         #endregion Parameters
 
         private ElementReference _divRef;
