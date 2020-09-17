@@ -20,7 +20,7 @@ else
 
     RenderFragment<ListItem> itemChildren = content =>
     @<Template>
-        @if (content.ItemLayout == AntDirectionVHType.Vertical && content.Extra != null)
+        @if (content.ItemLayout == ListItemLayout.Vertical && content.Extra != null)
         {
             <div class="@content.PrefixName-main">
                 @content.ChildContent
