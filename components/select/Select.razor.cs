@@ -393,7 +393,6 @@ namespace AntDesign
 
         protected async void OnRemoveSelected(SelectOption option)
         {
-            await Task.Delay(100);
             var value = option?.Value;
             if (option.IsTag)
             {
@@ -423,6 +422,8 @@ namespace AntDesign
             }
 
             OnChange?.Invoke(SelectedValues.Value, SelectedOptions);
+
+            //StateHasChanged();
             //await InvokeAsync(StateHasChanged);
         }
         #endregion 
