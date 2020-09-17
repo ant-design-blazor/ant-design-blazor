@@ -1,14 +1,19 @@
 ﻿@inject HttpClient HttpClient
 
-<AntList DataSource="@ListData" ItemLayout="@AntDirectionVHType.Vertical" Extra="@extra">
-    <Item Context="item">
-        <AntListItemMeta Avatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" Description="@item.Description">
-            <Title>
-                <a href="@item.Href">@item.Title</a>
-            </Title>
-        </AntListItemMeta>
-        @item.Content
-    </Item>
+<AntList DataSource="@ListData" ItemLayout="@ListItemLayout.Vertical">
+    <ChildContent Context="item">
+        <ListItem Extra="@extra" Actions="@(new[] { iconText(("start","156")),iconText(("like","156")),iconText(("message","2")) })">
+            <ListItemMeta Description="@item.Description">
+                <AvatarTemplate>
+                    @avatar
+                </AvatarTemplate>
+                <TitleTemplate>
+                    <a href="@item.Href">@item.Title</a>
+                </TitleTemplate>
+            </ListItemMeta>
+            @item.Content
+        </ListItem>
+    </ChildContent>
     <Footer>
         <div>
             <b>ant design</b> footer part
@@ -18,7 +23,17 @@
 
 @code {
 
+    RenderFragment avatar =@<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
+
     RenderFragment extra = @<img width="272" alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />;
+
+    RenderFragment<(string icon, string text)> iconText = context =>
+    @<Template>
+        <Space>
+            <SpaceItem><Icon Type="@context.icon" /></SpaceItem>
+            <SpaceItem>@context.text</SpaceItem>
+        </Space>
+    </Template> ;
 
     public int count = 3;
 

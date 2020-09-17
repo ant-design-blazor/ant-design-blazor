@@ -1,0 +1,42 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class" style="@Style">
+
+    @if (!string.IsNullOrWhiteSpace(Avatar) || AvatarTemplate != null)
+    {
+        <div class="ant-list-item-meta-avatar">
+            @if (!string.IsNullOrWhiteSpace(Avatar))
+            {
+                <Avatar Src="@Avatar"></Avatar>
+            }
+            else
+            {
+                @AvatarTemplate
+            }
+        </div>
+    }
+
+    <div class="ant-list-item-meta-content">
+        @if (!string.IsNullOrWhiteSpace(Title) || TitleTemplate != null)
+        {
+            <div>
+                <h4 class="ant-list-item-meta-title">
+                    @if (!string.IsNullOrWhiteSpace(Title))
+                    {
+                        @Title
+                    }
+                    else
+                    {
+                        @TitleTemplate
+                    }
+                </h4>
+            </div>
+        }
+
+        <div class="ant-list-item-meta-description">
+            @Description
+        </div>
+    </div>
+</div>
+

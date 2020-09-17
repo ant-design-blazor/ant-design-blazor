@@ -2,9 +2,12 @@
 
 <AntList Bordered DataSource="@data">
     <Header>Header</Header>
-    <Item Context="item">
-        <span><mark>[ITEM]</mark></span>@item
-    </Item>
+    <ChildContent Context="item">
+        <ListItem>
+            <span><Text Mark>[ITEM]</Text></span>@item
+        </ListItem>
+    </ChildContent>
+
     <Footer>Footer</Footer>
 </AntList>
 
@@ -12,9 +15,11 @@
 
 <AntList Bordered DataSource="@data" Size="small">
     <Header>Header</Header>
-    <Item Context="item">
-        <span><mark>[ITEM]</mark></span>@item
-    </Item>
+    <ChildContent Context="item">
+        <ListItem>
+            <span><Text Mark>[ITEM]</Text></span>@item
+        </ListItem>
+    </ChildContent>
     <Footer>Footer</Footer>
 </AntList>
 
@@ -22,16 +27,19 @@
 
 <AntList Bordered DataSource="@data" Size="large">
     <Header>Header</Header>
-    <Item Context="item">
-        <span><mark>[ITEM]</mark></span>@item
-    </Item>
+    <Header>Header</Header>
+    <ChildContent Context="item">
+        <ListItem>
+            <span><Text Mark>[ITEM]</Text></span>@item
+        </ListItem>
+    </ChildContent>
     <Footer>Footer</Footer>
 </AntList>
 
 @code{
 
     public List<string> data = new List<string>
-    {
+{
         "Racing car sprays burning fuel into crowd.",
         "Japanese princess to wed commoner.",
         "Australian walks 100km after outback crash.",
