@@ -50,7 +50,7 @@
                 {
                     if (ParentSelect.TagRender != null)
                     {
-                        <span>@ParentSelect.TagRender(GetProperties(option))</span>
+                        <span @key="@option.Value">@ParentSelect.TagRender(GetProperties(option))</span>
                     }
                     else
                     {
@@ -67,7 +67,7 @@
                                 }
                             </span>
 
-                            @if (ParentSelect.SelectMode == SelectMode.Tags)
+                            @if (ParentSelect.SelectMode == SelectMode.Tags || ParentSelect.SelectMode == SelectMode.Multiple)
                             {
                                 <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
                                       @onclick="()=>OnRemoveSelected.InvokeAsync(option)" @onclick:stopPropagation="true">
@@ -200,9 +200,7 @@
             Closable = true,
             Value = option.Value,
             Label = option.Label,
-            OnClose = Action
+            OnClose = (e) => { OnRemoveSelected.InvokeAsync(option); }
         };
-
-        void Action(MouseEventArgs e) => OnRemoveSelected.InvokeAsync(option);
     }
 }
