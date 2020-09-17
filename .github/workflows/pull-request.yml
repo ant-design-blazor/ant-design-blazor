@@ -12,10 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Setup .NET Core
+      - name: Setup .NET Core 3.1
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.300
+          
+      - name: Setup .NET 5
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.100-rc.1.20452.10
 
       - uses: actions/setup-node@v1
         with:
