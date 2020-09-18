@@ -184,7 +184,7 @@ namespace AntDesign
 
         #region control show and hide class name and style
 
-        private void Show()
+        private async Task Show()
         {
             if (_hasShow)
             {
@@ -213,7 +213,13 @@ namespace AntDesign
                 _maskAnimation = ModalAnimation.MaskEnter;
                 _modalAnimation = ModalAnimation.ModalEnter;
 
+                // wait for animation, "antZoomIn" animation take 0.3s
+                // see: @animation-duration-slow: 0.3s;
+                await Task.Delay(300);
+
                 _hasShow = true;
+
+                StateHasChanged();
             }
 
         }
@@ -242,6 +248,11 @@ namespace AntDesign
 
         }
 
+        public bool IsShow()
+        {
+            return _hasShow;
+        }
+
         #endregion
 
         private string GetMaskClsName()
@@ -267,7 +278,7 @@ namespace AntDesign
             {
                 if (!_hasDestroy)
                 {
-                    Show();
+                    await Show();
                 }
                 else
                 {

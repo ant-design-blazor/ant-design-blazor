@@ -28,6 +28,7 @@ namespace AntDesign
 
         private string _searchValue;
         private string _dropdownStyle;
+        private bool _hasInitDropdownStyle = false;
         private SelectOption _searchOption;
         internal ElementReference _inputRef;
 
@@ -287,11 +288,21 @@ namespace AntDesign
             base.OnInitialized();
         }
 
+        protected override async Task OnParametersSetAsync()
+        {
+            if (ModalCompleteShow && !_hasInitDropdownStyle)
+            {
+                await SetDropdownStyle();
+                _hasInitDropdownStyle = true;
+            }
+
+            await base.OnParametersSetAsync();
+        }
+
         protected override async Task OnFirstAfterRenderAsync()
         {
             await base.OnFirstAfterRenderAsync();
 
-            await SetDropdownStyle();
             await InvokeAsync(StateHasChanged);
         }
 

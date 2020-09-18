@@ -1,4 +1,5 @@
 ﻿@namespace AntDesign.Internal
+@inherits AntDomComponentBase
 @using OneOf;
 
 @switch (ParentSelect.SelectMode)
@@ -160,13 +161,13 @@
     public bool IsOverlayShow { get; set; }
 
     [Parameter]
+    public bool ShowPlaceholder { get; set; }
+
+    [Parameter]
     public EventCallback<ChangeEventArgs> OnInput { get; set; }
 
     [Parameter]
     public EventCallback<SelectOption> OnRemoveSelected { get; set; }
-
-    [Parameter]
-    public bool ShowPlaceholder { get; set; }
 
     [Parameter]
     public Func<SelectOption, OneOf<string, RenderFragment>> GetOptionShowValue { get; set; }
