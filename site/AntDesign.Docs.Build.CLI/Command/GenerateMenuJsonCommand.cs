@@ -184,7 +184,6 @@ namespace AntDesign.Docs.Build.CLI.Command
                 }
 
                 var configFilePath = Path.Combine(configFileDirectory, $"menu.{lang}.json");
-                Console.WriteLine(json);
 
                 if (File.Exists(configFilePath))
                 {

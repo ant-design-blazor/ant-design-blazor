@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
 
 namespace AntDesign.Docs.Shared
@@ -13,7 +14,7 @@ namespace AntDesign.Docs.Shared
     {
         private bool _isCollapsed = true;
 
-        private string CurrentLanguage => LanguageService.CurrentCulture.Name;
+        public string CurrentLanguage => LanguageService.CurrentCulture.Name;
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -35,11 +36,7 @@ namespace AntDesign.Docs.Shared
             await DemoService.InitializeDemos();
 
             LanguageService.LanguageChanged += OnLanguageChanged;
-
-            NavigationManager.LocationChanged += (_, args) =>
-            {
-                StateHasChanged();
-            };
+            NavigationManager.LocationChanged += OnLocationChanged;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -57,13 +54,7 @@ namespace AntDesign.Docs.Shared
 
             var currentSubmenuUrl = DemoService.GetCurrentSubMenuUrl();
             var prevNext = await DemoService.GetPrevNextMenu(currentSubmenuUrl, currentTitle);
-            foreach (var item in prevNext)
-            {
-                if (item != null)
-                {
-                    item.Url = $"{CurrentLanguage}/{currentSubmenuUrl}/{item.Title.ToLowerInvariant()}";
-                }
-            }
+
             PrevNextNav?.SetPrevNextNav(prevNext[0], prevNext[1]);
         }
 
@@ -73,9 +64,15 @@ namespace AntDesign.Docs.Shared
             await InvokeAsync(StateHasChanged);
         }
 
+        private void OnLocationChanged(object sender, LocationChangedEventArgs args)
+        {
+            StateHasChanged();
+        }
+
         public void Dispose()
         {
             LanguageService.LanguageChanged -= OnLanguageChanged;
+            NavigationManager.LocationChanged -= OnLocationChanged;
         }
     }
 }

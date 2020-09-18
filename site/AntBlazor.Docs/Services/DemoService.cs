@@ -126,16 +126,27 @@ namespace AntDesign.Docs.Services
 
         public async Task<DemoMenuItem[]> GetPrevNextMenu(string type, string currentTitle)
         {
-            var cache = type.ToLowerInvariant() == "docs" ? _docMenuCache : _demoMenuCache;
 
-            var items = cache.TryGetValue(CurrentLanguage, out var menuItems) ? (await menuItems)
+            var items = Array.Empty<DemoMenuItem>();
+
+            if (type.ToLowerInvariant() == "docs")
+            {
+                items = _docMenuCache.TryGetValue(CurrentLanguage, out var menuItems) ? (await menuItems).OrderBy(x => x.Order).ToArray() : Array.Empty<DemoMenuItem>();
+                currentTitle = $"docs/{currentTitle}";
+            }
+            else
+            {
+                items = _demoMenuCache.TryGetValue(CurrentLanguage, out var menuItems) ? (await menuItems)
                 .OrderBy(x => x.Order)
                 .SelectMany(x => x.Children)
                 .ToArray() : Array.Empty<DemoMenuItem>();
 
+                currentTitle = $"components/{currentTitle}";
+            }
+
             for (var i = 0; i < items.Length; i++)
             {
-                if (currentTitle.Equals(items[i].Title, StringComparison.InvariantCultureIgnoreCase))
+                if (currentTitle.Equals(items[i].Url, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var prev = i == 0 ? null : items[i - 1];
                     var next = i == items.Length - 1 ? null : items[i + 1];

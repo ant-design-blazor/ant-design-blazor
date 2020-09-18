@@ -1,7 +1,7 @@
 ﻿<section class="prev-next-nav">
     @if (prev != null)
     {
-        <NavLink class="prev-page" href="@prev.Url">
+        <NavLink class="prev-page" href="@($"{MainLayout?.CurrentLanguage}/{prev.Url}")">
             <Icon Type="left" Class="footer-nav-icon-before"/>
             <span>
                 @prev.Title
@@ -17,7 +17,7 @@
     }
     @if (next != null)
     {
-        <NavLink class="next-page" href="@next.Url">
+        <NavLink class="next-page" href="@($"{MainLayout?.CurrentLanguage}/{next.Url}")">
             <Icon Type="left" Class="footer-nav-icon-before"/>
             <span>@next.Title</span>
             @if (next.SubTitle != null)
@@ -31,6 +31,8 @@
 
 @code
 {
+    [Inject]
+    public ILanguageService LanguageService { get; set; }
 
     [CascadingParameter]
     public MainLayout MainLayout { get; set; }
@@ -49,5 +51,7 @@
     {
         this.prev = prev;
         this.next = next;
+
+        StateHasChanged();
     }
 }
