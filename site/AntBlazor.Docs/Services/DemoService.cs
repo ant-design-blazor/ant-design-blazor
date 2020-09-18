@@ -4,9 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Unicode;
 using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
@@ -131,7 +128,10 @@ namespace AntDesign.Docs.Services
         {
             var cache = type.ToLowerInvariant() == "docs" ? _docMenuCache : _demoMenuCache;
 
-            var items = cache.TryGetValue(CurrentLanguage, out var menuItems) ? await menuItems : Array.Empty<DemoMenuItem>();
+            var items = cache.TryGetValue(CurrentLanguage, out var menuItems) ? (await menuItems)
+                .OrderBy(x => x.Order)
+                .SelectMany(x => x.Children)
+                .ToArray() : Array.Empty<DemoMenuItem>();
 
             for (var i = 0; i < items.Length; i++)
             {
