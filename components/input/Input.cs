@@ -76,6 +76,9 @@ namespace AntDesign
         public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
 
         [Parameter]
+        public EventCallback<MouseEventArgs> OnMouseUp { get; set; }
+
+        [Parameter]
         public EventCallback<ChangeEventArgs> OnInput { get; set; }
 
         [Parameter]
@@ -113,7 +116,7 @@ namespace AntDesign
             }
 
             ClassMapper.Clear()
-                .If($"{PrefixCls}", () => Type != "number")
+                .Add($"{PrefixCls}")
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small);
 
@@ -201,6 +204,23 @@ namespace AntDesign
         protected virtual async Task OnkeyDownAsync(KeyboardEventArgs args)
         {
             if (OnkeyDown.HasDelegate) await OnkeyDown.InvokeAsync(args);
+        }
+
+        protected async Task OnMouseUpAsync(MouseEventArgs args)
+        {
+            if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
+            {
+                if (!_compositionInputting)
+                {
+                    CurrentValue = _inputValue;
+                    if (OnChange.HasDelegate)
+                    {
+                        await OnChange.InvokeAsync(Value);
+                    }
+                }
+            }
+
+            if (OnMouseUp.HasDelegate) await OnMouseUp.InvokeAsync(args);
         }
 
         internal virtual async Task OnBlurAsync(FocusEventArgs e)
@@ -381,11 +401,7 @@ namespace AntDesign
                 }
 
                 builder.AddAttribute(50, "Id", Id);
-                if (Type != "number")
-                {
-                    builder.AddAttribute(51, "type", Type);
-                }
-
+                builder.AddAttribute(51, "type", Type);
                 builder.AddAttribute(60, "placeholder", Placeholder);
                 builder.AddAttribute(61, "value", CurrentValue);
 
@@ -401,6 +417,7 @@ namespace AntDesign
                 builder.AddAttribute(63, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
                 builder.AddAttribute(64, "oninput", CallbackFactory.Create(this, OnInputAsync));
                 builder.AddAttribute(66, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
+                builder.AddAttribute(67, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
                 builder.AddElementReferenceCapture(68, r => Ref = r);
                 builder.CloseElement();
 
