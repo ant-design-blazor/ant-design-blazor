@@ -133,10 +133,6 @@ namespace AntDesign
             {
                 item.Select();
             }
-            else
-            {
-                item.Deselect();
-            }
 
             StateHasChanged();
 
@@ -212,6 +208,7 @@ namespace AntDesign
             if (Parent != null)
             {
                 Parent.OnCollapsed += CollapseUpdated;
+                CollapseUpdated(Parent.Collapsed);
             }
 
             SetClass();

@@ -1,0 +1,62 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+@if (Grid == null)
+{
+    <li class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation>
+        @itemChildren(this)
+    </li>
+}
+else
+{
+    <AntDesign.Col Flex="1" Style="@ColStyle" Xs="Grid.Xs" Sm="Grid.Sm" Md="Grid.Md" Lg="Grid.Lg" Xl="Grid.Xl" Xxl="Grid.Xxl">
+        <div class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation>
+            @itemChildren(this)
+        </div>
+    </AntDesign.Col>
+}
+@code{
+
+
+    RenderFragment<ListItem> itemChildren = content =>
+    @<Template>
+        @if (content.ItemLayout == ListItemLayout.Vertical && content.Extra != null)
+        {
+            <div class="@content.PrefixName-main">
+                @content.ChildContent
+                @content.actionsContent(content)
+            </div>
+            <div class="@content.PrefixName-extra">@content.Extra</div>
+        }
+        else
+        {
+            @content.ChildContent
+            @content.actionsContent(content)
+            @if (content.Extra != null)
+            {
+                @content.Extra
+            }
+        }
+    </Template>;
+
+    RenderFragment<ListItem> actionsContent = content =>
+    @<Template>
+        @if (content.Actions != null && content.Actions.Length > 0)
+        {
+            <ul class="@content.PrefixName-action" key="actions">
+                @for (int i = 0; i < content.Actions.Length; i++)
+                {
+                    <li key="@content.PrefixName-action-@i">
+                        @content.Actions[i]
+                        @if (i != (content.Actions.Length - 1))
+                        {
+                            <em class="@content.PrefixName-action-split" />
+                        }
+                    </li>
+                }
+            </ul>
+        }
+    </Template>;
+
+
+}

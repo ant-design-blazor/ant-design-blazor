@@ -1,7 +1,7 @@
 ﻿name: Publish Docs
 
 env:
-  Version: 0.3.0
+  Version: 0.4.0
   NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
 
 on:
@@ -23,7 +23,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.300
+          dotnet-version: 5.0.100-rc.1.20452.10
 
       - uses: actions/setup-node@v1
         with:

@@ -1,7 +1,7 @@
-﻿using Xunit;
-using AntDesign.Core.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using AntDesign.Core.Helpers;
+using Xunit;
 
 namespace AntDesign.Tests.Core
 {

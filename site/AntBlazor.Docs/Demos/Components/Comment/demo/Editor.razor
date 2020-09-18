@@ -2,12 +2,16 @@
     @if (datas.Count > 0)
     {
         <AntList DataSource="datas" TItem="Data" Header="@header">
-            <Item Context="item">
-                <Comment Avatar="item.Avatar" Author="item.Author" Datetime="item.Datetime" Content="item.Content"></Comment>
-            </Item>
+            <ListItem>
+                <Comment Avatar="context.Avatar" Author="context.Author" Datetime="context.Datetime" Content="context.Content"></Comment>
+            </ListItem>
         </AntList>
     }
-    <Comment Avatar="@(@"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png")" Content="@(GetEditor(@onSubmit))"></Comment>
+    <Comment Avatar="@(@"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png")">
+        <ContentTemplate>
+            @GetEditor(@onSubmit)
+        </ContentTemplate>
+</Comment>
 </div>
 
 

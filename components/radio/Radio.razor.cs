@@ -142,12 +142,12 @@ namespace AntDesign
 
         protected async Task Focus()
         {
-            await JsInvokeAsync(JSInteropConstants.focus, this.InputRef);
+            await JsInvokeAsync(JSInteropConstants.Focus, this.InputRef);
         }
 
         protected async Task Blur()
         {
-            await JsInvokeAsync(JSInteropConstants.blur, this.InputRef);
+            await JsInvokeAsync(JSInteropConstants.Blur, this.InputRef);
         }
     }
 }

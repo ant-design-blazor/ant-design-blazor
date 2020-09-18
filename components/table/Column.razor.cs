@@ -74,15 +74,15 @@ namespace AntDesign
                 var next = SortModel.NextType();
                 if (next == SortType.None)
                 {
-                    return "取消排序";
+                    return Table.Locale.CancelSort;
                 }
                 else if (next == SortType.Ascending)
                 {
-                    return "点击升序";
+                    return Table.Locale.TriggerAsc;
                 }
                 else
                 {
-                    return "点击降序";
+                    return Table.Locale.TriggerDesc;
                 }
             }
         }

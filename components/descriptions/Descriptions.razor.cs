@@ -29,7 +29,10 @@ namespace AntDesign
         public string Size { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        public string Title { get; set; }
+
+        [Parameter]
+        public RenderFragment TitleTemplate { get; set; }
 
         [Parameter]
         public bool Colon { get; set; }
@@ -163,7 +166,7 @@ namespace AntDesign
             }
             else
             {
-                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _divRef);
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _divRef);
                 var breakpointTuple = _descriptionsResponsiveMap.FirstOrDefault(x => x.PixelWidth > element.clientWidth);
                 var bp = breakpointTuple == default ? BreakpointEnum.xxl : breakpointTuple.Breakpoint;
                 _realColumn = Column.AsT1.ContainsKey(bp.ToString()) ? Column.AsT1[bp.ToString()] : _defaultColumnMap[bp.ToString()];

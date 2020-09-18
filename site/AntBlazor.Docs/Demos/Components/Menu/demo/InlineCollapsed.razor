@@ -2,20 +2,18 @@
     <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-bottom: 16px">
         @if (collapsed)
         {
-            <Icon  Type="menu-unfold" Theme="outline"></Icon>
+            <Icon Type="menu-unfold" Theme="outline"></Icon>
         }
         else
         {
-            <Icon  Type="menu-fold" Theme="outline"></Icon>
+            <Icon Type="menu-fold" Theme="outline"></Icon>
         }
     </Button>
-    <Menu
-        DefaultSelectedKeys=@(new[]{"1"})
-        DefaultOpenKeys=@(new[]{"sub1"})
-        Mode=MenuMode.Inline
-        Theme=MenuTheme.Dark
-        InlineCollapsed=collapsed
-    >
+    <Menu DefaultSelectedKeys=@(new[] { "1" })
+          DefaultOpenKeys=@(new[] { "sub1" })
+          Mode=MenuMode.Inline
+          Theme=MenuTheme.Dark
+          InlineCollapsed=collapsed>
         <MenuItem Key="1">
             <Icon Type="pie-chart" Theme="outline"></Icon>
             <span>Option 1</span>
@@ -28,19 +26,19 @@
             <Icon Type="container" Theme="outline"></Icon>
             <span>Option 3</span>
         </MenuItem>
-        <SubMenu Key="sub1" Title=sub1Title >
-        <MenuItem Key="5">Option 5</MenuItem>
-        <MenuItem Key="6">Option 6</MenuItem>
-        <MenuItem Key="7">Option 7</MenuItem>
-        <MenuItem Key="8">Option 8</MenuItem>
+        <SubMenu Key="sub1" TitleTemplate=@sub1Title>
+            <MenuItem Key="5">Option 5</MenuItem>
+            <MenuItem Key="6">Option 6</MenuItem>
+            <MenuItem Key="7">Option 7</MenuItem>
+            <MenuItem Key="8">Option 8</MenuItem>
         </SubMenu>
-        <SubMenu Key="sub2" Title=sub2Title>
-        <MenuItem Key="9">Option 9</MenuItem>
-        <MenuItem Key="10">Option 10</MenuItem>
-        <SubMenu Key="sub3" Title=@("Submenu")>
-            <MenuItem Key="11">Option 11</MenuItem>
-            <MenuItem Key="12">Option 12</MenuItem>
-        </SubMenu>
+        <SubMenu Key="sub2" TitleTemplate=@sub2Title>
+            <MenuItem Key="9">Option 9</MenuItem>
+            <MenuItem Key="10">Option 10</MenuItem>
+            <SubMenu Key="sub3" Title="Submenu">
+                <MenuItem Key="11">Option 11</MenuItem>
+                <MenuItem Key="12">Option 12</MenuItem>
+            </SubMenu>
         </SubMenu>
     </Menu>
 </div>
@@ -49,19 +47,19 @@
     bool collapsed = false;
 
     RenderFragment sub1Title =
-        @<span>
-            <Icon Type="mail" Theme="outline"></Icon>
-            <span>Navigation One</span>
-        </span>;
+    @<span>
+        <Icon Type="mail" Theme="outline"></Icon>
+        <span>Navigation One</span>
+    </span>;
 
     RenderFragment sub2Title =
-        @<span>
-            <Icon Type="appstore" Theme="outline"></Icon>
-            <span>Navigation Two</span>
-        </span>;
+    @<span>
+        <Icon Type="appstore" Theme="outline"></Icon>
+        <span>Navigation Two</span>
+    </span>;
 
-    void ToggleCollapsed()
-    {
-        collapsed = !collapsed;
+        void ToggleCollapsed()
+        {
+            collapsed = !collapsed;
+        }
     }
-}

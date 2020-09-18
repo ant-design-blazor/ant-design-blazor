@@ -141,7 +141,7 @@ namespace AntDesign
 
             if (firstRender)
             {
-                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, Ref);
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
                 _height = element.clientHeight;
             }
         }

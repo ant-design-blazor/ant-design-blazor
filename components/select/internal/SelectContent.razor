@@ -1,0 +1,206 @@
+﻿@namespace AntDesign.Internal
+@using OneOf;
+
+@switch (ParentSelect.SelectMode)
+{
+    case SelectMode.Default:
+        {
+            var selectedOption = ParentSelect.SelectedOptions.FirstOrDefault();
+
+            <div class="@Prefix-selector">
+                <span class="@Prefix-selection-search">
+                    <input @ref="ParentSelect._inputRef"
+                           @oninput="OnInput"
+                           id="@ParentSelect.Id"
+                           value="@SearchValue"
+                           role="combobox"
+                           class="@Prefix-selection-search-input"
+                           autocomplete="off"
+                           aria-owns="@(ParentSelect.Id)_list"
+                           aria-expanded="@IsOverlayShow"
+                           aria-autocomplete="list"
+                           aria-controls="@(ParentSelect.Id)_list" />
+                </span>
+
+                @if (ShowPlaceholder)
+                {
+                    <span class="ant-select-selection-placeholder">@Placeholder</span>
+                }
+                else if (string.IsNullOrEmpty(SearchValue) && selectedOption != null)
+                {
+                    var showValue = GetOptionShowValue(selectedOption);
+                    @if (showValue.IsT0)
+                    {
+                        <span class="ant-select-selection-item">@showValue.AsT0 </span>
+                    }
+                    else
+                    {
+                        <span class="ant-select-selection-item">@showValue.AsT1 </span>
+                    }
+                }
+            </div>
+
+
+            break;
+        }
+    default:
+        {
+            <div class="@Prefix-selector">
+                @foreach (var option in ParentSelect.SelectedOptions)
+                {
+                    if (ParentSelect.TagRender != null)
+                    {
+                        <span @key="@option.Value">@ParentSelect.TagRender(GetProperties(option))</span>
+                    }
+                    else
+                    {
+                        var showValue = GetOptionShowValue(option);
+                        <span class="@Prefix-selection-item">
+                            <span class="@Prefix-selection-item-content">
+                                @if (showValue.IsT0)
+                                {
+                                    @showValue.AsT0
+                                }
+                                else
+                                {
+                                    @showValue.AsT1
+                                }
+                            </span>
+
+                            @if (ParentSelect.SelectMode == SelectMode.Tags || ParentSelect.SelectMode == SelectMode.Multiple)
+                            {
+                                <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
+                                      @onclick="()=>OnRemoveSelected.InvokeAsync(option)" @onclick:stopPropagation="true">
+                                    <Icon Type="close"></Icon>
+                                </span>
+                            }
+                        </span>
+                    }
+                }
+
+                <span class="@Prefix-selection-search" style="width:@InputWidth">
+                    <input @ref="ParentSelect._inputRef"
+                           @oninput="OnInput"
+                           @onkeyup="OnKeyUp"
+                           @bind-value="@SearchValue"
+                           id="@ParentSelect.Id"
+                           role="combobox"
+                           class="@Prefix-selection-search-input"
+                           autocomplete="off"
+                           aria-owns="@(ParentSelect.Id)_list"
+                           aria-expanded="@IsOverlayShow"
+                           aria-autocomplete="list"
+                           aria-controls="@(ParentSelect.Id)_list" />
+
+                    <span class="@Prefix-selection-search-mirror" aria-hidden="true">&nbsp;</span>
+                </span>
+
+                @if (ShowPlaceholder)
+                {
+                    <span class="ant-select-selection-placeholder">@Placeholder</span>
+                }
+            </div>
+            break;
+        }
+}
+
+@if (ParentSelect.ShowArrow && ParentSelect.SelectMode == SelectMode.Default)
+{
+    if (ParentSelect.SuffixIcon != null)
+    {
+        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">
+            @ParentSelect.SuffixIcon
+        </span>
+    }
+    else if (ParentSelect.Loading)
+    {
+        <span class="ant-select-arrow ant-select-arrow-loading" unselectable="on" aria-hidden="true" style="user-select: none;">
+            <Icon Type="loading"></Icon>
+        </span>
+    }
+    else
+    {
+        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">
+            @if (ParentSelect.ShowSearch && IsOverlayShow)
+            {
+                <Icon Type="search"></Icon>
+            }
+            else
+            {
+                <Icon Type="down"></Icon>
+            }
+        </span>
+        @if (ParentSelect.AllowClear && ParentSelect.HasValue)
+        {
+            <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick">
+                <Icon Type="close-circle"></Icon>
+            </span>
+        }
+    }
+}
+
+@code
+{
+    [CascadingParameter(Name = "ParentSelect")]
+    public Select ParentSelect { get; set; }
+
+    [Parameter]
+    public string Prefix { get; set; }
+
+    [Parameter]
+    public string SearchValue { get; set; }
+
+    [Parameter]
+    public string Placeholder { get; set; }
+
+    [Parameter]
+    public string InputWidth { get; set; }
+
+    [Parameter]
+    public bool IsOverlayShow { get; set; }
+
+    [Parameter]
+    public EventCallback<ChangeEventArgs> OnInput { get; set; }
+
+    [Parameter]
+    public EventCallback<SelectOption> OnRemoveSelected { get; set; }
+
+    [Parameter]
+    public bool ShowPlaceholder { get; set; }
+
+    [Parameter]
+    public Func<SelectOption, OneOf<string, RenderFragment>> GetOptionShowValue { get; set; }
+
+    protected bool IsShowSearch()
+    {
+        if (ParentSelect.SelectMode == SelectMode.Default)
+        {
+            return ParentSelect.ShowSearch;
+        }
+        return true;
+    }
+
+    protected async Task OnClearClick(MouseEventArgs _)
+    {
+        await ParentSelect.ResetState();
+    }
+
+    protected async void OnKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter")
+        {
+            await ParentSelect.TransSearchValueToTag();
+        }
+    }
+
+    protected Properties GetProperties(SelectOption option)
+    {
+        return new Properties
+        {
+            Closable = true,
+            Value = option.Value,
+            Label = option.Label,
+            OnClose = (e) => { OnRemoveSelected.InvokeAsync(option); }
+        };
+    }
+}

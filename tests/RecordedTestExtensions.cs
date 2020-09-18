@@ -24,11 +24,9 @@ namespace AntDesign.Tests
             static string Cleanup(string value)
             {
                 value = Regex.Replace(value, "id=\"ant-blazor-.+?\"", "id:ignore");
-                value = Regex.Replace(value, "blazor:elementreference=\".+?\"", "blazor:elementreference:ignore");
 
                 return value;
             }
-
 
             var caller = new StackTrace().GetFrame(1)?.GetMethod();
             RecordedMarkupMatches(

@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
-using OneOf;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -24,8 +20,6 @@ namespace AntDesign
     {
         public string PrefixName { get; set; } = "ant-list";
 
-        [Parameter] public RenderFragment<TItem> Item { get; set; }
-
         [Parameter] public IEnumerable<TItem> DataSource { get; set; }
 
         [Parameter] public bool Bordered { get; set; } = false;
@@ -36,7 +30,7 @@ namespace AntDesign
 
         [Parameter] public RenderFragment LoadMore { get; set; }
 
-        [Parameter] public AntDirectionVHType ItemLayout { get; set; }
+        [Parameter] public ListItemLayout ItemLayout { get; set; }
 
         [Parameter] public bool Loading { get; set; } = false;
 
@@ -46,19 +40,13 @@ namespace AntDesign
 
         [Parameter] public bool Split { get; set; } = true;
 
-        [Parameter] public string ClassName { get; set; }
-
         [Parameter] public EventCallback<TItem> OnItemClick { get; set; }
 
         [Parameter] public ListGridType Grid { get; set; }
 
-        [Parameter] public List<RenderFragment> Actions { get; set; } = new List<RenderFragment>();
-
-        [Parameter] public RenderFragment Extra { get; set; }
-
         [Parameter] public PaginationOptions Pagination { get; set; }
 
-        private static readonly EventCallbackFactory CallbackFactory = new EventCallbackFactory();
+        [Parameter] public RenderFragment<TItem> ChildContent { get; set; }
 
         private bool IsSomethingAfterLastItem
         {
@@ -68,18 +56,12 @@ namespace AntDesign
             }
         }
 
-        protected override void OnParametersSet()
+        protected override void OnInitialized()
         {
-            base.OnParametersSet();
             SetClassMap();
-        }
 
-        protected override async Task OnParametersSetAsync()
-        {
-            await base.OnParametersSetAsync();
-            SetClassMap();
+            base.OnInitialized();
         }
-
         protected void SetClassMap()
         {
             // large => lg
@@ -101,11 +83,10 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(PrefixName)
-                .Add(ClassName)
                 .If($"{PrefixName}-split", () => Split)
                 .If($"{PrefixName}-bordered", () => Bordered)
-                .If($"{PrefixName}-{sizeCls}", () => !string.IsNullOrEmpty(sizeCls))
-                .If($"{PrefixName}-vertical", () => ItemLayout == AntDirectionVHType.Vertical)
+                .GetIf(() => $"{PrefixName}-{sizeCls}", () => !string.IsNullOrEmpty(sizeCls))
+                .If($"{PrefixName}-vertical", () => ItemLayout == ListItemLayout.Vertical)
                 .If($"{PrefixName}-loading", () => (Loading))
                 .If($"{PrefixName}-grid", () => Grid != null)
                 .If($"{PrefixName}-something-after-last-item", () => IsSomethingAfterLastItem);

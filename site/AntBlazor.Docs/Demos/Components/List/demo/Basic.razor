@@ -1,11 +1,11 @@
 ﻿<AntList DataSource="@data" TItem="BasicItem" OnItemClick="ItemClick">
-    <Item Context="item">
-        <AntListItemMeta  Avatar="avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
-            <Title>
-                <a href="https://ng.ant.design">@item.Title</a>
-            </Title>
-        </AntListItemMeta>
-    </Item>
+    <ListItem>
+        <ListItemMeta Avatar="avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
+            <TitleTemplate>
+                <a href="https://ng.ant.design">@context.Title</a>
+            </TitleTemplate>
+        </ListItemMeta>
+    </ListItem>
 </AntList>
 
 

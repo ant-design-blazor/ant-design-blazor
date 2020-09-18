@@ -44,10 +44,20 @@ namespace AntDesign.Internal
         public bool IsButton { get; set; } = false;
 
         [Parameter]
+        public bool InlineFlexMode { get; set; } = false;
+
+        [Parameter]
+        public bool HiddenMode { get; set; } = false;
+
+        [Parameter]
         public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
 
         [Parameter]
         public PlacementType Placement { get; set; } = PlacementType.BottomLeft;
+
+        [Parameter] public Action OnMouseEnter { get; set; }
+
+        [Parameter] public Action OnMouseLeave { get; set; }
 
         [Parameter]
         public EventCallback<bool> OnVisibleChange { get; set; }
@@ -89,6 +99,8 @@ namespace AntDesign.Internal
 
                 await Show();
             }
+
+            OnMouseEnter?.Invoke();
         }
 
         protected virtual async Task OnTriggerMouseLeave()
@@ -101,6 +113,8 @@ namespace AntDesign.Internal
 
                 await Hide();
             }
+
+            OnMouseLeave?.Invoke();
         }
 
         protected virtual async Task OnTriggerFocusIn()
@@ -212,6 +226,9 @@ namespace AntDesign.Internal
             await OnOverlayHiding.InvokeAsync(visible);
         }
 
+        protected virtual void OnOverlayShow() { }
+        protected virtual void OnOverlayHide() { }
+
         internal virtual string GetPlacementClass()
         {
             if (!string.IsNullOrEmpty(PlacementCls))
@@ -265,12 +282,17 @@ namespace AntDesign.Internal
 
         internal async Task<Element> GetTriggerDomInfo()
         {
-            return await JsInvokeAsync<Element>(JSInteropConstants.getFirstChildDomInfo, Ref);
+            return await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Ref);
         }
 
         public async Task Close()
         {
             await _overlay.Hide(true);
+        }
+
+        public bool IsOverlayShow()
+        {
+            return _overlay != null ? _overlay.IsPopup() : false;
         }
     }
 }

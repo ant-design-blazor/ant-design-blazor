@@ -14,7 +14,32 @@
     @if (DataSource != null && DataSource.Any())
     {
         <Spin Spinning="Loading">
-            @childrenContent(this)
+            @if (Grid != null)
+            {
+                <Row Gutter="Grid.Gutter">
+                    @foreach (var item in DataSource)
+                    { 
+                        <CascadingValue Value="ItemLayout">
+                            <CascadingValue Value="()=>HandleItemClick(item)" TValue="Action" Name="ItemClick">
+                                @ChildContent(item)
+                            </CascadingValue>
+                        </CascadingValue>
+                    }
+                </Row>
+            }
+            else
+            {
+                <ul class="ant-list-items">
+                    @foreach (var item in DataSource)
+                    {
+                        <CascadingValue Value="ItemLayout">
+                            <CascadingValue Value="()=>HandleItemClick(item)" TValue="Action" Name="ItemClick">
+                                @ChildContent(item)
+                            </CascadingValue>
+                        </CascadingValue>
+                    }
+                </ul>
+            }
         </Spin>
     }
     else
@@ -32,65 +57,5 @@
     {
         @LoadMore
     }
-    
+
 </div>
-
-@code{
-
-    RenderFragment<AntList<TItem>> childrenContent = content =>
-    @<Template>
-
-        @if (content.Grid != null)
-        {
-            <Row Gutter="content.Grid.Gutter">
-                @foreach (var item in content.DataSource)
-                {
-                    var callback = CallbackFactory.Create(content, () => content.HandleItemClick(item));
-
-                    <CascadingValue Value="callback" Name="ItemClickCallback">
-                        @if (content.Extra != null)
-                        {
-                            <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Grid="content.Grid" Actions="content.Actions" Extra="content.Extra">
-                                @content.Item(item)
-                            </AntListItem>
-                        }
-                        else
-                        {
-                            <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Grid="content.Grid" Actions="content.Actions">
-                                @content.Item(item)
-                            </AntListItem>
-                        }
-                    </CascadingValue>
-                }
-            </Row>
-        }
-        else
-        {
-            <ul class="ant-list-items">
-                @foreach (var item in content.DataSource)
-                {
-                    var callback = CallbackFactory.Create(content, () => content.HandleItemClick(item));
-
-                    <CascadingValue Value="callback" Name="ItemClickCallback">
-                        @if (content.Extra != null)
-                        {
-                            <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Actions="content.Actions" Extra="content.Extra">
-                                @content.Item(item)
-                            </AntListItem>
-                        }
-                        else
-                        {
-                            <AntListItem ItemCount="content.DataSource.Count()" ItemLayout="content.ItemLayout" Actions="content.Actions">
-                                @content.Item(item)
-                            </AntListItem>
-                        }
-                    </CascadingValue>
-                }
-
-            </ul>
-        }
-
-    </Template>;
-
-
-}

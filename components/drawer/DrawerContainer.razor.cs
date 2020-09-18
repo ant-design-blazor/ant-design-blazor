@@ -24,15 +24,14 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        private List<DrawerRef> _drawerRefs = new List<DrawerRef>();
-
+        private List<IDrawerRef> _drawerRefs = new List<IDrawerRef>();
 
         /// <summary>
-        /// 创建并打开抽屉
+        /// Create and Open a drawer
         /// </summary>
-        private async Task DrawerService_OnCreate(DrawerRef drawerRef)
+        private async Task DrawerService_OnCreate(IDrawerRef drawerRef)
         {
-            drawerRef.Config.Visible = true;
+            drawerRef.Options.Visible = true;
             if (!_drawerRefs.Contains(drawerRef))
             {
                 _drawerRefs.Add(drawerRef);
@@ -41,11 +40,11 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 关闭抽屉
+        /// Close the drawer
         /// </summary>
-        private async Task DrawerService_OnClose(DrawerRef drawerRef)
+        private async Task DrawerService_OnClose(IDrawerRef drawerRef)
         {
-            drawerRef.Config.Visible = false;
+            drawerRef.Options.Visible = false;
             await InvokeAsync(StateHasChanged);
             await Task.Delay(300);
             if (_drawerRefs.Contains(drawerRef))
@@ -53,7 +52,5 @@ namespace AntDesign
                 _drawerRefs.Remove(drawerRef);
             }
         }
-
-
     }
 }

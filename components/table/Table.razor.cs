@@ -34,13 +34,22 @@ namespace AntDesign
         public bool Loading { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Title { get; set; }
+        public string Title { get; set; }
 
         [Parameter]
-        public OneOf<string, RenderFragment> Footer { get; set; }
+        public RenderFragment TitleTemplate { get; set; }
+
+        [Parameter]
+        public string Footer { get; set; }
+
+        [Parameter]
+        public RenderFragment FooterTemplate { get; set; }
 
         [Parameter]
         public TableSize Size { get; set; }
+
+        [Parameter]
+        public TableLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Table;
 
         [Parameter]
         public bool Bordered { get; set; } = false;
@@ -115,7 +124,7 @@ namespace AntDesign
                     var query = _dataSource.AsQueryable();
                     foreach (var sort in queryModel.SortModel)
                     {
-                        sort.Sort(query);
+                        query = sort.Sort(query);
                     }
 
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);

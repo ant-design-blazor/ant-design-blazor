@@ -76,7 +76,7 @@ namespace AntDesign
                     : _okBtn;
                 if (element != null)
                 {
-                    await JsInvokeAsync(JSInteropConstants.focusDialog, $"#{element.Id}");
+                    await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{element.Id}");
                 }
             }
 

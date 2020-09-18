@@ -10,6 +10,7 @@ namespace AntDesign
         internal ClassMapper _classMapper = new ClassMapper();
 
         internal bool IsActive { get; set; }
+        internal bool HasRendered { get; set; }
 
         public TabPane()
         {
@@ -79,10 +80,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (_parent != null)
-            {
-                _parent._panes.Remove(this);
-            }
+            _parent?._panes.Remove(this);
             base.Dispose(disposing);
         }
     }

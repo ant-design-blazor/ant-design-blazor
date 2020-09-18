@@ -98,7 +98,7 @@ namespace AntDesign
             await base.OnFirstAfterRenderAsync();
             _rendered = true;
 
-            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _childRef);
+            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _childRef);
             _hiddenStyle = $"width: {domRect.width}px; height: {domRect.height}px;";
 
             if (_rootListened)
@@ -131,11 +131,11 @@ namespace AntDesign
 
         private async Task RenderAffixAsync()
         {
-            DomRect childRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _childRef);
+            DomRect childRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _childRef);
             _hiddenStyle = $"width: {childRect.width}px; height: {childRect.height}px;";
 
-            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, _ref);
-            DomRect appRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, RootRectSelector);
+            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _ref);
+            DomRect appRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, RootRectSelector);
             // reset appRect.top / bottom, so its position is fixed.
             appRect.top = 0;
             appRect.bottom = appRect.height;
@@ -146,7 +146,7 @@ namespace AntDesign
             }
             else
             {
-                containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.getBoundingClientRect, Target);
+                containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Target);
             }
             // become affixed
             if (OffsetBottom.HasValue)

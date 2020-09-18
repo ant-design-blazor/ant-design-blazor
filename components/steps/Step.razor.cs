@@ -62,11 +62,17 @@ namespace AntDesign
             }
         }
 
-        [Parameter] public OneOf<string, RenderFragment> Title { get; set; }
+        [Parameter] public string Title { get; set; } = string.Empty;
 
-        [Parameter] public OneOf<string, RenderFragment> Subtitle { get; set; }
+        [Parameter] public RenderFragment TitleTemplate { get; set; }
 
-        [Parameter] public OneOf<string, RenderFragment> Description { get; set; }
+        [Parameter] public string Subtitle { get; set; } = string.Empty;
+
+        [Parameter] public RenderFragment SubtitleTemplate { get; set; }
+
+        [Parameter] public string Description { get; set; } = string.Empty;
+
+        [Parameter] public RenderFragment DescriptionTemplate { get; set; }
 
         [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 

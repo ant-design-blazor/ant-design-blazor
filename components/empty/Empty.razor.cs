@@ -27,27 +27,28 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public OneOf<string, bool, RenderFragment> Description { get; set; } = "暂无数据";
+        public OneOf<string, bool?> Description { get; set; } = LocaleProvider.CurrentLocale.Empty.Description;
 
         [Parameter]
-        public OneOf<string, RenderFragment> Image { get; set; } = Empty.PRESENTED_IMAGE_DEFAULT;
+        public RenderFragment DescriptionTemplate { get; set; }
+
+        [Parameter]
+        public string Image { get; set; }
+
+        [Parameter]
+        public RenderFragment ImageTemplate { get; set; }
 
         protected void SetClass()
         {
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
-                .If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == Empty.PRESENTED_IMAGE_SIMPLE)
-                .If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
+                .If($"{PrefixCls}-normal", () => Simple)
+                .GetIf(() => $"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                 .If($"{PrefixCls}-small", () => Small)
                 ;
         }
 
         protected override void OnInitialized()
-        {
-            this.SetClass();
-        }
-
-        protected override void OnParametersSet()
         {
             this.SetClass();
         }

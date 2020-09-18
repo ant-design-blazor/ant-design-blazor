@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Components;
-using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
-using System.Data;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System.Diagnostics;
 using OneOf;
 
 namespace AntDesign
@@ -51,6 +51,9 @@ namespace AntDesign
 
         [Parameter]
         public string OverlayStyle { get; set; }
+
+        [Parameter]
+        public string PopupContainerSelector { get; set; } = "body";
 
         #endregion Parameters
 
@@ -295,7 +298,7 @@ namespace AntDesign
             }
             else
             {
-                Element element = await JsInvokeAsync<Element>(JSInteropConstants.getDomInfo, _divRef);
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _divRef);
                 newWidth = $"min-width:{element.clientWidth}px";
             }
             if (newWidth != _minWidth) _minWidth = newWidth;

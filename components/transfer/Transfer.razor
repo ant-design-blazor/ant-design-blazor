@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <div class="@this.ClassMapper.Class">
-    <div class="ant-transfer-list @(Footer.Value!=null?FooterClass:"")" @onscroll="@(e=>HandleScroll(TransferDirection.Left,e))" style="@Style">
+    <div class="ant-transfer-list @((FooterTemplate != null || Footer != null)?FooterClass:"")" @onscroll="@(e=>HandleScroll(TransferDirection.Left,e))" style="@Style">
         <div class="ant-transfer-list-header">
             @if (ShowSelectAll)
             {
@@ -66,21 +66,14 @@
             </ul>
         </div>
         <div class="ant-transfer-list-footer">
-            @if (Footer.IsT0)
-            {
-                @Footer.AsT0
-            }
-            else if (Footer.IsT1)
-            {
-                @Footer.AsT1
-            }
+            @if (FooterTemplate != null)@FooterTemplate else @Footer
         </div>
     </div>
     <div class="ant-transfer-operation">
         <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@AntSizeLDSType.Small" Icon="left" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))">@Operations[0]</Button>
         <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@AntSizeLDSType.Small" Icon="right" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))">@Operations[1]</Button>
     </div>
-    <div class="ant-transfer-list @(Footer.Value!=null?FooterClass:"")" @onscroll="@(e => HandleScroll(TransferDirection.Right, e))" style="@Style">
+    <div class="ant-transfer-list @((FooterTemplate != null || Footer != null)?FooterClass:"")" @onscroll="@(e => HandleScroll(TransferDirection.Right, e))" style="@Style">
         <div class="ant-transfer-list-header">
             @if (ShowSelectAll)
             {
@@ -142,14 +135,7 @@
             </ul>
         </div>
         <div class="ant-transfer-list-footer">
-            @if (Footer.IsT0)
-            {
-                @Footer.AsT0
-            }
-            else if (Footer.IsT1)
-            {
-                @Footer.AsT1
-            }
+            @if (FooterTemplate != null)@FooterTemplate else @Footer
         </div>
     </div>
 </div>
