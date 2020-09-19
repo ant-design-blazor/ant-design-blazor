@@ -1,0 +1,79 @@
+﻿@inject MessageService _message
+
+<Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+    Open Modal
+</Button>
+<Modal Title="@title"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+    <b>Select:</b><br />
+    <Select DefaultValue=@("lucy") Style="width:120px" AllowClear>
+        <SelectOption Value="lucy">Lucy</SelectOption>
+    </Select>
+
+    <div style="margin: 64px" />
+
+    <b>Dropdown:</b><br />
+    <Dropdown>
+        <Overlay>
+            <Menu>
+                <MenuItem>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                        1st menu item
+                    </a>
+                </MenuItem>
+            </Menu>
+        </Overlay>
+        <ChildContent>
+            <a class="ant-dropdown-link" @onclick:preventDefault>
+                Hover me <Icon Type="down" />
+            </a>
+        </ChildContent>
+    </Dropdown>
+
+    <div style="margin: 64px" />
+
+    <b>DatePicker:</b><br />
+    <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" />
+
+    <div style="margin: 64px" />
+
+    <b>Tooltip:</b><br />
+    <Tooltip Title="@("prompt text")">
+        <span>Tooltip will show on mouse enter.</span>
+    </Tooltip>
+
+    <div style="margin: 64px" />
+
+    <b>Popconfirm:</b><br />
+    <Popconfirm Title="Are you sure delete this task?"
+                OkText="Yes"
+                CancelText="No">
+        <a>Delete</a>
+    </Popconfirm>
+
+</Modal>
+
+@code{
+    string title = "BasicModal";
+    bool _visible = false;
+
+    RenderFragment _content =
+    @<div>
+        <p>Content</p>
+        <p>Content</p>
+    </div>;
+
+private void HandleOk(MouseEventArgs e)
+{
+  Console.WriteLine(e);
+  _visible = false;
+}
+
+private void HandleCancel(MouseEventArgs e)
+{
+  Console.WriteLine(e);
+  _visible = false;
+}
+}
