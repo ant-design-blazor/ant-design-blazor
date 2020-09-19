@@ -1,9 +1,13 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
-@if(_hasAdd)
+@if (_hasAdd)
 {
-    <Dialog @ref="_dialog" Config="@BuildDialogOptions()" 
+    <Dialog @ref="_dialog" Config="@BuildDialogOptions()"
             Visible="@Visible" Style="@Style">
-        @ChildContent
+        <CascadingValue Value=@(".ant-modal-wrap") Name="PopupContainerSelector">
+            <CascadingValue Value="@_dialog.IsShow()" Name="ModalCompleteShow">
+                @ChildContent
+            </CascadingValue>
+        </CascadingValue>
     </Dialog>
 }

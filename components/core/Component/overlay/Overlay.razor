@@ -10,7 +10,8 @@
          style="position: absolute; @display @Trigger.OverlayStyle @_overlayStyle"
          @ref="Ref"
          @onmouseenter="OnOverlayMouseEnter"
-         @onmouseleave="OnOverlayMouseLeave">
+         @onmouseleave="OnOverlayMouseLeave"
+         @onclick:stopPropagation>
         <CascadingValue Value="this" Name="Overlay">
             <CascadingValue Value="Trigger" Name="ParentTrigger">
                 <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
