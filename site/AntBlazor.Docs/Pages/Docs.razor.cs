@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using AntDesign.Docs.Highlight;
 using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
 using AntDesign.Docs.Shared;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign.Docs.Pages
 {
-    public partial class Docs : ComponentBase
+    public partial class Docs : ComponentBase, IDisposable
     {
         [Parameter] public string FileName { get; set; }
 
@@ -34,11 +33,7 @@ namespace AntDesign.Docs.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            NavigationManager.LocationChanged += async (sender, args) =>
-            {
-                await SetDocUrl();
-                await InvokeAsync(StateHasChanged);
-            };
+            NavigationManager.LocationChanged += OnLocationChanged;
 
             if (string.IsNullOrWhiteSpace(FileName))
             {
@@ -69,6 +64,14 @@ namespace AntDesign.Docs.Pages
         protected override async Task OnParametersSetAsync()
         {
             await SetDocUrl();
+            await base.OnParametersSetAsync();
+
+        }
+
+        private async void OnLocationChanged(object sender, LocationChangedEventArgs args)
+        {
+            await SetDocUrl();
+            await InvokeAsync(StateHasChanged);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -78,6 +81,11 @@ namespace AntDesign.Docs.Pages
                 _waitingHighlight = false;
                 await PrismHighlighter.HighlightAllAsync();
             }
+        }
+
+        public void Dispose()
+        {
+            NavigationManager.LocationChanged -= OnLocationChanged;
         }
     }
 }
