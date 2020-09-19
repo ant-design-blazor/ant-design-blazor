@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
 using AntDesign.Docs.Shared;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign.Docs.Pages
 {
-    public partial class Components : ComponentBase
+    public partial class Components : ComponentBase, IDisposable
     {
         [Parameter]
         public string Name { get; set; }
@@ -33,20 +35,24 @@ namespace AntDesign.Docs.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            LanguageService.LanguageChanged += async (sender, args) =>
-            {
-                if (!string.IsNullOrEmpty(Name))
-                {
-                    await HandleNavigate();
-                    await InvokeAsync(StateHasChanged);
-                }
-            };
+            LanguageService.LanguageChanged += OnLanguageChanged;
+            NavigationManager.LocationChanged += OnLocationChanged;
 
-            NavigationManager.LocationChanged += async (sender, args) =>
+            await HandleNavigate();
+        }
+
+
+        private async void OnLanguageChanged(object sender, CultureInfo args)
+        {
+            if (!string.IsNullOrEmpty(Name))
             {
                 await HandleNavigate();
-            };
+                await InvokeAsync(StateHasChanged);
+            }
+        }
 
+        private async void OnLocationChanged(object sender, LocationChangedEventArgs args)
+        {
             await HandleNavigate();
         }
 
@@ -74,6 +80,12 @@ namespace AntDesign.Docs.Pages
                 await MainLayout.ChangePrevNextNav(Name);
                 _demoComponent = await DemoService.GetComponentAsync(Name);
             }
+        }
+
+        public void Dispose()
+        {
+            LanguageService.LanguageChanged -= OnLanguageChanged;
+            NavigationManager.LocationChanged -= OnLocationChanged;
         }
     }
 }

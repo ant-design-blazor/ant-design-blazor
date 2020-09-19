@@ -1,23 +1,21 @@
 ﻿<section class="prev-next-nav">
     @if (prev != null)
     {
-        <NavLink class="prev-page" href="@prev.Url">
+        <NavLink class="prev-page" href="@($"{MainLayout?.CurrentLanguage}/{prev.Url}")">
             <Icon Type="left" Class="footer-nav-icon-before"/>
             <span>
                 @prev.Title
             </span>
             @if (prev.SubTitle != null)
             {
-                <span class="chinese">
-                    @prev.SubTitle
-                </span>
+                <span class="chinese">@prev.SubTitle</span>
             }
             <Icon Type="right" Class="footer-nav-icon-after"/>
         </NavLink>
     }
     @if (next != null)
     {
-        <NavLink class="next-page" href="@next.Url">
+        <NavLink class="next-page" href="@($"{MainLayout?.CurrentLanguage}/{next.Url}")">
             <Icon Type="left" Class="footer-nav-icon-before"/>
             <span>@next.Title</span>
             @if (next.SubTitle != null)
@@ -31,7 +29,6 @@
 
 @code
 {
-
     [CascadingParameter]
     public MainLayout MainLayout { get; set; }
 
@@ -49,5 +46,7 @@
     {
         this.prev = prev;
         this.next = next;
+
+        StateHasChanged();
     }
 }
