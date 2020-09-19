@@ -13,6 +13,22 @@ namespace AntDesign.Internal
         [CascadingParameter(Name = "PrefixCls")]
         public string PrefixCls { get; set; } = "ant-dropdown";
 
+        private string _popupContainerSelectorFromCascade = "";
+
+        [CascadingParameter(Name = "PopupContainerSelector")]
+        public string PopupContainerSelectorFromCascade
+        {
+            get
+            {
+                return _popupContainerSelectorFromCascade;
+            }
+            set
+            {
+                _popupContainerSelectorFromCascade = value;
+                PopupContainerSelector = value;
+            }
+        }
+
         [Parameter]
         public string PopupContainerSelector { get; set; } = "body";
 
