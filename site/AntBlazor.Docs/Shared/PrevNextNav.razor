@@ -8,9 +8,7 @@
             </span>
             @if (prev.SubTitle != null)
             {
-                <span class="chinese">
-                    @prev.SubTitle
-                </span>
+                <span class="chinese">@prev.SubTitle</span>
             }
             <Icon Type="right" Class="footer-nav-icon-after"/>
         </NavLink>
@@ -31,9 +29,6 @@
 
 @code
 {
-    [Inject]
-    public ILanguageService LanguageService { get; set; }
-
     [CascadingParameter]
     public MainLayout MainLayout { get; set; }
 
