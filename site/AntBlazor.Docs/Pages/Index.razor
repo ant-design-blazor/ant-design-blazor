@@ -103,14 +103,7 @@
                                                 <img alt="@item.Title" src="@item.Img">
                                             </Cover>
                                             <Body>
-                                                <CardMeta>
-                                                    <Title>
-                                                        @item.Title
-                                                    </Title>
-                                                    <Description>
-                                                        @language.Resources[item.Description]
-                                                    </Description>
-                                                </CardMeta>
+                                                <CardMeta Title="@item.Title" Description="@language.Resources[item.Description]" />
                                             </Body>
                                         </Card>
                                     </a>
@@ -138,14 +131,7 @@
                                             <img alt="@item.Title" src="@item.Img">
                                         </Cover>
                                         <Body>
-                                            <CardMeta>
-                                                <Title>
-                                                    @item.Title
-                                                </Title>
-                                                <Description>
-                                                    @item.Description
-                                                </Description>
-                                            </CardMeta>
+                                            <CardMeta Title="@item.Title" Description="@item.Description" /> 
                                             <div>
                                                 @item.Date
                                                 <span class="more-card-source">
