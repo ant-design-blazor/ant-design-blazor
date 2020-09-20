@@ -1,22 +1,46 @@
 ﻿<div>
-    <Card Loading="loading" Title=@("Card title")>
-        <p>Card content</p>
-        <p>Card content</p>
-        <p>Card content</p>
-    </Card>
-    <Button Style="margin-top: 16px"  OnClick="handleClick">
+
+    <Switch Checked="!loading" OnChange="OnChange">
         Toggle loading
-    </Button>
+    </Switch>
+
+    <Card Loading="loading" Style="width: 300px; margin-top: 16px">
+        <CardMeta Avatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                  Title="Card title"
+                  Description="This is the description" />
+    </Card>
+
+    <Card Style="width: 300px; margin-top: 16px"
+          Actions="new[] { actionSetting, actionEdit, actionEllipsis }">
+        <Skeleton Loading="loading" Avatar Active>
+            <CardMeta Title="Card title"
+                      Description="This is the description"
+                      Avatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+        </Skeleton>
+    </Card>
+
 </div>
 
 @code
 {
-    bool loading { get; set; } = true;
-    void handleClick()
+    bool loading = true;
+    void OnChange()
     {
         loading = !loading;
     }
+
+    private RenderFragment actionSetting =@<Template>
+        <Icon Type="setting" />
+    </Template>;
+
+    private RenderFragment actionEdit =@<Template>
+        <Icon Type="edit" />
+    </Template>;
+    
+    private RenderFragment actionEllipsis =@<Template>
+        <Icon Type="ellipsis" />
+    </Template>;
+
 }
 
 
-  
