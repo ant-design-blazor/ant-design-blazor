@@ -183,6 +183,9 @@ namespace AntDesign
         [Parameter]
         public bool Draggable { get; set; }
 
+        [CascadingParameter]
+        public Card Card { get; set; }
+
         #endregion Parameters
 
         public override Task SetParametersAsync(ParameterView parameters)
@@ -368,6 +371,8 @@ namespace AntDesign
 
                     _activeKey = _activePane.Key;
                 }
+
+                Card?.SetBody(_activePane.ChildContent);
 
                 StateHasChanged();
             }

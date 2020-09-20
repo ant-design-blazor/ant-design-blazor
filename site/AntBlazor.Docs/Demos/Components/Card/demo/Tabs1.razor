@@ -1,9 +1,9 @@
 ﻿<div>
-    <Card Style="width:100%" Title=@("Card title")>
+    <Card Title=@("Card title")>
         <Extra>
             <a>More</a>
         </Extra>
-        <Body>
+        <CardTabs>
             <Tabs DefaultActiveKey="1">
                 <TabPane Key="1">
                     <Tab>Tab 1</Tab>
@@ -18,31 +18,33 @@
                     <ChildContent>Content of Tab Pane 3</ChildContent>
                 </TabPane>
             </Tabs>
-        </Body>
+        </CardTabs>
     </Card>
-
-    <Card Style="width:100%" >
+    <br />
+    <br />
+    <Card>
         <Extra>
             <a>More</a>
         </Extra>
-        <Body>
+        <CardTabs>
             <Tabs DefaultActiveKey="1">
-                <TabPane Key="1">
-                    <Tab>Article</Tab>
-                    <ChildContent>Content of Tab Pane 1</ChildContent>
-                </TabPane>
-                <TabPane Key="2">
-                    <Tab>App</Tab>
-                    <ChildContent>Content of Tab Pane 2</ChildContent>
-                </TabPane>
-                <TabPane Key="3">
-                    <Tab>Project</Tab>
-                    <ChildContent>Content of Tab Pane 3</ChildContent>
-                </TabPane>
+                <ChildContent>
+                    <TabPane Key="1">
+                        <Tab>Article</Tab>
+                        <ChildContent>Content of Tab Pane 1</ChildContent>
+                    </TabPane>
+                    <TabPane Key="2">
+                        <Tab>App</Tab>
+                        <ChildContent>Content of Tab Pane 2</ChildContent>
+                    </TabPane>
+                    <TabPane Key="3">
+                        <Tab>Project</Tab>
+                        <ChildContent>Content of Tab Pane 3</ChildContent>
+                    </TabPane>
+                </ChildContent>
             </Tabs>
-        </Body>
+        </CardTabs>
     </Card>
 </div>
 
 
-  
