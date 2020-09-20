@@ -36,7 +36,7 @@ else
                         TriggerClass="@ClassMapper.Class"
                         Visible="IsOpen"
                         Disabled="Disabled"
-                        Placement="@(RootMenu.Mode == MenuMode.Horizontal ? PlacementType.BottomLeft : PlacementType.RightTop)"
+                        Placement="@(RootMenu.Mode == MenuMode.Horizontal && Parent == null ? PlacementType.BottomLeft : PlacementType.RightTop)"
                         OnVisibleChange="OnOverlayVisibleChange"
                         OnOverlayHiding="OnOverlayHiding"
                         PlacementCls="@($"{prefixCls}-placement-{placementName} {prefixCls}-popup")"
@@ -100,8 +100,8 @@ else
             </svg>
         </span>
     </span>;
-}
+ }
 
-return @<i class="@(prefixCls)-arrow"></i>;
+ return @<i class="@(prefixCls)-arrow"></i>;
 }
 }
