@@ -13,7 +13,7 @@ namespace AntDesign
         public RenderFragment Body { get; set; }
 
         [Parameter]
-        public bool Bordered { get; set; } = false;
+        public bool Bordered { get; set; } = true;
 
         [Parameter]
         public bool Hoverable { get; set; } = false;
@@ -46,21 +46,21 @@ namespace AntDesign
         public RenderFragment Extra { get; set; }
 
         [Parameter]
-        public RenderFragment AntCardTab { get; set; }
+        public RenderFragment CardTabs { get; set; }
 
-        internal IList<CardGrid> Grids { get; set; } = new List<CardGrid>();
+        private bool _hasGrids;
 
         protected void SetClassMap()
         {
-            this.ClassMapper.Clear()
+            this.ClassMapper
                 .Add("ant-card")
                 .If("ant-card-loading", () => Loading)
                 .If("ant-card-bordered", () => Bordered)
                 .If("ant-card-hoverable", () => Hoverable)
                 .If("ant-card-small", () => Size == "small")
-                .If("ant-card-contain-grid", () => Grids.Count > 0)
+                .If("ant-card-contain-grid", () => _hasGrids)
                 .If("ant-card-type-inner", () => Type == "inner")
-                .If("ant-card-contain-tabs", () => AntCardTab != null)
+                .If("ant-card-contain-tabs", () => CardTabs != null)
                 ;
         }
 
@@ -68,6 +68,18 @@ namespace AntDesign
         {
             base.OnInitialized();
             SetClassMap();
+        }
+
+        internal void MarkHasGrid()
+        {
+            _hasGrids = true;
+            StateHasChanged();
+        }
+
+        internal void SetBody(RenderFragment body)
+        {
+            this.Body = body;
+            StateHasChanged();
         }
     }
 }

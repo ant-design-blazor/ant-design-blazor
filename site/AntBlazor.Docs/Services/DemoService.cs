@@ -42,7 +42,6 @@ namespace AntDesign.Docs.Services
             await _menuCache.GetOrAdd(language, async (currentLanguage) =>
             {
                 var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/menu.{language}.json").ToString());
-
                 return menuItems;
             });
 
@@ -50,7 +49,6 @@ namespace AntDesign.Docs.Services
             await _componentCache.GetOrAdd(language, async (currentLanguage) =>
             {
                 var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/components.{language}.json").ToString());
-
                 return components.ToDictionary(x => x.Title.ToLower(), x => x);
             });
 
@@ -58,7 +56,6 @@ namespace AntDesign.Docs.Services
             await _demoMenuCache.GetOrAdd(language, async (currentLanguage) =>
             {
                 var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/demos.{language}.json").ToString());
-
                 return menuItems;
             });
 
@@ -126,7 +123,7 @@ namespace AntDesign.Docs.Services
 
         public async Task<DemoMenuItem[]> GetPrevNextMenu(string type, string currentTitle)
         {
-
+            await InitializeAsync(CurrentLanguage);
             var items = Array.Empty<DemoMenuItem>();
 
             if (type.ToLowerInvariant() == "docs")

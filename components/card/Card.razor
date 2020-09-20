@@ -3,27 +3,35 @@
 
 <CascadingValue Value="this">
     <div class="@ClassMapper.Class" style="@Style" id="@Id">
-        @if (TitleTemplate != null || Title != null || Extra != null || AntCardTab != null)
+        @if (TitleTemplate != null || Title != null || Extra != null || CardTabs != null)
         {
             <div class="ant-card-head">
+
                 <div class="ant-card-head-wrapper">
                     @if (TitleTemplate != null || Title != null)
                     {
-
                         <div class="ant-card-head-title">
-                            @if (TitleTemplate != null)@TitleTemplate else @Title
+                            @if (TitleTemplate != null)
+                            {
+                                @TitleTemplate
+                            }
+                            else
+                            {
+                                @Title
+                            }
                         </div>
-                    }
-                    @if (Extra != null)
-                    {
-                        <div class="ant-card-extra">
-                            @Extra
-                        </div>
+                        @if (Extra != null)
+                        {
+                            <div class="ant-card-extra">
+                                @Extra
+                            </div>
+                        }
                     }
                 </div>
-                @if (AntCardTab != null)
+
+                @if (CardTabs != null)
                 {
-                    @AntCardTab
+                    @CardTabs
                 }
             </div>
         }
@@ -35,18 +43,20 @@
             </div>
         }
 
-        <div class="ant-card-body" style="@BodyStyle">
-            @if (!Loading)
-            {
-                @Body
-                @ChildContent
-            }
-            else
-            {
-                <CardLoading></CardLoading>
-            }
-        </div>
-
+        @if (Body != null || ChildContent != null)
+        {
+            <div class="ant-card-body" style="@BodyStyle">
+                @if (!Loading)
+                {
+                    @Body
+                    @ChildContent
+                }
+                else
+                {
+                    <CardLoading></CardLoading>
+                }
+            </div>
+        }
         @if (Actions.Count > 0)
         {
             <ul class="ant-card-actions">
