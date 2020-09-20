@@ -8,10 +8,23 @@
        OnOk="@HandleOk"
        OnCancel="@HandleCancel">
     <b>Select:</b><br />
-    <Select DefaultValue=@("lucy") Style="width:120px" AllowClear>
-        <SelectOption Value="lucy">Lucy</SelectOption>
-    </Select>
 
+    <Form Model="_formModal">
+        <FormItem Label="类型">
+            <RadioGroup @bind-Value="@context.Type">
+                <Radio Value="1">Select</Radio>
+                <Radio Value="2">None</Radio>
+            </RadioGroup>
+        </FormItem>
+        @if (context.Type == 1)
+        {
+            <FormItem>
+                <Select @bind-Value="@context.Name" DefaultValue=@("lucy") Style="width:120px" AllowClear>
+                    <SelectOption Value="lucy">Lucy</SelectOption>
+                </Select>
+            </FormItem>
+        }
+    </Form>
     <div style="margin: 64px" />
 
     <b>Dropdown:</b><br />
@@ -56,6 +69,12 @@
 </Modal>
 
 @code{
+    class FormModal
+    {
+        public string Name { get; set; }
+        public int Type { get; set; }
+    }
+
     string title = "BasicModal";
     bool _visible = false;
 
@@ -64,6 +83,8 @@
         <p>Content</p>
         <p>Content</p>
     </div>;
+
+private FormModal _formModal = new FormModal();
 
 private void HandleOk(MouseEventArgs e)
 {
