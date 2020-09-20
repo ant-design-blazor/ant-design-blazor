@@ -21,6 +21,8 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            base.OnInitialized();
+
             _countDown = Value - DateTime.Now;
             _timer = new Timer(StartCountDownForTimeSpan);
             _timer.Change(0, REFRESH_INTERVAL);
