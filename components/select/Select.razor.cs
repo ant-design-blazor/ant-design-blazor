@@ -290,20 +290,23 @@ namespace AntDesign
 
         protected override async Task OnParametersSetAsync()
         {
-            if (ModalCompleteShow && !_hasInitDropdownStyle)
+            if ((ModalCompleteShow && InModal) && !_hasInitDropdownStyle)
             {
-                await SetDropdownStyle();
-                _hasInitDropdownStyle = true;
+                StateHasChanged();
             }
 
             await base.OnParametersSetAsync();
         }
 
-        protected override async Task OnFirstAfterRenderAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await base.OnFirstAfterRenderAsync();
+            if ((ModalCompleteShow || !InModal) && !_hasInitDropdownStyle)
+            {
+                _hasInitDropdownStyle = true;
+                await SetDropdownStyle();
+            }
 
-            await InvokeAsync(StateHasChanged);
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         protected override void OnAfterRender(bool firstRender)
