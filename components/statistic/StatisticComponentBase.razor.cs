@@ -40,5 +40,18 @@ namespace AntDesign
         [Parameter] public string ValueStyle { get; set; }
 
         [Parameter] public RenderFragment ChildContent { get; set; }
+
+        private void SetClassMap()
+        {
+            string prefixName = "ant-statistic";
+            ClassMapper.Clear().Add(prefixName);
+        }
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            SetClassMap();
+        }
+
     }
 }
