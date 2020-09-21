@@ -30,8 +30,8 @@ jobs:
         run: |
           npm install
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
-          dotnet build
-          dotnet publish -c Release -o cargo
+          dotnet build -f net5.0
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -f net5.0
 
       - name: Test And Coverage Report 📝
         run: |
