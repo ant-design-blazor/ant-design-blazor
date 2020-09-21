@@ -43,7 +43,7 @@ jobs:
           npm install
           echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
-          dotnet build -f netcoreapp3.1
+          dotnet build
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -f net5.0
 
       - name: Deploy 🚀
