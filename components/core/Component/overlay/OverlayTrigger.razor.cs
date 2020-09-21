@@ -98,11 +98,20 @@ namespace AntDesign.Internal
 
         protected Overlay _overlay = null;
 
-        protected override void OnInitialized()
+        protected override void OnAfterRender(bool firstRender)
         {
-            base.OnInitialized();
+            if (firstRender)
+            {
+                DomEventService.AddEventListener("document", "mouseup", OnMouseUp, false);
+            }
 
-            DomEventService.AddEventListener("document", "mouseup", OnMouseUp);
+            base.OnAfterRender(firstRender);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<JsonElement>("document", "mouseup", OnMouseUp);
+            base.Dispose(disposing);
         }
 
         protected virtual async Task OnTriggerMouseEnter()
