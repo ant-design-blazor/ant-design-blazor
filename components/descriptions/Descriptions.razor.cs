@@ -85,12 +85,24 @@ namespace AntDesign
         {
             SetClassMap();
 
+            await base.OnInitializedAsync();
+        }
 
-            if (Column.IsT1)
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender && Column.IsT1)
             {
                 DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
             }
-            await base.OnInitializedAsync();
+
+            base.OnAfterRender(firstRender);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            DomEventService.RemoveEventListerner<object>("window", "resize", OnResize);
         }
 
         private async void OnResize(object o)
@@ -173,11 +185,6 @@ namespace AntDesign
             }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
 
-            DomEventService.RemoveEventListerner<object>("window", "resize", OnResize);
-        }
     }
 }
