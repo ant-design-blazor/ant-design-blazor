@@ -297,8 +297,6 @@ namespace AntDesign
             {
                 throw new ArgumentOutOfRangeException($"Type argument of Slider should be one of {doubleType}, {tupleDoubleType}");
             }
-            DomEventService.AddEventListener("window", "mousemove", OnMouseMove);
-            DomEventService.AddEventListener("window", "mouseup", OnMouseUp);
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -365,6 +363,25 @@ namespace AntDesign
                 .If($"{PreFixCls}-disabled", () => Disabled)
                 .If($"{PreFixCls}-vertical", () => Vertical)
                 .If($"{PreFixCls}-with-marks", () => Marks != null);
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                DomEventService.AddEventListener("window", "mousemove", OnMouseMove, false);
+                DomEventService.AddEventListener("window", "mouseup", OnMouseUp, false);
+            }
+
+            base.OnAfterRender(firstRender);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<JsonElement>("window", "mousemove", OnMouseMove);
+            DomEventService.RemoveEventListerner<JsonElement>("window", "mouseup", OnMouseUp);
+
+            base.Dispose(disposing);
         }
 
         private void ValidateParameter()
