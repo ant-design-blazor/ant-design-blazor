@@ -7,29 +7,28 @@
         @ChildContent
     }
 
-    @if (HasStatusOrColor)
+    @if (HasStatusOrColor && ChildContent == null)
     {
-        <span class="@($"ant-badge-status-dot {(StatusOrPresetColor!=null? $"ant-badge-status-{StatusOrPresetColor}":"")}")" style="@(PresetColor == null && string.IsNullOrWhiteSpace(Color)?$"background:{Color};":"") @Style"></span>
+        <span class="@($"ant-badge-status-dot {(StatusOrPresetColor!=null? $"ant-badge-status-{StatusOrPresetColor}":"")}")" style="@DotColorStyle @Style"></span>
 
         @if (!string.IsNullOrEmpty(Text))
         {
             <span class="ant-badge-status-text">@Text</span>
         }
     }
-    @if (CountTemplate != null)
+    else if (CountTemplate != null)
     {
         <span role="img" class="ant-scroll-number-custom-component">@CountTemplate</span>
     }
     else
     {
-
         @if (!string.IsNullOrEmpty(Text))
         {
             <span class="ant-badge-status-text">@Text</span>
         }
         if (_showSup)
         {
-            <sup class="@CountClassMapper.Class" style="@CountStyle @Style" title="@Count">
+            <sup class="@CountClassMapper.Class" style="@CountStyle @DotColorStyle @Style" title="@Count">
                 @if (!Dot)
                 {
                     @if (Count <= OverflowCount)
