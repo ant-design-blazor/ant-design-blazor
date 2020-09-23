@@ -25,6 +25,7 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/6%26GF9WHwvY/Badge.svg
 | OverflowCount | 展示封顶的数字值 | number | 99 |  |
 | ShowZero | 当数值为 0 时，是否展示 Badge | boolean | false |  |
 | Status | 设置 Badge 为状态点 | `success` \| `processing` \| `default` \| `error` \| `warning` | '' |  |
+| Size | 在设置了 `count` 的前提下有效，设置小圆点的大小 | `default` \| `small` | - |  |
 | Text | 在设置了 `status` 的前提下有效，设置状态点的文本 | string | '' |  |
 | Title | 设置鼠标放在状态点上时显示的文字 | string | `count` |  |
 
