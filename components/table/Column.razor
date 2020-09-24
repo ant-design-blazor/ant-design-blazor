@@ -17,25 +17,52 @@ else if (IsColGroup)
 }
 else if (IsHeader)
 {
-    <th class="@ClassMapper.Class" style="@FixedStyle @Style" @onclick="HandelHeaderClick">
-        @if (Sortable)
-        {
-            if (ShowSorterTooltip)
+    if (TitleColSpan == 0)
+    {
+        //Do not generate TH
+    }
+    else if (TitleColSpan == 1)
+    {
+        <th class="@ClassMapper.Class" style="@FixedStyle @Style" @onclick="HandelHeaderClick">
+            @if (Sortable)
             {
-                @ToolTipSorter(this)
+                if (ShowSorterTooltip)
+                {
+                    @ToolTipSorter(this)
+                }
+                else
+                {
+                    @SortHeader(this)
+                }
             }
             else
             {
-                @SortHeader(this)
+                @HeaderTitle
             }
-        }
-        else
-        {
-            @HeaderTitle
-        }
-    </th>
+        </th>
+    }
+    else
+    {
+        <th class="@ClassMapper.Class" style="@FixedStyle @Style" @onclick="HandelHeaderClick" colspan="@TitleColSpan">
+            @if (Sortable)
+            {
+                if (ShowSorterTooltip)
+                {
+                    @ToolTipSorter(this)
+                }
+                else
+                {
+                    @SortHeader(this)
+                }
+            }
+            else
+            {
+                @HeaderTitle
+            }
+        </th>
+    }
 }
-else if(RowSpan==0 || ColSpan == 0)
+else if (RowSpan == 0 || ColSpan == 0)
 {
     //Do not generate TD
 }
