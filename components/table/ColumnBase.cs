@@ -39,6 +39,9 @@ namespace AntDesign
         public int ColSpan { get; set; } = 1;
 
         [Parameter]
+        public int TitleColSpan { get; set; } = 1;
+
+        [Parameter]
         public string Fixed { get; set; }
 
         [Parameter]
