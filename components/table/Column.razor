@@ -17,11 +17,7 @@ else if (IsColGroup)
 }
 else if (IsHeader)
 {
-    if (TitleColSpan == 0)
-    {
-        //Do not generate TH
-    }
-    else if (TitleColSpan == 1)
+    if (TitleColSpan == 1)
     {
         <th class="@ClassMapper.Class" style="@FixedStyle @Style" @onclick="HandelHeaderClick">
             @if (Sortable)
@@ -40,6 +36,10 @@ else if (IsHeader)
                 @HeaderTitle
             }
         </th>
+    }
+    else if (TitleColSpan == 0)
+    {
+        //Do not generate TH
     }
     else
     {
@@ -61,10 +61,6 @@ else if (IsHeader)
             }
         </th>
     }
-}
-else if (RowSpan == 0 || ColSpan == 0)
-{
-    //Do not generate TD
 }
 else if (RowSpan == 1 && ColSpan == 1)
 {
@@ -89,6 +85,10 @@ else if (RowSpan == 1 && ColSpan == 1)
             }
         }
     </td>
+}
+else if (RowSpan == 0 || ColSpan == 0)
+{
+    //Do not generate TD
 }
 else
 {
