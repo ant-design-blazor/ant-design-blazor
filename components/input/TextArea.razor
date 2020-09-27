@@ -18,7 +18,7 @@
             { "id", Id },
             { "style", Style },
             { "class", ClassMapper.Class },
-                            };
+                                    };
 
     if (Attributes != null)
     {
@@ -40,5 +40,5 @@ else
 
 @if (AutoSize)
 {
-    <textarea class="@ClassMapper.Class" style="position:absolute;z-index:-1; visibility: hidden;height: 0px;overflow-y:hidden; @_hiddenWidth" @ref="_hiddenEle">@Value</textarea>
+    <textarea class="@ClassMapper.Class" style="position: absolute;left:0; z-index: -1;visibility: hidden;height: 0px;overflow-y: hidden; @_hiddenWidth" @ref="_hiddenEle">@Value</textarea>
 }
