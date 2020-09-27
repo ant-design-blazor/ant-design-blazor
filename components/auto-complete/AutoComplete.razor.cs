@@ -93,7 +93,7 @@ namespace AntDesign
 
         public async Task InputBlur(FocusEventArgs e)
         {
-            this.ClosePanel();
+            //this.ClosePanel();
         }
 
         public async Task InputInput(ChangeEventArgs args)
@@ -285,6 +285,11 @@ namespace AntDesign
                 if (OnSelectionChange.HasDelegate) await OnSelectionChange.InvokeAsync(this.SelectedItem);
             }
             this.ClosePanel();
+        }
+
+        private void OnOverlayTriggerVisibleChange(bool visible)
+        {
+            this.ShowPanel = visible;
         }
 
         private string _minWidth = "";
