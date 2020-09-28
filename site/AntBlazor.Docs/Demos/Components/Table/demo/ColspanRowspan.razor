@@ -1,0 +1,56 @@
+﻿@using System.ComponentModel
+
+<Table DataSource="@data" Bordered>
+    <Column @bind-Field="@context.name" ColSpan="@GetColSpan(context.key,"name")"></Column>
+    <Column @bind-Field="@context.age" ColSpan="@GetColSpan(context.key)"></Column>
+    <Column @bind-Field="@context.tel" Title="Home phone" HeaderColSpan="2" RowSpan="@GetRowSpan(context.key)" ColSpan="@GetColSpan(context.key)"></Column>
+    <Column @bind-Field="@context.phone" HeaderColSpan="0" ColSpan="@GetColSpan(context.key)"></Column>
+    <Column @bind-Field="@context.address" ColSpan="@GetColSpan(context.key)"></Column>
+</Table>
+
+@code{ 
+    Data[] data =
+            {
+        new Data(){ key="1",name="John Brown",age=32,tel="0571-22098909",phone="18889898989",address="New York No. 1 Lake Park"},
+        new Data(){key="2",name="Jim Green",tel="0571-22098333",phone = "18889898888",age = 42,address="London No. 1 Lake Park"},
+        new Data(){key="3",name="Joe Black",age = 32,tel="0575-22098909",phone = "18900010002",address="Sidney No. 1 Lake Park"},
+        new Data(){key="4",name="Jim Red",age = 18,tel="0575-22098909",phone = "18900010002",address="London No. 2 Lake Park"},
+        new Data(){key="5",name="Jake White",age = 18,tel="0575-22098909",phone = "18900010002",address="Dublin No. 2 Lake Park"}
+    };
+
+    public class Data
+    {
+        public string key { get; set; }
+
+        public string name { get; set; }
+
+        public int age { get; set; }
+
+        public string tel { get; set; }
+
+        public string phone { get; set; }
+
+        public string address { get; set; }
+    }
+
+    private int GetRowSpan(string key)
+    {
+        if (key == "3")
+            return 2;
+        else if (key == "4")
+            return 0;
+        else
+            return 1;
+    }
+
+    private int GetColSpan(string key, string columnTitle = "")
+    {
+        if (key == "5")
+            if (columnTitle == "name")
+                return 5;
+            else
+                return 0;
+        else
+            return 1;
+    } 
+}
