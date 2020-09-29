@@ -19,7 +19,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | `Backfill` | 使用键盘选择选项的时候把选中项回填到输入框中 | `boolean` | `false` |
-| `DataSource` | 自动完成的数据源 | `AutocompleteDataSource` | - |
+| `Options` | 自动完成的数据源 | `AutocompleteDataSource` | - |
+| `Disabled` | 禁用组件 | `bool` | - |
+| `Placeholder` | 占位符文本 | `string` | - |
 | `DefaultActiveFirstOption` | 是否默认高亮第一个选项。 | `boolean` | `true` |
 | `Width` | 自定义宽度单位 px | `number` | 触发元素宽度 |
 | `OverlayClassName` | 下拉根元素的类名称 | `string` | - |
