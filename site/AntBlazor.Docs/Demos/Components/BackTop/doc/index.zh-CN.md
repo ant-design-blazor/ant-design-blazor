@@ -20,6 +20,9 @@ BackTop
 
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
-| Target | 设置需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数 | RenderFragment         | -         |
+| TargetId | 设置需要监听其滚动事件的元素，值为DOM的Id | string         | -         |
 | VisibilityHeight   | 滚动高度达到此参数值才出现 `BackTop`| int         |-    |
 | OnClick | 点击按钮的回调函数 | function         |-       |
+| Icon | 图标名称 | string         |-       |
+| ChildContent | 自定义外观 | `RenderFragment`         |-       |
+| Visible | 显示按钮 | bool         |-       |
