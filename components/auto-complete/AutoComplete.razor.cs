@@ -93,11 +93,6 @@ namespace AntDesign
             _inputComponent = input;
         }
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-        }
-
         #region 子控件触发事件
         public async Task InputFocus(FocusEventArgs e)
         {
