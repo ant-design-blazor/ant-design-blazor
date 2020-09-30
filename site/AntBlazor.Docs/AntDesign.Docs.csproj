@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign.Charts" Version="0.2.0-nightly-200822083000" />
+    <PackageReference Include="AntDesign.Charts" Version="0.2.0" />
     <PackageReference Include="System.Net.Http.Json" Version="3.2.1" />
   </ItemGroup>
 
@@ -31,6 +31,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Demos\Charts\Introduce\demo\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
