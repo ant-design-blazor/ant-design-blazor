@@ -89,5 +89,44 @@ namespace AntDesign
 
             panel.OnActiveChange.InvokeAsync(panel.Active);
         }
+
+        public void Activate(params string[] activeKeys)
+        {
+            var selectedKeys = new List<string>(activeKeys.Length);
+
+            foreach (var item in Items)
+            {
+                if (item.Key.IsIn(activeKeys))
+                {
+                    selectedKeys.Add(item.Key);
+                    item.SetActiveInt(true);
+                }
+                else if (this.Accordion)
+                {
+                    item.SetActiveInt(false);
+                }
+            }
+
+            OnChange.InvokeAsync(selectedKeys.ToArray());
+        }
+
+        public void Deactivate(params string[] inactiveKeys)
+        {
+            var selectedKeys = new List<string>();
+
+            foreach (var item in Items)
+            {
+                if (item.Key.IsIn(inactiveKeys))
+                {
+                    item.SetActiveInt(false);
+                }
+                else if (item.Active)
+                {
+                    selectedKeys.Add(item.Key);
+                }
+            }
+
+            OnChange.InvokeAsync(selectedKeys.ToArray());
+        }
     }
 }
