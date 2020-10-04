@@ -58,7 +58,7 @@ namespace AntDesign
             this.Items.Add(panel);
             if (panel.Key.IsIn(DefaultActiveKey))
             {
-                panel.SetActive(true);
+                panel.SetActiveInt(true);
             }
 
             StateHasChanged();
@@ -79,10 +79,10 @@ namespace AntDesign
             if (this.Accordion && !panel.Active)
             {
                 this.Items.Where(item => item != panel && item.Active)
-                    .ForEach(item => item.SetActive(false));
+                    .ForEach(item => item.SetActiveInt(false));
             }
 
-            panel.SetActive(!panel.Active);
+            panel.SetActiveInt(!panel.Active);
 
             var selectedKeys = this.Items.Where(x => x.Active).Select(x => x.Key).ToArray();
             OnChange.InvokeAsync(selectedKeys);
