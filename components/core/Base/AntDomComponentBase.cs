@@ -38,7 +38,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            Id = ComponentIdGenerator.Generate(this);
+            Id ??= ComponentIdGenerator.Generate(this);
             base.OnInitialized();
         }
 
