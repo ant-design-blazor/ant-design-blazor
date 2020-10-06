@@ -32,7 +32,7 @@ namespace AntDesign
 
         public OneOf<string, RenderFragment> Content { get; set; }
 
-        public OneOf<string, double> Width { get; set; } = 520;
+        public OneOf<string, double> Width { get; set; } = 416;
 
         public bool Centered { get; set; }
 
