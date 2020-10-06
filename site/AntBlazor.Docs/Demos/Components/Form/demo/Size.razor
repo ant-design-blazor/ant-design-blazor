@@ -44,7 +44,7 @@
         </RadioGroup>
     </FormItem>
     <FormItem Label="AutoComplete">
-        <AutoComplete @bind-Value="@context.AutoComplete" Options="@autoCompleteOptions" Placeholder="请输入文本" />
+        <AutoComplete @bind-Value="@context.AutoComplete" Options="@autoCompleteOptions" Placeholder="Input here" />
     </FormItem>
     <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
         <Button HtmlType="submit">
@@ -78,21 +78,21 @@
         new CascaderNode()
         {
             Value = "1",
-            Label = "浙江",
+            Label = "Zhejianng",
             Children = new []
     {
-                new CascaderNode {Value = "11", Label = "杭州"},
-                new CascaderNode {Value = "12", Label = "温州"},
+                new CascaderNode {Value = "11", Label = "Hangzhou"},
+                new CascaderNode {Value = "12", Label = "Wenzhou"},
             }
         },
         new CascaderNode()
         {
             Value = "2",
-            Label = "上海",
+            Label = "Shanghai",
         }
     };
 
-    private List<string> autoCompleteOptions = new List<string> { "小学", "初中", "高中", "本科", "硕士", "博士" };
+    private List<string> autoCompleteOptions = new List<string> { "Primary", "Junior", "Senior", "Undergraduate", "Master", "Doctor" };
 
     private void OnFinish(EditContext editContext)
     {
