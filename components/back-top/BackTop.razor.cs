@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -24,9 +23,7 @@ namespace AntDesign
         /// 回到顶部的目标控件
         /// </summary>
         [Parameter]
-        public string TargetId { get; set; }
-
-        protected ClassMapper BackTopClassMapper { get; set; } = new ClassMapper();
+        public string TargetSelector { get; set; }
 
         protected ClassMapper BackTopContentClassMapper { get; set; } = new ClassMapper();
 
@@ -38,10 +35,10 @@ namespace AntDesign
 
         protected async Task OnClickHandle()
         {
-            if (string.IsNullOrWhiteSpace(TargetId))
+            if (string.IsNullOrWhiteSpace(TargetSelector))
                 await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop);
             else
-                await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop, TargetId);
+                await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop, TargetSelector);
 
 
             if (OnClick.HasDelegate)
@@ -54,11 +51,10 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-
         protected void SetClass()
         {
             string prefixCls = "ant-back-top";
-            BackTopClassMapper.Add(prefixCls);
+            ClassMapper.Add(prefixCls);
             BackTopContentClassMapper.Add($"{prefixCls}-content");
             BackTopIconClassMapper.Add($"{prefixCls}-icon");
         }

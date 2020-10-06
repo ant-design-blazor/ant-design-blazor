@@ -20,7 +20,7 @@ BackTop
 
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
-| TargetId | 设置需要监听其滚动事件的元素，值为DOM的Id | string         | -         |
+| TargetSelector | 设置需要监听其滚动事件的元素，值为DOM的Selector | string         | -         |
 | VisibilityHeight   | 滚动高度达到此参数值才出现 `BackTop`| int         |-    |
 | OnClick | 点击按钮的回调函数 | function         |-       |
 | Icon | 图标名称 | string         |-       |
