@@ -1,0 +1,35 @@
+﻿@namespace AntDesign
+
+<span class="@TitleClassMapper.Class" title="@Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="@CanDraggable" aria-grabbed="@CanDraggable">
+    @if (TreeComponent.TitleIconTemplate != null && ShowIcon)
+    {
+        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(IsLoading?"ant-tree-icon_loading":"")">
+            <span class="ant-tree-iconEle ant-tree-icon__customize">
+                @TreeComponent.TitleIconTemplate(SelfNode)
+            </span>
+        </span>
+    }
+    else if (string.IsNullOrWhiteSpace(Icon) == false && ShowIcon)
+    {
+        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(IsLoading?"ant-tree-icon_loading":"")">
+            <span class="ant-tree-iconEle ant-tree-icon__customize">
+                @if (string.IsNullOrWhiteSpace(Icon) == false)
+                {
+                    <Icon Type="@Icon" Theme="outline" />
+                }
+            </span>
+        </span>
+    }
+
+    @if (TreeComponent.TitleTemplate != null)
+    {
+        @TreeComponent.TitleTemplate(SelfNode)
+    }
+    else
+    {
+        <span class="ant-tree-title">
+            @Title
+        </span>
+    }
+</span>
+

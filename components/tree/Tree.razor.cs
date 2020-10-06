@@ -1,285 +1,371 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
-using AntDesign.core.JsInterop.EventArg;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace AntDesign
 {
     public partial class Tree : AntDomComponentBase
     {
-        internal const string PREFIX_CLS = "ant-tree";
+        #region Tree
 
-        internal void CallStateHasChanged()
-        {
-            StateHasChanged();
-        }
-
-        [Inject]
-        public IJSRuntime JSRuntime { get; set; }
-
-        //[Parameter]
-        //public RenderFragment ChildContent { get; set; }
-
+        /// <summary>
+        /// 节点前添加展开图标
+        /// </summary>
         [Parameter]
-        public bool Checkable { get; set; }
+        public bool ShowExpand { get; set; } = true;
 
-        [Parameter]
-        public bool CheckStrictly { get; set; } = false;
-
-        [Parameter]
-        public bool ShowIcon { get; set; }
-
+        /// <summary>
+        /// 是否展示连接线
+        /// </summary>
         [Parameter]
         public bool ShowLine { get; set; }
 
+        /// <summary>
+        /// 是否展示 TreeNode title 前的图标
+        /// </summary>
         [Parameter]
-        public string SwitcherIcon { get; set; }
+        public bool ShowIcon { get; set; }
 
+        /// <summary>
+        /// 是否节点占据一行
+        /// </summary>
         [Parameter]
-        public RenderFragment<TreeNode> SwitcherIconTemplate { get; set; }
+        public bool BlockNode { get; set; }
 
+        /// <summary>
+        /// 设置节点可拖拽
+        /// </summary>
         [Parameter]
-        public string IconType { get; set; }
+        public bool Draggable { get; set; }
 
-        [Parameter]
-        public EventCallback<TreeEventArgs> OnCheckedStateChanged { get; set; }
 
-        [Parameter]
-        public EventCallback<TreeEventArgs> OnNodeSelectedChanged { get; set; }
-
-        [Parameter]
-        public EventCallback<TreeEventArgs> OnNodeLoadDelay { get; set; }
-
-        internal TreeNode _loadDelayNode;
-
-        [Parameter]
-        public RenderFragment<TreeNode> IconTemplate { get; set; }
-
-        [Parameter]
-        public RenderFragment<TreeNode> NodeTemplate { get; set; }
-
-        private List<TreeNode> _nodelist;
-
-        public List<TreeNode> NodeList
+        private void SetClassMapper()
         {
-            get
+            ClassMapper.Clear().Add("ant-tree")
+                .If("ant-tree-show-line", () => ShowLine)
+                .If("ant-tree-icon-hide", () => ShowIcon)
+                .If("ant-tree-block-node", () => BlockNode)
+                .If("draggable-tree", () => Draggable);
+        }
+
+        #endregion
+
+        #region Node
+
+        [Parameter]
+        public RenderFragment Nodes { get; set; }
+
+        [Parameter]
+        public List<TreeNode> ChildNodes { get; set; } = new List<TreeNode>();
+
+        /// <summary>
+        /// 添加节点
+        /// </summary>
+        /// <param name="treeNode"></param>
+        /// <param name=""></param>
+        public void AddNode(TreeNode treeNode)
+        {
+            ChildNodes.Add(treeNode);
+
+        }
+
+        /// <summary>
+        /// 删除节点
+        /// </summary>
+        /// <param name="treeNode"></param>
+        public void RemoveNode(TreeNode treeNode)
+        {
+            ChildNodes.Remove(treeNode);
+        }
+
+        #endregion
+
+        #region Selected
+        //TODO:选中功能设计的不是很理想，将来可以考虑改进
+        /// <summary>
+        /// 支持点选多个节点（节点本身）
+        /// </summary>
+        [Parameter]
+        public bool Multiple { get; set; }
+
+        /// <summary>
+        /// 选中的树节点
+        /// </summary>
+        internal Dictionary<long, TreeNode> SelectedNodesDictionary { get; set; } = new Dictionary<long, TreeNode>();
+
+        public List<TreeNode> SelectedNodes => SelectedNodesDictionary.Select(x => x.Value).ToList();
+
+        public List<string> SelectedNames => SelectedNodesDictionary.Select(x => x.Value.Name).ToList();
+
+        public List<string> SelectedTitles => SelectedNodesDictionary.Select(x => x.Value.Title).ToList();
+
+        public void SelectedNode(List<TreeNode> treeNodes)
+        {
+            foreach (var item in treeNodes)
             {
-                if (_nodelist == null) _nodelist = new List<TreeNode>();
-                return _nodelist;
+                item.SetSelected(true);
             }
         }
 
-        [Parameter]
-        public IReadOnlyCollection<TreeNode> Nodes
+        public void DeselectNode(List<TreeNode> treeNodes)
         {
-            get
+            foreach (var item in treeNodes)
             {
-                if (_nodelist != null)
-                    return _nodelist;
-                return Array.Empty<TreeNode>();
-            }
-            set
-            {
-                if (value == null || value.Count == 0)
-                {
-                    _nodelist = null;
-                    return;
-                }
-                if (_nodelist == null) _nodelist = new List<TreeNode>();
-                else if (_nodelist.Count != 0) _nodelist.Clear();
-                _nodelist.AddRange(value);
+                item.SetSelected(false);
             }
         }
 
         public void DeselectAll()
         {
-            foreach (var node in Nodes)
-                node?.DeselectAll();
+            DeselectNode(SelectedNodesDictionary.Select(x => x.Value).ToList());
         }
+
+
+        #endregion
+
+        #region Checkable
+
+        /// <summary>
+        /// 节点前添加 Checkbox 复选框
+        /// </summary>
+        [Parameter]
+        public bool Checkable { get; set; }
+
+        public List<TreeNode> CheckedNodes => GetCheckedNodes(ChildNodes);
+
+        public List<string> CheckedNames => GetCheckedNodes(ChildNodes).Select(x => x.Name).ToList();
+
+        public List<string> CheckedTitles => GetCheckedNodes(ChildNodes).Select(x => x.Title).ToList();
+
+        private List<TreeNode> GetCheckedNodes(List<TreeNode> childs)
+        {
+            List<TreeNode> checkeds = new List<TreeNode>();
+            foreach (var item in childs)
+            {
+                if (item.IsChecked) checkeds.Add(item);
+                checkeds.AddRange(GetCheckedNodes(item.ChildNodes));
+            }
+            return checkeds;
+        }
+
+        //取消所有选择项目
+        public void DecheckedAll()
+        {
+            foreach (var item in ChildNodes)
+            {
+                item.SetChecked(false);
+            }
+        }
+
+        #endregion
+
+        #region Search
+
+        public string _searchValue;
+        /// <summary>
+        /// 按需筛选树,双向绑定
+        /// </summary>
+        [Parameter]
+        public string SearchValue
+        {
+            get => _searchValue;
+            set
+            {
+                if (_searchValue == value) return;
+                _searchValue = value;
+                if (string.IsNullOrEmpty(value)) return;
+                foreach (var item in ChildNodes)
+                {
+                    SearchNode(item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 返回一个值是否是页节点
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode, bool> SearchExpression { get; set; }
+
+        /// <summary>
+        /// 查询节点
+        /// </summary>
+        /// <param name="treeNode"></param>
+        /// <returns></returns>
+        private bool SearchNode(TreeNode treeNode)
+        {
+            if (SearchExpression != null)
+                treeNode.IsMatched = SearchExpression(treeNode);
+            else
+                treeNode.IsMatched = treeNode.Title.Contains(SearchValue);
+
+            var hasChildMatched = treeNode.IsMatched;
+            foreach (var item in treeNode.ChildNodes)
+            {
+                var itemMatched = SearchNode(item);
+                hasChildMatched = hasChildMatched || itemMatched;
+            }
+            treeNode.HasChildMatched = hasChildMatched;
+
+            return hasChildMatched;
+        }
+
+        #endregion
+
+        #region DataBind
+
+        [Parameter]
+        public IEnumerable DataSource { get; set; }
+
+        /// <summary>
+        /// 指定一个方法，该表达式返回节点的文本。
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode, string> TitleExpression { get; set; }
+
+        /// <summary>
+        /// 指定一个返回节点名称的方法。
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode, string> NameExpression { get; set; }
+
+        /// <summary>
+        /// 指定一个返回节点名称的方法。
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode, string> IconExpression { get; set; }
+
+        /// <summary>
+        /// 返回一个值是否是页节点
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode, bool> IsLeafExpression { get; set; }
+
+        /// <summary>
+        /// 返回子节点的方法
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode, IEnumerable> ChildrenExpression { get; set; }
+
+        #endregion
+
+        #region Event
+
+        /// <summary>
+        /// 延迟加载
+        /// </summary>
+        /// <remarks>必须使用async，且返回类型为Task，否则可能会出现载入时差导致显示问题</remarks>
+        [Parameter]
+        public EventCallback<TreeEventArgs> OnNodeLoadDelayAsync { get; set; }
+
+        /// <summary>
+        /// 点击树节点触发
+        /// </summary>
+        [Parameter]
+        public EventCallback<TreeEventArgs> OnClick { get; set; }
+
+        /// <summary>
+        /// 双击树节点触发
+        /// </summary>
+        [Parameter]
+        public EventCallback<TreeEventArgs> OnDblClick { get; set; }
+
+        /// <summary>
+        /// 右键树节点触发
+        /// </summary>
+        [Parameter]
+        public EventCallback<TreeEventArgs> OnContextMenu { get; set; }
+
+        /// <summary>
+        /// 点击树节点 Checkbox 触发
+        /// </summary>
+        [Parameter]
+        public EventCallback<TreeEventArgs> OnCheckBoxChanged { get; set; }
+
+        /// <summary>
+        /// 点击展开树节点图标触发
+        /// </summary>
+        [Parameter]
+        public EventCallback<TreeEventArgs> OnExpandChanged { get; set; }
+
+        /// <summary>
+        /// 搜索节点时调用(与SearchValue配合使用)
+        /// </summary>
+        [Parameter]
+        public EventCallback<TreeEventArgs> OnSearchValueChanged { get; set; }
+
+        ///// <summary>
+        ///// 开始拖拽时调用
+        ///// </summary>
+        //public EventCallback<TreeEventArgs> OnDragStart { get; set; }
+
+        ///// <summary>
+        ///// dragenter 触发时调用
+        ///// </summary>
+        //public EventCallback<TreeEventArgs> OnDragEnter { get; set; }
+
+        ///// <summary>
+        ///// dragover 触发时调用
+        ///// </summary>
+        //public EventCallback<TreeEventArgs> OnDragOver { get; set; }
+
+        ///// <summary>
+        ///// dragleave 触发时调用
+        ///// </summary>
+        //public EventCallback<TreeEventArgs> OnDragLeave { get; set; }
+
+        ///// <summary>
+        ///// drop 触发时调用
+        ///// </summary>
+        //public EventCallback<TreeEventArgs> OnDrop { get; set; }
+
+        ///// <summary>
+        ///// dragend 触发时调用
+        ///// </summary>
+        //public EventCallback<TreeEventArgs> OnDragEnd { get; set; }
+
+        #endregion
+
+        #region Template
+
+        /// <summary>
+        /// 缩进模板
+        /// </summary>
+        [Parameter]
+        public RenderFragment<TreeNode> IndentTemplate { get; set; }
+
+        /// <summary>
+        /// 标题模板
+        /// </summary>
+        [Parameter]
+        public RenderFragment<TreeNode> TitleTemplate { get; set; }
+
+        /// <summary>
+        /// 图标模板
+        /// </summary>
+        [Parameter]
+        public RenderFragment<TreeNode> TitleIconTemplate { get; set; }
+
+        /// <summary>
+        /// 切换图标模板
+        /// </summary>
+        [Parameter]
+        public RenderFragment<TreeNode> SwitcherIconTemplate { get; set; }
+
+        #endregion
+
+
+
 
         protected override void OnInitialized()
         {
+            SetClassMapper();
             base.OnInitialized();
-            ClassMapper.Clear()
-                .Add(PREFIX_CLS)
-                .If($"{PREFIX_CLS}-icon-hide", () => !ShowIcon)
-                .If($"{PREFIX_CLS}-show-line", () => ShowLine)
-                ;
         }
-
-        internal string _expandedAnimateRequested;
-
-        protected override void OnAfterRender(bool firstRender)
-        {
-            base.OnAfterRender(firstRender);
-
-            if (_expandedAnimateRequested != null)
-            {
-                string id = _expandedAnimateRequested;
-                _expandedAnimateRequested = null;
-
-#pragma warning disable CA2012 // Use ValueTasks correctly
-                _ = JSRuntime.InvokeVoidAsync("eval", "var div=document.getElementById('" + id + "');"
-                    + @"
-if(div.style.height=='0px'){
-    div.style.height=div.scrollHeight+'px';
-    div.classList.add('ant-motion-collapse-appear-active')
-}
-else{
-    div.style.height=div.offsetHeight+'px';
-    setTimeout(function(){
-        div.style.height='0px';
-        div.classList.add('ant-motion-collapse-leave-active')
-    },16);
-}
-"
-);
-#pragma warning restore CA2012 // Use ValueTasks correctly
-            }
-        }
-
-        void CalcSwitcherIconOptions(TreeNode node, out string switchericonclass, out string switchericontype, out RenderFragment<TreeNode> switchericonrf)
-        {
-            switchericonclass = null;
-            switchericontype = null;
-            switchericonrf = node.SwitcherIconTemplate ?? this.SwitcherIconTemplate;
-
-            var nodeHCN = node.HasChildNodes;
-
-            if (switchericonrf == null)
-            {
-                switchericontype = node.SwitcherIcon ?? this.SwitcherIcon;
-                switchericonclass = $"{PREFIX_CLS}-switcher-icon";
-
-                if (string.IsNullOrEmpty(switchericontype))
-                {
-                    if (!this.ShowLine)
-                    {
-                        if (nodeHCN || node.LoadDelay)
-                        {
-                            switchericontype = "caret-down";
-                        }
-                        else
-                        {
-                            //noop
-                        }
-                    }
-                    else if (!nodeHCN)
-                    {
-                        switchericontype = "file";
-                        switchericonclass = $"{PREFIX_CLS}-switcher-icon-file";
-                    }
-                    else if (node.IsExpanded)
-                    {
-                        switchericontype = "minus-square";
-                        switchericonclass = $"{PREFIX_CLS}-switcher-icon-file";
-                    }
-                    else
-                    {
-                        switchericontype = "plus-square";
-                        switchericonclass = $"{PREFIX_CLS}-switcher-icon-file";
-                    }
-                }
-            }
-
-            if (_loadDelayNode == node && !nodeHCN)
-            {
-                switchericonclass = $"{PREFIX_CLS}-switcher-loading-icon anticon-spin";
-                switchericontype = "loading";
-                switchericonrf = null;
-            }
-            else if (!nodeHCN && !this.ShowLine && !node.LoadDelay)
-            {
-                switchericonrf = null;
-                switchericontype = null;
-            }
-        }
-
-        string GetCheckStateCls(TreeNode node)
-        {
-            bool? cs = node.CheckedState;
-            if (cs == null)
-                return "indeterminate";
-            if (cs == true)
-                return "checked";
-            return "unchecked";
-        }
-
-        Func<MouseEventArgs, Task> MakeSwitcherClick(TreeNode node)
-        {
-
-            async Task switcherClick(MouseEventArgs args)
-            {
-                if (node.HasChildNodes)
-                {
-                    await node.ToggleExpandedAnimatedAsync();
-                }
-                else if (node.LoadDelay)
-                {
-                    this._loadDelayNode = node;
-                    await this.OnNodeLoadDelay.InvokeAsync(new TreeEventArgs(this, node));
-                    this._loadDelayNode = null;
-                    if (node.HasChildNodes && !node.IsExpanded)
-                    {
-                        //this.CallStateHasChanged();
-                        await node.ToggleExpandedAnimatedAsync();
-                    }
-                }
-            }
-
-            return switcherClick;
-
-        }
-
-        Func<MouseEventArgs, Task> MakeCheckClick(TreeNode node)
-        {
-            async Task checkClick(MouseEventArgs args)
-            {
-                if (node.IsDisabled)
-                    return;
-                if (this.CheckStrictly)
-                    node.IsChecked = !node.IsChecked;
-                else
-                    node.SetCheckedAll(node.CheckedState != true);
-                if (this.OnCheckedStateChanged.HasDelegate)
-                {
-                    await this.OnCheckedStateChanged.InvokeAsync(new TreeEventArgs(this, node));
-                }
-            }
-
-            return checkClick;
-        }
-
-
-        Func<MouseEventArgs, Task> MakeNodeClick(TreeNode node)
-        {
-
-            async Task nodeClick(MouseEventArgs args)
-            {
-                if (node.IsDisabled)
-                    return;
-
-                if (node.IsSelected)
-                {
-                    node.IsSelected = false;
-                }
-                else
-                {
-                    if (!args.CtrlKey)//TODO: ownerTree.MultiSelect ?
-                        this.DeselectAll();
-                    node.IsSelected = true;
-                }
-                if (this.OnNodeSelectedChanged.HasDelegate)
-                {
-                    await this.OnNodeSelectedChanged.InvokeAsync(new TreeEventArgs(this, node));
-                }
-            }
-
-            return nodeClick;
-        }
-
     }
 }

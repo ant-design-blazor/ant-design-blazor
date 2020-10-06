@@ -1,21 +1,17 @@
-
-<Switch @bind-Value="@_showLine"/>
-<br />
-
-<Tree ShowLine="@_showLine" Checkable>
+<Tree @ref="tree" Checkable Multiple>
     <Nodes>
         <TreeNode Title="A">
             <Nodes>
                 <TreeNode Title="A1">
                     <Nodes>
                         <TreeNode Title="A1-1"></TreeNode>
-                        <TreeNode Title="A1-2"></TreeNode>
+                        <TreeNode Title="A2-2"></TreeNode>
                     </Nodes>
                 </TreeNode>
                 <TreeNode Title="A2" IsDisabled>
                     <Nodes>
                         <TreeNode Title="A2-1"></TreeNode>
-                        <TreeNode Title="A2-2"></TreeNode>
+                        <TreeNode Title="A1-2"></TreeNode>
                     </Nodes>
                 </TreeNode>
                 <TreeNode Title="A3" IsDisableCheckbox>
@@ -23,7 +19,6 @@
                         <TreeNode Title="A3-1"></TreeNode>
                         <TreeNode Title="A3-2" IsDisableCheckbox></TreeNode>
                         <TreeNode Title="A3-3" IsDisabled></TreeNode>
-
                     </Nodes>
                 </TreeNode>
             </Nodes>
@@ -32,8 +27,39 @@
     </Nodes>
 </Tree>
 
-@code{
-    bool _showLine = true;
+<br />
+<Button OnClick="PrintCheckedNodes">Print Checked Nodes</Button>
+
+<Button OnClick="PrintSelectedNodes">Print Selected Nodes</Button>
+<br />
+@if (string.IsNullOrWhiteSpace(printType) == false)
+{
+    <div>@printType</div>
+    <ul>
+        @foreach (var item in printTexts)
+        {
+            <li>@item</li>
+        }
+    </ul>
 }
+@code{
 
+    string printType;
 
+    List<string> printTexts = new List<string>();
+
+    Tree tree;
+
+    private void PrintCheckedNodes()
+    {
+        printType = "CheckedNodes";
+        printTexts = tree.CheckedTitles;
+    }
+
+    private void PrintSelectedNodes()
+    {
+        printType = "SelectedNodes";
+        printTexts = tree.SelectedTitles;
+    }
+
+}
