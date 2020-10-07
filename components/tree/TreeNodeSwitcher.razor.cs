@@ -22,38 +22,26 @@ namespace AntDesign
         [CascadingParameter(Name = "SelfNode")]
         public TreeNode SelfNode { get; set; }
 
-        [Parameter]
-        public bool ShowLine { get; set; }
+        private bool IsShowLineIcon => !SelfNode.IsLeaf && TreeComponent.ShowLine;
 
-        [Parameter]
-        public bool IsLeaf { get; set; }
-
-        [Parameter]
-        public bool IsLoading { get; set; }
-
-        [Parameter]
-        public bool IsExpanded { get; set; }
-
-        private bool IsShowLineIcon => !IsLeaf && ShowLine;
-
-        private bool IsShowSwitchIcon => !IsLeaf && !ShowLine;
+        private bool IsShowSwitchIcon => !SelfNode.IsLeaf && !TreeComponent.ShowLine;
 
         /// <summary>
         /// 节点是否处于展开状态
         /// </summary>
-        private bool IsSwitcherOpen => IsExpanded && !IsLeaf;
+        private bool IsSwitcherOpen => SelfNode.IsExpanded && !SelfNode.IsLeaf;
 
         /// <summary>
         /// 节点是否处于关闭状态
         /// </summary>
-        private bool IsSwitcherClose => !IsExpanded && !IsLeaf;
+        private bool IsSwitcherClose => !SelfNode.IsExpanded && !SelfNode.IsLeaf;
 
         protected ClassMapper ClassMapper { get; } = new ClassMapper();
 
         private void SetClassMap()
         {
             ClassMapper.Clear().Add("ant-tree-switcher")
-                .If("ant-tree-switcher-noop", () => IsLeaf)
+                .If("ant-tree-switcher-noop", () => SelfNode.IsLeaf)
                 .If("ant-tree-switcher_open", () => IsSwitcherOpen)
                 .If("ant-tree-switcher_close", () => IsSwitcherClose);
         }

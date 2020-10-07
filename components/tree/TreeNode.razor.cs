@@ -45,21 +45,12 @@ namespace AntDesign
         /// 添加节点
         /// </summary>
         /// <param name=""></param>
-        public void AddNode(TreeNode treeNode)
+        internal void AddNode(TreeNode treeNode)
         {
             ChildNodes.Add(treeNode);
             IsLeaf = false;
         }
 
-        /// <summary>
-        /// 删除节点
-        /// </summary>
-        /// <param name="treeNode"></param>
-        public void RemoveNode(TreeNode treeNode)
-        {
-            ChildNodes.Remove(treeNode);
-            if (ChildNodes.Count == 0) IsLeaf = true;
-        }
 
         #endregion
 
@@ -67,13 +58,13 @@ namespace AntDesign
 
         static long _nextNodeId;
 
-        long _nodeId;
+        internal long NodeId { get; private set; }
 
-        internal long GetNodeId() => _nodeId;
+
 
         public TreeNode()
         {
-            _nodeId = Interlocked.Increment(ref _nextNodeId);
+            NodeId = Interlocked.Increment(ref _nextNodeId);
         }
 
         private string _name;
@@ -131,11 +122,11 @@ namespace AntDesign
             if (value == true)
             {
                 if (TreeComponent.Multiple == false) TreeComponent.DeselectAll();
-                if (TreeComponent.SelectedNodesDictionary.ContainsKey(_nodeId) == false) TreeComponent.SelectedNodesDictionary.Add(_nodeId, this);
+                TreeComponent.SelectedNodeAdd(this);
             }
             else
             {
-                if (TreeComponent.SelectedNodesDictionary.ContainsKey(_nodeId) == true) TreeComponent.SelectedNodesDictionary.Remove(_nodeId);
+                TreeComponent.SelectedNodeRemove(this);
             }
             StateHasChanged();
         }
@@ -195,15 +186,15 @@ namespace AntDesign
         /// <summary>
         /// 真实的展开状态，路径上只要存在折叠，那么下面的全部折叠
         /// </summary>
-        internal bool IsRealExpanded
+        internal bool IsRealDisplay
         {
             get
             {
                 if (string.IsNullOrEmpty(TreeComponent.SearchValue))
                 {//普通模式下节点显示规则
-                    if (ParentNode == null) return true;//第一级节点默认展开
-                    if (ParentNode.IsExpanded == false) return false;//上级节点如果是关闭的，必定关闭
-                    return ParentNode.IsRealExpanded; //否则查找上级节点是否展开
+                    if (ParentNode == null) return true;//第一级节点默认显示
+                    if (ParentNode.IsExpanded == false) return false;//上级节点如果是折叠的，必定折叠
+                    return ParentNode.IsRealDisplay; //否则查找路径三的级节点显示情况
                 }
                 else
                 {//筛选模式下不考虑节点是否展开，只要节点符合条件，或者存在符合条件的子节点是就展开显示
@@ -377,29 +368,6 @@ namespace AntDesign
         /// 子节点存在满足搜索条件，所以夫节点也需要显示
         /// </summary>
         internal bool HasChildMatched { get; set; }
-
-        ///// <summary>
-        ///// 验证数据是否满足查询条件
-        ///// </summary>
-        //internal void MatchValue()
-        //{
-        //    if (TreeComponent.MatchExpression != null)
-        //        IsMatched = TreeComponent.MatchExpression(this);
-        //    else
-        //        IsMatched = Title.Contains(TreeComponent.SearchValue);
-
-        //    UpdateMatchState(IsMatched);
-
-        //    foreach (var item in ChildNodes)
-        //    {
-        //        item.MatchValue();
-        //    }
-        //}
-
-        //internal void UpdateMatchState(bool isMatched)
-        //{
-
-        //}
 
         #endregion
 

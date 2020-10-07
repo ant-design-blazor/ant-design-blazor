@@ -68,25 +68,16 @@ namespace AntDesign
         /// </summary>
         /// <param name="treeNode"></param>
         /// <param name=""></param>
-        public void AddNode(TreeNode treeNode)
+        internal void AddNode(TreeNode treeNode)
         {
             ChildNodes.Add(treeNode);
 
         }
 
-        /// <summary>
-        /// 删除节点
-        /// </summary>
-        /// <param name="treeNode"></param>
-        public void RemoveNode(TreeNode treeNode)
-        {
-            ChildNodes.Remove(treeNode);
-        }
-
         #endregion
 
         #region Selected
-        //TODO:选中功能设计的不是很理想，将来可以考虑改进
+
         /// <summary>
         /// 支持点选多个节点（节点本身）
         /// </summary>
@@ -104,27 +95,24 @@ namespace AntDesign
 
         public List<string> SelectedTitles => SelectedNodesDictionary.Select(x => x.Value.Title).ToList();
 
-        public void SelectedNode(List<TreeNode> treeNodes)
+        internal void SelectedNodeAdd(TreeNode treeNodes)
         {
-            foreach (var item in treeNodes)
-            {
-                item.SetSelected(true);
-            }
+            if (SelectedNodesDictionary.ContainsKey(treeNodes.NodeId) == false)
+                SelectedNodesDictionary.Add(treeNodes.NodeId, treeNodes);
         }
-
-        public void DeselectNode(List<TreeNode> treeNodes)
+        internal void SelectedNodeRemove(TreeNode treeNodes)
         {
-            foreach (var item in treeNodes)
-            {
-                item.SetSelected(false);
-            }
+            if (SelectedNodesDictionary.ContainsKey(treeNodes.NodeId) == true)
+                SelectedNodesDictionary.Remove(treeNodes.NodeId);
         }
 
         public void DeselectAll()
         {
-            DeselectNode(SelectedNodesDictionary.Select(x => x.Value).ToList());
+            foreach (var item in SelectedNodesDictionary.Select(x => x.Value).ToList())
+            {
+                item.SetSelected(false);
+            }
         }
-
 
         #endregion
 

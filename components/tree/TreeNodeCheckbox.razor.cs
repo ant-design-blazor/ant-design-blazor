@@ -13,23 +13,26 @@ namespace AntDesign
 {
     public partial class TreeNodeCheckbox
     {
-        [Parameter]
-        public bool IsChecked { get; set; }
-        [Parameter]
-        public bool IsHalfChecked { get; set; }
-        [Parameter]
-        public bool IsDisabled { get; set; }
-        [Parameter]
-        public bool IsDisableCheckbox { get; set; }
+        /// <summary>
+        /// 树控件本身
+        /// </summary>
+        [CascadingParameter(Name = "Tree")]
+        public Tree TreeComponent { get; set; }
+
+        /// <summary>
+        /// 当前节点
+        /// </summary>
+        [CascadingParameter(Name = "SelfNode")]
+        public TreeNode SelfNode { get; set; }
 
         protected ClassMapper ClassMapper { get; } = new ClassMapper();
 
         private void SetClassMap()
         {
             ClassMapper.Clear().Add("ant-tree-checkbox")
-                .If("ant-tree-checkbox-checked", () => IsChecked)
-                .If("ant-tree-checkbox-indeterminate", () => IsHalfChecked)
-                .If("ant-tree-checkbox-disabled", () => IsDisabled || IsDisableCheckbox)
+                .If("ant-tree-checkbox-checked", () => SelfNode.IsChecked)
+                .If("ant-tree-checkbox-indeterminate", () => SelfNode.IsHalfChecked)
+                .If("ant-tree-checkbox-disabled", () => SelfNode.IsDisabled || SelfNode.IsDisableCheckbox)
                 ;
         }
 

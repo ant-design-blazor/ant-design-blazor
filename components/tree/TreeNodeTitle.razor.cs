@@ -21,34 +21,11 @@ namespace AntDesign
         [CascadingParameter(Name = "SelfNode")]
         public TreeNode SelfNode { get; set; }
 
-        [Parameter]
-        public bool ShowIcon { get; set; }
-        [Parameter]
-        public string Icon { get; set; }
-        [Parameter]
-        public string Title { get; set; }
-        [Parameter]
-        public bool IsLoading { get; set; }
-        [Parameter]
-        public bool IsSelected { get; set; }
-        [Parameter]
-        public bool IsDisabled { get; set; }
+        private bool CanDraggable => TreeComponent.Draggable && !SelfNode.IsDisabled;
 
-        /// <summary>
-        /// title是否包含nzSearchValue(搜索使用)
-        /// </summary>
-        [Parameter]
-        public bool IsMatched { get; set; }
-        [Parameter]
-        public bool IsExpanded { get; set; }
-        [Parameter]
-        public bool IsLeaf { get; set; }
+        private bool IsSwitcherOpen => SelfNode.IsExpanded && !SelfNode.IsLeaf;
 
-        private bool CanDraggable => TreeComponent.Draggable && !IsDisabled;
-
-        private bool IsSwitcherOpen => IsExpanded && !IsLeaf;
-
-        private bool IsSwitcherClose => !IsExpanded && !IsLeaf;
+        private bool IsSwitcherClose => !SelfNode.IsExpanded && !SelfNode.IsLeaf;
 
         protected ClassMapper TitleClassMapper { get; } = new ClassMapper();
 
@@ -58,7 +35,7 @@ namespace AntDesign
                 .If("draggable", () => CanDraggable)
                 .If("ant-tree-node-content-wrapper-open", () => IsSwitcherOpen)
                 .If("ant-tree-node-content-wrapper-close", () => IsSwitcherClose)
-                .If("ant-tree-node-selected", () => IsSelected);
+                .If("ant-tree-node-selected", () => SelfNode.IsSelected);
         }
 
         protected override void OnInitialized()

@@ -1,21 +1,21 @@
 ﻿@namespace AntDesign
 
-<span class="@TitleClassMapper.Class" title="@Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="@CanDraggable" aria-grabbed="@CanDraggable">
-    @if (TreeComponent.TitleIconTemplate != null && ShowIcon)
+<span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="@CanDraggable" aria-grabbed="@CanDraggable">
+    @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
     {
-        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(IsLoading?"ant-tree-icon_loading":"")">
+        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.IsLoading?"ant-tree-icon_loading":"")">
             <span class="ant-tree-iconEle ant-tree-icon__customize">
                 @TreeComponent.TitleIconTemplate(SelfNode)
             </span>
         </span>
     }
-    else if (string.IsNullOrWhiteSpace(Icon) == false && ShowIcon)
+    else if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false && TreeComponent.ShowIcon)
     {
-        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(IsLoading?"ant-tree-icon_loading":"")">
+        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.IsLoading?"ant-tree-icon_loading":"")">
             <span class="ant-tree-iconEle ant-tree-icon__customize">
-                @if (string.IsNullOrWhiteSpace(Icon) == false)
+                @if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false)
                 {
-                    <Icon Type="@Icon" Theme="outline" />
+                    <Icon Type="@SelfNode.Icon" Theme="outline" />
                 }
             </span>
         </span>
@@ -28,7 +28,7 @@
     else
     {
         <span class="ant-tree-title">
-            @Title
+            @SelfNode.Title
         </span>
     }
 </span>

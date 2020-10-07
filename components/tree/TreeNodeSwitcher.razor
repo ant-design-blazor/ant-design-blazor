@@ -3,7 +3,7 @@
 <span class="@ClassMapper.Class" @onclick="OnClick">
     @if (IsShowSwitchIcon)
     {
-        @if (!IsLoading)
+        @if (!SelfNode.IsLoading)
         {
             if (TreeComponent.SwitcherIconTemplate != null)
             {
@@ -20,9 +20,9 @@
         }
 
     }
-    @if (ShowLine)
+    @if (TreeComponent.ShowLine)
     {
-        @if (!IsLoading)
+        @if (!SelfNode.IsLoading)
         {
             if (TreeComponent.SwitcherIconTemplate != null)
             {
