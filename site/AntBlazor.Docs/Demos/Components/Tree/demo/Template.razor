@@ -1,0 +1,60 @@
+
+<Tree Checkable ShowIcon>
+    <Nodes>
+        <TreeNode Title="A">
+            <Nodes>
+                <TreeNode Title="A1">
+                    <Nodes>
+                        <TreeNode Title="A1-1"></TreeNode>
+                        <TreeNode Title="A2-2"></TreeNode>
+                    </Nodes>
+                </TreeNode>
+                <TreeNode Title="A2" IsDisabled>
+                    <Nodes>
+                        <TreeNode Title="A2-1"></TreeNode>
+                        <TreeNode Title="A2-2"></TreeNode>
+                    </Nodes>
+                </TreeNode>
+                <TreeNode Title="A3" IsDisableCheckbox>
+                    <Nodes>
+                        <TreeNode Title="A3-1"></TreeNode>
+                        <TreeNode Title="A3-2" IsDisableCheckbox></TreeNode>
+                        <TreeNode Title="A3-3" IsDisabled></TreeNode>
+                    </Nodes>
+                </TreeNode>
+            </Nodes>
+        </TreeNode>
+        <TreeNode Title="B">
+            <Nodes>
+                <TreeNode Title="B1"></TreeNode>
+                <TreeNode Title="B2"></TreeNode>
+            </Nodes>
+        </TreeNode>
+    </Nodes>
+    <IndentTemplate Context="node">
+        <span>--></span>
+    </IndentTemplate>
+    <TitleTemplate Context="node">
+        <span style="color:@(node.Title?.FirstOrDefault() switch {'A'=>"red",'B'=>"green",_=>"blue" })">@node.Title</span>
+    </TitleTemplate>
+    <TitleIconTemplate Context="node">
+        @if (node.IsLeaf)
+        {
+            <Icon Type="@(node.Title?.FirstOrDefault() switch {'A'=>"user-delete",'B'=>"tag",_=>"" })" Theme="outline" />
+        }
+        else
+        {
+            <Icon Type="@(node.Title?.FirstOrDefault() switch {'A'=>"usergroup-delete",'B'=>"tags",_=>"" })" Theme="outline" />
+        }
+    </TitleIconTemplate>
+    <SwitcherIconTemplate Context="node">
+        @if (node.IsExpanded)
+        {
+            <Icon Type="down-circle" Theme="outline" />
+        }
+        else
+        {
+            <Icon Type="right-circle" Theme="outline" />
+        }
+    </SwitcherIconTemplate>
+</Tree>

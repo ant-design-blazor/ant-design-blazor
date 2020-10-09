@@ -1,34 +1,36 @@
 
 <div>
-    <Tree Nodes="TreeNodes" OnNodeLoadDelay="NodeLoadDelayAsync"></Tree>
+    <Tree DataSource="_datas"
+          TitleExpression="x=>((Data)x.DataItem).Title"
+          ChildrenExpression="x=>((Data)x.DataItem).Childs"
+          IsLeafExpression="x=>x.TreeLevel>2"
+          OnNodeLoadDelayAsync="OnNodeLoadDelayAsync"></Tree>
 </div>
 
 @code{
 
-    List<TreeNode> _treeNodes;
+    List<Data> _datas = new List<Data>()
+{
+        new Data(){Title="A"},
+        new Data(){Title="B"},
+        new Data(){Title="C"},
+    };
 
-    public List<TreeNode> TreeNodes
+    public async Task OnNodeLoadDelayAsync(TreeEventArgs args)
     {
-        get
-        {
-            if (_treeNodes != null)
-                return _treeNodes;
+        await Task.Delay(2000);//Ä£ÄâÒì²½Ö´ÐÐ
 
-            _treeNodes = new List<TreeNode>(){
-                new TreeNode{Text = "Expand to load",LoadDelay = true},
-                new TreeNode{Text = "Expand to load",LoadDelay = true},
-                new TreeNode{Text = "Tree Node"}
-            };
+        var dataItem = ((Data)args.Node.DataItem);
 
-            return _treeNodes;
-        }
+        dataItem.Childs.Add(new Data() { Title = $"{dataItem.Title}-1" });
+        dataItem.Childs.Add(new Data() { Title = $"{dataItem.Title}-2" });
     }
 
-    async Task NodeLoadDelayAsync(TreeEventArgs args)
+    public class Data
     {
-        await Task.Delay(300);
-        args.Node.Nodes.Add(new TreeNode { Text = "Child Node", LoadDelay = true });
-        args.Node.Nodes.Add(new TreeNode { Text = "Child Node", LoadDelay = true });
+        public string Title { get; set; }
+
+        public List<Data> Childs { get; set; } = new List<Data>();
     }
 }
 

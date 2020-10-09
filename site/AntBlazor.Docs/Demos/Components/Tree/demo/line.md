@@ -1,5 +1,5 @@
 ---
-order: 5
+order: 10
 title:
   zh-CN: 连接线
   en-US: Tree with line
