@@ -12,15 +12,15 @@ else if (IsColGroup)
         <col style="width: @(Width)px; min-width: @(Width)px;">
     }
 }
-else if (IsHeader)
+else if (IsHeader && HeaderColSpan != 0)
 {
-    <th class="@ClassMapper.Class" style="@FixedStyle @Style">
+    <th class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@HeaderColSpan">
         @(Title)
     </th>
 }
-else
+else if (RowSpan != 0 && ColSpan != 0)
 {
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style">
+    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan">
         @ChildContent
     </td>
 }

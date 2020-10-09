@@ -19,15 +19,19 @@ namespace AntDesign
 
         #region API
 
-        public Task Open([NotNull]MessageConfig config)
+        public Task Open([NotNull] MessageConfig config)
         {
             if (config == null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
 
-            var task = OnOpening?.Invoke(config);
-            return task;
+            if (OnOpening != null)
+            {
+                return OnOpening.Invoke(config);
+            }
+
+            return Task.CompletedTask;
         }
 
         public Task Success(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null)

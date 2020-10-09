@@ -1,13 +1,14 @@
 ---
-order: 1
+order: 2
+iframe: 360
 title:
   zh-CN: 自定义样式
   en-US: Custom style
 ---
 
 ## zh-CN
-可以自定义回到顶部按钮的样式，限制宽高：`40px * 40px`。
 
+可以自定义回到顶部按钮的样式，限制宽高：`40px * 40px`。
 
 ## en-US
 

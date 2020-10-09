@@ -12,18 +12,18 @@ else if (IsColGroup)
         <col style="width: @(Width)px; min-width: @(Width)px;">
     }
 }
-else if (IsHeader)
+else if (IsHeader && HeaderColSpan != 0)
 {
-    <th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key">
+    <th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key" colspan="@HeaderColSpan">
         @if (Type == "checkbox")
         {
             <Checkbox @bind-Checked="_checked" CheckedChange="HandleCheckedChange" Indeterminate="Indeterminate" />
         }
     </th>
 }
-else
+else if (RowSpan != 0 && ColSpan != 0)
 {
-    <td class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key">
+    <td class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
         @if (Type == "checkbox")
         {
             <Checkbox @bind-Checked="_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" />

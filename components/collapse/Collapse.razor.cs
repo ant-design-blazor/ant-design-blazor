@@ -58,7 +58,7 @@ namespace AntDesign
             this.Items.Add(panel);
             if (panel.Key.IsIn(DefaultActiveKey))
             {
-                panel.SetActive(true);
+                panel.SetActiveInt(true);
             }
 
             StateHasChanged();
@@ -79,15 +79,54 @@ namespace AntDesign
             if (this.Accordion && !panel.Active)
             {
                 this.Items.Where(item => item != panel && item.Active)
-                    .ForEach(item => item.SetActive(false));
+                    .ForEach(item => item.SetActiveInt(false));
             }
 
-            panel.SetActive(!panel.Active);
+            panel.SetActiveInt(!panel.Active);
 
             var selectedKeys = this.Items.Where(x => x.Active).Select(x => x.Key).ToArray();
             OnChange.InvokeAsync(selectedKeys);
 
             panel.OnActiveChange.InvokeAsync(panel.Active);
+        }
+
+        public void Activate(params string[] activeKeys)
+        {
+            var selectedKeys = new List<string>(activeKeys.Length);
+
+            foreach (var item in Items)
+            {
+                if (item.Key.IsIn(activeKeys))
+                {
+                    selectedKeys.Add(item.Key);
+                    item.SetActiveInt(true);
+                }
+                else if (this.Accordion)
+                {
+                    item.SetActiveInt(false);
+                }
+            }
+
+            OnChange.InvokeAsync(selectedKeys.ToArray());
+        }
+
+        public void Deactivate(params string[] inactiveKeys)
+        {
+            var selectedKeys = new List<string>();
+
+            foreach (var item in Items)
+            {
+                if (item.Key.IsIn(inactiveKeys))
+                {
+                    item.SetActiveInt(false);
+                }
+                else if (item.Active)
+                {
+                    selectedKeys.Add(item.Key);
+                }
+            }
+
+            OnChange.InvokeAsync(selectedKeys.ToArray());
         }
     }
 }

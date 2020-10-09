@@ -76,7 +76,10 @@ namespace AntDesign
         {
             ModalRef modalRef = new ModalRef(props, this);
             modalRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
-            await OnOpenEvent?.Invoke(modalRef);
+            if (OnOpenEvent != null)
+            {
+                await OnOpenEvent.Invoke(modalRef);
+            }
 
             return await modalRef.TaskCompletionSource.Task
                 .ContinueWith(t =>
