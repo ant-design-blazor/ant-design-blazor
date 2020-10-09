@@ -176,7 +176,7 @@ namespace AntDesign
 
         private async Task RemoveFile(UploadFileItem item)
         {
-            var canRemove = OnRemove == null || await OnRemove?.Invoke(item);
+            var canRemove = OnRemove == null || await OnRemove.Invoke(item);
             if (canRemove)
             {
                 this.FileList.Remove(item);
