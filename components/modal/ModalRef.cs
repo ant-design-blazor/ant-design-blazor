@@ -22,8 +22,8 @@ namespace AntDesign
         /// <returns></returns>
         public async Task TriggerOkAsync(TResult result)
         {
-            await _service?.CloseAsync(this);
-            await OnOk?.Invoke(result);
+            await (_service?.CloseAsync(this) ?? Task.CompletedTask);
+            await (OnOk?.Invoke(result) ?? Task.CompletedTask);
         }
 
         /// <summary>
@@ -32,8 +32,8 @@ namespace AntDesign
         /// <returns></returns>
         public async Task TriggerCancelAsync(TResult result)
         {
-            await _service?.CloseAsync(this);
-            await OnCancel?.Invoke(result);
+            await (_service.CloseAsync(this) ?? Task.CompletedTask);
+            await (OnCancel?.Invoke(result) ?? Task.CompletedTask);
         }
     }
 
