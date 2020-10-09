@@ -19,6 +19,8 @@ BackTop
 
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
-| Target | 	specifies the scrollable area dom node | RenderFragment         | -         |
+| TargetSelector | 	specifies the scrollable area dom selector | string    | -         |
 | VisibilityHeight   | the `BackTop` button will not show until the scroll height reaches this value| int         |-    |
 | OnClick | a callback function, which can be executed when you click the button | function         |-       |
+| ChildContent | Custom Content | `RenderFragment`         | -       |
+| Visible | Display the button | bool         | -       |
