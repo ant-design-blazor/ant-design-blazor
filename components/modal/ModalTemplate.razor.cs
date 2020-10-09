@@ -18,7 +18,7 @@ namespace AntDesign
         /// <returns></returns>
         public async Task OnOkAsync(TResult result)
         {
-            await ModalRef.OnOk?.Invoke(result);
+            await (ModalRef.OnOk?.Invoke(result) ?? Task.CompletedTask);
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace AntDesign
         /// <returns></returns>
         public async Task OnCancelAsync(TResult result)
         {
-            await ModalRef.OnCancel?.Invoke(result);
+            await (ModalRef.OnCancel?.Invoke(result) ?? Task.CompletedTask);
         }
 
 

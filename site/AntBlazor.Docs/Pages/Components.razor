@@ -8,9 +8,10 @@
 
         @if (_demoComponent != null)
         {
-            var docDemos = _demoComponent.DemoList.Where(x => x.Docs.HasValue && x.Docs.Value);
-            var demos = _demoComponent.DemoList.Where(x => !x.Debug && !x.Docs.HasValue).OrderBy(x => x.Order);
-            @if (demos.Any())
+            var docDemos = _demoComponent.DemoList?.Where(x => x.Docs.HasValue && x.Docs.Value) ?? Enumerable.Empty<DemoItem>();
+            var demos = _demoComponent.DemoList?.Where(x => !x.Debug && !x.Docs.HasValue).OrderBy(x => x.Order) ?? Enumerable.Empty<DemoItem>();
+
+            if (demos.Any())
             {
                 <div class="toc-affix">
                     <Affix OffsetTop="16">
@@ -27,6 +28,7 @@
                     </Affix>
                 </div>
             }
+
             <section class="markdown">
                 <h1>
                     @_demoComponent.Title
@@ -44,7 +46,7 @@
 
                 @foreach (var docDemo in docDemos)
                 {
-                    <RazorBox Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Title}")"/>
+                    <RazorBox Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Title}")" />
                 }
 
                 @if (demos.Any())
