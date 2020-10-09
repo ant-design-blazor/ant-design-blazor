@@ -1,8 +1,9 @@
-
-<Switch @bind-Value="@_showLine"/>
-<br />
-
-<Tree ShowLine="@_showLine" Checkable>
+<Tree Checkable BlockNode
+      OnClick='e=>EventRecord(e,"OnClick")'
+      OnDblClick='e=>EventRecord(e,"OnDblClick")'
+      OnContextMenu='e=>EventRecord(e,"OnContextMenu")'
+      OnCheckBoxChanged='e=>EventRecord(e,"OnCheckBoxChange")'
+      OnExpandChanged='e=>EventRecord(e,"OnExpandChange")'>
     <Nodes>
         <TreeNode Title="A">
             <Nodes>
@@ -31,9 +32,22 @@
         <TreeNode Title="B"></TreeNode>
     </Nodes>
 </Tree>
+<br />
+<span>Events</span>
+<div style="width:100%;height:150px;overflow-y:scroll">
+    <ul>
+        @foreach (var item in events)
+        {
+            <li>@item</li>
+        }
+    </ul>
+</div>
 
 @code{
-    bool _showLine = true;
+    public List<string> events { get; set; } = new List<string>();
+
+    public void EventRecord(TreeEventArgs args, string eventName)
+    {
+        events.Insert(0, $"{eventName}:{args.Node.Title}");
+    }
 }
-
-
