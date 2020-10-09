@@ -21,7 +21,7 @@ namespace AntDesign
         {
             CheckIsNull(options);
             IDrawerRef drawerRef = new DrawerRef<object>(options, this);
-            await OnOpenEvent.Invoke(drawerRef);
+            await (OnOpenEvent?.Invoke(drawerRef) ?? Task.CompletedTask);
             return drawerRef;
         }
 
@@ -39,7 +39,7 @@ namespace AntDesign
             CheckIsNull(config);
 
             DrawerRef<TResult> drawerRef = new DrawerRef<TResult>(config, this);
-            await OnOpenEvent.Invoke(drawerRef);
+            await (OnOpenEvent?.Invoke(drawerRef) ?? Task.CompletedTask);
 
             RenderFragment child = (builder) =>
             {
@@ -59,7 +59,7 @@ namespace AntDesign
             DrawerRef<TResult> drawerRef = new DrawerRef<TResult>(config, this);
 
             drawerRef.TaskCompletionSource = new TaskCompletionSource<TResult>(); ;
-            await OnOpenEvent.Invoke(drawerRef);
+            await (OnOpenEvent?.Invoke(drawerRef) ?? Task.CompletedTask);
 
             RenderFragment child = (builder) =>
             {
