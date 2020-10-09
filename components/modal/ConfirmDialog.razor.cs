@@ -59,7 +59,6 @@ namespace AntDesign
 
             config.ClassName = "ant-modal-confirm ant-modal-confirm-" + confirmOptions.ConfirmType;
             config.DestroyOnClose = true;
-            config.Width = 416;
             config.Title = null;
             config.CloseIcon = null;
             config.OnClosed = Close;
