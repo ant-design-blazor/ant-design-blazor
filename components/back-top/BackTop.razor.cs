@@ -7,31 +7,54 @@ namespace AntDesign
 {
     public partial class BackTop : AntDomComponentBase
     {
-        [Parameter]
-        public string Title { get; set; }
+        [Inject]
+        public DomEventService DomEventService { get; set; }
 
-        protected ClassMapper BackTopClassMapper { get; set; } = new ClassMapper();
+        [Parameter]
+        public string Icon { get; set; } = "vertical-align-top";
+
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
+        public bool Visible { get; set; } = true;
+
+        /// <summary>
+        /// 回到顶部的目标控件
+        /// </summary>
+        [Parameter]
+        public string TargetSelector { get; set; }
 
         protected ClassMapper BackTopContentClassMapper { get; set; } = new ClassMapper();
 
         protected ClassMapper BackTopIconClassMapper { get; set; } = new ClassMapper();
 
-        protected async Task OnClick()
+        [Parameter]
+        public EventCallback OnClick { get; set; }
+
+
+        protected async Task OnClickHandle()
         {
-            await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop, "BodyContainer");
+            if (string.IsNullOrWhiteSpace(TargetSelector))
+                await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop);
+            else
+                await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop, TargetSelector);
+
+
+            if (OnClick.HasDelegate)
+                await OnClick.InvokeAsync(null);
         }
 
         protected override void OnInitialized()
         {
             SetClass();
-
             base.OnInitialized();
         }
 
         protected void SetClass()
         {
             string prefixCls = "ant-back-top";
-            BackTopClassMapper.Add(prefixCls);
+            ClassMapper.Add(prefixCls);
             BackTopContentClassMapper.Add($"{prefixCls}-content");
             BackTopIconClassMapper.Add($"{prefixCls}-icon");
         }

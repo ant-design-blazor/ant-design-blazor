@@ -1,0 +1,90 @@
+<Tree @ref="tree" ShowIcon DataSource="games"
+      TitleExpression="x => ((GameElementGroup)x.DataItem).Text"
+      ChildrenExpression="x => ((GameElementGroup)x.DataItem).Items"
+      IconExpression="x => ((GameElementGroup)x.DataItem).Icon"
+      IsLeafExpression="x=> ((GameElementGroup)x.DataItem).Items?.Count==0"></Tree>
+<br />
+<Button OnClick="AddSon">Add Son Node</Button>
+<Button OnClick="DeleteNode">Delete Node</Button>
+@code{
+
+    Tree tree;
+
+    void AddSon()
+    {
+        var selectNode = tree.SelectedNodes?.FirstOrDefault();
+        if (selectNode != null)
+        {
+            ((GameElementGroup)selectNode.DataItem).Items.Add(new GameElementGroup()
+            {
+                Text = $"Node {new Random().Next(1000)}",
+                Items = new List<GameElementGroup>()
+            }); ;
+
+        }
+    }
+
+    void DeleteNode()
+    {
+        var selectNode = tree.SelectedNodes?.FirstOrDefault();
+        if (selectNode != null)
+        {
+            if (selectNode.ParentNode != null)
+            {
+                ((GameElementGroup)selectNode.ParentNode.DataItem).Items.Remove((GameElementGroup)selectNode.DataItem);
+            }
+            else
+            {
+                ((List<GameElementGroup>)tree.DataSource).Remove((GameElementGroup)selectNode.DataItem);
+            }
+            StateHasChanged();
+
+        }
+    }
+
+    List<GameElementGroup> games = new List<GameElementGroup>()
+{
+        new GameElementGroup()
+        {
+            Text="XBox",
+            Icon="windows",
+            Items=new List<GameElementGroup>()
+{
+                new GameElementGroup(){Text="Halo"},
+                 new GameElementGroup(){Text="Gears of War"},
+                 new GameElementGroup(){Text="Forza Motosport"},
+            }
+        },
+                new GameElementGroup()
+        {
+            Text="PlayStation",
+            Icon="desktop",
+            Items=new List<GameElementGroup>()
+{
+                new GameElementGroup(){Text="Uncharted" },
+                 new GameElementGroup(){Text="God Of War" },
+                 new GameElementGroup(){Text="The Order:1886" },
+            }
+        },
+                new GameElementGroup()
+        {
+            Text="Switch",
+            Icon="mobile",
+            Items=new List<GameElementGroup>()
+{
+                new GameElementGroup(){Text="Super Mario Bros"},
+                 new GameElementGroup(){Text="The Legend of Zelda"},
+            }
+        }
+    };
+
+    private class GameElementGroup
+    {
+        public string Text { get; set; }
+
+        public string Icon { get; set; }
+
+        public List<GameElementGroup> Items { get; set; } = new List<GameElementGroup>();
+
+    }
+}

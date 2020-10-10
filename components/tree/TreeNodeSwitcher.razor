@@ -1,0 +1,49 @@
+﻿@namespace AntDesign
+
+<span class="@ClassMapper.Class" @onclick="OnClick">
+    @if (IsShowSwitchIcon)
+    {
+        @if (!SelfNode.IsLoading)
+        {
+            if (TreeComponent.SwitcherIconTemplate != null)
+            {
+                @TreeComponent.SwitcherIconTemplate(SelfNode)
+            }
+            else
+            {
+                <Icon Type="caret-down" Theme="outline" class="ant-tree-switcher-icon" />
+            }
+        }
+        else
+        {
+            <Icon Type="loading" Theme="outline" class="ant-tree-switcher-loading-icon" />
+        }
+
+    }
+    @if (TreeComponent.ShowLine)
+    {
+        @if (!SelfNode.IsLoading)
+        {
+            if (TreeComponent.SwitcherIconTemplate != null)
+            {
+                @TreeComponent.SwitcherIconTemplate(SelfNode)
+            }
+            else
+            {
+                @if (IsShowLineIcon)
+                {
+                    <Icon Type="@(IsSwitcherOpen ? "minus-square" : "plus-square")" Theme="outline" class="ant-tree-switcher-line-icon" />
+                }
+                else
+                {
+                    <Icon Type="file" Theme="outline" class="ant-tree-switcher-line-icon" />
+                }
+            }
+        }
+        else
+        {
+            <Icon Type="loading" Theme="outline" class="ant-tree-switcher-loading-icon" />
+        }
+
+    }
+</span>

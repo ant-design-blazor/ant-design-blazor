@@ -35,3 +35,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg
 | `ShowArrow`    | 是否展示箭头                               | `boolean`                  | `true`  |
 | `Active`       | 面板是否展开，可双向绑定                   | `boolean`                  | -       |
 | `ActiveChange` | 面板展开回调                               | `EventCallback<boolean>`   | -       |
+
+### 方法
+
+| 名称    | 说明  |
+| ------- | ------------ |
+| Activate(string[] activeKeys)  | 展开指定 key 对应的 Panel |
+| Deactivate(string[] inactiveKeys) | 关闭指定 key 对应的 Panel  |

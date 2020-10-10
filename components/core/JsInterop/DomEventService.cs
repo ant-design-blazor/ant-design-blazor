@@ -50,15 +50,16 @@ namespace AntDesign.JsInterop
                 {
                     _domEventListeners[key] = new List<DomEventSubscription>();
 
-                    _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
+                    _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<string>((p) =>
                     {
                         foreach (var subscription in _domEventListeners[key])
                         {
-                            subscription.Delegate.DynamicInvoke(p);
+                            object tP = JsonSerializer.Deserialize(p, subscription.Type);
+                            subscription.Delegate.DynamicInvoke(tP);
                         }
                     })));
                 }
-                _domEventListeners[key].Add(new DomEventSubscription(callback));
+                _domEventListeners[key].Add(new DomEventSubscription(callback, typeof(T)));
             }
         }
 
