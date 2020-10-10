@@ -16,7 +16,7 @@ namespace AntDesign.Tests
     public static class RecordedTestExtensions
     {
         private const string Style =
-            "<link href=\"../../components/wwwroot/css/ant-design-blazor.css\" rel=\"stylesheet\">\n";
+            "<link href=\"../../components/wwwroot/css/ant-design-blazor.css\" rel=\"stylesheet\">";
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void RecordedMarkupMatches<T>(this IRenderedComponent<T> component) where T : notnull, IComponent
