@@ -6,11 +6,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public class ModalTemplate<TComponentOptions, TResult> : TemplateComponentBase<TComponentOptions>, IModalTemplate
+    public class ConfirmTemplate<TComponentOptions, TResult> : TemplateComponentBase<TComponentOptions>, IModalTemplate
     {
         [Parameter]
         public ConfirmRef<TResult> ConfirmRef { get; set; }
-
 
         /// <summary>
         /// Emit Ok and return values

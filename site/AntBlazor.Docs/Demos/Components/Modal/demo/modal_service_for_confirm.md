@@ -1,18 +1,19 @@
 ﻿---
 order: 13
 title:
-  zh-CN: 模板
-  en-US: Template
+  zh-CN: Confirm模板组件
+  en-US: ConfirmTemplate
 ---
 
 ## zh-CN
 
-Modal 的 service 用法，示例中演示了用户自定义模板、自定义component。
+通过 ModalService 创建一个 Confirm 对话框，示例中演示了用户自定义模板、自定义component。
 
-模板代码：ModalTemplateDemo.razor
+模板代码：ConfirmTemplateDemo.razor
 
 ``` c#
-@inherits ModalTemplate<string, string>
+
+@inherits ConfirmTemplate<string, string>
 
 <div>
     <Text>Please input "@config"</Text>
@@ -27,15 +28,16 @@ Modal 的 service 用法，示例中演示了用户自定义模板、自定义co
 
     protected override void OnInitialized()
     {
-        config = this.Config;
+        config = this.Options;
         base.OnInitialized();
     }
 
 
     public override async Task OkAsync(ModalClosingEventArgs args)
     {
-        ModalRef.Config.OkButtonProps.Loading = true;
+        ConfirmRef.Config.OkButtonProps.Loading = true;
         await Task.Delay(1000);
+        // only the input's value equals the initialized value, the OK button will close the confirm dialog box
         if (value != config)
             args.Cancel = true;
         else
@@ -44,7 +46,8 @@ Modal 的 service 用法，示例中演示了用户自定义模板、自定义co
         await base.OkAsync(args);
     }
 }
+
 ```
 ## en-US
 
-Usage of Modal's service, examples demonstrate user-defined templates, custom components.
+Create a confirm dialog box through ModalService, examples demonstrate user-defined templates, custom components.

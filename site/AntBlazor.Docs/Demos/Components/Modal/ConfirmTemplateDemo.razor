@@ -1,4 +1,4 @@
-﻿@inherits ModalTemplate<string, string>
+﻿@inherits ConfirmTemplate<string, string>
 
 <div>
     <Text>Please input "@config"</Text>
@@ -22,6 +22,7 @@
     {
         ConfirmRef.Config.OkButtonProps.Loading = true;
         await Task.Delay(1000);
+        // only the input's value equals the initialized value, the OK button will close the confirm dialog box
         if (value != config)
             args.Cancel = true;
         else

@@ -171,7 +171,7 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="componentOptions"></param>
         /// <returns></returns>
-        public async Task<ConfirmRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : ModalTemplate<TComponentOptions, TResult>
+        public async Task<ConfirmRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : ConfirmTemplate<TComponentOptions, TResult>
         {
             CheckIsNull(config);
 
