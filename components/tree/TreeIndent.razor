@@ -1,0 +1,15 @@
+﻿@namespace AntDesign
+
+<span class="ant-tree-indent" aria-hidden="true">
+    @for (int i = 0; i < TreeLevel; i++)
+    {
+        if (TreeComponent.IndentTemplate != null)
+        {
+            @TreeComponent.IndentTemplate(SelfNode)
+        }
+        else
+        {
+            <span class="ant-tree-indent-unit ng-star-inserted"></span>
+        }
+    }
+</span>

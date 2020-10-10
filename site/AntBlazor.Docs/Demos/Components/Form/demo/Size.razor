@@ -1,11 +1,11 @@
 ﻿@using System.Text.Json;
 
 <Form Model="@model"
-        LabelCol="new ColLayoutParam { Span = 8 }"
-        WrapperCol="new ColLayoutParam { Span = 16 }"
-        OnFinish="OnFinish"
-        OnFinishFailed="OnFinishFailed"
-        Size="@model.Size">
+      LabelCol="new ColLayoutParam { Span = 8 }"
+      WrapperCol="new ColLayoutParam { Span = 16 }"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      Size="@model.Size">
     <FormItem Label="Form Size">
         <RadioGroup @bind-Value="@context.Size">
             <Radio RadioButton Value="@AntSizeLDSType.Small">Small</Radio>
@@ -43,11 +43,16 @@
             <Radio RadioButton Value="@("Chengdu")">Chengdu</Radio>
         </RadioGroup>
     </FormItem>
+    <FormItem Label="AutoComplete">
+        <AutoComplete @bind-Value="@context.AutoComplete" Options="@autoCompleteOptions" Placeholder="Input here" />
+    </FormItem>
     <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
         <Button HtmlType="submit">
             Submit
         </Button>
     </FormItem>
+
+
 </Form>
 
 @code
@@ -63,28 +68,31 @@
         public double Number { get; set; } = 1;
         public bool Switch { get; set; } = true;
         public string Radio { get; set; } = "Beijing";
+        public string AutoComplete { get; set; }
     }
 
     private Model model = new Model();
 
     private List<CascaderNode> districts = new List<CascaderNode>
-    {
+{
         new CascaderNode()
         {
             Value = "1",
-            Label = "浙江",
+            Label = "Zhejianng",
             Children = new []
-            {
-                new CascaderNode {Value = "11", Label = "杭州"},
-                new CascaderNode {Value = "12", Label = "温州"},
+    {
+                new CascaderNode {Value = "11", Label = "Hangzhou"},
+                new CascaderNode {Value = "12", Label = "Wenzhou"},
             }
         },
         new CascaderNode()
         {
             Value = "2",
-            Label = "上海",
+            Label = "Shanghai",
         }
     };
+
+    private List<string> autoCompleteOptions = new List<string> { "Primary", "Junior", "Senior", "Undergraduate", "Master", "Doctor" };
 
     private void OnFinish(EditContext editContext)
     {

@@ -1,11 +1,18 @@
-﻿<AutoComplete  @bind-Value="@value" Options="@options" Backfill="switchBackfill" DefaultActiveFirstOption="switchDefaultActiveFirstOption" Width="120"/>
-<Divider Text="属性"></Divider>
+﻿<AutoComplete @bind-Value="@value"
+              Options="@options"
+              Backfill="@switchBackfill"
+              DefaultActiveFirstOption="@switchDefaultActiveFirstOption"
+              Width="120"
+              OnPanelVisibleChange="OnPanelVisibleChange"
+              Disabled="@disabled" />
+<Divider Text="Properties"></Divider>
 
 <div>
     <Switch @bind-Value="switchBackfill" />Backfill
     <br />
     <Switch @bind-Value="switchDefaultActiveFirstOption" />DefaultActiveFirstOption
-
+    <br />
+    <Switch @bind-Value="disabled" />Disabled
 </div>
 
 <Divider></Divider>
@@ -26,4 +33,11 @@
 
     bool switchDefaultActiveFirstOption { get; set; } = true;
 
+    bool disabled { get; set; } = false;
+
+
+    private void OnPanelVisibleChange(bool visible)
+    {
+        Console.WriteLine(visible);
+    }
 }
