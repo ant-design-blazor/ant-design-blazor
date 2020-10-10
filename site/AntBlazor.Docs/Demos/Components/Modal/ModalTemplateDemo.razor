@@ -20,7 +20,7 @@
 
     public override async Task OkAsync(ModalClosingEventArgs args)
     {
-        ModalRef.Config.OkButtonProps.Loading = true;
+        ConfirmRef.Config.OkButtonProps.Loading = true;
         await Task.Delay(1000);
         if (value != config)
             args.Cancel = true;

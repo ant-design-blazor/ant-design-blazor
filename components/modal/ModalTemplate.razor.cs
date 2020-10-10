@@ -9,7 +9,7 @@ namespace AntDesign
     public class ModalTemplate<TComponentOptions, TResult> : TemplateComponentBase<TComponentOptions>, IModalTemplate
     {
         [Parameter]
-        public ModalRef<TResult> ModalRef { get; set; }
+        public ConfirmRef<TResult> ConfirmRef { get; set; }
 
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace AntDesign
         /// <returns></returns>
         public async Task OnOkAsync(TResult result)
         {
-            await (ModalRef.OnOk?.Invoke(result) ?? Task.CompletedTask);
+            await (ConfirmRef.OnOk?.Invoke(result) ?? Task.CompletedTask);
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace AntDesign
         /// <returns></returns>
         public async Task OnCancelAsync(TResult result)
         {
-            await (ModalRef.OnCancel?.Invoke(result) ?? Task.CompletedTask);
+            await (ConfirmRef.OnCancel?.Invoke(result) ?? Task.CompletedTask);
         }
 
 
@@ -37,13 +37,13 @@ namespace AntDesign
         /// <returns></returns>
         protected async Task CloseAsync()
         {
-            await ModalRef.CloseAsync();
+            await ConfirmRef.CloseAsync();
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            ModalRef.ModalTemplate = this;
+            ConfirmRef.ModalTemplate = this;
         }
 
 

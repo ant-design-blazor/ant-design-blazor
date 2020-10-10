@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public class ModalRef<TResult> : ModalRef
+    public class ConfirmRef<TResult> : ConfirmRef
     {
         public Func<TResult, Task> OnCancel { get; set; }
 
         public Func<TResult, Task> OnOk { get; set; }
 
-        internal ModalRef(ConfirmOptions config, ModalService service) : base(config, service)
+        internal ConfirmRef(ConfirmOptions config, ModalService service) : base(config, service)
         {
 
         }
@@ -37,10 +37,9 @@ namespace AntDesign
         }
     }
 
-    public class ModalRef
+    public class ConfirmRef
     {
         public ConfirmOptions Config { get; set; }
-        public Drawer Drawer { get; set; }
 
         protected ModalService _service;
 
@@ -54,12 +53,12 @@ namespace AntDesign
 
         internal bool IsCreateByModalService => _service != null;
 
-        internal ModalRef(ConfirmOptions config)
+        internal ConfirmRef(ConfirmOptions config)
         {
             Config = config;
         }
 
-        internal ModalRef(ConfirmOptions config, ModalService service)
+        internal ConfirmRef(ConfirmOptions config, ModalService service)
         {
             Config = config;
             _service = service;
@@ -71,7 +70,7 @@ namespace AntDesign
         /// <returns></returns>
         public async Task OpenAsync()
         {
-            await _service?.OpenAsync(this);
+            await (_service?.OpenAsync(this) ?? Task.CompletedTask);
         }
 
         /// <summary>
@@ -80,18 +79,18 @@ namespace AntDesign
         /// <returns></returns>
         public async Task CloseAsync()
         {
-            await _service?.CloseAsync(this);
+            await (_service?.CloseAsync(this) ?? Task.CompletedTask);
         }
 
         public async Task UpdateConfig()
         {
-            await _service?.Update(this);
+            await (_service?.Update(this) ?? Task.CompletedTask);
         }
 
         public async Task UpdateConfig(ConfirmOptions config)
         {
             Config = config;
-            await _service?.Update(this);
+            await (_service?.Update(this) ?? Task.CompletedTask);
         }
 
         internal TaskCompletionSource<ConfirmResult> TaskCompletionSource { get; set; }
