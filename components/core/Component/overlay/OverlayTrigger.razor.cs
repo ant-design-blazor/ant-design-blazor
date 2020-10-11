@@ -13,6 +13,22 @@ namespace AntDesign.Internal
         [CascadingParameter(Name = "PrefixCls")]
         public string PrefixCls { get; set; } = "ant-dropdown";
 
+        private string _popupContainerSelectorFromCascade = "";
+
+        [CascadingParameter(Name = "PopupContainerSelector")]
+        public string PopupContainerSelectorFromCascade
+        {
+            get
+            {
+                return _popupContainerSelectorFromCascade;
+            }
+            set
+            {
+                _popupContainerSelectorFromCascade = value;
+                PopupContainerSelector = value;
+            }
+        }
+
         [Parameter]
         public string PopupContainerSelector { get; set; } = "body";
 
@@ -82,11 +98,20 @@ namespace AntDesign.Internal
 
         protected Overlay _overlay = null;
 
-        protected override void OnInitialized()
+        protected override void OnAfterRender(bool firstRender)
         {
-            base.OnInitialized();
+            if (firstRender)
+            {
+                DomEventService.AddEventListener("document", "mouseup", OnMouseUp, false);
+            }
 
-            DomEventService.AddEventListener("document", "mouseup", OnMouseUp);
+            base.OnAfterRender(firstRender);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<JsonElement>("document", "mouseup", OnMouseUp);
+            base.Dispose(disposing);
         }
 
         protected virtual async Task OnTriggerMouseEnter()

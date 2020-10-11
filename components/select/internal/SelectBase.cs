@@ -13,6 +13,12 @@ namespace AntDesign.Internal
         protected string[] _tokenSeparators;
         protected OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>>? _value;
 
+        [CascadingParameter(Name = "ModalCompleteShow")]
+        public bool ModalCompleteShow { get; set; }
+
+        [CascadingParameter(Name = "InModal")]
+        public bool InModal { get; set; } = false;
+
         #region Boolean(15)
         [Parameter] public bool AutoFocus { get; set; } = false;
 

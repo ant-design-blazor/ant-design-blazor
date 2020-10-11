@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -21,7 +22,7 @@ namespace AntDesign
         {
             CheckIsNull(options);
             IDrawerRef drawerRef = new DrawerRef<object>(options, this);
-            await OnOpenEvent.Invoke(drawerRef);
+            await (OnOpenEvent?.Invoke(drawerRef) ?? Task.CompletedTask);
             return drawerRef;
         }
 
@@ -39,7 +40,7 @@ namespace AntDesign
             CheckIsNull(config);
 
             DrawerRef<TResult> drawerRef = new DrawerRef<TResult>(config, this);
-            await OnOpenEvent.Invoke(drawerRef);
+            await (OnOpenEvent?.Invoke(drawerRef) ?? Task.CompletedTask);
 
             RenderFragment child = (builder) =>
             {
@@ -59,7 +60,7 @@ namespace AntDesign
             DrawerRef<TResult> drawerRef = new DrawerRef<TResult>(config, this);
 
             drawerRef.TaskCompletionSource = new TaskCompletionSource<TResult>(); ;
-            await OnOpenEvent.Invoke(drawerRef);
+            await (OnOpenEvent?.Invoke(drawerRef) ?? Task.CompletedTask);
 
             RenderFragment child = (builder) =>
             {
@@ -71,6 +72,29 @@ namespace AntDesign
             config.ChildContent = child;
 
             return await drawerRef.TaskCompletionSource.Task;
+        }
+
+
+        public async Task<TResult> CreateDialogAsync<TComponent, TComponentOptions, TResult>(TComponentOptions options,
+            bool closable = true,
+            bool maskClosable = true,
+            string title = null,
+            int width = 256,
+            bool mask = true,
+            bool noAnimation = false,
+             string placement = "right") where TComponent : DrawerTemplate<TComponentOptions, TResult>
+        {
+            var config = new DrawerOptions()
+            {
+                Closable = closable,
+                MaskClosable = maskClosable,
+                Title = title,
+                Width = width,
+                Mask = mask,
+                NoAnimation = noAnimation,
+                Placement = placement,
+            };
+            return await CreateDialogAsync<TComponent, TComponentOptions, TResult>(config, options);
         }
 
         internal Task OpenAsync(IDrawerRef drawerRef)

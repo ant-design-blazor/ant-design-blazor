@@ -17,6 +17,8 @@ namespace AntDesign.Docs.Build.CLI.Command
 
         private static readonly Dictionary<string, int> _sortMap = new Dictionary<string, int>()
         {
+            ["Docs"] = -2,
+            ["文档"] = -2,
             ["Overview"] = -1,
             ["组件总览"] = -1,
             ["General"] = 0,
@@ -184,7 +186,6 @@ namespace AntDesign.Docs.Build.CLI.Command
                 }
 
                 var configFilePath = Path.Combine(configFileDirectory, $"menu.{lang}.json");
-                Console.WriteLine(json);
 
                 if (File.Exists(configFilePath))
                 {

@@ -1,87 +1,77 @@
-
-<div>
-    <Search Value="@searchKey" Placeholder="Search.." ValueChanged="PrcessSearch" />
-    <Tree Nodes="TreeNodes"></Tree>
-</div>
+<Search @bind-Value="@searchKey" Placeholder="Search.." />
+<Divider Text="Default search (case sensitive)"></Divider>
+<Tree ShowIcon SearchValue="@searchKey"
+      DataSource="games"
+      TitleExpression="x => ((GameElementGroup)x.DataItem).Text"
+      ChildrenExpression="x => ((GameElementGroup)x.DataItem).Items"
+      IconExpression="x => ((GameElementGroup)x.DataItem).Icon"></Tree>
+<Divider Text="Custom search (Ignore case)"></Divider>
+<Tree ShowIcon SearchValue="@searchKey"
+      DataSource="games"
+      TitleExpression="x => ((GameElementGroup)x.DataItem).Text"
+      ChildrenExpression="x => ((GameElementGroup)x.DataItem).Items"
+      IconExpression="x => ((GameElementGroup)x.DataItem).Icon"
+      SearchExpression="x=> ((GameElementGroup)x.DataItem).Text.ToLower().Contains(searchKey.ToLower())"></Tree>
 
 @code{
-
     string searchKey;
 
-    void PrcessSearch(string newval)
-    {
-        searchKey = newval.Trim();
-        CheckNodesRecursive(TreeNodes);
-    }
-
-    bool CheckNodesRecursive(List<TreeNode> nodes)
-    {
-        int matches = 0;
-
-        foreach (TreeNode node in nodes)
+    List<GameElementGroup> games = new List<GameElementGroup>()
+{
+        new GameElementGroup()
         {
-            if (!string.IsNullOrEmpty(searchKey) && node.Text.Contains(searchKey, StringComparison.OrdinalIgnoreCase))
-                matches++;
-
-            if (!node.HasChildNodes)
-                continue;
-
-            node.IsExpanded = CheckNodesRecursive(node.Nodes);
-            if (node.IsExpanded)
-                matches++;
-        }
-
-        return matches != 0;
-    }
-
-
-    List<TreeNode> _treeNodes;
-
-    public List<TreeNode> TreeNodes
-    {
-        get
+            Text="XBox",
+            Icon="windows",
+            Items=new List<GameElementGroup>()
+{
+                new GameElementGroup(){
+                    Text="Halo" ,
+                    Items = new List<GameElementGroup>(){
+                        new GameElementGroup(){Text="Halo1" },
+                        new GameElementGroup(){Text="Halo2" },
+                        new GameElementGroup(){Text="Halo3" },
+                        new GameElementGroup(){Text="Halo4" },
+                        new GameElementGroup(){Text="Halo:ODST" },
+                        new GameElementGroup(){Text="Halo:REACH" },
+                    },
+                },
+                new GameElementGroup(){Text="Gears of War"},
+                new GameElementGroup(){Text="Forza Motosport"},
+            }
+        },
+                new GameElementGroup()
         {
-            if (_treeNodes != null)
-                return _treeNodes;
-
-            _treeNodes = new List<TreeNode>();
-            MakeSampleData(_treeNodes, "0", 0);
-
-            return _treeNodes;
-        }
-    }
-
-    RenderFragment RenderNodeTemplate(TreeNode node)
-    {
-        int index = string.IsNullOrEmpty(searchKey) ? -1 : node.Text.IndexOf(searchKey, StringComparison.OrdinalIgnoreCase);
-        if (index == -1)
-            return (b) => { b.AddContent(0, node.Text); };
-        return (b) =>
+            Text="PlayStation",
+            Icon="desktop",
+            Items=new List<GameElementGroup>()
+{
+                new GameElementGroup(){Text="Uncharted" },
+                new GameElementGroup(){Text="God Of War" },
+                new GameElementGroup(){Text="The Order:1886" },
+            }
+        },
+                new GameElementGroup()
         {
-            if (index != 0)
-                b.AddContent(0, node.Text.Substring(0, index));
-            b.AddMarkupContent(1, "<span class='site-tree-search-value' style='color:orange'>" + searchKey + "</span>");
-            if (index + searchKey.Length < node.Text.Length)
-                b.AddContent(2, node.Text.Substring(index + searchKey.Length));
-        };
-    }
-
-
-    void MakeSampleData(List<TreeNode> nodes, string ptext, int level)
-    {
-        for (int index = 0; index < 3; index++)
-        {
-            TreeNode subnode = new TreeNode();
-            subnode.Text = ptext + "-" + index;
-            subnode.NodeTemplate = this.RenderNodeTemplate;
-            nodes.Add(subnode);
-
-            if (index < 2 && level < 2)
-            {
-                MakeSampleData(subnode.Nodes, subnode.Text, level + 1);
+            Text="Switch",
+            Icon="mobile",
+            Items=new List<GameElementGroup>()
+{
+                new GameElementGroup(){Text="Super Mario Bros"},
+                new GameElementGroup(){Text="The Legend of Zelda"},
             }
         }
+    };
+
+    private class GameElementGroup
+    {
+        public string Text { get; set; }
+
+        public string Icon { get; set; }
+
+        public List<GameElementGroup> Items { get; set; }
+
     }
+
 }
 
 

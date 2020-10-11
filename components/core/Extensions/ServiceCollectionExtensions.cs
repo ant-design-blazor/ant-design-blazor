@@ -16,6 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         s => HtmlEncoder.Default.Encode(s)))
             );
 
+            services.TryAddSingleton<IComponentIdGenerator, GuidComponentIdGenerator>();
             services.TryAddScoped<IconService>();
             services.TryAddScoped<InteropService>();
             services.TryAddScoped<NotificationService>();

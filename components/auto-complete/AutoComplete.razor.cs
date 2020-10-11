@@ -17,6 +17,12 @@ namespace AntDesign
         #region Parameters
 
         [Parameter]
+        public string Placeholder { get; set; }
+
+        [Parameter]
+        public bool Disabled { get; set; }
+
+        [Parameter]
         public bool DefaultActiveFirstOption { get; set; } = true;
         [Parameter]
         public bool Backfill { get; set; } = false;
@@ -30,6 +36,9 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<ChangeEventArgs> OnInput { get; set; }
+
+        [Parameter]
+        public EventCallback<bool> OnPanelVisibleChange { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -84,16 +93,10 @@ namespace AntDesign
             _inputComponent = input;
         }
 
-
         #region 子控件触发事件
         public async Task InputFocus(FocusEventArgs e)
         {
             this.OpenPanel();
-        }
-
-        public async Task InputBlur(FocusEventArgs e)
-        {
-            this.ClosePanel();
         }
 
         public async Task InputInput(ChangeEventArgs args)
@@ -285,6 +288,22 @@ namespace AntDesign
                 if (OnSelectionChange.HasDelegate) await OnSelectionChange.InvokeAsync(this.SelectedItem);
             }
             this.ClosePanel();
+        }
+
+        bool _parPanelVisible = false;
+
+        private async void OnOverlayTriggerVisibleChange(bool visible)
+        {
+            if (OnPanelVisibleChange.HasDelegate && _parPanelVisible != visible)
+            {
+                _parPanelVisible = visible;
+                await OnPanelVisibleChange.InvokeAsync(visible);
+            }
+
+            if (this.ShowPanel != visible)
+            {
+                this.ShowPanel = visible;
+            }
         }
 
         private string _minWidth = "";

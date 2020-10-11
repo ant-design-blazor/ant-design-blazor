@@ -1,0 +1,50 @@
+﻿@inject DrawerService DrawerService
+@inject ConfirmService confirmService
+
+<Input @bind-Value="@value" />
+<br />
+<br />
+<Button OnClick="OpenComponent" Type="primary">Use Component</Button>
+
+@code{
+
+    private string value = "blazor";
+
+
+    // use component
+    private async Task OpenComponent()
+    {
+        var options = new DrawerOptions()
+        {
+            Title = "Component",
+            Width = 350,
+        };
+
+        var drawerRef = await DrawerService.CreateAsync<DrawerTemplateDemo, string, string>(options, value);
+
+        drawerRef.OnOpen = () =>
+        {
+            Console.WriteLine("OnAfterOpen");
+            return Task.CompletedTask;
+        };
+
+        drawerRef.OnClosing = async handle =>
+         {
+             Console.WriteLine("OnAfterClosing:");
+
+             if (await confirmService.Show("Drawer to close?", "Confirm?", ConfirmButtons.YesNo) == ConfirmResult.No)
+             {
+                 handle.Reject();
+             }
+         };
+
+        drawerRef.OnClosed = async result =>
+        {
+            Console.WriteLine("OnAfterClosed:" + result);
+            if (result != null)
+                value = result;
+            await InvokeAsync(StateHasChanged);
+        };
+
+    }
+}

@@ -4,9 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Unicode;
 using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
@@ -45,7 +42,6 @@ namespace AntDesign.Docs.Services
             await _menuCache.GetOrAdd(language, async (currentLanguage) =>
             {
                 var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/menu.{language}.json").ToString());
-
                 return menuItems;
             });
 
@@ -53,7 +49,6 @@ namespace AntDesign.Docs.Services
             await _componentCache.GetOrAdd(language, async (currentLanguage) =>
             {
                 var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/components.{language}.json").ToString());
-
                 return components.ToDictionary(x => x.Title.ToLower(), x => x);
             });
 
@@ -61,7 +56,6 @@ namespace AntDesign.Docs.Services
             await _demoMenuCache.GetOrAdd(language, async (currentLanguage) =>
             {
                 var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/demos.{language}.json").ToString());
-
                 return menuItems;
             });
 
@@ -129,13 +123,27 @@ namespace AntDesign.Docs.Services
 
         public async Task<DemoMenuItem[]> GetPrevNextMenu(string type, string currentTitle)
         {
-            var cache = type.ToLowerInvariant() == "docs" ? _docMenuCache : _demoMenuCache;
+            await InitializeAsync(CurrentLanguage);
+            var items = Array.Empty<DemoMenuItem>();
 
-            var items = cache.TryGetValue(CurrentLanguage, out var menuItems) ? await menuItems : Array.Empty<DemoMenuItem>();
+            if (type.ToLowerInvariant() == "docs")
+            {
+                items = _docMenuCache.TryGetValue(CurrentLanguage, out var menuItems) ? (await menuItems).OrderBy(x => x.Order).ToArray() : Array.Empty<DemoMenuItem>();
+                currentTitle = $"docs/{currentTitle}";
+            }
+            else
+            {
+                items = _demoMenuCache.TryGetValue(CurrentLanguage, out var menuItems) ? (await menuItems)
+                .OrderBy(x => x.Order)
+                .SelectMany(x => x.Children)
+                .ToArray() : Array.Empty<DemoMenuItem>();
+
+                currentTitle = $"components/{currentTitle}";
+            }
 
             for (var i = 0; i < items.Length; i++)
             {
-                if (currentTitle.Equals(items[i].Title, StringComparison.InvariantCultureIgnoreCase))
+                if (currentTitle.Equals(items[i].Url, StringComparison.InvariantCultureIgnoreCase))
                 {
                     var prev = i == 0 ? null : items[i - 1];
                     var next = i == items.Length - 1 ? null : items[i + 1];

@@ -14,9 +14,9 @@ namespace AntDesign
     public partial class Slider<TValue> : AntInputComponentBase<TValue>
     {
         private const string PreFixCls = "ant-slider";
-        private DomRect _sliderDom;
-        private DomRect _leftHandleDom;
-        private DomRect _rightHandleDom;
+        private Element _sliderDom;
+        private Element _leftHandleDom;
+        private Element _rightHandleDom;
         private ElementReference _slider;
         private ElementReference _leftHandle;
         private ElementReference _rightHandle;
@@ -297,8 +297,6 @@ namespace AntDesign
             {
                 throw new ArgumentOutOfRangeException($"Type argument of Slider should be one of {doubleType}, {tupleDoubleType}");
             }
-            DomEventService.AddEventListener("window", "mousemove", OnMouseMove);
-            DomEventService.AddEventListener("window", "mouseup", OnMouseUp);
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -367,6 +365,25 @@ namespace AntDesign
                 .If($"{PreFixCls}-with-marks", () => Marks != null);
         }
 
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                DomEventService.AddEventListener("window", "mousemove", OnMouseMove, false);
+                DomEventService.AddEventListener("window", "mouseup", OnMouseUp, false);
+            }
+
+            base.OnAfterRender(firstRender);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<JsonElement>("window", "mousemove", OnMouseMove);
+            DomEventService.RemoveEventListerner<JsonElement>("window", "mouseup", OnMouseUp);
+
+            base.Dispose(disposing);
+        }
+
         private void ValidateParameter()
         {
             if (Step == null && Marks == null)
@@ -387,13 +404,16 @@ namespace AntDesign
 
         private async void OnMouseDown(MouseEventArgs args)
         {
-            _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _slider);
-            decimal x = (decimal)args.ClientX;
-            decimal y = (decimal)args.ClientY;
+            //// _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _slider);
+            //_sliderDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _slider);
+            //decimal x = (decimal)args.ClientX;
+            //decimal y = (decimal)args.ClientY;
 
-            _mouseDown = !Disabled
-                && _sliderDom.left <= x && x <= _sliderDom.right
-                && _sliderDom.top <= y && y <= _sliderDom.bottom;
+            //_mouseDown = !Disabled
+            //    && _sliderDom.clientLeft <= x && x <= _sliderDom.clientLeft + _sliderDom.clientWidth
+            //    && _sliderDom.clientTop <= y && y <= _sliderDom.clientTop + _sliderDom.clientHeight;
+
+            _mouseDown = !Disabled;
         }
 
         private async void OnMouseMove(JsonElement jsonElement)
@@ -401,7 +421,7 @@ namespace AntDesign
             if (_mouseDown)
             {
                 _mouseMove = true;
-                await CalculateValueAsync(jsonElement.GetProperty(Vertical ? "clientY" : "clientX").GetDouble());
+                await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
 
                 OnChange?.Invoke(CurrentValue);
             }
@@ -412,24 +432,24 @@ namespace AntDesign
             if (_mouseDown)
             {
                 _mouseDown = false;
-                await CalculateValueAsync(Vertical ? jsonElement.GetProperty("clientY").GetDouble() : jsonElement.GetProperty("clientX").GetDouble());
+                await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
                 OnAfterChange?.Invoke(CurrentValue);
             }
         }
 
         private async Task CalculateValueAsync(double clickClient)
         {
-            _sliderDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _slider);
-            double sliderOffset = (double)(Vertical ? _sliderDom.top : _sliderDom.left);
-            double sliderLength = (double)(Vertical ? _sliderDom.height : _sliderDom.width);
+            _sliderDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _slider);
+            double sliderOffset = (double)(Vertical ? _sliderDom.absoluteTop: _sliderDom.absoluteLeft);
+            double sliderLength = (double)(Vertical ? _sliderDom.clientHeight : _sliderDom.clientWidth);
             double handleNewPosition;
             if (_right)
             {
                 if (_rightHandleDom == null)
                 {
-                    _rightHandleDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _rightHandle);
+                    _rightHandleDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _rightHandle);
                 }
-                double handleLength = (double)(Vertical ? _rightHandleDom.height : _rightHandleDom.width);
+                double handleLength = (double)(Vertical ? _rightHandleDom.clientHeight : _rightHandleDom.clientWidth);
                 if (Reverse)
                 {
                     if (Vertical)
@@ -468,9 +488,9 @@ namespace AntDesign
             {
                 if (_leftHandleDom == null)
                 {
-                    _leftHandleDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _leftHandle);
+                    _leftHandleDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _leftHandle);
                 }
-                double handleLength = (double)(Vertical ? _rightHandleDom.height : _rightHandleDom.width);
+                double handleLength = (double)(Vertical ? _rightHandleDom.clientHeight : _rightHandleDom.clientWidth);
                 if (Reverse)
                 {
                     if (Vertical)

@@ -28,6 +28,7 @@ namespace AntDesign
 
         private string _searchValue;
         private string _dropdownStyle;
+        private bool _hasInitDropdownStyle = false;
         private SelectOption _searchOption;
         internal ElementReference _inputRef;
 
@@ -169,16 +170,9 @@ namespace AntDesign
 
         protected async Task SetDropdownStyle()
         {
-            if (string.IsNullOrEmpty(Style))
-            {
-                var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
+            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
 
-                _dropdownStyle = $"min-width: {domRect.width}px; width: {domRect.width}px;";
-            }
-            else
-            {
-                _dropdownStyle = Style;
-            }
+            _dropdownStyle = $"min-width: {domRect.width}px; width: {domRect.width}px;";
         }
 
         protected IEnumerable<string> GetTagOptions()
@@ -294,12 +288,25 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected override async Task OnFirstAfterRenderAsync()
+        protected override async Task OnParametersSetAsync()
         {
-            await base.OnFirstAfterRenderAsync();
+            if ((ModalCompleteShow && InModal) && !_hasInitDropdownStyle)
+            {
+                StateHasChanged();
+            }
 
-            await SetDropdownStyle();
-            await InvokeAsync(StateHasChanged);
+            await base.OnParametersSetAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if ((ModalCompleteShow || !InModal) && !_hasInitDropdownStyle)
+            {
+                _hasInitDropdownStyle = true;
+                await SetDropdownStyle();
+            }
+
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         protected override void OnAfterRender(bool firstRender)

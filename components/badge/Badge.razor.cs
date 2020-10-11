@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,16 +38,13 @@ namespace AntDesign
         /// Set offset of the badge dot, like[x, y]
         /// </summary>
         [Parameter]
-        public Tuple<int, int> Offset { get; set; }
+        public ValueTuple<int, int> Offset { get; set; }
 
         /// <summary>
         /// Max count to show
         /// </summary>
         [Parameter]
         public int OverflowCount { get; set; } = 99;
-
-        [Parameter]
-        public bool ShowDot { get; set; } = true;
 
         /// <summary>
         /// Whether to show badge when count is zero
@@ -72,6 +70,9 @@ namespace AntDesign
         [Parameter]
         public string Title { get; set; }
 
+        [Parameter]
+        public string Size { get; set; }
+
         /// <summary>
         /// Wrapping this item.
         /// </summary>
@@ -94,8 +95,11 @@ namespace AntDesign
 
         private string CountStyle => Offset == default ? null : $"{(Offset.Item1 > 0 ? $"right:-{Offset.Item1}px" : "")};{(Offset.Item2 > 0 ? $"margin-top:{Offset.Item2}px" : "")};";
 
-        private bool ShowSup => (this.ShowDot && this.Dot) || this.Count > 0 ||
-                                (this.Count == 0 && this.ShowZero);
+        private string DotColorStyle => PresetColor == null && !string.IsNullOrWhiteSpace(Color) ? $"background:{Color};" : "";
+
+        private bool ShowSup => (this.Dot && (!this.Count.HasValue || (this.Count > 0 || this.Count == 0 && this.ShowZero)))
+                                || this.Count > 0
+                                || (this.Count == 0 && this.ShowZero);
 
         private bool _dotEnter;
 
@@ -119,6 +123,8 @@ namespace AntDesign
                 .Add("ant-scroll-number")
                 .If($"{prefixName}-count", () => !Dot)
                 .If($"{prefixName}-dot", () => Dot)
+                .If($"{prefixName}-count-sm", () => !string.IsNullOrWhiteSpace(Size) && Size.Equals("small", StringComparison.OrdinalIgnoreCase))
+                .GetIf(() => $"ant-badge-status-{StatusOrPresetColor}", () => StatusOrPresetColor != null)
                 .If($"{prefixName}-multiple-words", () => _countArray.Length >= 2)
                 .If($"{prefixName}-zoom-enter {prefixName}-zoom-enter-active", () => _dotEnter)
                 .If($"{prefixName}-zoom-leave {prefixName}-zoom-leave-active", () => _dotLeave)
@@ -133,6 +139,8 @@ namespace AntDesign
             base.OnInitialized();
             if (!string.IsNullOrEmpty(Color) && !string.IsNullOrEmpty(Status))
                 throw new ArgumentException($"You cannot provide a {nameof(Status)} and a {nameof(Color)}, choose one.");
+
+            _showSup = ShowSup;
 
             GenerateMaxNumberArray();
 
