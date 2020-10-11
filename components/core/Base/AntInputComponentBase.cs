@@ -204,6 +204,13 @@ namespace AntDesign
         /// <returns>True if the value could be parsed; otherwise false.</returns>
         protected virtual bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
         {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                validationErrorMessage = null;
+                return true;
+            }
+
             var success = BindConverter.TryConvertTo<TValue>(
                value, CultureInfo.CurrentCulture, out var parsedValue);
 
