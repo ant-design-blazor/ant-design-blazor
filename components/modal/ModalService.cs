@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public class ModalService
+    public partial class ModalService
     {
         internal event Func<ConfirmRef, Task> OnOpenEvent;
 
@@ -154,12 +154,12 @@ namespace AntDesign
         /// </summary>
         /// <param name="config">Options</param>
         /// <returns></returns>
-        public async Task<ConfirmRef> CreateAsync(ConfirmOptions config)
+        public Task<ConfirmRef> CreateAsync(ConfirmOptions config)
         {
             CheckIsNull(config);
             ConfirmRef confirmRef = new ConfirmRef(config, this);
-            OnOpenEvent.Invoke(confirmRef);
-            return confirmRef;
+            OnOpenEvent?.Invoke(confirmRef);
+            return Task.FromResult(confirmRef);
         }
 
         /// <summary>
@@ -171,12 +171,12 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="componentOptions"></param>
         /// <returns></returns>
-        public async Task<ConfirmRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : ConfirmTemplate<TComponentOptions, TResult>
+        public Task<ConfirmRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : ConfirmTemplate<TComponentOptions, TResult>
         {
             CheckIsNull(config);
 
             ConfirmRef<TResult> confirmRef = new ConfirmRef<TResult>(config, this);
-            OnOpenEvent.Invoke(confirmRef);
+            OnOpenEvent?.Invoke(confirmRef);
 
             RenderFragment child = (builder) =>
             {
@@ -187,7 +187,7 @@ namespace AntDesign
             };
             config.Content = child;
 
-            return confirmRef;
+            return Task.FromResult(confirmRef);
         }
 
         internal Task OpenAsync(ConfirmRef confirmRef)

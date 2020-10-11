@@ -1,5 +1,5 @@
 ﻿---
-order: 13
+order: 12
 title:
   zh-CN: Confirm模板组件
   en-US: ConfirmTemplate
@@ -50,4 +50,4 @@ title:
 ```
 ## en-US
 
-Create a confirm dialog box through ModalService, examples demonstrate user-defined templates, custom components.
+Create a Confirm dialog box through ModalService, examples demonstrate user-defined templates, custom components.
