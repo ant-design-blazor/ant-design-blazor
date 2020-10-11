@@ -186,9 +186,9 @@ namespace AntDesign
 
         protected async Task OnKeyUpAsync(KeyboardEventArgs args)
         {
-            if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
+            if (!_compositionInputting)
             {
-                if (!_compositionInputting)
+                if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
                 {
                     CurrentValue = _inputValue;
                     if (OnChange.HasDelegate)
