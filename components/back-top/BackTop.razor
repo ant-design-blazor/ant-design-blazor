@@ -1,7 +1,7 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-@if (Visible)
+@if (_visible)
 {
     <div class="@ClassMapper.Class" @onclick="_ => OnClickHandle()" style="@Style">
         @if (ChildContent != null)
