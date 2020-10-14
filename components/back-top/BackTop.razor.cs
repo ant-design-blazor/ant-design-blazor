@@ -1,12 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
     public partial class BackTop : AntDomComponentBase
     {
+        private bool _visible = false;
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -17,7 +19,7 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public bool Visible { get; set; } = true;
+        public double VisibilityHeight { get; set; } = 400;
 
         /// <summary>
         /// 回到顶部的目标控件
@@ -51,12 +53,46 @@ namespace AntDesign
             base.OnInitialized();
         }
 
+        protected async override Task OnFirstAfterRenderAsync()
+        {
+            if (string.IsNullOrWhiteSpace(TargetSelector))
+            {
+                DomEventService.AddEventListener("window", "scroll", OnScroll);
+            }
+            else
+            {
+                DomEventService.AddEventListener(TargetSelector, "scroll", OnScroll);
+            }
+            await base.OnFirstAfterRenderAsync();
+        }
+
         protected void SetClass()
         {
             string prefixCls = "ant-back-top";
             ClassMapper.Add(prefixCls);
             BackTopContentClassMapper.Add($"{prefixCls}-content");
             BackTopIconClassMapper.Add($"{prefixCls}-icon");
+        }
+
+        private async void OnScroll(JsonElement obj)
+        {
+            JsonElement scrollInfo = await JsInvokeAsync<JsonElement>(JSInteropConstants.GetScroll);
+            double offset = scrollInfo.GetProperty("y").GetDouble();
+            _visible = offset > VisibilityHeight;
+            StateHasChanged();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (string.IsNullOrWhiteSpace(TargetSelector))
+            {
+                DomEventService.RemoveEventListerner<JsonElement>("window", "scroll", OnScroll);
+            }
+            else
+            {
+                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "scroll", OnScroll);
+            }
         }
     }
 }
