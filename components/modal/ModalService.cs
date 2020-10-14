@@ -6,29 +6,29 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public class ModalService
+    public partial class ModalService
     {
-        internal event Func<ModalRef, Task> OnOpenEvent;
+        internal event Func<ConfirmRef, Task> OnOpenEvent;
 
-        internal event Func<ModalRef, Task> OnCloseEvent;
+        internal event Func<ConfirmRef, Task> OnCloseEvent;
 
-        internal event Func<ModalRef, Task> OnUpdateEvent;
+        internal event Func<ConfirmRef, Task> OnUpdateEvent;
 
-        internal event Func<ModalRef, Task> OnDestroyEvent;
+        internal event Func<ConfirmRef, Task> OnDestroyEvent;
 
         internal event Func<Task> OnDestroyAllEvent;
 
         #region SimpleConfirm
 
-        public ModalRef Confirm(ConfirmOptions props)
+        public ConfirmRef Confirm(ConfirmOptions props)
         {
-            ModalRef modalRef = new ModalRef(props, this);
-            modalRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
-            OnOpenEvent?.Invoke(modalRef);
-            return modalRef;
+            ConfirmRef confirmRef = new ConfirmRef(props, this);
+            confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
+            OnOpenEvent?.Invoke(confirmRef);
+            return confirmRef;
         }
 
-        public ModalRef Info(ConfirmOptions options)
+        public ConfirmRef Info(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -39,7 +39,7 @@ namespace AntDesign
             return Confirm(options);
         }
 
-        public ModalRef Success(ConfirmOptions options)
+        public ConfirmRef Success(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -50,7 +50,7 @@ namespace AntDesign
             return Confirm(options);
         }
 
-        public ModalRef Error(ConfirmOptions options)
+        public ConfirmRef Error(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -61,7 +61,7 @@ namespace AntDesign
             return Confirm(options);
         }
 
-        public ModalRef Warning(ConfirmOptions options)
+        public ConfirmRef Warning(ConfirmOptions options)
         {
             if (options == null)
             {
@@ -74,14 +74,14 @@ namespace AntDesign
 
         public async Task<bool> ConfirmAsync(ConfirmOptions props)
         {
-            ModalRef modalRef = new ModalRef(props, this);
-            modalRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
+            ConfirmRef confirmRef = new ConfirmRef(props, this);
+            confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
             if (OnOpenEvent != null)
             {
-                await OnOpenEvent.Invoke(modalRef);
+                await OnOpenEvent.Invoke(confirmRef);
             }
 
-            return await modalRef.TaskCompletionSource.Task
+            return await confirmRef.TaskCompletionSource.Task
                 .ContinueWith(t =>
                 {
                     return t.Result == ConfirmResult.OK;
@@ -134,14 +134,14 @@ namespace AntDesign
 
         #endregion SimpleConfirm
 
-        public Task Update(ModalRef modalRef)
+        public Task Update(ConfirmRef confirmRef)
         {
-            return OnUpdateEvent?.Invoke(modalRef);
+            return OnUpdateEvent?.Invoke(confirmRef);
         }
 
-        public Task Destroy(ModalRef modalRef)
+        public Task Destroy(ConfirmRef confirmRef)
         {
-            return OnDestroyEvent?.Invoke(modalRef);
+            return OnDestroyEvent?.Invoke(confirmRef);
         }
 
         public Task DestroyAll()
@@ -154,12 +154,12 @@ namespace AntDesign
         /// </summary>
         /// <param name="config">Options</param>
         /// <returns></returns>
-        public async Task<ModalRef> CreateAsync(ConfirmOptions config)
+        public Task<ConfirmRef> CreateAsync(ConfirmOptions config)
         {
             CheckIsNull(config);
-            ModalRef modalRef = new ModalRef(config, this);
-            OnOpenEvent.Invoke(modalRef);
-            return modalRef;
+            ConfirmRef confirmRef = new ConfirmRef(config, this);
+            OnOpenEvent?.Invoke(confirmRef);
+            return Task.FromResult(confirmRef);
         }
 
         /// <summary>
@@ -171,39 +171,39 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="componentOptions"></param>
         /// <returns></returns>
-        public async Task<ModalRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : ModalTemplate<TComponentOptions, TResult>
+        public Task<ConfirmRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : ConfirmTemplate<TComponentOptions, TResult>
         {
             CheckIsNull(config);
 
-            ModalRef<TResult> modalRef = new ModalRef<TResult>(config, this);
-            OnOpenEvent.Invoke(modalRef);
+            ConfirmRef<TResult> confirmRef = new ConfirmRef<TResult>(config, this);
+            OnOpenEvent?.Invoke(confirmRef);
 
             RenderFragment child = (builder) =>
             {
                 builder.OpenComponent<TComponent>(0);
-                builder.AddAttribute(1, "ModalRef", modalRef);
+                builder.AddAttribute(1, "ConfirmRef", confirmRef);
                 builder.AddAttribute(2, "Options", componentOptions);
                 builder.CloseComponent();
             };
             config.Content = child;
 
-            return modalRef;
+            return Task.FromResult(confirmRef);
         }
 
-        internal Task OpenAsync(ModalRef modalRef)
+        internal Task OpenAsync(ConfirmRef confirmRef)
         {
             if (OnOpenEvent != null)
             {
-                OnOpenEvent.Invoke(modalRef);
+                OnOpenEvent.Invoke(confirmRef);
             }
             return Task.CompletedTask;
         }
 
-        internal Task CloseAsync(ModalRef modalRef)
+        internal Task CloseAsync(ConfirmRef confirmRef)
         {
             if (OnCloseEvent != null)
             {
-                return OnCloseEvent.Invoke(modalRef);
+                return OnCloseEvent.Invoke(confirmRef);
             }
             return Task.CompletedTask;
         }

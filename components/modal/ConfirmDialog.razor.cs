@@ -13,7 +13,7 @@ namespace AntDesign
         public ConfirmOptions Config { get; set; }
 
         [Parameter]
-        public ModalRef ModalRef { get; set; }
+        public ConfirmRef ConfirmRef { get; set; }
 
         [Parameter]
         public EventCallback<ConfirmOptions> OnRemove { get; set; }
@@ -26,8 +26,8 @@ namespace AntDesign
         protected override async Task OnInitializedAsync()
         {
             _dialogOptions = BuildDialogOptions(Config);
-            if (ModalRef.OnOpen != null)
-                await ModalRef.OnOpen.Invoke();
+            if (ConfirmRef.OnOpen != null)
+                await ConfirmRef.OnOpen.Invoke();
             await base.OnInitializedAsync();
         }
 
@@ -62,7 +62,7 @@ namespace AntDesign
             config.Title = null;
             config.CloseIcon = null;
             config.OnClosed = Close;
-            config.OnCancel = ModalRef.IsCreateByModalService ? HandleCancel : new Func<MouseEventArgs, Task>(async (e) => await Close());
+            config.OnCancel = ConfirmRef.IsCreateByModalService ? HandleCancel : new Func<MouseEventArgs, Task>(async (e) => await Close());
             return config;
         }
 
@@ -96,8 +96,8 @@ namespace AntDesign
         {
             var args = new ModalClosingEventArgs(e, false);
 
-            if (ModalRef.ModalTemplate != null)
-                await ModalRef.ModalTemplate.OkAsync(args);
+            if (ConfirmRef.ModalTemplate != null)
+                await ConfirmRef.ModalTemplate.OkAsync(args);
 
             if (!args.Cancel && Config.OnOk != null)
             {
@@ -114,7 +114,7 @@ namespace AntDesign
             else
             {
                 await Close();
-                ModalRef.TaskCompletionSource?.SetResult(ConfirmResult.OK);
+                ConfirmRef.TaskCompletionSource?.SetResult(ConfirmResult.OK);
             }
         }
 
@@ -123,8 +123,8 @@ namespace AntDesign
 
             var args = new ModalClosingEventArgs(e, false);
 
-            if (ModalRef.ModalTemplate != null)
-                await ModalRef.ModalTemplate.CancelAsync(args);
+            if (ConfirmRef.ModalTemplate != null)
+                await ConfirmRef.ModalTemplate.CancelAsync(args);
             if (!args.Cancel && Config.OnCancel != null)
             {
                 Config.CancelButtonProps.Loading = true;
@@ -140,13 +140,13 @@ namespace AntDesign
             else
             {
                 await Close();
-                ModalRef.TaskCompletionSource?.SetResult(ConfirmResult.Cancel);
+                ConfirmRef.TaskCompletionSource?.SetResult(ConfirmResult.Cancel);
             }
         }
 
         private async Task HandleBtn1Click(MouseEventArgs e, ConfirmResult confirmResult)
         {
-            if (ModalRef.IsCreateByModalService)
+            if (ConfirmRef.IsCreateByModalService)
             {
                 await HandleOk(e);
             }
@@ -155,13 +155,13 @@ namespace AntDesign
                 Config.Button1Props.Loading = false;
                 await InvokeAsync(StateHasChanged);
                 await Close();
-                ModalRef.TaskCompletionSource?.SetResult(confirmResult);
+                ConfirmRef.TaskCompletionSource?.SetResult(confirmResult);
             }
         }
 
         private async Task HandleBtn2Click(MouseEventArgs e, ConfirmResult confirmResult)
         {
-            if (ModalRef.IsCreateByModalService)
+            if (ConfirmRef.IsCreateByModalService)
             {
                 await HandleCancel(e);
             }
@@ -170,7 +170,7 @@ namespace AntDesign
                 Config.Button2Props.Loading = false;
                 await InvokeAsync(StateHasChanged);
                 await Close();
-                ModalRef.TaskCompletionSource?.SetResult(confirmResult);
+                ConfirmRef.TaskCompletionSource?.SetResult(confirmResult);
             }
         }
 
@@ -179,7 +179,7 @@ namespace AntDesign
             Config.Button3Props.Loading = false;
             await InvokeAsync(StateHasChanged);
             await Close();
-            ModalRef.TaskCompletionSource?.SetResult(confirmResult);
+            ConfirmRef.TaskCompletionSource?.SetResult(confirmResult);
         }
     }
 }

@@ -130,7 +130,7 @@ export function triggerEvent(element, eventType, eventName) {
 
 export function getBoundingClientRect(element) {
   let dom = getDom(element);
-  if (dom) {
+  if (dom && dom.getBoundingClientRect) {
     return dom.getBoundingClientRect();
   }
   return null;
@@ -423,6 +423,10 @@ export function getScroll() {
 export function getInnerText(element) {
   let dom = getDom(element);
   return dom.innerText;
+}
+
+export function getMaxZIndex() {
+  return [...document.all].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
 }
 
 const objReferenceDict = {};
