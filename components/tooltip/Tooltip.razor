@@ -3,7 +3,7 @@
 
 @using AntDesign.Internal
 
-<div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-flex; @Style"
+<div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-block; @Style"
      @onclick="OnClickDiv"
      @onmouseenter="OnTriggerMouseEnter"
      @onmouseleave="OnTriggerMouseLeave"
@@ -19,7 +19,6 @@
         <Overlay @ref="_overlay"
                  HideMillisecondsDelay="10"
                  WaitForHideAnimMilliseconds="100"
-                 OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
                  OnOverlayMouseEnter="OnOverlayMouseEnter"
                  OnOverlayMouseLeave="OnOverlayMouseLeave">
             @if (Title.Value != null)

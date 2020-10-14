@@ -1,0 +1,38 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+@if (IsRealDisplay)
+{
+    <CascadingValue Value="this" Name="SelfNode">
+        <div @key="NodeId" class="@TreeNodeClassMapper.Class">
+
+            <TreeIndent TreeLevel="@TreeLevel"></TreeIndent>
+
+            @if (TreeComponent.ShowExpand)
+            {
+                <TreeNodeSwitcher OnSwitcherClick="OnSwitcherClick"></TreeNodeSwitcher>
+            }
+
+            @if (TreeComponent.Checkable)
+            {
+                <TreeNodeCheckbox OnCheckBoxClick="OnCheckBoxClick"></TreeNodeCheckbox>
+            }
+
+            <TreeNodeTitle></TreeNodeTitle>
+
+        </div>
+    </CascadingValue>
+}
+<CascadingValue Value="this" Name="Node">
+    @if (DataItem != null)
+    {
+        foreach (var item in ChildDataItems)
+        {
+            <TreeNode DataItem="@item"></TreeNode>
+        }
+    }
+    else
+    {
+        @Nodes
+    }
+</CascadingValue>

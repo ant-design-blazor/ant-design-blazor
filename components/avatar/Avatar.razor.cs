@@ -55,6 +55,17 @@ namespace AntDesign
         [Parameter]
         public EventCallback<ErrorEventArgs> Error { get; set; }
 
+        [CascadingParameter]
+        public AvatarGroup Group { get; set; }
+
+        [CascadingParameter(Name = "position")]
+        public string Position { get; set; }
+
+        /// <summary>
+        /// more than group max count
+        /// </summary>
+        internal bool Overflow { get; set; }
+
         private bool _hasText = false;
         private bool _hasSrc = true;
         private bool _hasIcon = false;
@@ -74,6 +85,10 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+
+            Group?.AddAvatar(this);
+
 
             SetClassMap();
             SetSizeStyle();
@@ -121,8 +136,8 @@ namespace AntDesign
         {
             ClassMapper.Clear()
                 .Add(_prefixCls)
-                .If($"{_prefixCls}-{this._sizeMap[this.Size]}", () => _sizeMap.ContainsKey(Size))
-                .If($"{_prefixCls}-{this.Shape}", () => !string.IsNullOrEmpty(Shape))
+                .GetIf(() => $"{_prefixCls}-{this._sizeMap[this.Size]}", () => _sizeMap.ContainsKey(Size))
+                .GetIf(() => $"{_prefixCls}-{this.Shape}", () => !string.IsNullOrEmpty(Shape))
                 .If($"{_prefixCls}-icon", () => !string.IsNullOrEmpty(Icon))
                 .If($"{_prefixCls}-image", () => _hasSrc)
                 ;
@@ -150,9 +165,9 @@ namespace AntDesign
                 return;
             }
 
-            var childrenWidth = (await this.JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, this.TextEl)).offsetWidth;
-            var avatarWidth = (await this.JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, this.Ref)).width;
-            var scale = avatarWidth - 8 < childrenWidth ? (avatarWidth - 8) / childrenWidth : 1;
+            var childrenWidth = (await this.JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, this.TextEl))?.offsetWidth ?? 0;
+            var avatarWidth = (await this.JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, this.Ref))?.width ?? 0;
+            var scale = childrenWidth != 0 && avatarWidth - 8 < childrenWidth ? (avatarWidth - 8) / childrenWidth : 1;
             this._textStyles = $"transform: scale({scale}) translateX(-50%);";
             if (decimal.TryParse(this.Size, out var pxSize))
             {
@@ -160,6 +175,13 @@ namespace AntDesign
             }
 
             StateHasChanged();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Group?.RemoveAvatar(this);
+
+            base.Dispose(disposing);
         }
     }
 }

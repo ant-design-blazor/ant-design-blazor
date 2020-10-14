@@ -43,7 +43,16 @@ namespace AntDesign.Docs.Build.CLI.Command
 
                 string demoDirectory = Path.Combine(Directory.GetCurrentDirectory(), source);
 
-                GenerateFiles(demoDirectory, output);
+                try
+                {
+
+                    GenerateFiles(demoDirectory, output);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return -1;
+                }
 
                 return 0;
             });
@@ -68,67 +77,73 @@ namespace AntDesign.Docs.Build.CLI.Command
             {
                 if (!(component is DirectoryInfo componentDirectory)) continue;
 
-                FileSystemInfo docDir = componentDirectory.GetFileSystemInfos("doc")[0];
-                FileSystemInfo demoDir = componentDirectory.GetFileSystemInfos("demo")[0];
+                FileSystemInfo docDir = componentDirectory.GetFileSystemInfos("doc")?.FirstOrDefault();
+                FileSystemInfo demoDir = componentDirectory.GetFileSystemInfos("demo")?.FirstOrDefault();
 
                 Dictionary<string, DemoComponent> componentDic = new Dictionary<string, DemoComponent>();
 
-                foreach (FileSystemInfo docItem in (docDir as DirectoryInfo).GetFileSystemInfos())
+                if (docDir != null && docDir.Exists)
                 {
-                    string language = docItem.Name.Replace("index.", "").Replace(docItem.Extension, "");
-                    string content = File.ReadAllText(docItem.FullName);
-                    (Dictionary<string, string> Meta, string desc, string apiDoc) docData = DocParser.ParseDemoDoc(content);
-
-                    componentDic.Add(language, new DemoComponent()
+                    foreach (FileSystemInfo docItem in (docDir as DirectoryInfo).GetFileSystemInfos())
                     {
-                        Title = docData.Meta["title"],
-                        SubTitle = docData.Meta.TryGetValue("subtitle", out string subtitle) ? subtitle : null,
-                        Type = docData.Meta["type"],
-                        Desc = docData.desc,
-                        ApiDoc = docData.apiDoc.Replace("<h2>API</h2>", $"<h2 id=\"API\"><span>API</span><a href=\"{language}/components/{docData.Meta["title"].ToLower()}#API\" class=\"anchor\">#</a></h2>"),
-                        Cols = docData.Meta.TryGetValue("cols", out var cols) ? int.Parse(cols) : (int?)null,
-                        Cover = docData.Meta.TryGetValue("cover", out var cover) ? cover : null,
-                    });
+                        string language = docItem.Name.Replace("index.", "").Replace(docItem.Extension, "");
+                        string content = File.ReadAllText(docItem.FullName);
+                        (Dictionary<string, string> Meta, string desc, string apiDoc) docData = DocParser.ParseDemoDoc(content);
+
+                        componentDic.Add(language, new DemoComponent()
+                        {
+                            Title = docData.Meta["title"],
+                            SubTitle = docData.Meta.TryGetValue("subtitle", out string subtitle) ? subtitle : null,
+                            Type = docData.Meta["type"],
+                            Desc = docData.desc,
+                            ApiDoc = docData.apiDoc.Replace("<h2>API</h2>", $"<h2 id=\"API\"><span>API</span><a href=\"{language}/components/{docData.Meta["title"].ToLower()}#API\" class=\"anchor\">#</a></h2>"),
+                            Cols = docData.Meta.TryGetValue("cols", out var cols) ? int.Parse(cols) : (int?)null,
+                            Cover = docData.Meta.TryGetValue("cover", out var cover) ? cover : null,
+                        });
+                    }
                 }
 
-                foreach (IGrouping<string, FileSystemInfo> demo in (demoDir as DirectoryInfo).GetFileSystemInfos()
-                    .GroupBy(x => x.Name
-                        .Replace(x.Extension, "")
-                        .Replace("-", "")
-                        .Replace("_", "")
-                        .Replace("Demo", "")
-                        .ToLower()))
+                if (demoDir != null && demoDir.Exists)
                 {
-                    List<FileSystemInfo> showCaseFiles = demo.ToList();
-                    FileSystemInfo razorFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".razor");
-                    FileSystemInfo descriptionFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".md");
-                    string code = razorFile != null ? File.ReadAllText(razorFile.FullName) : null;
-
-                    string demoType = $"{demoDirectoryInfo.Name}{razorFile.FullName.Replace(demoDirectoryInfo.FullName, "").Replace("/", ".").Replace("\\", ".").Replace(razorFile.Extension, "")}";
-
-                    (DescriptionYaml Meta, string Style, Dictionary<string, string> Descriptions) descriptionContent = descriptionFile != null ? DocParser.ParseDescription(File.ReadAllText(descriptionFile.FullName)) : default;
-
-                    demoTypes ??= new List<string>();
-                    demoTypes.Add(demoType);
-
-                    foreach (KeyValuePair<string, string> title in descriptionContent.Meta.Title)
+                    foreach (IGrouping<string, FileSystemInfo> demo in (demoDir as DirectoryInfo).GetFileSystemInfos()
+                        .GroupBy(x => x.Name
+                            .Replace(x.Extension, "")
+                            .Replace("-", "")
+                            .Replace("_", "")
+                            .Replace("Demo", "")
+                            .ToLower()))
                     {
-                        string language = title.Key;
-                        List<DemoItem> list = componentDic[language].DemoList ??= new List<DemoItem>();
+                        List<FileSystemInfo> showCaseFiles = demo.ToList();
+                        FileSystemInfo razorFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".razor");
+                        FileSystemInfo descriptionFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".md");
+                        string code = razorFile != null ? File.ReadAllText(razorFile.FullName) : null;
 
-                        list.Add(new DemoItem()
+                        string demoType = $"{demoDirectoryInfo.Name}{razorFile.FullName.Replace(demoDirectoryInfo.FullName, "").Replace("/", ".").Replace("\\", ".").Replace(razorFile.Extension, "")}";
+
+                        (DescriptionYaml Meta, string Style, Dictionary<string, string> Descriptions) descriptionContent = descriptionFile != null ? DocParser.ParseDescription(File.ReadAllText(descriptionFile.FullName)) : default;
+
+                        demoTypes ??= new List<string>();
+                        demoTypes.Add(demoType);
+
+                        foreach (KeyValuePair<string, string> title in descriptionContent.Meta.Title)
                         {
-                            Title = title.Value,
-                            Order = descriptionContent.Meta.Order,
-                            Iframe = descriptionContent.Meta.Iframe,
-                            Code = code,
-                            Description = descriptionContent.Descriptions[title.Key],
-                            Name = descriptionFile?.Name.Replace(".md", ""),
-                            Style = descriptionContent.Style,
-                            Debug = descriptionContent.Meta.Debug,
-                            Docs = descriptionContent.Meta.Docs,
-                            Type = demoType
-                        });
+                            string language = title.Key;
+                            List<DemoItem> list = componentDic[language].DemoList ??= new List<DemoItem>();
+
+                            list.Add(new DemoItem()
+                            {
+                                Title = title.Value,
+                                Order = descriptionContent.Meta.Order,
+                                Iframe = descriptionContent.Meta.Iframe,
+                                Code = code,
+                                Description = descriptionContent.Descriptions[title.Key],
+                                Name = descriptionFile?.Name.Replace(".md", ""),
+                                Style = descriptionContent.Style,
+                                Debug = descriptionContent.Meta.Debug,
+                                Docs = descriptionContent.Meta.Docs,
+                                Type = demoType
+                            });
+                        }
                     }
                 }
 

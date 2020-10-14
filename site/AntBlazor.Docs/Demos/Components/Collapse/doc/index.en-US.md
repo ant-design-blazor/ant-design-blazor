@@ -34,3 +34,10 @@ A content area which can be collapsed and expanded.
 | `ShowArrow`    | Display arrow or not                        | `boolean`                  | `true`  |
 | `Active`       | Active status of panel, double binding      | `boolean`                  | -       |
 | `ActiveChange` | Callback function of the active status      | `EventCallback<boolean>`   | -       |
+
+### Methods
+
+| Name    | Description  |
+| ------- | ------------ |
+| Activate(string[] activeKeys)  | Activate the panels by their keys |
+| Deactivate(string[] inactiveKeys) | Deactivate the panels by their keys   |

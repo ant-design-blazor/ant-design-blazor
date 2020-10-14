@@ -6,6 +6,18 @@
   // ================================================================
   /* Some non-status related component style is in `components.less` */
 
+  // ========================= Explain =========================
+  /* To support leave along ErrorList. We add additional className to handle explain style */
+  &-explain {
+    &&-error {
+      color: @error-color;
+    }
+
+    &&-warning {
+      color: @warning-color;
+    }
+  }
+
   &-has-feedback {
     // ========================= Input =========================
     .@{ant-prefix}-input {
@@ -232,12 +244,16 @@
         }
       }
     }
-  }
 
-  // Patch to keep error explain color
-  &-has-error-leave {
-    .@{form-item-prefix-cls}-explain {
-      color: @error-color;
+    // RadioGroup
+    .@{ant-prefix}-radio-button-wrapper {
+      border-color: @error-color !important;
+
+      &:not(:first-child) {
+        &::before {
+          background-color: @error-color;
+        }
+      }
     }
   }
 

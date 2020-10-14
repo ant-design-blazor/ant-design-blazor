@@ -1,0 +1,71 @@
+<Tree @ref="tree" Checkable Multiple>
+    <Nodes>
+        <TreeNode Title="A">
+            <Nodes>
+                <TreeNode Title="A1">
+                    <Nodes>
+                        <TreeNode Title="A1-1"></TreeNode>
+                        <TreeNode Title="A2-2"></TreeNode>
+                    </Nodes>
+                </TreeNode>
+                <TreeNode Title="A2" IsDisabled>
+                    <Nodes>
+                        <TreeNode Title="A2-1"></TreeNode>
+                        <TreeNode Title="A1-2"></TreeNode>
+                    </Nodes>
+                </TreeNode>
+                <TreeNode Title="A3" IsDisableCheckbox>
+                    <Nodes>
+                        <TreeNode Title="A3-1"></TreeNode>
+                        <TreeNode Title="A3-2" IsDisableCheckbox></TreeNode>
+                        <TreeNode Title="A3-3" IsDisabled></TreeNode>
+                    </Nodes>
+                </TreeNode>
+            </Nodes>
+        </TreeNode>
+        <TreeNode Title="B"></TreeNode>
+    </Nodes>
+</Tree>
+
+<br />
+<Button OnClick="PrintCheckedNodes">Print Checked Nodes</Button>
+
+<Button OnClick="PrintSelectedNodes">Print Selected Nodes</Button>
+
+<Button OnClick="DeselectAll">Deselect All</Button>
+<br />
+@if (string.IsNullOrWhiteSpace(printType) == false)
+{
+    <div>@printType</div>
+    <ul>
+        @foreach (var item in printTexts)
+        {
+            <li>@item</li>
+        }
+    </ul>
+}
+@code{
+
+    string printType;
+
+    List<string> printTexts = new List<string>();
+
+    Tree tree;
+
+    private void PrintCheckedNodes()
+    {
+        printType = "CheckedNodes";
+        printTexts = tree.CheckedTitles;
+    }
+
+    private void PrintSelectedNodes()
+    {
+        printType = "SelectedNodes";
+        printTexts = tree.SelectedTitles;
+    }
+
+    private void DeselectAll()
+    {
+        tree.DeselectAll();
+    }
+}

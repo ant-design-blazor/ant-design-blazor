@@ -1,32 +1,51 @@
-﻿@inherits ModalTemplate<string, string>
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+@inherits ModalTemplate<Form.demo.Basic.Model>
 
-<div>
-    <Text>Please input "@config"</Text>
-    value: <Input @bind-Value="value" Placeholder="@config" />
-</div>
+<Form Model="@_model"
+      LabelCol="new ColLayoutParam { Span = 8 }"
+      WrapperCol="new ColLayoutParam { Span = 16 }"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed">
+    <FormItem Label="Username">
+        <Input @bind-Value="@context.Username" />
+    </FormItem>
+    <FormItem Label="Password">
+        <InputPassword @bind-Value="@context.Password" />
+    </FormItem>
+    <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
+        <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
+    </FormItem>
+    <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+</Form>
+
+<br />
+<br />
+
 
 @code{
 
-    string config;
 
-    string value;
+    private Form.demo.Basic.Model _model;
 
     protected override void OnInitialized()
     {
-        config = this.Options;
+        _model = base.Options ?? new Form.demo.Basic.Model();
         base.OnInitialized();
     }
 
-
-    public override async Task OkAsync(ModalClosingEventArgs args)
+    private void OnFinish(EditContext editContext)
     {
-        ModalRef.Config.OkButtonProps.Loading = true;
-        await Task.Delay(1000);
-        if (value != config)
-            args.Cancel = true;
-        else
-            await this.OnOkAsync(value);
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(_model)}");
+        _ = base.ModalRef.CloseAsync();
+    }
 
-        await base.OkAsync(args);
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(_model)}");
     }
 }

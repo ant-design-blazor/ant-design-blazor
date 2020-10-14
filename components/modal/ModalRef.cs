@@ -5,95 +5,38 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public class ModalRef<TResult> : ModalRef
-    {
-        public Func<TResult, Task> OnCancel { get; set; }
-
-        public Func<TResult, Task> OnOk { get; set; }
-
-        internal ModalRef(ConfirmOptions config, ModalService service) : base(config, service)
-        {
-
-        }
-
-        /// <summary>
-        /// 确定
-        /// </summary>
-        /// <returns></returns>
-        public async Task TriggerOkAsync(TResult result)
-        {
-            await _service?.CloseAsync(this);
-            await OnOk?.Invoke(result);
-        }
-
-        /// <summary>
-        /// 取消
-        /// </summary>
-        /// <returns></returns>
-        public async Task TriggerCancelAsync(TResult result)
-        {
-            await _service?.CloseAsync(this);
-            await OnCancel?.Invoke(result);
-        }
-    }
-
     public class ModalRef
     {
-        public ConfirmOptions Config { get; set; }
-        public Drawer Drawer { get; set; }
+        internal readonly ModalOptions Config;
+        private readonly ModalService _service;
 
-        protected ModalService _service;
-
-        internal IModalTemplate ModalTemplate { get; set; }
-
-        public Func<Task> OnOpen { get; set; }
-
-        public Func<Task> OnClose { get; set; }
-
-        public Func<Task> OnDestroy { get; set; }
-
-        internal bool IsCreateByModalService => _service != null;
-
-        internal ModalRef(ConfirmOptions config)
+        internal ModalRef(ModalOptions config, ModalService modalService)
         {
             Config = config;
-        }
-
-        internal ModalRef(ConfirmOptions config, ModalService service)
-        {
-            Config = config;
-            _service = service;
+            _service = modalService;
         }
 
         /// <summary>
-        /// 打开窗体
+        /// open the Modal dialog
         /// </summary>
         /// <returns></returns>
         public async Task OpenAsync()
         {
-            await _service?.OpenAsync(this);
+            if (!Config.Visible)
+            {
+                Config.Visible = true;
+            }
+
+            await _service.CreateOrOpenModalAsync(this);
         }
 
         /// <summary>
-        /// 关闭窗体无返回值
+        /// close the Modal dialog
         /// </summary>
         /// <returns></returns>
         public async Task CloseAsync()
         {
-            await _service?.CloseAsync(this);
+            await _service.CloseModalAsync(this);
         }
-
-        public async Task UpdateConfig()
-        {
-            await _service?.Update(this);
-        }
-
-        public async Task UpdateConfig(ConfirmOptions config)
-        {
-            Config = config;
-            await _service?.Update(this);
-        }
-
-        internal TaskCompletionSource<ConfirmResult> TaskCompletionSource { get; set; }
     }
 }

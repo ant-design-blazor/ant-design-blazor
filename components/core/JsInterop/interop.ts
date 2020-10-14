@@ -130,7 +130,7 @@ export function triggerEvent(element, eventType, eventName) {
 
 export function getBoundingClientRect(element) {
   let dom = getDom(element);
-  if (dom) {
+  if (dom && dom.getBoundingClientRect) {
     return dom.getBoundingClientRect();
   }
   return null;
@@ -215,9 +215,26 @@ export function log(text) {
   console.log(text);
 }
 
-export function BackTop(element) {
-  let dom = document.getElementById("BodyContainer");
-  dom.scrollTo(0, 0);
+export function BackTop(target: string) {
+  let dom = getDom(target);
+  if (dom) {
+    slideTo(dom.scrollTop);
+  } else {
+    slideTo(0);
+  }
+}
+
+function slideTo(targetPageY) {
+  var timer = setInterval(function () {
+    var currentY = document.documentElement.scrollTop || document.body.scrollTop;
+    var distance = targetPageY > currentY ? targetPageY - currentY : currentY - targetPageY;
+    var speed = Math.ceil(distance / 10);
+    if (currentY == targetPageY) {
+      clearInterval(timer);
+    } else {
+      window.scrollTo(0, targetPageY > currentY ? currentY + speed : currentY - speed);
+    }
+  }, 10);
 }
 
 export function getFirstChildDomInfo(element) {
@@ -406,6 +423,10 @@ export function getScroll() {
 export function getInnerText(element) {
   let dom = getDom(element);
   return dom.innerText;
+}
+
+export function getMaxZIndex() {
+  return [...document.all].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
 }
 
 const objReferenceDict = {};

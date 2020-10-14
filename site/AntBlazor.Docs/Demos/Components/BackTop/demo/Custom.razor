@@ -1,0 +1,35 @@
+
+<div id="target" style="height:600vh;padding:8px;">
+    <div>Scroll to bottom</div>
+    <div>Scroll to bottom</div>
+    <div>Scroll to bottom</div>
+    <div>Scroll to bottom</div>
+    <div>Scroll to bottom</div>
+    <div>Scroll to bottom</div>
+    <div>Scroll to bottom</div>
+    <BackTop Style="margin-bottom:60px" OnClick="OnClick">
+        <div class="ant-back-top-inner">UP</div>
+    </BackTop>
+</div>
+
+<style>
+
+    .ant-back-top-inner {
+        height: 40px;
+        width: 40px;
+        line-height: 40px;
+        border-radius: 4px;
+        background-color: #1088e9;
+        color: #fff;
+        text-align: center;
+        font-size: 20px;
+    }
+</style>
+
+@code{
+    private void OnClick()
+    {
+        Console.WriteLine("Top");
+    }
+
+}

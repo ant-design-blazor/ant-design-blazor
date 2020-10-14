@@ -4,8 +4,11 @@ namespace AntDesign
 {
     public abstract class AntDomComponentBase : AntComponentBase
     {
+        [Inject]
+        private IComponentIdGenerator ComponentIdGenerator { get; set; }
+
         [Parameter]
-        public string Id { get; set; } = IdGeneratorHelper.Generate("ant-blazor-");
+        public string Id { get; set; }
 
         //[Parameter(CaptureUnmatchedValues = true)]
         //public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
@@ -31,6 +34,12 @@ namespace AntDesign
         {
             ClassMapper
                 .Get(() => this.Class);
+        }
+
+        protected override void OnInitialized()
+        {
+            Id ??= ComponentIdGenerator.Generate(this);
+            base.OnInitialized();
         }
 
         /// <summary>

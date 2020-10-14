@@ -6,11 +6,10 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public class ModalTemplate<TComponentOptions, TResult> : TemplateComponentBase<TComponentOptions>, IModalTemplate
+    public class ConfirmTemplate<TComponentOptions, TResult> : TemplateComponentBase<TComponentOptions>, IModalTemplate
     {
         [Parameter]
-        public ModalRef<TResult> ModalRef { get; set; }
-
+        public ConfirmRef<TResult> ConfirmRef { get; set; }
 
         /// <summary>
         /// Emit Ok and return values
@@ -18,7 +17,7 @@ namespace AntDesign
         /// <returns></returns>
         public async Task OnOkAsync(TResult result)
         {
-            await ModalRef.OnOk?.Invoke(result);
+            await (ConfirmRef.OnOk?.Invoke(result) ?? Task.CompletedTask);
         }
 
         /// <summary>
@@ -27,7 +26,7 @@ namespace AntDesign
         /// <returns></returns>
         public async Task OnCancelAsync(TResult result)
         {
-            await ModalRef.OnCancel?.Invoke(result);
+            await (ConfirmRef.OnCancel?.Invoke(result) ?? Task.CompletedTask);
         }
 
 
@@ -37,13 +36,13 @@ namespace AntDesign
         /// <returns></returns>
         protected async Task CloseAsync()
         {
-            await ModalRef.CloseAsync();
+            await ConfirmRef.CloseAsync();
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            ModalRef.ModalTemplate = this;
+            ConfirmRef.ModalTemplate = this;
         }
 
 

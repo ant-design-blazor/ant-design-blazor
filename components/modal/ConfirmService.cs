@@ -9,16 +9,16 @@ namespace AntDesign
 {
     public class ConfirmService
     {
-        internal event Func<ModalRef, Task> OnOpenEvent;
+        internal event Func<ConfirmRef, Task> OnOpenEvent;
 
         /// <summary>
-        /// 
+        /// show a confirm dialog like MessageBox of Windows
         /// </summary>
-        /// <param name="content"></param>
-        /// <param name="title"></param>
-        /// <param name="confirmButtons"></param>
-        /// <param name="confirmIcon"></param>
-        /// <param name="options"></param>
+        /// <param name="content">the content of dialog</param>
+        /// <param name="title">the title of dialog</param>
+        /// <param name="confirmButtons">the buttons of dialog</param>
+        /// <param name="confirmIcon">the icon of dialog</param>
+        /// <param name="options">the configuration options for dialog</param>
         /// <returns></returns>
         public async Task<ConfirmResult> Show(
             OneOf<string, RenderFragment> content,
@@ -53,12 +53,25 @@ namespace AntDesign
 
             #endregion
 
-            var modalRef = new ModalRef(confirmOptions);
-            modalRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>(); ;
-            await OnOpenEvent?.Invoke(modalRef);
+            var modalRef = new ConfirmRef(confirmOptions)
+            {
+                TaskCompletionSource = new TaskCompletionSource<ConfirmResult>()
+            };
+            if (OnOpenEvent != null)
+            {
+                await OnOpenEvent.Invoke(modalRef);
+            }
             return await modalRef.TaskCompletionSource.Task;
         }
 
+        /// <summary>
+        /// show a confirm dialog like MessageBox of Windows
+        /// </summary>
+        /// <param name="content">the content of dialog</param>
+        /// <param name="title">the title of dialog</param>
+        /// <param name="confirmButtons">the buttons of dialog</param>
+        /// <param name="confirmIcon">the icon of dialog</param>
+        /// <returns></returns>
         public Task<ConfirmResult> Show
             (OneOf<string, RenderFragment> content,
             OneOf<string, RenderFragment> title,
