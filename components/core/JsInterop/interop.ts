@@ -130,7 +130,7 @@ export function triggerEvent(element, eventType, eventName) {
 
 export function getBoundingClientRect(element) {
   let dom = getDom(element);
-  if (dom) {
+  if (dom && dom.getBoundingClientRect) {
     return dom.getBoundingClientRect();
   }
   return null;
