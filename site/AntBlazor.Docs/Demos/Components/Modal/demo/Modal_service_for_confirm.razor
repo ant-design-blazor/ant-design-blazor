@@ -1,0 +1,79 @@
+﻿@inject ModalService ModalService
+
+<Input @bind-Value="@value" />
+<br />
+<br />
+<Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
+<Button OnClick="OpenComponent" Type="primary">Use Component</Button>
+
+@code{
+
+    private string value = "blazor";
+
+    private ConfirmRef _confirmRef;
+
+    private async Task OpenTemplate()
+    {
+        RenderFragment content =@<div>value: @value <br /><Button OnClick="CloseModal">close</Button></div>;
+
+        var options = new ConfirmOptions()
+        {
+            Title = "Modal",
+            Width = 350,
+            Content = content,
+            OnOk = e => { Console.WriteLine("OnOk"); return Task.CompletedTask; },
+            OnCancel = e => { Console.WriteLine("OnCancel"); return Task.CompletedTask; }
+        };
+
+        _confirmRef = await ModalService.CreateAsync(options);
+
+        _confirmRef.OnOpen = () =>
+        {
+            Console.WriteLine("Open Modal");
+            return Task.CompletedTask;
+        };
+
+        _confirmRef.OnClose = () =>
+        {
+            Console.WriteLine("Close Modal");
+            return Task.CompletedTask;
+        };
+    }
+
+    private async Task CloseModal()
+    {
+        if (_confirmRef != null)
+        {
+            await _confirmRef.CloseAsync();
+        }
+    }
+
+    private async Task OpenComponent()
+    {
+        var options = new ConfirmOptions()
+        {
+            Title = "Component",
+
+        };
+
+        var confirmRef = await ModalService.CreateAsync<ConfirmTemplateDemo, string, string>(options, value);
+
+        confirmRef.OnOpen = () =>
+        {
+            Console.WriteLine("OnOpen");
+            return Task.CompletedTask;
+        };
+
+        confirmRef.OnClose = () =>
+        {
+            Console.WriteLine("OnClose");
+            return Task.CompletedTask;
+        };
+
+        confirmRef.OnOk = (result) =>
+        {
+            Console.WriteLine($"OnOk:{result}");
+            return Task.CompletedTask;
+        };
+    }
+}

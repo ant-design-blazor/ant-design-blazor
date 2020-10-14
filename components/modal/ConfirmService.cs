@@ -9,7 +9,7 @@ namespace AntDesign
 {
     public class ConfirmService
     {
-        internal event Func<ModalRef, Task> OnOpenEvent;
+        internal event Func<ConfirmRef, Task> OnOpenEvent;
 
         /// <summary>
         /// show a confirm dialog like MessageBox of Windows
@@ -53,7 +53,7 @@ namespace AntDesign
 
             #endregion
 
-            var modalRef = new ModalRef(confirmOptions)
+            var modalRef = new ConfirmRef(confirmOptions)
             {
                 TaskCompletionSource = new TaskCompletionSource<ConfirmResult>()
             };
