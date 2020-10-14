@@ -23,7 +23,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100-rc.1.20452.10
+          dotnet-version: 5.0.100-rc.2.20479.15
 
       - uses: actions/setup-node@v1
         with:
@@ -72,16 +72,16 @@ jobs:
         run: |
           dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
 
-      - name: Publish to npm 🎁
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-           dotnet publish scripts/npm -c Release -o npm-publish
-           cp ./scripts/npm/package.json ./npm-publish/wwwroot/
-           cd ./npm-publish/wwwroot/
-           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
-           npm version ${{ env.FULL_VERSION }}
-           npm publish
+      # - name: Publish to npm 🎁
+      #   env:
+      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      #   run: |
+      #      dotnet publish scripts/npm -c Release -o npm-publish
+      #      cp ./scripts/npm/package.json ./npm-publish/wwwroot/
+      #      cd ./npm-publish/wwwroot/
+      #      echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+      #      npm version ${{ env.FULL_VERSION }}
+      #      npm publish
 
       - name: Sync to Gitee 💕
         uses: wearerequired/git-mirror-action@master
