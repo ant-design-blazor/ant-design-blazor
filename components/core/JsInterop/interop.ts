@@ -425,6 +425,10 @@ export function getInnerText(element) {
   return dom.innerText;
 }
 
+export function getMaxZIndex() {
+  return [...document.all].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
+}
+
 const objReferenceDict = {};
 export function disposeObj(objReferenceName) {
   delete objReferenceDict[objReferenceName];

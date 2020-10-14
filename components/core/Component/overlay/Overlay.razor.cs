@@ -173,7 +173,9 @@ namespace AntDesign.Internal
             int left = GetOverlayLeft(trigger, overlayElement, containerElement);
             int top = GetOverlayTop(trigger, overlayElement, containerElement);
 
-            _overlayStyle = $"left: {left}px;top: {top}px;{GetTransformOrigin()}";
+            int zIndex = await JsInvokeAsync<int>(JSInteropConstants.GetMaxZIndex);
+
+            _overlayStyle = $"z-index:{zIndex};left: {left}px;top: {top}px;{GetTransformOrigin()}";
 
             _overlayCls = Trigger.GetOverlayEnterClass();
 
