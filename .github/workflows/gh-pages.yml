@@ -44,7 +44,7 @@ jobs:
           echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
           dotnet build
-          dotnet publish -c Release -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
