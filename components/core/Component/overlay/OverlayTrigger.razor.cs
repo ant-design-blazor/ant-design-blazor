@@ -202,7 +202,7 @@ namespace AntDesign.Internal
 
         protected virtual async Task OnTriggerClick()
         {
-            if (IsContainTrigger(TriggerType.Click) || IsContainTrigger(TriggerType.ContextMenu))
+            if (IsContainTrigger(TriggerType.Click))
             {
                 if (_overlay.IsPopup())
                 {
@@ -212,6 +212,10 @@ namespace AntDesign.Internal
                 {
                     await Show();
                 }
+            }
+            else if (IsContainTrigger(TriggerType.ContextMenu) && _overlay.IsPopup())
+            {
+                await Hide();
             }
         }
 
