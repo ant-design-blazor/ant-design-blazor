@@ -71,6 +71,8 @@ namespace AntDesign
 
         public static string GetInnerText => $"{FUNC_PREFIX}getInnerText";
 
+        public static string GetMaxZIndex => $"{FUNC_PREFIX}getMaxZIndex";
+
         public static string GetCursorXY => $"{FUNC_PREFIX}getCursorXY";
 
         public static string DisposeObj => $"{FUNC_PREFIX}disposeObj";
