@@ -1,0 +1,40 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+
+@foreach (ModalRef modalRef in _modalRefs)
+{
+    var options = modalRef.Config;
+    <Modal @key="@options"
+           AfterClose="@options.AfterClose"
+           BodyStyle="@options.BodyStyle"
+           CancelText="@options.CancelText"
+           Centered="@options.Centered"
+           Closable="@options.Closable"
+           Draggable="@options.Draggable"
+           DragInViewport="@options.DragInViewport"
+           CloseIcon="@options.CloseIcon"
+           ConfirmLoading="@options.ConfirmLoading"
+           DestroyOnClose="@options.DestroyOnClose"
+           Footer="@options.Footer"
+           ForceRender="@options.ForceRender"
+           GetContainer="@options.GetContainer"
+           Keyboard="@options.Keyboard"
+           Mask="@options.Mask"
+           MaskClosable="@options.MaskClosable"
+           MaskStyle="@options.MaskStyle"
+           OkText="@options.OkText"
+           OkType="@options.OkType"
+           Title="@options.Title"
+           Visible="@options.Visible"
+           Width="@options.Width"
+           WrapClassName="@options.WrapClassName"
+           ZIndex="@options.ZIndex"
+           OnCancel="@options.GetOnCancel()"
+           OnOk="@options.GetOnOk()"
+           OkButtonProps="@options.OkButtonProps"
+           CancelButtonProps="@options.CancelButtonProps"
+           >
+        @options.Content
+    </Modal>
+}

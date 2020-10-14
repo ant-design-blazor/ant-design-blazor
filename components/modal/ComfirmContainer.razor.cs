@@ -16,7 +16,7 @@ namespace AntDesign
         [Inject]
         private ConfirmService ConfirmService { get; set; }
 
-        private List<ModalRef> _modalRefs = new List<ModalRef>();
+        private List<ConfirmRef> _modalRefs = new List<ConfirmRef>();
 
         protected override void OnInitialized()
         {
@@ -32,13 +32,13 @@ namespace AntDesign
         /// <summary>
         /// 创建并打开窗体
         /// </summary>
-        private async Task Modal_OnOpen(ModalRef modalRef)
+        private async Task Modal_OnOpen(ConfirmRef confirmRef)
         {
-            modalRef.Config.Visible = true;
-            if (!_modalRefs.Contains(modalRef))
+            confirmRef.Config.Visible = true;
+            if (!_modalRefs.Contains(confirmRef))
             {
-                modalRef.Config.BuildButtonsDefaultOptions();
-                _modalRefs.Add(modalRef);
+                confirmRef.Config.BuildButtonsDefaultOptions();
+                _modalRefs.Add(confirmRef);
             }
             await InvokeAsync(StateHasChanged);
         }
@@ -46,36 +46,36 @@ namespace AntDesign
         /// <summary>
         /// 关闭窗体
         /// </summary>
-        private async Task Modal_OnClose(ModalRef modalRef)
+        private async Task Modal_OnClose(ConfirmRef confirmRef)
         {
-            modalRef.Config.Visible = false;
+            confirmRef.Config.Visible = false;
             await InvokeAsync(StateHasChanged);
             await Task.Delay(250);
-            if (_modalRefs.Contains(modalRef))
+            if (_modalRefs.Contains(confirmRef))
             {
-                _modalRefs.Remove(modalRef);
+                _modalRefs.Remove(confirmRef);
             }
-            modalRef.OnClose?.Invoke();
+            confirmRef.OnClose?.Invoke();
         }
 
-        private async Task Modal_OnUpdate(ModalRef modalRef)
+        private async Task Modal_OnUpdate(ConfirmRef confirmRef)
         {
-            if (modalRef.Config.Visible)
+            if (confirmRef.Config.Visible)
             {
                 await InvokeAsync(StateHasChanged);
             }
         }
 
-        private async Task Modal_OnDestroy(ModalRef modalRef)
+        private async Task Modal_OnDestroy(ConfirmRef confirmRef)
         {
-            modalRef.Config.Visible = false;
+            confirmRef.Config.Visible = false;
             await InvokeAsync(StateHasChanged);
             await Task.Delay(250);
-            if (_modalRefs.Contains(modalRef))
+            if (_modalRefs.Contains(confirmRef))
             {
-                _modalRefs.Remove(modalRef);
+                _modalRefs.Remove(confirmRef);
             }
-            modalRef.OnDestroy?.Invoke();
+            confirmRef.OnDestroy?.Invoke();
         }
 
         private async Task Modal_OnDestroyAll()

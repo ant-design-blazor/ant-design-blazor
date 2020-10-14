@@ -1,0 +1,41 @@
+﻿@inject ModalService ModalService
+
+<Input @bind-Value="@value" placeholder="user name" />
+<br />
+<br />
+<Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
+
+@code{
+
+    private string value = "AntDesignBlazor";
+
+    private ModalRef _modalRef;
+
+    private async Task OpenTemplate()
+    {
+        var templateOptions = new Form.demo.Basic.Model();
+        templateOptions.Username = value;
+
+        var modalConfig = new ModalOptions();
+        modalConfig.Title = "Basic Form";
+        modalConfig.OnCancel = async (e) =>
+        {
+            Console.WriteLine("OnCancel");
+            await _modalRef.CloseAsync();
+        };
+
+        modalConfig.AfterClose = () =>
+        {
+            Console.WriteLine("AfterClose");
+            value = templateOptions.Username;
+            InvokeAsync(StateHasChanged);
+            return Task.CompletedTask;
+        };
+
+        _modalRef = await ModalService
+            .CreateModalAsync<ModalTemplateDemo, Form.demo.Basic.Model>
+            (modalConfig, templateOptions);
+
+    }
+
+}
