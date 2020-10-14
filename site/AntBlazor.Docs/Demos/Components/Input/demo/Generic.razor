@@ -42,10 +42,16 @@
     <Text>DateTime?</Text>
     <Input Placeholder="Null" @bind-Value="@_dateNull" />
     <p>value:@_dateNull</p>
+    
+    <Text>Type=Number</Text>
+    <Input Max="4" Type="number" Placeholder="0" @bind-Value="@_int" />
+    <p>value:@_int</p>
+
 </div>
 @code{
     string _str;
     int _int;
+    int _intNum;
     int? _intNull;
     decimal _dec;
     decimal? _decNull;

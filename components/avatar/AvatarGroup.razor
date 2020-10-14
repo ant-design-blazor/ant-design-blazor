@@ -1,0 +1,25 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this">
+    <div class="ant-avatar-group">
+        <CascadingValue Value=@("shown") Name="position">
+            @ChildContent
+        </CascadingValue>
+        @if (_overflow)
+        {
+            <Popover Trigger="new[] { TriggerType.Hover}"
+                     Placement=MaxPopoverPlacement
+                     OverlayClassName=@($"{_prefixCls}-popover")>
+                <ContentTemplate>
+                    <CascadingValue Value=@("hidden") Name="position">
+                        @ChildContent
+                    </CascadingValue>
+                </ContentTemplate>
+                <ChildContent>
+                    <Avatar Style=@MaxStyle>@($"+{_shownAvatarList.Count - MaxCount}")</Avatar>
+                </ChildContent>
+            </Popover>
+        }
+    </div>
+</CascadingValue>

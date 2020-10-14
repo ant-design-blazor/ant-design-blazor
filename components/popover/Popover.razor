@@ -22,15 +22,17 @@
                  OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
                  OnOverlayMouseEnter="OnOverlayMouseEnter"
                  OnOverlayMouseLeave="OnOverlayMouseLeave">
-
             <div class="ant-popover-content">
                 <div class="ant-popover-arrow">
                     <span class="ant-popover-arrow-content"></span>
                 </div>
                 <div class="ant-popover-inner" role="tooltip">
-                    <div class="ant-popover-title">
-                        @if (TitleTemplate != null)@TitleTemplate else @Title
-                    </div>
+                    @if (TitleTemplate != null || !string.IsNullOrWhiteSpace(Title))
+                    {
+                        <div class="ant-popover-title">
+                            @if (TitleTemplate != null)@TitleTemplate else @Title
+                        </div>
+                    }
                     <div class="ant-popover-inner-content">
                         @if (ContentTemplate != null)@ContentTemplate else @Content
                     </div>
