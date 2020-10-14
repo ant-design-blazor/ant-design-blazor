@@ -1,4 +1,19 @@
-﻿@using System.ComponentModel.DataAnnotations
+﻿---
+order: 13
+title:
+  zh-CN: Modal模板组件
+  en-US: ModalTemplate
+---
+
+## zh-CN
+
+通过 ModalService 创建一个 Modal 对话框，示例中演示了自定义组件。
+
+模板代码：ConfirmTemplateDemo.razor
+
+``` c#
+
+@using System.ComponentModel.DataAnnotations
 @using System.Text.Json
 @inherits ModalTemplate<Form.demo.Basic.Model>
 
@@ -49,3 +64,8 @@
         Console.WriteLine($"Failed:{JsonSerializer.Serialize(_model)}");
     }
 }
+
+```
+## en-US
+
+Create a Modal dialog box through ModalService, examples demonstrate custom components.
