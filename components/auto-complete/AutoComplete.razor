@@ -17,31 +17,35 @@
                         OverlayStyle="@OverlayStyle"
                         OnVisibleChange="@OnOverlayTriggerVisibleChange">
             <Overlay>
+
                 <CascadingValue Value="this">
-                    <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @_minWidth">
-                        <div style="display: flex;flex-direction: column;">
-                            @if (Options.Value != null)
-                            {
-                                foreach (var option in GetOptionItems())
+                    @if (ShowPanel)
+                    {
+                        <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @_minWidth">
+                            <div style="display: flex;flex-direction: column;">
+                                @if (Options.Value != null)
                                 {
-                                    <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
-                                        @option.Label
-                                    </AutoCompleteOption>
+                                    foreach (var option in GetOptionItems())
+                                    {
+                                        <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
+                                            @option.Label
+                                        </AutoCompleteOption>
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                @AutoCompleteOptions
-                            }
+                                else
+                                {
+                                    @AutoCompleteOptions
+                                }
+                            </div>
                         </div>
-                    </div>
+                    }
                 </CascadingValue>
             </Overlay>
             <ChildContent>
                 <CascadingValue Value="this">
                     @if (ChildContent == null)
                     {
-                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled"/>
+                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" />
                     }
                     else
                     {
