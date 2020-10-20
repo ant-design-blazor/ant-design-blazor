@@ -105,7 +105,7 @@ namespace AntDesign
             if (SelectedNodesDictionary.ContainsKey(treeNodes.NodeId) == true)
                 SelectedNodesDictionary.Remove(treeNodes.NodeId);
         }
-
+     
         public void DeselectAll()
         {
             foreach (var item in SelectedNodesDictionary.Select(x => x.Value).ToList())
@@ -345,9 +345,46 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<TreeNode> SwitcherIconTemplate { get; set; }
 
-        #endregion
+    #endregion
 
-
+        /// <summary>
+        /// 查找节点
+        /// </summary>
+        /// <param name="expression">表达式</param>
+        /// <param name="recursive">是否递归查找</param>
+        /// <returns></returns>
+        public TreeNode FindFirstOrDefaultNode(Func<TreeNode, bool> expression, bool recursive = true)
+        {
+            foreach (var child in ChildNodes)
+            {
+                if (expression.Invoke(child))
+                {
+                    return child;
+                }
+                else if (recursive)
+                {
+                    return child.FindFirstOrDefaultNode(expression, recursive);
+                }
+            }
+            return null;
+        }
+        /// <summary>
+        /// 展开到指定节点
+        /// </summary>
+        /// <param name="node"></param>
+        public void ExpandToNode(TreeNode node)
+        {
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+            var parentNode = node.ParentNode;
+            while (parentNode != null)
+            {
+                parentNode.IsExpanded = true;
+                parentNode = parentNode.ParentNode;
+            }
+        }
 
 
         protected override void OnInitialized()
