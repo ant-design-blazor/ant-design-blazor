@@ -392,10 +392,10 @@ namespace AntDesign
         /// <summary>
         /// 查找节点
         /// </summary>
-        /// <param name="predicate">表达式</param>
-        /// <param name="recursive">是否递归查找</param>
+        /// <param name="predicate">Predicate</param>
+        /// <param name="recursive">Recursive Find</param>
         /// <returns></returns>
-        public TreeNode FindFirstOrDefaultNode(Func<TreeNode,bool> predicate, bool recursive = true)
+        public TreeNode FindFirstOrDefaultNode(Func<TreeNode, bool> predicate, bool recursive = true)
         {
             foreach (var child in ChildNodes)
             {
@@ -403,14 +403,22 @@ namespace AntDesign
                 {
                     return child;
                 }
-                else if(recursive)
+                if (recursive)
                 {
-                    return child.FindFirstOrDefaultNode(predicate, recursive);
+                    var find = child.FindFirstOrDefaultNode(predicate, recursive);
+                    if (find != null)
+                    {
+                        return find;
+                    }
                 }
             }
             return null;
         }
-      
+        public void Expand(bool isExpanded)
+        {
+            IsExpanded = isExpanded;
+        }
+
 
 
         protected override void OnInitialized()

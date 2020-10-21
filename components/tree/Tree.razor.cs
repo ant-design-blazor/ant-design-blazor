@@ -348,30 +348,35 @@ namespace AntDesign
     #endregion
 
         /// <summary>
-        /// 查找节点
+        /// Find Node
         /// </summary>
-        /// <param name="expression">表达式</param>
-        /// <param name="recursive">是否递归查找</param>
+        /// <param name="predicate">Predicate</param>
+        /// <param name="recursive">Recursive Find</param>
         /// <returns></returns>
-        public TreeNode FindFirstOrDefaultNode(Func<TreeNode, bool> expression, bool recursive = true)
+        public TreeNode FindFirstOrDefaultNode(Func<TreeNode, bool> predicate, bool recursive = true)
         {
             foreach (var child in ChildNodes)
             {
-                if (expression.Invoke(child))
+                if (predicate.Invoke(child))
                 {
                     return child;
                 }
-                else if (recursive)
+
+                if (recursive)
                 {
-                    return child.FindFirstOrDefaultNode(expression, recursive);
+                    var find = child.FindFirstOrDefaultNode(predicate, recursive);
+                    if (find != null)
+                    {
+                        return find;
+                    }
                 }
             }
             return null;
         }
         /// <summary>
-        /// 展开到指定节点
+        /// from node expand to root
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="node">Node</param>
         public void ExpandToNode(TreeNode node)
         {
             if (node == null)
@@ -381,7 +386,7 @@ namespace AntDesign
             var parentNode = node.ParentNode;
             while (parentNode != null)
             {
-                parentNode.IsExpanded = true;
+                parentNode.Expand(true);
                 parentNode = parentNode.ParentNode;
             }
         }
