@@ -390,7 +390,7 @@ namespace AntDesign
 
         #endregion
         /// <summary>
-        /// 查找节点
+        /// Find a node
         /// </summary>
         /// <param name="predicate">Predicate</param>
         /// <param name="recursive">Recursive Find</param>
@@ -440,6 +440,5 @@ namespace AntDesign
 
     }
 }
-
 
 
