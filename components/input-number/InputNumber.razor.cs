@@ -187,7 +187,7 @@ namespace AntDesign
             CurrentValue = Value;
         }
 
-        private async Task OnBlur()
+        private async Task OnBlurAsync()
         {
             _focused = false;
             if (_inputString == null)
