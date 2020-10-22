@@ -87,10 +87,10 @@ namespace AntDesign
         {
             SetClassMap();
 
-            if (string.IsNullOrEmpty(Children))
-            {
-                Children = await JsInvokeAsync<string>(JSInteropConstants.GetInnerText, _contentRef);
-            }
+            //if (string.IsNullOrEmpty(Children))
+            //{
+            //    Children = await JsInvokeAsync<string>(JSInteropConstants.GetInnerText, _contentRef);
+            //}
 
             SelectParent?.AddOption(this);
             SelectOptGroupParent?.AddOption(this);
@@ -102,12 +102,13 @@ namespace AntDesign
         {
         }
 
-        protected async override Task OnFirstAfterRenderAsync()
+        protected override async Task OnFirstAfterRenderAsync()
         {
             if (string.IsNullOrEmpty(Children))
             {
                 await Task.Delay(1);
                 Children = await JsInvokeAsync<string>(JSInteropConstants.GetInnerText, _contentRef);
+
                 //await InvokeAsync(StateHasChanged);
             }
         }

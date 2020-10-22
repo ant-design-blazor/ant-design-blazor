@@ -45,6 +45,10 @@ namespace AntDesign
 
         public static string AddClsToFirstChild => $"{FUNC_PREFIX}addClsToFirstChild";
 
+        public static string AddClsToElement => $"{FUNC_PREFIX}addCls";
+        
+        public static string RemoveClsFromElement => $"{FUNC_PREFIX}removeCls";
+
         public static string AddDomEventListenerToFirstChild => $"{FUNC_PREFIX}addDomEventListenerToFirstChild";
 
         public static string AddElementToBody => $"{FUNC_PREFIX}addElementToBody";

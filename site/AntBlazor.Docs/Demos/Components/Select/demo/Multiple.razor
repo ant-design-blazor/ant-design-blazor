@@ -1,4 +1,4 @@
-<Select Mode="multiple"
+﻿<Select Mode="multiple"
         Style="width: 100%"
         Placeholder="Please select"
         DefaultValue="@_defaultValues"
@@ -6,7 +6,7 @@
         OnChange="OnChange">
     @foreach (var item in _items)
     {
-        <SelectOption Value="@item">@item</SelectOption>
+        <SelectOption Value="@item" Label="@item">@item</SelectOption>
     }
 </Select>
 <label>Selected Values: @_value</label>

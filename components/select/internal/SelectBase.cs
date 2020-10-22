@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -128,6 +127,10 @@ namespace AntDesign.Internal
                             _value = value;
                         }
                     }
+                }
+                else
+                {
+                    _value = null;
                 }
             }
         }

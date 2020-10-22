@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 #pragma warning disable 1591
@@ -122,7 +120,6 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add($"{ClassPrefix}")
                 .If($"{ClassPrefix}-open", () => _dropDown != null ? _dropDown.Visible : false)
-                .If($"{ClassPrefix}-focused", () => IsShowSearch())
                 .If($"{ClassPrefix}-single", () => SelectMode == SelectMode.Default)
                 .If($"{ClassPrefix}-multiple", () => SelectMode != SelectMode.Default)
                 .If($"{ClassPrefix}-sm", () => Size == AntSizeLDSType.Small)
@@ -171,7 +168,7 @@ namespace AntDesign
         protected async Task SetDropdownStyle()
         {
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
-
+ 
             _dropdownStyle = $"min-width: {domRect.width}px; width: {domRect.width}px;";
         }
 
@@ -218,6 +215,7 @@ namespace AntDesign
         internal async Task ResetState()
         {
             await Task.Delay(1);
+            CurrentValue = null;
             Value = null;
             SelectedValues = null;
             SelectedOptions.Clear();
@@ -228,7 +226,6 @@ namespace AntDesign
         #region  Events
         protected override void OnInitialized()
         {
-
             SetClassMap();
 
             #region Init Values
@@ -331,6 +328,8 @@ namespace AntDesign
             {
                 OnFocus?.Invoke();
 
+                await JsInvokeAsync(JSInteropConstants.AddClsToElement, Ref, "ant-select-focused");
+
                 if (IsShowSearch())
                 {
                     await JsInvokeAsync(JSInteropConstants.Focus, _inputRef);
@@ -341,6 +340,8 @@ namespace AntDesign
             else
             {
                 OnOverlayHide();
+
+                await JsInvokeAsync(JSInteropConstants.RemoveClsFromElement, Ref, "ant-select-focused");
             }
         }
 
