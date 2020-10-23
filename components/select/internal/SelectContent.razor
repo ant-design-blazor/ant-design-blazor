@@ -41,7 +41,6 @@
                 }
             </div>
 
-
             break;
         }
     default:
@@ -137,6 +136,15 @@
                 <Icon Type="close-circle"></Icon>
             </span>
         }
+    }
+}
+else if (ParentSelect.SelectMode != SelectMode.Default)
+{
+    @if (ParentSelect.AllowClear && ParentSelect.HasValue)
+    {
+        <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick">
+            <Icon Type="close-circle"></Icon>
+        </span>
     }
 }
 

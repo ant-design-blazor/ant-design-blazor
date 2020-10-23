@@ -67,6 +67,12 @@
                                 }
                             </div>
                         }
+                        else if (IsEmptyOnHideSelected())
+                        {
+                            <div role="listbox" id="@(Id)_list" class="@ClassPrefix-item-empty">
+                                <Empty Simple Small />
+                            </div>
+                        }
 
                         @if (DropdownRender != null)
                         {

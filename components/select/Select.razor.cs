@@ -26,6 +26,8 @@ namespace AntDesign
 
         private string _searchValue;
         private string _dropdownStyle;
+        private bool _focused;
+
         private bool _hasInitDropdownStyle = false;
         private SelectOption _searchOption;
         internal ElementReference _inputRef;
@@ -120,6 +122,7 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add($"{ClassPrefix}")
                 .If($"{ClassPrefix}-open", () => _dropDown != null ? _dropDown.Visible : false)
+                .If($"{ClassPrefix}-focused", () => _focused)
                 .If($"{ClassPrefix}-single", () => SelectMode == SelectMode.Default)
                 .If($"{ClassPrefix}-multiple", () => SelectMode != SelectMode.Default)
                 .If($"{ClassPrefix}-sm", () => Size == AntSizeLDSType.Small)
@@ -148,6 +151,18 @@ namespace AntDesign
                         return false;
                     }
                 }
+                return true;
+            }
+
+            return false;
+        }
+
+        protected bool IsEmptyOnHideSelected()
+        {
+            if (SelectMode == SelectMode.Multiple && 
+                HideSelected && 
+                SelectedOptions.Count == SelectOptions.Count)
+            {
                 return true;
             }
 
@@ -328,7 +343,7 @@ namespace AntDesign
             {
                 OnFocus?.Invoke();
 
-                await JsInvokeAsync(JSInteropConstants.AddClsToElement, Ref, "ant-select-focused");
+                _focused = true;
 
                 if (IsShowSearch())
                 {
@@ -341,7 +356,7 @@ namespace AntDesign
             {
                 OnOverlayHide();
 
-                await JsInvokeAsync(JSInteropConstants.RemoveClsFromElement, Ref, "ant-select-focused");
+                _focused = false;
             }
         }
 
@@ -705,6 +720,7 @@ namespace AntDesign
         {
             await ResetState();
         }
+
         #endregion
         #endregion
 
