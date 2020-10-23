@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     public class TransferSearchArgs
     {
@@ -12,8 +8,8 @@ namespace AntDesign
 
         public TransferSearchArgs(string direction, string value)
         {
-            this.Direction = direction;
-            this.Value = value;
+            Direction = direction;
+            Value = value;
         }
     }
 }
