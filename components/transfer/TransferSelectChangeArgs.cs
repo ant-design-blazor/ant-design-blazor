@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     public class TransferSelectChangeArgs
     {
@@ -12,8 +8,8 @@ namespace AntDesign
 
         public TransferSelectChangeArgs(string[] sourceSelectedKeys, string[] targetSelectedKeys)
         {
-            this.SourceSelectedKeys = sourceSelectedKeys;
-            this.TargetSelectedKeys = targetSelectedKeys;
+            SourceSelectedKeys = sourceSelectedKeys;
+            TargetSelectedKeys = targetSelectedKeys;
         }
     }
 }

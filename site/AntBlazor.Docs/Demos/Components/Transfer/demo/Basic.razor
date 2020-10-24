@@ -1,28 +1,29 @@
 ﻿<div>
-    <Transfer DataSource="dataSource"
-              Disabled="Disabled"
-              TargetKeys="targetKeys.ToArray()"
-              SelectedKeys="selectedKeys"
-              Titles="titles"
+    <Transfer DataSource="_dataSource"
+              Disabled="_disabled"
+              TargetKeys="_targetKeys.ToArray()"
+              SelectedKeys="_selectedKeys"
+              Titles="_titles"
               OnChange="OnChange"
               OnScroll="OnScroll"
-              OnSelectChange="OnSelectChange"></Transfer>
+              OnSelectChange="OnSelectChange">
+    </Transfer>
 
     <Switch Style="margin-top: 16px;" OnChange="OnSwitchChange"></Switch>
 </div>
 
 @code {
-    private List<TransferItem> dataSource = new List<TransferItem>();
-    private List<string> targetKeys = new List<string>();
-    private string[] selectedKeys = Array.Empty<string>();
-    private string[] titles = { "Source", "Target" };
-    private bool Disabled = false;
+    private List<TransferItem> _dataSource = new List<TransferItem>();
+    private List<string> _targetKeys = new List<string>();
+    private string[] _selectedKeys = Array.Empty<string>();
+    private string[] _titles = { "Source", "Target" };
+    private bool _disabled = false;
 
     protected override void OnInitialized()
     {
         for (int i = 0; i < 20; i++)
         {
-            dataSource.Add(new TransferItem
+            _dataSource.Add(new TransferItem
             {
                 Title = $"Content{i + 1}",
                 Description = $"description of content{i + 1}",
@@ -31,19 +32,18 @@
             });
 
             if (i > 10)
-                targetKeys.Add(i.ToString());
+                _targetKeys.Add(i.ToString());
         }
         base.OnInitialized();
     }
 
     private void OnSwitchChange(bool check)
     {
-        Disabled = check;
+        _disabled = check;
     }
 
     private OneOf.OneOf<string, RenderFragment> Render(TransferItem item)
     {
-        //return new RenderFragment(buildTree);
         return $"{item.Title} - {item.Description}";
     }
 

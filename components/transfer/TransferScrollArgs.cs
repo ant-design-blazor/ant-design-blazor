@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -13,8 +10,8 @@ namespace AntDesign
 
         public TransferScrollArgs(string direction, EventArgs e)
         {
-            this.Direction = direction;
-            this.Args = e;
+            Direction = direction;
+            Args = e;
         }
     }
 }
