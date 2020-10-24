@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     public class TransferChangeArgs
     {
@@ -14,9 +10,9 @@ namespace AntDesign
 
         public TransferChangeArgs(string[] targetKeys, string direction, string[] moveKeys)
         {
-            this.TargetKeys = targetKeys;
-            this.Direction = direction;
-            this.MoveKeys = moveKeys;
+            TargetKeys = targetKeys;
+            Direction = direction;
+            MoveKeys = moveKeys;
         }
     }
 }
