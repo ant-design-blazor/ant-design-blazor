@@ -186,9 +186,6 @@ namespace AntDesign
         public Action<DateTime, string> OnPanelChange { get; set; }
 
         [Parameter]
-        public Action<DateTime, string> OnChange { get; set; }
-
-        [Parameter]
         public Func<DateTime, bool> DisabledDate { get; set; } = null;
 
         [Parameter]
@@ -266,8 +263,6 @@ namespace AntDesign
             {
                 _isNullable = false;
             }
-
-            // Debug.WriteLine(System.Globalization.CultureInfo.CurrentCulture.Name);
 
             this.SetClass();
 
@@ -372,8 +367,6 @@ namespace AntDesign
             if (_picker == _pickerStatus[index]._initPicker)
             {
                 ChangeValue(date, index);
-
-                OnChange?.Invoke(date, GetInputValue(index));
 
                 // auto focus the other input
                 if (IsRange && (!IsShowTime || Picker == DatePickerType.Time))

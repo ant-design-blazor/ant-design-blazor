@@ -5,6 +5,9 @@ namespace AntDesign
 {
     public partial class DatePicker<TValue> : DatePickerBase<TValue>
     {
+        [Parameter]
+        public Action<DateTime, string> OnChange { get; set; }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -89,6 +92,8 @@ namespace AntDesign
             {
                 Close();
             }
+
+            OnChange?.Invoke(value, GetInputValue(index));
         }
 
         protected override void OnValueChange(TValue value)
