@@ -6,15 +6,15 @@
 
 @code
 {
-    private void OnChange(DateTime value, string dateString)
+    private void OnChange(OnDateChangeEventArgs args)
     {
-        Console.WriteLine($"Selected Time: {value}");
-        Console.WriteLine($"Formatted Selected Time: {dateString}");
+        Console.WriteLine($"Selected Time: {args.Date}");
+        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
 
-    private void OnRangeChange(DateTime?[] values, string[] dateStrings)
+    private void OnRangeChange(OnDatesChangeEventArgs args)
     {
-        Console.WriteLine($"Selected Time: {JsonSerializer.Serialize(values)}");
-        Console.WriteLine($"Formatted Selected Time: {JsonSerializer.Serialize(dateStrings)}");
+        Console.WriteLine($"Selected Time: {JsonSerializer.Serialize(args.Dates)}");
+        Console.WriteLine($"Formatted Selected Time: {JsonSerializer.Serialize(args.DateStrings)}");
     }
 }

@@ -9,7 +9,7 @@ namespace AntDesign
     public partial class RangePicker<TValue> : DatePickerBase<TValue>
     {
         [Parameter]
-        public Action<DateTime?[], string[]> OnChange { get; set; }
+        public EventCallback<OnDatesChangeEventArgs> OnChange { get; set; }
 
         public RangePicker()
         {
@@ -138,9 +138,14 @@ namespace AntDesign
                 }
             }
 
-            OnChange?.Invoke(
-                new DateTime?[] { array.GetValue(0) as DateTime?, array.GetValue(1) as DateTime? },
-                new string[] { GetInputValue(0), GetInputValue(1) });
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(new OnDatesChangeEventArgs
+                {
+                    Dates = new DateTime?[] { array.GetValue(0) as DateTime?, array.GetValue(1) as DateTime? },
+                    DateStrings = new string[] { GetInputValue(0), GetInputValue(1) }
+                });
+            }
         }
 
         public override void ClearValue(int index = 0)

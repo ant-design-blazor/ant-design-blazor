@@ -6,7 +6,7 @@ namespace AntDesign
     public partial class DatePicker<TValue> : DatePickerBase<TValue>
     {
         [Parameter]
-        public Action<DateTime, string> OnChange { get; set; }
+        public EventCallback<OnDateChangeEventArgs> OnChange { get; set; }
 
         protected override void OnInitialized()
         {
@@ -93,7 +93,14 @@ namespace AntDesign
                 Close();
             }
 
-            OnChange?.Invoke(value, GetInputValue(index));
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(new OnDateChangeEventArgs
+                {
+                    Date = value,
+                    DateString = GetInputValue(index)
+                });
+            }
         }
 
         protected override void OnValueChange(TValue value)
