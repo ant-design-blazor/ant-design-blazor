@@ -29,18 +29,21 @@
                 }
                 else if (string.IsNullOrEmpty(SearchValue) && selectedOption != null)
                 {
-                    var showValue = GetOptionShowValue(selectedOption);
-                    @if (showValue.IsT0)
-                    {
-                        <span class="ant-select-selection-item">@showValue.AsT0 </span>
+                    <span class="ant-select-selection-item">
+                    @{
+                        var showValue = GetOptionShowValue(selectedOption);
+                        if (showValue.IsT0)
+                        {
+                            @showValue.AsT0
+                        }
+                        else
+                        {
+                            @showValue.AsT1
+                        }
                     }
-                    else
-                    {
-                        <span class="ant-select-selection-item">@showValue.AsT1 </span>
-                    }
+                    </span>
                 }
             </div>
-
 
             break;
         }
@@ -55,16 +58,18 @@
                     }
                     else
                     {
-                        var showValue = GetOptionShowValue(option);
                         <span class="@Prefix-selection-item">
                             <span class="@Prefix-selection-item-content">
-                                @if (showValue.IsT0)
-                                {
-                                    @showValue.AsT0
-                                }
-                                else
-                                {
-                                    @showValue.AsT1
+                                @{
+                                    var showValue = GetOptionShowValue(option);
+                                    if (showValue.IsT0)
+                                    {
+                                        @showValue.AsT0
+                                    }
+                                    else
+                                    {
+                                        @showValue.AsT1
+                                    }
                                 }
                             </span>
 
@@ -139,6 +144,15 @@
         }
     }
 }
+else if (ParentSelect.SelectMode != SelectMode.Default)
+{
+    @if (ParentSelect.AllowClear && ParentSelect.HasValue)
+    {
+        <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick">
+            <Icon Type="close-circle"></Icon>
+        </span>
+    }
+}
 
 @code
 {
@@ -183,7 +197,7 @@
 
     protected async Task OnClearClick(MouseEventArgs _)
     {
-        await ParentSelect.ResetState();
+        await ParentSelect.ResetStateAsync();
     }
 
     protected async void OnKeyUp(KeyboardEventArgs e)

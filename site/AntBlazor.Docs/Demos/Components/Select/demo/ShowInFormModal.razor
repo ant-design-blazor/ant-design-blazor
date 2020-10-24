@@ -1,0 +1,114 @@
+<Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+    Open Modal
+</Button>
+
+<Modal 
+       Title="@_title"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+    <Form @ref="_form"
+          Model="@_formModal"
+          LabelCol="new ColLayoutParam { Span = 4 }"
+          WrapperCol="new ColLayoutParam { Span = 12 }">
+        <FormItem Label="Basic Select">
+            <Select @bind-Value="@context.BasicValue" 
+                     DefaultValue="@("lucy")" 
+                     Style="width:120px" 
+                     OnChange="@(OnChange)">
+                <SelectOption Value="jack">Jack</SelectOption>
+                <SelectOption Value="lucy">Lucy</SelectOption>
+                <SelectOption Value="disabled" Disabled>Disabled</SelectOption>
+                <SelectOption Value="yaoming">YaoMing</SelectOption>
+            </Select>
+        </FormItem>
+        <FormItem Label="Tags">
+            <Select Mode="tags"
+                    @bind-Value="@context.TagValues"
+                    Style="width: 100%"
+                    Placeholder="Tags Mode"
+                    AllowClear
+                    OnChange="@(OnChange)">
+                @foreach (var item in _items)
+                {
+                    <SelectOption Value="@item">@item</SelectOption>
+                }
+            </Select>
+        </FormItem>
+        <FormItem Label="Multiple">
+            <Select Mode="multiple"
+                    @bind-Value="@context.MultipleValues"
+                    Style="width: 100%"
+                    Placeholder="Please select"
+                    AllowClear
+                    DefaultValue="@(new[] { "0a10", "1420" })"
+                    Options="@_options"
+                    OnChange="@(OnChange)">
+            </Select>
+        </FormItem>
+        <FormItem>
+            <Button OnClick="@(ResetFormHandler)">Reset Form</Button>
+        </FormItem>
+    </Form>
+</Modal>
+
+@using OneOf;
+@using System.ComponentModel.DataAnnotations;
+
+@code{
+    public class FormModal
+    {
+        public string BasicValue { get; set; }
+        public string TagValues { get; set; }
+        public string MultipleValues { get; set; }
+    }
+
+    private FormModal _formModal = new FormModal();
+    private Form<FormModal> _form;
+
+    string _title = "BasicModal";
+    bool _visible = false;
+    private string[] _items;
+    private LabeledValue[] _options;
+
+    protected override void OnInitialized()
+    {
+        var min = 10;
+        var max = 36;
+        _items = new string[max - min];
+        _options = new LabeledValue[max - min];
+
+        for (var i = min; max > i; i++)
+        {
+            var disabled = i == 10;
+            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+            
+            _items[i - min] = value;
+            _options[i - min] = new LabeledValue(value, value);
+        }
+    }
+
+    private void HandleOk(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
+
+    private void OnChange(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value, OneOf<SelectOption, IEnumerable<SelectOption>> option)
+    {
+        Console.WriteLine($"basic select: ${_formModal.BasicValue}");
+        Console.WriteLine($"tags: ${_formModal.TagValues}");
+        Console.WriteLine($"multiple: ${_formModal.MultipleValues}");
+    }
+
+    private void ResetFormHandler()
+    {
+        _form.Reset();
+    }
+}
