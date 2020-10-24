@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.AspNetCore.Components;
@@ -15,51 +16,38 @@ namespace AntDesign.Core.HashCodes
     /// <typeparam name="TComponent"></typeparam>
     class ParameterDescriptor<TComponent>
     {
+        private readonly bool _isParameter;
+
         private readonly HashCodeProvider _hashCodeProvider;
 
         private readonly Func<TComponent, object> _getter;
 
         /// <summary>
-        /// 获取参数名
+        /// 获取组件的所有参数描述
         /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// 获取是否为参数
-        /// </summary>
-        public bool IsParameter { get; }
+        public static readonly ParameterDescriptor<TComponent>[] Descriptors
+            = typeof(TComponent)
+                .GetProperties()
+                .Select(item => new ParameterDescriptor<TComponent>(item))
+                .Where(item => item._isParameter)
+                .ToArray();
 
         /// <summary>
         /// 组件的参数描述者
         /// </summary>
         /// <param name="property">属性类型</param>
-        public ParameterDescriptor(PropertyInfo property)
+        private ParameterDescriptor(PropertyInfo property)
         {
             if (property == null)
             {
                 throw new ArgumentNullException(nameof(property));
             }
 
-            if (IsEventCallBack(property) == false)
-            {
-                var parameter = property.GetCustomAttribute<ParameterAttribute>();
-                if (parameter != null)
-                {
-                    this.IsParameter = true;
-                    this.Name = property.Name;
-                }
-                else
-                {
-                    var cascadingParameter = property.GetCustomAttribute<CascadingParameterAttribute>();
-                    if (cascadingParameter != null)
-                    {
-                        this.IsParameter = true;
-                        this.Name = cascadingParameter.Name ?? property.Name;
-                    }
-                }
-            }
+            this._isParameter = IsEventCallBack(property) == false
+                || property.IsDefined(typeof(ParameterAttribute))
+                || property.IsDefined(typeof(CascadingParameterAttribute));
 
-            if (this.IsParameter == true)
+            if (this._isParameter == true)
             {
                 this._getter = CreateGetFunc(property);
                 this._hashCodeProvider = HashCodeProvider.Create(property.PropertyType);
@@ -110,7 +98,7 @@ namespace AntDesign.Core.HashCodes
         /// <returns></returns>
         public int GetValueHashCode(TComponent component)
         {
-            if (this.IsParameter == false)
+            if (this._isParameter == false)
             {
                 throw new NotSupportedException();
             }
