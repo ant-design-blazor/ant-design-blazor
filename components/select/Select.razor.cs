@@ -159,8 +159,8 @@ namespace AntDesign
 
         protected bool IsEmptyOnHideSelected()
         {
-            if (SelectMode == SelectMode.Multiple && 
-                HideSelected && 
+            if (SelectMode == SelectMode.Multiple &&
+                HideSelected &&
                 SelectedOptions.Count == SelectOptions.Count)
             {
                 return true;
@@ -180,10 +180,10 @@ namespace AntDesign
             return false;
         }
 
-        protected async Task SetDropdownStyle()
+        protected async Task SetDropdownStyleAsync()
         {
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
- 
+
             _dropdownStyle = $"min-width: {domRect.width}px; width: {domRect.width}px;";
         }
 
@@ -227,7 +227,7 @@ namespace AntDesign
             };
         }
 
-        internal async Task ResetState()
+        internal async Task ResetStateAsync()
         {
             await Task.Delay(1);
             CurrentValue = null;
@@ -256,7 +256,7 @@ namespace AntDesign
                             {
                                 SelectedValues = DefaultValue.Value;
 
-                                // Value 赋值
+                                // Value Assignment
                                 CurrentValueAsString = DefaultValue.Value.AsT2.Key;
                             }
                         }
@@ -266,19 +266,22 @@ namespace AntDesign
                             {
                                 SelectedValues = DefaultValue.Value;
 
-                                // Value 赋值
+                                // Value Assignment
                                 CurrentValueAsString = DefaultValue.Value.AsT0;
                             }
                         }
                         break;
                     default:
+                        if (string.IsNullOrEmpty(OptionLabelProp))
+                            OptionLabelProp = "children";
+
                         if (LabelInValue)
                         {
                             if (DefaultValue.Value.IsT3)
                             {
                                 SelectedValues = DefaultValue.Value;
 
-                                // Value 赋值
+                                // Value Assignment
                                 CurrentValueAsString = string.Join(",", DefaultValue.Value.AsT3.Select(s => s.Key));
                             }
                         }
@@ -288,7 +291,7 @@ namespace AntDesign
                             {
                                 SelectedValues = DefaultValue.Value;
 
-                                // Value 赋值
+                                // Value Assignment
                                 CurrentValueAsString = string.Join(",", DefaultValue.Value.AsT1);
                             }
                         }
@@ -315,7 +318,7 @@ namespace AntDesign
             if ((ModalCompleteShow || !InModal) && !_hasInitDropdownStyle)
             {
                 _hasInitDropdownStyle = true;
-                await SetDropdownStyle();
+                await SetDropdownStyleAsync();
             }
 
             await base.OnAfterRenderAsync(firstRender);
@@ -435,7 +438,7 @@ namespace AntDesign
                 var values = SelectedValues.Value.AsT3 as List<LabeledValue>;
                 values.RemoveAll(item => item.Key == value);
 
-                // Value 赋值
+                // Value Assignment
                 CurrentValueAsString = string.Join(",", values.Select(s => s.Key));
             }
             else
@@ -447,7 +450,7 @@ namespace AntDesign
                 }
                 values.Remove(value);
 
-                // Value 赋值
+                //  Value Assignment
                 CurrentValueAsString = string.Join(",", values);
             }
 
@@ -461,6 +464,7 @@ namespace AntDesign
         #endregion
 
         #region Methods
+
         public void RemoveOption(SelectOption selectOption)
         {
             SelectOptions.Remove(selectOption);
@@ -587,7 +591,7 @@ namespace AntDesign
                     SelectedValues = new LabeledValue(value, currentOption.Label);
                 }
 
-                // Value 赋值
+                // Value Assignment
                 CurrentValueAsString = value;
 
                 SelectedOptions.Clear();
@@ -638,7 +642,7 @@ namespace AntDesign
                         }
                     }
 
-                    // Value 赋值
+                    // Value Assignment
                     CurrentValueAsString = string.Join(",", values.Select(s => s.Key));
                 }
                 else
@@ -679,15 +683,16 @@ namespace AntDesign
                         }
                     }
 
-                    // Value 赋值
+                    // Value Assignment
                     CurrentValueAsString = string.Join(",", values);
                 }
 
-                // 多选模式换行时, 动态调整下拉框位置
-                await SetDropdownStyle();
+                // Dynamically adjust the position of the drop-down box
+                await SetDropdownStyleAsync();
             }
 
             OnChange?.Invoke(SelectedValues.Value, currentOption);
+
             if (isRrender)
             {
                 _searchValue = string.Empty;
@@ -718,7 +723,7 @@ namespace AntDesign
 
         public async Task ClearAll()
         {
-            await ResetState();
+            await ResetStateAsync();
         }
 
         #endregion

@@ -49,7 +49,8 @@ namespace AntDesign.Internal
         #endregion
 
         #region String(7)
-        [Parameter] public string Mode { get; set; }
+
+        [Parameter] public string Mode { get; set; } = "default";
 
         [Parameter] public string Placeholder { get; set; }
 

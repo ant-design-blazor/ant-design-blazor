@@ -55,6 +55,7 @@ namespace AntDesign
         }
 
         #region Properties
+
         protected string InnerStyle
         {
             get
@@ -63,14 +64,13 @@ namespace AntDesign
                 {
                     return Style;
                 }
-                else if (SelectParent.IsShowOption(this))
+
+                if (SelectParent.IsShowOption(this))
                 {
                     return Style;
                 }
-                else
-                {
-                    return Style + ";display:none";
-                }
+
+                return Style + ";display:none";
             }
         }
         #endregion
@@ -86,11 +86,6 @@ namespace AntDesign
         protected override async Task OnInitializedAsync()
         {
             SetClassMap();
-
-            //if (string.IsNullOrEmpty(Children))
-            //{
-            //    Children = await JsInvokeAsync<string>(JSInteropConstants.GetInnerText, _contentRef);
-            //}
 
             SelectParent?.AddOption(this);
             SelectOptGroupParent?.AddOption(this);
@@ -108,8 +103,6 @@ namespace AntDesign
             {
                 await Task.Delay(1);
                 Children = await JsInvokeAsync<string>(JSInteropConstants.GetInnerText, _contentRef);
-
-                //await InvokeAsync(StateHasChanged);
             }
         }
 
@@ -124,7 +117,6 @@ namespace AntDesign
                 {
                     await SelectParent.Close();
                 }
-                //await InvokeAsync(StateHasChanged);
             }
         }
 
@@ -132,14 +124,12 @@ namespace AntDesign
         {
             _isActive = true;
             SetClassMap();
-            //await InvokeAsync(StateHasChanged);
         }
 
         protected virtual async Task OnSelectOptionMouseLeave()
         {
             _isActive = false;
             SetClassMap();
-            //await InvokeAsync(StateHasChanged);
         }
         #endregion Events
 
