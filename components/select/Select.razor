@@ -12,7 +12,7 @@
                             HiddenMode
                             OnMouseEnter=@(() => { OnMouseEnter?.Invoke(); })
                             OnMouseLeave=@(() => { OnMouseLeave?.Invoke(); })
-                            OnVisibleChange="OnVisibleChange"
+                            OnVisibleChange="@OnVisibleChange"
                             PopupContainerSelector="@PopupContainerSelector"
                             OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
                             OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up">
@@ -63,8 +63,14 @@
                                 }
                                 else
                                 {
-                                    <Empty Image="Empty.PRESENTED_IMAGE_SIMPLE" Small="true" />
+                                    <Empty Simple Small />
                                 }
+                            </div>
+                        }
+                        else if (IsEmptyOnHideSelected())
+                        {
+                            <div role="listbox" id="@(Id)_list" class="@ClassPrefix-item-empty">
+                                <Empty Simple Small />
                             </div>
                         }
 
