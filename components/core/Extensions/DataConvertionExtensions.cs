@@ -5,7 +5,7 @@ namespace AntDesign.core.Extensions
     public static class DataConvertionExtensions
     {
         /// <summary>
-        /// 将泛型类型TFrom转换为指定的TTo类型
+        /// Converts the generic type TFrom to the specified TTo type
         /// </summary>
         /// <typeparam name="TFrom"></typeparam>
         /// <typeparam name="TTo"></typeparam>
