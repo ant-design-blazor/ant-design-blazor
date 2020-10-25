@@ -1,25 +1,19 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Runtime.CompilerServices;
 
 namespace AntDesign.core.Extensions
 {
     public static class DataConvertionExtensions
     {
+        /// <summary>
+        /// Converts the generic type TFrom to the specified TTo type
+        /// </summary>
+        /// <typeparam name="TFrom"></typeparam>
+        /// <typeparam name="TTo"></typeparam>
+        /// <param name="fromValue"></param>
+        /// <returns></returns>
         public static TTo Convert<TFrom, TTo>(TFrom fromValue)
         {
-            // Creating a parameter expression
-            ParameterExpression fromExpression = Expression.Parameter(typeof(TFrom), "from");
-
-            // Creating a parameter express
-            ParameterExpression toExpression = Expression.Parameter(typeof(TTo), "to");
-
-            // Creating a method body
-            BlockExpression blockExpression = Expression.Block(
-                new[] { toExpression },
-                Expression.Assign(toExpression, fromExpression)
-                );
-
-            return Expression.Lambda<Func<TFrom, TTo>>(blockExpression, fromExpression).Compile()(fromValue);
+            return Unsafe.As<TFrom, TTo>(ref fromValue);
         }
     }
 }
