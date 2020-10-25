@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Core.HashCodes;
 using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
@@ -46,11 +46,16 @@ namespace AntDesign
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
 
+        [Parameter]
+        public RenderMode RenderMode { get; set; } = RenderMode.Always;
+
         public bool IsModified => _editContext.IsModified();
 
         private EditContext _editContext;
         private IList<IFormItem> _formItems = new List<IFormItem>();
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
+        private bool _shouldRender = true;
+        private int _parametersHashCode = 0;
 
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
@@ -83,6 +88,22 @@ namespace AntDesign
             base.OnParametersSet();
 
             SetClass();
+
+            if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
+            {
+                var hashCode = this.GetParametersHashCode();
+                this._shouldRender = this._parametersHashCode != hashCode;
+                this._parametersHashCode = hashCode;
+            }
+            else
+            {
+                this._shouldRender = true;
+            }
+        }
+
+        protected override bool ShouldRender()
+        {
+            return this._shouldRender;
         }
 
         protected void SetClass()
