@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -50,7 +49,8 @@ namespace AntDesign.Internal
         #endregion
 
         #region String(7)
-        [Parameter] public string Mode { get; set; }
+
+        [Parameter] public string Mode { get; set; } = "default";
 
         [Parameter] public string Placeholder { get; set; }
 
@@ -128,6 +128,10 @@ namespace AntDesign.Internal
                             _value = value;
                         }
                     }
+                }
+                else
+                {
+                    _value = null;
                 }
             }
         }
