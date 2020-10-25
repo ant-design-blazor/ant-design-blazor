@@ -81,7 +81,7 @@ namespace AntDesign
 
         public override bool Equals(object obj) => obj is CssSizeLength other && Equals(other);
 
-        public override int GetHashCode() => unchecked(_value.GetHashCode() + _unit.GetHashCode());
+        public override int GetHashCode() => HashCode.Combine(_value, _unit);
 
         public static bool operator ==(CssSizeLength left, CssSizeLength right) => left.Equals(right);
 
