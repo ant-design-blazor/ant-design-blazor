@@ -158,7 +158,7 @@ namespace AntDesign
 
             _propertyReflector = PropertyReflector.Create(control.ValueExpression);
 
-            if (_propertyReflector.RequiredAttributes.Any())
+            if (_propertyReflector.RequiredAttribute != null)
             {
                 _labelCls = $"{_prefixCls}-required";
             }
