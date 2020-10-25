@@ -31,10 +31,10 @@ namespace AntDesign.core.Extensions
 
 
         /// <summary>
-        /// 读取为二进制数组并转换为指定的编码
+        /// Reads as a binary array and converts to the specified encoding
         /// </summary>
         /// <param name="httpContent"></param>
-        /// <param name="dstEncoding">目标编码</param>
+        /// <param name="dstEncoding">The target encoding</param>
         /// <exception cref="ArgumentException"></exception>
         /// <returns></returns>
         private static async Task<byte[]> ReadAsByteArrayAsync(this HttpContent httpContent, Encoding dstEncoding)
@@ -48,7 +48,7 @@ namespace AntDesign.core.Extensions
         }
 
         /// <summary>
-        /// 获取编码信息
+        /// Get encoding information from <see cref="HttpContent"/>
         /// </summary>
         /// <param name="httpContent"></param>
         /// <returns></returns>
