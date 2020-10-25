@@ -1,33 +1,30 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace AntDesign.Core.HashCodes
 {
     /// <summary>
-    /// 表示hashCode提供者抽象类
-    /// 用于计算参数值的HashCode
-    /// 集合类型则计算每个元素的HashCode
-    /// 其它类型则直接返回对象的默认GetHashCode方法所提值
-    /// 出于反射性能考虑，复杂模型不会进行拆解计算其各属性的HashCode，建议模型自己重写GetHashCode方法
+    /// HashCode provider
+    /// <para>It is used to calculate the parameter value of HashCode</para>
+    /// <para>The collection type computes the HashCode for each element,
+    /// and the other types simply return the value raised by the default GetHashCode method of the object
+    /// </para>
+    /// <para>For the consideration of reflection performance, the complex model will not disassemble and calculate the HashCode of its attributes, so it is suggested that the model rewrite the GetHashCode method by itself</para>
     /// </summary>
-    abstract class HashCodeProvider
+    internal abstract class HashCodeProvider
     {
         /// <summary>
-        /// 获取参数值的哈希值
+        /// Gets the hash value of the parameter value
         /// </summary>
-        /// <param name="parameter">参数值</param>
+        /// <param name="parameter">Parameter type</param>
         /// <returns></returns>
         public abstract int GetHashCode(object parameter);
 
         /// <summary>
-        /// 为参数创建合适的哈希提供者
+        /// Create the appropriate hash provider for the parameter
         /// </summary>
-        /// <param name="parameterType">参数类型</param>
+        /// <param name="parameterType">Parameter type</param>
         /// <returns></returns>
         public static HashCodeProvider Create(Type parameterType)
         {
@@ -45,7 +42,7 @@ namespace AntDesign.Core.HashCodes
         }
 
         /// <summary>
-        /// IEnumerable类型的哈希提供者
+        /// The hash provider for the IEnumerable type
         /// </summary>
         private class EnumerableHashCodeProvider : HashCodeProvider
         {
@@ -70,7 +67,7 @@ namespace AntDesign.Core.HashCodes
 
 
         /// <summary>
-        /// 字典类型的哈希提供者
+        /// The hash providers for dictionary types
         /// </summary>
         private class DictionaryHashCodeProvider : HashCodeProvider
         {
@@ -95,7 +92,7 @@ namespace AntDesign.Core.HashCodes
 
 
         /// <summary>
-        /// 其它类型的哈希提供者
+        /// The hash providers for other types 
         /// </summary>
         private class OtherHashCodeProvider : HashCodeProvider
         {

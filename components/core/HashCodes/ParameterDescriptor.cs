@@ -1,8 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -11,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 namespace AntDesign.Core.HashCodes
 {
     /// <summary>
-    /// 表示组件的参数描述者
+    /// Represents a parameter descriptor for a component
     /// </summary>
     /// <typeparam name="TComponent"></typeparam>
     class ParameterDescriptor<TComponent>
@@ -23,7 +19,7 @@ namespace AntDesign.Core.HashCodes
         private readonly Func<TComponent, object> _getter;
 
         /// <summary>
-        /// 获取组件的所有参数描述
+        /// Gets a description of all the parameters of the component
         /// </summary>
         public static readonly ParameterDescriptor<TComponent>[] Descriptors
             = typeof(TComponent)
@@ -33,7 +29,7 @@ namespace AntDesign.Core.HashCodes
                 .ToArray();
 
         /// <summary>
-        /// 组件的参数描述者
+        /// A parameter descriptor for a component
         /// </summary>
         /// <param name="property">属性类型</param>
         private ParameterDescriptor(PropertyInfo property)
@@ -55,7 +51,7 @@ namespace AntDesign.Core.HashCodes
         }
 
         /// <summary>
-        /// 返回是否为EventCallback类型
+        /// Check whether it is of type EventCallback
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
@@ -76,9 +72,9 @@ namespace AntDesign.Core.HashCodes
         }
 
         /// <summary>
-        /// 创建属性的获取委托
+        /// Create the get delegate for the property
         /// </summary>
-        /// <param name="property">属性</param>
+        /// <param name="property">Property</param>
         /// <returns></returns>
         private static Func<TComponent, object> CreateGetFunc(PropertyInfo property)
         {
@@ -91,7 +87,7 @@ namespace AntDesign.Core.HashCodes
         }
 
         /// <summary>
-        /// 返回参数值的哈希
+        /// Returns the hash of the parameter value
         /// </summary>
         /// <param name="component">组件</param>
         /// <exception cref="NotSupportedException"></exception>
