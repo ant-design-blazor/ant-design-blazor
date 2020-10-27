@@ -1,17 +1,14 @@
 ﻿
-    @for (int i = 0; i < 100; i++)
-    {
-        var count = i;
-        <AutoComplete @bind-Value="@value" CompareWith="CompareWith" OnSelectionChange="OnSelectionChange" Placeholder="@($"第{count}个")">
-            <AutoCompleteOptions>
-                @foreach (var option in options)
-                {
-                    <AutoCompleteOption Value="@option" Label="@option.label">
-                    </AutoCompleteOption>
-                }
-            </AutoCompleteOptions>
-        </AutoComplete>
-    }
+
+<AutoComplete @bind-Value="@value" CompareWith="CompareWith" OnSelectionChange="OnSelectionChange">
+    <AutoCompleteOptions>
+        @foreach (var option in options)
+        {
+            <AutoCompleteOption Value="@option" Label="@option.label">
+            </AutoCompleteOption>
+        }
+    </AutoCompleteOptions>
+</AutoComplete>
 
 <Divider></Divider>
 <span>bind-Value:@value</span>
@@ -24,7 +21,7 @@
 {
     protected override void OnInitialized()
     {
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 200; i++)
         {
             options.Add(new ObjectValueOption() { label = $"Lucy{i}", value = $"lucy{i}", age = 20 });
             options.Add(new ObjectValueOption() { label = $"Jack{i}", value = $"jack{i}", age = 22 });
