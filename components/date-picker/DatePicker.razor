@@ -9,7 +9,7 @@
                     IsButton="@true"
                     Disabled="Disabled"
                     PopupContainerSelector="@PopupContainerSelector"
-                    OnVisibleChange="visible => AutoFocus = visible"
+                    OnVisibleChange="visible => { AutoFocus = visible; OnOpenChange.InvokeAsync(visible); }"
                     OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
                     OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up"
                     Trigger="new TriggerType[] { TriggerType.Click }">
