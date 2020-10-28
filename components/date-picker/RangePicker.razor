@@ -24,7 +24,7 @@
                         <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="1" OnSelect="async (date, index) => await OnSelect(date)" />
                     </div>
                 </div>
-                @if (RenderExtraFooter != null)
+                @if (RenderExtraFooter != null && !IsShowTime)
                 {
                     <div class="@(PrefixCls)-footer">
                         <div class="@(PrefixCls)-footer-extra">
