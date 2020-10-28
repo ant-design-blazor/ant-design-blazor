@@ -183,7 +183,7 @@ namespace AntDesign
         public EventCallback<bool> OnOpenChange { get; set; }
 
         [Parameter]
-        public EventCallback<OnDateChangeEventArgs> OnPanelChange { get; set; }
+        public EventCallback<DateTimeChangedEventArgs> OnPanelChange { get; set; }
 
         [Parameter]
         public Func<DateTime, bool> DisabledDate { get; set; } = null;
@@ -557,7 +557,7 @@ namespace AntDesign
 
             if (OnPanelChange.HasDelegate)
             {
-                OnPanelChange.InvokeAsync(new OnDateChangeEventArgs
+                OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs
                 {
                     Date = PickerValues[index],
                     DateString = _picker
@@ -579,7 +579,7 @@ namespace AntDesign
 
             if (OnPanelChange.HasDelegate)
             {
-                OnPanelChange.InvokeAsync(new OnDateChangeEventArgs
+                OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs
                 {
                     Date = PickerValues[index],
                     DateString = _picker

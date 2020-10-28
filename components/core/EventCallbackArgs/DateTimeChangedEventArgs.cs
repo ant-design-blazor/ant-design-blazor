@@ -1,9 +1,8 @@
-﻿
-using System;
+﻿using System;
 
 namespace AntDesign
 {
-    public class OnDateChangeEventArgs
+    public class DateTimeChangedEventArgs
     {
         public DateTime Date { get; set; }
         public string DateString { get; set; }
