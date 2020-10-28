@@ -1,11 +1,23 @@
-﻿<RangePicker TValue="DateTime?[]"/>
+﻿@using System.Text.Json;
+
+<RangePicker TValue="DateTime?[]" />
 <br />
-<RangePicker TValue="DateTime?[]" ShowTime="@true"/>
+<RangePicker TValue="DateTime?[]" ShowTime="@true" />
 <br />
-<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Week"/>
+<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Week" />
 <br />
-<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Month"/>
+<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Month" />
 <br />
-<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Quarter"/>
+<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Quarter" />
 <br />
-<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Year"/>
+<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Year" />
+
+<RangePicker TValue="DateTime?[]" ShowTime='@("HH:mm")' OnChange="OnTimeRangeChange" />
+
+@code {
+    private void OnTimeRangeChange(DateRangeChangedEventArgs args)
+    {
+        Console.WriteLine($"Selected Time: {JsonSerializer.Serialize(args.Dates)}");
+        Console.WriteLine($"Formatted Selected Time: {JsonSerializer.Serialize(args.DateStrings)}");
+    }
+}
