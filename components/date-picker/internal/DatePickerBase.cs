@@ -183,10 +183,7 @@ namespace AntDesign
         public EventCallback<bool> OnOpenChange { get; set; }
 
         [Parameter]
-        public Action<DateTime, string> OnPanelChange { get; set; }
-
-        [Parameter]
-        public Action<DateTime, string> OnChange { get; set; }
+        public EventCallback<DateTimeChangedEventArgs> OnPanelChange { get; set; }
 
         [Parameter]
         public Func<DateTime, bool> DisabledDate { get; set; } = null;
@@ -266,8 +263,6 @@ namespace AntDesign
             {
                 _isNullable = false;
             }
-
-            // Debug.WriteLine(System.Globalization.CultureInfo.CurrentCulture.Name);
 
             this.SetClass();
 
@@ -372,8 +367,6 @@ namespace AntDesign
             if (_picker == _pickerStatus[index]._initPicker)
             {
                 ChangeValue(date, index);
-
-                OnChange?.Invoke(date, GetInputValue(index));
 
                 // auto focus the other input
                 if (IsRange && (!IsShowTime || Picker == DatePickerType.Time))
@@ -562,7 +555,14 @@ namespace AntDesign
                 }
             }
 
-            OnPanelChange?.Invoke(PickerValues[index], _picker);
+            if (OnPanelChange.HasDelegate)
+            {
+                OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs
+                {
+                    Date = PickerValues[index],
+                    DateString = _picker
+                });
+            }
 
             StateHasChanged();
         }
@@ -577,7 +577,14 @@ namespace AntDesign
             _prePickerStack.Push(_picker);
             _picker = type;
 
-            OnPanelChange?.Invoke(PickerValues[index], _picker);
+            if (OnPanelChange.HasDelegate)
+            {
+                OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs
+                {
+                    Date = PickerValues[index],
+                    DateString = _picker
+                });
+            }
 
             StateHasChanged();
         }

@@ -1,12 +1,20 @@
-﻿<DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange"/>
+﻿@using System.Text.Json;
+
+<DatePicker TValue="DateTime?" ShowTime="@true" OnChange="OnChange" />
 <br />
-<RangePicker TValue="DateTime?[]" ShowTime='@("HH:mm")' OnChange="OnChange"/>
+<RangePicker TValue="DateTime?[]" ShowTime='@("HH:mm")' OnChange="OnRangeChange" />
 
 @code
 {
-    private void OnChange(DateTime value, string dateString)
+    private void OnChange(DateTimeChangedEventArgs args)
     {
-        Console.WriteLine($"Selected Time: {value}");
-        Console.WriteLine($"Formatted Selected Time: {dateString}");
+        Console.WriteLine($"Selected Time: {args.Date}");
+        Console.WriteLine($"Formatted Selected Time: {args.DateString}");
+    }
+
+    private void OnRangeChange(DateRangeChangedEventArgs args)
+    {
+        Console.WriteLine($"Selected Time: {JsonSerializer.Serialize(args.Dates)}");
+        Console.WriteLine($"Formatted Selected Time: {JsonSerializer.Serialize(args.DateStrings)}");
     }
 }
