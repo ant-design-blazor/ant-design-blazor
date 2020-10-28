@@ -66,12 +66,15 @@ namespace AntDesign
         {
             if (array == null)
             {
-                return new[] { item };
+                return Array.Empty<T>();
             }
 
-            array = array.Where(x => !x.Equals(item)).ToArray();
+            if (item == null)
+            {
+                return array.Where(x => x != null).ToArray();
+            }
 
-            return array;
+            return array.Where(x => !item.Equals(x)).ToArray();
         }
     }
 }

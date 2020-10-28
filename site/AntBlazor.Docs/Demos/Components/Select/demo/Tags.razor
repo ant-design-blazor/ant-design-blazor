@@ -7,6 +7,19 @@
         <SelectOption Value="@item">@item</SelectOption>
     }
 </Select>
+<br />
+<br />
+<Select Mode="tags"
+        Style="width: 100%"
+        Placeholder="Tags Mode"
+        DefaultValue="@(new[]{"a010", "1016"})"
+        AllowClear
+        OnChange="@OnChange">
+    @foreach (var item in _items)
+    {
+        <SelectOption Value="@item">@item</SelectOption>
+    }
+</Select>
 
 @using OneOf;
 @code
