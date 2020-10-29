@@ -9,7 +9,7 @@
                     IsButton="@true"
                     Disabled="Disabled"
                     PopupContainerSelector="@PopupContainerSelector"
-                    OnVisibleChange="visible => AutoFocus = visible"
+                    OnVisibleChange="visible => { AutoFocus = visible; OnOpenChange.InvokeAsync(visible); }"
                     OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up ant-picker-dropdown-range"
                     OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up ant-picker-dropdown-range"
                     Trigger="new TriggerType[] { TriggerType.Click }">
@@ -24,7 +24,7 @@
                         <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="1" OnSelect="async (date, index) => await OnSelect(date)" />
                     </div>
                 </div>
-                @if (RenderExtraFooter != null)
+                @if (RenderExtraFooter != null && !IsShowTime)
                 {
                     <div class="@(PrefixCls)-footer">
                         <div class="@(PrefixCls)-footer-extra">
