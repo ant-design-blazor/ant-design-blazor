@@ -1,0 +1,58 @@
+﻿<AutoComplete @bind-Value="@value" Options="options" CompareWith="CompareWith" OnSelectionChange="OnSelectionChange" TOption="ObjectValueOption"></AutoComplete>
+
+<Divider></Divider>
+<span>bind-Value:@value</span>
+<br />
+<span>SelectedValue:@(System.Text.Json.JsonSerializer.Serialize(selectItem?.Value))</span>
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            options.Add(new ObjectValueOption() { label = $"Lucy{i}", value = $"lucy{i}", age = 20 });
+            options.Add(new ObjectValueOption() { label = $"Jack{i}", value = $"jack{i}", age = 22 });
+        }
+
+        base.OnInitialized();
+    }
+
+
+    private string value;
+
+    List<ObjectValueOption> options = new List<ObjectValueOption>();
+
+
+    Func<object, object, bool> CompareWith = (a, b) =>
+    {
+        if (a is ObjectValueOption o1 && b is ObjectValueOption o2)
+        {
+            return o1.value == o2.value;
+        }
+        else
+        {
+            return false;
+        }
+    };
+
+    private AutoCompleteOption selectItem;
+
+    void OnSelectionChange(AutoCompleteOption item)
+    {
+        selectItem = item;
+    }
+
+    public class ObjectValueOption
+    {
+        public string label { get; set; }
+        public string value { get; set; }
+        public int age { get; set; }
+
+        public override string ToString()
+        {
+            return $"{label}-{age}";
+        }
+
+    }
+}
