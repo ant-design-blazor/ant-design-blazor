@@ -8,6 +8,9 @@ namespace AntDesign
 {
     public partial class RangePicker<TValue> : DatePickerBase<TValue>
     {
+        [Parameter]
+        public EventCallback<DateRangeChangedEventArgs> OnChange { get; set; }
+
         public RangePicker()
         {
             IsRange = true;
@@ -133,6 +136,15 @@ namespace AntDesign
                 {
                     Close();
                 }
+            }
+
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(new DateRangeChangedEventArgs
+                {
+                    Dates = new DateTime?[] { array.GetValue(0) as DateTime?, array.GetValue(1) as DateTime? },
+                    DateStrings = new string[] { GetInputValue(0), GetInputValue(1) }
+                });
             }
         }
 
