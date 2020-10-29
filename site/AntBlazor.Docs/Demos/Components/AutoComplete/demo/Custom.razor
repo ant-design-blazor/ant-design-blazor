@@ -1,10 +1,9 @@
-﻿
-<div>Input</div>
-<AutoComplete Options="@options" OnInput="OnInput">
+﻿<div>Input</div>
+<AutoComplete Options="@options">
     <AutoCompleteInput Placeholder="input here" @bind-Value="@value" />
 </AutoComplete>
 <div>Search</div>
-<AutoComplete Options="@options" OnInput="OnInput">
+<AutoComplete Options="@options">
     <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" />
 </AutoComplete>
 
@@ -16,21 +15,7 @@
 {
     private string value;
 
-    List<string> options = new List<string>();
-
-    void OnInput(ChangeEventArgs e)
-    {
-        var v = e.Value.ToString();
-        if (string.IsNullOrWhiteSpace(v))
-            options = new List<string>();
-        else
-            options = new List<string>()
-{
-                v, v + "1", v + "2"
-            };
-    }
-    void AAAA(KeyboardEventArgs e)
-    {
-        Console.WriteLine(e.Key);
-    }
+    List<string> options = new List<string>(){
+        "Beijing","Shanghai","Guangzhou","Shenzhen","Chongqing","Wuhan"
+    };
 }

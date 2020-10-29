@@ -1,22 +1,19 @@
-﻿<AutoComplete OnInput="OnInput">
+﻿<AutoComplete Options="options" OnInput="OnInput" AllowFilter="false">
     <ChildContent>
         <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" />
     </ChildContent>
-    <AutoCompleteOptions>
-        @foreach (var option in options)
-        {
-            <AutoCompleteOption Style="display: flex;" Value="@option.category">
-                Found @option.value on
-                <a style=" flex: auto; text-overflow: ellipsis; overflow: hidden;"
-                   href="https://s.taobao.com/search?q=@(option.value)"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                    @option.category
-                </a>
-                <span style="flex: none;">@option.count results</span>
-            </AutoCompleteOption>
-        }
-    </AutoCompleteOptions>
+    <OptionTemplate Context="option">
+        <AutoCompleteOption Style="display: flex;" Value="@option.Value.Category">
+            Found @option.Value.Title on
+            <a style=" flex: auto; text-overflow: ellipsis; overflow: hidden;"
+               href="https://s.taobao.com/search?q=@(option.Value.Title)"
+               target="_blank"
+               rel="noopener noreferrer">
+                @option.Value.Category
+            </a>
+            <span style="flex: none;">@option.Value.Count results</span>
+        </AutoCompleteOption>
+    </OptionTemplate>
 </AutoComplete>
 
 @code{
@@ -33,17 +30,17 @@
         var i = 0;
         this.options = new int[7].Select(x => new UncertainCategoryOption()
         {
-            value = v,
-            category = $"{v}{i++}",
-            count = r.Next(100, 200),
+            Title = v,
+            Category = $"{v}{i++}",
+            Count = r.Next(100, 200),
         }).ToList();
     }
 
     public class UncertainCategoryOption
     {
-        public string value { get; set; }
+        public string Title { get; set; }
 
-        public string category { get; set; }
-        public int count { get; set; }
+        public string Category { get; set; }
+        public int Count { get; set; }
     }
 }

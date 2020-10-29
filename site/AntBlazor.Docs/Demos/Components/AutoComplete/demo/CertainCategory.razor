@@ -1,10 +1,8 @@
-﻿
-<AutoComplete>
+﻿<AutoComplete TOption="string">
     <ChildContent>
         <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" />
     </ChildContent>
-
-    <AutoCompleteOptions>
+    <OverlayTemplate>
         @foreach (var group in optionGroups)
         {
             <AutoCompleteOptGroup>
@@ -25,8 +23,7 @@
                 </ChildContent>
             </AutoCompleteOptGroup>
         }
-    </AutoCompleteOptions>
-
+    </OverlayTemplate>
 </AutoComplete>
 
 @code

@@ -1,11 +1,8 @@
 ﻿<div style="margin: 10px; overflow: scroll; height: 200px">
     <div style="padding: 100px; height: 1000px; background: #eee; position: relative " id="area">
         <AutoComplete PopupContainerSelector="#area"
-                      @bind-Value="@value" 
-                      Options="@options" 
-                      OnInput="OnInput" 
-                      OnSelectionChange="OnSelectionChange" 
-                      OnActiveChange="OnActiveChange" />
+                      @bind-Value="@value"
+                      Options="@options" />
     </div>
 </div>
 
@@ -13,32 +10,8 @@
 {
     private string value;
 
-    List<string> options = new List<string>();
+    List<string> options = new List<string>(){
+        "Beijing","Shanghai","Guangzhou","Shenzhen","Chongqing","Wuhan"
+    };
 
-
-    void OnInput(ChangeEventArgs e)
-    {
-        var v = e.Value.ToString();
-        if (string.IsNullOrWhiteSpace(v))
-            options = new List<string>();
-        else
-            options = new List<string>()
-            {
-                v, v + "1", v + "2"
-            };
-    }
-
-    private AutoCompleteOption selectItem;
-
-    void OnSelectionChange(AutoCompleteOption item)
-    {
-        selectItem = item;
-    }
-
-    private AutoCompleteOption activeItem;
-
-    void OnActiveChange(AutoCompleteOption item)
-    {
-        activeItem = item;
-    }
 }
