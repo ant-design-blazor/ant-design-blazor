@@ -23,7 +23,7 @@ namespace AntDesign
             get => _dataSource;
             set
             {
-                _waitingReload = HashCode<IEnumerable<TItem>>.HashCodeEquals(_dataSource, value) == false;
+                _waitingReload = true;
                 _dataSourceCount = value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
             }
