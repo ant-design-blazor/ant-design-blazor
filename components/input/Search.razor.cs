@@ -8,15 +8,18 @@ namespace AntDesign
 {
     public partial class Search : Input<string>
     {
-        private bool _isSearching;
+        [Parameter]
+        public bool Loading { get; set; }
 
         [Parameter]
-        public EventCallback<EventArgs> OnSearch { get; set; }
+        public EventCallback<string> OnSearch { get; set; }
 
         [Parameter]
         public OneOf<bool, string> EnterButton { get; set; } = false;
 
         protected override bool IgnoreOnChangeAndBlur => OnSearch.HasDelegate;
+
+        protected override bool EnableOnPressEnter => OnSearch.HasDelegate || OnPressEnter.HasDelegate;
 
         private int _sequence = 0;
 
@@ -31,7 +34,14 @@ namespace AntDesign
                     var i = 0;
                     builder.OpenComponent<Icon>(i++);
                     builder.AddAttribute(i++, "Class", $"{PrefixCls}-search-icon");
-                    builder.AddAttribute(i++, "Type", "search");
+                    if (Loading)
+                    {
+                        builder.AddAttribute(i++, "Type", "loading");
+                    }
+                    else
+                    {
+                        builder.AddAttribute(i++, "Type", "search");
+                    }
                     builder.AddAttribute(i++, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                     builder.CloseComponent();
                 };
@@ -45,14 +55,13 @@ namespace AntDesign
                     builder.AddAttribute(_sequence++, "Type", "primary");
                     builder.AddAttribute(_sequence++, "Size", Size);
 
-                    if (_isSearching)
+                    if (Loading)
                     {
                         builder.AddAttribute(_sequence++, "Loading", true);
                     }
                     else
                     {
-                        var e = new EventCallbackFactory().Create(this, HandleSearch);
-                        builder.AddAttribute(_sequence++, "OnClick", e);
+                        builder.AddAttribute(_sequence++, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                     }
 
                     EnterButton.Switch(boolean =>
@@ -92,15 +101,25 @@ namespace AntDesign
             GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-enter-button");
         }
 
-        private async void HandleSearch(MouseEventArgs args)
+        private async Task HandleSearch(MouseEventArgs args)
         {
-            _isSearching = true;
+            await SearchAsync();
+        }
+
+        protected override async Task OnPressEnterAsync()
+        {
+            await SearchAsync();
+            await base.OnPressEnterAsync();
+        }
+
+        private async Task SearchAsync()
+        {
+            Loading = true;
             if (OnSearch.HasDelegate)
             {
-                await OnSearch.InvokeAsync(EventArgs.Empty);
+                await OnSearch.InvokeAsync(CurrentValue);
             }
-            _isSearching = false;
-            StateHasChanged();
+            Loading = false;
         }
     }
 }
