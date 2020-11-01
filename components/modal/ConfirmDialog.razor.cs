@@ -23,6 +23,12 @@ namespace AntDesign
 
         DialogOptions _dialogOptions;
 
+        /// <summary>
+        /// Used to determine whether the dialog is completely removed from the dom
+        /// 用于判断将Dialog从DOM中彻底删除
+        /// </summary>
+        private bool _hasAdd = true;
+
         protected override async Task OnInitializedAsync()
         {
             _dialogOptions = BuildDialogOptions(Config);
@@ -66,6 +72,12 @@ namespace AntDesign
             return config;
         }
 
+        protected override void OnParametersSet()
+        {
+            _hasAdd = Config.Visible;
+            base.OnParametersSet();
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (Config.Visible && Config.AutoFocusButton != ConfirmAutoFocusButton.Null)
@@ -78,7 +90,6 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{element.Id}");
                 }
             }
-
             await base.OnAfterRenderAsync(firstRender);
         }
 
@@ -89,6 +100,11 @@ namespace AntDesign
             if (OnRemove.HasDelegate)
             {
                 await OnRemove.InvokeAsync(Config);
+            }
+            if (_hasAdd)
+            {
+                await Task.Delay(250);
+                _hasAdd = false;
             }
         }
 
