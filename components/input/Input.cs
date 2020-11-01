@@ -24,6 +24,8 @@ namespace AntDesign
 
         protected virtual bool IgnoreOnChangeAndBlur { get; }
 
+        protected virtual bool EnableOnPressEnter => OnPressEnter.HasDelegate;
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -178,11 +180,15 @@ namespace AntDesign
 
         protected async Task OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (args != null && args.Key == "Enter" && OnPressEnter.HasDelegate)
+            if (args != null && args.Key == "Enter" && EnableOnPressEnter)
             {
+                await ChangeValue();
                 await OnPressEnter.InvokeAsync(args);
+                await OnPressEnterAsync();
             }
         }
+
+        protected virtual Task OnPressEnterAsync() => Task.CompletedTask;
 
         protected async Task OnKeyUpAsync(KeyboardEventArgs args)
         {
