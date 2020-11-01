@@ -186,17 +186,7 @@ namespace AntDesign
 
         protected async Task OnKeyUpAsync(KeyboardEventArgs args)
         {
-            if (!_compositionInputting)
-            {
-                if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
-                {
-                    CurrentValue = _inputValue;
-                    if (OnChange.HasDelegate)
-                    {
-                        await OnChange.InvokeAsync(Value);
-                    }
-                }
-            }
+            await ChangeValue();
 
             if (OnkeyUp.HasDelegate) await OnkeyUp.InvokeAsync(args);
         }
@@ -208,23 +198,20 @@ namespace AntDesign
 
         protected async Task OnMouseUpAsync(MouseEventArgs args)
         {
-            if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
-            {
-                if (!_compositionInputting)
-                {
-                    CurrentValue = _inputValue;
-                    if (OnChange.HasDelegate)
-                    {
-                        await OnChange.InvokeAsync(Value);
-                    }
-                }
-            }
+            await ChangeValue();
 
             if (OnMouseUp.HasDelegate) await OnMouseUp.InvokeAsync(args);
         }
 
         internal virtual async Task OnBlurAsync(FocusEventArgs e)
         {
+            if (_compositionInputting)
+            {
+                _compositionInputting = false;
+            }
+
+            await ChangeValue();
+
             if (OnBlur.HasDelegate)
             {
                 await OnBlur.InvokeAsync(e);
@@ -273,6 +260,21 @@ namespace AntDesign
                 }));
                 builder.CloseComponent();
             };
+        }
+
+        private async Task ChangeValue()
+        {
+            if (!_compositionInputting)
+            {
+                if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
+                {
+                    CurrentValue = _inputValue;
+                    if (OnChange.HasDelegate)
+                    {
+                        await OnChange.InvokeAsync(Value);
+                    }
+                }
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
