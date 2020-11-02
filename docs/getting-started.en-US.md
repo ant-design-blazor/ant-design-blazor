@@ -5,7 +5,7 @@ title: Getting Started
 
 Ant Design of Blazor is dedicated to providing a **good development experience** for programmers.
 
-> Before delving into Ant Design Blazor, a good knowledge of [Blazor](https://blazor.net) and [.NET Core](https://dot.net/) is needed.
+> Before delving into Ant Design Blazor, a good knowledge of [Blazor](https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987) and [.NET Core](https://docs.microsoft.com/en-us/dotnet?WT.mc_id=DT-MVP-5003987) is needed.
 
 ## First Local Development
 
