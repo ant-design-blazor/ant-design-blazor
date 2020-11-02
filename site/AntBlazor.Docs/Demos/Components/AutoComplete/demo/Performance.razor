@@ -1,30 +1,15 @@
-﻿
-    @for (int i = 0; i < 100; i++)
-    {
-        var count = i;
-        <AutoComplete @bind-Value="@value" CompareWith="CompareWith" OnSelectionChange="OnSelectionChange" Placeholder="@($"第{count}个")">
-            <AutoCompleteOptions>
-                @foreach (var option in options)
-                {
-                    <AutoCompleteOption Value="@option" Label="@option.label">
-                    </AutoCompleteOption>
-                }
-            </AutoCompleteOptions>
-        </AutoComplete>
-    }
+﻿<AutoComplete @bind-Value="@value" Options="options" CompareWith="CompareWith" OnSelectionChange="OnSelectionChange" TOption="ObjectValueOption"></AutoComplete>
 
 <Divider></Divider>
 <span>bind-Value:@value</span>
 <br />
 <span>SelectedValue:@(System.Text.Json.JsonSerializer.Serialize(selectItem?.Value))</span>
 
-
-
 @code
 {
     protected override void OnInitialized()
     {
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 100; i++)
         {
             options.Add(new ObjectValueOption() { label = $"Lucy{i}", value = $"lucy{i}", age = 20 });
             options.Add(new ObjectValueOption() { label = $"Jack{i}", value = $"jack{i}", age = 22 });
@@ -63,6 +48,11 @@
         public string label { get; set; }
         public string value { get; set; }
         public int age { get; set; }
+
+        public override string ToString()
+        {
+            return $"{label}-{age}";
+        }
 
     }
 }

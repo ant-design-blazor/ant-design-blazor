@@ -1,6 +1,7 @@
 ﻿<AutoComplete @bind-Value="@value"
-              Options="@options"
+              OptionDataItems="@options"
               Backfill="@switchBackfill"
+              AllowFilter="@allowFilter"
               DefaultActiveFirstOption="@switchDefaultActiveFirstOption"
               Width="120"
               OnPanelVisibleChange="OnPanelVisibleChange"
@@ -13,6 +14,8 @@
     <Switch @bind-Value="switchDefaultActiveFirstOption" />DefaultActiveFirstOption
     <br />
     <Switch @bind-Value="disabled" />Disabled
+    <br />
+    <Switch @bind-Value="allowFilter" />AllowFilter
 </div>
 
 <Divider></Divider>
@@ -23,10 +26,10 @@
 {
     private string value;
 
-    List<AutoCompleteDataItem> options = new List<AutoCompleteDataItem>() {
-        new AutoCompleteDataItem("Burns Bay Road","Burns Bay Road"),
-        new AutoCompleteDataItem("Downing Street","Downing Street"){ IsDisabled=true },
-        new AutoCompleteDataItem("Wall Street","Wall Street")
+    List<AutoCompleteDataItem<string>> options = new List<AutoCompleteDataItem<string>>() {
+        new AutoCompleteDataItem<string>("Burns Bay Road","Burns Bay Road"),
+        new AutoCompleteDataItem<string>("Downing Street","Downing Street"){ IsDisabled=true },
+        new AutoCompleteDataItem<string>("Wall Street","Wall Street")
         };
 
     bool switchBackfill { get; set; } = false;
@@ -35,6 +38,7 @@
 
     bool disabled { get; set; } = false;
 
+    bool allowFilter { get; set; } = true;
 
     private void OnPanelVisibleChange(bool visible)
     {

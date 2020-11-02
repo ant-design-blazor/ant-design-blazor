@@ -29,7 +29,7 @@ namespace AntDesign
         [Parameter]
 
         [CascadingParameter]
-        public AutoComplete AutoComplete { get; set; }
+        public IAutoCompleteRef AutoComplete { get; set; }
 
         #endregion Parameters
 
@@ -72,12 +72,12 @@ namespace AntDesign
         /// <returns></returns>
         private bool CalcSelected()
         {
-            return AutoComplete.CompareWith(AutoComplete?.SelectedValue, Value);
+            return AutoComplete.CompareWith(AutoComplete.SelectedValue, Value);
         }
 
         private bool CalcActive()
         {
-            return AutoComplete.CompareWith(AutoComplete?.ActiveValue, Value);
+            return AutoComplete.CompareWith(AutoComplete.ActiveValue, Value);
         }
     }
 

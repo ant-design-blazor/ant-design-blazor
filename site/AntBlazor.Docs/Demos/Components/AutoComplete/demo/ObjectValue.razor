@@ -1,25 +1,18 @@
-﻿<AutoComplete @bind-Value="@value" CompareWith="CompareWith" OnSelectionChange="OnSelectionChange">
-    <AutoCompleteOptions>
-        @foreach (var option in options)
-        {
-            <AutoCompleteOption Value="@option" Label="@option.label">
-            </AutoCompleteOption>
-        }
-    </AutoCompleteOptions>
-
+﻿<AutoComplete @bind-Value="@value" Options="options" CompareWith="CompareWith" OnSelectionChange="OnSelectionChange">
+    <OptionTemplate Context="option">
+        <AutoCompleteOption Value="@option.Value" Label="@option.Label">
+        </AutoCompleteOption>
+    </OptionTemplate>
 </AutoComplete>
 <Divider></Divider>
 <span>bind-Value:@value</span>
 <br />
 <span>SelectedValue:@(System.Text.Json.JsonSerializer.Serialize(selectItem?.Value))</span>
 
-
-
 @code
 {
     private string value;
 
-    ObjectValueOption inputValue = new ObjectValueOption() { label = "Lucy", value = "lucy", age = 20 };
     ObjectValueOption[] options = new ObjectValueOption[] {
                                     new ObjectValueOption()   { label= "Lucy", value= "lucy", age= 20 },
                                     new ObjectValueOption()  { label= "Jack", value= "jack", age= 22 },
@@ -51,5 +44,9 @@
         public string value { get; set; }
         public int age { get; set; }
 
+        public override string ToString()
+        {
+            return $"{label}-{age}";
+        }
     }
 }

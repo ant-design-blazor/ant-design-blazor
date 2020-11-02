@@ -12,7 +12,7 @@ using OneOf;
 
 namespace AntDesign
 {
-    public partial class AutoComplete : AntInputComponentBase<string>, IAutoCompleteRef
+    public partial class AutoComplete<TOption> : AntInputComponentBase<string>, IAutoCompleteRef
     {
         #region Parameters
 
@@ -27,8 +27,50 @@ namespace AntDesign
         [Parameter]
         public bool Backfill { get; set; } = false;
 
+        /// <summary>
+        /// 列表对象集合
+        /// </summary>
+        private List<AutoCompleteOption> AutoCompleteOptions { get; set; } = new List<AutoCompleteOption>();
+
+        /// <summary>
+        /// 列表数据集合
+        /// </summary>
+        private List<AutoCompleteDataItem<TOption>> _optionDataItems = new List<AutoCompleteDataItem<TOption>>();
+
+        /// <summary>
+        /// 列表绑定数据源集合
+        /// </summary>
+        private IEnumerable<TOption> _options;
         [Parameter]
-        public OneOf<IList<AutoCompleteDataItem>, IList<string>, IList<int>> Options { get; set; }
+        public IEnumerable<TOption> Options
+        {
+            get
+            {
+                return _options;
+            }
+            set
+            {
+                _options = value;
+                _optionDataItems = _options?.Select(x => new AutoCompleteDataItem<TOption>(x, x.ToString())).ToList() ?? new List<AutoCompleteDataItem<TOption>>();
+            }
+        }
+
+        /// <summary>
+        /// 绑定列表数据项格式的数据源
+        /// </summary>
+        [Parameter]
+        public IEnumerable<AutoCompleteDataItem<TOption>> OptionDataItems
+        {
+            get
+            {
+                return _optionDataItems;
+            }
+            set
+            {
+                _optionDataItems = value.ToList();
+            }
+        }
+
         [Parameter]
         public EventCallback<AutoCompleteOption> OnSelectionChange { get; set; }
         [Parameter]
@@ -43,14 +85,41 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// 选项模板
+        /// </summary>
         [Parameter]
-        public RenderFragment AutoCompleteOptions { get; set; }
+        public RenderFragment<AutoCompleteDataItem<TOption>> OptionTemplate { get; set; }
 
+        /// <summary>
+        /// 格式化选项，可以自定义显示格式
+        /// </summary>
+        [Parameter]
+        public Func<AutoCompleteDataItem<TOption>, string> OptionFormat { get; set; }
+
+        /// <summary>
+        /// 所有选项模板
+        /// </summary>
+        [Parameter]
+        public RenderFragment OverlayTemplate { get; set; }
+
+        /// <summary>
+        /// 对比，用于两个对象比较是否相同
+        /// </summary>
         [Parameter]
         public Func<object, object, bool> CompareWith { get; set; } = (o1, o2) => o1?.ToString() == o2?.ToString();
 
+        /// <summary>
+        /// 过滤表达式
+        /// </summary>
         [Parameter]
-        public Func<AutoCompleteDataItem, bool> FilterOption { get; set; }
+        public Func<AutoCompleteDataItem<TOption>, string, bool> FilterExpression { get; set; } = (option, value) => string.IsNullOrEmpty(value) ? true : option.Label.Contains(value, StringComparison.InvariantCultureIgnoreCase);
+
+        /// <summary>
+        /// 允许过滤
+        /// </summary>
+        [Parameter]
+        public bool AllowFilter { get; set; } = true;
 
         [Parameter]
         public OneOf<int?, string> Width { get; set; }
@@ -68,7 +137,7 @@ namespace AntDesign
 
         private ElementReference _divRef;
 
-        public object SelectedValue { get; internal set; }
+        public object SelectedValue { get; set; }
         /// <summary>
         /// 选择的项
         /// </summary>
@@ -78,7 +147,7 @@ namespace AntDesign
         /// <summary>
         /// 高亮的项目
         /// </summary>
-        public object ActiveValue { get; internal set; }
+        public object ActiveValue { get; set; }
 
 
         [Parameter]
@@ -101,7 +170,7 @@ namespace AntDesign
 
         public async Task InputInput(ChangeEventArgs args)
         {
-            SelectedValue = args.Value;
+            SelectedValue = args?.Value;
             if (OnInput.HasDelegate) await OnInput.InvokeAsync(args);
             StateHasChanged();
         }
@@ -150,43 +219,31 @@ namespace AntDesign
             await base.OnFirstAfterRenderAsync();
         }
 
-        /// <summary>
-        /// 对象集合
-        /// </summary>
-        public List<AutoCompleteOption> _options = new List<AutoCompleteOption>();
+
 
         public void AddOption(AutoCompleteOption option)
         {
-            _options.Add(option);
+            AutoCompleteOptions.Add(option);
         }
 
         public void RemoveOption(AutoCompleteOption option)
         {
-            if (_options?.Contains(option) == true)
-                _options?.Remove(option);
+            if (AutoCompleteOptions?.Contains(option) == true)
+                AutoCompleteOptions?.Remove(option);
         }
 
-        public IList<AutoCompleteDataItem> GetOptionItems()
+        public IList<AutoCompleteDataItem<TOption>> GetOptionItems()
         {
-            if (Options.Value != null)
+            if (_optionDataItems != null)
             {
-                var opts = Options.Match<IList<AutoCompleteDataItem>>(
-                                          f0 => f0,
-                                          f1 => f1.Select(x => new AutoCompleteDataItem(x, x)).ToList(),
-                                          f2 => f2.Select(x => new AutoCompleteDataItem(x, x.ToString())).ToList());
-                if (FilterOption != null)
-                    return opts.Where(FilterOption).ToList();
+                if (FilterExpression != null && AllowFilter == true && SelectedValue != null)
+                    return _optionDataItems.Where(x => FilterExpression(x, SelectedValue?.ToString())).ToList();
                 else
-                    return opts;
-            }
-            else if (_options.Count > 0)
-            {
-                var opts = _options.Select(x => new AutoCompleteDataItem(x.Value, x.Label)).ToList();
-                return opts;
+                    return _optionDataItems;
             }
             else
             {
-                return new List<AutoCompleteDataItem>();
+                return new List<AutoCompleteDataItem<TOption>>();
             }
         }
 
@@ -217,13 +274,13 @@ namespace AntDesign
 
         public AutoCompleteOption GetActiveItem()
         {
-            return _options.FirstOrDefault(x => CompareWith(x.Value, this.ActiveValue));
+            return AutoCompleteOptions.FirstOrDefault(x => CompareWith(x.Value, this.ActiveValue));
         }
 
         //设置高亮的对象
         public void SetActiveItem(AutoCompleteOption item)
         {
-            this.ActiveValue = item?.Value;
+            this.ActiveValue = item == null ? default(TOption) : item.Value;
             if (OnActiveChange.HasDelegate) OnActiveChange.InvokeAsync(item);
             StateHasChanged();
         }
@@ -231,7 +288,7 @@ namespace AntDesign
         //设置下一个激活
         public void SetNextItemActive()
         {
-            var opts = _options.Where(x => x.Disabled == false).ToList();
+            var opts = AutoCompleteOptions.Where(x => x.Disabled == false).ToList();
             var nextItem = opts.IndexOf(GetActiveItem());
             if (nextItem == -1 || nextItem == opts.Count - 1)
                 SetActiveItem(opts.FirstOrDefault());
@@ -245,7 +302,7 @@ namespace AntDesign
         //设置上一个激活
         public void SetPreviousItemActive()
         {
-            var opts = _options.Where(x => x.Disabled == false).ToList();
+            var opts = AutoCompleteOptions.Where(x => x.Disabled == false).ToList();
             var nextItem = opts.IndexOf(GetActiveItem());
             if (nextItem == -1 || nextItem == 0)
                 SetActiveItem(opts.LastOrDefault());
@@ -259,7 +316,7 @@ namespace AntDesign
         private void ResetActiveItem()
         {
             var items = GetOptionItems();
-            _isOptionsZero = items.Count == 0 && Options.Value != null;
+            _isOptionsZero = items.Count == 0 && Options != null;
             if (items.Any(x => CompareWith(x.Value, this.ActiveValue)) == false)
             {//如果当前激活项找在列表中不存在，那么我们需要做一些处理
                 if (items.Any(x => CompareWith(x.Value, this.SelectedValue)))
@@ -268,7 +325,7 @@ namespace AntDesign
                 }
                 else if (DefaultActiveFirstOption == true && items.Count > 0)
                 {
-                    this.ActiveValue = items.FirstOrDefault()?.Value;
+                    this.ActiveValue = items.FirstOrDefault().Value;
                 }
                 else
                 {
@@ -281,7 +338,7 @@ namespace AntDesign
         {
             if (item != null)
             {
-                this.SelectedValue = item?.Value;
+                this.SelectedValue = item.Value;
                 this.SelectedItem = item;
                 _inputComponent?.SetValue(this.SelectedItem.Label);
 
@@ -324,17 +381,17 @@ namespace AntDesign
         }
     }
 
-    public class AutoCompleteDataItem
+    public class AutoCompleteDataItem<TOption>
     {
         public AutoCompleteDataItem() { }
 
-        public AutoCompleteDataItem(object value, string label)
+        public AutoCompleteDataItem(TOption value, string label)
         {
             Value = value;
             Label = label;
         }
 
-        public object Value { get; set; }
+        public TOption Value { get; set; }
         public string Label { get; set; }
 
         public bool IsDisabled { get; set; }
