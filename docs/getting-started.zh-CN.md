@@ -5,7 +5,7 @@ title: 快速上手
 
 Ant Design of Blazor 致力于提供给程序员**愉悦**的开发体验。
 
-> 在开始之前，推荐先学习 [Blazor](https://blazor.net) 和 [.Net Core](https://dot.net/)，并正确安装和配置了 [.NET Core SDK](https://dotnet.microsoft.com/download) 3.1.300 或以上。官方指南假设你已了解关于 HTML、CSS 和 JavaScript 的初级知识，并且已经完全掌握了 Blazor 的正确开发方式。如果你刚开始学习.NET 或者 Blazor，将 UI 框架作为你的第一步可能不是最好的主意。
+> 在开始之前，推荐先学习 [Blazor](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987) 和 [.Net Core](https://docs.microsoft.com/zh-cn/dotnet?WT.mc_id=DT-MVP-5003987)，并正确安装和配置了 [.NET Core SDK](https://dotnet.microsoft.com/download) 3.1.300 或以上。官方指南假设你已了解关于 HTML、CSS 和 JavaScript 的初级知识，并且已经完全掌握了 Blazor 的正确开发方式。如果你刚开始学习.NET 或者 Blazor，将 UI 框架作为你的第一步可能不是最好的主意。
 
 
 ## 第一个本地实例

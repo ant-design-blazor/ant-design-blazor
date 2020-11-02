@@ -164,7 +164,8 @@ Options for the template：
 ## 🔗 Links
 
 - [Ant Design Blazor Documentation](https://ant-design-blazor.gitee.io)
-- [Official Blazor Documentation](https://blazor.net)
+- [Official Blazor Documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987)
+- [MS Learn for Blazor Tutorial](https://docs.microsoft.com/en-us/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987)
 
 ## 🗺 Roadmap
 
