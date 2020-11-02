@@ -1,0 +1,16 @@
+﻿<div>
+    <AutoComplete @bind-Value="@value" Options="@options" OptionFormat='x => $"{x.Value} City"' />
+</div>
+<Divider></Divider>
+<span>bind-Value:@value</span>
+
+@code
+{
+    private string value;
+
+    List<string> options = new List<string>()
+{
+        "Beijing","Shanghai","Guangzhou","Shenzhen","Chongqing","Wuhan"
+    };
+
+}
