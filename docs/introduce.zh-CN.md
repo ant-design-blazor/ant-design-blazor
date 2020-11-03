@@ -160,7 +160,8 @@ title: Ant Design of Blazor
 ## 🔗 链接
 
 - [文档主页](https://ant-design-blazor.gitee.io)
-- [Blazor 官方文档](https://blazor.net)
+- [Blazor 官方文档](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987)
+- [MS Learn 平台 Blazor 教程](https://docs.microsoft.com/zh-cn/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987)
 
 ## 🗺 开发路线
 

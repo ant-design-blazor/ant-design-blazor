@@ -301,7 +301,7 @@ namespace AntDesign.Internal
 
         internal virtual async Task Hide(bool force = false)
         {
-            await _overlay.Hide(force);
+            if (!Visible || force) await _overlay.Hide(force);
         }
 
         internal Overlay GetOverlayComponent()

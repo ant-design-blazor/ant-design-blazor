@@ -18,9 +18,9 @@
 
         public int scrollWidth { get; set; }
 
-        public int scrollLeft { get; set; }
+        public double scrollLeft { get; set; }
 
-        public int scrollTop { get; set; }
+        public double scrollTop { get; set; }
 
         public int clientTop { get; set; }
 

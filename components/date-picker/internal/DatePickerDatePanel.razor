@@ -68,7 +68,7 @@
     </DatePickerTemplate>
 </div>
 
-@if (RenderExtraFooter != null)
+@if (RenderExtraFooter != null && !IsRange)
 {
     <div class="@(PrefixCls)-footer">
         <div class="@(PrefixCls)-footer-extra">

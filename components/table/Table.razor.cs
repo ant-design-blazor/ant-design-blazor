@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using AntDesign.Core.HashCodes;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
-using OneOf;
 
 namespace AntDesign
 {
@@ -12,15 +11,21 @@ namespace AntDesign
     {
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
 
+        private bool _shouldRender = true;
+        private int _parametersHashCode = 0;
+
+        [Parameter]
+        public RenderMode RenderMode { get; set; } = RenderMode.Always;
+
         [Parameter]
         public IEnumerable<TItem> DataSource
         {
             get => _dataSource;
             set
             {
+                _waitingReload = true;
                 _dataSourceCount = value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
-                _waitingReload = true;
             }
         }
 
@@ -181,6 +186,28 @@ namespace AntDesign
             {
                 this.FinishLoadPage();
             }
+        }
+
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
+            {
+                var hashCode = this.GetParametersHashCode();
+                this._shouldRender = this._parametersHashCode != hashCode;
+                this._parametersHashCode = hashCode;
+            }
+            else
+            {
+                this._shouldRender = true;
+            }
+        }
+
+        protected override bool ShouldRender()
+        {
+            return this._shouldRender;
         }
     }
 }

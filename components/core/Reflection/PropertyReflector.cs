@@ -11,7 +11,7 @@ namespace AntDesign.Core.Reflection
     {
         public PropertyInfo PropertyInfo { get; }
 
-        public IEnumerable<RequiredAttribute> RequiredAttributes { get; set; }
+        public RequiredAttribute RequiredAttribute { get; set; }
 
         public string DisplayName { get; set; }
 
@@ -20,7 +20,7 @@ namespace AntDesign.Core.Reflection
         private PropertyReflector(PropertyInfo propertyInfo)
         {
             this.PropertyInfo = propertyInfo;
-            this.RequiredAttributes = propertyInfo.GetCustomAttributes<RequiredAttribute>(true);
+            this.RequiredAttribute = propertyInfo.GetCustomAttribute<RequiredAttribute>(true);
             this.DisplayName = propertyInfo.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ?? propertyInfo.Name;
             this.PropertyName = PropertyInfo.Name;
         }

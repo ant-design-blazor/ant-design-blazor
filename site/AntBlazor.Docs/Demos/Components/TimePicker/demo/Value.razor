@@ -4,8 +4,8 @@
 {
     private DateTime _value = DateTime.Now;
 
-    private void OnChange(DateTime value, string dateString)
+    private void OnChange(DateTimeChangedEventArgs args)
     {
-        _value = value;
+        _value = args.Date;
     }
 }

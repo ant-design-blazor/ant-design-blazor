@@ -53,7 +53,7 @@ namespace AntDesign.TableModels
 
         void ITableSortModel.SetSortType(SortType sortType)
         {
-            this.SortType = SortType;
+            this.SortType = sortType;
         }
 
         void ITableSortModel.SetSortType(string sortType)

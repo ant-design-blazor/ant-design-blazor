@@ -9,7 +9,7 @@
                     IsButton="@true"
                     Disabled="Disabled"
                     PopupContainerSelector="@PopupContainerSelector"
-                    OnVisibleChange="visible => AutoFocus = visible"
+                    OnVisibleChange="visible => { AutoFocus = visible; OnOpenChange.InvokeAsync(visible); }"
                     OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up ant-picker-dropdown-range"
                     OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up ant-picker-dropdown-range"
                     Trigger="new TriggerType[] { TriggerType.Click }">
@@ -18,12 +18,20 @@
             <div class="@(PrefixCls)-panel-container">
                 <div class="@(PrefixCls)-panels">
                     <div class="@(PrefixCls)-panel">
-                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelect(date)"/>
+                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelect(date)" />
                     </div>
                     <div class="@(PrefixCls)-panel">
-                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="1" OnSelect="async (date, index) => await OnSelect(date)"/>
+                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="1" OnSelect="async (date, index) => await OnSelect(date)" />
                     </div>
                 </div>
+                @if (RenderExtraFooter != null && !IsShowTime)
+                {
+                    <div class="@(PrefixCls)-footer">
+                        <div class="@(PrefixCls)-footer-extra">
+                            @RenderExtraFooter
+                        </div>
+                    </div>
+                }
             </div>
         </Overlay>
         <ChildContent>
@@ -41,34 +49,32 @@
                                  AutoFocus="@AutoFocus"
                                  OnClick="async e => { await OnInputClick(0); }"
                                  OnInput="e => OnInput(e, 0)"
-                                 ShowTime="@(Picker == DatePickerType.Time)" 
+                                 ShowTime="@(Picker == DatePickerType.Time)"
                                  ShowSuffixIcon="false"
                                  IsRange="@IsRange"
                                  AllowClear="@AllowClear"
-                                 OnClickClear="e => ClearValue(0)"
-                />
+                                 OnClickClear="e => ClearValue(0)" />
 
                 <div class="@(PrefixCls)-range-separator">
                     <span aria-label="to" class="@(PrefixCls)-separator">
-                    <Icon Type="swap-right" Theme="outline" />
+                        <Icon Type="swap-right" Theme="outline" />
                     </span>
                 </div>
 
                 <DatePickerInput @ref="_inputEnd"
-                                    PrefixCls="@PrefixCls"
-                                    Size="@Size"
-                                    Disabled="@Disabled"
-                                    Value="@GetInputValue(1)"
-                                    Placeholder="@_placeholders[1]"
-                                    ReadOnly="@InputReadOnly"
-                                    AutoFocus="@AutoFocus"
-                                    OnClick="async e => { await OnInputClick(1); }"
-                                    OnInput="e => OnInput(e, 0)"
-                                    ShowTime="@(Picker == DatePickerType.Time)"
-                                    IsRange="@IsRange"
-                                    AllowClear="@AllowClear"
-                                    OnClickClear="e => ClearValue(0)"
-                />
+                                 PrefixCls="@PrefixCls"
+                                 Size="@Size"
+                                 Disabled="@Disabled"
+                                 Value="@GetInputValue(1)"
+                                 Placeholder="@_placeholders[1]"
+                                 ReadOnly="@InputReadOnly"
+                                 AutoFocus="@AutoFocus"
+                                 OnClick="async e => { await OnInputClick(1); }"
+                                 OnInput="e => OnInput(e, 0)"
+                                 ShowTime="@(Picker == DatePickerType.Time)"
+                                 IsRange="@IsRange"
+                                 AllowClear="@AllowClear"
+                                 OnClickClear="e => ClearValue(0)" />
                 <div class="@(PrefixCls)-active-bar" style="@_activeBarStyle"></div>
             </div>
         </ChildContent>

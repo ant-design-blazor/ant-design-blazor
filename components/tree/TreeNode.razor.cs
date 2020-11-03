@@ -32,7 +32,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public RenderFragment Nodes { get; set; }
-        internal List<TreeNode> ChildNodes { get; set; } = new List<TreeNode>();
+        public List<TreeNode> ChildNodes { get; set; } = new List<TreeNode>();
 
         public bool HasChildNodes => ChildNodes?.Count > 0;
 
@@ -389,6 +389,36 @@ namespace AntDesign
 
 
         #endregion
+        /// <summary>
+        /// Find a node
+        /// </summary>
+        /// <param name="predicate">Predicate</param>
+        /// <param name="recursive">Recursive Find</param>
+        /// <returns></returns>
+        public TreeNode FindFirstOrDefaultNode(Func<TreeNode, bool> predicate, bool recursive = true)
+        {
+            foreach (var child in ChildNodes)
+            {
+                if (predicate.Invoke(child))
+                {
+                    return child;
+                }
+                if (recursive)
+                {
+                    var find = child.FindFirstOrDefaultNode(predicate, recursive);
+                    if (find != null)
+                    {
+                        return find;
+                    }
+                }
+            }
+            return null;
+        }
+        public void Expand(bool isExpanded)
+        {
+            IsExpanded = isExpanded;
+        }
+
 
 
         protected override void OnInitialized()
@@ -410,6 +440,5 @@ namespace AntDesign
 
     }
 }
-
 
 

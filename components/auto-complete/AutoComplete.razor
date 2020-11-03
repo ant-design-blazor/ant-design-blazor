@@ -1,6 +1,6 @@
 ﻿@namespace AntDesign
 @inherits AntInputComponentBase<string>
-
+@typeparam TOption
 @using AntDesign.Internal
 
 <div @ref="@_divRef" style="@Style" id="@Id">
@@ -23,18 +23,30 @@
                     {
                         <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @_minWidth">
                             <div style="display: flex;flex-direction: column;">
-                                @if (Options.Value != null)
+
+                                @if (OverlayTemplate != null)
                                 {
-                                    foreach (var option in GetOptionItems())
-                                    {
-                                        <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
-                                            @option.Label
-                                        </AutoCompleteOption>
-                                    }
+                                    @OverlayTemplate
                                 }
                                 else
                                 {
-                                    @AutoCompleteOptions
+                                    @if (OptionTemplate != null)
+                                    {
+                                        @foreach (var option in GetOptionItems())
+                                        {
+                                            @OptionTemplate(option)
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @foreach (var option in GetOptionItems())
+                                        {
+                                            var label = OptionFormat == null ? option.Label : OptionFormat(option);
+                                            <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
+                                                @label
+                                            </AutoCompleteOption>
+                                        }
+                                    }
                                 }
                             </div>
                         </div>

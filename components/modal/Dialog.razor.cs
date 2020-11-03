@@ -105,15 +105,6 @@ namespace AntDesign
             _dialogMouseDown = true;
         }
 
-        private async Task OnMaskMouseUp()
-        {
-            if (Config.MaskClosable && _dialogMouseDown)
-            {
-                await Task.Delay(50);
-                _dialogMouseDown = false;
-            }
-        }
-
         private async Task OnMaskClick(MouseEventArgs e)
         {
             if (Config.MaskClosable
@@ -121,6 +112,7 @@ namespace AntDesign
             {
                 await CloseAsync();
             }
+            _dialogMouseDown = false;
         }
 
         #endregion

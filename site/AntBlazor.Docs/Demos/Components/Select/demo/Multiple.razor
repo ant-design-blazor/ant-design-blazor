@@ -1,12 +1,23 @@
-<Select Mode="multiple"
+﻿<Select Mode="multiple"
         Style="width: 100%"
         Placeholder="Please select"
         DefaultValue="@_defaultValues"
         @bind-Value="@_value"
+        AllowClear
         OnChange="OnChange">
     @foreach (var item in _items)
     {
-        <SelectOption Value="@item">@item</SelectOption>
+        <SelectOption Value="@item.Value">@item.Label</SelectOption>
+    }
+</Select>
+<Select Mode="multiple"
+        Style="width: 100%"
+        Placeholder="Please select"
+        DefaultValue="@_defaultValues"
+        Disabled>
+    @foreach (var item in _items)
+    {
+        <SelectOption Value="@item.Value">@item.Label</SelectOption>
     }
 </Select>
 <label>Selected Values: @_value</label>
@@ -14,20 +25,27 @@
 @using OneOf;
 @code
 {
-    private string _value;
-    private string[] _items;
-    private string[] _defaultValues;
+    public class CustomListItem
+    {
+        public string Label { get; set; }
+        public string Value { get; set; }
+    }
 
+    private string _value;
+    private CustomListItem[] _items;
+    private string[] _defaultValues;
+    
     protected override void OnInitialized()
     {
         const int min = 10;
         const int max = 36;
-        _defaultValues = new[] { "0a10", "0c12" };
+        _defaultValues = new[] { "v0a10", "v0c12" };
 
-        _items = new string[max - min];
+        _items = new CustomListItem[max - min];
         for (var i = min; max > i; i++)
         {
-            _items[i - min] = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+            var l = Convert.ToString(i, 16).PadLeft(2, '0') + i;
+            _items[i - min] = new CustomListItem() {Label = $"l{l}", Value = $"v{l}"};
         }
     }
 

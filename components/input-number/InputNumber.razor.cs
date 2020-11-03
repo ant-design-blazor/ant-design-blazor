@@ -61,6 +61,9 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
+        [Parameter]
+        public EventCallback<TValue> OnChange { get; set; }
+
         private readonly bool _isNullable;
 
         private readonly Func<TValue, TValue, TValue> _increaseFunc;
@@ -157,14 +160,14 @@ namespace AntDesign
         {
             await SetFocus();
             var num = _increaseFunc(Value, _step);
-            ChangeValue(num);
+            await ChangeValueAsync(num);
         }
 
         private async Task Decrease()
         {
             await SetFocus();
             var num = _decreaseFunc(Value, _step);
-            ChangeValue(num);
+            await ChangeValueAsync(num);
         }
 
         private async Task SetFocus()
@@ -184,22 +187,22 @@ namespace AntDesign
             CurrentValue = Value;
         }
 
-        private void OnBlur()
+        private async Task OnBlurAsync()
         {
             _focused = false;
             if (_inputString == null)
             {
-                ChangeValue(Value);
+                await ChangeValueAsync(Value);
                 return;
             }
 
             _inputString = Parser != null ? Parser(_inputString) : Regex.Replace(_inputString, @"[^\+\-\d.\d]", "");
 
-            ConvertNumber(_inputString);
+            await ConvertNumberAsync(_inputString);
             _inputString = null;
         }
 
-        private void ConvertNumber(string inputString)
+        private async Task ConvertNumberAsync(string inputString)
         {
             if (!Regex.IsMatch(inputString, @"^[+-]?\d*[.]?\d*$"))
             {
@@ -235,10 +238,10 @@ namespace AntDesign
                 }
             }
 
-            ChangeValue(num);
+            await ChangeValueAsync(num);
         }
 
-        private void ChangeValue(TValue value)
+        private async Task ChangeValueAsync(TValue value)
         {
             if (_greaterThanFunc(value, Max))
                 value = Max;
@@ -246,6 +249,11 @@ namespace AntDesign
                 value = Min;
 
             CurrentValue = _decimalPlaces.HasValue ? _roundFunc(value, _decimalPlaces.Value) : value;
+
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(value);
+            }
         }
 
         private string GetIconClass(string direction)
