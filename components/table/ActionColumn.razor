@@ -18,7 +18,7 @@ else if (IsHeader && HeaderColSpan != 0)
         @(Title)
     </th>
 }
-else if (RowSpan != 0 && ColSpan != 0)
+else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 {
     <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan">
         @ChildContent
