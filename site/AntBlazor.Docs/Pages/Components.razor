@@ -8,6 +8,8 @@
 
         @if (_demoComponent != null)
         {
+            var title = $"{_demoComponent.SubTitle}  {_demoComponent.Title} - Ant Design of Blazor";
+            <Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@title"></Microsoft.AspNetCore.Components.Web.Extensions.Head.Title>
             var docDemos = _demoComponent.DemoList?.Where(x => x.Docs.HasValue && x.Docs.Value) ?? Enumerable.Empty<DemoItem>();
             var demos = _demoComponent.DemoList?.Where(x => !x.Debug && !x.Docs.HasValue).OrderBy(x => x.Order) ?? Enumerable.Empty<DemoItem>();
 
