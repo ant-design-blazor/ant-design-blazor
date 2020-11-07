@@ -79,8 +79,8 @@ namespace AntDesign
                 Button?.Icons.Add(icon);
             }
 
-            ClassMapper.Add($"anticon anticon-{Type}")
-                .If("anticon-spin", () => Spin);
+            ClassMapper.Add($"anticon anticon-{Type}");
+               // .If("anticon-spin", () => Spin);
 
             await base.OnInitializedAsync();
         }
@@ -98,19 +98,23 @@ namespace AntDesign
                 return;
             }
 
+            string svgClass = null;
+            if (Spin) svgClass = "anticon-spin";
+
+
             if (!string.IsNullOrEmpty(IconFont))
             {
                 var svg = $"<svg><use xlink:href=#{IconFont} /></svg>";
-                _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate);
+                _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
 
                 StateHasChanged();
             }
             else
             {
-                Task.Run(async () =>
+               await Task.Run(async () =>
                 {
                     var svg = await IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
-                    _svgImg = IconService.GetStyledSvg(svg, Width, Height, Fill, Rotate);
+                    _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
                     await InvokeAsync(StateHasChanged);
                 });
             }
