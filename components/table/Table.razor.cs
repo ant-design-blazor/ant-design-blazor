@@ -75,6 +75,7 @@ namespace AntDesign
         private IEnumerable<TItem> _dataSource;
 
         private bool _waitingReload = false;
+        private bool _waitingReloadAndInvokeChange = false;
 
         private bool ServerSide => _total > _dataSourceCount;
 
@@ -176,7 +177,14 @@ namespace AntDesign
         {
             base.OnAfterRender(firstRender);
 
-            if (_waitingReload)
+            if (_waitingReloadAndInvokeChange)
+            {
+                _waitingReloadAndInvokeChange = false;
+                _waitingReload = false;
+
+                ReloadAndInvokeChange();
+            }
+            else if(_waitingReload)
             {
                 _waitingReload = false;
                 Reload();
