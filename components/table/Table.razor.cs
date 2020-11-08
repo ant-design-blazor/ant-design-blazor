@@ -10,6 +10,7 @@ namespace AntDesign
     public partial class Table<TItem> : AntDomComponentBase, ITable
     {
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
+        private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
         private bool _shouldRender = true;
         private int _parametersHashCode = 0;
@@ -31,6 +32,9 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment<TItem> ChildContent { get; set; }
+
+        [Parameter]
+        public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
 
         [Parameter]
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
@@ -205,9 +209,11 @@ namespace AntDesign
             }
         }
 
-        protected override bool ShouldRender()
+        protected override bool ShouldRender() => this._shouldRender;
+
+        private void ToggleExpandRow(RowData<TItem> rowData)
         {
-            return this._shouldRender;
+            rowData.Expanded = !rowData.Expanded;
         }
     }
 }
