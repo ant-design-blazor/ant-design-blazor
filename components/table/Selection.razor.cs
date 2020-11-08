@@ -12,6 +12,8 @@ namespace AntDesign
 
         [Parameter] public string Key { get; set; }
 
+        [Parameter] public bool CheckStrictly { get; set; }
+
         bool ISelectionColumn.Checked
         {
             get => _checked;

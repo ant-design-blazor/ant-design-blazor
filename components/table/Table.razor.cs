@@ -35,10 +35,16 @@ namespace AntDesign
         public RenderFragment<TItem> ChildContent { get; set; }
 
         [Parameter]
+        public RenderFragment<TItem> RowTemplate { get; set; }
+
+        [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
 
         [Parameter]
         public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
+
+        [Parameter]
+        public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
 
         [Parameter]
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
@@ -171,6 +177,11 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            if (RowTemplate != null)
+            {
+                ChildContent = RowTemplate;
+            }
 
             SetClass();
 
