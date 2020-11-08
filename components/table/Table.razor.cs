@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using AntDesign.Core.HashCodes;
@@ -35,6 +36,9 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
+
+        [Parameter]
+        public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
 
         [Parameter]
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
