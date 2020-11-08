@@ -2,12 +2,12 @@
 @using AntDesign.TableModels
 
 <Table @ref="table"
+       TItem="WeatherForecast"
        DataSource="@forecasts"
        Total="_total"
-       OnChange="@((QueryModel<WeatherForecast> _)=> onChange(_))"
+       OnChange="@onChange"
        @bind-PageIndex="_pageIndex"
        @bind-PageSize="_pageSize"
-       OnPageIndexChange="async e=>await fetchData(e)"
        @bind-SelectedRows="selectedRows">
     <Selection Key="@(context.Id.ToString())" />
     <Column @bind-Field="@context.Id" Sortable />
@@ -40,6 +40,8 @@
     }
 }
 
+<Button OnClick="()=> { _pageIndex--; }">Previous page</Button>
+<Button OnClick="()=> { _pageIndex++; }">Next Page</Button>
 
 @code {
 
@@ -52,20 +54,18 @@
     int _pageSize = 10;
     int _total = 0;
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
-        forecasts = await GetForecastAsync(1, 50);
-        _total = forecasts.Length;
+        //forecasts = await GetForecastAsync(1, 50);
+        //_total = forecasts.Length;
     }
 
-    async Task fetchData(PaginationEventArgs args)
+    async Task onChange(QueryModel<WeatherForecast> queryModel)
     {
-        //forecasts = await GetForecastAsync(args.PageIndex, args.PageSize);
-    }
-
-    void onChange(QueryModel<WeatherForecast> queryModel)
-    {
-        Console.WriteLine(queryModel);
+        forecasts = await GetForecastAsync(queryModel.PageIndex, queryModel.PageSize);
+        _pageIndex = queryModel.PageIndex;
+        _pageSize = queryModel.PageSize;
+        _total = 50;
     }
 
 

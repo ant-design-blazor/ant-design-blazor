@@ -37,14 +37,34 @@ namespace AntDesign
         public EventCallback<int> TotalChanged { get; set; }
 
         [Parameter]
-        public int PageIndex { get; set; } = 1;
-
+        public int PageIndex
+        {
+            get => _pageIndex;
+            set
+            {
+                if (_pageIndex != value)
+                {
+                    _pageIndex = value;
+                    _waitingReloadAndInvokeChange = true;
+                }
+            }
+        }
         [Parameter]
         public EventCallback<int> PageIndexChanged { get; set; }
 
         [Parameter]
-        public int PageSize { get; set; } = 10;
-
+        public int PageSize
+        {
+            get => _pageSize;
+            set
+            {
+                if (_pageSize != value)
+                {
+                    _pageSize = value;
+                    _waitingReloadAndInvokeChange = true;
+                }
+            }
+        }
         [Parameter]
         public EventCallback<int> PageSizeChanged { get; set; }
 
@@ -58,6 +78,8 @@ namespace AntDesign
         private int _dataSourceCount = 0;
         private string _paginationPosition = "bottomRight";
         private string _paginationClass;
+        private int _pageIndex = 1;
+        private int _pageSize = 10;
 
         private void InitializePagination()
         {
