@@ -12,6 +12,8 @@ namespace AntDesign.TableModels
 
         public bool Selected { get; set; }
 
+        public bool Expanded { get; set; }
+
         public TItem Data { get; set; }
 
         public RowData(int rowIndex, int pageIndex, TItem data)
