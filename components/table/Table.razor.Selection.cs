@@ -50,7 +50,7 @@ namespace AntDesign
         {
             foreach (var selection in _selection.RowSelections)
             {
-                _dataSourceCache[selection.CacheKey].Selected = selection.Checked;
+                _dataSourceCache[selection.RowData.CacheKey].Selected = selection.Checked;
             }
 
             if (SelectedRowsChanged.HasDelegate)

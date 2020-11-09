@@ -4,6 +4,10 @@
     {
         internal ISelectionColumn Selection { get; set; }
 
+        internal bool TreeMode { get; }
+
+        internal int IndentSize { get; }
+
         public TableLocale Locale { get; set; }
 
         internal void SelectionChanged();

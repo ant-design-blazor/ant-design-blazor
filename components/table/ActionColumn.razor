@@ -7,20 +7,24 @@
 }
 else if (IsColGroup)
 {
-    if (Width > 0)
+    if (Width != null)
     {
-        <col style="width: @(Width)px; min-width: @(Width)px;">
+        <col style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
+    }
+    else
+    {
+        <col />
     }
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-    <th class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@HeaderColSpan">
+    <th class="@ClassMapper.Class" style="@Style" colspan="@HeaderColSpan">
         @(Title)
     </th>
 }
 else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 {
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan">
+    <td class="@ClassMapper.Class" style="@Style" rowspan="@RowSpan" colspan="@ColSpan">
         @ChildContent
     </td>
 }

@@ -3,11 +3,8 @@
 <Table DataSource="data" TreeChildren="item=>item.Children">
     <Selection CheckStrictly />
     <Column @bind-Field="@context.Name" />
-    <Column @bind-Field="@context.Age" />
-    <Column @bind-Field="@context.Address" />
-    <ActionColumn Title="Action">
-        <a>Delete</a>
-    </ActionColumn>
+    <Column @bind-Field="@context.Age" Width="12%"/>
+    <Column @bind-Field="@context.Address" Width="30%"/>
 </Table>
 
 @code {

@@ -82,6 +82,9 @@ namespace AntDesign
         [Parameter]
         public int ScrollBarWidth { get; set; } = 17;
 
+        [Parameter]
+        public int IndentSize { get; set; } = 15;
+
         public ColumnContext ColumnContext { get; set; } = new ColumnContext();
 
         private IEnumerable<TItem> _showItems;
@@ -90,8 +93,13 @@ namespace AntDesign
 
         private bool _waitingReload = false;
         private bool _waitingReloadAndInvokeChange = false;
+        private bool _treeMode = false;
 
         private bool ServerSide => _total > _dataSourceCount;
+
+        bool ITable.TreeMode => _treeMode;
+
+        int ITable.IndentSize => IndentSize;
 
         public void ReloadData()
         {
@@ -104,6 +112,7 @@ namespace AntDesign
 
         void ITable.Refresh()
         {
+            _shouldRender = true;
             StateHasChanged();
         }
 
@@ -183,6 +192,11 @@ namespace AntDesign
                 ChildContent = RowTemplate;
             }
 
+            if (TreeChildren != null && DataSource.Any(x => TreeChildren(x).Any()))
+            {
+                _treeMode = true;
+            }
+
             SetClass();
 
             InitializePagination();
@@ -203,7 +217,7 @@ namespace AntDesign
 
                 ReloadAndInvokeChange();
             }
-            else if(_waitingReload)
+            else if (_waitingReload)
             {
                 _waitingReload = false;
                 Reload();
