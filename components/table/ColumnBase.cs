@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -17,20 +18,17 @@ namespace AntDesign
         [CascadingParameter(Name = "IsPlaceholder")]
         public bool IsPlaceholder { get; set; }
 
-        [CascadingParameter(Name = "RowIndex")]
-        public int RowIndex { get; set; }
-
         [CascadingParameter]
         public ColumnContext Context { get; set; }
 
-        [CascadingParameter(Name = "CacheKey")]
-        public int CacheKey { get; set; }
+        [CascadingParameter(Name = "RowData")]
+        public RowData RowData { get; set; }
 
         [Parameter]
         public string Title { get; set; }
 
         [Parameter]
-        public int Width { get; set; }
+        public string Width { get; set; }
 
         [Parameter]
         public int RowSpan { get; set; } = 1;
@@ -49,7 +47,7 @@ namespace AntDesign
 
         public int ColIndex { get; set; }
 
-        protected string FixedStyle => Fixed != null ? $"position: sticky; {Fixed}: {Width * (Fixed == "left" ? ColIndex : Context.Columns.Count - ColIndex - 1)}px;" : "";
+        //protected string FixedStyle => Fixed != null ? $"position: sticky; {Fixed}: {Width * (Fixed == "left" ? ColIndex : Context.Columns.Count - ColIndex - 1)}px;" : "";
 
         private void SetClass()
         {
@@ -58,6 +56,7 @@ namespace AntDesign
                 .If($"ant-table-cell-fix-{Fixed}", () => Fixed.IsIn("right", "left"))
                 .If($"ant-table-cell-fix-right-first", () => Fixed == "right" && Context?.Columns.FirstOrDefault(x => x.Fixed == "right")?.ColIndex == this.ColIndex)
                 .If($"ant-table-cell-fix-left-last", () => Fixed == "left" && Context?.Columns.LastOrDefault(x => x.Fixed == "left")?.ColIndex == this.ColIndex)
+                .If($"ant-table-cell-with-append", () => ColIndex == 1 && Table.TreeMode)
                 ;
         }
 
@@ -67,7 +66,6 @@ namespace AntDesign
             if (IsHeader)
             {
                 Context?.AddHeaderColumn(this);
-                Table?.Refresh();
             }
             else
             {
