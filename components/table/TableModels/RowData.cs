@@ -4,7 +4,19 @@ using System.Text;
 
 namespace AntDesign.TableModels
 {
-    public class RowData<TItem>
+    public class RowData<TItem> : RowData
+    {
+        public TItem Data { get; set; }
+
+        public RowData(int rowIndex, int pageIndex, TItem data)
+        {
+            this.RowIndex = rowIndex;
+            this.PageIndex = pageIndex;
+            this.Data = data;
+        }
+    }
+
+    public class RowData
     {
         public int RowIndex { get; set; }
 
@@ -14,13 +26,10 @@ namespace AntDesign.TableModels
 
         public bool Expanded { get; set; }
 
-        public TItem Data { get; set; }
+        public int Level { get; set; }
 
-        public RowData(int rowIndex, int pageIndex, TItem data)
-        {
-            this.RowIndex = rowIndex;
-            this.PageIndex = pageIndex;
-            this.Data = data;
-        }
+        public int CacheKey { get; set; }
+
+        public bool HasChildren { get; set; }
     }
 }
