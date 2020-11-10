@@ -213,14 +213,52 @@ namespace AntDesign
 
         #endregion
 
-        #region 选型的选择
+        #region 选项的选择
+
 
         public object SelectedValue { get; set; }
+
+        public AutoCompleteOption _selectedItem;
         /// <summary>
         /// 选择的项
         /// </summary>
         [Parameter]
-        public AutoCompleteOption SelectedItem { get; set; }
+        public AutoCompleteOption SelectedItem
+        {
+            get { return _selectedItem; }
+            set
+            {
+                _selectedItem = value;
+
+
+                if (KeyValueChanged.HasDelegate)
+                {
+                    if (KeyValueFunc == null)
+                        KeyValue = value?.Value;
+                    else
+                    {
+                        KeyValue = value == null ? null : KeyValueFunc(value?.Value);
+                    }
+                    KeyValueChanged.InvokeAsync(KeyValue);
+                }
+            }
+        }
+
+        /// <summary>
+        /// K/V模式下的Key值
+        /// </summary>
+        [Parameter]
+        public object KeyValue { get; set; }
+
+        [Parameter]
+        public EventCallback<object> KeyValueChanged { get; set; }
+
+        /// <summary>
+        /// 选中项绑定的数据转换，常用于K/V模式
+        /// </summary>
+        [Parameter]
+        public Func<object, object> KeyValueFunc { get; set; }
+
 
         /// <summary>
         /// 高亮的项目
