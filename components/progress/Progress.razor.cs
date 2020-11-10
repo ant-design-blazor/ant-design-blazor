@@ -63,12 +63,6 @@ namespace AntDesign
         public ProgressStrokeLinecap StrokeLinecap { get; set; } = ProgressStrokeLinecap.Round;
 
         /// <summary>
-        /// color of progress bar
-        /// </summary>
-        [Parameter]
-        public string Color { get; set; }
-
-        /// <summary>
         /// segmented success percent
         /// </summary>
         [Parameter]
@@ -93,7 +87,7 @@ namespace AntDesign
         /// color of circular progress, render linear-gradient when passing an object
         /// </summary>
         [Parameter]
-        public OneOf<string, Dictionary<int, string>> StrokeColor { get; set; }
+        public OneOf<string, Dictionary<string, string>> StrokeColor { get; set; }
 
         /// <summary>
         /// the total step count
@@ -233,12 +227,7 @@ namespace AntDesign
                     StringBuilder gradientBuilder = new StringBuilder(" background-image: linear-gradient(to right,");
                     foreach (var pair in StrokeColor.AsT1)
                     {
-                        if (pair.Key < 0 || pair.Key > 100)
-                        {
-                            throw new ArgumentOutOfRangeException(nameof(StrokeColor) + "'s key must be between 0 - 100.");
-                        }
-
-                        gradientBuilder.Append(" " + ToRGB(pair.Value) + $" {pair.Key}%,");
+                        gradientBuilder.Append($" {ToRGB(pair.Value)} {pair.Key},");
                     }
                     style += gradientBuilder.ToString().TrimEnd(',') + ");";
                 }
