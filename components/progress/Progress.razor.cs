@@ -218,6 +218,11 @@ namespace AntDesign
         {
             string style = $"{(StrokeLinecap == ProgressStrokeLinecap.Round ? string.Empty : "border-radius: 0px; ")}width: {Percent}%; height: {StrokeWidth}px;";
 
+            if (StrokeColor.Value == null)
+            {
+                return style;
+            }
+
             // width: 99.9%; height: 8px; background-image: linear-gradient(to right, rgb(16, 142, 233) 0%, rgb(135, 208, 104) 100%);
             // width: 99.9%; height: 8px; background-image: linear-gradient(to right, rgb(16, 142, 233), rgb(135, 208, 104));
             // '0%': '#108ee9', '100%': '#87d068',
@@ -233,7 +238,7 @@ namespace AntDesign
                             throw new ArgumentOutOfRangeException(nameof(StrokeColor) + "'s key must be between 0 - 100.");
                         }
 
-                        gradientBuilder.Append(" " + ToRGB(pair.Value) + ",");
+                        gradientBuilder.Append(" " + ToRGB(pair.Value) + $" {pair.Key}%,");
                     }
                     style += gradientBuilder.ToString().TrimEnd(',') + ");";
                 }
@@ -241,7 +246,7 @@ namespace AntDesign
             }
             else if (StrokeColor.IsT0)
             {
-
+                style += $"background: {ToRGB(StrokeColor.AsT0)};";
             }
 
             return style;
