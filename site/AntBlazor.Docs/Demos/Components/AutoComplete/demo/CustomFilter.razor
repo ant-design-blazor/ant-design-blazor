@@ -1,9 +1,21 @@
-﻿<span>Contains</span>
-<AutoComplete  Options="@options" FilterExpression="@((option,value)=>option.Label.Contains(value??"", StringComparison.InvariantCultureIgnoreCase))" />
+﻿
+<Divider>FilterComparison</Divider>
+<span>InvariantCultureIgnoreCase</span>
+<AutoComplete Options="@options" FilterComparison="@StringComparison.InvariantCultureIgnoreCase"/>
+<span>InvariantCulture</span>
+<AutoComplete Options="@options" FilterComparison="@StringComparison.InvariantCulture" />
+
+<Divider>StringFilterMode</Divider>
+<span>Contains</span>
+<AutoComplete Options="@options" FilterMode="@StringFilterMode.Contains" />
 <span>StartsWith</span>
-<AutoComplete  Options="@options" FilterExpression="@((option,value)=>option.Label.StartsWith(value??"", StringComparison.InvariantCultureIgnoreCase))" />
+<AutoComplete Options="@options" FilterMode="@StringFilterMode.StartsWith"  />
+
+<Divider>Custom</Divider>
+<AutoComplete Options="@options" FilterExpression="@((option,value)=>option.Label.EndsWith(value))" />
+
 
 @code
 {
-    private List<string> options = new List<string>() { "Burns Bay Road", "Downing Street", "Wall Street" };
+    List<string> options = new List<string>() { "Beijing", "Shanghai", "Guangzhou", "Shenzhen", "Chongqing", "Wuhan" };
 }

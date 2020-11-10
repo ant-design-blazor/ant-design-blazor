@@ -3,7 +3,7 @@
 @typeparam TOption
 @using AntDesign.Internal
 
-<div @ref="@_divRef" style="@Style" id="@Id">
+<div @ref="@Ref" style="@Style" id="@Id">
     <CascadingValue Value='$"ant-select-dropdown"' Name="PrefixCls">
         <OverlayTrigger Style="display: inline"
                         Visible="@(ShowPanel && !_isOptionsZero)"

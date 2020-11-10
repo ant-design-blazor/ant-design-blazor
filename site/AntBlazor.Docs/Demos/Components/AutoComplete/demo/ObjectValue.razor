@@ -1,21 +1,31 @@
-﻿<AutoComplete @bind-Value="@value" Options="options" CompareWith="CompareWith" OnSelectionChange="OnSelectionChange">
-    <OptionTemplate Context="option">
-        <AutoCompleteOption Value="@option.Value" Label="@option.Label">
-        </AutoCompleteOption>
-    </OptionTemplate>
+﻿<AutoComplete @bind-Value="@value"
+              Options="options"
+              CompareWith="CompareWith"
+              OnSelectionChange="OnSelectionChange"
+              OptionLabelExpression="x=>x.CityName"
+              OptionDisabledExpression="x=>x.IsProvincial==false  ">
 </AutoComplete>
 <Divider></Divider>
 <span>bind-Value:@value</span>
 <br />
 <span>SelectedValue:@(System.Text.Json.JsonSerializer.Serialize(selectItem?.Value))</span>
-
+<Button OnClick="ABC">1234</Button>
 @code
 {
+    void ABC()
+    {
+        options.ForEach(x => x.IsProvincial = !x.IsProvincial);
+    }
+
     private string value;
 
     ObjectValueOption[] options = new ObjectValueOption[] {
-                                    new ObjectValueOption()   { label= "Lucy", value= "lucy", age= 20 },
-                                    new ObjectValueOption()  { label= "Jack", value= "jack", age= 22 },
+                                    new ObjectValueOption()   { CityName= "Beijing", CityId= "1000", IsProvincial= true },
+                                    new ObjectValueOption()  { CityName= "Shanghai", CityId= "1001", IsProvincial= true },
+                                    new ObjectValueOption()   { CityName= "Guangzhou", CityId= "1002", IsProvincial= true },
+                                    new ObjectValueOption()  { CityName= "Shenzhen", CityId= "1003", IsProvincial= false },
+                                    new ObjectValueOption()  { CityName= "Chongqing", CityId= "1004", IsProvincial= true },
+                                    new ObjectValueOption()  { CityName= "Wuhan", CityId= "1005", IsProvincial= true },
                                     };
 
 
@@ -23,7 +33,7 @@
     {
         if (a is ObjectValueOption o1 && b is ObjectValueOption o2)
         {
-            return o1.value == o2.value;
+            return o1.CityId == o2.CityId;
         }
         else
         {
@@ -40,13 +50,8 @@
 
     public class ObjectValueOption
     {
-        public string label { get; set; }
-        public string value { get; set; }
-        public int age { get; set; }
-
-        public override string ToString()
-        {
-            return $"{label}-{age}";
-        }
+        public string CityName { get; set; }
+        public string CityId { get; set; }
+        public bool IsProvincial { get; set; }
     }
 }
