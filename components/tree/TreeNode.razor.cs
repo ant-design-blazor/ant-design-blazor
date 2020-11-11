@@ -67,23 +67,23 @@ namespace AntDesign
             NodeId = Interlocked.Increment(ref _nextNodeId);
         }
 
-        private string _name;
+        private string _key;
         /// <summary>
         /// 指定当前节点的唯一标识符名称。
         /// </summary>
         [Parameter]
-        public string Name
+        public string Key
         {
             get
             {
-                if (TreeComponent.NameExpression != null)
-                    return TreeComponent.NameExpression(this);
+                if (TreeComponent.KeyExpression != null)
+                    return TreeComponent.KeyExpression(this);
                 else
-                    return _name;
+                    return _key;
             }
             set
             {
-                _name = value;
+                _key = value;
             }
         }
 
@@ -207,14 +207,15 @@ namespace AntDesign
 
         private async Task OnSwitcherClick(MouseEventArgs args)
         {
-            if (TreeComponent.OnNodeLoadDelayAsync.HasDelegate)
+            this.IsExpanded = !this.IsExpanded;
+            if (TreeComponent.OnNodeLoadDelayAsync.HasDelegate && this.IsExpanded == true)
             {
+                //自有节点被展开时才需要延迟加载
                 //如果支持异步载入，那么在展开时是调用异步载入代码
                 this.IsLoading = true;
                 await TreeComponent.OnNodeLoadDelayAsync.InvokeAsync(new TreeEventArgs(TreeComponent, this, args));
                 this.IsLoading = false;
             }
-            this.IsExpanded = !this.IsExpanded;
             if (TreeComponent.OnExpandChanged.HasDelegate)
                 await TreeComponent.OnExpandChanged.InvokeAsync(new TreeEventArgs(TreeComponent, this, args));
         }

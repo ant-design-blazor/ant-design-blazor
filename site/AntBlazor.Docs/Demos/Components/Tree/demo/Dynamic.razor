@@ -21,7 +21,7 @@
         await Task.Delay(2000);//Ä£ÄâÒì²½Ö´ÐÐ
 
         var dataItem = ((Data)args.Node.DataItem);
-
+        dataItem.Childs.Clear();
         dataItem.Childs.Add(new Data() { Title = $"{dataItem.Title}-1" });
         dataItem.Childs.Add(new Data() { Title = $"{dataItem.Title}-2" });
     }

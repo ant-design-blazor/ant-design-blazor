@@ -1,34 +1,41 @@
 <Tree @ref="tree" Checkable Multiple>
     <Nodes>
-        <TreeNode Title="A">
+        <TreeNode Title="A" Key="100">
             <Nodes>
-                <TreeNode Title="A1">
+                <TreeNode Title="A1" Key="110">
                     <Nodes>
-                        <TreeNode Title="A1-1"></TreeNode>
-                        <TreeNode Title="A2-2"></TreeNode>
+                        <TreeNode Title="A1-1" Key="111"></TreeNode>
+                        <TreeNode Title="A2-2" Key="112"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A2" IsDisabled>
+                <TreeNode Title="A2" Key="120" IsDisabled>
                     <Nodes>
-                        <TreeNode Title="A2-1"></TreeNode>
-                        <TreeNode Title="A1-2"></TreeNode>
+                        <TreeNode Title="A2-1" Key="121"></TreeNode>
+                        <TreeNode Title="A1-2" Key="122"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A3" IsDisableCheckbox>
+                <TreeNode Title="A3" Key="130" IsDisableCheckbox>
                     <Nodes>
-                        <TreeNode Title="A3-1"></TreeNode>
-                        <TreeNode Title="A3-2" IsDisableCheckbox></TreeNode>
-                        <TreeNode Title="A3-3" IsDisabled></TreeNode>
+                        <TreeNode Title="A3-1" Key="131"></TreeNode>
+                        <TreeNode Title="A3-2" Key="132" IsDisableCheckbox></TreeNode>
+                        <TreeNode Title="A3-3" Key="133" IsDisabled></TreeNode>
                     </Nodes>
                 </TreeNode>
             </Nodes>
         </TreeNode>
-        <TreeNode Title="B"></TreeNode>
+        <TreeNode Title="B" Key="200"></TreeNode>
     </Nodes>
 </Tree>
 
 <br />
-<Button OnClick="PrintCheckedNodes">Print Checked Nodes</Button>
+<Button OnClick="PrintCheckedNodesTitle">Print Checked Nodes Title</Button>
+
+<Button OnClick="PrintCheckedNodesKey">Print Checked Nodes Key</Button>
+
+<br />
+<br />
+
+<Button OnClick="DecheckedAll">Dechecked All</Button>
 
 <Button OnClick="PrintSelectedNodes">Print Selected Nodes</Button>
 
@@ -52,10 +59,21 @@
 
     Tree tree;
 
-    private void PrintCheckedNodes()
+    private void PrintCheckedNodesTitle()
     {
-        printType = "CheckedNodes";
+        printType = "CheckedNodesTitle";
         printTexts = tree.CheckedTitles;
+    }
+
+    private void PrintCheckedNodesKey()
+    {
+        printType = "CheckedNodesKey";
+        printTexts = tree.CheckedKeys;
+    }
+
+    private void DecheckedAll()
+    {
+        tree.DecheckedAll();
     }
 
     private void PrintSelectedNodes()
@@ -68,4 +86,6 @@
     {
         tree.DeselectAll();
     }
+
+
 }

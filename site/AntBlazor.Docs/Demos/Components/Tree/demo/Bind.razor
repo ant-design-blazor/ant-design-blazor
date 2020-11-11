@@ -1,21 +1,62 @@
-<Tree @ref="tree" ShowIcon DataSource="games"
+<Tree @ref="tree"
+      ShowIcon DataSource="games"
+      Multiple="@multiple"
       TitleExpression="x => ((GameElementGroup)x.DataItem).Text"
       ChildrenExpression="x => ((GameElementGroup)x.DataItem).Items"
       IconExpression="x => ((GameElementGroup)x.DataItem).Icon"
-      IsLeafExpression="x=> ((GameElementGroup)x.DataItem).Items?.Count==0"></Tree>
+      IsLeafExpression="x=> ((GameElementGroup)x.DataItem).Items?.Count==0"
+      KeyExpression="x=>((GameElementGroup)x.DataItem).Id"
+      @bind-SelectedKey="@selectedKey"
+      @bind-SelectedData="@selectedData"
+      @bind-SelectedNode="@selectedNode"
+      @bind-SelectedKeys="@selectedKeys"
+      @bind-SelectedDatas="@selectedDatas"
+      @bind-SelectedNodes="@selectedNodes">
+
+</Tree>
+
+<Divider>Single</Divider>
+<span>bind-SelectedKey:@selectedKey</span>
 <br />
+<span>bind-SelectedData:@(System.Text.Json.JsonSerializer.Serialize(selectedData))</span>
+<br />
+<span>bind-SelectedNode:@(System.Text.Json.JsonSerializer.Serialize(selectedNode?.Id))</span>
+<Divider>Multiple</Divider>
+<Switch @bind-Value="multiple" />Multiple
+<br />
+<span>bind-SelectedKeys:@(System.Text.Json.JsonSerializer.Serialize(selectedKeys))</span>
+<br />
+<span>bind-SelectedData:@(System.Text.Json.JsonSerializer.Serialize(selectedDatas))</span>
+<br />
+<span>bind-SelectedNode:@(System.Text.Json.JsonSerializer.Serialize(selectedNodes?.Count()))</span>
+<Divider>Action</Divider>
 <Button OnClick="AddSon">Add Son Node</Button>
 <Button OnClick="DeleteNode">Delete Node</Button>
+
 @code{
+
+    private bool multiple;
 
     Tree tree;
 
+    string selectedKey;
+
+    object selectedData;
+
+    TreeNode selectedNode;
+
+    string[] selectedKeys;
+
+    object[] selectedDatas;
+
+    TreeNode[] selectedNodes;
+
+
     void AddSon()
     {
-        var selectNode = tree.SelectedNodes?.FirstOrDefault();
-        if (selectNode != null)
+        if (selectedNode != null)
         {
-            ((GameElementGroup)selectNode.DataItem).Items.Add(new GameElementGroup()
+            ((GameElementGroup)selectedNode.DataItem).Items.Add(new GameElementGroup()
             {
                 Text = $"Node {new Random().Next(1000)}",
                 Items = new List<GameElementGroup>()
@@ -26,16 +67,15 @@
 
     void DeleteNode()
     {
-        var selectNode = tree.SelectedNodes?.FirstOrDefault();
-        if (selectNode != null)
+        if (selectedNode != null)
         {
-            if (selectNode.ParentNode != null)
+            if (selectedNode.ParentNode != null)
             {
-                ((GameElementGroup)selectNode.ParentNode.DataItem).Items.Remove((GameElementGroup)selectNode.DataItem);
+                ((GameElementGroup)selectedNode.ParentNode.DataItem).Items.Remove((GameElementGroup)selectedNode.DataItem);
             }
             else
             {
-                ((List<GameElementGroup>)tree.DataSource).Remove((GameElementGroup)selectNode.DataItem);
+                ((List<GameElementGroup>)tree.DataSource).Remove((GameElementGroup)selectedNode.DataItem);
             }
             StateHasChanged();
 
@@ -46,40 +86,45 @@
 {
         new GameElementGroup()
         {
+            Id="100",
             Text="XBox",
             Icon="windows",
             Items=new List<GameElementGroup>()
 {
-                new GameElementGroup(){Text="Halo"},
-                 new GameElementGroup(){Text="Gears of War"},
-                 new GameElementGroup(){Text="Forza Motosport"},
+                new GameElementGroup(){    Id="101",Text="Halo"},
+                 new GameElementGroup(){    Id="102",Text="Gears of War"},
+                 new GameElementGroup(){    Id="103",Text="Forza Motosport"},
             }
         },
                 new GameElementGroup()
         {
+                    Id="200",
             Text="PlayStation",
             Icon="desktop",
             Items=new List<GameElementGroup>()
 {
-                new GameElementGroup(){Text="Uncharted" },
-                 new GameElementGroup(){Text="God Of War" },
+                new GameElementGroup(){    Id="201",Text="Uncharted" },
+                 new GameElementGroup(){ Id="202",Text="God Of War" },
                  new GameElementGroup(){Text="The Order:1886" },
             }
         },
                 new GameElementGroup()
         {
+                    Id="300",
             Text="Switch",
             Icon="mobile",
             Items=new List<GameElementGroup>()
 {
-                new GameElementGroup(){Text="Super Mario Bros"},
-                 new GameElementGroup(){Text="The Legend of Zelda"},
+                new GameElementGroup(){ Id="301",Text="Super Mario Bros"},
+                 new GameElementGroup(){ Id="302",Text="The Legend of Zelda"},
             }
         }
     };
 
     private class GameElementGroup
     {
+        public string Id { get; set; }
+
         public string Text { get; set; }
 
         public string Icon { get; set; }

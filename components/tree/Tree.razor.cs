@@ -89,28 +89,127 @@ namespace AntDesign
         /// </summary>
         internal Dictionary<long, TreeNode> SelectedNodesDictionary { get; set; } = new Dictionary<long, TreeNode>();
 
-        public List<TreeNode> SelectedNodes => SelectedNodesDictionary.Select(x => x.Value).ToList();
-
-        public List<string> SelectedNames => SelectedNodesDictionary.Select(x => x.Value.Name).ToList();
-
         public List<string> SelectedTitles => SelectedNodesDictionary.Select(x => x.Value.Title).ToList();
 
-        internal void SelectedNodeAdd(TreeNode treeNodes)
+        internal void SelectedNodeAdd(TreeNode treeNode)
         {
-            if (SelectedNodesDictionary.ContainsKey(treeNodes.NodeId) == false)
-                SelectedNodesDictionary.Add(treeNodes.NodeId, treeNodes);
+            if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == false)
+                SelectedNodesDictionary.Add(treeNode.NodeId, treeNode);
+
+            UpdateBindData();
         }
-        internal void SelectedNodeRemove(TreeNode treeNodes)
+
+        internal void SelectedNodeRemove(TreeNode treeNode)
         {
-            if (SelectedNodesDictionary.ContainsKey(treeNodes.NodeId) == true)
-                SelectedNodesDictionary.Remove(treeNodes.NodeId);
+            if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == true)
+                SelectedNodesDictionary.Remove(treeNode.NodeId);
+
+            UpdateBindData();
         }
-     
+
         public void DeselectAll()
         {
             foreach (var item in SelectedNodesDictionary.Select(x => x.Value).ToList())
             {
                 item.SetSelected(false);
+            }
+        }
+
+        /// <summary>
+        /// 选择的Key
+        /// </summary>
+        [Parameter]
+        public string SelectedKey { get; set; }
+
+        [Parameter]
+        public EventCallback<string> SelectedKeyChanged { get; set; }
+
+        /// <summary>
+        /// 选择的节点
+        /// </summary>
+        [Parameter]
+        public TreeNode SelectedNode { get; set; }
+
+        [Parameter]
+        public EventCallback<TreeNode> SelectedNodeChanged { get; set; }
+
+        /// <summary>
+        /// 选择的数据
+        /// </summary>
+        [Parameter]
+        public object SelectedData { get; set; }
+
+        [Parameter]
+        public EventCallback<object> SelectedDataChanged { get; set; }
+
+        /// <summary>
+        /// 选择的Key集合
+        /// </summary>
+        [Parameter]
+        public string[] SelectedKeys { get; set; }
+
+        [Parameter]
+        public EventCallback<string[]> SelectedKeysChanged { get; set; }
+
+        /// <summary>
+        /// 选择的节点集合
+        /// </summary>
+        [Parameter]
+        public TreeNode[] SelectedNodes { get; set; }
+
+        [Parameter]
+        public EventCallback<TreeNode[]> SelectedNodesChanged { get; set; }
+
+        /// <summary>
+        /// 选择的数据集合
+        /// </summary>
+        [Parameter]
+        public object[] SelectedDatas { get; set; }
+
+        [Parameter]
+        public EventCallback<object[]> SelectedDatasChanged { get; set; }
+
+        /// <summary>
+        /// 更新绑定数据
+        /// </summary>
+        private void UpdateBindData()
+        {
+            var selectedFirst = SelectedNodesDictionary.FirstOrDefault();
+            if (SelectedKeyChanged.HasDelegate)
+            {
+                SelectedKey = selectedFirst.Value?.Key;
+                SelectedKeyChanged.InvokeAsync(SelectedKey);
+            }
+
+            if (SelectedNodeChanged.HasDelegate)
+            {
+                SelectedNode = selectedFirst.Value;
+                SelectedNodeChanged.InvokeAsync(SelectedNode);
+            }
+
+            if (SelectedDataChanged.HasDelegate)
+            {
+                SelectedData = selectedFirst.Value?.DataItem;
+                SelectedDataChanged.InvokeAsync(SelectedData);
+            }
+
+
+            if (SelectedKeysChanged.HasDelegate)
+            {
+                SelectedKeys = SelectedNodesDictionary.Select(x => x.Value.Key).ToArray();
+                SelectedKeysChanged.InvokeAsync(SelectedKeys);
+            }
+
+            if (SelectedNodesChanged.HasDelegate)
+            {
+                SelectedNodes = SelectedNodesDictionary.Select(x => x.Value).ToArray();
+                SelectedNodesChanged.InvokeAsync(SelectedNodes);
+            }
+
+            if (SelectedDatasChanged.HasDelegate)
+            {
+                SelectedDatas = SelectedNodesDictionary.Select(x => x.Value.Key).ToArray();
+                SelectedDatasChanged.InvokeAsync(SelectedDatas);
             }
         }
 
@@ -126,7 +225,7 @@ namespace AntDesign
 
         public List<TreeNode> CheckedNodes => GetCheckedNodes(ChildNodes);
 
-        public List<string> CheckedNames => GetCheckedNodes(ChildNodes).Select(x => x.Name).ToList();
+        public List<string> CheckedKeys => GetCheckedNodes(ChildNodes).Select(x => x.Key).ToList();
 
         public List<string> CheckedTitles => GetCheckedNodes(ChildNodes).Select(x => x.Title).ToList();
 
@@ -220,7 +319,7 @@ namespace AntDesign
         /// 指定一个返回节点名称的方法。
         /// </summary>
         [Parameter]
-        public Func<TreeNode, string> NameExpression { get; set; }
+        public Func<TreeNode, string> KeyExpression { get; set; }
 
         /// <summary>
         /// 指定一个返回节点名称的方法。
@@ -345,7 +444,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<TreeNode> SwitcherIconTemplate { get; set; }
 
-    #endregion
+        #endregion
 
         /// <summary>
         /// Find Node
