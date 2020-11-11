@@ -22,6 +22,12 @@ namespace AntDesign
         [Parameter]
         public RenderMode RenderMode { get; set; } = RenderMode.Always;
 
+        /// <summary>
+        /// 排序的方式，默认为多选
+        /// </summary>
+        [Parameter]
+        public SortWay SortWay { get; set; } = SortWay.Default;
+
         [Parameter]
         public IEnumerable<TItem> DataSource
         {
@@ -146,6 +152,20 @@ namespace AntDesign
         void ITable.ReloadAndInvokeChange()
         {
             ReloadAndInvokeChange();
+        }
+
+        void ITable.SwithSortModelBySortWay()
+        {
+            if (this.SortWay == SortWay.Singleness)
+            {
+                foreach (var col in ColumnContext.Columns)
+                {
+                    if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
+                    {
+                        fieldColumn.SortModel.SetSortType(SortType.None);
+                    }
+                }
+            }
         }
 
         private void ReloadAndInvokeChange()

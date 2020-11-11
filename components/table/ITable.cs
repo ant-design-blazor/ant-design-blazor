@@ -30,6 +30,8 @@ namespace AntDesign
 
         internal void ReloadAndInvokeChange();
 
+        internal void SwithSortModelBySortWay();
+
         void SetSelection(string[] keys);
 
         internal int[] GetSelectedCacheKeys();

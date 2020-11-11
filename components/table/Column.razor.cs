@@ -94,6 +94,10 @@ namespace AntDesign
         {
             if (Sortable)
             {
+                var currenttype = SortModel.SortType;
+                Table.SwithSortModelBySortWay();
+                SortModel.SetSortType(currenttype);
+
                 SortModel.SwitchSortType();
                 Table.ReloadAndInvokeChange();
             }
