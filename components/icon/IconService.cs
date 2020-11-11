@@ -52,14 +52,10 @@ namespace AntDesign
         {
             if (!string.IsNullOrEmpty(svgImg))
             {
-                string svgStyle = string.Empty;
-                if (string.IsNullOrEmpty(svgClass))
+                string svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? "" : $"style=\"transform: rotate({rotate}deg);\"")}";
+                if (!string.IsNullOrEmpty(svgClass))
                 {
-                    svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? "" : $"style=\"transform: rotate({rotate}deg);\"")}";                   
-                }
-                else
-                {
-                    svgStyle = $"class=\"{svgClass}\" focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? "" : $"style=\"transform: rotate({rotate}deg);\"")}";  
+                    svgStyle += $" class=\"{svgClass}\"";
                 }
 
                 return svgImg.Insert(svgImg.IndexOf("<svg", StringComparison.Ordinal) + 4, $" {svgStyle} ");

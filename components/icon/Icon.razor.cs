@@ -58,10 +58,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (this is Icon icon)
-            {
-                Button?.Icons.Remove(icon);
-            }
+            Button?.Icons.Remove(this);
+
             base.Dispose(disposing);
         }
 
@@ -74,13 +72,10 @@ namespace AntDesign
 
             await SetupSvgImg();
 
-            if (this is Icon icon)
-            {
-                Button?.Icons.Add(icon);
-            }
+            Button?.Icons.Add(this);
 
-            ClassMapper.Add($"anticon anticon-{Type}");
-               // .If("anticon-spin", () => Spin);
+            ClassMapper.Add($"anticon")
+                .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type));
 
             await base.OnInitializedAsync();
         }
@@ -98,9 +93,7 @@ namespace AntDesign
                 return;
             }
 
-            string svgClass = null;
-            if (Spin) svgClass = "anticon-spin";
-
+            string svgClass = Spin ? "anticon-spin" : null;
 
             if (!string.IsNullOrEmpty(IconFont))
             {
@@ -111,12 +104,12 @@ namespace AntDesign
             }
             else
             {
-               await Task.Run(async () =>
-                {
-                    var svg = await IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
-                    _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
-                    await InvokeAsync(StateHasChanged);
-                });
+                await Task.Run(async () =>
+                 {
+                     var svg = await IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
+                     _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
+                     await InvokeAsync(StateHasChanged);
+                 });
             }
         }
 
