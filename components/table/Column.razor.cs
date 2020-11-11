@@ -95,7 +95,7 @@ namespace AntDesign
             if (Sortable)
             {
                 var currenttype = SortModel.SortType;
-                Table.SwithSortModelBySortWay();
+                Table.SwitchSortModelBySortWay();
                 SortModel.SetSortType(currenttype);
 
                 SortModel.SwitchSortType();

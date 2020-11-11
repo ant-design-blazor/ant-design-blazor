@@ -154,7 +154,7 @@ namespace AntDesign
             ReloadAndInvokeChange();
         }
 
-        void ITable.SwithSortModelBySortWay()
+        void ITable.SwitchSortModelBySortWay()
         {
             if (this.SortWay == SortWay.Singleness)
             {
