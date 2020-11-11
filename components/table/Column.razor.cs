@@ -86,5 +86,11 @@ namespace AntDesign
                 }
             }
         }
+
+        private void ToggleTreeNode()
+        {
+            RowData.Expanded = !RowData.Expanded;
+            Table?.Refresh();
+        }
     }
 }

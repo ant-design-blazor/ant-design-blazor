@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using AntDesign.Core.HashCodes;
@@ -10,6 +11,7 @@ namespace AntDesign
     public partial class Table<TItem> : AntDomComponentBase, ITable
     {
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
+        private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
         private bool _shouldRender = true;
         private int _parametersHashCode = 0;
@@ -31,6 +33,18 @@ namespace AntDesign
 
         [Parameter]
         public RenderFragment<TItem> ChildContent { get; set; }
+
+        [Parameter]
+        public RenderFragment<TItem> RowTemplate { get; set; }
+
+        [Parameter]
+        public RenderFragment<RowData<TItem>> ExpandTemplate { get; set; }
+
+        [Parameter]
+        public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
+
+        [Parameter]
+        public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
 
         [Parameter]
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
@@ -68,6 +82,9 @@ namespace AntDesign
         [Parameter]
         public int ScrollBarWidth { get; set; } = 17;
 
+        [Parameter]
+        public int IndentSize { get; set; } = 15;
+
         public ColumnContext ColumnContext { get; set; } = new ColumnContext();
 
         private IEnumerable<TItem> _showItems;
@@ -75,8 +92,14 @@ namespace AntDesign
         private IEnumerable<TItem> _dataSource;
 
         private bool _waitingReload = false;
+        private bool _waitingReloadAndInvokeChange = false;
+        private bool _treeMode = false;
 
         private bool ServerSide => _total > _dataSourceCount;
+
+        bool ITable.TreeMode => _treeMode;
+
+        int ITable.IndentSize => IndentSize;
 
         public void ReloadData()
         {
@@ -89,6 +112,7 @@ namespace AntDesign
 
         void ITable.Refresh()
         {
+            _shouldRender = true;
             StateHasChanged();
         }
 
@@ -163,6 +187,16 @@ namespace AntDesign
         {
             base.OnInitialized();
 
+            if (RowTemplate != null)
+            {
+                ChildContent = RowTemplate;
+            }
+
+            if (TreeChildren != null && DataSource.Any(x => TreeChildren(x).Any()))
+            {
+                _treeMode = true;
+            }
+
             SetClass();
 
             InitializePagination();
@@ -176,7 +210,14 @@ namespace AntDesign
         {
             base.OnAfterRender(firstRender);
 
-            if (_waitingReload)
+            if (_waitingReloadAndInvokeChange)
+            {
+                _waitingReloadAndInvokeChange = false;
+                _waitingReload = false;
+
+                ReloadAndInvokeChange();
+            }
+            else if (_waitingReload)
             {
                 _waitingReload = false;
                 Reload();
@@ -205,9 +246,11 @@ namespace AntDesign
             }
         }
 
-        protected override bool ShouldRender()
+        protected override bool ShouldRender() => this._shouldRender;
+
+        private void ToggleExpandRow(RowData<TItem> rowData)
         {
-            return this._shouldRender;
+            rowData.Expanded = !rowData.Expanded;
         }
     }
 }

@@ -62,7 +62,7 @@
                         <linearGradient id="ant-progress-gradient-@Id" x1="100%" y1="0%" x2="0%" y2="0%">
                             @foreach (var pair in StrokeColor.AsT1)
                             {
-                                <stop stop-color="@ToRGB(pair.Value)" offset="@(pair.Key)%" />
+                                <stop stop-color="@ToRGB(pair.Value)" offset="@(pair.Key)" />
                             }
                         </linearGradient>
                     </defs>

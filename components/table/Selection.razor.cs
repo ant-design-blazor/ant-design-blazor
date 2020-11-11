@@ -12,6 +12,8 @@ namespace AntDesign
 
         [Parameter] public string Key { get; set; }
 
+        [Parameter] public bool CheckStrictly { get; set; }
+
         bool ISelectionColumn.Checked
         {
             get => _checked;
@@ -73,7 +75,7 @@ namespace AntDesign
             {
                 if (Type == "radio")
                 {
-                    Table?.Selection.RowSelections.Where(x => x.CacheKey != this.CacheKey).ForEach(x => x.Check(false));
+                    Table?.Selection.RowSelections.Where(x => x.RowData.CacheKey != this.RowData.CacheKey).ForEach(x => x.Check(false));
                 }
 
                 Table?.Selection.InvokeSelectedRowsChange();
@@ -118,7 +120,7 @@ namespace AntDesign
             }
             else
             {
-                this.Table.Selection.RowSelections.ForEach(x => x.Check(x.CacheKey.IsIn(cacheKeys)));
+                this.Table.Selection.RowSelections.ForEach(x => x.Check(x.RowData.CacheKey.IsIn(cacheKeys)));
                 this.Table.Selection.StateHasChanged();
             }
         }

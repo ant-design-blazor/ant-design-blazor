@@ -69,9 +69,14 @@ namespace AntDesign
                 return;
             }
 
-            if (!Enum.TryParse(value.Substring(index).Trim(), ignoreCase: true, out _unit))
+            var unit = value.Substring(index).Trim();
+            if (!Enum.TryParse(unit, ignoreCase: true, out _unit))
             {
-                throw new FormatException();
+                _unit = unit switch
+                {
+                    "%" => CssSizeLengthUnit.Percent,
+                    _ => throw new FormatException(),
+                };
             }
         }
 
