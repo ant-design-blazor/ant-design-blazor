@@ -49,6 +49,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
 
+        [Parameter] 
+        public EventCallback<TItem> OnRowClick { get; set; }
+
         [Parameter]
         public bool Loading { get; set; }
 
@@ -251,6 +254,11 @@ namespace AntDesign
         private void ToggleExpandRow(RowData<TItem> rowData)
         {
             rowData.Expanded = !rowData.Expanded;
+        }
+
+        private void RowClick(TItem item)
+        {
+            OnRowClick.InvokeAsync(item);
         }
     }
 }
