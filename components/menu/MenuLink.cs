@@ -106,6 +106,7 @@ namespace AntDesign
                     else
                     {
                         MenuItem.Deselect();
+                        Menu.MarkStateHasChanged();
                     }
                 }
 
