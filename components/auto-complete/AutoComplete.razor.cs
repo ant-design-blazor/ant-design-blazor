@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -136,6 +135,7 @@ namespace AntDesign
         #endregion Parameters
 
         private ElementReference _divRef;
+        private OverlayTrigger _overlayTrigger;
 
         public object SelectedValue { get; set; }
         /// <summary>
@@ -165,7 +165,10 @@ namespace AntDesign
         #region 子控件触发事件
         public async Task InputFocus(FocusEventArgs e)
         {
-            this.OpenPanel();
+            if (!_isOptionsZero)
+            {
+                this.OpenPanel();
+            }
         }
 
         public async Task InputInput(ChangeEventArgs args)
@@ -190,7 +193,7 @@ namespace AntDesign
                     await SetSelectedItem(GetActiveItem());
                 }
             }
-            else
+            else if (!_isOptionsZero)
             {
                 this.OpenPanel();
             }
@@ -255,6 +258,9 @@ namespace AntDesign
             if (this.ShowPanel == false)
             {
                 this.ShowPanel = true;
+
+                _overlayTrigger.Show();
+
                 ResetActiveItem();
                 StateHasChanged();
             }
@@ -268,6 +274,9 @@ namespace AntDesign
             if (this.ShowPanel == true)
             {
                 this.ShowPanel = false;
+
+                _overlayTrigger.Close();
+
                 StateHasChanged();
             }
         }
@@ -318,7 +327,8 @@ namespace AntDesign
             var items = GetOptionItems();
             _isOptionsZero = items.Count == 0 && Options != null;
             if (items.Any(x => CompareWith(x.Value, this.ActiveValue)) == false)
-            {//如果当前激活项找在列表中不存在，那么我们需要做一些处理
+            {
+                // 如果当前激活项找在列表中不存在，那么我们需要做一些处理
                 if (items.Any(x => CompareWith(x.Value, this.SelectedValue)))
                 {
                     this.ActiveValue = this.SelectedValue;
@@ -330,6 +340,20 @@ namespace AntDesign
                 else
                 {
                     this.ActiveValue = null;
+                }
+            }
+
+            if (_overlayTrigger != null && ShowPanel)
+            {
+                // if options count == 0 then close overlay
+                if (_isOptionsZero && _overlayTrigger.IsOverlayShow())
+                {
+                    _overlayTrigger.Close();
+                }
+                // if options count > 0 then open overlay
+                else if (!_isOptionsZero && !_overlayTrigger.IsOverlayShow())
+                {
+                    _overlayTrigger.Show();
                 }
             }
         }
