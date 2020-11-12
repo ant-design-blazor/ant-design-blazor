@@ -266,5 +266,13 @@ namespace AntDesign
 
             base.Dispose(disposing);
         }
+
+        internal void MarkStateHasChanged()
+        {
+            if (!IsDisposed)
+            {
+                StateHasChanged();
+            }
+        }
     }
 }
