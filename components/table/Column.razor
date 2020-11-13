@@ -10,14 +10,18 @@
 }
 else if (IsColGroup)
 {
-    if (Width > 0)
+    if (Width != null)
     {
-        <col style="width: @(Width)px; min-width: @(Width)px;">
+        <col style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
+    }
+    else
+    {
+        <col />
     }
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-    <th class="@ClassMapper.Class" style="@FixedStyle @Style" @onclick="HandelHeaderClick" colspan="@HeaderColSpan">
+    <th class="@ClassMapper.Class" style=" @Style" @onclick="HandelHeaderClick" colspan="@HeaderColSpan">
         @if (Sortable)
         {
             if (ShowSorterTooltip)
@@ -37,7 +41,20 @@ else if (IsHeader && HeaderColSpan != 0)
 }
 else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 {
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan">
+    <td class="@ClassMapper.Class" style=" @Style" rowspan="@RowSpan" colspan="@ColSpan">
+        @if (ColIndex == 1 && Table.TreeMode)
+        {
+            <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @(RowData.Level* Table.IndentSize)px;"></span>
+            @if (RowData.HasChildren)
+            {
+                <button type="button" @onclick="ToggleTreeNode"
+                        class="ant-table-row-expand-icon @(RowData?.Expanded==true?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label="关闭行"></button>
+            }
+            else
+            {
+                <button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="关闭行"></button>
+            }
+        }
         @if (CellRender != null)
         {
             @CellRender(Field)

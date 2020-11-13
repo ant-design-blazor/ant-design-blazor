@@ -1,7 +1,6 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 @using AntDesign.TableModels
-@using System.Text.Json
 @typeparam TItem
 
 <div class="ant-table-wrapper">
@@ -11,7 +10,7 @@
             <Pagination Class="@_paginationClass"
                         Total="Total"
                         PageSize="PageSize"
-                        Current="PageIndex"
+                        PageIndex="PageIndex"
                         OnPageIndexChange="HandlePageIndexChange"
                         OnPageSizeChange="HandlePageSizeChange" />
         }
@@ -42,7 +41,7 @@
                                             <td style="padding: 0px; border: 0px; height: 0px;"></td>
                                         }
                                     </tr>
-                                    @body(this)
+                                    @body((this, _showItems, 0))
                                 </tbody>
                             </table>
                         </div>
@@ -54,7 +53,7 @@
                                 @colGroup(this)
                                 @header(this)
                                 <tbody class="ant-table-tbody">
-                                    @body(this)
+                                    @body((this, _showItems, 0))
                                 </tbody>
                             </table>
                         </div>
@@ -73,7 +72,7 @@
             <Pagination Class="@_paginationClass"
                         Total="Total"
                         PageSize="PageSize"
-                        Current="PageIndex"
+                        PageIndex="PageIndex"
                         OnPageIndexChange="HandlePageIndexChange"
                         OnPageSizeChange="HandlePageSizeChange" />
         }
@@ -87,6 +86,10 @@
         <thead class="ant-table-thead">
             <tr>
                 <CascadingValue Name="IsHeader" Value="true">
+                    @if (table.ExpandTemplate != null)
+                    {
+                        <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
+                    }
                     <CascadingValue Value="@table.ColumnContext">
                         @if (_fieldModel != null)
                         {
@@ -106,6 +109,10 @@ RenderFragment<Table<TItem>> colGroup = table =>
 @<Template>
     <CascadingValue Name="IsColGroup" Value="true">
         <colgroup>
+            @if (table.ExpandTemplate != null)
+            {
+                <col class="ant-table-expand-icon-col">
+            }
             @if (_fieldModel != null)
             {
                 @table.ChildContent(_fieldModel)
@@ -118,8 +125,13 @@ RenderFragment<Table<TItem>> colGroup = table =>
     </CascadingValue>
 </Template>;
 
-RenderFragment<Table<TItem>> body = table =>
+RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> body = context =>
 @<Template>
+    @{
+        var table = context.table;
+        var showItems = context.showItems;
+        var level = context.level;
+    }
 
     @if (table.Total <= 0)
     {
@@ -129,27 +141,51 @@ RenderFragment<Table<TItem>> body = table =>
             </td>
         </tr>
     }
-    else if (table._showItems != null && table.ColumnContext.Columns.Count > 0)
+    else if (showItems != null && table.ColumnContext.Columns.Count > 0)
     {
-        for (int i = 0; i < table._showItems.Count(); i++)
+        for (int i = 0; i < showItems.Count(); i++)
         {
             var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
-            var data = table._showItems.ElementAt(i);
+            var data = showItems.ElementAt(i);
             var cacheKey = data.GetHashCode();
             if (!table._dataSourceCache.ContainsKey(cacheKey))
             {
                 table._dataSourceCache[cacheKey] = new RowData<TItem>(rowIndex, table.PageIndex, data);
             }
-            var selected = table._dataSourceCache[cacheKey].Selected;
-            <CascadingValue Value="@rowIndex" Name="RowIndex">
+            var currentRowData = table._dataSourceCache[cacheKey] ?? new RowData<TItem>(rowIndex, table.PageIndex, data);
+            var hasChildren = table.TreeChildren(data)?.Any() == true;
+            currentRowData.CacheKey = cacheKey;
+            currentRowData.Level = level;
+            currentRowData.HasChildren = hasChildren;
                 <CascadingValue Value="table.ColumnContext">
-                    <CascadingValue Value="cacheKey" Name="CacheKey">
-                        <tr data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-0 @(selected ? "ant-table-row-selected" : "")">
+                    <CascadingValue Value="currentRowData" Name="RowData">
+                        <tr data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "")">
+                            @if (table.ExpandTemplate != null)
+                            {
+                                <td class="ant-table-cell ant-table-row-expand-icon-cell">
+                                    @if (table.RowExpandable(currentRowData))
+                                    {
+                                        <button type="button" @attributes="@(new Dictionary<string,object>() { {"onclick",_callbackFactory.Create(table,()=>table.ToggleExpandRow(currentRowData)) } })"
+                                                class="ant-table-row-expand-icon @(currentRowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label=""></button>
+                                    }
+                                </td>
+                            }
                             @table.ChildContent(data)
                         </tr>
                     </CascadingValue>
                 </CascadingValue>
-            </CascadingValue>
+            @if (hasChildren && currentRowData.Expanded)
+            {
+                @table.body((table, table.TreeChildren(data), level + 1));
+            }
+            @if (table.ExpandTemplate != null && table.RowExpandable(currentRowData))
+            {
+                <tr class="ant-table-expanded-row ant-table-expanded-row-level-1" style="@(currentRowData.Expanded?"":"display: none;")">
+                    <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
+                        @table.ExpandTemplate(currentRowData)
+                    </td>
+                </tr>
+            }
         }
     }
 </Template>;

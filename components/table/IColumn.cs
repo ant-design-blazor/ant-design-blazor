@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AntDesign.TableModels;
 
 namespace AntDesign
 {
@@ -16,14 +17,12 @@ namespace AntDesign
 
         public int ColIndex { get; set; }
 
-        public int RowIndex { get; }
-
         public string Fixed { get; set; }
-
-        public int CacheKey { get; set; }
 
         public string Title { get; set; }
 
-        public int Width { get; set; }
+        public string Width { get; set; }
+
+        public RowData RowData { get; set; }
     }
 }

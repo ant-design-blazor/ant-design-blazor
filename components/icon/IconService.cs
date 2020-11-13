@@ -48,11 +48,16 @@ namespace AntDesign
             return iconImg;
         }
 
-        public static string GetStyledSvg(string svgImg, string width = "1em", string height = "1em", string fill = "currentColor", int rotate = 0)
+        public static string GetStyledSvg(string svgImg, string svgClass = null, string width = "1em", string height = "1em", string fill = "currentColor", int rotate = 0)
         {
             if (!string.IsNullOrEmpty(svgImg))
             {
-                var svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? "" : $"style=\"transform: rotate({rotate}deg);\"")}";
+                string svgStyle = $"focusable=\"false\" width=\"{width}\" height=\"{height}\" fill=\"{fill}\" {(rotate == 0 ? "" : $"style=\"transform: rotate({rotate}deg);\"")}";
+                if (!string.IsNullOrEmpty(svgClass))
+                {
+                    svgStyle += $" class=\"{svgClass}\"";
+                }
+
                 return svgImg.Insert(svgImg.IndexOf("<svg", StringComparison.Ordinal) + 4, $" {svgStyle} ");
             }
 

@@ -21,6 +21,11 @@ jobs:
         with:
           dotnet-version: 3.1.300
 
+      - name: Setup .NET 5
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.100
+
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
@@ -31,7 +36,7 @@ jobs:
           echo "Publishing Version: ${VERSION}"
           echo "::set-env name=VERSION::${VERSION}"
           npm install
-          dotnet build
+          dotnet build components/AntDesign.csproj
           dotnet pack components/AntDesign.csproj /p:PackageVersion=$VERSION -c Release -o publish
           dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
 

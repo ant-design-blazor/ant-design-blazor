@@ -7,14 +7,18 @@
 }
 else if (IsColGroup)
 {
-    if (Width > 0)
+    if (Width !=null)
     {
-        <col style="width: @(Width)px; min-width: @(Width)px;">
+        <col class="ant-table-selection-col" style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
+    }
+    else
+    {
+        <col class="ant-table-selection-col">
     }
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-    <th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key" colspan="@HeaderColSpan">
+    <th class="@ClassMapper.Class ant-table-selection-column" style="@Style" @key="@Key" colspan="@HeaderColSpan">
         @if (Type == "checkbox")
         {
             <Checkbox @bind-Checked="_checked" CheckedChange="HandleCheckedChange" Indeterminate="Indeterminate" />
@@ -23,7 +27,7 @@ else if (IsHeader && HeaderColSpan != 0)
 }
 else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 {
-    <td class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
+    <td class="@ClassMapper.Class ant-table-selection-column" style=" @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
         @if (Type == "checkbox")
         {
             <Checkbox @bind-Checked="_checked" Disabled="Disabled" CheckedChange="HandleCheckedChange" />
