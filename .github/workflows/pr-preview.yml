@@ -59,7 +59,7 @@ jobs:
           npm install
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
           dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
 
       - name: Deploy Preview 🚀
         env:
