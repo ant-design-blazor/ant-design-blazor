@@ -30,7 +30,7 @@ title: Ant Design of Blazor
 - 💕 支持基于 WebAssembly 的客户端和基于 SignalR 的服务端 UI 事件交互。
 - 🎨 支持渐进式 Web 应用（PWA）
 - 🛡 使用 C# 构建，多范式静态语言带来高效的开发体验。
-- ⚙️ 基于 .NET Standard 2.1，可直接引用丰富的 .NET 类库。
+- ⚙️ 基于 .NET Standard 2.1/.NET 5，可直接引用丰富的 .NET 类库。
 - 🎁 可与已有的 ASP.NET Core MVC、Razor Pages 项目无缝集成。
 
 ## 🌈 在线示例
@@ -142,7 +142,7 @@ title: Ant Design of Blazor
 
 ## 🔨 本地开发
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/5.0) 5.0.100 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
 
