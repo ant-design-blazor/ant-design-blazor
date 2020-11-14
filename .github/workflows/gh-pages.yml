@@ -1,7 +1,7 @@
 ﻿name: Publish Docs
 
 env:
-  Version: 0.4.0
+  Version: 0.5.0
   NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
 
 on:
@@ -23,7 +23,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100-rc.2.20479.15
+          dotnet-version: 5.0.100
 
       - uses: actions/setup-node@v1
         with:
@@ -44,7 +44,7 @@ jobs:
           echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
           dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
