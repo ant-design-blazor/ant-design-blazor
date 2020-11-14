@@ -1,15 +1,29 @@
-﻿<div style="margin: 10px; overflow: scroll; height: 200px">
-    <div style="padding: 100px; height: 1000px; background: #eee; position: relative " id="area">
-		<Select DataSource="@_persons" 
-				@bind-Value="@_selectedValue"
-				LabelName="@nameof(Person.Name)" 
-				ValueName="@nameof(Person.Id)" 
-				Style="width: 120px"
-				PopupContainerSelector="#area"
-				Placeholder="Select a person">
-		</Select>
-    </div>
-</div>
+<Select DataSource="@_persons" 
+        @bind-Value="@_selectedValue"
+        LabelName="@nameof(Person.Name)" 
+        ValueName="@nameof(Person.Id)" 
+        Style="width: 120px"
+        Placeholder="Select a person">
+</Select>
+
+<Select DataSource="@_persons" 
+        LabelName="@nameof(Person.Name)" 
+        ValueName="@nameof(Person.Id)" 
+        Style="width:120px" 
+        Disabled
+        TItemValue="int"
+        TItem="Person">
+</Select>
+
+<Select DataSource="@_persons" 
+        LabelName="@nameof(Person.Name)" 
+        ValueName="@nameof(Person.Id)" 
+        DisabledName="@nameof(Person.NotAvailable)"
+        Style="width:120px" 
+        Loading 
+        TItemValue="int"
+        TItem="Person">
+</Select>
 
 @code
 {
@@ -21,7 +35,7 @@
     }
 
     List<Person> _persons;
-    int? _selectedValue = 2; // Lucy
+    int? _selectedValue = 12; // Jane
 
     protected override void OnInitialized()
     {

@@ -1,13 +1,26 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
-
-<div style="@InnerStyle"
-     class="@ClassMapper.Class"
-     aria-selected="@IsSelected"
-     @onclick="OnSelectOptionClick"
-     @onmouseenter="OnSelectOptionMouseEnter"
-     @onmouseleave="OnSelectOptionMouseLeave">
-    <div class="@ClassPrefix-content" @ref="_contentRef">@ChildContent</div>
+@typeparam TItemValue
+@typeparam TItem
+<div @ref="Ref"
+      @key="@this"
+      class="@ClassMapper.Class"
+      role="option"
+      aria-selected="@IsSelected"
+      style="@InnerStyle"
+      @onclick="@OnClick"
+      @onmouseenter="@OnMouseEnter"
+      @onmouseleave="@OnMouseLeave">
+    <div class="@ClassPrefix-content">
+        @if (ItemTemplate != null)
+        {
+             @ItemTemplate(Model.Item)
+        }
+        else
+        {
+            @Label
+        }
+    </div>
     @switch (SelectParent.SelectMode)
     {
         case SelectMode.Default:
@@ -17,14 +30,7 @@
             if (IsSelected)
             {
                 <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@ClassPrefix-state">
-                    @if (SelectParent.MenuItemSelectedIcon != null)
-                    {
-                        @SelectParent.MenuItemSelectedIcon
-                    }
-                    else
-                    {
-                        <Icon Type="check"></Icon>
-                    }
+                    <Icon Type="check"></Icon>
                 </span>
             }
             break;

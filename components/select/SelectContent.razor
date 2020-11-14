@@ -1,0 +1,158 @@
+﻿@namespace AntDesign
+@using AntDesign
+@typeparam TItemValue
+@typeparam TItem
+
+<div class="@Prefix-selector">
+    
+    @if (ShowPlaceholder)
+    {
+        <span class="@Prefix-selection-placeholder">@Placeholder</span>
+    }
+    else
+    {
+        @if (ParentSelect.SelectMode == SelectMode.Default)
+        {
+            var selectedItem = ParentSelect.SelectOptions.FirstOrDefault(x => x.IsSelected);
+            
+            if (string.IsNullOrEmpty(SearchValue) && selectedItem != null)
+            {
+                @if (ParentLabelTemplate != null)
+                {
+                    <CascadingValue Value="this" Name="SelectContent">
+                        <CascadingValue Value="@selectedItem" Name="SelectOption">
+                            @ParentLabelTemplate(selectedItem.Item)
+                        </CascadingValue>
+                    </CascadingValue>
+                }
+                else
+                {
+                    <span class="@Prefix-selection-item">
+                        <span class="@Prefix-selection-item-content">
+                            @selectedItem.Label
+                        </span>
+                    </span>
+                }
+            }
+        }
+        else
+        {
+            var selectedItems = ParentSelect.SortedSelectOptions.Where(x => x.IsSelected);
+
+            @foreach (var selectedOption in selectedItems)
+            {
+                @if (ParentLabelTemplate != null)
+                {
+                    <CascadingValue Value="this" Name="SelectContent">
+                        <CascadingValue Value="@selectedOption" Name="SelectOption">
+                            @ParentLabelTemplate(selectedOption.Item)
+                        </CascadingValue>
+                     </CascadingValue>
+                }
+                else
+                {
+                    <span class="@Prefix-selection-item">
+                        <span class="@Prefix-selection-item-content">
+                                @selectedOption.Label
+                        </span>
+                        <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
+                              @onclick="()=> OnRemoveSelected.InvokeAsync(selectedOption)" @onclick:stopPropagation="true">
+                            <Icon Type="close"></Icon>
+                        </span>
+                    </span>                    
+                }
+            }
+        }
+    }
+
+    <span class="@Prefix-selection-search" style="@_inputWidth">
+        <input @ref="ParentSelect._inputRef"
+                @oninput="OnInput"
+                @onkeyup="OnKeyUp"
+                @onkeydown="OnKeyDown"
+                @onfocus="OnFocus"
+                @onblur="OnBlur"
+                @attributes=@AdditonalAttributes() 
+                @onkeypress="@OnKeyPressEventHandler"
+                @onkeypress:preventDefault="@_suppressInput"
+                @onkeypress:stopPropagation="true"
+                value="@SearchValue"
+                id="@ParentSelect.Id"
+                role="combobox"
+                class="@Prefix-selection-search-input"
+                autocomplete="off"
+                aria-owns="@(ParentSelect.Id)_list"
+                aria-expanded="@IsOverlayShow"
+                aria-autocomplete="list"
+                aria-controls="@(ParentSelect.Id)_list"
+                style="@_inputStyle"/>
+
+        @if (ParentSelect.SelectMode != SelectMode.Default)
+        {
+            <span class="@Prefix-selection-search-mirror" aria-hidden="true">&nbsp;</span>
+        }
+    </span>
+</div>
+
+@if (ParentSelect.SelectMode == SelectMode.Default)
+{
+    if (ParentSelect.SuffixIcon != null)
+    {
+        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">
+            @ParentSelect.SuffixIcon
+        </span>
+    }
+    else if (ParentSelect.Loading)
+    {
+        <span class="ant-select-arrow ant-select-arrow-loading" unselectable="on" aria-hidden="true" style="user-select: none;">
+            <Icon Type="loading"></Icon>
+        </span>
+    }
+    else
+    {
+        if (ShowArrowIcon)
+        {
+            <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">
+                @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
+                {
+                    if (ShowSearchIcon)
+                    {
+                        <Icon Type="search"></Icon>
+                    }
+                }
+                else
+                {
+                    <Icon Type="down"></Icon>
+                }
+            </span>
+        }
+        else
+        {
+            <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">
+                @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
+                {
+                    if (ShowSearchIcon)
+                    {
+                        <Icon Type="search"></Icon>
+                    }
+                }
+            </span>
+        }
+        
+        @if (ParentSelect.AllowClear && ParentSelect.HasValue)
+        {
+            <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick" @onclick:stopPropagation="true">
+                <Icon Type="close-circle" theme="fill"></Icon>
+            </span>
+        }
+    }
+}
+else
+{
+    @if (ParentSelect.AllowClear && ParentSelect.HasValue)
+    {
+        <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick" @onclick:stopPropagation="true">
+            <Icon Type="close-circle" theme="fill"></Icon>
+        </span>
+    }
+}

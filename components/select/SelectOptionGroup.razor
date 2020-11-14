@@ -1,0 +1,29 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+@typeparam TItemValue
+@typeparam TItem
+
+@{
+    RenderFragment<SelectOptionItem<TItemValue, TItem>> selectOptionFragment = (model) => 
+        @<SelectOption
+            @key="@model.Item"
+            InternalId="@model.InternalId"
+            TItemValue="TItemValue"
+            TItem="TItem">
+        </SelectOption>;    
+}
+
+@foreach (var selectOption in SelectParent.SortedSelectOptions)
+{
+    if (_oldGroupName == selectOption.GroupName)
+    {
+        @selectOptionFragment(selectOption)
+    }
+    else
+    {
+        <div class="@ClassMapper.Class">@selectOption.GroupName</div>
+        @selectOptionFragment(selectOption)
+        
+        _oldGroupName = selectOption.GroupName;
+    }   
+}

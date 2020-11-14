@@ -1,0 +1,56 @@
+<Select DataSource="@_persons" 
+        @bind-Value="@_selectedValue"
+        LabelName="@nameof(Person.Name)" 
+        ValueName="@nameof(Person.Id)" 
+        DisabledName="@nameof(Person.NotAvailable)"
+        GroupName="@nameof(Person.Departement)"
+        SortByLabel="@SortDirection.Ascending"
+        SortByGroup="@SortDirection.Ascending"
+        Placeholder="Select a person"
+        OnSelectedItemChanged="@(item => OnOnSelectedItemChangedEventHandler(item))"
+        AllowClear>
+</Select>
+<br /><br />
+<p>
+    Selected Value: @_selectedValue <br/>
+    Selected Item: @_selectedItem?.Name
+</p>
+@code
+{
+    class Person
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Departement { get; set; }
+        public bool NotAvailable { get; set; }
+    }
+
+    List<Person> _persons;
+    int? _selectedValue;
+    Person _selectedItem;
+
+    protected override void OnInitialized()
+    {
+        _persons = new List<Person>
+        {
+            new Person {Id = 1, Name = "Jack", Departement = "Sales"}, 
+            new Person {Id = 2, Name = "Lucy", Departement = "Procurement"}, 
+            new Person {Id = 3, Name = "Yaoming", Departement = "Engineering"}, 
+            new Person {Id = 4, Name = "Frieda", Departement = "Procurement"}, 
+            new Person {Id = 5, Name = "Kathy", Departement = "Sales", NotAvailable = true}, 
+            new Person {Id = 6, Name = "Kate", Departement = "Engineering"}, 
+            new Person {Id = 7, Name = "Eric", Departement = "Sales"}, 
+            new Person {Id = 8, Name = "Jake", Departement = "Engineering", NotAvailable = true}, 
+            new Person {Id = 9, Name = "Olaf", Departement = "Sales"}, 
+            new Person {Id = 10, Name = "Sven", Departement = "Procurement"}, 
+            new Person {Id = 11, Name = "Bernd", Departement = "Procurement", NotAvailable = true}, 
+            new Person {Id = 12, Name = "Jane", Departement = "Sales"}, 
+            new Person {Id = 13, Name = "John", Departement = "Engineering"}
+        };
+    }
+
+    private void OnOnSelectedItemChangedEventHandler(Person value)
+    {
+        _selectedItem = value;
+    }
+}

@@ -1,5 +1,7 @@
 ﻿using System;
 
+#pragma warning disable 1591 // Disable missing XML comment
+
 namespace AntDesign
 {
     public static class SelectModeExtensions
