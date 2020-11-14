@@ -1,0 +1,69 @@
+<Select DataSource="@_provinces" 
+        @bind-Value="@_selectedProvince"
+        ValueName="@nameof(Province.Id)" 
+        LabelName="@nameof(Province.Name)"
+        Style="width: 200px"
+        Placeholder="Select a province"
+        OnSelectedItemChanged="@(item => OnOnSelectedItemChangedEventHandler(item))">
+</Select>
+
+<Select DataSource="@_cities" 
+        @bind-Value="@_selectedCity"
+        ValueName="@nameof(City.Id)" 
+        LabelName="@nameof(City.Name)" 
+        Style="width: 200px"
+        Placeholder="Select a city">
+</Select>
+<br /><br />
+<p>
+    Selected Province: @_selectedProvince <br/>
+    Selected City: @_selectedCity
+</p>
+
+@code
+{
+    class Province
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public List<City> Cities { get; set; } = new List<City>();
+    }
+
+    class City
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    List<Province> _provinces;
+    List<City> _cities = new List<City>();
+
+    int? _selectedProvince;
+    int? _selectedCity;
+
+    protected override void OnInitialized()
+    {
+        _provinces = new List<Province>() {
+            new Province() { Id = 1, Name = "Zhejiang", Cities = new List<City>()
+                {
+                    new City { Id = 100, Name = "Hangzhou" },
+                    new City { Id = 101, Name = "Ningbo" },
+                    new City { Id = 102, Name = "Wenzhou" }
+                }
+            },
+            new Province() { Id = 2, Name = "Jiangsu", Cities = new List<City>()
+                {
+                    new City { Id = 200, Name = "Nanjing" },
+                    new City { Id = 201, Name = "Suzhou" },
+                    new City { Id = 202, Name = "Zhenjiang" }
+                }
+            }
+        };
+    }
+
+    private void OnOnSelectedItemChangedEventHandler(Province value)
+    {
+        if (value != null)
+            _cities = value.Cities;
+    }
+}

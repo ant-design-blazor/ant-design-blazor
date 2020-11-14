@@ -388,6 +388,15 @@ export function removeCls(selector: Element | string, clsName: string | Array<st
   }
 }
 
+export function elementScrollIntoView(selector: Element | string) {
+    let element = getDom(selector);
+
+    if(!element)
+        return;
+
+    element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+}
+
 const oldBodyCacheStack = [];
 
 const hasScrollbar = () => {

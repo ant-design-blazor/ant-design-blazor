@@ -1,0 +1,46 @@
+@using AntDesign.Select
+<Select Mode="default" 
+        DataSource="@_myColors"
+        @bind-Value="@_selectedColorValue"
+        LabelName="@nameof(MyColor.Name)"
+        ValueName="@nameof(MyColor.Id)"
+        Placeholder="Select a color"
+        DefaultActiveFirstItem
+        AllowClear
+        EnableSearch>
+    <ItemTemplate>
+        <span style="Color: @((context as MyColor).Name);" >@((context as MyColor).Name)</span>
+    </ItemTemplate>
+    <LabelTemplate>
+        <LabelTemplateItem Context="item" 
+                           TItem="MyColor" 
+                           TItemValue="int">
+            <LabelTemplateItemContent>
+                <span style="color: @((item as MyColor).Name);" >@((item as MyColor).Name)</span>
+            </LabelTemplateItemContent>
+        </LabelTemplateItem>
+    </LabelTemplate>
+</Select>
+
+@code
+{
+    public class MyColor
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    List<MyColor> _myColors;
+
+    int _selectedColorValue;
+    
+    protected override void OnInitialized()
+    {
+        _myColors = new List<MyColor> 
+        {
+            new MyColor {Id = 1, Name = "gold"}, 
+            new MyColor {Id = 2, Name = "lime"}, 
+            new MyColor {Id = 3, Name = "green"}, 
+            new MyColor {Id = 4, Name = "cyan"}};
+    }
+}

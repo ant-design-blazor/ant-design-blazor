@@ -1,0 +1,59 @@
+<Select DataSource="@_persons"
+        @bind-Value="@_selectedValue"
+        LabelName="@nameof(Person.Name)"
+        ValueName="@nameof(Person.Id)"
+        DisabledName="@nameof(Person.NotAvailable)"
+        Placeholder="Search for..."
+        OnSelectedItemChanged="@(item => OnOnSelectedItemChangedEventHandler(item))"
+        DefaultActiveFirstItem="false"
+        EnableSearch
+        AllowClear>
+    <ItemTemplate>
+        <div>@((context as Person).Name) - (@((context as Person).Departement))</div>
+    </ItemTemplate>
+</Select>
+<br /><br />
+<p>
+    Selected Value: @if(!_selectedValue.Equals(Guid.Empty)) { @_selectedValue } <br />
+    Selected Item: @if (_selectedItem != null) { @($"{_selectedItem.Name} ({_selectedItem.Departement})") } 
+</p>
+
+@code
+{
+    class Person
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Departement { get; set; }
+        public bool NotAvailable { get; set; }
+    }
+
+    List<Person> _persons;
+    Guid _selectedValue;
+    Person _selectedItem;
+    
+    protected override void OnInitialized()
+    {
+        _persons = new List<Person>
+        {
+            new Person {Id = Guid.Parse("29143f04-1a51-4f16-a171-3ce17b5ecbff"), Name = "Jack", Departement = "Sales"}, 
+            new Person {Id = Guid.Parse("d7b2b143-2c1e-4658-8a49-d427bfb891fd"), Name = "Lucy", Departement = "Procurement"}, 
+            new Person {Id = Guid.Parse("019fd631-e179-4ea6-a130-e116358e4c92"), Name = "Yaoming", Departement = "Engineering"},
+            new Person {Id = Guid.Parse("386c6298-fde1-408e-91d5-2806eaec2277"), Name = "Frieda", Departement = "Procurement"}, 
+            new Person {Id = Guid.Parse("f9a6f63d-6535-4557-ad12-071c5112bc44"), Name = "Kathy", Departement = "Sales", NotAvailable = true}, 
+            new Person {Id = Guid.Parse("a6010215-74c5-4d7c-8cbc-85324313cd22"), Name = "Kate", Departement = "Engineering"}, 
+            new Person {Id = Guid.Parse("f59abd0c-2b02-4cef-9617-574bf7f65cc0"), Name = "Eric", Departement = "Sales"}, 
+            new Person {Id = Guid.Parse("8c9ee881-3df7-413b-b282-a136410b88fe"), Name = "Jake", Departement = "Engineering", NotAvailable = true}, 
+            new Person {Id = Guid.Parse("922d6fac-cced-40a1-92e8-116b1cc3191a"), Name = "Olaf", Departement = "Sales"}, 
+            new Person {Id = Guid.Parse("4e438442-4239-44cc-87a8-7f6aaf941155"), Name = "Sven", Departement = "Procurement"}, 
+            new Person {Id = Guid.Parse("1ca00e11-d8b7-4d97-bf52-26ee24003f51"), Name = "Bernd", Departement = "Procurement", NotAvailable = true}, 
+            new Person {Id = Guid.Parse("8d32f1d3-92bb-4395-a7af-a1110a25749f"), Name = "Jane", Departement = "Sales"}, 
+            new Person {Id = Guid.Parse("54ad5bc9-d5b4-417c-985a-3494f75191d6"), Name = "John", Departement = "Engineering"}
+        };
+    }
+
+    private void OnOnSelectedItemChangedEventHandler(Person value)
+    {
+        _selectedItem = value;
+    }
+}

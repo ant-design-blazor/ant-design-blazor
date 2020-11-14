@@ -419,5 +419,25 @@ namespace AntDesign.Internal
 
             return display;
         }
+
+        internal async Task UpdatePosition(int? overlayLeft = null, int? overlayTop = null)
+        {
+            Element trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+
+            _overlayLeft = overlayLeft;
+            _overlayTop = overlayTop;
+
+            Element overlayElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
+            Element containerElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.PopupContainerSelector);
+
+            int left = GetOverlayLeft(trigger, overlayElement, containerElement);
+            int top = GetOverlayTop(trigger, overlayElement, containerElement);
+
+            int zIndex = await JsInvokeAsync<int>(JSInteropConstants.GetMaxZIndex);
+
+            _overlayStyle = $"z-index:{zIndex};left: {left}px;top: {top}px;{GetTransformOrigin()}";
+
+            StateHasChanged();
+        }
     }
 }

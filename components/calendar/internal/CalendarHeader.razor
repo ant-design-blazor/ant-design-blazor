@@ -7,54 +7,44 @@
      id="@Id"
      @ref="@Ref">
     @{
-        int startYear = Calendar.Value.AddYears(-10).Year;
-        int endYear = Calendar.Value.AddYears(10).Year;
-
         if (Calendar.ValidRange != null)
         {
-            startYear = Calendar.ValidRange[0].Year;
-            endYear = Calendar.ValidRange[1].Year;
+            _startYear = Calendar.ValidRange[0].Year;
+            _endYear = Calendar.ValidRange[1].Year;
         }
-
-        string yearFormat = Calendar.CultureInfo.GetDateLocale().YearFormat;
     }
+
     <Select class=@($"{PrefixCls}-year-select")
-            Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
-            DefaultValue=@($"{Calendar.Value.Year}")
-            OnChange="async (value, option) => await OnSelectYear(value.AsT0)">
-        @for (int year = startYear; year <= endYear; year++)
-        {
-            DateTime yearDate = new DateTime(year, 1, 1);
-            <SelectOption @key="@yearDate.Year" Value=@($"{yearDate.Year}")>
-                @(yearDate.ToString(yearFormat, Calendar.CultureInfo))
-            </SelectOption>
-        }
+        DataSource="@_years"
+        @bind-Value="@_selectedYear"
+        LabelName="@nameof(YearMonthModel.Label)"
+        ValueName="@nameof(YearMonthModel.Value)"
+        Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
+        style="width: 70px;"
+        TItemValue="int"
+        TItem="YearMonthModel"
+        SortByLabel="@SortDirection.Ascending"
+        OnSelectedItemChanged="@(item => OnSelectYear(item.Value))">
     </Select>
 
     @if (Calendar.Mode == DatePickerType.Month)
     {
-        int startMonth = 1;
-        int endMonth = 12;
-
         if (Calendar.ValidRange != null)
         {
-            startMonth = Calendar.Value.Year == Calendar.ValidRange[0].Year ? Calendar.ValidRange[0].Month : startMonth;
-            endMonth = Calendar.Value.Year == Calendar.ValidRange[1].Year ? Calendar.ValidRange[1].Month : endMonth;
+            _startMonth = Calendar.Value.Year == Calendar.ValidRange[0].Year ? Calendar.ValidRange[0].Month : _startMonth;
+            _endMonth = Calendar.Value.Year == Calendar.ValidRange[1].Year ? Calendar.ValidRange[1].Month : _endMonth;
         }
 
-        string monthFormat = Calendar.CultureInfo.GetDateLocale().MonthFormat;
-
         <Select class=@($"{PrefixCls}-month-select")
+                DataSource="@_months"
+                @bind-Value="@_selectedMonth"
+                LabelName="@nameof(YearMonthModel.Label)"
+                ValueName="@nameof(YearMonthModel.Value)"
                 Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
-                DefaultValue=@($"{Calendar.Value.Month}")
-                OnChange="async (value, option) => await OnSelectMonth(value.AsT0)">
-            @for (int month = startMonth; month <= endMonth; month++)
-            {
-                DateTime monthDate = new DateTime(1, month, 1);
-                <SelectOption @key="@monthDate.Month" Value=@($"{monthDate.Month}")>
-                    @(monthDate.ToString(monthFormat, Calendar.CultureInfo))
-                </SelectOption>
-            }
+                style="width: 70px;"
+                TItemValue="int"
+                TItem="YearMonthModel"                
+                OnSelectedItemChanged="@(item => OnSelectMonth(item.Value))">
         </Select>
     }
 
@@ -75,14 +65,94 @@
     [CascadingParameter(Name = "Calendar")]
     public Calendar Calendar { get; set; }
 
-    private DateTime currentDate;
-    private bool hasChangeYear = true;
+    private DateTime _currentDate;
+    //private bool _hasChangeYear = true;
+
+    private int _selectedYear;
+    private int _selectedMonth;
+    private List<YearMonthModel> _years = new List<YearMonthModel>();
+    private List<YearMonthModel> _months = new List<YearMonthModel>();
+    private int _startYear;
+    private int _endYear;
+    private int _startMonth = 1;
+    private int _endMonth = 12;
+    private string _yearFormat;
+    private string _monthFormat;
+    private bool _isInitalized;
+
+    class YearMonthModel
+    {
+        public int Value { get; set; }
+        public string Label { get; set; }
+    }
+
+    private void CreateYearsDelta()
+    {
+        int indexCurrentYear = _years.FindIndex(x => x.Value == _selectedYear);
+        
+        _years.RemoveRange(0, indexCurrentYear);
+        _years.RemoveRange(1, _years.Count() - 1);
+
+        int startYear = _selectedYear -10;
+        int endYear = _selectedYear -1;
+
+        for (int year = _selectedYear - 10; year <= _selectedYear -1; year++)
+        {
+            DateTime yearDate = new DateTime(year, 1, 1);    
+
+            _years.Add(new YearMonthModel { Value = yearDate.Year, Label = yearDate.ToString(_yearFormat, Calendar.CultureInfo) });
+        }
+
+        startYear = _selectedYear + 1;
+        endYear = _selectedYear + 10;
+
+        for (int year = startYear; year <= endYear; year++)
+        {
+            DateTime yearDate = new DateTime(year, 1, 1);    
+
+            _years.Add(new YearMonthModel { Value = yearDate.Year, Label = yearDate.ToString(_yearFormat, Calendar.CultureInfo) });
+        }
+    }
+
+    private void InitialCreateYears()
+    {   
+        for (int year = _startYear; year <= _endYear; year++)
+        {
+            DateTime yearDate = new DateTime(year, 1, 1);    
+            
+            _years.Add(new YearMonthModel { Value = yearDate.Year, Label = yearDate.ToString(_yearFormat, Calendar.CultureInfo) });
+        }
+    }
+
+    private void InitialCreateMonths()
+    {
+        for (int month = _startMonth; month <= _endMonth; month++)
+        {
+            DateTime monthDate = new DateTime(1, month, 1);
+
+            _months.Add(new YearMonthModel { Value = monthDate.Month, Label = monthDate.ToString(_monthFormat, Calendar.CultureInfo) });
+        }
+    }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        currentDate = Calendar.Value;
+        _currentDate = Calendar.Value;
+
+        _yearFormat = Calendar.CultureInfo.GetDateLocale().YearFormat;
+        _monthFormat = Calendar.CultureInfo.GetDateLocale().MonthFormat;
+
+        _startYear = Calendar.Value.AddYears(-10).Year;
+        _endYear = Calendar.Value.AddYears(10).Year;
+
+        InitialCreateYears();
+        InitialCreateMonths();
+
+        _selectedYear = Calendar.Value.Year;
+        _selectedMonth = Calendar.Value.Month;
+
+        _isInitalized = true;
     }
 
     private void OnModeChange(string value)
@@ -90,15 +160,14 @@
         Calendar.ChangePickerType(value);
     }
 
-    private async Task OnSelectYear(string value)
+    private async Task OnSelectYear(int value)
     {
-        int year = Convert.ToInt32(value);
-        await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, year: year));
+        CreateYearsDelta();
+        await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, year: value));
     }
 
-    private async Task OnSelectMonth(string value)
+    private async Task OnSelectMonth(int value)
     {
-        int month = Convert.ToInt32(value);
-        await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, month: month));
+        await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, month: value));
     }
 }

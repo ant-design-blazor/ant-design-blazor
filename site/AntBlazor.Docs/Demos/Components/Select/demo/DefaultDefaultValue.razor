@@ -1,0 +1,94 @@
+<Select DataSource="@_persons" 
+        @bind-Value="@_selectedValue"
+        LabelName="@nameof(Person.Name)" 
+        ValueName="@nameof(Person.Id)" 
+        DisabledName="@nameof(Person.NotAvailable)"
+        Placeholder="Select a person"
+        DefaultActiveFirstItem="@_defaultActiveFirstItem"
+        DefaultValue="@_defaultValue"
+        OnSelectedItemChanged="@(item => OnSelectedItemChangedEventHandler(item))"
+        AllowClear>
+</Select>
+<br/>
+<Button OnClick="@SetClearValue" >Clear Value</Button>
+<Button OnClick="@SetValue" >Set Value (Eric)</Button>
+<Button OnClick="@SetWrongValue" >Set Wrong Value</Button>
+<Button OnClick="@SetDeactivatedValue" >Set Deactivated Value</Button>
+<Button OnClick="@ToggleDefaultActiveFirstItem" >Toggle Default First Item (@_defaultActiveFirstItem)</Button>
+<Button OnClick="@ToggleDefaultValue" >Toggle Default Value (@_defaultValue)</Button>
+<br /><br />
+<p>
+    Selected Value: @_selectedValue <br />
+    Selected Item: @if (_selectedItem != null) { @($"{_selectedItem.Name} ({_selectedItem.Id})") } 
+</p>
+
+@code
+{
+    class Person
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool NotAvailable { get; set; }
+    }
+
+    List<Person> _persons;
+    int? _selectedValue;
+    Person _selectedItem;
+    bool _defaultActiveFirstItem = true;
+    int? _defaultValue;
+
+    protected override void OnInitialized()
+    {
+        _persons = new List<Person> 
+        {
+            new Person {Id = 1, Name = "Jack", NotAvailable = true}, 
+            new Person {Id = 2, Name = "Lucy"}, 
+            new Person {Id = 3, Name = "Yaoming"}, 
+            new Person {Id = 4, Name = "Frieda"}, 
+            new Person {Id = 5, Name = "Kathy", NotAvailable = true}, 
+            new Person {Id = 6, Name = "Kate"}, 
+            new Person {Id = 7, Name = "Eric"}, 
+            new Person {Id = 8, Name = "Jake", NotAvailable = true}, 
+            new Person {Id = 9, Name = "Olaf"}, 
+            new Person {Id = 10, Name = "Sven"}, 
+            new Person {Id = 11, Name = "Bernd", NotAvailable = true}, 
+            new Person {Id = 12, Name = "Jane"}, 
+            new Person {Id = 13, Name = "John"}
+        };
+    }
+
+    private void SetValue()
+    {
+        _selectedValue = 7;  // Eric
+    }
+
+    private void SetClearValue()
+    {
+        _selectedValue = null;
+    }
+
+    private void SetWrongValue()
+    {
+        _selectedValue = 9999; // Unknown value
+    }
+
+    private void SetDeactivatedValue()
+    {
+        _selectedValue = 5; // Kathy
+    }
+
+    private void OnSelectedItemChangedEventHandler(Person value)
+    {
+        _selectedItem = value;
+    }
+
+    private void ToggleDefaultActiveFirstItem()
+    {
+        _defaultActiveFirstItem = !_defaultActiveFirstItem;
+    }
+
+    private void ToggleDefaultValue()
+    {
+       _defaultValue = _defaultValue == null ? (int?)12 : null; // Set Jane as default value
+    }
+}

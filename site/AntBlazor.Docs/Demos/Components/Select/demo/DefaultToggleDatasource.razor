@@ -1,0 +1,115 @@
+<Select DataSource="@_persons" 
+        @bind-Value="@_selectedValue"
+        LabelName="@nameof(Person.Name)" 
+        ValueName="@nameof(Person.Id)" 
+        DisabledName="@nameof(Person.NotAvailable)"
+        DefaultValue="12"
+        Placeholder="Select a person"
+        OnSelectedItemChanged="@(item => OnOnSelectedItemChangedEventHandler(item))"
+        OnDataSourceChanged="@OnDataSourceChangedEventHandler"
+        SortByLabel="@SortDirection.Ascending"
+        AllowClear>
+</Select>
+<Button OnClick="@SetDatasource1" >Set Datasource 1</Button>
+<Button OnClick="@SetDatasource2" >Set Datasource 2</Button>
+<Button OnClick="@SetDatasourceNull" >Set NULL</Button>
+<Button OnClick="@AddPerson" >Add Person (John)</Button>
+<Button OnClick="@RemovePerson" >Remove Person (John)</Button>
+<Button OnClick="@ClearDS" >Clear Datasource</Button>
+<br /><br />
+<p>
+    Selected Value: @_selectedValue <br/>
+    Selected Item: @_selectedItem?.Name
+</p>
+@code
+{
+    class Person
+    {
+        public Person(){}
+
+        public Person(Person obj)
+        {
+            Id = obj.Id;
+            Name = obj.Name;
+            NotAvailable = obj.NotAvailable;
+        }
+
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool NotAvailable { get; set; }
+    }
+
+    List<Person> _persons;
+    List<Person> _persons1;
+    List<Person> _persons2;
+
+    int? _selectedValue;
+    Person _selectedItem;
+
+    protected override void OnInitialized()
+    {
+        _persons1 = new List<Person>
+        {
+            new Person {Id = 1, Name = "Jack"}, 
+            new Person {Id = 2, Name = "Lucy"}, 
+            new Person {Id = 3, Name = "Yaoming"}, 
+            new Person {Id = 4, Name = "Frieda"}, 
+            new Person {Id = 5, Name = "Kathy", NotAvailable = true}, 
+            new Person {Id = 6, Name = "Kate"}, 
+            new Person {Id = 7, Name = "Eric"}
+        };
+
+        _persons2 = new List<Person> 
+        {
+            new Person {Id = 8, Name = "Jake", NotAvailable = true}, 
+            new Person {Id = 9, Name = "Olaf"},
+            new Person {Id = 10, Name = "Sven"}, 
+            new Person {Id = 11, Name = "Bernd", NotAvailable = true}, 
+            new Person {Id = 12, Name = "Jane"}, 
+            new Person {Id = 13, Name = "John"}};
+    }
+
+    private void SetDatasource1()
+    {
+        _persons = _persons1.ConvertAll(x => new Person(x));
+    }
+
+    private void SetDatasource2()
+    {
+        _persons = _persons2.ConvertAll(x => new Person(x));
+    }
+
+    private void SetDatasourceNull()
+    {
+        _persons = null;
+    }
+
+    private void ClearDS()
+    {
+        _persons?.Clear();
+    }
+
+    private void AddPerson()
+    {
+        if (_persons != null && _persons.All(x => x.Id != 13))
+            _persons.Add(new Person() {Id = 13, Name = "John"});
+    }
+
+    private void RemovePerson()
+    {
+        var item = _persons?.FirstOrDefault(x => x.Id == 13);
+
+        if (item != null)
+            _persons.Remove(item);
+    }
+
+    private void OnOnSelectedItemChangedEventHandler(Person value)
+    {
+        _selectedItem = value;
+    }
+
+    private void OnDataSourceChangedEventHandler()
+    {
+        Console.WriteLine("--- DataSourceChanged --- " + DateTime.Now.ToString("O"));
+    }
+}

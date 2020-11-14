@@ -1,15 +1,19 @@
-﻿<div style="margin: 10px; overflow: scroll; height: 200px">
-    <div style="padding: 100px; height: 1000px; background: #eee; position: relative " id="area">
-		<Select DataSource="@_persons" 
-				@bind-Value="@_selectedValue"
-				LabelName="@nameof(Person.Name)" 
-				ValueName="@nameof(Person.Id)" 
-				Style="width: 120px"
-				PopupContainerSelector="#area"
-				Placeholder="Select a person">
-		</Select>
-    </div>
-</div>
+<Select Mode="multiple" 
+        DataSource="@_persons"
+        @bind-Values="@_selectedValues"
+        LabelName="@nameof(Person.Name)"
+        ValueName="@nameof(Person.Id)"
+        DisabledName="@nameof(Person.NotAvailable)"
+        Placeholder="Select multiple persons"
+        OnSelectedItemsChanged="@(items => OnOnSelectedItemsChangedEventHandler(items))"
+        AllowClear
+        EnableSearch>
+</Select>
+<br /><br />
+<p>
+    Selected Items Values Count: @_selectedValues?.Count() <br />
+    Selected Items Count: @_selectedItems?.Count()
+</p>
 
 @code
 {
@@ -21,7 +25,8 @@
     }
 
     List<Person> _persons;
-    int? _selectedValue = 2; // Lucy
+    IEnumerable<int> _selectedValues;
+    IEnumerable<Person> _selectedItems;
 
     protected override void OnInitialized()
     {
@@ -39,7 +44,11 @@
             new Person {Id = 10, Name = "Sven"}, 
             new Person {Id = 11, Name = "Bernd", NotAvailable = true}, 
             new Person {Id = 12, Name = "Jane"}, 
-            new Person {Id = 13, Name = "John"}
-        };
+            new Person {Id = 13, Name = "John"}};
+    }
+
+    private void OnOnSelectedItemsChangedEventHandler(IEnumerable<Person> value)
+    {
+        _selectedItems = value;
     }
 }

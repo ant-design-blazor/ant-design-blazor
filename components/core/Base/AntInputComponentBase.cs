@@ -61,7 +61,7 @@ namespace AntDesign
         /// @bind-Value="model.PropertyName"
         /// </example>
         [Parameter]
-        public TValue Value
+        public virtual TValue Value
         {
             get { return _value; }
             set
@@ -79,7 +79,7 @@ namespace AntDesign
         /// Gets or sets a callback that updates the bound value.
         /// </summary>
         [Parameter]
-        public EventCallback<TValue> ValueChanged { get; set; }
+        public virtual EventCallback<TValue> ValueChanged { get; set; }
 
         /// <summary>
         /// Gets or sets an expression that identifies the bound value.
@@ -295,7 +295,7 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        internal void ResetValue()
+        internal virtual void ResetValue()
         {
             _isNotifyFieldChanged = false;
             CurrentValue = _firstValue;

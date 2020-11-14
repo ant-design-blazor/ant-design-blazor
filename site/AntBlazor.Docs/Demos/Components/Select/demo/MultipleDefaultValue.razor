@@ -1,0 +1,121 @@
+<Select Mode="multiple"
+        DataSource="@_persons" 
+        @bind-Values="@_selectedValues"
+        LabelName="@nameof(Person.Name)" 
+        ValueName="@nameof(Person.Id)" 
+        DisabledName="@nameof(Person.NotAvailable)"
+        Placeholder="Select a person"
+        DefaultActiveFirstItem="@_defaultActiveFirstItem"
+        DefaultValues="@_defaultValues"
+        OnSelectedItemsChanged="@(items => OnSelectedItemsChangedEventHandler(items))"
+        AllowClear>
+</Select>
+<br/>
+<Button OnClick="@SetClearValues" >Clear Values</Button>
+<Button OnClick="@SetValues" >Set Values</Button>
+<Button OnClick="@SetWrongValues" >Set Wrong Values</Button>
+<Button OnClick="@SetDeactivatedValues" >Set Deactivated Values</Button>
+<Button OnClick="@ToggleDefaultActiveFirstItem" >Toggle Default First Item (@_defaultActiveFirstItem)</Button>
+<Button OnClick="@ToggleDefaultValues" >Toggle Default Values (@_useDefaultValues)</Button>
+<br /><br />
+<p>
+    Selected Items Values Count: @_selectedValues?.Count() <br />
+    Selected Items Count: @_selectedItems?.Count()
+</p>
+
+@code
+{
+    class Person
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool NotAvailable { get; set; }
+    }
+
+    List<Person> _persons;
+    IEnumerable<int> _selectedValues;
+    IEnumerable<Person> _selectedItems;
+    bool _defaultActiveFirstItem = true;
+    IEnumerable<int> _defaultValues;
+    bool _useDefaultValues = true;
+
+    protected override void OnInitialized()
+    {
+        _persons = new List<Person> 
+        {
+            new Person {Id = 1, Name = "Jack", NotAvailable = true}, 
+            new Person {Id = 2, Name = "Lucy"}, 
+            new Person {Id = 3, Name = "Yaoming"}, 
+            new Person {Id = 4, Name = "Frieda"}, 
+            new Person {Id = 5, Name = "Kathy", NotAvailable = true}, 
+            new Person {Id = 6, Name = "Kate"}, 
+            new Person {Id = 7, Name = "Eric"}, 
+            new Person {Id = 8, Name = "Jake", NotAvailable = true}, 
+            new Person {Id = 9, Name = "Olaf"}, 
+            new Person {Id = 10, Name = "Sven"}, 
+            new Person {Id = 11, Name = "Bernd", NotAvailable = true}, 
+            new Person {Id = 12, Name = "Jane"}, 
+            new Person {Id = 13, Name = "John"}};
+
+        _selectedValues = new List<int> { 1, 2, 3, 4 }; // Jack (disabled), Lucy, Yaoming, Frieda
+
+        SetDefaultValues();
+    }
+
+    private void SetValues()
+    {
+        var items = new List<int> {3, 6, 9}; // Set Yaoming, Kate, Olaf
+
+        _selectedValues = items;
+    }
+
+    private void SetClearValues()
+    {
+        _selectedValues = null;
+    }
+
+    private void SetWrongValues()
+    {
+        var items = new List<int> {3, 999, 9}; // Set Yaoming, <invalid>, Olaf
+
+        _selectedValues = items;
+    }
+
+    private void SetDeactivatedValues()
+    {
+        var items = new List<int> {3, 8, 9}; // Set Yaoming, Jake (disabled), Olaf
+
+        _selectedValues = items;
+    }
+
+    private void OnSelectedItemsChangedEventHandler(IEnumerable<Person> values)
+    {
+        _selectedItems = values;
+    }
+
+    private void ToggleDefaultActiveFirstItem()
+    {
+        _defaultActiveFirstItem = !_defaultActiveFirstItem;
+    }
+
+    private void ToggleDefaultValues()
+    {
+        _useDefaultValues = !_useDefaultValues;
+
+        SetDefaultValues();
+    }
+
+    private void SetDefaultValues()
+    {
+        if (_useDefaultValues && _defaultValues == null)
+        {
+            var defaultValues = new List<int> {4, 11, 6}; // Set Frieda, Bernd (disabled), Kate
+
+            _defaultValues = defaultValues;
+        }
+        else
+        {
+            _defaultValues = null;
+        }
+    }
+}

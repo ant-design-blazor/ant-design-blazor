@@ -19,8 +19,13 @@
         @if (context.Type == 1)
         {
             <FormItem>
-                <Select @bind-Value="@context.Name" DefaultValue=@("lucy") Style="width:120px" AllowClear>
-                    <SelectOption Value="lucy">Lucy</SelectOption>
+                <Select DataSource="@_persons" 
+                        @bind-Value="@context.SelectedValue"
+                        LabelName="@nameof(Person.Name)" 
+                        ValueName="@nameof(Person.Id)" 
+                        Placeholder="Select a person"
+                        Style="width:120px"
+                        AllowClear>
                 </Select>
             </FormItem>
         }
@@ -73,10 +78,18 @@
     {
         public string Name { get; set; }
         public int Type { get; set; }
+        public int SelectedValue { get; set; }
+    }
+
+    class Person
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
     string title = "BasicModal";
     bool _visible = false;
+    List<Person> _persons;
 
     RenderFragment _content =
     @<div>
@@ -84,17 +97,28 @@
         <p>Content</p>
     </div>;
 
-private FormModal _formModal = new FormModal();
+    private FormModal _formModal = new FormModal();
 
-private void HandleOk(MouseEventArgs e)
-{
-  Console.WriteLine(e);
-  _visible = false;
-}
+    protected override void OnInitialized()
+    {
+        _persons = new List<Person> 
+        {
+            new Person {Id = 1, Name = "Jack"}, 
+            new Person {Id = 2, Name = "Lucy"}, 
+            new Person {Id = 3, Name = "Yaoming"}, 
+            new Person {Id = 4, Name = "Frieda"}, 
+        };
+    }
 
-private void HandleCancel(MouseEventArgs e)
-{
-  Console.WriteLine(e);
-  _visible = false;
-}
+    private void HandleOk(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
 }
