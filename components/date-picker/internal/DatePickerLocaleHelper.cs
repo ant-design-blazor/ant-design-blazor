@@ -26,7 +26,8 @@ namespace AntDesign
         {
             switch (name)
             {
-                case "en-US": return new EnUsDateLocale();
+                case "en-US": return new EnGbDateLocale();
+                case "en-GB": return new EnGbDateLocale();
                 case "zh-CN": return new ZhCnLocale();
                 default: return new EnUsDateLocale();
             }
@@ -38,6 +39,40 @@ namespace AntDesign
         private string _locale = "en-US";
         public string DateFormat => "yyyy-MM-dd";
         public string[] ShortWeekDays => new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
+        public int FirstDayOfWeekDiff => 7;
+        public string Year => "Year";
+        public string Month => "Month";
+        public string Week => "Week";
+        public string Today => "Today";
+        public bool MonthBeforeYear => true;
+        public string YearFormat => "yyyy";
+        public string MonthFormat => "MMM";
+        public string Ok => "OK";
+        public string Now => "Now";
+        public string SelectDate => "Select date";
+        public string SelectWeek => "Select week";
+        public string SelectMonth => "Select month";
+        public string SelectQuarter => "Select quarter";
+        public string SelectYear => "Select year";
+        public string SelectTime => "Select time";
+        public string StartOfDate => "Start date";
+        public string EndOfDate => "End date";
+        public string StartOfWeek => "Start week";
+        public string EndOfWeek => "End week";
+        public string StartOfMonth => "Start month";
+        public string EndOfMonth => "End month";
+        public string StartOfYear => "Start year";
+        public string EndOfYear => "End year";
+        public string StartOfQuarter => "Start quarter";
+        public string EndOfQuarter => "End quarter";
+    }
+
+    internal class EnGbDateLocale : IDateLocale
+    {
+        private string _locale = "en-GB";
+        public string DateFormat => "dd.MM.yyyy";
+        public string[] ShortWeekDays => new string[] { "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" };
+        public int FirstDayOfWeekDiff => 6;
         public string Year => "Year";
         public string Month => "Month";
         public string Week => "Week";
@@ -70,6 +105,7 @@ namespace AntDesign
         private string _locale = "zh-CN";
         public string DateFormat => "yyyy年M月d日";
         public string[] ShortWeekDays => new string[] { "一", "二", "三", "四", "五", "六", "日" };
+        public int FirstDayOfWeekDiff => 7;
         public string Year => "年";
         public string Month => "月";
         public string Week => "周";

@@ -12,7 +12,7 @@
     // sunday should be 7
     if (monthFirstDayOfWeek == 0)
     {
-        monthFirstDayOfWeek = 7;
+        monthFirstDayOfWeek = Calendar.CultureInfo.GetDateLocale().FirstDayOfWeekDiff;
     }
 
     int diffDay = (int)this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - monthFirstDayOfWeek;
@@ -20,7 +20,7 @@
 }
 
 <div class='@($"{PrefixCls}-panel")'>
-    <DatePickerTemplate TValue="TValue" 
+    <DatePickerTemplate TValue="TValue"
                         @attributes="GetAttritubes()"
                            MaxRow="6"
                            MaxCol="7"
@@ -80,7 +80,7 @@
 @if (ShowToday && !IsRange && Picker != DatePickerType.Time)
 {
     <div class="@(PrefixCls)-footer">
-        <a class="@(PrefixCls)-today-btn" 
+        <a class="@(PrefixCls)-today-btn"
            @onclick="e => { OnSelectDate(DateTime.Now); Close(); }">
             @this.DatePicker.CultureInfo.GetDateLocale().Today
         </a>
@@ -94,6 +94,9 @@
 
     [Parameter]
     public bool ShowToday { get; set; } = false;
+
+    [CascadingParameter(Name = "Calendar")]
+    public AntDesign.Calendar Calendar { get; set; }
 
     private string GetRowClass(DateTime viewDate)
     {

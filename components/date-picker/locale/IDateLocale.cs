@@ -11,6 +11,11 @@ namespace AntDesign
         /// </summary>
         string[] ShortWeekDays { get; }
 
+        /// <summary>
+        /// The difference of days to get the either Monday (6) or Sunday (7)
+        /// </summary>
+        int FirstDayOfWeekDiff { get; }
+
         string Year { get; }
         string Month { get; }
         string Week => "Week";
