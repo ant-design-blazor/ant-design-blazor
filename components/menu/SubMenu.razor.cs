@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using OneOf;
 
 namespace AntDesign
 {
@@ -175,7 +174,7 @@ namespace AntDesign
             }
         }
 
-        private void OnOverlayHiding(bool hiding)
+        private void OnOverlayHiding(bool _)
         {
             SetClass();
         }

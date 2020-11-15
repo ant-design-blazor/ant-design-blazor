@@ -107,6 +107,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string[]> SelectedKeysChanged { get; set; }
 
+        [Parameter]
+        public bool IgnoreSelectionAfterClick { get; set; } = false;
+
         internal MenuMode InternalMode { get; private set; }
         private bool _collapsed;
         private string[] _openKeys;

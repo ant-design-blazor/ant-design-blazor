@@ -37,6 +37,9 @@ namespace AntDesign
         [Parameter]
         public NavLinkMatch RouterMatch { get; set; }
 
+        [Parameter]
+        public string Title { get; set; }
+
         public bool IsSelected { get; private set; }
         private string _key;
 
@@ -82,7 +85,8 @@ namespace AntDesign
             if (!RootMenu.Selectable)
                 return;
 
-            RootMenu.SelectItem(this);
+            if (!RootMenu.IgnoreSelectionAfterClick)
+                RootMenu.SelectItem(this);
 
             if (OnClick.HasDelegate)
                 await OnClick.InvokeAsync(args);
