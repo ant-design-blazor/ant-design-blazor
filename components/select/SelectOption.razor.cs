@@ -29,7 +29,7 @@ namespace AntDesign
                 if (_isSelected != value)
                 {
                     _isSelected = value;
-                    SetClassMap();
+                    StateHasChanged();
                 }
             }
         }
@@ -43,7 +43,7 @@ namespace AntDesign
                 if (_isDisabled != value)
                 {
                     _isDisabled = value;
-                    SetClassMap();
+                    StateHasChanged();
                 }
             }
         }
@@ -57,7 +57,7 @@ namespace AntDesign
                 if (_isHidden != value)
                 {
                     _isHidden = value;
-                    SetClassMap();
+                    StateHasChanged();
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace AntDesign
                 if (_isActive != value)
                 {
                     _isActive = value;
-                    SetClassMap();
+                    StateHasChanged();
                 }
             }
         }
@@ -121,10 +121,11 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add("ant-select-item")
                 .Add(ClassPrefix)
-                .If($"{ClassPrefix}-disabled", () => IsDisabled)
-                .If($"{ClassPrefix}-selected", () => IsSelected)
-                .If($"{ClassPrefix}-active", () => IsActive)
-                .If($"{ClassPrefix}-grouped", () => SelectParent.IsGroupingEnabled);
+                .GetIf(() => $"{ClassPrefix}-disabled", () => IsDisabled)
+                .GetIf(() => $"{ClassPrefix}-selected", () => IsSelected)
+                .GetIf(() => $"{ClassPrefix}-active", () => IsActive)
+                .GetIf(() => $"{ClassPrefix}-grouped", () => SelectParent.IsGroupingEnabled);
+
             StateHasChanged();
         }
 
