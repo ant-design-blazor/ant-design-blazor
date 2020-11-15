@@ -40,6 +40,8 @@ namespace AntDesign
         [Parameter]
         public string Title { get; set; }
 
+        [Parameter]
+        public bool IgnoreSelectionAfterClick { get; set; } = false;
         public bool IsSelected { get; private set; }
         private string _key;
 
@@ -85,7 +87,7 @@ namespace AntDesign
             if (!RootMenu.Selectable)
                 return;
 
-            if (!RootMenu.IgnoreSelectionAfterClick)
+            if (!IgnoreSelectionAfterClick)
                 RootMenu.SelectItem(this);
 
             if (OnClick.HasDelegate)

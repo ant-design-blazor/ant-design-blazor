@@ -32,7 +32,6 @@ More layouts with navigation: [Layout](/components/layout).
 | DefaultOpenKeys | Array with the keys of default opened sub menus | string\[] |  |  |
 | DefaultSelectedKeys | Array with the keys of default selected menu items | string\[] |  |  |
 | ForceSubMenuRender | Render submenu into DOM before it becomes visible | boolean | false | (Not implemented) |
-| IgnoreSelectionAfterClick | When it is `True` the MenuItem is not selected after `OnClick`.  | bool | false |  |
 | InlineCollapsed | Specifies the collapsed status when menu is inline mode | boolean | - |  |
 | InlineIndent | Indent (in pixels) of inline menu items on each level | number | 24 | (Not implemented) |
 | Mode | Type of menu | `MenuMode.Vertical` \| `MenuMode.Horizontal` \| `MenuMode.Inline` | `MenuMode.Vertical` |  |
@@ -55,6 +54,7 @@ More layouts with navigation: [Layout](/components/layout).
 | -------- | ------------------------------------ | ------- | ------------- | ------- |
 | ChildContent    | Set display title for collapsed item | string  |               |         |
 | Disabled | Whether menu item is disabled        | boolean | false         |         |
+| IgnoreSelectionAfterClick | When it is `True` the MenuItem is not selected after `OnClick`.  | bool | false |  |
 | Key      | Unique ID of the menu item           | string  |               |         |
 | OnClick | Called when a menu item is clicked | EventCallback&lt;MouseEventArgs> | - |  |
 | RouterLink    |  Href route   | string |     -          |         |
