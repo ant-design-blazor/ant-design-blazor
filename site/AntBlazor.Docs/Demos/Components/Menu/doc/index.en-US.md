@@ -41,7 +41,7 @@ More layouts with navigation: [Layout](/components/layout).
 | OnOpenChange | Called when sub-menus are opened or closed | function(openKeys: string\[]) | noop | (Not implemented) |
 | OnSelect | Called when a menu item is selected | function({ item, key, keyPath, selectedKeys, domEvent }) | none | (Not implemented) |
 | OverflowedIndicator | Customized icon when menu is collapsed | RenderFragment | - | (Not implemented) |
-| Selectable | Allows selecting menu items | boolean | true |  |
+| Selectable | Allows selecting menu items. When it is `false` the menu item is not selected after `OnClick`. | boolean | true |  |
 | SelectedKeys | Array with the keys of currently selected menu items | string\[] |  |  |
 | Style | Style of the root node | string |  |  |
 | SubMenuCloseDelay | Delay time to hide submenu when mouse leaves (in seconds) | number | 0.1 | (Not implemented) |
@@ -54,7 +54,6 @@ More layouts with navigation: [Layout](/components/layout).
 | -------- | ------------------------------------ | ------- | ------------- | ------- |
 | ChildContent    | Set display title for collapsed item | string  |               |         |
 | Disabled | Whether menu item is disabled        | boolean | false         |         |
-| IgnoreSelectionAfterClick | When it is `True` the MenuItem is not selected after `OnClick`.  | bool | false |  |
 | Key      | Unique ID of the menu item           | string  |               |         |
 | OnClick | Called when a menu item is clicked | EventCallback&lt;MouseEventArgs> | - |  |
 | RouterLink    |  Href route   | string |     -          |         |

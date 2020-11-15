@@ -40,8 +40,6 @@ namespace AntDesign
         [Parameter]
         public string Title { get; set; }
 
-        [Parameter]
-        public bool IgnoreSelectionAfterClick { get; set; } = false;
         public bool IsSelected { get; private set; }
         private string _key;
 
@@ -84,14 +82,16 @@ namespace AntDesign
 
         public async Task HandleOnClick(MouseEventArgs args)
         {
-            if (!RootMenu.Selectable)
+            if (Disabled)
                 return;
-
-            if (!IgnoreSelectionAfterClick)
-                RootMenu.SelectItem(this);
 
             if (OnClick.HasDelegate)
                 await OnClick.InvokeAsync(args);
+
+            if (!RootMenu.Selectable)
+                return;
+
+            RootMenu.SelectItem(this);
 
             if (ParentMenu == null)
                 return;
