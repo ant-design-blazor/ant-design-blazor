@@ -17,10 +17,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 
 ## API
 
-```jsx
+```html
 <Menu>
   <Menu.Item>菜单项</Menu.Item>
-  <SubMenu title="子菜单">
+  <SubMenu Title="子菜单">
     <Menu.Item>子菜单项</Menu.Item>
   </SubMenu>
 </Menu>
@@ -30,53 +30,62 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| defaultOpenKeys | 初始展开的 SubMenu 菜单项 key 数组 | string\[] |  |  |
-| defaultSelectedKeys | 初始选中的菜单项 key 数组 | string\[] |  |  |
-| forceSubMenuRender | 在子菜单展示之前就渲染进 DOM | boolean | false |  |
-| inlineCollapsed | inline 时菜单是否收起状态 | boolean | - |  |
-| inlineIndent | inline 模式的菜单缩进宽度 | number | 24 |  |
-| mode | 菜单类型，现在支持垂直、水平、和内嵌模式三种 | `vertical` \| `horizontal` \| `inline` | `vertical` |  |
-| multiple | 是否允许多选 | boolean | false |  |
-| openKeys | 当前展开的 SubMenu 菜单项 key 数组 | string\[] |  |  |
-| selectable | 是否允许选中 | boolean | true |  |
-| selectedKeys | 当前选中的菜单项 key 数组 | string\[] |  |  |
-| style | 根节点样式 | object |  |  |
-| subMenuCloseDelay | 用户鼠标离开子菜单后关闭延时，单位：秒 | number | 0.1 |  |
-| subMenuOpenDelay | 用户鼠标进入子菜单后开启延时，单位：秒 | number | 0 |  |
-| theme | 主题颜色 | `light` \| `dark` | `light` |  |
-| onClick | 点击 MenuItem 调用此函数 | function({ item, key, keyPath, domEvent }) | - |  |
-| onDeselect | 取消选中时调用，仅在 multiple 生效 | function({ item, key, keyPath, selectedKeys, domEvent }) | - |  |
-| onOpenChange | SubMenu 展开/关闭的回调 | function(openKeys: string\[]) | noop |  |
-| onSelect | 被选中时调用 | function({ item, key, keyPath, selectedKeys, domEvent }) | 无   |  |
-| overflowedIndicator | 自定义 Menu 折叠时的图标 | ReactNode | - |  |
+| Accordion | SubMenu 手风琴模式 | boolean | false |
+| DefaultOpenKeys | 初始展开的 SubMenu 菜单项 key 数组 | string\[] |  |  |
+| DefaultSelectedKeys | 初始选中的菜单项 key 数组 | string\[] |  |  |
+| ForceSubMenuRender | 在子菜单展示之前就渲染进 DOM | boolean | false |  |
+| InlineCollapsed | inline 时菜单是否收起状态 | boolean | - |  |
+| InlineIndent | inline 模式的菜单缩进宽度 | number | 24 |  |
+| Mode | 菜单类型，现在支持垂直、水平、和内嵌模式三种 | `vertical` \| `horizontal` \| `inline` | `vertical` |  |
+| Multiple | 是否允许多选 | boolean | false |  |
+| OpenKeys | 当前展开的 SubMenu 菜单项 key 数组 | string\[] |  |  |
+| Selectable | 是否允许选中,当等于 `false` 时，会在触发 `OnClick` 之后不被选中 | boolean | true |  |
+| SelectedKeys | 当前选中的菜单项 key 数组 | string\[] |  |  |
+| Style | 根节点样式 | object |  |  |
+| SubMenuCloseDelay | 用户鼠标离开子菜单后关闭延时，单位：秒 | number | 0.1 |  |
+| SubMenuOpenDelay | 用户鼠标进入子菜单后开启延时，单位：秒 | number | 0 |  |
+| Theme | 主题颜色 | `light` \| `dark` | `light` |  |
+| OnClick | 点击 MenuItem 调用此函数 | function({ item, key, keyPath, domEvent }) | - |  |
+| OnDeselect | 取消选中时调用，仅在 multiple 生效 | function({ item, key, keyPath, selectedKeys, domEvent }) | - |  |
+| OnOpenChange | SubMenu 展开/关闭的回调 | function(openKeys: string\[]) | noop |  |
+| OnSelect | 被选中时调用 | function({ item, key, keyPath, selectedKeys, domEvent }) | 无   |  |
+| OverflowedIndicator | 自定义 Menu 折叠时的图标 | ReactNode | - |  |
 
 > More options in [rc-menu](https://github.com/react-component/menu#api)
 
-### Menu.Item
+### MenuItem
 
 | 参数     | 说明                     | 类型    | 默认值 | 版本 |
 | -------- | ------------------------ | ------- | ------ | ---- |
-| disabled | 是否禁用                 | boolean | false  |      |
-| key      | item 的唯一标志          | string  |        |      |
-| title    | 设置收缩时展示的悬浮标题 | string  |        |      |
+| Disabled | 是否禁用                 | boolean | false  |      |
+| Key      | item 的唯一标志          | string  |        |      |
+| Title    | 设置收缩时展示的悬浮标题 | string  |        |      |
+| OnClick  | 当鼠标点击菜单项时触发 | EventCallback&lt;MouseEventArgs> | - |  |
+| RouterLink    |  路由链接，当需要让菜单自动匹配路由进行高亮时使用  | string |     -          |         |
+| RouterMatch    | 修改自 `NavLink`,用于选择匹配模式  | NavLinkMatch |     -          |         |
+| Style    | 额外的 CSS 样式  | string |     -          |         |
 
-### Menu.SubMenu
+### SubMenu
 
 | 参数           | 说明           | 类型                        | 默认值 | 版本 |
 | -------------- | -------------- | --------------------------- | ------ | ---- |
-| popupClassName | 子菜单样式     | string                      |        |      |
-| children       | 子菜单的菜单项 | Array&lt;MenuItem\|SubMenu> |        |      |
-| disabled       | 是否禁用       | boolean                     | false  |      |
-| key            | 唯一标志       | string                      |        |      |
-| title          | 子菜单项值     | string\|ReactNode           |        |      |
-| onTitleClick   | 点击子菜单标题 | function({ key, domEvent }) |        |      |
+| ChildContent   | 放置子菜单的菜单项列表 | RenderFragment |        |      |
+| Disabled       | 是否禁用       | boolean                     | false  |      |
+| IsOpen         | 表示展开状态 | bool | false |  |
+| Key            | 唯一标志       | string                      |        |      |
+| OnTitleClick | 当标题被点击时触发的回调 | EventCallback&lt;MouseEventArgs> |  |  |
+| PopupClassName | 子菜单样式     | string                      |        |      |
+| Title          | 子菜单标题     | string          |        |      |
+| TitleTemplate  | 子菜单标题模板  | RenderFragment          |        |      |
 
-### Menu.ItemGroup
+### MenuItemGroup
 
 | 参数     | 说明         | 类型              | 默认值 | 版本 |
 | -------- | ------------ | ----------------- | ------ | ---- |
-| children | 分组的菜单项 | MenuItem\[]       |        |      |
-| title    | 分组标题     | string\|ReactNode |        |      |
+| ChildContent | 分组的菜单项 | MenuItem\[]       |        |      |
+| Style    | 额外的 CSS 样式  | string |     -          |         |
+| Title    | 分组标题     | string\|ReactNode |        |      |
+| TitleTemplate  | 分组标题模板  | RenderFragment          |        |      |
 
 ### Menu.Divider
 
