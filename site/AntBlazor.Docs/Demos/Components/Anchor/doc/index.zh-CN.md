@@ -29,6 +29,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_1-C1JwsC/Anchor.svg
 | getCurrentAnchor | 自定义高亮的锚点 | () => string | - |  |
 | targetOffset | 锚点滚动偏移量，默认与 offsetTop 相同，[例子](#components-anchor-demo-targetOffset) | number | `offsetTop` |  |
 | onChange | 监听锚点链接改变 | (currentActiveLink: string) => void |  |  |
+| key | 当key发生改变时刷新链接列表 | string |  |  |
+| childContent | 附加内容 | RenderFragment |  |  |
 
 ### Link Props
 

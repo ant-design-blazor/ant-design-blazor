@@ -28,6 +28,8 @@ For displaying anchor hyperlinks on page and jumping between them.
 | getCurrentAnchor | Customize the anchor highlight | () => string | - |  |
 | targetOffset | Anchor scroll offset, default as `offsetTop`, [example](#components-anchor-demo-targetOffset) | number | `offsetTop` |  |
 | onChange | Listening for anchor link change | (currentActiveLink: string) => void |  |  |
+| key | used to refresh links list when the key changed | string |  |  |
+| childContent | Additional Content | RenderFragment |  |  |
 
 ### Link Props
 

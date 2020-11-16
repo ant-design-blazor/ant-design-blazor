@@ -15,7 +15,7 @@ When there is a need for autocomplete functionality.
 
 ### AutoComplete
 
-| 参数 | 说明 | 类型 | 默认值 | 版本 |
+| Property | Description | Type | Default |
 | --- | --- | --- | --- | --- |
 | `Backfill` | backfill selected item the input when using keyboard | `boolean` | `false` |
 | `Options` | Data source for autocomplete | `AutocompleteDataSource` | - |
@@ -27,10 +27,24 @@ When there is a need for autocomplete functionality.
 | `OverlayStyle` | Style of the dropdown root element | `object` | - |
 | `CompareWith` | `(o1: object, o2: object) => bool` | `(o1: object, o2: object) => o1===o2` |
 | `PopupContainerSelector` | The selector of the container for dropdown element. | `string` | `'body'` |
+| `Placeholder` | The placeholder of input | `string` |  |
+| `AutoCompleteOptions` | Data source for autocomplete | `list<AutoCompleteOption>` |  |
+| `OptionDataItems` | Data source for Options binding | `AutoCompleteDataItem` |  |
+| `OnSelectionChange` | callback when a option is selected | `function锛堬級=>AutoCompleteOption` |  |
+| `OnActiveChange` | callback when active change | `function锛堬級=>AutoCompleteOption` |  |
+| `OnInput` | callback function,when input change | `function锛堬級=>ChangeEventArgs` |  |
+| `OnPanelVisibleChange` | callback function when panel visible is changed | `function锛堬級=>bool` |  |
+| `ChildContent` | `Additional Content` | `RenderFragment` |  |
+| `OptionTemplate` | option template | `RenderFragment=>AutoCompleteDataItem` |  |
+| `OptionFormat` | Format options,customize the display format | `RenderFragment=>AutoCompleteDataItem` |  |
+| `OverlayTemplate` | All options template | `RenderFragment` |  |
+| `FilterExpression` | Filter expression | `function(option, value)=>AutoCompleteDataItem` |  |
+| `AllowFilter` | is filtering allow data | `bool` | `true` |
+| `ShowPanel` | where optioning, display panel | `bool` | `false` |
 
 ### AutoCompleteOption
 
-| 属性 | 说明 | 类型 | 默认值 |
+| Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | `Value` | bind ngModel of the trigger element | `object` | - |
 | `Label` | display value of the trigger element | `string` | - |
