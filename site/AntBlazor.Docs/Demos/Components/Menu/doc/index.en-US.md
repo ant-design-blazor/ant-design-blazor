@@ -16,7 +16,7 @@ More layouts with navigation: [Layout](/components/layout).
 
 ## API
 
-```jsx
+```html
 <Menu>
   <MenuItem>Menu</MenuItem>
   <SubMenu Title="SubMenu">
@@ -29,6 +29,7 @@ More layouts with navigation: [Layout](/components/layout).
 
 | Param | Description | Type | Default value | Version |
 | --- | --- | --- | --- | --- |
+| Accordion | SubMenu accordion mode | boolean | false |
 | DefaultOpenKeys | Array with the keys of default opened sub menus | string\[] |  |  |
 | DefaultSelectedKeys | Array with the keys of default selected menu items | string\[] |  |  |
 | ForceSubMenuRender | Render submenu into DOM before it becomes visible | boolean | false | (Not implemented) |
@@ -69,7 +70,7 @@ More layouts with navigation: [Layout](/components/layout).
 | Disabled | Whether sub-menu is disabled | boolean | false |  |
 | IsOpen | Open state of the SubMenu | bool | false |  |
 | Key | Unique ID of the sub-menu | string |  |  |
-| OnTitleClicked | Callback executed when the sub-menu title is clicked | EventCallback&lt;MouseEventArgs> |  |  |
+| OnTitleClick | Callback executed when the sub-menu title is clicked | EventCallback&lt;MouseEventArgs> |  |  |
 | PopupClassName | Sub-menu class name | string |  | Not implemented) |
 | Title | Title of the sub-menu | string |  |  |
 | TitleTemplate | Title of the sub-menu | RenderFragment | - |  |

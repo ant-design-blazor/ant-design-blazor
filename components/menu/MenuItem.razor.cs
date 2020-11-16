@@ -40,7 +40,7 @@ namespace AntDesign
         [Parameter]
         public string Title { get; set; }
 
-        public bool IsSelected { get; private set; }
+        internal bool IsSelected { get; private set; }
         private string _key;
 
         private int PaddingLeft => RootMenu.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * 24 : 0;
@@ -91,7 +91,14 @@ namespace AntDesign
             if (!RootMenu.Selectable)
                 return;
 
-            RootMenu.SelectItem(this);
+            if (IsSelected && RootMenu?.Multiple == true)
+            {
+                Deselect();
+            }
+            else
+            {
+                RootMenu.SelectItem(this);
+            }
 
             if (ParentMenu == null)
                 return;

@@ -38,7 +38,7 @@ namespace AntDesign
         public bool IsOpen { get; set; }
 
         [Parameter]
-        public EventCallback<MouseEventArgs> OnTitleClicked { get; set; }
+        public EventCallback<MouseEventArgs> OnTitleClick { get; set; }
 
         internal int Level => RootMenu?.InternalMode == MenuMode.Inline ? (Parent?.Level ?? 0) + 1 : 0;
 
@@ -96,8 +96,8 @@ namespace AntDesign
         private async Task HandleOnTitleClick(MouseEventArgs args)
         {
             RootMenu?.SelectSubmenu(this, true);
-            if (OnTitleClicked.HasDelegate)
-                await OnTitleClicked.InvokeAsync(args);
+            if (OnTitleClick.HasDelegate)
+                await OnTitleClick.InvokeAsync(args);
         }
 
         public async Task Collapse()
