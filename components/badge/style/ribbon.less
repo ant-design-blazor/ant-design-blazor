@@ -54,11 +54,9 @@
     @color: extract(@preset-colors, @i);
     @darkColor: '@{color}-6';
     &-color-@{color} {
-      background: @@darkColor;
-    }
-    .@{ribbon-prefix-cls}-corner {
       color: @@darkColor;
-    }
+      background: @@darkColor;
+    }    
   }
   .make-color-classes();
 
