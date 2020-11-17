@@ -12,9 +12,9 @@ using OneOf;
 
 namespace AntDesign
 {
-    public partial class AutoComplete<TOption> : AntInputComponentBase<string>, IAutoCompleteRef<TOption>, IAutoCompleteValue<TOption>
+    public partial class AutoComplete<TOption> : AntInputComponentBase<string>, IAutoCompleteRef<TOption>, IAutoCompleteInputRef
     {
-        public void SetInputComponent(IAutoCompleteInput<TOption> input)
+        public void SetInputComponent(IAutoCompleteInput input)
         {
             _inputComponent = input;
         }
@@ -438,7 +438,7 @@ namespace AntDesign
 
         #region Input控件操控
 
-        private IAutoCompleteInput<TOption> _inputComponent;
+        private IAutoCompleteInput _inputComponent;
 
         public void InputFocus(FocusEventArgs e)
         {
@@ -450,7 +450,7 @@ namespace AntDesign
 
         public async Task InputInput(ChangeEventArgs args)
         {
-            //SelectedValue = args?.Value;
+            CurrentValue = args?.Value.ToString();
             if (OnInput.HasDelegate) await OnInput.InvokeAsync(args);
             StateHasChanged();
         }

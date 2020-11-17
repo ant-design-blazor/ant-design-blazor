@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public  interface IAutoCompleteRef<TOption>
+    public interface IAutoCompleteInputRef
     {
-        void SetInputComponent(IAutoCompleteInput<TOption> input);
+        void SetInputComponent(IAutoCompleteInput input);
 
         void InputFocus(FocusEventArgs e);
 
@@ -17,6 +17,10 @@ namespace AntDesign
 
         Task InputKeyDown(KeyboardEventArgs args);
 
+    }
+
+    public interface IAutoCompleteRef<TOption>
+    {
         void AddOption(AutoCompleteOption<TOption> option);
 
         void RemoveOption(AutoCompleteOption<TOption> option);
@@ -30,7 +34,6 @@ namespace AntDesign
         TOption SelectedValue { get; set; }
 
         TOption ActiveValue { get; set; }
-
     }
 
     public interface IAutoCompleteValue<TOption>

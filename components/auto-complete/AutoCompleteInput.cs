@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public class AutoCompleteInput<TOption> : Input<string>, IAutoCompleteInput<TOption>
+    public class AutoCompleteInput : Input<string>, IAutoCompleteInput
     {
 
         [CascadingParameter]
-        public IAutoCompleteRef<TOption> AutoComplete { get; set; }
+        public IAutoCompleteInputRef AutoComplete { get; set; }
 
         protected override void OnInitialized()
         {

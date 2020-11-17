@@ -1,9 +1,9 @@
 ﻿<AutoComplete Options="options" OnInput="OnInput" AllowFilter="false">
     <ChildContent>
-        <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" TOption="UncertainCategoryOption"/>
+        <AutoCompleteSearch Placeholder="input here" @bind-Value="@value"/>
     </ChildContent>
     <OptionTemplate Context="option">
-        <AutoCompleteOption Style="display: flex;" Value="@option.Value.Category">
+        <AutoCompleteOption Style="display: flex;" Value="@option.Value">
             Found @option.Value.Title on
             <a style=" flex: auto; text-overflow: ellipsis; overflow: hidden;"
                href="https://s.taobao.com/search?q=@(option.Value.Title)"
