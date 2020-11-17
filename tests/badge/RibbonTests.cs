@@ -117,7 +117,7 @@ namespace AntDesign.Tests.Badge
                 <div class=""ant-ribbon-wrapper""> 
                     <div /> 
                     <div class=""ant-ribbon ant-ribbon-placement-end"">
-                    <span class=""ant-ribbon-text"">unicorn</span>                        
+                    <span class=""ant-ribbon-text"">unicorn</span>
                         <div class=""ant-ribbon-corner"">
                             </div>
                         </div>
