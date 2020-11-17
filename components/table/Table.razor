@@ -159,7 +159,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
             currentRowData.HasChildren = hasChildren;
                 <CascadingValue Value="table.ColumnContext">
                     <CascadingValue Value="currentRowData" Name="RowData">
-                        <tr @attributes="@(new Dictionary<string,object> { {"onclick", _callbackFactory.Create(table, () => table.RowClick(data)) } })" 
+                        <tr @attributes="@(new Dictionary<string,object> { {"onclick", _callbackFactory.Create(table, () => table.RowClick(currentRowData)) } })" 
                              data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "")">
                             @if (table.ExpandTemplate != null)
                             {

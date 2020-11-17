@@ -50,7 +50,7 @@ namespace AntDesign
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
 
         [Parameter] 
-        public EventCallback<TItem> OnRowClick { get; set; }
+        public EventCallback<RowData<TItem>> OnRowClick { get; set; }
 
         [Parameter]
         public bool Loading { get; set; }
@@ -256,7 +256,7 @@ namespace AntDesign
             rowData.Expanded = !rowData.Expanded;
         }
 
-        private void RowClick(TItem item)
+        private void RowClick(RowData<TItem> item)
         {
             OnRowClick.InvokeAsync(item);
         }
