@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public interface IAutoCompleteInput
+    public interface IAutoCompleteInput<TOption>
     {
         [CascadingParameter]
-        public IAutoCompleteRef AutoComplete { get; set; }
+        public IAutoCompleteRef<TOption> AutoComplete { get; set; }
         public void SetValue(object value);
     }
 }

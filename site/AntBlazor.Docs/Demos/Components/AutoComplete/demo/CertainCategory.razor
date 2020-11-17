@@ -1,6 +1,6 @@
 ﻿<AutoComplete TOption="string">
     <ChildContent>
-        <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" />
+        <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" TOption="string"/>
     </ChildContent>
     <OverlayTemplate>
         @foreach (var group in optionGroups)

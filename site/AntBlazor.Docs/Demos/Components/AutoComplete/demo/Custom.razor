@@ -1,14 +1,13 @@
-﻿
-<Divider>Input</Divider>
+﻿<Divider>Input</Divider>
 <AutoComplete Options="@options">
-    <AutoCompleteInput Placeholder="input here" @bind-Value="@inputValue" />
+    <AutoCompleteInput Placeholder="input here" @bind-Value="@inputValue" TOption="string" />
 </AutoComplete>
 <br />
 <span>bind-Value:@inputValue</span>
 
 <Divider>Search</Divider>
 <AutoComplete Options="@options">
-    <AutoCompleteSearch Placeholder="input here" @bind-Value="@searchValue" />
+    <AutoCompleteSearch Placeholder="input here" @bind-Value="@searchValue" TOption="string" />
 </AutoComplete>
 <br />
 <span>bind-Value:@searchValue</span>

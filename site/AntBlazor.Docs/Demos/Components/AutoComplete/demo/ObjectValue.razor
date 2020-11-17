@@ -4,6 +4,7 @@
               OptionLabelExpression="x=>x.CityName"
               OptionDisabledExpression="x=>x.IsProvincial==false"
               KeyValueFunc="x=>((ObjectValueOption)x).CityId"
+              TOption="ObjectValueOption"
               @bind-Value="@value"
               @bind-KeyValue="@keyValue">
 </AutoComplete>
@@ -28,9 +29,9 @@
 
     private object keyValue;
 
-    private AutoCompleteOption selectItem;
+    private AutoCompleteOption<ObjectValueOption> selectItem;
 
-    void OnSelectionChange(AutoCompleteOption item)
+    void OnSelectionChange(AutoCompleteOption<ObjectValueOption> item)
     {
         selectItem = item;
     }

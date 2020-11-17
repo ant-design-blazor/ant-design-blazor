@@ -12,10 +12,9 @@ using OneOf;
 
 namespace AntDesign
 {
-    public partial class AutoComplete<TOption> : AntInputComponentBase<string>, IAutoCompleteRef
+    public partial class AutoComplete<TOption> : AntInputComponentBase<string>, IAutoCompleteRef<TOption>, IAutoCompleteValue<TOption>
     {
-
-        public void SetInputComponent(IAutoCompleteInput input)
+        public void SetInputComponent(IAutoCompleteInput<TOption> input)
         {
             _inputComponent = input;
         }
@@ -50,9 +49,9 @@ namespace AntDesign
         #region 事件
 
         [Parameter]
-        public EventCallback<AutoCompleteOption> OnSelectionChange { get; set; }
+        public EventCallback<AutoCompleteOption<TOption>> OnSelectionChange { get; set; }
         [Parameter]
-        public EventCallback<AutoCompleteOption> OnActiveChange { get; set; }
+        public EventCallback<AutoCompleteOption<TOption>> OnActiveChange { get; set; }
 
         [Parameter]
         public EventCallback<ChangeEventArgs> OnInput { get; set; }
@@ -70,7 +69,7 @@ namespace AntDesign
         /// <summary>
         /// 列表对象集合
         /// </summary>
-        private List<AutoCompleteOption> AutoCompleteOptions { get; set; } = new List<AutoCompleteOption>();
+        private List<AutoCompleteOption<TOption>> AutoCompleteOptions { get; set; } = new List<AutoCompleteOption<TOption>>();
 
         /// <summary>
         /// 列表绑定数据源集合
@@ -135,7 +134,7 @@ namespace AntDesign
         /// 对比，用于两个对象比较是否相同，用于过滤条件
         /// </summary>
         [Parameter]
-        public Func<object, object, bool> CompareWith { get; set; } = (o1, o2) => o1?.ToString() == o2?.ToString();
+        public Func<TOption, TOption, bool> CompareWith { get; set; } = (o1, o2) => o1?.ToString() == o2?.ToString();
 
         /// <summary>
         /// 筛选比较模式
@@ -172,12 +171,12 @@ namespace AntDesign
             }
         }
 
-        public void AddOption(AutoCompleteOption option)
+        public void AddOption(AutoCompleteOption<TOption> option)
         {
             AutoCompleteOptions.Add(option);
         }
 
-        public void RemoveOption(AutoCompleteOption option)
+        public void RemoveOption(AutoCompleteOption<TOption> option)
         {
             if (AutoCompleteOptions?.Contains(option) == true)
                 AutoCompleteOptions?.Remove(option);
@@ -199,8 +198,8 @@ namespace AntDesign
 
             if (OptionDataItems != null)
             {
-                if (FilterExpression != null && AllowFilter == true && SelectedValue != null)
-                    return OptionDataItems.Where(x => FilterExpression(x, SelectedValue?.ToString())).ToList();
+                if (FilterExpression != null && AllowFilter == true && CurrentValue != null)
+                    return OptionDataItems.Where(x => FilterExpression(x, CurrentValue)).ToList();
                 else
                     return OptionDataItems;
             }
@@ -215,28 +214,27 @@ namespace AntDesign
         #region 选项的选择
 
 
-        public object SelectedValue { get; set; }
+        public TOption SelectedValue { get; set; }
 
-        public AutoCompleteOption _selectedItem;
+        public AutoCompleteOption<TOption> _selectedItem;
         /// <summary>
         /// 选择的项
         /// </summary>
         [Parameter]
-        public AutoCompleteOption SelectedItem
+        public AutoCompleteOption<TOption> SelectedItem
         {
             get { return _selectedItem; }
             set
             {
                 _selectedItem = value;
 
-
                 if (KeyValueChanged.HasDelegate)
                 {
                     if (KeyValueFunc == null)
-                        KeyValue = value?.Value;
+                        KeyValue = value.Value;
                     else
                     {
-                        KeyValue = value == null ? null : KeyValueFunc(value?.Value);
+                        KeyValue = value == null ? null : KeyValueFunc(value.Value);
                     }
                     KeyValueChanged.InvokeAsync(KeyValue);
                 }
@@ -262,16 +260,16 @@ namespace AntDesign
         /// <summary>
         /// 高亮的项目
         /// </summary>
-        public object ActiveValue { get; set; }
+        public TOption ActiveValue { get; set; }
 
 
-        public AutoCompleteOption GetActiveItem()
+        public AutoCompleteOption<TOption> GetActiveItem()
         {
             return AutoCompleteOptions.FirstOrDefault(x => CompareWith(x.Value, this.ActiveValue));
         }
 
         //设置高亮的对象
-        public void SetActiveItem(AutoCompleteOption item)
+        public void SetActiveItem(AutoCompleteOption<TOption> item)
         {
             this.ActiveValue = item == null ? default(TOption) : item.Value;
             if (OnActiveChange.HasDelegate) OnActiveChange.InvokeAsync(item);
@@ -323,7 +321,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    this.ActiveValue = null;
+                    this.ActiveValue = default(TOption);
                 }
             }
 
@@ -342,7 +340,7 @@ namespace AntDesign
             }
         }
 
-        public async Task SetSelectedItem(AutoCompleteOption item)
+        public async Task SetSelectedItem(AutoCompleteOption<TOption> item)
         {
             if (item != null)
             {
@@ -359,6 +357,7 @@ namespace AntDesign
 
         #region 面板
 
+        private OverlayTrigger _overlayTrigger;
         /// <summary>
         /// 所有选项模板
         /// </summary>
@@ -382,6 +381,7 @@ namespace AntDesign
             if (this.ShowPanel == false)
             {
                 this.ShowPanel = true;
+                _overlayTrigger.Show();
                 ResetActiveItem();
                 StateHasChanged();
             }
@@ -395,6 +395,7 @@ namespace AntDesign
             if (this.ShowPanel == true)
             {
                 this.ShowPanel = false;
+                _overlayTrigger.Close();
                 StateHasChanged();
             }
         }
@@ -437,16 +438,19 @@ namespace AntDesign
 
         #region Input控件操控
 
-        private IAutoCompleteInput _inputComponent;
+        private IAutoCompleteInput<TOption> _inputComponent;
 
-        public async Task InputFocus(FocusEventArgs e)
+        public void InputFocus(FocusEventArgs e)
         {
-            this.OpenPanel();
+            if (!_isOptionsZero)
+            {
+                this.OpenPanel();
+            }
         }
 
         public async Task InputInput(ChangeEventArgs args)
         {
-            SelectedValue = args?.Value;
+            //SelectedValue = args?.Value;
             if (OnInput.HasDelegate) await OnInput.InvokeAsync(args);
             StateHasChanged();
         }
@@ -466,7 +470,7 @@ namespace AntDesign
                     await SetSelectedItem(GetActiveItem());
                 }
             }
-            else
+            else if (!_isOptionsZero)
             {
                 this.OpenPanel();
             }
@@ -494,11 +498,6 @@ namespace AntDesign
             await SetOverlayWidth();
             await base.OnFirstAfterRenderAsync();
         }
-
-
-
-
-
     }
 
     public class AutoCompleteDataItem<TOption>

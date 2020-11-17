@@ -56,7 +56,7 @@
                 <CascadingValue Value="this">
                     @if (ChildContent == null)
                     {
-                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" />
+                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" TOption="TOption"/>
                     }
                     else
                     {

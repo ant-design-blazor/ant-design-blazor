@@ -7,28 +7,34 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public  interface IAutoCompleteRef
+    public  interface IAutoCompleteRef<TOption>
     {
-        void SetInputComponent(IAutoCompleteInput input);
+        void SetInputComponent(IAutoCompleteInput<TOption> input);
 
-        Task InputFocus(FocusEventArgs e);
+        void InputFocus(FocusEventArgs e);
 
         Task InputInput(ChangeEventArgs args);
 
         Task InputKeyDown(KeyboardEventArgs args);
 
-        void AddOption(AutoCompleteOption option);
+        void AddOption(AutoCompleteOption<TOption> option);
 
-        void RemoveOption(AutoCompleteOption option);
+        void RemoveOption(AutoCompleteOption<TOption> option);
 
-        void SetActiveItem(AutoCompleteOption item);
+        void SetActiveItem(AutoCompleteOption<TOption> item);
 
-        Task SetSelectedItem(AutoCompleteOption item);
+        Task SetSelectedItem(AutoCompleteOption<TOption> item);
 
-        Func<object, object, bool> CompareWith { get; set; }
+        Func<TOption, TOption, bool> CompareWith { get; set; }
 
-        object SelectedValue { get;  set; }
+        TOption SelectedValue { get; set; }
 
-        object ActiveValue { get;  set; }
+        TOption ActiveValue { get; set; }
+
+    }
+
+    public interface IAutoCompleteValue<TOption>
+    {
+
     }
 }

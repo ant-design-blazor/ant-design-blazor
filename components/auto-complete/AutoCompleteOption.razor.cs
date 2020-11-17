@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class AutoCompleteOption : AntDomComponentBase
+    public partial class AutoCompleteOption<TOption> : AntDomComponentBase
     {
         #region Parameters
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
         [Parameter]
-        public object Value { get; set; }
+        public TOption Value { get; set; }
 
         private string _label;
         [Parameter]
@@ -29,7 +29,7 @@ namespace AntDesign
         [Parameter]
 
         [CascadingParameter]
-        public IAutoCompleteRef AutoComplete { get; set; }
+        public IAutoCompleteRef<TOption> AutoComplete { get; set; }
 
         #endregion Parameters
 
@@ -82,13 +82,13 @@ namespace AntDesign
     }
 
 
-    public class OptionSelectionChange
+    public class OptionSelectionChange<TOption>
     {
-        public AutoCompleteOption Source { get; set; }
+        public AutoCompleteOption<TOption> Source { get; set; }
 
         public bool IsUserInput { get; set; }
 
-        public OptionSelectionChange(AutoCompleteOption source, bool isUserInput = false)
+        public OptionSelectionChange(AutoCompleteOption<TOption> source, bool isUserInput = false)
         {
             Source = source;
             IsUserInput = isUserInput;

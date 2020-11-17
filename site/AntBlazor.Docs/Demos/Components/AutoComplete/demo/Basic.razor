@@ -1,4 +1,4 @@
-<AutoComplete @bind-Value="@value" Options="@options" OnSelectionChange="OnSelectionChange" OnActiveChange="OnActiveChange" Placeholder="input here"/>
+<AutoComplete @bind-Value="@value" Options="@options" OnSelectionChange="OnSelectionChange" OnActiveChange="OnActiveChange" Placeholder="input here" TOption="string"/>
 <Divider></Divider>
 <span>bind-Value:@value</span>
 <br />
@@ -16,16 +16,16 @@
     };
 
 
-    private AutoCompleteOption selectItem;
+    private AutoCompleteOption<string> selectItem;
 
-    void OnSelectionChange(AutoCompleteOption item)
+    void OnSelectionChange(AutoCompleteOption<string> item)
     {
         selectItem = item;
     }
 
-    private AutoCompleteOption activeItem;
+    private AutoCompleteOption<string> activeItem;
 
-    void OnActiveChange(AutoCompleteOption item)
+    void OnActiveChange(AutoCompleteOption<string> item)
     {
         activeItem = item;
     }
