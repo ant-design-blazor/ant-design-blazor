@@ -50,6 +50,9 @@ namespace AntDesign
         public bool Selectable { get; set; } = true;
 
         [Parameter]
+        public bool Multiple { get; set; }
+
+        [Parameter]
         public bool InlineCollapsed
         {
             get => _inlineCollapsed;
@@ -124,9 +127,12 @@ namespace AntDesign
                 return;
             }
 
-            foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
+            if (!Multiple)
             {
-                menuitem.Deselect();
+                foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
+                {
+                    menuitem.Deselect();
+                }
             }
 
             if (!item.IsSelected)

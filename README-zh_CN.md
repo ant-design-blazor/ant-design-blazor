@@ -17,6 +17,7 @@
 [![AntDesign](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/LICENSE)
 [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/AntBlazor/shared_invite/zt-etfaf1ww-AEHRU41B5YYKij7SlHqajA)
 [![Ding Talk Group](https://img.shields.io/badge/DingTalk-AntBlazor-blue.svg?style=flat-square&logo=data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pg0KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGNsYXNzPSJpY29uIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiBmaWxsPSIjZmZmZmZmIj4NCiAgPHBhdGggZD0iTTU3My43IDI1Mi41QzQyMi41IDE5Ny40IDIwMS4zIDk2LjcgMjAxLjMgOTYuN2MtMTUuNy00LjEtMTcuOSAxMS4xLTE3LjkgMTEuMS01IDYxLjEgMzMuNiAxNjAuNSA1My42IDE4Mi44IDE5LjkgMjIuMyAzMTkuMSAxMTMuNyAzMTkuMSAxMTMuN1MzMjYgMzU3LjkgMjcwLjUgMzQxLjljLTU1LjYtMTYtMzcuOSAxNy44LTM3LjkgMTcuOCAxMS40IDYxLjcgNjQuOSAxMzEuOCAxMDcuMiAxMzguNCA0Mi4yIDYuNiAyMjAuMSA0IDIyMC4xIDRzLTM1LjUgNC4xLTkzLjIgMTEuOWMtNDIuNyA1LjgtOTcgMTIuNS0xMTEuMSAxNy44LTMzLjEgMTIuNSAyNCA2Mi42IDI0IDYyLjYgODQuNyA3Ni44IDEyOS43IDUwLjUgMTI5LjcgNTAuNSAzMy4zLTEwLjcgNjEuNC0xOC41IDg1LjItMjQuMkw1NjUgNzQzLjFoODQuNkw2MDMgOTI4bDIwNS4zLTI3MS45SDcwMC44bDIyLjMtMzguN2MuMy41LjQuOC40LjhTNzk5LjggNDk2LjEgODI5IDQzMy44bC42LTFoLS4xYzUtMTAuOCA4LjYtMTkuNyAxMC0yNS44IDE3LTcxLjMtMTE0LjUtOTkuNC0yNjUuOC0xNTQuNXoiLz4NCjwvc3ZnPg0K)](https://h5.dingtalk.com/circle/healthCheckin.html?corpId=dingccf128388c3ea40eda055e4784d35b88&2f46=c9b80ba5&origin=11)
+[![Discord Server](https://img.shields.io/discord/753358910341251182?color=%237289DA&label=AntBlazor&logo=discord&logoColor=white&style=flat-square)](https://discord.com/invite/jqu3Xeq)
 
 </div>
 
@@ -31,7 +32,7 @@
 - 💕 支持基于 WebAssembly 的客户端和基于 SignalR 的服务端 UI 事件交互。
 - 🎨 支持渐进式 Web 应用（PWA）
 - 🛡 使用 C# 构建，多范式静态语言带来高效的开发体验。
-- ⚙️ 基于 .NET Standard 2.1，可直接引用丰富的 .NET 类库。
+- ⚙️ 基于 .NET Standard 2.1 / .NET 5，可直接引用丰富的 .NET 类库。
 - 🎁 可与已有的 ASP.NET Core MVC、Razor Pages 项目无缝集成。
 
 ## 🌈 在线示例
@@ -43,8 +44,8 @@ WebAssembly 静态托管页面示例
 
 ## 🖥 支持环境
 
-- .NET Core 3.1。
-- Blazor WebAssembly 3.2 正式版。
+- .NET Core 3.1 / .NET 5。
+- Blazor WebAssembly 3.2 /.NET 5 正式版。
 - 支持服务端双向绑定。
 - 支持 WebAssembly 静态文件部署。
 - 主流 4 款现代浏览器，以及 Internet Explorer 11+（限 [Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1)）。
@@ -67,7 +68,7 @@ WebAssembly 静态托管页面示例
 
 ## 📦 安装
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 以上版本，推荐 .NET 5
 
 ### 从模板创建一个新项目
 
@@ -76,7 +77,7 @@ WebAssembly 静态托管页面示例
 - 安装模板
 
   ```bash
-  $ dotnet new --install AntDesign.Templates::0.1.0-*
+  $ dotnet new --install AntDesign.Templates
   ```
 
 - 从模板创建 Ant Design Blazor Pro 项目
@@ -146,7 +147,7 @@ WebAssembly 静态托管页面示例
 
 ## ⌨️ 本地开发
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/5.0) 5.0.100 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
 

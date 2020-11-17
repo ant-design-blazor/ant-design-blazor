@@ -16,11 +16,11 @@ More layouts with navigation: [Layout](/components/layout).
 
 ## API
 
-```jsx
+```html
 <Menu>
-  <Menu.Item>Menu</Menu.Item>
-  <SubMenu title="SubMenu">
-    <Menu.Item>SubMenuItem</Menu.Item>
+  <MenuItem>Menu</MenuItem>
+  <SubMenu Title="SubMenu">
+    <MenuItem>SubMenuItem</MenuItem>
   </SubMenu>
 </Menu>
 ```
@@ -29,53 +29,60 @@ More layouts with navigation: [Layout](/components/layout).
 
 | Param | Description | Type | Default value | Version |
 | --- | --- | --- | --- | --- |
-| defaultOpenKeys | Array with the keys of default opened sub menus | string\[] |  |  |
-| defaultSelectedKeys | Array with the keys of default selected menu items | string\[] |  |  |
-| forceSubMenuRender | Render submenu into DOM before it becomes visible | boolean | false |  |
-| inlineCollapsed | Specifies the collapsed status when menu is inline mode | boolean | - |  |
-| inlineIndent | Indent (in pixels) of inline menu items on each level | number | 24 |  |
-| mode | Type of menu; `vertical`, `horizontal`, or `inline` | `vertical` \| `horizontal` \| `inline` | `vertical` |  |
-| multiple | Allows selection of multiple items | boolean | false |  |
-| openKeys | Array with the keys of currently opened sub-menus | string\[] |  |  |
-| selectable | Allows selecting menu items | boolean | true |  |
-| selectedKeys | Array with the keys of currently selected menu items | string\[] |  |  |
-| style | Style of the root node | object |  |  |
-| subMenuCloseDelay | Delay time to hide submenu when mouse leaves (in seconds) | number | 0.1 |  |
-| subMenuOpenDelay | Delay time to show submenu when mouse enters, (in seconds) | number | 0 |  |
-| theme | Color theme of the menu | `light` \| `dark` | `light` |  |
-| onClick | Called when a menu item is clicked | function({ item, key, keyPath, domEvent }) | - |  |
-| onDeselect | Called when a menu item is deselected (multiple mode only) | function({ item, key, keyPath, selectedKeys, domEvent }) | - |  |
-| onOpenChange | Called when sub-menus are opened or closed | function(openKeys: string\[]) | noop |  |
-| onSelect | Called when a menu item is selected | function({ item, key, keyPath, selectedKeys, domEvent }) | none |  |
-| overflowedIndicator | Customized icon when menu is collapsed | ReactNode | - |  |
+| Accordion | SubMenu accordion mode | boolean | false |
+| DefaultOpenKeys | Array with the keys of default opened sub menus | string\[] |  |  |
+| DefaultSelectedKeys | Array with the keys of default selected menu items | string\[] |  |  |
+| ForceSubMenuRender | Render submenu into DOM before it becomes visible | boolean | false | (Not implemented) |
+| InlineCollapsed | Specifies the collapsed status when menu is inline mode | boolean | - |  |
+| InlineIndent | Indent (in pixels) of inline menu items on each level | number | 24 | (Not implemented) |
+| Mode | Type of menu | `MenuMode.Vertical` \| `MenuMode.Horizontal` \| `MenuMode.Inline` | `MenuMode.Vertical` |  |
+| Multiple | Allows selection of multiple items | boolean | false | (Not implemented) |
+| OpenKeys | Array with the keys of currently opened sub-menus | string\[] |  |  |
+| OnDeselect | Called when a menu item is deselected (multiple mode only) | function({ item, key, keyPath, selectedKeys, domEvent }) | - | (Not implemented) |
+| OnOpenChange | Called when sub-menus are opened or closed | function(openKeys: string\[]) | noop | (Not implemented) |
+| OnSelect | Called when a menu item is selected | function({ item, key, keyPath, selectedKeys, domEvent }) | none | (Not implemented) |
+| OverflowedIndicator | Customized icon when menu is collapsed | RenderFragment | - | (Not implemented) |
+| Selectable | Allows selecting menu items. When it is `false` the menu item is not selected after `OnClick`. | boolean | true |  |
+| SelectedKeys | Array with the keys of currently selected menu items | string\[] |  |  |
+| Style | Style of the root node | string |  |  |
+| SubMenuCloseDelay | Delay time to hide submenu when mouse leaves (in seconds) | number | 0.1 | (Not implemented) |
+| SubMenuOpenDelay | Delay time to show submenu when mouse enters, (in seconds) | number | 0 | (Not implemented) |
+| Theme | Color theme of the menu | `light` \| `dark` | `light` |  |
 
-> More options in [rc-menu](https://github.com/react-component/menu#api)
-
-### Menu.Item
+### MenuItem
 
 | Param    | Description                          | Type    | Default value | Version |
 | -------- | ------------------------------------ | ------- | ------------- | ------- |
-| disabled | Whether menu item is disabled        | boolean | false         |         |
-| key      | Unique ID of the menu item           | string  |               |         |
-| title    | Set display title for collapsed item | string  |               |         |
+| ChildContent    | Set display title for collapsed item | string  |               |         |
+| Disabled | Whether menu item is disabled        | boolean | false         |         |
+| Key      | Unique ID of the menu item           | string  |               |         |
+| OnClick | Called when a menu item is clicked | EventCallback&lt;MouseEventArgs> | - |  |
+| RouterLink    |  Href route   | string |     -          |         |
+| RouterMatch    | Modifies the URL matching behavior for a NavLink  | NavLinkMatch |     -          |         |
+| Style    | Additional CSS style  | string |     -          |         |
+| Title | Title of the menu item | string |  |  |
 
-### Menu.SubMenu
+### SubMenu
 
 | Param | Description | Type | Default value | Version |
 | --- | --- | --- | --- | --- |
-| popupClassName | Sub-menu class name | string |  |  |
-| children | Sub-menus or sub-menu items | Array&lt;MenuItem\|SubMenu> |  |  |
-| disabled | Whether sub-menu is disabled | boolean | false |  |
-| key | Unique ID of the sub-menu | string |  |  |
-| title | Title of the sub-menu | string\|ReactNode |  |  |
-| onTitleClick | Callback executed when the sub-menu title is clicked | function({ key, domEvent }) |  |  |
+| ChildContent | Sub-menus or sub-menu items | RenderFragment |  |  |
+| Disabled | Whether sub-menu is disabled | boolean | false |  |
+| IsOpen | Open state of the SubMenu | bool | false |  |
+| Key | Unique ID of the sub-menu | string |  |  |
+| OnTitleClick | Callback executed when the sub-menu title is clicked | EventCallback&lt;MouseEventArgs> |  |  |
+| PopupClassName | Sub-menu class name | string |  | Not implemented) |
+| Title | Title of the sub-menu | string |  |  |
+| TitleTemplate | Title of the sub-menu | RenderFragment | - |  |
 
-### Menu.ItemGroup
+### MenuItemGroup
 
 | Param    | Description        | Type              | Default value | Version |
 | -------- | ------------------ | ----------------- | ------------- | ------- |
-| children | sub-menu items     | MenuItem\[]       |               |         |
-| title    | title of the group | string\|ReactNode |               |         |
+| ChildContent | sub-menu items     | RenderFragment       |               |         |
+| Style    | Additional CSS style  | string |     -          |         |
+| Title    | Title of the group | string |               |         |
+| TitleTemplate | Title of the group | RenderFragment | - |  |
 
 ### Menu.Divider
 

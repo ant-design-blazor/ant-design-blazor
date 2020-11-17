@@ -5,7 +5,14 @@
     <li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key">
         @if (RouterLink == null)
         {
-            @ChildContent
+            if (Title != null)
+            {
+                @Title
+            }
+            else
+            {
+                @ChildContent
+            }            
         }
         else
         {
