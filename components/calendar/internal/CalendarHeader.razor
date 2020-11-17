@@ -10,8 +10,6 @@
         int startYear = Calendar.Value.AddYears(-10).Year;
         int endYear = Calendar.Value.AddYears(10).Year;
 
-        Console.WriteLine("endYear VALUE" + endYear);
-
         if (Calendar.ValidRange != null)
         {
             startYear = Calendar.ValidRange[0].Year;
@@ -103,13 +101,9 @@
     }
 
     private async Task OnSelectYear(string value)
-    {
-        Console.WriteLine("YEAR VALUE" + value);
-        
+    {      
         int year = Convert.ToInt32(value);
         await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, year: year));
-
-        StateHasChanged();
     }
 
     private async Task OnSelectMonth(string value)
