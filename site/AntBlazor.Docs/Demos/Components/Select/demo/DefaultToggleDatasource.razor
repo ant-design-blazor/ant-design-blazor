@@ -8,14 +8,24 @@
         OnSelectedItemChanged="@(item => OnOnSelectedItemChangedEventHandler(item))"
         OnDataSourceChanged="@OnDataSourceChangedEventHandler"
         SortByLabel="@SortDirection.Ascending"
-        AllowClear>
+        AllowClear
+        Style="width: calc(100% - 68px);">
 </Select>
-<Button OnClick="@SetDatasource1" >Set Datasource 1</Button>
-<Button OnClick="@SetDatasource2" >Set Datasource 2</Button>
-<Button OnClick="@SetDatasourceNull" >Set NULL</Button>
-<Button OnClick="@AddPerson" >Add Person (John)</Button>
-<Button OnClick="@RemovePerson" >Remove Person (John)</Button>
-<Button OnClick="@ClearDS" >Clear Datasource</Button>
+<Dropdown Style="padding-left: 8px;" Trigger="@(new TriggerType[] { TriggerType.Click })">
+    <Overlay>
+        <Menu Selectable="false">
+            <MenuItem OnClick="@SetDatasource1">Set Datasource 1</MenuItem>
+            <MenuItem OnClick="@SetDatasource2">Set Datasource 2</MenuItem>
+            <MenuItem OnClick="@SetDatasourceNull">Set Datasource to NULL</MenuItem>
+            <MenuItem OnClick="@AddPerson">Add Person (John)</MenuItem>
+            <MenuItem OnClick="@RemovePerson">Remove Person (John)</MenuItem>
+            <MenuItem OnClick="@ClearDS">Clear Datasource</MenuItem>
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        <a class="ant-dropdown-link" @onclick:preventDefault>Actions<Icon Type="down" /></a>        
+    </ChildContent>
+</Dropdown>
 <br /><br />
 <p>
     Selected Value: @_selectedValue <br/>

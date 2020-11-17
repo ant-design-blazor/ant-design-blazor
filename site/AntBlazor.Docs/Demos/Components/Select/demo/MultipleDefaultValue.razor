@@ -8,15 +8,24 @@
         DefaultActiveFirstItem="@_defaultActiveFirstItem"
         DefaultValues="@_defaultValues"
         OnSelectedItemsChanged="@(items => OnSelectedItemsChangedEventHandler(items))"
+        Style="width: calc(100% - 68px);"
         AllowClear>
 </Select>
-<br/>
-<Button OnClick="@SetClearValues" >Clear Values</Button>
-<Button OnClick="@SetValues" >Set Values</Button>
-<Button OnClick="@SetWrongValues" >Set Wrong Values</Button>
-<Button OnClick="@SetDeactivatedValues" >Set Deactivated Values</Button>
-<Button OnClick="@ToggleDefaultActiveFirstItem" >Toggle Default First Item (@_defaultActiveFirstItem)</Button>
-<Button OnClick="@ToggleDefaultValues" >Toggle Default Values (@_useDefaultValues)</Button>
+<Dropdown Style="padding-left: 8px;" Trigger="@(new TriggerType[] { TriggerType.Click })">
+    <Overlay>
+        <Menu Selectable="false">
+            <MenuItem OnClick="@SetClearValues">Clear Value</MenuItem>
+            <MenuItem OnClick="@SetValues">Set Values</MenuItem>
+            <MenuItem OnClick="@SetWrongValues">Set Wrong Values</MenuItem>
+            <MenuItem OnClick="@SetDeactivatedValues">Set Deactivated Values</MenuItem>
+            <MenuItem OnClick="@ToggleDefaultActiveFirstItem">Toggle Default First Item (@_defaultActiveFirstItem)</MenuItem>
+            <MenuItem OnClick="@ToggleDefaultValues">Toggle Default Values (@_useDefaultValues)</MenuItem>
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        <a class="ant-dropdown-link" @onclick:preventDefault>Actions<Icon Type="down" /></a>        
+    </ChildContent>
+</Dropdown>
 <br /><br />
 <p>
     Selected Items Values Count: @_selectedValues?.Count() <br />

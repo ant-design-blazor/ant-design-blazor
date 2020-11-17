@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace AntDesign
+namespace AntDesign.Select.Internal
 {
     public partial class SelectOptionGroup<TItemValue, TItem>
     {

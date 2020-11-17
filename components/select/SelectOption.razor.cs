@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using AntDesign.Select.Internal;
 
 #pragma warning disable 1591 // Disable missing XML comment
 
@@ -13,15 +14,52 @@ namespace AntDesign
 
         # region Parameters
         [CascadingParameter(Name = "ItemTemplate")] internal RenderFragment<TItem> ItemTemplate { get; set; }
-        [CascadingParameter] public Select<TItemValue, TItem> SelectParent { get; set; }
-        [Parameter] public Guid InternalId { get; set; }
+        [CascadingParameter] internal Select<TItemValue, TItem> SelectParent { get; set; }
+        [CascadingParameter(Name = "InternalId")] internal Guid InternalId { get; set; }
+        [Parameter] public TItemValue Value { get; set; }
+        /// <summary>
+        /// The parameter should only be used if the SelectOption was created directly.
+        /// </summary>
+        [Parameter] public string Label
+        {
+            get => _label;
+            set
+            {
+                if (_label != value)
+                {
+                    _label = value;
+                    StateHasChanged();
+                }
+            }
+        }
+
+        /// <summary>
+        /// The parameter should only be used if the SelectOption was created directly.
+        /// </summary>
+        [Parameter] public bool IsDisabled
+        {
+            get => _isDisabled;
+            set
+            {
+                if (_isDisabled != value)
+                {
+                    _isDisabled = value;
+
+                    if (Model != null)
+                        Model.IsDisabled = value;
+                }
+            }
+        }
+
         #endregion
 
         # region Properties
-        public SelectOptionItem<TItemValue, TItem> Model { get; set; }
+        private string _label = string.Empty;
+        private bool _isDisabled;
+        internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
 
         private bool _isSelected;
-        public bool IsSelected
+        internal bool IsSelected
         {
             get => _isSelected;
             set
@@ -34,22 +72,22 @@ namespace AntDesign
             }
         }
 
-        private bool _isDisabled;
-        public bool IsDisabled
+        private bool _internalIsDisabled;
+        internal bool InternalIsDisabled
         {
-            get => _isDisabled;
+            get => _internalIsDisabled;
             set
             {
-                if (_isDisabled != value)
+                if (_internalIsDisabled != value)
                 {
-                    _isDisabled = value;
+                    _internalIsDisabled = value;
                     StateHasChanged();
                 }
             }
         }
 
         private bool _isHidden;
-        public bool IsHidden
+        internal bool IsHidden
         {
             get => _isHidden;
             set
@@ -63,7 +101,7 @@ namespace AntDesign
         }
 
         private bool _isActive;
-        public bool IsActive
+        internal bool IsActive
         {
             get => _isActive;
             set
@@ -76,22 +114,22 @@ namespace AntDesign
             }
         }
 
-        private string _label = string.Empty;
-        public string Label
+        private string _internalLabel = string.Empty;
+        internal string InternalLabel
         {
-            get => _label;
+            get => _internalLabel;
             set
             {
-                if (_label != value)
+                if (_internalLabel != value)
                 {
-                    _label = value;
+                    _internalLabel = value;
                     StateHasChanged();
                 }
             }
         }
 
         private string _groupName = string.Empty;
-        public string GroupName
+        internal string GroupName
         {
             get => _groupName;
             set
@@ -108,8 +146,31 @@ namespace AntDesign
 
         protected override async Task OnInitializedAsync()
         {
-            var item = SelectParent.SelectOptions.First(x => x.InternalId == InternalId);
-            item.ChildComponent = this;
+            if (SelectParent.SelectOptions == null)
+            {
+                // The SelectOptionItem was already created, now only the SelectOption has to be 
+                // bound to the SelectOptionItem.
+                var item = SelectParent.SelectOptionItems.First(x => x.InternalId == InternalId);
+                item.ChildComponent = this;
+            }
+            else
+            {
+                // The SelectOption was not created by using a DataSource, a SelectOptionItem must be created.
+                InternalId = Guid.NewGuid();
+
+                var newSelectOptionItem = new SelectOptionItem<TItemValue, TItem>()
+                {
+                    InternalId = InternalId,
+                    Label = Label,
+                    IsDisabled = IsDisabled,
+                    GroupName = _groupName,
+                    Value = Value,
+                    Item = (TItem)Convert.ChangeType(Value, typeof(TItem)),
+                    ChildComponent = this
+                };
+
+                SelectParent.SelectOptionItems.Add(newSelectOptionItem);
+            }
 
             SetClassMap();
 
@@ -121,10 +182,10 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add("ant-select-item")
                 .Add(ClassPrefix)
-                .GetIf(() => $"{ClassPrefix}-disabled", () => IsDisabled)
-                .GetIf(() => $"{ClassPrefix}-selected", () => IsSelected)
-                .GetIf(() => $"{ClassPrefix}-active", () => IsActive)
-                .GetIf(() => $"{ClassPrefix}-grouped", () => SelectParent.IsGroupingEnabled);
+                .If($"{ClassPrefix}-disabled", () => InternalIsDisabled)
+                .If($"{ClassPrefix}-selected", () => IsSelected)
+                .If($"{ClassPrefix}-active", () => IsActive)
+                .If($"{ClassPrefix}-grouped", () => SelectParent.IsGroupingEnabled);
 
             StateHasChanged();
         }
@@ -142,7 +203,7 @@ namespace AntDesign
 
         protected async Task OnClick(EventArgs _)
         {
-            if (!IsDisabled)
+            if (!InternalIsDisabled)
             {
                 await SelectParent.SetValueAsync(Model);
 
@@ -160,7 +221,7 @@ namespace AntDesign
         protected void OnMouseEnter()
         {
             // Workaround to prevent double active items if the actual active item was set by keyboard
-            SelectParent.SelectOptions.Where(x => x.IsActive)
+            SelectParent.SelectOptionItems.Where(x => x.IsActive)
                 .ForEach(i => i.IsActive = false);
 
             Model.IsActive = true;
@@ -169,6 +230,19 @@ namespace AntDesign
         protected void OnMouseLeave()
         {
             Model.IsActive = false;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (SelectParent.SelectOptions != null)
+            {
+                // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource.
+                var selectOptionItem = SelectParent.SelectOptionItems.First(x => x.InternalId == InternalId);
+
+                SelectParent.SelectOptionItems.Remove(selectOptionItem);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using AntDesign.Select.Internal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 #pragma warning disable 1591 // Disable missing XML comment
 #pragma warning disable CA1716 // Disable Select name warning
+#pragma warning disable CA1305 // IFormatProvider warning
 
 namespace AntDesign
 {
@@ -30,6 +33,10 @@ namespace AntDesign
         [Parameter] public bool HideSelected { get; set; }
         [Parameter] public bool IgnoreItemChanges { get; set; } = true;
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+        /// <summary>
+        /// LabelInValue can only be used if the SelectOption is not created by DataSource. 
+        /// </summary>
+        [Parameter] public bool LabelInValue { get; set; }
         [Parameter] public string LabelName { get; set; }
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
         [Parameter] public bool Loading { get; set; }
@@ -73,7 +80,7 @@ namespace AntDesign
 
                 if (value == null && _datasource != null)
                 {
-                    SelectOptions.Clear();
+                    SelectOptionItems.Clear();
 
                     Value = default;
 
@@ -84,9 +91,9 @@ namespace AntDesign
                     return;
                 }
 
-                if (value != null && !value.Any() && SelectOptions.Any())
+                if (value != null && !value.Any() && SelectOptionItems.Any())
                 {
-                    SelectOptions.Clear();
+                    SelectOptionItems.Clear();
 
                     Value = default;
 
@@ -207,6 +214,7 @@ namespace AntDesign
                 }
             }
         }
+        [Parameter] public RenderFragment SelectOptions { get; set; }
         #endregion
 
         #region Properties
@@ -219,7 +227,7 @@ namespace AntDesign
         /// <returns>true if SelectOptions has any selected Items, otherwise false</returns>
         internal bool HasValue
         {
-            get => SelectOptions.Where(x => x.IsSelected).Any();
+            get => SelectOptionItems.Where(x => x.IsSelected).Any();
         }
         /// <summary>
         /// Returns a true/false if the placeholder should be displayed or not.
@@ -258,13 +266,11 @@ namespace AntDesign
         private IEnumerable<TItemValue> _selectedValues;
         private IEnumerable<TItemValue> _defaultValues;
         private bool _defaultValuesHasItems;
-
         private bool _isInitialized;
-        private bool _firstRenderProceded;
         internal ElementReference _inputRef;
         protected OverlayTrigger _dropDown;
 
-        internal List<SelectOptionItem<TItemValue, TItem>> SelectOptions { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
+        internal HashSet<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new HashSet<SelectOptionItem<TItemValue, TItem>>();
         #endregion 
 
         protected override void OnInitialized()
@@ -274,8 +280,6 @@ namespace AntDesign
             if (string.IsNullOrWhiteSpace(Style))
                 Style = DefaultWidth;
 
-            //CreateDeleteSelectOptions();
-
             _isInitialized = true;
 
             base.OnInitialized();
@@ -283,7 +287,8 @@ namespace AntDesign
 
         protected override async Task OnParametersSetAsync()
         {
-            CreateDeleteSelectOptions();
+            if (SelectOptions == null)
+                CreateDeleteSelectOptions();
 
             await base.OnParametersSetAsync();
         }
@@ -295,18 +300,17 @@ namespace AntDesign
                 await SetInitialValuesAsync();
 
                 await SetDropdownStyleAsync();
-
-                _firstRenderProceded = true;
             }
 
-            if (_isInitialized)
+            // 
+            if (_isInitialized && SelectOptions == null)
                 CreateDeleteSelectOptions();
 
             if (SelectMode == SelectMode.Default)
             {
                 // Try to set the default value each render cycle if _selectedValue has no value
-                if (_defaultValueIsNotNull && !HasValue && SelectOptions.Any()
-                    || DefaultActiveFirstItem && !HasValue && SelectOptions.Any())
+                if (_defaultValueIsNotNull && !HasValue && SelectOptionItems.Any()
+                    || DefaultActiveFirstItem && !HasValue && SelectOptionItems.Any())
                 {
                     await TrySetDefaultValueAsync();
                 }
@@ -314,8 +318,8 @@ namespace AntDesign
             else
             {
                 // Try to set the default value each render cycle if _selectedValue has no value
-                if (_defaultValuesHasItems && !HasValue && SelectOptions.Any()
-                    || DefaultActiveFirstItem && !HasValue && SelectOptions.Any())
+                if (_defaultValuesHasItems && !HasValue && SelectOptionItems.Any()
+                    || DefaultActiveFirstItem && !HasValue && SelectOptionItems.Any())
                 {
                     await TrySetDefaultValuesAsync();
                 }
@@ -336,17 +340,19 @@ namespace AntDesign
                 return;
 
             // Compare items of SelectOptions and the datastore
-            if (SelectOptions.Any())
+            if (SelectOptionItems.Any())
             {
                 // Delete items from SelectOptions if it is no longer in the datastore
-                for (var i = SelectOptions.Count - 1; i >= 0; i--)
+                for (var i = SelectOptionItems.Count - 1; i >= 0; i--)
                 {
-                    var selectOption = SelectOptions[i];
+                    var selectOption = SelectOptionItems.ElementAt(i);
                     var exists = _datasource.Contains(selectOption.Item);
 
                     if (!exists)
                     {
-                        SelectOptions.Remove(selectOption);
+                        Console.WriteLine("Does not exists in DS: " + selectOption.Label);
+
+                        SelectOptionItems.Remove(selectOption);
                     }
                 }
             }
@@ -358,7 +364,7 @@ namespace AntDesign
                 var exists = false;
                 SelectOptionItem<TItemValue, TItem> updateSelectOption = null;
 
-                foreach (var selectOption in SelectOptions)
+                foreach (var selectOption in SelectOptionItems)
                 {
                     var result = EqualityComparer<TItemValue>.Default.Equals(selectOption.Value, value);
 
@@ -392,7 +398,7 @@ namespace AntDesign
                         Value = value
                     };
 
-                    SelectOptions.Add(newItem);
+                    SelectOptionItems.Add(newItem);
                 }
                 else if (exists && !IgnoreItemChanges)
                 {
@@ -410,11 +416,11 @@ namespace AntDesign
         /// <summary>
         /// Sorted list of SelectOptionItems
         /// </summary>
-        internal protected IEnumerable<SelectOptionItem<TItemValue, TItem>> SortedSelectOptions
+        internal protected IEnumerable<SelectOptionItem<TItemValue, TItem>> SortedSelectOptionItems
         {
             get
             {
-                var selectOption = SelectOptions;
+                var selectOption = SelectOptionItems;
 
                 if (SortByGroup == SortDirection.Ascending && SortByLabel == SortDirection.None)
                 {
@@ -482,7 +488,7 @@ namespace AntDesign
         /// <returns>true if all items are set to IsHidden(true)</returns>
         protected bool AllOptionsHidden()
         {
-            return SelectOptions.All(x => x.IsHidden);
+            return SelectOptionItems.All(x => x.IsHidden);
         }
 
         /// <summary>
@@ -528,12 +534,12 @@ namespace AntDesign
 
             if (SelectMode != SelectMode.Default && HideSelected)
             {
-                SelectOptions.Where(x => !x.IsSelected && x.IsHidden)
+                SelectOptionItems.Where(x => !x.IsSelected && x.IsHidden)
                     .ForEach(i => i.IsHidden = false);
             }
             else
             {
-                SelectOptions.Where(x => x.IsHidden)
+                SelectOptionItems.Where(x => x.IsHidden)
                     .ForEach(i => i.IsHidden = false);
             }
         }
@@ -569,11 +575,11 @@ namespace AntDesign
         /// The method is called every time if the user select/de-select a item by mouse or keyboard.
         /// Don't change the IsSelected property outside of this function.
         /// </summary>
-        internal async Task SetValueAsync(SelectOptionItem<TItemValue, TItem> selectOption)
+        protected internal async Task SetValueAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (SelectMode == SelectMode.Default)
             {
-                SelectOptions.Where(x => x.IsSelected)
+                SelectOptionItems.Where(x => x.IsSelected)
                     .ForEach(i => i.IsSelected = false);
 
                 selectOption.IsSelected = true;
@@ -634,9 +640,9 @@ namespace AntDesign
         /// </summary>
         private async Task SetDefaultActiveFirstItemAsync()
         {
-            if (SelectOptions.Any())
+            if (SelectOptionItems.Any())
             {
-                var firstEnabled = SortedSelectOptions.FirstOrDefault(x => !x.IsDisabled);
+                var firstEnabled = SortedSelectOptionItems.FirstOrDefault(x => !x.IsDisabled);
 
                 if (firstEnabled != null)
                 {
@@ -679,7 +685,7 @@ namespace AntDesign
         {
             if (_defaultValueIsNotNull)
             {
-                var result = SelectOptions.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, _defaultValue));
+                var result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, _defaultValue));
 
                 if (result != null && !result.IsDisabled)
                 {
@@ -715,7 +721,7 @@ namespace AntDesign
             {
                 foreach (var defaultValue in _defaultValues)
                 {
-                    var result = SelectOptions.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, defaultValue));
+                    var result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, defaultValue));
 
                     if (result != null && !result.IsDisabled)
                     {
@@ -726,7 +732,7 @@ namespace AntDesign
                     }
                 }
 
-                var anySelected = SelectOptions.Any(x => x.IsSelected);
+                var anySelected = SelectOptionItems.Any(x => x.IsSelected);
 
                 if (!anySelected)
                 {
@@ -763,7 +769,7 @@ namespace AntDesign
             {
                 if (_selectedValue != null)
                 {
-                    var result = SelectOptions.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, _selectedValue));
+                    var result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, _selectedValue));
 
                     if (result != null)
                     {
@@ -789,7 +795,7 @@ namespace AntDesign
                 {
                     foreach (var value in _selectedValues)
                     {
-                        var result = SelectOptions.FirstOrDefault(c => EqualityComparer<TItemValue>.Default.Equals(c.Value, value));
+                        var result = SelectOptionItems.FirstOrDefault(c => EqualityComparer<TItemValue>.Default.Equals(c.Value, value));
 
                         if (result != null && !result.IsDisabled)
                         {
@@ -808,12 +814,41 @@ namespace AntDesign
         /// <summary>
         /// A separate method to invoke ValuesChanged and OnSelectedItemsChanged to reduce code duplicates.
         /// </summary>
+
+        protected void InvokeOnSelectedItemChanged(SelectOptionItem<TItemValue, TItem> selectOptionItem = null)
+        {
+            if (selectOptionItem == null)
+            {
+                OnSelectedItemsChanged?.Invoke(default);
+            }
+            else
+            {
+                if (LabelInValue && SelectOptions != null)
+                {
+                    // Embed the label into the value and return the result as json string.
+                    var valueLabel = new Select.Internal.ValueLabel<TItemValue>
+                    {
+                        Value = selectOptionItem.Value,
+                        Label = selectOptionItem.Label
+                    };
+
+                    var json = JsonSerializer.Serialize(valueLabel);
+
+                    OnSelectedItemChanged?.Invoke((TItem)Convert.ChangeType(json, typeof(TItem)));
+                }
+                else
+                {
+                    OnSelectedItemChanged?.Invoke(selectOptionItem.Item);
+                }
+            }
+        }
+
         protected async Task InvokeValuesChanged()
         {
             var newSelectedValues = new List<TItemValue>();
             var newSelectedItems = new List<TItem>();
 
-            SelectOptions.Where(x => x.IsSelected)
+            SelectOptionItems.Where(x => x.IsSelected)
                 .ForEach(i =>
                 {
                     newSelectedValues.Add(i.Value);
@@ -858,7 +893,7 @@ namespace AntDesign
             if (!_isInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
                 return;
 
-            SelectOptions.Where(x => x.IsSelected)
+            SelectOptionItems.Where(x => x.IsSelected)
                 .ForEach(i => i.IsSelected = false);
 
             if (EqualityComparer<TItemValue>.Default.Equals(value, default))
@@ -868,7 +903,7 @@ namespace AntDesign
                 return;
             }
 
-            var result = SelectOptions.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
+            var result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
 
             if (result == null)
             {
@@ -889,7 +924,7 @@ namespace AntDesign
             if (HideSelected)
                 result.IsHidden = true;
 
-            OnSelectedItemChanged?.Invoke(result.Item);
+            InvokeOnSelectedItemChanged(result);
             ValueChanged.InvokeAsync(result.Value);
         }
 
@@ -901,10 +936,10 @@ namespace AntDesign
             if (!_isInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
                 return;
 
-            if (!SelectOptions.Any())
+            if (!SelectOptionItems.Any())
                 return;
 
-            SelectOptions.Where(x => x.IsSelected)
+            SelectOptionItems.Where(x => x.IsSelected)
                 .ForEach(i => i.IsSelected = false);
 
             if (values == null)
@@ -918,7 +953,7 @@ namespace AntDesign
 
             foreach (var item in valueList)
             {
-                var result = SelectOptions.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, item));
+                var result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, item));
 
                 if (result != null && !result.IsDisabled)
                 {
@@ -956,11 +991,11 @@ namespace AntDesign
 
             //_inputWidth = string.IsNullOrEmpty(_searchValue) ? InputDefaultWidth : $"{4 + _searchValue.Length * 8}px";
 
-            SelectOptions.Where(x => x.IsHidden).ForEach(i => i.IsHidden = false);
+            SelectOptionItems.Where(x => x.IsHidden).ForEach(i => i.IsHidden = false);
 
             if (!string.IsNullOrWhiteSpace(_searchValue))
             {
-                SelectOptions
+                SelectOptionItems
                     .Where(x => !x.Label.Contains(_searchValue, StringComparison.InvariantCultureIgnoreCase))
                     .ForEach(i =>
                     {
@@ -988,12 +1023,12 @@ namespace AntDesign
                 if (!_dropDown.IsOverlayShow())
                     return;
 
-                if (!SelectOptions.Any())
+                if (!SelectOptionItems.Any())
                     return;
 
                 if (SelectMode == SelectMode.Default)
                 {
-                    var firstActive = SelectOptions.FirstOrDefault(x => x.IsActive);
+                    var firstActive = SelectOptionItems.FirstOrDefault(x => x.IsActive);
 
                     if (firstActive != null)
                     {
@@ -1013,7 +1048,7 @@ namespace AntDesign
                     if (AllOptionsHidden())
                         return;
 
-                    var firstActive = SelectOptions.FirstOrDefault(x => x.IsActive);
+                    var firstActive = SelectOptionItems.FirstOrDefault(x => x.IsActive);
 
                     if (firstActive != null)
                     {
@@ -1030,7 +1065,7 @@ namespace AntDesign
                 {
                     if (AllowCustomTags)
                     {
-                        var anyActiveItems = SelectOptions.Any(x => x.IsActive);
+                        var anyActiveItems = SelectOptionItems.Any(x => x.IsActive);
 
                         if (AllOptionsHidden() || !anyActiveItems)
                         {
@@ -1042,7 +1077,7 @@ namespace AntDesign
                         }
                     }
 
-                    var firstActive = SelectOptions.FirstOrDefault(x => x.IsActive);
+                    var firstActive = SelectOptionItems.FirstOrDefault(x => x.IsActive);
 
                     if (firstActive != null)
                     {
@@ -1064,22 +1099,22 @@ namespace AntDesign
                     overlayFirstOpen = true;
                 }
 
-                if (!SelectOptions.Any())
+                if (!SelectOptionItems.Any())
                     return;
 
-                var sortedSelectOptions = SortedSelectOptions.ToList();
+                var sortedSelectOptionItems = SortedSelectOptionItems.ToList();
 
                 if (overlayFirstOpen)
                 {
                     // Check if there is a selected item and set it as active
-                    var currentSelected = sortedSelectOptions.FirstOrDefault(x => x.IsSelected);
+                    var currentSelected = sortedSelectOptionItems.FirstOrDefault(x => x.IsSelected);
 
                     if (currentSelected != null)
                     {
                         if (currentSelected.IsActive)
                             return;
 
-                        sortedSelectOptions.Where(x => x.IsActive)
+                        sortedSelectOptionItems.Where(x => x.IsActive)
                             .ForEach(i => i.IsActive = false);
 
                         currentSelected.IsActive = true;
@@ -1093,11 +1128,11 @@ namespace AntDesign
                     return;
                 }
 
-                var firstActive = sortedSelectOptions.FirstOrDefault(x => x.IsActive && !x.IsHidden && !x.IsDisabled);
+                var firstActive = sortedSelectOptionItems.FirstOrDefault(x => x.IsActive && !x.IsHidden && !x.IsDisabled);
 
                 if (firstActive == null)
                 {
-                    var firstOption = sortedSelectOptions.FirstOrDefault(x => !x.IsHidden && !x.IsDisabled);
+                    var firstOption = sortedSelectOptionItems.FirstOrDefault(x => !x.IsHidden && !x.IsDisabled);
 
                     if (firstOption != null)
                     {
@@ -1108,12 +1143,12 @@ namespace AntDesign
                 }
                 else
                 {
-                    var possibilityCount = sortedSelectOptions.Where(x => !x.IsHidden && !x.IsDisabled).Count();
+                    var possibilityCount = sortedSelectOptionItems.Where(x => !x.IsHidden && !x.IsDisabled).Count();
 
                     if (possibilityCount == 1) // Do nothing if there is only one choice
                         return;
 
-                    var index = sortedSelectOptions.FindIndex(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, firstActive.Value));
+                    var index = sortedSelectOptionItems.FindIndex(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, firstActive.Value));
 
                     index--;
 
@@ -1121,11 +1156,11 @@ namespace AntDesign
 
                     if (index == -1)
                     {
-                        nextIndex = sortedSelectOptions.FindLastIndex(x => !x.IsHidden && !x.IsDisabled);
+                        nextIndex = sortedSelectOptionItems.FindLastIndex(x => !x.IsHidden && !x.IsDisabled);
                     }
                     else
                     {
-                        nextIndex = sortedSelectOptions.FindIndex(index, x => !x.IsHidden && !x.IsDisabled);
+                        nextIndex = sortedSelectOptionItems.FindIndex(index, x => !x.IsHidden && !x.IsDisabled);
 
                         if (nextIndex != index)
                         {
@@ -1133,11 +1168,11 @@ namespace AntDesign
                             {
                                 if (i < 0)
                                 {
-                                    nextIndex = sortedSelectOptions.FindLastIndex(x => !x.IsHidden && !x.IsDisabled);
+                                    nextIndex = sortedSelectOptionItems.FindLastIndex(x => !x.IsHidden && !x.IsDisabled);
                                     break;
                                 }
 
-                                if (!sortedSelectOptions[i].IsHidden && !sortedSelectOptions[i].IsDisabled)
+                                if (!sortedSelectOptionItems[i].IsHidden && !sortedSelectOptionItems[i].IsDisabled)
                                 {
                                     nextIndex = i;
                                     break;
@@ -1150,11 +1185,11 @@ namespace AntDesign
                         return;
 
                     // Prevent duplicate active items if search has no value
-                    sortedSelectOptions.Where(x => x.IsActive)
+                    sortedSelectOptionItems.Where(x => x.IsActive)
                         .ForEach(x => x.IsActive = false);
 
-                    sortedSelectOptions[nextIndex].IsActive = true;
-                    await ElementScrollIntoViewAsync(sortedSelectOptions[nextIndex].Ref);
+                    sortedSelectOptionItems[nextIndex].IsActive = true;
+                    await ElementScrollIntoViewAsync(sortedSelectOptionItems[nextIndex].Ref);
                 }
             }
 
@@ -1166,22 +1201,22 @@ namespace AntDesign
                     overlayFirstOpen = true;
                 }
 
-                if (!SelectOptions.Any())
+                if (!SelectOptionItems.Any())
                     return;
 
-                var sortedSelectOptions = SortedSelectOptions.ToList();
+                var sortedSelectOptionItems = SortedSelectOptionItems.ToList();
 
                 if (overlayFirstOpen)
                 {
                     // Check if there is a selected item and set it as active
-                    var currentSelected = sortedSelectOptions.FirstOrDefault(x => x.IsSelected);
+                    var currentSelected = sortedSelectOptionItems.FirstOrDefault(x => x.IsSelected);
 
                     if (currentSelected != null)
                     {
                         if (currentSelected.IsActive)
                             return;
 
-                        sortedSelectOptions.Where(x => x.IsActive)
+                        sortedSelectOptionItems.Where(x => x.IsActive)
                             .ForEach(i => i.IsActive = false);
 
                         currentSelected.IsActive = true;
@@ -1195,42 +1230,42 @@ namespace AntDesign
                     return;
                 }
 
-                var firstActive = sortedSelectOptions.FirstOrDefault(x => x.IsActive && !x.IsHidden && !x.IsDisabled);
+                var firstActive = sortedSelectOptionItems.FirstOrDefault(x => x.IsActive && !x.IsHidden && !x.IsDisabled);
 
                 if (firstActive == null)
                 {
-                    var firstOption = sortedSelectOptions.FirstOrDefault(x => !x.IsHidden && !x.IsDisabled);
+                    var firstOption = sortedSelectOptionItems.FirstOrDefault(x => !x.IsHidden && !x.IsDisabled);
 
                     if (firstOption != null)
                         firstOption.IsActive = true;
                 }
                 else
                 {
-                    var possibilityCount = sortedSelectOptions.Count(x => !x.IsHidden && !x.IsDisabled);
+                    var possibilityCount = sortedSelectOptionItems.Count(x => !x.IsHidden && !x.IsDisabled);
 
                     if (possibilityCount == 1) // Do nothing if there is only one choice
                         return;
 
-                    var index = sortedSelectOptions.FindIndex(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, firstActive.Value));
+                    var index = sortedSelectOptionItems.FindIndex(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, firstActive.Value));
 
                     index++;
 
-                    var nextIndex = sortedSelectOptions.FindIndex(index, x => !x.IsHidden && !x.IsDisabled);
+                    var nextIndex = sortedSelectOptionItems.FindIndex(index, x => !x.IsHidden && !x.IsDisabled);
 
                     if (nextIndex == -1) // Maybe the next item is above the current active item
                     {
-                        nextIndex = sortedSelectOptions.FindIndex(0, x => !x.IsHidden && !x.IsDisabled); // Try to find the index from the first available item
+                        nextIndex = sortedSelectOptionItems.FindIndex(0, x => !x.IsHidden && !x.IsDisabled); // Try to find the index from the first available item
                     }
 
                     if (nextIndex == -1)
                         return;
 
                     // Prevent duplicate active items if search has no value
-                    sortedSelectOptions.Where(x => x.IsActive)
+                    sortedSelectOptionItems.Where(x => x.IsActive)
                         .ForEach(x => x.IsActive = false);
 
-                    sortedSelectOptions[nextIndex].IsActive = true;
-                    await ElementScrollIntoViewAsync(sortedSelectOptions[nextIndex].Ref);
+                    sortedSelectOptionItems[nextIndex].IsActive = true;
+                    await ElementScrollIntoViewAsync(sortedSelectOptionItems[nextIndex].Ref);
                 }
 
             }
@@ -1239,22 +1274,22 @@ namespace AntDesign
             {
                 if (_dropDown.IsOverlayShow())
                 {
-                    if (!SelectOptions.Any())
+                    if (!SelectOptionItems.Any())
                         return;
 
-                    var sortedSelectOptions = SortedSelectOptions.ToList();
+                    var sortedSelectOptionItems = SortedSelectOptionItems.ToList();
 
-                    var index = sortedSelectOptions.FindIndex(0, x => !x.IsHidden && !x.IsDisabled);
+                    var index = sortedSelectOptionItems.FindIndex(0, x => !x.IsHidden && !x.IsDisabled);
 
                     if (index == -1)
                         return;
 
                     // Prevent duplicate active items if search has no value
-                    sortedSelectOptions.Where(x => x.IsActive)
+                    sortedSelectOptionItems.Where(x => x.IsActive)
                         .ForEach(i => i.IsActive = false);
 
-                    sortedSelectOptions[index].IsActive = true;
-                    await ElementScrollIntoViewAsync(sortedSelectOptions[index].Ref);
+                    sortedSelectOptionItems[index].IsActive = true;
+                    await ElementScrollIntoViewAsync(sortedSelectOptionItems[index].Ref);
                 }
             }
 
@@ -1262,22 +1297,22 @@ namespace AntDesign
             {
                 if (_dropDown.IsOverlayShow())
                 {
-                    if (!SelectOptions.Any())
+                    if (!SelectOptionItems.Any())
                         return;
 
-                    var sortedSelectOptions = SortedSelectOptions.ToList();
+                    var sortedSelectOptionItems = SortedSelectOptionItems.ToList();
 
-                    var index = sortedSelectOptions.FindLastIndex(x => !x.IsHidden && !x.IsDisabled);
+                    var index = sortedSelectOptionItems.FindLastIndex(x => !x.IsHidden && !x.IsDisabled);
 
                     if (index == -1)
                         return;
 
                     // Prevent duplicate active items if search has no value
-                    sortedSelectOptions.Where(x => x.IsActive)
+                    sortedSelectOptionItems.Where(x => x.IsActive)
                         .ForEach(i => i.IsActive = false);
 
-                    sortedSelectOptions[index].IsActive = true;
-                    await ElementScrollIntoViewAsync(sortedSelectOptions[index].Ref);
+                    sortedSelectOptionItems[index].IsActive = true;
+                    await ElementScrollIntoViewAsync(sortedSelectOptionItems[index].Ref);
                 }
             }
 
@@ -1371,16 +1406,16 @@ namespace AntDesign
             {
                 if (HideSelected)
                 {
-                    SelectOptions.Where(x => x.IsHidden && !x.IsSelected)
+                    SelectOptionItems.Where(x => x.IsHidden && !x.IsSelected)
                         .ForEach(i => i.IsHidden = false);
                 }
                 else
                 {
-                    SelectOptions.Where(x => x.IsHidden)
+                    SelectOptionItems.Where(x => x.IsHidden)
                         .ForEach(i => i.IsHidden = false);
                 }
 
-                SelectOptions.Where(x => x.IsActive)
+                SelectOptionItems.Where(x => x.IsActive)
                         .ForEach(i => i.IsActive = false);
             }
 
@@ -1394,11 +1429,11 @@ namespace AntDesign
         protected async Task ScrollToFirstSelectedItemAsync()
         {
             // Check if there is a selected item and set it as active
-            var currentSelected = SelectOptions.FirstOrDefault(x => x.IsSelected);
+            var currentSelected = SelectOptionItems.FirstOrDefault(x => x.IsSelected);
 
             if (currentSelected != null)
             {
-                SelectOptions.Where(x => x.IsActive)
+                SelectOptionItems.Where(x => x.IsActive)
                     .ForEach(i => i.IsActive = false);
 
                 currentSelected.IsActive = true;
@@ -1417,7 +1452,7 @@ namespace AntDesign
         /// </summary>
         protected async Task OnInputClearClickAsync(MouseEventArgs _)
         {
-            SelectOptions.Where(c => c.IsSelected)
+            SelectOptionItems.Where(c => c.IsSelected)
                 .ForEach(i =>
                 {
                     i.IsSelected = false;

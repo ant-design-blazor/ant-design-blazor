@@ -1,32 +1,9 @@
-<Select DataSource="@_persons" 
-        @bind-Value="@_selectedValue1"
-        LabelName="@nameof(Person.Name)" 
-        ValueName="@nameof(Person.Id)" 
-        DisabledName="@nameof(Person.NotAvailable)"
-        Style="width: 120px"
-        Placeholder="Select a person">
-</Select>
-
-<Select @bind-Value="@_selectedValue2"
-		Style="width:120px" 
-        Disabled
-		DefaultValue=2
-        TItemValue="int"
-        TItem="string">
-		<SelectOptions>
-            <SelectOption TItemValue="int" TItem="string" Value=1 Label="Jack" />
-			<SelectOption TItemValue="int" TItem="string" Value=2 Label="Lucy" />
-			<SelectOption TItemValue="int" TItem="string" Value=3 Label="Yaoming" />
-			<SelectOption TItemValue="int" TItem="string" Value=4 Label="Frieda" />
-		</SelectOptions>		
-</Select>
-
-<Select @bind-Value="@_selectedValue3"
-        Style="width:120px" 
+<Select @bind-Value="@_selectedValue"
+        Placeholder="Select a person"
         TItemValue="int"
         TItem="string"
-		DefaultValue=6
-		Loading>
+        LabelInValue="true"
+        OnSelectedItemChanged="@(item => _selectedItem = item)">
 		<SelectOptions>
             @foreach(var item in _persons)
             {
@@ -34,6 +11,11 @@
             }
 		</SelectOptions>
 </Select>
+<br /><br />
+<p>
+    Selected Value: @_selectedValue <br />
+    Selected Item: @_selectedItem 
+</p>
 
 @code
 {
@@ -45,7 +27,7 @@
     }
 
     List<Person> _persons;
-	int _selectedValue1, _selectedValue2, _selectedValue3;
+	int _selectedValue;
     string _selectedItem;
 
     protected override void OnInitialized()

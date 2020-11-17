@@ -1,8 +1,13 @@
 ﻿using System;
 using Microsoft.AspNetCore.Components;
 
-namespace AntDesign
+namespace AntDesign.Select.Internal
 {
+    /// <summary>
+    /// The data model for a SelectOption that is used internally.
+    /// </summary>
+    /// <typeparam name="TItemValue"></typeparam>
+    /// <typeparam name="TItem"></typeparam>
     public class SelectOptionItem<TItemValue, TItem>
     {
         public ElementReference Ref { get => ChildComponent.Ref; }
@@ -41,7 +46,7 @@ namespace AntDesign
                     _label = value;
 
                     if (ChildComponent != null)
-                        ChildComponent.Label = value;
+                        ChildComponent.InternalLabel = value;
                 }
                 else
                 {
@@ -50,7 +55,7 @@ namespace AntDesign
                         _label = value;
 
                         if (ChildComponent != null)
-                            ChildComponent.Label = value;
+                            ChildComponent.InternalLabel = value;
                     }
                 }
             }
@@ -126,7 +131,7 @@ namespace AntDesign
                     _isDisabled = value;
 
                     if (ChildComponent != null)
-                        ChildComponent.IsDisabled = value;
+                        ChildComponent.InternalIsDisabled = value;
                 }
             }
         }
@@ -161,8 +166,8 @@ namespace AntDesign
                     _childComponent.IsActive = _isActive;
                     _childComponent.IsSelected = _isSelected;
                     _childComponent.IsHidden = _isHidden;
-                    _childComponent.IsDisabled = _isDisabled;
-                    _childComponent.Label = _label;
+                    _childComponent.InternalIsDisabled = _isDisabled;
+                    _childComponent.InternalLabel = _label;
                     _childComponent.GroupName = _groupName;
                 }
             }

@@ -36,6 +36,7 @@ Select component to select value from options.
 | HideSelected | Hides the selected items when they are selected. | bool | false |  |
 | IgnoreItemChanges | Is used to increase the speed. If you expect changes to the label name, group name or disabled indicator, disable this property. | bool | true |  |
 | ItemTemplate | Is used to customize the item style. | RenderFragment&lt;TItem> |  |  |
+| LabelInValue | Whether to embed label in value, turn the format of value from `TItemValue` to string (JSON) e.g. { "value": `TItemValue`, "label": "`Label value`" } | bool | false |  |
 | LabelName | The name of the property to be used for the label. | string |  |  |
 | LabelTemplate | Is used to customize the label style. | RenderFragment&lt;TItem> |  |  |
 | Loading | Show loading indicator. You have to write the loading logic by your own. | bool | false |  |

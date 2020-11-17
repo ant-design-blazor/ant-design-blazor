@@ -5,15 +5,14 @@ using Microsoft.AspNetCore.Components.Web;
 
 #pragma warning disable 1591 // Disable missing XML comment
 
-namespace AntDesign
+namespace AntDesign.Select.Internal
 {
     public partial class SelectContent<TItemValue, TItem>
     {
-        [CascadingParameter(Name = "ParentSelect")] public Select<TItemValue, TItem> ParentSelect { get; set; }
+        [CascadingParameter(Name = "ParentSelect")] internal Select<TItemValue, TItem> ParentSelect { get; set; }
         [CascadingParameter(Name = "ParentLabelTemplate")] internal RenderFragment<TItem> ParentLabelTemplate { get; set; }
-        [CascadingParameter(Name = "ShowSearchIcon")] private bool ShowSearchIcon { get; set; }
-        [CascadingParameter(Name = "ShowArrowIcon")] private bool ShowArrowIcon { get; set; }
-
+        [CascadingParameter(Name = "ShowSearchIcon")] internal bool ShowSearchIcon { get; set; }
+        [CascadingParameter(Name = "ShowArrowIcon")] internal bool ShowArrowIcon { get; set; }
         [Parameter] public string Prefix { get; set; }
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public bool IsOverlayShow { get; set; }

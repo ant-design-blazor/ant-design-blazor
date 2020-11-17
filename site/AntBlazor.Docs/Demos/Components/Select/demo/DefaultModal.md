@@ -1,5 +1,5 @@
 ---
-order: 9
+order: 11
 title:
   zh-CN: Default - Show select in modal
   en-US: Default - Show select in modal

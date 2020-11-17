@@ -2,15 +2,15 @@
 
 #pragma warning disable 1591 // Disable missing XML comment
 
-namespace AntDesign
+namespace AntDesign.Select.Internal
 {
-    public static class SelectModeExtensions
+    internal static class SelectModeExtensions
     {
-        public const string Tags = "tags";
-        public const string Multiple = "multiple";
+        internal const string Tags = "tags";
+        internal const string Multiple = "multiple";
         private const StringComparison Comparison = StringComparison.OrdinalIgnoreCase;
 
-        public static SelectMode ToSelectMode(this string mode)
+        internal static SelectMode ToSelectMode(this string mode)
         {
             if (Tags.Equals(mode, Comparison))
             {

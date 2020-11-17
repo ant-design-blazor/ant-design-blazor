@@ -5,7 +5,8 @@
 <Modal Title="@_title"
        Visible="@_visible"
        OnOk="@HandleOk"
-       OnCancel="@HandleCancel">
+       OnCancel="@HandleCancel"
+       DestroyOnClose="true">
     <Form @ref="_form"
           Model="@_formModel"
           LabelCol="new ColLayoutParam { Span = 6 }"

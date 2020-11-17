@@ -1,6 +1,6 @@
 ﻿#pragma warning disable 1591 // Disable missing XML comment
 
-namespace AntDesign
+namespace AntDesign.Select.Internal
 {
     public enum SelectMode
     {

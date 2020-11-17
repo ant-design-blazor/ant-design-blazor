@@ -1,5 +1,5 @@
-﻿@namespace AntDesign
-@using AntDesign
+﻿@using AntDesign
+@namespace AntDesign.Select.Internal
 @typeparam TItemValue
 @typeparam TItem
 
@@ -13,7 +13,7 @@
     {
         @if (ParentSelect.SelectMode == SelectMode.Default)
         {
-            var selectedItem = ParentSelect.SelectOptions.FirstOrDefault(x => x.IsSelected);
+            var selectedItem = ParentSelect.SelectOptionItems.FirstOrDefault(x => x.IsSelected);
             
             if (string.IsNullOrEmpty(SearchValue) && selectedItem != null)
             {
@@ -37,7 +37,7 @@
         }
         else
         {
-            var selectedItems = ParentSelect.SortedSelectOptions.Where(x => x.IsSelected);
+            var selectedItems = ParentSelect.SortedSelectOptionItems.Where(x => x.IsSelected);
 
             @foreach (var selectedOption in selectedItems)
             {
