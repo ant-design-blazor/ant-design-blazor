@@ -424,6 +424,12 @@ export function enableBodyScroll() {
   removeCls(document.body, "ant-scrolling-effect");
 }
 
+export function destroyAllDialog() {
+    console.log(document.querySelectorAll('.ant-modal-root').length);
+    document.querySelectorAll('.ant-modal-root')
+        .forEach(e => document.body.removeChild(e.parentNode));
+}
+
 export function createIconFromfontCN(scriptUrl) {
   if (document.querySelector(`[data-namespace="${scriptUrl}"]`)) {
     return;
