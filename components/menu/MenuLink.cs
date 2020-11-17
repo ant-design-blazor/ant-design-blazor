@@ -109,7 +109,7 @@ namespace AntDesign
                     }
                 }
 
-                StateHasChanged();
+                Menu.MarkStateHasChanged();
             }
         }
 

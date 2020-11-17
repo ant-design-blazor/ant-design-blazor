@@ -5,8 +5,8 @@
 
 <div @ref="@Ref" style="@Style" id="@Id">
     <CascadingValue Value='$"ant-select-dropdown"' Name="PrefixCls">
-        <OverlayTrigger Style="display: inline"
-                        Visible="@(ShowPanel && !_isOptionsZero)"
+        <OverlayTrigger @ref="_overlayTrigger"
+                        Style="display: inline"
                         IsButton="@true"
                         Disabled="false"
                         Trigger="new TriggerType[] { TriggerType.Click }"
@@ -17,9 +17,8 @@
                         OverlayStyle="@OverlayStyle"
                         OnVisibleChange="@OnOverlayTriggerVisibleChange">
             <Overlay>
-
                 <CascadingValue Value="this">
-                    @if (ShowPanel)
+                    @if (ShowPanel && !_isOptionsZero)
                     {
                         <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @_minWidth">
                             <div style="display: flex;flex-direction: column;">

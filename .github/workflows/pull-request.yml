@@ -20,7 +20,7 @@ jobs:
       - name: Setup .NET 5
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100-rc.2.20479.15
+          dotnet-version: 5.0.100
 
       - uses: actions/setup-node@v1
         with:
@@ -31,7 +31,7 @@ jobs:
           npm install
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
           dotnet build
-          dotnet publish -c Release -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
 
       - name: Test And Coverage Report 📝
         run: |

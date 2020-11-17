@@ -37,7 +37,10 @@ namespace AntDesign
         [Parameter]
         public NavLinkMatch RouterMatch { get; set; }
 
-        public bool IsSelected { get; private set; }
+        [Parameter]
+        public string Title { get; set; }
+
+        internal bool IsSelected { get; private set; }
         private string _key;
 
         private int PaddingLeft => RootMenu.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * 24 : 0;
@@ -79,13 +82,23 @@ namespace AntDesign
 
         public async Task HandleOnClick(MouseEventArgs args)
         {
-            if (!RootMenu.Selectable)
+            if (Disabled)
                 return;
-
-            RootMenu.SelectItem(this);
 
             if (OnClick.HasDelegate)
                 await OnClick.InvokeAsync(args);
+
+            if (!RootMenu.Selectable)
+                return;
+
+            if (IsSelected && RootMenu?.Multiple == true)
+            {
+                Deselect();
+            }
+            else
+            {
+                RootMenu.SelectItem(this);
+            }
 
             if (ParentMenu == null)
                 return;
