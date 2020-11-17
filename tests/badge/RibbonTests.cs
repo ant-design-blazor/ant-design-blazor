@@ -1,4 +1,4 @@
-﻿using Bunit;
+using Bunit;
 using Microsoft.AspNetCore.Components;
 using Xunit;
 
@@ -13,6 +13,7 @@ namespace AntDesign.Tests.Badge
             cut.MarkupMatches(@"
                 <div class=""ant-ribbon-wrapper""> 
                     <div class=""ant-ribbon ant-ribbon-placement-end"">
+                    <span class=""ant-ribbon-text""></span>
                         <div class=""ant-ribbon-corner""></div>
                     </div>
                 </div>
@@ -32,6 +33,7 @@ namespace AntDesign.Tests.Badge
                 <div class=""ant-ribbon-wrapper""> 
                     <div /> 
                     <div class=""ant-ribbon ant-ribbon-placement-start"">
+                    <span class=""ant-ribbon-text""></span>
                     <div class=""ant-ribbon-corner"">
                         </div>
                     </div>
@@ -48,6 +50,7 @@ namespace AntDesign.Tests.Badge
                 <div class=""ant-ribbon-wrapper""> 
                     <div /> 
                     <div class=""ant-ribbon ant-ribbon-placement-end"">
+                    <span class=""ant-ribbon-text""></span>
                     <div class=""ant-ribbon-corner"">
                         </div>
                     </div>
@@ -68,6 +71,7 @@ namespace AntDesign.Tests.Badge
                 <div class=""ant-ribbon-wrapper""> 
                     <div /> 
                     <div class=""ant-ribbon ant-ribbon-placement-end ant-ribbon-color-green"">
+                    <span class=""ant-ribbon-text""></span>
                     <div class=""ant-ribbon-corner"">
                         </div>
                     </div>
@@ -91,6 +95,7 @@ namespace AntDesign.Tests.Badge
                 <div class=""ant-ribbon-wrapper""> 
                     <div /> 
                     <div class=""ant-ribbon ant-ribbon-placement-end"" style=""background: {color}"">
+                    <span class=""ant-ribbon-text""></span>
                     <div class=""ant-ribbon-corner"" style=""color: {color}"">
                         </div>
                     </div>
@@ -112,7 +117,7 @@ namespace AntDesign.Tests.Badge
                 <div class=""ant-ribbon-wrapper""> 
                     <div /> 
                     <div class=""ant-ribbon ant-ribbon-placement-end"">
-                        unicorn
+                    <span class=""ant-ribbon-text"">unicorn</span>                        
                         <div class=""ant-ribbon-corner"">
                             </div>
                         </div>
@@ -142,7 +147,9 @@ namespace AntDesign.Tests.Badge
                 <div class=""ant-ribbon-wrapper""> 
                     <div /> 
                     <div class=""ant-ribbon ant-ribbon-placement-end"">
-                        <span class=""cool"">Hello</span>
+                        <span class=""ant-ribbon-text"">
+                            <span class=""cool"">Hello</span>
+                        </span>
                         <div class=""ant-ribbon-corner"">
                         </div>
                     </div>
