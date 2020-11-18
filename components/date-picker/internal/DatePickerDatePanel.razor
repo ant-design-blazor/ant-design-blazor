@@ -1,7 +1,6 @@
 ﻿@namespace AntDesign.Internal
 @typeparam TValue
 @inherits DatePickerPanelBase<TValue>
-@using System.Globalization;
 
 @{
     var calendar = this.DatePicker.CultureInfo.Calendar;
@@ -9,7 +8,13 @@
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
 
-    int diffDay = (int)this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - DayOfWeekHelper.GetDiffForDayOfWeek(FirstDayOfWeek);
+    // sunday should be 7
+    if (monthFirstDayOfWeek == 0)
+    {
+        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(FirstDayOfWeek);
+    }
+
+    int diffDay = (int)this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
 
@@ -42,7 +47,7 @@
                 {
                     <th></th>
                 }
-                @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays(FirstDayOfWeek, this.DatePicker.CultureInfo))
+                @foreach(string weekDay in this.DatePicker.CultureInfo.GetDateLocale().ShortWeekDays)
                 {
                     <th>@(weekDay)</th>
                 }

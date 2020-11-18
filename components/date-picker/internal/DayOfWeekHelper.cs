@@ -9,12 +9,12 @@ namespace AntDesign
         {
             switch (dayOfWeek)
             {
-                case DayOfWeek.Monday: return 1;
-                case DayOfWeek.Tuesday: return 2;
-                case DayOfWeek.Wednesday: return 3;
-                case DayOfWeek.Thursday: return 4;
-                case DayOfWeek.Friday: return 5;
-                case DayOfWeek.Saturday: return 6;
+                case DayOfWeek.Saturday: return 1;
+                case DayOfWeek.Friday: return 2;
+                case DayOfWeek.Thursday: return 3;
+                case DayOfWeek.Wednesday: return 4;
+                case DayOfWeek.Tuesday: return 5;
+                case DayOfWeek.Monday: return 6;
                 case DayOfWeek.Sunday: return 7;
                 default: return 0;
             }
