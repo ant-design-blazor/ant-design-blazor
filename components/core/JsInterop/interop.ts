@@ -425,7 +425,6 @@ export function enableBodyScroll() {
 }
 
 export function destroyAllDialog() {
-    console.log(document.querySelectorAll('.ant-modal-root').length);
     document.querySelectorAll('.ant-modal-root')
         .forEach(e => document.body.removeChild(e.parentNode));
 }
