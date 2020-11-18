@@ -28,6 +28,9 @@ namespace AntDesign
             {
                 case "en-US": return new EnUsDateLocale();
                 case "en-GB": return new EnGbDateLocale();
+                case "de-DE":
+                case "de-AT":
+                case "de-CH": return new DeChDateLocale();
                 case "zh-CN": return new ZhCnLocale();
                 default: return new EnUsDateLocale();
             }
@@ -93,6 +96,37 @@ namespace AntDesign
         public string EndOfYear => "End year";
         public string StartOfQuarter => "Start quarter";
         public string EndOfQuarter => "End quarter";
+    }
+
+    internal class DeChDateLocale : IDateLocale
+    {
+        private string _locale = "de-CH";
+        public string DateFormat => "dd.MM.yyyy";
+        public string Year => "Jahr";
+        public string Month => "Monat";
+        public string Week => "Woche";
+        public string Today => "Heute";
+        public bool MonthBeforeYear => true;
+        public string YearFormat => "yyyy";
+        public string MonthFormat => "MMM";
+        public string Ok => "OK";
+        public string Now => "Jetzt";
+        public string SelectDate => "Datum wählen";
+        public string SelectWeek => "Woche wählen";
+        public string SelectMonth => "Monat wählen";
+        public string SelectQuarter => "Quartal wählen";
+        public string SelectYear => "Jahr wählen";
+        public string SelectTime => "Zeit wählen";
+        public string StartOfDate => "Startdatum";
+        public string EndOfDate => "Enddatum";
+        public string StartOfWeek => "Startwoche";
+        public string EndOfWeek => "Schlusswoche";
+        public string StartOfMonth => "Startmonat";
+        public string EndOfMonth => "Schlussmonat";
+        public string StartOfYear => "Startjahr";
+        public string EndOfYear => "Schlussjahr";
+        public string StartOfQuarter => "Startquartal";
+        public string EndOfQuarter => "Schlussquartal";
     }
 
     internal class ZhCnLocale : IDateLocale
