@@ -157,23 +157,24 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
             currentRowData.CacheKey = cacheKey;
             currentRowData.Level = level;
             currentRowData.HasChildren = hasChildren;
-                <CascadingValue Value="table.ColumnContext">
-                    <CascadingValue Value="currentRowData" Name="RowData">
-                        <tr data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "")">
-                            @if (table.ExpandTemplate != null)
-                            {
-                                <td class="ant-table-cell ant-table-row-expand-icon-cell">
-                                    @if (table.RowExpandable(currentRowData))
-                                    {
-                                        <button type="button" @attributes="@(new Dictionary<string,object>() { {"onclick",_callbackFactory.Create(table,()=>table.ToggleExpandRow(currentRowData)) } })"
-                                                class="ant-table-row-expand-icon @(currentRowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label=""></button>
-                                    }
-                                </td>
-                            }
-                            @table.ChildContent(data)
-                        </tr>
-                    </CascadingValue>
+            <CascadingValue Value="table.ColumnContext">
+                <CascadingValue Value="currentRowData" Name="RowData">
+                    <tr @attributes="@(new Dictionary<string,object> { {"onclick", _callbackFactory.Create(table, () => table.RowClick(currentRowData)) } })"
+                        data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "")">
+                        @if (table.ExpandTemplate != null)
+                        {
+                            <td class="ant-table-cell ant-table-row-expand-icon-cell">
+                                @if (table.RowExpandable(currentRowData))
+                                {
+                                    <button type="button" @attributes="@(new Dictionary<string,object>() { {"onclick",_callbackFactory.Create(table,() => ToggleExpandRow(currentRowData)) } })"
+                                            class="ant-table-row-expand-icon @(currentRowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label=""></button>
+                                }
+                            </td>
+                        }
+                        @table.ChildContent(data)
+                    </tr>
                 </CascadingValue>
+            </CascadingValue>
             @if (hasChildren && currentRowData.Expanded)
             {
                 @table.body((table, table.TreeChildren(data), level + 1));
