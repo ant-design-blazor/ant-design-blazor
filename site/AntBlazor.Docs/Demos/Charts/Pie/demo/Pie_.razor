@@ -3,28 +3,28 @@
 
     <Tabs>
         <TabPane Key="1">
-            <Tab>示例1</Tab>
+            <Tab>Example 1</Tab>
             <ChildContent>
                 <Pie Data="data1" Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
-            <Tab>示例2</Tab>
+            <Tab>Example 2</Tab>
             <ChildContent>
                 <Pie Data="data2" Config="config2" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="3">
-            <Tab>示例3</Tab>
+            <Tab>Example 3</Tab>
             <ChildContent>
                 <Pie Data="data3" Config="config3" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="4">
-            <Tab>示例4</Tab>
+            <Tab>Example 4</Tab>
             <ChildContent>
                 <Pie Data="data4" Config="config4" />
             </ChildContent>
@@ -46,38 +46,38 @@
 
     }
 
-    #region 示例1
+    #region Example 1
 
     readonly object[] data1 =
 {
         new
         {
-            type = "分类一",
+            type = "Category One",
             value = 27
         },
         new
         {
-            type = "分类二",
+            type = "Category Two",
             value = 25
         },
         new
         {
-            type = "分类三",
+            type = "Category Three",
             value = 18
         },
         new
         {
-            type = "分类四",
+            type = "Category Four",
             value = 15
         },
         new
         {
-            type = "分类五",
+            type = "Category Five",
             value = 10
         },
         new
         {
-            type = "其它",
+            type = "Other",
             value = 5
         }
     };
@@ -93,8 +93,7 @@
         Description = new Description
         {
             Visible = true,
-            Text =
-                "指定颜色映射字段(colorField)，饼图切片将根据该字段数据显示为不同的颜色。指定颜色需要将color配置为一个数组。\n当把饼图label的类型设置为inner时，标签会显示在切片内部。设置offset控制标签的偏移值。"
+            Text = "指定颜色映射字段(colorField)，饼图切片将根据该字段数据显示为不同的颜色。指定颜色需要将color配置为一个数组。\n当把饼图label的类型设置为inner时，标签会显示在切片内部。设置offset控制标签的偏移值。"
         },
         Radius = 0.8,
         AngleField = "value",
@@ -106,40 +105,40 @@
         }
     };
 
-    #endregion 示例1
+    #endregion Example 1
 
-    #region 示例2
+    #region Example 2
 
     readonly object[] data2 =
     {
         new
         {
-            type = "分类一",
+            type = "Category One",
             value = 27
         },
         new
         {
-            type = "分类二",
+            type = "Category Two",
             value = 25
         },
         new
         {
-            type = "分类三",
+            type = "Category Three",
             value = 18
         },
         new
         {
-            type = "分类四",
+            type = "Category Four",
             value = 15
         },
         new
         {
-            type = "分类五",
+            type = "Category Five",
             value = 10
         },
         new
         {
-            type = "其它",
+            type = "Other",
             value = 5
         }
     };
@@ -155,8 +154,7 @@
         Description = new Description
         {
             Visible = true,
-            Text =
-                "当把饼图label的类型设置为outer时，标签在切片外部拉线显示。设置offset控制标签的偏移值。"
+            Text = "当把饼图label的类型设置为outer时，标签在切片外部拉线显示。设置offset控制标签的偏移值。"
         },
         Radius = 0.8,
         AngleField = "value",
@@ -169,9 +167,9 @@
         }
     };
 
-    #endregion 示例2
+    #endregion Example 2
 
-    #region 示例3
+    #region Example 3
 
 
     readonly PieConfig config3 = new PieConfig
@@ -185,8 +183,7 @@
         Description = new Description
         {
             Visible = true,
-            Text =
-                "当把饼图label的类型设置为outer-center时，标签在切片外部拉线显示。outer-center布局的label发生遮挡会直接隐藏而不偏移躲避，相对于outer label布局来说，更美观"
+            Text = "当把饼图label的类型设置为outer-center时，标签在切片外部拉线显示。outer-center布局的label发生遮挡会直接隐藏而不偏移躲避，相对于outer label布局来说，更美观"
         },
         Radius = 0.8,
         AngleField = "value",
@@ -198,40 +195,40 @@
         }
     };
 
-    #endregion 示例3
+    #endregion Example 3
 
-    #region 示例4
+    #region Example 4
 
     readonly object[] data4 =
     {
         new
         {
-            type = "分类一",
+            type = "Category One",
             value = 27
         },
         new
         {
-            type = "分类二",
+            type = "Category Two",
             value = 25
         },
         new
         {
-            type = "分类三",
+            type = "Category Three",
             value = 18
         },
         new
         {
-            type = "分类四",
+            type = "Category Four",
             value = 15
         },
         new
         {
-            type = "分类五",
+            type = "Category Five",
             value = 10
         },
         new
         {
-            type = "其它",
+            type = "Other",
             value = 5
         }
     };
@@ -242,13 +239,12 @@
         Title = new Title
         {
             Visible = true,
-            Text = "饼图-图形标签蜘蛛布局"
+            Text = "Pie Chart-Graphic Tab Spider Layout"
         },
         Description = new Description
         {
             Visible = true,
-            Text =
-                "当把饼图label的类型设置为spider时，标签分为两组，在图表两侧拉线对齐显示。一般来说，蜘蛛布局的label更不容易相互遮挡。"
+            Text = "When the type of the pie chart label is set to spider, the labels are divided into two groups, and they are displayed in alignment by pulling lines on both sides of the chart. Generally speaking, the labels of the spider layout are less likely to block each other."
         },
         Radius = 0.8,
         AngleField = "value",
@@ -260,6 +256,6 @@
         }
     };
 
-    #endregion 示例4
+    #endregion Example 4
 
 }
