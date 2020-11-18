@@ -43,6 +43,6 @@ namespace AntDesign
         }
 
         private static string GetTwoLetterCode(this DateTime today, CultureInfo cultureInfo)
-            => today.ToString("ddd", cultureInfo).Substring(0, 1);
+            => today.ToString("ddd", cultureInfo).Substring(0, 2);
     }
 }
