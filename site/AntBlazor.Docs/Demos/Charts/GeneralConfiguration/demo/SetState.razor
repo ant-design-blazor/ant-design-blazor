@@ -1,45 +1,45 @@
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
 
-<Text>未完成</Text>
+<Text>Undone</Text>
 <Tabs>
     <TabPane Key="1">
-        <Tab>示例1</Tab>
+        <Tab>Example 1</Tab>
         <ChildContent>
             <AntDesign.Charts.Column Data="data1" Config="config1" OnCreateAfter="onCreateAfter1" />
         </ChildContent>
     </TabPane>
 
     <TabPane Key="2">
-        <Tab>示例2</Tab>
+        <Tab>Example 2</Tab>
         <ChildContent>
             <AntDesign.Charts.Column Data="data2" Config="config2" OnCreateAfter="onCreateAfter2" />
         </ChildContent>
     </TabPane>
 
     <TabPane Key="3">
-        <Tab>示例3</Tab>
+        <Tab>Example 3</Tab>
         <ChildContent>
             <AntDesign.Charts.Column Data="data3" Config="config3" OnCreateAfter="onCreateAfter3" />
         </ChildContent>
     </TabPane>
 
     <TabPane Key="4">
-        <Tab>示例4</Tab>
+        <Tab>Example 4</Tab>
         <ChildContent>
             <AntDesign.Charts.Column Data="data4" Config="config4" OnCreateAfter="onCreateAfter4" />
         </ChildContent>
     </TabPane>
 
     <TabPane Key="5">
-        <Tab>示例5</Tab>
+        <Tab>Example 5</Tab>
         <ChildContent>
             <AntDesign.Charts.Column Data="data5" Config="config5" OnCreateAfter="onCreateAfter5" />
         </ChildContent>
     </TabPane>
 
     <TabPane Key="6">
-        <Tab>示例6</Tab>
+        <Tab>Example 6</Tab>
         <ChildContent>
             <AntDesign.Charts.Column Data="data6" Config="config6" OnCreateAfter="onCreateAfter6" />
         </ChildContent>
@@ -49,7 +49,7 @@
 
 @code{
 
-    #region 示例1
+    #region Example 1
 
     object[] data1 =
     {
@@ -105,12 +105,12 @@
         Title = new Title
         {
             Visible = true,
-            Text = "设置active状态"
+            Text = "Set active state"
         },
         Description = new Description
         {
             Visible = true,
-            Text = "设置单值active状态。"
+            Text = "Set the single value active state."
         },
         XField = "year",
         YField = "value"
@@ -126,9 +126,9 @@
             });
     }
 
-    #endregion 示例1
+    #endregion Example 1
 
-    #region 示例2
+    #region Example 2
 
     object[] data2 =
     {
@@ -184,12 +184,12 @@
         Title = new Title
         {
             Visible = true,
-            Text = "设置active状态"
+            Text = "Set active state"
         },
         Description = new Description
         {
             Visible = true,
-            Text = "批量（多值）设置active状态。"
+            Text = "Set the active state in batch (multi-value)."
         },
         XField = "year",
         YField = "value"
@@ -205,9 +205,9 @@
             });
     }
 
-    #endregion 示例2
+    #endregion Example 2
 
-    #region 示例3
+    #region Example 3
 
     object[] data3 =
     {
@@ -263,12 +263,12 @@
         Title = new Title
         {
             Visible = true,
-            Text = "设置disable状态"
+            Text = "Set disable state"
         },
         Description = new Description
         {
             Visible = true,
-            Text = "批量（多值）设置disable状态。。"
+            Text = "Set the disable state in batch(multi - value)."
         },
         XField = "year",
         YField = "value"
@@ -283,9 +283,9 @@
             });
     }
 
-    #endregion 示例3
+    #endregion Example 3
 
-    #region 示例4
+    #region Example 4
 
     object[] data4 =
     {
@@ -341,12 +341,12 @@
         Title = new Title
         {
             Visible = true,
-            Text = "设置disable状态"
+            Text = "Set disable state"
         },
         Description = new Description
         {
             Visible = true,
-            Text = "设置单值disable状态。"
+            Text = "Set the single value disable state."
         },
         XField = "year",
         YField = "value"
@@ -361,9 +361,9 @@
             });
     }
 
-    #endregion 示例4
+    #endregion Example 4
 
-    #region 示例5
+    #region Example 5
 
     object[] data5 =
     {
@@ -419,12 +419,12 @@
         Title = new Title
         {
             Visible = true,
-            Text = "设置selected状态"
+            Text = "Set selected state"
         },
         Description = new Description
         {
             Visible = true,
-            Text = "设置单值selected状态。"
+            Text = "Set the single value selected state."
         },
         XField = "year",
         YField = "value"
@@ -437,13 +437,13 @@
             {
                 Stroke = "black",
                 LineWidth = 2,
-                
+
             });
     }
 
-    #endregion 示例5
+    #endregion Example 5
 
-    #region 示例6
+    #region Example 6
 
     object[] data6 =
     {
@@ -499,12 +499,12 @@
         Title = new Title
         {
             Visible = true,
-            Text = "设置selected状态"
+            Text = "Set selected state"
         },
         Description = new Description
         {
             Visible = true,
-            Text = "设置单值selected状态。"
+            Text = "Set single value selected state"
         },
         XField = "year",
         YField = "value"
@@ -520,6 +520,6 @@
             });
     }
 
-    #endregion 示例6
+    #endregion Example 6
 
 }
