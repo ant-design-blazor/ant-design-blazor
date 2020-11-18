@@ -12,3 +12,4 @@ title:
 ## en-US
 
 We can set the date format by `format`.
+We can set the first day of the week by `FirstDayOfWeek`. The Parameter takes a `DayOfWeek`.
