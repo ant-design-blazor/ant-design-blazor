@@ -47,7 +47,7 @@
                 {
                     <th></th>
                 }
-                @foreach(string weekDay in this.DatePicker.CultureInfo.GetDateLocale().ShortWeekDays)
+                @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays(this.FirstDayOfWeek, this.DatePicker.CultureInfo))
                 {
                     <th>@(weekDay)</th>
                 }

@@ -5,17 +5,6 @@ namespace AntDesign
     public interface IDateLocale
     {
         string DateFormat { get; }
-
-        /// <summary>
-        /// The start day of week should be either Monday or Sunday according to the CultureInfo
-        /// </summary>
-        string[] ShortWeekDays { get; }
-
-        /// <summary>
-        /// The difference of days to get the either Monday (6) or Sunday (7)
-        /// </summary>
-        int FirstDayOfWeekDiff { get; }
-
         string Year { get; }
         string Month { get; }
         string Week => "Week";

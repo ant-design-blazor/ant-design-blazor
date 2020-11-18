@@ -26,7 +26,7 @@ namespace AntDesign
         {
             switch (name)
             {
-                case "en-US": return new EnGbDateLocale();
+                case "en-US": return new EnUsDateLocale();
                 case "en-GB": return new EnGbDateLocale();
                 case "zh-CN": return new ZhCnLocale();
                 default: return new EnUsDateLocale();
@@ -38,8 +38,6 @@ namespace AntDesign
     {
         private string _locale = "en-US";
         public string DateFormat => "yyyy-MM-dd";
-        public string[] ShortWeekDays => new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
-        public int FirstDayOfWeekDiff => 7;
         public string Year => "Year";
         public string Month => "Month";
         public string Week => "Week";
@@ -66,13 +64,10 @@ namespace AntDesign
         public string StartOfQuarter => "Start quarter";
         public string EndOfQuarter => "End quarter";
     }
-
     internal class EnGbDateLocale : IDateLocale
     {
         private string _locale = "en-GB";
         public string DateFormat => "dd.MM.yyyy";
-        public string[] ShortWeekDays => new string[] { "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" };
-        public int FirstDayOfWeekDiff => 6;
         public string Year => "Year";
         public string Month => "Month";
         public string Week => "Week";
@@ -104,8 +99,6 @@ namespace AntDesign
     {
         private string _locale = "zh-CN";
         public string DateFormat => "yyyy年M月d日";
-        public string[] ShortWeekDays => new string[] { "一", "二", "三", "四", "五", "六", "日" };
-        public int FirstDayOfWeekDiff => 7;
         public string Year => "年";
         public string Month => "月";
         public string Week => "周";
