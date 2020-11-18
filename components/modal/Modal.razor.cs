@@ -15,6 +15,8 @@ namespace AntDesign
     {
         private const string PrefixCls = "ant-modal";
 
+        internal static HashSet<Modal> ReusedModals = new HashSet<Modal>(); 
+
         #region Parameter
 
         [Parameter] public Func<Task> AfterClose { get; set; }
@@ -199,6 +201,12 @@ namespace AntDesign
             {
                 _hasAdd = true;
             }
+
+            if (!DestroyOnClose && !ReusedModals.Contains(this))
+            {
+                ReusedModals.Add(this);
+            }
+
             await base.OnParametersSetAsync();
         }
 
