@@ -1,7 +1,6 @@
 ﻿@namespace AntDesign.Internal
 @typeparam TValue
 @inherits DatePickerPanelBase<TValue>
-@using System.Globalization;
 
 @{
     var calendar = this.DatePicker.CultureInfo.Calendar;
@@ -17,7 +16,7 @@
 <div class='@($"{PrefixCls}-datetime-panel")'>
     @if (IsShowTime)
     {
-        <DatePickerTemplate TValue="TValue" 
+        <DatePickerTemplate TValue="TValue"
                             @attributes="GetAttritubes()"
                             MaxRow="6"
                             MaxCol="7"
@@ -35,7 +34,7 @@
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
-                    @foreach(string weekDay in this.DatePicker.CultureInfo.GetDateLocale().ShortWeekDays)
+                    @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays(FirstDayOfWeek, this.DatePicker.CultureInfo))
                     {
                         <th>@weekDay</th>
                     }
@@ -67,7 +66,7 @@
                 </div>
             </div>
         }
-        
+
         <div class="@(PrefixCls)-content">
             @if (timeFormat.ToLower().Contains("hh"))
             {

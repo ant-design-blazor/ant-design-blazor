@@ -9,13 +9,7 @@
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
 
-    // sunday should be 7
-    if (monthFirstDayOfWeek == 0)
-    {
-        monthFirstDayOfWeek = Calendar.CultureInfo.GetDateLocale().FirstDayOfWeekDiff;
-    }
-
-    int diffDay = (int)this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - monthFirstDayOfWeek;
+    int diffDay = (int)this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - DayOfWeekHelper.GetDiffForDayOfWeek(FirstDayOfWeek);
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
 
@@ -48,7 +42,7 @@
                 {
                     <th></th>
                 }
-                @foreach(string weekDay in this.DatePicker.CultureInfo.GetDateLocale().ShortWeekDays)
+                @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays(FirstDayOfWeek, this.DatePicker.CultureInfo))
                 {
                     <th>@(weekDay)</th>
                 }
@@ -94,9 +88,6 @@
 
     [Parameter]
     public bool ShowToday { get; set; } = false;
-
-    [CascadingParameter(Name = "Calendar")]
-    public AntDesign.Calendar Calendar { get; set; }
 
     private string GetRowClass(DateTime viewDate)
     {

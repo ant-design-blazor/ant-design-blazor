@@ -72,6 +72,9 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public DayOfWeek FirstDayOfWeek { get; set; }
+
         public bool IsShowTime { get; protected set; } = false;
         public string ShowTimeFormat { get; protected set; } = "HH:mm:ss";
         protected OneOf<bool, string> _showTime = null;

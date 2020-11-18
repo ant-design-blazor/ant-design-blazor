@@ -17,6 +17,9 @@ namespace AntDesign
         public string Picker { get; set; }
 
         [Parameter]
+        public DayOfWeek FirstDayOfWeek { get; set; }
+
+        [Parameter]
         public bool IsRange { get; set; } = false;
 
         [Parameter]
@@ -79,6 +82,7 @@ namespace AntDesign
             {
                 { "PrefixCls", PrefixCls },
                 { "Picker", Picker },
+                { "FirstDayOfWeek", FirstDayOfWeek },
                 { "ClosePanel", ClosePanel },
                 { "ChangePickerValue", ChangePickerValue },
                 { "ChangeValue", ChangeValue },
