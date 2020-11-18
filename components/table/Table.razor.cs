@@ -49,7 +49,7 @@ namespace AntDesign
         [Parameter]
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
 
-        [Parameter] 
+        [Parameter]
         public EventCallback<RowData<TItem>> OnRowClick { get; set; }
 
         [Parameter]
@@ -232,7 +232,6 @@ namespace AntDesign
             }
         }
 
-
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
@@ -251,14 +250,17 @@ namespace AntDesign
 
         protected override bool ShouldRender() => this._shouldRender;
 
-        private void ToggleExpandRow(RowData<TItem> rowData)
+        private static void ToggleExpandRow(RowData<TItem> rowData)
         {
             rowData.Expanded = !rowData.Expanded;
         }
 
         private void RowClick(RowData<TItem> item)
         {
-            OnRowClick.InvokeAsync(item);
+            if (OnRowClick.HasDelegate)
+            {
+                OnRowClick.InvokeAsync(item);
+            }
         }
     }
 }
