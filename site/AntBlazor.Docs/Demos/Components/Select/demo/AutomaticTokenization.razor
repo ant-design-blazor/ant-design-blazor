@@ -1,0 +1,62 @@
+<Select Mode="tags"
+        DataSource="@_items"
+		@bind-Values="@_selectedValues"
+        LabelName="@nameof(Tag.Label)"
+        ValueName="@nameof(Tag.Value)"
+		TItemValue="string"
+		TItem="Tag"
+        OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
+		OnCreateCustomTag="@(async item => await OnCreateCustomTagHandlerAsync(item))"
+		AllowCustomTags
+		EnableSearch>
+</Select>
+
+@code
+{
+	class Tag
+	{
+		public string Value { get; set; }
+		public string Label { get; set; }
+	}
+
+    private List<Tag> _items;
+	private IEnumerable<string> _selectedValues;
+
+    protected override void OnInitialized()
+    {
+        const int min = 10;
+        const int max = 36;
+        _items = new List<Tag>();
+        for (var i = min; max > i; i++)
+        {
+            var content = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+			_items.Add(new Tag { Value = content, Label = content });
+        }
+    }
+
+    private void OnSelectedItemsChangedHandler(IEnumerable<Tag> values)
+    {
+        Console.WriteLine($"selected: ${string.Join(",", values.Select(x => x.Label))}");
+    }
+
+	private async Task OnCreateCustomTagHandlerAsync(string value)
+    {
+        var labelExists = _items.Any(x => x.Label.Equals(value, StringComparison.InvariantCultureIgnoreCase));
+        if (!labelExists)
+        {
+            var newTag = new Tag {Value = _items.Count().ToString(), Label = value};
+            _items.Add(newTag);
+            await Task.Delay(1); // ---- Important for Blazor (server-side) between the ADD and the APPEND
+            if (_selectedValues == null)
+            {
+                var list = new List<string> { newTag.Value } ;
+                _selectedValues = list;
+            }
+            else
+            {
+                _selectedValues = _selectedValues.Append(newTag.Value);
+            }
+            StateHasChanged(); // ---- Important after Delay 1
+        }
+    }
+}

@@ -23,9 +23,8 @@ Select component to select value from options.
 | AllowCustomTags | Wheter the user an create own tags. You have to implement your own logic to create tags (`CreateCustomTag`).  | bool | false |  |
 | AutoClearSearchValue | Whether the current search will be cleared on selecting an item. | bool | true |  |
 | Bordered | Toggle the border style. | bool | true |  |
-| CreateCustomTag | Returns the string of the input field when the user press enter. | Action&lt;string> | - |  |
 | DataSource | The datasource for this component. | IEnumerable&lt;TItem> | - |  |
-| DefaultActiveFirstOption | Activates the first item that is not deactivated.  | bool | true |  |
+| DefaultActiveFirstOption | Activates the first item that is not deactivated.  | bool | false |  |
 | DefaultValue | `default` - The value is used during initialization and when pressing the Rest button within Forms. | TItemValue | - |  |
 | DefaultValues | `multiple` \| `tags` -  The values are used during initialization and when pressing the Rest button within Forms. | IEnumerable&lt;TItemValues> | - |  |
 | Disabled | Whether disabled select. | bool | false |  |
@@ -41,8 +40,10 @@ Select component to select value from options.
 | LabelTemplate | Is used to customize the label style. | RenderFragment&lt;TItem> |  |  |
 | Loading | Show loading indicator. You have to write the loading logic by your own. | bool | false |  |
 | Mode | Set mode of Select - `default` \| `multiple` \| `tags` | string | default |  |
+| NotFoundContent | Specify content to show when no result matches. | RenderFragment | `Not Found` |  |
 | OnBlur | Called when blur. | Action | - |  |
 | OnClearSelected | Called when the user clears the selection. | Action | - |  |
+| OnCreateCustomTag | Returns the string of the input field when the user press enter. | Action&lt;string> | - |  |
 | OnDataSourceChanged | Called when the datasource changes. From `null` to `IEnumerable<TItem>`, from `IEnumerable<TItem>` to `IEnumerable<TItem>` or from `IEnumerable<TItem>` to `null`. | Action | - |  |
 | OnDropdownVisibleChange | Called when the dropdown visibility changes. | Action&lt;bool> | - |  |
 | OnFocus | Called when focus. | Action | - |  |

@@ -1,0 +1,29 @@
+<Select @bind-Value="@_selectedValue1"
+		DefaultValue="@("lucy")"
+		Style="width:120px"
+		TItemValue="string"
+		TItem="string"
+		Bordered="false">
+    <SelectOptions>
+		<SelectOption TItemValue="string" TItem="string" Value="@("jack")" Label="Jack" />
+		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+		<SelectOption TItemValue="string" TItem="string" Value="@("yaoming")" Label="YaoMing" />
+	</SelectOptions>
+</Select>
+
+<Select @bind-Value="@_selectedValue2"
+		DefaultValue="@("lucy")"
+		Style="width:120px"
+		TItemValue="string"
+		TItem="string"
+		Bordered="false"
+		Disabled>
+    <SelectOptions>
+		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+	</SelectOptions>
+</Select>
+
+@code
+{
+	string _selectedValue1, _selectedValue2;
+}

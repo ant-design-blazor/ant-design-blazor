@@ -23,8 +23,8 @@ namespace AntDesign
         [Parameter] public bool AllowCustomTags { get; set; }
         [Parameter] public bool AutoClearSearchValue { get; set; } = true;
         [Parameter] public bool Bordered { get; set; } = true;
-        [Parameter] public Action<string> CreateCustomTag { get; set; }
-        [Parameter] public bool DefaultActiveFirstItem { get; set; } = true;
+        [Parameter] public Action<string> OnCreateCustomTag { get; set; }
+        [Parameter] public bool DefaultActiveFirstItem { get; set; } = false;
         [Parameter] public bool Disabled { get; set; }
         [Parameter] public string DisabledName { get; set; }
         [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
@@ -41,6 +41,7 @@ namespace AntDesign
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
         [Parameter] public bool Loading { get; set; }
         [Parameter] public string Mode { get; set; } = "default";
+        [Parameter] public RenderFragment NotFoundContent { get; set; }
         [Parameter] public Action OnBlur { get; set; }
         [Parameter] public Action OnClearSelected { get; set; }
         /// <summary>
@@ -350,8 +351,6 @@ namespace AntDesign
 
                     if (!exists)
                     {
-                        Console.WriteLine("Does not exists in DS: " + selectOption.Label);
-
                         SelectOptionItems.Remove(selectOption);
                     }
                 }
@@ -577,6 +576,8 @@ namespace AntDesign
         /// </summary>
         protected internal async Task SetValueAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
+            if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
+
             if (SelectMode == SelectMode.Default)
             {
                 SelectOptionItems.Where(x => x.IsSelected)
@@ -806,7 +807,18 @@ namespace AntDesign
                         }
                     }
 
-                    await InvokeValuesChanged();
+                    var newSelectedValues = new List<TItemValue>();
+                    var newSelectedItems = new List<TItem>();
+
+                    SelectOptionItems.Where(x => x.IsSelected)
+                        .ForEach(i =>
+                        {
+                            newSelectedValues.Add(i.Value);
+                            newSelectedItems.Add(i.Item);
+                        });
+
+                    OnSelectedItemsChanged?.Invoke(newSelectedItems);
+                    await ValuesChanged.InvokeAsync(newSelectedValues);
                 }
             }
         }
@@ -846,16 +858,13 @@ namespace AntDesign
         protected async Task InvokeValuesChanged()
         {
             var newSelectedValues = new List<TItemValue>();
-            var newSelectedItems = new List<TItem>();
 
             SelectOptionItems.Where(x => x.IsSelected)
                 .ForEach(i =>
                 {
                     newSelectedValues.Add(i.Value);
-                    newSelectedItems.Add(i.Item);
                 });
 
-            OnSelectedItemsChanged?.Invoke(newSelectedItems);
             await ValuesChanged.InvokeAsync(newSelectedValues);
         }
 
@@ -966,7 +975,18 @@ namespace AntDesign
                 await UpdateOverlayPositionAsync();
             }
 
-            await InvokeValuesChanged();
+            var newSelectedValues = new List<TItemValue>();
+            var newSelectedItems = new List<TItem>();
+
+            SelectOptionItems.Where(x => x.IsSelected)
+                .ForEach(i =>
+                {
+                    newSelectedValues.Add(i.Value);
+                    newSelectedItems.Add(i.Item);
+                });
+
+            OnSelectedItemsChanged?.Invoke(newSelectedItems);
+            await ValuesChanged.InvokeAsync(newSelectedValues);
         }
 
         /// <summary>
@@ -1069,7 +1089,7 @@ namespace AntDesign
 
                         if (AllOptionsHidden() || !anyActiveItems)
                         {
-                            CreateCustomTag?.Invoke(_searchValue);
+                            OnCreateCustomTag?.Invoke(_searchValue);
 
                             ClearSearch();
 

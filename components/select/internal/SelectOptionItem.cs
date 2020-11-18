@@ -131,7 +131,7 @@ namespace AntDesign.Select.Internal
                     _isDisabled = value;
 
                     if (ChildComponent != null)
-                        ChildComponent.InternalIsDisabled = value;
+                        ChildComponent.IsDisabled = value;
                 }
             }
         }
@@ -166,7 +166,7 @@ namespace AntDesign.Select.Internal
                     _childComponent.IsActive = _isActive;
                     _childComponent.IsSelected = _isSelected;
                     _childComponent.IsHidden = _isHidden;
-                    _childComponent.InternalIsDisabled = _isDisabled;
+                    _childComponent.IsDisabled = _isDisabled;
                     _childComponent.InternalLabel = _label;
                     _childComponent.GroupName = _groupName;
                 }

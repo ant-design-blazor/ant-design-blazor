@@ -1,0 +1,40 @@
+<Select Mode="tags"
+        Placeholder="Please select"
+		@bind-Values="@_selectedValues"
+		TItemValue="string"
+		TItem="string"
+		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
+		EnableSearch>
+		<SelectOptions>
+			@foreach(var item in _items)
+			{
+				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+			}
+		</SelectOptions>
+</Select>
+@code
+{
+    List<string> _items;
+    IEnumerable<string> _selectedValues;
+
+	protected override void OnInitialized()
+    {
+        const int min = 10;
+        const int max = 36;
+        _items = new List<string>();
+
+        for (var i = min; max > i; i++)
+        {
+            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+            _items.Add(value);
+        }
+
+		_selectedValues = new List<string> { "0f15"};
+    }
+
+    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+    {
+		if (values != null)
+			Console.WriteLine($"selected: ${string.Join(",", values)}");
+    }
+}

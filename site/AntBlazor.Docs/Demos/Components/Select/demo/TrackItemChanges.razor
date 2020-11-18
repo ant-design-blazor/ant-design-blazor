@@ -8,7 +8,7 @@
         Placeholder="Select a person"
         DefaultActiveFirstItem
         IgnoreItemChanges="false"
-        OnSelectedItemChanged="@(item => OnOnSelectedItemChangedEventHandler(item))"
+        OnSelectedItemChanged="OnSelectedItemChangedHandler"
         AllowClear>
 </Select>
 <Button OnClick="@RenameLabel" >Rename Lucy</Button>
@@ -68,7 +68,7 @@
         }
     }
 
-    private void OnOnSelectedItemChangedEventHandler(Person value)
+    private void OnSelectedItemChangedHandler(Person value)
     {
         _selectedItem = value;
     }

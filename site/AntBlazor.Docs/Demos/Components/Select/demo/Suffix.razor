@@ -1,0 +1,37 @@
+<Select SuffixIcon="_syncIcon"
+        DefaultValue="@("luck")"
+        Style="width: 120px"
+		TItemValue="string"
+		TItem="string">
+    <SelectOptions>
+		<SelectOption TItemValue="string" TItem="string" Value="@("jack")" Label="Jack" />
+		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+		<SelectOption TItemValue="string" TItem="string" Value="@("disabled")" Label="Disabled" Disabled/>
+		<SelectOption TItemValue="string" TItem="string" Value="@("yaoming")" Label="YaoMing" />
+	</SelectOptions>
+</Select>
+
+<Select SuffixIcon="_smileIcon"
+        DefaultValue="@("luck")"
+		TItemValue="string"
+		TItem="string"
+        Style="width: 120px"
+		Disabled>
+    <SelectOptions>
+		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+	</SelectOptions>
+</Select>
+
+@using OneOf;
+@code
+{
+    private RenderFragment _syncIcon;
+    private RenderFragment _smileIcon;
+
+    protected override void OnParametersSet()
+    {
+        _syncIcon =@<Icon Type="sync" Theme="true"></Icon>;
+        _smileIcon =@<Icon Type="smile" Theme="outline" Rotate="180"></Icon>;
+        base.OnParametersSet();
+    }
+}

@@ -1,0 +1,45 @@
+<Select DataSource="@_persons" 
+        @bind-Value="@_selectedValue"
+        ValueName="@nameof(Person.Value)" 
+        LabelName="@nameof(Person.Name)" 
+        GroupName="@nameof(Person.Role)"
+        SortByLabel="@SortDirection.Ascending"
+        SortByGroup="@SortDirection.Ascending"
+        OnSelectedItemChanged="OnSelectedItemChangedHandler"
+		DefaultActiveFirstItem="true"
+		Style="width: 200px;">
+</Select>
+<br /><br />
+<p>
+    Selected Value: @_selectedValue <br/>
+    Selected Item Name: @_selectedItem?.Name
+</p>
+@code
+{
+    class Person
+    {
+        public string Value { get; set; }
+        public string Name { get; set; }
+        public string Role { get; set; }
+    }
+
+    List<Person> _persons;
+    string _selectedValue;
+    Person _selectedItem;
+
+    protected override void OnInitialized()
+    {
+        _persons = new List<Person>
+        {
+            new Person {Value = "jack", Name = "Jack", Role = "Manager"}, 
+            new Person {Value = "lucy", Name = "Lucy", Role = "Manager"}, 
+            new Person {Value = "yaoming", Name = "Yaoming", Role = "Engineer"}
+        };
+    }
+
+    private void OnSelectedItemChangedHandler(Person value)
+    {
+        _selectedItem = value;
+		Console.WriteLine($"selected: ${value?.Name}");
+    }
+}

@@ -1,0 +1,25 @@
+<Select Mode="multiple"
+        @bind-Values="@_selectedValues"
+        Placeholder="Inserted are removed"
+        EnableSearch
+        HideSelected
+		TItemValue="string" 
+		TItem="string"
+		OnSelectedItemsChanged="OnSelectedItemsChangedHandler">
+	<SelectOptions>
+		@foreach (var item in _items)
+		{
+			<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+		}
+	</SelectOptions>
+</Select>
+@code
+{
+    private readonly string[] _items = new[] { "Apples", "Nails", "Bananas", "Helicopters" };
+    private IEnumerable<string> _selectedValues;
+
+    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+    {
+        Console.WriteLine($"selected: ${string.Join(",", values)}");
+    }
+}

@@ -1,0 +1,56 @@
+﻿<Select Mode="multiple"
+        Placeholder="Please select"
+		@bind-Values="@_selectedValues1"
+		TItemValue="string"
+		TItem="string"
+		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
+		Style="width: 100%; margin-bottom: 8px;"
+		EnableSearch
+		AllowClear>
+		<SelectOptions>
+			@foreach(var item in _items)
+			{
+				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+			}
+		</SelectOptions>
+</Select>
+<Select Mode="multiple"
+        Placeholder="Please select"
+		@bind-Values="@_selectedValues2"
+		TItemValue="string"
+		TItem="string"
+		Disabled>
+		<SelectOptions>
+			@foreach(var item in _items)
+			{
+				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+			}
+		</SelectOptions>
+</Select>
+@code
+{
+    List<string> _items;
+    IEnumerable<string> _selectedValues1, _selectedValues2;
+
+	protected override void OnInitialized()
+    {
+        const int min = 10;
+        const int max = 36;
+        _items = new List<string>();
+
+        for (var i = min; max > i; i++)
+        {
+            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+            _items.Add(value);
+        }
+
+		_selectedValues1 = new List<string> { "0a10" , "0c12"};
+		_selectedValues2 = new List<string> { "0a10" , "0c12"};
+    }
+
+    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+    {
+		if (values != null)
+			Console.WriteLine($"selected: ${string.Join(",", values)}");
+    }
+}

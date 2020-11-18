@@ -63,19 +63,25 @@
                                 </div>
                             </div>
                         }
-
                         @if (AllOptionsHidden())
                         {
                             <div role="listbox" id="@(Id)_list" class="@ClassPrefix-item-empty">
-                                <Empty Simple Small/>
+                                @if (NotFoundContent != null)
+                                {
+                                    @NotFoundContent
+                                }
+                                else
+                                {
+                                    <Empty Simple Small/>
+                                }
                             </div>
-                        }
-                        
+                        } 
+
                         @if (DropdownRender != null)
                         {
                             @DropdownRender(default)
                         }
-                    </div>
+                    </div>                    
                 </Overlay>
                 <ChildContent>
                     <CascadingValue Value="this" Name=@("ParentSelect") IsFixed="true">

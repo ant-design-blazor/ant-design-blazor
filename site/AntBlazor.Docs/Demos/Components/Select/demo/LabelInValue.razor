@@ -1,0 +1,23 @@
+<Select @bind-Value="@_selectedValue"
+        DefaultValue="@("jack")"
+		TItemValue="string"
+        TItem="string"
+        LabelInValue="true"
+        OnSelectedItemChanged="@(item => _selectedItem = item)"
+		Style="width: 120px;">
+		<SelectOptions>
+			<SelectOption TItemValue="string" TItem="string" Value="@("jack")" Label="Jack (100)" />
+			<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Jack (101)" />
+		</SelectOptions>
+</Select>
+<br /><br />
+<p>
+    Selected Value: @_selectedValue <br />
+    Selected Item: @_selectedItem 
+</p>
+
+@code
+{
+	string _selectedValue;
+    string _selectedItem;
+}

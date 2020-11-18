@@ -1,0 +1,66 @@
+<Select DataSource="@_list"
+		@bind-Value="@_selectedValue1"
+		DefaultValue="@("lucy")"
+		ValueName="@nameof(Person.Value)"
+		LabelName="@nameof(Person.Name)"
+		DisabledName="@nameof(Person.IsDisabled)"
+		Style="width:120px"
+		OnSelectedItemChanged="OnSelectedItemChangedHandler">
+</Select>
+<Select @bind-Value="@_selectedValue2"
+		DefaultValue="@("lucy")"
+		Style="width: 120px;"
+		TItemValue="string"
+		TItem="string"
+		Disabled>
+    <SelectOptions>
+		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+	</SelectOptions>
+</Select>
+<Select @bind-Value="@_selectedValue3"
+		DefaultValue="@("lucy")"
+		Style="width: 120px;"
+		TItemValue="string"
+		TItem="string"
+		Loading>
+	<SelectOptions>
+		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+	</SelectOptions>
+</Select>
+<Select DataSource="@_list"
+		@bind-Value="@_selectedValue4"		
+		ValueName="@nameof(Person.Value)"
+		LabelName="@nameof(Person.Name)"
+		DisabledName="@nameof(Person.IsDisabled)"
+		Style="width: 120px;"
+		Placeholder="Choose"
+		AllowClear>
+</Select>
+@code
+{
+	List<Person> _list;
+	string _selectedValue1, _selectedValue2, _selectedValue3;
+	string _selectedValue4 = "lucy";
+	class Person
+	{
+		public string Value { get; set; }
+		public string Name { get; set; }
+		public bool IsDisabled { get; set; }
+	}
+
+    protected override void OnInitialized()
+    {
+        _list = new List<Person>
+        {
+            new Person {Value = "jack", Name = "Jack"},
+            new Person {Value = "lucy", Name = "Lucy"},
+            new Person {Value = "disabled", Name = "Disabled", IsDisabled = true},
+            new Person {Value = "yaoming", Name = "YaoMing"}
+		};
+    }
+
+    private void OnSelectedItemChangedHandler(Person value)
+    {
+        Console.WriteLine($"selected: ${value?.Name}");
+    }
+}

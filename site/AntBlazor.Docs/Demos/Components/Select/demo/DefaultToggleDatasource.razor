@@ -5,8 +5,8 @@
         DisabledName="@nameof(Person.NotAvailable)"
         DefaultValue="12"
         Placeholder="Select a person"
-        OnSelectedItemChanged="@(item => OnOnSelectedItemChangedEventHandler(item))"
-        OnDataSourceChanged="@OnDataSourceChangedEventHandler"
+        OnSelectedItemChanged="OnSelectedItemChangedHandler"
+        OnDataSourceChanged="OnDataSourceChangedHandler"
         SortByLabel="@SortDirection.Ascending"
         AllowClear
         Style="width: calc(100% - 68px);">
@@ -113,12 +113,12 @@
             _persons.Remove(item);
     }
 
-    private void OnOnSelectedItemChangedEventHandler(Person value)
+    private void OnSelectedItemChangedHandler(Person value)
     {
         _selectedItem = value;
     }
 
-    private void OnDataSourceChangedEventHandler()
+    private void OnDataSourceChangedHandler()
     {
         Console.WriteLine("--- DataSourceChanged --- " + DateTime.Now.ToString("O"));
     }

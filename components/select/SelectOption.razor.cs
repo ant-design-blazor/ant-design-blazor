@@ -36,14 +36,14 @@ namespace AntDesign
         /// <summary>
         /// The parameter should only be used if the SelectOption was created directly.
         /// </summary>
-        [Parameter] public bool IsDisabled
+        [Parameter] public bool Disabled
         {
-            get => _isDisabled;
+            get => _disabled;
             set
             {
-                if (_isDisabled != value)
+                if (_disabled != value)
                 {
-                    _isDisabled = value;
+                    _disabled = value;
 
                     if (Model != null)
                         Model.IsDisabled = value;
@@ -55,7 +55,7 @@ namespace AntDesign
 
         # region Properties
         private string _label = string.Empty;
-        private bool _isDisabled;
+        private bool _disabled;
         internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
 
         private bool _isSelected;
@@ -72,15 +72,15 @@ namespace AntDesign
             }
         }
 
-        private bool _internalIsDisabled;
-        internal bool InternalIsDisabled
+        private bool _isDisabled;
+        internal bool IsDisabled
         {
-            get => _internalIsDisabled;
+            get => _isDisabled;
             set
             {
-                if (_internalIsDisabled != value)
+                if (_isDisabled != value)
                 {
-                    _internalIsDisabled = value;
+                    _isDisabled = value;
                     StateHasChanged();
                 }
             }
@@ -162,7 +162,7 @@ namespace AntDesign
                 {
                     InternalId = InternalId,
                     Label = Label,
-                    IsDisabled = IsDisabled,
+                    IsDisabled = Disabled,
                     GroupName = _groupName,
                     Value = Value,
                     Item = (TItem)Convert.ChangeType(Value, typeof(TItem)),
@@ -182,7 +182,7 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add("ant-select-item")
                 .Add(ClassPrefix)
-                .If($"{ClassPrefix}-disabled", () => InternalIsDisabled)
+                .If($"{ClassPrefix}-disabled", () => IsDisabled)
                 .If($"{ClassPrefix}-selected", () => IsSelected)
                 .If($"{ClassPrefix}-active", () => IsActive)
                 .If($"{ClassPrefix}-grouped", () => SelectParent.IsGroupingEnabled);
@@ -203,7 +203,7 @@ namespace AntDesign
 
         protected async Task OnClick(EventArgs _)
         {
-            if (!InternalIsDisabled)
+            if (!IsDisabled)
             {
                 await SelectParent.SetValueAsync(Model);
 

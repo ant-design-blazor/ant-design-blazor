@@ -1,0 +1,90 @@
+<RadioGroup @bind-Value="@_sizeValue" OnChange="OnChangeSize" TValue="string">
+    <Radio RadioButton Value="@("large")">Large</Radio>
+    <Radio RadioButton Value="@("default")">Default</Radio>
+    <Radio RadioButton Value="@("small")">Small</Radio>
+</RadioGroup>
+<br /><br />
+<Select @bind-Value="@_selectedValue"
+		DefaultValue="@("0a10")"
+		TItemValue="string"
+		TItem="string"
+		Style="width: 200px; margin-bottom: 8px;"
+		Size="@_sizeValue"
+		OnSelectedItemChanged="OnSelectedItemChangedHandler">
+		<SelectOptions>
+			@foreach(var item in _items)
+			{
+				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+			}
+		</SelectOptions>
+</Select>
+<Select Mode="multiple"
+		@bind-Values="@_selectedValues1"
+		Placeholder="Please select"
+		TItemValue="string"
+		TItem="string"
+		Size="@_sizeValue"
+		Style="width: 100%; margin-bottom: 8px;"
+		OnSelectedItemsChanged="OnSelectedItemsChangedHandler">
+		<SelectOptions>
+			@foreach(var item in _items)
+			{
+				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+			}
+		</SelectOptions>
+</Select>
+<Select Mode="tags"
+		@bind-Values="@_selectedValues2"
+		Placeholder="Please select"
+		TItemValue="string"
+		TItem="string"
+		Size="@_sizeValue"
+		OnSelectedItemsChanged="OnSelectedItemsChangedHandler">
+		<SelectOptions>
+			@foreach(var item in _items)
+			{
+				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+			}
+		</SelectOptions>
+</Select>
+
+@code
+{
+	List<string> _items;
+	string _selectedValue;
+    IEnumerable<string> _selectedValues1, _selectedValues2;
+    private string _sizeValue = AntSizeLDSType.Default;
+
+	protected override void OnInitialized()
+    {
+        const int min = 10;
+        const int max = 36;
+        _items = new List<string>();
+
+        for (var i = min; max > i; i++)
+        {
+            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+            _items.Add(value);
+        }
+		_selectedValue = "0a10";
+		_selectedValues1 = new List<string> { "0a10" , "0c12"};
+		_selectedValues2 = new List<string> { "0a10" , "0c12"};
+    }
+
+    private void OnChangeSize(string value)
+    {
+        _sizeValue = value;
+        Console.WriteLine($"selected size: ${value}");
+    }
+
+	private void OnSelectedItemChangedHandler(string value)
+    {
+		Console.WriteLine($"selected: ${value}");
+    }
+
+    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+    {
+		if (values != null)
+			Console.WriteLine($"selected: ${string.Join(",", values)}");
+    }
+}

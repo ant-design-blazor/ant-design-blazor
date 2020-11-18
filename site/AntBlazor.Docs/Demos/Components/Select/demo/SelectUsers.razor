@@ -1,0 +1,14 @@
+<Select @bind-Value="@_selectedValue"
+		DefaultValue="@("lucy")"
+		Style="width: 120px;"
+		TItemValue="string"
+		TItem="string"
+		Loading>
+	<SelectOptions>
+		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+	</SelectOptions>
+</Select>
+@code
+{
+	string _selectedValue;
+}
