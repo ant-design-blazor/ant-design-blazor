@@ -65,6 +65,8 @@ namespace AntDesign
 
         public static string EnableBodyScroll => $"{FUNC_PREFIX}enableBodyScroll";
 
+        public static string DestroyAllDialog => $"{FUNC_PREFIX}destroyAllDialog";
+
         public static string CreateIconFromfontCN => $"{FUNC_PREFIX}createIconFromfontCN";
 
         public static string GetScroll => $"{FUNC_PREFIX}getScroll";
