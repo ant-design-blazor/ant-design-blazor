@@ -9,22 +9,24 @@ Avatars can be used to represent people or objects. It supports images, `Icon`s,
 
 ## API
 
-### Avatar
+### Avatar Props
 
-| Property | Description | Type | Default |
+| Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| Shape | Set avatar shape | string | null |
-| Size | Set avatar size | `string|AntSizeLDSType{"default","large","small"}` | AntSizeLDSType.Default |
-| Src | Set resource address of the avatar image | string |  |
-| SrcSet | Set responsive resource address where avatar type is image | string |  |
-| Alt | Replace text when the image can't display | string |  |
-| Icon | Set avatra icon | string |  |
-| Error | Callback function when the image load faile,return false will close fallback action of default | function()=>ErrorEventArgs |  |
+| Alt | This attribute defines the alternative text describing the image | string | - |  |
+| Icon | Custom icon type for an icon avatar | string | - |  |
+| OnError | Handler when img load error | EventCallback&lt;ErrorEventArgs> | - |  |
+| Shape | The shape of avatar | string | - |  |
+| Size | The size of the avatar `default` \| `small` \| `large` | string | `default` |  |
+| Src | The address of the image for an image avatar | string | - |  |
+| SrcSet | A list of sources to use for different screen resolutions | string | - |  |
 
-### AvaterGroup
+> Tip: You can set `Icon` or `ChildContent` as the fallback for image load error, with the priority of `Icon` > `ChildContent`
 
-| Property | Description | Type | Default |
-| --- | --- | --- | --- |
-| ChildContent | Additional Content | RenderFragment | - |
-| MaxCount | Group max show number  | int | - |
-| MaxStyle | Group style when over the max show number | string | - |
+### AvatarGroup Props
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| MaxCount | Max avatars to show | int | - |  |
+| MaxPopoverPlacement | The placement of excess avatar Popover | `top` \| `bottom` | `top` |  |
+| MaxStyle | The style of excess avatar style | string | - |  |
