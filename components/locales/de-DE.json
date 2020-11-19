@@ -42,7 +42,20 @@
       "previousDecade": "Vorheriges Jahrzehnt",
       "nextDecade": "Nächstes Jahrzehnt",
       "previousCentury": "Vorheriges Jahrhundert",
-      "nextCentury": "Nächstes Jahrhundert"
+      "nextCentury": "Nächstes Jahrhundert",
+      "startDate": "Startdatum",
+      "startWeek": "Startwoche",
+      "startMonth": "Startmonat",
+      "startYear": "Startjahr",
+      "startQuarter": "Startquartal",
+      "endDate": "Schlussdatum",
+      "endWeek": "Schlusswoche",
+      "endMonth": "Schlussmonat",
+      "endYear": "Schlussjahr",
+      "endQuarter": "Schlussquartal",
+      "quarterSelect": "Quartal wählen",
+      "week": "Woche",
+      "monthFormat": "MMM"
     },
     "timePickerLocale": { "placeholder": "Zeit auswählen" }
   },
