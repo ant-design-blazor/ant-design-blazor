@@ -40,7 +40,7 @@
       "monthSelect": "选择月份",
       "yearSelect": "选择年份",
       "decadeSelect": "选择年代",
-      "yearFormat": "YYYY年",
+      "yearFormat": "yyyy年",
       "dayFormat": "D日",
       "dateFormat": "yyyy年M月D日",
       "dateTimeFormat": "yyyy年M月D日 HH时mm分ss秒",

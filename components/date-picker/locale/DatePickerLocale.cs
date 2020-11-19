@@ -4,9 +4,9 @@
     {
         public string FirstDayOfWeek { get; set; } = "Sunday";
 
-        public DateLocale Lang { get; set; }
+        public DateLocale Lang { get; set; } = new DateLocale();
 
-        public TimePickerLocale TimePickerLocale { get; set; }
+        public TimePickerLocale TimePickerLocale { get; set; } = new TimePickerLocale();
     }
 
     public class DateLocale
