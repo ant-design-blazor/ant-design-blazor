@@ -20,10 +20,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/tX6-md4H6/Affix.svg
 
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
-| OffsetBottom | 距离窗口底部达到指定偏移量后触发 | int         | -         |
-| OffsetTop   | 距离窗口顶部达到指定偏移量后触发| int         |-    |
+| OffsetBottom | 距离窗口底部达到指定偏移量后触发 | uint?         | -         |
+| OffsetTop   | 距离窗口顶部达到指定偏移量后触发| uint?         |   0  |
 | Target | 设置 Affix 需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数 | RenderFragment         |-       |
-| OnChange | 固定状态改变时触发的回调函数| Function()  | -  |
+| OnChange | 固定状态改变时触发的回调函数| EventCallback&lt;bool>  | -  |
 
 注意：`Affix` 内的元素不要使用绝对定位，如需要绝对定位的效果，可以直接设置 `Affix` 为绝对定位：
 
