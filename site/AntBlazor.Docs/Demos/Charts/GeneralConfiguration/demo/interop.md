@@ -11,4 +11,3 @@ title:
 
 ## en-US
 
-Description about this component.

@@ -3,14 +3,14 @@
 
     <Tabs>
         <TabPane Key="1">
-            <Tab>示例1</Tab>
+            <Tab>Example 1</Tab>
             <ChildContent>
                 <AntDesign.Charts.Column Data="data1" Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
-            <Tab>示例2</Tab>
+            <Tab>Example 2</Tab>
             <ChildContent>
                 <AntDesign.Charts.Column Data="data2" Config="config2" />
             </ChildContent>
@@ -19,7 +19,7 @@
 
 @code{
 
-    #region 示例1
+    #region Example 1
 
     object[] data1 =
     {
@@ -75,20 +75,20 @@
         Title = new Title
         {
             Visible = true,
-            Text = "图表标题及描述"
+            Text = "Chart title and description"
         },
         Description = new Description
         {
             Visible = true,
-            Text = "这是一个关于配置图表标题和描述文本内容的demo"
+            Text = "This is a demo about configuring the chart title and description text content"
         },
         XField = "year",
         YField = "value"
     };
 
-    #endregion 示例1
+    #endregion Example 1
 
-    #region 示例2
+    #region Example 2
 
     object[] data2 =
     {
@@ -144,7 +144,7 @@
         Title = new Title
         {
             Visible = true,
-            Text = "图表标题及描述",
+            Text = "Chart title and description",
             Style = new TextStyle
             {
                 Fill = "#1c3747"
@@ -153,7 +153,7 @@
         Description = new Description
         {
             Visible = true,
-            Text = "这是一个配置图表标题和描述文本样式的demo",
+            Text = "This is a demo to configure the chart title and description text style",
             Style = new TextStyle
             {
                 Fill = "#177ca6",
@@ -164,6 +164,6 @@
         YField = "value"
     };
 
-    #endregion 示例2
+    #endregion Example 2
 
 }

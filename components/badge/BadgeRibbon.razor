@@ -7,7 +7,9 @@
         @ChildContent
     }
     <div class="@ClassMapper.Class" style="@_colorStyle">
-        @if (TextTemplate != null)@TextTemplate else @Text
+        <span class="ant-ribbon-text">
+            @if (TextTemplate != null)@TextTemplate else @Text
+        </span>
         <div class="ant-ribbon-corner" style="@_cornerColorStyle" />
     </div>
 </div>

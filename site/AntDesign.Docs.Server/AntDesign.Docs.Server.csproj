@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RazorLangVersion>3.0</RazorLangVersion>
+    <TargetFrameworks>netcoreapp3.1;net5</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,8 +15,8 @@
   <ItemGroup>
     <DocFiles Include="$(SolutionDir)docs\**\*.*"></DocFiles>
   </ItemGroup>
-  <ItemGroup>    
-    <Watch Include="$(SolutionDir)**\*.razor"   />
+  <ItemGroup>
+    <Watch Include="$(SolutionDir)**\*.razor" />
   </ItemGroup>
   <Target Name="CopyDocs" BeforeTargets="Build">
     <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />

@@ -11,4 +11,5 @@ title:
 
 ## en-US
 
-Description about this component.
+
+The basic function of the donut chart is similar to the pie chart. It is used to compare the relationship between the whole and the part. Each arc slice represents a category in the whole. It consists of a pie chart hollowed out in the center, and explanatory text is usually placed in the center.
