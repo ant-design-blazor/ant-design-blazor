@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Threading.Tasks;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
@@ -55,22 +54,6 @@ namespace AntDesign
 
         [Parameter]
         public bool ShowToday { get; set; } = true;
-
-        private CultureInfo? _cultureInfo;
-
-        [Parameter]
-        public CultureInfo CultureInfo
-        {
-            get
-            {
-                return _cultureInfo ?? CultureInfo.DefaultThreadCurrentUICulture; ;
-            }
-            set
-            {
-                _cultureInfo = value;
-                InitPicker(_picker);
-            }
-        }
 
         public bool IsShowTime { get; protected set; }
         public string ShowTimeFormat { get; protected set; } = "HH:mm:ss";
@@ -520,7 +503,7 @@ namespace AntDesign
         {
             if (!string.IsNullOrEmpty(Format))
             {
-                return value.ToString(Format, this.CultureInfo);
+                return value.ToString(Format, LocaleProvider.CurrentLocale.CurrentCulture);
             }
 
             string formater = _pickerStatus[index]._initPicker switch
@@ -534,7 +517,7 @@ namespace AntDesign
                 _ => "yyyy-MM-dd",
             };
 
-            return value.ToString(formater, this.CultureInfo);
+            return value.ToString(formater, LocaleProvider.CurrentLocale.CurrentCulture);
         }
 
         internal void ChangePickerValue(DateTime date, int index = 0)

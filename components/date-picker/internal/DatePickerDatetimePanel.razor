@@ -3,12 +3,12 @@
 @inherits DatePickerPanelBase<TValue>
 
 @{
-    var calendar = this.DatePicker.CultureInfo.Calendar;
+    var calendar = LocaleProvider.CurrentLocale.CurrentCulture.Calendar;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     DayOfWeek monthFirstDayOfWeek = calendar.GetDayOfWeek(monthFirstDayDate);
 
-    int diffDay = (int)this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - (int)monthFirstDayOfWeek;
+    int diffDay = (int)LocaleProvider.CurrentLocale.CurrentCulture.DateTimeFormat.FirstDayOfWeek - (int)monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 
 }

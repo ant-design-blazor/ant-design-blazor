@@ -59,7 +59,7 @@ namespace AntDesign
 
             var array = Value as Array;
 
-            if (BindConverter.TryConvertTo(args.Value.ToString(), CultureInfo, out DateTime changeValue))
+            if (BindConverter.TryConvertTo(args.Value.ToString(), LocaleProvider.CurrentLocale.CurrentCulture, out DateTime changeValue))
             {
                 array.SetValue(changeValue, index);
                 PickerValues[index] = changeValue;
@@ -109,7 +109,7 @@ namespace AntDesign
                     return null;
                 }
 
-                return Convert.ToDateTime(indexValue, this.CultureInfo);
+                return Convert.ToDateTime(indexValue, LocaleProvider.CurrentLocale.CurrentCulture);
             }
             else if (DefaultValues[index] != null)
             {
@@ -205,7 +205,7 @@ namespace AntDesign
 
             if (!_isNullable)
             {
-                DateTime dateTime = Convert.ToDateTime(indexValue, CultureInfo);
+                DateTime dateTime = Convert.ToDateTime(indexValue, LocaleProvider.CurrentLocale.CurrentCulture);
                 if (dateTime != DateTime.MinValue)
                 {
                     notNullAction?.Invoke(dateTime);
@@ -213,7 +213,7 @@ namespace AntDesign
             }
             if (_isNullable && indexValue != null)
             {
-                notNullAction?.Invoke(Convert.ToDateTime(indexValue, CultureInfo));
+                notNullAction?.Invoke(Convert.ToDateTime(indexValue, LocaleProvider.CurrentLocale.CurrentCulture));
             }
         }
 
@@ -254,8 +254,8 @@ namespace AntDesign
                 return false;
             }
 
-            var success0 = BindConverter.TryConvertTo<DateTime>(values[0], CultureInfo, out var dateTime0);
-            var success1 = BindConverter.TryConvertTo<DateTime>(values[1], CultureInfo, out var dateTime1);
+            var success0 = BindConverter.TryConvertTo<DateTime>(values[0], LocaleProvider.CurrentLocale.CurrentCulture, out var dateTime0);
+            var success1 = BindConverter.TryConvertTo<DateTime>(values[1], LocaleProvider.CurrentLocale.CurrentCulture, out var dateTime1);
 
             if (success0 && success1)
             {
