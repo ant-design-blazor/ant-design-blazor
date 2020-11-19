@@ -19,9 +19,10 @@ Wrap Affix around another component to make it stick the viewport.
 
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
-| OffsetBottom | Offset from the bottom of the viewport (in pixels) | int         | -         |
-| OffsetTop   | Offset from the top of the viewport (in pixels)| int         |- |
+| OffsetBottom | Offset from the bottom of the viewport (in pixels) | uint?         | -         |
+| OffsetTop   | Offset from the top of the viewport (in pixels)| uint?         | 0 |
 | Target | Specifies the scrollable area DOM node | RenderFragment         |-       |
-| OnChange |Callback for when Affix state is changed| Function()  | -  |
+| ChildContent | Additional Content | RenderFragment         |-       |
+| OnChange |Callback for when Affix state is changed| EventCallback&lt;bool>  | -  |
 
 Note: Children of `Affix` must not have the property `position: absolute`, but you can set `position: absolute` on `Affix` itself:

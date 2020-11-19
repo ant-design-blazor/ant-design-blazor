@@ -17,7 +17,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg
 
 ### Alert Props
 
-| Property | Description | Type | Default | Version |
+| 参数             | 说明  | 类型          | 默认值    |
 | --- | --- | --- | --- | --- |
 | AfterClose | 	关闭动画结束后触发的回调函数 | EventCallback&lt;MouseEventArgs> | - |  |
 | Banner | 是否用作顶部公告 | Banner | false |  |
@@ -29,4 +29,5 @@ cover: https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg
 | ShowIcon | 是否显示辅助图标 | bool | false |  |
 | Type | 指定警告提示的样式，有四种选择 `success` \| `info` \| `warning` \| `error` | string | warning |  |
 | OnClose | 关闭时触发的回调函数 | EventCallback&lt;MouseEventArgs> | - |  |
-| ChildContent | Additional Content | RenderFragment | - |  |
+| ChildContent | 附加内容 | RenderFragment | - |  |
+

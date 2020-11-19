@@ -3,21 +3,21 @@
 
     <Tabs>
         <TabPane Key="1">
-            <Tab>示例1</Tab>
+            <Tab>Example 1</Tab>
             <ChildContent>
                 <Donut Data="data1" Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
-            <Tab>示例2</Tab>
+            <Tab>Example 2</Tab>
             <ChildContent>
                 <Donut Data="data2" Config="config2" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="3">
-            <Tab>示例3</Tab>
+            <Tab>Example 3</Tab>
             <ChildContent>
                 <Donut Data="data3" Config="config3" />
             </ChildContent>
@@ -26,28 +26,28 @@
 
 @code{
 
-    #region 示例1
+    #region Example 1
 
     readonly object[] data1 =
     {
         new
         {
-            type = "分类一",
+            type = "Category One",
             value = 27
         },
         new
         {
-            type = "分类二",
+            type = "Category Two",
             value = 25
         },
         new
         {
-            type = "分类三",
+            type = "Category Three",
             value = 18
         },
         new
         {
-            type = "分类四",
+            type = "Category Four",
             value = 15
         },
         new
@@ -57,7 +57,7 @@
         },
         new
         {
-            type = "其它",
+            type = "other",
             value = 5
         }
     };
@@ -68,12 +68,12 @@
         Title = new Title
         {
             Visible = true,
-            Text = "环图"
+            Text = "Donut Diagram"
         },
         Description = new Description
         {
             Visible = true,
-            Text = "环图的外半径决定环图的大小，而内半径决定环图的厚度。"
+            Text = "The outer radius of the ring graph determines the size of the ring graph, and the inner radius determines the thickness of the ring graph."
         },
         Radius = 0.8,
         Padding = "auto",
@@ -81,30 +81,30 @@
         ColorField = "type"
     };
 
-    #endregion 示例1
+    #endregion Example 1
 
-    #region 示例2
+    #region Example 2
 
     readonly object[] data2 =
     {
         new
         {
-            type = "分类一",
+            type = "Category One",
             value = 27
         },
         new
         {
-            type = "分类二",
+            type = "Category Two",
             value = 25
         },
         new
         {
-            type = "分类三",
+            type = "Category Three",
             value = 18
         },
         new
         {
-            type = "分类四",
+            type = "Category Four",
             value = 15
         },
         new
@@ -114,7 +114,7 @@
         },
         new
         {
-            type = "其它",
+            type = "other",
             value = 5
         }
     };
@@ -125,12 +125,12 @@
         Title = new Title
         {
             Visible = true,
-            Text = "环图-指标卡"
+            Text = "Donut Chart"
         },
         Description = new Description
         {
             Visible = true,
-            Text = "环图指标卡能够代替tooltip，在环图中心挖空部分显示各分类的详细信息。"
+            Text = "The ring chart indicator card can replace the tooltip and display the detailed information of each category in the hollowed-out part of the ring chart."
         },
         Radius = 0.8,
         Padding = "auto",
@@ -142,30 +142,30 @@
         }
     };
 
-    #endregion 示例2
+    #endregion Example 2
 
-    #region 示例3
+    #region Example 3
 
     readonly object[] data3 =
     {
         new
         {
-            type = "分类一",
+            type = "Category One",
             value = 15
         },
         new
         {
-            type = "分类二",
+            type = "Category Two",
             value = 14
         },
         new
         {
-            type = "分类三",
+            type = "Category Three",
             value = 18
         },
         new
         {
-            type = "分类四",
+            type = "Category Four",
             value = 27
         },
 
@@ -207,6 +207,6 @@
         },
     };
 
-    #endregion 示例3
+    #endregion Example 3
 
 }

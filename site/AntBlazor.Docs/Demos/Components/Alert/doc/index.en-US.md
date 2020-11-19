@@ -29,3 +29,4 @@ Alert component for feedback.
 | Type | Type of Alert styles, options: `success` \| `info` \| `warning` \| `error` | string | warning |  |
 | OnClose | Callback when Alert is closed | EventCallback&lt;MouseEventArgs> | - |  |
 | ChildContent | Additional Content | RenderFragment | - |  |
+
