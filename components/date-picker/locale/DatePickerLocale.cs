@@ -2,7 +2,7 @@
 {
     public class DatePickerLocale
     {
-        public string FirstDayOfWeek { get; set; }
+        public string FirstDayOfWeek { get; set; } = "Sunday";
 
         public DateLocale Lang { get; set; }
 

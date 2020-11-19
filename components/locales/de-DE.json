@@ -13,6 +13,7 @@
     "next_3": "3 Seiten vor"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Monday",
     "lang": {
       "placeholder": "Datum auswählen",
       "rangePlaceholder": [ "Startdatum", "Enddatum" ],
@@ -29,10 +30,10 @@
       "monthSelect": "Wähle einen Monat",
       "yearSelect": "Wähle ein Jahr",
       "decadeSelect": "Wähle ein Jahrzehnt",
-      "yearFormat": "YYYY",
-      "dateFormat": "D.M.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D.M.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d.M.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d.M.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Vorheriger Monat (PageUp)",
       "nextMonth": "Nächster Monat (PageDown)",
