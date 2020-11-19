@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-We can set the default globalization formatting with `CultureInfo` Property. The default is `CultureInfo.CuurrentCulture`.
+We can set the default globalization formatting with `CultureInfo` Property. The default is `CultureInfo.CurrentCulture`.
