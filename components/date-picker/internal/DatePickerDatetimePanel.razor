@@ -25,7 +25,7 @@
                             IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                             IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
                             IsSelected="date => DateHelper.IsSameDay(date, Value)"
-                            GetColTitle='date => date.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.DateFormat, LocaleProvider.CurrentLocale.CurrentCulture)'
+                            GetColTitle='date => date.ToString(Locale.Lang.DateFormat, LocaleProvider.CurrentLocale.CurrentCulture)'
                             OnValueSelect="OnSelectDate"
                             GetNextColValue="date => date.AddDays(1)">
             <RenderPickerHeader>
@@ -34,7 +34,7 @@
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
-                    @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays())
+                    @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays(Locale))
                     {
                         <th>@weekDay</th>
                     }
@@ -149,13 +149,13 @@
         <li class="@(PrefixCls)-now">
             <a class="@(PrefixCls)-now-btn"
                @onclick="e => { OnSelectTime(DateTime.Now); Close(); }">
-                @LocaleProvider.CurrentLocale.DatePicker.Lang.Now
+                @Locale.Lang.Now
             </a>
         </li>
         <li class="@(PrefixCls)-ok">
             <Button Type="@ButtonType.Primary"
                        OnClick="e => DatePicker.Close()">
-                @LocaleProvider.CurrentLocale.DatePicker.Lang.Ok
+                @Locale.Lang.Ok
             </Button>
         </li>
     </ul>

@@ -83,7 +83,7 @@ namespace AntDesign.Internal
 
             if (IsRange)
             {
-                var (startPlaceholder, endPlaceholder) = DatePickerPlaceholder.GetRangePlaceHolderByType(Picker);
+                var (startPlaceholder, endPlaceholder) = DatePickerPlaceholder.GetRangePlaceHolderByType(Picker, Locale);
 
                 if (DatePicker.GetOnFocusPickerIndex() == 0)
                 {
@@ -96,7 +96,7 @@ namespace AntDesign.Internal
             }
             else
             {
-                placeholder = DatePickerPlaceholder.GetPlaceholderByType(Picker);
+                placeholder = DatePickerPlaceholder.GetPlaceholderByType(Picker, Locale);
             }
 
             int focusIndex = DatePicker.GetOnFocusPickerIndex();

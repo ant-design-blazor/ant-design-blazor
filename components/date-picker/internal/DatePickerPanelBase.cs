@@ -26,6 +26,9 @@ namespace AntDesign
         public bool IsShowHeader { get; set; } = true;
 
         [Parameter]
+        public DatePickerLocale Locale { get; set; }
+
+        [Parameter]
         public Action ClosePanel { get; set; }
 
         [Parameter]
@@ -79,6 +82,7 @@ namespace AntDesign
             {
                 { "PrefixCls", PrefixCls },
                 { "Picker", Picker },
+                { "Locale", Locale },
                 { "ClosePanel", ClosePanel },
                 { "ChangePickerValue", ChangePickerValue },
                 { "ChangeValue", ChangeValue },

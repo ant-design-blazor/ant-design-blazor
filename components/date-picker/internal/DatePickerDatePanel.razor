@@ -11,7 +11,7 @@
     // sunday should be 7
     if (monthFirstDayOfWeek == 0)
     {
-        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek();
+        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(Locale);
     }
 
     int diffDay = (int)LocaleProvider.CurrentLocale.CurrentCulture.DateTimeFormat.FirstDayOfWeek - monthFirstDayOfWeek;
@@ -29,7 +29,7 @@
                            IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                            IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
                            IsSelected="date => !IsWeek && DateHelper.IsSameDay(date, Value)"
-                           GetColTitle='date => date.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.DateFormat, LocaleProvider.CurrentLocale.CurrentCulture)'
+                           GetColTitle='date => date.ToString(Locale.Lang.DateFormat, LocaleProvider.CurrentLocale.CurrentCulture)'
                            OnRowSelect="OnRowSelect"
                            OnValueSelect="OnValueSelect"
                            GetNextColValue="date => date.AddDays(1)">
@@ -47,7 +47,7 @@
                 {
                     <th></th>
                 }
-                @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays())
+                @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays(Locale))
                 {
                     <th>@(weekDay)</th>
                 }
@@ -81,7 +81,7 @@
     <div class="@(PrefixCls)-footer">
         <a class="@(PrefixCls)-today-btn"
            @onclick="e => { OnSelectDate(DateTime.Now); Close(); }">
-            @LocaleProvider.CurrentLocale.DatePicker.Lang.Today
+            @Locale.Lang.Today
         </a>
     </div>
 }

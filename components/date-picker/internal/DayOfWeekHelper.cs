@@ -12,9 +12,9 @@ namespace AntDesign
         private const string SATURDAY = "Saturday";
         private const string SUNDAY = "Sunday";
 
-        internal static int GetDiffForDayOfWeek()
+        internal static int GetDiffForDayOfWeek(DatePickerLocale locale)
         {
-            switch (LocaleProvider.CurrentLocale.DatePicker.FirstDayOfWeek)
+            switch (locale.FirstDayOfWeek)
             {
                 case SATURDAY: return 1;
                 case FRIDAY: return 2;
@@ -27,10 +27,10 @@ namespace AntDesign
             }
         }
 
-        internal static string[] GetShortWeekDays()
+        internal static string[] GetShortWeekDays(DatePickerLocale locale)
         {
             DayOfWeek currentDay = DateTime.Now.DayOfWeek;
-            DayOfWeek firstDayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), LocaleProvider.CurrentLocale.DatePicker.FirstDayOfWeek);
+            DayOfWeek firstDayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), locale.FirstDayOfWeek);
             DateTime referenceDay = DateTime.Today;
 
             if(firstDayOfWeek != currentDay)

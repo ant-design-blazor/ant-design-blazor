@@ -55,6 +55,9 @@ namespace AntDesign
         [Parameter]
         public bool ShowToday { get; set; } = true;
 
+        [Parameter]
+        public DatePickerLocale Locale { get; set; } = LocaleProvider.CurrentLocale.DatePicker;
+
         public bool IsShowTime { get; protected set; }
         public string ShowTimeFormat { get; protected set; } = "HH:mm:ss";
         protected OneOf<bool, string> _showTime = null;
@@ -386,13 +389,13 @@ namespace AntDesign
             }
             if (IsRange)
             {
-                (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(picker);
+                (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(picker, Locale);
                 _placeholders[0] = first;
                 _placeholders[1] = second;
             }
             else
             {
-                string first = DatePickerPlaceholder.GetPlaceholderByType(picker);
+                string first = DatePickerPlaceholder.GetPlaceholderByType(picker, Locale);
                 _placeholders[0] = first;
                 _placeholders[1] = first;
             }
@@ -509,7 +512,7 @@ namespace AntDesign
             string formater = _pickerStatus[index]._initPicker switch
             {
                 DatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
-                DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}{LocaleProvider.CurrentLocale.DatePicker.Lang.Week}",
+                DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}{Locale.Lang.Week}",
                 DatePickerType.Month => "yyyy-MM",
                 DatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
                 DatePickerType.Year => "yyyy",
