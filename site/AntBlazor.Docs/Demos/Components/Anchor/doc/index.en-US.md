@@ -18,21 +18,23 @@ For displaying anchor hyperlinks on page and jumping between them.
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| affix | Fixed mode of Anchor | boolean | true |  |
-| bounds | Bounding distance of anchor area | number | 5(px) |  |
-| getContainer | Scrolling container | () => HTMLElement | () => window |  |
-| offsetBottom | Pixels to offset from bottom when calculating position of scroll | number | - |  |
-| offsetTop | Pixels to offset from top when calculating position of scroll | number | 0 |  |
-| showInkInFixed | Whether show ink-balls in Fixed mode | boolean | false |  |
-| onClick | set the handler to handle `click` event | Function(e: Event, link: Object) | - |  |
-| getCurrentAnchor | Customize the anchor highlight | () => string | - |  |
-| targetOffset | Anchor scroll offset, default as `offsetTop`, [example](#components-anchor-demo-targetOffset) | number | `offsetTop` |  |
-| onChange | Listening for anchor link change | (currentActiveLink: string) => void |  |  |
+| Affix | Fixed mode of Anchor | boolean | true |  |
+| Bounds | Bounding distance of anchor area | number | 5(px) |  |
+| GetContainer | Scrolling container | () => HTMLElement | () => window |  |
+| OffsetBottom | Pixels to offset from bottom when calculating position of scroll | number | - |  |
+| OffsetTop | Pixels to offset from top when calculating position of scroll | number | 0 |  |
+| ShowInkInFixed | Whether show ink-balls in Fixed mode | boolean | false |  |
+| OnClick | set the handler to handle `click` event | Function(e: Event, link: Object) | - |  |
+| GetCurrentAnchor | Customize the anchor highlight | () => string | - |  |
+| TargetOffset | Anchor scroll offset, default as `offsetTop`, [example](#components-anchor-demo-targetOffset) | number | `offsetTop` |  |
+| OnChange | Listening for anchor link change | (currentActiveLink: string) => void |  |  |
+| Key | used to refresh links list when the key changed | string |  |  |
+| ChildContent | Additional Content | RenderFragment |  |  |
 
 ### Link Props
 
 | Property | Description                               | Type              | Default | Version |
 | -------- | ----------------------------------------- | ----------------- | ------- | ------- |
-| href     | target of hyperlink                       | string            |         |         |
-| title    | content of hyperlink                      | string\|ReactNode |         |         |
-| target   | Specifies where to display the linked URL | string            |         |         |
+| Href     | target of hyperlink                       | string            |         |         |
+| Title    | content of hyperlink                      | string\|ReactNode |         |         |
+| Target   | Specifies where to display the linked URL | string            |         |         |
