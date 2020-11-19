@@ -1,9 +1,9 @@
-﻿using System;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     public class DatePickerLocale
     {
+        public string FirstDayOfWeek { get; set; }
+
         public DateLocale Lang { get; set; }
 
         public TimePickerLocale TimePickerLocale { get; set; }
@@ -48,7 +48,6 @@ namespace AntDesign
         public string PreviousCentury { get; set; }
         public string NextCentury { get; set; }
         public string YearFormat { get; set; }
-        public DayOfWeek FirstDayOfWeek { get; set; }
         public string StartDate { get; set; }
         public string StartWeek { get; set; }
         public string StartMonth { get; set; }

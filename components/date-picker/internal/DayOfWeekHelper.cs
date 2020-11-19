@@ -4,17 +4,25 @@ namespace AntDesign
 {
     internal static class DayOfWeekHelper
     {
+        private const string MONDAY = "Monday";
+        private const string TUESDAY = "Tuesday";
+        private const string WEDNESDAY = "Wednesday";
+        private const string THURSDAY = "Thursday";
+        private const string FRIDAY = "Friday";
+        private const string SATURDAY = "Saturday";
+        private const string SUNDAY = "Sunday";
+
         internal static int GetDiffForDayOfWeek()
         {
-            switch (LocaleProvider.CurrentLocale.DatePicker.Lang.FirstDayOfWeek)
+            switch (LocaleProvider.CurrentLocale.DatePicker.FirstDayOfWeek)
             {
-                case DayOfWeek.Saturday: return 1;
-                case DayOfWeek.Friday: return 2;
-                case DayOfWeek.Thursday: return 3;
-                case DayOfWeek.Wednesday: return 4;
-                case DayOfWeek.Tuesday: return 5;
-                case DayOfWeek.Monday: return 6;
-                case DayOfWeek.Sunday: return 7;
+                case SATURDAY: return 1;
+                case FRIDAY: return 2;
+                case THURSDAY: return 3;
+                case WEDNESDAY: return 4;
+                case TUESDAY: return 5;
+                case MONDAY: return 6;
+                case SUNDAY: return 7;
                 default: return 0;
             }
         }
@@ -22,11 +30,12 @@ namespace AntDesign
         internal static string[] GetShortWeekDays()
         {
             DayOfWeek currentDay = DateTime.Now.DayOfWeek;
+            DayOfWeek firstDayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), LocaleProvider.CurrentLocale.DatePicker.FirstDayOfWeek);
             DateTime referenceDay = DateTime.Today;
 
-            if(LocaleProvider.CurrentLocale.DatePicker.Lang.FirstDayOfWeek != currentDay)
+            if(firstDayOfWeek != currentDay)
             {
-                int diff = LocaleProvider.CurrentLocale.DatePicker.Lang.FirstDayOfWeek - currentDay;
+                int diff = firstDayOfWeek - currentDay;
                 referenceDay = referenceDay.AddDays(diff);
             }
 

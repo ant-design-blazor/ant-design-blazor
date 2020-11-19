@@ -13,6 +13,7 @@
     "next_3": "Next 3 Pages"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Monday",
     "lang": {
       "placeholder": "Select date",
       "yearPlaceholder": "Select year",
@@ -49,7 +50,19 @@
       "previousDecade": "Last decade",
       "nextDecade": "Next decade",
       "previousCentury": "Last century",
-      "nextCentury": "Next century"
+      "nextCentury": "Next century",
+      "startDate": "Start date",
+      "startWeek": "Start week",
+      "startMonth": "Start month",
+      "startYear": "Start year",
+      "startQuarter": "Start quarter",
+      "endDate": "End date",
+      "endWeek": "End week",
+      "endMonth": "End month",
+      "endYear": "End year",
+      "endQuarter": "End Quarter",
+      "quarterSelect": "Select quarter",
+      "week": "Week"
     },
     "timePickerLocale": {
       "placeholder": "Select time",
