@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign.Internal
 @typeparam TValue
+@inherits DatePickerPanelBase<TValue>
 
 <div class="@(DatePicker.PrefixCls)-footer">
     <a class="@(DatePicker.PrefixCls)-today-btn" @onclick="e => DatePicker.ChangePickerValue(DateTime.Now)">
