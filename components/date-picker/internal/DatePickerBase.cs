@@ -406,13 +406,13 @@ namespace AntDesign
             }
             if (IsRange)
             {
-                (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(picker, this.CultureInfo);
+                (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(picker);
                 _placeholders[0] = first;
                 _placeholders[1] = second;
             }
             else
             {
-                string first = DatePickerPlaceholder.GetPlaceholderByType(picker, this.CultureInfo);
+                string first = DatePickerPlaceholder.GetPlaceholderByType(picker);
                 _placeholders[0] = first;
                 _placeholders[1] = first;
             }
@@ -529,7 +529,7 @@ namespace AntDesign
             string formater = _pickerStatus[index]._initPicker switch
             {
                 DatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
-                DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}{CultureInfo.GetDateLocale().Week}",
+                DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}{LocaleProvider.CurrentLocale.DatePicker.Lang.Week}",
                 DatePickerType.Month => "yyyy-MM",
                 DatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
                 DatePickerType.Year => "yyyy",

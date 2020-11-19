@@ -29,7 +29,7 @@
                            IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                            IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
                            IsSelected="date => !IsWeek && DateHelper.IsSameDay(date, Value)"
-                           GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().DateFormat, this.DatePicker.CultureInfo)'
+                           GetColTitle='date => date.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.DateFormat, LocaleProvider.CurrentLocale.CurrentCulture)'
                            OnRowSelect="OnRowSelect"
                            OnValueSelect="OnValueSelect"
                            GetNextColValue="date => date.AddDays(1)">
@@ -81,7 +81,7 @@
     <div class="@(PrefixCls)-footer">
         <a class="@(PrefixCls)-today-btn"
            @onclick="e => { OnSelectDate(DateTime.Now); Close(); }">
-            @this.DatePicker.CultureInfo.GetDateLocale().Today
+            @LocaleProvider.CurrentLocale.DatePicker.Lang.Today
         </a>
     </div>
 }

@@ -21,7 +21,7 @@
                         IsInView="date => true"
                         IsToday="date => DateHelper.IsSameQuarter(date, DatePicker.CurrentDate)"
                         IsSelected="date => DateHelper.IsSameQuarter(date, Value)"
-                        GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().YearFormat, this.DatePicker.CultureInfo)'
+                        GetColTitle='date => date.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.YearFormat, LocaleProvider.CurrentLocale.CurrentCulture)'
                         OnValueSelect="date => OnSelectQuarter(date)"
                         GetNextColValue="date => date.AddMonths(3)">
         <RenderPickerHeader>

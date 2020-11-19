@@ -23,7 +23,7 @@
                         IsInView="date => true"
                         IsToday="date => DateHelper.IsSameMonth(date, DatePicker.CurrentDate)"
                         IsSelected="date => DateHelper.IsSameMonth(date, Value)"
-                        GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().MonthFormat, this.DatePicker.CultureInfo)'
+                        GetColTitle='date => date.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.MonthFormat, LocaleProvider.CurrentLocale.CurrentCulture)'
                         OnValueSelect="date => OnSelectMonth(date)"
                         GetNextColValue="date => date.AddMonths(1)">
         <RenderPickerHeader>
@@ -35,7 +35,7 @@
                               ShowSuperNextChange="@(!(IsRange && PickerIndex == 0))" />
         </RenderPickerHeader>
         <RenderColValue Context="currentColDate">
-            @(currentColDate.ToString(this.DatePicker.CultureInfo.GetDateLocale().MonthFormat, this.DatePicker.CultureInfo))
+            @(currentColDate.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.MonthFormat, LocaleProvider.CurrentLocale.CurrentCulture))
         </RenderColValue>
     </DatePickerTemplate>
 </div>

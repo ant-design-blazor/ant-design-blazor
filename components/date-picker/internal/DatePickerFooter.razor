@@ -3,7 +3,7 @@
 
 <div class="@(DatePicker.PrefixCls)-footer">
     <a class="@(DatePicker.PrefixCls)-today-btn" @onclick="e => DatePicker.ChangePickerValue(DateTime.Now)">
-        @this.DatePicker.CultureInfo.GetDateLocale().Today
+        @LocaleProvider.CurrentLocale.DatePicker.Lang.Today
     </a>
 </div>
 

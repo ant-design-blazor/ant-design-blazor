@@ -34,7 +34,6 @@ namespace AntDesign
         public string MonthSelect { get; set; }
         public string YearSelect { get; set; }
         public string DecadeSelect { get; set; }
-        public string YearFormat { get; set; }
         public string MonthFormat { get; set; }
         public string DateFormat { get; set; }
         public string DayFormat { get; set; }
@@ -48,6 +47,19 @@ namespace AntDesign
         public string NextDecade { get; set; }
         public string PreviousCentury { get; set; }
         public string NextCentury { get; set; }
+        public string YearFormat { get; set; }
         public DayOfWeek FirstDayOfWeek { get; set; }
+        public string StartDate { get; set; }
+        public string StartWeek { get; set; }
+        public string StartMonth { get; set; }
+        public string StartYear { get; set; }
+        public string StartQuarter { get; set; }
+        public string EndDate { get; set; }
+        public string EndWeek { get; set; }
+        public string EndMonth { get; set; }
+        public string EndYear { get; set; }
+        public string EndQuarter { get; set; }
+        public string QuarterSelect { get; set; }
+        public string Week { get; set; }
     }
 }

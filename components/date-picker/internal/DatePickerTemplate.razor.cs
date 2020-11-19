@@ -83,7 +83,7 @@ namespace AntDesign.Internal
 
             if (IsRange)
             {
-                var (startPlaceholder, endPlaceholder) = DatePickerPlaceholder.GetRangePlaceHolderByType(Picker, DatePicker.CultureInfo);
+                var (startPlaceholder, endPlaceholder) = DatePickerPlaceholder.GetRangePlaceHolderByType(Picker);
 
                 if (DatePicker.GetOnFocusPickerIndex() == 0)
                 {
@@ -96,7 +96,7 @@ namespace AntDesign.Internal
             }
             else
             {
-                placeholder = DatePickerPlaceholder.GetPlaceholderByType(Picker, DatePicker.CultureInfo);
+                placeholder = DatePickerPlaceholder.GetPlaceholderByType(Picker);
             }
 
             int focusIndex = DatePicker.GetOnFocusPickerIndex();
@@ -106,7 +106,7 @@ namespace AntDesign.Internal
 
         private bool IsDateInRange(DateTime currentColDate)
         {
-            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month) == false)
+            if (!IsRange || !Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month))
             {
                 return false;
             }
