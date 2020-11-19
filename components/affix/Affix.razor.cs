@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -15,7 +11,6 @@ namespace AntDesign
         private const string RootScollSelector = "window";
         private const string RootRectSelector = "app";
         private bool _affixed;
-        private bool _rendered;
         private bool _rootListened;
         private bool _targetListened;
 
@@ -96,7 +91,6 @@ namespace AntDesign
         protected async override Task OnFirstAfterRenderAsync()
         {
             await base.OnFirstAfterRenderAsync();
-            _rendered = true;
 
             DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _childRef);
             _hiddenStyle = $"width: {domRect.width}px; height: {domRect.height}px;";
