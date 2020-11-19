@@ -3,12 +3,12 @@
 @inherits DatePickerPanelBase<TValue>
 
 @{
-    var calendar = LocaleProvider.CurrentLocale.CurrentCulture.Calendar;
+    var calendar = CultureInfo.Calendar;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     DayOfWeek monthFirstDayOfWeek = calendar.GetDayOfWeek(monthFirstDayDate);
 
-    int diffDay = (int)LocaleProvider.CurrentLocale.CurrentCulture.DateTimeFormat.FirstDayOfWeek - (int)monthFirstDayOfWeek;
+    int diffDay = (int)CultureInfo.DateTimeFormat.FirstDayOfWeek - (int)monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 
 }
@@ -25,7 +25,7 @@
                             IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                             IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
                             IsSelected="date => DateHelper.IsSameDay(date, Value)"
-                            GetColTitle='date => date.ToString(Locale.Lang.DateFormat, LocaleProvider.CurrentLocale.CurrentCulture)'
+                            GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                             OnValueSelect="OnSelectDate"
                             GetNextColValue="date => date.AddDays(1)">
             <RenderPickerHeader>
@@ -34,7 +34,7 @@
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
-                    @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays(Locale))
+                    @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays(Locale, CultureInfo))
                     {
                         <th>@weekDay</th>
                     }

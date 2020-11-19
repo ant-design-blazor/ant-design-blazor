@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
@@ -57,6 +58,9 @@ namespace AntDesign
 
         [Parameter]
         public DatePickerLocale Locale { get; set; } = LocaleProvider.CurrentLocale.DatePicker;
+
+        [Parameter]
+        public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
 
         public bool IsShowTime { get; protected set; }
         public string ShowTimeFormat { get; protected set; } = "HH:mm:ss";
@@ -506,7 +510,7 @@ namespace AntDesign
         {
             if (!string.IsNullOrEmpty(Format))
             {
-                return value.ToString(Format, LocaleProvider.CurrentLocale.CurrentCulture);
+                return value.ToString(Format, CultureInfo);
             }
 
             string formater = _pickerStatus[index]._initPicker switch
@@ -520,7 +524,7 @@ namespace AntDesign
                 _ => "yyyy-MM-dd",
             };
 
-            return value.ToString(formater, LocaleProvider.CurrentLocale.CurrentCulture);
+            return value.ToString(formater, CultureInfo);
         }
 
         internal void ChangePickerValue(DateTime date, int index = 0)

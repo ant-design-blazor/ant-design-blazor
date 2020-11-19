@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace AntDesign
 {
@@ -27,7 +28,7 @@ namespace AntDesign
             }
         }
 
-        internal static string[] GetShortWeekDays(DatePickerLocale locale)
+        internal static string[] GetShortWeekDays(DatePickerLocale locale, CultureInfo cultureInfo)
         {
             DayOfWeek currentDay = DateTime.Now.DayOfWeek;
             DayOfWeek firstDayOfWeek = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), locale.FirstDayOfWeek);
@@ -39,17 +40,17 @@ namespace AntDesign
                 referenceDay = referenceDay.AddDays(diff);
             }
 
-            return new[] { referenceDay.GetTwoLetterCode(),
-                           referenceDay.AddDays(1).GetTwoLetterCode(),
-                           referenceDay.AddDays(2).GetTwoLetterCode(),
-                           referenceDay.AddDays(3).GetTwoLetterCode(),
-                           referenceDay.AddDays(4).GetTwoLetterCode(),
-                           referenceDay.AddDays(5).GetTwoLetterCode(),
-                           referenceDay.AddDays(6).GetTwoLetterCode(),
+            return new[] { referenceDay.GetTwoLetterCode(cultureInfo),
+                           referenceDay.AddDays(1).GetTwoLetterCode(cultureInfo),
+                           referenceDay.AddDays(2).GetTwoLetterCode(cultureInfo),
+                           referenceDay.AddDays(3).GetTwoLetterCode(cultureInfo),
+                           referenceDay.AddDays(4).GetTwoLetterCode(cultureInfo),
+                           referenceDay.AddDays(5).GetTwoLetterCode(cultureInfo),
+                           referenceDay.AddDays(6).GetTwoLetterCode(cultureInfo),
             };
         }
 
-        private static string GetTwoLetterCode(this DateTime today)
-            => today.ToString("ddd", LocaleProvider.CurrentLocale.CurrentCulture).Substring(0, 2);
+        private static string GetTwoLetterCode(this DateTime today, CultureInfo cultureInfo)
+            => today.ToString("ddd", cultureInfo).Substring(0, 2);
     }
 }

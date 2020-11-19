@@ -57,7 +57,7 @@ namespace AntDesign
                     return null;
                 }
 
-                return Convert.ToDateTime(Value, LocaleProvider.CurrentLocale.CurrentCulture);
+                return Convert.ToDateTime(Value, CultureInfo);
             }
             else if (DefaultValues[index] != null)
             {
@@ -70,7 +70,7 @@ namespace AntDesign
         public override void ChangeValue(DateTime value, int index = 0)
         {
             bool result = BindConverter.TryConvertTo<TValue>(
-               value.ToString(LocaleProvider.CurrentLocale.CurrentCulture), LocaleProvider.CurrentLocale.CurrentCulture, out var dateTime);
+               value.ToString(CultureInfo), CultureInfo, out var dateTime);
 
             if (result)
             {
@@ -121,7 +121,7 @@ namespace AntDesign
         {
             if (!_isNullable)
             {
-                DateTime dateTime = Convert.ToDateTime(value, LocaleProvider.CurrentLocale.CurrentCulture);
+                DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
                 if (dateTime != DateTime.MinValue)
                 {
                     notNullAction?.Invoke(dateTime);
@@ -129,7 +129,7 @@ namespace AntDesign
             }
             if (_isNullable && value != null)
             {
-                notNullAction?.Invoke(Convert.ToDateTime(value, LocaleProvider.CurrentLocale.CurrentCulture));
+                notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
             }
         }
     }
