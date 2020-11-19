@@ -6,7 +6,7 @@
 {
     var options = modalRef.Config;
     <Modal @key="@options"
-           AfterClose="@options.AfterClose"
+           AfterClose="@options.GetAfterClose()"
            BodyStyle="@options.BodyStyle"
            CancelText="@options.CancelText"
            Centered="@options.Centered"

@@ -31,6 +31,12 @@ namespace AntDesign
 
         public Func<Task> AfterClose { get; set; }
 
+        internal Func<Task> GetAfterClose()
+        {
+            return AfterClose ?? (() => Task.CompletedTask);
+        }
+
+
         public string BodyStyle { get; set; }
 
         public OneOf<string, RenderFragment> CancelText { get; set; } = "Cancel";
@@ -77,7 +83,7 @@ namespace AntDesign
 
         public int ZIndex { get; set; } = 1000;
 
-        public Func<MouseEventArgs, Task> OnCancel { get; set; }
+        public Func<MouseEventArgs, Task> OnCancel { get; set; } = null;
 
         internal Func<MouseEventArgs, Task> GetOnCancel()
         {
