@@ -70,13 +70,13 @@ else
             await InvokeAsync(StateHasChanged);
         };
 
-        lstIcons = await iconListService.GetIcons();      
+        lstIcons = iconListService.GetIcons();      
         await OnThemeChanged(currentTheme);
     }
 
     private async Task OnSearching(string word)
     {
-        lstIcons =await iconListService.Search(word);
+        lstIcons = iconListService.Search(word);
         await OnThemeChanged(currentTheme);
 
     }
@@ -93,7 +93,7 @@ else
             itemIcons.IconNames = new List<string>();
             foreach (var item in categorys.IconNames)
             {
-                var isExist = await IconService.IconExists(currentTheme, item);
+                var isExist = IconService.IconExists(currentTheme, item);
 
                 if (isExist)
                 {
