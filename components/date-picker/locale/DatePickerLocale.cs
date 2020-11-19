@@ -35,6 +35,7 @@ namespace AntDesign
         public string YearSelect { get; set; }
         public string DecadeSelect { get; set; }
         public string YearFormat { get; set; }
+        public string MonthFormat { get; set; }
         public string DateFormat { get; set; }
         public string DayFormat { get; set; }
         public string DateTimeFormat { get; set; }

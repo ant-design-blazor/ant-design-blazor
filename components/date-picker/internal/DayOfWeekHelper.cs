@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Globalization;
 
 namespace AntDesign
 {
     internal static class DayOfWeekHelper
     {
-        internal static int GetDiffForDayOfWeek(DayOfWeek dayOfWeek)
+        internal static int GetDiffForDayOfWeek()
         {
-            switch (dayOfWeek)
+            switch (LocaleProvider.CurrentLocale.DatePicker.Lang.FirstDayOfWeek)
             {
                 case DayOfWeek.Saturday: return 1;
                 case DayOfWeek.Friday: return 2;
@@ -20,29 +19,28 @@ namespace AntDesign
             }
         }
 
-        internal static string[] GetShortWeekDays(DayOfWeek firstDayOfWeek, CultureInfo cultureInfo = null)
+        internal static string[] GetShortWeekDays()
         {
-            var culture = cultureInfo ?? CultureInfo.CurrentCulture;
             DayOfWeek currentDay = DateTime.Now.DayOfWeek;
             DateTime referenceDay = DateTime.Today;
 
-            if(firstDayOfWeek != currentDay)
+            if(LocaleProvider.CurrentLocale.DatePicker.Lang.FirstDayOfWeek != currentDay)
             {
-                int diff = firstDayOfWeek - currentDay;
+                int diff = LocaleProvider.CurrentLocale.DatePicker.Lang.FirstDayOfWeek - currentDay;
                 referenceDay = referenceDay.AddDays(diff);
             }
 
-            return new[] { referenceDay.GetTwoLetterCode(culture),
-                           referenceDay.AddDays(1).GetTwoLetterCode(culture),
-                           referenceDay.AddDays(2).GetTwoLetterCode(culture),
-                           referenceDay.AddDays(3).GetTwoLetterCode(culture),
-                           referenceDay.AddDays(4).GetTwoLetterCode(culture),
-                           referenceDay.AddDays(5).GetTwoLetterCode(culture),
-                           referenceDay.AddDays(6).GetTwoLetterCode(culture),
+            return new[] { referenceDay.GetTwoLetterCode(),
+                           referenceDay.AddDays(1).GetTwoLetterCode(),
+                           referenceDay.AddDays(2).GetTwoLetterCode(),
+                           referenceDay.AddDays(3).GetTwoLetterCode(),
+                           referenceDay.AddDays(4).GetTwoLetterCode(),
+                           referenceDay.AddDays(5).GetTwoLetterCode(),
+                           referenceDay.AddDays(6).GetTwoLetterCode(),
             };
         }
 
-        private static string GetTwoLetterCode(this DateTime today, CultureInfo cultureInfo)
-            => today.ToString("ddd", cultureInfo).Substring(0, 2);
+        private static string GetTwoLetterCode(this DateTime today)
+            => today.ToString("ddd", LocaleProvider.CurrentLocale.CurrentCulture).Substring(0, 2);
     }
 }

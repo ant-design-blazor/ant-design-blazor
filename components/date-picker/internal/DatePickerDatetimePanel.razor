@@ -34,7 +34,7 @@
             </RenderPickerHeader>
             <RenderTableHeader>
                 <tr>
-                    @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays(FirstDayOfWeek, this.DatePicker.CultureInfo))
+                    @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays())
                     {
                         <th>@weekDay</th>
                     }

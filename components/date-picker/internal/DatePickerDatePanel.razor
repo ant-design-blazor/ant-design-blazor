@@ -11,7 +11,7 @@
     // sunday should be 7
     if (monthFirstDayOfWeek == 0)
     {
-        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(FirstDayOfWeek);
+        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek();
     }
 
     int diffDay = (int)this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - monthFirstDayOfWeek;
@@ -47,7 +47,7 @@
                 {
                     <th></th>
                 }
-                @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays(this.FirstDayOfWeek, this.DatePicker.CultureInfo))
+                @foreach(string weekDay in DayOfWeekHelper.GetShortWeekDays())
                 {
                     <th>@(weekDay)</th>
                 }
