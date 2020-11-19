@@ -38,10 +38,10 @@
       "monthSelect": "Choose a month",
       "yearSelect": "Choose a year",
       "decadeSelect": "Choose a decade",
-      "yearFormat": "YYYY",
-      "dateFormat": "M/D/YYYY",
+      "yearFormat": "yyyy",
+      "dateFormat": "yyyy-MM-dd",
       "dayFormat": "D",
-      "dateTimeFormat": "M/D/YYYY HH:mm:ss",
+      "dateTimeFormat": "yyyy-MM-dd HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Previous month (PageUp)",
       "nextMonth": "Next month (PageDown)",
@@ -62,7 +62,8 @@
       "endYear": "End year",
       "endQuarter": "End Quarter",
       "quarterSelect": "Select quarter",
-      "week": "Week"
+      "week": "Week",
+      "monthFormat": "MMM"
     },
     "timePickerLocale": {
       "placeholder": "Select time",

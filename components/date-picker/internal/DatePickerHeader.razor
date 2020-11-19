@@ -23,13 +23,13 @@
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
-                @(PickerValue.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.MonthFormat, this.DatePicker.CultureInfo))
+                @(PickerValue.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.MonthFormat, LocaleProvider.CurrentLocale.CurrentCulture))
             </button>
         }
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
-                @(PickerValue.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.YearFormat, this.DatePicker.CultureInfo))
+                @(PickerValue.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.YearFormat, LocaleProvider.CurrentLocale.CurrentCulture))
             </button>
         }
     }
@@ -38,13 +38,13 @@
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
-                @(PickerValue.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.YearFormat, this.DatePicker.CultureInfo))
+                @(PickerValue.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.YearFormat, LocaleProvider.CurrentLocale.CurrentCulture))
             </button>
         }
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
-                @(PickerValue.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.MonthFormat, this.DatePicker.CultureInfo))
+                @(PickerValue.ToString(LocaleProvider.CurrentLocale.DatePicker.Lang.MonthFormat, LocaleProvider.CurrentLocale.CurrentCulture))
             </button>
         }
 
