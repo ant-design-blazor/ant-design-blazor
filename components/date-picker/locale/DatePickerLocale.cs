@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AntDesign
 {
@@ -49,5 +47,6 @@ namespace AntDesign
         public string NextDecade { get; set; }
         public string PreviousCentury { get; set; }
         public string NextCentury { get; set; }
+        public DayOfWeek FirstDayOfWeek { get; set; }
     }
 }

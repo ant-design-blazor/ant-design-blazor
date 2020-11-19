@@ -63,19 +63,19 @@ namespace AntDesign
         {
             get
             {
-                return this._cultureInfo ?? CultureInfo.DefaultThreadCurrentUICulture; ;
+                return _cultureInfo ?? CultureInfo.DefaultThreadCurrentUICulture; ;
             }
             set
             {
                 _cultureInfo = value;
-                InitPicker(this._picker);
+                InitPicker(_picker);
             }
         }
 
         [Parameter]
         public DayOfWeek FirstDayOfWeek { get; set; }
 
-        public bool IsShowTime { get; protected set; } = false;
+        public bool IsShowTime { get; protected set; }
         public string ShowTimeFormat { get; protected set; } = "HH:mm:ss";
         protected OneOf<bool, string> _showTime = null;
 
