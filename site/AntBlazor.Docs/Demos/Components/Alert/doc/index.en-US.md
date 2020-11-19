@@ -12,21 +12,21 @@ Alert component for feedback.
 - When you need to show alert messages to users.
 - When you need a persistent static container which is closable by user actions.
 
-
 ## API
 
-时间轴
+### Alert Props
 
-| 参数             | 说明                                         | 类型          | 默认值    |
-| ---------------- | -------------------------------------------- | ------------- | --------- |
-| AfterClose | Called when close animation is finished | function()         | -         |
-| Banner   | Whether to show as banner | bool         | false    |
-| Closable | Whether Alert can be closed | bool        | false       |
-| CloseText | Close text to show         | string         |
-| Description | Additional content of Alert | string  | -  |
-| Icon | Custom icon, effective when showIcon is true | RenderFragment  | -  |
-| Message | Content of Aler | string  | -  |
-| ShowIcon | Whether to show icon | bool  | -  |
-| Type | Type of Alert styles, options: success, info, warning, error | string  | Warning  |
-| OnClose | Callback when Alert is closed | function()  | -  |
-| ChildContent | Additional Content | RenderFragment  | -  |
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| AfterClose | Called when close animation is finished | EventCallback&lt;MouseEventArgs> | - |  |
+| Banner | Whether to show as banner | Banner | false |  |
+| Closable | Whether Alert can be closed | bool | false |  |
+| CloseText | Close text to show | string | - |  |
+| Description | Additional content of Alert | string | - |  |
+| Icon | Custom icon, effective when `ShowIcon` is `true` | RenderFragment | - |  |
+| Message | Content of Alert | string | - |  |
+| ShowIcon | Whether to show icon | bool | false |  |
+| Type | Type of Alert styles, options: `success` \| `info` \| `warning` \| `error` | string | warning |  |
+| OnClose | Callback when Alert is closed | EventCallback&lt;MouseEventArgs> | - |  |
+| ChildContent | Additional Content | RenderFragment | - |  |
+
