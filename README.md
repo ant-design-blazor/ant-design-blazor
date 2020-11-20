@@ -104,8 +104,14 @@ Options for the template：
   $ dotnet add package AntDesign
   ```
 
-- Register the services
+- Register the services in `Program.cs` (WebAssembly) 
 
+  ```csharp
+  builder.Services.AddAntDesign();
+  ```
+  
+  or `Startup.cs` (Server)
+  
   ```csharp
   services.AddAntDesign();
   ```
