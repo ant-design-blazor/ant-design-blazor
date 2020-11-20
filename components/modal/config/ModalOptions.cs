@@ -29,13 +29,7 @@ namespace AntDesign
             builder.CloseComponent();
         };
 
-        public Func<Task> AfterClose { get; set; }
-
-        internal Func<Task> GetAfterClose()
-        {
-            return AfterClose ?? (() => Task.CompletedTask);
-        }
-
+        public Func<Task> AfterClose { get; set; } = () => Task.CompletedTask;
 
         public string BodyStyle { get; set; }
 
@@ -59,7 +53,7 @@ namespace AntDesign
 
         public bool ForceRender { get; set; }
 
-        public ElementReference? GetContainer { get; set; } = null;
+        public ElementReference? GetContainer { get; set; }
 
         public bool Keyboard { get; set; } = true;
 
@@ -83,26 +77,42 @@ namespace AntDesign
 
         public int ZIndex { get; set; } = 1000;
 
-        public Func<MouseEventArgs, Task> OnCancel { get; set; } = null;
+        private Func<MouseEventArgs, Task> _onCancel;
 
-        internal Func<MouseEventArgs, Task> GetOnCancel()
+        public Func<MouseEventArgs, Task> OnCancel
         {
-            if (OnCancel != null) return OnCancel;
-            return async (e) =>
+            get
             {
-                await (ModalRef?.CloseAsync() ?? Task.CompletedTask);
-            };
+                return _onCancel ??= DefaultOnCancelOrOk;
+            }
+            set
+            {
+                _onCancel = value;
+            }
         }
 
-        public Func<MouseEventArgs, Task> OnOk { get; set; }
+        private Func<MouseEventArgs, Task> _onOk;
 
-        internal Func<MouseEventArgs, Task> GetOnOk()
+        public ModalOptions()
         {
-            if (OnOk != null) return OnOk;
-            return async (e) =>
+            Rtl = false;
+        }
+
+        public Func<MouseEventArgs, Task> OnOk
+        {
+            get
             {
-                await (ModalRef?.CloseAsync() ?? Task.CompletedTask);
-            };
+                return _onOk ??= DefaultOnCancelOrOk;
+            }
+            set
+            {
+                _onOk = value;
+            }
+        }
+
+        internal async Task DefaultOnCancelOrOk(MouseEventArgs e)
+        {
+            await (ModalRef?.CloseAsync() ?? Task.CompletedTask);
         }
 
         public ButtonProps OkButtonProps { get; set; }
@@ -111,6 +121,6 @@ namespace AntDesign
 
         public RenderFragment Content { get; set; }
 
-        public bool Rtl { get; set; } = false;
+        public bool Rtl { get; set; }
     }
 }
