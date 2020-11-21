@@ -14,7 +14,7 @@
         monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(Locale);
     }
 
-    int diffDay = (int)CultureInfo.DateTimeFormat.FirstDayOfWeek - monthFirstDayOfWeek;
+    int diffDay = (int) Locale.FirstDayOfWeek - monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
 

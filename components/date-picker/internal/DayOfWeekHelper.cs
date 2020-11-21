@@ -9,13 +9,13 @@ namespace AntDesign
         {
             switch (locale.FirstDayOfWeek)
             {
-                case DayOfWeek.Saturday: return 1;
-                case DayOfWeek.Friday: return 2;
-                case DayOfWeek.Thursday: return 3;
-                case DayOfWeek.Wednesday: return 4;
-                case DayOfWeek.Tuesday: return 5;
-                case DayOfWeek.Monday: return 6;
-                case DayOfWeek.Sunday: return 7;
+                case DayOfWeek.Saturday: return 1 + (int)locale.FirstDayOfWeek;
+                case DayOfWeek.Friday: return 2 + (int)locale.FirstDayOfWeek;
+                case DayOfWeek.Thursday: return 3 + (int)locale.FirstDayOfWeek;
+                case DayOfWeek.Wednesday: return 4 + (int)locale.FirstDayOfWeek;
+                case DayOfWeek.Tuesday: return 5 + (int)locale.FirstDayOfWeek;
+                case DayOfWeek.Monday: return 6 + (int)locale.FirstDayOfWeek;
+                case DayOfWeek.Sunday: return 7 + (int)locale.FirstDayOfWeek;
                 default: return 0;
             }
         }
