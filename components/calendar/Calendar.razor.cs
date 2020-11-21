@@ -66,6 +66,12 @@ namespace AntDesign
         [Parameter]
         public Func<DateTime, bool> DisabledDate { get; set; } = null;
 
+        [Parameter]
+        public DatePickerLocale Locale { get; set; } = LocaleProvider.CurrentLocale.DatePicker;
+
+        [Parameter]
+        public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
+
         protected string _picker;
         protected readonly DateTime[] PickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
         protected Stack<string> _prePickerStack = new Stack<string>();
@@ -175,7 +181,5 @@ namespace AntDesign
         }
 
         public string Picker { get { return _picker; } }
-
-        public CultureInfo CultureInfo { get; set; } = CultureInfo.DefaultThreadCurrentUICulture;
     }
 }
