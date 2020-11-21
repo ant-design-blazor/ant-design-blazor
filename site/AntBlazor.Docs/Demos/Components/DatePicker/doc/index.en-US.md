@@ -65,7 +65,6 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | defaultPickerValue | to set default picker date | [moment](http://momentjs.com/) | - |  |
 | disabledTime | to specify the time that cannot be selected | function(date) | - |  |
 | format | to set the date format, refer to [moment.js](http://momentjs.com/). When an array is provided, all values are used for parsing and first value is used for formatting. | string \| string[] | "YYYY-MM-DD" |  |
-| Locale | Set custom localization. | `DatePickerLocale` | Locale for current Culture |  |
 | renderExtraFooter | render extra footer in panel | (mode) => React.ReactNode | - |  |
 | showTime | to provide an additional time selection | object\|boolean | [TimePicker Options](/components/time-picker/#API) |  |
 | showTime.defaultValue（TODO） | to set default time of selected date, [demo](#components-date-picker-demo-disabled-date) | [moment](http://momentjs.com/) | moment() |  |
@@ -74,6 +73,8 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | onChange | a callback function, can be executed when the selected time is changing | function(date: moment, dateString: string) | - |  |
 | onOk（TODO） | callback when click ok button | function() | - |  |
 | onPanelChange | Callback function for panel changing | function(value, mode) | - |  |
+| Locale | Set custom localization. | `DatePickerLocale` | Locale for current Culture |  |
+| CultureInfo | Set's the `CultureInfo` used for generate localized headers, formatting and parsing. | `CultureInfo` | CultureInfo.DefaultThreadCurrentUICulture  |  |
 
 ### YearPicker
 
