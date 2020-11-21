@@ -13,7 +13,7 @@
     "next_3": "向后 3 页"
   },
   "DatePicker": {
-    "firstDayOfWeek": "Sunday",
+    "firstDayOfWeek": "Monday",
     "lang": {
       "placeholder": "请选择日期",
       "yearPlaceholder": "请选择年份",
