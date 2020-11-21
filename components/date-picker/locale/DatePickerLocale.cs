@@ -1,8 +1,10 @@
-﻿namespace AntDesign
+﻿using System;
+
+namespace AntDesign
 {
     public class DatePickerLocale
     {
-        public string FirstDayOfWeek { get; set; } = "Sunday";
+        public DayOfWeek FirstDayOfWeek { get; set; }
 
         public DateLocale Lang { get; set; } = new DateLocale();
 
