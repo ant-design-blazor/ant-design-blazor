@@ -223,9 +223,13 @@ namespace AntDesign.Internal
         {
             if (IsContainTrigger(TriggerType.ContextMenu))
             {
-                // TODO：MouseEventArgs will support offsetX/offsetY in the future
                 int offsetX = 10;
                 int offsetY = 10;
+#if NET5_0
+                // offsetX/offsetY were only supported in Net5
+                offsetX = (int)args.OffsetX;
+                offsetY = (int)args.OffsetY;
+#endif
 
                 await Hide();
                 await Show(offsetX, offsetY);
