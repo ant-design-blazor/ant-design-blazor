@@ -88,5 +88,15 @@ namespace AntDesign
         public static string SetPointerCapture => $"{FUNC_PREFIX}setPointerCapture";
 
         internal static string ReleasePointerCapture => $"{FUNC_PREFIX}releasePointerCapture";
+
+        #region Css
+
+        public static string SetCss => $"{FUNC_PREFIX}css";
+
+        public static string SetBodyStyle => $"{FUNC_PREFIX}setBodyStyle";
+        public static string StartResize => $"{FUNC_PREFIX}startResize";
+        public static string EndResize => $"{FUNC_PREFIX}endResize";
+
+        #endregion
     }
 }
