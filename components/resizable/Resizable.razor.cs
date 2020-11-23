@@ -19,12 +19,19 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
+        [Parameter]
+        public double Width { get; set; } = 400;
+
+        [Parameter]
+        public double Height { get; set; } = 200;
+
         private bool _resizing = false;
 
         private ResizeHandleEvent _currentEvent;
 
-        [Inject]
-        private DomEventService DomEventService { get; set; }
+        private ResizableDomRect _domRect = new ResizableDomRect();
+
+        private string GetStyle => AsStyle();
 
         private void SetClass()
         {
@@ -35,13 +42,56 @@ namespace AntDesign
                  ;
         }
 
+        private string AsStyle()
+        {
+            return $"position:relative;width:{this.Width}px;height:{Height}px";
+        }
+
         private async void StartResize()
         {
             // 给window添加鼠标事件
             if (this._resizing)
             {
-                await this.JsInvokeAsync(JSInteropConstants.StartResize, DotNetObjectReference.Create(this));
+                object temp = await this.JsInvokeAsync<object>(JSInteropConstants.StartResize, this.Ref, DotNetObjectReference.Create(this));
+                System.Console.WriteLine(JsonSerializer.Serialize(temp));
             }
+        }
+
+        private void Resize(double clientX, double clientY)
+        {
+            MouseEventArgs handleEvent = this._currentEvent?.MouseEvent;
+            switch (this._currentEvent?.Direction)
+            {
+                case "bottomRight":
+                    this.Width = clientX - this._domRect.left;
+                    this.Height = clientY - this._domRect.top;
+                    break;
+                case "bottomLeft":
+                    this.Width = this._domRect.width + handleEvent.ClientX - clientX;
+                    this.Height = clientY - this._domRect.top;
+                    break;
+                case "topRight":
+                    this.Width = clientX - _domRect.left;
+                    this.Height = _domRect.height + handleEvent.ClientY - clientY;
+                    break;
+                case "topLeft":
+                    this.Width = _domRect.width + handleEvent.ClientX - clientX;
+                    this.Height = _domRect.height + handleEvent.ClientY - clientY;
+                    break;
+                case "top":
+                    this.Height = _domRect.height + handleEvent.ClientY - clientY;
+                    break;
+                case "right":
+                    this.Width = (double)(clientX - this._domRect.left);
+                    break;
+                case "bottom":
+                    this.Height = clientY - _domRect.top;
+                    break;
+                case "left":
+                    this.Width = _domRect.width + handleEvent.ClientX - clientX;
+                    break;
+            }
+            this.InvokeStateHasChanged();
         }
 
         private async void EndResize()
@@ -49,9 +99,6 @@ namespace AntDesign
             if (this._resizing)
             {
                 this._resizing = false;
-                // 还原widnow的鼠标样式
-                await this.JsInvokeAsync(JSInteropConstants.SetBodyStyle, "user-select", "");
-                await this.JsInvokeAsync(JSInteropConstants.SetBodyStyle, "cursor", "");
                 await this.JsInvokeAsync(JSInteropConstants.EndResize);
             }
         }
@@ -103,7 +150,6 @@ namespace AntDesign
             base.OnAfterRender(firstRender);
             if (firstRender)
             {
-                this.SetPosition();
                 ResizableService.MouseDown.Subscribe(Observer.Create<ResizeHandleEvent>(ret =>
                 {
                     this._currentEvent = ret;
@@ -131,7 +177,7 @@ namespace AntDesign
         }
 
         [JSInvokable("ClientMouseUp")]
-        private async void OnMouseUp()
+        public async void OnMouseUp()
         {
             await InvokeAsync(() =>
             {
@@ -140,11 +186,11 @@ namespace AntDesign
         }
 
         [JSInvokable("ClientMouseMove")]
-        private async void OnMouseMove(MouseEventArgs e)
+        public async void OnMouseMove(MouseEventArgs e)
         {
             await InvokeAsync(() =>
             {
-                System.Console.WriteLine(e);
+                this.Resize(e.ClientX, e.ClientY);
             });
         }
     }
