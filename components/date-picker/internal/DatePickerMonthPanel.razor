@@ -39,3 +39,12 @@
         </RenderColValue>
     </DatePickerTemplate>
 </div>
+
+@if (RenderExtraFooter != null && !IsRange)
+{
+    <div class="@(PrefixCls)-footer">
+        <div class="@(PrefixCls)-footer-extra">
+            @RenderExtraFooter
+        </div>
+    </div>
+}
