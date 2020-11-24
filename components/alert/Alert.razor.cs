@@ -47,7 +47,7 @@ namespace AntDesign
         public RenderFragment Icon { get; set; }
 
         /// <summary>
-        /// Content of Aler
+        /// Content of Alert
         /// </summary>
         [Parameter]
         public string Message { get; set; }
@@ -88,16 +88,16 @@ namespace AntDesign
         /// <summary>
         /// Indicator if the component is closed or not.
         /// </summary>
-        private bool _isClosed = false;
+        private bool _isClosed;
 
         /// <summary>
         /// Just before we close the component we set this indicator to show a closing animation.
         /// </summary>
-        private bool _isClosing = false;
+        private bool _isClosing;
 
-        private int _motionStage = 0;
+        private int _motionStage;
 
-        private int _height = 0;
+        private int _height;
 
         private string _innerStyle = string.Empty;
 

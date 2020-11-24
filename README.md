@@ -13,6 +13,7 @@ A set of enterprise-class UI components based on Ant Design and Blazor.
 ![](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
 [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![AntDesign](https://img.shields.io/nuget/dt/AntDesign.svg?style=flat-square)](https://www.nuget.org/packages/AntDesign/)
+[![AntDesign.Templates](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Templates&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
 [![codecov](https://img.shields.io/codecov/c/github/ant-design-blazor/ant-design-blazor/master.svg?style=flat-square)](https://codecov.io/gh/ant-design-blazor/ant-design-blazor)
 [![AntDesign](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/LICENSE)
 [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/AntBlazor/shared_invite/zt-etfaf1ww-AEHRU41B5YYKij7SlHqajA)
@@ -33,7 +34,7 @@ English | [简体中文](README-zh_CN.md)
 - 💕 Supports WebAssembly-based client-side and SignalR-based server-side UI event interaction.
 - 🎨 Supports Progressive Web Applications (PWA).
 - 🛡 Build with C#, a multi-paradigm static language for an efficient development experience.
-- ⚙️ .NET Standard 2.1 based, with direct reference to the rich .NET ecosystem.
+- ⚙️ .NET Standard 2.1/.NET 5 based, with direct reference to the rich .NET ecosystem.
 - 🎁 Seamless integration with existing ASP.NET Core MVC and Razor Pages projects.
 
 ## 🌈 Online Examples
@@ -45,8 +46,8 @@ WebAssembly static hosting examples:
 
 ## 🖥 Environment Support
 
-- .NET Core 3.1
-- Blazor WebAssembly 3.2 Release
+- .NET Core 3.1 / .NET 5
+- Blazor WebAssembly 3.2/.NET 5 Release
 - Supports two-way binding on the server side
 - Supports WebAssembly static file deployment
 - Support 4 major browsers engines, and Internet Explorer 11+ ([Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1) only)
@@ -69,16 +70,16 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 ## 📦 Installation Guide
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 or later
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 or later, .NET 5 is even better.
 
-### Create a new project from the dotnet new template
+### Create a new project from the dotnet new template [![AntDesign.Templates](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Templates&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
 
 We have provided the `dotnet new` template to create a [Boilerplate](https://github.com/ant-design-blazor/ant-design-pro-blazor) project out of the box：
 
 - Install the template
 
   ```bash
-  $ dotnet new --install AntDesign.Templates::0.1.0-*
+  $ dotnet new --install AntDesign.Templates
   ```
 
 - Create the Boilerplate project with the template
@@ -104,8 +105,14 @@ Options for the template：
   $ dotnet add package AntDesign
   ```
 
-- Register the services
+- Register the services in `Program.cs` (WebAssembly) 
 
+  ```csharp
+  builder.Services.AddAntDesign();
+  ```
+  
+  or `Startup.cs` (Server)
+  
   ```csharp
   services.AddAntDesign();
   ```
@@ -148,7 +155,7 @@ Options for the template：
 
 ## ⌨️ Local Development
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 or later.
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/5.0) 5.0.100 or later.
 - Install Node.js (only for building style files and interoperable TypeScript files)
 - Clone to local development
 
@@ -165,7 +172,7 @@ Options for the template：
 
 ## 🔗 Links
 
-- [Ant Design Blazor Documentation](https://ant-design-blazor.gitee.io)
+- [Ant Design Blazor Documentation](https://ant-design-blazor.github.io)
 - [Official Blazor Documentation](https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987)
 - [MS Learn for Blazor Tutorial](https://docs.microsoft.com/en-us/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987)
 

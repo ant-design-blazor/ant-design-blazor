@@ -32,7 +32,7 @@ namespace AntDesign.Docs.Build.CLI.Command
 
                 if (string.IsNullOrEmpty(source) || !Directory.Exists(source))
                 {
-                    Console.WriteLine("Invalid source.");
+                    Console.WriteLine($"Invalid source: {source}");
                     return 1;
                 }
 
@@ -45,7 +45,6 @@ namespace AntDesign.Docs.Build.CLI.Command
 
                 try
                 {
-
                     GenerateFiles(demoDirectory, output);
                 }
                 catch (Exception ex)

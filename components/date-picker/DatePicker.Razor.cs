@@ -30,7 +30,7 @@ namespace AntDesign
 
             if (TryParseValueFromString(args.Value.ToString(), out TValue changeValue, out _))
             {
-                Value = changeValue;
+                CurrentValue = changeValue;
 
                 GetIfNotNull(changeValue, (notNullValue) =>
                 {
@@ -74,7 +74,7 @@ namespace AntDesign
 
             if (result)
             {
-                Value = dateTime;
+                CurrentValue = dateTime;
             }
 
             _pickerStatus[index]._hadSelectValue = true;

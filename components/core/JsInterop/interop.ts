@@ -27,12 +27,30 @@ export function getDomInfo(element) {
   result["clientLeft"] = dom.clientLeft || 0;
   result["clientHeight"] = dom.clientHeight || 0;
   result["clientWidth"] = dom.clientWidth || 0;
-
-  result["absoluteTop"] = getAbsoluteTop(dom);
-  result["absoluteLeft"] = getAbsoluteLeft(dom);
+  var absolutePosition = getElementAbsolutePos(dom);
+  result["absoluteTop"] = Math.round(absolutePosition.y);
+  result["absoluteLeft"] = Math.round(absolutePosition.x);
 
   return result;
 }
+
+function getElementAbsolutePos(element) {
+    var res:any = new Object();
+    res.x = 0; res.y = 0;
+    if (element !== null) {
+        if (element.getBoundingClientRect) {
+            var viewportElement = document.documentElement;
+            var box = element.getBoundingClientRect();
+            var scrollLeft = viewportElement.scrollLeft;
+            var scrollTop = viewportElement.scrollTop;
+
+            res.x = box.left + scrollLeft;
+            res.y = box.top + scrollTop;
+        }
+    }
+    return res;
+}
+
 
 export function addFileClickEventListener(btn) {
   if ((btn as HTMLElement).addEventListener) {
@@ -404,6 +422,11 @@ export function enableBodyScroll() {
       "overflow": oldBodyCache["overflow"] ?? null
     });
   removeCls(document.body, "ant-scrolling-effect");
+}
+
+export function destroyAllDialog() {
+    document.querySelectorAll('.ant-modal-root')
+        .forEach(e => document.body.removeChild(e.parentNode));
 }
 
 export function createIconFromfontCN(scriptUrl) {
