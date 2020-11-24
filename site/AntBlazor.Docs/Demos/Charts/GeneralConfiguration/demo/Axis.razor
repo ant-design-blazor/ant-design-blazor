@@ -5,28 +5,28 @@
 
     <Tabs ActiveKeyChanged="OnTabChanged">
         <TabPane Key="1">
-            <Tab>示例1</Tab>
+            <Tab>Example 1</Tab>
             <ChildContent>
                 <Line @ref="chart1" Data="data1" Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
-            <Tab>示例2</Tab>
+            <Tab>Example 2</Tab>
             <ChildContent>
                 <Line @ref="chart2" Data="data2" Config="config2" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="3">
-            <Tab>示例3</Tab>
+            <Tab>Example 3</Tab>
             <ChildContent>
                 <Line @ref="chart3" Data="data3" Config="config3" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="4">
-            <Tab>示例4</Tab>
+            <Tab>Example 4</Tab>
             <ChildContent>
                 <Line @ref="chart4" Data="data4" Config="config4" />
             </ChildContent>
@@ -82,14 +82,14 @@
         }
     }
 
-    #region 示例1
+    #region Example 1
 
     readonly LineConfig config1 = new LineConfig
     {
         Title = new Title
         {
             Visible = true,
-            Text = "配置坐标轴tick数量"
+            Text = "Configure the number of coordinate axis ticks"
         },
         ForceFit = true,
         Padding = "auto",
@@ -103,16 +103,16 @@
         }
     };
 
-    #endregion 示例1
+    #endregion
 
-    #region 示例2
+    #region Example 2
 
     readonly LineConfig config2 = new LineConfig
     {
         Title = new Title
         {
             Visible = true,
-            Text = "配置坐标轴最大值和最小值"
+            Text = "Configure the maximum and minimum axis values"
         },
         Description = new Description
         {
@@ -137,16 +137,16 @@
         }
     };
 
-    #endregion 示例2
+    #endregion
 
-    #region 示例3
+    #region Example 3
 
     readonly LineConfig config3 = new LineConfig
     {
         Title = new Title
         {
             Visible = true,
-            Text = "配置坐标轴标题"
+            Text = "Configure axis title"
         },
         ForceFit = true,
         Padding = "auto",
@@ -159,7 +159,7 @@
             Type = "dateTime",
             Title = new BaseAxisTitle
             {
-                Text = "x轴标题",
+                Text = "x-axis title",
             },
         },
         YAxis = new ValueAxis
@@ -167,21 +167,21 @@
             Visible = true,
             Title = new BaseAxisTitle
             {
-                Text = "y轴标题"
+                Text = "y-axis title"
             }
         }
     };
 
-    #endregion 示例3
+    #endregion
 
-    #region 示例4
+    #region Example 4
 
     readonly LineConfig config4 = new LineConfig
     {
         Title = new Title
         {
             Visible = true,
-            Text = "配置坐标轴样式"
+            Text = "Configure axis style"
         },
         Description = new Description
         {
@@ -259,6 +259,6 @@
 
     };
 
-    #endregion 示例4
+    #endregion
 
 }

@@ -6,9 +6,10 @@
     <Tabs DefaultActiveKey="0" TabPosition="@mode" Style="height: 220px;">
         @for (int i = 0; i < 30; i++)
         {
-            <TabPane Key="@($"{i}")">
-                <Tab>Tab-@i</Tab>
-                <ChildContent>Content of tab Pane @i</ChildContent>
+            var myTab = i;
+            <TabPane Key="@($"{myTab}")">
+                <Tab>Tab-@myTab</Tab>
+                <ChildContent>Content of tab Pane @myTab</ChildContent>
             </TabPane>
         }
     </Tabs>

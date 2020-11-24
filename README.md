@@ -13,6 +13,7 @@ A set of enterprise-class UI components based on Ant Design and Blazor.
 ![](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
 [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![AntDesign](https://img.shields.io/nuget/dt/AntDesign.svg?style=flat-square)](https://www.nuget.org/packages/AntDesign/)
+[![AntDesign.Templates](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Templates&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
 [![codecov](https://img.shields.io/codecov/c/github/ant-design-blazor/ant-design-blazor/master.svg?style=flat-square)](https://codecov.io/gh/ant-design-blazor/ant-design-blazor)
 [![AntDesign](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/LICENSE)
 [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/AntBlazor/shared_invite/zt-etfaf1ww-AEHRU41B5YYKij7SlHqajA)
@@ -71,7 +72,7 @@ Regularly synchronize with Official Ant Design specifications, you can check the
 
 - Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 or later, .NET 5 is even better.
 
-### Create a new project from the dotnet new template
+### Create a new project from the dotnet new template [![AntDesign.Templates](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Templates&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
 
 We have provided the `dotnet new` template to create a [Boilerplate](https://github.com/ant-design-blazor/ant-design-pro-blazor) project out of the box：
 
@@ -104,8 +105,14 @@ Options for the template：
   $ dotnet add package AntDesign
   ```
 
-- Register the services
+- Register the services in `Program.cs` (WebAssembly) 
 
+  ```csharp
+  builder.Services.AddAntDesign();
+  ```
+  
+  or `Startup.cs` (Server)
+  
   ```csharp
   services.AddAntDesign();
   ```

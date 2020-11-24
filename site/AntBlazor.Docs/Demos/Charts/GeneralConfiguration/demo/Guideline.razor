@@ -3,21 +3,21 @@
 
     <Tabs>
         <TabPane Key="1">
-            <Tab>示例1</Tab>
+            <Tab>Example 1</Tab>
             <ChildContent>
                 <AntDesign.Charts.Column Data="data1" Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
-            <Tab>示例2</Tab>
+            <Tab>Example 2</Tab>
             <ChildContent>
                 <AntDesign.Charts.Column Data="data2" Config="config2" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="3">
-            <Tab>示例3</Tab>
+            <Tab>Example 3</Tab>
             <ChildContent>
                 <AntDesign.Charts.Column Data="data3" Config="config3" />
             </ChildContent>
@@ -26,7 +26,7 @@
 
 @code{
 
-    #region 示例1
+    #region Example 1
 
     object[] data1 =
     {
@@ -82,7 +82,7 @@
         Title = new Title
         {
             Visible = true,
-            Text = "更改图表辅助线样式"
+            Text = "Change chart guide style"
         },
         XField = "year",
         YField = "value",
@@ -99,7 +99,7 @@
                 Text = new GuideLineConfigText
                 {
                     Position = "start",
-                    Content = "预警线",
+                    Content = "Warning line",
                     Style = new TextStyle
                     {
                         Fill = "red"
@@ -109,9 +109,9 @@
         }
     };
 
-    #endregion 示例1
+    #endregion Example 1
 
-    #region 示例2
+    #region Example 2
 
     object[] data2 =
     {
@@ -167,7 +167,7 @@
         Title = new Title
         {
             Visible = true,
-            Text = "统计值图表辅助线"
+            Text = "Statistical value chart support line"
         },
         XField = "year",
         YField = "value",
@@ -179,7 +179,7 @@
                 Text = new GuideLineConfigText
                 {
                     Position = "start",
-                    Content = "中位数",
+                    Content = "median",
 
                 }
 
@@ -188,9 +188,9 @@
         }
     };
 
-    #endregion 示例2
+    #endregion Example 2
 
-    #region 示例3
+    #region Example 3
 
     object[] data3 =
     {
@@ -246,7 +246,7 @@
         Title = new Title
         {
             Visible = true,
-            Text = "自定义图表辅助线"
+            Text = "Custom chart support line"
         },
         XField = "year",
         YField = "value",
@@ -259,13 +259,13 @@
                 Text = new GuideLineConfigText
                 {
                     Position = "start",
-                    Content = "自定义位置辅助线",
+                    Content = "Custom location guide",
                 },
-                
+
             }
         }
     };
 
-    #endregion 示例3
+    #endregion Example 3
 
 }

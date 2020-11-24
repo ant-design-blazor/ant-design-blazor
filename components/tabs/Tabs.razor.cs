@@ -20,7 +20,6 @@ namespace AntDesign
         private TabPane _activePane;
 
         private TabPane _renderedActivePane;
-        private ElementReference _activeTabBar;
 
         private ElementReference _scrollTabBar;
         private ElementReference _tabBars;
@@ -336,6 +335,9 @@ namespace AntDesign
 
         private void HandleTabClick(TabPane tabPane, MouseEventArgs args)
         {
+            if (tabPane.IsActive)
+                    return;
+
             if (OnTabClick.HasDelegate)
             {
                 OnTabClick.InvokeAsync(tabPane.Key);
@@ -420,9 +422,9 @@ namespace AntDesign
                 // TODO: slide to activated tab
                 // animate Active Ink
                 // ink bar
-                Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _activeTabBar);
-                Element navSection = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tabBars);
-                Element navScroll = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _scrollTabBar);
+                var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _activePane.TabBar);
+                var navSection = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tabBars);
+
                 if (IsHorizontal)
                 {
                     //_inkStyle = "left: 0px; width: 0px;";
