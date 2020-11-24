@@ -11,7 +11,7 @@
     // sunday should be 7
     if (monthFirstDayOfWeek == 0)
     {
-        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(Locale);
+        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(Locale.FirstDayOfWeek);
     }
 
     int diffDay = (int) Locale.FirstDayOfWeek - monthFirstDayOfWeek;
