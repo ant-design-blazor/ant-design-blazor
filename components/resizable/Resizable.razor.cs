@@ -52,8 +52,8 @@ namespace AntDesign
             // 给window添加鼠标事件
             if (this._resizing)
             {
-                object temp = await this.JsInvokeAsync<object>(JSInteropConstants.StartResize, this.Ref, DotNetObjectReference.Create(this));
-                System.Console.WriteLine(JsonSerializer.Serialize(temp));
+                await this.JsInvokeAsync(JSInteropConstants.StartResize, DotNetObjectReference.Create(this));
+                this._domRect = await this.JsInvokeAsync<ResizableDomRect>(JSInteropConstants.GetBoundingClientRect, this.Ref);
             }
         }
 

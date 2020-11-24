@@ -6,11 +6,10 @@ class ResizableService {
 
     private static that: any;
 
-    static init(element: any, instance: any) {
+    static init(instance: any) {
         this.DotNetObjRef = instance;
         this.that = this;
         this.addEvt();
-        return getBoundingClientRect(element);
     }
 
     static dispose() {
@@ -48,8 +47,8 @@ class ResizableService {
     }
 }
 
-export function startResize(element, instance) {
-    ResizableService.init(element, instance);
+export function startResize(instance) {
+    ResizableService.init(instance);
 }
 
 export function endResize() {
