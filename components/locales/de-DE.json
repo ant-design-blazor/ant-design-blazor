@@ -55,7 +55,8 @@
       "endQuarter": "Schlussquartal",
       "quarterSelect": "Quartal wählen",
       "week": "Woche",
-      "monthFormat": "MMM"
+      "monthFormat": "MMM",
+      "shortWeekDays": [ "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So" ]
     },
     "timePickerLocale": { "placeholder": "Zeit auswählen" }
   },

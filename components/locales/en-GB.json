@@ -55,7 +55,8 @@
       "endQuarter": "End Quarter",
       "quarterSelect": "Select quarter",
       "week": "Week",
-      "monthFormat": "MMM"
+      "monthFormat": "MMM",
+      "shortWeekDays": [ "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
     },
     "timePickerLocale": { "placeholder": "Select time" }
   },
