@@ -11,51 +11,40 @@
             <div class="ant-tabs-nav-list" style="@_navStyle" @ref="@_scrollTabBar">
                 @foreach (var pane in _panes)
                 {
-                    if (pane.IsActive)
-                    {
-                        <button @ref="_activeTabBar" type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="@pane._classMapper.Class" id="@($"rc-tabs-{Id}-tab-{pane.Key}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")"
-                                draggable="@Draggable.ToString()"
-                                @ondragover:preventDefault
-                                ondragover="event.preventDefault();"
-                                @ondragstart="(e)=>HandleDragStart(e, pane)"
-                                @ondrop="(e)=>HandleDrop(pane)">
-                            @if (Type == TabType.EditableCard && pane.Closable)
-                            {
-                                @pane.Tab
-                                <span class="ant-tabs-tab-remove">
-                                    <Icon Type="close" @onclick="(e)=>RemoveTabPane(pane)" />
-                                </span>
-                            }
-                            else
-                            {
-                                @pane.Tab
-                            }
-                        </button>
-                    }
-                    else
-                    {
-                        <button type="button" role="tab" aria-selected="@(pane.IsActive)" tabindex="0" class="@pane._classMapper.Class" id="@($"rc-tabs-{Id}-tab-{pane.Key}")" aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")"
-                                disabled="@(pane.Disabled)"
-                                @onclick="(e)=>HandleTabClick(pane,e)"
-                                @onclick:stopPropagation
-                                draggable="@Draggable.ToString()"
-                                ondragover="event.preventDefault();"
-                                @ondragstart="(e)=>HandleDragStart(e, pane)"
-                                @ondrop="(e)=>HandleDrop(pane)">
-                            @if (Type == TabType.EditableCard && pane.Closable)
-                            {
-                                @pane.Tab
-                                <span class="ant-tabs-tab-remove">
-                                    <Icon Type="close" @onclick="(e)=>RemoveTabPane(pane)" />
-                                </span>
-                            }
-                            else
-                            {
-                                @pane.Tab
-                            }
-                        </button>
-                    }
+                    var ondragoverPreventDefault = pane.IsActive;
+                    var onclickStopPropagation = !pane.IsActive;
+
+                    <button @key="pane.Key"
+                            @ref="pane.TabBar"
+                            @onclick:stopPropagation="@onclickStopPropagation"
+                            @onclick="@(e => HandleTabClick(pane,e))"
+                            @ondragover:preventDefault="@ondragoverPreventDefault"
+                            @ondragstart="@(e => HandleDragStart(e, pane))"
+                            @ondrop="@(_ => HandleDrop(pane))"
+                            aria-controls="@($"rc-tabs-{Id}-tab-{pane.Key}")"
+                            aria-selected="@(pane.IsActive)"
+                            class="@pane._classMapper.Class"
+                            draggable="@Draggable.ToString()"
+                            id="@($"rc-tabs-{Id}-tab-{pane.Key}")"
+                            ondragover="event.preventDefault();"
+                            role="tab"
+                            tabindex="0"
+                            type="button"
+                            >
+                        @if (Type == TabType.EditableCard && pane.Closable)
+                        {
+                            @pane.Tab
+                            <span class="ant-tabs-tab-remove">
+                                <Icon Type="close" @onclick="(e)=>RemoveTabPane(pane)" />
+                            </span>
+                        }
+                        else
+                        {
+                            @pane.Tab
+                        }
+                    </button>
                 }
+
                 @if (Type == TabType.EditableCard && !HideAdd)
                 {
                     <button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="(e)=>AddTabPane(e)">

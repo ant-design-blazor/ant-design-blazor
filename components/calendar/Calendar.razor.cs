@@ -168,12 +168,11 @@ namespace AntDesign
 
         string IDatePicker.GetFormatValue(DateTime value, int index)
         {
-            throw new NotImplementedException();
+            return value.ToString(CultureInfo);
         }
 
         void IDatePicker.ChangePlaceholder(string placeholder, int index)
         {
-            throw new NotImplementedException();
         }
 
         public string Picker { get { return _picker; } }
