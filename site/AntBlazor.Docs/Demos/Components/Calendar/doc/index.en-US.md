@@ -47,3 +47,5 @@ When data is in the form of dates, such as schedules, timetables, prices calenda
 | onSelect | Callback for when a date is selected | Func(DateTime） | - |  |
 | onChange | Callback for when date changes | Func(DateTime | - |  |
 | headerRender | render custom header in panel | Func(CalendarHeaderRenderArgs) | - |  |
+| Locale | Set custom localization. | `DatePickerLocale` | Locale for current Culture |  |
+| CultureInfo | Set's the `CultureInfo` used for generate localized headers, formatting and parsing. | `CultureInfo` | CultureInfo.DefaultThreadCurrentUICulture  |  |

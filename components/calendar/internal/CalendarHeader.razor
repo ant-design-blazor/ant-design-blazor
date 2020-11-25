@@ -16,7 +16,7 @@
             endYear = Calendar.ValidRange[1].Year;
         }
 
-        string yearFormat = Calendar.CultureInfo.GetDateLocale().YearFormat;
+        string yearFormat = Calendar.Locale.Lang.YearFormat;
     }
     <Select class=@($"{PrefixCls}-year-select")
             Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
@@ -42,7 +42,7 @@
             endMonth = Calendar.Value.Year == Calendar.ValidRange[1].Year ? Calendar.ValidRange[1].Month : endMonth;
         }
 
-        string monthFormat = Calendar.CultureInfo.GetDateLocale().MonthFormat;
+        string monthFormat = Calendar.Locale.Lang.MonthFormat;
 
         <Select class=@($"{PrefixCls}-month-select")
                 Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
@@ -62,8 +62,8 @@
                 Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
                 Value="@Calendar.Mode"
                 OnChange="OnModeChange" TValue="string">
-        <Radio RadioButton Value="@DatePickerType.Month">@(Calendar.CultureInfo.GetDateLocale().Month)</Radio>
-        <Radio RadioButton Value="@DatePickerType.Year">@(Calendar.CultureInfo.GetDateLocale().Year)</Radio>
+        <Radio RadioButton Value="@DatePickerType.Month">@(Calendar.Locale.Lang.Month)</Radio>
+        <Radio RadioButton Value="@DatePickerType.Year">@(Calendar.Locale.Lang.Year)</Radio>
     </RadioGroup>
 </div>
 

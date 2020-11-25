@@ -1,53 +1,67 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AntDesign
 {
     public class DatePickerLocale
     {
-        public DateLocale Lang { get; set; }
+        public DayOfWeek FirstDayOfWeek { get; set; }
 
-        public TimePickerLocale TimePickerLocale { get; set; }
+        public DateLocale Lang { get; set; } = new DateLocale();
+
+        public TimePickerLocale TimePickerLocale { get; set; } = new TimePickerLocale();
     }
 
     public class DateLocale
     {
-        public string Placeholder { get; set; }
-        public string YearPlaceholder { get; set; }
-        public string QuarterPlaceholder { get; set; }
-        public string MonthPlaceholder { get; set; }
-        public string WeekPlaceholder { get; set; }
-        public string[] RangePlaceholder { get; set; }
-        public string[] RangeYearPlaceholder { get; set; }
-        public string[] RangeMonthPlaceholder { get; set; }
-        public string[] RangeWeekPlaceholder { get; set; }
-        public string Locale { get; set; }
-        public string Today { get; set; }
-        public string Now { get; set; }
-        public string BackToToday { get; set; }
-        public string Ok { get; set; }
-        public string Clear { get; set; }
-        public string Month { get; set; }
-        public string Year { get; set; }
-        public string TimeSelect { get; set; }
-        public string DateSelect { get; set; }
-        public string WeekSelect { get; set; }
-        public string MonthSelect { get; set; }
-        public string YearSelect { get; set; }
-        public string DecadeSelect { get; set; }
-        public string YearFormat { get; set; }
-        public string DateFormat { get; set; }
-        public string DayFormat { get; set; }
-        public string DateTimeFormat { get; set; }
-        public bool MonthBeforeYear { get; set; }
-        public string PreviousMonth { get; set; }
-        public string NextMonth { get; set; }
-        public string PreviousYear { get; set; }
-        public string NextYear { get; set; }
-        public string PreviousDecade { get; set; }
-        public string NextDecade { get; set; }
-        public string PreviousCentury { get; set; }
-        public string NextCentury { get; set; }
+        public string Placeholder { get; set; } = "Select date";
+        public string YearPlaceholder { get; set; } = "Select year";
+        public string QuarterPlaceholder { get; set; } = "Select quarter";
+        public string MonthPlaceholder { get; set; } = "Select month";
+        public string WeekPlaceholder { get; set; } = "Select week";
+        public string[] RangePlaceholder { get; set; } = new[] { "Start date", "End date" };
+        public string[] RangeYearPlaceholder { get; set; } = new[] { "Start year", "End year" };
+        public string[] RangeMonthPlaceholder { get; set; } = new[] { "Start month", "End month" };
+        public string[] RangeWeekPlaceholder { get; set; } = new[] { "Start week", "End week" };
+        public string Locale { get; set; } = "en_US";
+        public string Today { get; set; } = "Today";
+        public string Now { get; set; } = "Now";
+        public string BackToToday { get; set; } = "Back to today";
+        public string Ok { get; set; } = "Ok";
+        public string Clear { get; set; } = "Clear";
+        public string Month { get; set; } = "Month";
+        public string Year { get; set; } = "Year";
+        public string TimeSelect { get; set; } = "select time";
+        public string DateSelect { get; set; } = "select date";
+        public string WeekSelect { get; set; } = "Choose a week";
+        public string MonthSelect { get; set; } = "Choose a month";
+        public string YearSelect { get; set; } = "Choose a year";
+        public string DecadeSelect { get; set; } = "Choose a decade";
+        public string MonthFormat { get; set; } = "MMM";
+        public string DateFormat { get; set; } = "yyyy-MM-dd";
+        public string DayFormat { get; set; } = "D";
+        public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
+        public bool MonthBeforeYear { get; set; } = true;
+        public string PreviousMonth { get; set; } = "Previous month (PageUp)";
+        public string NextMonth { get; set; } = "Next month (PageDown)";
+        public string PreviousYear { get; set; } = "Last year (Control + left)";
+        public string NextYear { get; set; } = "Next year (Control + right)";
+        public string PreviousDecade { get; set; } = "Last decade";
+        public string NextDecade { get; set; } = "Next decade";
+        public string PreviousCentury { get; set; } = "Last century";
+        public string NextCentury { get; set; } = "Next century";
+        public string YearFormat { get; set; } = "yyyy";
+        public string StartDate { get; set; } = "Start date";
+        public string StartWeek { get; set; } = "Start week";
+        public string StartMonth { get; set; } = "Start month";
+        public string StartYear { get; set; } = "Start year";
+        public string StartQuarter { get; set; } = "Start quarter";
+        public string EndDate { get; set; } = "End date";
+        public string EndWeek { get; set; } = "End week";
+        public string EndMonth { get; set; } = "End month";
+        public string EndYear { get; set; } = "End year";
+        public string EndQuarter { get; set; } = "End Quarter";
+        public string QuarterSelect { get; set; } = "Select quarter";
+        public string Week { get; set; } = "Week";
+        public string[] ShortWeekDays { get; set; } = new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
     }
 }

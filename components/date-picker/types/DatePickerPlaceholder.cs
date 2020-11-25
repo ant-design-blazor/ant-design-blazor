@@ -1,38 +1,34 @@
-﻿using System.Globalization;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     internal class DatePickerPlaceholder
     {
-
-
-        public static string GetPlaceholderByType(string pickerType, CultureInfo info)
+        public static string GetPlaceholderByType(string pickerType, DatePickerLocale locale)
         {
             var placeholder = pickerType switch
             {
-                DatePickerType.Date => info.GetDateLocale().SelectDate,
-                DatePickerType.Week => info.GetDateLocale().SelectWeek,
-                DatePickerType.Month => info.GetDateLocale().SelectMonth,
-                DatePickerType.Quarter => info.GetDateLocale().SelectQuarter,
-                DatePickerType.Year => info.GetDateLocale().SelectYear,
-                DatePickerType.Time => info.GetDateLocale().SelectTime,
-                _ => info.GetDateLocale().SelectDate,
+                DatePickerType.Date => locale.Lang.DateSelect,
+                DatePickerType.Week => locale.Lang.WeekSelect,
+                DatePickerType.Month => locale.Lang.MonthSelect,
+                DatePickerType.Quarter => locale.Lang.QuarterSelect,
+                DatePickerType.Year => locale.Lang.YearSelect,
+                DatePickerType.Time => locale.Lang.TimeSelect,
+                _ => locale.Lang.DateSelect,
             };
 
             return placeholder;
         }
 
-        public static (string, string) GetRangePlaceHolderByType(string pickerType, CultureInfo info)
+        public static (string, string) GetRangePlaceHolderByType(string pickerType, DatePickerLocale locale)
         {
             var placeholder = pickerType switch
             {
-                DatePickerType.Date => (info.GetDateLocale().StartOfDate, info.GetDateLocale().EndOfDate),
-                DatePickerType.Week => (info.GetDateLocale().StartOfWeek, info.GetDateLocale().EndOfWeek),
-                DatePickerType.Month => (info.GetDateLocale().StartOfMonth, info.GetDateLocale().EndOfMonth),
-                DatePickerType.Year => (info.GetDateLocale().StartOfYear, info.GetDateLocale().EndOfYear),
-                DatePickerType.Time => (info.GetDateLocale().StartOfDate, info.GetDateLocale().EndOfDate),
-                DatePickerType.Quarter => (info.GetDateLocale().StartOfQuarter, info.GetDateLocale().EndOfQuarter),
-                _ => (info.GetDateLocale().StartOfDate, info.GetDateLocale().EndOfDate),
+                DatePickerType.Date => (locale.Lang.StartDate, locale.Lang.EndDate),
+                DatePickerType.Week => (locale.Lang.StartWeek, locale.Lang.EndWeek),
+                DatePickerType.Month => (locale.Lang.StartMonth, locale.Lang.EndMonth),
+                DatePickerType.Year => (locale.Lang.StartYear, locale.Lang.EndYear),
+                DatePickerType.Time => (locale.Lang.StartDate, locale.Lang.EndDate),
+                DatePickerType.Quarter => (locale.Lang.StartQuarter, locale.Lang.EndQuarter),
+                _ => (locale.Lang.StartDate, locale.Lang.EndDate),
             };
             return placeholder;
         }
