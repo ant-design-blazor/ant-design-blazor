@@ -1,20 +1,20 @@
 <Tree @ref="tree"
       ShowIcon DataSource="games"
       Multiple="@multiple"
-      TitleExpression="x => ((GameElementGroup)x.DataItem).Text"
-      ChildrenExpression="x => ((GameElementGroup)x.DataItem).Items"
-      IconExpression="x => ((GameElementGroup)x.DataItem).Icon"
-      IsLeafExpression="x=> ((GameElementGroup)x.DataItem).Items?.Count==0"
-      KeyExpression="x=>((GameElementGroup)x.DataItem).Id"
+      TitleExpression="x =>x.DataItem.Text"
+      ChildrenExpression="x => x.DataItem.Items"
+      IconExpression="x => x.DataItem.Icon"
+      IsLeafExpression="x=> x.DataItem.Items?.Count==0"
+      KeyExpression="x=>x.DataItem.Id"
       @bind-SelectedKey="@selectedKey"
       @bind-SelectedData="@selectedData"
       @bind-SelectedNode="@selectedNode"
       @bind-SelectedKeys="@selectedKeys"
-      @bind-SelectedDatas="@selectedDatas"
-      @bind-SelectedNodes="@selectedNodes">
-
+      TItem="GameElement">
 </Tree>
 
+@*@bind-SelectedDatas="@selectedDatas"
+@bind-SelectedNodes="@selectedNodes"*@
 <Divider>Single</Divider>
 <span>bind-SelectedKey:@selectedKey</span>
 <br />
@@ -37,29 +37,29 @@
 
     private bool multiple;
 
-    Tree tree;
+    Tree<GameElement> tree;
 
     string selectedKey;
 
-    object selectedData;
+    GameElement selectedData;
 
-    TreeNode selectedNode;
+    TreeNode<GameElement> selectedNode;
 
     string[] selectedKeys;
 
-    object[] selectedDatas;
+    GameElement[] selectedDatas;
 
-    TreeNode[] selectedNodes;
+    TreeNode<GameElement>[] selectedNodes;
 
 
     void AddSon()
     {
         if (selectedNode != null)
         {
-            ((GameElementGroup)selectedNode.DataItem).Items.Add(new GameElementGroup()
+            selectedNode.DataItem.Items.Add(new GameElement()
             {
                 Text = $"Node {new Random().Next(1000)}",
-                Items = new List<GameElementGroup>()
+                Items = new List<GameElement>()
             }); ;
 
         }
@@ -71,57 +71,57 @@
         {
             if (selectedNode.ParentNode != null)
             {
-                ((GameElementGroup)selectedNode.ParentNode.DataItem).Items.Remove((GameElementGroup)selectedNode.DataItem);
+                selectedNode.ParentNode.DataItem.Items.Remove(selectedNode.DataItem);
             }
             else
             {
-                ((List<GameElementGroup>)tree.DataSource).Remove((GameElementGroup)selectedNode.DataItem);
+                tree.DataSource.Remove(selectedNode.DataItem);
             }
             StateHasChanged();
 
         }
     }
 
-    List<GameElementGroup> games = new List<GameElementGroup>()
+    List<GameElement> games = new List<GameElement>()
 {
-        new GameElementGroup()
+        new GameElement()
         {
             Id="100",
             Text="XBox",
             Icon="windows",
-            Items=new List<GameElementGroup>()
+            Items=new List<GameElement>()
 {
-                new GameElementGroup(){    Id="101",Text="Halo"},
-                 new GameElementGroup(){    Id="102",Text="Gears of War"},
-                 new GameElementGroup(){    Id="103",Text="Forza Motosport"},
+                new GameElement(){    Id="101",Text="Halo"},
+                 new GameElement(){    Id="102",Text="Gears of War"},
+                 new GameElement(){    Id="103",Text="Forza Motosport"},
             }
         },
-                new GameElementGroup()
+                new GameElement()
         {
                     Id="200",
             Text="PlayStation",
             Icon="desktop",
-            Items=new List<GameElementGroup>()
+            Items=new List<GameElement>()
 {
-                new GameElementGroup(){    Id="201",Text="Uncharted" },
-                 new GameElementGroup(){ Id="202",Text="God Of War" },
-                 new GameElementGroup(){Text="The Order:1886" },
+                new GameElement(){    Id="201",Text="Uncharted" },
+                 new GameElement(){ Id="202",Text="God Of War" },
+                 new GameElement(){Text="The Order:1886" },
             }
         },
-                new GameElementGroup()
+                new GameElement()
         {
                     Id="300",
             Text="Switch",
             Icon="mobile",
-            Items=new List<GameElementGroup>()
+            Items=new List<GameElement>()
 {
-                new GameElementGroup(){ Id="301",Text="Super Mario Bros"},
-                 new GameElementGroup(){ Id="302",Text="The Legend of Zelda"},
+                new GameElement(){ Id="301",Text="Super Mario Bros"},
+                 new GameElement(){ Id="302",Text="The Legend of Zelda"},
             }
         }
     };
 
-    private class GameElementGroup
+    private class GameElement
     {
         public string Id { get; set; }
 
@@ -129,7 +129,7 @@
 
         public string Icon { get; set; }
 
-        public List<GameElementGroup> Items { get; set; } = new List<GameElementGroup>();
+        public List<GameElement> Items { get; set; } = new List<GameElement>();
 
     }
 }

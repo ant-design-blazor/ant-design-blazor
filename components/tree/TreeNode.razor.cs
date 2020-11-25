@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNode : AntDomComponentBase
+    public partial class TreeNode<TItem> : AntDomComponentBase
     {
 
         #region Node
@@ -19,20 +19,23 @@ namespace AntDesign
         /// 树控件本身
         /// </summary>
         [CascadingParameter(Name = "Tree")]
-        public Tree TreeComponent { get; set; }
+        public Tree<TItem> TreeComponent { get; set; }
+
+        [CascadingParameter(Name = "Tree")]
+        public object GGG { get; set; }
 
         /// <summary>
         /// 上一级节点
         /// </summary>
         [CascadingParameter(Name = "Node")]
-        public TreeNode ParentNode { get; set; }
+        public TreeNode<TItem> ParentNode { get; set; }
 
         /// <summary>
         /// 子节点
         /// </summary>
         [Parameter]
         public RenderFragment Nodes { get; set; }
-        public List<TreeNode> ChildNodes { get; set; } = new List<TreeNode>();
+        public List<TreeNode<TItem>> ChildNodes { get; set; } = new List<TreeNode<TItem>>();
 
         public bool HasChildNodes => ChildNodes?.Count > 0;
 
@@ -45,7 +48,7 @@ namespace AntDesign
         /// 添加节点
         /// </summary>
         /// <param name=""></param>
-        internal void AddNode(TreeNode treeNode)
+        internal void AddNode(TreeNode<TItem> treeNode)
         {
             ChildNodes.Add(treeNode);
             IsLeaf = false;
@@ -213,11 +216,11 @@ namespace AntDesign
                 //自有节点被展开时才需要延迟加载
                 //如果支持异步载入，那么在展开时是调用异步载入代码
                 this.IsLoading = true;
-                await TreeComponent.OnNodeLoadDelayAsync.InvokeAsync(new TreeEventArgs(TreeComponent, this, args));
+                await TreeComponent.OnNodeLoadDelayAsync.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
                 this.IsLoading = false;
             }
             if (TreeComponent.OnExpandChanged.HasDelegate)
-                await TreeComponent.OnExpandChanged.InvokeAsync(new TreeEventArgs(TreeComponent, this, args));
+                await TreeComponent.OnExpandChanged.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
         }
 
         private bool IsSwitcherOpen => IsExpanded && !IsLeaf;
@@ -243,7 +246,7 @@ namespace AntDesign
         {
             SetChecked(!IsChecked);
             if (TreeComponent.OnCheckBoxChanged.HasDelegate)
-                await TreeComponent.OnCheckBoxChanged.InvokeAsync(new TreeEventArgs(TreeComponent, this, args));
+                await TreeComponent.OnCheckBoxChanged.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
         }
 
         /// <summary>
@@ -375,16 +378,16 @@ namespace AntDesign
         #region 数据绑定
 
         [Parameter]
-        public object DataItem { get; set; }
+        public TItem DataItem { get; set; }
 
-        private IEnumerable ChildDataItems
+        private IList<TItem> ChildDataItems
         {
             get
             {
                 if (TreeComponent.ChildrenExpression != null)
-                    return TreeComponent.ChildrenExpression(this) ?? Enumerable.Empty<object>();
+                    return TreeComponent.ChildrenExpression(this) ?? new List<TItem>();
                 else
-                    return Enumerable.Empty<object>();
+                    return new List<TItem>();
             }
         }
 
@@ -396,7 +399,7 @@ namespace AntDesign
         /// <param name="predicate">Predicate</param>
         /// <param name="recursive">Recursive Find</param>
         /// <returns></returns>
-        public TreeNode FindFirstOrDefaultNode(Func<TreeNode, bool> predicate, bool recursive = true)
+        public TreeNode<TItem> FindFirstOrDefaultNode(Func<TreeNode<TItem>, bool> predicate, bool recursive = true)
         {
             foreach (var child in ChildNodes)
             {
@@ -424,6 +427,9 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            var ss = GGG;
+ 
+            var s2 =typeof( TItem);
             SetTreeNodeClassMapper();
             if (ParentNode != null)
                 ParentNode.AddNode(this);

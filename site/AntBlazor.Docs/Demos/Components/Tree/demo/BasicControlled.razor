@@ -1,29 +1,29 @@
-<Tree @ref="tree" Checkable Multiple>
+<Tree @ref="tree" Checkable Multiple TItem="string">
     <Nodes>
-        <TreeNode Title="A" Key="100">
+        <TreeNode Title="A" Key="100" TItem="string">
             <Nodes>
-                <TreeNode Title="A1" Key="110">
+                <TreeNode Title="A1" Key="110" TItem="string">
                     <Nodes>
-                        <TreeNode Title="A1-1" Key="111"></TreeNode>
-                        <TreeNode Title="A2-2" Key="112"></TreeNode>
+                        <TreeNode Title="A1-1" Key="111" TItem="string"></TreeNode>
+                        <TreeNode Title="A2-2" Key="112" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A2" Key="120" IsDisabled>
+                <TreeNode Title="A2" Key="120" IsDisabled TItem="string">
                     <Nodes>
-                        <TreeNode Title="A2-1" Key="121"></TreeNode>
-                        <TreeNode Title="A1-2" Key="122"></TreeNode>
+                        <TreeNode Title="A2-1" Key="121" TItem="string"></TreeNode>
+                        <TreeNode Title="A1-2" Key="122" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A3" Key="130" IsDisableCheckbox>
+                <TreeNode Title="A3" Key="130" IsDisableCheckbox TItem="string">
                     <Nodes>
-                        <TreeNode Title="A3-1" Key="131"></TreeNode>
-                        <TreeNode Title="A3-2" Key="132" IsDisableCheckbox></TreeNode>
-                        <TreeNode Title="A3-3" Key="133" IsDisabled></TreeNode>
+                        <TreeNode Title="A3-1" Key="131" TItem="string"></TreeNode>
+                        <TreeNode Title="A3-2" Key="132" IsDisableCheckbox TItem="string"></TreeNode>
+                        <TreeNode Title="A3-3" Key="133" IsDisabled TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
             </Nodes>
         </TreeNode>
-        <TreeNode Title="B" Key="200"></TreeNode>
+        <TreeNode Title="B" Key="200" TItem="string"></TreeNode>
     </Nodes>
 </Tree>
 
@@ -32,10 +32,9 @@
 
 <Button OnClick="PrintCheckedNodesKey">Print Checked Nodes Key</Button>
 
-<br />
-<br />
-
 <Button OnClick="DecheckedAll">Dechecked All</Button>
+<br />
+<br />
 
 <Button OnClick="PrintSelectedNodes">Print Selected Nodes</Button>
 
@@ -57,7 +56,7 @@
 
     List<string> printTexts = new List<string>();
 
-    Tree tree;
+    Tree<string> tree;
 
     private void PrintCheckedNodesTitle()
     {
