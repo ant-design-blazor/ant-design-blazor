@@ -20,26 +20,7 @@ There are six kinds of picker:
 - RangePicker
 - WeekPicker
 - YearPicker
-- QuarterPicker (Added in 4.1.0)
-
-### Localization（TODO）
-
-The default locale is en-US, if you need to use other languages, recommend to use internationalized components provided by us at the entrance. Look at: [ConfigProvider](http://ant.design/components/config-provider/).
-
-If there are special needs (only modifying single component language), Please use the property: local. Example: [default](https://github.com/ant-design/ant-design/blob/master/components/date-picker/locale/example.json).
-
-```jsx
-import locale from 'antd/es/date-picker/locale/zh_CN';
-
-<DatePicker locale={locale} />;
-```
-
-```jsx
-// The default locale is en-US, if you want to use other locale, just set locale in entry file globally.
-import moment from 'moment';
-
-<DatePicker defaultValue={moment('2015-01-01', 'YYYY-MM-DD')} />;
-```
+- QuarterPicker
 
 ### Common API
 
@@ -92,6 +73,8 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | onChange | a callback function, can be executed when the selected time is changing | function(date: moment, dateString: string) | - |  |
 | onOk（TODO） | callback when click ok button | function() | - |  |
 | onPanelChange | Callback function for panel changing | function(value, mode) | - |  |
+| Locale | Set custom localization. | `DatePickerLocale` | Locale for current Culture |  |
+| CultureInfo | Set's the `CultureInfo` used for generate localized headers, formatting and parsing. | `CultureInfo` | CultureInfo.DefaultThreadCurrentUICulture  |  |
 
 ### YearPicker
 

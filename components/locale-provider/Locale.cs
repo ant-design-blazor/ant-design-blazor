@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Globalization;
+using System.Text.Json.Serialization;
 using AntDesign.Form.Locale;
 
 namespace AntDesign.Locales
@@ -7,6 +8,8 @@ namespace AntDesign.Locales
     {
         [JsonPropertyName("locale")]
         public string LocaleName { get; set; }
+
+        public CultureInfo CurrentCulture => new CultureInfo(LocaleName);
 
         public PaginationLocale Pagination { get; set; }
 
