@@ -1,14 +1,11 @@
 <Select Mode="tags"
-        DataSource="@_items"
 		@bind-Values="@_selectedValues"
         LabelName="@nameof(Tag.Label)"
         ValueName="@nameof(Tag.Value)"
 		TItemValue="string"
 		TItem="Tag"
-        OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
-		OnCreateCustomTag="@(async item => await OnCreateCustomTagHandlerAsync(item))"
-		AllowCustomTags
-		EnableSearch>
+        TokenSeparators="new[]{ ',' }"
+        EnableSearch>
 </Select>
 
 @code

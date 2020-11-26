@@ -19,6 +19,7 @@ namespace AntDesign
     public partial class Select<TItemValue, TItem>
     {
         #region Parameters
+
         [Parameter] public bool AllowClear { get; set; }
         [Parameter] public bool AllowCustomTags { get; set; }
         [Parameter] public bool AutoClearSearchValue { get; set; } = true;
@@ -33,10 +34,12 @@ namespace AntDesign
         [Parameter] public bool HideSelected { get; set; }
         [Parameter] public bool IgnoreItemChanges { get; set; } = true;
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+
         /// <summary>
-        /// LabelInValue can only be used if the SelectOption is not created by DataSource. 
+        /// LabelInValue can only be used if the SelectOption is not created by DataSource.
         /// </summary>
         [Parameter] public bool LabelInValue { get; set; }
+
         [Parameter] public string LabelName { get; set; }
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
         [Parameter] public bool Loading { get; set; }
@@ -44,6 +47,7 @@ namespace AntDesign
         [Parameter] public RenderFragment NotFoundContent { get; set; }
         [Parameter] public Action OnBlur { get; set; }
         [Parameter] public Action OnClearSelected { get; set; }
+
         /// <summary>
         /// The OnDataSourceChanged event occurs after the DataSource property changes.
         /// </summary>
@@ -51,6 +55,7 @@ namespace AntDesign
         /// It does not trigger if a value inside the IEnumerable&lt;TItem&gt; changes.
         /// </remarks>
         [Parameter] public Action OnDataSourceChanged { get; set; }
+
         [Parameter] public Action<bool> OnDropdownVisibleChange { get; set; }
         [Parameter] public Action OnFocus { get; set; }
         [Parameter] public Action OnMouseEnter { get; set; }
@@ -67,9 +72,11 @@ namespace AntDesign
         [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
         [Parameter] public SortDirection SortByLabel { get; set; } = SortDirection.None;
         [Parameter] public RenderFragment SuffixIcon { get; set; }
+        [Parameter] public char[] TokenSeparators { get; set; }
         [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
         [Parameter] public string ValueName { get; set; }
         [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
+
         [Parameter]
         public IEnumerable<TItem> DataSource
         {
@@ -127,6 +134,7 @@ namespace AntDesign
                 }
             }
         }
+
         [Parameter]
         public override TItemValue Value
         {
@@ -142,6 +150,7 @@ namespace AntDesign
                 }
             }
         }
+
         [Parameter]
         public TItemValue DefaultValue
         {
@@ -156,6 +165,7 @@ namespace AntDesign
                 }
             }
         }
+
         [Parameter]
         public IEnumerable<TItemValue> Values
         {
@@ -187,6 +197,7 @@ namespace AntDesign
                 }
             }
         }
+
         [Parameter]
         public IEnumerable<TItemValue> DefaultValues
         {
@@ -215,10 +226,13 @@ namespace AntDesign
                 }
             }
         }
+
         [Parameter] public RenderFragment SelectOptions { get; set; }
-        #endregion
+
+        #endregion Parameters
 
         #region Properties
+
         private const string ClassPrefix = "ant-select";
         private const string DefaultWidth = "width: 100%;";
 
@@ -230,6 +244,7 @@ namespace AntDesign
         {
             get => SelectOptionItems.Where(x => x.IsSelected).Any();
         }
+
         /// <summary>
         /// Returns a true/false if the placeholder should be displayed or not.
         /// </summary>
@@ -241,6 +256,7 @@ namespace AntDesign
                 return !HasValue && string.IsNullOrEmpty(_searchValue);
             }
         }
+
         /// <summary>
         /// Returns the value of EnableSearch parameter
         /// </summary>
@@ -249,6 +265,7 @@ namespace AntDesign
         {
             get => EnableSearch;
         }
+
         /// <summary>
         /// Indicates if the GroupName is used. When this value is True, the SelectOptions will be rendered in group mode.
         /// </summary>
@@ -256,6 +273,7 @@ namespace AntDesign
         {
             get => !string.IsNullOrWhiteSpace(GroupName);
         }
+
         internal SelectMode SelectMode => Mode.ToSelectMode();
         internal bool Focused { get; private set; }
         private string _searchValue = string.Empty;
@@ -272,7 +290,8 @@ namespace AntDesign
         protected OverlayTrigger _dropDown;
 
         internal HashSet<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new HashSet<SelectOptionItem<TItemValue, TItem>>();
-        #endregion 
+
+        #endregion Properties
 
         protected override void OnInitialized()
         {
@@ -303,7 +322,7 @@ namespace AntDesign
                 await SetDropdownStyleAsync();
             }
 
-            // 
+            //
             if (_isInitialized && SelectOptions == null)
                 CreateDeleteSelectOptions();
 
@@ -415,7 +434,7 @@ namespace AntDesign
         /// <summary>
         /// Sorted list of SelectOptionItems
         /// </summary>
-        internal protected IEnumerable<SelectOptionItem<TItemValue, TItem>> SortedSelectOptionItems
+        protected internal IEnumerable<SelectOptionItem<TItemValue, TItem>> SortedSelectOptionItems
         {
             get
             {
@@ -824,6 +843,18 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Append a label item in tag mode
+        /// </summary>
+        /// <param name="label"></param>
+        private void AppendLabelValue(string label)
+        {
+            if (string.IsNullOrWhiteSpace(label))
+                return;
+
+            SelectOptionItems.Add(new SelectOptionItem<TItemValue, TItem>() { Label = label, IsActive = true, IsSelected = true });
+        }
+
+        /// <summary>
         /// A separate method to invoke ValuesChanged and OnSelectedItemsChanged to reduce code duplicates.
         /// </summary>
 
@@ -1011,20 +1042,30 @@ namespace AntDesign
 
             //_inputWidth = string.IsNullOrEmpty(_searchValue) ? InputDefaultWidth : $"{4 + _searchValue.Length * 8}px";
 
-            SelectOptionItems.Where(x => x.IsHidden).ForEach(i => i.IsHidden = false);
-
-            if (!string.IsNullOrWhiteSpace(_searchValue))
+            if (SelectMode == SelectMode.Default)
             {
-                SelectOptionItems
-                    .Where(x => !x.Label.Contains(_searchValue, StringComparison.InvariantCultureIgnoreCase))
-                    .ForEach(i =>
-                    {
-                        i.IsHidden = true;
-                        i.IsActive = false;
-                    });
-            }
+                SelectOptionItems.Where(x => x.IsHidden).ForEach(i => i.IsHidden = false);
 
-            OnSearch?.Invoke(_searchValue);
+                if (!string.IsNullOrWhiteSpace(_searchValue))
+                {
+                    SelectOptionItems
+                        .Where(x => !x.Label.Contains(_searchValue, StringComparison.InvariantCultureIgnoreCase))
+                        .ForEach(i =>
+                        {
+                            i.IsHidden = true;
+                            i.IsActive = false;
+                        });
+                }
+
+                OnSearch?.Invoke(_searchValue);
+            }
+            else if (TokenSeparators?.Any() == true)
+            {
+                // Automatic tokenization
+                _searchValue?.Split(TokenSeparators).ForEach(AppendLabelValue);
+
+                ClearSearch();
+            }
         }
 
         /// <summary>
@@ -1096,16 +1137,23 @@ namespace AntDesign
                             return;
                         }
                     }
-
-                    var firstActive = SelectOptionItems.FirstOrDefault(x => x.IsActive);
-
-                    if (firstActive != null)
+                    else
                     {
-                        if (!firstActive.IsDisabled)
-                        {
-                            await SetValueAsync(firstActive);
-                        }
+                        AppendLabelValue(_searchValue);
+                        ClearSearch();
+                        return;
                     }
+
+
+                    //var firstActive = SelectOptionItems.FirstOrDefault(x => x.IsActive);
+
+                    //if (firstActive != null)
+                    //{
+                    //    if (!firstActive.IsDisabled)
+                    //    {
+                    //        await SetValueAsync(firstActive);
+                    //    }
+                    //}
 
                     return;
                 }
@@ -1287,7 +1335,6 @@ namespace AntDesign
                     sortedSelectOptionItems[nextIndex].IsActive = true;
                     await ElementScrollIntoViewAsync(sortedSelectOptionItems[nextIndex].Ref);
                 }
-
             }
 
             if (key == "HOME")
@@ -1479,7 +1526,6 @@ namespace AntDesign
                     i.IsHidden = false;
                 });
 
-
             await ClearSelectedAsync();
 
             if (SelectMode != SelectMode.Default)
@@ -1501,6 +1547,7 @@ namespace AntDesign
 
             await SetValueAsync(selectOption);
         }
-        #endregion        
+
+        #endregion Events
     }
 }
