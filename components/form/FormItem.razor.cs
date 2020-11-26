@@ -6,6 +6,7 @@ using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using OneOf;
 
 namespace AntDesign
 {
@@ -34,7 +35,51 @@ namespace AntDesign
         public ColLayoutParam LabelCol { get; set; }
 
         [Parameter]
+        public OneOf<string, int> LabelColSpan
+        {
+            get { return LabelCol?.Span ?? null; }
+            set
+            {
+                if (LabelCol == null) LabelCol = new ColLayoutParam();
+                LabelCol.Span = value;
+            }
+        }
+
+        [Parameter]
+        public OneOf<string, int> LabelColOffset
+        {
+            get { return LabelCol?.Offset ?? null; }
+            set
+            {
+                if (LabelCol == null) LabelCol = new ColLayoutParam();
+                LabelCol.Offset = value;
+            }
+        }
+
+        [Parameter]
         public ColLayoutParam WrapperCol { get; set; }
+
+        [Parameter]
+        public OneOf<string, int> WrapperColSpan
+        {
+            get { return WrapperCol?.Span ?? null; }
+            set
+            {
+                if (WrapperCol == null) WrapperCol = new ColLayoutParam();
+                WrapperCol.Span = value;
+            }
+        }
+
+        [Parameter]
+        public OneOf<string, int> WrapperColOffset
+        {
+            get { return WrapperCol?.Offset ?? null; }
+            set
+            {
+                if (WrapperCol == null) WrapperCol = new ColLayoutParam();
+                WrapperCol.Offset = value;
+            }
+        }
 
         [Parameter]
         public bool NoStyle { get; set; } = false;
