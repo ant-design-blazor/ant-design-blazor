@@ -1,11 +1,11 @@
 <Tree @ref="tree"
       ShowIcon DataSource="games"
       Multiple="@multiple"
-      TitleExpression="x =>x.DataItem.Text"
+      TitleExpression="x => x.DataItem.Text"
       ChildrenExpression="x => x.DataItem.Items"
       IconExpression="x => x.DataItem.Icon"
-      IsLeafExpression="x=> x.DataItem.Items?.Count==0"
-      KeyExpression="x=>x.DataItem.Id"
+      IsLeafExpression="x => x.DataItem.Items?.Count == 0"
+      KeyExpression="x => x.DataItem.Id"
       @bind-SelectedKey="@selectedKey"
       @bind-SelectedData="@selectedData"
       @bind-SelectedNode="@selectedNode"
@@ -13,8 +13,6 @@
       TItem="GameElement">
 </Tree>
 
-@*@bind-SelectedDatas="@selectedDatas"
-@bind-SelectedNodes="@selectedNodes"*@
 <Divider>Single</Divider>
 <span>bind-SelectedKey:@selectedKey</span>
 <br />
@@ -25,10 +23,6 @@
 <Switch @bind-Value="multiple" />Multiple
 <br />
 <span>bind-SelectedKeys:@(System.Text.Json.JsonSerializer.Serialize(selectedKeys))</span>
-<br />
-<span>bind-SelectedData:@(System.Text.Json.JsonSerializer.Serialize(selectedDatas))</span>
-<br />
-<span>bind-SelectedNode:@(System.Text.Json.JsonSerializer.Serialize(selectedNodes?.Count()))</span>
 <Divider>Action</Divider>
 <Button OnClick="AddSon">Add Son Node</Button>
 <Button OnClick="DeleteNode">Delete Node</Button>
@@ -47,18 +41,14 @@
 
     string[] selectedKeys;
 
-    GameElement[] selectedDatas;
-
-    TreeNode<GameElement>[] selectedNodes;
-
 
     void AddSon()
     {
         if (selectedNode != null)
         {
-            selectedNode.DataItem.Items.Add(new GameElement()
+            var id = new Random().Next(1000).ToString();
+            selectedNode.DataItem.Items.Add(new GameElement(id, $"Node {id}")
             {
-                Text = $"Node {new Random().Next(1000)}",
                 Items = new List<GameElement>()
             }); ;
 
@@ -84,52 +74,36 @@
 
     List<GameElement> games = new List<GameElement>()
 {
-        new GameElement()
+        new ("100","XBox","windows")
         {
-            Id="100",
-            Text="XBox",
-            Icon="windows",
             Items=new List<GameElement>()
 {
-                new GameElement(){    Id="101",Text="Halo"},
-                 new GameElement(){    Id="102",Text="Gears of War"},
-                 new GameElement(){    Id="103",Text="Forza Motosport"},
+                new ("101","Halo"),
+                 new ("102","Gears of War"),
+                 new ("103","Forza Motosport"),
             }
         },
-                new GameElement()
+        new ("200","PlayStation","desktop")
         {
-                    Id="200",
-            Text="PlayStation",
-            Icon="desktop",
             Items=new List<GameElement>()
 {
-                new GameElement(){    Id="201",Text="Uncharted" },
-                 new GameElement(){ Id="202",Text="God Of War" },
-                 new GameElement(){Text="The Order:1886" },
+                new ("201","Uncharted"),
+                 new ("202","God Of War"),
+                 new ("203","The Order:1886"),
             }
         },
-                new GameElement()
+                new ("300","Switch","mobile")
         {
-                    Id="300",
-            Text="Switch",
-            Icon="mobile",
             Items=new List<GameElement>()
 {
-                new GameElement(){ Id="301",Text="Super Mario Bros"},
-                 new GameElement(){ Id="302",Text="The Legend of Zelda"},
+                new ("301","Super Mario Bros"),
+                 new ("302","The Legend of Zelda"),
             }
         }
     };
 
-    private class GameElement
+    private record GameElement(string Id, string Text, string Icon = null)
     {
-        public string Id { get; set; }
-
-        public string Text { get; set; }
-
-        public string Icon { get; set; }
-
         public List<GameElement> Items { get; set; } = new List<GameElement>();
-
     }
 }

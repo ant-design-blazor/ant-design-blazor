@@ -54,6 +54,60 @@ namespace AntDesign
             IsLeaf = false;
         }
 
+        /// <summary>
+        /// Find a node
+        /// </summary>
+        /// <param name="predicate">Predicate</param>
+        /// <param name="recursive">Recursive Find</param>
+        /// <returns></returns>
+        public TreeNode<TItem> FindFirstOrDefaultNode(Func<TreeNode<TItem>, bool> predicate, bool recursive = true)
+        {
+            foreach (var child in ChildNodes)
+            {
+                if (predicate.Invoke(child))
+                {
+                    return child;
+                }
+                if (recursive)
+                {
+                    var find = child.FindFirstOrDefaultNode(predicate, recursive);
+                    if (find != null)
+                    {
+                        return find;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获得上级数据集合
+        /// </summary>
+        /// <returns></returns>
+        public List<TreeNode<TItem>> GetParentNodes()
+        {
+            if (this.ParentNode != null)
+                return this.ParentNode.ChildNodes;
+            else
+                return this.TreeComponent.ChildNodes;
+        }
+
+        public TreeNode<TItem> GetPreviousNode()
+        {
+            var parentNodes = GetParentNodes();
+            var index = parentNodes.IndexOf(this);
+            if (index == 0) return null;
+            else return parentNodes[index - 1];
+        }
+
+        public TreeNode<TItem> GetNextNode()
+        {
+            var parentNodes = GetParentNodes();
+            var index = parentNodes.IndexOf(this);
+            if (index == parentNodes.Count - 1) return null;
+            else return parentNodes[index + 1];
+        }
+
 
         #endregion
 
@@ -187,6 +241,15 @@ namespace AntDesign
         public bool IsExpanded { get; set; }
 
         /// <summary>
+        /// 折叠节点
+        /// </summary>
+        /// <param name="isExpanded"></param>
+        public void Expand(bool isExpanded)
+        {
+            IsExpanded = isExpanded;
+        }
+
+        /// <summary>
         /// 真实的展开状态，路径上只要存在折叠，那么下面的全部折叠
         /// </summary>
         internal bool IsRealDisplay
@@ -204,7 +267,6 @@ namespace AntDesign
                     return IsMatched || HasChildMatched;
 
                 }
-
             }
         }
 
@@ -391,45 +453,130 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// 获得上级数据集合
+        /// </summary>
+        /// <returns></returns>
+        public IList<TItem> GetParentChildDataItems()
+        {
+            if (this.ParentNode != null)
+                return this.ParentNode.ChildDataItems;
+            else
+                return this.TreeComponent.DataSource;
+        }
 
         #endregion
+
+        #region 节点数据操作
+
         /// <summary>
-        /// Find a node
+        /// 添加子节点
         /// </summary>
-        /// <param name="predicate">Predicate</param>
-        /// <param name="recursive">Recursive Find</param>
-        /// <returns></returns>
-        public TreeNode<TItem> FindFirstOrDefaultNode(Func<TreeNode<TItem>, bool> predicate, bool recursive = true)
+        /// <param name="dataItem"></param>
+        public void AddSon(TItem dataItem)
         {
-            foreach (var child in ChildNodes)
-            {
-                if (predicate.Invoke(child))
-                {
-                    return child;
-                }
-                if (recursive)
-                {
-                    var find = child.FindFirstOrDefaultNode(predicate, recursive);
-                    if (find != null)
-                    {
-                        return find;
-                    }
-                }
-            }
-            return null;
-        }
-        public void Expand(bool isExpanded)
-        {
-            IsExpanded = isExpanded;
+            ChildDataItems.Add(dataItem);
         }
 
+        /// <summary>
+        /// 节点后面添加节点
+        /// </summary>
+        /// <param name="dataItem"></param>
+        public void AddNext(TItem dataItem)
+        {
+            var parentChildDataItems = GetParentChildDataItems();
+            var index = parentChildDataItems.IndexOf(this.DataItem);
+            parentChildDataItems.Insert(index + 1, dataItem);
+        }
+
+        /// <summary>
+        /// 节点前面添加节点
+        /// </summary>
+        /// <param name="dataItem"></param>
+        public void AddPrevious(TItem dataItem)
+        {
+            var parentChildDataItems = GetParentChildDataItems();
+            var index = parentChildDataItems.IndexOf(this.DataItem);
+            parentChildDataItems.Insert(index, dataItem);
+        }
+
+        /// <summary>
+        /// 删除节点
+        /// </summary>
+        public void RemoveSelf()
+        {
+            var parentChildDataItems = GetParentChildDataItems();
+            parentChildDataItems.Remove(this.DataItem);
+        }
+
+        public void NodeMove(TreeNode<TItem> treeNode)
+        {
+            if (treeNode == this || this.DataItem.Equals(treeNode.DataItem)) return;
+            var parentChildDataItems = GetParentChildDataItems();
+            parentChildDataItems.Remove(this.DataItem);
+            treeNode.AddSon(this.DataItem);
+        }
+
+        /// <summary>
+        /// 上移节点
+        /// </summary>
+        public void NodeMoveUp()
+        {
+            var parentChildDataItems = GetParentChildDataItems();
+            var index = parentChildDataItems.IndexOf(this.DataItem);
+            if (index == 0) return;
+            parentChildDataItems.RemoveAt(index);
+            parentChildDataItems.Insert(index - 1, this.DataItem);
+
+        }
+
+        /// <summary>
+        /// 下移节点
+        /// </summary>
+        public void NodeMoveDown()
+        {
+            var parentChildDataItems = GetParentChildDataItems();
+            var index = parentChildDataItems.IndexOf(this.DataItem);
+            if (index == parentChildDataItems.Count - 1) return;
+            parentChildDataItems.RemoveAt(index);
+            parentChildDataItems.Insert(index + 1, this.DataItem);
+        }
+
+        /// <summary>
+        /// 降级节点
+        /// </summary>
+        public void NodeDowngrade()
+        {
+            var previousNode = GetPreviousNode();
+            if (previousNode == null) return;
+            var parentChildDataItems = GetParentChildDataItems();
+            parentChildDataItems.Remove(this.DataItem);
+            previousNode.AddSon(this.DataItem);
+        }
+
+        /// <summary>
+        /// 升级节点
+        /// </summary>
+        public void NodeUpgrade()
+        {
+            if (this.ParentNode == null) return;
+            var parentChildDataItems = this.ParentNode.GetParentChildDataItems();
+            var index = parentChildDataItems.IndexOf(this.ParentNode.DataItem);
+            RemoveSelf();
+            parentChildDataItems.Insert(index + 1, this.DataItem);
+        }
+
+
+
+
+        #endregion 
 
 
         protected override void OnInitialized()
         {
             var ss = GGG;
- 
-            var s2 =typeof( TItem);
+
+            var s2 = typeof(TItem);
             SetTreeNodeClassMapper();
             if (ParentNode != null)
                 ParentNode.AddNode(this);

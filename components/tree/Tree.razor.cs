@@ -157,17 +157,11 @@ namespace AntDesign
         [Parameter]
         public TreeNode<TItem>[] SelectedNodes { get; set; }
 
-        [Parameter]
-        public EventCallback<TreeNode<TItem>[]> SelectedNodesChanged { get; set; }
-
         /// <summary>
         /// 选择的数据集合
         /// </summary>
         [Parameter]
         public TItem[] SelectedDatas { get; set; }
-
-        [Parameter]
-        public EventCallback<TItem[]> SelectedDatasChanged { get; set; }
 
         /// <summary>
         /// 更新绑定数据
@@ -175,51 +169,29 @@ namespace AntDesign
         private void UpdateBindData()
         {
             if (SelectedNodesDictionary.Count == 0)
-            {//如果没有对象选中，那么绑定改成默认值
-                if (SelectedKeyChanged.HasDelegate) SelectedKeyChanged.InvokeAsync(null);
-                if (SelectedNodeChanged.HasDelegate) SelectedNodeChanged.InvokeAsync(null);
-                if (SelectedDataChanged.HasDelegate) SelectedDataChanged.InvokeAsync(default(TItem));
-                if (SelectedKeysChanged.HasDelegate) SelectedKeysChanged.InvokeAsync(Array.Empty<string>());
-                if (SelectedNodesChanged.HasDelegate) SelectedNodesChanged.InvokeAsync(Array.Empty<TreeNode<TItem>>());
-                if (SelectedDatasChanged.HasDelegate) SelectedDatasChanged.InvokeAsync(Array.Empty<TItem>());
-                return;
-            }
-
-            var selectedFirst = SelectedNodesDictionary.FirstOrDefault();
-            if (SelectedKeyChanged.HasDelegate)
             {
+                SelectedKey = null;
+                SelectedNode = null;
+                SelectedData = default(TItem);
+                SelectedKeys = Array.Empty<string>();
+                SelectedNodes = Array.Empty<TreeNode<TItem>>();
+                SelectedDatas = Array.Empty<TItem>();
+            }
+            else
+            {
+                var selectedFirst = SelectedNodesDictionary.FirstOrDefault();
                 SelectedKey = selectedFirst.Value?.Key;
-                SelectedKeyChanged.InvokeAsync(SelectedKey);
-            }
-            if (SelectedNodeChanged.HasDelegate)
-            {
                 SelectedNode = selectedFirst.Value;
-                SelectedNodeChanged.InvokeAsync(SelectedNode);
-            }
-            if (SelectedDataChanged.HasDelegate)
-            {
                 SelectedData = selectedFirst.Value.DataItem;
-                SelectedDataChanged.InvokeAsync(SelectedData);
-            }
-
-
-            if (SelectedKeysChanged.HasDelegate)
-            {
                 SelectedKeys = SelectedNodesDictionary.Select(x => x.Value.Key).ToArray();
-                SelectedKeysChanged.InvokeAsync(SelectedKeys);
-            }
-
-            if (SelectedNodesChanged.HasDelegate)
-            {
                 SelectedNodes = SelectedNodesDictionary.Select(x => x.Value).ToArray();
-                SelectedNodesChanged.InvokeAsync(SelectedNodes);
+                SelectedDatas = SelectedNodesDictionary.Select(x => x.Value.DataItem).ToArray();
             }
 
-            if (SelectedDatasChanged.HasDelegate)
-            {
-                SelectedDatas = SelectedNodesDictionary.Select(x => x.Value.DataItem).ToArray();
-                SelectedDatasChanged.InvokeAsync(SelectedDatas);
-            }
+            if (SelectedKeyChanged.HasDelegate) SelectedKeyChanged.InvokeAsync(SelectedKey);
+            if (SelectedNodeChanged.HasDelegate) SelectedNodeChanged.InvokeAsync(SelectedNode);
+            if (SelectedDataChanged.HasDelegate) SelectedDataChanged.InvokeAsync(SelectedData);
+            if (SelectedKeysChanged.HasDelegate) SelectedKeysChanged.InvokeAsync(SelectedKeys);
         }
 
         #endregion

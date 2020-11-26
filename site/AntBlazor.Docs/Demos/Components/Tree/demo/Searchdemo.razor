@@ -2,74 +2,53 @@
 <Divider Text="Default search (case sensitive)"></Divider>
 <Tree ShowIcon SearchValue="@searchKey"
       DataSource="games"
-      TitleExpression="x => ((GameElementGroup)x.DataItem).Text"
-      ChildrenExpression="x => ((GameElementGroup)x.DataItem).Items"
-      IconExpression="x => ((GameElementGroup)x.DataItem).Icon"></Tree>
+      TitleExpression="x => x.DataItem.Text"
+      ChildrenExpression="x => x.DataItem.Items"
+      IconExpression="x => x.DataItem.Icon"></Tree>
 <Divider Text="Custom search (Ignore case)"></Divider>
 <Tree ShowIcon SearchValue="@searchKey"
       DataSource="games"
-      TitleExpression="x => ((GameElementGroup)x.DataItem).Text"
-      ChildrenExpression="x => ((GameElementGroup)x.DataItem).Items"
-      IconExpression="x => ((GameElementGroup)x.DataItem).Icon"
-      SearchExpression="x=> ((GameElementGroup)x.DataItem).Text.ToLower().Contains(searchKey.ToLower())"></Tree>
+      TitleExpression="x => x.DataItem.Text"
+      ChildrenExpression="x => x.DataItem.Items"
+      IconExpression="x => x.DataItem.Icon"
+      SearchExpression="x=> x.DataItem.Text.ToLower().Contains(searchKey.ToLower())"></Tree>
 
 @code{
     string searchKey;
 
-    List<GameElementGroup> games = new List<GameElementGroup>()
+    List<GameElement> games = new List<GameElement>()
 {
-        new GameElementGroup()
+        new ("100","XBox","windows")
         {
-            Text="XBox",
-            Icon="windows",
-            Items=new List<GameElementGroup>()
+            Items=new List<GameElement>()
 {
-                new GameElementGroup(){
-                    Text="Halo" ,
-                    Items = new List<GameElementGroup>(){
-                        new GameElementGroup(){Text="Halo1" },
-                        new GameElementGroup(){Text="Halo2" },
-                        new GameElementGroup(){Text="Halo3" },
-                        new GameElementGroup(){Text="Halo4" },
-                        new GameElementGroup(){Text="Halo:ODST" },
-                        new GameElementGroup(){Text="Halo:REACH" },
-                    },
-                },
-                new GameElementGroup(){Text="Gears of War"},
-                new GameElementGroup(){Text="Forza Motosport"},
+                new ("101","Halo"),
+                 new ("102","Gears of War"),
+                 new ("103","Forza Motosport"),
             }
         },
-                new GameElementGroup()
+        new ("200","PlayStation","desktop")
         {
-            Text="PlayStation",
-            Icon="desktop",
-            Items=new List<GameElementGroup>()
+            Items=new List<GameElement>()
 {
-                new GameElementGroup(){Text="Uncharted" },
-                new GameElementGroup(){Text="God Of War" },
-                new GameElementGroup(){Text="The Order:1886" },
+                new ("201","Uncharted"),
+                 new ("202","God Of War"),
+                 new ("203","The Order:1886"),
             }
         },
-                new GameElementGroup()
+                new ("300","Switch","mobile")
         {
-            Text="Switch",
-            Icon="mobile",
-            Items=new List<GameElementGroup>()
+            Items=new List<GameElement>()
 {
-                new GameElementGroup(){Text="Super Mario Bros"},
-                new GameElementGroup(){Text="The Legend of Zelda"},
+                new ("301","Super Mario Bros"),
+                 new ("302","The Legend of Zelda"),
             }
         }
     };
 
-    private class GameElementGroup
+    private record GameElement(string Id, string Text, string Icon = null)
     {
-        public string Text { get; set; }
-
-        public string Icon { get; set; }
-
-        public List<GameElementGroup> Items { get; set; }
-
+        public List<GameElement> Items { get; set; } = new List<GameElement>();
     }
 
 }
