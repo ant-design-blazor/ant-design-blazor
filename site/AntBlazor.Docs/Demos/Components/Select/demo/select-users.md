@@ -9,10 +9,12 @@ title:
 
 一个带有远程搜索，防抖控制，请求时序控制，加载状态的多选示例。
 
+Currently not implemented.
 ## en-US
 
 A complete multiple select sample with remote search, debounce fetch, ajax callback order flow, and loading state.
 
+Currently not implemented.
 ```jsx
 import { Select, Spin } from 'antd';
 import debounce from 'lodash/debounce';

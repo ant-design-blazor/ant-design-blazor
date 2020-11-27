@@ -1,56 +1,56 @@
 ﻿<Select Mode="multiple"
-        Style="width: 100%"
         Placeholder="Please select"
-        DefaultValue="@_defaultValues"
-        @bind-Value="@_value"
-        AllowClear
-        OnChange="OnChange">
-    @foreach (var item in _items)
-    {
-        <SelectOption Value="@item.Value">@item.Label</SelectOption>
-    }
+		@bind-Values="@_selectedValues1"
+		TItemValue="string"
+		TItem="string"
+		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
+		Style="width: 100%; margin-bottom: 8px;"
+		EnableSearch
+		AllowClear>
+		<SelectOptions>
+			@foreach(var item in _items)
+			{
+				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+			}
+		</SelectOptions>
 </Select>
 <Select Mode="multiple"
-        Style="width: 100%"
         Placeholder="Please select"
-        DefaultValue="@_defaultValues"
-        Disabled>
-    @foreach (var item in _items)
-    {
-        <SelectOption Value="@item.Value">@item.Label</SelectOption>
-    }
+		@bind-Values="@_selectedValues2"
+		TItemValue="string"
+		TItem="string"
+		Disabled>
+		<SelectOptions>
+			@foreach(var item in _items)
+			{
+				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+			}
+		</SelectOptions>
 </Select>
-<label>Selected Values: @_value</label>
-
-@using OneOf;
 @code
 {
-    public class CustomListItem
-    {
-        public string Label { get; set; }
-        public string Value { get; set; }
-    }
+    List<string> _items;
+    IEnumerable<string> _selectedValues1, _selectedValues2;
 
-    private string _value;
-    private CustomListItem[] _items;
-    private string[] _defaultValues;
-    
-    protected override void OnInitialized()
+	protected override void OnInitialized()
     {
         const int min = 10;
         const int max = 36;
-        _defaultValues = new[] { "v0a10", "v0c12" };
+        _items = new List<string>();
 
-        _items = new CustomListItem[max - min];
         for (var i = min; max > i; i++)
         {
-            var l = Convert.ToString(i, 16).PadLeft(2, '0') + i;
-            _items[i - min] = new CustomListItem() {Label = $"l{l}", Value = $"v{l}"};
+            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+            _items.Add(value);
         }
+
+		_selectedValues1 = new List<string> { "0a10" , "0c12"};
+		_selectedValues2 = new List<string> { "0a10" , "0c12"};
     }
 
-    private void OnChange(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value, OneOf<SelectOption, IEnumerable<SelectOption>> option)
+    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
     {
-        Console.WriteLine($"selected: ${value}");
+		if (values != null)
+			Console.WriteLine($"selected: ${string.Join(",", values)}");
     }
 }

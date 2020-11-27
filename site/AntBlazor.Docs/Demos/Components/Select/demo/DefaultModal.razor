@@ -1,0 +1,106 @@
+<Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+    Open Modal
+</Button>
+
+<Modal Title="@_title"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel"
+       DestroyOnClose="true">
+    <Form @ref="_form"
+          Model="@_formModel"
+          LabelCol="new ColLayoutParam { Span = 6 }"
+          WrapperCol="new ColLayoutParam { Span = 18 }">
+        <FormItem Label="Basic Select">
+            <Select DataSource="@_persons" 
+                    @bind-Value="@context.SelectValue1"
+                    LabelName="@nameof(Person.Name)" 
+                    ValueName="@nameof(Person.Id)" 
+                    DisabledName="@nameof(Person.NotAvailable)"
+                    Placeholder="Select a person"
+                    AllowClear>
+            </Select>
+        </FormItem>
+        <FormItem Label="Tags">
+            <Select DataSource="@_persons" 
+                    @bind-Value="@context.SelectValue2"
+                    LabelName="@nameof(Person.Name)" 
+                    ValueName="@nameof(Person.Id)" 
+                    DisabledName="@nameof(Person.NotAvailable)"
+                    Placeholder="Select a person"
+                    AllowClear>
+            </Select>
+        </FormItem>
+        <FormItem Label="Multiple">
+            <Select DataSource="@_persons" 
+                    @bind-Value="@context.SelectValue3"
+                    LabelName="@nameof(Person.Name)" 
+                    ValueName="@nameof(Person.Id)" 
+                    DisabledName="@nameof(Person.NotAvailable)"
+                    Placeholder="Select a person"
+                    AllowClear>
+            </Select>
+        </FormItem>
+        <FormItem>
+            <Button OnClick="@(ResetFormHandler)">Reset Form</Button>
+        </FormItem>
+    </Form>
+</Modal>
+
+@code
+{
+    class FormModel
+    {
+        public int? SelectValue1 { get; set; } = 7;
+        public int? SelectValue2 { get; set; }
+        public int? SelectValue3 { get; set; }
+    }
+
+    class Person
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool NotAvailable { get; set; }
+    }
+
+    FormModel _formModel = new FormModel();
+    Form<FormModel> _form;
+    string _title = "Basic Modal";
+    bool _visible = false;
+    List<Person> _persons;
+
+    protected override void OnInitialized()
+    {
+        _persons = new List<Person> 
+        {
+            new Person {Id = 1, Name = "Jack", NotAvailable = true}, 
+            new Person {Id = 2, Name = "Lucy"}, 
+            new Person {Id = 3, Name = "Yaoming"}, 
+            new Person {Id = 4, Name = "Frieda"}, 
+            new Person {Id = 5, Name = "Kathy", NotAvailable = true}, 
+            new Person {Id = 6, Name = "Kate"}, 
+            new Person {Id = 7, Name = "Eric"}, 
+            new Person {Id = 8, Name = "Jake", NotAvailable = true}, 
+            new Person {Id = 9, Name = "Olaf"}, 
+            new Person {Id = 10, Name = "Sven"}, 
+            new Person {Id = 11, Name = "Bernd", NotAvailable = true}, 
+            new Person {Id = 12, Name = "Jane"}, 
+            new Person {Id = 13, Name = "John"}
+        };
+    }
+
+    private void ResetFormHandler()
+    {
+        _form.Reset();
+    }
+
+    private void HandleOk(MouseEventArgs e)
+    {
+        _visible = false;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        _visible = false;
+    }
+}
