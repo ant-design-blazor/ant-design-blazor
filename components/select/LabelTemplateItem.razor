@@ -1,0 +1,18 @@
+﻿@using AntDesign.Select.Internal
+@namespace AntDesign.Select
+@typeparam TItemValue
+@typeparam TItem
+
+<span class="@Class" style="@Style">
+    <span class="@ContentClass" style="@ContentStyle">
+        @LabelTemplateItemContent(SelectOption.Item)
+    </span>
+    
+    @if (ParentSelectContent.ParentSelect.SelectMode != SelectMode.Default)
+    {
+        <span unselectable="on" aria-hidden="true" style="user-select: none; @RemoveIconStyle" class="@RemoveIconClass"
+              @onclick="()=> ParentSelectContent.OnRemoveSelected.InvokeAsync(SelectOption)" @onclick:stopPropagation="true">
+            <Icon Type="close"></Icon>
+        </span>
+    }
+</span>

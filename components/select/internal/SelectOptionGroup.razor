@@ -1,0 +1,32 @@
+﻿@namespace AntDesign.Select.Internal
+@inherits AntDomComponentBase
+@typeparam TItemValue
+@typeparam TItem
+
+@{
+    RenderFragment<SelectOptionItem<TItemValue, TItem>> selectOptionFragment = (model) => 
+        @<SelectOption
+            @key="@model.InternalId"
+            TItemValue="TItemValue"
+            TItem="TItem">
+        </SelectOption>;
+}
+
+@foreach (var selectOption in SelectParent.SortedSelectOptionItems)
+{
+    if (_oldGroupName == selectOption.GroupName)
+    {
+        <CascadingValue Value="@selectOption.InternalId" Name="InternalId">
+            @selectOptionFragment(selectOption)
+        </CascadingValue>
+    }
+    else
+    {
+        <div class="@ClassMapper.Class">@selectOption.GroupName</div>
+        <CascadingValue Value="@selectOption.InternalId" Name="InternalId">
+            @selectOptionFragment(selectOption)
+        </CascadingValue>
+        
+        _oldGroupName = selectOption.GroupName;
+    }   
+}

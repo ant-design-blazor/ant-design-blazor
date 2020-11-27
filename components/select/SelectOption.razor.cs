@@ -1,169 +1,248 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using AntDesign.Select.Internal;
 
-#pragma warning disable 1591
-#pragma warning disable CA1716
+#pragma warning disable 1591 // Disable missing XML comment
 
 namespace AntDesign
 {
-    public partial class SelectOption : AntDomComponentBase
+    public partial class SelectOption<TItemValue, TItem>
     {
+        private const string ClassPrefix = "ant-select-item-option";
 
-        #region Paramters
-        [Parameter] public bool IsTag { get; set; } = false;
+        # region Parameters
+        [CascadingParameter(Name = "ItemTemplate")] internal RenderFragment<TItem> ItemTemplate { get; set; }
+        [CascadingParameter] internal Select<TItemValue, TItem> SelectParent { get; set; }
+        [CascadingParameter(Name = "InternalId")] internal Guid InternalId { get; set; }
+        [Parameter] public TItemValue Value { get; set; }
+        /// <summary>
+        /// The parameter should only be used if the SelectOption was created directly.
+        /// </summary>
+        [Parameter] public string Label
+        {
+            get => _label;
+            set
+            {
+                if (_label != value)
+                {
+                    _label = value;
+                    StateHasChanged();
+                }
+            }
+        }
 
-        [Parameter] public bool IsSearch { get; set; } = false;
+        /// <summary>
+        /// The parameter should only be used if the SelectOption was created directly.
+        /// </summary>
+        [Parameter] public bool Disabled
+        {
+            get => _disabled;
+            set
+            {
+                if (_disabled != value)
+                {
+                    _disabled = value;
 
-        [Parameter] public string Title { get; set; }
+                    if (Model != null)
+                        Model.IsDisabled = value;
+                }
+            }
+        }
 
-        [Parameter] public string Value { get; set; }
-
-        [Parameter] public string ClassName { get; set; }
-
-        [Parameter] public bool Disabled { get; set; } = false;
-
-        [Parameter] public RenderFragment ChildContent { get; set; }
-
-        [CascadingParameter] public Select SelectParent { get; set; }
-
-        [CascadingParameter] public SelectOptGroup SelectOptGroupParent { get; set; }
-
-        [Parameter] public string Label { get => _label ?? Children; set => _label = value; }
         #endregion
 
-        #region Private
-        private string _label = null;
-        private bool _isActive = false;
-        private const string ClassPrefix = "ant-select-item-option";
-        private ElementReference _contentRef;
-        private bool IsSelected => IsTag || (!IsSearch && SelectParent.OptionIsSelected(Value));
+        # region Properties
+        private string _label = string.Empty;
+        private bool _disabled;
+        internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
 
-        #endregion Private
+        private bool _isSelected;
+        internal bool IsSelected
+        {
+            get => _isSelected;
+            set
+            {
+                if (_isSelected != value)
+                {
+                    _isSelected = value;
+                    StateHasChanged();
+                }
+            }
+        }
 
-        #region Protected
+        private bool _isDisabled;
+        internal bool IsDisabled
+        {
+            get => _isDisabled;
+            set
+            {
+                if (_isDisabled != value)
+                {
+                    _isDisabled = value;
+                    StateHasChanged();
+                }
+            }
+        }
+
+        private bool _isHidden;
+        internal bool IsHidden
+        {
+            get => _isHidden;
+            set
+            {
+                if (_isHidden != value)
+                {
+                    _isHidden = value;
+                    StateHasChanged();
+                }
+            }
+        }
+
+        private bool _isActive;
+        internal bool IsActive
+        {
+            get => _isActive;
+            set
+            {
+                if (_isActive != value)
+                {
+                    _isActive = value;
+                    StateHasChanged();
+                }
+            }
+        }
+
+        private string _internalLabel = string.Empty;
+        internal string InternalLabel
+        {
+            get => _internalLabel;
+            set
+            {
+                if (_internalLabel != value)
+                {
+                    _internalLabel = value;
+                    StateHasChanged();
+                }
+            }
+        }
+
+        private string _groupName = string.Empty;
+        internal string GroupName
+        {
+            get => _groupName;
+            set
+            {
+                if (_groupName != value)
+                {
+                    _groupName = value;
+                    StateHasChanged();
+                }
+            }
+        }
+
+        #endregion
+
+        protected override async Task OnInitializedAsync()
+        {
+            if (SelectParent.SelectOptions == null)
+            {
+                // The SelectOptionItem was already created, now only the SelectOption has to be 
+                // bound to the SelectOptionItem.
+                var item = SelectParent.SelectOptionItems.First(x => x.InternalId == InternalId);
+                item.ChildComponent = this;
+            }
+            else
+            {
+                // The SelectOption was not created by using a DataSource, a SelectOptionItem must be created.
+                InternalId = Guid.NewGuid();
+
+                var newSelectOptionItem = new SelectOptionItem<TItemValue, TItem>()
+                {
+                    InternalId = InternalId,
+                    Label = Label,
+                    IsDisabled = Disabled,
+                    GroupName = _groupName,
+                    Value = Value,
+                    Item = (TItem)Convert.ChangeType(Value, typeof(TItem)),
+                    ChildComponent = this
+                };
+
+                SelectParent.SelectOptionItems.Add(newSelectOptionItem);
+            }
+
+            SetClassMap();
+
+            await base.OnInitializedAsync();
+        }
+
         protected void SetClassMap()
         {
             ClassMapper.Clear()
                 .Add("ant-select-item")
                 .Add(ClassPrefix)
-                .If($"{ClassPrefix}-disabled", () => Disabled)
+                .If($"{ClassPrefix}-disabled", () => IsDisabled)
                 .If($"{ClassPrefix}-selected", () => IsSelected)
-                .If($"{ClassPrefix}-active", () => _isActive)
-                .If($"{ClassPrefix}-grouped", () => SelectOptGroupParent != null)
-                .If(ClassName, () => !string.IsNullOrWhiteSpace(ClassName));
-        }
+                .If($"{ClassPrefix}-active", () => IsActive)
+                .If($"{ClassPrefix}-grouped", () => SelectParent.IsGroupingEnabled);
 
-        #region Properties
+            StateHasChanged();
+        }
 
         protected string InnerStyle
         {
             get
             {
-                if (IsSearch)
-                {
+                if (!IsHidden)
                     return Style;
-                }
-
-                if (SelectParent.IsShowOption(this))
-                {
-                    return Style;
-                }
 
                 return Style + ";display:none";
             }
         }
-        #endregion
 
-        #region Events
-        protected override void Dispose(bool disposing)
+        protected async Task OnClick(EventArgs _)
         {
-            SelectParent?.RemoveOption(this);
-            SelectOptGroupParent?.RemoveOption(this);
-            base.Dispose(disposing);
-        }
-
-        protected override async Task OnInitializedAsync()
-        {
-            SetClassMap();
-
-            SelectParent?.AddOption(this);
-            SelectOptGroupParent?.AddOption(this);
-
-            await base.OnInitializedAsync();
-        }
-
-        protected override void OnInitialized()
-        {
-        }
-
-        protected override async Task OnFirstAfterRenderAsync()
-        {
-            if (string.IsNullOrEmpty(Children))
+            if (!IsDisabled)
             {
-                await Task.Delay(1);
-                Children = await JsInvokeAsync<string>(JSInteropConstants.GetInnerText, _contentRef);
-            }
-        }
-
-        protected async Task OnSelectOptionClick(EventArgs _)
-        {
-            if (!Disabled)
-            {
-                await Task.Delay(1);
-                await SelectParent.ToggleOrSetValue(Value);
+                await SelectParent.SetValueAsync(Model);
 
                 if (SelectParent.SelectMode == SelectMode.Default)
                 {
-                    await SelectParent.Close();
+                    await SelectParent.CloseAsync();
+                }
+                else
+                {
+                    await SelectParent.UpdateOverlayPositionAsync();
                 }
             }
         }
 
-        protected virtual async Task OnSelectOptionMouseEnter()
+        protected void OnMouseEnter()
         {
-            _isActive = true;
-            SetClassMap();
+            // Workaround to prevent double active items if the actual active item was set by keyboard
+            SelectParent.SelectOptionItems.Where(x => x.IsActive)
+                .ForEach(i => i.IsActive = false);
+
+            Model.IsActive = true;
         }
 
-        protected virtual async Task OnSelectOptionMouseLeave()
+        protected void OnMouseLeave()
         {
-            _isActive = false;
-            SetClassMap();
+            Model.IsActive = false;
         }
-        #endregion Events
 
-        #region Methods
-        internal void SearchToTag()
+        protected override void Dispose(bool disposing)
         {
-            if (IsSearch)
+            if (SelectParent.SelectOptions != null)
             {
-                IsTag = true;
-                IsSearch = false;
-            }
-        }
-        #endregion
-        #endregion Protected
+                // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource.
+                var selectOptionItem = SelectParent.SelectOptionItems.First(x => x.InternalId == InternalId);
 
-        #region Public
-        #region Properties
-        #region Generals
-        public string Children { get; private set; } = string.Empty;
-        #endregion
-
-        #endregion
-        #endregion
-
-        public override bool Equals(object obj)
-        {
-            SelectOption compareObj = obj as SelectOption;
-
-            if (compareObj == null)
-            {
-                return false;
+                SelectParent.SelectOptionItems.Remove(selectOptionItem);
             }
 
-            return this.Value == compareObj.Value;
+            base.Dispose(disposing);
         }
     }
 }

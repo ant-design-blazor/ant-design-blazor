@@ -1,116 +1,100 @@
-﻿@namespace AntDesign.Internal
-@inherits AntDomComponentBase
-@using OneOf;
+﻿@using AntDesign
+@namespace AntDesign.Select.Internal
+@typeparam TItemValue
+@typeparam TItem
 
-@switch (ParentSelect.SelectMode)
-{
-    case SelectMode.Default:
+<div class="@Prefix-selector">
+    
+    @if (ShowPlaceholder)
+    {
+        <span class="@Prefix-selection-placeholder">@Placeholder</span>
+    }
+    else
+    {
+        @if (ParentSelect.SelectMode == SelectMode.Default)
         {
-            var selectedOption = ParentSelect.SelectedOptions.FirstOrDefault();
-
-            <div class="@Prefix-selector">
-                <span class="@Prefix-selection-search">
-                    <input @ref="ParentSelect._inputRef"
-                           @oninput="OnInput"
-                           id="@ParentSelect.Id"
-                           value="@SearchValue"
-                           role="combobox"
-                           class="@Prefix-selection-search-input"
-                           autocomplete="off"
-                           aria-owns="@(ParentSelect.Id)_list"
-                           aria-expanded="@IsOverlayShow"
-                           aria-autocomplete="list"
-                           aria-controls="@(ParentSelect.Id)_list" />
-                </span>
-
-                @if (ShowPlaceholder)
+            var selectedItem = ParentSelect.SelectOptionItems.FirstOrDefault(x => x.IsSelected);
+            
+            if (string.IsNullOrEmpty(SearchValue) && selectedItem != null)
+            {
+                @if (ParentLabelTemplate != null)
                 {
-                    <span class="ant-select-selection-placeholder">@Placeholder</span>
+                    <CascadingValue Value="this" Name="SelectContent">
+                        <CascadingValue Value="@selectedItem" Name="SelectOption">
+                            @ParentLabelTemplate(selectedItem.Item)
+                        </CascadingValue>
+                    </CascadingValue>
                 }
-                else if (string.IsNullOrEmpty(SearchValue) && selectedOption != null)
+                else
                 {
-                    <span class="ant-select-selection-item">
-                    @{
-                        var showValue = GetOptionShowValue(selectedOption);
-                        if (showValue.IsT0)
-                        {
-                            @showValue.AsT0
-                        }
-                        else
-                        {
-                            @showValue.AsT1
-                        }
-                    }
+                    <span class="@Prefix-selection-item">
+                        <span class="@Prefix-selection-item-content">
+                            @selectedItem.Label
+                        </span>
                     </span>
                 }
-            </div>
-
-            break;
+            }
         }
-    default:
+        else
         {
-            <div class="@Prefix-selector">
-                @foreach (var option in ParentSelect.SelectedOptions)
-                {
-                    if (ParentSelect.TagRender != null)
-                    {
-                        <span @key="@option.Value">@ParentSelect.TagRender(GetProperties(option))</span>
-                    }
-                    else
-                    {
-                        <span class="@Prefix-selection-item">
-                            <span class="@Prefix-selection-item-content">
-                                @{
-                                    var showValue = GetOptionShowValue(option);
-                                    if (showValue.IsT0)
-                                    {
-                                        @showValue.AsT0
-                                    }
-                                    else
-                                    {
-                                        @showValue.AsT1
-                                    }
-                                }
-                            </span>
+            var selectedItems = ParentSelect.SortedSelectOptionItems.Where(x => x.IsSelected);
 
-                            @if (ParentSelect.SelectMode == SelectMode.Tags || ParentSelect.SelectMode == SelectMode.Multiple)
-                            {
-                                <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
-                                      @onclick="()=>OnRemoveSelected.InvokeAsync(option)" @onclick:stopPropagation="true">
-                                    <Icon Type="close"></Icon>
-                                </span>
-                            }
+            @foreach (var selectedOption in selectedItems)
+            {
+                @if (ParentLabelTemplate != null)
+                {
+                    <CascadingValue Value="this" Name="SelectContent">
+                        <CascadingValue Value="@selectedOption" Name="SelectOption">
+                            @ParentLabelTemplate(selectedOption.Item)
+                        </CascadingValue>
+                     </CascadingValue>
+                }
+                else
+                {
+                    <span class="@Prefix-selection-item">
+                        <span class="@Prefix-selection-item-content">
+                                @selectedOption.Label
                         </span>
-                    }
+                        <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
+                              @onclick="()=> OnRemoveSelected.InvokeAsync(selectedOption)" @onclick:stopPropagation="true">
+                            <Icon Type="close"></Icon>
+                        </span>
+                    </span>                    
                 }
-
-                <span class="@Prefix-selection-search" style="width:@InputWidth">
-                    <input @ref="ParentSelect._inputRef"
-                           @oninput="OnInput"
-                           @onkeyup="OnKeyUp"
-                           @bind-value="@SearchValue"
-                           id="@ParentSelect.Id"
-                           role="combobox"
-                           class="@Prefix-selection-search-input"
-                           autocomplete="off"
-                           aria-owns="@(ParentSelect.Id)_list"
-                           aria-expanded="@IsOverlayShow"
-                           aria-autocomplete="list"
-                           aria-controls="@(ParentSelect.Id)_list" />
-
-                    <span class="@Prefix-selection-search-mirror" aria-hidden="true">&nbsp;</span>
-                </span>
-
-                @if (ShowPlaceholder)
-                {
-                    <span class="ant-select-selection-placeholder">@Placeholder</span>
-                }
-            </div>
-            break;
+            }
         }
-}
+    }
 
-@if (ParentSelect.ShowArrow && ParentSelect.SelectMode == SelectMode.Default)
+    <span class="@Prefix-selection-search" style="@_inputWidth">
+        <input @ref="ParentSelect._inputRef"
+                @oninput="OnInput"
+                @onkeyup="OnKeyUp"
+                @onkeydown="OnKeyDown"
+                @onfocus="OnFocus"
+                @onblur="OnBlur"
+                @attributes=@AdditonalAttributes() 
+                @onkeypress="@OnKeyPressEventHandler"
+                @onkeypress:preventDefault="@_suppressInput"
+                @onkeypress:stopPropagation="true"
+                value="@SearchValue"
+                id="@ParentSelect.Id"
+                role="combobox"
+                class="@Prefix-selection-search-input"
+                autocomplete="off"
+                aria-owns="@(ParentSelect.Id)_list"
+                aria-expanded="@IsOverlayShow"
+                aria-autocomplete="list"
+                aria-controls="@(ParentSelect.Id)_list"
+                style="@_inputStyle"/>
+
+        @if (ParentSelect.SelectMode != SelectMode.Default)
+        {
+            <span class="@Prefix-selection-search-mirror" aria-hidden="true">&nbsp;</span>
+        }
+    </span>
+</div>
+
+@if (ParentSelect.SelectMode == SelectMode.Default)
 {
     if (ParentSelect.SuffixIcon != null)
     {
@@ -126,96 +110,49 @@
     }
     else
     {
-        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">
-            @if (ParentSelect.ShowSearch && IsOverlayShow)
-            {
-                <Icon Type="search"></Icon>
-            }
-            else
-            {
-                <Icon Type="down"></Icon>
-            }
-        </span>
+        if (ShowArrowIcon)
+        {
+            <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">
+                @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
+                {
+                    if (ShowSearchIcon)
+                    {
+                        <Icon Type="search"></Icon>
+                    }
+                }
+                else
+                {
+                    <Icon Type="down"></Icon>
+                }
+            </span>
+        }
+        else
+        {
+            <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">
+                @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
+                {
+                    if (ShowSearchIcon)
+                    {
+                        <Icon Type="search"></Icon>
+                    }
+                }
+            </span>
+        }
+        
         @if (ParentSelect.AllowClear && ParentSelect.HasValue)
         {
-            <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick">
-                <Icon Type="close-circle"></Icon>
+            <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick" @onclick:stopPropagation="true">
+                <Icon Type="close-circle" theme="fill"></Icon>
             </span>
         }
     }
 }
-else if (ParentSelect.SelectMode != SelectMode.Default)
+else
 {
     @if (ParentSelect.AllowClear && ParentSelect.HasValue)
     {
-        <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick">
-            <Icon Type="close-circle"></Icon>
+        <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick" @onclick:stopPropagation="true">
+            <Icon Type="close-circle" theme="fill"></Icon>
         </span>
-    }
-}
-
-@code
-{
-    [CascadingParameter(Name = "ParentSelect")]
-    public Select ParentSelect { get; set; }
-
-    [Parameter]
-    public string Prefix { get; set; }
-
-    [Parameter]
-    public string SearchValue { get; set; }
-
-    [Parameter]
-    public string Placeholder { get; set; }
-
-    [Parameter]
-    public string InputWidth { get; set; }
-
-    [Parameter]
-    public bool IsOverlayShow { get; set; }
-
-    [Parameter]
-    public bool ShowPlaceholder { get; set; }
-
-    [Parameter]
-    public EventCallback<ChangeEventArgs> OnInput { get; set; }
-
-    [Parameter]
-    public EventCallback<SelectOption> OnRemoveSelected { get; set; }
-
-    [Parameter]
-    public Func<SelectOption, OneOf<string, RenderFragment>> GetOptionShowValue { get; set; }
-
-    protected bool IsShowSearch()
-    {
-        if (ParentSelect.SelectMode == SelectMode.Default)
-        {
-            return ParentSelect.ShowSearch;
-        }
-        return true;
-    }
-
-    protected async Task OnClearClick(MouseEventArgs _)
-    {
-        await ParentSelect.ResetStateAsync();
-    }
-
-    protected async void OnKeyUp(KeyboardEventArgs e)
-    {
-        if (e.Code == "Enter")
-        {
-            await ParentSelect.TransSearchValueToTag();
-        }
-    }
-
-    protected Properties GetProperties(SelectOption option)
-    {
-        return new Properties
-        {
-            Closable = true,
-            Value = option.Value,
-            Label = option.Label,
-            OnClose = (e) => { OnRemoveSelected.InvokeAsync(option); }
-        };
     }
 }
