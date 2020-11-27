@@ -109,7 +109,7 @@ namespace AntDesign
                     return null;
                 }
 
-                return Convert.ToDateTime(indexValue, this.CultureInfo);
+                return Convert.ToDateTime(indexValue, CultureInfo);
             }
             else if (DefaultValues[index] != null)
             {

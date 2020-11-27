@@ -13,6 +13,7 @@
     "next_3": "3 Seiten vor"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Monday",
     "lang": {
       "placeholder": "Datum auswählen",
       "rangePlaceholder": [ "Startdatum", "Enddatum" ],
@@ -29,10 +30,10 @@
       "monthSelect": "Wähle einen Monat",
       "yearSelect": "Wähle ein Jahr",
       "decadeSelect": "Wähle ein Jahrzehnt",
-      "yearFormat": "YYYY",
-      "dateFormat": "D.M.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D.M.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d.M.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d.M.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Vorheriger Monat (PageUp)",
       "nextMonth": "Nächster Monat (PageDown)",
@@ -41,7 +42,21 @@
       "previousDecade": "Vorheriges Jahrzehnt",
       "nextDecade": "Nächstes Jahrzehnt",
       "previousCentury": "Vorheriges Jahrhundert",
-      "nextCentury": "Nächstes Jahrhundert"
+      "nextCentury": "Nächstes Jahrhundert",
+      "startDate": "Startdatum",
+      "startWeek": "Startwoche",
+      "startMonth": "Startmonat",
+      "startYear": "Startjahr",
+      "startQuarter": "Startquartal",
+      "endDate": "Schlussdatum",
+      "endWeek": "Schlusswoche",
+      "endMonth": "Schlussmonat",
+      "endYear": "Schlussjahr",
+      "endQuarter": "Schlussquartal",
+      "quarterSelect": "Quartal wählen",
+      "week": "Woche",
+      "monthFormat": "MMM",
+      "shortWeekDays": [ "Mo", "Di", "Mi", "Do", "Fr", "Sa", "So" ]
     },
     "timePickerLocale": { "placeholder": "Zeit auswählen" }
   },

@@ -3,7 +3,7 @@
 
 <Tabs>
     <TabPane Key="1">
-        <Tab>示例1</Tab>
+        <Tab>Example 1</Tab>
         <ChildContent>
             <AntDesign.Charts.Column @ref="chart1" Data="data1" Config="config1"/>
             <Button OnClick="Render">Render</Button>
@@ -39,12 +39,12 @@
             Title = new Title
             {
                 Visible = true,
-                Text = "设置active状态"
+                Text = "Set active state"
             },
             Description = new Description
             {
                 Visible = true,
-                Text = "已经应用了新配置"
+                Text = "The new configuration has been applied"
             },
             XField = "year",
             YField = "value",
@@ -110,7 +110,7 @@
         StateHasChanged();
     }
 
-    #region 示例1
+    #region Example 1
 
     readonly DataItem[] data1 =
     {
@@ -130,12 +130,12 @@
         Title = new Title
         {
             Visible = true,
-            Text = "设置active状态"
+            Text = "Set active state"
         },
         Description = new Description
         {
             Visible = true,
-            Text = "设置单值active状态。"
+            Text = "Set the single value active state."
         },
         XField = "year",
         YField = "value"
@@ -147,6 +147,6 @@
         public int value { get; set; }
     }
 
-    #endregion 示例1
+    #endregion Example 1
 
 }

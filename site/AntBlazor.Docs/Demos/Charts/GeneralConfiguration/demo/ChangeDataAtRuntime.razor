@@ -1,0 +1,54 @@
+@using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+
+    <Tabs ActiveKeyChanged="OnTabChanged">
+        <TabPane Key="1">
+            <Tab>Example 1</Tab>
+            <ChildContent>
+                <Line @ref="chart1" Data="data1" Config="config1" />
+            </ChildContent>
+        </TabPane>
+    </Tabs>
+
+@code{
+
+    IChartComponent chart1;
+    FertilityItem[] data1;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        OnTabChanged("1");
+    }
+
+    private async void OnTabChanged(string activeKey)
+    {
+        if (activeKey == "1")
+        {
+            data1 = await ChartsDemoData.FertilityItemAsync(NavigationManager, HttpClient);
+            await chart1.ChangeData(data1);
+        }
+    }
+
+    readonly LineConfig config1 = new LineConfig
+    {
+        Title = new Title
+        {
+            Visible = true,
+            Text = "Load data from WebService on load."
+        },
+        ForceFit = true,
+        Padding = "auto",
+        XField = "year",
+        YField = "value",
+        SeriesField = "country",
+        XAxis = new ValueCatTimeAxis
+        {
+            Type = "dateTime",
+            TickCount = 5
+        }
+    };
+}

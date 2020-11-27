@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 
@@ -24,6 +25,12 @@ namespace AntDesign
 
         [Parameter]
         public bool IsShowHeader { get; set; } = true;
+
+        [Parameter]
+        public DatePickerLocale Locale { get; set; }
+
+        [Parameter]
+        public CultureInfo CultureInfo { get; set; }
 
         [Parameter]
         public Action ClosePanel { get; set; }
@@ -79,6 +86,8 @@ namespace AntDesign
             {
                 { "PrefixCls", PrefixCls },
                 { "Picker", Picker },
+                { "Locale", Locale },
+                { "CultureInfo", CultureInfo },
                 { "ClosePanel", ClosePanel },
                 { "ChangePickerValue", ChangePickerValue },
                 { "ChangeValue", ChangeValue },
