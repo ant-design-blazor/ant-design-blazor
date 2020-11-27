@@ -15,8 +15,8 @@
             @if (context.Type == 1)
             {
                 <FormItem>
-                    <Select @bind-Value="@context.Name" DefaultValue=@("lucy") Style="width:120px" AllowClear>
-                        <SelectOption Value="lucy">Lucy</SelectOption>
+                    <Select TItem="string" TItemValue="string" @bind-Value="@context.Name" DefaultValue=@("lucy") Style="width:120px" AllowClear>
+                        <SelectOption TItem="string" TItemValue="string" Value=@("lucy")>Lucy</SelectOption>
                     </Select>
                 </FormItem>
             }
