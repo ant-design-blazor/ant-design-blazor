@@ -4,10 +4,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public static class DescriptionsLayout
+    public class DescriptionsLayout : AntDirectionVHType
     {
-        public const string Horizontal = "horizontal";
-        public const string Vertical = "vertical";
-
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public sealed class DatePickerSize: AntSizeLDSType
+    public sealed class DrawerPlacement: AntFourDirectionType
     {
     }
 }

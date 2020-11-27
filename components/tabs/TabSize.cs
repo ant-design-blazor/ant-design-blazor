@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public static class TabSize
+    public sealed class TabSize : AntSizeLDSType
     {
-        public const string Large = "large";
-        public const string Default = "default";
-        public const string Small = "small";
     }
 }

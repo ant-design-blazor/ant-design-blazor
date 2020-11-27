@@ -5,11 +5,8 @@ using OneOf;
 
 namespace AntDesign
 {
-    public static class SkeletonElementSize
+    public sealed class SkeletonElementSize : AntSizeLDSType
     {
-        public const string Default = "default";
-        public const string Large = "large";
-        public const string Small = "small";
     }
 
     public static class SkeletonAvatarShape

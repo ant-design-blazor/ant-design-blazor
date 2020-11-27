@@ -12,24 +12,17 @@ namespace AntDesign
         Inline
     }
 
-    public enum AntDirectionVHType
+    public class AntDirectionVHType
     {
-        Vertical,
-        Horizontal
+        public const string Horizontal = "horizontal";
+        public const string Vertical = "vertical";
     }
 
-    public enum AntFourDirectionType
+    public class AntFourDirectionType
     {
-        Top,
-        Bottom,
-        Left,
-        Right
-    }
-
-    public enum AntAlignType
-    {
-        Top,
-        Middle,
-        Bottom
+        public const string Top = "top";
+        public const string Bottom = "bottom";
+        public const string Left = "left";
+        public const string Right = "right";
     }
 }
