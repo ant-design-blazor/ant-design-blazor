@@ -5,8 +5,8 @@
     <Form Model="@_baseFormModel"
           Name="basicForm"
           OnFinish="OnBasicFinish"
-          LabelCol="new ColLayoutParam { Span = 8 }"
-          WrapperCol="new ColLayoutParam { Span = 16 }">
+      LabelColSpan="8"
+      WrapperColSpan="16">
         <FormItem Label="Group Name">
             <Input @bind-Value="context.GroupName" />
         </FormItem>
@@ -32,7 +32,7 @@
                 </Paragraph>
             }
         </FormItem>
-        <FormItem WrapperCol="new ColLayoutParam { Offset = 8, Span = 16 }">
+        <FormItem WrapperColOffset="8" WrapperColSpan="16">
             <Button HtmlType="submit" Type="@ButtonType.Primary">
                 Submit
             </Button>
