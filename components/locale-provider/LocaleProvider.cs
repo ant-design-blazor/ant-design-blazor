@@ -56,7 +56,7 @@ namespace AntDesign
             });
         }
 
-        private static void SetLocale(string cultureName, Locale locale = null)
+        public static void SetLocale(string cultureName, Locale locale = null)
         {
             var culture = CultureInfo.GetCultureInfo(cultureName);
 
