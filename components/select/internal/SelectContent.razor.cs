@@ -60,11 +60,11 @@ namespace AntDesign.Select.Internal
             {
                 if (ParentSelect.HasValue)
                 {
-                    _inputWidth = "width: 4px;"; //ToDo fix class 
+                    _inputWidth = "width: 4px;"; //ToDo fix class
                 }
                 else
                 {
-                    _inputWidth = "width: 4px; margin-left: 6.5px;"; //ToDo fix class     
+                    _inputWidth = "width: 4px; margin-left: 6.5px;"; //ToDo fix class
                 }
             }
         }

@@ -17,10 +17,12 @@ namespace AntDesign
         [CascadingParameter] internal Select<TItemValue, TItem> SelectParent { get; set; }
         [CascadingParameter(Name = "InternalId")] internal Guid InternalId { get; set; }
         [Parameter] public TItemValue Value { get; set; }
+
         /// <summary>
         /// The parameter should only be used if the SelectOption was created directly.
         /// </summary>
-        [Parameter] public string Label
+        [Parameter]
+        public string Label
         {
             get => _label;
             set
@@ -36,7 +38,8 @@ namespace AntDesign
         /// <summary>
         /// The parameter should only be used if the SelectOption was created directly.
         /// </summary>
-        [Parameter] public bool Disabled
+        [Parameter]
+        public bool Disabled
         {
             get => _disabled;
             set
@@ -59,6 +62,7 @@ namespace AntDesign
         internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
 
         private bool _isSelected;
+
         internal bool IsSelected
         {
             get => _isSelected;
@@ -73,6 +77,7 @@ namespace AntDesign
         }
 
         private bool _isDisabled;
+
         internal bool IsDisabled
         {
             get => _isDisabled;
@@ -87,6 +92,7 @@ namespace AntDesign
         }
 
         private bool _isHidden;
+
         internal bool IsHidden
         {
             get => _isHidden;
@@ -101,6 +107,7 @@ namespace AntDesign
         }
 
         private bool _isActive;
+
         internal bool IsActive
         {
             get => _isActive;
@@ -115,6 +122,7 @@ namespace AntDesign
         }
 
         private string _internalLabel = string.Empty;
+
         internal string InternalLabel
         {
             get => _internalLabel;
@@ -129,6 +137,7 @@ namespace AntDesign
         }
 
         private string _groupName = string.Empty;
+
         internal string GroupName
         {
             get => _groupName;
@@ -148,7 +157,7 @@ namespace AntDesign
         {
             if (SelectParent.SelectOptions == null)
             {
-                // The SelectOptionItem was already created, now only the SelectOption has to be 
+                // The SelectOptionItem was already created, now only the SelectOption has to be
                 // bound to the SelectOptionItem.
                 var item = SelectParent.SelectOptionItems.First(x => x.InternalId == InternalId);
                 item.ChildComponent = this;
@@ -234,7 +243,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (SelectParent.SelectOptions != null)
+            if (SelectParent?.SelectOptions != null)
             {
                 // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource.
                 var selectOptionItem = SelectParent.SelectOptionItems.First(x => x.InternalId == InternalId);

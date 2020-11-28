@@ -286,6 +286,7 @@ namespace AntDesign
         private IEnumerable<TItemValue> _defaultValues;
         private bool _defaultValuesHasItems;
         private bool _isInitialized;
+        private bool _waittingStateChange;
         internal ElementReference _inputRef;
         protected OverlayTrigger _dropDown;
 
@@ -343,6 +344,12 @@ namespace AntDesign
                 {
                     await TrySetDefaultValuesAsync();
                 }
+            }
+
+            if (_waittingStateChange)
+            {
+                _waittingStateChange = false;
+                StateHasChanged();
             }
 
             await base.OnAfterRenderAsync(firstRender);
@@ -714,6 +721,8 @@ namespace AntDesign
                     if (HideSelected)
                         result.IsHidden = true;
 
+                    _waittingStateChange = true;
+
                     await ValueChanged.InvokeAsync(result.Value);
                 }
                 else
@@ -767,6 +776,8 @@ namespace AntDesign
                 }
                 else
                 {
+                    _waittingStateChange = true;
+
                     await InvokeValuesChanged();
                 }
             }
@@ -1143,7 +1154,6 @@ namespace AntDesign
                         ClearSearch();
                         return;
                     }
-
 
                     //var firstActive = SelectOptionItems.FirstOrDefault(x => x.IsActive);
 
