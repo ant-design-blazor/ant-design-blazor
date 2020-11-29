@@ -574,9 +574,6 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            var ss = GGG;
-
-            var s2 = typeof(TItem);
             SetTreeNodeClassMapper();
             if (ParentNode != null)
                 ParentNode.AddNode(this);
