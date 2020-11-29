@@ -1,10 +1,9 @@
 ﻿@namespace AntDesign.Internal
 @typeparam TValue
 @inherits DatePickerPanelBase<TValue>
-@using System.Globalization;
 
 @{
-    var calendar = this.DatePicker.CultureInfo.Calendar;
+    var calendar = CultureInfo.Calendar;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
@@ -12,15 +11,15 @@
     // sunday should be 7
     if (monthFirstDayOfWeek == 0)
     {
-        monthFirstDayOfWeek = 7;
+        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(Locale.FirstDayOfWeek);
     }
 
-    int diffDay = (int)this.DatePicker.CultureInfo.DateTimeFormat.FirstDayOfWeek - monthFirstDayOfWeek;
+    int diffDay = (int) Locale.FirstDayOfWeek - monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
 
 <div class='@($"{PrefixCls}-panel")'>
-    <DatePickerTemplate TValue="TValue" 
+    <DatePickerTemplate TValue="TValue"
                         @attributes="GetAttritubes()"
                            MaxRow="6"
                            MaxCol="7"
@@ -30,7 +29,7 @@
                            IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
                            IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
                            IsSelected="date => !IsWeek && DateHelper.IsSameDay(date, Value)"
-                           GetColTitle='date => date.ToString(this.DatePicker.CultureInfo.GetDateLocale().DateFormat, this.DatePicker.CultureInfo)'
+                           GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                            OnRowSelect="OnRowSelect"
                            OnValueSelect="OnValueSelect"
                            GetNextColValue="date => date.AddDays(1)">
@@ -48,7 +47,7 @@
                 {
                     <th></th>
                 }
-                @foreach(string weekDay in this.DatePicker.CultureInfo.GetDateLocale().ShortWeekDays)
+                @foreach(string weekDay in Locale.Lang.ShortWeekDays)
                 {
                     <th>@(weekDay)</th>
                 }
@@ -80,9 +79,9 @@
 @if (ShowToday && !IsRange && Picker != DatePickerType.Time)
 {
     <div class="@(PrefixCls)-footer">
-        <a class="@(PrefixCls)-today-btn" 
+        <a class="@(PrefixCls)-today-btn"
            @onclick="e => { OnSelectDate(DateTime.Now); Close(); }">
-            @this.DatePicker.CultureInfo.GetDateLocale().Today
+            @Locale.Lang.Today
         </a>
     </div>
 }

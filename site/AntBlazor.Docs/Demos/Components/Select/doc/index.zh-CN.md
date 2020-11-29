@@ -15,11 +15,6 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 
 ## API
 
-```razor
-<Select>
-  <SelectOption Value="lucy">lucy</SelectOption>
-</Select>
-```
 
 ### Select props
 

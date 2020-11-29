@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Globalization;
-using AntDesign.Internal;
 
 namespace AntDesign
 {
     public interface IDatePicker
     {
         public DateTime CurrentDate { get; set; }
-        public CultureInfo CultureInfo { get; set; }
 
         internal DateTime? HoverDateTime { get; set; }
 

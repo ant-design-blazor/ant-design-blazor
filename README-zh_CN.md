@@ -10,9 +10,10 @@
 
 一套基于 Ant Design 和 Blazor 的企业级组件库
 
-![](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
+![Build](https://img.shields.io/github/workflow/status/ant-design-blazor/ant-design-blazor/Publish%20Docs?style=flat-square)
 [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
 [![AntDesign](https://img.shields.io/nuget/dt/AntDesign.svg?style=flat-square)](https://www.nuget.org/packages/AntDesign/)
+[![Pro 模板](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Pro%20模板&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
 [![codecov](https://img.shields.io/codecov/c/github/ant-design-blazor/ant-design-blazor/master.svg?style=flat-square)](https://codecov.io/gh/ant-design-blazor/ant-design-blazor)
 [![AntDesign](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/LICENSE)
 [![Slack Group](https://img.shields.io/badge/Slack-AntBlazor-blue.svg?style=flat-square&logo=slack)](https://join.slack.com/t/AntBlazor/shared_invite/zt-etfaf1ww-AEHRU41B5YYKij7SlHqajA)
@@ -70,7 +71,7 @@ WebAssembly 静态托管页面示例
 
 - 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 以上版本，推荐 .NET 5
 
-### 从模板创建一个新项目
+### 从模板创建一个新项目 [![Pro 模板](https://img.shields.io/nuget/v/AntDesign.Templates?color=%23512bd4&label=Pro%20模板&style=flat-square)](https://github.com/ant-design-blazor/ant-design-pro-blazor)
 
 我们提供了 `dotnet new` 模板来创建一个开箱即用的 [Ant Design Pro](https://github.com/ant-design-blazor/ant-design-pro-blazor) 新项目：
 

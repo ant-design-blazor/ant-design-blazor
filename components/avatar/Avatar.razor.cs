@@ -53,7 +53,7 @@ namespace AntDesign
         public string Icon { get; set; }
 
         [Parameter]
-        public EventCallback<ErrorEventArgs> Error { get; set; }
+        public EventCallback<ErrorEventArgs> OnError { get; set; }
 
         [CascadingParameter]
         public AvatarGroup Group { get; set; }
@@ -66,9 +66,9 @@ namespace AntDesign
         /// </summary>
         internal bool Overflow { get; set; }
 
-        private bool _hasText = false;
+        private bool _hasText;
         private bool _hasSrc = true;
-        private bool _hasIcon = false;
+        private bool _hasIcon;
 
         private string _textStyles = "";
 
@@ -86,9 +86,7 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-
             Group?.AddAvatar(this);
-
 
             SetClassMap();
             SetSizeStyle();
@@ -96,9 +94,9 @@ namespace AntDesign
 
         protected override void OnParametersSet()
         {
-            this._hasText = string.IsNullOrEmpty(this.Src) && (!string.IsNullOrEmpty(this._text) || _childContent != null);
-            this._hasIcon = string.IsNullOrEmpty(this.Src) && !string.IsNullOrEmpty(this.Icon);
-            this._hasSrc = !string.IsNullOrEmpty(this.Src);
+            _hasText = string.IsNullOrEmpty(Src) && (!string.IsNullOrEmpty(_text) || _childContent != null);
+            _hasIcon = string.IsNullOrEmpty(Src) && !string.IsNullOrEmpty(Icon);
+            _hasSrc = !string.IsNullOrEmpty(Src);
 
             base.OnParametersSet();
         }
@@ -116,17 +114,17 @@ namespace AntDesign
 
         private async Task ImgError(ErrorEventArgs args)
         {
-            await Error.InvokeAsync(args);
-            this._hasSrc = false;
-            this._hasIcon = false;
-            this._hasText = false;
-            if (!string.IsNullOrEmpty(this.Icon))
+            await OnError.InvokeAsync(args);
+            _hasSrc = false;
+            _hasIcon = false;
+            _hasText = false;
+            if (!string.IsNullOrEmpty(Icon))
             {
-                this._hasIcon = true;
+                _hasIcon = true;
             }
-            else if (!string.IsNullOrEmpty(this._text))
+            else if (!string.IsNullOrEmpty(_text))
             {
-                this._hasText = true;
+                _hasText = true;
             }
 
             _waitingCaclSize = true;
@@ -136,22 +134,21 @@ namespace AntDesign
         {
             ClassMapper.Clear()
                 .Add(_prefixCls)
-                .GetIf(() => $"{_prefixCls}-{this._sizeMap[this.Size]}", () => _sizeMap.ContainsKey(Size))
-                .GetIf(() => $"{_prefixCls}-{this.Shape}", () => !string.IsNullOrEmpty(Shape))
+                .GetIf(() => $"{_prefixCls}-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
+                .GetIf(() => $"{_prefixCls}-{Shape}", () => !string.IsNullOrEmpty(Shape))
                 .If($"{_prefixCls}-icon", () => !string.IsNullOrEmpty(Icon))
-                .If($"{_prefixCls}-image", () => _hasSrc)
-                ;
+                .If($"{_prefixCls}-image", () => _hasSrc);
         }
 
         private void SetSizeStyle()
         {
-            if (decimal.TryParse(this.Size, out var pxSize))
+            if (decimal.TryParse(Size, out var pxSize))
             {
                 var size = StyleHelper.ToCssPixel(pxSize.ToString(CultureInfo.InvariantCulture));
                 Style += $";width:{size};";
                 Style += $"height:{size};";
                 Style += $"line-height:{size};";
-                if (this._hasIcon)
+                if (_hasIcon)
                 {
                     Style += $"font-size:calc(${size} / 2)";
                 }
@@ -160,18 +157,18 @@ namespace AntDesign
 
         private async Task CalcStringSize()
         {
-            if (!this._hasText)
+            if (!_hasText)
             {
                 return;
             }
 
-            var childrenWidth = (await this.JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, this.TextEl))?.offsetWidth ?? 0;
-            var avatarWidth = (await this.JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, this.Ref))?.width ?? 0;
+            var childrenWidth = (await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, TextEl))?.offsetWidth ?? 0;
+            var avatarWidth = (await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref))?.width ?? 0;
             var scale = childrenWidth != 0 && avatarWidth - 8 < childrenWidth ? (avatarWidth - 8) / childrenWidth : 1;
-            this._textStyles = $"transform: scale({scale}) translateX(-50%);";
-            if (decimal.TryParse(this.Size, out var pxSize))
+            _textStyles = $"transform: scale({scale}) translateX(-50%);";
+            if (decimal.TryParse(Size, out var pxSize))
             {
-                this._textStyles += $"lineHeight:{pxSize}px;";
+                _textStyles += $"lineHeight:{pxSize}px;";
             }
 
             StateHasChanged();

@@ -1,17 +1,17 @@
 ---
 order: 4
 title:
-  zh-CN: 定制回填内容
-  en-US: Custom selection render
+  zh-CN: Item Templates
+  en-US: Item Templates
 ---
 
 ## zh-CN
 
-使用 `optionLabelProp` 指定回填到选择框的 `Option` 属性。
+With the `ItemTemplate` parameter, it is possible to make visual customizations.
 
 ## en-US
 
-Spacified the prop name of Option which will be rendered in select box.
+With the `ItemTemplate` parameter, it is possible to make visual customizations.
 
 ```jsx
 import { Select } from 'antd';

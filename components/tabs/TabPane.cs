@@ -2,7 +2,7 @@
 
 namespace AntDesign
 {
-    public partial class TabPane : AntDomComponentBase
+    public class TabPane : AntDomComponentBase
     {
         private const string PrefixCls = "ant-tabs-tab";
         private Tabs _parent;
@@ -11,6 +11,7 @@ namespace AntDesign
 
         internal bool IsActive { get; set; }
         internal bool HasRendered { get; set; }
+        internal ElementReference TabBar { get; set; }
 
         public TabPane()
         {

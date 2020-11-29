@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -67,6 +65,12 @@ namespace AntDesign
 
         [Parameter]
         public Func<DateTime, bool> DisabledDate { get; set; } = null;
+
+        [Parameter]
+        public DatePickerLocale Locale { get; set; } = LocaleProvider.CurrentLocale.DatePicker;
+
+        [Parameter]
+        public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
 
         protected string _picker;
         protected readonly DateTime[] PickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
@@ -168,16 +172,13 @@ namespace AntDesign
 
         string IDatePicker.GetFormatValue(DateTime value, int index)
         {
-            throw new NotImplementedException();
+            return value.ToString(CultureInfo);
         }
 
         void IDatePicker.ChangePlaceholder(string placeholder, int index)
         {
-            throw new NotImplementedException();
         }
 
         public string Picker { get { return _picker; } }
-
-        public CultureInfo CultureInfo { get; set; } = CultureInfo.DefaultThreadCurrentUICulture;
     }
 }

@@ -13,6 +13,7 @@
     "next_3": "Next 3 Pages"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Sunday",
     "lang": {
       "placeholder": "Select date",
       "yearPlaceholder": "Select year",
@@ -37,10 +38,10 @@
       "monthSelect": "Choose a month",
       "yearSelect": "Choose a year",
       "decadeSelect": "Choose a decade",
-      "yearFormat": "YYYY",
-      "dateFormat": "M/D/YYYY",
+      "yearFormat": "yyyy",
+      "dateFormat": "yyyy-MM-dd",
       "dayFormat": "D",
-      "dateTimeFormat": "M/D/YYYY HH:mm:ss",
+      "dateTimeFormat": "yyyy-MM-dd HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Previous month (PageUp)",
       "nextMonth": "Next month (PageDown)",
@@ -49,7 +50,21 @@
       "previousDecade": "Last decade",
       "nextDecade": "Next decade",
       "previousCentury": "Last century",
-      "nextCentury": "Next century"
+      "nextCentury": "Next century",
+      "startDate": "Start date",
+      "startWeek": "Start week",
+      "startMonth": "Start month",
+      "startYear": "Start year",
+      "startQuarter": "Start quarter",
+      "endDate": "End date",
+      "endWeek": "End week",
+      "endMonth": "End month",
+      "endYear": "End year",
+      "endQuarter": "End Quarter",
+      "quarterSelect": "Select quarter",
+      "week": "Week",
+      "monthFormat": "MMM",
+      "shortWeekDays": [ "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" ]
     },
     "timePickerLocale": {
       "placeholder": "Select time",

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using AntDesign.Locales;
 
@@ -46,14 +47,16 @@ namespace AntDesign
                 using var streamReader = new StreamReader(fileStream);
                 var content = streamReader.ReadToEnd();
 
-                return JsonSerializer.Deserialize<Locale>(content, new JsonSerializerOptions()
+                var serializerOptions = new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true,
-                });
+                };
+                serializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                return JsonSerializer.Deserialize<Locale>(content, serializerOptions);
             });
         }
 
-        private static void SetLocale(string cultureName, Locale locale = null)
+        public static void SetLocale(string cultureName, Locale locale = null)
         {
             var culture = CultureInfo.GetCultureInfo(cultureName);
 

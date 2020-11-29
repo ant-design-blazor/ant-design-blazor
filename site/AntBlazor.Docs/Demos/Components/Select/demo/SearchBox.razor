@@ -1,27 +1,34 @@
-<Select ShowSearch
-        Style="width:200px"
+<Select DataSource="@_items"
+		@bind-Value="@_selectedValue"
+		EnableSearch
+        Style="width: 200px;"
+		ValueName="@nameof(Item.Value)"
+		LabelName="@nameof(Item.Label)"
+		TItemValue="string"
+		TItem="Item"
         Placeholder="input search text"
-        ShowArrow="false"
-        FilterOption="false"
-        DefaultActiveFirstOption="false"
-        OnSearch="@OnSearch"
-        OnChange="@OnChange">
-    @foreach (var value in _items)
-    {
-        <SelectOption Value="@value">@value</SelectOption>
-    }
+        ShowArrowIcon="false"
+		HideNotFoundContent="true"
+        OnSearch="@(async (value) => await OnSearch(value))"
+		OnSelectedItemChanged="OnSelectedItemChangedHandler">
 </Select>
 
-@using OneOf;
 @using System.Web;
 @using System.Text.Json;
 @inject HttpClient Http
 @code
 {
-    private Task<string> _oldTask;
-    private List<string> _items = new List<string>();
-
-    private async void OnSearch(string value)
+	class Item
+	{
+		public string Value { get; set; }
+		public string Label { get; set; }
+	}
+	
+    Task<string> _oldTask;
+    List<Item> _items = new List<Item>();
+	string _selectedValue;
+	
+    private async Task OnSearch(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
         {
@@ -34,20 +41,26 @@
                 var content = await _oldTask;
 
                 var result = JsonSerializer.Deserialize<ApiResult>(content);
-                _items.Clear();
+                _items.Clear();				
                 foreach (var item in result.result)
                 {
-                    _items.Add(item[0]);
+                    _items.Add(new Item { Value = item[0], Label = item[0]});
                 }
-
+				
+				await Task.Delay(1);
                 StateHasChanged();
             }
         }
+		else
+		{
+			if (_items.Any())
+				_items.Clear();
+		}
     }
 
-    private void OnChange(OneOf<string, IEnumerable<string>, LabeledValue, IEnumerable<LabeledValue>> value, OneOf<SelectOption, IEnumerable<SelectOption>> option)
+    private void OnSelectedItemChangedHandler(Item value)
     {
-        Console.WriteLine($"selected: ${value}");
+        Console.WriteLine($"selected: ${value?.Label}");
     }
 
     public class ApiResult
