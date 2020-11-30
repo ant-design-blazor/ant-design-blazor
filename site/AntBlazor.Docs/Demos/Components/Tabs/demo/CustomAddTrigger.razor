@@ -2,44 +2,32 @@
     <div style="margin-bottom: 16px;">
         <Button @onclick="(e)=>Add()">ADD</Button>
     </div>
-    <Tabs Type="@TabType.EditableCard" HideAdd>
-        @foreach (var temp in _panes)
+    <Tabs Type="@TabType.EditableCard" HideAdd @bind-ActiveKey="activeKey">
+        @foreach (var pane in panes)
         {
-            TabPane pane = temp;
             <TabPane Key="@pane.Key">
-                <Tab>@pane.Tab</Tab>
-                <ChildContent>@pane.ChildContent</ChildContent>
+                <Tab>@pane.Title</Tab>
+                <ChildContent>@pane.Content</ChildContent>
             </TabPane>
         }
     </Tabs>
 </div>
 
 @code{
-    private List<TabPane> _panes = new List<TabPane>();
-    private static int btnIndex = 1;
+    private string activeKey;
+    private int newTabIndex;
+
+    public record Pane(string Title, string Content, string Key, bool Closable = true);
+
+    List<Pane> panes = new List<Pane>() {
+        new("Tab 1", "Content of Tab Pane 1","1"),
+        new("Tab 2", "Content of Tab Pane 2","2"),
+        new("Tab 3", "Content of Tab Pane 3","3",false),
+    };
+
     private void Add()
     {
-        int index = ++btnIndex;
-        _panes.Add(new TabPane(
-            key: index.ToString(),
-            tab: (b) => b.AddContent(0, $"Tab {index}"),
-            childContent: (b) => b.AddContent(0, $"Content of Tab Pane {index}")
-        ));
-
-        StateHasChanged();
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        for (int i = 0; i < btnIndex + 1; i++)
-        {
-            int index = i;
-            _panes.Add(new TabPane(
-                key: index.ToString(),
-                tab: (b) => b.AddContent(0, $"Tab {index}"),
-                childContent: (b) => b.AddContent(0, $"Content of Tab Pane {index}")
-            ));
-        }
+        activeKey = $"newTab{newTabIndex++}";
+        panes.Add(new Pane($"New Tab", $"New Tab Pane", activeKey));
     }
 }

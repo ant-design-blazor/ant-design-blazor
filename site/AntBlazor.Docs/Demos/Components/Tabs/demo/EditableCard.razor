@@ -1,28 +1,29 @@
-﻿<Tabs DefaultActiveKey="1" Type="@TabType.EditableCard" CreateTabPane="@Create">
-    <TabPane Key="1">
-        <Tab>Tab 1</Tab>
-        <ChildContent>Content of Tab Pane 1</ChildContent>
-    </TabPane>
-    <TabPane Key="2">
-        <Tab>Tab 2</Tab>
-        <ChildContent>Content of Tab Pane 2</ChildContent>
-    </TabPane>
-    <TabPane Key="3" Closable="false">
-        <Tab>Tab 3</Tab>
-        <ChildContent>Content of Tab Pane 3</ChildContent>
-    </TabPane>
+﻿<Tabs DefaultActiveKey="1" Type="@TabType.EditableCard" OnAddClick="OnAddClick" @bind-ActiveKey="activeKey">
+    @foreach (var pane in panes)
+    {
+        <TabPane Key="@pane.Key" Closable="@pane.Closable">
+            <Tab>@pane.Title</Tab>
+            <ChildContent>@pane.Content</ChildContent>
+        </TabPane>
+    }
 </Tabs>
 
 @code{
-    private static int addedIndex = 3;
-    private readonly Func<TabPane> Create = () =>
-        {
-            addedIndex++;
-            int temp = addedIndex;
-            return new TabPane(
-                key: temp.ToString(),
-                childContent: (b) => { b.AddContent(0, $"Content of Tab Pane {temp}"); },
-                tab: (b) => { b.AddContent(0, $"Tab {temp}"); }
-            );
-        };
+    private string activeKey;
+    private int newTabIndex;
+
+    public record Pane(string Title, string Content, string Key, bool Closable = true);
+
+    List<Pane> panes = new List<Pane>() {
+        new("Tab 1", "Content of Tab Pane 1","1"),
+        new("Tab 2", "Content of Tab Pane 2","2"),
+        new("Tab 3", "Content of Tab Pane 3","3",false),
+    };
+
+    private void OnAddClick()
+    {
+        var key = panes.Count + 1;
+        activeKey = $"newTab{newTabIndex++}";
+        panes.Add(new Pane($"Tab {key}", $"Content of Tab Pane {key}", activeKey));
+    }
 }

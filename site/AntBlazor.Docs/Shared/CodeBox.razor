@@ -29,11 +29,12 @@
             <span class="code-box-code-action">
                 <span role="img" aria-label="thunderbolt" class="anticon anticon-thunderbolt"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="thunderbolt" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M848 359.3H627.7L825.8 109c4.1-5.3.4-13-6.3-13H436c-2.8 0-5.5 1.5-6.9 4L170 547.5c-3.1 5.3.7 12 6.9 12h174.4l-89.4 357.6c-1.9 7.8 7.5 13.3 13.3 7.7L853.5 373c5.2-4.9 1.7-13.7-5.5-13.7zM378.2 732.5l60.3-241H281.1l189.6-327.4h224.6L487 427.4h211L378.2 732.5z"></path></svg></span>
             </span>
-            <Icon Type="snippets" Class="code-box-code-copy code-box-code-action" OnClick="@(async _=>await Copy())"/>
-            <span class="code-expand-icon code-box-code-action" @onclick="_=>codeExpand=!codeExpand">
-                <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(codeExpand?"code-expand-icon-hide":"code-expand-icon-show")">
-                <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="@(!codeExpand?"code-expand-icon-hide":"code-expand-icon-show")">
+            <Icon Type="snippets" Class="code-box-code-copy code-box-code-action" OnClick="@(async _ => await Copy())"/>
+            <span class="code-expand-icon code-box-code-action" @onclick="_ => codeExpand = !codeExpand">
+                <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(codeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
+                <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="@(!codeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
             </span>
+            @DebugIcon
         </div>
     </section>
     <section class="highlight-wrapper @(codeExpand?"highlight-wrapper-expand":"")">
@@ -59,6 +60,8 @@
 
     RenderFragment Component;
 
+    RenderFragment DebugIcon;
+
     private bool codeExpand { get; set; }
 
     protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
@@ -68,6 +71,12 @@
         await base.OnInitializedAsync();
 
         Component = demoService.GetShowCase(Demo.Type);
+
+#if DEBUG
+        DebugIcon =@<a href="mock?type=@(Demo.Type)" class="code-box-code-action" target="_blank">
+            <Icon Type="bug" />
+        </a>;
+#endif
     }
 
     async ValueTask Copy()
