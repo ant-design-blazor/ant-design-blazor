@@ -41,6 +41,7 @@ namespace AntDesign
         private int _navTotal;
         private int _navSection;
         private bool _needRefresh;
+
         internal List<TabPane> _panes = new List<TabPane>();
 
         #region Parameters
@@ -64,10 +65,12 @@ namespace AntDesign
             {
                 if (_activeKey != value)
                 {
+                    _activeKey = value;
+
                     if (_panes.Count == 0)
                         return;
 
-                    TabPane tabPane = _panes.Find(p => p.Key == value);
+                    var tabPane = _panes.Find(p => p.Key == value);
 
                     if (tabPane == null)
                         return;
@@ -150,7 +153,13 @@ namespace AntDesign
         /// Callback executed when tab is added or removed. Only works while <see cref="Type"/> = <see cref="TabType.EditableCard"/>
         /// </summary>
         [Parameter]
-        public Func<string, Task<bool>> OnEdit { get; set; } = key => Task.FromResult(true);
+        public Func<string, string, Task<bool>> OnEdit { get; set; } = (key, action) => Task.FromResult(true);
+
+        [Parameter]
+        public EventCallback OnAddClick { get; set; }
+
+        [Parameter]
+        public EventCallback<string> AfterTabCreated { get; set; }
 
         /// <summary>
         /// Callback executed when next button is clicked
@@ -175,9 +184,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Keyboard { get; set; } = true;
-
-        [Parameter]
-        public Func<TabPane> CreateTabPane { get; set; }
 
         [Parameter]
         public bool Draggable { get; set; }
@@ -279,64 +285,57 @@ namespace AntDesign
             }
 
             _panes.Add(tabPane);
-            if (!string.IsNullOrEmpty(DefaultActiveKey))
-            {
-                if (tabPane.Key == DefaultActiveKey)
-                {
-                    ActivatePane(tabPane);
-                }
-            }
-            else
-            {
-                if (_panes.Count == 1)
-                {
-                    ActivatePane(tabPane);
-                }
-            }
         }
 
-        private async Task AddTabPane(MouseEventArgs args)
+        internal void AddTabPaneContent(TabPane content)
         {
-            if (CreateTabPane != null)
+            var pane = _panes.FirstOrDefault(x => x.Key == content.Key);
+            if (pane != null && pane.IsComplete())
             {
-                TabPane pane = CreateTabPane();
-
-                if (await OnEdit.Invoke(pane.Key))
+                if (DefaultActiveKey is not null && pane.Key == DefaultActiveKey && _panes.All(x => !x.IsActive))
                 {
-                    Dictionary<string, object> properties = new Dictionary<string, object>
-                    {
-                        //[nameof(TabPane.Parent)] = this,
-                        [nameof(TabPane.ForceRender)] = pane.ForceRender,
-                        [nameof(TabPane.Key)] = pane.Key,
-                        [nameof(TabPane.Tab)] = pane.Tab,
-                        [nameof(TabPane.ChildContent)] = pane.ChildContent,
-                        [nameof(TabPane.Disabled)] = pane.Disabled
-                    };
-
-                    await pane.SetParametersAsync(ParameterView.FromDictionary(properties));
-                    pane.Parent = this;
                     ActivatePane(pane);
+                }
+                else if (_panes.All(x => !x.IsActive && x.IsComplete()))
+                {
+                    ActivatePane(_panes.FirstOrDefault());
+                }
+                else if (_panes.All(x => x.IsComplete()))
+                {
+                    var activedPane = _panes.Find(x => x.Key == ActiveKey);
+                    if (activedPane?.IsActive == false)
+                    {
+                        ActivatePane(activedPane);
+                    }
+                }
+
+                if (AfterTabCreated.HasDelegate)
+                {
+                    AfterTabCreated.InvokeAsync(pane.Key);
                 }
             }
         }
 
         public async Task RemoveTabPane(TabPane pane)
         {
-            if (await OnEdit.Invoke(pane.Key))
+            if (await OnEdit.Invoke(pane.Key, "remove"))
             {
-                _needRefresh = true;
+                var index = _panes.IndexOf(pane);
                 _panes.Remove(pane);
                 if (pane != null && pane.IsActive && _panes.Count > 0)
                 {
-                    ActivatePane(_panes[0]);
+                    ActivatePane(index > 1 ? _panes[index - 1] : _panes[0]);
                 }
+
+                _needRefresh = true;
+                StateHasChanged();
             }
         }
 
-        private void HandleTabClick(TabPane tabPane, MouseEventArgs args)
+        internal void HandleTabClick(TabPane tabPane, MouseEventArgs args)
         {
             if (tabPane.IsActive)
-                    return;
+                return;
 
             if (OnTabClick.HasDelegate)
             {
@@ -384,14 +383,13 @@ namespace AntDesign
         {
             await base.OnAfterRenderAsync(firstRender);
 
-            if (_activePane == null)
+            if (_activePane != null)
             {
-                throw new ArgumentNullException($"One of {nameof(ActiveKey)} and {nameof(DefaultActiveKey)} should be set");
+                await TryRenderInk();
+
+                await TryRenderNavOperation();
             }
 
-            await TryRenderInk();
-
-            await TryRenderNavOperation();
             _needRefresh = false;
         }
 
@@ -567,7 +565,7 @@ namespace AntDesign
 
         private TabPane _draggingPane;
 
-        private void HandleDragStart(DragEventArgs args, TabPane pane)
+        internal void HandleDragStart(DragEventArgs args, TabPane pane)
         {
             if (Draggable)
             {
@@ -577,7 +575,7 @@ namespace AntDesign
             }
         }
 
-        private void HandleDrop(TabPane pane)
+        internal void HandleDrop(TabPane pane)
         {
             if (Draggable && _draggingPane != null)
             {
