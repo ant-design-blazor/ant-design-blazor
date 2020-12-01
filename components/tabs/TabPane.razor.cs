@@ -93,7 +93,7 @@ namespace AntDesign
             if (IsPane && !Pane._hasContent)
             {
                 Pane.SetContent();
-                Parent.AddTabPaneContent(Pane);
+                Parent.Complete(Pane);
             }
         }
 

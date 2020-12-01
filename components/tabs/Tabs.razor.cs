@@ -41,6 +41,8 @@ namespace AntDesign
         private int _navTotal;
         private int _navSection;
         private bool _needRefresh;
+        private bool _afterFirstRender;
+        private bool _activePaneChanged;
 
         internal List<TabPane> _panes = new List<TabPane>();
 
@@ -287,26 +289,36 @@ namespace AntDesign
             _panes.Add(tabPane);
         }
 
-        internal void AddTabPaneContent(TabPane content)
+        internal void Complete(TabPane content)
         {
             var pane = _panes.FirstOrDefault(x => x.Key == content.Key);
             if (pane != null && pane.IsComplete())
             {
-                if (DefaultActiveKey is not null && pane.Key == DefaultActiveKey && _panes.All(x => !x.IsActive))
+                if (_panes.Any(x => !x.IsComplete()))
                 {
-                    ActivatePane(pane);
+                    return;
                 }
-                else if (_panes.All(x => !x.IsActive && x.IsComplete()))
-                {
-                    ActivatePane(_panes.FirstOrDefault());
-                }
-                else if (_panes.All(x => x.IsComplete()))
+
+                if (!string.IsNullOrWhiteSpace(ActiveKey))
                 {
                     var activedPane = _panes.Find(x => x.Key == ActiveKey);
                     if (activedPane?.IsActive == false)
                     {
                         ActivatePane(activedPane);
                     }
+                }
+                else if (!string.IsNullOrWhiteSpace(DefaultActiveKey))
+                {
+                    var defaultPane = _panes.FirstOrDefault(x => x.Key == DefaultActiveKey);
+                    if (defaultPane != null)
+                    {
+                        ActivatePane(defaultPane);
+                    }
+                }
+
+                if (_activePane == null || _panes.All(x => !x.IsActive))
+                {
+                    ActivatePane(_panes.FirstOrDefault());
                 }
 
                 if (AfterTabCreated.HasDelegate)
@@ -332,7 +344,7 @@ namespace AntDesign
             }
         }
 
-        internal void HandleTabClick(TabPane tabPane, MouseEventArgs args)
+        internal void HandleTabClick(TabPane tabPane)
         {
             if (tabPane.IsActive)
                 return;
@@ -373,6 +385,9 @@ namespace AntDesign
                     _activeKey = _activePane.Key;
                 }
 
+                _needRefresh = true;
+                _activePaneChanged = true;
+
                 Card?.SetBody(_activePane.ChildContent);
 
                 StateHasChanged();
@@ -382,14 +397,16 @@ namespace AntDesign
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
-
-            if (_activePane != null)
+            if (firstRender)
             {
-                await TryRenderInk();
-
-                await TryRenderNavOperation();
+                _afterFirstRender = true;
             }
 
+            if (_afterFirstRender && _activePane != null)
+            {
+                await TryRenderInk();
+                await TryRenderNavOperation();
+            }
             _needRefresh = false;
         }
 
@@ -415,40 +432,42 @@ namespace AntDesign
 
         private async Task TryRenderInk()
         {
-            if (_renderedActivePane != _activePane)
-            {
-                // TODO: slide to activated tab
-                // animate Active Ink
-                // ink bar
-                var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _activePane.TabBar);
-                var navSection = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tabBars);
+            //if (_renderedActivePane == _activePane)
+            //{
+            //    return;
+            //}
 
-                if (IsHorizontal)
+            // TODO: slide to activated tab
+            // animate Active Ink
+            // ink bar
+            var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _activePane.TabBar);
+            var navSection = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tabBars);
+
+            if (IsHorizontal)
+            {
+                //_inkStyle = "left: 0px; width: 0px;";
+                _inkStyle = $"left: {element.offsetLeft}px; width: {element.clientWidth}px";
+                if (element.offsetLeft > _scrollOffset + navSection.clientWidth
+                    || element.offsetLeft < _scrollOffset)
                 {
-                    //_inkStyle = "left: 0px; width: 0px;";
-                    _inkStyle = $"left: {element.offsetLeft}px; width: {element.clientWidth}px";
-                    if (element.offsetLeft > _scrollOffset + navSection.clientWidth
-                        || element.offsetLeft < _scrollOffset)
-                    {
-                        // need to scroll tab bars
-                        _scrollOffset = element.offsetLeft;
-                        _navStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
-                    }
+                    // need to scroll tab bars
+                    _scrollOffset = element.offsetLeft;
+                    _navStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
                 }
-                else
-                {
-                    _inkStyle = $"top: {element.offsetTop}px; height: {element.clientHeight}px;";
-                    if (element.offsetTop > _scrollOffset + navSection.clientHeight
-                        || element.offsetTop < _scrollOffset)
-                    {
-                        // need to scroll tab bars
-                        _scrollOffset = element.offsetTop;
-                        _navStyle = $"transform: translate(0px, -{_scrollOffset}px);";
-                    }
-                }
-                StateHasChanged();
-                _renderedActivePane = _activePane;
             }
+            else
+            {
+                _inkStyle = $"top: {element.offsetTop}px; height: {element.clientHeight}px;";
+                if (element.offsetTop > _scrollOffset + navSection.clientHeight
+                    || element.offsetTop < _scrollOffset)
+                {
+                    // need to scroll tab bars
+                    _scrollOffset = element.offsetTop;
+                    _navStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+                }
+            }
+            StateHasChanged();
+            _renderedActivePane = _activePane;
         }
 
         //private async void OnPrevClicked()

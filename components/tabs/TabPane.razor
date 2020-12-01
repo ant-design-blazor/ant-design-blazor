@@ -14,7 +14,7 @@
     <div @key="Pane?.Key"
          @ref="Pane.TabBar"
          @onclick:stopPropagation="@onclickStopPropagation"
-         @onclick="@(e => Parent.HandleTabClick(Pane, e))"
+         @onclick="@(e => Parent.HandleTabClick(Pane))"
          @ondragover:preventDefault="@ondragoverPreventDefault"
          @ondragstart="@(e => Parent.HandleDragStart(e, Pane))"
          @ondrop="@(_ => Parent.HandleDrop(Pane))"
