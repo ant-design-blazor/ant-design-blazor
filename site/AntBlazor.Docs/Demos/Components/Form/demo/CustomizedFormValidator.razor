@@ -1,0 +1,43 @@
+@using System.ComponentModel.DataAnnotations;
+
+<Form Model="@model1"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      Validator="null">
+    <FormItem Label="No Validator">
+        <AntDesign.InputNumber @bind-Value="@context.Number"/>
+    </FormItem>
+</Form>
+<Form Model="@model2"
+      LabelColSpan="8"
+      WrapperColSpan="16">
+    <Validator>
+        <CustomValidator/>
+    </Validator>
+    <ChildContent>
+        <FormItem Label="CustomValidator">
+            <AntDesign.InputNumber @bind-Value="@context.Number"/>
+        </FormItem>
+    </ChildContent>
+</Form>
+
+@code
+{
+    public class Model1
+    {
+        [Required]
+        public int Number { get; set; }
+    }
+
+    public class Model2
+    {
+        [Required]
+        public int Number { get; set; }
+    }
+
+    private Model1 model1 = new Model1();
+
+    private Model2 model2 = new Model2();
+
+    private RenderFragment validator = @<CustomValidator/>;
+}

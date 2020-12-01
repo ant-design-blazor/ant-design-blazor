@@ -72,6 +72,15 @@ namespace AntDesign
         [Parameter]
         public EventCallback<EditContext> OnFinishFailed { get; set; }
 
+        [Parameter]
+        public RenderFragment Validator { get; set; } = _defaultValidator;
+
+        private static readonly RenderFragment _defaultValidator = builder =>
+        {
+            builder.OpenComponent<ObjectGraphDataAnnotationsValidator>(0);
+            builder.CloseComponent();
+        };
+
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
 
