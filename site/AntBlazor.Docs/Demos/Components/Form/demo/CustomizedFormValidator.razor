@@ -3,9 +3,9 @@
 <Form Model="@model1"
       LabelColSpan="8"
       WrapperColSpan="16"
-      Validator="validator">
-    <FormItem Label="Number 0~10">
-        <Input type="number" @bind-Value="@context.Number"/>
+      Validator="null">
+    <FormItem Label="No Validator">
+        <AntDesign.InputNumber @bind-Value="@context.Number"/>
     </FormItem>
 </Form>
 <Form Model="@model2"
@@ -15,8 +15,8 @@
         <CustomValidator/>
     </Validator>
     <ChildContent>
-        <FormItem Label="Number 10~20">
-            <Input type="number" @bind-Value="@context.Number"/>
+        <FormItem Label="CustomValidator">
+            <AntDesign.InputNumber @bind-Value="@context.Number"/>
         </FormItem>
     </ChildContent>
 </Form>
@@ -26,13 +26,13 @@
     public class Model1
     {
         [Required]
-        public string Number { get; set; }
+        public int Number { get; set; }
     }
 
     public class Model2
     {
         [Required]
-        public string Number { get; set; }
+        public int Number { get; set; }
     }
 
     private Model1 model1 = new Model1();
