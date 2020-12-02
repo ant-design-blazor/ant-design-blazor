@@ -235,6 +235,7 @@
             loadBootResource: function (type, name, defaultUri, integrity) {
                 if (type !== 'dotnetjs' && location.hostname !== 'localhost') {
                     return (async function () {
+                        defaultUri = 'https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io/' + defaultUri;
                         const response = await fetch(defaultUri + '.br', { cache: 'no-cache' });
                         if (!response.ok) {
                             throw new Error(response.statusText);

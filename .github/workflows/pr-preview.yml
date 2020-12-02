@@ -57,7 +57,6 @@ jobs:
           git fetch origin pull/$PULL_NUMBER/head:fork
           git checkout fork
           npm install
-          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
           dotnet build
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
 
