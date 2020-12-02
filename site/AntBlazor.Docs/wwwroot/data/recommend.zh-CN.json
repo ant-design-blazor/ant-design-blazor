@@ -1,8 +1,15 @@
 ﻿[
   {
+    "title": "【入门系列教程】进击吧！Blazor",
+    "description": "从 9 月份开始，Ant Design Blazor 团队携手微软 MVP 张善友，在 Reactor 上海举办了一系列的 Blazor 入门教程，一共 7 期，带领大家掌握 Blazor！。主讲人是张善友和 Ant Design Blazor 贡献者陈超超，主持人是董斌。",
+    "img": "/docs/assets/news/attack-blazor.jpg",
+    "href": "https://space.bilibili.com/483888821/channel/detail?cid=151273",
+    "popularize": false
+  },
+  {
     "title": "从 HelloWorld 到 AntDesign，Blazor 将 .NET 带到现代前端圈",
     "description": "7月11日，Ant Design Blazor 团队与 Reactor 上海合作的一场 Blazor 专题在线分享。内容从 Blazor 的整体介绍到与其他前端框架的横向对比，从 Hello World 到 Ant Design 入门实战，不要错过了哦！",
-    "img": "https://yangshunjie.com/images/dotnet-meetup/blazor-07.jpg",
+    "img": "/docs/assets/news/blazor-07.jpg",
     "href": "https://www.bilibili.com/video/BV17z4y1Q7cJ",
     "popularize": false
   },
@@ -11,13 +18,6 @@
     "description": "Ant Design Blazor 是 Ant Design 的 Blazor 实现，希望有一天能在丰富 Blazor 生态的同时，还能成为被 Ant Design 生态认可的框架实现，能成为他们 Design 梦的一个延续。",
     "img": "https://picb.zhimg.com/v2-320009747fc474ccd71dbd87e5767b64_1440w.jpg?source=172ae18b",
     "href": "https://zhuanlan.zhihu.com/p/115046252",
-    "popularize": false
-  },
-  {
-    "title": "Blazor 主页",
-    "description": "使用Ant Design Blazor前，建议先通过官方文档熟悉 Blazor 框架，了解 Blazor 的基础使用方法。这样，就可以在之后的 Ant Design Blazor 使用中，更加得心应手。",
-    "img": "https://pic1.zhimg.com/v2-6b030839df798e18440319dae866d367_1440w.jpg",
-    "href": "https://blazor.net",
     "popularize": false
   }
 ]
