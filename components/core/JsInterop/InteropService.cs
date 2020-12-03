@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace AntDesign.JsInterop
@@ -43,5 +44,19 @@ namespace AntDesign.JsInterop
                 throw;
             }
         }
+
+        #region 
+
+        public async Task<Element> GetDomInfo(ElementReference elemRef)
+        {
+            return await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, elemRef);
+        }
+
+        public async Task<Window> GetWindow()
+        {
+            return await JsInvokeAsync<Window>(JSInteropConstants.GetWindow);
+        }
+
+        #endregion
     }
 }

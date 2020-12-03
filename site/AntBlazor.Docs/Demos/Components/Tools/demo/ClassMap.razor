@@ -1,0 +1,41 @@
+﻿<div class="@classMapper.Class">
+    我是Div
+</div>
+
+<Divider></Divider>
+<Switch @bind-Value="isRed"></Switch>红色
+<br />
+<Switch @bind-Value="isItalic"></Switch>斜体
+
+<style>
+    .css-border {
+        border: 1px solid black;
+    }
+
+    .css-red {
+        color: red
+    }
+
+    .css-Italic {
+        font-style: italic
+    }
+</style>
+
+
+@code{
+    ClassMapper classMapper = new ClassMapper();
+
+    bool isRed;
+
+    bool isItalic;
+
+    protected override void OnParametersSet()
+    {
+        classMapper
+            .Add("css-border")
+            .If("css-red", () => isRed)
+            .If("css-Italic", () => isItalic);
+        base.OnParametersSet();
+    }
+
+}
