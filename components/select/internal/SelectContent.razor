@@ -139,7 +139,7 @@
             </span>
         }
         
-        @if (ParentSelect.AllowClear && ParentSelect.HasValue)
+        @if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
         {
             <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick" @onclick:stopPropagation="true">
                 <Icon Type="close-circle" Theme="fill"></Icon>
@@ -149,7 +149,7 @@
 }
 else
 {
-    @if (ParentSelect.AllowClear && ParentSelect.HasValue)
+    @if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
     {
         <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick" @onclick:stopPropagation="true">
             <Icon Type="close-circle" Theme="fill"></Icon>

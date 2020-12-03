@@ -66,6 +66,7 @@ namespace AntDesign.Internal
         private bool _preVisible = false;
         private bool _isOverlayShow = false;
         private bool _isOverlayHiding = false;
+        private bool _lastDisabledState = false;
 
         private int? _overlayLeft = null;
         private int? _overlayTop = null;
@@ -97,11 +98,19 @@ namespace AntDesign.Internal
             if (firstRender)
             {
                 await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"{Trigger.PrefixCls}-trigger");
+            }
 
+            if (_lastDisabledState != Trigger.Disabled)
+            {
                 if (Trigger.Disabled)
                 {
                     await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"disabled");
                 }
+                else
+                {
+                    await JsInvokeAsync(JSInteropConstants.RemoveClsFromFirstChild, Ref, $"disabled");
+                }
+                _lastDisabledState = Trigger.Disabled;
             }
 
             if (_isWaitForOverlayFirstRender && _isOverlayFirstRender)
