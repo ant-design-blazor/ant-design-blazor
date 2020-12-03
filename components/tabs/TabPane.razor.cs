@@ -82,18 +82,20 @@ namespace AntDesign
 
                 Pane.ClassMapper
                  .Add(PrefixCls)
-                 .If($"{PrefixCls}-active", () =>
-                 {
-                     return Pane?.IsActive == true;
-                 })
+                 .If($"{PrefixCls}-active", () => Pane?.IsActive == true)
                  .If($"{PrefixCls}-with-remove", () => Pane?.Closable == true)
                  .If($"{PrefixCls}-disabled", () => Pane?.Disabled == true);
+
+                if (Parent?.Card != null)
+                {
+                    Parent.Complete(Pane);
+                }
             }
 
             if (IsPane && !Pane._hasContent)
             {
                 Pane.SetContent();
-                Parent.AddTabPaneContent(Pane);
+                Parent.Complete(Pane);
             }
         }
 
@@ -107,7 +109,7 @@ namespace AntDesign
             _hasContent = true;
         }
 
-        internal bool IsComplete() => _hasTab && _hasContent;
+        internal bool IsComplete() => _hasTab && (Parent?.Card != null || _hasContent);
 
         protected override bool ShouldRender() => Pane?.Key == Key;
 
