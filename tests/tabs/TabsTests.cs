@@ -108,7 +108,7 @@ namespace AntDesign.Tests.tabs
 
             Assert.Equal("Content 2", cut.Find(".ant-tabs-tabpane").TextContent);
 
-            cut.Find("button.ant-tabs-tab").Click();
+            cut.Find("div.ant-tabs-tab").Click();
 
             Assert.Equal("Content 1", cut.Find(".ant-tabs-tabpane").TextContent);
         }

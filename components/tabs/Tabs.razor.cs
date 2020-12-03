@@ -41,6 +41,9 @@ namespace AntDesign
         private int _navTotal;
         private int _navSection;
         private bool _needRefresh;
+        private bool _afterFirstRender;
+        private bool _activePaneChanged;
+
         internal List<TabPane> _panes = new List<TabPane>();
 
         #region Parameters
@@ -64,10 +67,12 @@ namespace AntDesign
             {
                 if (_activeKey != value)
                 {
+                    _activeKey = value;
+
                     if (_panes.Count == 0)
                         return;
 
-                    TabPane tabPane = _panes.Find(p => p.Key == value);
+                    var tabPane = _panes.Find(p => p.Key == value);
 
                     if (tabPane == null)
                         return;
@@ -150,7 +155,13 @@ namespace AntDesign
         /// Callback executed when tab is added or removed. Only works while <see cref="Type"/> = <see cref="TabType.EditableCard"/>
         /// </summary>
         [Parameter]
-        public Func<string, Task<bool>> OnEdit { get; set; } = key => Task.FromResult(true);
+        public Func<string, string, Task<bool>> OnEdit { get; set; } = (key, action) => Task.FromResult(true);
+
+        [Parameter]
+        public EventCallback OnAddClick { get; set; }
+
+        [Parameter]
+        public EventCallback<string> AfterTabCreated { get; set; }
 
         /// <summary>
         /// Callback executed when next button is clicked
@@ -177,15 +188,27 @@ namespace AntDesign
         public bool Keyboard { get; set; } = true;
 
         [Parameter]
-        public Func<TabPane> CreateTabPane { get; set; }
-
-        [Parameter]
         public bool Draggable { get; set; }
 
         [CascadingParameter]
         public Card Card { get; set; }
 
         #endregion Parameters
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            ClassMapper.Clear()
+                .Add(PrefixCls)
+                .Add($"{PrefixCls}-{TabPosition}")
+                .Add($"{PrefixCls}-{Type}")
+                .If($"{PrefixCls}-large", () => Size == TabSize.Large || Card != null)
+                .If($"{PrefixCls}-head-tabs", () => Card != null)
+                .If($"{PrefixCls}-small", () => Size == TabSize.Small)
+                .GetIf(() => $"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
+                .If($"{PrefixCls}-no-animation", () => !Animated);
+        }
 
         public override Task SetParametersAsync(ParameterView parameters)
         {
@@ -224,15 +247,6 @@ namespace AntDesign
             //    };
             //}
 
-            ClassMapper.Clear()
-                .Add(PrefixCls)
-                .Add($"{PrefixCls}-{TabPosition}")
-                .Add($"{PrefixCls}-{Type}")
-                .If($"{PrefixCls}-large", () => Size == TabSize.Large)
-                .If($"{PrefixCls}-small", () => Size == TabSize.Small)
-                .If($"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
-                .If($"{PrefixCls}-no-animation", () => !Animated);
-
             //_barClassMapper.Clear()
             //    .Add($"{PrefixCls}-bar")
             //    .Add($"{PrefixCls}-{TabPosition}-bar")
@@ -261,7 +275,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Add <see cref="AntTabPane"/> to <see cref="AntTabs"/>
+        /// Add <see cref="TabPane"/> to <see cref="Tabs"/>
         /// </summary>
         /// <param name="tabPane">The AntTabPane to be added</param>
         /// <exception cref="ArgumentNullException">Key is null</exception>
@@ -279,64 +293,67 @@ namespace AntDesign
             }
 
             _panes.Add(tabPane);
-            if (!string.IsNullOrEmpty(DefaultActiveKey))
-            {
-                if (tabPane.Key == DefaultActiveKey)
-                {
-                    ActivatePane(tabPane);
-                }
-            }
-            else
-            {
-                if (_panes.Count == 1)
-                {
-                    ActivatePane(tabPane);
-                }
-            }
         }
 
-        private async Task AddTabPane(MouseEventArgs args)
+        internal void Complete(TabPane content)
         {
-            if (CreateTabPane != null)
+            var pane = _panes.FirstOrDefault(x => x.Key == content.Key);
+            if (pane != null && pane.IsComplete())
             {
-                TabPane pane = CreateTabPane();
-
-                if (await OnEdit.Invoke(pane.Key))
+                if (_panes.Any(x => !x.IsComplete()))
                 {
-                    Dictionary<string, object> properties = new Dictionary<string, object>
-                    {
-                        //[nameof(TabPane.Parent)] = this,
-                        [nameof(TabPane.ForceRender)] = pane.ForceRender,
-                        [nameof(TabPane.Key)] = pane.Key,
-                        [nameof(TabPane.Tab)] = pane.Tab,
-                        [nameof(TabPane.ChildContent)] = pane.ChildContent,
-                        [nameof(TabPane.Disabled)] = pane.Disabled
-                    };
+                    return;
+                }
 
-                    await pane.SetParametersAsync(ParameterView.FromDictionary(properties));
-                    pane.Parent = this;
-                    ActivatePane(pane);
+                if (!string.IsNullOrWhiteSpace(ActiveKey))
+                {
+                    var activedPane = _panes.Find(x => x.Key == ActiveKey);
+                    if (activedPane?.IsActive == false)
+                    {
+                        ActivatePane(activedPane);
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(DefaultActiveKey))
+                {
+                    var defaultPane = _panes.FirstOrDefault(x => x.Key == DefaultActiveKey);
+                    if (defaultPane != null)
+                    {
+                        ActivatePane(defaultPane);
+                    }
+                }
+
+                if (_activePane == null || _panes.All(x => !x.IsActive))
+                {
+                    ActivatePane(_panes.FirstOrDefault());
+                }
+
+                if (AfterTabCreated.HasDelegate)
+                {
+                    AfterTabCreated.InvokeAsync(pane.Key);
                 }
             }
         }
 
         public async Task RemoveTabPane(TabPane pane)
         {
-            if (await OnEdit.Invoke(pane.Key))
+            if (await OnEdit.Invoke(pane.Key, "remove"))
             {
-                _needRefresh = true;
+                var index = _panes.IndexOf(pane);
                 _panes.Remove(pane);
                 if (pane != null && pane.IsActive && _panes.Count > 0)
                 {
-                    ActivatePane(_panes[0]);
+                    ActivatePane(index > 1 ? _panes[index - 1] : _panes[0]);
                 }
+
+                _needRefresh = true;
+                StateHasChanged();
             }
         }
 
-        private void HandleTabClick(TabPane tabPane, MouseEventArgs args)
+        internal void HandleTabClick(TabPane tabPane)
         {
             if (tabPane.IsActive)
-                    return;
+                return;
 
             if (OnTabClick.HasDelegate)
             {
@@ -374,6 +391,9 @@ namespace AntDesign
                     _activeKey = _activePane.Key;
                 }
 
+                _needRefresh = true;
+                _activePaneChanged = true;
+
                 Card?.SetBody(_activePane.ChildContent);
 
                 StateHasChanged();
@@ -383,15 +403,16 @@ namespace AntDesign
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
-
-            if (_activePane == null)
+            if (firstRender)
             {
-                throw new ArgumentNullException($"One of {nameof(ActiveKey)} and {nameof(DefaultActiveKey)} should be set");
+                _afterFirstRender = true;
             }
 
-            await TryRenderInk();
-
-            await TryRenderNavOperation();
+            if (_afterFirstRender && _activePane != null)
+            {
+                await TryRenderInk();
+                await TryRenderNavOperation();
+            }
             _needRefresh = false;
         }
 
@@ -417,40 +438,44 @@ namespace AntDesign
 
         private async Task TryRenderInk()
         {
-            if (_renderedActivePane != _activePane)
+            if (_renderedActivePane == _activePane)
             {
-                // TODO: slide to activated tab
-                // animate Active Ink
-                // ink bar
-                var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _activePane.TabBar);
-                var navSection = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tabBars);
-
-                if (IsHorizontal)
-                {
-                    //_inkStyle = "left: 0px; width: 0px;";
-                    _inkStyle = $"left: {element.offsetLeft}px; width: {element.clientWidth}px";
-                    if (element.offsetLeft > _scrollOffset + navSection.clientWidth
-                        || element.offsetLeft < _scrollOffset)
-                    {
-                        // need to scroll tab bars
-                        _scrollOffset = element.offsetLeft;
-                        _navStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
-                    }
-                }
-                else
-                {
-                    _inkStyle = $"top: {element.offsetTop}px; height: {element.clientHeight}px;";
-                    if (element.offsetTop > _scrollOffset + navSection.clientHeight
-                        || element.offsetTop < _scrollOffset)
-                    {
-                        // need to scroll tab bars
-                        _scrollOffset = element.offsetTop;
-                        _navStyle = $"transform: translate(0px, -{_scrollOffset}px);";
-                    }
-                }
-                StateHasChanged();
-                _renderedActivePane = _activePane;
+                return;
             }
+
+            await Task.Delay(100);
+
+            // TODO: slide to activated tab
+            // animate Active Ink
+            // ink bar
+            var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _activePane.TabBar);
+            var navSection = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tabBars);
+
+            if (IsHorizontal)
+            {
+                //_inkStyle = "left: 0px; width: 0px;";
+                _inkStyle = $"left: {element.offsetLeft}px; width: {element.clientWidth}px";
+                if (element.offsetLeft > _scrollOffset + navSection.clientWidth
+                    || element.offsetLeft < _scrollOffset)
+                {
+                    // need to scroll tab bars
+                    _scrollOffset = element.offsetLeft;
+                    _navStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
+                }
+            }
+            else
+            {
+                _inkStyle = $"top: {element.offsetTop}px; height: {element.clientHeight}px;";
+                if (element.offsetTop > _scrollOffset + navSection.clientHeight
+                    || element.offsetTop < _scrollOffset)
+                {
+                    // need to scroll tab bars
+                    _scrollOffset = element.offsetTop;
+                    _navStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+                }
+            }
+            StateHasChanged();
+            _renderedActivePane = _activePane;
         }
 
         //private async void OnPrevClicked()
@@ -567,7 +592,7 @@ namespace AntDesign
 
         private TabPane _draggingPane;
 
-        private void HandleDragStart(DragEventArgs args, TabPane pane)
+        internal void HandleDragStart(DragEventArgs args, TabPane pane)
         {
             if (Draggable)
             {
@@ -577,7 +602,7 @@ namespace AntDesign
             }
         }
 
-        private void HandleDrop(TabPane pane)
+        internal void HandleDrop(TabPane pane)
         {
             if (Draggable && _draggingPane != null)
             {

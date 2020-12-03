@@ -267,6 +267,13 @@ export function addClsToFirstChild(element, className) {
   }
 }
 
+export function removeClsFromFirstChild(element, className) {
+    var dom = getDom(element);
+    if (dom.firstElementChild) {
+        dom.firstElementChild.classList.remove(className);
+    }
+}
+
 export function addDomEventListenerToFirstChild(element, eventName, invoker) {
   var dom = getDom(element);
 
