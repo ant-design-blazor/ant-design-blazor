@@ -1,4 +1,21 @@
 <div>
+    <Text>byte</Text>
+    <AntDesign.InputNumber @bind-Value="@_byte" />
+    <p>value:@_byte</p>
+    <br />
+    <Text>byte?</Text>
+    <AntDesign.InputNumber @bind-Value="@_byteNull" />
+    <p>value:@_byteNull</p>
+    <br />
+    <Text>ushort</Text>
+    <AntDesign.InputNumber @bind-Value="@_ushort" />
+    <p>value:@_ushort</p>
+    <br />
+
+    <Text>ushort?</Text>
+    <AntDesign.InputNumber @bind-Value="@_ushortNull" />
+    <p>value:@_ushortNull</p>
+    <br />
 
     <Text>int</Text>
     <AntDesign.InputNumber @bind-Value="@_int" />
@@ -31,7 +48,10 @@
     <br />
 </div>
 @code{
-
+    byte _byte;
+    byte? _byteNull;
+    ushort _ushort;
+    ushort? _ushortNull;
     int _int;
     int? _intNull;
     decimal _dec;

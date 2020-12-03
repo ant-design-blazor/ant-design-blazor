@@ -69,27 +69,78 @@ namespace AntDesign
         private readonly Func<TValue, TValue, TValue> _increaseFunc;
         private readonly Func<TValue, TValue, TValue> _decreaseFunc;
         private readonly Func<TValue, TValue, bool> _greaterThanFunc;
+        private readonly Func<TValue, TValue, bool> _equalToFunc;
         private readonly Func<TValue, string, string> _toStringFunc;
         private readonly Func<TValue, int, TValue> _roundFunc;
+        private readonly Func<string, TValue, TValue> _parseFunc;
 
         private static readonly Type _surfaceType = typeof(TValue);
 
+        private static readonly Type[] _smallIntegerType = new Type[]
+        {
+            typeof(sbyte),
+            typeof(byte),
+            typeof(short),
+            typeof(ushort),
+        };
+
+        private static readonly Type[] _supportTypes = new Type[] {
+             typeof(sbyte),
+             typeof(byte),
+
+             typeof(short),
+             typeof(ushort),
+
+             typeof(int),
+             typeof(uint),
+
+             typeof(long),
+             typeof(ulong),
+
+             typeof(float),
+             typeof(double),
+             typeof(decimal)
+        };
+
         private static readonly Dictionary<Type, object> _defaultMaximum = new Dictionary<Type, object>()
         {
+            { typeof(sbyte),sbyte.MaxValue },
+            { typeof(byte), byte.MaxValue },
+
+            { typeof(short),short.MaxValue },
+            { typeof(ushort),ushort.MaxValue },
+
             { typeof(int),int.MaxValue },
-            { typeof(decimal),decimal.MaxValue },
-            { typeof(double),double.PositiveInfinity },
+            { typeof(uint),uint.MaxValue },
+
+            { typeof(long),long.MaxValue },
+            { typeof(ulong),ulong.MaxValue },
+
             { typeof(float),float.PositiveInfinity },
+            { typeof(double),double.PositiveInfinity },
+            { typeof(decimal),decimal.MaxValue },
         };
 
         private static readonly Dictionary<Type, object> _defaultMinimum = new Dictionary<Type, object>()
         {
+            { typeof(sbyte),sbyte.MinValue },
+            { typeof(byte), byte.MinValue },
+
+            { typeof(short),short.MinValue },
+            { typeof(ushort),ushort.MinValue },
+
             { typeof(int),int.MinValue },
-            { typeof(decimal),decimal.MinValue },
-            { typeof(double),double.NegativeInfinity },
+            { typeof(uint),uint.MinValue },
+
+            { typeof(long),long.MinValue },
+            { typeof(ulong),ulong.MinValue },
+
             { typeof(float),float.NegativeInfinity},
+            { typeof(double),double.NegativeInfinity },
+            { typeof(decimal),decimal.MinValue },
         };
 
+        private static Type[] _floatTypes = new Type[] { typeof(float), typeof(double), typeof(decimal) };
         private string _inputString;
         private bool _focused;
         private ElementReference _inputRef;
@@ -97,13 +148,35 @@ namespace AntDesign
         public InputNumber()
         {
             _isNullable = _surfaceType.IsGenericType && _surfaceType.GetGenericTypeDefinition() == typeof(Nullable<>);
+            var underlyingType = _isNullable ? Nullable.GetUnderlyingType(_surfaceType) : _surfaceType;
+            if (!_supportTypes.Contains(underlyingType))
+            {
+                throw new NotSupportedException("InputNumber supports only numeric types.");
+            }
+
+            // 数字解析
+            ParameterExpression input = Expression.Parameter(typeof(string), "input");
+            ParameterExpression defaultValue = Expression.Parameter(typeof(TValue), "defaultValue");
+            MethodCallExpression inputParse = Expression.Call(null, typeof(InputNumberMath).GetMethod(nameof(InputNumberMath.Parse), new Type[] { typeof(string), typeof(TValue) }), input, defaultValue);
+            var lambdaParse = Expression.Lambda<Func<string, TValue, TValue>>(inputParse, input, defaultValue);
+            _parseFunc = lambdaParse.Compile();
 
             //递增与递减
             ParameterExpression piValue = Expression.Parameter(_surfaceType, "value");
             ParameterExpression piStep = Expression.Parameter(_surfaceType, "step");
-            var fexpAdd = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Add(piValue, piStep), piValue, piStep);
+            Expression<Func<TValue, TValue, TValue>> fexpAdd;
+            Expression<Func<TValue, TValue, TValue>> fexpSubtract;
+            if (_smallIntegerType.Contains(underlyingType))
+            {
+                fexpAdd = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Convert(Expression.Add(Expression.Convert(piValue, typeof(int)), Expression.Convert(piStep, typeof(int))), _surfaceType), piValue, piStep);
+                fexpSubtract = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Convert(Expression.Subtract(Expression.Convert(piValue, typeof(int)), Expression.Convert(piStep, typeof(int))), _surfaceType), piValue, piStep);
+            }
+            else
+            {
+                fexpAdd = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Add(piValue, piStep), piValue, piStep);
+                fexpSubtract = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Subtract(piValue, piStep), piValue, piStep);
+            }
             _increaseFunc = fexpAdd.Compile();
-            var fexpSubtract = Expression.Lambda<Func<TValue, TValue, TValue>>(Expression.Subtract(piValue, piStep), piValue, piStep);
             _decreaseFunc = fexpSubtract.Compile();
 
             //数字比较
@@ -111,6 +184,8 @@ namespace AntDesign
             ParameterExpression piRight = Expression.Parameter(_surfaceType, "right");
             var fexpGreaterThan = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThan(piLeft, piRight), piLeft, piRight);
             _greaterThanFunc = fexpGreaterThan.Compile();
+            var fexpEqualTo = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.Equal(piLeft, piRight), piLeft, piRight);
+            _equalToFunc = fexpEqualTo.Compile();
 
             //格式化
             ParameterExpression format = Expression.Parameter(typeof(string), "format");
@@ -125,13 +200,14 @@ namespace AntDesign
             _toStringFunc = lambdaToString.Compile();
 
             //四舍五入
-            ParameterExpression num = Expression.Parameter(_surfaceType, "num");
-            ParameterExpression decimalPlaces = Expression.Parameter(typeof(int), "decimalPlaces");
-            MethodCallExpression expRound = Expression.Call(null, typeof(InputNumberMath).GetMethod("Round", new Type[] { _surfaceType, typeof(int) }), num, decimalPlaces);
-            var lambdaRound = Expression.Lambda<Func<TValue, int, TValue>>(expRound, num, decimalPlaces);
-            _roundFunc = lambdaRound.Compile();
-
-            var underlyingType = _isNullable ? Nullable.GetUnderlyingType(_surfaceType) : _surfaceType;
+            if (_floatTypes.Contains(_surfaceType))
+            {
+                ParameterExpression num = Expression.Parameter(_surfaceType, "num");
+                ParameterExpression decimalPlaces = Expression.Parameter(typeof(int), "decimalPlaces");
+                MethodCallExpression expRound = Expression.Call(null, typeof(InputNumberMath).GetMethod(nameof(InputNumberMath.Round), new Type[] { _surfaceType, typeof(int) }), num, decimalPlaces);
+                var lambdaRound = Expression.Lambda<Func<TValue, int, TValue>>(expRound, num, decimalPlaces);
+                _roundFunc = lambdaRound.Compile();
+            }
 
             if (_defaultMaximum.ContainsKey(underlyingType)) Max = (TValue)_defaultMaximum[underlyingType];
             if (_defaultMinimum.ContainsKey(underlyingType)) Min = (TValue)_defaultMinimum[underlyingType];
@@ -144,6 +220,50 @@ namespace AntDesign
             base.OnInitialized();
             SetClass();
             CurrentValue = Value ?? DefaultValue;
+        }
+        /// <summary>
+        /// Always return true, if input string is invalid, result = default, if input string is null or empty, result = DefaultValue
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="result"></param>
+        /// <param name="validationErrorMessage"></param>
+        /// <returns></returns>
+        protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
+        {
+            validationErrorMessage = null;
+            if (!Regex.IsMatch(value, @"^[+-]?\d*[.]?\d*$"))
+            {
+                result = Value;
+                return true;
+            }
+
+            if (value == "-" || value == "+")
+            {
+                value = "0";
+            }
+            if (!_isNullable)
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    result = default;
+                }
+                else
+                {
+                    result = _parseFunc(value, Value);
+                }
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    result = default;
+                }
+                else
+                {
+                    result = _parseFunc(value, Value);
+                }
+            }
+            return true;
         }
 
         private void SetClass()
@@ -158,6 +278,14 @@ namespace AntDesign
 
         private async Task Increase()
         {
+            if (_isNullable && Value == null)
+            {
+                return;
+            }
+            if (_equalToFunc(Value, Max))
+            {
+                return;
+            }
             await SetFocus();
             var num = _increaseFunc(Value, _step);
             await ChangeValueAsync(num);
@@ -165,6 +293,14 @@ namespace AntDesign
 
         private async Task Decrease()
         {
+            if (_isNullable && Value == null)
+            {
+                return;
+            }
+            if (_equalToFunc(Value, Min))
+            {
+                return;
+            }
             await SetFocus();
             var num = _decreaseFunc(Value, _step);
             await ChangeValueAsync(num);
@@ -204,40 +340,7 @@ namespace AntDesign
 
         private async Task ConvertNumberAsync(string inputString)
         {
-            if (!Regex.IsMatch(inputString, @"^[+-]?\d*[.]?\d*$"))
-            {
-                return;
-            }
-
-            if (inputString == "-" || inputString == "+")
-            {
-                inputString = "0";
-            }
-
-            TValue num;
-            if (!_isNullable)
-            {
-                if (string.IsNullOrWhiteSpace(inputString))
-                {
-                    num = default;
-                }
-                else
-                {
-                    num = (TValue)Convert.ChangeType(inputString, _surfaceType);
-                }
-            }
-            else
-            {
-                if (string.IsNullOrWhiteSpace(inputString))
-                {
-                    num = default;
-                }
-                else
-                {
-                    num = (TValue)Convert.ChangeType(inputString, Nullable.GetUnderlyingType(_surfaceType));
-                }
-            }
-
+            _ = TryParseValueFromString(inputString, out TValue num, out _);
             await ChangeValueAsync(num);
         }
 
@@ -247,9 +350,14 @@ namespace AntDesign
                 value = Max;
             else if (_greaterThanFunc(Min, value))
                 value = Min;
-
-            CurrentValue = _decimalPlaces.HasValue ? _roundFunc(value, _decimalPlaces.Value) : value;
-
+            if (_roundFunc == null)
+            {
+                CurrentValue = value;
+            }
+            else
+            {
+                CurrentValue = _decimalPlaces.HasValue ? _roundFunc(value, _decimalPlaces.Value) : value;
+            }
             if (OnChange.HasDelegate)
             {
                 await OnChange.InvokeAsync(value);
