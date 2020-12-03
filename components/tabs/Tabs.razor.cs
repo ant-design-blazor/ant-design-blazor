@@ -195,6 +195,21 @@ namespace AntDesign
 
         #endregion Parameters
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            ClassMapper.Clear()
+                .Add(PrefixCls)
+                .Add($"{PrefixCls}-{TabPosition}")
+                .Add($"{PrefixCls}-{Type}")
+                .If($"{PrefixCls}-large", () => Size == TabSize.Large || Card != null)
+                .If($"{PrefixCls}-head-tabs", () => Card != null)
+                .If($"{PrefixCls}-small", () => Size == TabSize.Small)
+                .GetIf(() => $"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
+                .If($"{PrefixCls}-no-animation", () => !Animated);
+        }
+
         public override Task SetParametersAsync(ParameterView parameters)
         {
             _needRefresh = true;
@@ -232,15 +247,6 @@ namespace AntDesign
             //    };
             //}
 
-            ClassMapper.Clear()
-                .Add(PrefixCls)
-                .Add($"{PrefixCls}-{TabPosition}")
-                .Add($"{PrefixCls}-{Type}")
-                .If($"{PrefixCls}-large", () => Size == TabSize.Large)
-                .If($"{PrefixCls}-small", () => Size == TabSize.Small)
-                .If($"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
-                .If($"{PrefixCls}-no-animation", () => !Animated);
-
             //_barClassMapper.Clear()
             //    .Add($"{PrefixCls}-bar")
             //    .Add($"{PrefixCls}-{TabPosition}-bar")
@@ -269,7 +275,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Add <see cref="AntTabPane"/> to <see cref="AntTabs"/>
+        /// Add <see cref="TabPane"/> to <see cref="Tabs"/>
         /// </summary>
         /// <param name="tabPane">The AntTabPane to be added</param>
         /// <exception cref="ArgumentNullException">Key is null</exception>
@@ -432,10 +438,12 @@ namespace AntDesign
 
         private async Task TryRenderInk()
         {
-            //if (_renderedActivePane == _activePane)
-            //{
-            //    return;
-            //}
+            if (_renderedActivePane == _activePane)
+            {
+                return;
+            }
+
+            await Task.Delay(100);
 
             // TODO: slide to activated tab
             // animate Active Ink
