@@ -267,6 +267,13 @@ export function addClsToFirstChild(element, className) {
   }
 }
 
+export function removeClsFromFirstChild(element, className) {
+    var dom = getDom(element);
+    if (dom.firstElementChild) {
+        dom.firstElementChild.classList.remove(className);
+    }
+}
+
 export function addDomEventListenerToFirstChild(element, eventName, invoker) {
   var dom = getDom(element);
 
@@ -386,6 +393,15 @@ export function removeCls(selector: Element | string, clsName: string | Array<st
   } else {
     element.classList.remove(...clsName);
   }
+}
+
+export function elementScrollIntoView(selector: Element | string) {
+    let element = getDom(selector);
+
+    if(!element)
+        return;
+
+    element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
 }
 
 const oldBodyCacheStack = [];

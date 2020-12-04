@@ -1,10 +1,45 @@
 ﻿<div style="margin: 10px; overflow: scroll; height: 200px">
     <div style="padding: 100px; height: 1000px; background: #eee; position: relative " id="area">
-        <Select PopupContainerSelector="#area" DefaultValue=@("lucy") Style="width:120px">
-            <SelectOption Value="jack">Jack</SelectOption>
-            <SelectOption Value="lucy">Lucy</SelectOption>
-            <SelectOption Value="disabled" Disabled>Disabled</SelectOption>
-            <SelectOption Value="yaoming">YaoMing</SelectOption>
-        </Select>
+		<Select DataSource="@_persons" 
+				@bind-Value="@_selectedValue"
+				LabelName="@nameof(Person.Name)" 
+				ValueName="@nameof(Person.Id)" 
+				Style="width: 120px"
+				PopupContainerSelector="#area"
+				Placeholder="Select a person">
+		</Select>
     </div>
 </div>
+
+@code
+{
+    class Person
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool NotAvailable { get; set; }
+    }
+
+    List<Person> _persons;
+    int? _selectedValue = 2; // Lucy
+
+    protected override void OnInitialized()
+    {
+        _persons = new List<Person> 
+        {
+            new Person {Id = 1, Name = "Jack"}, 
+            new Person {Id = 2, Name = "Lucy"}, 
+            new Person {Id = 3, Name = "Yaoming"}, 
+            new Person {Id = 4, Name = "Frieda"}, 
+            new Person {Id = 5, Name = "Kathy", NotAvailable = true}, 
+            new Person {Id = 6, Name = "Kate"}, 
+            new Person {Id = 7, Name = "Eric"}, 
+            new Person {Id = 8, Name = "Jake", NotAvailable = true}, 
+            new Person {Id = 9, Name = "Olaf"}, 
+            new Person {Id = 10, Name = "Sven"}, 
+            new Person {Id = 11, Name = "Bernd", NotAvailable = true}, 
+            new Person {Id = 12, Name = "Jane"}, 
+            new Person {Id = 13, Name = "John"}
+        };
+    }
+}

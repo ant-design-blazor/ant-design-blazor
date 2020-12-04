@@ -1,40 +1,72 @@
-<Select Style="width:240px"
+<Select DataSource="@_list"
+        @bind-Value="@_selectedValue"
+        ValueName="@nameof(Person.Id)"
+        LabelName="@nameof(Person.Name)"
         Placeholder="custom dropdown render"
-        DropdownRender="@OnDropdownRender">
-    @foreach (var item in _items)
-    {
-        <SelectOption Value="@item">@item</SelectOption>
-    }
+        OnSelectedItemChanged="OnSelectedItemChangedHandler"
+        Style="width: 240px;"
+        DropdownRender="@DropdownRender">
 </Select>
+<br /><br />
+<p>
+    Selected Value: @_selectedValue <br />
+    Selected Item Name: @_selectedItem?.Name
+</p>
 
-@code{
-    private int _index = 0;
-    private string _name = "";
-    private List<string> _items = new List<string> { "jack", "lucy" };
+@code
+{
+    class Person
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    List<Person> _list;
+    int? _selectedValue;
+    Person _selectedItem;
+    string _name = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        _list = new List<Person>
+        {
+            new Person {Id = 1, Name = "Jack"},
+            new Person {Id = 2, Name = "Lucy"}            
+        };
+    }
+
+    private void OnSelectedItemChangedHandler(Person value)
+    {
+        _selectedItem = value;
+    }
+
+    private RenderFragment DropdownRender(RenderFragment originNode)
+    {
+        RenderFragment customDropdownRender =
+            @<Template>
+                <div>
+                    @originNode
+                    <Divider Style="margin: 4px 0"></Divider>
+                    <div style="display: flex; flex-wrap: nowrap; padding: 8px">
+                        <Input Style="flex: auto" @bind-Value="@_name"/>
+                        <a style="flex: none; padding: 8px; display: block; cursor: pointer" @onclick="AddItem">
+                            <Icon Type="plus" Theme="outline"></Icon>
+                            Add Item
+                        </a>
+                    </div>
+                </div>
+            </Template>;
+
+        return customDropdownRender;
+    }
 
     private void AddItem(MouseEventArgs args)
     {
-        var newItem = !string.IsNullOrWhiteSpace(_name) ? _name : $"New Item {_index++}";
-        _items.Add(newItem);
-        _name = "";
-    }
-
-    private RenderFragment OnDropdownRender(RenderFragment originNode, Properties props)
-    {
-        RenderFragment customDropdownRender =
-        @<Template>
-            <div>
-                @originNode
-                <Divider Style="margin:4px 0"></Divider>
-                <div style="display:flex;flex-wrap:nowrap;padding:8px">
-                    <Input Style="flex:auto" @bind-Value="@_name"/>
-                    <a style="flex:none;padding:8px;display:block;cursor:pointer" @onclick="AddItem">
-                        <Icon Type="plus" Theme="outline"></Icon>
-                        Add Item
-                    </a>
-                </div>
-            </div>
-        </Template>;
-        return customDropdownRender;
+		if (!string.IsNullOrWhiteSpace(_name))
+		{
+            int newId = _list.Count() + 1;
+		    _list.Add(new Person {Id = newId, Name = _name});
+		    _name = string.Empty;
+	   }
     }
 }

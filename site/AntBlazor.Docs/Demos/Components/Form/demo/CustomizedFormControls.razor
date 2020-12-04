@@ -1,14 +1,14 @@
 ﻿@using System.Text.Json;
 
 <Form Model="@model"
-      LabelCol="new ColLayoutParam { Span = 8 }"
-      WrapperCol="new ColLayoutParam { Span = 16 }"
       OnFinish="OnFinish"
-      OnFinishFailed="OnFinishFailed">
+      OnFinishFailed="OnFinishFailed"
+      LabelColSpan="8"
+      WrapperColSpan="16">
     <FormItem Label="Input">
         <PriceInput @bind-Value="context.Price" />
     </FormItem>
-    <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button HtmlType="submit">Submit</Button>
     </FormItem>
 </Form>

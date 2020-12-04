@@ -32,8 +32,8 @@ namespace AntDesign.Tests.tabs
         {
             var tabPane1Builder = new ComponentParameterBuilder<TabPane>()
                 .Add(x => x.Key, key)
-                .Add(x => x.Tab, RenderFragmentHelper.ToRenderFragment($"Tab {key}"))
-                .Add(x => x.ChildContent, RenderFragmentHelper.ToRenderFragment($"Content {key}"));
+                .Add(x => x.Tab, $"Tab {key}".ToRenderFragment())
+                .Add(x => x.ChildContent, $"Content {key}".ToRenderFragment());
 
             configure?.Invoke(tabPane1Builder);
 
@@ -92,6 +92,25 @@ namespace AntDesign.Tests.tabs
             cut.SetParametersAndRender(p => p.Add(x => x.ActiveKey, "1"));
 
             Assert.Equal(2, renderedPanes.Count);
+        }
+
+        [Fact]
+        public void Clicking_on_an_inactive_tab_should_make_it_active()
+        {
+            var cut = CreateTabs(p =>
+            {
+                var tabPane1 = CreateTabPanel("1");
+                var tabPane2 = CreateTabPanel("2");
+
+                tabPane1(p);
+                tabPane2(p);
+            });
+
+            Assert.Equal("Content 2", cut.Find(".ant-tabs-tabpane").TextContent);
+
+            cut.Find("div.ant-tabs-tab").Click();
+
+            Assert.Equal("Content 1", cut.Find(".ant-tabs-tabpane").TextContent);
         }
     }
 }

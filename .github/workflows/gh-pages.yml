@@ -65,6 +65,7 @@ jobs:
           external_repository: ant-design-blazor/ant-design-blazor.github.io
           publish_branch: master
           publish_dir: ./cargo/wwwroot
+          cname: antblazor.com
 
       - name: Package Nightly Nuget 📦
         run: |

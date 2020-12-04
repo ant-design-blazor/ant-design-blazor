@@ -6,6 +6,7 @@ using AntDesign.Forms;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using OneOf;
 
 namespace AntDesign
 {
@@ -20,10 +21,38 @@ namespace AntDesign
         public RenderFragment<TModel> ChildContent { get; set; }
 
         [Parameter]
-        public ColLayoutParam LabelCol { get; set; }
+        public ColLayoutParam LabelCol { get; set; } = new ColLayoutParam();
 
         [Parameter]
-        public ColLayoutParam WrapperCol { get; set; }
+        public OneOf<string, int> LabelColSpan
+        {
+            get { return LabelCol.Span; }
+            set { LabelCol.Span = value; }
+        }
+
+        [Parameter]
+        public OneOf<string, int> LabelColOffset
+        {
+            get { return LabelCol.Offset; }
+            set { LabelCol.Offset = value; }
+        }
+
+        [Parameter]
+        public ColLayoutParam WrapperCol { get; set; } = new ColLayoutParam();
+
+        [Parameter]
+        public OneOf<string, int> WrapperColSpan
+        {
+            get { return WrapperCol.Span; }
+            set { WrapperCol.Span = value; }
+        }
+
+        [Parameter]
+        public OneOf<string, int> WrapperColOffset
+        {
+            get { return WrapperCol.Offset; }
+            set { WrapperCol.Offset = value; }
+        }
 
         [Parameter]
         public string Size { get; set; }
@@ -42,6 +71,15 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<EditContext> OnFinishFailed { get; set; }
+
+        [Parameter]
+        public RenderFragment Validator { get; set; } = _defaultValidator;
+
+        private static readonly RenderFragment _defaultValidator = builder =>
+        {
+            builder.OpenComponent<ObjectGraphDataAnnotationsValidator>(0);
+            builder.CloseComponent();
+        };
 
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }

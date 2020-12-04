@@ -13,6 +13,7 @@
     "next_3": "向后 3 页"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Monday",
     "lang": {
       "placeholder": "请选择日期",
       "yearPlaceholder": "请选择年份",
@@ -39,16 +40,18 @@
       "monthSelect": "选择月份",
       "yearSelect": "选择年份",
       "decadeSelect": "选择年代",
-      "yearFormat": "YYYY年",
+      "yearFormat": "yyyy年",
       "dayFormat": "D日",
-      "dateFormat": "YYYY年M月D日",
-      "dateTimeFormat": "YYYY年M月D日 HH时mm分ss秒",
+      "dateFormat": "yyyy年M月D日",
+      "dateTimeFormat": "yyyy年M月D日 HH时mm分ss秒",
       "previousYear": "上一年 (Control键加左方向键)",
       "nextYear": "下一年 (Control键加右方向键)",
       "previousDecade": "上一年代",
       "nextDecade": "下一年代",
       "previousCentury": "上一世纪",
-      "nextCentury": "下一世纪"
+      "nextCentury": "下一世纪",
+      "monthFormat": "M月",
+      "shortWeekDays": [ "一", "二", "三", "四", "五", "六", "日" ]
     },
     "timePickerLocale": {
       "placeholder": "请选择时间",

@@ -7,11 +7,11 @@ title:
 
 ## zh-CN
 
-使用 `dropdownRender` 对下拉菜单进行自由扩展。
+使用 `DropdownRender` 对下拉菜单进行自由扩展。
 
 ## en-US
 
-Customize the dropdown menu via `dropdownRender`.
+Customize the dropdown menu via `DropdownRender`.
 
 ```jsx
 import { Select, Divider, Input } from 'antd';

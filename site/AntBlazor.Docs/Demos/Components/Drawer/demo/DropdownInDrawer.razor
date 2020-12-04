@@ -1,0 +1,88 @@
+﻿@inject MessageService _message
+
+<div>
+    <Button Type="primary" @onclick="_=>open()">Open</Button>
+    <Drawer Width="500" Closable="true" Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
+        <b>Select:</b><br />
+
+        <Form Model="_formModal">
+            <FormItem Label="类型">
+                <RadioGroup @bind-Value="@context.Type">
+                    <Radio Value="1">Select</Radio>
+                    <Radio Value="2">None</Radio>
+                </RadioGroup>
+            </FormItem>
+            @if (context.Type == 1)
+            {
+                <FormItem>
+                    <Select TItem="string" TItemValue="string" @bind-Value="@context.Name" DefaultValue=@("lucy") Style="width:120px" AllowClear>
+                        <SelectOption TItem="string" TItemValue="string" Value=@("lucy")>Lucy</SelectOption>
+                    </Select>
+                </FormItem>
+            }
+        </Form>
+        <div style="margin: 64px" />
+
+        <b>Dropdown:</b><br />
+        <Dropdown>
+            <Overlay>
+                <Menu>
+                    <MenuItem>
+                        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                            1st menu item
+                        </a>
+                    </MenuItem>
+                </Menu>
+            </Overlay>
+            <ChildContent>
+                <a class="ant-dropdown-link" @onclick:preventDefault>
+                    Hover me <Icon Type="down" />
+                </a>
+            </ChildContent>
+        </Dropdown>
+
+        <div style="margin: 64px" />
+
+        <b>DatePicker:</b><br />
+        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" />
+
+        <div style="margin: 64px" />
+
+        <b>Tooltip:</b><br />
+        <Tooltip Title="@("prompt text")">
+            <span>Tooltip will show on mouse enter.</span>
+        </Tooltip>
+
+        <div style="margin: 64px" />
+
+        <b>Popconfirm:</b><br />
+        <Popconfirm Title="Are you sure delete this task?"
+                    OkText="Yes"
+                    CancelText="No">
+            <a>Delete</a>
+        </Popconfirm>
+    </Drawer>
+</div>
+
+@code{
+    class FormModal
+    {
+        public string Name { get; set; }
+        public int Type { get; set; }
+    }
+
+    private FormModal _formModal = new FormModal();
+
+    bool visible = false;
+
+    void open()
+    {
+        this.visible = true;
+    }
+
+    void close()
+    {
+        this.visible = false;
+    }
+
+}

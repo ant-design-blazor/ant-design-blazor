@@ -45,6 +45,8 @@ namespace AntDesign
 
         public static string AddClsToFirstChild => $"{FUNC_PREFIX}addClsToFirstChild";
 
+        public static string RemoveClsFromFirstChild => $"{FUNC_PREFIX}removeClsFromFirstChild";
+
         public static string AddDomEventListenerToFirstChild => $"{FUNC_PREFIX}addDomEventListenerToFirstChild";
 
         public static string AddElementToBody => $"{FUNC_PREFIX}addElementToBody";
@@ -79,6 +81,7 @@ namespace AntDesign
 
         public static string DisposeObj => $"{FUNC_PREFIX}disposeObj";
 
+        public static string ElementScrollIntoView => $"{FUNC_PREFIX}elementScrollIntoView";
         #region Draggable Modal
 
         public static string EnableDraggable => $"{FUNC_PREFIX}enableDraggable";

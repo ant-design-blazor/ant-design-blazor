@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+#pragma warning disable 1591 // Disable missing XML comment
+
     public class Properties
     {
         public string Value { get; set; }
