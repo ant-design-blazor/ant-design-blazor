@@ -55,6 +55,12 @@ namespace AntDesign.Internal
 
         [Parameter]
         public bool Visible { get; set; } = false;
+        /// <summary>
+        /// 自动关闭功能和Visible参数同时生效
+        /// Both auto-off and Visible control close
+        /// </summary>
+        [Parameter]
+        public bool ComplexAutoCloseAndVisible { get; set; } = false;
 
         [Parameter]
         public bool IsButton { get; set; } = false;
@@ -305,7 +311,12 @@ namespace AntDesign.Internal
 
         internal virtual async Task Hide(bool force = false)
         {
-            if (!Visible || force) await _overlay.Hide(force);
+            if (Visible && !ComplexAutoCloseAndVisible && !force)
+            {
+                return;
+            }
+
+            await _overlay.Hide(force);
         }
 
         internal Overlay GetOverlayComponent()
