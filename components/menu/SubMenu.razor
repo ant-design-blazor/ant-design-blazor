@@ -35,6 +35,7 @@ else
         <SubMenuTrigger @ref="_overlayTrigger"
                         TriggerClass="@ClassMapper.Class"
                         Visible="IsOpen"
+                        ComplexAutoCloseAndVisible="true"
                         Disabled="Disabled"
                         Placement="@(RootMenu.Mode == MenuMode.Horizontal && Parent == null ? PlacementType.BottomLeft : PlacementType.RightTop)"
                         OnVisibleChange="OnOverlayVisibleChange"
