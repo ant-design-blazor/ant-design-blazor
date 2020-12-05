@@ -19,7 +19,7 @@ else if (IsColGroup)
 else if (IsHeader && HeaderColSpan != 0)
 {
     <th class="@ClassMapper.Class" style="@Style" colspan="@HeaderColSpan">
-        @(Title)
+          @if (TitleTemplate != null) @TitleTemplate else @Title
     </th>
 }
 else if (!IsHeader && RowSpan != 0 && ColSpan != 0)

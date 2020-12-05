@@ -1,4 +1,4 @@
-@namespace AntDesign
+锘緻namespace AntDesign
 @inherits ColumnBase
 @using AntDesign.Core.Helpers
 @using AntDesign.TableModels
@@ -33,6 +33,10 @@ else if (IsHeader && HeaderColSpan != 0)
                 @SortHeader(this)
             }
         }
+        else if (TitleTemplate != null)
+        {
+            @TitleTemplate
+        }
         else
         {
             @HeaderTitle
@@ -47,12 +51,11 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
             <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @(RowData.Level* Table.IndentSize)px;"></span>
             @if (RowData.HasChildren)
             {
-                <button type="button" @onclick="ToggleTreeNode"
-                        class="ant-table-row-expand-icon @(RowData?.Expanded==true?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label="关闭行"></button>
+                <button type="button" @onclick="ToggleTreeNode" class="ant-table-row-expand-icon @(RowData?.Expanded==true?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded==true?Table.Locale.Collapse:Table.Locale.Expand)"></button>
             }
             else
             {
-                <button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="关闭行"></button>
+                <button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
             }
         }
         @if (CellRender != null)
@@ -84,7 +87,9 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 
     readonly RenderFragment<Column<TData>> SortHeader = col =>
     @<div class="ant-table-column-sorters">
-        <span>@col.HeaderTitle</span>
+        <span>
+            @if (col.TitleTemplate != null)@col.TitleTemplate else @col.HeaderTitle
+        </span>
         <span class="ant-table-column-sorter ant-table-column-sorter-full">
             <span class="ant-table-column-sorter-inner">
                 <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up {(col.SortModel.SortType==SortType.Ascending? "active":"")}") />
