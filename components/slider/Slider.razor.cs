@@ -166,7 +166,33 @@ namespace AntDesign
         /// dual thumb mode
         /// </summary>
         //[Parameter]
-        public bool Range { get; private set; }
+        private bool? _range;
+        public bool Range
+        {
+            get
+            {
+                if (_range == null)
+                {
+                    Type type = typeof(TValue);
+                    Type doubleType = typeof(double);
+                    Type tupleDoubleType = typeof((double, double));
+                    if (type == doubleType)
+                    {
+                        _range = false;
+                    }
+                    else if (type == tupleDoubleType)
+                    {
+                        _range = true;
+                    }
+                    else
+                    {
+                        throw new ArgumentOutOfRangeException($"Type argument of Slider should be one of {doubleType}, {tupleDoubleType}");
+                    }
+                }
+                return _range.Value;
+            }
+            //private set { _range = value; }
+        }
 
         /// <summary>
         /// reverse the component
@@ -281,22 +307,6 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
-            Type type = typeof(TValue);
-            Type doubleType = typeof(double);
-            Type tupleDoubleType = typeof((double, double));
-            if (type == doubleType)
-            {
-                Range = false;
-            }
-            else if (type == tupleDoubleType)
-            {
-                Range = true;
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException($"Type argument of Slider should be one of {doubleType}, {tupleDoubleType}");
-            }
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
