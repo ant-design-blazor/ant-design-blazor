@@ -1,4 +1,4 @@
-@namespace AntDesign
+﻿@namespace AntDesign
 @inherits AntDomComponentBase
 @using AntDesign.TableModels
 @typeparam TItem
@@ -167,7 +167,8 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
                                 @if (table.RowExpandable(currentRowData))
                                 {
                                     <button type="button" @attributes="@(new Dictionary<string,object>() { {"onclick",_callbackFactory.Create(table,() => ToggleExpandRow(currentRowData)) } })"
-                                            class="ant-table-row-expand-icon @(currentRowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label=""></button>
+                                            class="ant-table-row-expand-icon @(currentRowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
+                                            aria-label="@(currentRowData.Expanded?table.Locale.Collapse:table.Locale.Expand)"></button>
                                 }
                             </td>
                         }
