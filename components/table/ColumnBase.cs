@@ -27,11 +27,8 @@ namespace AntDesign
         [Parameter]
         public string Title { get; set; }
 
-	[Parameter]
-	public string TitleTemplate { get; set; }
-
         [Parameter]
-	    public string TitleTemplate { get; set; }
+        public RenderFragment TitleTemplate { get; set; }
 
         [Parameter]
         public string Width { get; set; }
