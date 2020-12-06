@@ -634,6 +634,11 @@ namespace AntDesign
 
             if (Range)
             {
+                if (IsLeftAndRightChanged(value))
+                {
+                    _leftValue = double.MinValue;
+                    _rightValue = double.MaxValue;
+                }
                 LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value).Item1;
                 RightValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value).Item2;
             }
@@ -641,6 +646,12 @@ namespace AntDesign
             {
                 RightValue = DataConvertionExtensions.Convert<TValue, double>(value);
             }
+        }
+
+        private bool IsLeftAndRightChanged(TValue value)
+        {
+            (double, double) v = DataConvertionExtensions.Convert<TValue, (double, double)>(value);
+            return (v.Item1 != LeftValue) && (v.Item2 != RightValue);
         }
     }
 }
