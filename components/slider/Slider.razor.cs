@@ -445,15 +445,15 @@ namespace AntDesign
                 bool metaKey = jsonElement.GetProperty("metaKey").GetBoolean();
                 bool shiftKey = jsonElement.GetProperty("shiftKey").GetBoolean();
 
-                _edgeClicked = _edgeClickArgs.ClientX == clientX
+                _edgeClicked = _edgeClickArgs != null
+                            && _edgeClickArgs.ClientX == clientX
                             && _edgeClickArgs.ClientY == clientY
                             && _edgeClickArgs.CtrlKey == ctrlKey
                             && _edgeClickArgs.MetaKey == metaKey
                             && _edgeClickArgs.AltKey == altKey
                             && _edgeClickArgs.ShiftKey == shiftKey;
             }
-            //return _edgeClicked.Value;
-            return false;
+            return _edgeClicked.Value;
         }
 
         private async void OnMouseMove(JsonElement jsonElement)
@@ -476,7 +476,6 @@ namespace AntDesign
                 {
                     await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
                     OnAfterChange?.Invoke(CurrentValue);
-
                 }
             }
             if (_edgeClicked != null)
