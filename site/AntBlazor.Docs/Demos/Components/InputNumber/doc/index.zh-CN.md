@@ -12,7 +12,11 @@ cover: https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg
 
 - 当需要获取标准数值时。
 
+## 支持类型
 
+`sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double`, `decimal`
+
+也支持以上类型的Nullable类型，比如`ushort?`, `int?`等
 
 ## API
 
