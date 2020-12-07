@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
@@ -649,8 +650,47 @@ namespace AntDesign
 
         private bool IsLeftAndRightChanged(TValue value)
         {
-            (double, double) v = DataConvertionExtensions.Convert<TValue, (double, double)>(value);
-            return (v.Item1 != LeftValue) && (v.Item2 != RightValue);
+            (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value);
+            return (typedValue.Item1 != LeftValue) && (typedValue.Item2 != RightValue);
+        }
+
+        private TValue _value;
+
+        /// <summary>
+        /// Gets or sets the value of the input. This should be used with two-way binding.
+        /// </summary>
+        /// <example>
+        /// @bind-Value="model.PropertyName"
+        /// </example>
+        [Parameter]
+        public sealed override TValue Value
+        {
+            get { return _value; }
+            set
+            {
+                TValue orderedValue = SortValue(value);
+                var hasChanged = !EqualityComparer<TValue>.Default.Equals(orderedValue, Value);
+                if (hasChanged)
+                {
+                    _value = orderedValue;
+                    OnValueChange(orderedValue);
+                }
+            }
+        }
+
+        private TValue SortValue(TValue value)
+        {
+            TValue orderedValue = value;
+            if (Range)
+            {
+                //sort if needed
+                (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value);
+                if (typedValue.Item1 > typedValue.Item2)
+                {
+                    orderedValue = DataConvertionExtensions.Convert<(double, double), TValue>((typedValue.Item2, typedValue.Item1));
+                }
+            }
+            return orderedValue;
         }
     }
 }
