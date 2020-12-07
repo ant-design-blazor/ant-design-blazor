@@ -199,7 +199,6 @@ namespace AntDesign
                     _leftValue = Math.Min(_leftValue, RightValue);
                     _leftValue = GetNearestStep(_leftValue);
                     SetStyle();
-
                     //CurrentValue = TupleToGeneric((_leftValue, RightValue));
                     CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
                 }
@@ -241,6 +240,7 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
         /// If true, the slider will be vertical.
         /// </summary>
         [Parameter]
@@ -416,9 +416,39 @@ namespace AntDesign
             _mouseDown = !Disabled;
         }
 
+        private MouseEventArgs _edgeClickArgs;
+        private bool? _edgeClicked;
+        private void OnMouseDownEdge(MouseEventArgs args, bool right)
+        {
+            _right = right;
+            _edgeClickArgs = args;
+        }
+
+        private bool IsMoveInEdgeBoundary(JsonElement jsonElement)
+        {
+            if (_edgeClicked == null)
+            {
+                double clientX = jsonElement.GetProperty("clientX").GetDouble();
+                double clientY = jsonElement.GetProperty("clientY").GetDouble();
+                bool altKey = jsonElement.GetProperty("altKey").GetBoolean();
+                bool ctrlKey = jsonElement.GetProperty("ctrlKey").GetBoolean();
+                bool metaKey = jsonElement.GetProperty("metaKey").GetBoolean();
+                bool shiftKey = jsonElement.GetProperty("shiftKey").GetBoolean();
+
+                _edgeClicked = _edgeClickArgs.ClientX == clientX
+                            && _edgeClickArgs.ClientY == clientY
+                            && _edgeClickArgs.CtrlKey == ctrlKey
+                            && _edgeClickArgs.MetaKey == metaKey
+                            && _edgeClickArgs.AltKey == altKey
+                            && _edgeClickArgs.ShiftKey == shiftKey;
+            }
+            //return _edgeClicked.Value;
+            return false;
+        }
+
         private async void OnMouseMove(JsonElement jsonElement)
         {
-            if (_mouseDown)
+            if (_mouseDown && !IsMoveInEdgeBoundary(jsonElement))
             {
                 _mouseMove = true;
                 await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
@@ -432,8 +462,16 @@ namespace AntDesign
             if (_mouseDown)
             {
                 _mouseDown = false;
-                await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
-                OnAfterChange?.Invoke(CurrentValue);
+                if (!IsMoveInEdgeBoundary(jsonElement))
+                {
+                    await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
+                    OnAfterChange?.Invoke(CurrentValue);
+
+                }
+            }
+            if (_edgeClicked != null)
+            {
+                _edgeClicked = null;
             }
         }
 
@@ -489,6 +527,10 @@ namespace AntDesign
                 if (_leftHandleDom == null)
                 {
                     _leftHandleDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _leftHandle);
+                }
+                if (_rightHandleDom == null)
+                {
+                    _rightHandleDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _rightHandle);
                 }
                 double handleLength = (double)(Vertical ? _rightHandleDom.clientHeight : _rightHandleDom.clientWidth);
                 if (Reverse)
