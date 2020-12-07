@@ -220,14 +220,14 @@ namespace AntDesign
             get => _leftValue;
             set
             {
-                if (_leftValue != value)
+                double candidate = Clamp(value, Min, Max);
+                if (_leftValue != candidate)
                 {
-                    _leftValue = Math.Max(value, Min);
-                    _leftValue = Math.Min(_leftValue, RightValue);
-                    _leftValue = GetNearestStep(_leftValue);
+                    _leftValue = candidate;
                     SetStyle();
-                    //CurrentValue = TupleToGeneric((_leftValue, RightValue));
-                    CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
+                    (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue);
+                    if (value != typedValue.Item1)
+                        CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
                 }
             }
         }
@@ -240,32 +240,52 @@ namespace AntDesign
             get => _rightValue;
             set
             {
-                if (_rightValue != value)
+                double candidate;
+                if (Range)
                 {
-                    _rightValue = Math.Min(value, Max);
-                    if (Range)
-                    {
-                        _rightValue = Math.Max(LeftValue, _rightValue);
-                    }
-                    else
-                    {
-                        _rightValue = Math.Max(Min, _rightValue);
-                    }
-                    _rightValue = GetNearestStep(_rightValue);
+                    candidate = Clamp(value, LeftValue, Max);
+                }
+                else
+                {
+                    candidate = Clamp(value, Min, Max);
+                }
+
+                if (_rightValue != candidate)
+                {
+                    _rightValue = candidate;
                     SetStyle();
                     if (Range)
                     {
                         //CurrentValue = TupleToGeneric((LeftValue, _rightValue));
-                        CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((LeftValue, _rightValue));
+                        (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue);
+                        if (value != typedValue.Item2)
+                            CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((LeftValue, _rightValue));
                     }
                     else
                     {
-                        //CurrentValue = DoubleToGeneric(_rightValue);
-                        CurrentValue = DataConvertionExtensions.Convert<double, TValue>(_rightValue);
+                        double typedValue = DataConvertionExtensions.Convert<TValue, double>(CurrentValue);
+                        if (value != typedValue)
+                            //CurrentValue = DoubleToGeneric(_rightValue);
+                            CurrentValue = DataConvertionExtensions.Convert<double, TValue>(_rightValue);
                     }
                 }
             }
         }
+
+        private double Clamp(
+            double value, double inclusiveMinimum, double inclusiveMaximum)
+        {
+            if (value < inclusiveMinimum)
+            {
+                value = inclusiveMinimum;
+            }
+            if (value > inclusiveMaximum)
+            {
+                value = inclusiveMaximum;
+            }
+            return GetNearestStep(value);
+        }
+
 
         /// <summary>
         /// If true, the slider will be vertical.
