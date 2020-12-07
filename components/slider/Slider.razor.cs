@@ -198,8 +198,21 @@ namespace AntDesign
         /// <summary>
         /// reverse the component
         /// </summary>
+        private bool _reverse;
+
         [Parameter]
-        public bool Reverse { get; set; }
+        public bool Reverse
+        {
+            get { return _reverse; }
+            set 
+            {
+                if (_reverse != value)
+                {
+                    _reverse = value;
+                    SetStyle();
+                }
+            }
+        }
 
         /// <summary>
         /// The granularity the slider can step through values. Must greater than 0, and be divided by (<see cref="Max"/> - <see cref="Min"/>) . When <see cref="Marks"/> no null, <see cref="Step"/> can be null.
@@ -674,7 +687,7 @@ namespace AntDesign
             return (typedValue.Item1 != LeftValue) && (typedValue.Item2 != RightValue);
         }
 
-        private TValue _value;
+        private TValue _value;        
 
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
