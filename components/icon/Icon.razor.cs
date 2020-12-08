@@ -104,12 +104,9 @@ namespace AntDesign
             }
             else
             {
-                await Task.Run(async () =>
-                 {
-                     var svg = await IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
-                     _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
-                     await InvokeAsync(StateHasChanged);
-                 });
+                var svg = IconService.GetIconImg(Type.ToLowerInvariant(), Theme.ToLowerInvariant());
+                _svgImg = IconService.GetStyledSvg(svg, svgClass, Width, Height, Fill, Rotate);
+                await InvokeAsync(StateHasChanged);
             }
         }
 
