@@ -49,16 +49,5 @@
     "typescript": "^3.8.3",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged -r"
-    }
-  },
-  "lint-staged": {
-    "*.cs": [
-      "dotnet dotnet-format --include"
-    ]
   }
 }
