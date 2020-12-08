@@ -1,49 +1,29 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
-using AntDesign.core.Extensions;
-using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+
+#pragma warning disable CA1822
+#pragma warning disable CA1054
+#pragma warning disable CA1062
 
 namespace AntDesign
 {
     public class IconService
     {
-        private static readonly ConcurrentDictionary<string, ValueTask<string>> _svgCache = new ConcurrentDictionary<string, ValueTask<string>>();
-        private static IDictionary<string, string[]> _iconfiles;
-        private readonly static HttpClient _httpClient = new HttpClient();
         private IJSRuntime _js;
 
-        private Uri _baseAddress;
-
-        public IconService(NavigationManager navigationManager, IJSRuntime js)
+        public IconService(IJSRuntime js)
         {
-            if (navigationManager != null)
-                _baseAddress = new Uri(navigationManager.BaseUri);
-
             _js = js;
         }
 
-        public async ValueTask<string> GetIconImg(string type, string theme)
+        public static string GetIconImg(string type, string theme)
         {
-            if (!await IconExists(theme, type))
-            {
-                return null;
-            }
+            var iconImg = IconStore.GetIcon(type, theme);
 
-            var cacheKey = $"{theme}/{type}";
-            var iconImg = await _svgCache.GetOrAdd(cacheKey, async key =>
-            {
-                var res = await _httpClient.GetAsync(new Uri(_baseAddress, $"_content/AntDesign/icons/{key}.svg"));
-                if (res.IsSuccessStatusCode)
-                {
-                    return await res.Content.ReadAsStringAsync();
-                }
-
+            if (string.IsNullOrEmpty(iconImg))
                 return null;
-            });
 
             return iconImg;
         }
@@ -74,22 +54,16 @@ namespace AntDesign
             await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, scriptUrl);
         }
 
-        public async Task<IDictionary<string, string[]>> GetAllIcons()
+        public IDictionary<string, string[]> GetAllIcons()
         {
-            _iconfiles ??= await _httpClient.GetFromJsonAsync<IDictionary<string, string[]>>(new Uri(_baseAddress, $"_content/AntDesign/icons/icons.json").ToString());
-            return _iconfiles;
+            return IconStore.GetAllIconNames();
         }
 
-        public async ValueTask<bool> IconExists(string theme, string type)
+        public bool IconExists(string theme = "", string type = "")
         {
-            _iconfiles ??= await GetAllIcons();
+            var icon = IconStore.GetIcon(type, theme);
 
-            if (!_iconfiles.TryGetValue(theme, out var files))
-            {
-                return false;
-            }
-
-            return type.IsIn(files);
+            return !string.IsNullOrEmpty(icon);
         }
     }
 }

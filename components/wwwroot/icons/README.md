@@ -1,1 +1,0 @@
-This files is copy from https://github.com/ant-design/ant-design-icons/tree/master/packages/icons/svg

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace AntDesign.Docs.Services
@@ -15,157 +14,159 @@ namespace AntDesign.Docs.Services
             _iconService = iconService;
         }
 
-        public async Task<IList<IconItem>> GetIcons()
+        public IList<IconItem> GetIcons()
         {
-            _icons ??= await Icons();
+            _icons ??= Icons();
             return _icons;
         }
 
-        private async Task<IList<IconItem>> Icons()
+        private IList<IconItem> Icons()
         {
             IList<IconItem> icons = new List<IconItem>();
 
             var item1 = new IconItem()
             {
                 Category = "direction",
-                IconNames = new List<string> {
-                                "step-backward",
-                                "step-forward",
-                                "fast-backward",
-                                "fast-forward",
-                                "shrink",
-                                "arrows-alt",
-                                "down",
-                                "up",
-                                "left",
-                                "right",
-                                "caret-up",
-                                "caret-down",
-                                "caret-left",
-                                "caret-right",
-                                "up-circle",
-                                "down-circle",
-                                "left-circle",
-                                "right-circle",
-                                "double-right",
-                                "double-left",
-                                "vertical-left",
-                                "vertical-right",
-                                "vertical-align-top",
-                                "vertical-align-middle",
-                                "vertical-align-bottom",
-                                "forward",
-                                "backward",
-                                "rollback",
-                                "enter",
-                                "retweet",
-                                "swap",
-                                "swap-left",
-                                "swap-right",
-                                "arrow-up",
-                                "arrow-down",
-                                "arrow-left",
-                                "arrow-right",
-                                "play-circle",
-                                "up-square",
-                                "down-square",
-                                "left-square",
-                                "right-square",
-                                "login",
-                                "logout",
-                                "menu-fold",
-                                "menu-unfold",
-                                "border-bottom",
-                                "border-horizontal",
-                                "border-inner",
-                                "border-outer",
-                                "border-left",
-                                "border-right",
-                                "border-top",
-                                "border-verticle",
-                                "pic-center",
-                                "pic-left",
-                                "pic-right",
-                                "radius-bottomleft",
-                                "radius-bottomright",
-                                "radius-upleft",
-                                "radius-upright",
-                                "fullscreen",
-                                "fullscreen-exit"
-                        }
+                IconNames = new List<string>
+                    {
+                        "step-backward",
+                        "step-forward",
+                        "fast-backward",
+                        "fast-forward",
+                        "shrink",
+                        "arrows-alt",
+                        "down",
+                        "up",
+                        "left",
+                        "right",
+                        "caret-up",
+                        "caret-down",
+                        "caret-left",
+                        "caret-right",
+                        "up-circle",
+                        "down-circle",
+                        "left-circle",
+                        "right-circle",
+                        "double-right",
+                        "double-left",
+                        "vertical-left",
+                        "vertical-right",
+                        "vertical-align-top",
+                        "vertical-align-middle",
+                        "vertical-align-bottom",
+                        "forward",
+                        "backward",
+                        "rollback",
+                        "enter",
+                        "retweet",
+                        "swap",
+                        "swap-left",
+                        "swap-right",
+                        "arrow-up",
+                        "arrow-down",
+                        "arrow-left",
+                        "arrow-right",
+                        "play-circle",
+                        "up-square",
+                        "down-square",
+                        "left-square",
+                        "right-square",
+                        "login",
+                        "logout",
+                        "menu-fold",
+                        "menu-unfold",
+                        "border-bottom",
+                        "border-horizontal",
+                        "border-inner",
+                        "border-outer",
+                        "border-left",
+                        "border-right",
+                        "border-top",
+                        "border-verticle",
+                        "pic-center",
+                        "pic-left",
+                        "pic-right",
+                        "radius-bottomleft",
+                        "radius-bottomright",
+                        "radius-upleft",
+                        "radius-upright",
+                        "fullscreen",
+                        "fullscreen-exit"
+                    }
             };
 
             var item2 = new IconItem()
             {
                 Category = "suggestion",
-                IconNames = new List<string>{
-                                                "question",
-                                                "question-circle",
-                                                "plus",
-                                                "plus-circle",
-                                                "pause",
-                                                "pause-circle",
-                                                "minus",
-                                                "minus-circle",
-                                                "plus-square",
-                                                "minus-square",
-                                                "info",
-                                                "info-circle",
-                                                "exclamation",
-                                                "exclamation-circle",
-                                                "close",
-                                                "close-circle",
-                                                "close-square",
-                                                "check",
-                                                "check-circle",
-                                                "check-square",
-                                                "clock-circle",
-                                                "warning",
-                                                "issues-close",
-                                                "stop"
-                                            }
+                IconNames = new List<string>
+                    {
+                        "question",
+                        "question-circle",
+                        "plus",
+                        "plus-circle",
+                        "pause",
+                        "pause-circle",
+                        "minus",
+                        "minus-circle",
+                        "plus-square",
+                        "minus-square",
+                        "info",
+                        "info-circle",
+                        "exclamation",
+                        "exclamation-circle",
+                        "close",
+                        "close-circle",
+                        "close-square",
+                        "check",
+                        "check-circle",
+                        "check-square",
+                        "clock-circle",
+                        "warning",
+                        "issues-close",
+                        "stop"
+                    }
             };
 
             var item3 = new IconItem()
             {
                 Category = "editor",
                 IconNames = new List<string>
-                            {
-                                "edit",
-                                "form",
-                                "copy",
-                                "scissor",
-                                "delete",
-                                "snippets",
-                                "diff",
-                                "highlight",
-                                "align-center",
-                                "align-left",
-                                "align-right",
-                                "bg-colors",
-                                "bold",
-                                "italic",
-                                "underline",
-                                "strikethrough",
-                                "redo",
-                                "undo",
-                                "zoom-in",
-                                "zoom-out",
-                                "font-colors",
-                                "font-size",
-                                "line-height",
-                                "colum-height",
-                                "colum-width",
-                                "dash",
-                                "small-dash",
-                                "sort-ascending",
-                                "sort-descending",
-                                "drag",
-                                "ordered-list",
-                                "unordered-list",
-                                "radius-setting",
-                                "column-width"
-                            }
+                    {
+                        "edit",
+                        "form",
+                        "copy",
+                        "scissor",
+                        "delete",
+                        "snippets",
+                        "diff",
+                        "highlight",
+                        "align-center",
+                        "align-left",
+                        "align-right",
+                        "bg-colors",
+                        "bold",
+                        "italic",
+                        "underline",
+                        "strikethrough",
+                        "redo",
+                        "undo",
+                        "zoom-in",
+                        "zoom-out",
+                        "font-colors",
+                        "font-size",
+                        "line-height",
+                        "colum-height",
+                        "colum-width",
+                        "dash",
+                        "small-dash",
+                        "sort-ascending",
+                        "sort-descending",
+                        "drag",
+                        "ordered-list",
+                        "unordered-list",
+                        "radius-setting",
+                        "column-width"
+                    }
             };
 
             var item4 = new IconItem()
@@ -173,19 +174,19 @@ namespace AntDesign.Docs.Services
                 Category = "data",
                 IconNames = new List<string>
                     {
-                          "area-chart",
-                            "pie-chart",
-                            "bar-chart",
-                            "dot-chart",
-                            "line-chart",
-                            "radar-chart",
-                            "heat-map",
-                            "fall",
-                            "rise",
-                            "stock",
-                            "box-plot",
-                            "fund",
-                            "sliders"
+                        "area-chart",
+                        "pie-chart",
+                        "bar-chart",
+                        "dot-chart",
+                        "line-chart",
+                        "radar-chart",
+                        "heat-map",
+                        "fall",
+                        "rise",
+                        "stock",
+                        "box-plot",
+                        "fund",
+                        "sliders"
                     }
             };
 
@@ -250,7 +251,7 @@ namespace AntDesign.Docs.Services
             var item6 = new IconItem()
             {
                 Category = "other",
-                IconNames = (List<string>)await GetOtherItems()
+                IconNames = (List<string>)GetOtherItems()
             };
             //remove the exist icon from existed catogory if duplicated
             var it1 = item6.IconNames.RemoveAll(it => item5.IconNames.Contains(it));
@@ -269,11 +270,12 @@ namespace AntDesign.Docs.Services
             return icons;
         }
 
-        private async Task<IList<string>> GetOtherItems()
+        private IList<string> GetOtherItems()
         {
             List<string> icons = new List<string>();
 
-            IDictionary<string, string[]> iconfiles = await _iconService.GetAllIcons();
+            IDictionary<string, string[]> iconfiles = _iconService.GetAllIcons();
+
             foreach (var item in iconfiles)
             {
                 icons.AddRange(item.Value);
@@ -282,9 +284,9 @@ namespace AntDesign.Docs.Services
             return icons.Distinct().OrderBy(x => x).ToList();
         }
 
-        public async Task<List<IconItem>> Search(string word)
+        public List<IconItem> Search(string word)
         {
-            var listOfIcons = await GetIcons();
+            var listOfIcons = GetIcons();
             List<IconItem> lstNewIcons = new List<IconItem>();
 
             foreach (var item in listOfIcons)
