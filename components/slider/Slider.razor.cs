@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
@@ -166,13 +167,52 @@ namespace AntDesign
         /// dual thumb mode
         /// </summary>
         //[Parameter]
-        public bool Range { get; private set; }
+        private bool? _range;
+        public bool Range
+        {
+            get
+            {
+                if (_range == null)
+                {
+                    Type type = typeof(TValue);
+                    Type doubleType = typeof(double);
+                    Type tupleDoubleType = typeof((double, double));
+                    if (type == doubleType)
+                    {
+                        _range = false;
+                    }
+                    else if (type == tupleDoubleType)
+                    {
+                        _range = true;
+                    }
+                    else
+                    {
+                        throw new ArgumentOutOfRangeException($"Type argument of Slider should be one of {doubleType}, {tupleDoubleType}");
+                    }
+                }
+                return _range.Value;
+            }
+            //private set { _range = value; }
+        }
 
         /// <summary>
         /// reverse the component
         /// </summary>
+        private bool _reverse;
+
         [Parameter]
-        public bool Reverse { get; set; }
+        public bool Reverse
+        {
+            get { return _reverse; }
+            set 
+            {
+                if (_reverse != value)
+                {
+                    _reverse = value;
+                    SetStyle();
+                }
+            }
+        }
 
         /// <summary>
         /// The granularity the slider can step through values. Must greater than 0, and be divided by (<see cref="Max"/> - <see cref="Min"/>) . When <see cref="Marks"/> no null, <see cref="Step"/> can be null.
@@ -193,15 +233,14 @@ namespace AntDesign
             get => _leftValue;
             set
             {
-                if (_leftValue != value)
+                double candidate = Clamp(value, Min, Max);
+                if (_leftValue != candidate)
                 {
-                    _leftValue = Math.Max(value, Min);
-                    _leftValue = Math.Min(_leftValue, RightValue);
-                    _leftValue = GetNearestStep(_leftValue);
+                    _leftValue = candidate;
                     SetStyle();
-
-                    //CurrentValue = TupleToGeneric((_leftValue, RightValue));
-                    CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
+                    (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue);
+                    if (value != typedValue.Item1)
+                        CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
                 }
             }
         }
@@ -214,33 +253,54 @@ namespace AntDesign
             get => _rightValue;
             set
             {
-                if (_rightValue != value)
+                double candidate;
+                if (Range)
                 {
-                    _rightValue = Math.Min(value, Max);
-                    if (Range)
-                    {
-                        _rightValue = Math.Max(LeftValue, _rightValue);
-                    }
-                    else
-                    {
-                        _rightValue = Math.Max(Min, _rightValue);
-                    }
-                    _rightValue = GetNearestStep(_rightValue);
+                    candidate = Clamp(value, LeftValue, Max);
+                }
+                else
+                {
+                    candidate = Clamp(value, Min, Max);
+                }
+
+                if (_rightValue != candidate)
+                {
+                    _rightValue = candidate;
                     SetStyle();
                     if (Range)
                     {
                         //CurrentValue = TupleToGeneric((LeftValue, _rightValue));
-                        CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((LeftValue, _rightValue));
+                        (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue);
+                        if (value != typedValue.Item2)
+                            CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((LeftValue, _rightValue));
                     }
                     else
                     {
-                        //CurrentValue = DoubleToGeneric(_rightValue);
-                        CurrentValue = DataConvertionExtensions.Convert<double, TValue>(_rightValue);
+                        double typedValue = DataConvertionExtensions.Convert<TValue, double>(CurrentValue);
+                        if (value != typedValue)
+                            //CurrentValue = DoubleToGeneric(_rightValue);
+                            CurrentValue = DataConvertionExtensions.Convert<double, TValue>(_rightValue);
                     }
                 }
             }
         }
 
+        private double Clamp(
+            double value, double inclusiveMinimum, double inclusiveMaximum)
+        {
+            if (value < inclusiveMinimum)
+            {
+                value = inclusiveMinimum;
+            }
+            if (value > inclusiveMaximum)
+            {
+                value = inclusiveMaximum;
+            }
+            return GetNearestStep(value);
+        }
+
+
+        /// <summary>
         /// If true, the slider will be vertical.
         /// </summary>
         [Parameter]
@@ -281,22 +341,6 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
-            Type type = typeof(TValue);
-            Type doubleType = typeof(double);
-            Type tupleDoubleType = typeof((double, double));
-            if (type == doubleType)
-            {
-                Range = false;
-            }
-            else if (type == tupleDoubleType)
-            {
-                Range = true;
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException($"Type argument of Slider should be one of {doubleType}, {tupleDoubleType}");
-            }
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -416,9 +460,39 @@ namespace AntDesign
             _mouseDown = !Disabled;
         }
 
+        private MouseEventArgs _edgeClickArgs;
+        private bool? _edgeClicked;
+        private void OnMouseDownEdge(MouseEventArgs args, bool right)
+        {
+            _right = right;
+            _edgeClickArgs = args;
+        }
+
+        private bool IsMoveInEdgeBoundary(JsonElement jsonElement)
+        {
+            if (_edgeClicked == null)
+            {
+                double clientX = jsonElement.GetProperty("clientX").GetDouble();
+                double clientY = jsonElement.GetProperty("clientY").GetDouble();
+                bool altKey = jsonElement.GetProperty("altKey").GetBoolean();
+                bool ctrlKey = jsonElement.GetProperty("ctrlKey").GetBoolean();
+                bool metaKey = jsonElement.GetProperty("metaKey").GetBoolean();
+                bool shiftKey = jsonElement.GetProperty("shiftKey").GetBoolean();
+
+                _edgeClicked = _edgeClickArgs != null
+                            && _edgeClickArgs.ClientX == clientX
+                            && _edgeClickArgs.ClientY == clientY
+                            && _edgeClickArgs.CtrlKey == ctrlKey
+                            && _edgeClickArgs.MetaKey == metaKey
+                            && _edgeClickArgs.AltKey == altKey
+                            && _edgeClickArgs.ShiftKey == shiftKey;
+            }
+            return _edgeClicked.Value;
+        }
+
         private async void OnMouseMove(JsonElement jsonElement)
         {
-            if (_mouseDown)
+            if (_mouseDown && !IsMoveInEdgeBoundary(jsonElement))
             {
                 _mouseMove = true;
                 await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
@@ -432,8 +506,15 @@ namespace AntDesign
             if (_mouseDown)
             {
                 _mouseDown = false;
-                await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
-                OnAfterChange?.Invoke(CurrentValue);
+                if (!IsMoveInEdgeBoundary(jsonElement))
+                {
+                    await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
+                    OnAfterChange?.Invoke(CurrentValue);
+                }
+            }
+            if (_edgeClicked != null)
+            {
+                _edgeClicked = null;
             }
         }
 
@@ -489,6 +570,10 @@ namespace AntDesign
                 if (_leftHandleDom == null)
                 {
                     _leftHandleDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _leftHandle);
+                }
+                if (_rightHandleDom == null)
+                {
+                    _rightHandleDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _rightHandle);
                 }
                 double handleLength = (double)(Vertical ? _rightHandleDom.clientHeight : _rightHandleDom.clientWidth);
                 if (Reverse)
@@ -582,6 +667,11 @@ namespace AntDesign
 
             if (Range)
             {
+                if (IsLeftAndRightChanged(value))
+                {
+                    _leftValue = double.MinValue;
+                    _rightValue = double.MaxValue;
+                }
                 LeftValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value).Item1;
                 RightValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value).Item2;
             }
@@ -589,6 +679,51 @@ namespace AntDesign
             {
                 RightValue = DataConvertionExtensions.Convert<TValue, double>(value);
             }
+        }
+
+        private bool IsLeftAndRightChanged(TValue value)
+        {
+            (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value);
+            return (typedValue.Item1 != LeftValue) && (typedValue.Item2 != RightValue);
+        }
+
+        private TValue _value;        
+
+        /// <summary>
+        /// Gets or sets the value of the input. This should be used with two-way binding.
+        /// </summary>
+        /// <example>
+        /// @bind-Value="model.PropertyName"
+        /// </example>
+        [Parameter]
+        public sealed override TValue Value
+        {
+            get { return _value; }
+            set
+            {
+                TValue orderedValue = SortValue(value);
+                var hasChanged = !EqualityComparer<TValue>.Default.Equals(orderedValue, Value);
+                if (hasChanged)
+                {
+                    _value = orderedValue;
+                    OnValueChange(orderedValue);
+                }
+            }
+        }
+
+        private TValue SortValue(TValue value)
+        {
+            TValue orderedValue = value;
+            if (Range)
+            {
+                //sort if needed
+                (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(value);
+                if (typedValue.Item1 > typedValue.Item2)
+                {
+                    orderedValue = DataConvertionExtensions.Convert<(double, double), TValue>((typedValue.Item2, typedValue.Item1));
+                }
+            }
+            return orderedValue;
         }
     }
 }

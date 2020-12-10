@@ -22,14 +22,14 @@
     </div>
     @if (Range)
     {
-        <div tabindex="0" class="ant-slider-handle ant-slider-handle-1" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_leftHandleStyle" @ref="_leftHandle">
+        <div tabindex="0" class="ant-slider-handle ant-slider-handle-1" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_leftHandleStyle" @ref="_leftHandle" @onmousedown="(e)=>OnMouseDownEdge(e,  false)">
         </div>
-        <div tabindex="0" class="ant-slider-handle ant-slider-handle-2" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="_rightHandle">
+        <div tabindex="0" class="ant-slider-handle ant-slider-handle-2" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="_rightHandle" @onmousedown="(e)=>OnMouseDownEdge(e,  true)">
         </div>
     }
     else
     {
-        <div tabindex="0" class="ant-slider-handle" role="slider" aria-disabled="false" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="_rightHandle">
+        <div tabindex="0" class="ant-slider-handle" role="slider" aria-disabled="false" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="_rightHandle" @onmousedown="(e)=>OnMouseDownEdge(e,  true)">
         </div>
     }
     <div class="ant-slider-mark">
