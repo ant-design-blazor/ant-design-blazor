@@ -117,7 +117,7 @@ namespace AntDesign
             OptimizeSize(window.innerWidth);
         }
 
-        private void ToggleCollapsed()
+        public void ToggleCollapsed()
         {
             _isCollapsed = !_isCollapsed;
             OnCollapsed?.Invoke(_isCollapsed);
