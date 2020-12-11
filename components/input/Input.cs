@@ -124,7 +124,7 @@ namespace AntDesign
 
             Attributes ??= new Dictionary<string, object>();
 
-            if (MaxLength >= 0)
+            if (MaxLength >= 0 && !Attributes.ContainsKey("maxlength"))
             {
                 Attributes?.Add("maxlength", MaxLength);
             }
