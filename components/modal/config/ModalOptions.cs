@@ -67,7 +67,7 @@ namespace AntDesign
 
         public string OkType { get; set; } = ButtonType.Primary;
 
-        public OneOf<string, RenderFragment> Title { get; set; } = string.Empty;
+        public OneOf<string, RenderFragment> Title { get; set; }
 
         public bool Visible { get; set; } = true;
 
