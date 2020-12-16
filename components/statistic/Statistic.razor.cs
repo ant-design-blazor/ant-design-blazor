@@ -15,7 +15,7 @@ namespace AntDesign
 
         private (string integerPart, string fractionalPart) SeparateDecimal()
         {
-            var decimalValue = 0m;
+            decimal decimalValue;
             if (Value is decimal d)
             {
                 decimalValue = d;
@@ -45,13 +45,14 @@ namespace AntDesign
             var fractionalPart = "";
             if (decimalValue == 0 && Precision > 0)
             {
-                fractionalPart = ".".PadRight(Precision + 1, '0');
+                fractionalPart = DecimalSeparator.PadRight(Precision + 1, '0');
             }
             if (decimalValue != 0)
             {
                 if (Precision <= 0)
                 {
-                    fractionalPart = decimalValue.ToString(CultureInfo.InvariantCulture);
+                    fractionalPart = decimalValue.ToString(CultureInfo.InvariantCulture)
+                        .Replace("0.", DecimalSeparator, true, CultureInfo.InvariantCulture);
                 }
                 else
                 {
