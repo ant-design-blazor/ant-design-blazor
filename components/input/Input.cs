@@ -89,7 +89,7 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
-        
+
         [Parameter]
         public int DebounceMilliseconds { get; set; }
 
@@ -98,7 +98,7 @@ namespace AntDesign
         private TValue _inputValue;
         private bool _compositionInputting = false;
         private Timer _debounceTimer;
-        private bool _debounceEnabled => DebounceMilliseconds != 0;
+        private bool DebounceEnabled => DebounceMilliseconds != 0;
 
         protected override void OnInitialized()
         {
@@ -273,31 +273,32 @@ namespace AntDesign
                 builder.CloseComponent();
             };
         }
-        
-        protected void DebounceChangeValue() 
+
+        protected void DebounceChangeValue()
         {
-            debounceTimer?.Dispose();
-            debounceTimer = new Timer(DebounceTimerIntervalOnTick, null, DebounceMilliseconds, DebounceMilliseconds);
+            _debounceTimer?.Dispose();
+            _debounceTimer = new Timer(DebounceTimerIntervalOnTick, null, DebounceMilliseconds, DebounceMilliseconds);
         }
 
-        protected void DebounceTimerIntervalOnTick(object state) 
+        protected void DebounceTimerIntervalOnTick(object state)
         {
-            debounceTimer?.Dispose();
+            _debounceTimer?.Dispose();
 
-            if (debounceTimer != null) {
-                debounceTimer = null;
-                InvokeAsync(ChangeValue);
+            if (_debounceTimer != null)
+            {
+                _debounceTimer = null;
+                InvokeAsync(async () => await ChangeValue(true));
             }
         }
-        
-        private async Task ChangeValue()
+
+        private async Task ChangeValue(bool ignoreDebounce = false)
         {
-            if (_debounceEnabled)
+            if (DebounceEnabled && !ignoreDebounce)
             {
                 DebounceChangeValue();
                 return;
             }
-            
+
             if (!_compositionInputting)
             {
                 if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
@@ -331,6 +332,8 @@ namespace AntDesign
         {
             DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionstart", OnCompositionStart);
             DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionend", OnCompositionEnd);
+
+            _debounceTimer?.Dispose();
 
             base.Dispose(disposing);
         }
