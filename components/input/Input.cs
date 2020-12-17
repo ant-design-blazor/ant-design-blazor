@@ -222,7 +222,7 @@ namespace AntDesign
                 _compositionInputting = false;
             }
 
-            await ChangeValue();
+            await ChangeValue(true);
 
             if (OnBlur.HasDelegate)
             {
