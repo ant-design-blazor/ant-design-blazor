@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -88,11 +89,16 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
+        
+        [Parameter]
+        public int DebounceMilliseconds { get; set; }
 
         public Dictionary<string, object> Attributes { get; set; }
 
         private TValue _inputValue;
         private bool _compositionInputting = false;
+        private Timer _debounceTimer;
+        private bool _debounceEnabled => DebounceMilliseconds != 0;
 
         protected override void OnInitialized()
         {
@@ -267,9 +273,31 @@ namespace AntDesign
                 builder.CloseComponent();
             };
         }
+        
+        protected void DebounceChangeValue() 
+        {
+            debounceTimer?.Dispose();
+            debounceTimer = new Timer(DebounceTimerIntervalOnTick, null, DebounceMilliseconds, DebounceMilliseconds);
+        }
 
+        protected void DebounceTimerIntervalOnTick(object state) 
+        {
+            debounceTimer?.Dispose();
+
+            if (debounceTimer != null) {
+                debounceTimer = null;
+                InvokeAsync(ChangeValue);
+            }
+        }
+        
         private async Task ChangeValue()
         {
+            if (_debounceEnabled)
+            {
+                DebounceChangeValue();
+                return;
+            }
+            
             if (!_compositionInputting)
             {
                 if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
