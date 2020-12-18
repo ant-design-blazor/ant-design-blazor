@@ -201,8 +201,8 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(PrefixCls)
-                .Add($"{PrefixCls}-{TabPosition}")
-                .Add($"{PrefixCls}-{Type}")
+                .GetIf(() => $"{PrefixCls}-{TabPosition}", () => TabPosition.IsIn(AntDesign.TabPosition.Top, AntDesign.TabPosition.Bottom, AntDesign.TabPosition.Left, AntDesign.TabPosition.Right))
+                .GetIf(() => $"{PrefixCls}-{Type}", () => Type.IsIn(TabType.Card, TabType.EditableCard, TabType.Line))
                 .If($"{PrefixCls}-large", () => Size == TabSize.Large || Card != null)
                 .If($"{PrefixCls}-head-tabs", () => Card != null)
                 .If($"{PrefixCls}-small", () => Size == TabSize.Small)
