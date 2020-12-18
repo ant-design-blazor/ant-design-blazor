@@ -28,6 +28,8 @@ namespace AntDesign
         private bool _mouseMove;
         private bool _right = true;
         private bool _initialized = false;
+        private double _initialLeftValue;
+        private double _initialRightValue;
 
         private string RightHandleStyleFormat
         {
@@ -465,11 +467,13 @@ namespace AntDesign
         private void OnMouseDownEdge(MouseEventArgs args, bool right)
         {
             _right = right;
+            _initialLeftValue = _leftValue;
+            _initialRightValue = _rightValue;
             _edgeClickArgs = args;
         }
 
         private bool IsMoveInEdgeBoundary(JsonElement jsonElement)
-        {
+        {            
             if (_edgeClicked == null)
             {
                 double clientX = jsonElement.GetProperty("clientX").GetDouble();
@@ -492,7 +496,7 @@ namespace AntDesign
 
         private async void OnMouseMove(JsonElement jsonElement)
         {
-            if (_mouseDown && !IsMoveInEdgeBoundary(jsonElement))
+            if (_mouseDown)
             {
                 _mouseMove = true;
                 await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
@@ -515,6 +519,8 @@ namespace AntDesign
             if (_edgeClicked != null)
             {
                 _edgeClicked = null;
+                _initialLeftValue = _leftValue;
+                _initialRightValue = _rightValue;
             }
         }
 
@@ -530,27 +536,26 @@ namespace AntDesign
                 {
                     _rightHandleDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _rightHandle);
                 }
-                double handleLength = (double)(Vertical ? _rightHandleDom.clientHeight : _rightHandleDom.clientWidth);
                 if (Reverse)
                 {
                     if (Vertical)
                     {
-                        handleNewPosition = clickClient - sliderOffset + handleLength / 2;
+                        handleNewPosition = clickClient - sliderOffset;
                     }
                     else
                     {
-                        handleNewPosition = sliderLength - (clickClient - sliderOffset) + handleLength / 2;
+                        handleNewPosition = sliderLength - (clickClient - sliderOffset);
                     }
                 }
                 else
                 {
                     if (Vertical)
                     {
-                        handleNewPosition = sliderOffset + sliderLength - clickClient - handleLength / 2;
+                        handleNewPosition = sliderOffset + sliderLength - clickClient;
                     }
                     else
                     {
-                        handleNewPosition = clickClient - sliderOffset - handleLength / 2;
+                        handleNewPosition = clickClient - sliderOffset;
                     }
                 }
 
@@ -558,7 +563,10 @@ namespace AntDesign
                 if (rightV < LeftValue)
                 {
                     _right = false;
+                    if (_mouseDown)
+                        RightValue = _initialLeftValue;
                     LeftValue = rightV;
+                    await JsInvokeAsync(JSInteropConstants.Focus, _leftHandle);
                 }
                 else
                 {
@@ -575,27 +583,26 @@ namespace AntDesign
                 {
                     _rightHandleDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _rightHandle);
                 }
-                double handleLength = (double)(Vertical ? _rightHandleDom.clientHeight : _rightHandleDom.clientWidth);
                 if (Reverse)
                 {
                     if (Vertical)
                     {
-                        handleNewPosition = clickClient - sliderOffset + handleLength / 2;
+                        handleNewPosition = clickClient - sliderOffset;
                     }
                     else
                     {
-                        handleNewPosition = sliderLength - (clickClient - sliderOffset) + handleLength / 2;
+                        handleNewPosition = sliderLength - (clickClient - sliderOffset);
                     }
                 }
                 else
                 {
                     if (Vertical)
                     {
-                        handleNewPosition = sliderOffset + sliderLength - clickClient - handleLength / 2;
+                        handleNewPosition = sliderOffset + sliderLength - clickClient;
                     }
                     else
                     {
-                        handleNewPosition = clickClient - sliderOffset - handleLength / 2;
+                        handleNewPosition = clickClient - sliderOffset;
                     }
                 }
 
@@ -603,7 +610,10 @@ namespace AntDesign
                 if (leftV > RightValue)
                 {
                     _right = true;
+                    if (_mouseDown)
+                        LeftValue = _initialRightValue;
                     RightValue = leftV;
+                    await JsInvokeAsync(JSInteropConstants.Focus, _rightHandle);
                 }
                 else
                 {
