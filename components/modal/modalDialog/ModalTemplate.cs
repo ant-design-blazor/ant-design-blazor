@@ -5,11 +5,16 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// ModalTemplate
+    /// </summary>
+    /// <typeparam name="TComponentOptions"></typeparam>
     public class ModalTemplate<TComponentOptions> : TemplateComponentBase<TComponentOptions>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [Parameter]
         public ModalRef ModalRef { get; set; }
-
-
     }
 }

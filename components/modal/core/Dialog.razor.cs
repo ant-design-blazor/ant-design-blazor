@@ -1,17 +1,42 @@
 ﻿using System;
-using System.Globalization;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// Dialog only control component show or hide,
+    /// Elements are not removed from the DOM tree
+    /// </summary>
     public partial class Dialog
     {
         private const string IdPrefix = "Ant-Design-";
 
+        /// <summary>
+        /// default Dialog close icon
+        /// </summary>
+        internal static readonly RenderFragment DefaultCloseIcon = (builder) =>
+        {
+            builder.OpenComponent<Icon>(0);
+            builder.AddAttribute(1, "Type", "close");
+            builder.AddAttribute(2, "Theme", "outline");
+            builder.CloseComponent();
+        };
+
+        /// <summary>
+        /// default modal footer
+        /// </summary>
+        internal static readonly RenderFragment DefaultFooter = (builder) =>
+        {
+            builder.OpenComponent<ModalFooter>(0);
+            builder.CloseComponent();
+        };
+
+
+        #region Parameters
+
+#pragma warning disable 1591
         [Parameter]
         public DialogOptions Config { get; set; }
 
@@ -21,17 +46,21 @@ namespace AntDesign
         [Parameter]
         public bool Visible { get; set; }
 
-        private string _maskAnimation = "";
-        private string _modalAnimation = "";
+#pragma warning restore 1591
+
+        #endregion
+
+        private string _maskAnimationClsName = "";
+        private string _modalAnimationClsName = "";
         private string _maskHideClsName = "";
+        private string _wrapStyle = "";
 
         private bool _hasShow;
         private bool _hasDestroy = true;
-        private string _wrapStyle = "";
         private bool _disableBodyScroll;
-        private bool _doDragable = false;
+        private bool _doDraggable;
 
-
+#pragma warning disable 649
         /// <summary>
         /// dialog root container
         /// </summary>
@@ -40,8 +69,7 @@ namespace AntDesign
         private ElementReference _dialogHeader;
 
         private ElementReference _modal;
-
-        private bool _isFirstRender = true;
+#pragma warning restore 649
 
         #region ant-modal style
 
@@ -105,14 +133,22 @@ namespace AntDesign
             _dialogMouseDown = true;
         }
 
-        private async Task OnMaskClick(MouseEventArgs e)
+        private async Task OnMaskMouseUp()
+        {
+            if (Config.MaskClosable && _dialogMouseDown)
+            {
+                await Task.Delay(50);
+                _dialogMouseDown = false;
+            }
+        }
+
+        private async Task OnMaskClick()
         {
             if (Config.MaskClosable
                 && !_dialogMouseDown)
             {
                 await CloseAsync();
             }
-            _dialogMouseDown = false;
         }
 
         #endregion
@@ -125,8 +161,16 @@ namespace AntDesign
         private readonly string _sentinelStart = IdPrefix + Guid.NewGuid().ToString();
         private readonly string _sentinelEnd = IdPrefix + Guid.NewGuid().ToString();
 
+        /// <summary>
+        /// Tab start control id
+        /// </summary>
         public string SentinelStart => _sentinelStart;
 
+        /// <summary>
+        /// Listening for Tab and ESC key events
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         private async Task OnKeyDown(KeyboardEventArgs e)
         {
             if (Config.Keyboard && e.Key == "Escape")
@@ -156,8 +200,11 @@ namespace AntDesign
 
         #endregion
 
-
-        private async Task OnCloserClick(MouseEventArgs e)
+        /// <summary>
+        /// closer(X) click event
+        /// </summary>
+        /// <returns></returns>
+        private async Task OnCloserClick()
         {
             await CloseAsync();
         }
@@ -176,14 +223,13 @@ namespace AntDesign
 
         #region control show and hide class name and style
 
+        /// <summary>
+        /// show dialog through animation
+        /// </summary>
+        /// <returns></returns>
         private async Task Show()
         {
-            if (_hasShow)
-            {
-                return;
-            }
-
-            if (Visible)
+            if (!_hasShow && Visible)
             {
                 if (Config.Draggable)
                 {
@@ -202,21 +248,21 @@ namespace AntDesign
                     _wrapStyle = "";
                 }
                 _maskHideClsName = "";
-                _maskAnimation = ModalAnimation.MaskEnter;
-                _modalAnimation = ModalAnimation.ModalEnter;
+                _maskAnimationClsName = ModalAnimation.MaskEnter;
+                _modalAnimationClsName = ModalAnimation.ModalEnter;
 
                 // wait for animation, "antZoomIn" animation take 0.3s
                 // see: @animation-duration-slow: 0.3s;
                 await Task.Delay(300);
-
                 _hasShow = true;
-
-                StateHasChanged();
             }
-
         }
 
-        public async Task Hide()
+        /// <summary>
+        /// Hide Dialog through animation
+        /// </summary>
+        /// <returns></returns>
+        internal async Task Hide()
         {
             if (!_hasShow)
             {
@@ -225,13 +271,13 @@ namespace AntDesign
 
             if (!Visible)
             {
-                _maskAnimation = ModalAnimation.MaskLeave;
-                _modalAnimation = ModalAnimation.ModalLeave;
+                _maskAnimationClsName = ModalAnimation.MaskLeave;
+                _modalAnimationClsName = ModalAnimation.ModalLeave;
                 await Task.Delay(200);
                 _wrapStyle = "display: none;";
                 _maskHideClsName = "ant-modal-mask-hidden";
                 _hasShow = false;
-                StateHasChanged();
+                await InvokeStateHasChangedAsync();
                 if (Config.OnClosed != null)
                 {
                     await Config.OnClosed.Invoke();
@@ -240,6 +286,10 @@ namespace AntDesign
 
         }
 
+        /// <summary>
+        /// Determine whether Dialog is displayed
+        /// </summary>
+        /// <returns></returns>
         public bool IsShow()
         {
             return _hasShow;
@@ -247,22 +297,29 @@ namespace AntDesign
 
         #endregion
 
+        #region build element's class name
+
         private string GetMaskClsName()
         {
-            string clsName = _maskHideClsName;
-            clsName += _maskAnimation;
+            var clsName = _maskHideClsName;
+            clsName += _maskAnimationClsName;
             return clsName;
         }
 
         private string GetModalClsName()
         {
-            string clsName = Config.ClassName;
-
-            return clsName + _modalAnimation;
+            var clsName = Config.ClassName;
+            return clsName + _modalAnimationClsName;
         }
+
+        #endregion
 
         #region override
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         protected override async Task OnParametersSetAsync()
         {
             //Reduce one rendering when showing and not destroyed
@@ -271,6 +328,7 @@ namespace AntDesign
                 if (!_hasDestroy)
                 {
                     await Show();
+                    //await InvokeStateHasChangedAsync();
                 }
                 else
                 {
@@ -285,18 +343,22 @@ namespace AntDesign
             await base.OnParametersSetAsync();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isFirst"></param>
+        /// <returns></returns>
         protected override async Task OnAfterRenderAsync(bool isFirst)
         {
-            _isFirstRender = isFirst;
-
             if (Visible)
             {
+                // disable body scroll
                 if (_hasDestroy)
                 {
-                    await AppendToContainer();
                     _hasDestroy = false;
-                    Show();
-                    StateHasChanged();
+                    await AppendToContainer();
+                    await Show();
+                    await InvokeStateHasChangedAsync();
                 }
 
                 if (!_disableBodyScroll)
@@ -305,27 +367,30 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
                 }
 
-                if (Config.Draggable && !_doDragable)
+                // enable drag and drop
+                if (Config.Draggable && !_doDraggable)
                 {
-                    _doDragable = true;
+                    _doDraggable = true;
                     await JsInvokeAsync(JSInteropConstants.EnableDraggable, _dialogHeader, _modal, Config.DragInViewport);
                 }
             }
             else
             {
+                // enable body scroll
                 if (_disableBodyScroll)
                 {
                     _disableBodyScroll = false;
                     await Task.Delay(250);
                     await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
                 }
-
-                if (Config.Draggable && _doDragable)
+                // disable drag and drop
+                if (Config.Draggable && _doDraggable)
                 {
-                    _doDragable = false;
+                    _doDraggable = false;
                     await JsInvokeAsync(JSInteropConstants.DisableDraggable, _dialogHeader);
                 }
             }
+
             await base.OnAfterRenderAsync(isFirst);
         }
         #endregion

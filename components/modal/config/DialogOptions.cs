@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -8,23 +7,106 @@ using OneOf;
 
 namespace AntDesign
 {
-    public class DialogOptions
+    /// <summary>
+    /// dialog options
+    /// </summary>
+    public class DialogOptions : DialogOptionsBase
     {
+        #region static and const
+
         internal const string PrefixCls = "ant-modal";
 
+        /// <summary>
+        /// default Dialog close icon
+        /// </summary>
+        internal static readonly RenderFragment DefaultCloseIcon = (builder) =>
+        {
+            builder.OpenComponent<Icon>(0);
+            builder.AddAttribute(1, "Type", "close");
+            builder.AddAttribute(2, "Theme", "outline");
+            builder.CloseComponent();
+        };
+
+        /// <summary>
+        /// default modal footer
+        /// </summary>
+        internal static readonly RenderFragment DefaultFooter = (builder) =>
+        {
+            builder.OpenComponent<ModalFooter>(0);
+            builder.CloseComponent();
+        };
+
+        #endregion
+
+        /// <summary>
+        /// trigger after Dialog is closed
+        /// </summary>
         public Func<Task> OnClosed { get; set; }
 
+        /// <summary>
+        /// ant-modal-body style
+        /// </summary>
         public string BodyStyle { get; set; }
 
-        public OneOf<string, RenderFragment> CancelText { get; set; } = "Cancel";
-
-        public bool Centered { get; set; }
-
+        /// <summary>
+        /// show ant-modal-closer 
+        /// </summary>
         public bool Closable { get; set; } = true;
 
+        /// <summary>
+        /// Draggable modal
+        /// </summary>
         public bool Draggable { get; set; }
 
+        /// <summary>
+        /// Drag and drop only within the Viewport
+        /// </summary>
         public bool DragInViewport { get; set; } = true;
+
+        /// <summary>
+        /// closer icon RenderFragment, the default is a "X"
+        /// </summary>
+        public RenderFragment? CloseIcon { get; set; } = DefaultCloseIcon;
+
+        /// <summary>
+        /// Whether to apply loading visual effect for OK button or not
+        /// </summary>
+        public bool ConfirmLoading { get; set; }
+
+        /// <summary>
+        /// modal footer
+        /// </summary>
+        public OneOf<string, RenderFragment>? Footer { get; set; } = DefaultFooter;
+
+        /// <summary>
+        /// The class name of the container of the modal dialog	
+        /// </summary>
+        public string WrapClassName { get; set; }
+
+        /// <summary>
+        /// ChildContent
+        /// </summary>
+        public RenderFragment ChildContent { get; set; }
+
+        /// <summary>
+        /// the class name of the element of ".ant-modal" 
+        /// </summary>
+        public string ClassName { get; set; }
+
+        /// <summary>
+        /// for OK-Cancel Confirm dialog, cancel button clicked callback.
+        /// It's only trigger in Confirm created by ModalService mode
+        /// </summary>
+        public Func<MouseEventArgs, Task> OnCancel { get; set; }
+
+        /// <summary>
+        /// for OK-Cancel Confirm dialog, OK button clicked callback.
+        /// It's only trigger in Confirm created by ModalService mode
+        /// </summary>
+        public Func<MouseEventArgs, Task> OnOk { get; set; }
+
+        #region internal
+
 
         internal string GetHeaderStyle()
         {
@@ -34,46 +116,6 @@ namespace AntDesign
             }
             return "";
         }
-
-        private static readonly RenderFragment _defaultCloseIcon = (builder) =>
-        {
-            builder.OpenComponent<Icon>(0);
-            builder.AddAttribute(1, "Type", "close");
-            builder.AddAttribute(2, "Theme", "outline");
-            builder.CloseComponent();
-        };
-
-        public RenderFragment? CloseIcon { get; set; } = _defaultCloseIcon;
-
-        public bool ConfirmLoading { get; set; }
-
-        public bool DestroyOnClose { get; set; }
-
-        private static readonly RenderFragment _defaultFooter = (builder) =>
-        {
-            builder.OpenComponent<ModalFooter>(0);
-            builder.CloseComponent();
-        };
-
-        public OneOf<string, RenderFragment>? Footer { get; set; } = _defaultFooter;
-
-        public bool ForceRender { get; set; }
-
-        public ElementReference? GetContainer { get; set; } = null;
-
-        public bool Keyboard { get; set; } = true;
-        public bool Mask { get; set; } = true;
-        public bool MaskClosable { get; set; } = true;
-
-        public string MaskStyle { get; set; }
-
-        public OneOf<string, RenderFragment> OkText { get; set; } = "OK";
-
-        public string OkType { get; set; } = ButtonType.Primary;
-
-        public OneOf<string, RenderFragment>? Title { get; set; } = null;
-
-        public OneOf<string, double> Width { get; set; } = 520;
 
         internal string GetWidth()
         {
@@ -87,41 +129,29 @@ namespace AntDesign
             }
         }
 
-        public string WrapClassName { get; set; }
-
-        public int ZIndex { get; set; } = 1000;
-
-        public Func<MouseEventArgs, Task> OnCancel { get; set; }
-
-        public Func<MouseEventArgs, Task> OnOk { get; set; }
-
-        public ButtonProps OkButtonProps { get; set; }
-
-        public ButtonProps CancelButtonProps { get; set; }
-
-        public RenderFragment ChildContent { get; set; }
-
-        public bool Rtl { get; set; } = false;
-
-        internal string GetWrapClassNameExtended()
+        internal string GetWrapClassNameExtended(Modal modal = null)
         {
             var classNameArray = new List<string>();
-            if (Centered)
+            if (modal == null)
             {
-                classNameArray.Add($"{PrefixCls}-centered");
+                classNameArray.AddIf(
+                        !string.IsNullOrWhiteSpace(WrapClassName),
+                        WrapClassName)
+                    .AddIf(Centered, $"{PrefixCls}-centered")
+                    .AddIf(Rtl, $"{PrefixCls}-wrap-rtl");
+
+                return string.Join(' ', classNameArray);
             }
 
-            if (Rtl)
-            {
-                classNameArray.Add($"{PrefixCls}-wrap-rtl");
-            }
+            classNameArray.AddIf(
+                    !string.IsNullOrWhiteSpace(modal.WrapClassName),
+                    modal.WrapClassName)
+                .AddIf(modal.Centered, $"{PrefixCls}-centered")
+                .AddIf(modal.Rtl, $"{PrefixCls}-wrap-rtl");
 
             return string.Join(' ', classNameArray);
         }
 
-        public string TransitionName { get; set; }
-        public string MaskTransitionName { get; set; }
-
-        public string ClassName { get; set; }
+        #endregion
     }
 }

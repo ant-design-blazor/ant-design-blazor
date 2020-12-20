@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -7,41 +8,44 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class ConfirmDialog
+    /// <summary>
+    /// DOT NOT use Confirm Directly,
+    /// please using ModalService or ConfirmService to create a Confirm dialog
+    /// </summary>
+    public partial class Confirm
     {
+        #region Parameters
+
+        /// <summary>
+        /// 
+        /// </summary>
         [Parameter]
         public ConfirmOptions Config { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Parameter]
         public ConfirmRef ConfirmRef { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Parameter]
-        public EventCallback<ConfirmOptions> OnRemove { get; set; }
+        public EventCallback<ConfirmRef> OnRemove { get; set; }
+
+        #endregion
 
         private Button _cancelBtn;
         private Button _okBtn;
 
         DialogOptions _dialogOptions;
-
-        /// <summary>
-        /// Used to determine whether the dialog is completely removed from the dom
-        /// 用于判断将Dialog从DOM中彻底删除
-        /// </summary>
-        private bool _hasAdd = true;
-
-        protected override async Task OnInitializedAsync()
-        {
-            _dialogOptions = BuildDialogOptions(Config);
-            if (ConfirmRef.OnOpen != null)
-                await ConfirmRef.OnOpen.Invoke();
-            await base.OnInitializedAsync();
-        }
-
         private DialogOptions BuildDialogOptions(ConfirmOptions confirmOptions)
         {
             DialogOptions config = new DialogOptions()
             {
                 Title = confirmOptions.Title,
+                TitleTemplate = confirmOptions.TitleTemplate,
                 OkButtonProps = confirmOptions.OkButtonProps,
                 CancelButtonProps = confirmOptions.CancelButtonProps,
                 Width = confirmOptions.Width,
@@ -57,14 +61,11 @@ namespace AntDesign
                 Keyboard = confirmOptions.Keyboard,
                 GetContainer = confirmOptions.GetContainer,
                 Footer = null,
-                TransitionName = confirmOptions.TransitionName,
-                MaskTransitionName = confirmOptions.MaskTransitionName,
 
                 ClassName = confirmOptions.ClassName,
             };
 
             config.ClassName = "ant-modal-confirm ant-modal-confirm-" + confirmOptions.ConfirmType;
-            config.DestroyOnClose = true;
             config.Title = null;
             config.CloseIcon = null;
             config.OnClosed = Close;
@@ -72,12 +73,26 @@ namespace AntDesign
             return config;
         }
 
-        protected override void OnParametersSet()
+        #region override
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected override async Task OnInitializedAsync()
         {
-            _hasAdd = Config.Visible;
-            base.OnParametersSet();
+            _dialogOptions = BuildDialogOptions(Config);
+            if (ConfirmRef.OnOpen != null)
+                await ConfirmRef.OnOpen.Invoke();
+            await base.OnInitializedAsync();
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="firstRender"></param>
+        /// <returns></returns>
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (Config.Visible && Config.AutoFocusButton != ConfirmAutoFocusButton.Null)
@@ -93,18 +108,16 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        private async Task Close()
+        #endregion
+
+        internal async Task Close()
         {
             Config.Visible = false;
             await InvokeAsync(StateHasChanged);
+            await Task.Delay(250);
             if (OnRemove.HasDelegate)
             {
-                await OnRemove.InvokeAsync(Config);
-            }
-            if (_hasAdd)
-            {
-                await Task.Delay(250);
-                _hasAdd = false;
+                await OnRemove.InvokeAsync(ConfirmRef);
             }
         }
 
@@ -136,7 +149,6 @@ namespace AntDesign
 
         private async Task HandleCancel(MouseEventArgs e)
         {
-
             var args = new ModalClosingEventArgs(e, false);
 
             if (ConfirmRef.ModalTemplate != null)
@@ -190,12 +202,13 @@ namespace AntDesign
             }
         }
 
-        private async Task HandleBtn3Click(MouseEventArgs e, ConfirmResult confirmResult)
+        private async Task HandleBtn3Click(MouseEventArgs _, ConfirmResult confirmResult)
         {
             Config.Button3Props.Loading = false;
             await InvokeAsync(StateHasChanged);
             await Close();
             ConfirmRef.TaskCompletionSource?.SetResult(confirmResult);
         }
+
     }
 }
