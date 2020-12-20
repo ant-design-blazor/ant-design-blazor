@@ -222,7 +222,7 @@ namespace AntDesign
             file.State = UploadState.Fail;
             file.Progress = 100;
             _uploadInfo.File = file;
-            file.Response ??= "error";
+            file.Response ??= reponseCode;
             await UploadChanged(id, 100);
             await InvokeAsync(StateHasChanged);
             if (OnSingleCompleted.HasDelegate)
