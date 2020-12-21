@@ -163,7 +163,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
                         data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "")">
                         @if (table.ExpandTemplate != null)
                         {
-                            <td class="ant-table-cell ant-table-row-expand-icon-cell">
+                            <td class="ant-table-cell ant-table-row-expand-icon-cell" style="text-align:center;">
                                 @if (table.RowExpandable(currentRowData))
                                 {
                                     <button type="button" @attributes="@(new Dictionary<string,object>() { {"onclick",_callbackFactory.Create(table,() => ToggleExpandRow(currentRowData)) } })"
@@ -183,7 +183,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
             @if (table.ExpandTemplate != null && table.RowExpandable(currentRowData))
             {
                 <tr class="ant-table-expanded-row ant-table-expanded-row-level-1" style="@(currentRowData.Expanded?"":"display: none;")">
-                    <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
+                    <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell" style="text-align:center;">
                         @table.ExpandTemplate(currentRowData)
                     </td>
                 </tr>
