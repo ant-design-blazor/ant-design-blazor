@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -17,6 +18,22 @@ namespace AntDesign
                 GetIfNotNull(Value, notNullValue =>
                 {
                     ChangeValue(notNullValue, 0);
+                });
+            }
+        }
+
+        private async Task OnInputClick()
+        {
+            await _dropDown.Show();
+
+            // clear status
+            _pickerStatus[0]._currentShowHadSelectValue = false;
+
+            if (!_inputStart.IsOnFocused && _pickerStatus[0]._hadSelectValue)
+            {
+                GetIfNotNull(Value, notNullValue =>
+                {
+                    ChangePickerValue(notNullValue, 0);
                 });
             }
         }

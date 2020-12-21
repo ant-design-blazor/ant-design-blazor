@@ -33,7 +33,7 @@
                                  Placeholder="@_placeholders[0]"
                                  ReadOnly="@InputReadOnly"
                                  AutoFocus="@AutoFocus"
-                                 OnClick="async e => { await _dropDown.Show(); ChangeFocusTarget(true, false); }"
+                                 OnClick="async e => { await OnInputClick(); }"
                                  OnInput="e => OnInput(e, 0)"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  OnClickClear="e => ClearValue(0)"
