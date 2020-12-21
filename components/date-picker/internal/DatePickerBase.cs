@@ -120,27 +120,8 @@ namespace AntDesign
 
         [Parameter]
         public string Format { get; set; }
-
-        protected readonly DateTime?[] DefaultValues = new DateTime?[2];
-        private OneOf<DateTime, DateTime[]> _defaultValue;
-
         [Parameter]
-        public OneOf<DateTime, DateTime[]> DefaultValue
-        {
-            get => _defaultValue;
-            set
-            {
-                _defaultValue = value;
-                value.Switch(single =>
-                {
-                    DefaultValues[0] = single;
-                }, arr =>
-                {
-                    DefaultValues[0] = arr.Length > 0 ? arr[0] : DefaultValues[0];
-                    DefaultValues[1] = arr.Length > 1 ? arr[1] : DefaultValues[1];
-                });
-            }
-        }
+        public TValue DefaultValue { get; set; }
 
         private readonly DateTime?[] _defaultPickerValues = new DateTime?[2];
         private OneOf<DateTime, DateTime[]> _defaultPickerValue;

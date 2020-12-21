@@ -111,12 +111,24 @@ namespace AntDesign
 
                 return Convert.ToDateTime(indexValue, CultureInfo);
             }
-            else if (DefaultValues[index] != null)
+            else if (GetTypedValue(DefaultValue, index, out var defaultValue) != null)
             {
-                return (DateTime)DefaultValues[index];
+                return defaultValue;
             }
-
             return null;
+        }
+
+        private DateTime? GetTypedValue(TValue value, int index, out DateTime? outValue)
+        {
+            if (_isNullable)
+            {
+                outValue = (value as DateTime?[])[index];
+            }
+            else
+            {
+                outValue = (value as DateTime[])[index];
+            }
+            return outValue;
         }
 
         public override void ChangeValue(DateTime value, int index = 0)

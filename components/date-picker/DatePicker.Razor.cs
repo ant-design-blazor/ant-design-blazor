@@ -84,9 +84,9 @@ namespace AntDesign
 
                 return Convert.ToDateTime(Value, CultureInfo);
             }
-            else if (DefaultValues[0] != null)
+            else if (DefaultValue != null)
             {
-                return DefaultValues[0];
+                return Convert.ToDateTime(DefaultValue, CultureInfo);
             }
 
             return null;
