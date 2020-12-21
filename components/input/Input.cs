@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -89,10 +90,15 @@ namespace AntDesign
         [Parameter]
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
 
+        [Parameter]
+        public int DebounceMilliseconds { get; set; } = 500;
+
         public Dictionary<string, object> Attributes { get; set; }
 
         private TValue _inputValue;
-        private bool _compositionInputting = false;
+        private bool _compositionInputting;
+        private Timer _debounceTimer;
+        private bool DebounceEnabled => DebounceMilliseconds != 0;
 
         protected override void OnInitialized()
         {
@@ -216,7 +222,7 @@ namespace AntDesign
                 _compositionInputting = false;
             }
 
-            await ChangeValue();
+            await ChangeValue(true);
 
             if (OnBlur.HasDelegate)
             {
@@ -268,8 +274,36 @@ namespace AntDesign
             };
         }
 
-        private async Task ChangeValue()
+        protected void DebounceChangeValue()
         {
+            _debounceTimer?.Dispose();
+            _debounceTimer = new Timer(DebounceTimerIntervalOnTick, null, DebounceMilliseconds, DebounceMilliseconds);
+        }
+
+        protected void DebounceTimerIntervalOnTick(object state)
+        {
+            InvokeAsync(async () => await ChangeValue(true));
+        }
+
+        private async Task ChangeValue(bool ignoreDebounce = false)
+        {
+            if (DebounceEnabled)
+            {
+                if (!ignoreDebounce)
+                {
+                    DebounceChangeValue();
+                    return;
+                }
+                else
+                {
+                    _debounceTimer?.Dispose();
+                    if (_debounceTimer != null)
+                    {
+                        _debounceTimer = null;
+                    }
+                }
+            }
+
             if (!_compositionInputting)
             {
                 if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
@@ -303,6 +337,8 @@ namespace AntDesign
         {
             DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionstart", OnCompositionStart);
             DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionend", OnCompositionEnd);
+
+            _debounceTimer?.Dispose();
 
             base.Dispose(disposing);
         }
