@@ -91,12 +91,12 @@ namespace AntDesign
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
 
         [Parameter]
-        public int DebounceMilliseconds { get; set; }
+        public int DebounceMilliseconds { get; set; } = 500;
 
         public Dictionary<string, object> Attributes { get; set; }
 
         private TValue _inputValue;
-        private bool _compositionInputting = false;
+        private bool _compositionInputting;
         private Timer _debounceTimer;
         private bool DebounceEnabled => DebounceMilliseconds != 0;
 
@@ -222,7 +222,7 @@ namespace AntDesign
                 _compositionInputting = false;
             }
 
-            await ChangeValue(!DebounceEnabled);
+            await ChangeValue(true);
 
             if (OnBlur.HasDelegate)
             {
@@ -282,21 +282,26 @@ namespace AntDesign
 
         protected void DebounceTimerIntervalOnTick(object state)
         {
-            _debounceTimer?.Dispose();
-
-            if (_debounceTimer != null)
-            {
-                _debounceTimer = null;
-                InvokeAsync(async () => await ChangeValue(true));
-            }
+            InvokeAsync(async () => await ChangeValue(true));
         }
 
         private async Task ChangeValue(bool ignoreDebounce = false)
         {
-            if (DebounceEnabled && !ignoreDebounce)
+            if (DebounceEnabled)
             {
-                DebounceChangeValue();
-                return;
+                if (!ignoreDebounce)
+                {
+                    DebounceChangeValue();
+                    return;
+                }
+                else
+                {
+                    _debounceTimer?.Dispose();
+                    if (_debounceTimer != null)
+                    {
+                        _debounceTimer = null;
+                    }
+                }
             }
 
             if (!_compositionInputting)
