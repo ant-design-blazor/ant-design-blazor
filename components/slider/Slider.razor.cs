@@ -170,6 +170,7 @@ namespace AntDesign
         /// </summary>
         //[Parameter]
         private bool? _range;
+
         public bool Range
         {
             get
@@ -206,7 +207,7 @@ namespace AntDesign
         public bool Reverse
         {
             get { return _reverse; }
-            set 
+            set
             {
                 if (_reverse != value)
                 {
@@ -300,7 +301,6 @@ namespace AntDesign
             }
             return GetNearestStep(value);
         }
-
 
         /// <summary>
         /// If true, the slider will be vertical.
@@ -464,6 +464,7 @@ namespace AntDesign
 
         private MouseEventArgs _edgeClickArgs;
         private bool? _edgeClicked;
+
         private void OnMouseDownEdge(MouseEventArgs args, bool right)
         {
             _right = right;
@@ -473,7 +474,7 @@ namespace AntDesign
         }
 
         private bool IsMoveInEdgeBoundary(JsonElement jsonElement)
-        {            
+        {
             if (_edgeClicked == null)
             {
                 double clientX = jsonElement.GetProperty("clientX").GetDouble();
@@ -527,7 +528,7 @@ namespace AntDesign
         private async Task CalculateValueAsync(double clickClient)
         {
             _sliderDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _slider);
-            double sliderOffset = (double)(Vertical ? _sliderDom.absoluteTop: _sliderDom.absoluteLeft);
+            double sliderOffset = (double)(Vertical ? _sliderDom.absoluteTop : _sliderDom.absoluteLeft);
             double sliderLength = (double)(Vertical ? _sliderDom.clientHeight : _sliderDom.clientWidth);
             double handleNewPosition;
             if (_right)
@@ -697,7 +698,7 @@ namespace AntDesign
             return (typedValue.Item1 != LeftValue) && (typedValue.Item2 != RightValue);
         }
 
-        private TValue _value;        
+        private TValue _value;
 
         /// <summary>
         /// Gets or sets the value of the input. This should be used with two-way binding.
