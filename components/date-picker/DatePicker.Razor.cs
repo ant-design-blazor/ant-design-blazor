@@ -40,6 +40,10 @@ namespace AntDesign
 
         protected void OnInput(ChangeEventArgs args, int index = 0)
         {
+            if (index != 0)
+            {
+                throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
+            }
             if (args == null)
             {
                 return;
@@ -51,7 +55,7 @@ namespace AntDesign
 
                 GetIfNotNull(changeValue, (notNullValue) =>
                 {
-                    PickerValues[index] = notNullValue;
+                    PickerValues[0] = notNullValue;
                 });
 
                 StateHasChanged();
@@ -61,13 +65,17 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Get value by picker index
+        /// Get value of the picker
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public override DateTime? GetIndexValue(int index)
+        public override DateTime? GetIndexValue(int index = 0)
         {
-            if (_pickerStatus[index]._hadSelectValue)
+            if (index != 0)
+            {
+                throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
+            }
+            if (_pickerStatus[0]._hadSelectValue)
             {
                 if (Value == null)
                 {
@@ -76,9 +84,9 @@ namespace AntDesign
 
                 return Convert.ToDateTime(Value, CultureInfo);
             }
-            else if (DefaultValues[index] != null)
+            else if (DefaultValues[0] != null)
             {
-                return DefaultValues[index];
+                return DefaultValues[0];
             }
 
             return null;
@@ -86,6 +94,10 @@ namespace AntDesign
 
         public override void ChangeValue(DateTime value, int index = 0)
         {
+            if (index != 0)
+            {
+                throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
+            }
             bool result = BindConverter.TryConvertTo<TValue>(
                value.ToString(CultureInfo), CultureInfo, out var dateTime);
 
@@ -94,7 +106,7 @@ namespace AntDesign
                 CurrentValue = dateTime;
             }
 
-            _pickerStatus[index]._hadSelectValue = true;
+            _pickerStatus[0]._hadSelectValue = true;
 
             UpdateCurrentValueAsString();
 
@@ -115,7 +127,7 @@ namespace AntDesign
                 OnChange.InvokeAsync(new DateTimeChangedEventArgs
                 {
                     Date = value,
-                    DateString = GetInputValue(index)
+                    DateString = GetInputValue(0)
                 });
             }
         }
