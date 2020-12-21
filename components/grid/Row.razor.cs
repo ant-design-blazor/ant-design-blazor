@@ -97,7 +97,7 @@ namespace AntDesign
 
         private void OptimizeSize(decimal windowWidth)
         {
-            BreakpointType actualBreakpoint = null;
+            BreakpointType actualBreakpoint = _breakpoints[_breakpoints.Length - 1];
             for (int i = 0; i < _breakpoints.Length; i++)
             {
                 if (windowWidth <= _breakpoints[i].Width && (windowWidth >= (i > 0 ? _breakpoints[i - 1].Width : 0)))
