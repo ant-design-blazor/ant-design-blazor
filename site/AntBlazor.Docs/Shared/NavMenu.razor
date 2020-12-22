@@ -1,5 +1,5 @@
 ﻿@using AntDesign.Docs.Services
-<Menu Class="aside-container menu-site" Theme="MenuTheme.Light" Mode="MenuMode.Inline">
+<Menu Class="aside-container menu-site" Theme="MenuTheme.Light" Mode="MenuMode.Inline" >
     @menuItemTemplate((MenuItems, LanguageService, 1))
 </Menu>
 
@@ -10,9 +10,6 @@
 @inject DemoService DemoService; 
 
 @code {
-
-    [Parameter]
-    public bool IsCollapsed { get; set; }
 
     [Parameter]
     public DemoMenuItem[] MenuItems { get; set; } = {};

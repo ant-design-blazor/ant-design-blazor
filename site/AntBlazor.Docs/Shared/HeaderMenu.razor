@@ -9,24 +9,39 @@
     ">
     </span>
 </div>
-<Menu Mode="MenuMode.Horizontal" Id="nav" Class="menu-site">
-    @foreach (var item in _menuItems.OrderBy(x=>x.Order))
+<Menu Mode="@(IsMobile?MenuMode.Inline: MenuMode.Horizontal)" Id="nav" Class="menu-site">
+    @foreach (var item in _menuItems.OrderBy(x => x.Order))
     {
         <MenuItem Class="ant-menu-item-only-child" Key="@item.Url" RouterLink="@($"{CurrentLanguage}/{item.Url}")" RouterMatch="NavLinkMatch.Prefix">
             <span>@item.Title</span>
         </MenuItem>
-}
+    }
+    @if (IsMobile)
+    {
+        <MenuItem><a href="https://github.com/ant-design-blazor/ant-design-blazor">Github</a></MenuItem>
+
+        @if (CurrentLanguage != "en-US")
+        {
+            <MenuItem Class="header-button header-lang-button" OnClick="@(_ => ChangeLanguage("en-US"))">English</MenuItem>
+        }
+        else
+        {
+            <MenuItem Class="header-button header-lang-button" OnClick="@(_ => ChangeLanguage("zh-CN"))">简体中文</MenuItem>
+        }
+    }
 </Menu>
 
-@if (CurrentLanguage != "en-US")
+@if (!IsMobile)
 {
-<Button Class="header-button header-lang-button" Size="small" OnClick="@(_ => ChangeLanguage("en-US"))">English</Button>
-}
-else
-{
-<Button Class="header-button header-lang-button" Size="small" OnClick="@(_ => ChangeLanguage("zh-CN"))">简体中文</Button>
+    @if (CurrentLanguage != "en-US")
+    {
+        <Button Class="header-button header-lang-button" Size="small" OnClick="@(_ => ChangeLanguage("en-US"))">English</Button>
+    }
+    else
+    {
+        <Button Class="header-button header-lang-button" Size="small" OnClick="@(_ => ChangeLanguage("zh-CN"))">简体中文</Button>
+    }
+
+    <GithubButton />
 
 }
-
-<GithubButton />
-

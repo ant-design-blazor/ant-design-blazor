@@ -7,6 +7,8 @@ namespace AntDesign.Docs.Shared
 {
     public partial class HeaderMenu : ComponentBase
     {
+        [Parameter] public bool IsMobile { get; set; }
+
         [Inject] private DemoService DemoService { get; set; }
 
         [Inject] private ILanguageService LanguageService { get; set; }
