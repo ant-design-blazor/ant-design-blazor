@@ -43,7 +43,7 @@
                                     <td class="ant-descriptions-item-label">
                                         @if (item.item.TitleTemplate != null)@item.item.TitleTemplate else @item.item.Title
                                     </td>
-                                    <td class="ant-descriptions-item-content" colspan="@item.realSpan * 2 - 1">
+                                    <td class="ant-descriptions-item-content" colspan="@(item.realSpan * 2 - 1)">
                                         @item.item.ChildContent
                                     </td>
                                 }
