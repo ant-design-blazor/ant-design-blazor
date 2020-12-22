@@ -10,7 +10,7 @@ namespace AntDesign.Internal
 
         internal ColLayoutParam LabelCol { get; }
 
-        internal EditContext EditContext { get; }
+        EditContext EditContext { get; }
 
         internal string Size { get; }
 
