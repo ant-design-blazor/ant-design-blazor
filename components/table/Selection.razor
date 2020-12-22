@@ -7,7 +7,7 @@
 }
 else if (IsColGroup)
 {
-    if (Width !=null)
+    if (Width != null)
     {
         <col class="ant-table-selection-col" style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
     }
@@ -18,7 +18,7 @@ else if (IsColGroup)
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-    <th class="@ClassMapper.Class ant-table-selection-column" style="@Style" @key="@Key" colspan="@HeaderColSpan">
+    <th class="@ClassMapper.Class ant-table-selection-column" style="@HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
         @if (Type == "checkbox")
         {
             <Checkbox @bind-Checked="_checked" CheckedChange="HandleCheckedChange" Indeterminate="Indeterminate" />
