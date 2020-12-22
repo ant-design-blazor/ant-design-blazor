@@ -94,7 +94,7 @@ namespace AntDesign
 
         ColLayoutParam IForm.LabelCol => LabelCol;
 
-        EditContext IForm.EditContext => _editContext;
+       public EditContext EditContext => _editContext;
 
         string IForm.Size => Size;
         string IForm.Name => Name;
