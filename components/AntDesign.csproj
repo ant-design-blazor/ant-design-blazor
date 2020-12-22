@@ -13,8 +13,8 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>James Yeung</Copyright>
-    <Authors>James Yeung</Authors>
+    <Copyright>Tim Chen</Copyright>
+    <Authors>Tim Chen</Authors>
     <PackageIcon>logo.png</PackageIcon>
     <NoWarn>CA2007</NoWarn>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
