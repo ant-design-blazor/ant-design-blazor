@@ -34,6 +34,9 @@ namespace AntDesign
         public string Width { get; set; }
 
         [Parameter]
+        public string HeaderStyle { get; set; }
+
+        [Parameter]
         public int RowSpan { get; set; } = 1;
 
         [Parameter]
