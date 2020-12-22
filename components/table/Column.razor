@@ -21,7 +21,7 @@ else if (IsColGroup)
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-    <th class="@ClassMapper.Class" style=" @Style" @onclick="HandelHeaderClick" colspan="@HeaderColSpan">
+    <th class="@ClassMapper.Class" style="@HeaderStyle" @onclick="HandelHeaderClick" colspan="@HeaderColSpan">
         @if (Sortable)
         {
             if (ShowSorterTooltip)
@@ -45,7 +45,7 @@ else if (IsHeader && HeaderColSpan != 0)
 }
 else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 {
-    <td class="@ClassMapper.Class" style=" @Style" rowspan="@RowSpan" colspan="@ColSpan">
+    <td class="@ClassMapper.Class" style="@Style" rowspan="@RowSpan" colspan="@ColSpan">
         @if (ColIndex == 1 && Table.TreeMode)
         {
             <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @(RowData.Level* Table.IndentSize)px;"></span>
