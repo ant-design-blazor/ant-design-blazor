@@ -56,17 +56,6 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public string TitleStyle
-        {
-            get => _titleStyle;
-            set
-            {
-                _titleStyle = value;
-                this.StateHasChanged();
-            }
-        }
-
         /// <summary>
         /// Specifies an inline style for an DOM element.
         /// </summary>
@@ -88,6 +77,5 @@ namespace AntDesign
 
         private string _class;
         private string _style;
-        private string _titleStyle;
     }
 }

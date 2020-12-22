@@ -21,7 +21,7 @@ else if (IsColGroup)
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-    <th class="@ClassMapper.Class" style=" @TitleStyle" @onclick="HandelHeaderClick" colspan="@HeaderColSpan">
+    <th class="@ClassMapper.Class" style="@HeaderStyle" @onclick="HandelHeaderClick" colspan="@HeaderColSpan">
         @if (Sortable)
         {
             if (ShowSorterTooltip)
