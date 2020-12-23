@@ -12,6 +12,8 @@ namespace AntDesign.TableModels
 
         public IList<ITableSortModel> SortModel { get; private set; }
 
+        public IList<ITableFilterModel> FilterModel { get; private set; }
+
         [JsonIgnore]
         public IQueryable<TItem> QueryableLambda { get; private set; }
 
@@ -20,6 +22,7 @@ namespace AntDesign.TableModels
             this.PageSize = pageSize;
             this.PageIndex = pageIndex;
             this.SortModel = new List<ITableSortModel>();
+            this.FilterModel = new List<ITableFilterModel>();
         }
 
         internal void AddSortModel(ITableSortModel model)

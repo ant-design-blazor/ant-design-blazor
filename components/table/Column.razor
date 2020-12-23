@@ -41,16 +41,9 @@ else if (IsHeader && HeaderColSpan != 0)
     }
 
     <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" @onclick="HandelHeaderClick" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")">
-        @if (Sortable)
+        @if (Sortable || Filters?.Any() == true)
         {
-            if (ShowSorterTooltip)
-            {
-                @ToolTipSorter(this)
-            }
-            else
-            {
-                @SortHeader(this)
-            }
+            @FilterToolTipSorter(this)
         }
         else if (TitleTemplate != null)
         {
@@ -124,7 +117,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
     readonly RenderFragment<Column<TData>> SortHeader = col =>
     @<div class="ant-table-column-sorters">
         <span>
-            @if (col.TitleTemplate != null)@col.TitleTemplate else @col.HeaderTitle
+            @if (col.TitleTemplate != null) @col.TitleTemplate else @col.HeaderTitle
         </span>
         @{ 
             bool hasDescendingSorter = SortDirection.Descending.IsIn(col.SortDirections);
@@ -144,13 +137,65 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         </span>
     </div>;
 
-    readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
-    @<Tooltip Title="@col.SorterTooltip">
-        <Unbound>
-            <div class="ant-table-column-sorters-with-tooltip" @ref="context.Current">
-                @col.SortHeader(col)
-            </div>
-        </Unbound>
-    </Tooltip>;
+readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
+@<Template>
+    @if (col.ShowSorterTooltip)
+    {
+        <Tooltip Title="@col.SorterTooltip">
+            <Unbound>
+                <div class="ant-table-column-sorters-with-tooltip" @ref="context.Current">
+                    @col.SortHeader(col)
+                </div>
+            </Unbound>
+        </Tooltip>
+    }
+    else
+    {
+        @col.SortHeader(col)
+    }
+</Template>;
 
-}   
+
+readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
+@<Template>
+    @if (col.Filters?.Any() == true)
+    {
+        <div class="ant-table-filter-column">
+            <span class="ant-table-filter-column-title">
+                @if (col.Sortable)
+                {
+                    @col.ToolTipSorter(col)
+                }
+            </span>
+            <Dropdown Trigger="new[] { TriggerType.Click }">
+                <Overlay>
+                    <Menu>
+                        @foreach (var filter in col.Filters)
+                        {
+                            <MenuItem>
+                                <Checkbox Value="filter.Selected">@filter.Text</Checkbox>
+                            </MenuItem>
+                        }
+                    </Menu>
+                </Overlay>
+                <ChildContent>
+                    <span class="ant-table-filter-trigger-container">
+                        <span role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger">
+                            <Icon Type="filter" />
+                        </span>
+                    </span>
+                </ChildContent>
+            </Dropdown>
+        </div>
+    }
+    else
+    {
+        @if (col.Sortable)
+        {
+            @col.ToolTipSorter(col)
+        }
+    }
+</Template>;
+
+
+}

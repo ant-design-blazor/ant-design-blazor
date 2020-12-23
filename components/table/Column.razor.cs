@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using AntDesign.Core.Reflection;
 using AntDesign.Internal;
@@ -48,6 +49,9 @@ namespace AntDesign
 
         [Parameter]
         public SortDirection DefaultSortOrder { get; set; }
+
+        [Parameter]
+        public IEnumerable<FilterModel<TData>> Filters { get; set; }
 
         private PropertyReflector? _propertyReflector;
 
