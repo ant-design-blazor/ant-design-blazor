@@ -177,9 +177,18 @@ namespace AntDesign
             }
         }
 
+        #region 验证
+
+        /// <summary>
+        /// 自动验证
+        /// </summary>
+        [Parameter] public bool AutoValidate { get; set; } = true;
+
         public bool Validate()
         {
             return _editContext.Validate();
         }
+
+        #endregion
     }
 }

@@ -28,6 +28,7 @@ namespace AntDesign.Internal
         void Reset();
 
         void Submit();
+        bool AutoValidate { get; set; }
         bool Validate();
     }
 }
