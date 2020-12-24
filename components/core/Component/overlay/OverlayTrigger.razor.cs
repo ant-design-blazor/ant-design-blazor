@@ -109,6 +109,7 @@ namespace AntDesign.Internal
             if (firstRender)
             {
                 DomEventService.AddEventListener("document", "mouseup", OnMouseUp, false);
+                DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
             }
 
             base.OnAfterRender(firstRender);
@@ -250,6 +251,13 @@ namespace AntDesign.Internal
             }
         }
 
+        protected async void OnWindowResize(JsonElement element)
+        {
+            if (IsOverlayShow())
+            {
+                await GetOverlayComponent().UpdatePosition();
+            }
+        }
         protected virtual bool IsContainTrigger(TriggerType triggerType)
         {
             return Trigger.Contains(triggerType);
