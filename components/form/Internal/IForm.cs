@@ -18,6 +18,8 @@ namespace AntDesign.Internal
 
         internal void AddControl(IControlValueAccessor valueAccessor);
 
+        internal bool ValidateOnChange { get; }
+
         event Action<IForm> OnFinishEvent;
 
         bool IsModified { get; }
@@ -28,7 +30,7 @@ namespace AntDesign.Internal
         void Reset();
 
         void Submit();
-        bool AutoValidate { get; set; }
+
         bool Validate();
     }
 }

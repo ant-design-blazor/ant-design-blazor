@@ -115,7 +115,7 @@ namespace AntDesign
 
                     ValueChanged.InvokeAsync(value);
 
-                    if (_isNotifyFieldChanged && (Form?.AutoValidate ?? true))
+                    if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
                     {
                         EditContext?.NotifyFieldChanged(FieldIdentifier);
                     }

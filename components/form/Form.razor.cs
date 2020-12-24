@@ -75,6 +75,12 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Validator { get; set; } = _defaultValidator;
 
+        /// <summary>
+        /// 自动验证
+        /// </summary>
+        [Parameter]
+        public bool ValidateOnChange { get; set; }
+
         private static readonly RenderFragment _defaultValidator = builder =>
         {
             builder.OpenComponent<ObjectGraphDataAnnotationsValidator>(0);
@@ -99,8 +105,9 @@ namespace AntDesign
         string IForm.Size => Size;
         string IForm.Name => Name;
         object IForm.Model => Model;
+        bool IForm.ValidateOnChange => ValidateOnChange;
 
-        bool IForm.IsModified => throw new NotImplementedException();
+        bool IForm.IsModified => _editContext.IsModified();
 
         public event Action<IForm> OnFinishEvent;
 
@@ -179,16 +186,11 @@ namespace AntDesign
 
         #region 验证
 
-        /// <summary>
-        /// 自动验证
-        /// </summary>
-        [Parameter] public bool AutoValidate { get; set; } = true;
-
         public bool Validate()
         {
             return _editContext.Validate();
         }
 
-        #endregion
+        #endregion 验证
     }
 }
