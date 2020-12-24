@@ -54,6 +54,7 @@ namespace AntDesign
             if (_modalRefs.Contains(confirmRef))
             {
                 _modalRefs.Remove(confirmRef);
+                await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
             }
             confirmRef.OnClose?.Invoke();
         }
