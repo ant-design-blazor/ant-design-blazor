@@ -140,18 +140,25 @@ namespace AntDesign
 
         internal void RemoveSlick(CarouselSlick slick)
         {
-            _slicks.Remove(slick);
-            StateHasChanged();
+            var slicks = new List<CarouselSlick>(_slicks ?? new List<CarouselSlick>());
+            slicks.Remove(slick);
+            _slicks = slicks;
+            InvokeAsync(async () =>
+            {
+                await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+            });
         }
 
         internal void AddSlick(CarouselSlick slick)
         {
-            _slicks.Add(slick);
+            var slicks = new List<CarouselSlick>(_slicks ?? new List<CarouselSlick>());
+            slicks.Add(slick);
+            _slicks = slicks;
             if (ActiveSlick == null)
             {
                 Activate(_slicks[0]);
             }
-            StateHasChanged();
+            InvokeStateHasChanged();
         }
 
         internal int IndexOfSlick(CarouselSlick slick)
@@ -171,7 +178,10 @@ namespace AntDesign
             {
                 index = 0;
             }
-
+            if (_slicks == null || _slicks.Count == 0)
+            {
+                return;
+            }
             this.Activate(_slicks[index]);
 
             // The current thread is not associated with the Dispatcher.
