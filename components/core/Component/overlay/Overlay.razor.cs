@@ -325,7 +325,7 @@ namespace AntDesign.Internal
         {
             int left = 0;
             int triggerLeft = trigger.absoluteLeft - containerElement.absoluteLeft;
-            int triggerWidth = trigger.clientWidth;
+            int triggerWidth = trigger.clientWidth != 0 ? trigger.clientWidth : trigger.offsetWidth;
 
             // contextMenu
             if (_overlayLeft != null)
