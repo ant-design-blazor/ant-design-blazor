@@ -76,7 +76,7 @@ namespace AntDesign
         public RenderFragment Validator { get; set; } = _defaultValidator;
 
         /// <summary>
-        /// 自动验证
+        /// Enable validation when component values change
         /// </summary>
         [Parameter]
         public bool ValidateOnChange { get; set; }
@@ -184,13 +184,9 @@ namespace AntDesign
             }
         }
 
-        #region 验证
-
         public bool Validate()
         {
             return _editContext.Validate();
         }
-
-        #endregion 验证
     }
 }
