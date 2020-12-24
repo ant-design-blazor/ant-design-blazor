@@ -330,7 +330,10 @@ namespace AntDesign.Internal
             int triggerLeft = trigger.absoluteLeft - containerElement.absoluteLeft;
             int triggerWidth = trigger.clientWidth;
 
-            _overlayClientWidth = (overlay.clientWidth > 0) ? overlay.clientWidth : _overlayClientWidth;
+            if (overlay.clientWidth > 0)
+            {
+                _overlayClientWidth = overlay.clientWidth;
+            }
 
             // contextMenu
             if (_overlayLeft != null)
@@ -363,7 +366,7 @@ namespace AntDesign.Internal
             else if (Trigger.Placement.IsIn(PlacementType.BottomRight, PlacementType.TopRight))
             {
                 left = triggerLeft + triggerWidth - _overlayClientWidth;
-                
+
                 if (ArrowPointAtCenter)
                 {
                     left += HORIZONTAL_ARROW_SHIFT + ARROW_SIZE / 2 - triggerWidth / 2;
