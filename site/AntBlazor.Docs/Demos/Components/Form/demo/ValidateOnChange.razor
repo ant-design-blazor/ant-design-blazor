@@ -1,0 +1,45 @@
+﻿@using System.ComponentModel.DataAnnotations;
+
+<Switch @bind-Value="@auto" CheckedChildren="True" UnCheckedChildren="False" />
+<Form @ref="form"
+      ValidateOnChange="@auto"
+      Model="@model"
+      LabelColSpan="8"
+      WrapperColSpan="16">
+    <FormItem Label="Username">
+        <Input @bind-Value="@context.Username" />
+    </FormItem>
+    <FormItem Label="Password">
+        <InputPassword @bind-Value="@context.Password" />
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" OnClick="OnValidate">
+            Validate
+        </Button>
+    </FormItem>
+</Form>
+@code
+{
+    public class Model
+    {
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        public string Password { get; set; }
+        public bool RememberMe { get; set; } = true;
+    }
+
+    private Model model = new Model();
+
+    AntDesign.Form<Model> form;
+
+    private bool auto = false;
+
+    public void OnValidate()
+    {
+        form.Validate();
+    }
+}
