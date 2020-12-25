@@ -16,6 +16,9 @@ namespace AntDesign
         public SubMenu Parent { get; set; }
 
         [Parameter]
+        public PlacementType Placement { get; set; }
+
+        [Parameter]
         public string Title { get; set; }
 
         [Parameter]

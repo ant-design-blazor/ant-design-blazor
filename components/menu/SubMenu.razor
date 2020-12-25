@@ -29,7 +29,10 @@
 }
 else
 {
-    string placementName = RootMenu.Mode == MenuMode.Horizontal ? "bottomLeft" : "rightTop";
+    if (Placement == null)
+    {
+        Placement = (RootMenu.Mode == MenuMode.Horizontal && Parent == null) ? PlacementType.BottomLeft : PlacementType.RightTop;
+    }
 
     <CascadingValue Value="this" Name="SubMenu">
         <SubMenuTrigger @ref="_overlayTrigger"
@@ -37,10 +40,10 @@ else
                         Visible="IsOpen"
                         ComplexAutoCloseAndVisible="true"
                         Disabled="Disabled"
-                        Placement="@(RootMenu.Mode == MenuMode.Horizontal && Parent == null ? PlacementType.BottomLeft : PlacementType.RightTop)"
+                        Placement="Placement"
                         OnVisibleChange="OnOverlayVisibleChange"
                         OnOverlayHiding="OnOverlayHiding"
-                        PlacementCls="@($"{prefixCls}-placement-{placementName} {prefixCls}-popup")"
+                        PlacementCls="@($"{prefixCls}-placement-{Placement.Name} {prefixCls}-popup")"
                         OverlayEnterCls="@($"{prefixCls}-{RootMenu.Theme} ")"
                         OverlayLeaveCls="@($"{prefixCls}-{RootMenu.Theme} ")"
                         OverlayHiddenCls="@($"{RootMenu.PrefixCls}-hidden")">
