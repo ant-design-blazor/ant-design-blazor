@@ -23,6 +23,14 @@ namespace AntDesign
                 {
                     return $"height: {TotalHeight}px; opacity: 1; transform: translate3d(0px, -{SlickHeight * (IndexOfSlick(ActiveSlick) + 1)}px, 0px);transition: -webkit-transform 500ms ease 0s;";
                 }
+                else if (Effect == CarouselEffect.Fade && IsHorizontal)
+                {
+                    return $"width: {TotalWidth}px; opacity: 1;";
+                }
+                else if (Effect == CarouselEffect.Fade && !IsHorizontal)
+                {
+                    return $"height: {TotalHeight}px; opacity: 1;";
+                }
 
                 return string.Empty;
             }
