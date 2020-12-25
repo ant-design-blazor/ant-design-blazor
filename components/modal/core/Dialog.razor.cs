@@ -37,6 +37,7 @@ namespace AntDesign
         #region Parameters
 
 #pragma warning disable 1591
+
         [Parameter]
         public DialogOptions Config { get; set; }
 
@@ -227,7 +228,7 @@ namespace AntDesign
         /// show dialog through animation
         /// </summary>
         /// <returns></returns>
-        private async Task Show()
+        private void Show()
         {
             if (!_hasShow && Visible)
             {
@@ -250,10 +251,6 @@ namespace AntDesign
                 _maskHideClsName = "";
                 _maskAnimationClsName = ModalAnimation.MaskEnter;
                 _modalAnimationClsName = ModalAnimation.ModalEnter;
-
-                // wait for animation, "antZoomIn" animation take 0.3s
-                // see: @animation-duration-slow: 0.3s;
-                await Task.Delay(300);
                 _hasShow = true;
             }
         }
@@ -327,7 +324,7 @@ namespace AntDesign
             {
                 if (!_hasDestroy)
                 {
-                    await Show();
+                    Show();
                     //await InvokeStateHasChangedAsync();
                 }
                 else
@@ -357,7 +354,7 @@ namespace AntDesign
                 {
                     _hasDestroy = false;
                     await AppendToContainer();
-                    await Show();
+                    Show();
                     await InvokeStateHasChangedAsync();
                 }
 
