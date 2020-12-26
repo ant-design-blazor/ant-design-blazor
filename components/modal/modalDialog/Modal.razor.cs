@@ -13,8 +13,6 @@ namespace AntDesign
     /// </summary>
     public partial class Modal
     {
-        internal static HashSet<Modal> ReusedModals = new HashSet<Modal>();
-
         #region Parameter
 
         /// <summary>
@@ -284,19 +282,5 @@ namespace AntDesign
         }
 
         #endregion
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        protected override async Task OnParametersSetAsync()
-        {
-            if (!DestroyOnClose && !ReusedModals.Contains(this))
-            {
-                ReusedModals.Add(this);
-            }
-
-            await base.OnParametersSetAsync();
-        }
     }
 }
