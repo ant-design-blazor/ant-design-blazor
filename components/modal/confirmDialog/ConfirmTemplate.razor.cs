@@ -6,8 +6,16 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// ConfirmTemplate
+    /// </summary>
+    /// <typeparam name="TComponentOptions"></typeparam>
+    /// <typeparam name="TResult"></typeparam>
     public class ConfirmTemplate<TComponentOptions, TResult> : TemplateComponentBase<TComponentOptions>, IModalTemplate
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [Parameter]
         public ConfirmRef<TResult> ConfirmRef { get; set; }
 
@@ -29,9 +37,8 @@ namespace AntDesign
             await (ConfirmRef.OnCancel?.Invoke(result) ?? Task.CompletedTask);
         }
 
-
         /// <summary>
-        /// Close the Modal
+        /// just Close the Modal and OnOk and OnCancel callback are not triggered
         /// </summary>
         /// <returns></returns>
         protected async Task CloseAsync()
@@ -45,7 +52,11 @@ namespace AntDesign
             ConfirmRef.ModalTemplate = this;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public virtual Task CancelAsync(ModalClosingEventArgs args)
         {
             return Task.CompletedTask;

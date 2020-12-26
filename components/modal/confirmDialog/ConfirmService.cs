@@ -7,6 +7,9 @@ using OneOf;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// show a simple Confirm dialog like MessageBox of Windows, it's different from ModalService. ModalService can only create OK-Cancel Confirm dialog and return ConfirmRef, but ConfirmService return ConfirmResult
+    /// </summary>
     public class ConfirmService
     {
         internal event Func<ConfirmRef, Task> OnOpenEvent;
@@ -30,11 +33,18 @@ namespace AntDesign
             if (options == null) throw new ArgumentNullException(nameof(options));
             ConfirmOptions confirmOptions = new ConfirmOptions()
             {
-                Title = title,
                 Content = content,
                 ConfirmButtons = confirmButtons,
                 ConfirmIcon = confirmIcon,
             };
+            if (title.IsT0)
+            {
+                confirmOptions.Title = title.AsT0;
+            }
+            else
+            {
+                confirmOptions.TitleTemplate = title.AsT1;
+            }
 
             #region config button default properties
 
@@ -53,15 +63,15 @@ namespace AntDesign
 
             #endregion
 
-            var modalRef = new ConfirmRef(confirmOptions)
+            var confirmRef = new ConfirmRef(confirmOptions)
             {
                 TaskCompletionSource = new TaskCompletionSource<ConfirmResult>()
             };
             if (OnOpenEvent != null)
             {
-                await OnOpenEvent.Invoke(modalRef);
+                await OnOpenEvent.Invoke(confirmRef);
             }
-            return await modalRef.TaskCompletionSource.Task;
+            return await confirmRef.TaskCompletionSource.Task;
         }
 
         /// <summary>

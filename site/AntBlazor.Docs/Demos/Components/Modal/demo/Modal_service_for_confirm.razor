@@ -25,7 +25,7 @@
             OnCancel = e => { Console.WriteLine("OnCancel"); return Task.CompletedTask; }
         };
 
-        _confirmRef = await ModalService.CreateAsync(options);
+        _confirmRef = await ModalService.CreateConfirmAsync(options);
 
         _confirmRef.OnOpen = () =>
         {
@@ -53,10 +53,9 @@
         var options = new ConfirmOptions()
         {
             Title = "Component",
-
         };
 
-        var confirmRef = await ModalService.CreateAsync<ConfirmTemplateDemo, string, string>(options, value);
+        var confirmRef = await ModalService.CreateConfirmAsync<ConfirmTemplateDemo, string, string>(options, value);
 
         confirmRef.OnOpen = () =>
         {

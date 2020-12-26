@@ -7,8 +7,14 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// modal footer Component
+    /// </summary>
     public partial class ModalFooter
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [CascadingParameter]
         public DialogOptions ModalProps { get; set; }
 

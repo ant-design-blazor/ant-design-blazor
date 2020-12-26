@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
 
 namespace AntDesign
 {
-    public partial class ModalService : IDisposable
+    /// <summary>
+    /// create and open a Modal dialog
+    /// </summary>
+    public partial class ModalService: IDisposable
     {
         internal event Func<ModalRef, Task> OnModalOpenEvent;
-
         internal event Func<ModalRef, Task> OnModalCloseEvent;
 
         private readonly NavigationManager _navigationManager;
         private readonly IJSRuntime _jsRuntime;
+        internal static HashSet<ModalRef> ReusedModals = new HashSet<ModalRef>();
+
         /// <summary>
         /// constructor
         /// </summary>
@@ -56,7 +60,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Create and open template modal
+        /// Create and open a Modal with template
         /// </summary>
         /// <typeparam name="TComponent"></typeparam>
         /// <typeparam name="TComponentOptions"></typeparam>
@@ -71,7 +75,7 @@ namespace AntDesign
             }
             ModalRef modalRef = new ModalRef(config, this);
 
-            void Child(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder builder)
+            void Child(RenderTreeBuilder builder)
             {
                 builder.OpenComponent<TComponent>(0);
                 builder.AddAttribute(1, "ModalRef", modalRef);
@@ -83,12 +87,23 @@ namespace AntDesign
             return CreateOrOpenModalAsync(modalRef);
         }
 
+        /// <summary>
+        /// create or open a Modal dialog
+        /// </summary>
+        /// <param name="modalRef"></param>
+        /// <returns></returns>
         internal Task<ModalRef> CreateOrOpenModalAsync(ModalRef modalRef)
         {
             OnModalOpenEvent?.Invoke(modalRef);
+            ReusedModals.Add(modalRef);
             return Task.FromResult(modalRef);
         }
 
+        /// <summary>
+        /// close modal dialog
+        /// </summary>
+        /// <param name="modalRef"></param>
+        /// <returns></returns>
         internal Task CloseModalAsync(ModalRef modalRef)
         {
             if (OnModalCloseEvent != null)
