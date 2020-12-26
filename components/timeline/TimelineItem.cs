@@ -14,7 +14,8 @@ namespace AntDesign
         [Parameter]
         public string Color { get; set; } = "blue";
 
-        [CascadingParameter] public Timeline ParentTimeline { get; set; }
+        [CascadingParameter]
+        public Timeline ParentTimeline { get; set; }
 
         internal ClassMapper _headClassMapper = new ClassMapper();
 
@@ -31,7 +32,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            ParentTimeline?._items.Remove(this);
+            ParentTimeline?.RemoveItem(this);
             base.Dispose(disposing);
         }
 
