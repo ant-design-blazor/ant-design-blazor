@@ -11,7 +11,7 @@
          @onclick="@OnMaskClick" 
          @onkeydown="@OnKeyDown"
          style="@_wrapStyle">
-        <div  @ref="@_modal" role="document" class="ant-modal @GetModalClsName()"
+        <div @ref="@_modal" role="document" class="ant-modal @GetModalClsName()"
              @onmousedown="@OnDialogMouseDown"
              style="@GetStyle()">
             <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
@@ -26,25 +26,24 @@
                         </span>
                     </button>
                 }
-                
-                @if (Config.Title != null)
-                {
-                    var titleValue = Config.Title.Value;
 
+                @if (Config.TitleTemplate != null)
+                {
                     <div @ref="@_dialogHeader" class="ant-modal-header" style="@Config.GetHeaderStyle()">
                         <div class="ant-modal-title" id="rcDialogTitle0">
-                            @if (titleValue.IsT0)
-                            {
-                                @(titleValue.AsT0)
-                            }
-                            else
-                            {
-                                @(titleValue.AsT1)
-                            }
+                            @Config.TitleTemplate
                         </div>
                     </div>
                 }
-                
+                else if (!string.IsNullOrWhiteSpace(Config.Title))
+                {
+                    <div @ref="@_dialogHeader" class="ant-modal-header" style="@Config.GetHeaderStyle()">
+                        <div class="ant-modal-title" id="rcDialogTitle0">
+                            @Config.Title
+                        </div>
+                    </div>
+                }
+
                 <div class="ant-modal-body" style="@Config.BodyStyle">
                     @ChildContent
                 </div>

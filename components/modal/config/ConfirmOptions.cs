@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -8,61 +9,69 @@ using OneOf;
 
 namespace AntDesign
 {
-    public class ConfirmOptions
+    /// <summary>
+    /// Confirm dialog options
+    /// </summary>
+    public class ConfirmOptions : DialogOptionsBase
     {
+        public ConfirmOptions()
+        {
+            Width = 416;
+            Mask = true;
+            MaskClosable = false;
+        }
+
+        #region const
+
         /// <summary>
         /// OK
         /// </summary>
-        internal static string DefaultBtn1Text = "OK";
+        internal const string DefaultBtn1Text = "OK";
         /// <summary>
         /// Cancel
         /// </summary>
-        internal static string DefaultBtn2Text = "Cancel";
+        internal const string DefaultBtn2Text = "Cancel";
         /// <summary>
         /// Ignore
         /// </summary>
-        internal static string DefaultBtn3Text = "Ignore";
+        internal const string DefaultBtn3Text = "Ignore";
 
+        #endregion
 
+        /// <summary>
+        /// the class name of the element of ".ant-modal" 
+        /// </summary>
         public string ClassName { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Visible { get; set; }
 
-        public OneOf<string, RenderFragment>? Title { get; set; } = null;
-
+        /// <summary>
+        /// ChildContent
+        /// </summary>
         public OneOf<string, RenderFragment> Content { get; set; }
 
-        public OneOf<string, double> Width { get; set; } = 416;
-
-        public bool Centered { get; set; }
-
-        public bool Mask { get; set; } = true;
-
-        public bool MaskClosable { get; set; } = false;
-
-        public string MaskStyle { get; set; }
-
+        /// <summary>
+        /// Confirm left top icon
+        /// </summary>
         public RenderFragment? Icon { get; set; } = null;
 
-        public int ZIndex { get; set; } = 1000;
-
+        /// <summary>
+        /// .ant-modal element's style
+        /// </summary>
         public string Style { get; set; }
 
-        public bool Keyboard { get; set; } = true;
-
-        public string TransitionName { get; set; }
-
-        public string MaskTransitionName { get; set; }
-
-        public ElementReference? GetContainer { get; set; } = null;
-
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ConfirmAutoFocusButton AutoFocusButton { get; set; }
 
         /// <summary>
         /// set OK button type for the leftmost button: OK or Yes button
         /// </summary>
-        public string OkType
+        public new string OkType
         {
             get
             {
@@ -82,9 +91,12 @@ namespace AntDesign
         /// <summary>
         /// set OK button content for the leftmost button: OK or Yes button
         /// </summary>
-        public OneOf<string, RenderFragment> OkText { get => Button1Props.ChildContent; set => Button1Props.ChildContent = value; }
+        public new OneOf<string, RenderFragment> OkText { get => Button1Props.ChildContent; set => Button1Props.ChildContent = value; }
 
-        public OneOf<string, RenderFragment> CancelText { get => Button2Props.ChildContent; set => Button2Props.ChildContent = value; }
+        /// <summary>
+        /// set Cancel button content for the second on the left button: Cancel or NO button
+        /// </summary>
+        public new OneOf<string, RenderFragment> CancelText { get => Button2Props.ChildContent; set => Button2Props.ChildContent = value; }
 
         /// <summary>
         /// the leftmost button in LTR layout
@@ -92,7 +104,7 @@ namespace AntDesign
         internal OneOf<string, RenderFragment> Button1Text { get => Button1Props.ChildContent; set => Button1Props.ChildContent = value; }
 
         /// <summary>
-        /// the secondary button in LTR layout
+        /// The second button on the left is in the LTR layout
         /// </summary>
         internal OneOf<string, RenderFragment> Button2Text { get => Button2Props.ChildContent; set => Button2Props.ChildContent = value; }
 
@@ -105,16 +117,35 @@ namespace AntDesign
 
         #region button OnClick callback
 
+        /// <summary>
+        /// for OK-Cancel Confirm dialog, cancel button clicked callback.
+        /// It's only trigger in Confirm created by ModalService mode
+        /// </summary>
         public Func<ModalClosingEventArgs, Task> OnCancel { get; set; }
+
+        /// <summary>
+        /// for OK-Cancel Confirm dialog, OK button clicked callback.
+        /// It's only trigger in Confirm created by ModalService mode
+        /// </summary>
         public Func<ModalClosingEventArgs, Task> OnOk { get; set; }
 
         #endregion
 
         #region button props
 
-        public ButtonProps OkButtonProps { get => Button1Props; set => Button1Props = value; }
-        public ButtonProps CancelButtonProps { get => Button1Props; set => Button2Props = value; }
+        /// <summary>
+        ///  OK-Cancel Confirm dialog's OK button props. It is equivalent to Button1Props.
+        /// </summary>
+        public new ButtonProps OkButtonProps { get => Button1Props; set => Button1Props = value; }
 
+        /// <summary>
+        ///  OK-Cancel Confirm dialog's cancel button props. It is equivalent to Button2Props.
+        /// </summary>
+        public new ButtonProps CancelButtonProps { get => Button2Props; set => Button2Props = value; }
+
+        /// <summary>
+        /// the leftmost button in LTR layout 
+        /// </summary>
         public ButtonProps Button1Props
         {
             get => _button1Props;
@@ -127,6 +158,10 @@ namespace AntDesign
                 }
             }
         }
+
+        /// <summary>
+        /// The second button on the left is in the LTR layout
+        /// </summary>
         public ButtonProps Button2Props
         {
             get => _button2Props;
@@ -140,6 +175,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// the rightmost button in LTR layout
+        /// </summary>
         public ButtonProps Button3Props
         {
             get => _button3Props;
@@ -162,21 +200,14 @@ namespace AntDesign
         #region Confirm buttons config
 
         /// <summary>
-        /// show Cancel button?
+        /// show Cancel button for OK-Cancel Confirm dialog
         /// </summary>
         public bool OkCancel
         {
             get => ConfirmButtons != ConfirmButtons.OK;
             set
             {
-                if (!value)
-                {
-                    ConfirmButtons = ConfirmButtons.OK;
-                }
-                else
-                {
-                    ConfirmButtons = ConfirmButtons.OKCancel;
-                }
+                ConfirmButtons = !value ? ConfirmButtons.OK : ConfirmButtons.OKCancel;
             }
         }
 
@@ -201,7 +232,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    ConfirmType = value.ToString().ToLower();
+                    ConfirmType = value.ToString().ToLower(CultureInfo.CurrentUICulture);
                 }
             }
         }
@@ -246,10 +277,7 @@ namespace AntDesign
                                 }
                             }
                             // config button2 defult type
-                            if (this.Button2Props.Danger == null)
-                            {
-                                this.Button2Props.Danger = true;
-                            }
+                            this.Button2Props.Danger ??= true;
                         }
                         break;
                     }
@@ -273,10 +301,7 @@ namespace AntDesign
                             this.Button2Text = "Retry";
                         }
                         // config button2 defult type
-                        if (this.Button2Props.Danger == null)
-                        {
-                            this.Button2Props.Danger = true;
-                        }
+                        this.Button2Props.Danger ??= true;
                         break;
                     }
                 default:

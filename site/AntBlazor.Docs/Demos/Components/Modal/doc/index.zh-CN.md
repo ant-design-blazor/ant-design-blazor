@@ -18,7 +18,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| AfterClose | Modal 完全关闭后的回调 | EventCallback | - |
+| AfterClose | Modal 关闭后的回调 | EventCallback | - |
 | BodyStyle | Modal body 样式 | string | - |
 | CancelText | 取消按钮文字 | string\|RenderFragment | Cancel |
 | Centered | 垂直居中展示 Modal | bool | `false` |
@@ -38,7 +38,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | OkButtonProps | ok 按钮 props | ButtonProps                   | - |
 | CancelButtonProps | cancel 按钮 props | ButtonProps | - |
 | Style | 可用于设置浮层的样式，调整浮层位置等 | string | - |
-| Title | 标题 | string\|RenderFragment | - |
+| Title | 标题，如果 TitleTemplate 不为null，则优先显示 TitleTemplate | string | null |
+| TitleTemplate | 标题 | RenderFragment | null |
 | Visible | 对话框是否可见 | bool | - |
 | Width | 宽度 | string\|number | 520 |
 | WrapClassName | 对话框外层容器的类名 | string | - |
@@ -54,7 +55,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 
 ### ModalService
 
-包括：
+1. 用于创建 Confirm dialog
 
 - `ModalService.Info`
 - `ModalService.Success`
@@ -67,30 +68,48 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 - `ModalService.SuccessAsync`
 - `ModalService.ErrorAsync`
 - `ModalService.WarningAsync`
+- `ModalService.UpdateConfirmAsync`
+-  `ModalService.DestroyConfirmAsync`
+-  `ModalService.DestroyAllConfirmAsync`
+-  `ModalService.CreateConfirmAsync`
+
+2. 用于创建 Modal dialog
+
+-  `ModalService.CreateModalAsync`
+
 
 > 请确认已经在 `App.Razor` 中添加了 `<AntContainer />` 组件。
-> `ConfirmAsync`、`InfoAsync`、`SuccessAsync`、`ErrorAsync`、`WarningAsync` 返回值为Task<bool>，可用于判断用户点击的按钮是 OK按钮(true) 还是 Cancel按钮(false)
+> `ConfirmAsync`、`InfoAsync`、`SuccessAsync`、`ErrorAsync`、`WarningAsync` 返回值为Task<bool>，可用于判断用户点击的按钮是 OK按钮(true) 还是 Cancel按钮(false)。
+
+### ConfirmService
+
+`ConfirmService.Show` 用于弹出类似于在WinForm中使用 MessageBox 方式弹出的对话框。这和 ModalService 不同的是，ModalService 只可以创建 具有 OK-Cancel 按钮的对话框并返回 ConfirmRef 对象或者是否OK按钮被点击，而 ConfirmService 总是返回 ConfirmResult ，以指示哪个按钮被点击。
+
 
 #### ConfirmOptions
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | AutoFocusButton | 指定自动获得焦点的按钮 | ConfirmAutoFocusButton | `ConfirmAutoFocusButton.Ok` |
-| CancelText | 设置 Modal.confirm 取消按钮文字 | string | Cancel                      |
+| CancelText | 取消按钮文字，等价于 Button2Props.ChildContent               | string | Cancel                      |
 | Centered | 垂直居中展示 Modal | bool | `false` |
-| ClassName | 容器类名 | string | - |
+| ClassName | 容器(.ant-modal)类名 | string | - |
 | Content | 内容 | string\|RenderFragment | - |
 | Icon | 自定义图标 | RenderFragment | -                           |
 | MaskClosable | 点击蒙层是否允许关闭 | bool | `false` |
-| OkText | 确认按钮文字 | string | 确定 |
-| OkType | 确认按钮类型 | string | primary |
-| OkButtonProps | ok 按钮 props | ButtonProps | - |
-| CancelButtonProps | cancel 按钮 props | ButtonProps | - |
-| Title | 标题 | string\|RenderFragment | - |
+| OkText | 确认按钮文字，等价于 Button1Props.ChildContent | string\|RenderFragment | 确定 |
+| OkType | 确认按钮类型，等价于 Button1Props.Type | string | primary |
+| OkButtonProps | ok 按钮 props，与 Button1Props 等价 | ButtonProps | - |
+| CancelButtonProps | cancel 按钮 props，与 Button2Props 等价 | ButtonProps | - |
+| Title | 标题，如果 TitleTemplate 不为null，则优先显示 TitleTemplate | string | null |
+| TitleTemplate | 标题 | RenderFragment | null |
 | Width | 宽度 | string\|double | 416 |
 | ZIndex | 设置 Modal 的 `z-index` | int | 1000 |
-| OnCancel | 取消回调，参数为关闭函数，返回 promise 时 resolve 后自动关闭 | EventCallback<MouseEventArgs>?         | null |
-| OnOk | 点击确定回调，参数为关闭函数，返回 promise 时 resolve 后自动关闭 | EventCallback<MouseEventArgs>?         | null |
+| OnCancel | 取消回调，参数为关闭函数，仅会在通过 ModalService 创建的 Confirm 触发 | EventCallback<MouseEventArgs>?         | null |
+| OnOk | 点击确定回调，参数为关闭函数，仅会在通过 ModalService 创建的 Confirm 触发 | EventCallback<MouseEventArgs>?         | null |
+| Button1Props | 在LTR模式中最左侧按钮的属性 | ButtonProps | Type = ButtonType.Primary, ChildContent 与 ConfirmButtons 顺序相同 |
+| Button2Props | 在LTR模式中左边第二个按钮的属性 | ButtonProps |  ChildContent 与 ConfirmButtons 顺序相同|
+| Button3Props | 在LTR模式中左边第三个按钮的属性 | ButtonProps |  ChildContent 与 ConfirmButtons 顺序相同 |
 
 以上函数调用后，会返回一个引用，可以通过该引用更新和关闭弹窗。
 
@@ -98,13 +117,13 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 ConfirmOptions config = new ConfirmOptions();
 var modelRef = await ModalService.Info(config);
 
-modelRef.UpdateConfig();
+modelRef.UpdateConfirmAsync();
 
-ModalService.Destroy(modelRef);
+ModalService.DestroyConfirmAsync(modelRef);
 ```
 
-- `ModalService.DestroyAll`
+- `ModalService.DestroyAllConfirmAsync`
 
-使用 `ModalService.DestroyAll()` 可以销毁弹出的确认窗（即上述的 ModalService.Info、ModalService.Success、ModalService.Error、ModalService.Warning、ModalService.Confirm）。通常用于路由监听当中，处理路由前进、后退不能销毁确认对话框的问题，而不用各处去使用实例的返回值进行关闭（ModalService.Destroy(config) 适用于主动关闭，而不是路由这样被动关闭）
+使用 `ModalService.DestroyAllConfirmAsync()` 可以销毁弹出的确认窗（即上述的 ModalService.Info、ModalService.Success、ModalService.Error、ModalService.Warning、ModalService.Confirm）。通常用于路由监听当中，处理路由前进、后退不能销毁确认对话框的问题，而不用各处去使用实例的返回值进行关闭（ModalService.DestroyConfirmAsync(config) 适用于主动关闭，而不是路由这样被动关闭）
 
 

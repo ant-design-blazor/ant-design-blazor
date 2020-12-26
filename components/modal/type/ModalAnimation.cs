@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AntDesign
 {
-    public class ModalAnimation
+    public sealed class ModalAnimation
     {
         public const string ModalEnter = " zoom-enter zoom-enter-active";
         public const string ModalLeave = " zoom-leave zoom-leave-active";
