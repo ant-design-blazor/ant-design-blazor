@@ -1,0 +1,18 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<DialogWrapper @ref="_dialogWrapper"
+               Config="@BuildDialogOptions()"
+               Visible="@Visible"
+               DestroyOnClose="@DestroyOnClose"
+               OnAfterShow="@OnAfterDialogShow"
+               OnBeforeDestroy="@OnBeforeDialogWrapperDestroy"
+               Style="@Style">
+        <CascadingValue Value=@(".ant-modal-wrap") Name="PopupContainerSelector">
+            <CascadingValue Value="true" Name="InModal">
+                <CascadingValue Value="@_dialogWrapper.Dialog.IsShow()" Name="ModalCompleteShow">
+                    @ChildContent
+                </CascadingValue>
+            </CascadingValue>
+        </CascadingValue>
+</DialogWrapper>

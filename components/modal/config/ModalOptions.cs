@@ -11,116 +11,99 @@ namespace AntDesign
     /// <summary>
     /// the options of Modal dialog box
     /// </summary>
-    public class ModalOptions
+    public class ModalOptions : DialogOptionsBase
     {
+        public ModalOptions()
+        {
+            _onCancel = DefaultOnCancelOrOk;
+            _onOk = DefaultOnCancelOrOk;
+            Width = 520;
+            MaskClosable = true;
+        }
+
         internal ModalRef ModalRef;
 
-        internal static readonly RenderFragment DefaultCloseIcon = (builder) =>
-        {
-            builder.OpenComponent<Icon>(0);
-            builder.AddAttribute(1, "Type", "close");
-            builder.AddAttribute(2, "Theme", "outline");
-            builder.CloseComponent();
-        };
-
-        internal static readonly RenderFragment DefaultFooter = (builder) =>
-        {
-            builder.OpenComponent<ModalFooter>(0);
-            builder.CloseComponent();
-        };
-
+        /// <summary>
+        /// trigger after Dialog is closed
+        /// </summary>
         public Func<Task> AfterClose { get; set; } = () => Task.CompletedTask;
 
+        /// <summary>
+        /// ant-modal-body style
+        /// </summary>
         public string BodyStyle { get; set; }
 
-        public OneOf<string, RenderFragment> CancelText { get; set; } = "Cancel";
-
-        public bool Centered { get; set; }
-
+        /// <summary>
+        /// show ant-modal-closer 
+        /// </summary>
         public bool Closable { get; set; } = true;
 
+        /// <summary>
+        /// Draggable modal
+        /// </summary>
         public bool Draggable { get; set; }
 
+        /// <summary>
+        /// Drag and drop only within the Viewport
+        /// </summary>
         public bool DragInViewport { get; set; } = true;
 
-        public RenderFragment CloseIcon { get; set; } = DefaultCloseIcon;
+        /// <summary>
+        /// closer icon RenderFragment, the default is a "X"
+        /// </summary>
+        public RenderFragment CloseIcon { get; set; } = DialogOptions.DefaultCloseIcon;
 
+        /// <summary>
+        /// Whether to apply loading visual effect for OK button or not
+        /// </summary>
         public bool ConfirmLoading { get; set; }
 
+        /// <summary>
+        /// Whether to remove Modal from DOM after the Modal closed
+        /// </summary>
         public bool DestroyOnClose { get; set; }
 
-        public OneOf<string, RenderFragment>? Footer { get; set; } = DefaultFooter;
+        /// <summary>
+        /// Modal footer. If Footer==null, the dialog will not have a footer
+        /// </summary>
+        public OneOf<string, RenderFragment>? Footer { get; set; } = DialogOptions.DefaultFooter;
 
-        public bool ForceRender { get; set; }
-
-        public ElementReference? GetContainer { get; set; }
-
-        public bool Keyboard { get; set; } = true;
-
-        public bool Mask { get; set; } = true;
-
-        public bool MaskClosable { get; set; } = true;
-
-        public string MaskStyle { get; set; }
-
-        public OneOf<string, RenderFragment> OkText { get; set; } = "OK";
-
-        public string OkType { get; set; } = ButtonType.Primary;
-
-        public OneOf<string, RenderFragment> Title { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Visible { get; set; } = true;
 
-        public OneOf<string, double> Width { get; set; } = 520;
-
+        /// <summary>
+        /// The class name of the container of the modal dialog	
+        /// </summary>
         public string WrapClassName { get; set; }
-
-        public int ZIndex { get; set; } = 1000;
 
         private Func<MouseEventArgs, Task> _onCancel;
 
-        public Func<MouseEventArgs, Task> OnCancel
-        {
-            get
-            {
-                return _onCancel ??= DefaultOnCancelOrOk;
-            }
-            set
-            {
-                _onCancel = value;
-            }
-        }
+        /// <summary>
+        /// Specify a function that will be called when a user clicks mask, close button on top right or Cancel button.
+        /// </summary>
+        public Func<MouseEventArgs, Task> OnCancel { get => _onCancel; set => _onCancel = value; }
 
         private Func<MouseEventArgs, Task> _onOk;
 
-        public ModalOptions()
-        {
-            Rtl = false;
-        }
+        /// <summary>
+        /// Specify a function that will be called when a user clicks the OK button
+        /// </summary>
+        public Func<MouseEventArgs, Task> OnOk { get => _onOk; set => _onOk = value; }
 
-        public Func<MouseEventArgs, Task> OnOk
-        {
-            get
-            {
-                return _onOk ??= DefaultOnCancelOrOk;
-            }
-            set
-            {
-                _onOk = value;
-            }
-        }
+        /// <summary>
+        /// ChildContent
+        /// </summary>
+        public RenderFragment Content { get; set; } = null;
+
+        #region internal
 
         internal async Task DefaultOnCancelOrOk(MouseEventArgs e)
         {
             await (ModalRef?.CloseAsync() ?? Task.CompletedTask);
         }
 
-        public ButtonProps OkButtonProps { get; set; }
-
-        public ButtonProps CancelButtonProps { get; set; }
-
-        public RenderFragment Content { get; set; }
-
-        public bool Rtl { get; set; }
+        #endregion
     }
 }

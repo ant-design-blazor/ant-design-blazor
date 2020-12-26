@@ -26,7 +26,7 @@
     {
         _modalText = "The modal will be closed after two seconds";
         _confirmLoading = true;
-
+        StateHasChanged();
         await Task.Delay(2000);
         _visible = false;
         _confirmLoading = false;
