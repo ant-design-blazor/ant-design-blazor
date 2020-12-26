@@ -1,16 +1,39 @@
 ﻿@using System.ComponentModel
 
-<Table DataSource="data" TreeChildren="item=>item.Children">
+<Table DataSource="_data" TreeChildren="item=>item.Children">
     <Selection CheckStrictly />
     <Column @bind-Field="@context.Name" />
-    <Column @bind-Field="@context.Age" Width="12%"/>
-    <Column @bind-Field="@context.Address" Width="30%"/>
+    <Column @bind-Field="@context.Age" Width="12%" />
+    <Column @bind-Field="@context.Address" Width="30%" />
 </Table>
 
 @code {
+    Data[] _data;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await Task.Delay(500);
+
+        _data = data;
+        await InvokeAsync(StateHasChanged);
+
+        await Task.Delay(500);
+
+        _data[1].Children = new Data[]
+        {
+            new() {
+                Key = "21",
+                Name = "Jim Green",
+                Age = 42,
+                Address = "London No. 1 Lake Park",
+            },
+        };
+    }
 
     Data[] data =
-    {
+{
         new() {
             Key = "1",
             Name = "John Brown sr.",

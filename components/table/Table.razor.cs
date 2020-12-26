@@ -166,6 +166,8 @@ namespace AntDesign
                 }
             }
 
+            _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x).Any()) == true);
+
             StateHasChanged();
 
             return queryModel;
@@ -193,11 +195,6 @@ namespace AntDesign
             if (RowTemplate != null)
             {
                 ChildContent = RowTemplate;
-            }
-
-            if (TreeChildren != null && DataSource.Any(x => TreeChildren(x).Any()))
-            {
-                _treeMode = true;
             }
 
             SetClass();
