@@ -36,11 +36,11 @@ namespace AntDesign
         /// <param name="e"></param>
         private async void NavigationManager_LocationChanged(object sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
         {
-            if (Modal.ReusedModals.Count > 0)
+            if (ReusedModals.Count > 0)
             {
                 // Since Modal cannot be captured, it can only be removed through JS
                 await _jsRuntime.InvokeVoidAsync(JSInteropConstants.DestroyAllDialog);
-                Modal.ReusedModals.Clear();
+                ReusedModals.Clear();
             }
         }
 
