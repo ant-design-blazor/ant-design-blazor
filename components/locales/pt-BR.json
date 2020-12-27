@@ -94,8 +94,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Cancelar"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Cancelar",
-    "justOkText": "OK"
+    "yesText": "Sim",
+    "noText": "Não",
+    "retryText": "Tentar de novo",
+    "abortText": "Abortar",
+    "ignoreText": "Ignorar"
   },
   "Popconfirm": {
     "okText": "OK",

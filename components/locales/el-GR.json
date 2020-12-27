@@ -88,8 +88,16 @@
   },
   "Modal": {
     "okText": "ΟΚ",
+    "cancelText": "Άκυρο"
+  },
+  "Confirm": {
+    "okText": "ΟΚ",
     "cancelText": "Άκυρο",
-    "justOkText": "ΟΚ"
+    "yesText": "Ναι",
+    "noText": "Όχι",
+    "retryText": "Αναχώρηση",
+    "abortText": "Εγκατάλειψη",
+    "ignoreText": "Αγνόηση"
   },
   "Popconfirm": {
     "okText": "ΟΚ",

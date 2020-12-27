@@ -93,8 +93,16 @@
   },
   "Modal": {
     "okText": "अच्छी तरह से",
+    "cancelText": "रद्द करना"
+  },
+  "Confirm": {
+    "okText": "अच्छी तरह से",
     "cancelText": "रद्द करना",
-    "justOkText": "अच्छी तरह से"
+    "yesText": "है",
+    "noText": "नहीं",
+    "retryText": "फिर कोशिश करें",
+    "abortText": "छोड़ें",
+    "ignoreText": "उपेक्षा करें"
   },
   "Popconfirm": {
     "okText": "अच्छी तरह से",

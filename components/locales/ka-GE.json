@@ -86,8 +86,16 @@
   },
   "Modal": {
     "okText": "დიახ",
+    "cancelText": "გაუქმება"
+  },
+  "Confirm": {
+    "okText": "დიახ",
     "cancelText": "გაუქმება",
-    "justOkText": "დიახ"
+    "yesText": "ეა",
+    "noText": "ნვ",
+    "retryText": "შეცდომა",
+    "abortText": "გახსნა",
+    "ignoreText": "ინგორიცია"
   },
   "Popconfirm": {
     "okText": "დიახ",

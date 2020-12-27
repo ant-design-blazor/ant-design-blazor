@@ -93,8 +93,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Avbryt"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Avbryt",
-    "justOkText": "OK"
+    "yesText": "Ja",
+    "noText": "Nei",
+    "retryText": "Prøv igjen",
+    "abortText": "Avbryt",
+    "ignoreText": "Ignorer"
   },
   "Popconfirm": {
     "okText": "OK",

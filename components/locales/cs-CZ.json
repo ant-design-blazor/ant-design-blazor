@@ -86,8 +86,16 @@
   },
   "Modal": {
     "okText": "Ok",
+    "cancelText": "Storno"
+  },
+  "Confirm": {
+    "okText": "Ok",
     "cancelText": "Storno",
-    "justOkText": "Ok"
+    "yesText": "Ano",
+    "noText": "Ne",
+    "retryText": "Ústup",
+    "abortText": "Zrušit",
+    "ignoreText": "Ignorovat"
   },
   "Popconfirm": {
     "okText": "Ok",

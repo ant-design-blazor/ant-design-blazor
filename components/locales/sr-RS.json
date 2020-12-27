@@ -93,8 +93,16 @@
   },
   "Modal": {
     "okText": "U redu",
+    "cancelText": "Otkaži"
+  },
+  "Confirm": {
+    "okText": "U redu",
     "cancelText": "Otkaži",
-    "justOkText": "U redu"
+    "yesText": "Da",
+    "noText": "Ne, ne",
+    "retryText": "Pokušaj ponovo",
+    "abortText": "Prekinite",
+    "ignoreText": "Ignoriraj"
   },
   "Popconfirm": {
     "okText": "U redu",
