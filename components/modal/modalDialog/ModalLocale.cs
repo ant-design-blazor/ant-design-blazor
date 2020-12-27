@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ModalLocale
     {
+        /// <summary>
+        /// OK button text
+        /// </summary>
         public string OkText { get; set; }
 
+        /// <summary>
+        /// Cancel button text
+        /// </summary>
         public string CancelText { get; set; }
-
-        public string JustOkText { get; set; }
     }
 }
