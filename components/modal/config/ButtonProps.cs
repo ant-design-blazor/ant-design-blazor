@@ -39,6 +39,6 @@ namespace AntDesign
             }
         }
 
-        public OneOf<string, RenderFragment> ChildContent { get; set; } = "";
+        public OneOf<string, RenderFragment>? ChildContent { get; set; } = null;
     }
 }
