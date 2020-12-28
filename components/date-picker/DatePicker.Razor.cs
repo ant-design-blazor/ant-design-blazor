@@ -148,7 +148,7 @@ namespace AntDesign
 
         private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
         {
-            if (!_isNullable)
+            if (!IsNullable)
             {
                 DateTime dateTime = Convert.ToDateTime(value, CultureInfo);
                 if (dateTime != DateTime.MinValue)
@@ -156,7 +156,7 @@ namespace AntDesign
                     notNullAction?.Invoke(dateTime);
                 }
             }
-            if (_isNullable && value != null)
+            if (IsNullable && value != null)
             {
                 notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
             }

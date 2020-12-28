@@ -8,6 +8,30 @@ namespace AntDesign
 {
     public partial class RangePicker<TValue> : DatePickerBase<TValue>
     {
+        private TValue _value;
+
+        /// <summary>
+        /// Gets or sets the value of the input. This should be used with two-way binding.
+        /// </summary>
+        /// <example>
+        /// @bind-Value="model.PropertyName"
+        /// </example>
+        [Parameter]
+        public sealed override TValue Value
+        {
+            get { return _value; }
+            set
+            {
+                TValue orderedValue = SortValue(value);
+                var hasChanged = !EqualityComparer<TValue>.Default.Equals(orderedValue, Value);
+                if (hasChanged)
+                {
+                    _value = orderedValue;
+                    OnValueChange(orderedValue);
+                }
+            }
+        }
+
         [Parameter]
         public EventCallback<DateRangeChangedEventArgs> OnChange { get; set; }
 
@@ -120,7 +144,7 @@ namespace AntDesign
 
         private DateTime? GetTypedValue(TValue value, int index, out DateTime? outValue)
         {
-            if (_isNullable)
+            if (IsNullable)
             {
                 outValue = (value as DateTime?[])[index];
             }
@@ -215,7 +239,7 @@ namespace AntDesign
             var array = value as Array;
             var indexValue = array.GetValue(index);
 
-            if (!_isNullable)
+            if (IsNullable)
             {
                 DateTime dateTime = Convert.ToDateTime(indexValue, CultureInfo);
                 if (dateTime != DateTime.MinValue)
@@ -223,7 +247,7 @@ namespace AntDesign
                     notNullAction?.Invoke(dateTime);
                 }
             }
-            if (_isNullable && indexValue != null)
+            if (IsNullable && indexValue != null)
             {
                 notNullAction?.Invoke(Convert.ToDateTime(indexValue, CultureInfo));
             }
@@ -231,7 +255,7 @@ namespace AntDesign
 
         private TValue CreateInstance()
         {
-            if (_isNullable)
+            if (IsNullable)
             {
                 return (TValue)Array.CreateInstance(typeof(DateTime?), 2).Clone();
             }

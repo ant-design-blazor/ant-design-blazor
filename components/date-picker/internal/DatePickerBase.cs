@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using AntDesign.core.Extensions;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -21,7 +22,32 @@ namespace AntDesign
 
         protected string _picker;
         protected bool _isSetPicker = false;
-        protected bool _isNullable = false;
+        private bool _isNullableEvaluated;
+        private bool _isNullable;
+
+        /// <summary>
+        /// Stores information if TValue is a nullable type.
+        /// </summary>
+        protected bool IsNullable
+        {
+            get
+            {
+                if (!_isNullableEvaluated)
+                {
+                    Type type = typeof(TValue);
+                    if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[])))
+                    {
+                        _isNullable = true;
+                    }
+                    else
+                    {
+                        _isNullable = false;
+                    }
+                    _isNullableEvaluated = true;
+                }
+                return _isNullable;
+            }
+        }
 
         [Parameter]
         public string Picker
@@ -575,6 +601,35 @@ namespace AntDesign
         public void InvokeStateHasChanged()
         {
             StateHasChanged();
+        }
+
+        protected TValue SortValue(TValue value)
+        {
+            if (value == null)
+            {
+                return value;
+            }
+            TValue orderedValue = value;
+            if (IsRange)
+            {
+                if (IsNullable)
+                {
+                    var tempValue = value as DateTime?[];
+                    if ((tempValue[0] ?? DateTime.Now).CompareTo((tempValue[1] ?? DateTime.Now)) > 0)
+                    {
+                        orderedValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { tempValue[1], tempValue[0] });
+                    }
+                }
+                else
+                {
+                    var tempValue = value as DateTime[];
+                    if (tempValue[0].CompareTo(tempValue[1]) > 0)
+                    {
+                        orderedValue = DataConvertionExtensions.Convert<DateTime[], TValue>(new DateTime[] { tempValue[1], tempValue[0] });
+                    }
+                }
+            }
+            return orderedValue;
         }
     }
 }
