@@ -9,31 +9,63 @@ namespace AntDesign
         [Parameter]
         public EventCallback<DateTimeChangedEventArgs> OnChange { get; set; }
 
+        private DateTime _pickerValuesAfterInit;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            ProcessDefaults();
+            _pickerValuesAfterInit = PickerValues[0];
 
-            if (Value != null)
+        }
+
+        private void ProcessDefaults()
+        {
+            UseDefaultPickerValue[0] = true;
+            if (DefaultPickerValue.Equals(default(TValue)))
             {
-                GetIfNotNull(Value, notNullValue =>
+                if ((IsNullable && Value != null) || (!IsNullable && !Value.Equals(default(TValue))))
                 {
-                    ChangeValue(notNullValue, 0);
-                });
+                    DefaultPickerValue = Value;
+                }
+                else if ((IsNullable && DefaultValue != null) || (!IsNullable && !DefaultValue.Equals(default(TValue))))
+                {
+                    DefaultPickerValue = DefaultValue;
+                }
+                else if (!IsNullable && Value.Equals(default(TValue)))
+                {
+                    DefaultPickerValue = Value;
+                }
+                else
+                {
+                    UseDefaultPickerValue[0] = false;
+                }
+            }
+            if (UseDefaultPickerValue[0])
+            {
+                PickerValues[0] = Convert.ToDateTime(DefaultPickerValue, CultureInfo);
             }
         }
 
         private async Task OnInputClick()
         {
+            //Reset Picker to default in case it the picker value was changed
+            //but no value was selected (for example when a user clicks next 
+            //month but does not select any value)
+            if (UseDefaultPickerValue[0] && DefaultPickerValue != null)
+            {
+                PickerValues[0] = _pickerValuesAfterInit;
+            }
             await _dropDown.Show();
 
             // clear status
             _pickerStatus[0]._currentShowHadSelectValue = false;
 
-            if (!_inputStart.IsOnFocused && _pickerStatus[0]._hadSelectValue)
+            if (!_inputStart.IsOnFocused && _pickerStatus[0]._hadSelectValue && !UseDefaultPickerValue[0])
             {
                 GetIfNotNull(Value, notNullValue =>
                 {
-                    ChangePickerValue(notNullValue, 0);
+                    ChangePickerValue(notNullValue);
                 });
             }
         }
@@ -98,6 +130,7 @@ namespace AntDesign
             {
                 throw new ArgumentOutOfRangeException("DatePicker should have only single picker.");
             }
+            UseDefaultPickerValue[0] = false;
             bool result = BindConverter.TryConvertTo<TValue>(
                value.ToString(CultureInfo), CultureInfo, out var dateTime);
 
@@ -135,7 +168,6 @@ namespace AntDesign
         protected override void OnValueChange(TValue value)
         {
             base.OnValueChange(value);
-
             _pickerStatus[0]._hadSelectValue = true;
         }
 
