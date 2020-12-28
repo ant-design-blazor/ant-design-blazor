@@ -26,7 +26,7 @@ namespace AntDesign.Docs.Shared
             LanguageService.LanguageChanged += async (sender, args) =>
             {
                 _menuItems = await DemoService.GetMenuAsync();
-                StateHasChanged();
+                await InvokeAsync(StateHasChanged);
             };
         }
 
