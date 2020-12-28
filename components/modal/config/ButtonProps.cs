@@ -7,6 +7,9 @@ using OneOf;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// button props
+    /// </summary>
     public class ButtonProps
     {
         public bool Block { get; set; } = false;

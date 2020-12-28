@@ -155,7 +155,7 @@ namespace AntDesign
         public ButtonProps Button1Props
         {
             get => _button1Props;
-            set => _button1Props = value;
+            set => _button1Props = SetButtonProps(value, _button1Props);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace AntDesign
         public ButtonProps Button2Props
         {
             get => _button2Props;
-            set => _button2Props = value;
+            set => _button2Props = SetButtonProps(value, _button2Props);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace AntDesign
         public ButtonProps Button3Props
         {
             get => _button3Props;
-            set => _button3Props = value;
+            set => _button3Props = SetButtonProps(value, _button3Props);
         }
 
         private ButtonProps _button1Props = new ButtonProps() { Type = ButtonType.Primary };
@@ -223,6 +223,21 @@ namespace AntDesign
         }
 
         #endregion
+
+        private static ButtonProps SetButtonProps(ButtonProps newProps, ButtonProps oldProps)
+        {
+            if (newProps == null || newProps.ChildContent.HasValue)
+            {
+                return newProps;
+            }
+
+            if (oldProps != null)
+            {
+                newProps.ChildContent = oldProps.ChildContent;
+            }
+
+            return newProps;
+        }
 
         /// <summary>
         /// set default options for buttons

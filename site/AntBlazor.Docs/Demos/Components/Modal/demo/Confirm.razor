@@ -53,9 +53,7 @@
             Content = "Some descriptions",
             OnOk = onOk,
             OnCancel = onCancel,
-            OkText = "Yes",
             OkType = "danger",
-            CancelText = "No",
         });
     }
 
@@ -65,12 +63,12 @@
         {
             Title = "Are you sure delete this task?",
             Icon = icon,
-            Content = "Some descriptions",
+            Content = "OkText will override locale",
             OnOk = onOk,
             OnCancel = onCancel,
+            // it will override locale
             OkText = "Yes",
             OkType = "danger",
-            CancelText = "No",
             OkButtonProps = new AntDesign.ButtonProps()
             {
                 Disabled = true,
