@@ -368,15 +368,7 @@ namespace AntDesign
                 (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(picker, Locale);
                 _placeholders[0] = first;
                 _placeholders[1] = second;
-            }
-            else
-            {
-                string first = DatePickerPlaceholder.GetPlaceholderByType(picker, Locale);
-                _placeholders[0] = first;
-                _placeholders[1] = first;
-            }
-            if (IsRange)
-            {
+
                 DateTime now = DateTime.Now;
                 PickerValues[1] = picker switch
                 {
@@ -388,6 +380,12 @@ namespace AntDesign
                     DatePickerType.Year => now.AddYears(10),
                     _ => now,
                 };
+            }
+            else
+            {
+                string first = DatePickerPlaceholder.GetPlaceholderByType(picker, Locale);
+                _placeholders[0] = first;
+                _placeholders[1] = first;
             }
         }
 
@@ -462,13 +460,33 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Get pickerValue by picker index
+        /// Get pickerValue by picker index. Note that index refers to a picker panel 
+        /// and not to input text. For RangePicker 2 inputs generate 2 panels.
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
         public DateTime GetIndexPickerValue(int index)
         {
-            return PickerValues[index];
+            int tempIndex = GetOnFocusPickerIndex();
+            if (index == 0)
+            {
+                return PickerValues[tempIndex];
+            }
+            else
+            {
+                //First picker panel will show the value, second panel shows next 
+                //expected value that depends on Picker type
+                return Picker switch
+                {
+                    DatePickerType.Date => PickerValues[tempIndex].AddMonths(1),
+                    DatePickerType.Week => PickerValues[tempIndex].AddMonths(1),
+                    DatePickerType.Month => PickerValues[tempIndex].AddYears(1),
+                    DatePickerType.Decade => PickerValues[tempIndex].AddYears(1),
+                    DatePickerType.Quarter => PickerValues[tempIndex].AddYears(1),
+                    DatePickerType.Year => PickerValues[tempIndex].AddYears(10),
+                    _ => DateTime.Now,
+                };
+            }
         }
 
         public void ChangePlaceholder(string placeholder, int index = 0)
