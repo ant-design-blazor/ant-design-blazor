@@ -146,28 +146,22 @@ namespace AntDesign
 
         [Parameter]
         public string Format { get; set; }
-        [Parameter]
-        public TValue DefaultValue { get; set; }
 
-        private readonly DateTime?[] _defaultPickerValues = new DateTime?[2];
-        private OneOf<DateTime, DateTime[]> _defaultPickerValue;
-
+        private TValue _defaultValue;
         [Parameter]
-        public OneOf<DateTime, DateTime[]> DefaultPickerValue
+        public TValue DefaultValue
+        {
+            get => _defaultValue;
+            set => _defaultValue = SortValue(value);
+        }
+
+        protected bool[] UseDefaultPickerValue { get; } = new bool[2];
+        private TValue _defaultPickerValue;
+        [Parameter]
+        public TValue DefaultPickerValue
         {
             get => _defaultPickerValue;
-            set
-            {
-                _defaultPickerValue = value;
-                value.Switch(single =>
-                {
-                    _defaultPickerValues[0] = single;
-                }, arr =>
-                {
-                    _defaultPickerValues[0] = arr.Length > 0 ? arr[0] : _defaultPickerValues[0];
-                    _defaultPickerValues[1] = arr.Length > 1 ? arr[1] : _defaultPickerValues[1];
-                });
-            }
+            set => _defaultPickerValue = SortValue(value);
         }
 
         [Parameter]
@@ -206,26 +200,7 @@ namespace AntDesign
 
         public DateTime CurrentDate { get; set; } = DateTime.Now;
 
-        protected readonly DateTime[] PickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
-        protected OneOf<DateTime, DateTime[]> _pickerValue;
-
-        [Parameter]
-        public OneOf<DateTime, DateTime[]> PickerValue
-        {
-            get => _pickerValue;
-            set
-            {
-                _pickerValue = value;
-                value.Switch(single =>
-                {
-                    PickerValues[0] = single;
-                }, arr =>
-                {
-                    PickerValues[0] = arr.Length > 0 ? arr[0] : PickerValues[0];
-                    PickerValues[1] = arr.Length > 1 ? arr[1] : PickerValues[1];
-                });
-            }
-        }
+        protected DateTime[] PickerValues { get; } = new DateTime[] { DateTime.Now, DateTime.Now };
 
         public bool IsRange { get; set; }
 
@@ -249,16 +224,6 @@ namespace AntDesign
             if (_isSetPicker == false)
             {
                 Picker = DatePickerType.Date;
-            }
-
-            Type type = typeof(TValue);
-            if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[])))
-            {
-                _isNullable = true;
-            }
-            else
-            {
-                _isNullable = false;
             }
 
             this.SetClass();
