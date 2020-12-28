@@ -508,29 +508,23 @@ namespace AntDesign
             return value.ToString(formater, CultureInfo);
         }
 
-        internal void ChangePickerValue(DateTime date, int index = 0)
+        /// <summary>
+        /// Changes what date(s) will be visible on the picker. 
+        /// </summary>
+        /// <param name="date">New date to be saved.</param>
+        /// <param name="index">Index of the input box, where 0 = inputStart and 1 = inputEnd (only RangePicker)</param>
+        internal void ChangePickerValue(DateTime date, int? index = null)
         {
-            TimeSpan interval = date - PickerValues[index];
+            if (index == null)
+                index = GetOnFocusPickerIndex();
 
-            PickerValues[index] = date;
-
-            if (IsRange)
-            {
-                if (index == 0)
-                {
-                    PickerValues[1] = PickerValues[1].Add(interval);
-                }
-                else
-                {
-                    PickerValues[0] = PickerValues[0].Add(interval);
-                }
-            }
+            PickerValues[index.Value] = date;
 
             if (OnPanelChange.HasDelegate)
             {
                 OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs
                 {
-                    Date = PickerValues[index],
+                    Date = PickerValues[index.Value],
                     DateString = _picker
                 });
             }
