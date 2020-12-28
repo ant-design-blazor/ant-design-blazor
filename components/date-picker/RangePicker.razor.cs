@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -32,9 +31,10 @@ namespace AntDesign
             }
         }
 
+        private DateTime[] _pickerValuesAfterInit = new DateTime[2];
+
         [Parameter]
         public EventCallback<DateRangeChangedEventArgs> OnChange { get; set; }
-
         public RangePicker()
         {
             IsRange = true;
@@ -97,23 +97,26 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            RangePickerDefaults.ProcessDefaults(Value, DefaultValue, DefaultPickerValue, PickerValues, UseDefaultPickerValue);
+            _pickerValuesAfterInit[0] = PickerValues[0];
+            _pickerValuesAfterInit[1] = PickerValues[1];
+        }
 
-            if (Value != null)
-            {
-                GetIfNotNull(Value, 0, notNullValue =>
-                {
-                    ChangeValue(notNullValue, 0);
-                });
+        /// <summary>
+        /// Handle change of values.
+        /// When values are changed, PickerValues should point to those new values 
+        /// or current date if no values were passed.
+        /// </summary>
+        /// <param name="value"></param>
+        protected override void OnValueChange(TValue value)
+        {
+            base.OnValueChange(value);
 
-                GetIfNotNull(Value, 1, notNullValue =>
-                {
-                    ChangeValue(notNullValue, 1);
-                });
-            }
-            else
-            {
-                Value = CreateInstance();
-            }
+            UseDefaultPickerValue[0] = false;
+            UseDefaultPickerValue[1] = false;
+            _pickerStatus[0]._hadSelectValue = true;
+            _pickerStatus[1]._hadSelectValue = true;
+
         }
 
         /// <summary>
@@ -123,7 +126,7 @@ namespace AntDesign
         /// <returns></returns>
         public override DateTime? GetIndexValue(int index)
         {
-            if (_pickerStatus[index]._hadSelectValue)
+            if (Value != null)
             {
                 var array = Value as Array;
                 var indexValue = array.GetValue(index);
@@ -135,28 +138,24 @@ namespace AntDesign
 
                 return Convert.ToDateTime(indexValue, CultureInfo);
             }
-            else if (GetTypedValue(DefaultValue, index, out var defaultValue) != null)
+            else if (!IsTypedValueNull(DefaultValue, index, out var defaultValue))
             {
                 return defaultValue;
             }
             return null;
         }
 
-        private DateTime? GetTypedValue(TValue value, int index, out DateTime? outValue)
+        private static bool IsTypedValueNull(TValue value, int index, out DateTime? outValue)
         {
-            if (IsNullable)
-            {
-                outValue = (value as DateTime?[])[index];
-            }
-            else
-            {
-                outValue = (value as DateTime[])[index];
-            }
-            return outValue;
+            outValue = (DateTime?)(value as Array)?.GetValue(index);
+            return outValue == null;
         }
 
         public override void ChangeValue(DateTime value, int index = 0)
         {
+            if (Value == null)
+                Value = CreateInstance();
+            UseDefaultPickerValue[index] = false;
             var array = Value as Array;
 
             array.SetValue(value, index);
@@ -200,6 +199,13 @@ namespace AntDesign
 
         private async Task OnInputClick(int index)
         {
+            //Reset Picker to default in case it the picker value was changed
+            //but no value was selected (for example when a user clicks next 
+            //month but does not select any value)
+            if (UseDefaultPickerValue[index] && DefaultPickerValue != null)
+            {
+                PickerValues[index] = _pickerValuesAfterInit[index];
+            }
             await _dropDown.Show();
 
             // clear status
@@ -209,7 +215,7 @@ namespace AntDesign
             if (index == 0)
             {
                 // change start picker value
-                if (!_inputStart.IsOnFocused && _pickerStatus[index]._hadSelectValue)
+                if (!_inputStart.IsOnFocused && _pickerStatus[index]._hadSelectValue && !UseDefaultPickerValue[index])
                 {
                     GetIfNotNull(Value, index, notNullValue =>
                     {
@@ -222,7 +228,7 @@ namespace AntDesign
             else
             {
                 // change end picker value
-                if (!_inputEnd.IsOnFocused && _pickerStatus[index]._hadSelectValue)
+                if (!_inputEnd.IsOnFocused && _pickerStatus[index]._hadSelectValue && !UseDefaultPickerValue[index])
                 {
                     GetIfNotNull(Value, index, notNullValue =>
                     {
@@ -239,7 +245,7 @@ namespace AntDesign
             var array = value as Array;
             var indexValue = array.GetValue(index);
 
-            if (IsNullable)
+            if (!IsNullable)
             {
                 DateTime dateTime = Convert.ToDateTime(indexValue, CultureInfo);
                 if (dateTime != DateTime.MinValue)
