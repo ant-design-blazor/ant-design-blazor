@@ -7,7 +7,11 @@
     var calendar = CultureInfo.InvariantCulture.Calendar;
 
     int startYear = PickerValue.Year / 10 * 10 - 1;
-    DateTime startDate = new DateTime(startYear, 1, 1);
+    DateTime startDate;
+    if (startYear > 0)
+        startDate = new DateTime(startYear, 1, 1);
+    else
+        startDate = DateTime.MinValue;
 
     int yearIndex = 0;
 }

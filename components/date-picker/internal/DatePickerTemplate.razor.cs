@@ -426,14 +426,21 @@ namespace AntDesign.Internal
 
         private DateTime GetPreDate(DateTime dateTime)
         {
-            return Picker switch
+            try
             {
-                DatePickerType.Date => dateTime.AddDays(-1),
-                DatePickerType.Year => dateTime.AddYears(-1),
-                DatePickerType.Month => dateTime.AddMonths(-1),
-                DatePickerType.Quarter => dateTime.AddMonths(-3),
-                _ => dateTime,
-            };
+                return Picker switch
+                {
+                    DatePickerType.Date => dateTime.AddDays(-1),
+                    DatePickerType.Year => dateTime.AddYears(-1),
+                    DatePickerType.Month => dateTime.AddMonths(-1),
+                    DatePickerType.Quarter => dateTime.AddMonths(-3),
+                    _ => dateTime,
+                };
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return dateTime; //reached min date, return requested
+            }
         }
 
         private DateTime GetNextDate(DateTime dateTime)
