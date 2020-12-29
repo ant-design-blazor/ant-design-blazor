@@ -113,8 +113,16 @@
   },
   "Modal": {
     "okText": "हो",
+    "cancelText": "होईन"
+  },
+  "Confirm": {
+    "okText": "हो",
     "cancelText": "होईन",
-    "justOkText": "हो"
+    "yesText": "हो",
+    "noText": "होइन",
+    "retryText": "पुन: प्रयास गर्नुहोस्",
+    "abortText": "परित्याग गर्नुहोस्",
+    "ignoreText": "उपेक्षा गर्नुहोस्"
   },
   "Popconfirm": {
     "okText": "हो",

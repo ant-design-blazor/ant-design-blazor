@@ -88,8 +88,16 @@
   },
   "Modal": {
     "okText": "Добре",
+    "cancelText": "Отказ"
+  },
+  "Confirm": {
+    "okText": "Добре",
     "cancelText": "Отказ",
-    "justOkText": "Добре"
+    "yesText": "Да",
+    "noText": "Не",
+    "retryText": "Повторение",
+    "abortText": "Прекъсване",
+    "ignoreText": "Игнориране"
   },
   "Popconfirm": {
     "okText": "Добре",

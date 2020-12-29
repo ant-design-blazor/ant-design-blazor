@@ -89,8 +89,16 @@
   },
   "Modal": {
     "okText": "確 定",
+    "cancelText": "取 消"
+  },
+  "Confirm": {
+    "okText": "確 定",
     "cancelText": "取 消",
-    "justOkText": "OK"
+    "yesText": "是",
+    "noText": "否",
+    "retryText": "重 試",
+    "abortText": "終 止",
+    "ignoreText": "忽 略"
   },
   "Popconfirm": {
     "okText": "確 定",

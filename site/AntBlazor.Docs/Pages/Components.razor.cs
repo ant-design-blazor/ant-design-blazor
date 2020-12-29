@@ -46,7 +46,7 @@ namespace AntDesign.Docs.Pages
         {
             if (!string.IsNullOrEmpty(Name))
             {
-                await HandleNavigate();
+                await InvokeAsync(HandleNavigate);
                 await InvokeAsync(StateHasChanged);
             }
         }

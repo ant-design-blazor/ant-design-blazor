@@ -96,8 +96,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Цуцлах"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Цуцлах",
-    "justOkText": "OK"
+    "yesText": "Тийм ээ",
+    "noText": "Үгүй",
+    "retryText": "Дахин оролдоно уу",
+    "abortText": "Үр хөндөлт",
+    "ignoreText": "Үл тоомсорлох"
   },
   "Popconfirm": {
     "okText": "OK",

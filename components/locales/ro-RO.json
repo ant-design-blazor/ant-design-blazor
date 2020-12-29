@@ -102,8 +102,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Anulare"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Anulare",
-    "justOkText": "OK"
+    "yesText": "Da",
+    "noText": "Nu",
+    "retryText": "Retragere",
+    "abortText": "Anulează",
+    "ignoreText": "Ignoră"
   },
   "Popconfirm": {
     "okText": "OK",

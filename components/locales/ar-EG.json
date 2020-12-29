@@ -96,8 +96,16 @@
   },
   "Modal": {
     "okText": "تأكيد",
+    "cancelText": "إلغاء"
+  },
+  "Confirm": {
+    "okText": "تأكيد",
     "cancelText": "إلغاء",
-    "justOkText": "تأكيد"
+    "yesText": "نعم",
+    "noText": "نو",
+    "retryText": "ريتيري",
+    "abortText": "ابورت",
+    "ignoreText": "ايجنور"
   },
   "Popconfirm": {
     "okText": "تأكيد",

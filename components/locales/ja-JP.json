@@ -94,8 +94,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "キャンセル"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "キャンセル",
-    "justOkText": "OK"
+    "yesText": "はい",
+    "noText": "なし",
+    "retryText": "再試行",
+    "abortText": "中止する",
+    "ignoreText": "無視"
   },
   "Popconfirm": {
     "okText": "OK",

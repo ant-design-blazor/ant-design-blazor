@@ -106,8 +106,16 @@
   },
   "Modal": {
     "okText": "אישור",
+    "cancelText": "ביטול"
+  },
+  "Confirm": {
+    "okText": "אישור",
     "cancelText": "ביטול",
-    "justOkText": "אישור"
+    "yesText": "כן",
+    "noText": "לא",
+    "retryText": "נסה מחדש",
+    "abortText": "בוטל",
+    "ignoreText": "התעלם"
   },
   "Popconfirm": {
     "okText": "אישור",

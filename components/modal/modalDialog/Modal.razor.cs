@@ -27,10 +27,10 @@ namespace AntDesign
         public string BodyStyle { get; set; }
 
         /// <summary>
-        /// Text of the Cancel button
+        /// Text or RenderFragment of the Cancel button, it will override the ModalLocale
         /// </summary>
         [Parameter]
-        public OneOf<string, RenderFragment> CancelText { get; set; } = "Cancel";
+        public OneOf<string, RenderFragment>? CancelText { get; set; } = null;
 
         /// <summary>
         /// centered
@@ -111,10 +111,10 @@ namespace AntDesign
         public string MaskStyle { get; set; }
 
         /// <summary>
-        /// Text of the OK button	
+        /// Text of RenderFragment of the OK button, it will override the ModalLocale
         /// </summary>
         [Parameter]
-        public OneOf<string, RenderFragment> OkText { get; set; } = "OK";
+        public OneOf<string, RenderFragment>? OkText { get; set; } = null;
 
         /// <summary>
         /// Button type of the OK button
@@ -197,6 +197,9 @@ namespace AntDesign
         [Parameter]
         public ButtonProps CancelButtonProps { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -205,6 +208,12 @@ namespace AntDesign
         /// </summary>
         [CascadingParameter]
         public bool Rtl { get; set; } = false;
+
+        /// <summary>
+        /// Modal Locale
+        /// </summary>
+        [Parameter]
+        public ModalLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Modal;
 
         #endregion Parameter
 
@@ -218,7 +227,7 @@ namespace AntDesign
             {
                 OnClosed = AfterClose,
                 BodyStyle = BodyStyle,
-                CancelText = CancelText,
+                CancelText = CancelText ?? Locale.CancelText,
                 Centered = Centered,
                 Closable = Closable,
                 Draggable = Draggable,
@@ -233,7 +242,7 @@ namespace AntDesign
                 MaskClosable = MaskClosable,
                 MaskStyle = MaskStyle,
 
-                OkText = OkText,
+                OkText = OkText ?? Locale.OkText,
                 OkType = OkType,
                 Title = Title,
                 TitleTemplate = TitleTemplate,

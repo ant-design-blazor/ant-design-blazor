@@ -103,8 +103,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Отмена"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Отмена",
-    "justOkText": "OK"
+    "yesText": "Да",
+    "noText": "Нет",
+    "retryText": "повторная попытка",
+    "abortText": "прервать",
+    "ignoreText": "игнорировать"
   },
   "Popconfirm": {
     "okText": "OK",
