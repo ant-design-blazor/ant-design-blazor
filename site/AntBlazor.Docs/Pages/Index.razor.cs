@@ -13,8 +13,6 @@ namespace AntDesign.Docs.Pages
 
         private MoreProps[] _moreArticles = { };
 
-        private bool _isCollapsed = false;
-
         [Inject] private DemoService DemoService { get; set; }
         [Inject] private ILanguageService Language { get; set; }
 
@@ -36,11 +34,6 @@ namespace AntDesign.Docs.Pages
 
             _products = await DemoService.GetProduct();
             _moreArticles = await DemoService.GetMore();
-        }
-
-        private void OnBreakpoint(BreakpointType breakpoint)
-        {
-            _isCollapsed = breakpoint.IsIn(BreakpointType.Sm, BreakpointType.Xs);
         }
     }
 }

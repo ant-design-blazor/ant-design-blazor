@@ -12,10 +12,11 @@ namespace AntDesign.Docs.Shared
 {
     public partial class MainLayout : LayoutComponentBase, IDisposable
     {
-        private bool _isCollapsed = false;
         private bool _drawerVisible = false;
 
         public string CurrentLanguage => LanguageService.CurrentCulture.Name;
+
+        private bool _isMobile;
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }
@@ -68,11 +69,6 @@ namespace AntDesign.Docs.Shared
         private void OnLocationChanged(object sender, LocationChangedEventArgs args)
         {
             StateHasChanged();
-        }
-
-        private void OnBreakpoint(BreakpointType breakpoint)
-        {
-            _isCollapsed = breakpoint.IsIn(BreakpointType.Sm, BreakpointType.Xs);
         }
 
         public void Dispose()
