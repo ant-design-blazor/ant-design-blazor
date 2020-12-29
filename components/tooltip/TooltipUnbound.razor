@@ -1,0 +1,40 @@
+﻿@namespace AntDesign
+@inherits OverlayTriggerUnbound
+
+@using AntDesign.Internal
+
+@*what is missing is handling of the context menu event*@
+@ChildContent(RefBack)
+
+<CascadingValue Value="this" Name="Trigger">
+    <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
+        <OverlayUnbound @ref="_overlay"
+                 HideMillisecondsDelay="10"
+                 WaitForHideAnimMilliseconds="100"
+                 OnOverlayMouseEnter="OnOverlayMouseEnter"
+                 OnOverlayMouseLeave="OnOverlayMouseLeave">
+            @if (Title.Value != null)
+            {
+                <div class="ant-tooltip-content">
+                    <div class="ant-tooltip-arrow">
+                        <span class="ant-tooltip-arrow-content"></span>
+                    </div>
+                    <div class="ant-tooltip-inner" role="tooltip">
+                        @if (Title.IsT0 && !string.IsNullOrWhiteSpace(Title.AsT0))
+                        {
+                            @Title.AsT0
+                        }
+                        else if (Title.IsT1)
+                        {
+                            @Title.AsT1
+                        }
+                        else if (Title.IsT2)
+                        {
+                            @Title.AsT2
+                        }
+                    </div>
+                </div>
+            }
+        </OverlayUnbound>
+    </CascadingValue>
+</CascadingValue>
