@@ -1,0 +1,114 @@
+﻿@*@namespace AntDesign
+    @inherits AntDomComponentBase
+
+
+    @foreach (ModalRef modalRef in _modalRefs)
+    {
+        var options = modalRef.Config;
+        <Modal @key="@options"
+               AfterClose="@options.AfterClose"
+               BodyStyle="@options.BodyStyle"
+               CancelText="@options.CancelText"
+               Centered="@options.Centered"
+               Closable="@options.Closable"
+               Draggable="@options.Draggable"
+               DragInViewport="@options.DragInViewport"
+               CloseIcon="@options.CloseIcon"
+               ConfirmLoading="@options.ConfirmLoading"
+               DestroyOnClose="@options.DestroyOnClose"
+               Footer="@options.Footer"
+               Keyboard="@options.Keyboard"
+               Mask="@options.Mask"
+               MaskClosable="@options.MaskClosable"
+               MaskStyle="@options.MaskStyle"
+               OkText="@options.OkText"
+               OkType="@options.OkType"
+               Title="@options.Title"
+               TitleTemplate="@options.TitleTemplate"
+               Visible="@options.Visible"
+               Width="@options.Width"
+               WrapClassName="@options.WrapClassName"
+               ZIndex="@options.ZIndex"
+               OnCancel="@options.OnCancel"
+               OnOk="@options.OnOk"
+               OkButtonProps="@options.OkButtonProps"
+               CancelButtonProps="@options.CancelButtonProps"
+               >
+            @options.Content
+        </Modal>
+    }*@
+
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+
+@foreach (ModalRef modalRef in _modalRefs)
+{
+    var options = modalRef.Config;
+    if (options.TitleTemplate != null)
+    {
+        <Modal @key="@options"
+               AfterClose="@options.AfterClose"
+               BodyStyle="@options.BodyStyle"
+               CancelText="@options.CancelText"
+               Centered="@options.Centered"
+               Closable="@options.Closable"
+               Draggable="@options.Draggable"
+               DragInViewport="@options.DragInViewport"
+               CloseIcon="@options.CloseIcon"
+               ConfirmLoading="@options.ConfirmLoading"
+               DestroyOnClose="@options.DestroyOnClose"
+               Footer="@options.Footer"
+               GetContainer="@options.GetContainer"
+               Keyboard="@options.Keyboard"
+               Mask="@options.Mask"
+               MaskClosable="@options.MaskClosable"
+               MaskStyle="@options.MaskStyle"
+               OkText="@options.OkText"
+               OkType="@options.OkType"
+               TitleTemplate="@options.TitleTemplate"
+               Visible="@options.Visible"
+               Width="@options.Width"
+               WrapClassName="@options.WrapClassName"
+               ZIndex="@options.ZIndex"
+               OnCancel="@options.OnCancel"
+               OnOk="@options.OnOk"
+               OkButtonProps="@options.OkButtonProps"
+               CancelButtonProps="@options.CancelButtonProps">
+            @options.Content
+        </Modal>
+    }
+    else
+    {
+        <Modal @key="@options"
+               AfterClose="@options.AfterClose"
+               BodyStyle="@options.BodyStyle"
+               CancelText="@options.CancelText"
+               Centered="@options.Centered"
+               Closable="@options.Closable"
+               Draggable="@options.Draggable"
+               DragInViewport="@options.DragInViewport"
+               CloseIcon="@options.CloseIcon"
+               ConfirmLoading="@options.ConfirmLoading"
+               DestroyOnClose="@options.DestroyOnClose"
+               Footer="@options.Footer"
+               GetContainer="@options.GetContainer"
+               Keyboard="@options.Keyboard"
+               Mask="@options.Mask"
+               MaskClosable="@options.MaskClosable"
+               MaskStyle="@options.MaskStyle"
+               OkText="@options.OkText"
+               OkType="@options.OkType"
+               Title="@options.Title"
+               Visible="@options.Visible"
+               Width="@options.Width"
+               WrapClassName="@options.WrapClassName"
+               ZIndex="@options.ZIndex"
+               OnCancel="@options.OnCancel"
+               OnOk="@options.OnOk"
+               OkButtonProps="@options.OkButtonProps"
+               CancelButtonProps="@options.CancelButtonProps">
+            @options.Content
+        </Modal>
+    }
+}

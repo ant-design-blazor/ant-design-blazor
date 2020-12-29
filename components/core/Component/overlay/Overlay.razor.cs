@@ -78,6 +78,8 @@ namespace AntDesign.Internal
         private const int HORIZONTAL_ARROW_SHIFT = 13;
         private const int VERTICAL_ARROW_SHIFT = 5;
 
+        private int _overlayClientWidth = 0;
+        
         protected override async Task OnParametersSetAsync()
         {
             if (!_isOverlayShow && Trigger.Visible && !_preVisible)
@@ -324,8 +326,14 @@ namespace AntDesign.Internal
         private int GetOverlayLeft(Element trigger, Element overlay, Element containerElement)
         {
             int left = 0;
+            
             int triggerLeft = trigger.absoluteLeft - containerElement.absoluteLeft;
-            int triggerWidth = trigger.clientWidth;
+            int triggerWidth = trigger.clientWidth != 0 ? trigger.clientWidth : trigger.offsetWidth;
+
+            if (overlay.clientWidth > 0)
+            {
+                _overlayClientWidth = overlay.clientWidth;
+            }
 
             // contextMenu
             if (_overlayLeft != null)
@@ -336,7 +344,7 @@ namespace AntDesign.Internal
 
             if (Trigger.Placement.IsIn(PlacementType.Left, PlacementType.LeftTop, PlacementType.LeftBottom))
             {
-                left = triggerLeft - overlay.clientWidth - HorizontalOffset;
+                left = triggerLeft - _overlayClientWidth - HorizontalOffset;
             }
             else if (Trigger.Placement.IsIn(PlacementType.Right, PlacementType.RightTop, PlacementType.RightBottom))
             {
@@ -353,11 +361,11 @@ namespace AntDesign.Internal
             }
             else if (Trigger.Placement.IsIn(PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.TopCenter, PlacementType.Top))
             {
-                left = triggerLeft + triggerWidth / 2 - overlay.clientWidth / 2;
+                left = triggerLeft + triggerWidth / 2 - _overlayClientWidth / 2;
             }
             else if (Trigger.Placement.IsIn(PlacementType.BottomRight, PlacementType.TopRight))
             {
-                left = triggerLeft + triggerWidth - overlay.clientWidth;
+                left = triggerLeft + triggerWidth - _overlayClientWidth;
 
                 if (ArrowPointAtCenter)
                 {

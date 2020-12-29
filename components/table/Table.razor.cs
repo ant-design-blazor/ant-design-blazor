@@ -28,11 +28,6 @@ namespace AntDesign
                 _waitingReload = true;
                 _dataSourceCount = value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
-
-                if (TreeChildren != null && _dataSource.Any(x => TreeChildren(x).Any()))
-                {
-                    _treeMode = true;
-                }
             }
         }
 
@@ -171,6 +166,8 @@ namespace AntDesign
                 }
             }
 
+            _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x).Any()) == true);
+
             StateHasChanged();
 
             return queryModel;
@@ -199,11 +196,6 @@ namespace AntDesign
             {
                 ChildContent = RowTemplate;
             }
-
-            //if (TreeChildren != null && DataSource.Any(x => TreeChildren(x).Any()))
-            //{
-            //    _treeMode = true;
-            //}
 
             SetClass();
 
