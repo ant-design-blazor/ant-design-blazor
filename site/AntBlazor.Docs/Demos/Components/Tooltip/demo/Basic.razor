@@ -1,7 +1,9 @@
 ﻿<Tooltip Title="@("prompt text")">
-    <span>Tooltip will show on mouse enter.</span>
+    <span>Tooltip (bound to div) will show on mouse enter.</span>
 </Tooltip>
-<br/>
-<TooltipUnbound Title="@("prompt text")">
-    <span  @ref="@context.Current">Tooltip (div-unbound) will show on mouse enter.</span>
-</TooltipUnbound>
+<br />
+<Tooltip Title="@("prompt text")">
+    <Unbound>
+        <span @ref="@context.Current">Tooltip (unbound) will show on mouse enter.</span>
+    </Unbound>
+</Tooltip>

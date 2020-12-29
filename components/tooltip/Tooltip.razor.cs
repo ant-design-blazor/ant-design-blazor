@@ -3,6 +3,9 @@ using AntDesign.Internal;
 using OneOf;
 using System.Threading.Tasks;
 using System.Linq;
+using AntDesign.JsInterop;
+using System.Text.Json;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -19,6 +22,9 @@ namespace AntDesign
 
         [Parameter]
         public double MouseLeaveDelay { get; set; } = 0.1;
+
+        [Inject]
+        private DomEventService DomEventService { get; set; }
 
         public Tooltip()
         {
@@ -55,6 +61,37 @@ namespace AntDesign
 
             await base.Hide(force);
         }
+        protected override Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender && Unbound != null)
+            {
+                Ref = RefBack.Current;
+                DomEventService.AddEventListener(Ref, "mouseover", (async e => await OnTriggerMouseEnter()), true);
+                DomEventService.AddEventListener(Ref, "mouseout", (async e => await OnTriggerMouseLeave()), true);
+                DomEventService.AddEventListener(Ref, "focusin", (async e => await OnTriggerFocusIn()), true);
+                DomEventService.AddEventListener(Ref, "focusout", (async e => await OnTriggerFocusOut()), true);
+                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true);
 
+            }
+            return base.OnAfterRenderAsync(firstRender);
+        }
+
+        private async void OnContextMenu(JsonElement jsonElement)
+        {
+            await base.OnTriggerContextmenu(new MouseEventArgs { 
+                AltKey = jsonElement.GetProperty("altKey").GetBoolean(),
+                Button = jsonElement.GetProperty("button").GetInt16(),
+                Buttons = jsonElement.GetProperty("buttons").GetInt16(),
+                ClientX = jsonElement.GetProperty("clientX").GetDouble(),
+                ClientY = jsonElement.GetProperty("clientY").GetDouble(),
+                CtrlKey = jsonElement.GetProperty("ctrlKey").GetBoolean(),
+                Detail = jsonElement.GetProperty("detail").GetInt32(),
+                MetaKey = jsonElement.GetProperty("metaKey").GetBoolean(),
+                ScreenX = jsonElement.GetProperty("screenX").GetDouble(),
+                ScreenY = jsonElement.GetProperty("screenY").GetDouble(),
+                ShiftKey = jsonElement.GetProperty("shiftKey").GetBoolean(),
+                Type = jsonElement.GetProperty("type").GetString(),
+            });
+        }
     }
 }

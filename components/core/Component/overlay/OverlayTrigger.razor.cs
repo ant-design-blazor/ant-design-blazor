@@ -94,6 +94,9 @@ namespace AntDesign.Internal
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
+        public RenderFragment<ForwardRef> Unbound { get; set; }
+
+        [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         [Inject]
