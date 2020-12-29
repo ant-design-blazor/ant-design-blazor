@@ -1,9 +1,9 @@
 @inherits LayoutComponentBase
 
 <div id="react-content">
-    <MainHeader IsMobile="_isCollapsed" />
+    <MainHeader OnMobileModeChanged="isMobile=> _isMobile=isMobile" />
     <div class="main-wrapper">
-        @if (_isCollapsed)
+        @if (_isMobile)
         {
             <div class="drawer-wrapper">
                 <div class="drawer drawer-left @(_drawerVisible?"drawer-open":"")">
@@ -20,8 +20,8 @@
             </div>
         }
 
-        <Row OnBreakpoint="OnBreakpoint">
-            @if (!_isCollapsed)
+        <Row>
+            @if (!_isMobile)
             {
                 <RowCol Class="main-menu" Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
                     <div>

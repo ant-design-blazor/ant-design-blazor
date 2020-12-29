@@ -2,7 +2,7 @@
 @page "/"
 
 <div id="react-content">
-    <MainHeader IsMobile="_isCollapsed" />
+    <MainHeader IsHome />
     <div class="home-container">
         <div class="home-banner">
             <div class="home-banner-background">
@@ -47,7 +47,7 @@
             {
                 <div class="home-block-content">
                     <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">@Language.Resources["app.home.recommend"]</h2>
-                    <Row Style="margin: -12px -12px -36px;" OnBreakpoint="OnBreakpoint">
+                    <Row Style="margin: -12px -12px -36px;">
                         <AntDesign.Col Xs="24" Sm="14" Style="padding: 12px;">
                             <Recommend Data="_recommends[0]" Main />
                         </AntDesign.Col>

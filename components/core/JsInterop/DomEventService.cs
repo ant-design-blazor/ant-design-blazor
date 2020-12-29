@@ -52,8 +52,9 @@ namespace AntDesign.JsInterop
 
                     _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<string>((p) =>
                     {
-                        foreach (var subscription in _domEventListeners[key])
+                        for (var i = 0; i < _domEventListeners[key].Count; i++)
                         {
+                            var subscription = _domEventListeners[key][i];
                             object tP = JsonSerializer.Deserialize(p, subscription.Type);
                             subscription.Delegate.DynamicInvoke(tP);
                         }
