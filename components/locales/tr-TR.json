@@ -98,8 +98,16 @@
   },
   "Modal": {
     "okText": "Tamam",
+    "cancelText": "İptal"
+  },
+  "Confirm": {
+    "okText": "Tamam",
     "cancelText": "İptal",
-    "justOkText": "Tamam"
+    "yesText": "Evet",
+    "noText": "Hayır, hayır",
+    "retryText": "Yeniden dene",
+    "abortText": "Kes",
+    "ignoreText": "İhmal et"
   },
   "Popconfirm": {
     "okText": "Tamam",

@@ -7,6 +7,9 @@ using OneOf;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// button props
+    /// </summary>
     public class ButtonProps
     {
         public bool Block { get; set; } = false;
@@ -39,6 +42,6 @@ namespace AntDesign
             }
         }
 
-        public OneOf<string, RenderFragment> ChildContent { get; set; } = "";
+        public OneOf<string, RenderFragment>? ChildContent { get; set; } = null;
     }
 }

@@ -94,8 +94,16 @@
   },
   "Modal": {
     "okText": "Օկ",
+    "cancelText": "Չեղարկել"
+  },
+  "Confirm": {
+    "okText": "Օկ",
     "cancelText": "Չեղարկել",
-    "justOkText": "Օկ"
+    "yesText": "Այո",
+    "noText": "Ոչ",
+    "retryText": "Կրկին փորձել",
+    "abortText": "Անտրել",
+    "ignoreText": "Անտեսել"
   },
   "Popconfirm": {
     "okText": "Հաստատել",

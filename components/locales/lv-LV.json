@@ -88,8 +88,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Atcelt"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Atcelt",
-    "justOkText": "OK"
+    "yesText": "Jā",
+    "noText": "Nē",
+    "retryText": "Atpakaļ mēģināt",
+    "abortText": "Pārtrauc",
+    "ignoreText": "Ignorēt"
   },
   "Popconfirm": {
     "okText": "OK",

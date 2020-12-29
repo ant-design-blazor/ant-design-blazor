@@ -91,7 +91,7 @@
         await base.OnInitializedAsync();
         language.LanguageChanged += (sender, args) =>
         {
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         };
     }
 

@@ -26,7 +26,7 @@ namespace AntDesign.Docs.Pages
             Language.LanguageChanged += async (sender, args) =>
             {
                 await FetchData();
-                StateHasChanged();
+                await InvokeAsync(StateHasChanged);
             };
         }
 

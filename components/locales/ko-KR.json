@@ -88,8 +88,16 @@
   },
   "Modal": {
     "okText": "확인",
+    "cancelText": "취소"
+  },
+  "Confirm": {
+    "okText": "확인",
     "cancelText": "취소",
-    "justOkText": "확인"
+    "yesText": "네",
+    "noText": "아니",
+    "retryText": "다시 시도 하 다",
+    "abortText": "중지 하 다",
+    "ignoreText": "소홀히 하 다"
   },
   "Popconfirm": {
     "okText": "확인",

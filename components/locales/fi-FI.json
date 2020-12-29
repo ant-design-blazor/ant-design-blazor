@@ -89,8 +89,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Peruuta"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Peruuta",
-    "justOkText": "OK"
+    "yesText": "Kyllä",
+    "noText": "Ei",
+    "retryText": "Peruuta",
+    "abortText": "Keskeytä",
+    "ignoreText": "Ohita"
   },
   "Popconfirm": {
     "okText": "OK",
