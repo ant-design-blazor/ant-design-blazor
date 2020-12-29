@@ -1,0 +1,29 @@
+﻿@namespace AntDesign.Internal
+@inherits AntDomComponentBase
+
+@{
+    string inlineFlexDisplay = InlineFlexMode ? "display: inline-flex;" : "";
+}
+
+<div class="@ClassMapper.Class"
+     style="@inlineFlexDisplay @Style"
+     id="@Id"
+     @ref="@Ref"
+     @onclick="OnClickDiv"
+     @onmouseenter="OnTriggerMouseEnter"
+     @onmouseleave="OnTriggerMouseLeave"
+     @oncontextmenu="OnTriggerContextmenu"
+     @onfocusin="OnTriggerFocusIn"
+     @onfocusout="OnTriggerFocusOut"
+     @oncontextmenu:preventDefault>
+    @ChildContent
+</div>
+
+<CascadingValue Value="this" Name="Trigger">
+    <OverlayUnbound @ref="_overlay"
+             HiddenMode="HiddenMode"
+             OnShow="OnOverlayShow"
+             OnHide="OnOverlayHide"
+             OnOverlayMouseEnter="OnOverlayMouseEnter"
+             OnOverlayMouseLeave="OnOverlayMouseLeave" />
+</CascadingValue>
