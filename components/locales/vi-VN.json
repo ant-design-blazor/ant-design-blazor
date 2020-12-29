@@ -96,8 +96,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Huỷ"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Huỷ",
-    "justOkText": "OK"
+    "yesText": "Phải",
+    "noText": "Không",
+    "retryText": "Description",
+    "abortText": "Hủy",
+    "ignoreText": "Bỏ"
   },
   "Popconfirm": {
     "okText": "OK",

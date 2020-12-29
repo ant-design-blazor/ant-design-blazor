@@ -88,8 +88,16 @@
   },
   "Modal": {
     "okText": "Temam",
+    "cancelText": "Betal ke"
+  },
+  "Confirm": {
+    "okText": "Temam",
     "cancelText": "Betal ke",
-    "justOkText": "Temam"
+    "yesText": "Erê",
+    "noText": "Ne",
+    "retryText": "Biceribîne",
+    "abortText": "Betalkirin",
+    "ignoreText": "Ignore"
   },
   "Popconfirm": {
     "okText": "Temam",

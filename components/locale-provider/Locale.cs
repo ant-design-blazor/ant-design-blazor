@@ -23,6 +23,8 @@ namespace AntDesign.Locales
 
         public ModalLocale Modal { get; set; }
 
+        public ConfirmLocale Confirm { get; set; }
+
         public PopconfirmLocale Popconfirm { get; set; }
 
         public TransferLocale Transfer { get; set; }

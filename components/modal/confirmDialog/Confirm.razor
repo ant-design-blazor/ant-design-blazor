@@ -47,7 +47,7 @@
                         if (props == null) return null;
                         var onClickEvent = new EventCallback<MouseEventArgs>(this, onClick);
                         Button innerBtnRef = null;
-                        var children = props.ChildContent;
+                        var children = props.ChildContent!.Value;
                         RenderFragment compontent = (@<Button @ref="@innerBtnRef"
                                                               OnClick="@onClickEvent"
                                                               Block="@props.Block"

@@ -122,8 +122,16 @@
   },
   "Modal": {
     "okText": "确定",
+    "cancelText": "取消"
+  },
+  "Confirm": {
+    "okText": "确定",
     "cancelText": "取消",
-    "justOkText": "知道了"
+    "yesText": "是",
+    "noText": "否",
+    "retryText": "重试",
+    "abortText": "终止",
+    "ignoreText": "忽略"
   },
   "Popconfirm": {
     "cancelText": "取消",

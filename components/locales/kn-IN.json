@@ -93,8 +93,16 @@
   },
   "Modal": {
     "okText": "ಸರಿ",
+    "cancelText": "ರದ್ದು"
+  },
+  "Confirm": {
+    "okText": "ಸರಿ",
     "cancelText": "ರದ್ದು",
-    "justOkText": "ಸರಿ"
+    "yesText": "ಹೌದು",
+    "noText": "ಇಲ್ಲ",
+    "retryText": "ಪುನಃ ಪ್ರಯತ್ನಿಸು",
+    "abortText": "ಅಡ್ಡಬಿಡು",
+    "ignoreText": "ಆಲಕ್ಷಿಸು"
   },
   "Popconfirm": {
     "okText": "ಸರಿ",
