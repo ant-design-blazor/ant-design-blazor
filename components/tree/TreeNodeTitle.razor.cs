@@ -7,19 +7,19 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNodeTitle
+    public partial class TreeNodeTitle<TItem>
     {
         /// <summary>
         /// 树控件本身
         /// </summary>
         [CascadingParameter(Name = "Tree")]
-        public Tree TreeComponent { get; set; }
+        public Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
         /// 当前节点
         /// </summary>
         [CascadingParameter(Name = "SelfNode")]
-        public TreeNode SelfNode { get; set; }
+        public TreeNode<TItem> SelfNode { get; set; }
 
         private bool CanDraggable => TreeComponent.Draggable && !SelfNode.IsDisabled;
 
@@ -54,15 +54,15 @@ namespace AntDesign
         {
             SelfNode.SetSelected(!SelfNode.IsSelected);
             if (TreeComponent.OnClick.HasDelegate && args.Button == 0)
-                await TreeComponent.OnClick.InvokeAsync(new TreeEventArgs(TreeComponent, SelfNode, args));
+                await TreeComponent.OnClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
             else if (TreeComponent.OnContextMenu.HasDelegate && args.Button == 2)
-                await TreeComponent.OnContextMenu.InvokeAsync(new TreeEventArgs(TreeComponent, SelfNode, args));
+                await TreeComponent.OnContextMenu.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
         }
 
         private async Task OnDblClick(MouseEventArgs args)
         {
             if (TreeComponent.OnDblClick.HasDelegate && args.Button == 0)
-                await TreeComponent.OnDblClick.InvokeAsync(new TreeEventArgs(TreeComponent, SelfNode, args));
+                await TreeComponent.OnDblClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
         }
 
 

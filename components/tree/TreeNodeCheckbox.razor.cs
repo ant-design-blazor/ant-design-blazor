@@ -11,19 +11,19 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNodeCheckbox
+    public partial class TreeNodeCheckbox<TItem>
     {
         /// <summary>
         /// 树控件本身
         /// </summary>
         [CascadingParameter(Name = "Tree")]
-        public Tree TreeComponent { get; set; }
+        public Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
         /// 当前节点
         /// </summary>
         [CascadingParameter(Name = "SelfNode")]
-        public TreeNode SelfNode { get; set; }
+        public TreeNode<TItem> SelfNode { get; set; }
 
         protected ClassMapper ClassMapper { get; } = new ClassMapper();
 
