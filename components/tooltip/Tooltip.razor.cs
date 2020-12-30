@@ -70,7 +70,7 @@ namespace AntDesign
                 DomEventService.AddEventListener(Ref, "mouseout", (async e => await OnTriggerMouseLeave()), true);
                 DomEventService.AddEventListener(Ref, "focusin", (async e => await OnTriggerFocusIn()), true);
                 DomEventService.AddEventListener(Ref, "focusout", (async e => await OnTriggerFocusOut()), true);
-                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true);
+                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
 
             }
             return base.OnAfterRenderAsync(firstRender);
@@ -78,20 +78,10 @@ namespace AntDesign
 
         private async void OnContextMenu(JsonElement jsonElement)
         {
-            await base.OnTriggerContextmenu(new MouseEventArgs { 
-                AltKey = jsonElement.GetProperty("altKey").GetBoolean(),
-                Button = jsonElement.GetProperty("button").GetInt16(),
-                Buttons = jsonElement.GetProperty("buttons").GetInt16(),
-                ClientX = jsonElement.GetProperty("clientX").GetDouble(),
-                ClientY = jsonElement.GetProperty("clientY").GetDouble(),
-                CtrlKey = jsonElement.GetProperty("ctrlKey").GetBoolean(),
-                Detail = jsonElement.GetProperty("detail").GetInt32(),
-                MetaKey = jsonElement.GetProperty("metaKey").GetBoolean(),
-                ScreenX = jsonElement.GetProperty("screenX").GetDouble(),
-                ScreenY = jsonElement.GetProperty("screenY").GetDouble(),
-                ShiftKey = jsonElement.GetProperty("shiftKey").GetBoolean(),
-                Type = jsonElement.GetProperty("type").GetString(),
-            });
+            var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            await base.OnTriggerContextmenu(eventArgs);
         }
     }
 }
