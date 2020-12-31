@@ -28,7 +28,7 @@
     {
         foreach (var item in ChildDataItems)
         {
-            <TreeNode DataItem="@item"></TreeNode>
+            <TreeNode DataItem="@item" @key="item.GetHashCode()"></TreeNode>
         }
     }
     else

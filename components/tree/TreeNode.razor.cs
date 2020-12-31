@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNode : AntDomComponentBase
+    public partial class TreeNode : AntDomComponentBase, IRendered
     {
 
         #region Node
@@ -376,6 +376,7 @@ namespace AntDesign
         [Parameter]
         public object DataItem { get; set; }
 
+
         private IEnumerable ChildDataItems
         {
             get
@@ -399,7 +400,7 @@ namespace AntDesign
         {
             foreach (var child in ChildNodes)
             {
-                if (predicate.Invoke(child))
+                if (predicate != null && predicate.Invoke(child))
                 {
                     return child;
                 }
@@ -431,14 +432,45 @@ namespace AntDesign
             base.OnInitialized();
         }
 
+
         protected override void OnParametersSet()
         {
             SetTreeNodeClassMapper();
             base.OnParametersSet();
+
         }
 
+        /// <summary>
+        /// 渲染完成后
+        /// </summary>
+        public Action OnRendered { get; set; }
 
+        /// <summary>
+        /// 新节点数据，用于展开并选择新节点
+        /// </summary>
+        public object NewChildData { get; set; }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+
+            if (OnRendered != null)
+            {
+                OnRendered.Invoke();
+                OnRendered = null;
+            }
+
+            if (NewChildData != null)
+            {
+                var tn = ChildNodes.FirstOrDefault(treeNode => treeNode.DataItem == NewChildData);
+                if (tn != null)
+                {
+                    this.Expand(true);
+                    tn.SetSelected(true);
+                }
+
+                NewChildData = null;
+            }
+        }
     }
 }
-
-

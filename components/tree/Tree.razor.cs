@@ -2,14 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Tree : AntDomComponentBase
+    public partial class Tree : AntDomComponentBase, IRendered
     {
         #region Tree
 
@@ -105,7 +102,7 @@ namespace AntDesign
             if (SelectedNodesDictionary.ContainsKey(treeNodes.NodeId) == true)
                 SelectedNodesDictionary.Remove(treeNodes.NodeId);
         }
-     
+
         public void DeselectAll()
         {
             foreach (var item in SelectedNodesDictionary.Select(x => x.Value).ToList())
@@ -345,7 +342,8 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<TreeNode> SwitcherIconTemplate { get; set; }
 
-    #endregion
+        #endregion
+
 
         /// <summary>
         /// Find Node
@@ -357,7 +355,7 @@ namespace AntDesign
         {
             foreach (var child in ChildNodes)
             {
-                if (predicate.Invoke(child))
+                if (predicate != null && predicate.Invoke(child))
                 {
                     return child;
                 }
@@ -391,11 +389,74 @@ namespace AntDesign
             }
         }
 
+        private bool expanded;
+
+        /// <summary>
+        /// 展开全部节点
+        /// </summary>
+        public void Expand()
+        {
+            expanded = true;
+            toggle();
+        }
+        /// <summary>
+        /// 折叠全部节点
+        /// </summary>
+        public void Collapse()
+        {
+            expanded = false;
+            toggle();
+        }
+        /// <summary>
+        /// 切换全部节点的折叠、展开模式
+        /// </summary>
+        public void Toggle()
+        {
+            expanded = !expanded;
+            toggle();
+        }
+
+        private void toggle()
+        {
+            this.ChildNodes.ForEach(tc => sw(tc, expanded));
+        }
+
+        private void sw(TreeNode tn,bool exp)
+        {
+            tn.Expand(exp);
+            tn.ChildNodes.ForEach(tc => sw(tc, exp));
+        }
 
         protected override void OnInitialized()
         {
             SetClassMapper();
             base.OnInitialized();
         }
+
+        /// <summary>
+        /// 新节点数据，用于展开并选择新节点
+        /// </summary>
+        public Action OnRendered { get; set; }
+
+        /// <summary>
+        /// 新节点数据
+        /// </summary>
+        public object NewChildData { get; set; }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+
+            OnRendered?.Invoke();
+            OnRendered = null;
+
+            if (NewChildData != null)
+            {
+                ChildNodes.FirstOrDefault(treeNode => treeNode.DataItem == NewChildData)?.SetSelected(true);
+                NewChildData = null;
+            }
+
+        }
+
     }
 }
