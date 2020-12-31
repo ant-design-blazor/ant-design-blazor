@@ -1,24 +1,25 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
+@typeparam TItem
 
 @if (IsRealDisplay)
 {
     <CascadingValue Value="this" Name="SelfNode">
         <div @key="NodeId" class="@TreeNodeClassMapper.Class">
 
-            <TreeIndent TreeLevel="@TreeLevel"></TreeIndent>
+            <TreeIndent TreeLevel="@TreeLevel" TItem="TItem"></TreeIndent>
 
             @if (TreeComponent.ShowExpand)
             {
-                <TreeNodeSwitcher OnSwitcherClick="OnSwitcherClick"></TreeNodeSwitcher>
+                <TreeNodeSwitcher OnSwitcherClick="OnSwitcherClick"  TItem="TItem"></TreeNodeSwitcher>
             }
 
             @if (TreeComponent.Checkable)
             {
-                <TreeNodeCheckbox OnCheckBoxClick="OnCheckBoxClick"></TreeNodeCheckbox>
+                <TreeNodeCheckbox OnCheckBoxClick="OnCheckBoxClick"  TItem="TItem"></TreeNodeCheckbox>
             }
 
-            <TreeNodeTitle></TreeNodeTitle>
+            <TreeNodeTitle  TItem="TItem"></TreeNodeTitle>
 
         </div>
     </CascadingValue>

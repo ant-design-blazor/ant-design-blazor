@@ -8,19 +8,19 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNodeSwitcher
+    public partial class TreeNodeSwitcher<TItem>
     {
         /// <summary>
         /// 树控件本身
         /// </summary>
         [CascadingParameter(Name = "Tree")]
-        public Tree TreeComponent { get; set; }
+        public Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
         /// 当前节点
         /// </summary>
         [CascadingParameter(Name = "SelfNode")]
-        public TreeNode SelfNode { get; set; }
+        public TreeNode<TItem> SelfNode { get; set; }
 
         private bool IsShowLineIcon => !SelfNode.IsLeaf && TreeComponent.ShowLine;
 
