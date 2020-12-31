@@ -434,7 +434,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 新节点数据，用于展开并选择新节点
+        /// 渲染完成后
         /// </summary>
         public Action OnRendered { get; set; }
 
