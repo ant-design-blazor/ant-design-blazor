@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Tree<TItem> : AntDomComponentBase, IRendered<TItem>
+    public partial class Tree<TItem> : AntDomComponentBase
     {
         #region Tree
 
@@ -40,7 +40,6 @@ namespace AntDesign
         [Parameter]
         public bool Draggable { get; set; }
 
-
         private void SetClassMapper()
         {
             ClassMapper.Clear().Add("ant-tree")
@@ -50,7 +49,7 @@ namespace AntDesign
                 .If("draggable-tree", () => Draggable);
         }
 
-        #endregion
+        #endregion Tree
 
         #region Node
 
@@ -68,10 +67,9 @@ namespace AntDesign
         internal void AddNode(TreeNode<TItem> treeNode)
         {
             ChildNodes.Add(treeNode);
-
         }
 
-        #endregion
+        #endregion Node
 
         #region Selected
 
@@ -191,7 +189,7 @@ namespace AntDesign
             if (SelectedKeysChanged.HasDelegate) SelectedKeysChanged.InvokeAsync(SelectedKeys);
         }
 
-        #endregion
+        #endregion Selected
 
         #region Checkable
 
@@ -212,7 +210,7 @@ namespace AntDesign
             List<TreeNode<TItem>> checkeds = new List<TreeNode<TItem>>();
             foreach (var item in childs)
             {
-                if (item.IsChecked) checkeds.Add(item);
+                if (item.Checked) checkeds.Add(item);
                 checkeds.AddRange(GetCheckedNodes(item.ChildNodes));
             }
             return checkeds;
@@ -227,11 +225,12 @@ namespace AntDesign
             }
         }
 
-        #endregion
+        #endregion Checkable
 
         #region Search
 
         public string _searchValue;
+
         /// <summary>
         /// 按需筛选树,双向绑定
         /// </summary>
@@ -265,11 +264,11 @@ namespace AntDesign
         private bool SearchNode(TreeNode<TItem> treeNode)
         {
             if (SearchExpression != null)
-                treeNode.IsMatched = SearchExpression(treeNode);
+                treeNode.Matched = SearchExpression(treeNode);
             else
-                treeNode.IsMatched = treeNode.Title.Contains(SearchValue);
+                treeNode.Matched = treeNode.Title.Contains(SearchValue);
 
-            var hasChildMatched = treeNode.IsMatched;
+            var hasChildMatched = treeNode.Matched;
             foreach (var item in treeNode.ChildNodes)
             {
                 var itemMatched = SearchNode(item);
@@ -280,7 +279,7 @@ namespace AntDesign
             return hasChildMatched;
         }
 
-        #endregion
+        #endregion Search
 
         #region DataBind
 
@@ -309,7 +308,7 @@ namespace AntDesign
         /// 返回一个值是否是页节点
         /// </summary>
         [Parameter]
-        public Func<TreeNode<TItem>, bool> IsLeafExpression { get; set; }
+        public Func<TreeNode<TItem>, bool> LeafExpression { get; set; }
 
         /// <summary>
         /// 返回子节点的方法
@@ -317,7 +316,7 @@ namespace AntDesign
         [Parameter]
         public Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
 
-        #endregion
+        #endregion DataBind
 
         #region Event
 
@@ -394,7 +393,7 @@ namespace AntDesign
         ///// </summary>
         //public EventCallback<TreeEventArgs> OnDragEnd { get; set; }
 
-        #endregion
+        #endregion Event
 
         #region Template
 
@@ -422,8 +421,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<TreeNode<TItem>> SwitcherIconTemplate { get; set; }
 
-        #endregion
-
+        #endregion Template
 
         /// <summary>
         /// Find Node
@@ -451,6 +449,7 @@ namespace AntDesign
             }
             return null;
         }
+
         /// <summary>
         /// from node expand to root
         /// </summary>
@@ -479,6 +478,7 @@ namespace AntDesign
             _expanded = true;
             ToggleMode();
         }
+
         /// <summary>
         /// 折叠全部节点
         /// </summary>
@@ -487,6 +487,7 @@ namespace AntDesign
             _expanded = false;
             ToggleMode();
         }
+
         /// <summary>
         /// 切换全部节点的折叠、展开模式
         /// </summary>
@@ -535,8 +536,6 @@ namespace AntDesign
                 ChildNodes.FirstOrDefault(treeNode => treeNode.DataItem.Equals(NewChildData))?.SetSelected(true);
                 NewChildData = default;
             }
-
         }
-
     }
 }
