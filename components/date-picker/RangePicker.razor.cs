@@ -111,12 +111,14 @@ namespace AntDesign
         protected override void OnValueChange(TValue value)
         {
             base.OnValueChange(value);
-
-            UseDefaultPickerValue[0] = false;
-            UseDefaultPickerValue[1] = false;
-            _pickerStatus[0]._hadSelectValue = true;
-            _pickerStatus[1]._hadSelectValue = true;
-
+            //reset all only if not changed using picker
+            if (!_inputStart.IsOnFocused && !_inputEnd.IsOnFocused)
+            {
+                UseDefaultPickerValue[0] = false;
+                UseDefaultPickerValue[1] = false;
+                _pickerStatus[0]._hadSelectValue = true;
+                _pickerStatus[1]._hadSelectValue = true;
+            }
         }
 
         /// <summary>
@@ -153,12 +155,23 @@ namespace AntDesign
 
         public override void ChangeValue(DateTime value, int index = 0)
         {
-            if (Value == null)
+            bool isValueInstantiated = Value == null;
+            if (isValueInstantiated)
+            {
                 Value = CreateInstance();
+            }
             UseDefaultPickerValue[index] = false;
             var array = Value as Array;
 
             array.SetValue(value, index);
+
+            //if Value was just now instantiated then set the other index to existing DefaultValue
+            if (isValueInstantiated && IsRange && DefaultValue != null)
+            {
+                var arrayDefault = DefaultValue as Array;
+                int oppositeIndex = index == 1 ? 0 : 1;
+                array.SetValue(arrayDefault.GetValue(oppositeIndex), oppositeIndex);
+            }
 
             _pickerStatus[index]._hadSelectValue = true;
             _pickerStatus[index]._currentShowHadSelectValue = true;
