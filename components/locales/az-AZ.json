@@ -91,8 +91,16 @@
   },
   "Modal": {
     "okText": "Bəli",
+    "cancelText": "Ləğv et"
+  },
+  "Confirm": {
+    "okText": "Bəli",
     "cancelText": "Ləğv et",
-    "justOkText": "Bəli"
+    "yesText": "Bəli",
+    "noText": "Yox",
+    "retryText": "Yenidən denə",
+    "abortText": "Qeyd E",
+    "ignoreText": "İhmal Et"
   },
   "Popconfirm": {
     "okText": "Bəli",

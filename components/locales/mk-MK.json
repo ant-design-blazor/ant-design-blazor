@@ -97,8 +97,16 @@
   },
   "Modal": {
     "okText": "ОК",
+    "cancelText": "Откажи"
+  },
+  "Confirm": {
+    "okText": "ОК",
     "cancelText": "Откажи",
-    "justOkText": "ОК"
+    "yesText": "-Да",
+    "noText": "Не",
+    "retryText": "Пробај повторно",
+    "abortText": "Прекини",
+    "ignoreText": "Игнорирај"
   },
   "Popconfirm": {
     "okText": "ОК",

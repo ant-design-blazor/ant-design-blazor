@@ -1,5 +1,5 @@
-﻿<header id="header" class="clearfix home-header">
-    <Row Style="flex-flow: nowrap; height: 64px;">
+﻿<header id="header" class="clearfix @(IsHome?"home-header":"")">
+    <Row Style="flex-flow: nowrap; height: 64px;" OnBreakpoint="OnBreakpoint">
         <RowCol Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
             <h1>
                 <a id="logo" href="/">
@@ -7,9 +7,9 @@
                 </a>
             </h1>
         </RowCol>
-        @if (IsMobile)
+        @if (_isMobile)
         {
-            <Dropdown Placement="PlacementType.BottomRight" Trigger="new[] { TriggerType.Click }" OverlayStyle="width: 300px">
+            <Dropdown Placement="PlacementType.BottomRight" Trigger="new[] { TriggerType.Click }">
                 <Overlay>
                     <HeaderMenu IsMobile />
                 </Overlay>
@@ -18,7 +18,7 @@
                 </ChildContent>
             </Dropdown>
         }
-        @if (!IsMobile)
+        @if (!_isMobile)
         {
             <RowCol Class="menu-row" Xs="0" Sm="0" Md="18" Lg="18" Xl="19" Xxl="20">
                 <HeaderMenu IsMobile="false" />
@@ -28,5 +28,18 @@
 </header>
 
 @code {
-    [Parameter] public bool IsMobile { get; set; }
+    public bool _isMobile;
+
+    [Parameter] public bool IsHome { get; set; }
+
+    [Parameter] public EventCallback<bool> OnMobileModeChanged { get; set; }
+
+    private void OnBreakpoint(BreakpointType breakpoint)
+    {
+        _isMobile = breakpoint.IsIn(BreakpointType.Sm, BreakpointType.Xs, BreakpointType.Md);
+        if (OnMobileModeChanged.HasDelegate)
+        {
+            OnMobileModeChanged.InvokeAsync(_isMobile);
+        }
+    }
 }

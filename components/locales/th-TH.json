@@ -100,8 +100,16 @@
   },
   "Modal": {
     "okText": "ตกลง",
+    "cancelText": "ยกเลิก"
+  },
+  "Confirm": {
+    "okText": "ตกลง",
     "cancelText": "ยกเลิก",
-    "justOkText": "ตกลง"
+    "yesText": "ใช่แล้ว",
+    "noText": "ไม่",
+    "retryText": "ลองอีกครั้ง",
+    "abortText": "การหยุด",
+    "ignoreText": "ไม่สนใจ"
   },
   "Popconfirm": {
     "okText": "ตกลง",

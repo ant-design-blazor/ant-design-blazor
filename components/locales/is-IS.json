@@ -88,8 +88,16 @@
   },
   "Modal": {
     "okText": "Áfram",
+    "cancelText": "Hætta við"
+  },
+  "Confirm": {
+    "okText": "Áfram",
     "cancelText": "Hætta við",
-    "justOkText": "Í lagi"
+    "yesText": "Já",
+    "noText": "Nei",
+    "retryText": "Reynda aftur",
+    "abortText": "Hætta",
+    "ignoreText": "Hunsa"
   },
   "Popconfirm": {
     "okText": "Áfram",

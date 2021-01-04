@@ -89,8 +89,16 @@
   },
   "Modal": {
     "okText": "Alkalmazás",
-    "cancelText": "Visszavonás",
-    "justOkText": "Alkalmazás"
+    "cancelText": "Törlés"
+  },
+  "Confirm": {
+    "okText": "Alkalmazás",
+    "cancelText": "Törlés",
+    "yesText": "Igen",
+    "noText": "Nem",
+    "retryText": "Visszavonulás",
+    "abortText": "Megszakítás",
+    "ignoreText": "Figyelmen"
   },
   "Popconfirm": {
     "okText": "Alkalmazás",

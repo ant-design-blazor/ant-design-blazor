@@ -88,8 +88,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Tühista"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Tühista",
-    "justOkText": "OK"
+    "yesText": "Jah",
+    "noText": "Ei",
+    "retryText": "Tagasikäik",
+    "abortText": "Katkesta",
+    "ignoreText": "Ignoreeritakse"
   },
   "Popconfirm": {
     "okText": "OK",

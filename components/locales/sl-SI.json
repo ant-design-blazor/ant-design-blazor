@@ -96,8 +96,16 @@
   },
   "Modal": {
     "okText": "V redu",
+    "cancelText": "Prekliči"
+  },
+  "Confirm": {
+    "okText": "V redu",
     "cancelText": "Prekliči",
-    "justOkText": "V redu"
+    "yesText": "Ja",
+    "noText": "Ne",
+    "retryText": "Umik",
+    "abortText": "Prekliči",
+    "ignoreText": "Prezri"
   },
   "Popconfirm": {
     "okText": "v redu",

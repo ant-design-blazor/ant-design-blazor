@@ -94,8 +94,16 @@
   },
   "Modal": {
     "okText": "Гаразд",
+    "cancelText": "Скасувати"
+  },
+  "Confirm": {
+    "okText": "Гаразд",
     "cancelText": "Скасувати",
-    "justOkText": "Гаразд"
+    "yesText": "Так",
+    "noText": "Hi",
+    "retryText": "Повторно спробувати",
+    "abortText": "Перервати",
+    "ignoreText": "Ігнорувати"
   },
   "Popconfirm": {
     "okText": "Гаразд",
