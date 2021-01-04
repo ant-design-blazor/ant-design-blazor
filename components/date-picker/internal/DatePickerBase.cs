@@ -528,6 +528,17 @@ namespace AntDesign
                 index = GetOnFocusPickerIndex();
 
             PickerValues[index.Value] = date;
+            if (IsRange)
+            {
+                if (!UseDefaultPickerValue[1] && !_pickerStatus[1]._hadSelectValue && index == 0)
+                {
+                    PickerValues[1] = date;
+                }
+                else if (!UseDefaultPickerValue[0] && !_pickerStatus[0]._hadSelectValue && index == 1)
+                {
+                    PickerValues[0] = date;
+                }
+            }
 
             if (OnPanelChange.HasDelegate)
             {
