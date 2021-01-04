@@ -1,37 +1,31 @@
 
 <div>
     <Tree DataSource="_datas"
-          TitleExpression="x=>((Data)x.DataItem).Title"
-          ChildrenExpression="x=>((Data)x.DataItem).Childs"
-          IsLeafExpression="x=>x.TreeLevel>2"
-          OnNodeLoadDelayAsync="OnNodeLoadDelayAsync"></Tree>
+          TitleExpression="x => x.DataItem.Title"
+          ChildrenExpression="x => x.DataItem.Childs"
+          IsLeafExpression="x => x.TreeLevel > 2"
+          OnNodeLoadDelayAsync="OnNodeLoadDelayAsync" TItem="Data"></Tree>
 </div>
 
 @code{
+    public record Data(string Title)
+    {
+        public List<Data> Childs { get; set; } = new List<Data>();
+    }
 
-    List<Data> _datas = new List<Data>()
-{
-        new Data(){Title="A"},
-        new Data(){Title="B"},
-        new Data(){Title="C"},
-    };
+    List<Data> _datas = new() { new("A"), new("B"), new("C") };
 
-    public async Task OnNodeLoadDelayAsync(TreeEventArgs args)
+    public async Task OnNodeLoadDelayAsync(TreeEventArgs<Data> args)
     {
         await Task.Delay(2000);//Ä£ÄâÒì²½Ö´ÐÐ
 
         var dataItem = ((Data)args.Node.DataItem);
-
-        dataItem.Childs.Add(new Data() { Title = $"{dataItem.Title}-1" });
-        dataItem.Childs.Add(new Data() { Title = $"{dataItem.Title}-2" });
+        dataItem.Childs.Clear();
+        dataItem.Childs.Add(new Data($"{dataItem.Title}-1"));
+        dataItem.Childs.Add(new Data($"{dataItem.Title}-2"));
     }
 
-    public class Data
-    {
-        public string Title { get; set; }
 
-        public List<Data> Childs { get; set; } = new List<Data>();
-    }
 }
 
 

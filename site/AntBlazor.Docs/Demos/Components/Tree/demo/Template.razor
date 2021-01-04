@@ -1,37 +1,36 @@
-
-<Tree Checkable ShowIcon>
+<Tree Checkable ShowIcon TItem="string">
     <Nodes>
-        <TreeNode Title="A">
+        <TreeNode Title="A" TItem="string">
             <Nodes>
-                <TreeNode Title="A1">
+                <TreeNode Title="A1" TItem="string">
                     <Nodes>
-                        <TreeNode Title="A1-1"></TreeNode>
-                        <TreeNode Title="A2-2"></TreeNode>
+                        <TreeNode Title="A1-1" TItem="string"></TreeNode>
+                        <TreeNode Title="A2-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A2" IsDisabled>
+                <TreeNode Title="A2" IsDisabled TItem="string">
                     <Nodes>
-                        <TreeNode Title="A2-1"></TreeNode>
-                        <TreeNode Title="A2-2"></TreeNode>
+                        <TreeNode Title="A2-1" TItem="string"></TreeNode>
+                        <TreeNode Title="A2-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A3" IsDisableCheckbox>
+                <TreeNode Title="A3" IsDisableCheckbox TItem="string">
                     <Nodes>
-                        <TreeNode Title="A3-1"></TreeNode>
-                        <TreeNode Title="A3-2" IsDisableCheckbox></TreeNode>
-                        <TreeNode Title="A3-3" IsDisabled></TreeNode>
+                        <TreeNode Title="A3-1" TItem="string"></TreeNode>
+                        <TreeNode Title="A3-2" IsDisableCheckbox TItem="string"></TreeNode>
+                        <TreeNode Title="A3-3" IsDisabled TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
             </Nodes>
         </TreeNode>
-        <TreeNode Title="B">
+        <TreeNode Title="B" TItem="string">
             <Nodes>
-                <TreeNode Title="B1"></TreeNode>
-                <TreeNode Title="B2"></TreeNode>
+                <TreeNode Title="B1" TItem="string"></TreeNode>
+                <TreeNode Title="B2" TItem="string"></TreeNode>
             </Nodes>
         </TreeNode>
     </Nodes>
-    <IndentTemplate Context="node">
+    <IndentTemplate Context="node" >
         <span>--></span>
     </IndentTemplate>
     <TitleTemplate Context="node">

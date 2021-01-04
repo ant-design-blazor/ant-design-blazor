@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
+@typeparam TItem
 
 <div class="@ClassMapper.Class" style="@Style">
     <div class="ant-tree-list">
@@ -9,7 +10,7 @@
                 {
                     foreach (var item in DataSource)
                     {
-                        <TreeNode DataItem="@item"></TreeNode>
+                        <TreeNode DataItem="@item" TItem="TItem"></TreeNode>
                     }
                 }
                 else

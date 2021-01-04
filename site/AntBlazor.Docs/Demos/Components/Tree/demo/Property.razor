@@ -9,33 +9,33 @@
 <Switch @bind-Value="@multiple" />Multiple
 <br />
 <br />
-<Tree Checkable="@checkable" BlockNode="@blockNode" ShowExpand="@showExpand" ShowIcon="@showIcon" Multiple="@multiple">
+<Tree Checkable="@checkable" BlockNode="@blockNode" ShowExpand="@showExpand" ShowIcon="@showIcon" Multiple="@multiple" TItem="string">
     <Nodes>
-        <TreeNode Title="A" Icon="folder-open">
+        <TreeNode Title="A" Icon="folder-open" TItem="string">
             <Nodes>
-                <TreeNode Title="A1" Icon="folder-open">
+                <TreeNode Title="A1" Icon="folder-open" TItem="string">
                     <Nodes>
-                        <TreeNode Title="A1-1" Icon="file"></TreeNode>
-                        <TreeNode Title="A1-2" Icon="file"></TreeNode>
+                        <TreeNode Title="A1-1" Icon="file" TItem="string"></TreeNode>
+                        <TreeNode Title="A1-2" Icon="file" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A2" Icon="folder-open" IsDisabled>
+                <TreeNode Title="A2" Icon="folder-open" IsDisabled TItem="string">
                     <Nodes>
-                        <TreeNode Title="A2-1" Icon="file"></TreeNode>
-                        <TreeNode Title="A2-2" Icon="file"></TreeNode>
+                        <TreeNode Title="A2-1" Icon="file" TItem="string"></TreeNode>
+                        <TreeNode Title="A2-2" Icon="file" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A3" Icon="folder-open" IsDisableCheckbox>
+                <TreeNode Title="A3" Icon="folder-open" IsDisableCheckbox TItem="string">
                     <Nodes>
-                        <TreeNode Title="A3-1" Icon="file"></TreeNode>
-                        <TreeNode Title="A3-2" Icon="file" IsDisableCheckbox></TreeNode>
-                        <TreeNode Title="A3-3" Icon="file" IsDisabled></TreeNode>
+                        <TreeNode Title="A3-1" Icon="file" TItem="string"></TreeNode>
+                        <TreeNode Title="A3-2" Icon="file" IsDisableCheckbox TItem="string"></TreeNode>
+                        <TreeNode Title="A3-3" Icon="file" IsDisabled TItem="string"></TreeNode>
 
                     </Nodes>
                 </TreeNode>
             </Nodes>
         </TreeNode>
-        <TreeNode Title="B" Icon="folder-open"></TreeNode>
+        <TreeNode Title="B" Icon="folder-open" TItem="string"></TreeNode>
     </Nodes>
 </Tree>
 
