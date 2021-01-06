@@ -8,17 +8,17 @@
                         <TreeNode Title="A2-2" Key="112" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A2" Key="120" IsDisabled TItem="string">
+                <TreeNode Title="A2" Key="120" Disabled TItem="string">
                     <Nodes>
                         <TreeNode Title="A2-1" Key="121" TItem="string"></TreeNode>
                         <TreeNode Title="A1-2" Key="122" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A3" Key="130" IsDisableCheckbox TItem="string">
+                <TreeNode Title="A3" Key="130" DisableCheckbox TItem="string">
                     <Nodes>
                         <TreeNode Title="A3-1" Key="131" TItem="string"></TreeNode>
-                        <TreeNode Title="A3-2" Key="132" IsDisableCheckbox TItem="string"></TreeNode>
-                        <TreeNode Title="A3-3" Key="133" IsDisabled TItem="string"></TreeNode>
+                        <TreeNode Title="A3-2" Key="132" DisableCheckbox TItem="string"></TreeNode>
+                        <TreeNode Title="A3-3" Key="133" Disabled TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
             </Nodes>
@@ -40,6 +40,11 @@
 
 <Button OnClick="DeselectAll">Deselect All</Button>
 <br />
+
+<Button OnClick="ExpandAll">Expand All Nodes</Button>
+
+<Button OnClick="CollapseAll">Collapse All Nodes</Button>
+
 @if (string.IsNullOrWhiteSpace(printType) == false)
 {
     <div>@printType</div>
@@ -86,5 +91,13 @@
         tree.DeselectAll();
     }
 
+    private void ExpandAll()
+    {
+        tree.ExpandAll();
+    }
 
+    private void CollapseAll()
+    {
+        tree.CollapseAll();
+    }
 }

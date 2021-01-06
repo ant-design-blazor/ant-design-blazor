@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @typeparam TItem
 
-@if (IsRealDisplay)
+@if (RealDisplay)
 {
     <CascadingValue Value="this" Name="SelfNode">
         <div @key="NodeId" class="@TreeNodeClassMapper.Class">
@@ -11,15 +11,15 @@
 
             @if (TreeComponent.ShowExpand)
             {
-                <TreeNodeSwitcher OnSwitcherClick="OnSwitcherClick"  TItem="TItem"></TreeNodeSwitcher>
+                <TreeNodeSwitcher OnSwitcherClick="OnSwitcherClick" TItem="TItem"></TreeNodeSwitcher>
             }
 
             @if (TreeComponent.Checkable)
             {
-                <TreeNodeCheckbox OnCheckBoxClick="OnCheckBoxClick"  TItem="TItem"></TreeNodeCheckbox>
+                <TreeNodeCheckbox OnCheckBoxClick="OnCheckBoxClick" TItem="TItem"></TreeNodeCheckbox>
             }
 
-            <TreeNodeTitle  TItem="TItem"></TreeNodeTitle>
+            <TreeNodeTitle TItem="TItem"></TreeNodeTitle>
 
         </div>
     </CascadingValue>

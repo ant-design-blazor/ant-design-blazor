@@ -1,4 +1,5 @@
 <Tree @ref="tree"
+      SelectedKey="100"
       ShowIcon DataSource="games"
       TitleExpression="x => x.DataItem.Text"
       ChildrenExpression="x => x.DataItem.Items"
@@ -39,48 +40,48 @@
 
     void AddSon()
     {
-        selectedNode.AddSon(GenerateDataItem());
+        selectedNode?.AddChildNode(GenerateDataItem());
     }
 
     void AddNext()
     {
-        selectedNode.AddNext(GenerateDataItem());
+        selectedNode?.AddNextNode(GenerateDataItem());
     }
 
     void AddPrevious()
     {
-        selectedNode.AddPrevious(GenerateDataItem());
+        selectedNode?.AddPreviousNode(GenerateDataItem());
     }
 
     void RemoveSelf()
     {
-        selectedNode.RemoveSelf();
+        selectedNode?.Remove();
     }
 
     void NodeMove()
     {
         var firstNode = tree.ChildNodes.First();
-        selectedNode.NodeMove(firstNode);
+        selectedNode?.MoveInto(firstNode);
     }
 
     void NodeMoveUp()
     {
-        selectedNode.NodeMoveUp();
+        selectedNode?.MoveUp();
     }
 
     void NodeMoveDown()
     {
-        selectedNode.NodeMoveDown();
+        selectedNode?.MoveDown();
     }
 
     void NodeDowngrade()
     {
-        selectedNode.NodeDowngrade();
+        selectedNode?.Downgrade();
     }
 
     void NodeUpgrade()
     {
-        selectedNode.NodeUpgrade();
+        selectedNode?.Upgrade();
     }
 
     List<GameElement> games = new List<GameElement>()

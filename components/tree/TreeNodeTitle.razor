@@ -1,10 +1,11 @@
 ﻿@namespace AntDesign
+@inherits AntDomComponentBase
 @typeparam TItem
 
 <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="@CanDraggable" aria-grabbed="@CanDraggable">
     @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
     {
-        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.IsLoading?"ant-tree-icon_loading":"")">
+        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
             <span class="ant-tree-iconEle ant-tree-icon__customize">
                 @TreeComponent.TitleIconTemplate(SelfNode)
             </span>
@@ -12,7 +13,7 @@
     }
     else if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false && TreeComponent.ShowIcon)
     {
-        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.IsLoading?"ant-tree-icon_loading":"")">
+        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
             <span class="ant-tree-iconEle ant-tree-icon__customize">
                 @if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false)
                 {

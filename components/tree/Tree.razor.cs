@@ -308,7 +308,7 @@ namespace AntDesign
         /// 返回一个值是否是页节点
         /// </summary>
         [Parameter]
-        public Func<TreeNode<TItem>, bool> LeafExpression { get; set; }
+        public Func<TreeNode<TItem>, bool> IsLeafExpression { get; set; }
 
         /// <summary>
         /// 返回子节点的方法
@@ -423,6 +423,12 @@ namespace AntDesign
 
         #endregion Template
 
+        protected override void OnInitialized()
+        {
+            SetClassMapper();
+            base.OnInitialized();
+        }
+
         /// <summary>
         /// Find Node
         /// </summary>
@@ -468,74 +474,26 @@ namespace AntDesign
             }
         }
 
-        private bool _expanded;
-
         /// <summary>
         /// 展开全部节点
         /// </summary>
-        public void Expand()
+        public void ExpandAll()
         {
-            _expanded = true;
-            ToggleMode();
+            this.ChildNodes.ForEach(node => Switch(node, true));
         }
 
         /// <summary>
         /// 折叠全部节点
         /// </summary>
-        public void Collapse()
+        public void CollapseAll()
         {
-            _expanded = false;
-            ToggleMode();
+            this.ChildNodes.ForEach(node => Switch(node, false));
         }
 
-        /// <summary>
-        /// 切换全部节点的折叠、展开模式
-        /// </summary>
-        public void Toggle()
+        private void Switch(TreeNode<TItem> node, bool expanded)
         {
-            _expanded = !_expanded;
-            ToggleMode();
-        }
-
-        private void ToggleMode()
-        {
-            this.ChildNodes.ForEach(tc => Switch(tc, _expanded));
-        }
-
-        private void Switch(TreeNode<TItem> tn, bool exp)
-        {
-            tn.Expand(exp);
-            tn.ChildNodes.ForEach(tc => Switch(tc, exp));
-        }
-
-        protected override void OnInitialized()
-        {
-            SetClassMapper();
-            base.OnInitialized();
-        }
-
-        /// <summary>
-        /// 渲染完成后
-        /// </summary>
-        public Action OnRendered { get; set; }
-
-        /// <summary>
-        /// 新节点数据
-        /// </summary>
-        public TItem NewChildData { get; set; }
-
-        protected override void OnAfterRender(bool firstRender)
-        {
-            base.OnAfterRender(firstRender);
-
-            OnRendered?.Invoke();
-            OnRendered = null;
-
-            if (NewChildData != null)
-            {
-                ChildNodes.FirstOrDefault(treeNode => treeNode.DataItem.Equals(NewChildData))?.SetSelected(true);
-                NewChildData = default;
-            }
+            node.Expand(expanded);
+            node.ChildNodes.ForEach(n => Switch(n, expanded));
         }
     }
 }

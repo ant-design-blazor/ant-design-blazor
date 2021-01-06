@@ -46,7 +46,7 @@ namespace AntDesign
         internal void AddNode(TreeNode<TItem> treeNode)
         {
             ChildNodes.Add(treeNode);
-            Leaf = false;
+            IsLeaf = false;
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace AntDesign
                 .If("ant-tree-treenode-switcher-open", () => SwitcherOpen)
                 .If("ant-tree-treenode-switcher-close", () => SwitcherClose)
                 .If("ant-tree-treenode-checkbox-checked", () => Checked)
-                .If("ant-tree-treenode-checkbox-indeterminate", () => HalfChecked)
+                .If("ant-tree-treenode-checkbox-indeterminate", () => Indeterminate)
                 .If("ant-tree-treenode-selected", () => Selected)
                 .If("ant-tree-treenode-loading", () => Loading);
         }
@@ -212,12 +212,12 @@ namespace AntDesign
         /// 是否为叶子节点
         /// </summary>
         [Parameter]
-        public bool Leaf
+        public bool IsLeaf
         {
             get
             {
-                if (TreeComponent.LeafExpression != null)
-                    return TreeComponent.LeafExpression(this);
+                if (TreeComponent.IsLeafExpression != null)
+                    return TreeComponent.IsLeafExpression(this);
                 else
                     return _isLeaf;
             }
@@ -279,9 +279,9 @@ namespace AntDesign
                 await TreeComponent.OnExpandChanged.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
         }
 
-        private bool SwitcherOpen => Expanded && !Leaf;
+        private bool SwitcherOpen => Expanded && !IsLeaf;
 
-        private bool SwitcherClose => !Expanded && !Leaf;
+        private bool SwitcherClose => !Expanded && !IsLeaf;
 
         #endregion Switcher
 
@@ -291,7 +291,7 @@ namespace AntDesign
         public bool Checked { get; set; }
 
         [Parameter]
-        public bool HalfChecked { get; set; }
+        public bool Indeterminate { get; set; }
 
         [Parameter]
         public bool DisableCheckbox { get; set; }//是否可以选择不受父节点控制
@@ -314,7 +314,7 @@ namespace AntDesign
         {
             if (Disabled) return;
             this.Checked = check;
-            this.HalfChecked = false;
+            this.Indeterminate = false;
             if (HasChildNodes)
             {
                 foreach (var subnode in ChildNodes)
@@ -333,7 +333,7 @@ namespace AntDesign
             if (halfChecked.HasValue && halfChecked.Value == true)
             {//如果子元素存在不确定状态，父元素必定存在不确定状态
                 this.Checked = false;
-                this.HalfChecked = true;
+                this.Indeterminate = true;
             }
             else if (HasChildNodes == true)
             {//判断当前节点的选择状态
@@ -342,7 +342,7 @@ namespace AntDesign
 
                 foreach (var item in ChildNodes)
                 {
-                    if (item.HalfChecked == true) break;
+                    if (item.Indeterminate == true) break;
                     if (item.Checked == true) hasChecked = true;
                     if (item.Checked == false) hasUnchecked = true;
                 }
@@ -350,22 +350,22 @@ namespace AntDesign
                 if (hasChecked && !hasUnchecked)
                 {
                     this.Checked = true;
-                    this.HalfChecked = false;
+                    this.Indeterminate = false;
                 }
                 else if (!hasChecked && hasUnchecked)
                 {
                     this.Checked = false;
-                    this.HalfChecked = false;
+                    this.Indeterminate = false;
                 }
                 else if (hasChecked && hasUnchecked)
                 {
                     this.Checked = false;
-                    this.HalfChecked = true;
+                    this.Indeterminate = true;
                 }
             }
 
             if (ParentNode != null)
-                ParentNode.UpdateCheckState(this.HalfChecked);
+                ParentNode.UpdateCheckState(this.Indeterminate);
 
             //当达到最顶级后进行刷新状态，避免每一级刷新的性能问题
             if (ParentNode == null)
@@ -469,60 +469,58 @@ namespace AntDesign
         /// 添加子节点
         /// </summary>
         /// <param name="dataItem"></param>
-        public void AddSon(TItem dataItem)
+        public void AddChildNode(TItem dataItem)
         {
             ChildDataItems.Add(dataItem);
-
-            this._newChildData = dataItem;
         }
 
         /// <summary>
         /// 节点后面添加节点
         /// </summary>
         /// <param name="dataItem"></param>
-        public void AddNext(TItem dataItem)
+        public void AddNextNode(TItem dataItem)
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(this.DataItem);
             parentChildDataItems.Insert(index + 1, dataItem);
 
-            this._newChildData = dataItem;
+            AddNodeAndSelect(dataItem);
         }
 
         /// <summary>
         /// 节点前面添加节点
         /// </summary>
         /// <param name="dataItem"></param>
-        public void AddPrevious(TItem dataItem)
+        public void AddPreviousNode(TItem dataItem)
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(this.DataItem);
             parentChildDataItems.Insert(index, dataItem);
 
-            this._newChildData = dataItem;
+            AddNodeAndSelect(dataItem);
         }
 
         /// <summary>
         /// 删除节点
         /// </summary>
-        public void RemoveSelf()
+        public void Remove()
         {
             var parentChildDataItems = GetParentChildDataItems();
             parentChildDataItems.Remove(this.DataItem);
         }
 
-        public void NodeMove(TreeNode<TItem> treeNode)
+        public void MoveInto(TreeNode<TItem> treeNode)
         {
             if (treeNode == this || this.DataItem.Equals(treeNode.DataItem)) return;
             var parentChildDataItems = GetParentChildDataItems();
             parentChildDataItems.Remove(this.DataItem);
-            treeNode.AddSon(this.DataItem);
+            treeNode.AddChildNode(this.DataItem);
         }
 
         /// <summary>
         /// 上移节点
         /// </summary>
-        public void NodeMoveUp()
+        public void MoveUp()
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(this.DataItem);
@@ -534,7 +532,7 @@ namespace AntDesign
         /// <summary>
         /// 下移节点
         /// </summary>
-        public void NodeMoveDown()
+        public void MoveDown()
         {
             var parentChildDataItems = GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(this.DataItem);
@@ -546,24 +544,24 @@ namespace AntDesign
         /// <summary>
         /// 降级节点
         /// </summary>
-        public void NodeDowngrade()
+        public void Downgrade()
         {
             var previousNode = GetPreviousNode();
             if (previousNode == null) return;
             var parentChildDataItems = GetParentChildDataItems();
             parentChildDataItems.Remove(this.DataItem);
-            previousNode.AddSon(this.DataItem);
+            previousNode.AddChildNode(this.DataItem);
         }
 
         /// <summary>
         /// 升级节点
         /// </summary>
-        public void NodeUpgrade()
+        public void Upgrade()
         {
             if (this.ParentNode == null) return;
             var parentChildDataItems = this.ParentNode.GetParentChildDataItems();
             var index = parentChildDataItems.IndexOf(this.ParentNode.DataItem);
-            RemoveSelf();
+            Remove();
             parentChildDataItems.Insert(index + 1, this.DataItem);
         }
 
@@ -586,25 +584,13 @@ namespace AntDesign
             base.OnParametersSet();
         }
 
-        /// <summary>
-        /// 新节点数据，用于展开并选择新节点
-        /// </summary>
-        private TItem _newChildData;
-
-        protected override void OnAfterRender(bool firstRender)
+        private void AddNodeAndSelect(TItem dataItem)
         {
-            base.OnAfterRender(firstRender);
-
-            if (_newChildData != null)
+            var tn = ChildNodes.FirstOrDefault(treeNode => treeNode.DataItem.Equals(dataItem));
+            if (tn != null)
             {
-                var tn = ChildNodes.FirstOrDefault(treeNode => treeNode.DataItem.Equals(_newChildData));
-                if (tn != null)
-                {
-                    this.Expand(true);
-                    tn.SetSelected(true);
-                }
-
-                _newChildData = default;
+                this.Expand(true);
+                tn.SetSelected(true);
             }
         }
     }
