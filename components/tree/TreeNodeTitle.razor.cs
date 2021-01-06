@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNodeTitle<TItem>
+    public partial class TreeNodeTitle<TItem> : AntDomComponentBase
     {
         /// <summary>
         /// 树控件本身
@@ -21,11 +21,11 @@ namespace AntDesign
         [CascadingParameter(Name = "SelfNode")]
         public TreeNode<TItem> SelfNode { get; set; }
 
-        private bool CanDraggable => TreeComponent.Draggable && !SelfNode.IsDisabled;
+        private bool CanDraggable => TreeComponent.Draggable && !SelfNode.Disabled;
 
-        private bool IsSwitcherOpen => SelfNode.IsExpanded && !SelfNode.IsLeaf;
+        private bool IsSwitcherOpen => SelfNode.Expanded && !SelfNode.IsLeaf;
 
-        private bool IsSwitcherClose => !SelfNode.IsExpanded && !SelfNode.IsLeaf;
+        private bool IsSwitcherClose => !SelfNode.Expanded && !SelfNode.IsLeaf;
 
         protected ClassMapper TitleClassMapper { get; } = new ClassMapper();
 
@@ -35,7 +35,7 @@ namespace AntDesign
                 .If("draggable", () => CanDraggable)
                 .If("ant-tree-node-content-wrapper-open", () => IsSwitcherOpen)
                 .If("ant-tree-node-content-wrapper-close", () => IsSwitcherClose)
-                .If("ant-tree-node-selected", () => SelfNode.IsSelected);
+                .If("ant-tree-node-selected", () => SelfNode.Selected);
         }
 
         protected override void OnInitialized()
@@ -52,7 +52,7 @@ namespace AntDesign
 
         private async Task OnClick(MouseEventArgs args)
         {
-            SelfNode.SetSelected(!SelfNode.IsSelected);
+            SelfNode.SetSelected(!SelfNode.Selected);
             if (TreeComponent.OnClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
             else if (TreeComponent.OnContextMenu.HasDelegate && args.Button == 2)
@@ -64,7 +64,5 @@ namespace AntDesign
             if (TreeComponent.OnDblClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnDblClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
         }
-
-
     }
 }

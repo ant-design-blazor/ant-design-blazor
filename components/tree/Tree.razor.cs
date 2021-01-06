@@ -2,9 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -43,7 +40,6 @@ namespace AntDesign
         [Parameter]
         public bool Draggable { get; set; }
 
-
         private void SetClassMapper()
         {
             ClassMapper.Clear().Add("ant-tree")
@@ -53,7 +49,7 @@ namespace AntDesign
                 .If("draggable-tree", () => Draggable);
         }
 
-        #endregion
+        #endregion Tree
 
         #region Node
 
@@ -71,10 +67,9 @@ namespace AntDesign
         internal void AddNode(TreeNode<TItem> treeNode)
         {
             ChildNodes.Add(treeNode);
-
         }
 
-        #endregion
+        #endregion Node
 
         #region Selected
 
@@ -194,7 +189,7 @@ namespace AntDesign
             if (SelectedKeysChanged.HasDelegate) SelectedKeysChanged.InvokeAsync(SelectedKeys);
         }
 
-        #endregion
+        #endregion Selected
 
         #region Checkable
 
@@ -215,7 +210,7 @@ namespace AntDesign
             List<TreeNode<TItem>> checkeds = new List<TreeNode<TItem>>();
             foreach (var item in childs)
             {
-                if (item.IsChecked) checkeds.Add(item);
+                if (item.Checked) checkeds.Add(item);
                 checkeds.AddRange(GetCheckedNodes(item.ChildNodes));
             }
             return checkeds;
@@ -230,11 +225,12 @@ namespace AntDesign
             }
         }
 
-        #endregion
+        #endregion Checkable
 
         #region Search
 
         public string _searchValue;
+
         /// <summary>
         /// 按需筛选树,双向绑定
         /// </summary>
@@ -268,11 +264,11 @@ namespace AntDesign
         private bool SearchNode(TreeNode<TItem> treeNode)
         {
             if (SearchExpression != null)
-                treeNode.IsMatched = SearchExpression(treeNode);
+                treeNode.Matched = SearchExpression(treeNode);
             else
-                treeNode.IsMatched = treeNode.Title.Contains(SearchValue);
+                treeNode.Matched = treeNode.Title.Contains(SearchValue);
 
-            var hasChildMatched = treeNode.IsMatched;
+            var hasChildMatched = treeNode.Matched;
             foreach (var item in treeNode.ChildNodes)
             {
                 var itemMatched = SearchNode(item);
@@ -283,7 +279,7 @@ namespace AntDesign
             return hasChildMatched;
         }
 
-        #endregion
+        #endregion Search
 
         #region DataBind
 
@@ -320,7 +316,7 @@ namespace AntDesign
         [Parameter]
         public Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
 
-        #endregion
+        #endregion DataBind
 
         #region Event
 
@@ -397,7 +393,7 @@ namespace AntDesign
         ///// </summary>
         //public EventCallback<TreeEventArgs> OnDragEnd { get; set; }
 
-        #endregion
+        #endregion Event
 
         #region Template
 
@@ -425,7 +421,13 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<TreeNode<TItem>> SwitcherIconTemplate { get; set; }
 
-        #endregion
+        #endregion Template
+
+        protected override void OnInitialized()
+        {
+            SetClassMapper();
+            base.OnInitialized();
+        }
 
         /// <summary>
         /// Find Node
@@ -437,7 +439,7 @@ namespace AntDesign
         {
             foreach (var child in ChildNodes)
             {
-                if (predicate.Invoke(child))
+                if (predicate != null && predicate.Invoke(child))
                 {
                     return child;
                 }
@@ -453,6 +455,7 @@ namespace AntDesign
             }
             return null;
         }
+
         /// <summary>
         /// from node expand to root
         /// </summary>
@@ -471,11 +474,26 @@ namespace AntDesign
             }
         }
 
-
-        protected override void OnInitialized()
+        /// <summary>
+        /// 展开全部节点
+        /// </summary>
+        public void ExpandAll()
         {
-            SetClassMapper();
-            base.OnInitialized();
+            this.ChildNodes.ForEach(node => Switch(node, true));
+        }
+
+        /// <summary>
+        /// 折叠全部节点
+        /// </summary>
+        public void CollapseAll()
+        {
+            this.ChildNodes.ForEach(node => Switch(node, false));
+        }
+
+        private void Switch(TreeNode<TItem> node, bool expanded)
+        {
+            node.Expand(expanded);
+            node.ChildNodes.ForEach(n => Switch(n, expanded));
         }
     }
 }
