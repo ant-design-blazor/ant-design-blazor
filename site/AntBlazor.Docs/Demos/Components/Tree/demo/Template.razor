@@ -8,17 +8,17 @@
                         <TreeNode Title="A2-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A2" IsDisabled TItem="string">
+                <TreeNode Title="A2" Disabled TItem="string">
                     <Nodes>
                         <TreeNode Title="A2-1" TItem="string"></TreeNode>
                         <TreeNode Title="A2-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A3" IsDisableCheckbox TItem="string">
+                <TreeNode Title="A3" DisableCheckbox TItem="string">
                     <Nodes>
                         <TreeNode Title="A3-1" TItem="string"></TreeNode>
-                        <TreeNode Title="A3-2" IsDisableCheckbox TItem="string"></TreeNode>
-                        <TreeNode Title="A3-3" IsDisabled TItem="string"></TreeNode>
+                        <TreeNode Title="A3-2" DisableCheckbox TItem="string"></TreeNode>
+                        <TreeNode Title="A3-3" Disabled TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
             </Nodes>
@@ -47,7 +47,7 @@
         }
     </TitleIconTemplate>
     <SwitcherIconTemplate Context="node">
-        @if (node.IsExpanded)
+        @if (node.Expanded)
         {
             <Icon Type="down-circle" Theme="outline" />
         }
