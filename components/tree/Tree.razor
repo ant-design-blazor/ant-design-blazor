@@ -10,7 +10,7 @@
                 {
                     foreach (var item in DataSource)
                     {
-                        <TreeNode DataItem="@item" TItem="TItem"></TreeNode>
+                        <TreeNode DataItem="@item" @key="item.GetHashCode()"></TreeNode>
                     }
                 }
                 else
