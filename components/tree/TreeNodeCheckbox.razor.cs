@@ -1,17 +1,10 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNodeCheckbox<TItem>
+    public partial class TreeNodeCheckbox<TItem> : AntDomComponentBase
     {
         /// <summary>
         /// 树控件本身
@@ -30,9 +23,9 @@ namespace AntDesign
         private void SetClassMap()
         {
             ClassMapper.Clear().Add("ant-tree-checkbox")
-                .If("ant-tree-checkbox-checked", () => SelfNode.IsChecked)
-                .If("ant-tree-checkbox-indeterminate", () => SelfNode.IsHalfChecked)
-                .If("ant-tree-checkbox-disabled", () => SelfNode.IsDisabled || SelfNode.IsDisableCheckbox)
+                .If("ant-tree-checkbox-checked", () => SelfNode.Checked)
+                .If("ant-tree-checkbox-indeterminate", () => SelfNode.Indeterminate)
+                .If("ant-tree-checkbox-disabled", () => SelfNode.Disabled || SelfNode.DisableCheckbox)
                 ;
         }
 
