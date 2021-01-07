@@ -66,14 +66,32 @@ namespace AntDesign
             if (firstRender && Unbound != null)
             {
                 Ref = RefBack.Current;
-                DomEventService.AddEventListener(Ref, "mouseover", (async e => await OnTriggerMouseEnter()), true);
-                DomEventService.AddEventListener(Ref, "mouseout", (async e => await OnTriggerMouseLeave()), true);
-                DomEventService.AddEventListener(Ref, "focusin", (async e => await OnTriggerFocusIn()), true);
-                DomEventService.AddEventListener(Ref, "focusout", (async e => await OnTriggerFocusOut()), true);
+                DomEventService.AddEventListener(Ref, "mouseover", OnTooltipMouseEnter, true);
+                DomEventService.AddEventListener(Ref, "mouseout", OnTooltipMouseLeave, true);
+                DomEventService.AddEventListener(Ref, "focusin", OnTooltipFocusIn, true);
+                DomEventService.AddEventListener(Ref, "focusout", OnTooltipFocusOut, true);
                 DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
 
             }
             return base.OnAfterRenderAsync(firstRender);
+        }
+
+        private void OnTooltipMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
+        private void OnTooltipMouseLeave(JsonElement jsonElement) => OnTriggerMouseLeave();
+        private void OnTooltipFocusIn(JsonElement jsonElement) => OnTriggerFocusIn();
+        private void OnTooltipFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
+
+        protected override void Dispose(bool disposing)
+        {
+            if (Unbound != null)
+            {
+                DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseover", OnTooltipMouseEnter);
+                DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseout", OnTooltipMouseLeave);
+                DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusin", OnTooltipFocusIn);
+                DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusout", OnTooltipFocusOut);
+                DomEventService.RemoveEventListerner<JsonElement>(Ref, "contextmenu", OnContextMenu);
+            }
+            base.Dispose(disposing);
         }
 
         private async void OnContextMenu(JsonElement jsonElement)
