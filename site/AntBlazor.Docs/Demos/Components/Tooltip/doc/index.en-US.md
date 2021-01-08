@@ -9,14 +9,16 @@ A simple text popup tip.
 
 ## When To Use
 
-- The tip is shown on mouse enter, and is hidden on mouse leave. The Tooltip doesn't support complex text or operations.
+- The tip is shown on mouse enter, and is hidden on mouse leave. The `Tooltip` doesn't support complex text or operations.
 - To provide an explanation of a `button/text/operation`. It's often used instead of the html `title` attribute.
 
 ## Two types
 
-There are 2 rendering approaches for Tooltip:  
-1. Wraps child element (content of the Tooltip) with a ```<div>``` (default approach).
-2. Child element is not wrapped with anything. This approach requires usage of ```<Unbound>``` tag inside ```<Tooltip>``` and child element has to have its ```@ref``` set to ```@context.Current``` (please refer to the first example).
+There are 2 rendering approaches for `Tooltip`:  
+1. Wraps child element (content of the `Tooltip`) with a `<div>` (default approach).
+2. Child element is not wrapped with anything. This approach requires usage of `<Unbound>` tag inside `<Tooltip>` and depending on the child element type (please refer to the first example):
+   - html tag: has to have its `@ref` set to `@context.Current` 
+   - `Ant Design Blazor` component: has to have its `RefBack` attribute set to `@context`.
 
 ## API
 

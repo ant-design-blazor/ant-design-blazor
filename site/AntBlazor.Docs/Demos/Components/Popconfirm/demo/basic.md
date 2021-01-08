@@ -11,7 +11,7 @@ title:
 
 ## en-US
 
-The basic example.
+The basic example of both types of the Popconfirm.
 
 ```jsx
 import { Popconfirm, message } from 'antd';

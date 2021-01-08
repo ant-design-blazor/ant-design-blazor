@@ -11,7 +11,7 @@ title:
 
 ## en-US
 
-The simplest usage of both types of the Tooltip.
+The simplest usage of both types of the `Tooltip`.
 
 ```jsx
 import { Tooltip } from 'antd';
