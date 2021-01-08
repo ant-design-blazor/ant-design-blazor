@@ -66,32 +66,42 @@ namespace AntDesign
             if (firstRender && Unbound != null)
             {
                 Ref = RefBack.Current;
-                DomEventService.AddEventListener(Ref, "mouseover", OnTooltipMouseEnter, true);
-                DomEventService.AddEventListener(Ref, "mouseout", OnTooltipMouseLeave, true);
-                DomEventService.AddEventListener(Ref, "focusin", OnTooltipFocusIn, true);
-                DomEventService.AddEventListener(Ref, "focusout", OnTooltipFocusOut, true);
+                DomEventService.AddEventListener(Ref, "click", OnUnboundClick, true);
+                DomEventService.AddEventListener(Ref, "mouseover", OnUnboundMouseEnter, true);
+                DomEventService.AddEventListener(Ref, "mouseout", OnUnboundMouseLeave, true);
+                DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn, true);
+                DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut, true);
                 DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
 
             }
             return base.OnAfterRenderAsync(firstRender);
         }
 
-        private void OnTooltipMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
-        private void OnTooltipMouseLeave(JsonElement jsonElement) => OnTriggerMouseLeave();
-        private void OnTooltipFocusIn(JsonElement jsonElement) => OnTriggerFocusIn();
-        private void OnTooltipFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
+        private void OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
+        private void OnUnboundMouseLeave(JsonElement jsonElement) => OnTriggerMouseLeave();
+        private void OnUnboundFocusIn(JsonElement jsonElement) => OnTriggerFocusIn();
+        private void OnUnboundFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
 
         protected override void Dispose(bool disposing)
         {
             if (Unbound != null)
             {
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseover", OnTooltipMouseEnter);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseout", OnTooltipMouseLeave);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusin", OnTooltipFocusIn);
-                DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusout", OnTooltipFocusOut);
+                DomEventService.RemoveEventListerner<JsonElement>(Ref, "click", OnUnboundClick);
+                DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
+                DomEventService.RemoveEventListerner<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
+                DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusin", OnUnboundFocusIn);
+                DomEventService.RemoveEventListerner<JsonElement>(Ref, "focusout", OnUnboundFocusOut);
                 DomEventService.RemoveEventListerner<JsonElement>(Ref, "contextmenu", OnContextMenu);
             }
             base.Dispose(disposing);
+        }
+
+        private async void OnUnboundClick(JsonElement jsonElement)
+        {
+            var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            await base.OnClickDiv(eventArgs);
         }
 
         private async void OnContextMenu(JsonElement jsonElement)
