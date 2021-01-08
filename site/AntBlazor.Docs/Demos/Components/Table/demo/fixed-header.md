@@ -3,7 +3,6 @@ order: 18
 title:
   en-US: Fixed Header
   zh-CN: 固定表头
-debug: true
 ---
 
 ## zh-CN

@@ -21,5 +21,9 @@
         internal int[] GetSelectedCacheKeys();
 
         void ReloadData();
+
+        internal void HasFixLeft();
+
+        internal void HasFixRight();
     }
 }

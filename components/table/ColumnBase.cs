@@ -24,6 +24,9 @@ namespace AntDesign
         [CascadingParameter(Name = "RowData")]
         public RowData RowData { get; set; }
 
+        [CascadingParameter(Name = "IsMeasure")]
+        public bool IsMeasure { get; set; }
+
         [Parameter]
         public string Title { get; set; }
 
@@ -53,13 +56,13 @@ namespace AntDesign
 
         public int ColIndex { get; set; }
 
-        //protected string FixedStyle => Fixed != null ? $"position: sticky; {Fixed}: {Width * (Fixed == "left" ? ColIndex : Context.Columns.Count - ColIndex - 1)}px;" : "";
+        protected string FixedStyle => Fixed != null ? $"position: sticky; {Fixed}: {(CssSizeLength)(((CssSizeLength)Width).Value * (Fixed == "left" ? ColIndex : Context.Columns.Count - ColIndex - 1))};" : "";
 
         private void SetClass()
         {
             ClassMapper
                 .Add("ant-table-cell")
-                .If($"ant-table-cell-fix-{Fixed}", () => Fixed.IsIn("right", "left"))
+                .GetIf(() => $"ant-table-cell-fix-{Fixed}", () => Fixed.IsIn("right", "left"))
                 .If($"ant-table-cell-fix-right-first", () => Fixed == "right" && Context?.Columns.FirstOrDefault(x => x.Fixed == "right")?.ColIndex == this.ColIndex)
                 .If($"ant-table-cell-fix-left-last", () => Fixed == "left" && Context?.Columns.LastOrDefault(x => x.Fixed == "left")?.ColIndex == this.ColIndex)
                 .If($"ant-table-cell-with-append", () => ColIndex == 1 && Table.TreeMode)
@@ -79,6 +82,15 @@ namespace AntDesign
             }
 
             SetClass();
+
+            if (Fixed == "left")
+            {
+                Table.HasFixLeft();
+            }
+            else if (Fixed == "right")
+            {
+                Table.HasFixRight();
+            }
         }
 
         protected override void Dispose(bool disposing)

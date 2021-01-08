@@ -31,7 +31,7 @@
                                 @header(this)
                             </table>
                         </div>
-                        <div class="ant-table-body" style="overflow-y: scroll; max-height: @ScrollY;">
+                        <div class="ant-table-body" @ref="_tableBodyRef" style="overflow-y: scroll; max-height: @((CssSizeLength)ScrollY)">
                             <table style="table-layout: fixed;">
                                 @colGroup(this)
                                 <tbody class="ant-table-tbody">
@@ -40,6 +40,23 @@
                                         {
                                             <td style="padding: 0px; border: 0px; height: 0px;"></td>
                                         }
+                                    </tr>
+                                    @body((this, _showItems, 0))
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else if (ScrollX != null)
+                    {
+                        <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden;">
+                            <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; table-layout: fixed;">
+                                @colGroup(this)
+                                @header(this)
+                                <tbody class="ant-table-tbody">
+                                    <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
+                                        <CascadingValue Name="IsMeasure" Value="true">
+                                            @ChildContent(_fieldModel)
+                                        </CascadingValue>
                                     </tr>
                                     @body((this, _showItems, 0))
                                 </tbody>
@@ -119,7 +136,7 @@ RenderFragment<Table<TItem>> colGroup = table =>
             }
             @if (table.ScrollY != null)
             {
-                <col style="width: @(table.ScrollBarWidth)px; min-width: @(table.ScrollBarWidth)px;" />
+                <col style="width: @((CssSizeLength)table.ScrollBarWidth); min-width: @((CssSizeLength)table.ScrollBarWidth);" />
             }
         </colgroup>
     </CascadingValue>
