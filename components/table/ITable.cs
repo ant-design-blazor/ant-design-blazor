@@ -10,6 +10,8 @@
 
         internal string ScrollX { get; }
 
+        internal string ScrollY { get; }
+
         internal int ScrollBarWidth { get; }
 
         public TableLocale Locale { get; set; }

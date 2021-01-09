@@ -69,7 +69,7 @@ namespace AntDesign
                 }
 
                 var fixedWidth = ((CssSizeLength)Width).Value * (Fixed == "left" ? ColIndex : Context.Columns.Count - ColIndex - 1);
-                if (IsHeader && Fixed == "right" && Context.Columns.Count - ColIndex - 1 == 0)
+                if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right" && Context.Columns.Count - ColIndex - 1 == 0)
                 {
                     fixedWidth += Table.ScrollBarWidth;
                 }

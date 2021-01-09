@@ -118,7 +118,7 @@ namespace AntDesign
         int ITable.IndentSize => IndentSize;
 
         string ITable.ScrollX => ScrollX;
-
+        string ITable.ScrollY => ScrollY;
         int ITable.ScrollBarWidth => ScrollBarWidth;
 
         public void ReloadData()
