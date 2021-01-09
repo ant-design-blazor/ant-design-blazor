@@ -35,22 +35,21 @@ export function getDomInfo(element) {
 }
 
 function getElementAbsolutePos(element) {
-    var res:any = new Object();
-    res.x = 0; res.y = 0;
-    if (element !== null) {
-        if (element.getBoundingClientRect) {
-            var viewportElement = document.documentElement;
-            var box = element.getBoundingClientRect();
-            var scrollLeft = viewportElement.scrollLeft;
-            var scrollTop = viewportElement.scrollTop;
+  var res: any = new Object();
+  res.x = 0; res.y = 0;
+  if (element !== null) {
+    if (element.getBoundingClientRect) {
+      var viewportElement = document.documentElement;
+      var box = element.getBoundingClientRect();
+      var scrollLeft = viewportElement.scrollLeft;
+      var scrollTop = viewportElement.scrollTop;
 
-            res.x = box.left + scrollLeft;
-            res.y = box.top + scrollTop;
-        }
+      res.x = box.left + scrollLeft;
+      res.y = box.top + scrollTop;
     }
-    return res;
+  }
+  return res;
 }
-
 
 export function addFileClickEventListener(btn) {
   if ((btn as HTMLElement).addEventListener) {
@@ -268,10 +267,10 @@ export function addClsToFirstChild(element, className) {
 }
 
 export function removeClsFromFirstChild(element, className) {
-    var dom = getDom(element);
-    if (dom.firstElementChild) {
-        dom.firstElementChild.classList.remove(className);
-    }
+  var dom = getDom(element);
+  if (dom.firstElementChild) {
+    dom.firstElementChild.classList.remove(className);
+  }
 }
 
 export function addDomEventListenerToFirstChild(element, eventName, invoker) {
@@ -396,12 +395,12 @@ export function removeCls(selector: Element | string, clsName: string | Array<st
 }
 
 export function elementScrollIntoView(selector: Element | string) {
-    let element = getDom(selector);
+  let element = getDom(selector);
 
-    if(!element)
-        return;
+  if (!element)
+    return;
 
-    element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+  element.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
 }
 
 const oldBodyCacheStack = [];
@@ -441,8 +440,8 @@ export function enableBodyScroll() {
 }
 
 export function destroyAllDialog() {
-    document.querySelectorAll('.ant-modal-root')
-        .forEach(e => document.body.removeChild(e.parentNode));
+  document.querySelectorAll('.ant-modal-root')
+    .forEach(e => document.body.removeChild(e.parentNode));
 }
 
 export function createIconFromfontCN(scriptUrl) {
@@ -498,3 +497,14 @@ function mentionsOnWindowClick(e) {
 //#endregion
 
 export { enableDraggable, disableDraggable, resetModalPosition } from "./modules/dragHelper";
+
+export function bindTableHeaderAndBodyScroll(bodyRef, headerRef) {
+  bodyRef.bindScrollLeftToHeader = () => {
+    headerRef.scrollLeft = bodyRef.scrollLeft;
+  }
+  bodyRef.addEventListener('scroll', bodyRef.bindScrollLeftToHeader);
+}
+
+export function unbindTableHeaderAndBodyScroll(bodyRef) {
+  bodyRef.removeEventListener('scroll', bodyRef.bindScrollLeftToHeader);
+}

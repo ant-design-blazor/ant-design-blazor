@@ -109,6 +109,7 @@ namespace AntDesign
         private bool _pingRight;
         private bool _pingLeft;
 
+        private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
 
         private bool ServerSide => _total > _dataSourceCount;
@@ -262,6 +263,11 @@ namespace AntDesign
                     DomEventService.AddEventListener("window", "resize", OnResize, false);
                     DomEventService.AddEventListener(_tableBodyRef, "scroll", OnScroll);
                 }
+
+                if (ScrollY != null && ScrollX != null)
+                {
+                    await JsInvokeAsync(JSInteropConstants.BindTableHeaderAndBodyScroll, _tableBodyRef, _tableHeaderRef);
+                }
             }
         }
 
@@ -353,6 +359,10 @@ namespace AntDesign
         public async ValueTask DisposeAsync()
         {
             await this.SetScrollPositionClassName(true);
+            if (ScrollY != null && ScrollX != null)
+            {
+                await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);
+            }
         }
     }
 }
