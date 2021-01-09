@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNodeSwitcher<TItem>
+    public partial class TreeNodeSwitcher<TItem> : AntDomComponentBase
     {
         /// <summary>
         /// 树控件本身
@@ -29,12 +29,12 @@ namespace AntDesign
         /// <summary>
         /// 节点是否处于展开状态
         /// </summary>
-        private bool IsSwitcherOpen => SelfNode.IsExpanded && !SelfNode.IsLeaf;
+        private bool IsSwitcherOpen => SelfNode.Expanded && !SelfNode.IsLeaf;
 
         /// <summary>
         /// 节点是否处于关闭状态
         /// </summary>
-        private bool IsSwitcherClose => !SelfNode.IsExpanded && !SelfNode.IsLeaf;
+        private bool IsSwitcherClose => !SelfNode.Expanded && !SelfNode.IsLeaf;
 
         protected ClassMapper ClassMapper { get; } = new ClassMapper();
 

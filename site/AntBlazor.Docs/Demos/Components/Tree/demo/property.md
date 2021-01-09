@@ -1,5 +1,5 @@
 ---
-order: 99
+order: 9
 title:
   zh-CN: 属性
   en-US: Property

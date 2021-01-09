@@ -1,5 +1,5 @@
 ---
-order: 10
+order: 7
 title:
   zh-CN: 修改
   en-US: Modify
