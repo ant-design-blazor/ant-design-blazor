@@ -4,7 +4,11 @@
 @using AntDesign.TableModels
 @typeparam TData
 
-@if (IsPlaceholder)
+@if (IsInitialize)
+{
+    return;
+}
+else if (IsPlaceholder)
 {
     <td style="padding: 0px; border: 0px; height: 0px;"></td>
 }

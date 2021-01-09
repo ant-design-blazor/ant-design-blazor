@@ -8,6 +8,10 @@
 
         internal int IndentSize { get; }
 
+        internal string ScrollX { get; }
+
+        internal int ScrollBarWidth { get; }
+
         public TableLocale Locale { get; set; }
 
         internal void SelectionChanged();

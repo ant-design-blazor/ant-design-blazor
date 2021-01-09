@@ -15,6 +15,9 @@
                         OnPageSizeChange="HandlePageSizeChange" />
         }
         <CascadingValue Value="@this" TValue="ITable">
+            <CascadingValue Name="IsInitialize" Value="true">
+                @ChildContent(_fieldModel)
+            </CascadingValue>
             <div class="@ClassMapper.Class">
                 @if (TitleTemplate != null || Title != null)
                 {
@@ -31,15 +34,14 @@
                                 @header(this)
                             </table>
                         </div>
-                        <div class="ant-table-body" @ref="_tableBodyRef" style="overflow-y: scroll; max-height: @((CssSizeLength)ScrollY)">
-                            <table style="table-layout: fixed;">
+                        <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?"overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY)">
+                            <table style="@(ScrollX!=null?$"width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") table-layout: fixed;">
                                 @colGroup(this)
                                 <tbody class="ant-table-tbody">
-                                    <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px;">
-                                        @for (var i = 0; i < ColumnContext.Columns.Count; i++)
-                                        {
-                                            <td style="padding: 0px; border: 0px; height: 0px;"></td>
-                                        }
+                                    <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
+                                        <CascadingValue Name="IsMeasure" Value="true">
+                                            @ChildContent(_fieldModel)
+                                        </CascadingValue>
                                     </tr>
                                     @body((this, _showItems, 0))
                                 </tbody>
@@ -116,7 +118,7 @@
                 </CascadingValue>
                 @if (table.ScrollY != null)
                 {
-                    <th class="ant-table-cell ant-table-cell-scrollbar"></th>
+                    <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
                 }
             </tr>
         </thead>
@@ -134,7 +136,7 @@ RenderFragment<Table<TItem>> colGroup = table =>
             {
                 @table.ChildContent(_fieldModel)
             }
-            @if (table.ScrollY != null)
+            @if (table.ScrollY != null && !table._hasFixRight)
             {
                 <col style="width: @((CssSizeLength)table.ScrollBarWidth); min-width: @((CssSizeLength)table.ScrollBarWidth);" />
             }
@@ -177,7 +179,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
             <CascadingValue Value="table.ColumnContext">
                 <CascadingValue Value="currentRowData" Name="RowData">
                     <tr @attributes="@(new Dictionary<string,object> { {"onclick", _callbackFactory.Create(table, () => table.RowClick(currentRowData)) } })"
-                        data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "")">
+                        data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "")">
                         @if (table.ExpandTemplate != null)
                         {
                             <td class="ant-table-cell ant-table-row-expand-icon-cell">

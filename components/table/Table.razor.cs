@@ -94,7 +94,7 @@ namespace AntDesign
         [Inject]
         public DomEventService DomEventService { get; set; }
 
-        public ColumnContext ColumnContext { get; set; } = new ColumnContext();
+        public ColumnContext ColumnContext { get; set; }
 
         private IEnumerable<TItem> _showItems;
 
@@ -116,6 +116,10 @@ namespace AntDesign
         bool ITable.TreeMode => _treeMode;
 
         int ITable.IndentSize => IndentSize;
+
+        string ITable.ScrollX => ScrollX;
+
+        int ITable.ScrollBarWidth => ScrollBarWidth;
 
         public void ReloadData()
         {
@@ -210,6 +214,8 @@ namespace AntDesign
             {
                 ChildContent = RowTemplate;
             }
+
+            this.ColumnContext = new ColumnContext(this);
 
             SetClass();
 

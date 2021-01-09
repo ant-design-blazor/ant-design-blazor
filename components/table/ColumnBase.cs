@@ -9,6 +9,9 @@ namespace AntDesign
         [CascadingParameter]
         public ITable Table { get; set; }
 
+        [CascadingParameter(Name = "IsInitialize")]
+        public bool IsInitialize { get; set; }
+
         [CascadingParameter(Name = "IsHeader")]
         public bool IsHeader { get; set; }
 
@@ -56,7 +59,24 @@ namespace AntDesign
 
         public int ColIndex { get; set; }
 
-        protected string FixedStyle => Fixed != null ? $"position: sticky; {Fixed}: {(CssSizeLength)(((CssSizeLength)Width).Value * (Fixed == "left" ? ColIndex : Context.Columns.Count - ColIndex - 1))};" : "";
+        protected string FixedStyle
+        {
+            get
+            {
+                if (Fixed == null || Context == null)
+                {
+                    return "";
+                }
+
+                var fixedWidth = ((CssSizeLength)Width).Value * (Fixed == "left" ? ColIndex : Context.Columns.Count - ColIndex - 1);
+                if (IsHeader && Fixed == "right" && Context.Columns.Count - ColIndex - 1 == 0)
+                {
+                    fixedWidth += Table.ScrollBarWidth;
+                }
+
+                return $"position: sticky; {Fixed}: {(CssSizeLength)fixedWidth}";
+            }
+        }
 
         private void SetClass()
         {
@@ -75,6 +95,14 @@ namespace AntDesign
             if (IsHeader)
             {
                 Context?.AddHeaderColumn(this);
+                if (Fixed == "left")
+                {
+                    Table.HasFixLeft();
+                }
+                else if (Fixed == "right")
+                {
+                    Table.HasFixRight();
+                }
             }
             else
             {
@@ -82,15 +110,6 @@ namespace AntDesign
             }
 
             SetClass();
-
-            if (Fixed == "left")
-            {
-                Table.HasFixLeft();
-            }
-            else if (Fixed == "right")
-            {
-                Table.HasFixRight();
-            }
         }
 
         protected override void Dispose(bool disposing)
