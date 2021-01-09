@@ -1,9 +1,17 @@
 ﻿@namespace AntDesign
 @inherits ColumnBase
 
-@if (IsPlaceholder)
+@if (IsInitialize)
+{
+    return;
+}
+else if (IsPlaceholder)
 {
     <td style="padding: 0px; border: 0px; height: 0px;"></td>
+}
+else if (IsMeasure)
+{
+    <td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>
 }
 else if (IsColGroup)
 {
@@ -18,13 +26,13 @@ else if (IsColGroup)
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-    <th class="@ClassMapper.Class" style="@HeaderStyle" colspan="@HeaderColSpan">
+    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan">
         @if (TitleTemplate != null)@TitleTemplate else @Title
     </th>
 }
 else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 {
-    <td class="@ClassMapper.Class" style="@Style" rowspan="@RowSpan" colspan="@ColSpan">
+    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan">
         @ChildContent
     </td>
 }
