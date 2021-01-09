@@ -92,7 +92,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            if (IsHeader)
+            if (IsInitialize)
             {
                 Context?.AddHeaderColumn(this);
                 if (Fixed == "left")
@@ -103,6 +103,10 @@ namespace AntDesign
                 {
                     Table.HasFixRight();
                 }
+            }
+            else if (IsColGroup && Width == null)
+            {
+                Context?.AddColGroup(this);
             }
             else
             {
