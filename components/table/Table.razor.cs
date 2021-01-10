@@ -108,6 +108,7 @@ namespace AntDesign
         private bool _hasFixRight;
         private bool _pingRight;
         private bool _pingLeft;
+        private bool _tableLayoutIsFixed;
 
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
@@ -305,6 +306,8 @@ namespace AntDesign
         void ITable.HasFixLeft() => _hasFixLeft = true;
 
         void ITable.HasFixRight() => _hasFixRight = true;
+
+        void ITable.TableLayoutIsFixed() => _tableLayoutIsFixed = true;
 
         private async void OnResize(JsonElement _) => await SetScrollPositionClassName();
 
