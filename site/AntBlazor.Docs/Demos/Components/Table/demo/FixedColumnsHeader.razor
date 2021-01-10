@@ -2,14 +2,14 @@
 <Table DataSource="data" PageSize="10" ScrollX="1500" ScrollY="300">
     <Column @bind-Field="@context.Name" Width="100" Fixed="left" />
     <Column @bind-Field="@context.Age" Width="100" Fixed="left" />
-    <Column Title="Column 1" Width="150" @bind-Field="@context.Address" />
-    <Column Title="Column 2" Width="150" @bind-Field="@context.Address" />
-    <Column Title="Column 3" Width="150" @bind-Field="@context.Address" />
-    <Column Title="Column 4" Width="150" @bind-Field="@context.Address" />
-    <Column Title="Column 5" Width="150" @bind-Field="@context.Address" />
-    <Column Title="Column 6" Width="150" @bind-Field="@context.Address" />
-    <Column Title="Column 7" Width="150" @bind-Field="@context.Address" />
-    <Column Title="Column 8" @bind-Field="@context.Address" />
+    <Column @bind-Field="@context.Address" Width="150" Title="Column 1" />
+    <Column @bind-Field="@context.Address" Width="150" Title="Column 2" />
+    <Column @bind-Field="@context.Address" Width="150" Title="Column 3" />
+    <Column @bind-Field="@context.Address" Width="150" Title="Column 4" />
+    <Column @bind-Field="@context.Address" Width="150" Title="Column 5" />
+    <Column @bind-Field="@context.Address" Width="150" Title="Column 6" />
+    <Column @bind-Field="@context.Address" Width="150" Title="Column 7" />
+    <Column @bind-Field="@context.Address" Title="Column 8" />
     <ActionColumn Title="Action" Width="100" Fixed="right">
         <a>action</a>
     </ActionColumn>
