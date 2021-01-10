@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNodeCheckbox<TItem> : AntDomComponentBase
+    public partial class TreeNodeCheckbox<TItem> : ComponentBase
     {
         /// <summary>
         /// 树控件本身

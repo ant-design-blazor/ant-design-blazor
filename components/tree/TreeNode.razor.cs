@@ -188,11 +188,9 @@ namespace AntDesign
         [Parameter]
         public bool Loading { get; set; }
 
-        protected ClassMapper TreeNodeClassMapper { get; } = new ClassMapper();
-
         private void SetTreeNodeClassMapper()
         {
-            TreeNodeClassMapper.Clear().Add("ant-tree-treenode")
+            ClassMapper.Clear().Add("ant-tree-treenode")
                 .If("ant-tree-treenode-disabled", () => Disabled)
                 .If("ant-tree-treenode-switcher-open", () => SwitcherOpen)
                 .If("ant-tree-treenode-switcher-close", () => SwitcherClose)

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNodeSwitcher<TItem> : AntDomComponentBase
+    public partial class TreeNodeSwitcher<TItem> : ComponentBase
     {
         /// <summary>
         /// 树控件本身
