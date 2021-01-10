@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this">
-    <button class="@ClassMapper.Class" style="@(this.Danger ? this._btnWave + Style:Style)" id="@Id" type="@HtmlType"
+    <button class="@ClassMapper.Class" style="@(this.Danger ? this._btnWave + Style:Style)" id="@Id" type="@HtmlType" @ref="@Ref"
             @onclick="HandleOnClick" disabled="@Disabled"
             @onmouseup="OnMouseUp"
             ant-click-animating-without-extra-node="@(this._animating ? "true":"false")">
