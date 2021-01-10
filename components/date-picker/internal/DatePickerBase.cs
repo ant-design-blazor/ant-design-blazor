@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
+using AntDesign.core.Extensions;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -21,7 +22,32 @@ namespace AntDesign
 
         protected string _picker;
         protected bool _isSetPicker = false;
-        protected bool _isNullable = false;
+        private bool _isNullableEvaluated;
+        private bool _isNullable;
+
+        /// <summary>
+        /// Stores information if TValue is a nullable type.
+        /// </summary>
+        protected bool IsNullable
+        {
+            get
+            {
+                if (!_isNullableEvaluated)
+                {
+                    Type type = typeof(TValue);
+                    if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[])))
+                    {
+                        _isNullable = true;
+                    }
+                    else
+                    {
+                        _isNullable = false;
+                    }
+                    _isNullableEvaluated = true;
+                }
+                return _isNullable;
+            }
+        }
 
         [Parameter]
         public string Picker
@@ -121,46 +147,21 @@ namespace AntDesign
         [Parameter]
         public string Format { get; set; }
 
-        protected readonly DateTime?[] DefaultValues = new DateTime?[2];
-        private OneOf<DateTime, DateTime[]> _defaultValue;
-
+        private TValue _defaultValue;
         [Parameter]
-        public OneOf<DateTime, DateTime[]> DefaultValue
+        public TValue DefaultValue
         {
             get => _defaultValue;
-            set
-            {
-                _defaultValue = value;
-                value.Switch(single =>
-                {
-                    DefaultValues[0] = single;
-                }, arr =>
-                {
-                    DefaultValues[0] = arr.Length > 0 ? arr[0] : DefaultValues[0];
-                    DefaultValues[1] = arr.Length > 1 ? arr[1] : DefaultValues[1];
-                });
-            }
+            set => _defaultValue = SortValue(value);
         }
 
-        private readonly DateTime?[] _defaultPickerValues = new DateTime?[2];
-        private OneOf<DateTime, DateTime[]> _defaultPickerValue;
-
+        protected bool[] UseDefaultPickerValue { get; } = new bool[2];
+        private TValue _defaultPickerValue;
         [Parameter]
-        public OneOf<DateTime, DateTime[]> DefaultPickerValue
+        public TValue DefaultPickerValue
         {
             get => _defaultPickerValue;
-            set
-            {
-                _defaultPickerValue = value;
-                value.Switch(single =>
-                {
-                    _defaultPickerValues[0] = single;
-                }, arr =>
-                {
-                    _defaultPickerValues[0] = arr.Length > 0 ? arr[0] : _defaultPickerValues[0];
-                    _defaultPickerValues[1] = arr.Length > 1 ? arr[1] : _defaultPickerValues[1];
-                });
-            }
+            set => _defaultPickerValue = SortValue(value);
         }
 
         [Parameter]
@@ -199,26 +200,7 @@ namespace AntDesign
 
         public DateTime CurrentDate { get; set; } = DateTime.Now;
 
-        protected readonly DateTime[] PickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
-        protected OneOf<DateTime, DateTime[]> _pickerValue;
-
-        [Parameter]
-        public OneOf<DateTime, DateTime[]> PickerValue
-        {
-            get => _pickerValue;
-            set
-            {
-                _pickerValue = value;
-                value.Switch(single =>
-                {
-                    PickerValues[0] = single;
-                }, arr =>
-                {
-                    PickerValues[0] = arr.Length > 0 ? arr[0] : PickerValues[0];
-                    PickerValues[1] = arr.Length > 1 ? arr[1] : PickerValues[1];
-                });
-            }
-        }
+        protected DateTime[] PickerValues { get; } = new DateTime[] { DateTime.Now, DateTime.Now };
 
         public bool IsRange { get; set; }
 
@@ -242,16 +224,6 @@ namespace AntDesign
             if (_isSetPicker == false)
             {
                 Picker = DatePickerType.Date;
-            }
-
-            Type type = typeof(TValue);
-            if (type.IsAssignableFrom(typeof(DateTime?)) || type.IsAssignableFrom(typeof(DateTime?[])))
-            {
-                _isNullable = true;
-            }
-            else
-            {
-                _isNullable = false;
             }
 
             this.SetClass();
@@ -396,15 +368,7 @@ namespace AntDesign
                 (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(picker, Locale);
                 _placeholders[0] = first;
                 _placeholders[1] = second;
-            }
-            else
-            {
-                string first = DatePickerPlaceholder.GetPlaceholderByType(picker, Locale);
-                _placeholders[0] = first;
-                _placeholders[1] = first;
-            }
-            if (IsRange)
-            {
+
                 DateTime now = DateTime.Now;
                 PickerValues[1] = picker switch
                 {
@@ -416,6 +380,12 @@ namespace AntDesign
                     DatePickerType.Year => now.AddYears(10),
                     _ => now,
                 };
+            }
+            else
+            {
+                string first = DatePickerPlaceholder.GetPlaceholderByType(picker, Locale);
+                _placeholders[0] = first;
+                _placeholders[1] = first;
             }
         }
 
@@ -490,13 +460,33 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Get pickerValue by picker index
+        /// Get pickerValue by picker index. Note that index refers to a picker panel 
+        /// and not to input text. For RangePicker 2 inputs generate 2 panels.
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
         public DateTime GetIndexPickerValue(int index)
         {
-            return PickerValues[index];
+            int tempIndex = GetOnFocusPickerIndex();
+            if (index == 0)
+            {
+                return PickerValues[tempIndex];
+            }
+            else
+            {
+                //First picker panel will show the value, second panel shows next 
+                //expected value that depends on Picker type
+                return Picker switch
+                {
+                    DatePickerType.Date => PickerValues[tempIndex].AddMonths(1),
+                    DatePickerType.Week => PickerValues[tempIndex].AddMonths(1),
+                    DatePickerType.Month => PickerValues[tempIndex].AddYears(1),
+                    DatePickerType.Decade => PickerValues[tempIndex].AddYears(1),
+                    DatePickerType.Quarter => PickerValues[tempIndex].AddYears(1),
+                    DatePickerType.Year => PickerValues[tempIndex].AddYears(10),
+                    _ => DateTime.Now,
+                };
+            }
         }
 
         public void ChangePlaceholder(string placeholder, int index = 0)
@@ -527,21 +517,26 @@ namespace AntDesign
             return value.ToString(formater, CultureInfo);
         }
 
-        internal void ChangePickerValue(DateTime date, int index = 0)
+        /// <summary>
+        /// Changes what date(s) will be visible on the picker. 
+        /// </summary>
+        /// <param name="date">New date to be saved.</param>
+        /// <param name="index">Index of the input box, where 0 = inputStart and 1 = inputEnd (only RangePicker)</param>
+        internal void ChangePickerValue(DateTime date, int? index = null)
         {
-            TimeSpan interval = date - PickerValues[index];
+            if (index == null)
+                index = GetOnFocusPickerIndex();
 
-            PickerValues[index] = date;
-
+            PickerValues[index.Value] = date;
             if (IsRange)
             {
-                if (index == 0)
+                if (!UseDefaultPickerValue[1] && !_pickerStatus[1]._hadSelectValue && index == 0)
                 {
-                    PickerValues[1] = PickerValues[1].Add(interval);
+                    PickerValues[1] = date;
                 }
-                else
+                else if (!UseDefaultPickerValue[0] && !_pickerStatus[0]._hadSelectValue && index == 1)
                 {
-                    PickerValues[0] = PickerValues[0].Add(interval);
+                    PickerValues[0] = date;
                 }
             }
 
@@ -549,7 +544,7 @@ namespace AntDesign
             {
                 OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs
                 {
-                    Date = PickerValues[index],
+                    Date = PickerValues[index.Value],
                     DateString = _picker
                 });
             }
@@ -600,6 +595,35 @@ namespace AntDesign
         public void InvokeStateHasChanged()
         {
             StateHasChanged();
+        }
+
+        protected TValue SortValue(TValue value)
+        {
+            if (value == null)
+            {
+                return value;
+            }
+            TValue orderedValue = value;
+            if (IsRange)
+            {
+                if (IsNullable)
+                {
+                    var tempValue = value as DateTime?[];
+                    if ((tempValue[0] ?? DateTime.Now).CompareTo((tempValue[1] ?? DateTime.Now)) > 0)
+                    {
+                        orderedValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { tempValue[1], tempValue[0] });
+                    }
+                }
+                else
+                {
+                    var tempValue = value as DateTime[];
+                    if (tempValue[0].CompareTo(tempValue[1]) > 0)
+                    {
+                        orderedValue = DataConvertionExtensions.Convert<DateTime[], TValue>(new DateTime[] { tempValue[1], tempValue[0] });
+                    }
+                }
+            }
+            return orderedValue;
         }
     }
 }
