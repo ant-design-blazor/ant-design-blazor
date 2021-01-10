@@ -36,7 +36,7 @@ namespace AntDesign
         public Action ClosePanel { get; set; }
 
         [Parameter]
-        public Action<DateTime, int> ChangePickerValue { get; set; }
+        public Action<DateTime, int?> ChangePickerValue { get; set; } //nullable int as picker index is no longer needed here unless forced
 
         [Parameter]
         public Action<DateTime, int> ChangeValue { get; set; }
@@ -176,7 +176,7 @@ namespace AntDesign
             int? second = null)
         {
             return DateHelper.CombineNewDate(
-                PickerValue,
+                GetIndexPickerValue(0),
                 year,
                 month,
                 day,
@@ -188,12 +188,12 @@ namespace AntDesign
 
         protected void ChangePickerYearValue(int interval)
         {
-            ChangePickerValue(PickerValue.AddYears(interval), PickerIndex);
+            ChangePickerValue(GetIndexPickerValue(0).AddYears(interval), null);
         }
 
         protected void ChangePickerMonthValue(int interval)
         {
-            ChangePickerValue(PickerValue.AddMonths(interval), PickerIndex);
+            ChangePickerValue(GetIndexPickerValue(0).AddMonths(interval), null);
         }
 
         protected void Close()

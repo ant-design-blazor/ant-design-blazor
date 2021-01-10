@@ -6,6 +6,10 @@ namespace AntDesign.Internal
 {
     public partial class DatePickerTemplate<TValue> : DatePickerPanelBase<TValue>
     {
+        private int _maxCol;
+        private int _maxRow;
+        private DateTime _viewStartDate;
+
         [Parameter]
         public RenderFragment RenderPickerHeader { get; set; }
 
@@ -22,7 +26,14 @@ namespace AntDesign.Internal
         public RenderFragment<DateTime> RenderLastCol { get; set; }
 
         [Parameter]
-        public DateTime ViewStartDate { get; set; }
+        public DateTime ViewStartDate
+        {
+            get { return _viewStartDate; }
+            set {
+                if (_viewStartDate != value)
+                    _viewStartDate = value;
+            }
+        }
 
         [Parameter]
         public Func<DateTime, string> GetColTitle { get; set; }
@@ -52,10 +63,24 @@ namespace AntDesign.Internal
         public bool ShowFooter { get; set; } = false;
 
         [Parameter]
-        public int MaxRow { get; set; } = 0;
+        public int MaxRow
+        {
+            get { return _maxRow; }
+            set {
+                if (_maxRow != value)
+                    _maxRow = value;
+            }
+        }
 
         [Parameter]
-        public int MaxCol { get; set; } = 0;
+        public int MaxCol
+        {
+            get { return _maxCol; }
+            set {
+                if (_maxCol != value)
+                    _maxCol = value;
+            }
+        }
 
         private void DateOnMouseEnter(DateTime hoverDateTime)
         {
@@ -127,7 +152,7 @@ namespace AntDesign.Internal
         private string GetCellCls(DateTime currentColDate)
         {
             bool isInView = IsInView(currentColDate);
-            bool isToday = IsToday(currentColDate);
+            bool isToday = IsToday(currentColDate); 
             bool isSelected = IsSelected(currentColDate);
             bool isInRange = IsDateInRange(currentColDate);
 
@@ -401,14 +426,21 @@ namespace AntDesign.Internal
 
         private DateTime GetPreDate(DateTime dateTime)
         {
-            return Picker switch
+            try
             {
-                DatePickerType.Date => dateTime.AddDays(-1),
-                DatePickerType.Year => dateTime.AddYears(-1),
-                DatePickerType.Month => dateTime.AddMonths(-1),
-                DatePickerType.Quarter => dateTime.AddMonths(-3),
-                _ => dateTime,
-            };
+                return Picker switch
+                {
+                    DatePickerType.Date => dateTime.AddDays(-1),
+                    DatePickerType.Year => dateTime.AddYears(-1),
+                    DatePickerType.Month => dateTime.AddMonths(-1),
+                    DatePickerType.Quarter => dateTime.AddMonths(-3),
+                    _ => dateTime,
+                };
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return dateTime; //reached min date, return requested
+            }
         }
 
         private DateTime GetNextDate(DateTime dateTime)
