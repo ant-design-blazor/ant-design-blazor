@@ -26,6 +26,10 @@ namespace AntDesign
 
     public readonly struct CssSizeLength : IEquatable<CssSizeLength>
     {
+        public int Value => _value;
+
+        internal CssSizeLengthUnit Unit => _unit;
+
         private readonly int _value;
 
         private readonly CssSizeLengthUnit _unit;

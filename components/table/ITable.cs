@@ -8,6 +8,12 @@
 
         internal int IndentSize { get; }
 
+        internal string ScrollX { get; }
+
+        internal string ScrollY { get; }
+
+        internal int ScrollBarWidth { get; }
+
         public TableLocale Locale { get; set; }
 
         internal void SelectionChanged();
@@ -21,5 +27,11 @@
         internal int[] GetSelectedCacheKeys();
 
         void ReloadData();
+
+        internal void HasFixLeft();
+
+        internal void HasFixRight();
+
+        internal void TableLayoutIsFixed();
     }
 }

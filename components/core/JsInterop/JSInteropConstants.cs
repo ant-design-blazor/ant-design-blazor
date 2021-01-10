@@ -82,6 +82,10 @@ namespace AntDesign
         public static string DisposeObj => $"{FUNC_PREFIX}disposeObj";
 
         public static string ElementScrollIntoView => $"{FUNC_PREFIX}elementScrollIntoView";
+
+        public static string BindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}bindTableHeaderAndBodyScroll";
+        public static string UnbindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}unbindTableHeaderAndBodyScroll";
+
         #region Draggable Modal
 
         public static string EnableDraggable => $"{FUNC_PREFIX}enableDraggable";

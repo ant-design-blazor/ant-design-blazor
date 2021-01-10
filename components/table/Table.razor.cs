@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Threading.Tasks;
 using AntDesign.Core.HashCodes;
+using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Table<TItem> : AntDomComponentBase, ITable
+    public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
     {
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
         private bool _shouldRender = true;
-        private int _parametersHashCode = 0;
+        private int _parametersHashCode;
 
         [Parameter]
         public RenderMode RenderMode { get; set; } = RenderMode.Always;
@@ -88,21 +91,37 @@ namespace AntDesign
         [Parameter]
         public int IndentSize { get; set; } = 15;
 
-        public ColumnContext ColumnContext { get; set; } = new ColumnContext();
+        [Inject]
+        public DomEventService DomEventService { get; set; }
+
+        public ColumnContext ColumnContext { get; set; }
 
         private IEnumerable<TItem> _showItems;
 
         private IEnumerable<TItem> _dataSource;
 
-        private bool _waitingReload = false;
-        private bool _waitingReloadAndInvokeChange = false;
-        private bool _treeMode = false;
+        private bool _waitingReload;
+        private bool _waitingReloadAndInvokeChange;
+        private bool _treeMode;
+
+        private bool _hasFixLeft;
+        private bool _hasFixRight;
+        private bool _pingRight;
+        private bool _pingLeft;
+        private bool _tableLayoutIsFixed;
+
+        private ElementReference _tableHeaderRef;
+        private ElementReference _tableBodyRef;
 
         private bool ServerSide => _total > _dataSourceCount;
 
         bool ITable.TreeMode => _treeMode;
 
         int ITable.IndentSize => IndentSize;
+
+        string ITable.ScrollX => ScrollX;
+        string ITable.ScrollY => ScrollY;
+        int ITable.ScrollBarWidth => ScrollBarWidth;
 
         public void ReloadData()
         {
@@ -181,10 +200,11 @@ namespace AntDesign
                 .If($"{prefixCls}-bordered", () => Bordered)
                 .If($"{prefixCls}-small", () => Size == TableSize.Small)
                 .If($"{prefixCls}-middle", () => Size == TableSize.Middle)
-                //.Add( "ant-table ant-table-ping-left ant-table-ping-right ")
-                .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ColumnContext.Columns.Any(x => x.Fixed.IsIn("left", "right")))
-                .If($"{prefixCls}-has-fix-left", () => ColumnContext.Columns.Any(x => x.Fixed == "left"))
-                .If($"{prefixCls}-has-fix-right {prefixCls}-ping-right ", () => ColumnContext.Columns.Any(x => x.Fixed == "right"))
+                .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ScrollX != null)
+                .If($"{prefixCls}-has-fix-left", () => _hasFixLeft)
+                .If($"{prefixCls}-has-fix-right", () => _hasFixRight)
+                .If($"{prefixCls}-ping-left", () => _pingLeft)
+                .If($"{prefixCls}-ping-right", () => _pingRight)
                 ;
         }
 
@@ -196,6 +216,8 @@ namespace AntDesign
             {
                 ChildContent = RowTemplate;
             }
+
+            this.ColumnContext = new ColumnContext(this);
 
             SetClass();
 
@@ -229,6 +251,27 @@ namespace AntDesign
             }
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
+            {
+                if (ScrollX != null)
+                {
+                    await SetScrollPositionClassName();
+
+                    DomEventService.AddEventListener("window", "resize", OnResize, false);
+                    DomEventService.AddEventListener(_tableBodyRef, "scroll", OnScroll);
+                }
+
+                if (ScrollY != null && ScrollX != null)
+                {
+                    await JsInvokeAsync(JSInteropConstants.BindTableHeaderAndBodyScroll, _tableBodyRef, _tableHeaderRef);
+                }
+            }
+        }
+
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
@@ -257,6 +300,71 @@ namespace AntDesign
             if (OnRowClick.HasDelegate)
             {
                 OnRowClick.InvokeAsync(item);
+            }
+        }
+
+        void ITable.HasFixLeft() => _hasFixLeft = true;
+
+        void ITable.HasFixRight() => _hasFixRight = true;
+
+        void ITable.TableLayoutIsFixed() => _tableLayoutIsFixed = true;
+
+        private async void OnResize(JsonElement _) => await SetScrollPositionClassName();
+
+        private async void OnScroll(JsonElement _) => await SetScrollPositionClassName();
+
+        private async Task SetScrollPositionClassName(bool clear = false)
+        {
+            var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tableBodyRef);
+            var scrollWidth = element.scrollWidth;
+            var scrollLeft = element.scrollLeft;
+            var clientWidth = element.clientWidth;
+
+            var beforePingLeft = _pingLeft;
+            var beforePingRight = _pingRight;
+
+            if ((scrollWidth == clientWidth && scrollWidth != 0) || clear)
+            {
+                _pingLeft = false;
+                _pingRight = false;
+            }
+            else if (scrollLeft == 0)
+            {
+                _pingLeft = false;
+                _pingRight = true;
+            }
+            else if (scrollWidth == scrollLeft + clientWidth)
+            {
+                _pingRight = false;
+                _pingLeft = true;
+            }
+            else
+            {
+                _pingLeft = true;
+                _pingRight = true;
+            }
+
+            _shouldRender = beforePingLeft != _pingLeft || beforePingRight != _pingRight;
+            if (!clear)
+            {
+                StateHasChanged();
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnResize);
+            DomEventService.RemoveEventListerner<JsonElement>(_tableBodyRef, "scroll", OnScroll);
+
+            base.Dispose(disposing);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await this.SetScrollPositionClassName(true);
+            if (ScrollY != null && ScrollX != null)
+            {
+                await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);
             }
         }
     }

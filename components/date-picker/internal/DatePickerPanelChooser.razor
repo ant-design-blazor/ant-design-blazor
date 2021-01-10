@@ -4,7 +4,7 @@
 
 @{
     Action ClosePanel = () => { DatePicker.Close(); };
-    Action<DateTime, int> ChangePickerValue = (date, index) => { DatePicker.ChangePickerValue(date, index); };
+    Action<DateTime, int?> ChangePickerValue = (date, index) => { DatePicker.ChangePickerValue(date, index); };
     Action<DateTime, int> ChangeValue = (date, index) => { DatePicker.ChangeValue(date, index); };
     Action<string, int> ChangePickerType = (type, index) => { DatePicker.ChangePickerType(type, index); };
     Func<int, DateTime> GetIndexPickerValue = (index) => DatePicker.GetIndexPickerValue(index);
