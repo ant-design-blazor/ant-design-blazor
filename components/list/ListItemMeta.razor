@@ -35,7 +35,14 @@
         }
 
         <div class="ant-list-item-meta-description">
-            @Description
+            @if (!string.IsNullOrWhiteSpace(Description))
+            {
+                @Description
+            }
+            else
+            {
+                @DescriptionTemplate
+            }
         </div>
     </div>
 </div>
