@@ -31,5 +31,7 @@
         internal void HasFixLeft();
 
         internal void HasFixRight();
+
+        internal void TableLayoutIsFixed();
     }
 }

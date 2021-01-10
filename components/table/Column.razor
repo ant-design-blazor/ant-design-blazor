@@ -29,7 +29,7 @@ else if (IsColGroup)
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" @onclick="HandelHeaderClick" colspan="@HeaderColSpan">
+    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" @onclick="HandelHeaderClick" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")">
         @if (Sortable)
         {
             if (ShowSorterTooltip)
@@ -53,10 +53,13 @@ else if (IsHeader && HeaderColSpan != 0)
 }
 else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 {
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan">
+
+    var fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(Field, Format) : Field.ToString();
+
+    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis?fieldText:"")">
         @if (ColIndex == 1 && Table.TreeMode)
         {
-            <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @(RowData.Level* Table.IndentSize)px;"></span>
+            <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level* Table.IndentSize));"></span>
             @if (RowData.HasChildren)
             {
                 <button type="button" @onclick="ToggleTreeNode" class="ant-table-row-expand-icon @(RowData?.Expanded==true?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded==true?Table.Locale.Collapse:Table.Locale.Expand)"></button>

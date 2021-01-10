@@ -57,6 +57,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        [Parameter]
+        public bool Ellipsis { get; set; }
+
         public int ColIndex { get; set; }
 
         protected string FixedStyle
@@ -68,13 +71,29 @@ namespace AntDesign
                     return "";
                 }
 
-                var fixedWidth = ((CssSizeLength)Width).Value * (Fixed == "left" ? ColIndex : Context.Columns.Count - ColIndex - 1);
-                if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right" && Context.Columns.Count - ColIndex - 1 == 0)
+                var fixedWidth = 0;
+
+                if (Fixed == "left" && Context?.Columns.Count >= ColIndex)
+                {
+                    for (int i = 0; i < ColIndex; i++)
+                    {
+                        fixedWidth += ((CssSizeLength)Context?.Columns[i].Width).Value;
+                    }
+                }
+                else if (Fixed == "right")
+                {
+                    for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
+                    {
+                        fixedWidth += ((CssSizeLength)Context?.Columns[i].Width).Value;
+                    }
+                }
+
+                if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
                 {
                     fixedWidth += Table.ScrollBarWidth;
                 }
 
-                return $"position: sticky; {Fixed}: {(CssSizeLength)fixedWidth}";
+                return $"position: sticky; {Fixed}: {(CssSizeLength)fixedWidth};";
             }
         }
 
@@ -86,6 +105,7 @@ namespace AntDesign
                 .If($"ant-table-cell-fix-right-first", () => Fixed == "right" && Context?.Columns.FirstOrDefault(x => x.Fixed == "right")?.ColIndex == this.ColIndex)
                 .If($"ant-table-cell-fix-left-last", () => Fixed == "left" && Context?.Columns.LastOrDefault(x => x.Fixed == "left")?.ColIndex == this.ColIndex)
                 .If($"ant-table-cell-with-append", () => ColIndex == 1 && Table.TreeMode)
+                .If($"ant-table-cell-ellipsis", () => Ellipsis)
                 ;
         }
 
@@ -97,11 +117,16 @@ namespace AntDesign
                 Context?.AddHeaderColumn(this);
                 if (Fixed == "left")
                 {
-                    Table.HasFixLeft();
+                    Table?.HasFixLeft();
                 }
                 else if (Fixed == "right")
                 {
-                    Table.HasFixRight();
+                    Table?.HasFixRight();
+                }
+
+                if (Ellipsis)
+                {
+                    Table?.TableLayoutIsFixed();
                 }
             }
             else if (IsColGroup && Width == null)
