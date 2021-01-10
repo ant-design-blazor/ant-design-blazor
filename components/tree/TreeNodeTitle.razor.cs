@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNodeTitle<TItem> : AntDomComponentBase
+    public partial class TreeNodeTitle<TItem> : ComponentBase
     {
         /// <summary>
         /// 树控件本身

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class TreeIndent<TItem>
+    public partial class TreeIndent<TItem> : ComponentBase
     {
         /// <summary>
         /// 树控件本身
@@ -21,7 +21,5 @@ namespace AntDesign
 
         [Parameter]
         public int TreeLevel { get; set; }
-
-
     }
 }
