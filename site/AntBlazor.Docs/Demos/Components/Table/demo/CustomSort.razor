@@ -1,0 +1,41 @@
+﻿<Table @ref="table" TItem="TestData" DataSource="@testData">
+    <Column @bind-Field="@context.Id" Sortable/>
+    <Column Title="Default sort" @bind-Field="@context.DayOfWeek" Sortable />
+    <Column Title="Custom comparer" @bind-Field="@context.DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)"/>
+    <Column Title="Custom comparer(order by DayName)" @bind-Field="@context.DayOfWeek" Sortable SorterCompare="@((v1, v2) => string.CompareOrdinal(DayName[v1], DayName[v2]))" />
+    <Column Title="DayName" Field="DayName[context.DayOfWeek]"/>
+</Table>
+
+@code {
+
+    ITable table;
+
+    TestData[] testData;
+
+    public class TestData
+    {
+        public int Id { get; set; }
+
+        public int DayOfWeek { get; set; }
+    }
+
+    public string[] DayName = {"None", "Monday", "Tuesday", "Wednesdays", "Thursday", "Friday", "Saturday", "Sunday"};
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        testData = GetForecastAsync();
+        base.OnInitialized();
+    }
+
+    public TestData[] GetForecastAsync()
+    {
+        var rng = new Random();
+        return Enumerable.Range(0, 5).Select(index => new TestData
+        {
+            Id = index,
+            DayOfWeek = rng.Next(1, 8),
+        }).ToArray();
+    }
+
+}
