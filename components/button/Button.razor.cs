@@ -78,6 +78,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
+        [Parameter]
+        public bool OnClickStopPropagation { get; set; }
+
         public IList<Icon> Icons { get; set; } = new List<Icon>();
 
         protected string IconStyle { get; set; }

@@ -38,7 +38,12 @@ namespace AntDesign
                 return;
             }
 
-            column.ColIndex = CurrentColIndex++;
+            if (++CurrentColIndex >= Columns.Count)
+            {
+                CurrentColIndex = 0;
+            }
+
+            column.ColIndex = CurrentColIndex;
             HeaderColumns.Add(column);
         }
 

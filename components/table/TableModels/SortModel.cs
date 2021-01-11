@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace AntDesign.TableModels
 {
-    public class SortModel<TField> : ITableSortModel
+    public class SortModel<TField> : ITableSortModel, IComparer<TField>
     {
         private PropertyInfo _propertyInfo;
+
+        private readonly Func<TField, TField, int> _comparer;
 
         public SortType SortType { get; private set; }
 
@@ -15,9 +18,10 @@ namespace AntDesign.TableModels
 
         public string FieldName { get; }
 
-        public SortModel(PropertyInfo propertyInfo, int priority, string sort)
+        public SortModel(PropertyInfo propertyInfo, int priority, string sort, Func<TField, TField, int> comparer)
         {
             this._propertyInfo = propertyInfo;
+            _comparer = comparer;
             this.Priority = priority;
             this.FieldName = propertyInfo?.Name;
             this.SortType = SortType.Parse(sort) ?? SortType.None;
@@ -38,11 +42,11 @@ namespace AntDesign.TableModels
 
             if (SortType == SortType.Ascending)
             {
-                return source.OrderBy(lambda);
+                return _comparer == null ? source.OrderBy(lambda) : source.OrderBy(lambda, this);
             }
             else
             {
-                return source.OrderByDescending(lambda);
+                return _comparer == null ? source.OrderByDescending(lambda) : source.OrderByDescending(lambda, this);
             }
         }
 
@@ -74,12 +78,18 @@ namespace AntDesign.TableModels
             }
             else if (SortType == SortType.Ascending)
             {
-                return SortType.Descending; ;
+                return SortType.Descending;
             }
             else
             {
                 return SortType.None;
             }
+        }
+
+        /// <inheritdoc />
+        public int Compare(TField x, TField y)
+        {
+            return _comparer?.Invoke(x, y) ?? 0;
         }
     }
 }
