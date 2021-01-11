@@ -34,9 +34,9 @@
                 }
             </div>
         </Overlay>
-        <ChildContent>
+        <Unbound>
             <div class="@ClassMapper.Class"
-                 @ref="@Ref"
+                 @ref="@context.Current"
                  style="@Style"
                  Id="@Id">
                 <DatePickerInput @ref="_inputStart"
@@ -77,6 +77,6 @@
                                  OnClickClear="e => ClearValue(0)" />
                 <div class="@(PrefixCls)-active-bar" style="@_activeBarStyle"></div>
             </div>
-        </ChildContent>
+        </Unbound>
     </OverlayTrigger>
 </CascadingValue>

@@ -20,9 +20,9 @@
                 </div>
             </div>
         </Overlay>
-        <ChildContent>
+        <Unbound>
             <div class="@ClassMapper.Class"
-                 @ref="@Ref"
+                 @ref="@context.Current"
                  style="@Style"
                  Id="@Id">
                 <DatePickerInput @ref="_inputStart"
@@ -37,8 +37,8 @@
                                  OnInput="e => OnInput(e, 0)"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  OnClickClear="e => ClearValue(0)"
-                                 AllowClear="@AllowClear"/>
+                                 AllowClear="@AllowClear" />
             </div>
-        </ChildContent>
+        </Unbound>
     </OverlayTrigger>
 </CascadingValue>
