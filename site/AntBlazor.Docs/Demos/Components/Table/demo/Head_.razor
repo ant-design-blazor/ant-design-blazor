@@ -1,0 +1,52 @@
+﻿<Table DataSource="data" OnChange="OnChange" TItem="Column">
+    <Column @bind-Field="@context.Name" Width="150" Sortable />
+    <Column @bind-Field="@context.Age" Width="150" Sortable />
+    <Column @bind-Field="@context.Address" Sortable />
+</Table>
+
+
+@using AntDesign.TableModels;
+@using System.Text.Json; 
+@code {
+    class Column
+    {
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Address { get; set; }
+    }
+
+    Column[] data = new Column[]
+    {
+        new()
+        {
+            Name = "John Brown",
+            Age = 32,
+            Address = "New York No. 1 Lake Park"
+        },
+        new()
+        {
+            Name = "Jim Green",
+            Age = 42,
+            Address = "London No. 1 Lake Park"
+        },
+        new()
+        {
+            Name = "Joe Black",
+            Age = 32,
+            Address = "Sidney No. 1 Lake Park"
+        },
+        new()
+        {
+            Name = "Jim Red",
+            Age = 32,
+            Address = "London No. 2 Lake Park"
+        },
+    };
+
+    void OnChange(QueryModel<Column> query)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(query));
+    }
+}

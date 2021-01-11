@@ -112,9 +112,12 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            // Render Pipeline: Initialize -> ColGroup -> Header ...
             if (IsInitialize)
             {
-                Context?.AddHeaderColumn(this);
+                Context?.AddColumn(this);
+
                 if (Fixed == "left")
                 {
                     Table?.HasFixLeft();
@@ -132,6 +135,10 @@ namespace AntDesign
             else if (IsColGroup && Width == null)
             {
                 Context?.AddColGroup(this);
+            }
+            else if (IsHeader)
+            {
+                Context?.AddHeaderColumn(this);
             }
             else
             {
