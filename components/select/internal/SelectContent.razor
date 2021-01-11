@@ -98,7 +98,7 @@
 {
     if (ParentSelect.SuffixIcon != null)
     {
-        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="@OnArrowClick" @onclick:stopPropagation="true">
+        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="@ParentSelect.Show" @onclick:stopPropagation="true">
             @ParentSelect.SuffixIcon
         </span>
     }
@@ -112,7 +112,7 @@
     {
         if (ShowArrowIcon)
         {
-            <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="@OnArrowClick" @onclick:stopPropagation="true">
+            <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="@ParentSelect.Show" @onclick:stopPropagation="true">
                 @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
                 {
                     if (ShowSearchIcon)
@@ -128,7 +128,7 @@
         }
         else
         {
-            <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="@OnArrowClick" @onclick:stopPropagation="true">
+            <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="@ParentSelect.Show" @onclick:stopPropagation="true">
                 @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
                 {
                     if (ShowSearchIcon)

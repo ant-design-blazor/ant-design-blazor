@@ -22,7 +22,6 @@ namespace AntDesign.Select.Internal
         [Parameter] public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
         [Parameter] public EventCallback<FocusEventArgs> OnFocus { get; set; }
         [Parameter] public EventCallback<FocusEventArgs> OnBlur { get; set; }
-        [Parameter] public EventCallback<MouseEventArgs> OnArrowClick { get; set; }
         [Parameter] public EventCallback<MouseEventArgs> OnClearClick { get; set; }
         [Parameter] public EventCallback<SelectOptionItem<TItemValue, TItem>> OnRemoveSelected { get; set; }
         [Parameter] public string SearchValue { get; set; }
