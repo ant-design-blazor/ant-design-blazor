@@ -67,6 +67,8 @@ WebAssembly 静态托管页面示例
 
 与 Ant Design 设计规范定期同步，你可以在线查看[同步日志](https://github.com/ant-design-blazor/ant-design-blazor/actions?query=workflow%3A%22Style+sync+Bot%22)。
 
+因此，你可以直接使用在 Ant Design 中的自定义主题样式。
+
 ## 📦 安装
 
 - 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 以上版本，推荐 .NET 5

@@ -68,6 +68,8 @@ WebAssembly static hosting examples:
 
 Regularly synchronize with Official Ant Design specifications, you can check the [sync logs](https://github.com/ant-design-blazor/ant-design-blazor/actions?query=workflow%3A%22Style+sync+Bot%22) online.
 
+Therefore, you can use the custom theme styles of Ant Design directly.
+
 ## 📦 Installation Guide
 
 - Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) 3.1.300 or later, .NET 5 is even better.
