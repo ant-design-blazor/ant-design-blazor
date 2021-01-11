@@ -9,6 +9,8 @@ namespace AntDesign
     {
         public IList<IColumn> Columns { get; set; } = new List<IColumn>();
 
+        public IList<IColumn> HeaderColumns { get; set; } = new List<IColumn>();
+
         private int CurrentColIndex { get; set; }
 
         private ITable _table;
@@ -16,6 +18,17 @@ namespace AntDesign
         public ColumnContext(ITable table)
         {
             _table = table;
+        }
+
+        public void AddColumn(IColumn column)
+        {
+            if (column == null)
+            {
+                return;
+            }
+
+            column.ColIndex = CurrentColIndex++;
+            Columns.Add(column);
         }
 
         public void AddHeaderColumn(IColumn column)
@@ -26,7 +39,7 @@ namespace AntDesign
             }
 
             column.ColIndex = CurrentColIndex++;
-            Columns.Add(column);
+            HeaderColumns.Add(column);
         }
 
         public void AddColGroup(IColumn column)
