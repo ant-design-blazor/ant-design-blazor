@@ -1,7 +1,7 @@
 ﻿name: Publish Docs
 
 env:
-  Version: 0.5.0
+  Version: 0.6.0
   NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
 
 on:
