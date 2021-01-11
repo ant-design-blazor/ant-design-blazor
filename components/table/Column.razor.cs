@@ -30,6 +30,9 @@ namespace AntDesign
         public string Sort { get; set; }
 
         [Parameter]
+        public Func<TData, TData, int> SorterCompare { get; set; }
+
+        [Parameter]
         public bool ShowSorterTooltip { get; set; } = true;
 
         private PropertyReflector? _propertyReflector;
@@ -49,13 +52,13 @@ namespace AntDesign
                 _propertyReflector = PropertyReflector.Create(FieldExpression);
                 if (Sortable)
                 {
-                    SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, 1, Sort);
+                    SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, 1, Sort, SorterCompare);
                 }
             }
 
             ClassMapper
-                .If("ant-table-column-has-sorters", () => Sortable)
-                .If($"ant-table-column-sort", () => Sortable && SortModel.SortType.IsIn(SortType.Ascending, SortType.Descending));
+               .If("ant-table-column-has-sorters", () => Sortable)
+               .If($"ant-table-column-sort", () => Sortable && SortModel.SortType.IsIn(SortType.Ascending, SortType.Descending));
         }
 
         private void HandelHeaderClick()
