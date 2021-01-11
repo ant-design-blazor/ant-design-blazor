@@ -5,7 +5,6 @@
        TItem="WeatherForecast"
        DataSource="@forecasts"
        Total="_total"
-       OnChange="@onChange"
        @bind-PageIndex="_pageIndex"
        @bind-PageSize="_pageSize"
        @bind-SelectedRows="selectedRows">
@@ -56,18 +55,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //forecasts = await GetForecastAsync(1, 50);
-        //_total = forecasts.Length;
+        forecasts = await GetForecastAsync(_pageIndex, _pageSize);
+        _total = forecasts.Length;
     }
-
-    async Task onChange(QueryModel<WeatherForecast> queryModel)
-    {
-        forecasts = await GetForecastAsync(queryModel.PageIndex, queryModel.PageSize);
-        _pageIndex = queryModel.PageIndex;
-        _pageSize = queryModel.PageSize;
-        _total = 50;
-    }
-
 
     public class WeatherForecast
     {
@@ -113,8 +103,6 @@
     {
         var selected = selectedRows.Where(x => x.Id != id);
         selectedRows = selected;
-
-        //table.SetSelection(selected.Select(x => x.Id.ToString()).ToArray());
     }
 
     private void Delete(int id)
