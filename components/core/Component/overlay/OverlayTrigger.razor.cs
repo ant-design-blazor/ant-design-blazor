@@ -243,7 +243,7 @@ namespace AntDesign.Internal
             }
         }
 
-        protected virtual async Task OnClickDiv(MouseEventArgs args)
+        public virtual async Task OnClickDiv(MouseEventArgs args)
         {
             if (!IsButton)
             {
