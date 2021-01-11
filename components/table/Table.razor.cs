@@ -156,7 +156,7 @@ namespace AntDesign
         {
             var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
 
-            foreach (var col in ColumnContext.Columns)
+            foreach (var col in ColumnContext.HeaderColumns)
             {
                 if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
                 {
