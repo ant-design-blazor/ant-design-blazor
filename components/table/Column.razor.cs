@@ -30,7 +30,7 @@ namespace AntDesign
         public string Sort { get; set; }
 
         [Parameter]
-        public Func<TData, TData, int> Comparer { get; set; }
+        public Func<TData, TData, int> SorterCompare { get; set; }
 
         [Parameter]
         public bool ShowSorterTooltip { get; set; } = true;
@@ -52,7 +52,7 @@ namespace AntDesign
                 _propertyReflector = PropertyReflector.Create(FieldExpression);
                 if (Sortable)
                 {
-                    SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, 1, Sort, Comparer);
+                    SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, 1, Sort, SorterCompare);
                 }
             }
 
