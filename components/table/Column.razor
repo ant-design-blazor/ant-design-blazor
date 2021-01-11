@@ -54,9 +54,9 @@ else if (IsHeader && HeaderColSpan != 0)
 else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 {
 
-    var fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(Field, Format) : Field.ToString();
+    var fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(Field, Format) : Field?.ToString();
 
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis?fieldText:"")">
+    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis? fieldText:"")">
         @if (ColIndex == 1 && Table.TreeMode)
         {
             <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level* Table.IndentSize));"></span>
