@@ -35,6 +35,7 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<DateRangeChangedEventArgs> OnChange { get; set; }
+
         public RangePicker()
         {
             IsRange = true;
@@ -104,7 +105,7 @@ namespace AntDesign
 
         /// <summary>
         /// Handle change of values.
-        /// When values are changed, PickerValues should point to those new values 
+        /// When values are changed, PickerValues should point to those new values
         /// or current date if no values were passed.
         /// </summary>
         /// <param name="value"></param>
@@ -112,7 +113,7 @@ namespace AntDesign
         {
             base.OnValueChange(value);
             //reset all only if not changed using picker
-            if (!_inputStart.IsOnFocused && !_inputEnd.IsOnFocused)
+            if (_inputStart?.IsOnFocused != true && _inputEnd?.IsOnFocused != true) // is null or false
             {
                 UseDefaultPickerValue[0] = false;
                 UseDefaultPickerValue[1] = false;
@@ -213,7 +214,7 @@ namespace AntDesign
         private async Task OnInputClick(int index)
         {
             //Reset Picker to default in case it the picker value was changed
-            //but no value was selected (for example when a user clicks next 
+            //but no value was selected (for example when a user clicks next
             //month but does not select any value)
             if (UseDefaultPickerValue[index] && DefaultPickerValue != null)
             {
