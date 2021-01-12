@@ -188,12 +188,19 @@ namespace AntDesign
 
         protected void ChangePickerYearValue(int interval)
         {
-            ChangePickerValue(GetIndexPickerValue(0).AddYears(interval), null);
+            // Year should be greater then 0
+            if (GetIndexPickerValue(0).Year + interval > 0)
+            {
+                ChangePickerValue(GetIndexPickerValue(0).AddYears(interval), null);
+            }
         }
 
         protected void ChangePickerMonthValue(int interval)
         {
-            ChangePickerValue(GetIndexPickerValue(0).AddMonths(interval), null);
+            if (GetIndexPickerValue(0).Month + interval > 0)
+            {
+                ChangePickerValue(GetIndexPickerValue(0).AddMonths(interval), null);
+            }
         }
 
         protected void Close()
