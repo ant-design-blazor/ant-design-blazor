@@ -16,9 +16,9 @@
                         @ChildContent
                     </CascadingValue>
                 </ContentTemplate>
-                <ChildContent>
-                    <Avatar Style=@MaxStyle>@($"+{_shownAvatarList.Count - MaxCount}")</Avatar>
-                </ChildContent>
+                <Unbound>
+                    <Avatar RefBack="@context" Style=@MaxStyle>@($"+{_shownAvatarList.Count - MaxCount}")</Avatar>
+                </Unbound>
             </Popover>
         }
     </div>
