@@ -15,7 +15,15 @@
                 }
                 else
                 {
-                    @Nodes
+                    @if (ChildContent != null)
+                    {
+                        @ChildContent
+                    }
+                    else
+                    {
+                        @Nodes
+                    }
+
                 }
             </CascadingValue>
         </div>

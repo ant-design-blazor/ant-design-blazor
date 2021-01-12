@@ -30,6 +30,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Nodes { get; set; }
 
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
         public List<TreeNode<TItem>> ChildNodes { get; set; } = new List<TreeNode<TItem>>();
 
         public bool HasChildNodes => ChildNodes?.Count > 0;

@@ -54,6 +54,9 @@ namespace AntDesign
         #region Node
 
         [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        [Parameter]
         public RenderFragment Nodes { get; set; }
 
         [Parameter]

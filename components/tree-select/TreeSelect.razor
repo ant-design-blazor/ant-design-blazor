@@ -1,5 +1,55 @@
-﻿<h3>TreeSelect</h3>
+﻿@namespace AntDesign
+@inherits SelectBase<TItemValue, TItem>
+@typeparam TItemValue
+@typeparam TItem
 
-@code {
+@using AntDesign.Internal
+@using AntDesign.Select.Internal
 
-}
+<CascadingValue Value="this" IsFixed="true">
+    <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls">
+        <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
+            <OverlayTrigger @ref="@_dropDown"
+                            Visible="Open"
+                            Disabled="Disabled"
+                            Trigger="new[] { TriggerType.Click }"
+                            HiddenMode
+                            OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"
+                            OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
+                            OnVisibleChange="@OnOverlayVisibleChangeAsync"
+                            PopupContainerSelector="@PopupContainerSelector"
+                            OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
+                            OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up">
+                <Overlay>
+                    <Tree DataSource="DataSource">
+                        @ChildContent
+                    </Tree>
+                </Overlay>
+                <ChildContent>
+                    <CascadingValue Value="this" Name=@("ParentSelect") IsFixed>
+                        <CascadingValue Value="@LabelTemplate" Name="ParentLabelTemplate">
+                            <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
+                                <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
+                                    <SelectContent Prefix="ant-select"
+                                                   TItemValue="TItemValue"
+                                                   TItem="TItem"
+                                                   SearchValue="@_searchValue"
+                                                   IsOverlayShow="@_dropDown.IsOverlayShow()"
+                                                   OnInput="@OnInputAsync"
+                                                   OnKeyUp="@OnKeyUpAsync"
+                                                   OnKeyDown="@OnKeyDownAsync"
+                                                   OnFocus="@OnInputFocusAsync"
+                                                   OnBlur="@OnInputBlurAsync"
+                                                   OnClearClick="@OnInputClearClickAsync"
+                                                   OnRemoveSelected="@OnRemoveSelectedAsync"
+                                                   Placeholder="@Placeholder"
+                                                   ShowPlaceholder="@ShowPlaceholder" />
+                                </CascadingValue>
+                            </CascadingValue>
+                        </CascadingValue>
+                    </CascadingValue>
+                </ChildContent>
+            </OverlayTrigger>
+        </div>
+    </CascadingValue>
+</CascadingValue>
