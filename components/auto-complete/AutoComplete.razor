@@ -3,67 +3,67 @@
 @typeparam TOption
 @using AntDesign.Internal
 
-<div @ref="@_divRef" style="@Style" id="@Id">
-    <CascadingValue Value='$"ant-select-dropdown"' Name="PrefixCls">
-        <OverlayTrigger @ref="_overlayTrigger"
-                        Style="display: inline"
-                        IsButton="@true"
-                        Disabled="false"
-                        Trigger="new TriggerType[] { TriggerType.Click }"
-                        PopupContainerSelector="@PopupContainerSelector"
-                        OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
-                        OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up"
-                        OverlayClassName="@OverlayClassName"
-                        OverlayStyle="@OverlayStyle"
-                        OnVisibleChange="@OnOverlayTriggerVisibleChange">
-            <Overlay>
-                <CascadingValue Value="this">
-                    @if (ShowPanel && !_isOptionsZero)
-                    {
-                        <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @_minWidth">
-                            <div style="display: flex;flex-direction: column;">
+<CascadingValue Value='$"ant-select-dropdown"' Name="PrefixCls">
+    <OverlayTrigger @ref="_overlayTrigger"
+                    Style="display: inline"
+                    IsButton="@true"
+                    Disabled="false"
+                    Trigger="new TriggerType[] { TriggerType.Click }"
+                    PopupContainerSelector="@PopupContainerSelector"
+                    OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
+                    OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up"
+                    OverlayClassName="@OverlayClassName"
+                    OverlayStyle="@OverlayStyle"
+                    OnVisibleChange="@OnOverlayTriggerVisibleChange">
+        <Overlay>
+            <CascadingValue Value="this">
+                @if (ShowPanel && !_isOptionsZero)
+                {
+                    <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @_minWidth">
+                        <div style="display: flex;flex-direction: column;">
 
-                                @if (OverlayTemplate != null)
+                            @if (OverlayTemplate != null)
+                            {
+                                @OverlayTemplate
+                            }
+                            else
+                            {
+                                @if (OptionTemplate != null)
                                 {
-                                    @OverlayTemplate
+                                    @foreach (var option in GetOptionItems())
+                                    {
+                                        @OptionTemplate(option)
+                                    }
                                 }
                                 else
                                 {
-                                    @if (OptionTemplate != null)
+                                    @foreach (var option in GetOptionItems())
                                     {
-                                        @foreach (var option in GetOptionItems())
-                                        {
-                                            @OptionTemplate(option)
-                                        }
-                                    }
-                                    else
-                                    {
-                                        @foreach (var option in GetOptionItems())
-                                        {
-                                            var label = OptionFormat == null ? option.Label : OptionFormat(option);
-                                            <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
-                                                @label
-                                            </AutoCompleteOption>
-                                        }
+                                        var label = OptionFormat == null ? option.Label : OptionFormat(option);
+                                        <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
+                                            @label
+                                        </AutoCompleteOption>
                                     }
                                 }
-                            </div>
+                            }
                         </div>
-                    }
-                </CascadingValue>
-            </Overlay>
-            <ChildContent>
-                <CascadingValue Value="this">
-                    @if (ChildContent == null)
-                    {
-                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" />
-                    }
-                    else
-                    {
+                    </div>
+                }
+            </CascadingValue>
+        </Overlay>
+        <Unbound>
+            <CascadingValue Value="this">
+                @if (ChildContent == null)
+                {
+                    <AutoCompleteInput RefBack="context" @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" />
+                }
+                else
+                {                
+                    <div @ref="@context.Current" style="@Style" id="@Id">
                         @ChildContent
-                    }
-                </CascadingValue>
-            </ChildContent>
-        </OverlayTrigger>
-    </CascadingValue>
-</div>
+                    </div>
+                }
+            </CascadingValue>
+        </Unbound>
+    </OverlayTrigger>
+</CascadingValue>

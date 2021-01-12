@@ -84,6 +84,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        //[Parameter]
+        //public RenderFragment<ForwardRef> UnboundContent { get; set; }
+
         /// <summary>
         /// 选项模板
         /// </summary>
@@ -134,7 +137,7 @@ namespace AntDesign
 
         #endregion Parameters
 
-        private ElementReference _divRef;
+        //private ElementReference _divRef;
         private OverlayTrigger _overlayTrigger;
 
         public object SelectedValue { get; set; }
@@ -398,7 +401,16 @@ namespace AntDesign
             }
             else
             {
-                Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _divRef);
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current); ;
+                //Element element;
+                //if (_divRef.Id != null)
+                //{
+                //    element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _divRef);
+                //}
+                //else
+                //{
+                //    element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current);
+                //}
                 newWidth = $"min-width:{element.clientWidth}px";
             }
             if (newWidth != _minWidth) _minWidth = newWidth;
