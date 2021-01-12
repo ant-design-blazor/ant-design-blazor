@@ -25,7 +25,7 @@
                         IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
                         IsSelected="date => DateHelper.IsSameYear(date, Value)"
                         OnValueSelect="date => OnSelectYear(date)"
-                        GetNextColValue="date => date.AddYears(10)">
+                        GetNextColValue="date => DateHelper.AddYearsSafely(date, 10)">
         <RenderPickerHeader>
             <DatePickerHeader @attributes="GetAttritubes()"
                               TValue="TValue"

@@ -190,20 +190,14 @@ namespace AntDesign
         {
             var currentValue = GetIndexPickerValue(0);
 
-            if (InYearRange(currentValue.Year + interval))
-            {
-                ChangePickerValue(currentValue.AddYears(interval), null);
-            }
+            ChangePickerValue(DateHelper.AddYearsSafely(currentValue, interval), null);
         }
 
         protected void ChangePickerMonthValue(int interval)
         {
             var currentValue = GetIndexPickerValue(0);
 
-            if (InMonthRange(currentValue.Month + interval))
-            {
-                ChangePickerValue(currentValue.AddMonths(interval), null);
-            }
+            ChangePickerValue(DateHelper.AddMonthsSafely(currentValue, interval), null);
         }
 
         protected void Close()
@@ -218,16 +212,6 @@ namespace AntDesign
         public void PopUpPicker(string type)
         {
             ChangePickerType(type, PickerIndex);
-        }
-
-        protected bool InYearRange(int year)
-        {
-            return year >= 1 && year <= 9999;
-        }
-
-        protected bool InMonthRange(int month)
-        {
-            return month >= 1 && month <= 12;
         }
     }
 }
