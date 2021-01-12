@@ -652,12 +652,10 @@ namespace AntDesign
             if (SelectMode == SelectMode.Default)
             {
                 OnSelectedItemChanged?.Invoke(default);
-                await ValueChanged.InvokeAsync(default);
             }
             else
             {
                 OnSelectedItemsChanged?.Invoke(default);
-                await ValuesChanged.InvokeAsync(default);
             }
         }
 
@@ -680,8 +678,6 @@ namespace AntDesign
 
                     if (SelectMode == SelectMode.Default)
                     {
-                        await ValueChanged.InvokeAsync(firstEnabled.Value);
-
                         if (!ValueChanged.HasDelegate)
                             await InvokeStateHasChangedAsync();
                     }
@@ -722,8 +718,6 @@ namespace AntDesign
                         result.IsHidden = true;
 
                     _waittingStateChange = true;
-
-                    await ValueChanged.InvokeAsync(result.Value);
                 }
                 else
                 {
@@ -816,7 +810,6 @@ namespace AntDesign
                             result.IsHidden = true;
 
                         OnSelectedItemChanged?.Invoke(result.Item);
-                        await ValueChanged.InvokeAsync(result.Value);
                     }
                 }
             }
@@ -848,7 +841,6 @@ namespace AntDesign
                         });
 
                     OnSelectedItemsChanged?.Invoke(newSelectedItems);
-                    await ValuesChanged.InvokeAsync(newSelectedValues);
                 }
             }
         }
@@ -950,7 +942,6 @@ namespace AntDesign
             if (EqualityComparer<TItemValue>.Default.Equals(value, default))
             {
                 OnSelectedItemChanged?.Invoke(default);
-                ValueChanged.InvokeAsync(default);
                 return;
             }
 
@@ -976,7 +967,6 @@ namespace AntDesign
                 result.IsHidden = true;
 
             InvokeOnSelectedItemChanged(result);
-            ValueChanged.InvokeAsync(result.Value);
         }
 
         /// <summary>
@@ -995,7 +985,6 @@ namespace AntDesign
 
             if (values == null)
             {
-                await ValuesChanged.InvokeAsync(default);
                 OnSelectedItemsChanged?.Invoke(default);
                 return;
             }
@@ -1028,7 +1017,6 @@ namespace AntDesign
                 });
 
             OnSelectedItemsChanged?.Invoke(newSelectedItems);
-            await ValuesChanged.InvokeAsync(newSelectedValues);
         }
 
         /// <summary>
@@ -1538,11 +1526,16 @@ namespace AntDesign
 
             await ClearSelectedAsync();
 
-            if (SelectMode != SelectMode.Default)
+            if (SelectMode == SelectMode.Default)
             {
-                await Task.Delay(1);    // Todo - Workaround because UI does not refresh
+                await ValueChanged.InvokeAsync(default);
+            }
+            else
+            {
+                await ValuesChanged.InvokeAsync(default);
+                await Task.Delay(1); // Todo - Workaround because UI does not refresh
                 await UpdateOverlayPositionAsync();
-                StateHasChanged();      // Todo - Workaround because UI does not refresh
+                StateHasChanged(); // Todo - Workaround because UI does not refresh
             }
 
             OnClearSelected?.Invoke();
