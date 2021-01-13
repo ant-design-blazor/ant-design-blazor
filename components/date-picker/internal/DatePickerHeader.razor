@@ -53,14 +53,26 @@
     @if (Picker.IsIn(DatePickerType.Year))
     {
         int startYear = PickerValue.Year / 10 * 10;
+        int showCount = 9;
+
+        if (startYear < DateTime.MinValue.Year)
+        {
+            startYear = DateTime.MinValue.Year;
+            showCount = 10;
+        }
 
         <button type="button" class="@(PrefixCls)-decade-btn" @onclick="e => PopUpPicker(DatePickerType.Decade)">
-            @(startYear)-@(startYear + 9)
+            @(startYear)-@(startYear + showCount)
         </button>
     }
     @if (Picker.IsIn(DatePickerType.Decade))
     {
         int startYear = PickerValue.Year / 100 * 100;
+
+        if (startYear < DateTime.MinValue.Year)
+        {
+            startYear = DateTime.MinValue.Year + 10;
+        }
 
         <button type="button" class="@(PrefixCls)-decade-btn">
             @(startYear)-@(startYear + 99)

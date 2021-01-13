@@ -466,6 +466,7 @@ namespace AntDesign.Internal
                 DatePickerType.Year => DateHelper.IsSameYear(preDate, nextDate),
                 DatePickerType.Month => DateHelper.IsSameMonth(preDate, nextDate),
                 DatePickerType.Quarter => DateHelper.IsSameQuarter(preDate, nextDate),
+                DatePickerType.Decade => DateHelper.IsSameYear(preDate, nextDate) || nextDate.Year == DateTime.MaxValue.Year,
                 _ => false,
             };
         }
