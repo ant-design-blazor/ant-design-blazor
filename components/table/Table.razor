@@ -160,7 +160,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
     @if (table.Total <= 0)
     {
         <tr class="ant-table-placeholder">
-            <td colspan="@table.ColumnContext.Columns.Count" class="ant-table-cell">
+            <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
                 <Empty Simple />
             </td>
         </tr>
