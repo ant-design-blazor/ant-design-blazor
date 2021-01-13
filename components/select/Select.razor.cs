@@ -934,7 +934,10 @@ namespace AntDesign
         protected override void OnValueChange(TItemValue value)
         {
             if (!_isInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
+            {
+                _waittingStateChange = true;
                 return;
+            }
 
             SelectOptionItems.Where(x => x.IsSelected)
                 .ForEach(i => i.IsSelected = false);
@@ -975,7 +978,10 @@ namespace AntDesign
         protected async Task OnValuesChangeAsync(IEnumerable<TItemValue> values)
         {
             if (!_isInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
+            {
+                _waittingStateChange = true;
                 return;
+            }
 
             if (!SelectOptionItems.Any())
                 return;
