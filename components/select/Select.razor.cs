@@ -91,6 +91,8 @@ namespace AntDesign
                     SelectOptionItems.Clear();
 
                     Value = default;
+                    if (ValueChanged.HasDelegate)
+                        _ = ValueChanged.InvokeAsync(default);
 
                     _datasource = null;
 
@@ -678,8 +680,11 @@ namespace AntDesign
 
                     if (SelectMode == SelectMode.Default)
                     {
+                        Value = firstEnabled.Value;
                         if (!ValueChanged.HasDelegate)
                             await InvokeStateHasChangedAsync();
+                        else
+                            await ValueChanged.InvokeAsync(firstEnabled.Value);
                     }
                     else
                     {
@@ -712,12 +717,12 @@ namespace AntDesign
 
                 if (result != null && !result.IsDisabled)
                 {
-                    result.IsSelected = true;
-
-                    if (HideSelected)
-                        result.IsHidden = true;
-
-                    _waittingStateChange = true;
+                    Value = result.Value;
+                        
+                    if (!ValueChanged.HasDelegate)
+                        await InvokeStateHasChangedAsync();
+                    else
+                        await ValueChanged.InvokeAsync(result.Value);
                 }
                 else
                 {
