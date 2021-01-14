@@ -94,5 +94,84 @@ namespace AntDesign
 
             return dateTime;
         }
+
+        /// <summary>
+        /// 用该函数来执行AddYears逻辑, 不会触发System.ArgumentOutOfRangeException异常
+        /// AddYears by the function would never throw System.ArgumentOutOfRangeException
+        /// </summary>
+        /// <param name="currentDate"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static DateTime AddYearsSafely(DateTime currentDate, int value)
+        {
+            int newYear = currentDate.Year + value;
+
+            if (newYear < DateTime.MinValue.Year)
+            {
+                value = DateTime.MinValue.Year - currentDate.Year;
+            }
+            else if (newYear > DateTime.MaxValue.Year)
+            {
+                value = DateTime.MaxValue.Year - currentDate.Year;
+            }
+
+            return currentDate.AddYears(value);
+        }
+
+        /// <summary>
+        /// 用该函数来执行AddMonths逻辑, 不会触发System.ArgumentOutOfRangeException异常
+        /// AddMonths by the function would never throw System.ArgumentOutOfRangeException
+        /// </summary>
+        /// <param name="currentDate"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static DateTime AddMonthsSafely(DateTime currentDate, int value)
+        {
+            int newMonth = currentDate.Month + value;
+
+            /* at min date value */
+            if (currentDate.Year == DateTime.MinValue.Year && newMonth < DateTime.MinValue.Month)
+            {
+                value = DateTime.MinValue.Month - currentDate.Month;
+            }
+
+            /* at max date value */
+            if (currentDate.Year == DateTime.MaxValue.Year && newMonth > DateTime.MaxValue.Month)
+            {
+                value = DateTime.MaxValue.Month - currentDate.Month;
+            }
+
+            return currentDate.AddMonths(value);
+        }
+
+        /// <summary>
+        /// 用该函数来执行AddDays逻辑, 不会触发System.ArgumentOutOfRangeException异常
+        /// AddDays by the function would never throw System.ArgumentOutOfRangeException
+        /// </summary>
+        /// <param name="currentDate"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static DateTime AddDaysSafely(DateTime currentDate, int value)
+        {
+            int newDay = currentDate.Day + value;
+
+            /* at min date value */
+            if (currentDate.Year == DateTime.MinValue.Year
+                && currentDate.Month == DateTime.MinValue.Month
+                && newDay < DateTime.MinValue.Day)
+            {
+                value = DateTime.MinValue.Day - currentDate.Day;
+            }
+
+            /* at max date value */
+            if (currentDate.Year == DateTime.MaxValue.Year
+                && currentDate.Month == DateTime.MaxValue.Month
+                && newDay > DateTime.MaxValue.Day)
+            {
+                value = DateTime.MaxValue.Day - currentDate.Day;
+            }
+
+            return currentDate.AddDays(value);
+        }
     }
 }

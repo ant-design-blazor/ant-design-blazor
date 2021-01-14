@@ -14,10 +14,19 @@
                 @RenderTableHeader
             </thead>
             <tbody>
-                @{ var startDate = ViewStartDate; }
+                @{ 
+                    var startDate = ViewStartDate;
+                    bool shouldStopRender = false;
+                }
                 @for (int row = 1; row <= MaxRow; row++)
                 {
+                    if (shouldStopRender)
+                    {
+                        break;
+                    }
+
                     var startColDate = startDate;
+
                     <tr class="@(GetRowClass?.Invoke(startColDate))"
                         @onclick="e => OnRowSelect?.Invoke(startColDate)">
 
@@ -25,6 +34,11 @@
 
                         @for (int col = 1; col <= MaxCol; col++)
                         {
+                            if (shouldStopRender)
+                            {
+                                break;
+                            }
+
                             var currentColDate = startDate;
 
                             string cellCls = GetCellCls(currentColDate);
@@ -82,6 +96,11 @@
                             </td>
 
                             startDate = @GetNextColValue(currentColDate);
+
+                            if (ShouldStopRenderDate(currentColDate, startDate))
+                            {
+                                shouldStopRender = true;
+                            }
                         }
 
                         @{ var endColDate = startDate;}

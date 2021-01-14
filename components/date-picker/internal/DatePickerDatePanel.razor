@@ -32,7 +32,7 @@
                            GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                            OnRowSelect="OnRowSelect"
                            OnValueSelect="OnValueSelect"
-                           GetNextColValue="date => date.AddDays(1)">
+                           GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)">
         <RenderPickerHeader>
             <DatePickerHeader TValue="TValue"
                               @attributes="GetAttritubes()"
