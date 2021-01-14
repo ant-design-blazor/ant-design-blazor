@@ -29,7 +29,8 @@ namespace AntDesign.Internal
         public DateTime ViewStartDate
         {
             get { return _viewStartDate; }
-            set {
+            set
+            {
                 if (_viewStartDate != value)
                     _viewStartDate = value;
             }
@@ -66,7 +67,8 @@ namespace AntDesign.Internal
         public int MaxRow
         {
             get { return _maxRow; }
-            set {
+            set
+            {
                 if (_maxRow != value)
                     _maxRow = value;
             }
@@ -76,7 +78,8 @@ namespace AntDesign.Internal
         public int MaxCol
         {
             get { return _maxCol; }
-            set {
+            set
+            {
                 if (_maxCol != value)
                     _maxCol = value;
             }
@@ -152,7 +155,7 @@ namespace AntDesign.Internal
         private string GetCellCls(DateTime currentColDate)
         {
             bool isInView = IsInView(currentColDate);
-            bool isToday = IsToday(currentColDate); 
+            bool isToday = IsToday(currentColDate);
             bool isSelected = IsSelected(currentColDate);
             bool isInRange = IsDateInRange(currentColDate);
 
@@ -430,10 +433,10 @@ namespace AntDesign.Internal
             {
                 return Picker switch
                 {
-                    DatePickerType.Date => dateTime.AddDays(-1),
-                    DatePickerType.Year => dateTime.AddYears(-1),
-                    DatePickerType.Month => dateTime.AddMonths(-1),
-                    DatePickerType.Quarter => dateTime.AddMonths(-3),
+                    DatePickerType.Date => DateHelper.AddDaysSafely(dateTime, -1),
+                    DatePickerType.Year => DateHelper.AddYearsSafely(dateTime, -1),
+                    DatePickerType.Month => DateHelper.AddMonthsSafely(dateTime, -1),
+                    DatePickerType.Quarter => DateHelper.AddMonthsSafely(dateTime, -3),
                     _ => dateTime,
                 };
             }
@@ -447,11 +450,24 @@ namespace AntDesign.Internal
         {
             return Picker switch
             {
-                DatePickerType.Date => dateTime.AddDays(1),
-                DatePickerType.Year => dateTime.AddYears(1),
-                DatePickerType.Month => dateTime.AddMonths(1),
-                DatePickerType.Quarter => dateTime.AddMonths(3),
+                DatePickerType.Date => DateHelper.AddDaysSafely(dateTime, 1),
+                DatePickerType.Year => DateHelper.AddYearsSafely(dateTime, 1),
+                DatePickerType.Month => DateHelper.AddMonthsSafely(dateTime, 1),
+                DatePickerType.Quarter => DateHelper.AddMonthsSafely(dateTime, 3),
                 _ => dateTime,
+            };
+        }
+
+        private bool ShouldStopRenderDate(DateTime preDate, DateTime nextDate)
+        {
+            return Picker switch
+            {
+                DatePickerType.Date => DateHelper.IsSameDay(preDate, nextDate),
+                DatePickerType.Year => DateHelper.IsSameYear(preDate, nextDate),
+                DatePickerType.Month => DateHelper.IsSameMonth(preDate, nextDate),
+                DatePickerType.Quarter => DateHelper.IsSameQuarter(preDate, nextDate),
+                DatePickerType.Decade => DateHelper.IsSameYear(preDate, nextDate) || nextDate.Year == DateTime.MaxValue.Year,
+                _ => false,
             };
         }
     }

@@ -6,14 +6,20 @@
 @{
     var calendar = CultureInfo.InvariantCulture.Calendar;
 
-    int startYear = PickerValue.Year / 100 * 100 - 10;
-    DateTime startDate = new DateTime(startYear, 1, 1);
+    int year = PickerValue.Year / 100 * 100;
+
+    if (year < DateTime.MinValue.Year)
+    {
+        year = DateTime.MinValue.Year;
+    }
+
+    DateTime startDate = DateHelper.AddYearsSafely(new DateTime(year, 1, 1), -10);
 
     int yearIndex = 0;
     const int MAX_ROW = 4;
     const int MAX_COL = 3;
     const int FIRST_YEAR_INDEX = 0;
-    const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL;
+    const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL - 1;
 }
 <div class='@($"{PrefixCls}-panel")'>
     <DatePickerTemplate @attributes="GetAttritubes()"
@@ -25,7 +31,7 @@
                         IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
                         IsSelected="date => DateHelper.IsSameYear(date, Value)"
                         OnValueSelect="date => OnSelectYear(date)"
-                        GetNextColValue="date => date.AddYears(10)">
+                        GetNextColValue="date => DateHelper.AddYearsSafely(date, 10)">
         <RenderPickerHeader>
             <DatePickerHeader @attributes="GetAttritubes()"
                               TValue="TValue"

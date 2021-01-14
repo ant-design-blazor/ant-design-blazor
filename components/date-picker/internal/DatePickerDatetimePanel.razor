@@ -27,7 +27,7 @@
                             IsSelected="date => DateHelper.IsSameDay(date, Value)"
                             GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                             OnValueSelect="OnSelectDate"
-                            GetNextColValue="date => date.AddDays(1)">
+                            GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)">
             <RenderPickerHeader>
                 <DatePickerHeader TValue="TValue"
                                   @attributes="GetAttritubes()" />
