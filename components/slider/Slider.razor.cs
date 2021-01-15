@@ -30,6 +30,8 @@ namespace AntDesign
         private bool _initialized = false;
         private double _initialLeftValue;
         private double _initialRightValue;
+        private Tooltip _toolTipRight;
+        private Tooltip _toolTipLeft;
 
         private string RightHandleStyleFormat
         {
@@ -220,14 +222,28 @@ namespace AntDesign
         /// <summary>
         /// The granularity the slider can step through values. Must greater than 0, and be divided by (<see cref="Max"/> - <see cref="Min"/>) . When <see cref="Marks"/> no null, <see cref="Step"/> can be null.
         /// </summary>
+        private double? _step = 1;
+        private int _precision;
         [Parameter]
-        public double? Step { get; set; } = 1;
-
-        /// <summary>
-        /// Slider will pass its value to tipFormatter, and display its value in Tooltip, and hide Tooltip when return value is null.
-        /// </summary>
-        [Parameter]
-        public Func<string> TipFormatter { get; set; }
+        public double? Step
+        {
+            get { return _step; }
+            set
+            {
+                _step = value;
+                //no need to evaluate if no tooltip
+                if (_step != null && _isTipFormatterDefault)
+                {
+                    char separator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+                    string[] number = _step.ToString().Split(separator);
+                    if (number.Length > 1)
+                    {
+                        _precision = number[1].Length;
+                        _tipFormatter = (d) => string.Format(CultureInfo.CurrentCulture, "{0:N02}", Math.Round(d, _precision));
+                    }
+                }
+            }
+        }
 
         private double _leftValue = double.MinValue;
 
@@ -244,6 +260,8 @@ namespace AntDesign
                     (double, double) typedValue = DataConvertionExtensions.Convert<TValue, (double, double)>(CurrentValue);
                     if (value != typedValue.Item1)
                         CurrentValue = DataConvertionExtensions.Convert<(double, double), TValue>((_leftValue, RightValue));
+                    if (_toolTipLeft != null)
+                        _toolTipLeft.ChildElementMoved();
                 }
             }
         }
@@ -284,6 +302,8 @@ namespace AntDesign
                             //CurrentValue = DoubleToGeneric(_rightValue);
                             CurrentValue = DataConvertionExtensions.Convert<double, TValue>(_rightValue);
                     }
+                    if (_toolTipRight != null)
+                        _toolTipRight.ChildElementMoved();
                 }
             }
         }
@@ -320,17 +340,56 @@ namespace AntDesign
         [Parameter]
         public Action<TValue> OnChange { get; set; }
 
+        [Parameter]
+        public bool HasTooltip { get; set; } = true;
+
+        /// <summary>
+        /// Slider will pass its value to tipFormatter, and display its value in Tooltip
+        /// </summary>        
+        private bool _isTipFormatterDefault = true;
+        private Func<double, string> _tipFormatter = (d) => d.ToString(LocaleProvider.CurrentLocale.CurrentCulture);
+        [Parameter]
+        public Func<double, string> TipFormatter
+        {
+            get { return _tipFormatter; }
+            set
+            {
+                _tipFormatter = value;
+                _isTipFormatterDefault = false;
+            }
+        }
+
         /// <summary>
         /// Set Tooltip display position. Ref Tooltip
         /// </summary>
         [Parameter]
-        public string TooltipPlacement { get; set; }
+        public PlacementType TooltipPlacement { get; set; }
 
         /// <summary>
         /// If true, Tooltip will show always, or it will not show anyway, even if dragging or hovering.
         /// </summary>
+        private bool _tooltipVisible;
+        private bool _tooltipRightVisible;
+        private bool _tooltipLeftVisible;
         [Parameter]
-        public bool TooltipVisible { get; set; }
+        public bool TooltipVisible
+        {
+            get { return _tooltipVisible; }
+            set
+            {
+                if (_tooltipVisible != value)
+                {
+                    _tooltipVisible = value;
+                    //ensure parameter loading is not happening because values are changing during mouse moving
+                    //otherwise the tooltip will be vanishing when mouse moves out of the edge 
+                    if (!_mouseDown)
+                    {
+                        _tooltipRightVisible = _tooltipVisible;
+                        _tooltipLeftVisible = _tooltipVisible;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// The DOM container of the Tooltip, the default behavior is to create a div element in body.
@@ -393,6 +452,13 @@ namespace AntDesign
                         RightValue = DataConvertionExtensions.Convert<TValue, double>(CurrentValue);
                     }
                 }
+                if (!dict.ContainsKey(nameof(TooltipPlacement)))
+                {
+                    if (Vertical)
+                        TooltipPlacement = PlacementType.Right;
+                    else
+                        TooltipPlacement = PlacementType.Top;
+                }
             }
 
             _initialized = true;
@@ -430,6 +496,24 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (!firstRender)
+            {
+                if (_toolTipRight != null && HasTooltip)
+                {
+                    _rightHandle = _toolTipRight.Ref;
+                    await _toolTipRight.ChildElementMoved();
+                    if (_toolTipLeft != null)
+                    {
+                        _leftHandle = _toolTipLeft.Ref;
+                        await _toolTipLeft.ChildElementMoved();
+                    }
+                }
+            }
+            await base.OnAfterRenderAsync(firstRender);
+        }
+
         private void ValidateParameter()
         {
             if (Step == null && Marks == null)
@@ -462,43 +546,42 @@ namespace AntDesign
             _mouseDown = !Disabled;
         }
 
-        private MouseEventArgs _edgeClickArgs;
-        private bool? _edgeClicked;
-
+        private double _trackedClientX;
+        private double _trackedClientY;
         private void OnMouseDownEdge(MouseEventArgs args, bool right)
         {
             _right = right;
             _initialLeftValue = _leftValue;
             _initialRightValue = _rightValue;
-            _edgeClickArgs = args;
+            _trackedClientX = args.ClientX;
+            _trackedClientY = args.ClientY;
+            if (_toolTipRight != null)
+            {
+                if (_right)
+                {
+                    _tooltipRightVisible = true;
+                }
+                else
+                {
+                    _tooltipLeftVisible = true;
+                }
+            }
         }
 
         private bool IsMoveInEdgeBoundary(JsonElement jsonElement)
         {
-            if (_edgeClicked == null)
-            {
-                double clientX = jsonElement.GetProperty("clientX").GetDouble();
-                double clientY = jsonElement.GetProperty("clientY").GetDouble();
-                bool altKey = jsonElement.GetProperty("altKey").GetBoolean();
-                bool ctrlKey = jsonElement.GetProperty("ctrlKey").GetBoolean();
-                bool metaKey = jsonElement.GetProperty("metaKey").GetBoolean();
-                bool shiftKey = jsonElement.GetProperty("shiftKey").GetBoolean();
+            double clientX = jsonElement.GetProperty("clientX").GetDouble();
+            double clientY = jsonElement.GetProperty("clientY").GetDouble();
 
-                _edgeClicked = _edgeClickArgs != null
-                            && _edgeClickArgs.ClientX == clientX
-                            && _edgeClickArgs.ClientY == clientY
-                            && _edgeClickArgs.CtrlKey == ctrlKey
-                            && _edgeClickArgs.MetaKey == metaKey
-                            && _edgeClickArgs.AltKey == altKey
-                            && _edgeClickArgs.ShiftKey == shiftKey;
-            }
-            return _edgeClicked.Value;
+            return (clientX == _trackedClientX && clientY == _trackedClientY);
         }
 
         private async void OnMouseMove(JsonElement jsonElement)
         {
             if (_mouseDown)
             {
+                _trackedClientX = jsonElement.GetProperty("clientX").GetDouble();
+                _trackedClientY = jsonElement.GetProperty("clientY").GetDouble();
                 _mouseMove = true;
                 await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
 
@@ -508,21 +591,33 @@ namespace AntDesign
 
         private async void OnMouseUp(JsonElement jsonElement)
         {
+            bool isMoveInEdgeBoundary = IsMoveInEdgeBoundary(jsonElement);
             if (_mouseDown)
             {
                 _mouseDown = false;
-                if (!IsMoveInEdgeBoundary(jsonElement))
+                if (!isMoveInEdgeBoundary)
                 {
                     await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
                     OnAfterChange?.Invoke(CurrentValue);
                 }
             }
-            if (_edgeClicked != null)
+            if (_toolTipRight != null)
             {
-                _edgeClicked = null;
-                _initialLeftValue = _leftValue;
-                _initialRightValue = _rightValue;
+                if (_tooltipRightVisible != TooltipVisible)
+                {
+                    _tooltipRightVisible = TooltipVisible;
+                    _toolTipRight.Visible = TooltipVisible;
+                }
+
+                if (_tooltipLeftVisible != TooltipVisible)
+                {
+                    _tooltipLeftVisible = TooltipVisible;
+                    _toolTipLeft.Visible = TooltipVisible;
+                }
             }
+
+            _initialLeftValue = _leftValue;
+            _initialRightValue = _rightValue;
         }
 
         private async Task CalculateValueAsync(double clickClient)

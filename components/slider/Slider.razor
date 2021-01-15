@@ -1,14 +1,15 @@
 ﻿@namespace AntDesign
 @typeparam TValue
 @inherits AntInputComponentBase<TValue>
+@using Microsoft.AspNetCore.Components.Web
 
 <div class="@ClassMapper.Class" style="user-select:none;@Style" id="@Id" @ref="_slider"
-     @onmousedown="(e)=>OnMouseDown(e)">
+     @onmousedown="(e) => OnMouseDown(e)">
     <div class="ant-slider-rail">
     </div>
     @if (Included)
     {
-        <div class="ant-slider-track @(Range?"ant-slider-track-1":string.Empty)" style="@_trackStyle">
+        <div class="ant-slider-track @(Range ? "ant-slider-track-1" : string.Empty)" style="@_trackStyle">
         </div>
     }
     <div class="ant-slider-step">
@@ -16,28 +17,59 @@
         {
             @foreach (SliderMark mark in Marks)
             {
-                <span class="ant-slider-dot @IsActiveMark(mark.Key)" style=@($"{(Vertical?"bottom":"left")}: {SetMarkPosition(mark.Key)};")></span>
+                <span class="ant-slider-dot @IsActiveMark(mark.Key)" style=@($"{(Vertical ? "bottom" : "left")}: {SetMarkPosition(mark.Key)};")></span>
             }
         }
     </div>
     @if (Range)
     {
-        <div tabindex="0" class="ant-slider-handle ant-slider-handle-1" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_leftHandleStyle" @ref="_leftHandle" @onmousedown="(e)=>OnMouseDownEdge(e,  false)">
-        </div>
-        <div tabindex="0" class="ant-slider-handle ant-slider-handle-2" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="_rightHandle" @onmousedown="(e)=>OnMouseDownEdge(e,  true)">
-        </div>
+        @if (HasTooltip)
+        {
+            <Tooltip Title="@TipFormatter(_leftValue)" Style="display: inline;" Visible="_tooltipLeftVisible" ArrowPointAtCenter="true" OverlayClassName="ant-slider-tooltip" Placement="@TooltipPlacement" @ref="_toolTipLeft">
+                <Unbound>
+                    <div tabindex="0" class="ant-slider-handle ant-slider-handle-1" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_leftHandleStyle" @ref="@context.Current" @onmousedown="(e) => OnMouseDownEdge(e, false)">
+                    </div>
+                </Unbound>
+            </Tooltip>
+            <Tooltip Title="@TipFormatter(_rightValue)" Style="display: inline;" Visible="_tooltipRightVisible" ArrowPointAtCenter="true" OverlayClassName="ant-slider-tooltip" Placement="@TooltipPlacement" @ref="_toolTipRight">
+                <Unbound>
+                    <div tabindex="0" class="ant-slider-handle ant-slider-handle-2" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="@context.Current" @onmousedown="(e) => OnMouseDownEdge(e, true)">
+                    </div>
+                </Unbound>
+            </Tooltip>
+        }
+        else
+        {
+            <div tabindex="0" class="ant-slider-handle ant-slider-handle-1" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_leftHandleStyle" @ref="_leftHandle" @onmousedown="(e) => OnMouseDownEdge(e, false)">
+            </div>
+            <div tabindex="0" class="ant-slider-handle ant-slider-handle-2" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="_rightHandle" @onmousedown="(e) => OnMouseDownEdge(e, true)">
+            </div>
+        }
     }
     else
     {
-        <div tabindex="0" class="ant-slider-handle" role="slider" aria-disabled="false" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="_rightHandle" @onmousedown="(e)=>OnMouseDownEdge(e,  true)">
-        </div>
+
+        @if (HasTooltip)
+        {
+            <Tooltip Title="@TipFormatter(_rightValue)" Style="display: inline;" Visible="_tooltipRightVisible" ArrowPointAtCenter="true" OverlayClassName="ant-slider-tooltip" Placement="@TooltipPlacement" @ref="_toolTipRight">
+                <Unbound>
+                    <div tabindex="0" class="ant-slider-handle" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="@context.Current" @onmousedown="(e)=>OnMouseDownEdge(e,  true)">
+                    </div>
+                </Unbound>
+            </Tooltip>
+        }
+        else
+        {
+            <div tabindex="0" class="ant-slider-handle" role="slider" aria-disabled="@Disabled.ToString()" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="@_rightHandleStyle" @ref="_rightHandle" @onmousedown="(e)=>OnMouseDownEdge(e,  true)">
+                </div>
+        }
     }
     <div class="ant-slider-mark">
         @if (Marks != null)
         {
             @foreach (SliderMark mark in Marks)
             {
-                <span class="ant-slider-mark-text ant-slider-mark-text-active" style=@($"{(Vertical?"bottom":"left")}: {SetMarkPosition(mark.Key)}; {(Vertical?"margin-bottom: -50%;":"transform: translateX(-50%);")}" + mark.Style)>@mark.Value</span>
+                <span class="ant-slider-mark-text ant-slider-mark-text-active" style=@($"{(Vertical ? "bottom" : "left")}: {SetMarkPosition(mark.Key)}; {(Vertical ? "margin-bottom: -50%;" : "transform: translateX(-50%);")}" + mark.Style)>@mark.Value</span>
             }
         }
     </div>
