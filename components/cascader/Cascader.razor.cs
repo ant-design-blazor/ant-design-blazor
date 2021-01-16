@@ -74,6 +74,8 @@ namespace AntDesign
                 if (_nodelist == null) _nodelist = new List<CascaderNode>();
                 else if (_nodelist.Count != 0) _nodelist.Clear();
                 _nodelist.AddRange(value);
+
+                _optionsNeedInitialize = true;
             }
         }
 
@@ -114,13 +116,11 @@ namespace AntDesign
         private SelectedTypeEnum SelectedType { get; set; }
 
         private string _displayText;
+        private bool _optionsNeedInitialize;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            InitCascaderNodeState(_nodelist, null, 0);
-
-            SetDefaultValue(Value ?? DefaultValue);
         }
 
         protected override void OnParametersSet()
@@ -143,6 +143,8 @@ namespace AntDesign
                 _pickerSizeClass = "";
                 _inputSizeClass = "";
             }
+
+            ProcessParentAndDefault();
         }
 
         protected override void OnValueChange(string value)
@@ -151,6 +153,7 @@ namespace AntDesign
 
             RefreshNodeValue(value);
         }
+
         #region event
 
         /// <summary>
@@ -301,6 +304,20 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Options 更新后处理父节点和默认值
+        /// </summary>
+        private void ProcessParentAndDefault()
+        {
+            if (_optionsNeedInitialize)
+            {
+                _optionsNeedInitialize = false;
+
+                InitCascaderNodeState(_nodelist, null, 0);
+                SetDefaultValue(Value ?? DefaultValue);
+            }
+        }
+
+        /// <summary>
         /// 初始化节点属性(Level, ParentNode)
         /// </summary>
         /// <param name="list"></param>
@@ -346,11 +363,11 @@ namespace AntDesign
             if (string.IsNullOrWhiteSpace(defaultValue))
                 return;
 
+            _selectedNodes.Clear();
             var node = GetNodeByValue(_nodelist, defaultValue);
             SetSelectedNodeWithParent(node, ref _selectedNodes);
             _renderNodes = _selectedNodes;
-            if (node != null)
-                SetValue(node.Value);
+            SetValue(node?.Value);
         }
 
         /// <summary>
