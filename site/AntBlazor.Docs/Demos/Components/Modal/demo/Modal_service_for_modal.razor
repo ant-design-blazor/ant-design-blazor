@@ -13,29 +13,35 @@
 
     private async Task OpenTemplate()
     {
-        var templateOptions = new Form.demo.Basic.Model();
-        templateOptions.Username = value;
-
-        var modalConfig = new ModalOptions();
-        modalConfig.Title = "Basic Form";
-        modalConfig.OnCancel = async (e) =>
+        if (_modalRef == null)
         {
-            Console.WriteLine("OnCancel");
-            await _modalRef.CloseAsync();
-        };
+            var templateOptions = new Form.demo.Basic.Model();
+            templateOptions.Username = value;
 
-        modalConfig.AfterClose = () =>
+            var modalConfig = new ModalOptions();
+            modalConfig.Title = "Basic Form";
+            modalConfig.OnCancel = async (e) =>
+            {
+                Console.WriteLine("OnCancel");
+                await _modalRef.CloseAsync();
+            };
+
+            modalConfig.AfterClose = () =>
+            {
+                Console.WriteLine("AfterClose");
+                value = templateOptions.Username;
+                InvokeAsync(StateHasChanged);
+                return Task.CompletedTask;
+            };
+
+            _modalRef = await ModalService
+                .CreateModalAsync<ModalTemplateDemo, Form.demo.Basic.Model>
+                (modalConfig, templateOptions);
+        }
+        else
         {
-            Console.WriteLine("AfterClose");
-            value = templateOptions.Username;
-            InvokeAsync(StateHasChanged);
-            return Task.CompletedTask;
-        };
-
-        _modalRef = await ModalService
-            .CreateModalAsync<ModalTemplateDemo, Form.demo.Basic.Model>
-            (modalConfig, templateOptions);
-
+            await _modalRef.OpenAsync();
+        }
     }
 
 }
