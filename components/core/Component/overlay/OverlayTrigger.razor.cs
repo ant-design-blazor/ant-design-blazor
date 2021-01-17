@@ -55,6 +55,9 @@ namespace AntDesign.Internal
 
         [Parameter]
         public bool Visible { get; set; } = false;
+
+        public void SetVisible(bool visible) => Visible = visible;
+
         /// <summary>
         /// 自动关闭功能和Visible参数同时生效
         /// Both auto-off and Visible control close

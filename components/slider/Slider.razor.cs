@@ -606,13 +606,13 @@ namespace AntDesign
                 if (_tooltipRightVisible != TooltipVisible)
                 {
                     _tooltipRightVisible = TooltipVisible;
-                    _toolTipRight.Visible = TooltipVisible;
+                    _toolTipRight.SetVisible(TooltipVisible);
                 }
 
                 if (_tooltipLeftVisible != TooltipVisible)
                 {
                     _tooltipLeftVisible = TooltipVisible;
-                    _toolTipLeft.Visible = TooltipVisible;
+                    _toolTipLeft.SetVisible(TooltipVisible);
                 }
             }
 
