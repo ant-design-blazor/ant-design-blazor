@@ -259,7 +259,9 @@ function slideTo(targetPageY) {
 
 export function getFirstChildDomInfo(element) {
   var dom = getDom(element);
-  return getDomInfo(dom.firstElementChild);
+  if (dom.firstElementChild)
+    return getDomInfo(dom.firstElementChild);
+  return getDomInfo(dom);
 }
 
 export function addClsToFirstChild(element, className) {
