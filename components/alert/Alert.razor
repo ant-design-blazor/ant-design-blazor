@@ -6,7 +6,7 @@
     <div data-show="@(!_isClosing||_isClosed?"true":"false")" class="@ClassMapper.Class" style="@_innerStyle @Style " Id="@Id" @ref="Ref">
         @if (ShowIcon)
         {
-            @if (Icon!=null)
+            @if (Icon != null)
             {
                 <div class="ant-alert-icon">
                     @Icon
@@ -17,18 +17,20 @@
                 <Icon Type="@IconType" Theme="@(string.IsNullOrWhiteSpace(Description)?"fill":"outline")" Class="ant-alert-icon" />
             }
         }
-        @if (!string.IsNullOrEmpty(Message))
-        {
-            <span class="ant-alert-message">@Message</span>
-        }
-        @if (!string.IsNullOrEmpty(Description))
-        {
-            <span class="ant-alert-description">@Description</span>
-        }
-        @if (ChildContent != null)
-        {
-            <span class="ant-alert-description">@ChildContent</span>
-        }
+        <div class="ant-alert-content">
+            @if (!string.IsNullOrEmpty(Message))
+            {
+                <div class="ant-alert-message">@Message</div>
+            }
+            @if (!string.IsNullOrEmpty(Description))
+            {
+                <div class="ant-alert-description">@Description</div>
+            }
+            @if (ChildContent != null)
+            {
+                <div class="ant-alert-description">@ChildContent</div>
+            }
+        </div>
         @if (Closable)
         {
             <button type="button" class="ant-alert-close-icon" tabindex="0" @onclick="@OnCloseHandler">
@@ -38,7 +40,7 @@
                 }
                 else
                 {
-                    <Icon Type="close"/>
+                    <Icon Type="close" />
                 }
             </button>
         }
