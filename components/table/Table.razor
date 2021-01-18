@@ -15,77 +15,79 @@
                         OnPageSizeChange="HandlePageSizeChange" />
         }
         <CascadingValue Value="@this" TValue="ITable">
-            <CascadingValue Value="@ColumnContext">
-                <CascadingValue Name="IsInitialize" Value="true">
-                    @ChildContent(_fieldModel)
-                </CascadingValue>
-                <div class="@ClassMapper.Class">
-                    @if (TitleTemplate != null || Title != null)
-                    {
-                        <div class="ant-table-title">
-                            @if (TitleTemplate != null)@TitleTemplate else @Title
+            <CascadingValue Value=@typeof(TItem) Name="ItemType">
+                <CascadingValue Value="@ColumnContext">
+                    <CascadingValue Name="IsInitialize" Value="true">
+                        @ChildContent(_fieldModel)
+                    </CascadingValue>
+                    <div class="@ClassMapper.Class">
+                        @if (TitleTemplate != null || Title != null)
+                        {
+                            <div class="ant-table-title">
+                                @if (TitleTemplate != null)@TitleTemplate else @Title
+                            </div>
+                        }
+                        <div class="ant-table-container">
+                            @if (ScrollY != null)
+                            {
+                                <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
+                                    <table style="table-layout: fixed;">
+                                        @colGroup((this, true))
+                                        @header(this)
+                                    </table>
+                                </div>
+                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY)">
+                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") table-layout: fixed;">
+                                        @colGroup((this, false))
+                                        <tbody class="ant-table-tbody">
+                                            <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
+                                                <CascadingValue Name="IsMeasure" Value="true">
+                                                    @ChildContent(_fieldModel)
+                                                </CascadingValue>
+                                            </tr>
+                                            @body((this, _showItems, 0))
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else if (ScrollX != null)
+                            {
+                                <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden;">
+                                    <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; table-layout: fixed;">
+                                        @colGroup((this, true))
+                                        @header(this)
+                                        <tbody class="ant-table-tbody">
+                                            <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
+                                                <CascadingValue Name="IsMeasure" Value="true">
+                                                    @ChildContent(_fieldModel)
+                                                </CascadingValue>
+                                            </tr>
+                                            @body((this, _showItems, 0))
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="ant-table-content">
+                                    <table style="table-layout: @(_tableLayoutIsFixed?"fixed":"auto");">
+                                        @colGroup((this, true))
+                                        @header(this)
+                                        <tbody class="ant-table-tbody">
+                                            @body((this, _showItems, 0))
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
                         </div>
-                    }
-                    <div class="ant-table-container">
-                        @if (ScrollY != null)
+                        @if (FooterTemplate != null || Footer != null)
                         {
-                            <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
-                                <table style="table-layout: fixed;">
-                                    @colGroup((this, true))
-                                    @header(this)
-                                </table>
-                            </div>
-                            <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY)">
-                                <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") table-layout: fixed;">
-                                    @colGroup((this, false))
-                                    <tbody class="ant-table-tbody">
-                                        <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
-                                            <CascadingValue Name="IsMeasure" Value="true">
-                                                @ChildContent(_fieldModel)
-                                            </CascadingValue>
-                                        </tr>
-                                        @body((this, _showItems, 0))
-                                    </tbody>
-                                </table>
-                            </div>
-                        }
-                        else if (ScrollX != null)
-                        {
-                            <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden;">
-                                <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; table-layout: fixed;">
-                                    @colGroup((this, true))
-                                    @header(this)
-                                    <tbody class="ant-table-tbody">
-                                        <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
-                                            <CascadingValue Name="IsMeasure" Value="true">
-                                                @ChildContent(_fieldModel)
-                                            </CascadingValue>
-                                        </tr>
-                                        @body((this, _showItems, 0))
-                                    </tbody>
-                                </table>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="ant-table-content">
-                                <table style="table-layout: @(_tableLayoutIsFixed?"fixed":"auto");">
-                                    @colGroup((this, true))
-                                    @header(this)
-                                    <tbody class="ant-table-tbody">
-                                        @body((this, _showItems, 0))
-                                    </tbody>
-                                </table>
+                            <div class="ant-table-footer">
+                                @if (FooterTemplate != null)@FooterTemplate else @Footer
                             </div>
                         }
                     </div>
-                    @if (FooterTemplate != null || Footer != null)
-                    {
-                        <div class="ant-table-footer">
-                            @if (FooterTemplate != null)@FooterTemplate else @Footer
-                        </div>
-                    }
-                </div>
+                </CascadingValue>
             </CascadingValue>
         </CascadingValue>
         @if (!HidePagination && PaginationPosition.Contains("bottom"))

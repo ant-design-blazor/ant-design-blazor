@@ -17,7 +17,7 @@ namespace AntDesign.Core.Reflection
 
         public string PropertyName { get; set; }
 
-        private PropertyReflector(PropertyInfo propertyInfo)
+        internal PropertyReflector(PropertyInfo propertyInfo)
         {
             this.PropertyInfo = propertyInfo;
             this.RequiredAttribute = propertyInfo.GetCustomAttribute<RequiredAttribute>(true);

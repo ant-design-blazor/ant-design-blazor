@@ -83,6 +83,10 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
             {
                 @(Formatter<TData>.Format(Field,Format))
             }
+            else if (GetValue != null)
+            {
+                @GetValue(RowData);
+            }
             else
             {
                 @Field
