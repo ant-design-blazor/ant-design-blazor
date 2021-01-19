@@ -109,9 +109,13 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
         </span>
     </div>;
 
-readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
-@<Tooltip Class="ant-table-column-sorters-with-tooltip" Title="@col.SorterTooltip">
-    @col.SortHeader(col)
-</Tooltip>;
+    readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
+    @<Tooltip Title="@col.SorterTooltip">
+        <Unbound>
+            <div class="ant-table-column-sorters-with-tooltip" @ref="context.Current">
+                @col.SortHeader(col)
+            </div>
+        </Unbound>
+    </Tooltip>;
 
-}
+}   
