@@ -1,7 +1,28 @@
-@inject MessageService _message
-
-<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76" Directory>
+<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76" Directory OnSingleCompleted="OnSingleCompleted">
     <Button Icon="upload">
         <span>点击上传</span>
     </Button>
 </Upload>
+
+@code{
+    void OnSingleCompleted(UploadInfo fileinfo)
+    {
+        if (fileinfo.File.State == UploadState.Success)
+        {
+            var result = fileinfo.File.GetResponse<ResponseModel>();
+            fileinfo.File.Url = result.url;
+        }
+    }
+
+    public class ResponseModel
+    {
+        public string name { get; set; }
+
+        public string status { get; set; }
+
+        public string url { get; set; }
+
+        public string thumbUrl { get; set; }
+    }
+
+}
