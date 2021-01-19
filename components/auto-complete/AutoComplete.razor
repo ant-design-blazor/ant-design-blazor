@@ -58,11 +58,11 @@
                     <AutoCompleteInput RefBack="context" @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" />
                 }
                 else
-                {                
-                    <div @ref="@context.Current" style="@Style" id="@Id">
+                {
+                    <CascadingValue Value="context" Name="OverlayTriggerContext">
                         @ChildContent
-                    </div>
-                }
+                    </CascadingValue>
+                }                    
             </CascadingValue>
         </Unbound>
     </OverlayTrigger>

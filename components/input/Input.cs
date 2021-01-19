@@ -95,6 +95,8 @@ namespace AntDesign
 
         public Dictionary<string, object> Attributes { get; set; }
 
+        public ForwardRef WrapperRefBack { get; set; }
+
         private TValue _inputValue;
         private bool _compositionInputting;
         private Timer _debounceTimer;
@@ -415,6 +417,10 @@ namespace AntDesign
                         container = "affixWrapper";
                         builder.AddAttribute(23, "style", Style);
                     }
+                    if (WrapperRefBack != null)
+                    {
+                        builder.AddElementReferenceCapture(24, r => WrapperRefBack.Current = r);
+                    }
                 }
 
                 if (Prefix != null)
@@ -457,12 +463,12 @@ namespace AntDesign
                 }
 
                 builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
-                builder.AddAttribute(63, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
-                builder.AddAttribute(63, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
-                builder.AddAttribute(64, "oninput", CallbackFactory.Create(this, OnInputAsync));
-                builder.AddAttribute(66, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
-                builder.AddAttribute(67, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
-                builder.AddElementReferenceCapture(68, r => Ref = r);
+                builder.AddAttribute(64, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
+                builder.AddAttribute(65, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
+                builder.AddAttribute(66, "oninput", CallbackFactory.Create(this, OnInputAsync));
+                builder.AddAttribute(67, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
+                builder.AddAttribute(68, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
+                builder.AddElementReferenceCapture(69, r => Ref = r);
                 builder.CloseElement();
 
                 if (Suffix != null)

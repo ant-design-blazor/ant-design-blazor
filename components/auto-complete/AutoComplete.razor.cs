@@ -84,9 +84,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        //[Parameter]
-        //public RenderFragment<ForwardRef> UnboundContent { get; set; }
-
         /// <summary>
         /// 选项模板
         /// </summary>
