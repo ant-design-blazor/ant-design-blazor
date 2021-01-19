@@ -1,29 +1,29 @@
 @inject MessageService _message
 
-    <Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            Name="avatar"
-            @bind-FileList="fileList"
-            ShowButton="fileList?.Count < 8"
-            ListType="picture-card"
-            OnPreview="(file)=> {
+<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        Name="avatar"
+        @bind-FileList="fileList"
+        ShowButton="fileList?.Count < 8"
+        ListType="picture-card"
+        OnPreview="(file)=> {
                            Console.WriteLine(file.FileName);
                            Console.WriteLine(file.Url);
                            previewVisible = true;
                            previewTitle = file.FileName;
                            imgUrl = file.Url;
                        }"
-            OnChange="HandleChange">
-            <div>
-                <Icon Type="plus"></Icon>
-                <div className="ant-upload-text">Upload</div>
-            </div>
+        OnChange="HandleChange">
+    <div>
+        <Icon Type="plus"></Icon>
+        <div className="ant-upload-text">Upload</div>
+    </div>
 
-    </Upload>
-    <Modal Visible="previewVisible"
-           Title="previewTitle"
-           OnCancel="()=> previewVisible=false">
-        <img style="width: 100%" src="@imgUrl" />
-    </Modal>
+</Upload>
+<Modal Visible="previewVisible"
+       Title="previewTitle"
+       OnCancel="()=> previewVisible=false">
+    <img style="width: 100%" src="@imgUrl" />
+</Modal>
 
 @code
 {
@@ -32,7 +32,7 @@
     string imgUrl = string.Empty;
 
     List<UploadFileItem> fileList = new List<UploadFileItem>
-    {
+{
         new UploadFileItem
         {
             Id = "1",
@@ -59,6 +59,14 @@
             Id = "4",
             FileName = "image.png",
             State = UploadState.Success,
+            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        },
+        new UploadFileItem
+        {
+            Id = "xxx",
+            FileName = "image.png",
+            State = UploadState.Uploading,
+            Percent = 50,
             Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         },
          new UploadFileItem
