@@ -3,7 +3,7 @@
 
 <div class="@ClassMapper.Class">
     <div class="@SlickSliderClassMapper.Class">
-        <div class="slick-list" @ref="_ref" style="@SlickListStyle">
+        <div class="slick-list" @ref="Ref" style="@SlickListStyle">
             <div class="slick-track" style="@TrackStyle">
                 @if (_slicks.Count > 0 && Effect == CarouselEffect.ScrollX)
                 {
@@ -15,7 +15,7 @@
                         </div>
                     </div>
                 }
-                <CascadingValue Value="this">
+                <CascadingValue Value="this" IsFixed="@true">
                     @ChildContent
                 </CascadingValue>
                 @if (Effect == CarouselEffect.ScrollX)

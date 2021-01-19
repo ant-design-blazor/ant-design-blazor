@@ -11,6 +11,23 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        [Parameter] public ForwardRef RefBack { get; set; } = new ForwardRef();
+
+        private ElementReference _ref;
+
+        /// <summary>
+        /// Returned ElementRef reference for DOM element.
+        /// </summary>
+        public virtual ElementReference Ref
+        {
+            get => _ref;
+            set
+            {
+                _ref = value;
+                RefBack?.Set(value);
+            }
+        }
+
         private static readonly Hashtable _spaceSize = new Hashtable()
         {
             ["small"] = 8,

@@ -9,14 +9,6 @@ var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var buffer = require('vinyl-buffer');
 
-gulp.task('less', function () {
-  return gulp
-    .src('ant-design-blazor.less')
-    .pipe(less({ javascriptEnabled: true }))
-    .pipe(cleanCss({ compatibility: 'ie8' }))
-    .pipe(gulp.dest('wwwroot/css'));
-});
-
 gulp.task('ts', function () {
   return browserify({
     basedir: '.',
@@ -38,8 +30,4 @@ gulp.task('ts', function () {
     .pipe(gulp.dest('wwwroot/js'));
 });
 
-gulp.task('src', function () {
-  return gulp.src(['**/*.less', '!wwwroot/**']).pipe(gulp.dest('wwwroot/less'));
-});
-
-gulp.task('default', gulp.parallel('less', 'ts', 'src'), function () { });
+gulp.task('default', gulp.parallel('ts'), function () { });

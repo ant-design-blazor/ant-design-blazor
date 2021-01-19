@@ -21,7 +21,7 @@
     const int FIRST_YEAR_INDEX = 0;
     const int LAST_YEAR_INDEX = MAX_ROW * MAX_COL - 1;
 }
-<div class='@($"{PrefixCls}-panel")'>
+<div class='@($"{PrefixCls}-panel")' @ref="Ref">
     <DatePickerTemplate @attributes="GetAttritubes()"
                         TValue="TValue"
                         MaxRow="MAX_ROW"

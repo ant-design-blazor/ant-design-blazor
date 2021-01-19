@@ -15,7 +15,7 @@
          @oncontextmenu:preventDefault>
         @if (IsButton)
         {
-            <CascadingValue Value="this">
+            <CascadingValue Value="this" IsFixed="@true">
                 <DropdownGroupButton>
                     <LeftButton>
                         <Button @key="1" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled">@ChildContent</Button>
@@ -37,7 +37,7 @@
 {
     @if (IsButton)
     {
-        <CascadingValue Value="this">
+        <CascadingValue Value="this" IsFixed="@true">
             <DropdownGroupButton>
                 <LeftButton>
                     <Button @key="1" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled">@ChildContent</Button>
@@ -54,7 +54,7 @@
     }
 }
 
-<CascadingValue Value="this" Name="Trigger">
+<CascadingValue Value="this" Name="Trigger" IsFixed="@true">
     <Overlay @ref="_overlay"
              OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
              OnOverlayMouseEnter="OnOverlayMouseEnter"

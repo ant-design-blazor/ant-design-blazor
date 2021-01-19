@@ -9,7 +9,8 @@
         ant-click-animating="@(_clickAnimating?"true":"false")"
         @onmouseover="HandleMouseOver"
         @onmouseout="HandleMouseOut"
-        @onclick="HandleClick">
+        @onclick="HandleClick"
+        @ref="Ref">
     <div class="@($"{_prefixCls}-handle")">
         @if (Loading)
         {

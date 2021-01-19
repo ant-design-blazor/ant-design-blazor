@@ -18,7 +18,6 @@ namespace AntDesign
         private Element _sliderDom;
         private Element _leftHandleDom;
         private Element _rightHandleDom;
-        private ElementReference _slider;
         private ElementReference _leftHandle;
         private ElementReference _rightHandle;
         private string _leftHandleStyle = "left: 0%; right: auto; transform: translateX(-50%);";
@@ -622,7 +621,7 @@ namespace AntDesign
 
         private async Task CalculateValueAsync(double clickClient)
         {
-            _sliderDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _slider);
+            _sliderDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
             double sliderOffset = (double)(Vertical ? _sliderDom.absoluteTop : _sliderDom.absoluteLeft);
             double sliderLength = (double)(Vertical ? _sliderDom.clientHeight : _sliderDom.clientWidth);
             double handleNewPosition;

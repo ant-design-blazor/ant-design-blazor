@@ -37,9 +37,7 @@ namespace AntDesign
         [Parameter]
         public bool Colon { get; set; }
 
-        #endregion Parameters
-
-        private ElementReference _divRef;
+        #endregion Parameters        
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -178,7 +176,7 @@ namespace AntDesign
             }
             else
             {
-                Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _divRef);
+                Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
                 var breakpointTuple = _descriptionsResponsiveMap.FirstOrDefault(x => x.PixelWidth > element.clientWidth);
                 var bp = breakpointTuple == default ? BreakpointEnum.xxl : breakpointTuple.Breakpoint;
                 _realColumn = Column.AsT1.ContainsKey(bp.ToString()) ? Column.AsT1[bp.ToString()] : _defaultColumnMap[bp.ToString()];

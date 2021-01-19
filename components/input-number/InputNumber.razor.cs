@@ -143,7 +143,6 @@ namespace AntDesign
         private static Type[] _floatTypes = new Type[] { typeof(float), typeof(double), typeof(decimal) };
         private string _inputString;
         private bool _focused;
-        private ElementReference _inputRef;
 
         public InputNumber()
         {
@@ -309,7 +308,7 @@ namespace AntDesign
         private async Task SetFocus()
         {
             _focused = true;
-            await JsInvokeAsync(JSInteropConstants.Focus, _inputRef);
+            await JsInvokeAsync(JSInteropConstants.Focus, Ref);
         }
 
         private void OnInput(ChangeEventArgs args)

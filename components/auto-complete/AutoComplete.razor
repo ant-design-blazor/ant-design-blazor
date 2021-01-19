@@ -16,7 +16,7 @@
                     OverlayStyle="@OverlayStyle"
                     OnVisibleChange="@OnOverlayTriggerVisibleChange">
         <Overlay>
-            <CascadingValue Value="this">
+            <CascadingValue Value="this" IsFixed="@true">
                 @if (ShowPanel && !_isOptionsZero)
                 {
                     <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @_minWidth">
@@ -52,7 +52,7 @@
             </CascadingValue>
         </Overlay>
         <Unbound>
-            <CascadingValue Value="this">
+            <CascadingValue Value="this" IsFixed="@true">
                 @if (ChildContent == null)
                 {
                     <AutoCompleteInput RefBack="context" @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" />

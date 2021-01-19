@@ -106,11 +106,11 @@ namespace AntDesign.Tests.tabs
                 tabPane2(p);
             });
 
-            Assert.Equal("Content 2", cut.Find(".ant-tabs-tabpane").TextContent);
+            Assert.Equal("Content 2", cut.Find(".ant-tabs-tabpane").TextContent.Trim());
 
             cut.Find("div.ant-tabs-tab").Click();
 
-            Assert.Equal("Content 1", cut.Find(".ant-tabs-tabpane").TextContent);
+            Assert.Equal("Content 1", cut.Find(".ant-tabs-tabpane").TextContent.Trim());
         }
     }
 }

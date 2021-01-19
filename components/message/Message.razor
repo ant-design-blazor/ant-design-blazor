@@ -4,7 +4,7 @@
 @if (_configs.Count > 0)
 {
     <div>
-        <div class="ant-message" style="top: @(_top)px;">
+        <div class="ant-message" style="top: @(_top)px;" @ref="Ref">
             <span>
                 @foreach (var config in _configs)
                 {

@@ -3,7 +3,7 @@
 @inherits AntInputComponentBase<TValue>
 @using Microsoft.AspNetCore.Components.Web
 
-<div class="@ClassMapper.Class" style="user-select:none;@Style" id="@Id" @ref="_slider"
+<div class="@ClassMapper.Class" style="user-select:none;@Style" id="@Id" @ref="Ref"
      @onmousedown="(e) => OnMouseDown(e)">
     <div class="ant-slider-rail">
     </div>
@@ -74,3 +74,4 @@
         }
     </div>
 </div>
+

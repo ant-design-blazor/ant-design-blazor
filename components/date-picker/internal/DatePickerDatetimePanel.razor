@@ -13,7 +13,7 @@
 
 }
 
-<div class='@($"{PrefixCls}-datetime-panel")'>
+<div class='@($"{PrefixCls}-datetime-panel")' @ref="Ref">
     @if (IsShowTime)
     {
         <DatePickerTemplate TValue="TValue"
