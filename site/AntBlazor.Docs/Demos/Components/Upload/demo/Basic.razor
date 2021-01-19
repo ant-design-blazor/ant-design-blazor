@@ -1,21 +1,12 @@
-@inject MessageService _message
-
-<Upload @attributes="attrs"
+<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        Name="files"
         OnSingleCompleted="OnSingleCompleted">
     <Button Icon="upload">
         <span>点击上传</span>
     </Button>
 </Upload>
 
-@code
-{
-
-    Dictionary<string, object> attrs = new Dictionary<string, object>
-    {
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" }
-    };
-
+@code {
     void OnSingleCompleted(UploadInfo fileinfo)
     {
         if (fileinfo.File.State == UploadState.Success)

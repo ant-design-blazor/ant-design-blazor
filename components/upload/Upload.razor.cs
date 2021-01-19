@@ -58,6 +58,9 @@ namespace AntDesign
         public List<UploadFileItem> FileList { get; set; } = new List<UploadFileItem>();
 
         [Parameter]
+        public UploadLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Upload;
+
+        [Parameter]
         public EventCallback<List<UploadFileItem>> FileListChanged { get; set; }
 
         [Parameter]
@@ -90,6 +93,10 @@ namespace AntDesign
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
 
+        private bool IsText => ListType == "text";
+        private bool IsPicture => ListType == "picture";
+        private bool IsPictureCard => ListType == "picture-card";
+
         private DotNetObjectReference<Upload> _currentInstance;
 
         private UploadInfo _uploadInfo = new UploadInfo();
@@ -102,7 +109,7 @@ namespace AntDesign
 
         private string _fileId = Guid.NewGuid().ToString();
 
-        private bool _beforeTheFirstRender = false;
+        private bool _beforeTheFirstRender;
 
         protected override Task OnInitializedAsync()
         {
@@ -160,7 +167,7 @@ namespace AntDesign
                         return;
                     }
                 }
-                fileItem.Progress = 0;
+                fileItem.Percent = 0;
                 fileItem.State = UploadState.Uploading;
                 fileItem.Id = id;
                 FileList.Add(fileItem);
@@ -186,6 +193,14 @@ namespace AntDesign
             }
         }
 
+        private async Task PreviewFile(UploadFileItem item)
+        {
+            if (item.State == UploadState.Success && OnPreview.HasDelegate)
+            {
+                await OnPreview.InvokeAsync(item);
+            }
+        }
+
         [JSInvokable]
         public async Task UploadSuccess(string id, string returnData)
         {
@@ -196,7 +211,7 @@ namespace AntDesign
             }
 
             file.State = UploadState.Success;
-            file.Progress = 100;
+            file.Percent = 100;
             file.Response = returnData;
             _uploadInfo.File = file;
             await UploadChanged(id, 100);
@@ -220,7 +235,7 @@ namespace AntDesign
                 return;
             }
             file.State = UploadState.Fail;
-            file.Progress = 100;
+            file.Percent = 100;
             _uploadInfo.File = file;
             file.Response ??= reponseCode;
             await UploadChanged(id, 100);
@@ -243,7 +258,7 @@ namespace AntDesign
             {
                 return;
             }
-            file.Progress = progress;
+            file.Percent = progress;
             _uploadInfo.File = file;
             await InvokeAsync(StateHasChanged);
             if (OnChange.HasDelegate)
