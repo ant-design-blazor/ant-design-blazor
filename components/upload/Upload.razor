@@ -1,14 +1,25 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
+
+@using AntDesign.Internal;
+
 <span class="@ClassMapper.Class @(IsPictureCard? "ant-upload-picture-card-wrapper" : "")" style="@Style" @ref="Ref">
     @if (!IsPictureCard || !ShowUploadList)
     {
-        <div class="ant-upload ant-upload-select ant-upload-select-@(ListType)" style="@(!ShowButton?"display:none;":"")">
-            <span tabindex="0" class="ant-upload" @ref="_btn" data-fileid="@_fileId" role="button">
-                <input type="file" webkitdirectory="@Directory" multiple="@(Multiple || Directory)" @ref="_file" @onchange="FileNameChanged" accept="@Accept" style="display: none;" id="@_fileId" />
+        <CascadingValue Value="this" IsFixed>
+            <UploadButton Action="@Action"
+                          Accept="@Accept"
+                          ListType="@ListType"
+                          Name="@Name"
+                          Directory="@Directory"
+                          Multiple="@Multiple"
+                          Data="@Data"
+                          Headers="@Headers"
+                          Disabled="Disabled"
+                          ShowButton="@ShowButton">
                 @ChildContent
-            </span>
-        </div>
+            </UploadButton>
+        </CascadingValue>
     }
 
     @if (ShowUploadList)
@@ -134,12 +145,20 @@
 
             @if (IsPictureCard)
             {
-                <div class="ant-upload ant-upload-select ant-upload-select-@(ListType)" style="@(!ShowButton ? "display:none;" : "")">
-                    <span tabindex="0" class="ant-upload" @ref="_btn" data-fileid="@_fileId" role="button">
-                        <input type="file" webkitdirectory="@Directory" multiple="@(Multiple || Directory)" @ref="_file" @onchange="FileNameChanged" accept="@Accept" style="display: none;" id="@_fileId" />
+                <CascadingValue Value="this" IsFixed>
+                    <UploadButton Action="@Action"
+                                  Accept="@Accept"
+                                  ListType="@ListType"
+                                  Name="@Name"
+                                  Directory="@Directory"
+                                  Multiple="@Multiple"
+                                  Data="@Data"
+                                  Headers="@Headers"
+                                  Disabled="Disabled"
+                                  ShowButton="@ShowButton">
                         @ChildContent
-                    </span>
-                </div>
+                    </UploadButton>
+                </CascadingValue>
             }
         </div>
     }
