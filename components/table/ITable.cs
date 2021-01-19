@@ -33,5 +33,7 @@
         internal void HasFixRight();
 
         internal void TableLayoutIsFixed();
+
+        public int ExpandIconColumnIndex { get; set; }
     }
 }
