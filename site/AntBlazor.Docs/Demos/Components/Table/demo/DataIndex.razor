@@ -1,0 +1,96 @@
+﻿<Table @ref="            table" TItem="TestData" DataSource="@testData">
+    <Column @bind-Field="@context.Id" Sortable/>
+    <Column Title="DayOfWeek" @bind-Field="@context.DayOfWeek" Sortable/>
+    <Column Title="DayOfWeek DataIndex" TData="int" DataIndex="DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)"/>
+    <Column Title="N1.N12.N2A DataIndex" TData="string" DataIndex="N1.N12.N2A" Sortable SorterCompare="@((v1, v2) => string.CompareOrdinal(v1, v2))"/>
+    <Column Title="N1.N1A DataIndex Nullable" TData="int?" DataIndex="N1.N1A" Sortable SorterCompare="CompareNullableInt"/>
+    <Column Title="Time" TData="DateTime" DataIndex="N1.N12.Time" Format="yyyy-MM-dd hh:mm:ss" Sortable SorterCompare="@((t1, t2) => t1.CompareTo(t2))"></Column>
+</Table>
+
+@code {
+
+    ITable table;
+
+    TestData[] testData;
+
+    public class TestData
+    {
+        public int Id { get; set; }
+
+        public int DayOfWeek { get; set; }
+
+        public int Jobs { get; set; }
+
+        public int Popularity { get; set; }
+
+        public Nested1 N1 { get; set; }
+    }
+
+    public class Nested1
+    {
+        public int? N1A { get; set; }
+
+        public Nested2 N12 { get; set; }
+    }
+
+    public class Nested2
+    {
+        public string N2A { get; set; }
+
+        public DateTime Time { get; set; }
+    }
+
+    public string[] DayName = {"None", "Monday", "Tuesday", "Wednesdays", "Thursday", "Friday", "Saturday", "Sunday"};
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        testData = GetForecastAsync();
+        base.OnInitialized();
+    }
+
+    public TestData[] GetForecastAsync()
+    {
+        var rng = new Random();
+        var startDate = new DateTime(DateTime.Today.Year - 5, 1, 1);
+        var range = (DateTime.Today - startDate).TotalSeconds;
+        return Enumerable.Range(0, 5).Select(index =>
+        {
+            var data = new TestData
+            {
+                Id = index,
+                DayOfWeek = rng.Next(1, 8),
+                Jobs = rng.Next(0, 20),
+                Popularity = rng.Next(0, 30),
+            };
+            data.N1 = new()
+            {
+                N1A = (index & 1) == 0 ? index : null,
+                N12 = new()
+                {
+                    N2A = DayName[data.DayOfWeek] + " - DI",
+                    Time = startDate.AddSeconds(rng.Next((int)range))
+                }
+            };
+            return data;
+        }).ToArray();
+    }
+
+    public int CompareNullableInt(int? a, int? b)
+    {
+        if (a is null && b is null)
+        {
+            return 0;
+        }
+        if (a is null)
+        {
+            return -1;
+        }
+        if (b is null)
+        {
+            return 1;
+        }
+        return (a - b).Value;
+    }
+
+}
