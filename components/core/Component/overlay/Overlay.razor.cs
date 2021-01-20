@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -55,6 +56,9 @@ namespace AntDesign.Internal
         [Parameter]
         public bool HiddenMode { get; set; } = false;
 
+        [Inject]
+        private DomEventService DomEventService { get; set; }
+
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
         private bool _isChildOverlayShow = false;
@@ -79,7 +83,7 @@ namespace AntDesign.Internal
         private const int VERTICAL_ARROW_SHIFT = 5;
 
         private int _overlayClientWidth = 0;
-        
+
         protected override async Task OnParametersSetAsync()
         {
             if (!_isOverlayShow && Trigger.Visible && !_preVisible)
@@ -100,6 +104,7 @@ namespace AntDesign.Internal
             if (firstRender)
             {
                 await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"{Trigger.PrefixCls}-trigger");
+                DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
             }
 
             if (_lastDisabledState != Trigger.Disabled)
@@ -130,7 +135,7 @@ namespace AntDesign.Internal
 
         protected override void Dispose(bool disposing)
         {
-            if (_hasAddOverlayToBody)
+            if (_hasAddOverlayToBody && !_isReloading)
             {
                 _ = InvokeAsync(async () =>
                 {
@@ -138,7 +143,7 @@ namespace AntDesign.Internal
                     await JsInvokeAsync(JSInteropConstants.DelElementFrom, Ref, Trigger.PopupContainerSelector);
                 });
             }
-
+            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
             base.Dispose(disposing);
         }
 
@@ -264,6 +269,12 @@ namespace AntDesign.Internal
         {
             return _isOverlayHiding;
         }
+
+        /// <summary>
+        /// Indicates that a page is being refreshed 
+        /// </summary>
+        private bool _isReloading;
+        private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
         private async Task AddOverlayToBody()
         {
