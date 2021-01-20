@@ -31,7 +31,7 @@ namespace AntDesign.Internal
             Func<RowData, TProp> getValue = null;
             ITableSortModel sortModel = null;
             var properties = dataIndex?.Split(".");
-            if (properties is {Length: >0})
+            if (properties is { Length: > 0 })
             {
                 var isNullable = propType.IsValueType && Nullable.GetUnderlyingType(propType) != null;
                 var rowDataType = typeof(RowData);

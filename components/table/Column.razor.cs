@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Linq.Expressions;
-using System.Reflection;
-using AntDesign.core.Helpers;
 using AntDesign.Core.Reflection;
 using AntDesign.Internal;
 using AntDesign.TableModels;
@@ -59,17 +56,25 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (FieldExpression != null)
+            if (IsHeader)
             {
-                _propertyReflector = PropertyReflector.Create(FieldExpression);
-                if (Sortable)
+                if (FieldExpression != null)
                 {
-                    SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, 1, Sort, SorterCompare);
+                    _propertyReflector = PropertyReflector.Create(FieldExpression);
+                    if (Sortable)
+                    {
+                        SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, 1, Sort, SorterCompare);
+                    }
+                }
+                else
+                {
+                    (GetValue, SortModel) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
                 }
             }
-            else
+            else if (IsBody)
             {
-                (GetValue, SortModel) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                SortModel = Context.HeaderColumns[ColIndex] is IFieldColumn fieldColumn ? fieldColumn.SortModel : null;
+                (GetValue, _) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
             }
 
             ClassMapper
