@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using AntDesign.Core.Reflection;
+using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
@@ -8,6 +9,9 @@ namespace AntDesign
 {
     public partial class Column<TData> : ColumnBase, IFieldColumn
     {
+        [CascadingParameter(Name = "ItemType")]
+        public Type ItemType { get; set; }
+
         [Parameter]
         public EventCallback<TData> FieldChanged { get; set; }
 
@@ -19,6 +23,9 @@ namespace AntDesign
 
         [Parameter]
         public TData Field { get; set; }
+
+        [Parameter]
+        public string DataIndex { get; set; }
 
         [Parameter]
         public string Format { get; set; }
@@ -43,22 +50,36 @@ namespace AntDesign
 
         public ITableSortModel SortModel { get; private set; }
 
+        public Func<RowData, TData> GetValue { get; private set; }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (FieldExpression != null)
+            if (IsHeader)
             {
-                _propertyReflector = PropertyReflector.Create(FieldExpression);
-                if (Sortable)
+                if (FieldExpression != null)
                 {
-                    SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, 1, Sort, SorterCompare);
+                    _propertyReflector = PropertyReflector.Create(FieldExpression);
+                    if (Sortable)
+                    {
+                        SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, 1, Sort, SorterCompare);
+                    }
                 }
+                else
+                {
+                    (GetValue, SortModel) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                }
+            }
+            else if (IsBody)
+            {
+                SortModel = Context.HeaderColumns[ColIndex] is IFieldColumn fieldColumn ? fieldColumn.SortModel : null;
+                (GetValue, _) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
             }
 
             ClassMapper
                .If("ant-table-column-has-sorters", () => Sortable)
-               .If($"ant-table-column-sort", () => Sortable && SortModel.SortType.IsIn(SortType.Ascending, SortType.Descending));
+               .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortType.IsIn(SortType.Ascending, SortType.Descending));
         }
 
         private void HandelHeaderClick()
