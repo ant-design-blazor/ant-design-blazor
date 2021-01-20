@@ -92,7 +92,7 @@ namespace AntDesign
         public int IndentSize { get; set; } = 15;
 
         [Parameter]
-        public int ExpandIconColumnIndex { get; set; } = 1;
+        public int ExpandIconColumnIndex { get; set; } = 0;
 
         [Inject]
         public DomEventService DomEventService { get; set; }
