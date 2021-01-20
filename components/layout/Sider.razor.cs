@@ -62,6 +62,8 @@ namespace AntDesign
 
         private bool _isCollapsed;
 
+        private bool _showTrigger;
+
         private string SiderStyles =>
             $"flex: 0 0 {ComputedWidth}px;" +
             $"max-width: {ComputedWidth}px;" +
@@ -133,10 +135,14 @@ namespace AntDesign
             if (windowWidth < Breakpoint?.Width)
             {
                 _isCollapsed = true;
+                _showTrigger = true;
                 OnBreakpoint.InvokeAsync(true);
             }
             else
+            {
+                _showTrigger = false;
                 _isCollapsed = false;
+            }
 
             OnCollapsed?.Invoke(_isCollapsed);
             if (OnCollapse.HasDelegate)
