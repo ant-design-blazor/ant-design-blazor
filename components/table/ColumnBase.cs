@@ -21,6 +21,9 @@ namespace AntDesign
         [CascadingParameter(Name = "IsPlaceholder")]
         public bool IsPlaceholder { get; set; }
 
+        [CascadingParameter(Name = "IsBody")]
+        public bool IsBody { get; set; }
+
         [CascadingParameter]
         public ColumnContext Context { get; set; }
 

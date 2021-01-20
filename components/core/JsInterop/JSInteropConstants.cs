@@ -39,7 +39,9 @@ namespace AntDesign
 
         public static string Blur => $"{FUNC_PREFIX}blur";
 
-        public static string BackTop => $"{FUNC_PREFIX}BackTop";
+        public static string BackTop => $"{FUNC_PREFIX}backTop";
+
+        public static string ScrollTo => $"{FUNC_PREFIX}scrollTo";
 
         public static string GetFirstChildDomInfo => $"{FUNC_PREFIX}getFirstChildDomInfo";
 
