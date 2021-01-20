@@ -34,14 +34,12 @@ namespace AntDesign
         [Parameter]
         public EventCallback OnClick { get; set; }
 
-
         protected async Task OnClickHandle()
         {
             if (string.IsNullOrWhiteSpace(TargetSelector))
                 await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop);
             else
                 await JsInvokeAsync<DomRect>(JSInteropConstants.BackTop, TargetSelector);
-
 
             if (OnClick.HasDelegate)
                 await OnClick.InvokeAsync(null);
@@ -70,7 +68,13 @@ namespace AntDesign
         {
             string prefixCls = "ant-back-top";
             ClassMapper.Add(prefixCls);
-            BackTopContentClassMapper.Add($"{prefixCls}-content");
+
+            BackTopContentClassMapper
+                .If($"{prefixCls}-content", () => ChildContent == null)
+                .If("fade fade-leave fade-leave-active", () => !_visible)
+                .If("fade fade-enter fade-enter-active", () => _visible)
+                ;
+
             BackTopIconClassMapper.Add($"{prefixCls}-icon");
         }
 
