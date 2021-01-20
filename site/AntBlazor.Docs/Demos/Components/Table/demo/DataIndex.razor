@@ -1,9 +1,10 @@
-﻿<Table @ref="table" TItem="TestData" DataSource="@testData">
+﻿<Table @ref="            table" TItem="TestData" DataSource="@testData">
     <Column @bind-Field="@context.Id" Sortable/>
     <Column Title="DayOfWeek" @bind-Field="@context.DayOfWeek" Sortable/>
     <Column Title="DayOfWeek DataIndex" TData="int" DataIndex="DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)"/>
     <Column Title="N1.N12.N2A DataIndex" TData="string" DataIndex="N1.N12.N2A" Sortable SorterCompare="@((v1, v2) => string.CompareOrdinal(v1, v2))"/>
     <Column Title="N1.N1A DataIndex Nullable" TData="int?" DataIndex="N1.N1A" Sortable SorterCompare="CompareNullableInt"/>
+    <Column Title="Time" TData="DateTime" DataIndex="N1.N12.Time" Format="yyyy-MM-dd hh:mm:ss" Sortable SorterCompare="@((t1, t2) => t1.CompareTo(t2))"></Column>
 </Table>
 
 @code {
@@ -35,6 +36,8 @@
     public class Nested2
     {
         public string N2A { get; set; }
+
+        public DateTime Time { get; set; }
     }
 
     public string[] DayName = {"None", "Monday", "Tuesday", "Wednesdays", "Thursday", "Friday", "Saturday", "Sunday"};
@@ -49,6 +52,8 @@
     public TestData[] GetForecastAsync()
     {
         var rng = new Random();
+        var startDate = new DateTime(DateTime.Today.Year - 5, 1, 1);
+        var range = (DateTime.Today - startDate).TotalSeconds;
         return Enumerable.Range(0, 5).Select(index =>
         {
             var data = new TestData
@@ -58,7 +63,15 @@
                 Jobs = rng.Next(0, 20),
                 Popularity = rng.Next(0, 30),
             };
-            data.N1 = new() {N1A = (index & 1) == 0 ? index : null, N12 = new() {N2A = DayName[data.DayOfWeek] + " - DI"}};
+            data.N1 = new()
+            {
+                N1A = (index & 1) == 0 ? index : null,
+                N12 = new()
+                {
+                    N2A = DayName[data.DayOfWeek] + " - DI",
+                    Time = startDate.AddSeconds(rng.Next((int)range))
+                }
+            };
             return data;
         }).ToArray();
     }
