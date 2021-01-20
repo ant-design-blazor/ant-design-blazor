@@ -3,9 +3,11 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.JSInterop;
 
 namespace AntDesign.Docs.Routing
 {
@@ -19,6 +21,8 @@ namespace AntDesign.Docs.Routing
         [Inject] private INavigationInterception NavigationInterception { get; set; }
         [Inject] private RouteManager RouteManager { get; set; }
         [Inject] private ILanguageService LanguageService { get; set; }
+        [Inject] private IJSRuntime JsRuntime { get; set; }
+
         [Parameter] public RenderFragment NotFound { get; set; }
         [Parameter] public RenderFragment<RouteData> Found { get; set; }
 
@@ -86,8 +90,13 @@ namespace AntDesign.Docs.Routing
         private void Refresh()
         {
             var relativeUri = NavigationManager.ToBaseRelativePath(_location);
+            var hash = string.Empty;
 
-            relativeUri = relativeUri.IndexOf('#') >= 0 ? relativeUri.Substring(0, relativeUri.IndexOf('#')) : relativeUri;
+            if (relativeUri.IndexOf('#') >= 0)
+            {
+                hash = relativeUri.Substring(relativeUri.IndexOf('#'), relativeUri.Length - relativeUri.IndexOf('#'));
+                relativeUri = relativeUri.Substring(0, relativeUri.IndexOf('#'));
+            }
 
             var currentCulture = LanguageService.CurrentCulture;
 
@@ -131,6 +140,18 @@ namespace AntDesign.Docs.Routing
                 }
 
                 _renderHandle.Render(NotFound);
+            }
+
+            if (!string.IsNullOrWhiteSpace(hash))
+            {
+                if (JsRuntime.IsBrowser())
+                {
+                    ((IJSInProcessRuntime)JsRuntime).InvokeVoid(JSInteropConstants.ScrollTo, $"{hash}");
+                }
+                else
+                {
+                    Task.Run(() => JsRuntime.InvokeVoidAsync(JSInteropConstants.ScrollTo, $"{hash}"));
+                }
             }
         }
     }
