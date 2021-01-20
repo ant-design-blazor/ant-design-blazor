@@ -187,11 +187,14 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
                     @if (table.ExpandTemplate != null)
                     {
                         <td class="ant-table-cell ant-table-row-expand-icon-cell">
-                            @if (table.RowExpandable(currentRowData))
+                            @if (!hasChildren)
                             {
-                                <button type="button" @attributes="@(new Dictionary<string,object>() { {"onclick",_callbackFactory.Create(table,() => ToggleExpandRow(currentRowData)) } })"
-                                        class="ant-table-row-expand-icon @(currentRowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
-                                        aria-label="@(currentRowData.Expanded?table.Locale.Collapse:table.Locale.Expand)"></button>
+                                @if (table.RowExpandable(currentRowData))
+                                {
+                                    <button type="button" @attributes="@(new Dictionary<string,object>() { {"onclick",_callbackFactory.Create(table,() => ToggleExpandRow(currentRowData)) } })"
+                                            class="ant-table-row-expand-icon @(currentRowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
+                                            aria-label="@(currentRowData.Expanded?table.Locale.Collapse:table.Locale.Expand)"></button>
+                                }
                             }
                         </td>
                     }
@@ -204,11 +207,14 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
             }
             @if (table.ExpandTemplate != null && table.RowExpandable(currentRowData))
             {
-                <tr class="ant-table-expanded-row ant-table-expanded-row-level-1" style="@(currentRowData.Expanded?"":"display: none;")">
-                    <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
-                        @table.ExpandTemplate(currentRowData)
-                    </td>
-                </tr>
+                if (!hasChildren)
+                {
+                    <tr class="ant-table-expanded-row ant-table-expanded-row-level-1" style="@(currentRowData.Expanded?"":"display: none;")">
+                        <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
+                            @table.ExpandTemplate(currentRowData)
+                        </td>
+                    </tr>
+                }
             }
         }
     }
