@@ -54,6 +54,8 @@ namespace AntDesign
 
         public Func<RowData, TData> GetValue { get; private set; }
 
+        private static ConcurrentDictionary<ColumnCacheKey, ColumnCacheItem> _dataIndexCache = new();
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -68,46 +70,8 @@ namespace AntDesign
             }
             else
             {
-                var properties = DataIndex?.Split(".");
-                if (properties is {Length: >0})
-                {
-                    var isNullable = typeof(TData).IsValueType && Nullable.GetUnderlyingType(typeof(TData)) != null;
-                    var rowDataType = typeof(RowData);
-                    var rowData1Type = typeof(RowData<>).MakeGenericType(ItemType);
-                    var rowDataExp = Expression.Parameter(rowDataType);
-                    var rowData1Exp = Expression.TypeAs(rowDataExp, rowData1Type);
-                    var dataMemberExp = Expression.Property(rowData1Exp, nameof(RowData<object>.Data));
-
-                    MemberExpression member;
-
-                    if (isNullable) // TData is Nullable<T> 
-                    {
-                        var memberExp = PropertyAccessHelper.AccessNullableProperty(dataMemberExp, properties);
-                        member = memberExp.IfFalse switch
-                        {
-                            UnaryExpression ue => ((MemberExpression)ue.Operand),
-                            MemberExpression me => me,
-                            _ => throw new ArgumentException($"unexpected type: {memberExp.IfFalse.GetType().Name}")
-                        };
-                    }
-                    else
-                    {
-                        member = PropertyAccessHelper.AccessProperty(dataMemberExp, properties);
-                    }
-
-                    GetValue = Expression.Lambda<Func<RowData, TData>>(member, rowDataExp).Compile();
-                    var propertyInfo = (PropertyInfo)member.Member;
-                    _propertyReflector = new PropertyReflector(propertyInfo);
-
-                    //propertyInfo = (PropertyInfo)((MemberExpression)propertySelector.Body).Member;
-                    if (Sortable)
-                    {
-                        var propertySelector = isNullable
-                                                   ? PropertyAccessHelper.BuildNullablePropertyAccessExpression(ItemType, properties)
-                                                   : PropertyAccessHelper.BuildPropertyAccessExpression(ItemType, properties);
-                        SortModel = new DataIndexSortModel<TData>(propertyInfo, propertySelector, 1, Sort, SorterCompare);
-                    }
-                }
+                var cacheKey = ColumnCacheKey.Create(this);
+                (GetValue, _propertyReflector, SortModel) = _dataIndexCache.GetOrAdd(cacheKey, CreateDataIndex);
             }
 
             ClassMapper
@@ -148,6 +112,109 @@ namespace AntDesign
         {
             RowData.Expanded = !RowData.Expanded;
             Table?.Refresh();
+        }
+
+        private struct ColumnCacheKey
+        {
+            public Type ItemType;
+
+            public Type PropType;
+
+            public string DataIndex;
+
+            public bool Sortable;
+
+            public string Sort;
+
+            public Func<TData, TData, int> SorterCompare;
+
+            internal static ColumnCacheKey Create(Column<TData> column)
+            {
+                return new(column.ItemType, typeof(TData), column.DataIndex, column.Sortable, column.Sort, column.SorterCompare);
+            }
+
+            public ColumnCacheKey(Type itemType, Type propType, string dataIndex, bool sortable, string sort, Func<TData, TData, int> sorterCompare)
+            {
+                ItemType = itemType;
+                PropType = propType;
+                DataIndex = dataIndex;
+                Sortable = sortable;
+                Sort = sort;
+                SorterCompare = sorterCompare;
+            }
+
+            public void Deconstruct(out Type itemType, out Type propType, out string dataIndex, out bool sortable, out string sort, out Func<TData, TData, int> sorterCompare)
+            {
+                itemType = ItemType;
+                propType = PropType;
+                dataIndex = DataIndex;
+                sortable = Sortable;
+                sort = Sort;
+                sorterCompare = SorterCompare;
+            }
+        }
+
+        private struct ColumnCacheItem
+        {
+            public Func<RowData, TData> GetValue;
+
+            public PropertyReflector? PropertyReflector;
+
+            public ITableSortModel SortModel;
+
+            public void Deconstruct(out Func<RowData, TData> getValue, out PropertyReflector? propertyReflector, out ITableSortModel sortModel)
+            {
+                getValue = GetValue;
+                propertyReflector = PropertyReflector;
+                sortModel = SortModel;
+            }
+        }
+
+        private static ColumnCacheItem CreateDataIndex(ColumnCacheKey key)
+        {
+            var (itemType, propType, dataIndex, sortable, sort, sorterCompare) = key;
+            var item = new ColumnCacheItem();
+            var properties = dataIndex?.Split(".");
+            if (properties is {Length: >0})
+            {
+                var isNullable = propType.IsValueType && Nullable.GetUnderlyingType(propType) != null;
+                var rowDataType = typeof(RowData);
+                var rowData1Type = typeof(RowData<>).MakeGenericType(itemType);
+                var rowDataExp = Expression.Parameter(rowDataType);
+                var rowData1Exp = Expression.TypeAs(rowDataExp, rowData1Type);
+                var dataMemberExp = Expression.Property(rowData1Exp, nameof(RowData<object>.Data));
+
+                MemberExpression member;
+
+                if (isNullable) // TData is Nullable<T> 
+                {
+                    var nullableMemberExp = PropertyAccessHelper.AccessNullableProperty(dataMemberExp, properties);
+                    member = nullableMemberExp.IfFalse switch
+                    {
+                        UnaryExpression ue => (MemberExpression)ue.Operand,
+                        MemberExpression me => me,
+                        _ => throw new ArgumentException($"unexpected type: {nullableMemberExp.IfFalse.GetType().Name}")
+                    };
+                }
+                else
+                {
+                    member = PropertyAccessHelper.AccessProperty(dataMemberExp, properties);
+                }
+
+                item.GetValue = Expression.Lambda<Func<RowData, TData>>(member, rowDataExp).Compile();
+                var propertyInfo = (PropertyInfo)member.Member;
+                item.PropertyReflector = new PropertyReflector(propertyInfo);
+
+                if (sortable)
+                {
+                    var propertySelector = isNullable
+                                               ? PropertyAccessHelper.BuildNullablePropertyAccessExpression(itemType, properties)
+                                               : PropertyAccessHelper.BuildPropertyAccessExpression(itemType, properties);
+                    item.SortModel = new DataIndexSortModel<TData>(propertyInfo, propertySelector, 1, sort, sorterCompare);
+                }
+            }
+
+            return item;
         }
     }
 }
