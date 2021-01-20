@@ -223,21 +223,12 @@ namespace AntDesign.core.Helpers
         /// <returns></returns>
         public static ParameterExpression GetRootParameterExpression(Expression expression)
         {
-            while (true)
+            return expression switch
             {
-                if (expression is MemberExpression {Expression: { }} m)
-                {
-                    expression = m.Expression;
-                }
-                else if (expression is ParameterExpression parameterExpression)
-                {
-                    return parameterExpression;
-                }
-                else
-                {
-                    return null;
-                }
-            }
+                MemberExpression {Expression: { }} memberExp => GetRootParameterExpression(memberExp.Expression),
+                ParameterExpression paramExp => paramExp,
+                _ => null
+            };
         }
     }
 }
