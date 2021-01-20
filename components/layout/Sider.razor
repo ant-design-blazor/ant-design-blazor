@@ -1,7 +1,7 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<aside class="@ClassMapper.Class" style="@SiderStyles @Style">
+<aside class="@ClassMapper.Class" style="@SiderStyles @Style" @onfocuslost="OnFocusLost" >
     @if (_isCollapsed && CollapsedWidth == 0)
     {
         <span class="ant-layout-sider-zero-width-trigger ant-layout-sider-zero-width-trigger-left"

@@ -147,6 +147,17 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        private void OnFocusLost()
+        {
+            if (_isCollapsed ||
+                CollapsedWidth != 0)
+            {
+                return;
+            }
+            
+            ToggleCollapsed();
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
