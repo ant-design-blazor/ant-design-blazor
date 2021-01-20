@@ -56,90 +56,92 @@
                         break;
                 }
 
-                <Tooltip Title="tips" Disabled="file.State != UploadState.Fail" Class="@containerClass" Style="@(IsPictureCard ? "" : "display: list-item;")">
+                <Tooltip Title="tips" Disabled="file.State != UploadState.Fail">
                     <Unbound>
-                        @if (IsPictureCard && file.State == UploadState.Uploading)
-                        {
-                            <div class="ant-upload-list-item ant-upload-list-item-uploading ant-upload-list-item-list-type-picture-card" @ref="@context.Current">
-                                <div class="ant-upload-list-item-info">
-                                    <div class="ant-upload-list-item-thumbnail">@Locale.Uploading</div>
-                                    <span class="ant-upload-list-item-name ant-upload-list-item-name-icon-count-1" title="@file.FileName">
-                                        @file.FileName
-                                    </span>
-                                </div>
-                                <div class="ant-upload-list-item-progress">
-                                    <Progress Percent="file.Percent" StrokeWidth="2" Type="ProgressType.Line" ShowInfo="false"></Progress>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="ant-upload-list-item @stateClass  ant-upload-list-item-list-type-@ListType" @ref="@context.Current">
-                                <div class="ant-upload-list-item-info">
-                                    <span class="ant-upload-span">
-                                        @if (IsText)
-                                        {
-                                            <div class="ant-upload-text-icon">
-                                                @if (file.State == UploadState.Uploading)
-                                                {
-                                                    <Icon Type="loading" />
-                                                }
-                                                else
-                                                {
-                                                    <Icon Type="paper-clip" />
-                                                }
-                                            </div>
-                                            <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@file.Url">@file.FileName</a>
-                                            <span class="ant-upload-list-item-card-actions">
-                                                <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)">
-                                                    <Icon Type="delete" />
-                                                </button>
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            if (file.State == UploadState.Success)
-                                            {
-                                                <a class="ant-upload-list-item-thumbnail" href="@file.Url" target="_blank" rel="noopener noreferrer">
-                                                    @if (file.IsPicture())
-                                                    {
-                                                        <img src="@(file.ObjectURL ?? file.Url)" alt="@file.FileName" class="ant-upload-list-item-image" />
-                                                    }
-                                                    else
-                                                    {
-                                                        <Icon Type="file" />
-                                                    }
-                                                </a>
-                                            }
-                                            else
-                                            {
-                                                <div class="ant-upload-list-item-thumbnail ant-upload-list-item-file">
-                                                    <Icon Type="picture" />
-                                                </div>
-                                            }
-                                            <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@file.Url">@file.FileName</a>
-                                        }
-                                    </span>
-                                </div>
-                                @if (IsPictureCard)
-                                {
-                                    <span class="ant-upload-list-item-actions">
-                                        <a href="@(OnPreview.HasDelegate ? null : file.Url)" target="_blank" rel="noopener noreferrer" title="@Locale.PreviewFile" @onclick="() => PreviewFile(file)" style="@(file.State==UploadState.Fail?"pointer-events: none; opacity: 0.5;":"")">
-                                            <Icon Type="eye" />
-                                        </a>
-                                        <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)">
-                                            <Icon Type="delete" />
-                                        </button>
-                                    </span>
-                                }
-                                @if (file.State == UploadState.Uploading)
-                                {
+                        <div Class="@containerClass" Style="@(IsPictureCard ? "" : "display: list-item;")">
+                            @if (IsPictureCard && file.State == UploadState.Uploading)
+                            {
+                                <div class="ant-upload-list-item ant-upload-list-item-uploading ant-upload-list-item-list-type-picture-card" @ref="@context.Current">
+                                    <div class="ant-upload-list-item-info">
+                                        <div class="ant-upload-list-item-thumbnail">@Locale.Uploading</div>
+                                        <span class="ant-upload-list-item-name ant-upload-list-item-name-icon-count-1" title="@file.FileName">
+                                            @file.FileName
+                                        </span>
+                                    </div>
                                     <div class="ant-upload-list-item-progress">
                                         <Progress Percent="file.Percent" StrokeWidth="2" Type="ProgressType.Line" ShowInfo="false"></Progress>
                                     </div>
-                                }
-                            </div>
-                        }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="ant-upload-list-item @stateClass  ant-upload-list-item-list-type-@ListType" @ref="@context.Current">
+                                    <div class="ant-upload-list-item-info">
+                                        <span class="ant-upload-span">
+                                            @if (IsText)
+                                            {
+                                                <div class="ant-upload-text-icon">
+                                                    @if (file.State == UploadState.Uploading)
+                                                    {
+                                                        <Icon Type="loading" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <Icon Type="paper-clip" />
+                                                    }
+                                                </div>
+                                                <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@file.Url">@file.FileName</a>
+                                                <span class="ant-upload-list-item-card-actions">
+                                                    <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)">
+                                                        <Icon Type="delete" />
+                                                    </button>
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                if (file.State == UploadState.Success)
+                                                {
+                                                    <a class="ant-upload-list-item-thumbnail" href="@file.Url" target="_blank" rel="noopener noreferrer">
+                                                        @if (file.IsPicture())
+                                                        {
+                                                            <img src="@(file.ObjectURL ?? file.Url)" alt="@file.FileName" class="ant-upload-list-item-image" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <Icon Type="file" />
+                                                        }
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <div class="ant-upload-list-item-thumbnail ant-upload-list-item-file">
+                                                        <Icon Type="picture" />
+                                                    </div>
+                                                }
+                                                <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@file.Url">@file.FileName</a>
+                                            }
+                                        </span>
+                                    </div>
+                                    @if (IsPictureCard)
+                                    {
+                                        <span class="ant-upload-list-item-actions">
+                                            <a href="@(OnPreview.HasDelegate ? null : file.Url)" target="_blank" rel="noopener noreferrer" title="@Locale.PreviewFile" @onclick="() => PreviewFile(file)" style="@(file.State==UploadState.Fail?"pointer-events: none; opacity: 0.5;":"")">
+                                                <Icon Type="eye" />
+                                            </a>
+                                            <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)">
+                                                <Icon Type="delete" />
+                                            </button>
+                                        </span>
+                                    }
+                                    @if (file.State == UploadState.Uploading)
+                                    {
+                                        <div class="ant-upload-list-item-progress">
+                                            <Progress Percent="file.Percent" StrokeWidth="2" Type="ProgressType.Line" ShowInfo="false"></Progress>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
                     </Unbound>
                 </Tooltip>
             }
