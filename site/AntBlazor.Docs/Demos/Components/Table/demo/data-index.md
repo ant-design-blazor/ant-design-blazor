@@ -11,8 +11,12 @@ title:
 
 当绑定的属性是值类型并且是Nullable时, `TData` 应设为Nullable类型。如: `<Column TData="int?" DataIndex="prop1" />` 或 `<Column TData="Nullable<int>" DataIndex="prop1" />`。
 
+Column使用DataIndex时, Table的OnChange参数 `QuerModel<TItem>.SortModel[].FieldName` 等于 `DataIndex`。 
+
 ## en-US
 
 Instead of using `@bind-Field`, you can specify the property to be bound by setting the data type `TData` and the data index string `DataIndex`, which can bind descendant properties.
 
 When the bound property is ValueType and is Nullable, `TData` should be set to Nullable type. For example: `<Column TData="int?" DataIndex="prop1" />` or `<Column TData="Nullable<int>" DataIndex="prop1" />`.
+
+When Column uses DataIndex, Table's OnChange event parameter `QuerModel<TItem>.SortModel[].FieldName` is equal to `DataIndex`.

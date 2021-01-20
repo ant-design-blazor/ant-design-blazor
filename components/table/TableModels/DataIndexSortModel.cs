@@ -8,8 +8,6 @@ namespace AntDesign.TableModels
 {
     public class DataIndexSortModel<TField> : ITableSortModel, IComparer<TField>
     {
-        private readonly PropertyInfo _propertyInfo;
-
         private readonly LambdaExpression _propertySelect;
 
         private readonly Func<TField, TField, int> _comparer;
@@ -20,13 +18,12 @@ namespace AntDesign.TableModels
 
         public string FieldName { get; }
 
-        public DataIndexSortModel(PropertyInfo propertyInfo, LambdaExpression propertySelect, int priority, string sort, Func<TField, TField, int> comparer)
+        public DataIndexSortModel(string dataIndex, LambdaExpression propertySelect, int priority, string sort, Func<TField, TField, int> comparer)
         {
-            this._propertyInfo = propertyInfo;
+            this.FieldName = dataIndex;
             this._propertySelect = propertySelect;
             this._comparer = comparer;
             this.Priority = priority;
-            this.FieldName = propertyInfo?.Name;
             this.SortType = SortType.Parse(sort) ?? SortType.None;
         }
 
