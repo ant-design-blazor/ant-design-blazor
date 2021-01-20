@@ -232,7 +232,7 @@ export function log(text) {
   console.log(text);
 }
 
-export function BackTop(target: string) {
+export function backTop(target: string) {
   let dom = getDom(target);
   if (dom) {
     slideTo(dom.scrollTop);
@@ -252,6 +252,17 @@ function slideTo(targetPageY) {
       window.scrollTo(0, targetPageY > currentY ? currentY + speed : currentY - speed);
     }
   }, 10);
+}
+
+export function scrollTo(target) {
+  let dom = getDom(target);
+  if (dom instanceof HTMLElement) {
+    dom.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+      inline: "nearest"
+    });
+  }
 }
 
 export function getFirstChildDomInfo(element) {
