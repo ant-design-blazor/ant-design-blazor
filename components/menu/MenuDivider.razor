@@ -1,0 +1,28 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<li Class="@ClassMapper.Class"></li>
+
+@code {
+    [CascadingParameter]
+    public Menu RootMenu { get; set; }
+
+    private void setClass()
+    {        
+        ClassMapper.Clear()
+            .Add($"{RootMenu.PrefixCls}-item-divider");            
+    }
+
+    protected override void OnParametersSet()
+    {
+        setClass();
+        base.OnParametersSet();
+    }
+
+    protected override void OnInitialized()
+    {
+        setClass();
+        base.OnInitialized();
+    }
+
+} 
