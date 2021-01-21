@@ -109,10 +109,6 @@
     @<Template>
         <thead class="ant-table-thead">
             <tr>
-                @if (table.ExpandTemplate != null)
-                {
-                    <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
-                }
                 <CascadingValue Name="IsHeader" Value="true" IsFixed>
                     @table.ChildContent(_fieldModel)
                 </CascadingValue>
@@ -130,12 +126,7 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
         var table = ctx.table;
         var header = ctx.header;
     }
-
      <colgroup>
-         @if (table.ExpandTemplate != null)
-         {
-             <col class="ant-table-expand-icon-col">
-         }
          <CascadingValue Name="IsColGroup" Value="true" IsFixed>
              @table.ChildContent(_fieldModel)
          </CascadingValue>
@@ -181,17 +172,6 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
 
                 <tr @attributes="@(new Dictionary<string,object> { {"onclick", _callbackFactory.Create(table, () => table.RowClick(currentRowData)) } })"
                     data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "")">
-                    @if (table.ExpandTemplate != null)
-                    {
-                        <td class="ant-table-cell ant-table-row-expand-icon-cell">
-                            @if (table.RowExpandable(currentRowData))
-                            {
-                                <button type="button" @attributes="@(new Dictionary<string,object>() { {"onclick",_callbackFactory.Create(table,() => ToggleExpandRow(currentRowData)) } })"
-                                        class="ant-table-row-expand-icon @(currentRowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
-                                        aria-label="@(currentRowData.Expanded?table.Locale.Collapse:table.Locale.Expand)"></button>
-                            }
-                        </td>
-                    }
                     <CascadingValue Value="currentRowData" Name="RowData" IsFixed>
                         <CascadingValue Value="true" Name="IsBody" IsFixed>
                             @table.ChildContent(data)
@@ -202,7 +182,7 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
                 {
                     @table.body((table, table.TreeChildren(data), level + 1));
                 }
-                @if (table.ExpandTemplate != null && table.RowExpandable(currentRowData))
+                @if (!hasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData))
                 {
                     <tr class="ant-table-expanded-row ant-table-expanded-row-level-1" style="@(currentRowData.Expanded?"":"display: none;")">
                         <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
