@@ -40,6 +40,9 @@ namespace AntDesign
         public Func<TData, TData, int> SorterCompare { get; set; }
 
         [Parameter]
+        public int SorterMultiple { get; set; }
+
+        [Parameter]
         public bool ShowSorterTooltip { get; set; } = true;
 
         private PropertyReflector? _propertyReflector;
@@ -56,6 +59,11 @@ namespace AntDesign
         {
             base.OnInitialized();
 
+            if (!Sortable)
+            {
+                Sortable = SorterMultiple != default || SorterCompare != default || Sort != default;
+            }
+
             if (IsHeader)
             {
                 if (FieldExpression != null)
@@ -63,7 +71,7 @@ namespace AntDesign
                     _propertyReflector = PropertyReflector.Create(FieldExpression);
                     if (Sortable)
                     {
-                        SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, 1, Sort, SorterCompare);
+                        SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, SorterMultiple, Sort, SorterCompare);
                     }
                 }
                 else

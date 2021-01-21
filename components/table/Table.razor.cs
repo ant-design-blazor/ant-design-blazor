@@ -178,7 +178,8 @@ namespace AntDesign
                 if (_dataSource != null)
                 {
                     var query = _dataSource.AsQueryable();
-                    foreach (var sort in queryModel.SortModel)
+                    var orderedSortModels = queryModel.SortModel.OrderBy(x => x.Priority);
+                    foreach (var sort in orderedSortModels)
                     {
                         query = sort.Sort(query);
                     }
