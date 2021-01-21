@@ -63,19 +63,22 @@ namespace AntDesign
         /// <inheritdoc />
         protected override void OnParametersSet()
         {
-            if (Href == "/" && Match != NavLinkMatch.All)
+            if (Match != NavLinkMatch.All && Href == "/")
             {
                 Match = NavLinkMatch.All;
             }
 
             // Update computed state
-            _hrefAbsolute = Href == null ? null : NavigationManger.ToAbsoluteUri(Href).AbsoluteUri;
-            _isActive = ShouldMatch(NavigationManger.Uri);
+            _hrefAbsolute = Href == null ? null : NavigationManger.ToAbsoluteUri(Href).AbsoluteUri;                        
 
-            if (MenuItem != null && _isActive && !MenuItem.IsSelected)
+            if (MenuItem.FirstRun)
             {
-                Menu?.SelectItem(MenuItem);
-                Menu?.SelectSubmenu(MenuItem.ParentMenu);
+                _isActive = ShouldMatch(NavigationManger.Uri);
+                if (MenuItem != null && _isActive && !MenuItem.IsSelected)
+                {
+                    Menu?.SelectItem(MenuItem);
+                    Menu?.SelectSubmenu(MenuItem.ParentMenu);
+                }
             }
         }
 
@@ -98,12 +101,12 @@ namespace AntDesign
 
                 if (MenuItem != null)
                 {
-                    if (_isActive)
+                    if (_isActive && !MenuItem.IsSelected)
                     {
                         MenuItem.Select();
                         Menu.SelectItem(MenuItem);
                     }
-                    else
+                    else if (MenuItem.IsSelected)
                     {
                         MenuItem.Deselect();
                     }
@@ -159,9 +162,10 @@ namespace AntDesign
                 builder.OpenElement(0, "a");
                 builder.AddAttribute(1, "href", Href);
                 builder.AddAttribute(2, "class", ClassMapper.Class);
-                builder.AddAttribute(2, "style", Style);
-                builder.AddMultipleAttributes(3, Attributes);
-                builder.AddContent(4, ChildContent);
+                builder.AddAttribute(3, "style", Style);
+                builder.SetKey(MenuItem.Key);
+                builder.AddMultipleAttributes(5, Attributes);
+                builder.AddContent(6, ChildContent);
                 builder.CloseElement();
             }
         }

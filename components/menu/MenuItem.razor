@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<CascadingValue Value="this" IsFixed="@true">
+<CascadingValue Value="this" IsFixed>
     <li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key" @ref="Ref">
         @if (RouterLink == null)
         {

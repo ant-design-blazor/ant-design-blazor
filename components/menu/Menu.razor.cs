@@ -122,16 +122,24 @@ namespace AntDesign
 
         public void SelectItem(MenuItem item)
         {
-            if (item == null)
+            if (item == null || item.IsSelected)
             {
                 return;
             }
-
+            var selectedKeys = new List<string>();
             if (!Multiple)
             {
                 foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
                 {
-                    menuitem.Deselect();
+                    if (item.RouterLink != null && menuitem.RouterLink != null && menuitem.RouterLink.Equals(item.RouterLink) && !menuitem.IsSelected)
+                    {
+                        menuitem.Select();
+                        selectedKeys.Add(menuitem.Key);
+                    }
+                    else if (menuitem.IsSelected || menuitem.FirstRun)
+                    {
+                        menuitem.Deselect();
+                    }
                 }
             }
 
@@ -139,13 +147,14 @@ namespace AntDesign
             {
                 item.Select();
             }
+            selectedKeys.Add(item.Key);
+            _selectedKeys = selectedKeys.ToArray();
 
             StateHasChanged();
 
             if (OnMenuItemClicked.HasDelegate)
                 OnMenuItemClicked.InvokeAsync(item);
 
-            _selectedKeys = MenuItems.Where(x => x.IsSelected).Select(x => x.Key).ToArray();
             if (SelectedKeysChanged.HasDelegate)
                 SelectedKeysChanged.InvokeAsync(_selectedKeys);
 
