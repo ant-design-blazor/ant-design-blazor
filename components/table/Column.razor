@@ -104,11 +104,11 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
         {
             if (!string.IsNullOrWhiteSpace(Format))
             {
-                @(Formatter<TData>.Format(Field,Format))
+                @(Formatter<TData>.Format(GetValue != null ? GetValue(RowData) : Field, Format))
             }
             else
             {
-                @Field
+                @(GetValue != null ? GetValue(RowData) : Field)
             }
         }
     </td>
