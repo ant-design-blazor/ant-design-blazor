@@ -3,18 +3,26 @@
 
 @using AntDesign.Internal
 
-<div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-flex; @Style"
-     @onclick="OnClickDiv"
-     @onmouseenter="OnTriggerMouseEnter"
-     @onmouseleave="OnTriggerMouseLeave"
-     @oncontextmenu="OnTriggerContextmenu"
-     @onfocusin="OnTriggerFocusIn"
-     @onfocusout="OnTriggerFocusOut"
-     @oncontextmenu:preventDefault>
-    @ChildContent
-</div>
+@if (ChildContent != null)
+{
+    <div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-flex; @Style"
+         @onclick="OnClickDiv"
+         @onmouseenter="OnTriggerMouseEnter"
+         @onmouseleave="OnTriggerMouseLeave"
+         @oncontextmenu="OnTriggerContextmenu"
+         @onfocusin="OnTriggerFocusIn"
+         @onfocusout="OnTriggerFocusOut"
+         @oncontextmenu:preventDefault>
+        @ChildContent
+    </div>
+}
+@if (Unbound != null)
+{
+    @Unbound(RefBack)
+}
 
-<CascadingValue Value="this" Name="Trigger">
+
+<CascadingValue Value="this" Name="Trigger" IsFixed="@true">
     <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
         <Overlay @ref="_overlay"
                  HideMillisecondsDelay="10"

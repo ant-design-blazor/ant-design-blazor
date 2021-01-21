@@ -39,28 +39,28 @@ namespace AntDesign
                 base.BuildRenderTree(builder);
                 // According to Ant-Design 4.0, Fallback to 1 if level is invalid.
                 int localLevel = Level < 1 || Level > 4 ? 1 : Level;
-                int i = 0;
-                builder.OpenElement(i++, "h" + localLevel);
-                builder.AddAttribute(i++, "class", this.ClassMapper.Class);
-                builder.AddAttribute(i++, "style", Style);
-                if (Mark) builder.OpenElement(i++, "mark");
-                if (Delete) builder.OpenElement(i++, "del");
-                if (Underline) builder.OpenElement(i++, "u");
-                builder.AddContent(i++, ChildContent);
+
+                builder.OpenElement(1, "h" + localLevel);
+                builder.AddAttribute(2, "class", this.ClassMapper.Class);
+                builder.AddAttribute(3, "style", Style);
+                if (Mark) builder.OpenElement(4, "mark");
+                if (Delete) builder.OpenElement(5, "del");
+                if (Underline) builder.OpenElement(6, "u");
+                builder.AddContent(7, ChildContent);
                 if (Underline) builder.CloseElement();
                 if (Delete) builder.CloseElement();
                 if (Mark) builder.CloseElement();
                 if (Copyable)
                 {
-                    builder.OpenElement(i++, "a");
-                    builder.AddAttribute(i++, "onclick", (Action)(async () => await Copy()));
-                    builder.OpenComponent<Icon>(i++);
-                    builder.AddAttribute(i++, "type", "copy");
-                    builder.AddAttribute(i++, "theme", IconThemeType.Outline);
+                    builder.OpenElement(8, "a");
+                    builder.AddAttribute(9, "onclick", (Action)(async () => await Copy()));
+                    builder.OpenComponent<Icon>(10);
+                    builder.AddAttribute(11, "type", "copy");
+                    builder.AddAttribute(12, "theme", IconThemeType.Outline);
                     builder.CloseComponent();
                     builder.CloseElement();
                 }
-
+                builder.AddElementReferenceCapture(13, r => Ref = r);
                 builder.CloseElement();
             }
         }

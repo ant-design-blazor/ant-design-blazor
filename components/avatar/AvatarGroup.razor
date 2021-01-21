@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<CascadingValue Value="this">
+<CascadingValue Value="this" IsFixed="@true">
     <div class="ant-avatar-group">
         <CascadingValue Value=@("shown") Name="position">
             @ChildContent
@@ -16,9 +16,9 @@
                         @ChildContent
                     </CascadingValue>
                 </ContentTemplate>
-                <ChildContent>
-                    <Avatar Style=@MaxStyle>@($"+{_shownAvatarList.Count - MaxCount}")</Avatar>
-                </ChildContent>
+                <Unbound>
+                    <Avatar RefBack="@context" Style=@MaxStyle>@($"+{_shownAvatarList.Count - MaxCount}")</Avatar>
+                </Unbound>
             </Popover>
         }
     </div>

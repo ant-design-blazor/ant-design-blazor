@@ -4,7 +4,8 @@
 <div id="@Config.Key"
      class="@(ClassPrefix)-notice @(ClassPrefix)-notice-closable @GetClassName()"
      style="@Config.Style"
-     @onclick="OnClick">
+     @onclick="OnClick"
+     @ref="Ref">
 
     <div class="@(ClassPrefix)-notice-content">
         <div class="@GetIconClassName()">

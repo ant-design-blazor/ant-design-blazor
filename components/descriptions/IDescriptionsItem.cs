@@ -9,6 +9,9 @@ namespace AntDesign
     public interface IDescriptionsItem
     {
         [Parameter]
+        ElementReference Ref { get; set; }
+
+        [Parameter]
         string Title { get; set; }
 
         [Parameter]

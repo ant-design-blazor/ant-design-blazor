@@ -3,7 +3,7 @@
 @using AntDesign.TableModels
 @typeparam TItem
 
-<div class="ant-table-wrapper">
+<div class="ant-table-wrapper" @ref="Ref">
     <Spin Spinning="Loading">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
@@ -14,6 +14,7 @@
                         OnPageIndexChange="HandlePageIndexChange"
                         OnPageSizeChange="HandlePageSizeChange" />
         }
+
         <CascadingValue Value="@this" TValue="ITable" IsFixed>
             <CascadingValue Value=@typeof(TItem) Name="ItemType" IsFixed>
                 <CascadingValue Value="@ColumnContext" IsFixed>

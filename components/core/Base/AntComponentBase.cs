@@ -9,7 +9,7 @@ namespace AntDesign
     public abstract class AntComponentBase : ComponentBase, IDisposable
     {
         [Parameter]
-        public ForwardRef RefBack { get; set; }
+        public ForwardRef RefBack { get; set; } = new ForwardRef();
 
         private readonly Queue<Func<Task>> _afterRenderCallQuene = new Queue<Func<Task>>();
 

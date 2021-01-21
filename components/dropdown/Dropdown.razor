@@ -2,18 +2,42 @@
 @inherits OverlayTrigger
 @using AntDesign.Internal
 
-<div class="@ClassMapper.Class"
-     style="display: inline-block; width: fit-content; @Style"
-     id="@Id"
-     @ref="@Ref"
-     @onclick="OnClickDiv"
-     @onmouseenter="OnTriggerMouseEnter"
-     @onmouseleave="OnTriggerMouseLeave"
-     @oncontextmenu="OnTriggerContextmenu"
-     @oncontextmenu:preventDefault>
+@if (ChildContent != null)
+{
+    <div class="@ClassMapper.Class"
+         style="display: inline-block; width: fit-content; @Style"
+         id="@Id"
+         @ref="@Ref"
+         @onclick="OnClickDiv"
+         @onmouseenter="OnTriggerMouseEnter"
+         @onmouseleave="OnTriggerMouseLeave"
+         @oncontextmenu="OnTriggerContextmenu"
+         @oncontextmenu:preventDefault>
+        @if (IsButton)
+        {
+            <CascadingValue Value="this" IsFixed="@true">
+                <DropdownGroupButton>
+                    <LeftButton>
+                        <Button @key="1" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled">@ChildContent</Button>
+                    </LeftButton>
+                    <RightButton>
+                        <Button @key="2" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled" OnClick="OnTriggerClick" Class="ant-dropdown-trigger" Icon="@_rightButtonIcon" />
+                    </RightButton>
+                </DropdownGroupButton>
+            </CascadingValue>
+        }
+        else
+        {
+            @ChildContent
+        }
+    </div>
+}
+
+@if (Unbound != null)
+{
     @if (IsButton)
     {
-        <CascadingValue Value="this">
+        <CascadingValue Value="this" IsFixed="@true">
             <DropdownGroupButton>
                 <LeftButton>
                     <Button @key="1" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled">@ChildContent</Button>
@@ -26,11 +50,11 @@
     }
     else
     {
-        @ChildContent
+        @Unbound(RefBack)
     }
-</div>
+}
 
-<CascadingValue Value="this" Name="Trigger">
+<CascadingValue Value="this" Name="Trigger" IsFixed="@true">
     <Overlay @ref="_overlay"
              OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
              OnOverlayMouseEnter="OnOverlayMouseEnter"

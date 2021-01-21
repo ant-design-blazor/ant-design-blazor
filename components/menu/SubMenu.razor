@@ -8,7 +8,7 @@
 
 @if (RootMenu.InternalMode == MenuMode.Inline)
 {
-    <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="position:relative;@Style">
+    <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="position:relative;@Style" @ref="Ref">
         <div class="@(prefixCls)-title" style="padding-left: @(PaddingLeft)px; " role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
             @if (TitleTemplate != null)
             {
@@ -21,7 +21,7 @@
             <i class="@(prefixCls)-arrow"></i>
         </div>
         <ul direction="ltr" class="@SubMenuMapper.Class" role="menu" aria-expanded="@IsOpen">
-            <CascadingValue Value="this">
+            <CascadingValue Value="this" IsFixed="@true">
                 @ChildContent
             </CascadingValue>
         </ul>
@@ -34,7 +34,7 @@ else
         Placement = (RootMenu.Mode == MenuMode.Horizontal && Parent == null) ? PlacementType.BottomLeft : PlacementType.RightTop;
     }
 
-    <CascadingValue Value="this" Name="SubMenu">
+    <CascadingValue Value="this" Name="SubMenu" IsFixed="@true">
         <SubMenuTrigger @ref="_overlayTrigger"
                         TriggerClass="@ClassMapper.Class"
                         Visible="IsOpen"
@@ -62,7 +62,7 @@ else
             </ChildContent>
             <Overlay>
                 <ul direction="ltr" class="@(SubMenuMapper.Class)" style="@_popupMinWidthStyle" role="menu">
-                    <CascadingValue Value="this">
+                    <CascadingValue Value="this" IsFixed="@true">
                         @ChildContent
                     </CascadingValue>
                 </ul>

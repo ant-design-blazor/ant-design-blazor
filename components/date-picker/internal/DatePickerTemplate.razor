@@ -3,7 +3,7 @@
 @inherits DatePickerPanelBase<TValue>
 @using AntDesign
 
-<div class="@(PrefixCls)-@(Picker)-panel">
+<div class="@(PrefixCls)-@(Picker)-panel" @ref="Ref">
     @if (IsShowHeader)
     {
         @RenderPickerHeader

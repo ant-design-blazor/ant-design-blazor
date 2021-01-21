@@ -7,6 +7,16 @@
             CancelText="No">
     <a>Delete</a>
 </Popconfirm>
+<br />
+<Popconfirm Title="Are you sure delete this task?"
+            OnConfirm="Confirm"
+            OnCancel="Cancel"
+            OkText="Yes"
+            CancelText="No">
+    <Unbound>
+        <a @ref="@context.Current">Delete (unbound)</a>
+    </Unbound>
+</Popconfirm>
 
 @code{
 
