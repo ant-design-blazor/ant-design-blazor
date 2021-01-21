@@ -92,7 +92,7 @@ namespace AntDesign
         public int IndentSize { get; set; } = 15;
 
         [Parameter]
-        public int ExpandIconColumnIndex { get; set; } = 0;
+        public int ExpandIconColumnIndex { get; set; }
 
         [Inject]
         public DomEventService DomEventService { get; set; }
@@ -112,6 +112,7 @@ namespace AntDesign
         private bool _pingRight;
         private bool _pingLeft;
         private bool _tableLayoutIsFixed;
+        private int _treeExpandIconColumnIndex;
 
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
@@ -119,12 +120,13 @@ namespace AntDesign
         private bool ServerSide => _total > _dataSourceCount;
 
         bool ITable.TreeMode => _treeMode;
-
         int ITable.IndentSize => IndentSize;
-
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
         int ITable.ScrollBarWidth => ScrollBarWidth;
+        int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex;
+        int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
+        bool ITable.HasExpandTemplate => ExpandTemplate != null;
 
         public void ReloadData()
         {
@@ -189,6 +191,10 @@ namespace AntDesign
             }
 
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x).Any()) == true);
+            if (_treeMode)
+            {
+                _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null ? 1 : 0);
+            }
 
             StateHasChanged();
 
@@ -293,11 +299,6 @@ namespace AntDesign
 
         protected override bool ShouldRender() => this._shouldRender;
 
-        private static void ToggleExpandRow(RowData<TItem> rowData)
-        {
-            rowData.Expanded = !rowData.Expanded;
-        }
-
         private void RowClick(RowData<TItem> item)
         {
             if (OnRowClick.HasDelegate)
@@ -369,6 +370,11 @@ namespace AntDesign
             {
                 await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);
             }
+        }
+
+        bool ITable.RowExpandable(RowData rowData)
+        {
+            return RowExpandable(rowData as RowData<TItem>);
         }
     }
 }
