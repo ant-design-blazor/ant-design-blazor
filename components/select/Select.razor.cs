@@ -1558,6 +1558,10 @@ namespace AntDesign
             await SetValueAsync(selectOption);
         }
 
+        internal async Task OnArrowClick(MouseEventArgs args)
+        {
+            await _dropDown.OnClickDiv(args);
+        }
         #endregion Events
     }
 }

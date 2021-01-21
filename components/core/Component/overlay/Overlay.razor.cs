@@ -154,15 +154,22 @@ namespace AntDesign.Internal
                 return;
             }
 
-            Element trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
-
-            // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
-            // I try to render Overlay when OvelayTrigger’s OnAfterRender is called, but is still get negative absoluteLeft
-            // This may be a bad solution, but for now I can only do it this way.
-            while (trigger.absoluteLeft <= 0 && trigger.clientWidth <= 0)
+            Element trigger;
+            if (Trigger.ChildContent != null) 
             {
-                await Task.Delay(50);
                 trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+                // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
+                // I try to render Overlay when OvelayTrigger’s OnAfterRender is called, but is still get negative absoluteLeft
+                // This may be a bad solution, but for now I can only do it this way.
+                while (trigger.absoluteLeft <= 0 && trigger.clientWidth <= 0)
+                {
+                    await Task.Delay(50);
+                    trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+                }
+            }
+            else //(Trigger.Unbound != null)
+            {
+                trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.Ref);
             }
 
             _overlayLeft = overlayLeft;
@@ -450,7 +457,15 @@ namespace AntDesign.Internal
 
         internal async Task UpdatePosition(int? overlayLeft = null, int? overlayTop = null)
         {
-            Element trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+            Element trigger;
+            if (Trigger.ChildContent != null) 
+            {
+                trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+            }
+            else //(Trigger.Unbound != null)
+            {
+                trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.Ref);
+            }
 
             _overlayLeft = overlayLeft;
             _overlayTop = overlayTop;

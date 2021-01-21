@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-The most basic dropdown menu.
+The most basic dropdown menu of both types.

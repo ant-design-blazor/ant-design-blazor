@@ -153,7 +153,7 @@ export function getBoundingClientRect(element) {
   return null;
 }
 
-export function addDomEventListener(element, eventName, invoker) {
+export function addDomEventListener(element, eventName, preventDefault, invoker) {
   let callback = args => {
     const obj = {};
     for (let k in args) {
@@ -165,6 +165,9 @@ export function addDomEventListener(element, eventName, invoker) {
       return v;
     }, ' ');
     invoker.invokeMethodAsync('Invoke', json);
+    if (preventDefault === true) {
+      args.preventDefault();
+    }
   };
 
   if (element == 'window') {
@@ -286,11 +289,11 @@ export function removeClsFromFirstChild(element, className) {
   }
 }
 
-export function addDomEventListenerToFirstChild(element, eventName, invoker) {
+export function addDomEventListenerToFirstChild(element, eventName, preventDefault, invoker) {
   var dom = getDom(element);
 
   if (dom.firstElementChild) {
-    addDomEventListener(dom.firstElementChild, eventName, invoker);
+    addDomEventListener(dom.firstElementChild, eventName, preventDefault, invoker);
   }
 }
 

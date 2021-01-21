@@ -12,7 +12,7 @@
         </span>
     </div>
     <div class="ant-input-number-input-wrap">
-        <input @ref="_inputRef" role="spinbutton" aria-valuemin="@Min" aria-valuemax="@Max" autocomplete="off" max="@Max" min="@Min" step="@Step"
+        <input @ref="Ref" role="spinbutton" aria-valuemin="@Min" aria-valuemax="@Max" autocomplete="off" max="@Max" min="@Min" step="@Step"
                aria-valuenow="@CurrentValue" class="ant-input-number-input" @bind="@CurrentValueAsString" @oninput="OnInput" @onfocus="@OnFocus" @onblur="@OnBlurAsync" />
     </div>
 </div>

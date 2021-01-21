@@ -36,8 +36,7 @@ namespace AntDesign
             }
         }
         internal string SlickClonedStyle => $"width: {SlickWidth}px;";
-        private string SlickListStyle => IsHorizontal ? string.Empty : $"height: {SlickHeight}px";
-        private ElementReference _ref;
+        private string SlickListStyle => IsHorizontal ? string.Empty : $"height: {SlickHeight}px";       
         internal int SlickWidth { get; set; } = -1;
         private int SlickHeight { get; set; } = -1;
         private int TotalWidth => SlickWidth * (_slicks.Count * 2 + 1);
@@ -134,7 +133,7 @@ namespace AntDesign
 
         private async void Resize(JsonElement e = default)
         {
-            DomRect listRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _ref);
+            DomRect listRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
             if ((SlickWidth != (int)listRect.width && IsHorizontal)
                 || (SlickHeight != (int)listRect.height && !IsHorizontal)
                 || IsHorizontal && !string.IsNullOrEmpty(SlickListStyle)

@@ -4,7 +4,7 @@
 
 @if (RealDisplay)
 {
-    <CascadingValue Value="this" Name="SelfNode">
+    <CascadingValue Value="this" Name="SelfNode" IsFixed="@true">
         <div @key="NodeId" class="@ClassMapper.Class" style="@Style">
 
             <TreeIndent TreeLevel="@TreeLevel" TItem="TItem"></TreeIndent>
@@ -23,7 +23,7 @@
         </div>
     </CascadingValue>
 }
-<CascadingValue Value="this" Name="Node">
+<CascadingValue Value="this" Name="Node" IsFixed="@true">
     @if (DataItem != null)
     {
         foreach (var item in ChildDataItems)

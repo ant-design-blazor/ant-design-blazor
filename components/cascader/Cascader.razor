@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntInputComponentBase<string>
 
-<div style="@Style" class="@ClassMapper.Class">
+<div style="@Style" class="@ClassMapper.Class" @ref="Ref">
     <span class="ant-cascader-picker @_pickerSizeClass" tabindex="1" @onclick="InputOnToggle" @onblur="CascaderOnBlur" @onmouseover="InputOnMouseOver" @onmouseout="InputOnMouseOut">
         <span class="ant-cascader-picker-label"></span>
         <input autocomplete="off" tabindex="-1" placeholder="@PlaceHolder" class="ant-input ant-cascader-input @_inputSizeClass" readonly="@Readonly" type="text" value="@_displayText">

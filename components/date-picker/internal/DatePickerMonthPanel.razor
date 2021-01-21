@@ -14,7 +14,7 @@
     string inViewClass = $"{PrefixCls}-cell-in-view";
 }
 
-<div class='@($"{PrefixCls}-panel")'>
+<div class='@($"{PrefixCls}-panel")' @ref="Ref">
     <DatePickerTemplate @attributes="GetAttritubes()"
                         TValue="TValue"
                         MaxRow="MAX_ROW"

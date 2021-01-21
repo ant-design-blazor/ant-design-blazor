@@ -13,6 +13,14 @@ A simple and compact dialog used for asking for user confirmation.
 
 The difference with the `confirm` modal dialog is that it's more lightweight than the static popped full-screen confirm modal.
 
+## Two types
+
+There are 2 rendering approaches for `Popconfirm`:  
+1. Wraps child element (content of the `Popconfirm`) with a `<div>` (default approach).
+2. Child element is not wrapped with anything. This approach requires usage of `<Unbound>` tag inside `<Popconfirm>` and depending on the child element type (please refer to the first example):
+   - html tag: has to have its `@ref` set to `@context.Current` 
+   - `Ant Design Blazor` component: has to have its `RefBack` attribute set to `@context`.
+   
 ## API
 
 | Param | Description | Type | Default value |

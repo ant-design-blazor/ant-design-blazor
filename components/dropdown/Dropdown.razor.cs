@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Internal;
-using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -19,9 +17,6 @@ namespace AntDesign
 
         private RenderFragment _leftButton;
         private RenderFragment _rightButton;
-
-        [Inject]
-        private DomEventService DomEventService { get; set; }
 
         protected void ChangeRightButtonIcon(string icon)
         {
