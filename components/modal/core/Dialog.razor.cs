@@ -51,6 +51,9 @@ namespace AntDesign
 
         #endregion
 
+        [CascadingParameter(Name = "DialogWrapperId")]
+        public string DialogWrapperId { get; set; } = "";
+
         private string _maskAnimationClsName = "";
         private string _modalAnimationClsName = "";
         private string _maskHideClsName = "";
