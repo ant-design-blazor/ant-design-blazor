@@ -11,10 +11,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(SolutionDir)'==''">
-    <SolutionDir>../../</SolutionDir>
-  </PropertyGroup>
-
   <ItemGroup>
     <Content Include="$(SolutionDir)docs\**" LinkBase="docs" />
   </ItemGroup>
