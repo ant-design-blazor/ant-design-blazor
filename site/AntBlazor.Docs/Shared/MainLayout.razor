@@ -23,7 +23,7 @@
         <Row>
             @if (!_isMobile)
             {
-                <RowCol Class="main-menu" Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
+                <GridCol Class="main-menu" Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
                     <div>
                         <Affix>
                             <section class="main-menu-inner">
@@ -31,10 +31,10 @@
                             </section>
                         </Affix>
                     </div>
-                </RowCol>
+                </GridCol>
             }
 
-            <RowCol Xs="24" Sm="24" Md="18" Lg="18" Xl="19" Xxl="20">
+            <GridCol Xs="24" Sm="24" Md="18" Lg="18" Xl="19" Xxl="20">
                 <CascadingValue Value="this">
                     @Body
                     @*<div class="fixed-widgets">
@@ -47,7 +47,7 @@
                     <PrevNextNav />
                 </CascadingValue>
                 <MainFooter />
-            </RowCol>
+            </GridCol>
         </Row>
     </div>
 </div>

@@ -21,10 +21,12 @@ Card
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | Actions |卡片操作组，位置在卡片底部   | Array(RenderFragment) |-        |
+| ActionTemplate | 用于放置 CardAction 的模板 | RenderFragment | -
 | Body |卡片主要区域   | RenderFragment |-        |
 | Extra |卡片右上角的操作区域 | RenderFragment |-        |
 | Bordered |是否有边框 | boolean |-        |
 | BodyStyle |内容区域自定义样式 | Css Properties |-        |
+| CardAction | 一个单独的 卡片操作 组件，需要放在 ActionTemplate 内 | CardAction | -
 | Cover |卡片封面 | RenderFragment |-        |
 | Loading |当卡片内容还在加载中时，可以用 loading 展示一个占位 | boolean |-        |
 | size |card 的尺寸 | RenderFragment |-        |
