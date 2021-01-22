@@ -93,6 +93,9 @@ namespace AntDesign
 
         [Parameter]
         public int ExpandIconColumnIndex { get; set; }
+        
+        [Parameter]
+        public Func<RowData<TItem>, string> RowClassName { get; set; } = _ => "";
 
         [Inject]
         public DomEventService DomEventService { get; set; }

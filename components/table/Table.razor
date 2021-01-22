@@ -171,7 +171,7 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
                 currentRowData.HasChildren = hasChildren;
 
                 <tr @attributes="@(new Dictionary<string,object> { {"onclick", _callbackFactory.Create(table, () => table.RowClick(currentRowData)) } })"
-                    data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "")">
+                    data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "") @table.RowClassName(currentRowData)">
                     <CascadingValue Value="currentRowData" Name="RowData" IsFixed>
                         <CascadingValue Value="true" Name="IsBody" IsFixed>
                             @table.ChildContent(data)
@@ -184,7 +184,7 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
                 }
                 @if (!hasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData))
                 {
-                    <tr class="ant-table-expanded-row ant-table-expanded-row-level-1" style="@(currentRowData.Expanded?"":"display: none;")">
+                    <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @table.RowClassName(currentRowData)" style="@(currentRowData.Expanded?"":"display: none;")">
                         <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
                             @table.ExpandTemplate(currentRowData)
                         </td>
