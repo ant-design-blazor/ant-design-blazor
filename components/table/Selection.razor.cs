@@ -43,7 +43,7 @@ namespace AntDesign
             {
                 Table.Selection = this;
             }
-            else
+            else if (IsBody)
             {
                 Table?.Selection?.RowSelections.Add(this);
             }
@@ -71,7 +71,7 @@ namespace AntDesign
                 RowSelections.Where(x => !x.Disabled).ForEach(x => x.Check(@checked));
                 InvokeSelectedRowsChange();
             }
-            else
+            else if (IsBody)
             {
                 if (Type == "radio")
                 {
