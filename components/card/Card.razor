@@ -57,7 +57,13 @@
                 }
             </div>
         }
-        @if (Actions.Count > 0)
+        @if (ActionTemplate != null)
+        {
+            <ul class="ant-card-actions">
+                @ActionTemplate
+            </ul>
+        }
+        else if (Actions.Count > 0)
         {
             <ul class="ant-card-actions">
                 @foreach (var action in Actions)
