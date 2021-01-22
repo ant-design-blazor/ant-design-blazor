@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -41,6 +41,7 @@ namespace AntDesign
         public string Title { get; set; }
 
         internal bool IsSelected { get; private set; }
+        internal bool FirstRun { get; set; } = true;
         private string _key;
 
         private int PaddingLeft => RootMenu.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * 24 : 0;
@@ -76,7 +77,7 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            if (RootMenu.SelectedKeys.Contains(Key))
+            if (RootMenu.SelectedKeys.Contains(Key) && !IsSelected)
                 Select();
         }
 
@@ -112,12 +113,14 @@ namespace AntDesign
         public void Select()
         {
             IsSelected = true;
+            FirstRun = false;
             ParentMenu?.Select();
         }
 
         public void Deselect()
         {
             IsSelected = false;
+            FirstRun = false;
             ParentMenu?.Deselect();
         }
     }
