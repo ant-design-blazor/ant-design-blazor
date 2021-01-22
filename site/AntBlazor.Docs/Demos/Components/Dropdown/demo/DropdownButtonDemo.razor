@@ -22,14 +22,18 @@
         Dropdown
     </ChildContent>
 </DropdownButton>
-<DropdownButton ButtonsRender="ButtonsRender">
-    <Overlay>
-        @_overlayMenu
-    </Overlay>
-    <ChildContent>
-        TODO: With ToolTip
-    </ChildContent>
-</DropdownButton>
+<Tooltip Title="@("tooltip")">
+    <Unbound>
+        <DropdownButton ButtonsRender="ButtonsRender" RefBack="@context" Icon="loading">
+            <Overlay>
+                @_overlayMenu
+            </Overlay>
+            <ChildContent>
+                With ToolTip
+            </ChildContent>
+        </DropdownButton>
+    </Unbound>
+</Tooltip>
 <Dropdown>
     <Overlay>
         @_overlayMenu
@@ -41,29 +45,31 @@
 
 @code
 {
-    private RenderFragment _overlayMenu =@<Menu>
-        <MenuItem>
-            <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-                1st menu item
-            </a>
-        </MenuItem>
-        <MenuItem>
-            <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-                2nd menu item
-            </a>
-        </MenuItem>
-        <MenuItem>
-            <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-                3rd menu item
-            </a>
-        </MenuItem>
-    </Menu>;
+private RenderFragment _overlayMenu =@<Menu>
+    <MenuItem>
+        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+            1st menu item
+        </a>
+    </MenuItem>
+    <MenuItem>
+        <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+            2nd menu item
+        </a>
+    </MenuItem>
+    <MenuItem>
+        <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+            3rd menu item
+        </a>
+    </MenuItem>
+</Menu>; 
 
-    
-    private RenderFragment ButtonsRender(RenderFragment leftButton, RenderFragment rightButton)
-    {
-        return @<Template>
-            <span>@leftButton</span>@rightButton
-        </Template>;
-    }
+private RenderFragment ButtonsRender(RenderFragment leftButton, RenderFragment rightButton)
+{
+return @<Template>
+    <span>@leftButton</span>
+    @rightButton
+</Template>;
+}
+
+
 }
