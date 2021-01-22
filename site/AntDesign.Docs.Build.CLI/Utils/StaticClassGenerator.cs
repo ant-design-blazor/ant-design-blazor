@@ -1,14 +1,9 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-
-namespace AntDesign
+namespace AntDesign.Docs.Build.CLI.Utils
 {
     /// <summary>
     /// Creates convenience static classes that can be used as enums
@@ -18,7 +13,6 @@ namespace AntDesign
     /// </summary>
     internal static class StaticClassGenerator
     {
-
         private const string OpenBracket = "{\n";
         private const string CloseBracket = "}\n";
         private const string Warning = "//This is a generated file. Any changes to it will be discarded in the next run\n";
@@ -26,6 +20,7 @@ namespace AntDesign
 
         //IconType specific
         private const string IconTypeFileName = "IconType.cs";
+
         private const string IconTypeClassName = "IconType";
 
         //Generates the static class IconType.cs
@@ -36,16 +31,14 @@ namespace AntDesign
         }
 
         //Gets the text of the static class IconType
-        //This class has 3 classes, one for each theme Fill, Outline, Twotone 
+        //This class has 3 classes, one for each theme Fill, Outline, Twotone
         internal static string GetIconTypeStaticClassString()
         {
             //creates one string representating a c# class by icon theme
-            var iconsByTheme = IconStore.GetAllIconNames()
-                .Select(item => GetClassString(item.Key, item.Value));
+            var iconsByTheme = new string[0]; //IconStore.GetAllIconNames()   .Select(item => GetClassString(item.Key, item.Value));
 
             //all icons classes joined
             var iconsByThemeAggregated = iconsByTheme.Aggregate((a, b) => a + b);
-
 
             var result = NameSpace
                 + OpenBracket
@@ -80,7 +73,6 @@ namespace AntDesign
                 + GetLine(1, CloseBracket);
 
             return classString;
-
         }
 
         //produces a line of text with identation and new line at the end
