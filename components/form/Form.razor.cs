@@ -153,6 +153,7 @@ namespace AntDesign
         public void Reset()
         {
             _controls.ForEach(item => item.Reset());
+            _editContext = new EditContext(Model);
         }
 
         void IForm.AddFormItem(IFormItem formItem)
