@@ -96,6 +96,9 @@ namespace AntDesign
         
         [Parameter]
         public Func<RowData<TItem>, string> RowClassName { get; set; } = _ => "";
+        
+        [Parameter]
+        public Func<RowData<TItem>, string> ExpandedRowClassName { get; set; } = _ => "";
 
         [Inject]
         public DomEventService DomEventService { get; set; }
