@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using AntDesign.Core.Reflection;
 using AntDesign.Internal;
@@ -34,9 +35,6 @@ namespace AntDesign
         public bool Sortable { get; set; }
 
         [Parameter]
-        public string Sort { get; set; }
-
-        [Parameter]
         public Func<TData, TData, int> SorterCompare { get; set; }
 
         [Parameter]
@@ -44,6 +42,12 @@ namespace AntDesign
 
         [Parameter]
         public bool ShowSorterTooltip { get; set; } = true;
+
+        [Parameter]
+        public SortDirection[] SortDirections { get; set; }
+
+        [Parameter]
+        public SortDirection DefaultSortOrder { get; set; }
 
         private PropertyReflector? _propertyReflector;
 
@@ -53,53 +57,59 @@ namespace AntDesign
 
         public ITableSortModel SortModel { get; private set; }
 
+        private SortDirection _sortDirection;
+
         public Func<RowData, TData> GetValue { get; private set; }
+
+        void IFieldColumn.ClearSorter() => SetSorter(SortDirection.None);
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (!Sortable)
-            {
-                Sortable = SorterMultiple != default || SorterCompare != default || Sort != default;
-            }
+            SortDirections ??= Table.SortDirections;
+            Sortable = Sortable || SorterMultiple != default || SorterCompare != default || DefaultSortOrder != default || SortDirections?.Any() == true;
 
             if (IsHeader)
             {
                 if (FieldExpression != null)
                 {
                     _propertyReflector = PropertyReflector.Create(FieldExpression);
-                    if (Sortable)
-                    {
-                        SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, SorterMultiple, Sort, SorterCompare);
-                    }
                 }
-                else
+
+                if (Sortable)
                 {
-                    (GetValue, SortModel) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                    if (_propertyReflector.HasValue)
+                    {
+                        SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, SorterMultiple, DefaultSortOrder, SorterCompare);
+                    }
+                    else
+                    {
+                        (GetValue, SortModel) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                    }
                 }
             }
             else if (IsBody)
             {
                 SortModel = Context.HeaderColumns[ColIndex] is IFieldColumn fieldColumn ? fieldColumn.SortModel : null;
+
                 (GetValue, _) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
             }
 
+            Sortable = Sortable || SortModel != null;
+            _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
+
             ClassMapper
-               .If("ant-table-column-has-sorters", () => Sortable)
-               .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortType.IsIn(SortType.Ascending, SortType.Descending));
+                .If("ant-table-column-has-sorters", () => Sortable)
+                .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortDirection.IsIn(SortDirection.Ascending, SortDirection.Descending));
         }
 
         private void HandelHeaderClick()
         {
             if (Sortable)
             {
-                var currenttype = SortModel.SortType;
-                Table.SwitchSortModelBySortWay();
-                SortModel.SetSortType(currenttype);
-
-                SortModel.SwitchSortType();
-                Table.ReloadAndInvokeChange();
+                SetSorter(NextSortDirection());
+                Table.ColumnSorterChange(this);
             }
         }
 
@@ -107,20 +117,39 @@ namespace AntDesign
         {
             get
             {
-                var next = SortModel.NextType();
-                if (next == SortType.None)
+                var next = NextSortDirection();
+                return next?.Value switch
                 {
-                    return Table.Locale.CancelSort;
-                }
-                else if (next == SortType.Ascending)
-                {
-                    return Table.Locale.TriggerAsc;
-                }
-                else
-                {
-                    return Table.Locale.TriggerDesc;
-                }
+                    0 => Table.Locale.CancelSort,
+                    1 => Table.Locale.TriggerAsc,
+                    2 => Table.Locale.TriggerDesc,
+                    _ => Table.Locale.CancelSort
+                };
             }
+        }
+
+        private SortDirection NextSortDirection()
+        {
+            if (_sortDirection == SortDirection.None)
+            {
+                return SortDirections[0];
+            }
+            else
+            {
+                var index = Array.IndexOf(SortDirections, _sortDirection);
+                if (index >= SortDirections.Length - 1)
+                {
+                    return SortDirection.None;
+                }
+
+                return SortDirections[index + 1];
+            }
+        }
+
+        private void SetSorter(SortDirection sortDirection)
+        {
+            _sortDirection = sortDirection;
+            SortModel.SetSortDirection(sortDirection);
         }
 
         private void ToggleTreeNode()

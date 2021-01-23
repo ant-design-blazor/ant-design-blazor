@@ -22,12 +22,6 @@ namespace AntDesign
         [Parameter]
         public RenderMode RenderMode { get; set; } = RenderMode.Always;
 
-        /// <summary>
-        /// 排序的方式，默认为多选
-        /// </summary>
-        [Parameter]
-        public SortWay SortWay { get; set; } = SortWay.Default;
-
         [Parameter]
         public IEnumerable<TItem> DataSource
         {
@@ -100,6 +94,9 @@ namespace AntDesign
         [Parameter]
         public int ExpandIconColumnIndex { get; set; }
 
+        [Parameter]
+        public SortDirection[] SortDirections { get; set; } = SortDirection.Preset.Default;
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -133,6 +130,7 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex;
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+        SortDirection[] ITable.SortDirections => SortDirections;
 
         public void ReloadData()
         {
@@ -154,18 +152,17 @@ namespace AntDesign
             ReloadAndInvokeChange();
         }
 
-        void ITable.SwitchSortModelBySortWay()
+        void ITable.ColumnSorterChange(IFieldColumn column)
         {
-            if (this.SortWay == SortWay.Singleness)
+            foreach (var col in ColumnContext.HeaderColumns)
             {
-                foreach (var col in ColumnContext.Columns)
+                if (col.ColIndex != column.ColIndex && col is IFieldColumn fieldCol && fieldCol.SorterMultiple <= 0)
                 {
-                    if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
-                    {
-                        fieldColumn.SortModel.SetSortType(SortType.None);
-                    }
+                    fieldCol.ClearSorter();
                 }
             }
+
+            ReloadAndInvokeChange();
         }
 
         private void ReloadAndInvokeChange()
@@ -183,7 +180,7 @@ namespace AntDesign
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
-                if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
+                if (col is IFieldColumn fieldColumn && fieldColumn.SortModel != null)
                 {
                     queryModel.AddSortModel(fieldColumn.SortModel);
                 }
@@ -201,7 +198,7 @@ namespace AntDesign
                     var orderedSortModels = queryModel.SortModel.OrderBy(x => x.Priority);
                     foreach (var sort in orderedSortModels)
                     {
-                        query = sort.Sort(query);
+                        query = sort.SortList(query);
                     }
 
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);

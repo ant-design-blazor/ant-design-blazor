@@ -22,6 +22,8 @@ namespace AntDesign
 
         internal bool HasExpandTemplate { get; }
 
+        internal SortDirection[] SortDirections { get; }
+
         public TableLocale Locale { get; set; }
 
         internal void SelectionChanged();
@@ -29,8 +31,6 @@ namespace AntDesign
         internal void Refresh();
 
         internal void ReloadAndInvokeChange();
-
-        internal void SwitchSortModelBySortWay();
 
         void SetSelection(string[] keys);
 
@@ -43,6 +43,8 @@ namespace AntDesign
         internal void HasFixRight();
 
         internal void TableLayoutIsFixed();
+
+        internal void ColumnSorterChange(IFieldColumn column);
 
         internal bool RowExpandable(RowData rowData);
     }
