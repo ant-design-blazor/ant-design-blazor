@@ -29,6 +29,9 @@ namespace AntDesign
         [Parameter]
         public string Src { get; set; }
 
+        [Inject]
+        private ImageService ImageService { get; set; }
+
         private bool _isError;
 
         private string _imgStyle;
@@ -68,6 +71,11 @@ namespace AntDesign
         private void HandleOnLoadStart()
         {
             _loaded = false;
+        }
+
+        private void OnPreview()
+        {
+            ImageService.OpenImage(Src);
         }
     }
 }

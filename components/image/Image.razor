@@ -3,20 +3,24 @@
 
 
 <div class="@ClassMapper.Class" style="@Style">
-    @if (Placeholder != null)
+    @if (!_loaded && Placeholder != null)
     {
-        if (!_loaded)
-        {
-            <div aria-hidden="true" class="ant-image-placeholder">
-                @Placeholder
+        <div aria-hidden="true" class="ant-image-placeholder">
+            @Placeholder
+        </div>
+    }
+
+    <img alt="@Alt" class="ant-image-img" src="@Src" style="@_imgStyle"
+         @onerror="HandleOnError"
+         @onloadstart="HandleOnLoadStart"
+         @onload="HandleOnLoad" />
+
+    @if (!_isError)
+    {
+        <div class="ant-image-mask" @onclick="OnPreview">
+            <div class="ant-image-mask-info">
+                <Icon Type="eye" /> 预览
             </div>
-        }
-        else
-        {
-            <img alt="@Alt" class="ant-image-img" src="@Src" style="@_imgStyle"
-                 @onerror="HandleOnError"
-                 @onloadstart="HandleOnLoadStart"
-                 @onload="HandleOnLoad" />
-        }
+        </div>
     }
 </div>
