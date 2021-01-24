@@ -24,6 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<ModalService>();
             services.TryAddScoped<DrawerService>();
             services.TryAddScoped<ConfirmService>();
+            services.TryAddScoped<ImageService>();
 
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
 

@@ -219,5 +219,8 @@
       },
       "pattern": { "mismatch": "${label} does not match the pattern ${pattern}" }
     }
+  },
+  "Image": {
+    "preview": "Preview"
   }
 }
