@@ -1,0 +1,7 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+@foreach (string url in _previewList)
+{
+    <ImagePreview ImageUrl="@url" />
+}

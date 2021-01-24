@@ -204,5 +204,8 @@
       },
       "pattern": { "mismatch": "${label}与模式不匹配${pattern}" }
     }
+  },
+  "Image": {
+    "preview": "预览"
   }
 }
