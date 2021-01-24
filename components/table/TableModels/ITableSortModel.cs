@@ -4,20 +4,16 @@ namespace AntDesign.TableModels
 {
     public interface ITableSortModel
     {
-        public SortType SortType { get; }
+        public string Sort { get; }
 
         public int Priority { get; }
 
         public string FieldName { get; }
 
-        IOrderedQueryable<TItem> Sort<TItem>(IQueryable<TItem> source);
+        internal SortDirection SortDirection { get; }
 
-        internal void SetSortType(SortType sortType);
+        internal void SetSortDirection(SortDirection sortDirection);
 
-        internal void SetSortType(string sortType);
-
-        internal void SwitchSortType();
-
-        internal SortType NextType();
+        internal IOrderedQueryable<TItem> SortList<TItem>(IQueryable<TItem> source);
     }
 }
