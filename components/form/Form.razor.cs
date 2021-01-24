@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -200,6 +199,11 @@ namespace AntDesign
         public bool Validate()
         {
             return _editContext.Validate();
+        }
+
+        public void ValidationReset()
+        {
+            _editContext = new EditContext(Model);
         }
     }
 }
