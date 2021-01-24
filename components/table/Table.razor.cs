@@ -93,6 +93,12 @@ namespace AntDesign
 
         [Parameter]
         public int ExpandIconColumnIndex { get; set; }
+        
+        [Parameter]
+        public Func<RowData<TItem>, string> RowClassName { get; set; } = _ => "";
+        
+        [Parameter]
+        public Func<RowData<TItem>, string> ExpandedRowClassName { get; set; } = _ => "";
 
         [Parameter]
         public SortDirection[] SortDirections { get; set; } = SortDirection.Preset.Default;
