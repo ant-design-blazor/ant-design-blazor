@@ -61,7 +61,18 @@ namespace AntDesign
         public string Name { get; set; }
 
         [Parameter]
-        public TModel Model { get; set; }
+        public TModel Model
+        {
+            get { return _model; }
+            set
+            {
+                if (!(_model?.Equals(value) ?? false))
+                {
+                    _model = value;
+                    _editContext = new EditContext(Model);
+                }
+            }
+        }
 
         [Parameter]
         public bool Loading { get; set; }
@@ -95,6 +106,7 @@ namespace AntDesign
         private EditContext _editContext;
         private IList<IFormItem> _formItems = new List<IFormItem>();
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
+        private TModel _model;
 
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
