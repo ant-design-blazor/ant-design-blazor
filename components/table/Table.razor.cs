@@ -93,6 +93,15 @@ namespace AntDesign
 
         [Parameter]
         public int ExpandIconColumnIndex { get; set; }
+        
+        [Parameter]
+        public Func<RowData<TItem>, string> RowClassName { get; set; } = _ => "";
+        
+        [Parameter]
+        public Func<RowData<TItem>, string> ExpandedRowClassName { get; set; } = _ => "";
+
+        [Parameter]
+        public SortDirection[] SortDirections { get; set; } = SortDirection.Preset.Default;
 
         [Inject]
         public DomEventService DomEventService { get; set; }
@@ -127,6 +136,7 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex;
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+        SortDirection[] ITable.SortDirections => SortDirections;
 
         public void ReloadData()
         {
@@ -148,6 +158,19 @@ namespace AntDesign
             ReloadAndInvokeChange();
         }
 
+        void ITable.ColumnSorterChange(IFieldColumn column)
+        {
+            foreach (var col in ColumnContext.HeaderColumns)
+            {
+                if (col.ColIndex != column.ColIndex && col is IFieldColumn fieldCol && fieldCol.SorterMultiple <= 0)
+                {
+                    fieldCol.ClearSorter();
+                }
+            }
+
+            ReloadAndInvokeChange();
+        }
+
         private void ReloadAndInvokeChange()
         {
             var queryModel = this.Reload();
@@ -163,7 +186,7 @@ namespace AntDesign
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
-                if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
+                if (col is IFieldColumn fieldColumn && fieldColumn.SortModel != null)
                 {
                     queryModel.AddSortModel(fieldColumn.SortModel);
                 }
@@ -181,7 +204,7 @@ namespace AntDesign
                     var orderedSortModels = queryModel.SortModel.OrderBy(x => x.Priority);
                     foreach (var sort in orderedSortModels)
                     {
-                        query = sort.Sort(query);
+                        query = sort.SortList(query);
                     }
 
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
