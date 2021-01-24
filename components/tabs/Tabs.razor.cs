@@ -443,8 +443,6 @@ namespace AntDesign
                 return;
             }
 
-            await Task.Delay(100);
-
             // TODO: slide to activated tab
             // animate Active Ink
             // ink bar
