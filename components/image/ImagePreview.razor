@@ -3,25 +3,25 @@
 <div>
     <div class="ant-image-preview-root">
         <div class="ant-image-preview-mask"></div>
-        <div tabindex="-1" class="ant-image-preview-wrap" role="dialog">
+        <div tabindex="-1" class="ant-image-preview-wrap" role="dialog" @onclick="HandleClose">
             <div role="document" class="ant-image-preview" style="transform-origin: 391.825px 91.4125px;">
                 <div tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
                 <div class="ant-image-preview-content">
                     <div class="ant-image-preview-body">
                         <ul class="ant-image-preview-operations">
-                            <li class="ant-image-preview-operations-operation" @onclick="HandleClose">
+                            <li class="ant-image-preview-operations-operation" @onclick="HandleClose"  @onclick:stopPropagation >
                                 <Icon Type="close" Class="ant-image-preview-operations-icon"/>
                             </li>
-                            <li class="ant-image-preview-operations-operation" @onclick="HandleZoomIn">
+                            <li class="ant-image-preview-operations-operation" @onclick="HandleZoomIn" @onclick:stopPropagation >
                                 <Icon Type="zoom-in" Class="ant-image-preview-operations-icon" />
                             </li>
-                            <li class="ant-image-preview-operations-operation @(_zoomOutTimes==1?"ant-image-preview-operations-operation-disabled":"")" @onclick="HandleZoomOut">
+                            <li class="ant-image-preview-operations-operation @(_zoomOutTimes==1?"ant-image-preview-operations-operation-disabled":"")" @onclick="HandleZoomOut" @onclick:stopPropagation >
                                 <Icon Type="zoom-out" Class="ant-image-preview-operations-icon" />
                                   </li>
-                            <li class="ant-image-preview-operations-operation" @onclick="HandleRotateRight">
+                            <li class="ant-image-preview-operations-operation" @onclick="HandleRotateRight" @onclick:stopPropagation >
                                 <Icon Type="rotate-right" Class="ant-image-preview-operations-icon" />
                                 </li>
-                            <li class="ant-image-preview-operations-operation" @onclick="HandleRotateLeft">
+                            <li class="ant-image-preview-operations-operation" @onclick="HandleRotateLeft" @onclick:stopPropagation >
                                 <Icon Type="rotate-left" Class="ant-image-preview-operations-icon" />
                             </li>
                         </ul>

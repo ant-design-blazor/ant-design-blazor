@@ -44,5 +44,7 @@ namespace AntDesign.Locales
         public TextLocale Text { get; set; }
 
         public FormLocale Form { get; set; }
+
+        public ImageLocale Image { get; set; }
     }
 }

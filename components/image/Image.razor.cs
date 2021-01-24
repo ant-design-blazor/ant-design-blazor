@@ -24,10 +24,13 @@ namespace AntDesign
         public RenderFragment Placeholder { get; set; }
 
         [Parameter]
-        public bool Preview { get; set; }
+        public bool Preview { get; set; } = true;
 
         [Parameter]
         public string Src { get; set; }
+
+        [Parameter]
+        public ImageLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Image;
 
         [Inject]
         private ImageService ImageService { get; set; }
@@ -75,7 +78,10 @@ namespace AntDesign
 
         private void OnPreview()
         {
-            ImageService.OpenImage(Src);
+            if (Preview)
+            {
+                ImageService.OpenImage(Src);
+            }
         }
     }
 }
