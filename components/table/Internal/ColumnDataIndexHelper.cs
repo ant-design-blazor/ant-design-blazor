@@ -67,7 +67,7 @@ namespace AntDesign.Internal
 
             internal readonly bool Sortable;
 
-            internal readonly string Sort;
+            internal readonly SortDirection DefaultSortOrder;
 
             internal readonly int SorterMultiple;
 
@@ -75,27 +75,27 @@ namespace AntDesign.Internal
 
             internal static ColumnCacheKey Create(Column<TProp> column)
             {
-                return new(column.ItemType, typeof(TProp), column.DataIndex, column.Sortable, column.Sort, column.SorterMultiple, column.SorterCompare);
+                return new(column.ItemType, typeof(TProp), column.DataIndex, column.Sortable, column.DefaultSortOrder, column.SorterMultiple, column.SorterCompare);
             }
 
-            internal ColumnCacheKey(Type itemType, Type propType, string dataIndex, bool sortable, string sort, int sorterMultiple, Func<TProp, TProp, int> sorterCompare)
+            internal ColumnCacheKey(Type itemType, Type propType, string dataIndex, bool sortable, SortDirection defaultSortOrder, int sorterMultiple, Func<TProp, TProp, int> sorterCompare)
             {
                 ItemType = itemType;
                 PropType = propType;
                 DataIndex = dataIndex;
                 Sortable = sortable;
-                Sort = sort;
+                DefaultSortOrder = defaultSortOrder;
                 SorterMultiple = sorterMultiple;
                 SorterCompare = sorterCompare;
             }
 
-            internal void Deconstruct(out Type itemType, out Type propType, out string dataIndex, out bool sortable, out string sort, out int sorterMultiple, out Func<TProp, TProp, int> sorterCompare)
+            internal void Deconstruct(out Type itemType, out Type propType, out string dataIndex, out bool sortable, out SortDirection defaultSortOrder, out int sorterMultiple, out Func<TProp, TProp, int> sorterCompare)
             {
                 itemType = ItemType;
                 propType = PropType;
                 dataIndex = DataIndex;
                 sortable = Sortable;
-                sort = Sort;
+                defaultSortOrder = DefaultSortOrder;
                 sorterMultiple = SorterMultiple;
                 sorterCompare = SorterCompare;
             }
