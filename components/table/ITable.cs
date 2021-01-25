@@ -1,4 +1,6 @@
-﻿namespace AntDesign
+﻿using AntDesign.TableModels;
+
+namespace AntDesign
 {
     public interface ITable
     {
@@ -13,6 +15,14 @@
         internal string ScrollY { get; }
 
         internal int ScrollBarWidth { get; }
+
+        internal int ExpandIconColumnIndex { get; }
+
+        internal int TreeExpandIconColumnIndex { get; }
+
+        internal bool HasExpandTemplate { get; }
+
+        internal SortDirection[] SortDirections { get; }
 
         public TableLocale Locale { get; set; }
 
@@ -33,5 +43,9 @@
         internal void HasFixRight();
 
         internal void TableLayoutIsFixed();
+
+        internal void ColumnSorterChange(IFieldColumn column);
+
+        internal bool RowExpandable(RowData rowData);
     }
 }

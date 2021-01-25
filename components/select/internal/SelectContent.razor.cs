@@ -25,10 +25,22 @@ namespace AntDesign.Select.Internal
         [Parameter] public EventCallback<MouseEventArgs> OnClearClick { get; set; }
         [Parameter] public EventCallback<SelectOptionItem<TItemValue, TItem>> OnRemoveSelected { get; set; }
         [Parameter] public string SearchValue { get; set; }
+        [Parameter] public ForwardRef RefBack { get; set; } = new ForwardRef();
+
+        protected ElementReference Ref
+        {
+            get { return _ref; }
+            set
+            {
+                _ref = value;
+                RefBack?.Set(value);
+            }
+        }
 
         private string _inputStyle = string.Empty;
         private string _inputWidth;
         private bool _suppressInput;
+        private ElementReference _ref;
 
         protected override void OnInitialized()
         {

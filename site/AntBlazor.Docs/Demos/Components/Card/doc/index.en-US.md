@@ -21,10 +21,12 @@ Card
 | Property             | Description                                         | Type          | Default    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | Actions |The action list, shows at the bottom of the Card.   | Array(RenderFragment) |-        |
+| ActionTemplate | The template placeholder for CardAction | RenderFragment | -
 | Body |Body area on card | RenderFragment |-        |
 | Extra |Content to render in the top-right corner of the card | RenderFragment |-        |
 | Bordered |Toggles rendering of the border around the card | boolean |-        |
 | BodyStyle |Inline style to apply to the card content | Css Properties |-        |
+| CardAction | A component for actions, and it should be put in ActionTemplate | CardAction | -
 | Cover |Card cover | RenderFragment |-        |
 | Loading |Shows a loading indicator while the contents of the card are being fetched | boolean |-        |
 | Size |	Size of card | RenderFragment |-        |

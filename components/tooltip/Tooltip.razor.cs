@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
-using AntDesign.Internal;
-using OneOf;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using System.Linq;
+using AntDesign.Internal;
+using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -55,6 +55,8 @@ namespace AntDesign
 
             await base.Hide(force);
         }
+
+        internal async Task ChildElementMoved() =>await GetOverlayComponent().UpdatePosition();
 
     }
 }

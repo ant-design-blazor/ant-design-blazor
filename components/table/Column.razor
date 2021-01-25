@@ -18,6 +18,11 @@ else if (IsMeasure)
 }
 else if (IsColGroup)
 {
+    @if (AppendExpandColumn)
+    {
+        <col class="ant-table-expand-icon-col">
+    }
+
     if (Width != null)
     {
         <col style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
@@ -29,6 +34,12 @@ else if (IsColGroup)
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
+
+    @if (AppendExpandColumn)
+    {
+        <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
+    }
+
     <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" @onclick="HandelHeaderClick" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")">
         @if (Sortable)
         {
@@ -51,15 +62,27 @@ else if (IsHeader && HeaderColSpan != 0)
         }
     </th>
 }
-else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
+else if (IsBody && RowSpan != 0 && ColSpan != 0)
 {
 
     var fieldText = !string.IsNullOrWhiteSpace(Format) ? Formatter<TData>.Format(Field, Format) : Field?.ToString();
 
+    @if (AppendExpandColumn)
+    {
+        <td class="ant-table-cell ant-table-row-expand-icon-cell">
+            @if (Table.RowExpandable(RowData) && (!Table.TreeMode || !RowData.HasChildren))
+            {
+                <button type="button" @onclick="()=> RowData.Expanded = !RowData.Expanded"
+                        class="ant-table-row-expand-icon @(RowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
+                        aria-label="@(RowData.Expanded?Table.Locale.Collapse:Table.Locale.Expand)"></button>
+            }
+        </td>
+    }
+
     <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis? fieldText:"")">
-        @if (ColIndex == 1 && Table.TreeMode)
+        @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
         {
-            <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level* Table.IndentSize));"></span>
+            <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
             @if (RowData.HasChildren)
             {
                 <button type="button" @onclick="ToggleTreeNode" class="ant-table-row-expand-icon @(RowData?.Expanded==true?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded==true?Table.Locale.Collapse:Table.Locale.Expand)"></button>
@@ -69,6 +92,7 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
                 <button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
             }
         }
+
         @if (CellRender != null)
         {
             @CellRender(Field)
@@ -94,24 +118,39 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 @code
 {
 
-    string HeaderTitle => Title ?? DisplayName ?? FieldName;
+    string HeaderTitle => Title ?? DisplayName ?? FieldName ?? DataIndex;
+
 
     readonly RenderFragment<Column<TData>> SortHeader = col =>
     @<div class="ant-table-column-sorters">
         <span>
             @if (col.TitleTemplate != null)@col.TitleTemplate else @col.HeaderTitle
         </span>
-        <span class="ant-table-column-sorter ant-table-column-sorter-full">
+        @{ 
+            bool hasDescendingSorter = SortDirection.Descending.IsIn(col.SortDirections);
+            bool hasAscendingSorter = SortDirection.Ascending.IsIn(col.SortDirections);
+        }
+        <span class="ant-table-column-sorter @((hasDescendingSorter && hasAscendingSorter)?"ant-table-column-sorter-full":"")">
             <span class="ant-table-column-sorter-inner">
-                <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up {(col.SortModel.SortType==SortType.Ascending? "active":"")}") />
-                <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down {(col.SortModel.SortType==SortType.Descending? "active":"")}") />
+                @if (hasAscendingSorter)
+                {
+                    <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up {(col._sortDirection == SortDirection.Ascending? "active":"")}") />
+                }
+                @if (hasDescendingSorter)
+                {
+                    <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down {(col._sortDirection == SortDirection.Descending ? "active" : "")}") />
+                }
             </span>
         </span>
     </div>;
 
-readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
-@<Tooltip Class="ant-table-column-sorters-with-tooltip" Title="@col.SorterTooltip">
-    @col.SortHeader(col)
-</Tooltip>;
+    readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
+    @<Tooltip Title="@col.SorterTooltip">
+        <Unbound>
+            <div class="ant-table-column-sorters-with-tooltip" @ref="context.Current">
+                @col.SortHeader(col)
+            </div>
+        </Unbound>
+    </Tooltip>;
 
-}
+}   

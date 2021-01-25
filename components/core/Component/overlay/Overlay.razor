@@ -12,7 +12,7 @@
          @onmouseenter="OnOverlayMouseEnter"
          @onmouseleave="OnOverlayMouseLeave"
          @onclick:stopPropagation>
-        <CascadingValue Value="this" Name="Overlay">
+        <CascadingValue Value="this" Name="Overlay" IsFixed="@true">
             <CascadingValue Value="Trigger" Name="ParentTrigger">
                 @if (!string.IsNullOrEmpty(OverlayChildPrefixCls))
                 {

@@ -12,7 +12,7 @@
                             Visible="Open"
                             Disabled="Disabled"
                             Trigger="new[] { TriggerType.Click }"
-                            HiddenMode
+                            HiddenMode                            
                             OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"
                             OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
                             OnVisibleChange="@OnOverlayVisibleChangeAsync"
@@ -83,12 +83,13 @@
                         }
                     </div>                    
                 </Overlay>
-                <ChildContent>
+                <Unbound>
                     <CascadingValue Value="this" Name=@("ParentSelect") IsFixed="true">
                         <CascadingValue Value="@LabelTemplate" Name="ParentLabelTemplate">
                             <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
                                 <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
-                                    <SelectContent Prefix="@ClassPrefix"
+                                    <SelectContent Prefix="@ClassPrefix"   
+                                                   RefBack="@context"
                                                    TItemValue="TItemValue"
                                                    TItem="TItem"
                                                    SearchValue="@_searchValue"
@@ -98,7 +99,7 @@
                                                    OnKeyDown="@OnKeyDownAsync"
                                                    OnFocus="@OnInputFocusAsync"
                                                    OnBlur="@OnInputBlurAsync"
-                                                   OnClearClick="@OnInputClearClickAsync"   
+                                                   OnClearClick="@OnInputClearClickAsync"                                                      
                                                    OnRemoveSelected="@OnRemoveSelectedAsync"
                                                    Placeholder="@Placeholder"
                                                    ShowPlaceholder="@ShowPlaceholder"/>
@@ -106,7 +107,7 @@
                             </CascadingValue>
                         </CascadingValue>
                     </CascadingValue>
-                </ChildContent>
+                </Unbound>
             </OverlayTrigger>
         </div>
     </CascadingValue>

@@ -27,7 +27,7 @@ namespace AntDesign.Internal
 
         private static ColumnCacheItem CreateDataIndexConfig(ColumnCacheKey key)
         {
-            var (itemType, propType, dataIndex, sortable, sort, sorterCompare) = key;
+            var (itemType, propType, dataIndex, sortable, sort, sorterMultiple, sorterCompare) = key;
             Func<RowData, TProp> getValue = null;
             ITableSortModel sortModel = null;
             var properties = dataIndex?.Split(".");
@@ -50,7 +50,7 @@ namespace AntDesign.Internal
                     var propertySelector = isNullable
                                                ? PropertyAccessHelper.BuildNullablePropertyAccessExpression(itemType, properties)
                                                : PropertyAccessHelper.BuildPropertyAccessExpression(itemType, properties);
-                    sortModel = new DataIndexSortModel<TProp>(dataIndex, propertySelector, 1, sort, sorterCompare);
+                    sortModel = new DataIndexSortModel<TProp>(dataIndex, propertySelector, sorterMultiple, sort, sorterCompare);
                 }
             }
 
@@ -67,32 +67,36 @@ namespace AntDesign.Internal
 
             internal readonly bool Sortable;
 
-            internal readonly string Sort;
+            internal readonly SortDirection DefaultSortOrder;
+
+            internal readonly int SorterMultiple;
 
             internal readonly Func<TProp, TProp, int> SorterCompare;
 
             internal static ColumnCacheKey Create(Column<TProp> column)
             {
-                return new(column.ItemType, typeof(TProp), column.DataIndex, column.Sortable, column.Sort, column.SorterCompare);
+                return new(column.ItemType, typeof(TProp), column.DataIndex, column.Sortable, column.DefaultSortOrder, column.SorterMultiple, column.SorterCompare);
             }
 
-            internal ColumnCacheKey(Type itemType, Type propType, string dataIndex, bool sortable, string sort, Func<TProp, TProp, int> sorterCompare)
+            internal ColumnCacheKey(Type itemType, Type propType, string dataIndex, bool sortable, SortDirection defaultSortOrder, int sorterMultiple, Func<TProp, TProp, int> sorterCompare)
             {
                 ItemType = itemType;
                 PropType = propType;
                 DataIndex = dataIndex;
                 Sortable = sortable;
-                Sort = sort;
+                DefaultSortOrder = defaultSortOrder;
+                SorterMultiple = sorterMultiple;
                 SorterCompare = sorterCompare;
             }
 
-            internal void Deconstruct(out Type itemType, out Type propType, out string dataIndex, out bool sortable, out string sort, out Func<TProp, TProp, int> sorterCompare)
+            internal void Deconstruct(out Type itemType, out Type propType, out string dataIndex, out bool sortable, out SortDirection defaultSortOrder, out int sorterMultiple, out Func<TProp, TProp, int> sorterCompare)
             {
                 itemType = ItemType;
                 propType = PropType;
                 dataIndex = DataIndex;
                 sortable = Sortable;
-                sort = Sort;
+                defaultSortOrder = DefaultSortOrder;
+                sorterMultiple = SorterMultiple;
                 sorterCompare = SorterCompare;
             }
         }

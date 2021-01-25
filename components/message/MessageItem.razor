@@ -2,7 +2,7 @@
 @inherits MessageBase
 
 <div class="@PrefixCls-notice @Config.AnimationClass">
-    <div class="@PrefixCls-notice-content">
+    <div class="@PrefixCls-notice-content" @ref="Ref">
         <div class="@PrefixCls-custom-content @GetClassName()">
             @{
                 switch (Config.Type)

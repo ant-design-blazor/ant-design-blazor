@@ -31,7 +31,6 @@ namespace AntDesign
             }
         }
 
-        private ElementReference _ref;
         private ElementReference _childRef;
         private string _hiddenStyle;
         private string _affixStyle;
@@ -128,7 +127,7 @@ namespace AntDesign
             DomRect childRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _childRef);
             _hiddenStyle = $"width: {childRect.width}px; height: {childRect.height}px;";
 
-            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _ref);
+            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
             DomRect appRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, RootRectSelector);
             // reset appRect.top / bottom, so its position is fixed.
             appRect.top = 0;

@@ -1,0 +1,26 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+
+<div class="@ClassMapper.Class" style="@Style">
+    <img alt="@Alt" class="ant-image-img" src="@Src" style="@_imgStyle"
+         @onerror="HandleOnError"
+         @onloadstart="HandleOnLoadStart"
+         @onload="HandleOnLoad" />
+
+    @if (!_loaded && Placeholder != null)
+    {
+        <div aria-hidden="true" class="ant-image-placeholder">
+            @Placeholder
+        </div>
+    }
+
+    @if (!_isError && Preview)
+    {
+        <div class="ant-image-mask" @onclick="OnPreview">
+            <div class="ant-image-mask-info">
+                <Icon Type="eye" /> @Locale.Preview
+            </div>
+        </div>
+    }
+</div>

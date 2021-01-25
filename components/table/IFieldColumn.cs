@@ -13,6 +13,10 @@ namespace AntDesign
 
         public bool Sortable { get; }
 
+        public int SorterMultiple { get; }
+
         public ITableSortModel SortModel { get; }
+
+        internal void ClearSorter();
     }
 }

@@ -1,48 +1,32 @@
 ﻿<Table DataSource="data" OnChange="OnChange" TItem="Column">
-    <Column @bind-Field="@context.Name" Width="150" Sortable />
-    <Column @bind-Field="@context.Age" Width="150" Sortable />
-    <Column @bind-Field="@context.Address" Sortable />
+    <Column TData="string" 
+        DataIndex="@nameof(context.Name)" 
+        SorterCompare="@((a,b)=> a.Length - b.Length)" 
+        SortDirections="new[] { SortDirection.Descending }"/>
+    <Column TData="int" 
+        DataIndex="@nameof(context.Age)" 
+        DefaultSortOrder="@SortDirection.Descending"
+        SorterCompare="@((a,b)=> a - b)"  />
+    <Column TData="string" 
+        DataIndex="@nameof(context.Address)" 
+        SorterCompare="@((a,b)=> a.Length - b.Length)" 
+        SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }"
+        />
 </Table>
 
 
 @using AntDesign.TableModels;
-@using System.Text.Json; 
+@using System.Text.Json;
 @code {
-    class Column
+
+    record Column(string Name, int Age, string Address);
+
+    Column[] data =
     {
-        public string Name { get; set; }
-
-        public int Age { get; set; }
-
-        public string Address { get; set; }
-    }
-
-    Column[] data = new Column[]
-    {
-        new()
-        {
-            Name = "John Brown",
-            Age = 32,
-            Address = "New York No. 1 Lake Park"
-        },
-        new()
-        {
-            Name = "Jim Green",
-            Age = 42,
-            Address = "London No. 1 Lake Park"
-        },
-        new()
-        {
-            Name = "Joe Black",
-            Age = 32,
-            Address = "Sidney No. 1 Lake Park"
-        },
-        new()
-        {
-            Name = "Jim Red",
-            Age = 32,
-            Address = "London No. 2 Lake Park"
-        },
+        new("John Brown",32,"New York No. 1 Lake Park"),
+        new("Jim Green",42, "London No. 1 Lake Park"),
+        new("Joe Black", 32,"Sidney No. 1 Lake Park"),
+        new("Jim Red",32,"London No. 2 Lake Park"),
     };
 
     void OnChange(QueryModel<Column> query)

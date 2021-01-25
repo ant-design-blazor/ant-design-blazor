@@ -17,7 +17,7 @@ read_dir(){
             filePath=${filePath/$2\//}  
             echo ''
             echo 'purging '${filePath}'...'
-            #curl -s -# https://purge.jsdelivr.net/gh/$3/$filePath
+            curl -s https://purge.jsdelivr.net/gh/$3/$filePath
         fi
     done
 }

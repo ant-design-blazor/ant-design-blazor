@@ -2,7 +2,7 @@
 @typeparam TValue
 @inherits DatePickerPanelBase<TValue>
 
-<div class="@(PrefixCls)-header">
+<div class="@(PrefixCls)-header" @ref="Ref">
     @if (ShowSuperPreChange)
     {
         <button tabindex="-1" class="@(PrefixCls)-header-super-prev-btn" @onclick="e => ChangePickerYearValue(-SuperChangeDateInterval)">

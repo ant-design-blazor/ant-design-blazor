@@ -4,7 +4,8 @@ using System.Text;
 
 namespace AntDesign
 {
-    public class RowCol : Col
+    public class ImageLocale
     {
+        public string Preview { get; set; }
     }
 }

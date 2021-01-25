@@ -2,7 +2,7 @@
 order: 4
 title:
   zh-CN: 自定义时间轴点
-  en-US: Basic
+  en-US: Custom
 ---
 
 ## zh-CN

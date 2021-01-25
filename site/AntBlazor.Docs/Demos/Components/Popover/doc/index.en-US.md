@@ -13,6 +13,14 @@ A simple popup menu to provide extra information or operations.
 
 Comparing with `Tooltip`, besides information `Popover` card can also provide action elements like links and buttons.
 
+## Two types
+
+There are 2 rendering approaches for `Popover`:  
+1. Wraps child element (content of the `Popover`) with a `<div>` (default approach).
+2. Child element is not wrapped with anything. This approach requires usage of `<Unbound>` tag inside `<Popover>` and depending on the child element type (please refer to the first example):
+   - html tag: has to have its `@ref` set to `@context.Current` 
+   - `Ant Design Blazor` component: has to have its `RefBack` attribute set to `@context`.
+
 ## API
 
 | Param   | Description         | Type                               | Default value | Version |
