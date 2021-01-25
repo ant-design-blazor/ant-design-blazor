@@ -290,6 +290,7 @@ namespace AntDesign
 
             if (firstRender)
             {
+                DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
                 if (ScrollX != null)
                 {
                     await SetScrollPositionClassName();
@@ -343,6 +344,8 @@ namespace AntDesign
 
         private async Task SetScrollPositionClassName(bool clear = false)
         {
+            if (!_isReloading)
+                return;
             var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tableBodyRef);
             var scrollWidth = element.scrollWidth;
             var scrollLeft = element.scrollLeft;
@@ -383,22 +386,35 @@ namespace AntDesign
         {
             DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnResize);
             DomEventService.RemoveEventListerner<JsonElement>(_tableBodyRef, "scroll", OnScroll);
-
+            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);            
             base.Dispose(disposing);
         }
 
         public async ValueTask DisposeAsync()
         {
-            await this.SetScrollPositionClassName(true);
-            if (ScrollY != null && ScrollX != null)
+            if (!_isReloading)
             {
-                await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);
+                await this.SetScrollPositionClassName(true);
+                if (ScrollY != null && ScrollX != null)
+                {
+                    await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);
+                }
             }
+            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
         }
 
         bool ITable.RowExpandable(RowData rowData)
         {
             return RowExpandable(rowData as RowData<TItem>);
+        }
+
+        /// <summary>
+        /// Indicates that a page is being refreshed 
+        /// </summary>
+        private bool _isReloading;
+        private void Reloading(JsonElement jsonElement)
+        {
+            _isReloading = true;
         }
     }
 }

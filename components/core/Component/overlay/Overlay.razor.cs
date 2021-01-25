@@ -103,21 +103,23 @@ namespace AntDesign.Internal
         {
             if (firstRender)
             {
-                await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"{Trigger.PrefixCls}-trigger");
                 DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
             }
 
             if (_lastDisabledState != Trigger.Disabled)
             {
-                if (Trigger.Disabled)
+                if (Ref.Id != null)
                 {
-                    await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"disabled");
+                    if (Trigger.Disabled)
+                    {
+                        await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"disabled");
+                    }
+                    else
+                    {
+                        await JsInvokeAsync(JSInteropConstants.RemoveClsFromFirstChild, Ref, $"disabled");
+                    }
                 }
-                else
-                {
-                    await JsInvokeAsync(JSInteropConstants.RemoveClsFromFirstChild, Ref, $"disabled");
-                }
-                _lastDisabledState = Trigger.Disabled;
+                 _lastDisabledState = Trigger.Disabled;
             }
 
             if (_isWaitForOverlayFirstRender && _isOverlayFirstRender)
