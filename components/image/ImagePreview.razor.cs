@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -12,9 +13,13 @@ namespace AntDesign
 
         private int _zoomOutTimes = 1;
         private int _rotateTimes;
+        private bool _visible = true;
 
-        private void HandleClose()
+        private async Task HandleClose()
         {
+            _visible = false;
+            // Blocking DOM removal
+            await Task.Delay(200);
             ImageService.CloseImage(ImageUrl);
         }
 
@@ -40,5 +45,12 @@ namespace AntDesign
         {
             _rotateTimes--;
         }
+
+        private static readonly DialogOptions _dialogOptions = new DialogOptions()
+        {
+            PrefixCls = "ant-image-preview",
+            Closable = false,
+            Footer = null
+        };
     }
 }
