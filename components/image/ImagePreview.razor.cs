@@ -18,6 +18,7 @@ namespace AntDesign
         private async Task HandleClose()
         {
             _visible = false;
+            StateHasChanged();
             // Blocking DOM removal
             await Task.Delay(200);
             ImageService.CloseImage(ImageUrl);
@@ -46,11 +47,19 @@ namespace AntDesign
             _rotateTimes--;
         }
 
-        private static readonly DialogOptions _dialogOptions = new DialogOptions()
+        private DialogOptions GetDialogOptions()
         {
-            PrefixCls = "ant-image-preview",
-            Closable = false,
-            Footer = null
-        };
+            return new DialogOptions()
+            {
+                PrefixCls = "ant-image-preview",
+                Closable = false,
+                Footer = null,
+                MaskClosable = true,
+                OnCancel = async (e) =>
+                {
+                    await HandleClose();
+                }
+            };
+        }
     }
 }

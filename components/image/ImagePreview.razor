@@ -1,6 +1,6 @@
 ﻿@namespace AntDesign
 
-<Dialog Config="@_dialogOptions" Visible="@_visible">
+<Dialog Config="@GetDialogOptions()" Visible="@_visible">
     <ul class="ant-image-preview-operations">
         <li class="ant-image-preview-operations-operation" @onclick="HandleClose"  @onclick:stopPropagation >
             <Icon Type="close" Class="ant-image-preview-operations-icon"/>
