@@ -47,8 +47,8 @@
                 {
                     <th></th>
                 }
-                @foreach(string weekDay in Locale.Lang.ShortWeekDays)
-                {
+                @foreach(string weekDay in Locale.Lang.ShortWeekDaysSorted(Locale.FirstDayOfWeek))
+                {                    
                     <th>@(weekDay)</th>
                 }
             </tr>

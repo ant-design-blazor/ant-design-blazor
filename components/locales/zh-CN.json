@@ -51,7 +51,8 @@
       "previousCentury": "上一世纪",
       "nextCentury": "下一世纪",
       "monthFormat": "M月",
-      "shortWeekDays": [ "一", "二", "三", "四", "五", "六", "日" ]
+      "shortWeekDays": [ "一", "二", "三", "四", "五", "六", "日" ],
+      "mondayIndex": 0
     },
     "timePickerLocale": {
       "placeholder": "请选择时间",
