@@ -5,6 +5,12 @@
 在一个维护者审核通过后合并。
 请确保填写以下 pull request 的信息，谢谢！~
 
+请尽量使用英语，因为我们有来自全球的贡献者，使用英语会让您的问题和需求得到更迅速的响应和解决。
+推荐使用：https://cn.bing.com/translator
+
+Please use English as much as possible, as we have contributors from all over the world,
+using English will allow your questions and needs to be responded to and resolved more quickly.
+
 [[English Template / 英文模板](?expand=1)]
 -->
 
