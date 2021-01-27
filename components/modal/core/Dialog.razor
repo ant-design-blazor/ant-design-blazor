@@ -7,8 +7,9 @@
         {
             <div class=@($"{Config.PrefixCls}-mask {GetMaskClsName()}") style="@Config.MaskStyle"></div>
         }
-        <div tabindex="-1" id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}") class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended()}") role="dialog" aria-labelledby="rcDialogTitle0"
+        <div tabindex="-1" id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}") class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended()}") role="dialog"
              @onclick="@OnMaskClick"
+             @onmouseup="@OnMaskMouseUp"
              @onkeydown="@OnKeyDown"
              style="@_wrapStyle">
             <div @ref="@_modal" role="document" class=@($"{Config.PrefixCls} {GetModalClsName()}")
@@ -29,7 +30,7 @@
                     @if (Config.TitleTemplate != null)
                     {
                         <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
-                            <div class=@($"{Config.PrefixCls}-title") id="rcDialogTitle0">
+                            <div class=@($"{Config.PrefixCls}-title")>
                                 @Config.TitleTemplate
                             </div>
                         </div>
@@ -37,7 +38,7 @@
                     else if (!string.IsNullOrWhiteSpace(Config.Title))
                     {
                         <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
-                            <div class=@($"{Config.PrefixCls}-title") id="rcDialogTitle0">
+                            <div class=@($"{Config.PrefixCls}-title")>
                                 @Config.Title
                             </div>
                         </div>
