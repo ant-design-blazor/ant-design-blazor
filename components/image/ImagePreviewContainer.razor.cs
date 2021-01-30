@@ -7,7 +7,7 @@ namespace AntDesign
     {
         [Inject] private ImageService ImageService { get; set; }
 
-        private readonly IList<string> _previewList = new List<string>();
+        private readonly IList<ImageRef> _previewList = new List<ImageRef>();
 
         protected override void OnInitialized()
         {
@@ -17,21 +17,21 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        private void HandlePreviewOpen(string url)
+        private void HandlePreviewOpen(ImageRef imageRef)
         {
-            if (!_previewList.Contains(url))
+            if (!_previewList.Contains(imageRef))
             {
-                _previewList.Add(url);
+                _previewList.Add(imageRef);
             }
 
             StateHasChanged();
         }
 
-        private void HandlePreviewClose(string url)
+        private void HandlePreviewClose(ImageRef imageRef)
         {
-            if (_previewList.Contains(url))
+            if (_previewList.Contains(imageRef))
             {
-                _previewList.Remove(url);
+                _previewList.Remove(imageRef);
             }
 
             StateHasChanged();
