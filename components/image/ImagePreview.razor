@@ -2,23 +2,29 @@
 
 <Dialog Config="@GetDialogOptions()" Visible="@_visible">
     <ul class="ant-image-preview-operations">
-        <li class="ant-image-preview-operations-operation" @onclick="HandleClose"  @onclick:stopPropagation >
-            <Icon Type="close" Class="ant-image-preview-operations-icon"/>
+        <li class="ant-image-preview-operations-operation" @onclick="HandleClose" @onclick:stopPropagation>
+            <Icon Type="close" Class="ant-image-preview-operations-icon" />
         </li>
-        <li class="ant-image-preview-operations-operation" @onclick="HandleZoomIn" @onclick:stopPropagation >
+        <li class="ant-image-preview-operations-operation" @onclick="HandleZoomIn" @onclick:stopPropagation>
             <Icon Type="zoom-in" Class="ant-image-preview-operations-icon" />
         </li>
-        <li class="ant-image-preview-operations-operation @(_zoomOutTimes==1?"ant-image-preview-operations-operation-disabled":"")" @onclick="HandleZoomOut" @onclick:stopPropagation >
+        <li class="ant-image-preview-operations-operation @(_zoomOutTimes==1?"ant-image-preview-operations-operation-disabled":"")" @onclick="HandleZoomOut" @onclick:stopPropagation>
             <Icon Type="zoom-out" Class="ant-image-preview-operations-icon" />
         </li>
-        <li class="ant-image-preview-operations-operation" @onclick="HandleRotateRight" @onclick:stopPropagation >
+        <li class="ant-image-preview-operations-operation" @onclick="HandleRotateRight" @onclick:stopPropagation>
             <Icon Type="rotate-right" Class="ant-image-preview-operations-icon" />
         </li>
-        <li class="ant-image-preview-operations-operation" @onclick="HandleRotateLeft" @onclick:stopPropagation >
+        <li class="ant-image-preview-operations-operation" @onclick="HandleRotateLeft" @onclick:stopPropagation>
             <Icon Type="rotate-left" Class="ant-image-preview-operations-icon" />
         </li>
     </ul>
     <div class="ant-image-preview-img-wrapper" style="transform: translate3d(0px, 0px, 0px);">
-        <img class="ant-image-preview-img" src="@ImageUrl" style="transform: scale3d(@_zoomOutTimes, @_zoomOutTimes, 1) rotate(@(90*_rotateTimes)deg);">
+        <img class="ant-image-preview-img" src="@ImageRef.ImageSrc" style="transform: scale3d(@_zoomOutTimes, @_zoomOutTimes, 1) rotate(@(90*_rotateTimes)deg);">
+    </div>
+    <div class="ant-image-preview-switch-left @(ImageRef.CurrentIndex==0?"ant-image-preview-switch-left-disabled":"")" @onclick="()=>ImageRef.SwitchTo(ImageRef.CurrentIndex-1)" @onclick:stopPropagation>
+        <Icon Type="left" />
+    </div>
+    <div class="ant-image-preview-switch-right @(ImageRef.CurrentIndex==ImageRef.ImageCount-1?"ant-image-preview-switch-right-disabled":"")" @onclick="()=>ImageRef.SwitchTo(ImageRef.CurrentIndex+1)" @onclick:stopPropagation>
+        <Icon Type="right" />
     </div>
 </Dialog>
