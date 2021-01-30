@@ -440,43 +440,53 @@ namespace AntDesign
                     builder.AddAttribute(43, "style", Style);
                 }
 
+                bool needsDisabled = Disabled;
                 if (Attributes != null)
                 {
                     builder.AddMultipleAttributes(44, Attributes);
+                    if (!Attributes.TryGetValue("disabled", out object disabledAttribute))
+                    {
+                        needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
+                    }
                 }
 
                 if (AdditionalAttributes != null)
                 {
                     builder.AddMultipleAttributes(45, AdditionalAttributes);
+                    if (!AdditionalAttributes.TryGetValue("disabled", out object disabledAttribute))
+                    {
+                        needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
+                    }
                 }
 
                 builder.AddAttribute(50, "Id", Id);
                 builder.AddAttribute(51, "type", Type);
                 builder.AddAttribute(60, "placeholder", Placeholder);
                 builder.AddAttribute(61, "value", CurrentValue);
+                builder.AddAttribute(62, "disabled", needsDisabled);
 
                 // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
                 if (!IgnoreOnChangeAndBlur)
                 {
-                    builder.AddAttribute(62, "onchange", CallbackFactory.Create(this, OnChangeAsync));
-                    builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+                    builder.AddAttribute(70, "onchange", CallbackFactory.Create(this, OnChangeAsync));
+                    builder.AddAttribute(71, "onblur", CallbackFactory.Create(this, OnBlurAsync));
                 }
 
-                builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
-                builder.AddAttribute(64, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
-                builder.AddAttribute(65, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
-                builder.AddAttribute(66, "oninput", CallbackFactory.Create(this, OnInputAsync));
-                builder.AddAttribute(67, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
-                builder.AddAttribute(68, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
-                builder.AddElementReferenceCapture(69, r => Ref = r);
+                builder.AddAttribute(72, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
+                builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
+                builder.AddAttribute(74, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
+                builder.AddAttribute(75, "oninput", CallbackFactory.Create(this, OnInputAsync));
+                builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
+                builder.AddAttribute(77, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
+                builder.AddElementReferenceCapture(90, r => Ref = r);
                 builder.CloseElement();
 
                 if (Suffix != null)
                 {
                     // suffix
-                    builder.OpenElement(71, "span");
-                    builder.AddAttribute(72, "class", $"{PrefixCls}-suffix");
-                    builder.AddContent(73, Suffix);
+                    builder.OpenElement(91, "span");
+                    builder.AddAttribute(92, "class", $"{PrefixCls}-suffix");
+                    builder.AddContent(93, Suffix);
                     builder.CloseElement();
                 }
 
@@ -488,9 +498,9 @@ namespace AntDesign
                 if (AddOnAfter != null)
                 {
                     // addOnAfter
-                    builder.OpenElement(81, "span");
-                    builder.AddAttribute(82, "class", $"{PrefixCls}-group-addon");
-                    builder.AddContent(83, AddOnAfter);
+                    builder.OpenElement(100, "span");
+                    builder.AddAttribute(101, "class", $"{PrefixCls}-group-addon");
+                    builder.AddContent(102, AddOnAfter);
                     builder.CloseElement();
                 }
 
