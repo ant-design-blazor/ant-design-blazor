@@ -31,25 +31,25 @@ namespace AntDesign.Internal
             Func<RowData, TProp> getValue = null;
             ITableSortModel sortModel = null;
             var properties = dataIndex?.Split(".");
-            if (properties is { Length: > 0 })
+            if (properties is {Length: > 0})
             {
-                var isNullable = propType.IsValueType && Nullable.GetUnderlyingType(propType) != null;
+                var canBeNull = !propType.IsValueType || Nullable.GetUnderlyingType(propType) != null;
                 var rowDataType = typeof(RowData);
                 var rowData1Type = typeof(RowData<>).MakeGenericType(itemType);
                 var rowDataExp = Expression.Parameter(rowDataType);
                 var rowData1Exp = Expression.TypeAs(rowDataExp, rowData1Type);
                 var dataMemberExp = Expression.Property(rowData1Exp, nameof(RowData<object>.Data));
 
-                Expression memberExp = isNullable
-                                           ? PropertyAccessHelper.AccessNullableProperty(dataMemberExp, properties)
-                                           : PropertyAccessHelper.AccessProperty(dataMemberExp, properties);
+                Expression memberExp = canBeNull
+                                           ? dataMemberExp.AccessNullableProperty(properties)
+                                           : dataMemberExp.AccessProperty(properties);
                 getValue = Expression.Lambda<Func<RowData, TProp>>(memberExp, rowDataExp).Compile();
 
                 if (sortable)
                 {
-                    var propertySelector = isNullable
-                                               ? PropertyAccessHelper.BuildNullablePropertyAccessExpression(itemType, properties)
-                                               : PropertyAccessHelper.BuildPropertyAccessExpression(itemType, properties);
+                    var propertySelector = canBeNull
+                                               ? itemType.BuildAccessNullablePropertyLambdaExpression(properties)
+                                               : itemType.BuildAccessPropertyLambdaExpression(properties);
                     sortModel = new DataIndexSortModel<TProp>(dataIndex, propertySelector, sorterMultiple, sort, sorterCompare);
                 }
             }
