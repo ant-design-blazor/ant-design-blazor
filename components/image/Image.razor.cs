@@ -94,9 +94,10 @@ namespace AntDesign
 
         private void HandleOnError()
         {
+            Src = Fallback;
+
             _loaded = true;
             _isError = true;
-            Src = Fallback;
         }
 
         private void HandleOnLoad()
