@@ -6,10 +6,7 @@ namespace AntDesign
     public partial class ImagePreview
     {
         [Parameter]
-        public string ImageUrl { get; set; }
-
-        [Inject]
-        private ImageService ImageService { get; set; }
+        public ImageRef ImageRef { get; set; }
 
         private int _zoomOutTimes = 1;
         private int _rotateTimes;
@@ -21,7 +18,8 @@ namespace AntDesign
             StateHasChanged();
             // Blocking DOM removal
             await Task.Delay(200);
-            ImageService.CloseImage(ImageUrl);
+
+            ImageRef.Close();
         }
 
         private void HandleZoomIn()
