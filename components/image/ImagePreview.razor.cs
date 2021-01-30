@@ -8,9 +8,6 @@ namespace AntDesign
         [Parameter]
         public ImageRef ImageRef { get; set; }
 
-        [Inject]
-        private ImageService ImageService { get; set; }
-
         private int _zoomOutTimes = 1;
         private int _rotateTimes;
         private bool _visible = true;
@@ -21,7 +18,8 @@ namespace AntDesign
             StateHasChanged();
             // Blocking DOM removal
             await Task.Delay(200);
-            ImageService.CloseImage(ImageRef);
+
+            ImageRef.Close();
         }
 
         private void HandleZoomIn()

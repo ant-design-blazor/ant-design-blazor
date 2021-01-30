@@ -21,10 +21,13 @@
     <div class="ant-image-preview-img-wrapper" style="transform: translate3d(0px, 0px, 0px);">
         <img class="ant-image-preview-img" src="@ImageRef.ImageSrc" style="transform: scale3d(@_zoomOutTimes, @_zoomOutTimes, 1) rotate(@(90*_rotateTimes)deg);">
     </div>
-    <div class="ant-image-preview-switch-left @(ImageRef.CurrentIndex==0?"ant-image-preview-switch-left-disabled":"")" @onclick="()=>ImageRef.SwitchTo(ImageRef.CurrentIndex-1)" @onclick:stopPropagation>
-        <Icon Type="left" />
-    </div>
-    <div class="ant-image-preview-switch-right @(ImageRef.CurrentIndex==ImageRef.ImageCount-1?"ant-image-preview-switch-right-disabled":"")" @onclick="()=>ImageRef.SwitchTo(ImageRef.CurrentIndex+1)" @onclick:stopPropagation>
-        <Icon Type="right" />
-    </div>
+    @if (ImageRef.ImageCount > 1)
+    {
+        <div class="ant-image-preview-switch-left @(ImageRef.CurrentIndex==0?"ant-image-preview-switch-left-disabled":"")" @onclick="()=>ImageRef.SwitchTo(ImageRef.CurrentIndex-1)" @onclick:stopPropagation>
+            <Icon Type="left" />
+        </div>
+        <div class="ant-image-preview-switch-right @(ImageRef.CurrentIndex==ImageRef.ImageCount-1?"ant-image-preview-switch-right-disabled":"")" @onclick="()=>ImageRef.SwitchTo(ImageRef.CurrentIndex+1)" @onclick:stopPropagation>
+            <Icon Type="right" />
+        </div>
+    }
 </Dialog>

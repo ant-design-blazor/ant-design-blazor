@@ -10,9 +10,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        [Inject]
-        private ImageService ImageService { get; set; }
-
         internal IList<Image> Images => _images;
 
         private IList<Image> _images;
