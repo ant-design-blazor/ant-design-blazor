@@ -67,7 +67,6 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            SortDirections ??= Table.SortDirections;
             Sortable = Sortable || SorterMultiple != default || SorterCompare != default || DefaultSortOrder != default || SortDirections?.Any() == true;
 
             if (IsHeader)
@@ -95,6 +94,8 @@ namespace AntDesign
 
                 (GetValue, _) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
             }
+
+            SortDirections ??= Table.SortDirections;
 
             Sortable = Sortable || SortModel != null;
             _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;

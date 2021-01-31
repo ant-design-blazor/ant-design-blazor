@@ -1,23 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AntDesign
 {
     public class ImageService
     {
-        public event Action<string> ImagePreviewOpened;
+        public event Action<ImageRef> ImagePreviewOpened;
 
-        public event Action<string> ImagePreviewClosed;
+        public event Action<ImageRef> ImagePreviewClosed;
 
-        public void OpenImage(string url)
+        public ImageRef OpenImages(IList<Image> images)
         {
-            ImagePreviewOpened?.Invoke(url);
+            if (images?.Any() != true)
+                return null;
+
+            var imageRef = new ImageRef(images, this);
+
+            ImagePreviewOpened?.Invoke(imageRef);
+
+            return imageRef;
         }
 
-        public void CloseImage(string url)
+        public void CloseImage(ImageRef iamgeRef)
         {
-            ImagePreviewClosed?.Invoke(url);
+            ImagePreviewClosed?.Invoke(iamgeRef);
         }
     }
 }

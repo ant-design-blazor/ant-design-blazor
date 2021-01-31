@@ -7,7 +7,7 @@ title:
 
 ## zh-CN
 
-*⚠注意: 排序方式设置 与 筛选 将在下个版本中提供*
+*⚠注意: 筛选功能 将在下个版本中提供*
 
 对某一列数据进行筛选，使用列的 `filters` 属性来指定需要筛选菜单的列，`onFilter` 用于筛选当前数据，`filterMultiple` 用于指定多选和单选。
 
@@ -19,7 +19,7 @@ title:
 
 ## en-US
 
-*⚠Notice: `sortDirections` and `filters` will be provided in the next release.*
+*⚠Notice: `filters` will be provided in the next release.*
 
 Use `filters` to generate filter menu in columns, `onFilter` to determine filtered result, and `filterMultiple` to indicate whether it's multiple or single selection.
 

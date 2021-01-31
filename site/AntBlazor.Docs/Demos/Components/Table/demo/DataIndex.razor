@@ -2,9 +2,9 @@
     <Column @bind-Field="@context.Id" Sortable/>
     <Column Title="DayOfWeek" @bind-Field="@context.DayOfWeek" Sortable/>
     <Column Title="DayOfWeek DataIndex" TData="int" DataIndex="DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)"/>
-    <Column Title="N1.N12.N2A DataIndex" TData="string" DataIndex="N1.N12.N2A" Sortable SorterCompare="@((v1, v2) => string.CompareOrdinal(v1, v2))"/>
+    <Column Title="N1.N12.N2A DataIndex" TData="string" DataIndex=@("N1.N12[\"test\"].N2A") Sortable SorterCompare="@((v1, v2) => string.CompareOrdinal(v1, v2))"/>
     <Column Title="N1.N1A DataIndex Nullable" TData="int?" DataIndex="N1.N1A" Sortable SorterCompare="CompareNullableInt"/>
-    <Column Title="Time" TData="DateTime" DataIndex="N1.N12.Time" Format="yyyy-MM-dd hh:mm:ss" Sortable SorterCompare="@((t1, t2) => t1.CompareTo(t2))"></Column>
+    <Column Title="Time" TData="DateTime?" DataIndex=@(@"N1.N12[""test""].Time") Format="yyyy-MM-dd hh:mm:ss" Sortable SorterCompare="_dateTimeCompare"></Column>
 </Table>
 
 @code {
@@ -30,17 +30,29 @@
     {
         public int? N1A { get; set; }
 
-        public Nested2 N12 { get; set; }
+        public Dictionary<string, Nested2> N12 { get; set; }
     }
 
     public class Nested2
     {
         public string N2A { get; set; }
 
-        public DateTime Time { get; set; }
+        public DateTime? Time { get; set; }
     }
 
     public string[] DayName = {"None", "Monday", "Tuesday", "Wednesdays", "Thursday", "Friday", "Saturday", "Sunday"};
+
+    Func<DateTime?, DateTime?, int> _dateTimeCompare = (t1, t2) =>
+    {
+        if (t1.HasValue && t2.HasValue)
+            return DateTime.Compare(t1.Value, t2.Value);
+        if (t1.HasValue)
+            return 1;
+        if (t2.HasValue)
+            return -1;
+
+        return 0;
+    };
 
     /// <inheritdoc />
     protected override void OnInitialized()
@@ -68,8 +80,14 @@
                 N1A = (index & 1) == 0 ? index : null,
                 N12 = new()
                 {
-                    N2A = DayName[data.DayOfWeek] + " - DI",
-                    Time = startDate.AddSeconds(rng.Next((int)range))
+                    {"no used", null},
+                    {
+                        "test", new Nested2()
+                        {
+                            N2A = DayName[data.DayOfWeek] + " - DI",
+                            Time = startDate.AddSeconds(rng.Next((int)range))
+                        }
+                    }
                 }
             };
             return data;

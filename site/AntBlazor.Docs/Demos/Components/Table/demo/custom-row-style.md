@@ -2,7 +2,7 @@
 order: 22
 title:
   en-US: Custom Row Styling
-  zh-CN: ĞŞ¸ÄÃ¿ĞĞµÄÑùÊ½
+  zh-CN: ä¿®æ”¹æ¯è¡Œçš„æ ·å¼
 ---
 ## en-US
 
@@ -12,4 +12,4 @@ A solution for displaying custom styling on rows.
 
 ## zh-CN
 
-¿ÉÒÔÊ¹ÓÃ `RowClassName` ¸øÌØ¶¨µÄĞĞÉèÖÃ class¡£Ò²¿ÉÒÔÓÃ `ExpandedRowClassName` ¸øÌØ¶¨µÄÕ¹¿ªĞĞÉèÖÃ class¡£
+å¯ä»¥ä½¿ç”¨ `RowClassName` ç»™ç‰¹å®šçš„è¡Œè®¾ç½® classã€‚ä¹Ÿå¯ä»¥ç”¨ `ExpandedRowClassName` ç»™ç‰¹å®šçš„å±•å¼€è¡Œè®¾ç½® classã€‚
