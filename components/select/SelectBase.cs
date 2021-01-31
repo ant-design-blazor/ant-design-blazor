@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AntDesign.Internal;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -255,6 +256,11 @@ namespace AntDesign
         internal async Task UpdateOverlayPositionAsync()
         {
             await _dropDown.GetOverlayComponent().UpdatePosition();
+        }
+
+        internal async Task OnArrowClick(MouseEventArgs args)
+        {
+            await _dropDown.OnClickDiv(args);
         }
 
         protected abstract void SetClassMap();

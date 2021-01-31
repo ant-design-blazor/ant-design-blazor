@@ -25,12 +25,13 @@
                         @ChildContent
                     </Tree>
                 </Overlay>
-                <ChildContent>
+                <Unbound>
                     <CascadingValue Value="this" Name=@("ParentSelect") IsFixed>
                         <CascadingValue Value="@LabelTemplate" Name="ParentLabelTemplate">
                             <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
                                 <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
                                     <SelectContent Prefix="ant-select"
+                                                   RefBack="@context"
                                                    TItemValue="TItemValue"
                                                    TItem="TItem"
                                                    SearchValue="@_searchValue"
@@ -48,7 +49,7 @@
                             </CascadingValue>
                         </CascadingValue>
                     </CascadingValue>
-                </ChildContent>
+                </Unbound>
             </OverlayTrigger>
         </div>
     </CascadingValue>
