@@ -93,10 +93,10 @@ namespace AntDesign
 
         [Parameter]
         public int ExpandIconColumnIndex { get; set; }
-        
+
         [Parameter]
         public Func<RowData<TItem>, string> RowClassName { get; set; } = _ => "";
-        
+
         [Parameter]
         public Func<RowData<TItem>, string> ExpandedRowClassName { get; set; } = _ => "";
 
@@ -344,8 +344,9 @@ namespace AntDesign
 
         private async Task SetScrollPositionClassName(bool clear = false)
         {
-            if (!_isReloading)
+            if (_isReloading)
                 return;
+
             var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tableBodyRef);
             var scrollWidth = element.scrollWidth;
             var scrollLeft = element.scrollLeft;
@@ -364,7 +365,8 @@ namespace AntDesign
                 _pingLeft = false;
                 _pingRight = true;
             }
-            else if (scrollWidth == scrollLeft + clientWidth)
+            // allow the gap between 1 px, it's magic ✨
+            else if (Math.Abs(scrollWidth - (scrollLeft + clientWidth)) < 1)
             {
                 _pingRight = false;
                 _pingLeft = true;
@@ -386,7 +388,7 @@ namespace AntDesign
         {
             DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnResize);
             DomEventService.RemoveEventListerner<JsonElement>(_tableBodyRef, "scroll", OnScroll);
-            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);            
+            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
             base.Dispose(disposing);
         }
 
@@ -409,9 +411,10 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Indicates that a page is being refreshed 
+        /// Indicates that a page is being refreshed
         /// </summary>
         private bool _isReloading;
+
         private void Reloading(JsonElement jsonElement)
         {
             _isReloading = true;
