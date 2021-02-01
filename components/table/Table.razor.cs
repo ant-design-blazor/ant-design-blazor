@@ -162,7 +162,7 @@ namespace AntDesign
         {
             foreach (var col in ColumnContext.HeaderColumns)
             {
-                if (col.ColIndex != column.ColIndex && col is IFieldColumn fieldCol && fieldCol.SorterMultiple <= 0)
+                if (col.ColIndex != column.ColIndex && col is IFieldColumn fieldCol && fieldCol.SorterMultiple <= 0 && fieldCol.Sortable)
                 {
                     fieldCol.ClearSorter();
                 }
