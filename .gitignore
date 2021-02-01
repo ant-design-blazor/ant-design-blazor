@@ -349,3 +349,4 @@ package-lock.json
 /site/AntBlazor.Docs/wwwroot/meta
 /AntBlazor.Docs/wwwroot/docs
 coverage.cobertura.xml
+scripts/previewEditor/index.html
