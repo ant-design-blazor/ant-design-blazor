@@ -45,7 +45,7 @@ namespace AntDesign
 
         internal int Level => RootMenu?.InternalMode == MenuMode.Inline ? (Parent?.Level ?? 0) + 1 : 0;
 
-        private int PaddingLeft => Level * 24;
+        private int PaddingLeft => Level * RootMenu?.InlineIndent ?? 0;
 
         private ClassMapper SubMenuMapper { get; } = new ClassMapper();
 

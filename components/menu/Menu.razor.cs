@@ -67,6 +67,9 @@ namespace AntDesign
         }
 
         [Parameter]
+        public int InlineIndent { get; set; } = 24;
+
+        [Parameter]
         public bool AutoCloseDropdown { get; set; } = true;
 
         [Parameter]
