@@ -32,7 +32,6 @@ namespace AntDesign
                     this._status = value > this.Index ? "finish" : value == this.Index ? GroupStatus ?? string.Empty : "wait";
                 }
                 SetClassMap();
-                InvokeStateHasChanged();
             }
         }
 
@@ -114,6 +113,7 @@ namespace AntDesign
                 .If($"{prefixName}-custom", () => !string.IsNullOrEmpty(Icon))
                 .If($"ant-steps-next-error", () => GroupStatus == "error" && Parent.Current == Index + 1)
                 ;
+                InvokeStateHasChanged();
         }
 
         protected override void OnParametersSet()
