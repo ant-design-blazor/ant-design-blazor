@@ -152,6 +152,9 @@ namespace AntDesign.Select.Internal
             }
         }
 
+
+        public bool IsAddedTag { get; set; }
+
         private SelectOption<TItemValue, TItem> _childComponent;
 
         public SelectOption<TItemValue, TItem> ChildComponent
