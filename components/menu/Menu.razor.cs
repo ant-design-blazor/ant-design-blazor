@@ -218,6 +218,8 @@ namespace AntDesign
 
             Parent?.AddMenu(this);
 
+            OpenKeys = DefaultOpenKeys?.ToArray() ?? OpenKeys;
+
             SetClass();
         }
 
