@@ -29,7 +29,7 @@ namespace AntDesign
                 if (_mode != value)
                 {
                     _mode = value;
-                    CollapseUpdated(_inlineCollapsed);
+                    UpdateMode();
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace AntDesign
                 if (_inlineCollapsed != value)
                 {
                     _inlineCollapsed = value;
-                    CollapseUpdated(_inlineCollapsed);
+                    UpdateMode();
                 }
             }
         }
@@ -226,7 +226,13 @@ namespace AntDesign
         public void CollapseUpdated(bool collapsed)
         {
             _inlineCollapsed = collapsed;
-            if (collapsed)
+
+            UpdateMode();
+        }
+
+        private void UpdateMode()
+        {
+            if (_inlineCollapsed)
             {
                 InternalMode = MenuMode.Vertical;
                 foreach (SubMenu item in Submenus)
