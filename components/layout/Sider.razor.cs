@@ -40,7 +40,7 @@ namespace AntDesign
                     return;
 
                 _isCollapsed = value;
-                OnCollapsed?.Invoke(_isCollapsed);
+                _menu?.CollapseUpdated(value);
             }
         }
 
@@ -54,15 +54,11 @@ namespace AntDesign
 
         private int ComputedWidth => _isCollapsed ? CollapsedWidth : Width;
 
-        /// <summary>
-        /// param1: collapsed or not
-        /// param2: call inside sider or not
-        /// </summary>
-        public event Action<bool> OnCollapsed;
-
         private bool _isCollapsed;
 
         private bool _showTrigger;
+
+        private Menu _menu;
 
         private string SiderStyles =>
             $"flex: 0 0 {ComputedWidth}px;" +
@@ -103,6 +99,11 @@ namespace AntDesign
             SetClass();
         }
 
+        internal void AddMenu(Menu menu)
+        {
+            _menu = menu;
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -122,7 +123,7 @@ namespace AntDesign
         public void ToggleCollapsed()
         {
             _isCollapsed = !_isCollapsed;
-            OnCollapsed?.Invoke(_isCollapsed);
+            _menu?.CollapseUpdated(_isCollapsed);
 
             if (OnCollapse.HasDelegate)
             {
@@ -144,7 +145,8 @@ namespace AntDesign
                 _isCollapsed = false;
             }
 
-            OnCollapsed?.Invoke(_isCollapsed);
+            _menu?.CollapseUpdated(_isCollapsed);
+
             if (OnCollapse.HasDelegate)
             {
                 OnCollapse.InvokeAsync(_isCollapsed);
