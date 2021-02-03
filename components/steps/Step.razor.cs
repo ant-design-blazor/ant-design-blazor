@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using OneOf;
 
 namespace AntDesign
 {
@@ -31,7 +30,7 @@ namespace AntDesign
                 {
                     this._status = value > this.Index ? "finish" : value == this.Index ? GroupStatus ?? string.Empty : "wait";
                 }
-                SetClassMap();
+                InvokeStateHasChanged();
             }
         }
 
@@ -57,7 +56,7 @@ namespace AntDesign
                 {
                     _status = value;
                     _isCustomStatus = true;
-                    SetClassMap();
+                    InvokeStateHasChanged();
                 }
             }
         }
@@ -98,8 +97,10 @@ namespace AntDesign
 
         internal int? GetTabIndex()
         {
-            if (!Disabled && Clickable) return 0;
-            else return null;
+            if (!Disabled && Clickable)
+                return 0;
+            else
+                return null;
         }
 
         protected void SetClassMap()
@@ -107,19 +108,12 @@ namespace AntDesign
             string prefixName = "ant-steps-item";
             ClassMapper.Clear()
                 .Add(prefixName)
-                .If($"{prefixName}-{Status}", () => !string.IsNullOrEmpty(Status))
+                .GetIf(() => $"{prefixName}-{Status}", () => !string.IsNullOrEmpty(Status))
                 .If($"{prefixName}-active", () => Parent.Current == Index)
                 .If($"{prefixName}-disabled", () => Disabled)
                 .If($"{prefixName}-custom", () => !string.IsNullOrEmpty(Icon))
                 .If($"ant-steps-next-error", () => GroupStatus == "error" && Parent.Current == Index + 1)
                 ;
-                InvokeStateHasChanged();
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            SetClassMap();
         }
 
         private void HandleClick(MouseEventArgs args)
@@ -132,10 +126,6 @@ namespace AntDesign
                     OnClick.InvokeAsync(args);
                 }
             }
-        }
-
-        internal static void MarkForCheck()
-        {
         }
     }
 }
