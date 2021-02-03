@@ -264,10 +264,6 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-     
- }
         internal void MarkStateHasChanged()
         {
             if (!IsDisposed)
