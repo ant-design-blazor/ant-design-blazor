@@ -29,7 +29,7 @@ namespace AntDesign
                 if (_mode != value)
                 {
                     _mode = value;
-                    CollapseUpdated(_collapsed);
+                    UpdateMode();
                 }
             }
         }
@@ -55,21 +55,19 @@ namespace AntDesign
         [Parameter]
         public bool InlineCollapsed
         {
-            get => _inlineCollapsed;
+            get => Parent?.Collapsed ?? _inlineCollapsed;
             set
             {
                 if (_inlineCollapsed != value)
                 {
                     _inlineCollapsed = value;
-                    if (Parent == null)
-                    {
-                        this._collapsed = _inlineCollapsed;
-                    }
-
-                    CollapseUpdated(_collapsed);
+                    UpdateMode();
                 }
             }
         }
+
+        [Parameter]
+        public int InlineIndent { get; set; } = 24;
 
         [Parameter]
         public bool AutoCloseDropdown { get; set; } = true;
@@ -111,7 +109,7 @@ namespace AntDesign
         public EventCallback<string[]> SelectedKeysChanged { get; set; }
 
         internal MenuMode InternalMode { get; private set; }
-        private bool _collapsed;
+
         private string[] _openKeys;
         private string[] _selectedKeys;
         private bool _inlineCollapsed;
@@ -208,7 +206,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-{MenuMode.Inline}", () => InternalMode == MenuMode.Inline)
                 .If($"{PrefixCls}-{MenuMode.Vertical}", () => InternalMode == MenuMode.Vertical)
                 .If($"{PrefixCls}-{MenuMode.Horizontal}", () => InternalMode == MenuMode.Horizontal)
-                .If($"{PrefixCls}-inline-collapsed", () => _collapsed)
+                .If($"{PrefixCls}-inline-collapsed", () => InlineCollapsed)
                 .If($"{PrefixCls}-unselectable", () => !Selectable);
         }
 
@@ -216,23 +214,28 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (InternalMode != MenuMode.Inline && _collapsed)
+            if (InternalMode != MenuMode.Inline && _inlineCollapsed)
                 throw new ArgumentException($"{nameof(Menu)} in the {Mode} mode cannot be {nameof(InlineCollapsed)}");
 
             InternalMode = Mode;
-            if (Parent != null)
-            {
-                Parent.OnCollapsed += CollapseUpdated;
-                CollapseUpdated(Parent.Collapsed);
-            }
+
+            Parent?.AddMenu(this);
+
+            OpenKeys = DefaultOpenKeys?.ToArray() ?? OpenKeys;
 
             SetClass();
         }
 
         public void CollapseUpdated(bool collapsed)
         {
-            this._collapsed = collapsed;
-            if (collapsed)
+            _inlineCollapsed = collapsed;
+
+            UpdateMode();
+        }
+
+        private void UpdateMode()
+        {
+            if (_inlineCollapsed)
             {
                 InternalMode = MenuMode.Vertical;
                 foreach (SubMenu item in Submenus)
@@ -270,16 +273,6 @@ namespace AntDesign
             }
 
             StateHasChanged();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (Parent != null)
-            {
-                Parent.OnCollapsed -= CollapseUpdated;
-            }
-
-            base.Dispose(disposing);
         }
 
         internal void MarkStateHasChanged()
