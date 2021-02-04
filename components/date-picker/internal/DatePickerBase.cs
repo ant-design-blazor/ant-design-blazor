@@ -609,18 +609,17 @@ namespace AntDesign
                 if (IsNullable)
                 {
                     var tempValue = value as DateTime?[];
+                    if (tempValue[0] == null || tempValue[1] == null)
+                        return orderedValue;
+
                     if ((tempValue[0] ?? DateTime.Now).CompareTo((tempValue[1] ?? DateTime.Now)) > 0)
-                    {
                         orderedValue = DataConvertionExtensions.Convert<DateTime?[], TValue>(new DateTime?[] { tempValue[1], tempValue[0] });
-                    }
                 }
                 else
                 {
                     var tempValue = value as DateTime[];
                     if (tempValue[0].CompareTo(tempValue[1]) > 0)
-                    {
                         orderedValue = DataConvertionExtensions.Convert<DateTime[], TValue>(new DateTime[] { tempValue[1], tempValue[0] });
-                    }
                 }
             }
             return orderedValue;
