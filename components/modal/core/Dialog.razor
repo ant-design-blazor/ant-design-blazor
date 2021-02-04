@@ -2,54 +2,53 @@
 @inherits AntDomComponentBase
 
 <div @ref="@_element">
-    <div class="ant-modal-root">
+    <div class=@($"{Config.PrefixCls}-root")>
         @if (Config.Mask)
         {
-            <div class="ant-modal-mask @GetMaskClsName()" style="@Config.MaskStyle"></div>
+            <div class=@($"{Config.PrefixCls}-mask {GetMaskClsName()}") style="@Config.MaskStyle"></div>
         }
-        <div tabindex="-1" id=@($"ant-modal-wrap_{DialogWrapperId}") class="ant-modal-wrap @Config.GetWrapClassNameExtended()" role="dialog" aria-labelledby="rcDialogTitle0"
+        <div tabindex="-1" id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}") class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended()}") role="dialog"
              @onclick="@OnMaskClick"
+             @onmouseup="@OnMaskMouseUp"
              @onkeydown="@OnKeyDown"
              style="@_wrapStyle">
-            <div @ref="@_modal" role="document" class="ant-modal @GetModalClsName()"
+            <div @ref="@_modal" role="document" class=@($"{Config.PrefixCls} {GetModalClsName()}")
                  @onmousedown="@OnDialogMouseDown"
                  style="@GetStyle()">
                 <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
-                <div class="ant-modal-content">
+                <div class=@($"{Config.PrefixCls}-content")>
                     @if (Config.Closable)
                     {
-                        <button type="button" aria-label="Close" class="ant-modal-close" @onclick="@OnCloserClick">
-                            <span class="ant-modal-close-x">
-                                <span role="img" aria-label="close" class="anticon anticon-close ant-modal-close-icon">
+                        <button type="button" aria-label="Close" class=@($"{Config.PrefixCls}-close") @onclick="@OnCloserClick">
+                            <span class=@($"{Config.PrefixCls}-close-x")>
+                                <span role="img" aria-label="close" class=@($"anticon anticon-close {Config.PrefixCls}-close-icon")>
                                     @Config.CloseIcon
                                 </span>
                             </span>
                         </button>
                     }
-
                     @if (Config.TitleTemplate != null)
                     {
-                        <div @ref="@_dialogHeader" class="ant-modal-header" style="@Config.GetHeaderStyle()">
-                            <div class="ant-modal-title" id="rcDialogTitle0">
+                        <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
+                            <div class=@($"{Config.PrefixCls}-title")>
                                 @Config.TitleTemplate
                             </div>
                         </div>
                     }
                     else if (!string.IsNullOrWhiteSpace(Config.Title))
                     {
-                        <div @ref="@_dialogHeader" class="ant-modal-header" style="@Config.GetHeaderStyle()">
-                            <div class="ant-modal-title" id="rcDialogTitle0">
+                        <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
+                            <div class=@($"{Config.PrefixCls}-title")>
                                 @Config.Title
                             </div>
                         </div>
                     }
-
-                    <div class="ant-modal-body" style="@Config.BodyStyle">
+                    <div class=@($"{Config.PrefixCls}-body") style="@Config.BodyStyle">
                         @ChildContent
                     </div>
                     @if (Config.Footer != null)
                     {
-                        <div class="ant-modal-footer">
+                        <div class=@($"{Config.PrefixCls}-footer")>
                             <CascadingValue Value="@Config">
                                 @if (Config.Footer.Value.IsT0)
                             {

@@ -1,7 +1,6 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-
 <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
     <div class="ant-steps-item-container" @onclick="@HandleClick" tabindex="@GetTabIndex()" @attributes="@_containerAttributes">
         @if (!Last)
@@ -25,11 +24,11 @@
                             {
                                 if (Status == "finish")
                                 {
-                                    <Icon type="check"></Icon>
+                                    <Icon Type="check"></Icon>
                                 }
                                 else if (Status == "error")
                                 {
-                                    <Icon type="close"></Icon>
+                                    <Icon Type="close"></Icon>
                                 }
                                 else if (Status == "process" || Status == "wait")
                                 {
@@ -40,11 +39,11 @@
                             {
                                 if (Status == "error")
                                 {
-                                    <Icon type="close"></Icon>
+                                    <Icon Type="close"></Icon>
                                 }
                                 else
                                 {
-                                    <Icon type="@Icon"></Icon>
+                                    <Icon Type="@Icon"></Icon>
                                 }
                             }
                         </span>
@@ -58,11 +57,11 @@
                         {
                             if (Status == "finish")
                             {
-                                <Icon type="check"></Icon>
+                                <Icon Type="check"></Icon>
                             }
                             else if (Status == "error")
                             {
-                                <Icon type="close"></Icon>
+                                <Icon Type="close"></Icon>
                             }
                             else if (Status == "process" || Status == "wait")
                             {
@@ -73,11 +72,11 @@
                         {
                             if (Status == "error")
                             {
-                                <Icon type="close"></Icon>
+                                <Icon Type="close"></Icon>
                             }
                             else
                             {
-                                <Icon type="@Icon"></Icon>
+                                <Icon Type="@Icon"></Icon>
                             }
                         }
                     </span>

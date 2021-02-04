@@ -44,7 +44,7 @@ namespace AntDesign
         internal bool FirstRun { get; set; } = true;
         private string _key;
 
-        private int PaddingLeft => RootMenu.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * 24 : 0;
+        private int PaddingLeft => RootMenu.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * RootMenu?.InlineIndent ?? 0 : 0;
 
         private void SetClass()
         {

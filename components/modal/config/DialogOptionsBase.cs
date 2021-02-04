@@ -19,8 +19,6 @@ namespace AntDesign
     {
         #region static and const
 
-        internal const string PrefixCls = "ant-modal";
-
         /// <summary>
         /// default Dialog close icon
         /// </summary>
@@ -42,6 +40,11 @@ namespace AntDesign
         };
 
         #endregion
+
+        /// <summary>
+        /// class name prefix 
+        /// </summary>
+        public string PrefixCls { get; set; } = "ant-modal";
 
         /// <summary>
         /// Cancel Button's props
