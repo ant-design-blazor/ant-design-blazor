@@ -322,7 +322,7 @@ namespace AntDesign
                     if (_activeOption != null && _activeOption.IsActive)
                         _activeOption.IsActive = false;
                     _activeOption = value;
-                    if (!_activeOption.IsActive)
+                    if (_activeOption != null && !_activeOption.IsActive)
                         _activeOption.IsActive = true;
                 }
             }
@@ -1894,6 +1894,7 @@ namespace AntDesign
                 }
             }
             AddedTags.Clear();
+            ActiveOption = SelectOptionItems.FirstOrDefault();
             CustomTagSelectOptionItem = null;
             SelectedOptionItems.Clear();
 
