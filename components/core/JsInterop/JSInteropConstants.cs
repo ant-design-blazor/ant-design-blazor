@@ -87,6 +87,8 @@ namespace AntDesign
 
         public static string BindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}bindTableHeaderAndBodyScroll";
         public static string UnbindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}unbindTableHeaderAndBodyScroll";
+        public static string AddPreventCursorMoveOnArrowUp => $"{FUNC_PREFIX}addPreventCursorMoveOnArrowUp";
+        public static string RemovePreventCursorMoveOnArrowUp => $"{FUNC_PREFIX}removePreventCursorMoveOnArrowUp";
 
         #region Draggable Modal
 
