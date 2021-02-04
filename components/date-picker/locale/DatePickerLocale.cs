@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
 
 namespace AntDesign
 {
@@ -63,73 +62,6 @@ namespace AntDesign
         public string EndQuarter { get; set; } = "End Quarter";
         public string QuarterSelect { get; set; } = "Select quarter";
         public string Week { get; set; } = "Week";
-
-        private string[] _shortWeekDays = new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
-
-        /// <summary>
-        /// How weekdays will be represented in a shortened way.
-        /// SetShortWeekDays() should be used instead of setter.
-        /// </summary>        
-        public string[] ShortWeekDays
-        {
-            get => _shortWeekDays;
-            set
-            {
-                _shortWeekDays = value;
-                if (value.Length <= _mondayIndex)
-                    MondayIndex = 0;
-            }
-        }
-
-        /// <summary>
-        /// Should equal to index in ShortWeekDays that represents Monday.
-        /// SetShortWeekDays() should be used instead of setter.
-        /// </summary>
-        public int MondayIndex
-        {
-            get => _mondayIndex;
-            set {
-                if (_shortWeekDays.Length <= value)
-                    throw new IndexOutOfRangeException("MondayIndex should be equal to index of ShortWeekDays that represents Monday.");
-                _mondayIndex = value;
-            }
-        }
-
-        private string[] _orderedShortWeekdays;
-        private int _mondayIndex = 1;
-
-        public void SetShortWeekDays(string[] shortWeekDays, int mondayIndex)
-        {
-            if (shortWeekDays.Length <= mondayIndex)
-                throw new IndexOutOfRangeException("MondayIndex should be equal to index of ShortWeekDays that represents Monday.");
-
-            _shortWeekDays = shortWeekDays;
-            _mondayIndex = mondayIndex;
-        }
-
-        public string[] ShortWeekDaysSorted(DayOfWeek firstDayOfWeek)
-        {
-            if (_orderedShortWeekdays == null)
-            {
-                if ((int)firstDayOfWeek == _mondayIndex)
-                {
-                    _orderedShortWeekdays = _shortWeekDays;
-                }
-                else
-                {
-                    _orderedShortWeekdays = new string[7];
-                    int newIndex = _mondayIndex + (int)firstDayOfWeek - 1;
-                    if (newIndex < 0)
-                        newIndex += _shortWeekDays.Length;
-                    int j = 0;
-                    for (int i = newIndex; i < _shortWeekDays.Length + newIndex; i++)
-                    {
-                        _orderedShortWeekdays[j++] = _shortWeekDays[(i % _shortWeekDays.Length)];
-                    }
-                }
-            }
-            return _orderedShortWeekdays;
-        }
-
+        public string[] ShortWeekDays { get; set; } = new string[] { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
     }
 }
