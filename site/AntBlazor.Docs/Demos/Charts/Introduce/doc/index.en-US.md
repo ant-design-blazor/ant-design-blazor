@@ -21,7 +21,7 @@ Github: https://github.com/ant-design-blazor/ant-design-charts-blazor
   - Link the static files in `wwwroot/index.html` (WebAssembly) or `Pages/_Host.razor` (Server)
 
   ```html
-  <script src="_content/AntDesign.Charts/g2plot.js"></script>
+  <script src="https://unpkg.com/@antv/g2plot@1.1.28/dist/g2plot.js"></script>
   <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
   ```
   
