@@ -40,9 +40,20 @@ namespace AntDesign
         [Parameter]
         public string Title { get; set; }
 
+        [Parameter]
+        public string ToolTipTitle { get; set; }
+
+        [Parameter]
+        public string Icon { get; set; }
+
+        [Parameter]
+        public string IconTheme { get; set; } = IconThemeType.Outline;
+
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;
         private string _key;
+
+        private bool TooltipDisabled => ParentMenu?.IsOpen == true || ParentMenu?._overlayVisible == true || RootMenu?.InlineCollapsed == false;
 
         private int PaddingLeft => RootMenu.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * RootMenu?.InlineIndent ?? 0 : 0;
 
@@ -57,7 +68,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            RootMenu.MenuItems.Remove(this);
+            RootMenu?.MenuItems?.Remove(this);
+
             base.Dispose(disposing);
         }
 
