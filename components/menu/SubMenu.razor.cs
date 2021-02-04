@@ -56,6 +56,8 @@ namespace AntDesign
         private string _popupMinWidthStyle = "";
         private OverlayTrigger _overlayTrigger;
 
+        internal bool _overlayVisible;
+
         private void SetClass()
         {
             string prefixCls = $"{RootMenu.PrefixCls}-submenu";
@@ -63,7 +65,7 @@ namespace AntDesign
             ClassMapper
                     .Clear()
                     .Add(prefixCls)
-                    .Add($"{prefixCls}-{RootMenu?.InternalMode}")
+                    .Get(() => $"{prefixCls}-{RootMenu?.InternalMode}")
                     .If($"{prefixCls}-disabled", () => Disabled)
                     .If($"{prefixCls}-selected", () => _isSelected)
                     .If($"{prefixCls}-open", () => RootMenu?.InternalMode == MenuMode.Inline && IsOpen)
@@ -73,8 +75,8 @@ namespace AntDesign
                 .Clear()
                 .Add(RootMenu?.PrefixCls)
                 .Add($"{RootMenu?.PrefixCls}-sub")
-                .Add($"{RootMenu?.PrefixCls}-{RootMenu?.Theme}")
-                .Add($"{RootMenu?.PrefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
+                .Get(() => $"{RootMenu?.PrefixCls}-{RootMenu?.Theme}")
+                .Get(() => $"{RootMenu?.PrefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
                 //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
                 .If($"{RootMenu?.PrefixCls}-hidden", () => RootMenu?.InternalMode == MenuMode.Inline && !IsOpen)
                 ;
@@ -126,12 +128,13 @@ namespace AntDesign
 
             if (RootMenu.DefaultOpenKeys.Contains(Key))
                 IsOpen = true;
+
+            _overlayVisible = IsOpen;
         }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            SetClass();
 
             if (!RootMenu.InlineCollapsed && RootMenu.OpenKeys.Contains(Key))
                 IsOpen = true;
@@ -171,15 +174,11 @@ namespace AntDesign
 
         private void OnOverlayVisibleChange(bool visible)
         {
-            if (visible)
-            {
-                SetClass();
-            }
+            _overlayVisible = visible;
         }
 
         private void OnOverlayHiding(bool _)
         {
-            SetClass();
         }
 
         public void Select()

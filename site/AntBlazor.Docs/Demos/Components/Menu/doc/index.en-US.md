@@ -48,6 +48,7 @@ More layouts with navigation: [Layout](/components/layout).
 | SubMenuCloseDelay | Delay time to hide submenu when mouse leaves (in seconds) | number | 0.1 | (Not implemented) |
 | SubMenuOpenDelay | Delay time to show submenu when mouse enters, (in seconds) | number | 0 | (Not implemented) |
 | Theme | Color theme of the menu | `light` \| `dark` | `light` |  |
+| TriggerSubMenuAction | Which action can trigger submenu open/close | `hover` \| `click` | `hover` |  |
 
 ### MenuItem
 
@@ -61,6 +62,7 @@ More layouts with navigation: [Layout](/components/layout).
 | RouterMatch    | Modifies the URL matching behavior for a NavLink  | NavLinkMatch |     -          |         |
 | Style    | Additional CSS style  | string |     -          |         |
 | Title | Title of the menu item | string |  |  |
+| Icon | The icon of the menu item | string | - | |
 
 ### SubMenu
 
