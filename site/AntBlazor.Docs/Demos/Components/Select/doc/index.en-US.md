@@ -20,7 +20,6 @@ Select component to select value from options.
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | AllowClear | Show clear button. | bool | false |  |
-| AllowCustomTags | Wheter the user an create own tags. You have to implement your own logic to create tags (`CreateCustomTag`).  | bool | false |  |
 | AutoClearSearchValue | Whether the current search will be cleared on selecting an item. | bool | true |  |
 | Bordered | Toggle the border style. | bool | true |  |
 | DataSource | The datasource for this component. | IEnumerable&lt;TItem> | - |  |
@@ -30,7 +29,7 @@ Select component to select value from options.
 | Disabled | Whether disabled select. | bool | false |  |
 | DisabledName | The name of the property to be used as a disabled indicator. | string |  |  |
 | DropdownRender | Customize dropdown content. | Renderfragment | - |  |
-| EnableSearch | Indicates whether the search function is active or not. | bool | false |  |
+| EnableSearch | Indicates whether the search function is active or not. Always `true` for mode `tags`. | bool | false |  |
 | GroupName | The name of the property to be used as a group indicator. If the value is set, the entries are displayed in groups. Use additional `SortByGroup` and `SortByLabel`. | string | - |  |
 | HideSelected | Hides the selected items when they are selected. | bool | false |  |
 | IgnoreItemChanges | Is used to increase the speed. If you expect changes to the label name, group name or disabled indicator, disable this property. | bool | true |  |
@@ -43,7 +42,6 @@ Select component to select value from options.
 | NotFoundContent | Specify content to show when no result matches. | RenderFragment | `Not Found` |  |
 | OnBlur | Called when blur. | Action | - |  |
 | OnClearSelected | Called when the user clears the selection. | Action | - |  |
-| OnCreateCustomTag | Returns the string of the input field when the user press enter. | Action&lt;string> | - |  |
 | OnDataSourceChanged | Called when the datasource changes. From `null` to `IEnumerable<TItem>`, from `IEnumerable<TItem>` to `IEnumerable<TItem>` or from `IEnumerable<TItem>` to `null`. | Action | - |  |
 | OnDropdownVisibleChange | Called when the dropdown visibility changes. | Action&lt;bool> | - |  |
 | OnFocus | Called when focus. | Action | - |  |
@@ -56,6 +54,7 @@ Select component to select value from options.
 | Placeholder | Placeholder of select. | string | - |  |
 | PopupContainerMaxHeight | The maximum height of the popup container. | string | `256px` |  |
 | PopupContainerSelector | Use this to fix overlay problems e.g. #area | string | body |  |
+| PrefixIcon | The custom prefix icon. For mode `multiple` and `tags` visible only when no data selected. | RenderFragment | - |  |
 | ShowArrowIcon | Whether to show the drop-down arrow | bool | true |  |
 | ShowSearchIcon | Whether show search input in single mode. | bool | true |  |
 | Size | The size of the component. `small` \| `default` \| `large` | string | default |  |
