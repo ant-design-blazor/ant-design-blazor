@@ -43,6 +43,7 @@ else
                         Placement="Placement"
                         OnVisibleChange="OnOverlayVisibleChange"
                         OnOverlayHiding="OnOverlayHiding"
+                        Trigger="new[] { RootMenu?.TriggerSubMenuAction }"
                         PlacementCls="@($"{prefixCls}-placement-{Placement.Name} {prefixCls}-popup")"
                         OverlayEnterCls="@($"{prefixCls}-{RootMenu.Theme} ")"
                         OverlayLeaveCls="@($"{prefixCls}-{RootMenu.Theme} ")"

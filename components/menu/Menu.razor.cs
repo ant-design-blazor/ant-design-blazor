@@ -108,6 +108,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<string[]> SelectedKeysChanged { get; set; }
 
+        [Parameter]
+        public TriggerType TriggerSubMenuAction { get; set; } = TriggerType.Hover;
+
         internal MenuMode InternalMode { get; private set; }
 
         private string[] _openKeys;
