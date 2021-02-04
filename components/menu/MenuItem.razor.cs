@@ -41,13 +41,7 @@ namespace AntDesign
         public string Title { get; set; }
 
         [Parameter]
-        public string ToolTipTitle { get; set; }
-
-        [Parameter]
         public string Icon { get; set; }
-
-        [Parameter]
-        public string IconTheme { get; set; } = IconThemeType.Outline;
 
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;
