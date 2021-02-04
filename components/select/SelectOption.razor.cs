@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using AntDesign.Select.Internal;
+using System.Globalization;
 
 #pragma warning disable 1591 // Disable missing XML comment
 
@@ -16,6 +17,7 @@ namespace AntDesign
         [CascadingParameter(Name = "ItemTemplate")] internal RenderFragment<TItem> ItemTemplate { get; set; }
         [CascadingParameter] internal Select<TItemValue, TItem> SelectParent { get; set; }
         [CascadingParameter(Name = "InternalId")] internal Guid InternalId { get; set; }
+
         [Parameter] public TItemValue Value { get; set; }
 
         /// <summary>
@@ -59,7 +61,9 @@ namespace AntDesign
         # region Properties
         private string _label = string.Empty;
         private bool _disabled;
-        internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
+
+
+        [CascadingParameter(Name = "Model")] internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
 
         private bool _isSelected;
 
@@ -162,7 +166,16 @@ namespace AntDesign
                 var item = SelectParent.SelectOptionItems.First(x => x.InternalId == InternalId);
                 item.ChildComponent = this;
             }
-            else
+            else if (Model is not null)
+            {
+                InternalId = Model.InternalId;
+                Label = Model.Label;
+                IsDisabled = Model.IsDisabled;
+                GroupName = Model.GroupName;
+                Value = Model.Value;
+                Model.ChildComponent = this;
+            }
+            else 
             {
                 // The SelectOption was not created by using a DataSource, a SelectOptionItem must be created.
                 InternalId = Guid.NewGuid();
@@ -174,7 +187,7 @@ namespace AntDesign
                     IsDisabled = Disabled,
                     GroupName = _groupName,
                     Value = Value,
-                    Item = (TItem)Convert.ChangeType(Value, typeof(TItem)),
+                    Item = (TItem)Convert.ChangeType(Value, typeof(TItem), CultureInfo.CurrentCulture),
                     ChildComponent = this
                 };
 
@@ -229,16 +242,7 @@ namespace AntDesign
 
         protected void OnMouseEnter()
         {
-            // Workaround to prevent double active items if the actual active item was set by keyboard
-            SelectParent.SelectOptionItems.Where(x => x.IsActive)
-                .ForEach(i => i.IsActive = false);
-
-            Model.IsActive = true;
-        }
-
-        protected void OnMouseLeave()
-        {
-            Model.IsActive = false;
+            SelectParent.ActiveOption = Model;
         }
 
         protected override void Dispose(bool disposing)
@@ -246,9 +250,9 @@ namespace AntDesign
             if (SelectParent?.SelectOptions != null)
             {
                 // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource.
-                var selectOptionItem = SelectParent.SelectOptionItems.First(x => x.InternalId == InternalId);
-
-                SelectParent.SelectOptionItems.Remove(selectOptionItem);
+                var selectOptionItem = SelectParent.SelectOptionItems.FirstOrDefault(x => x.InternalId == InternalId);
+                if (selectOptionItem is not null)
+                    SelectParent.SelectOptionItems.Remove(selectOptionItem);
             }
 
             base.Dispose(disposing);
