@@ -91,7 +91,7 @@ namespace AntDesign
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
 
         [Parameter]
-        public int DebounceMilliseconds { get; set; } = 500;
+        public int DebounceMilliseconds { get; set; } = 250;
 
         public Dictionary<string, object> Attributes { get; set; }
 
@@ -190,7 +190,7 @@ namespace AntDesign
         {
             if (args != null && args.Key == "Enter" && EnableOnPressEnter)
             {
-                await ChangeValue();
+                await ChangeValue(true);
                 await OnPressEnter.InvokeAsync(args);
                 await OnPressEnterAsync();
             }
@@ -212,7 +212,7 @@ namespace AntDesign
 
         protected async Task OnMouseUpAsync(MouseEventArgs args)
         {
-            await ChangeValue();
+            await ChangeValue(true);
 
             if (OnMouseUp.HasDelegate) await OnMouseUp.InvokeAsync(args);
         }
@@ -296,14 +296,12 @@ namespace AntDesign
                     DebounceChangeValue();
                     return;
                 }
-                else
-                {
+            
                     _debounceTimer?.Dispose();
                     if (_debounceTimer != null)
                     {
                         _debounceTimer = null;
                     }
-                }
             }
 
             if (!_compositionInputting)
