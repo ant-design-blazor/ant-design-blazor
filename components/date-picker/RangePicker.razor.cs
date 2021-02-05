@@ -207,8 +207,17 @@ namespace AntDesign
             _isSetPicker = false;
 
             var array = CurrentValue as Array;
-            array.SetValue(default, 0);
-            array.SetValue(default, 1);
+            if (!IsNullable && DefaultValue != null)
+            {
+                var defaults = DefaultValue as Array;
+                array.SetValue(defaults.GetValue(0), 0);
+                array.SetValue(defaults.GetValue(1), 1);
+            }
+            else
+            {
+                array.SetValue(default, 0);
+                array.SetValue(default, 1);
+            }
 
             (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(_pickerStatus[0]._initPicker, Locale);
             _placeholders[0] = first;
