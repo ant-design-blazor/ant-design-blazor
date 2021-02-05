@@ -28,7 +28,7 @@ namespace AntDesign
 
         public static Locale GetCurrentLocale()
         {
-            var currentCulture = CultureInfo.DefaultThreadCurrentUICulture?.Name;
+            var currentCulture = CultureInfo.CurrentUICulture?.Name;
             if (string.IsNullOrWhiteSpace(currentCulture) || !_availableResources.ContainsKey(currentCulture))
             {
                 currentCulture = DefaultLanguage;
@@ -41,7 +41,10 @@ namespace AntDesign
         {
             return _localeCache.GetOrAdd(cultureName, key =>
             {
-                string fileName = _availableResources[key];
+                string fileName;
+                //fallback to default language if not found
+                if (!_availableResources.TryGetValue(key, out fileName))
+                    fileName = _availableResources[DefaultLanguage];
                 using var fileStream = _resourcesAssembly.GetManifestResourceStream(fileName);
                 if (fileStream == null) return null;
                 using var streamReader = new StreamReader(fileStream);
