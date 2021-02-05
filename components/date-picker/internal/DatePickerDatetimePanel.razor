@@ -6,9 +6,16 @@
     var calendar = CultureInfo.Calendar;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
-    DayOfWeek monthFirstDayOfWeek = calendar.GetDayOfWeek(monthFirstDayDate);
+    int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
 
-    int diffDay = (int)CultureInfo.DateTimeFormat.FirstDayOfWeek - (int)monthFirstDayOfWeek;
+    // sunday should be 7
+    if (monthFirstDayOfWeek == 0)
+    {
+        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(Locale.FirstDayOfWeek);
+        Console.WriteLine($"{DateTime.Now} DatePickerDatePanel.razor monthFirstDayOfWeek: {monthFirstDayOfWeek}");
+    }
+
+    int diffDay = (int)Locale.FirstDayOfWeek - monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 
 }
