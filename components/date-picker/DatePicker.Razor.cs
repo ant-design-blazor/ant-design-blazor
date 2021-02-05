@@ -174,7 +174,11 @@ namespace AntDesign
         public override void ClearValue(int index = 0)
         {
             _isSetPicker = false;
-            CurrentValue = default;
+
+            if (!IsNullable && DefaultValue != null)
+                CurrentValue = DefaultValue;
+            else
+                CurrentValue = default;
             Close();
         }
 
