@@ -29,10 +29,10 @@
       "monthSelect": "اختيار الشهر",
       "yearSelect": "اختيار السنة",
       "decadeSelect": "اختيار العقد",
-      "yearFormat": "YYYY",
-      "dateFormat": "M/D/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "M/D/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "M/d/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "M/d/yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "الشهر السابق (PageUp)",
       "nextMonth": "الشهر التالى(PageDown)",
@@ -44,10 +44,10 @@
       "nextCentury": "القرن التالى"
     },
     "timePickerLocale": { "placeholder": "اختيار الوقت" },
-    "dateFormat": "DD-MM-YYYY",
-    "monthFormat": "MM-YYYY",
-    "dateTimeFormat": "DD-MM-YYYY HH:mm:ss",
-    "weekFormat": "wo-YYYY"
+    "dateFormat": "dd-MM-yyyy",
+    "monthFormat": "MM-yyyy",
+    "dateTimeFormat": "dd-MM-yyyy HH:mm:ss",
+    "weekFormat": "wo-yyyy"
   },
   "TimePicker": { "placeholder": "اختيار الوقت" },
   "Calendar": {
@@ -67,10 +67,10 @@
       "monthSelect": "اختيار الشهر",
       "yearSelect": "اختيار السنة",
       "decadeSelect": "اختيار العقد",
-      "yearFormat": "YYYY",
-      "dateFormat": "M/D/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "M/D/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "M/d/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "M/d/yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "الشهر السابق (PageUp)",
       "nextMonth": "الشهر التالى(PageDown)",
@@ -82,10 +82,10 @@
       "nextCentury": "القرن التالى"
     },
     "timePickerLocale": { "placeholder": "اختيار الوقت" },
-    "dateFormat": "DD-MM-YYYY",
-    "monthFormat": "MM-YYYY",
-    "dateTimeFormat": "DD-MM-YYYY HH:mm:ss",
-    "weekFormat": "wo-YYYY"
+    "dateFormat": "dd-MM-yyyy",
+    "monthFormat": "MM-yyyy",
+    "dateTimeFormat": "dd-MM-yyyy HH:mm:ss",
+    "weekFormat": "wo-yyyy"
   },
   "Table": {
     "filterTitle": "الفلاتر",
