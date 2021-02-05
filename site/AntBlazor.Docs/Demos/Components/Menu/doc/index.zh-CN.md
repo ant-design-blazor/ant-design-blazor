@@ -45,6 +45,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 | SubMenuCloseDelay | 用户鼠标离开子菜单后关闭延时，单位：秒 | number | 0.1 |  |
 | SubMenuOpenDelay | 用户鼠标进入子菜单后开启延时，单位：秒 | number | 0 |  |
 | Theme | 主题颜色 | `light` \| `dark` | `light` |  |
+| TriggerSubMenuAction | SubMenu 展开/关闭的触发行为 | `hover` \| `click` | `hover` |  |
 | OnClick | 点击 MenuItem 调用此函数 | function({ item, key, keyPath, domEvent }) | - |  |
 | OnDeselect | 取消选中时调用，仅在 multiple 生效 | function({ item, key, keyPath, selectedKeys, domEvent }) | - |  |
 | OnOpenChange | SubMenu 展开/关闭的回调 | function(openKeys: string\[]) | noop |  |
@@ -59,11 +60,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 | -------- | ------------------------ | ------- | ------ | ---- |
 | Disabled | 是否禁用                 | boolean | false  |      |
 | Key      | item 的唯一标志          | string  |        |      |
-| Title    | 设置收缩时展示的悬浮标题 | string  |        |      |
 | OnClick  | 当鼠标点击菜单项时触发 | EventCallback&lt;MouseEventArgs> | - |  |
 | RouterLink    |  路由链接，当需要让菜单自动匹配路由进行高亮时使用  | string |     -          |         |
 | RouterMatch    | 修改自 `NavLink`,用于选择匹配模式  | NavLinkMatch |     -          |         |
 | Style    | 额外的 CSS 样式  | string |     -          |         |
+| Title    | 设置收缩时展示的悬浮标题 | string  |        |      |
+| Icon | 图标的类型| string | - | |
 
 ### SubMenu
 

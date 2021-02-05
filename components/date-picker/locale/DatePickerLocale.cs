@@ -12,7 +12,7 @@ namespace AntDesign
     }
 
     public class DateLocale
-    {
+    {       
         public string Placeholder { get; set; } = "Select date";
         public string YearPlaceholder { get; set; } = "Select year";
         public string QuarterPlaceholder { get; set; } = "Select quarter";

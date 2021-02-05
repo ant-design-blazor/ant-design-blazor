@@ -524,3 +524,21 @@ export function bindTableHeaderAndBodyScroll(bodyRef, headerRef) {
 export function unbindTableHeaderAndBodyScroll(bodyRef) {
   bodyRef.removeEventListener('scroll', bodyRef.bindScrollLeftToHeader);
 }
+
+function preventCursorMoveOnArrowUp(e) {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        return false;
+    }
+}
+
+export function addPreventCursorMoveOnArrowUp(inputElement) {
+  let dom = getDom(inputElement);
+  (dom as HTMLElement).addEventListener("keydown", preventCursorMoveOnArrowUp, false);
+}
+
+export function removePreventCursorMoveOnArrowUp(inputElement) {
+  let dom = getDom(inputElement);
+  (dom as HTMLElement).removeEventListener("keydown", preventCursorMoveOnArrowUp);
+}
+
