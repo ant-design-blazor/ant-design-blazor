@@ -18,27 +18,27 @@ namespace AntDesign.JsInterop
             _jsRuntime = jsRuntime;
         }
 
-        private void AddEventListenerToFirstChildInternal<T>(object dom, string eventName, Action<T> callback)
+        private void AddEventListenerToFirstChildInternal<T>(object dom, string eventName, bool preventDefault, Action<T> callback)
         {
             if (!_domEventListeners.ContainsKey(FormatKey(dom, eventName)))
             {
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListenerToFirstChild, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
+                _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListenerToFirstChild, dom, eventName, preventDefault, DotNetObjectReference.Create(new Invoker<T>((p) =>
                 {
                     callback?.Invoke(p);
                 })));
             }
         }
 
-        public void AddEventListener(object dom, string eventName, Action<JsonElement> callback, bool exclusive = true)
+        public void AddEventListener(object dom, string eventName, Action<JsonElement> callback, bool exclusive = true, bool preventDefault = false)
         {
-            AddEventListener<JsonElement>(dom, eventName, callback, exclusive);
+            AddEventListener<JsonElement>(dom, eventName, callback, exclusive, preventDefault);
         }
 
-        public void AddEventListener<T>(object dom, string eventName, Action<T> callback, bool exclusive = true)
+        public void AddEventListener<T>(object dom, string eventName, Action<T> callback, bool exclusive = true, bool preventDefault = false)
         {
             if (exclusive)
             {
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<T>((p) =>
+                _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, DotNetObjectReference.Create(new Invoker<T>((p) =>
                 {
                     callback(p);
                 })));
@@ -50,10 +50,11 @@ namespace AntDesign.JsInterop
                 {
                     _domEventListeners[key] = new List<DomEventSubscription>();
 
-                    _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, DotNetObjectReference.Create(new Invoker<string>((p) =>
+                    _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, DotNetObjectReference.Create(new Invoker<string>((p) =>
                     {
-                        foreach (var subscription in _domEventListeners[key])
+                        for (var i = 0; i < _domEventListeners[key].Count; i++)
                         {
+                            var subscription = _domEventListeners[key][i];
                             object tP = JsonSerializer.Deserialize(p, subscription.Type);
                             subscription.Delegate.DynamicInvoke(tP);
                         }
@@ -63,18 +64,18 @@ namespace AntDesign.JsInterop
             }
         }
 
-        public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback)
+        public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
         {
-            AddEventListenerToFirstChildInternal<string>(dom, eventName, (e) =>
+            AddEventListenerToFirstChildInternal<string>(dom, eventName, preventDefault, (e) =>
             {
                 JsonElement jsonElement = JsonDocument.Parse(e).RootElement;
                 callback(jsonElement);
             });
         }
 
-        public void AddEventListenerToFirstChild<T>(object dom, string eventName, Action<T> callback)
+        public void AddEventListenerToFirstChild<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
         {
-            AddEventListenerToFirstChildInternal<string>(dom, eventName, (e) =>
+            AddEventListenerToFirstChildInternal<string>(dom, eventName, preventDefault, (e) =>
             {
                 T obj = JsonSerializer.Deserialize<T>(e);
                 callback(obj);

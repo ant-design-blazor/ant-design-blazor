@@ -11,7 +11,7 @@ title:
 
 ## en-US
 
-The most basic example. The size of the floating layer depends on the contents region.
+The most basic example of both types of the `Popover`. The size of the floating layer depends on the contents region.
 
 ```jsx
 import { Popover, Button } from 'antd';

@@ -12,7 +12,7 @@
     const int MAX_COL = 4;
 }
 
-<div class='@($"{PrefixCls}-panel")'>
+<div class='@($"{PrefixCls}-panel")' @ref="Ref">
     <DatePickerTemplate @attributes="GetAttritubes()"
                         TValue="TValue"
                         MaxRow="MAX_ROW"
@@ -23,7 +23,7 @@
                         IsSelected="date => DateHelper.IsSameQuarter(date, Value)"
                         GetColTitle='date => date.ToString(Locale.Lang.YearFormat, CultureInfo)'
                         OnValueSelect="date => OnSelectQuarter(date)"
-                        GetNextColValue="date => date.AddMonths(3)">
+                        GetNextColValue="date => DateHelper.AddMonthsSafely(date, 3)">
         <RenderPickerHeader>
             <DatePickerHeader @attributes="GetAttritubes()"
                               TValue="TValue"

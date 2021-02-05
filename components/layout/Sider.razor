@@ -2,14 +2,14 @@
 @inherits AntDomComponentBase
 
 <aside class="@ClassMapper.Class" style="@SiderStyles @Style">
-    @if (_isCollapsed && CollapsedWidth == 0)
+    @if (_showTrigger && CollapsedWidth == 0)
     {
         <span class="ant-layout-sider-zero-width-trigger ant-layout-sider-zero-width-trigger-left"
               @onclick="ToggleCollapsed">
             <Icon Type="bars" />
         </span>
     }
-    <CascadingValue Value="this">
+    <CascadingValue Value="this" IsFixed="@true">
         <div class="ant-layout-sider-children">
             @ChildContent
         </div>

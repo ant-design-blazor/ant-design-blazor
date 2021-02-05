@@ -30,10 +30,10 @@
       "monthSelect": "Ay seç",
       "yearSelect": "il seç",
       "decadeSelect": "Onillik seçin",
-      "yearFormat": "YYYY",
-      "dateFormat": "D.M.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D.M.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d.M.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d.M.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Əvvəlki ay (PageUp)",
       "nextMonth": "Növbəti ay (PageDown)",
@@ -65,10 +65,10 @@
       "monthSelect": "Ay seç",
       "yearSelect": "il seç",
       "decadeSelect": "Onillik seçin",
-      "yearFormat": "YYYY",
-      "dateFormat": "D.M.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D.M.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d.M.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d.M.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Əvvəlki ay (PageUp)",
       "nextMonth": "Növbəti ay (PageDown)",
@@ -91,8 +91,16 @@
   },
   "Modal": {
     "okText": "Bəli",
+    "cancelText": "Ləğv et"
+  },
+  "Confirm": {
+    "okText": "Bəli",
     "cancelText": "Ləğv et",
-    "justOkText": "Bəli"
+    "yesText": "Bəli",
+    "noText": "Yox",
+    "retryText": "Yenidən denə",
+    "abortText": "Qeyd E",
+    "ignoreText": "İhmal Et"
   },
   "Popconfirm": {
     "okText": "Bəli",

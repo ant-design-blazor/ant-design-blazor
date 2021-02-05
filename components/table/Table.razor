@@ -1,9 +1,9 @@
-@namespace AntDesign
+﻿@namespace AntDesign
 @inherits AntDomComponentBase
 @using AntDesign.TableModels
 @typeparam TItem
 
-<div class="ant-table-wrapper">
+<div class="ant-table-wrapper" @ref="Ref">
     <Spin Spinning="Loading">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
@@ -14,58 +14,82 @@
                         OnPageIndexChange="HandlePageIndexChange"
                         OnPageSizeChange="HandlePageSizeChange" />
         }
-        <CascadingValue Value="@this" TValue="ITable">
-            <div class="@ClassMapper.Class">
-                @if (TitleTemplate != null || Title != null)
-                {
-                    <div class="ant-table-title">
-                        @if (TitleTemplate != null)@TitleTemplate else @Title
+
+        <CascadingValue Value="@this" TValue="ITable" IsFixed>
+            <CascadingValue Value=@typeof(TItem) Name="ItemType" IsFixed>
+                <CascadingValue Value="@ColumnContext" IsFixed>
+                    <CascadingValue Name="IsInitialize" Value="true" IsFixed>
+                        @ChildContent(_fieldModel)
+                    </CascadingValue>
+                    <div class="@ClassMapper.Class">
+                        @if (TitleTemplate != null || Title != null)
+                        {
+                            <div class="ant-table-title">
+                                @if (TitleTemplate != null)@TitleTemplate else @Title
+                            </div>
+                        }
+                        <div class="ant-table-container">
+                            @if (ScrollY != null)
+                            {
+                                <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
+                                    <table style="table-layout: fixed;">
+                                        @colGroup((this, true))
+                                        @header(this)
+                                    </table>
+                                </div>
+                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY)">
+                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") table-layout: fixed;">
+                                        @colGroup((this, false))
+                                        <tbody class="ant-table-tbody">
+                                            <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
+                                                <CascadingValue Name="IsMeasure" Value="true" IsFixed>
+                                                    @ChildContent(_fieldModel)
+                                                </CascadingValue>
+                                            </tr>
+                                            @body((this, _showItems, 0))
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else if (ScrollX != null)
+                            {
+                                <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden;">
+                                    <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; table-layout: fixed;">
+                                        @colGroup((this, true))
+                                        @header(this)
+                                        <tbody class="ant-table-tbody">
+                                            <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
+                                                <CascadingValue Name="IsMeasure" Value="true" IsFixed>
+                                                    @ChildContent(_fieldModel)
+                                                </CascadingValue>
+                                            </tr>
+                                            @body((this, _showItems, 0))
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="ant-table-content">
+                                    <table style="table-layout: @(_tableLayoutIsFixed?"fixed":"auto");">
+                                        @colGroup((this, true))
+                                        @header(this)
+                                        <tbody class="ant-table-tbody">
+                                            @body((this, _showItems, 0))
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                        </div>
+                        @if (FooterTemplate != null || Footer != null)
+                        {
+                            <div class="ant-table-footer">
+                                @if (FooterTemplate != null)@FooterTemplate else @Footer
+                            </div>
+                        }
                     </div>
-                }
-                <div class="ant-table-container">
-                    @if (ScrollY != null)
-                    {
-                        <div class="ant-table-header" style="overflow: hidden;">
-                            <table style="table-layout: fixed;">
-                                @colGroup(this)
-                                @header(this)
-                            </table>
-                        </div>
-                        <div class="ant-table-body" style="overflow-y: scroll; max-height: @ScrollY;">
-                            <table style="table-layout: fixed;">
-                                @colGroup(this)
-                                <tbody class="ant-table-tbody">
-                                    <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px;">
-                                        @for (var i = 0; i < ColumnContext.Columns.Count; i++)
-                                        {
-                                            <td style="padding: 0px; border: 0px; height: 0px;"></td>
-                                        }
-                                    </tr>
-                                    @body((this, _showItems, 0))
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="ant-table-content">
-                            <table style="table-layout: auto;">
-                                @colGroup(this)
-                                @header(this)
-                                <tbody class="ant-table-tbody">
-                                    @body((this, _showItems, 0))
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                </div>
-                @if (FooterTemplate != null || Footer != null)
-                {
-                    <div class="ant-table-footer">
-                        @if (FooterTemplate != null)@FooterTemplate else @Footer
-                    </div>
-                }
-            </div>
+                </CascadingValue>
+            </CascadingValue>
         </CascadingValue>
         @if (!HidePagination && PaginationPosition.Contains("bottom"))
         {
@@ -85,109 +109,89 @@
     @<Template>
         <thead class="ant-table-thead">
             <tr>
-                <CascadingValue Name="IsHeader" Value="true">
-                    @if (table.ExpandTemplate != null)
-                    {
-                        <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
-                    }
-                    <CascadingValue Value="@table.ColumnContext">
-                        @if (_fieldModel != null)
-                        {
-                            @table.ChildContent(_fieldModel)
-                        }
-                    </CascadingValue>
+                <CascadingValue Name="IsHeader" Value="true" IsFixed>
+                    @table.ChildContent(_fieldModel)
                 </CascadingValue>
                 @if (table.ScrollY != null)
                 {
-                    <th class="ant-table-cell ant-table-cell-scrollbar"></th>
+                    <th class="ant-table-cell @(table._hasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(table._hasFixRight?"position: sticky; right: 0px;":"")"></th>
                 }
             </tr>
         </thead>
     </Template>;
 
-RenderFragment<Table<TItem>> colGroup = table =>
-@<Template>
-    <CascadingValue Name="IsColGroup" Value="true">
-        <colgroup>
-            @if (table.ExpandTemplate != null)
-            {
-                <col class="ant-table-expand-icon-col">
-            }
-            @if (_fieldModel != null)
-            {
-                @table.ChildContent(_fieldModel)
-            }
-            @if (table.ScrollY != null)
-            {
-                <col style="width: @(table.ScrollBarWidth)px; min-width: @(table.ScrollBarWidth)px;" />
-            }
-        </colgroup>
-    </CascadingValue>
-</Template>;
-
-RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> body = context =>
+RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
 @<Template>
     @{
-        var table = context.table;
-        var showItems = context.showItems;
-        var level = context.level;
+        var table = ctx.table;
+        var header = ctx.header;
     }
+     <colgroup>
+         <CascadingValue Name="IsColGroup" Value="true" IsFixed>
+             @table.ChildContent(_fieldModel)
+         </CascadingValue>
+         @if (table.ScrollY != null && header)
+         {
+             <col style="width: @((CssSizeLength)table.ScrollBarWidth); min-width: @((CssSizeLength)table.ScrollBarWidth);" />
+         }
+     </colgroup>
+    </Template>;
 
-    @if (table.Total <= 0)
-    {
-        <tr class="ant-table-placeholder">
-            <td colspan="@table.ColumnContext.Columns.Count" class="ant-table-cell">
-                <Empty Simple />
-            </td>
-        </tr>
-    }
-    else if (showItems != null && table.ColumnContext.Columns.Count > 0)
-    {
-        for (int i = 0; i < showItems.Count(); i++)
+    RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> body = context =>
+    @<Template>
+        @{
+            var table = context.table;
+            var showItems = context.showItems;
+            var level = context.level;
+        }
+
+        @if (table.Total <= 0)
         {
-            var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
-            var data = showItems.ElementAt(i);
-            var cacheKey = data.GetHashCode();
-            if (!table._dataSourceCache.ContainsKey(cacheKey))
+            <tr class="ant-table-placeholder">
+                <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
+                    <Empty Simple />
+                </td>
+            </tr>
+        }
+        else if (showItems != null && table.ColumnContext.Columns.Count > 0)
+        {
+            for (int i = 0; i < showItems.Count(); i++)
             {
-                table._dataSourceCache[cacheKey] = new RowData<TItem>(rowIndex, table.PageIndex, data);
-            }
-            var currentRowData = table._dataSourceCache[cacheKey] ?? new RowData<TItem>(rowIndex, table.PageIndex, data);
-            var hasChildren = table.TreeChildren(data)?.Any() == true;
-            currentRowData.CacheKey = cacheKey;
-            currentRowData.Level = level;
-            currentRowData.HasChildren = hasChildren;
-            <CascadingValue Value="table.ColumnContext">
-                <CascadingValue Value="currentRowData" Name="RowData">
-                    <tr @attributes="@(new Dictionary<string,object> { {"onclick", _callbackFactory.Create(table, () => table.RowClick(currentRowData)) } })"
-                        data-row-id="@rowIndex" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "")">
-                        @if (table.ExpandTemplate != null)
-                        {
-                            <td class="ant-table-cell ant-table-row-expand-icon-cell">
-                                @if (table.RowExpandable(currentRowData))
-                                {
-                                    <button type="button" @attributes="@(new Dictionary<string,object>() { {"onclick",_callbackFactory.Create(table,() => ToggleExpandRow(currentRowData)) } })"
-                                            class="ant-table-row-expand-icon @(currentRowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label=""></button>
-                                }
-                            </td>
-                        }
-                        @table.ChildContent(data)
-                    </tr>
-                </CascadingValue>
-            </CascadingValue>
-            @if (hasChildren && currentRowData.Expanded)
-            {
-                @table.body((table, table.TreeChildren(data), level + 1));
-            }
-            @if (table.ExpandTemplate != null && table.RowExpandable(currentRowData))
-            {
-                <tr class="ant-table-expanded-row ant-table-expanded-row-level-1" style="@(currentRowData.Expanded?"":"display: none;")">
-                    <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
-                        @table.ExpandTemplate(currentRowData)
-                    </td>
+                var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
+                var data = showItems.ElementAt(i);
+                var cacheKey = data.GetHashCode();
+                if (!table._dataSourceCache.ContainsKey(cacheKey))
+                {
+                    table._dataSourceCache[cacheKey] = new RowData<TItem>(rowIndex, table.PageIndex, data);
+                }
+                var currentRowData = table._dataSourceCache[cacheKey] ?? new RowData<TItem>(rowIndex, table.PageIndex, data);
+                var hasChildren = table.TreeChildren(data)?.Any() == true;
+                currentRowData.CacheKey = cacheKey;
+                currentRowData.Level = level;
+                currentRowData.HasChildren = hasChildren;
+
+                <tr @attributes="@(new Dictionary<string,object> { {"onclick", _callbackFactory.Create(table, () => table.RowClick(currentRowData)) } })"
+                    data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "") @table.RowClassName(currentRowData)">
+                    <CascadingValue Value="currentRowData" Name="RowData" IsFixed>
+                        <CascadingValue Value="true" Name="IsBody" IsFixed>
+                            @table.ChildContent(data)
+                        </CascadingValue>
+                    </CascadingValue>
                 </tr>
+                @if (hasChildren && currentRowData.Expanded)
+                {
+                    @table.body((table, table.TreeChildren(data), level + 1));
+                }
+                @if (!hasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData))
+                {
+                    <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @table.ExpandedRowClassName(currentRowData)"
+                        style="@(currentRowData.Expanded?"":"display: none;")">
+                        <td colspan="@(table.ColumnContext.Columns.Count+1)" class="ant-table-cell">
+                            @table.ExpandTemplate(currentRowData)
+                        </td>
+                    </tr>
+                }
             }
         }
-    }
-</Template>;
+    </Template>;
 }

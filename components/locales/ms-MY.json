@@ -32,10 +32,10 @@
       "monthSelect": "Pilih bulan",
       "yearSelect": "Pilih tahun",
       "decadeSelect": "Pilih dekad",
-      "yearFormat": "YYYY",
-      "dayFormat": "D",
-      "dateFormat": "M/D/YYYY",
-      "dateTimeFormat": "M/D/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dayFormat": "d",
+      "dateFormat": "M/d/yyyy",
+      "dateTimeFormat": "M/d/yyyy HH:mm:ss",
       "previousYear": "Tahun lepas (Ctrl+left)",
       "nextYear": "Tahun depan (Ctrl+right)",
       "previousDecade": "Dekad lepas",
@@ -70,10 +70,10 @@
       "monthSelect": "Pilih bulan",
       "yearSelect": "Pilih tahun",
       "decadeSelect": "Pilih dekad",
-      "yearFormat": "YYYY",
-      "dayFormat": "D",
-      "dateFormat": "M/D/YYYY",
-      "dateTimeFormat": "M/D/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dayFormat": "d",
+      "dateFormat": "M/d/yyyy",
+      "dateTimeFormat": "M/d/yyyy HH:mm:ss",
       "previousYear": "Tahun lepas (Ctrl+left)",
       "nextYear": "Tahun depan (Ctrl+right)",
       "previousDecade": "Dekad lepas",
@@ -110,8 +110,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Batal"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Batal",
-    "justOkText": "OK"
+    "yesText": "Ya",
+    "noText": "Tidak",
+    "retryText": "Cuba semula",
+    "abortText": "Batalkan",
+    "ignoreText": "Abaikan"
   },
   "Popconfirm": {
     "okText": "OK",

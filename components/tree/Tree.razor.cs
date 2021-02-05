@@ -2,14 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Tree : AntDomComponentBase
+    public partial class Tree<TItem> : AntDomComponentBase
     {
         #region Tree
 
@@ -43,7 +40,6 @@ namespace AntDesign
         [Parameter]
         public bool Draggable { get; set; }
 
-
         private void SetClassMapper()
         {
             ClassMapper.Clear().Add("ant-tree")
@@ -53,7 +49,7 @@ namespace AntDesign
                 .If("draggable-tree", () => Draggable);
         }
 
-        #endregion
+        #endregion Tree
 
         #region Node
 
@@ -61,20 +57,19 @@ namespace AntDesign
         public RenderFragment Nodes { get; set; }
 
         [Parameter]
-        public List<TreeNode> ChildNodes { get; set; } = new List<TreeNode>();
+        public List<TreeNode<TItem>> ChildNodes { get; set; } = new List<TreeNode<TItem>>();
 
         /// <summary>
         /// 添加节点
         /// </summary>
         /// <param name="treeNode"></param>
         /// <param name=""></param>
-        internal void AddNode(TreeNode treeNode)
+        internal void AddNode(TreeNode<TItem> treeNode)
         {
             ChildNodes.Add(treeNode);
-
         }
 
-        #endregion
+        #endregion Node
 
         #region Selected
 
@@ -87,25 +82,26 @@ namespace AntDesign
         /// <summary>
         /// 选中的树节点
         /// </summary>
-        internal Dictionary<long, TreeNode> SelectedNodesDictionary { get; set; } = new Dictionary<long, TreeNode>();
-
-        public List<TreeNode> SelectedNodes => SelectedNodesDictionary.Select(x => x.Value).ToList();
-
-        public List<string> SelectedNames => SelectedNodesDictionary.Select(x => x.Value.Name).ToList();
+        internal Dictionary<long, TreeNode<TItem>> SelectedNodesDictionary { get; set; } = new Dictionary<long, TreeNode<TItem>>();
 
         public List<string> SelectedTitles => SelectedNodesDictionary.Select(x => x.Value.Title).ToList();
 
-        internal void SelectedNodeAdd(TreeNode treeNodes)
+        internal void SelectedNodeAdd(TreeNode<TItem> treeNode)
         {
-            if (SelectedNodesDictionary.ContainsKey(treeNodes.NodeId) == false)
-                SelectedNodesDictionary.Add(treeNodes.NodeId, treeNodes);
+            if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == false)
+                SelectedNodesDictionary.Add(treeNode.NodeId, treeNode);
+
+            UpdateBindData();
         }
-        internal void SelectedNodeRemove(TreeNode treeNodes)
+
+        internal void SelectedNodeRemove(TreeNode<TItem> treeNode)
         {
-            if (SelectedNodesDictionary.ContainsKey(treeNodes.NodeId) == true)
-                SelectedNodesDictionary.Remove(treeNodes.NodeId);
+            if (SelectedNodesDictionary.ContainsKey(treeNode.NodeId) == true)
+                SelectedNodesDictionary.Remove(treeNode.NodeId);
+
+            UpdateBindData();
         }
-     
+
         public void DeselectAll()
         {
             foreach (var item in SelectedNodesDictionary.Select(x => x.Value).ToList())
@@ -114,7 +110,86 @@ namespace AntDesign
             }
         }
 
-        #endregion
+        /// <summary>
+        /// 选择的Key
+        /// </summary>
+        [Parameter]
+        public string SelectedKey { get; set; }
+
+        [Parameter]
+        public EventCallback<string> SelectedKeyChanged { get; set; }
+
+        /// <summary>
+        /// 选择的节点
+        /// </summary>
+        [Parameter]
+        public TreeNode<TItem> SelectedNode { get; set; }
+
+        [Parameter]
+        public EventCallback<TreeNode<TItem>> SelectedNodeChanged { get; set; }
+
+        /// <summary>
+        /// 选择的数据
+        /// </summary>
+        [Parameter]
+        public TItem SelectedData { get; set; }
+
+        [Parameter]
+        public EventCallback<TItem> SelectedDataChanged { get; set; }
+
+        /// <summary>
+        /// 选择的Key集合
+        /// </summary>
+        [Parameter]
+        public string[] SelectedKeys { get; set; }
+
+        [Parameter]
+        public EventCallback<string[]> SelectedKeysChanged { get; set; }
+
+        /// <summary>
+        /// 选择的节点集合
+        /// </summary>
+        [Parameter]
+        public TreeNode<TItem>[] SelectedNodes { get; set; }
+
+        /// <summary>
+        /// 选择的数据集合
+        /// </summary>
+        [Parameter]
+        public TItem[] SelectedDatas { get; set; }
+
+        /// <summary>
+        /// 更新绑定数据
+        /// </summary>
+        private void UpdateBindData()
+        {
+            if (SelectedNodesDictionary.Count == 0)
+            {
+                SelectedKey = null;
+                SelectedNode = null;
+                SelectedData = default(TItem);
+                SelectedKeys = Array.Empty<string>();
+                SelectedNodes = Array.Empty<TreeNode<TItem>>();
+                SelectedDatas = Array.Empty<TItem>();
+            }
+            else
+            {
+                var selectedFirst = SelectedNodesDictionary.FirstOrDefault();
+                SelectedKey = selectedFirst.Value?.Key;
+                SelectedNode = selectedFirst.Value;
+                SelectedData = selectedFirst.Value.DataItem;
+                SelectedKeys = SelectedNodesDictionary.Select(x => x.Value.Key).ToArray();
+                SelectedNodes = SelectedNodesDictionary.Select(x => x.Value).ToArray();
+                SelectedDatas = SelectedNodesDictionary.Select(x => x.Value.DataItem).ToArray();
+            }
+
+            if (SelectedKeyChanged.HasDelegate) SelectedKeyChanged.InvokeAsync(SelectedKey);
+            if (SelectedNodeChanged.HasDelegate) SelectedNodeChanged.InvokeAsync(SelectedNode);
+            if (SelectedDataChanged.HasDelegate) SelectedDataChanged.InvokeAsync(SelectedData);
+            if (SelectedKeysChanged.HasDelegate) SelectedKeysChanged.InvokeAsync(SelectedKeys);
+        }
+
+        #endregion Selected
 
         #region Checkable
 
@@ -124,18 +199,18 @@ namespace AntDesign
         [Parameter]
         public bool Checkable { get; set; }
 
-        public List<TreeNode> CheckedNodes => GetCheckedNodes(ChildNodes);
+        public List<TreeNode<TItem>> CheckedNodes => GetCheckedNodes(ChildNodes);
 
-        public List<string> CheckedNames => GetCheckedNodes(ChildNodes).Select(x => x.Name).ToList();
+        public List<string> CheckedKeys => GetCheckedNodes(ChildNodes).Select(x => x.Key).ToList();
 
         public List<string> CheckedTitles => GetCheckedNodes(ChildNodes).Select(x => x.Title).ToList();
 
-        private List<TreeNode> GetCheckedNodes(List<TreeNode> childs)
+        private List<TreeNode<TItem>> GetCheckedNodes(List<TreeNode<TItem>> childs)
         {
-            List<TreeNode> checkeds = new List<TreeNode>();
+            List<TreeNode<TItem>> checkeds = new List<TreeNode<TItem>>();
             foreach (var item in childs)
             {
-                if (item.IsChecked) checkeds.Add(item);
+                if (item.Checked) checkeds.Add(item);
                 checkeds.AddRange(GetCheckedNodes(item.ChildNodes));
             }
             return checkeds;
@@ -150,11 +225,12 @@ namespace AntDesign
             }
         }
 
-        #endregion
+        #endregion Checkable
 
         #region Search
 
         public string _searchValue;
+
         /// <summary>
         /// 按需筛选树,双向绑定
         /// </summary>
@@ -178,21 +254,21 @@ namespace AntDesign
         /// 返回一个值是否是页节点
         /// </summary>
         [Parameter]
-        public Func<TreeNode, bool> SearchExpression { get; set; }
+        public Func<TreeNode<TItem>, bool> SearchExpression { get; set; }
 
         /// <summary>
         /// 查询节点
         /// </summary>
         /// <param name="treeNode"></param>
         /// <returns></returns>
-        private bool SearchNode(TreeNode treeNode)
+        private bool SearchNode(TreeNode<TItem> treeNode)
         {
             if (SearchExpression != null)
-                treeNode.IsMatched = SearchExpression(treeNode);
+                treeNode.Matched = SearchExpression(treeNode);
             else
-                treeNode.IsMatched = treeNode.Title.Contains(SearchValue);
+                treeNode.Matched = treeNode.Title.Contains(SearchValue);
 
-            var hasChildMatched = treeNode.IsMatched;
+            var hasChildMatched = treeNode.Matched;
             foreach (var item in treeNode.ChildNodes)
             {
                 var itemMatched = SearchNode(item);
@@ -203,44 +279,44 @@ namespace AntDesign
             return hasChildMatched;
         }
 
-        #endregion
+        #endregion Search
 
         #region DataBind
 
         [Parameter]
-        public IEnumerable DataSource { get; set; }
+        public IList<TItem> DataSource { get; set; }
 
         /// <summary>
         /// 指定一个方法，该表达式返回节点的文本。
         /// </summary>
         [Parameter]
-        public Func<TreeNode, string> TitleExpression { get; set; }
+        public Func<TreeNode<TItem>, string> TitleExpression { get; set; }
 
         /// <summary>
         /// 指定一个返回节点名称的方法。
         /// </summary>
         [Parameter]
-        public Func<TreeNode, string> NameExpression { get; set; }
+        public Func<TreeNode<TItem>, string> KeyExpression { get; set; }
 
         /// <summary>
         /// 指定一个返回节点名称的方法。
         /// </summary>
         [Parameter]
-        public Func<TreeNode, string> IconExpression { get; set; }
+        public Func<TreeNode<TItem>, string> IconExpression { get; set; }
 
         /// <summary>
         /// 返回一个值是否是页节点
         /// </summary>
         [Parameter]
-        public Func<TreeNode, bool> IsLeafExpression { get; set; }
+        public Func<TreeNode<TItem>, bool> IsLeafExpression { get; set; }
 
         /// <summary>
         /// 返回子节点的方法
         /// </summary>
         [Parameter]
-        public Func<TreeNode, IEnumerable> ChildrenExpression { get; set; }
+        public Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
 
-        #endregion
+        #endregion DataBind
 
         #region Event
 
@@ -249,43 +325,43 @@ namespace AntDesign
         /// </summary>
         /// <remarks>必须使用async，且返回类型为Task，否则可能会出现载入时差导致显示问题</remarks>
         [Parameter]
-        public EventCallback<TreeEventArgs> OnNodeLoadDelayAsync { get; set; }
+        public EventCallback<TreeEventArgs<TItem>> OnNodeLoadDelayAsync { get; set; }
 
         /// <summary>
         /// 点击树节点触发
         /// </summary>
         [Parameter]
-        public EventCallback<TreeEventArgs> OnClick { get; set; }
+        public EventCallback<TreeEventArgs<TItem>> OnClick { get; set; }
 
         /// <summary>
         /// 双击树节点触发
         /// </summary>
         [Parameter]
-        public EventCallback<TreeEventArgs> OnDblClick { get; set; }
+        public EventCallback<TreeEventArgs<TItem>> OnDblClick { get; set; }
 
         /// <summary>
         /// 右键树节点触发
         /// </summary>
         [Parameter]
-        public EventCallback<TreeEventArgs> OnContextMenu { get; set; }
+        public EventCallback<TreeEventArgs<TItem>> OnContextMenu { get; set; }
 
         /// <summary>
         /// 点击树节点 Checkbox 触发
         /// </summary>
         [Parameter]
-        public EventCallback<TreeEventArgs> OnCheckBoxChanged { get; set; }
+        public EventCallback<TreeEventArgs<TItem>> OnCheckBoxChanged { get; set; }
 
         /// <summary>
         /// 点击展开树节点图标触发
         /// </summary>
         [Parameter]
-        public EventCallback<TreeEventArgs> OnExpandChanged { get; set; }
+        public EventCallback<TreeEventArgs<TItem>> OnExpandChanged { get; set; }
 
         /// <summary>
         /// 搜索节点时调用(与SearchValue配合使用)
         /// </summary>
         [Parameter]
-        public EventCallback<TreeEventArgs> OnSearchValueChanged { get; set; }
+        public EventCallback<TreeEventArgs<TItem>> OnSearchValueChanged { get; set; }
 
         ///// <summary>
         ///// 开始拖拽时调用
@@ -317,7 +393,7 @@ namespace AntDesign
         ///// </summary>
         //public EventCallback<TreeEventArgs> OnDragEnd { get; set; }
 
-        #endregion
+        #endregion Event
 
         #region Template
 
@@ -325,27 +401,33 @@ namespace AntDesign
         /// 缩进模板
         /// </summary>
         [Parameter]
-        public RenderFragment<TreeNode> IndentTemplate { get; set; }
+        public RenderFragment<TreeNode<TItem>> IndentTemplate { get; set; }
 
         /// <summary>
         /// 标题模板
         /// </summary>
         [Parameter]
-        public RenderFragment<TreeNode> TitleTemplate { get; set; }
+        public RenderFragment<TreeNode<TItem>> TitleTemplate { get; set; }
 
         /// <summary>
         /// 图标模板
         /// </summary>
         [Parameter]
-        public RenderFragment<TreeNode> TitleIconTemplate { get; set; }
+        public RenderFragment<TreeNode<TItem>> TitleIconTemplate { get; set; }
 
         /// <summary>
         /// 切换图标模板
         /// </summary>
         [Parameter]
-        public RenderFragment<TreeNode> SwitcherIconTemplate { get; set; }
+        public RenderFragment<TreeNode<TItem>> SwitcherIconTemplate { get; set; }
 
-    #endregion
+        #endregion Template
+
+        protected override void OnInitialized()
+        {
+            SetClassMapper();
+            base.OnInitialized();
+        }
 
         /// <summary>
         /// Find Node
@@ -353,11 +435,11 @@ namespace AntDesign
         /// <param name="predicate">Predicate</param>
         /// <param name="recursive">Recursive Find</param>
         /// <returns></returns>
-        public TreeNode FindFirstOrDefaultNode(Func<TreeNode, bool> predicate, bool recursive = true)
+        public TreeNode<TItem> FindFirstOrDefaultNode(Func<TreeNode<TItem>, bool> predicate, bool recursive = true)
         {
             foreach (var child in ChildNodes)
             {
-                if (predicate.Invoke(child))
+                if (predicate != null && predicate.Invoke(child))
                 {
                     return child;
                 }
@@ -373,11 +455,12 @@ namespace AntDesign
             }
             return null;
         }
+
         /// <summary>
         /// from node expand to root
         /// </summary>
         /// <param name="node">Node</param>
-        public void ExpandToNode(TreeNode node)
+        public void ExpandToNode(TreeNode<TItem> node)
         {
             if (node == null)
             {
@@ -391,11 +474,26 @@ namespace AntDesign
             }
         }
 
-
-        protected override void OnInitialized()
+        /// <summary>
+        /// 展开全部节点
+        /// </summary>
+        public void ExpandAll()
         {
-            SetClassMapper();
-            base.OnInitialized();
+            this.ChildNodes.ForEach(node => Switch(node, true));
+        }
+
+        /// <summary>
+        /// 折叠全部节点
+        /// </summary>
+        public void CollapseAll()
+        {
+            this.ChildNodes.ForEach(node => Switch(node, false));
+        }
+
+        private void Switch(TreeNode<TItem> node, bool expanded)
+        {
+            node.Expand(expanded);
+            node.ChildNodes.ForEach(n => Switch(n, expanded));
         }
     }
 }

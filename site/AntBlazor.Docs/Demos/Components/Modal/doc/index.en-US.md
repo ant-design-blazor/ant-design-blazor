@@ -35,7 +35,8 @@ When requiring users to interact with the application, but without jumping to a 
 | OkButtonProps     | The ok button props                                          | ButtonProps                   | -             |
 | CancelButtonProps | The cancel button props                                      | ButtonProps                   | -             |
 | Style             | Style of floating layer,  typically used at least for adjusting the position. | string                        | -             |
-| Title             | The modal dialog's title                                     | string\|RenderFragment        | -             |
+| Title             | The modal dialog's title, If the TitleTemplate is not null, the TitleTemplate takes precedence | string | null            |
+| TitleTemplate | The modal dialog's title | RenderFragment | null |
 | Visible           | Whether the modal dialog is  visible or not                  | bool                          | -             |
 | Width             | Width of the modal dialog                                    | string\|double                | 520           |
 | WrapClassName     | The class name of the  container of the modal dialog         | string                        | -             |
@@ -49,9 +50,11 @@ When requiring users to interact with the application, but without jumping to a 
 
 > The state of Modal will be preserved at it's component lifecycle by default, if you wish to open it with a brand new state everytime, set `DestroyOnClose` on it.
 
-### Modal.method()
+### ModalService.method()
 
-There are five ways to display the information based on the content's nature:
+There are some ways to display the information based on the content's nature:
+
+1. For Confirm dialog
 
 - `ModalService.Info`
 - `ModalService.Success`
@@ -64,13 +67,27 @@ There are five ways to display the information based on the content's nature:
 - `ModalService.SuccessAsync`
 - `ModalService.ErrorAsync`
 - `ModalService.WarningAsync`
+- `ModalService.UpdateConfirmAsync`
+-  `ModalService.DestroyConfirmAsync`
+-  `ModalService.DestroyAllConfirmAsync`
+-  `ModalService.CreateConfirmAsync`
+
+2. For Modal dialog
+
+-  `ModalService.CreateModalAsync`
+
 
 > Please confirm that the `<AntContainer />` component has been added to `App.Razor`.
 > `ConfirmAsync`、`InfoAsync`、`SuccessAsync`、`ErrorAsync`、`WarningAsync` will return Task<bool>，it can be used to determine whether the button the user clicks is an OK button (true) or a cancel button (false)
 
+### ConfirmService
+
+`ConfirmService.Show` to show a simple Confirm dialog like MessageBox of Windows, it's different from ModalService. ModalService can only create OK-Cancel Confirm dialog and return ConfirmRef or OK button is clicked, but ConfirmService return ConfirmResult.
+
+
 #### ConfirmOptions
 
-| CancelText        | Text  of the Cancel button with Modal.confirm                | string                         | Cancel  |
+| CancelText        | Text  of the Cancel button, equivalent to Button2Props.ChildContent | string\|RenderFragment                         | Cancel  |
 | ----------------- | ------------------------------------------------------------ | ------------------------------ | ------- |
 | Centered          | Centered Modal                                               | bool                           | fasle   |
 | ClassName         | className of container                                       | string                         | -       |
@@ -79,15 +96,19 @@ There are five ways to display the information based on the content's nature:
 | Keyboard          | Whether support press esc to  close                          | bool                           | true    |
 | Mask              | Whether show mask or not.                                    | bool                           | true    |
 | MaskClosable      | Whether to close the modal  dialog when the mask (area outside the modal) is clicked | bool                           | fasle   |
-| OkText            | Text of the OK button                                        | string                         | OK      |
-| OkType            | Button type of the OK button                                 | string                         | primary |
-| OkButtonProps     | The ok button props                                          | ButtonProps                    | -       |
-| CancelButtonProps | The cancel button props                                      | ButtonProps                    | -       |
-| Title             | Title                                                        | string\|RenderFragment         | -       |
+| OkText            | Text of the OK button, equivalent to Button1Props.ChildContent | string                         | OK      |
+| OkType            | Button type of the OK button, equivalent to Button1Props.Type  | string                         | primary |
+| OkButtonProps     | The ok button props , equivalent to Button1Props  | ButtonProps                    | -       |
+| CancelButtonProps | The cancel button props, equivalent to Button2Props | ButtonProps                    | -       |
+| Title             | The modal dialog's title, If the TitleTemplate is not null, the TitleTemplate takes precedence | string | null            |
+| TitleTemplate | The modal dialog's title | RenderFragment | null |
 | Width             | Width of the modal dialog                                    | string\|double                 | 416     |
 | ZIndex            | The z-index of the Modal                                     | int                            | 1000    |
-| OnCancel          | Specify a function that will  be called when the user clicks the Cancel button. The parameter of this  function is a function whose execution should include closing the dialog. You  can also just return a promise and when the promise is resolved, the modal dialog  will also be closed | EventCallback<MouseEventArgs>? | null    |
-| OnOk              | Specify a function that will  be called when the user clicks the OK button. The parameter of this function  is a function whose execution should include closing the dialog. You can also  just return a promise and when the promise is resolved, the modal dialog will  also be closed | EventCallback<MouseEventArgs>? | null    |
+| OnCancel          | Specify a function that will  be called when the user clicks the Cancel button. The parameter of this  function is a function whose execution should include closing the dialog. You  can also just return a promise and when the promise is resolved, the modal dialog  will also be closed. **It's only trigger in Confirm created by ModalService mode** | EventCallback<MouseEventArgs>? | null    |
+| OnOk              | Specify a function that will  be called when the user clicks the OK button. The parameter of this function  is a function whose execution should include closing the dialog. You can also  just return a promise and when the promise is resolved, the modal dialog will  also be closed. **It's only trigger in Confirm created by ModalService mode** | EventCallback<MouseEventArgs>? | null    |
+| Button1Props | the props of the leftmost button in LTR layout  | ButtonProps | Type = ButtonType.Primary, ChildContent is in the same order as ConfirmButtons |
+| Button2Props | the props of the second button on the left is in the LTR layout  | ButtonProps |  ChildContent is in the same order as ConfirmButtons|
+| Button3Props | the props of the rightmost button in LTR layout | ButtonProps | ChildContent is in the same order as ConfirmButtons |
 
 All the `ModalService.Method`s will return a reference, and then we can update and close the modal dialog by the reference.
 
@@ -95,11 +116,11 @@ All the `ModalService.Method`s will return a reference, and then we can update a
 ConfirmOptions config = new ConfirmOptions();
 var modelRef = await ModalService.Info(config);
 
-modelRef.UpdateConfig();
+modelRef.UpdateConfirmAsync();
 
-ModalService.Destroy(modelRef);
+ModalService.DestroyConfirmAsync(modelRef);
 ```
 
-- `ModalService.DestroyAll`
+- `ModalService.DestroyAllConfirmAsync`
 
-`ModalService.DestroyAll()` could destroy all confirmation modal dialogs(ModalService.Info/ModalService.Success/ModalService.Error/ModalService.Warning/ModalService.Confirm). Usually, you can use it in router change event to destroy confirm modal dialog automatically without use modal reference to close( it's too complex to use for all modal dialogs)
+`ModalService.DestroyAllConfirmAsync()` could destroy all confirmation modal dialogs(ModalService.Info/ModalService.Success/ModalService.Error/ModalService.Warning/ModalService.Confirm). Usually, you can use it in router change event to destroy confirm modal dialog automatically without use modal reference to close( it's too complex to use for all modal dialogs)

@@ -29,10 +29,10 @@
       "monthSelect": "Valitse kuukausi",
       "yearSelect": "Valitse vuosi",
       "decadeSelect": "Valitse vuosikymmen",
-      "yearFormat": "YYYY",
-      "dateFormat": "D.M.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D.M.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d.M.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d.M.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Edellinen kuukausi (PageUp)",
       "nextMonth": "Seuraava kuukausi (PageDown)",
@@ -63,10 +63,10 @@
       "monthSelect": "Valitse kuukausi",
       "yearSelect": "Valitse vuosi",
       "decadeSelect": "Valitse vuosikymmen",
-      "yearFormat": "YYYY",
-      "dateFormat": "D.M.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D.M.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d.M.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d.M.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Edellinen kuukausi (PageUp)",
       "nextMonth": "Seuraava kuukausi (PageDown)",
@@ -89,8 +89,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Peruuta"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Peruuta",
-    "justOkText": "OK"
+    "yesText": "Kyllä",
+    "noText": "Ei",
+    "retryText": "Peruuta",
+    "abortText": "Keskeytä",
+    "ignoreText": "Ohita"
   },
   "Popconfirm": {
     "okText": "OK",

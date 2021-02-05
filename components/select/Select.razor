@@ -12,7 +12,7 @@
                             Visible="Open"
                             Disabled="Disabled"
                             Trigger="new[] { TriggerType.Click }"
-                            HiddenMode
+                            HiddenMode                            
                             OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"
                             OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
                             OnVisibleChange="@OnOverlayVisibleChangeAsync"
@@ -26,12 +26,39 @@
                             <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;">
                                 <div>
                                     <div class="" role="listbox" style="display: flex; flex-direction: column;">
+                                        @if (CustomTagSelectOptionItem != null) 
+                                        {
+                                            <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
+                                                <CascadingValue Value="@CustomTagSelectOptionItem" Name="Model">
+                                                    <SelectOption
+                                                        @key="@CustomTagSelectOptionItem.InternalId"
+                                                        TItemValue="TItemValue"
+                                                        TItem="TItem">
+                                                    </SelectOption>
+                                                </CascadingValue>
+                                            </CascadingValue>
+                                        }
                                         @SelectOptions
+                                        @if (AddedTags != null) 
+                                        {
+                                            foreach (var selectOption in AddedTags)
+                                            {
+                                                <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
+                                                    <CascadingValue Value="@selectOption" Name="Model">
+                                                        <SelectOption
+                                                            @key="@selectOption.InternalId"
+                                                            TItemValue="TItemValue"
+                                                            TItem="TItem">
+                                                        </SelectOption>
+                                                    </CascadingValue>
+                                                </CascadingValue>
+                                            } 
+                                        }
                                     </div>
                                 </div>
                             </div>
                         }
-                        else if (SelectOptions == null && DataSource != null)
+                        else if (SelectOptions == null)
                         {
                             <div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;">
                                 <div>
@@ -83,12 +110,14 @@
                         }
                     </div>                    
                 </Overlay>
-                <ChildContent>
+                <Unbound>
                     <CascadingValue Value="this" Name=@("ParentSelect") IsFixed="true">
                         <CascadingValue Value="@LabelTemplate" Name="ParentLabelTemplate">
                             <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
                                 <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
-                                    <SelectContent Prefix="@ClassPrefix"
+                                    <SelectContent Prefix="@ClassPrefix"   
+                                                   RefBack="@context"
+                                                   @ref="_selectContent"
                                                    TItemValue="TItemValue"
                                                    TItem="TItem"
                                                    SearchValue="@_searchValue"
@@ -98,7 +127,7 @@
                                                    OnKeyDown="@OnKeyDownAsync"
                                                    OnFocus="@OnInputFocusAsync"
                                                    OnBlur="@OnInputBlurAsync"
-                                                   OnClearClick="@OnInputClearClickAsync"   
+                                                   OnClearClick="@OnInputClearClickAsync"                                                      
                                                    OnRemoveSelected="@OnRemoveSelectedAsync"
                                                    Placeholder="@Placeholder"
                                                    ShowPlaceholder="@ShowPlaceholder"/>
@@ -106,7 +135,7 @@
                             </CascadingValue>
                         </CascadingValue>
                     </CascadingValue>
-                </ChildContent>
+                </Unbound>
             </OverlayTrigger>
         </div>
     </CascadingValue>

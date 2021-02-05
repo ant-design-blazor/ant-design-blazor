@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -11,11 +12,28 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private static readonly Hashtable _spaceSize = new Hashtable()
+        [Parameter] public ForwardRef RefBack { get; set; } = new ForwardRef();
+
+        private ElementReference _ref;
+
+        /// <summary>
+        /// Returned ElementRef reference for DOM element.
+        /// </summary>
+        public virtual ElementReference Ref
         {
-            ["small"] = 8,
-            ["middle"] = 16,
-            ["large"] = 24
+            get => _ref;
+            set
+            {
+                _ref = value;
+                RefBack?.Set(value);
+            }
+        }
+
+        private static readonly Dictionary<string, string>  _spaceSize = new()
+        {
+            ["small"] = "8",
+            ["middle"] = "16",
+            ["large"] = "24"
         };
 
         private string _marginStyle = "";
@@ -32,7 +50,7 @@ namespace AntDesign
 
             var marginSize = size.IsIn("small", "middle", "large") ? _spaceSize[size] : size;
 
-            _marginStyle = direction == "horizontal" ? $"margin-right:{marginSize}px;" : $"margin-bottom:{marginSize}px;";
+            _marginStyle = direction == "horizontal" ? $"margin-right:{(CssSizeLength)marginSize};" : $"margin-bottom:{(CssSizeLength)marginSize};";
         }
     }
 }

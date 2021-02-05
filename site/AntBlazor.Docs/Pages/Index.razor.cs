@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
 using Microsoft.AspNetCore.Components;
 
@@ -13,16 +14,17 @@ namespace AntDesign.Docs.Pages
         private MoreProps[] _moreArticles = { };
 
         [Inject] private DemoService DemoService { get; set; }
+        [Inject] private ILanguageService Language { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
             await FetchData();
 
-            language.LanguageChanged += async (sender, args) =>
+            Language.LanguageChanged += async (sender, args) =>
             {
                 await FetchData();
-                StateHasChanged();
+                await InvokeAsync(StateHasChanged);
             };
         }
 

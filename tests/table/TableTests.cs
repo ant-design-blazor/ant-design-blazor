@@ -17,41 +17,41 @@ namespace AntDesign.Tests.Table
 
         private IRenderedComponent<Table<Person>> CreatePersonsTable(
             IReadOnlyList<Person> persons,
-            Action<ComponentParameterBuilder<Table<Person>>> callback = null,
+            Action<ComponentParameterCollectionBuilder<Table<Person>>> callback = null,
             bool enableSelection = false)
         {
             return Context.RenderComponent<Table<Person>>(x =>
-                {
-                    x
-                        .Add(b => b.DataSource, persons)
-                        .Add(b => b.ChildContent, p =>
-                            {
-                                var selection = new ComponentParameterBuilder<Selection>()
-                                    .Add(q => q.Key, p.Id.ToString())
-                                    .Build()
-                                    .ToComponentRenderFragment<Selection>();
+            {
+                x
+                    .Add(b => b.DataSource, persons)
+                    .Add(b => b.ChildContent, p =>
+                    {
+                        var selection = new ComponentParameterCollectionBuilder<Selection>()
+                                .Add(q => q.Key, p.Id.ToString())
+                                .Build()
+                                .ToRenderFragment<Selection>();
 
-                                var nameCol = new ComponentParameterBuilder<Column<string>>()
-                                    .Add(q => q.Field, p.Name)
-                                    .Build()
-                                    .ToComponentRenderFragment<Column<string>>();
+                        var nameCol = new ComponentParameterCollectionBuilder<Column<string>>()
+                                .Add(q => q.Field, p.Name)
+                                .Build()
+                                .ToRenderFragment<Column<string>>();
 
-                                var surnameCol = new ComponentParameterBuilder<Column<string>>()
-                                    .Add(q => q.Field, p.Surname)
-                                    .Build()
-                                    .ToComponentRenderFragment<Column<string>>();
+                        var surnameCol = new ComponentParameterCollectionBuilder<Column<string>>()
+                                .Add(q => q.Field, p.Surname)
+                                .Build()
+                                .ToRenderFragment<Column<string>>();
 
-                                return builder =>
-                                {
-                                    if (enableSelection) selection(builder);
-                                    nameCol(builder);
-                                    surnameCol(builder);
-                                };
-                            }
-                        );
+                        return builder =>
+                        {
+                            if (enableSelection) selection(builder);
+                            nameCol(builder);
+                            surnameCol(builder);
+                        };
+                    }
+                    );
 
-                    callback?.Invoke(x);
-                }
+                callback?.Invoke(x);
+            }
             );
         }
 
@@ -115,29 +115,29 @@ namespace AntDesign.Tests.Table
                 x.Add(b => b.DataSource, persons)
                 .Add(b => b.ChildContent, p =>
                 {
-                    var selection = new ComponentParameterBuilder<Selection>()
+                    var selection = new ComponentParameterCollectionBuilder<Selection>()
                         .Add(q => q.Key, p.Id.ToString())
                         .Add(q => q.HeaderColSpan, 2)
                         .Add(q => q.ColSpan, 1)
                         .Add(q => q.RowSpan, 2)
                         .Build()
-                        .ToComponentRenderFragment<Selection>();
+                        .ToRenderFragment<Selection>();
 
-                    var nameCol = new ComponentParameterBuilder<Column<string>>()
+                    var nameCol = new ComponentParameterCollectionBuilder<Column<string>>()
                         .Add(q => q.Field, p.Name)
                         .Add(q => q.HeaderColSpan, 0)
                         .Add(q => q.ColSpan, 2)
                         .Add(q => q.RowSpan, 1)
                         .Build()
-                        .ToComponentRenderFragment<Column<string>>();
+                        .ToRenderFragment<Column<string>>();
 
-                    var surnameCol = new ComponentParameterBuilder<Column<string>>()
+                    var surnameCol = new ComponentParameterCollectionBuilder<Column<string>>()
                         .Add(q => q.Field, p.Surname)
                         .Add(q => q.HeaderColSpan, 1)
                         .Add(q => q.ColSpan, 0)
                         .Add(q => q.RowSpan, 0)
                         .Build()
-                        .ToComponentRenderFragment<Column<string>>();
+                        .ToRenderFragment<Column<string>>();
 
                     return builder =>
                     {

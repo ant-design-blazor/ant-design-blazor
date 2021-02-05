@@ -3,7 +3,7 @@
 
 @{
     Action ClosePanel = () => { };
-    Action<DateTime, int> ChangePickerValue = async (date, index) => { await Calendar.ChangeValue(date); };
+    Action<DateTime, int?> ChangePickerValue = async (date, index) => { await Calendar.ChangeValue(date); };
     Action<DateTime, int> ChangeValue = async (date, index) => { await Calendar.ChangeValue(date); };
     Action<string, int> ChangePickerType = (type, index) => { Calendar.ChangePickerType(type, index); };
     Func<int, DateTime> GetIndexPickerValue = (index) => Calendar.Value;

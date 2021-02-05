@@ -7,6 +7,8 @@ namespace AntDesign.Docs.Shared
 {
     public partial class HeaderMenu : ComponentBase
     {
+        [Parameter] public bool IsMobile { get; set; }
+
         [Inject] private DemoService DemoService { get; set; }
 
         [Inject] private ILanguageService LanguageService { get; set; }
@@ -24,7 +26,7 @@ namespace AntDesign.Docs.Shared
             LanguageService.LanguageChanged += async (sender, args) =>
             {
                 _menuItems = await DemoService.GetMenuAsync();
-                StateHasChanged();
+                await InvokeAsync(StateHasChanged);
             };
         }
 

@@ -1,0 +1,122 @@
+﻿@inject ConfirmService _confirmService
+@inject ModalService _modalService
+
+
+<Divider>Modal</Divider>
+
+<Space>
+    <SpaceItem>
+        <Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+            Open Modal
+        </Button>
+        <Modal Title="@_title"
+               Visible="@_visible"
+               OnOk="@HandleOk"
+               OnCancel="@HandleCancel"
+               OkText="@_okText"
+               CancelText="@_cancelText"
+               >
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+        </Modal>
+    </SpaceItem>
+</Space>
+
+<Divider>ModalService</Divider>
+<Space>
+    <SpaceItem>
+        <Button OnClick="OpenModal" Type="primary">Open a Modal</Button>
+    </SpaceItem>
+    <SpaceItem>
+        <Button OnClick="OpenConfirm" Type="primary">Open a Confirm</Button>
+    </SpaceItem>
+</Space>
+
+<Divider>ConfirmService</Divider>
+<Space>
+    <SpaceItem>
+        <Button OnClick="OpenConfirmByConfirmService" Type="primary">Open a Modal</Button>
+    </SpaceItem>
+</Space>
+
+
+@code{
+    string _okText = "OK!";
+    string _cancelText = "Cancel?";
+    string _title = "Override Locale";
+    bool _visible = false;
+
+    private void HandleOk(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
+
+    private async Task OpenConfirm()
+    {
+        RenderFragment content =@<div>confirm content</div>;
+
+        var options = new ConfirmOptions()
+        {
+            Title = "Modal",
+            Width = 350,
+            Content = content,
+            OnOk = e => { Console.WriteLine("OnOk"); return Task.CompletedTask; },
+            OnCancel = e => { Console.WriteLine("OnCancel"); return Task.CompletedTask; }
+        };
+
+        var confirmRef = await _modalService.CreateConfirmAsync(options);
+
+        confirmRef.OnOpen = () =>
+        {
+            Console.WriteLine("Open Modal");
+            return Task.CompletedTask;
+        };
+
+        confirmRef.OnClose = () =>
+        {
+            Console.WriteLine("Close Modal");
+            return Task.CompletedTask;
+        };
+    }
+
+    private async Task OpenModal()
+    {
+        var modalConfig = new ModalOptions
+        {
+            Title = _title,
+            OkText = _okText,
+            CancelText = _cancelText,
+            Content = @<div>some content</div>
+        };
+
+        await _modalService.CreateModalAsync(modalConfig);
+    }
+
+    private async Task OpenConfirmByConfirmService()
+    {
+        var content = "some content";
+        var options = new ConfirmButtonOptions()
+        {
+            Button1Props = new AntDesign.ButtonProps()
+            {
+                ChildContent = _okText
+            }
+        };
+        var confirmResult = await 
+            _confirmService.Show(
+                content, 
+                _title, 
+                ConfirmButtons.OK, 
+                ConfirmIcon.Info, 
+                options);
+    }
+
+}

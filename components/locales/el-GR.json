@@ -29,10 +29,10 @@
       "monthSelect": "Επιλογή μήνα",
       "yearSelect": "Επιλογή έτους",
       "decadeSelect": "Επιλογή δεκαετίας",
-      "yearFormat": "YYYY",
-      "dateFormat": "D/M/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D/M/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d/M/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d/M/yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Προηγούμενος μήνας (PageUp)",
       "nextMonth": "Επόμενος μήνας (PageDown)",
@@ -63,10 +63,10 @@
       "monthSelect": "Επιλογή μήνα",
       "yearSelect": "Επιλογή έτους",
       "decadeSelect": "Επιλογή δεκαετίας",
-      "yearFormat": "YYYY",
-      "dateFormat": "D/M/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D/M/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d/M/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d/M/yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Προηγούμενος μήνας (PageUp)",
       "nextMonth": "Επόμενος μήνας (PageDown)",
@@ -88,8 +88,16 @@
   },
   "Modal": {
     "okText": "ΟΚ",
+    "cancelText": "Άκυρο"
+  },
+  "Confirm": {
+    "okText": "ΟΚ",
     "cancelText": "Άκυρο",
-    "justOkText": "ΟΚ"
+    "yesText": "Ναι",
+    "noText": "Όχι",
+    "retryText": "Αναχώρηση",
+    "abortText": "Εγκατάλειψη",
+    "ignoreText": "Αγνόηση"
   },
   "Popconfirm": {
     "okText": "ΟΚ",

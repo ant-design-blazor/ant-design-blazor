@@ -19,8 +19,8 @@
             secondsToGo -= 1;
             await Task.Delay(1000);
             props.Content = $"This modal will be destroyed after {secondsToGo} second.";
-            await modelRef.UpdateConfig();
+            await modelRef.UpdateConfigAsync();
         }
-        await _modalService.Destroy(modelRef);
+        await _modalService.DestroyConfirmAsync(modelRef);
     }
 }

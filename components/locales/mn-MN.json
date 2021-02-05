@@ -30,10 +30,10 @@
       "monthSelect": "Сар сонгох",
       "yearSelect": "Жил сонгох",
       "decadeSelect": "Арван сонгох",
-      "yearFormat": "YYYY",
-      "dateFormat": "YYYY/MM/DD",
-      "dayFormat": "DD",
-      "dateTimeFormat": "YYYY/MM/DD HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "yyyy/MM/dd",
+      "dayFormat": "dd",
+      "dateTimeFormat": "yyyy/MM/dd HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Өмнөх сар (PageUp)",
       "nextMonth": "Дараа сар (PageDown)",
@@ -69,10 +69,10 @@
       "monthSelect": "Сар сонгох",
       "yearSelect": "Жил сонгох",
       "decadeSelect": "Арван сонгох",
-      "yearFormat": "YYYY",
-      "dateFormat": "YYYY/MM/DD",
-      "dayFormat": "DD",
-      "dateTimeFormat": "YYYY/MM/DD HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "yyyy/MM/dd",
+      "dayFormat": "dd",
+      "dateTimeFormat": "yyyy/MM/dd HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Өмнөх сар (PageUp)",
       "nextMonth": "Дараа сар (PageDown)",
@@ -96,8 +96,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Цуцлах"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Цуцлах",
-    "justOkText": "OK"
+    "yesText": "Тийм ээ",
+    "noText": "Үгүй",
+    "retryText": "Дахин оролдоно уу",
+    "abortText": "Үр хөндөлт",
+    "ignoreText": "Үл тоомсорлох"
   },
   "Popconfirm": {
     "okText": "OK",

@@ -29,10 +29,10 @@
       "monthSelect": "Izvēlieties mēnesi",
       "yearSelect": "Izvēlieties gadu",
       "decadeSelect": "Izvēlieties desmit gadus",
-      "yearFormat": "YYYY",
-      "dateFormat": "D.M.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D.M.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d.M.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d.M.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Iepriekšējais mēnesis (PageUp)",
       "nextMonth": "Nākammēnes (PageDown)",
@@ -63,10 +63,10 @@
       "monthSelect": "Izvēlieties mēnesi",
       "yearSelect": "Izvēlieties gadu",
       "decadeSelect": "Izvēlieties desmit gadus",
-      "yearFormat": "YYYY",
-      "dateFormat": "D.M.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D.M.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d.M.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d.M.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Iepriekšējais mēnesis (PageUp)",
       "nextMonth": "Nākammēnes (PageDown)",
@@ -88,8 +88,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Atcelt"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Atcelt",
-    "justOkText": "OK"
+    "yesText": "Jā",
+    "noText": "Nē",
+    "retryText": "Atpakaļ mēģināt",
+    "abortText": "Pārtrauc",
+    "ignoreText": "Ignorēt"
   },
   "Popconfirm": {
     "okText": "OK",

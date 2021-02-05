@@ -8,19 +8,19 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class TreeNodeSwitcher
+    public partial class TreeNodeSwitcher<TItem> : ComponentBase
     {
         /// <summary>
         /// 树控件本身
         /// </summary>
         [CascadingParameter(Name = "Tree")]
-        public Tree TreeComponent { get; set; }
+        public Tree<TItem> TreeComponent { get; set; }
 
         /// <summary>
         /// 当前节点
         /// </summary>
         [CascadingParameter(Name = "SelfNode")]
-        public TreeNode SelfNode { get; set; }
+        public TreeNode<TItem> SelfNode { get; set; }
 
         private bool IsShowLineIcon => !SelfNode.IsLeaf && TreeComponent.ShowLine;
 
@@ -29,12 +29,12 @@ namespace AntDesign
         /// <summary>
         /// 节点是否处于展开状态
         /// </summary>
-        private bool IsSwitcherOpen => SelfNode.IsExpanded && !SelfNode.IsLeaf;
+        private bool IsSwitcherOpen => SelfNode.Expanded && !SelfNode.IsLeaf;
 
         /// <summary>
         /// 节点是否处于关闭状态
         /// </summary>
-        private bool IsSwitcherClose => !SelfNode.IsExpanded && !SelfNode.IsLeaf;
+        private bool IsSwitcherClose => !SelfNode.Expanded && !SelfNode.IsLeaf;
 
         protected ClassMapper ClassMapper { get; } = new ClassMapper();
 

@@ -13,9 +13,17 @@
     "next_3": "Następne 3 strony"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Monday",
     "lang": {
       "placeholder": "Wybierz datę",
+      "yearPlaceholder": "Wybierz rok",
+      "quarterPlaceholder": "Wybierz kwartał",
+      "monthPlaceholder": "Wybierz miesiąc",
+      "weekPlaceholder": "Wybierz tydzień",
       "rangePlaceholder": [ "Data początkowa", "Data końcowa" ],
+      "rangeYearPlaceholder": [ "Rok początkowy", "Rok końcowy" ],
+      "rangeMonthPlaceholder": [ "Miesiąc początkowy", "Miesiąc końcowy" ],
+      "rangeWeekPlaceholder": [ "Tydzień początkowy", "Tydzień końcowy" ],
       "locale": "pl_PL",
       "today": "Dzisiaj",
       "now": "Teraz",
@@ -26,13 +34,14 @@
       "year": "Rok",
       "timeSelect": "Ustaw czas",
       "dateSelect": "Ustaw datę",
+      "weekSelect": "Wybierz tydzień",
       "monthSelect": "Wybierz miesiąc",
       "yearSelect": "Wybierz rok",
       "decadeSelect": "Wybierz dekadę",
-      "yearFormat": "YYYY",
-      "dateFormat": "D/M/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D/M/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d/M/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d/M/yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Poprzedni miesiąc (PageUp)",
       "nextMonth": "Następny miesiąc (PageDown)",
@@ -41,7 +50,21 @@
       "previousDecade": "Ostatnia dekada",
       "nextDecade": "Następna dekada",
       "previousCentury": "Ostatni wiek",
-      "nextCentury": "Następny wiek"
+      "nextCentury": "Następny wiek",
+      "startDate": "Data początkowa",
+      "startWeek": "Początkowy tydzień",
+      "startMonth": "Początkowy miesiąc",
+      "startYear": "Początkowy rok",
+      "startQuarter": "Początkowy kwartał",
+      "endDate": "Data końcowa",
+      "endWeek": "Końcowy tydzień",
+      "endMonth": "Końcowy miesiąc",
+      "endYear": "Końcowy rok",
+      "endQuarter": "Końcowy kwartał",
+      "quarterSelect": "Wybierz kwartał",
+      "week": "Tydzień",
+      "monthFormat": "MMMM",
+      "shortWeekDays": [ "Pn", "Wt", "Śr", "Cz", "Pt", "So", "Nd" ]
     },
     "timePickerLocale": {
       "placeholder": "Wybierz godzinę"
@@ -67,10 +90,10 @@
       "monthSelect": "Wybierz miesiąc",
       "yearSelect": "Wybierz rok",
       "decadeSelect": "Wybierz dekadę",
-      "yearFormat": "YYYY",
-      "dateFormat": "D/M/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D/M/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d/M/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d/M/yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Poprzedni miesiąc (PageUp)",
       "nextMonth": "Następny miesiąc (PageDown)",
@@ -94,8 +117,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Anuluj"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Anuluj",
-    "justOkText": "OK"
+    "yesText": "Tak",
+    "noText": "Nie",
+    "retryText": "Retry",
+    "abortText": "Przerwij",
+    "ignoreText": "Ignoruj"
   },
   "Popconfirm": {
     "okText": "OK",

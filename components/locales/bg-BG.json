@@ -29,10 +29,10 @@
       "monthSelect": "Избор на месец",
       "yearSelect": "Избор на година",
       "decadeSelect": "Десетилетие",
-      "yearFormat": "YYYY",
-      "dateFormat": "D M YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D M YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d M yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d M yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Предишен месец (PageUp)",
       "nextMonth": "Следващ месец (PageDown)",
@@ -63,10 +63,10 @@
       "monthSelect": "Избор на месец",
       "yearSelect": "Избор на година",
       "decadeSelect": "Десетилетие",
-      "yearFormat": "YYYY",
-      "dateFormat": "D M YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D M YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d M yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d M yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Предишен месец (PageUp)",
       "nextMonth": "Следващ месец (PageDown)",
@@ -88,8 +88,16 @@
   },
   "Modal": {
     "okText": "Добре",
+    "cancelText": "Отказ"
+  },
+  "Confirm": {
+    "okText": "Добре",
     "cancelText": "Отказ",
-    "justOkText": "Добре"
+    "yesText": "Да",
+    "noText": "Не",
+    "retryText": "Повторение",
+    "abortText": "Прекъсване",
+    "ignoreText": "Игнориране"
   },
   "Popconfirm": {
     "okText": "Добре",

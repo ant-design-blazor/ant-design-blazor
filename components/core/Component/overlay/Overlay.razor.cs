@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -55,6 +56,9 @@ namespace AntDesign.Internal
         [Parameter]
         public bool HiddenMode { get; set; } = false;
 
+        [Inject]
+        private DomEventService DomEventService { get; set; }
+
         private bool _hasAddOverlayToBody = false;
         private bool _isPreventHide = false;
         private bool _isChildOverlayShow = false;
@@ -78,6 +82,8 @@ namespace AntDesign.Internal
         private const int HORIZONTAL_ARROW_SHIFT = 13;
         private const int VERTICAL_ARROW_SHIFT = 5;
 
+        private int _overlayClientWidth = 0;
+
         protected override async Task OnParametersSetAsync()
         {
             if (!_isOverlayShow && Trigger.Visible && !_preVisible)
@@ -97,20 +103,23 @@ namespace AntDesign.Internal
         {
             if (firstRender)
             {
-                await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"{Trigger.PrefixCls}-trigger");
+                DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
             }
 
             if (_lastDisabledState != Trigger.Disabled)
             {
-                if (Trigger.Disabled)
+                if (Ref.Id != null)
                 {
-                    await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"disabled");
+                    if (Trigger.Disabled)
+                    {
+                        await JsInvokeAsync(JSInteropConstants.AddClsToFirstChild, Ref, $"disabled");
+                    }
+                    else
+                    {
+                        await JsInvokeAsync(JSInteropConstants.RemoveClsFromFirstChild, Ref, $"disabled");
+                    }
                 }
-                else
-                {
-                    await JsInvokeAsync(JSInteropConstants.RemoveClsFromFirstChild, Ref, $"disabled");
-                }
-                _lastDisabledState = Trigger.Disabled;
+                 _lastDisabledState = Trigger.Disabled;
             }
 
             if (_isWaitForOverlayFirstRender && _isOverlayFirstRender)
@@ -128,7 +137,7 @@ namespace AntDesign.Internal
 
         protected override void Dispose(bool disposing)
         {
-            if (_hasAddOverlayToBody)
+            if (_hasAddOverlayToBody && !_isReloading)
             {
                 _ = InvokeAsync(async () =>
                 {
@@ -136,7 +145,7 @@ namespace AntDesign.Internal
                     await JsInvokeAsync(JSInteropConstants.DelElementFrom, Ref, Trigger.PopupContainerSelector);
                 });
             }
-
+            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
             base.Dispose(disposing);
         }
 
@@ -147,15 +156,22 @@ namespace AntDesign.Internal
                 return;
             }
 
-            Element trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
-
-            // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
-            // I try to render Overlay when OvelayTrigger’s OnAfterRender is called, but is still get negative absoluteLeft
-            // This may be a bad solution, but for now I can only do it this way.
-            while (trigger.absoluteLeft <= 0 && trigger.clientWidth <= 0)
+            Element trigger;
+            if (Trigger.ChildContent != null) 
             {
-                await Task.Delay(50);
                 trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+                // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
+                // I try to render Overlay when OvelayTrigger’s OnAfterRender is called, but is still get negative absoluteLeft
+                // This may be a bad solution, but for now I can only do it this way.
+                while (trigger.absoluteLeft <= 0 && trigger.clientWidth <= 0)
+                {
+                    await Task.Delay(50);
+                    trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+                }
+            }
+            else //(Trigger.Unbound != null)
+            {
+                trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.Ref);
             }
 
             _overlayLeft = overlayLeft;
@@ -263,6 +279,12 @@ namespace AntDesign.Internal
             return _isOverlayHiding;
         }
 
+        /// <summary>
+        /// Indicates that a page is being refreshed 
+        /// </summary>
+        private bool _isReloading;
+        private void Reloading(JsonElement jsonElement) => _isReloading = true;
+
         private async Task AddOverlayToBody()
         {
             if (!_hasAddOverlayToBody)
@@ -324,8 +346,14 @@ namespace AntDesign.Internal
         private int GetOverlayLeft(Element trigger, Element overlay, Element containerElement)
         {
             int left = 0;
+            
             int triggerLeft = trigger.absoluteLeft - containerElement.absoluteLeft;
-            int triggerWidth = trigger.clientWidth;
+            int triggerWidth = trigger.clientWidth != 0 ? trigger.clientWidth : trigger.offsetWidth;
+
+            if (overlay.clientWidth > 0)
+            {
+                _overlayClientWidth = overlay.clientWidth;
+            }
 
             // contextMenu
             if (_overlayLeft != null)
@@ -336,7 +364,7 @@ namespace AntDesign.Internal
 
             if (Trigger.Placement.IsIn(PlacementType.Left, PlacementType.LeftTop, PlacementType.LeftBottom))
             {
-                left = triggerLeft - overlay.clientWidth - HorizontalOffset;
+                left = triggerLeft - _overlayClientWidth - HorizontalOffset;
             }
             else if (Trigger.Placement.IsIn(PlacementType.Right, PlacementType.RightTop, PlacementType.RightBottom))
             {
@@ -353,11 +381,11 @@ namespace AntDesign.Internal
             }
             else if (Trigger.Placement.IsIn(PlacementType.BottomCenter, PlacementType.Bottom, PlacementType.TopCenter, PlacementType.Top))
             {
-                left = triggerLeft + triggerWidth / 2 - overlay.clientWidth / 2;
+                left = triggerLeft + triggerWidth / 2 - _overlayClientWidth / 2;
             }
             else if (Trigger.Placement.IsIn(PlacementType.BottomRight, PlacementType.TopRight))
             {
-                left = triggerLeft + triggerWidth - overlay.clientWidth;
+                left = triggerLeft + triggerWidth - _overlayClientWidth;
 
                 if (ArrowPointAtCenter)
                 {
@@ -431,7 +459,15 @@ namespace AntDesign.Internal
 
         internal async Task UpdatePosition(int? overlayLeft = null, int? overlayTop = null)
         {
-            Element trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+            Element trigger;
+            if (Trigger.ChildContent != null) 
+            {
+                trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+            }
+            else //(Trigger.Unbound != null)
+            {
+                trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.Ref);
+            }
 
             _overlayLeft = overlayLeft;
             _overlayTop = overlayTop;

@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Threading.Tasks;
 using AntDesign.Core.HashCodes;
+using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Table<TItem> : AntDomComponentBase, ITable
+    public partial class Table<TItem> : AntDomComponentBase, ITable, IAsyncDisposable
     {
         private static readonly TItem _fieldModel = (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem));
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
         private bool _shouldRender = true;
-        private int _parametersHashCode = 0;
+        private int _parametersHashCode;
 
         [Parameter]
         public RenderMode RenderMode { get; set; } = RenderMode.Always;
@@ -88,21 +91,52 @@ namespace AntDesign
         [Parameter]
         public int IndentSize { get; set; } = 15;
 
-        public ColumnContext ColumnContext { get; set; } = new ColumnContext();
+        [Parameter]
+        public int ExpandIconColumnIndex { get; set; }
+
+        [Parameter]
+        public Func<RowData<TItem>, string> RowClassName { get; set; } = _ => "";
+
+        [Parameter]
+        public Func<RowData<TItem>, string> ExpandedRowClassName { get; set; } = _ => "";
+
+        [Parameter]
+        public SortDirection[] SortDirections { get; set; } = SortDirection.Preset.Default;
+
+        [Inject]
+        public DomEventService DomEventService { get; set; }
+
+        public ColumnContext ColumnContext { get; set; }
 
         private IEnumerable<TItem> _showItems;
 
         private IEnumerable<TItem> _dataSource;
 
-        private bool _waitingReload = false;
-        private bool _waitingReloadAndInvokeChange = false;
-        private bool _treeMode = false;
+        private bool _waitingReload;
+        private bool _waitingReloadAndInvokeChange;
+        private bool _treeMode;
+
+        private bool _hasFixLeft;
+        private bool _hasFixRight;
+        private bool _pingRight;
+        private bool _pingLeft;
+        private bool _tableLayoutIsFixed;
+        private int _treeExpandIconColumnIndex;
+
+        private ElementReference _tableHeaderRef;
+        private ElementReference _tableBodyRef;
 
         private bool ServerSide => _total > _dataSourceCount;
 
         bool ITable.TreeMode => _treeMode;
-
         int ITable.IndentSize => IndentSize;
+        string ITable.ScrollX => ScrollX;
+        string ITable.ScrollY => ScrollY;
+        int ITable.ScrollBarWidth => ScrollBarWidth;
+        int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex;
+        int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
+        bool ITable.HasExpandTemplate => ExpandTemplate != null;
+        SortDirection[] ITable.SortDirections => SortDirections;
 
         public void ReloadData()
         {
@@ -124,6 +158,19 @@ namespace AntDesign
             ReloadAndInvokeChange();
         }
 
+        void ITable.ColumnSorterChange(IFieldColumn column)
+        {
+            foreach (var col in ColumnContext.HeaderColumns)
+            {
+                if (col.ColIndex != column.ColIndex && col is IFieldColumn fieldCol && fieldCol.SorterMultiple <= 0 && fieldCol.Sortable)
+                {
+                    fieldCol.ClearSorter();
+                }
+            }
+
+            ReloadAndInvokeChange();
+        }
+
         private void ReloadAndInvokeChange()
         {
             var queryModel = this.Reload();
@@ -137,9 +184,9 @@ namespace AntDesign
         {
             var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
 
-            foreach (var col in ColumnContext.Columns)
+            foreach (var col in ColumnContext.HeaderColumns)
             {
-                if (col is IFieldColumn fieldColumn && fieldColumn.Sortable)
+                if (col is IFieldColumn fieldColumn && fieldColumn.SortModel != null)
                 {
                     queryModel.AddSortModel(fieldColumn.SortModel);
                 }
@@ -154,9 +201,10 @@ namespace AntDesign
                 if (_dataSource != null)
                 {
                     var query = _dataSource.AsQueryable();
-                    foreach (var sort in queryModel.SortModel)
+                    var orderedSortModels = queryModel.SortModel.OrderBy(x => x.Priority);
+                    foreach (var sort in orderedSortModels)
                     {
-                        query = sort.Sort(query);
+                        query = sort.SortList(query);
                     }
 
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
@@ -164,6 +212,12 @@ namespace AntDesign
 
                     _showItems = query;
                 }
+            }
+
+            _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x).Any()) == true);
+            if (_treeMode)
+            {
+                _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null ? 1 : 0);
             }
 
             StateHasChanged();
@@ -179,10 +233,11 @@ namespace AntDesign
                 .If($"{prefixCls}-bordered", () => Bordered)
                 .If($"{prefixCls}-small", () => Size == TableSize.Small)
                 .If($"{prefixCls}-middle", () => Size == TableSize.Middle)
-                //.Add( "ant-table ant-table-ping-left ant-table-ping-right ")
-                .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ColumnContext.Columns.Any(x => x.Fixed.IsIn("left", "right")))
-                .If($"{prefixCls}-has-fix-left", () => ColumnContext.Columns.Any(x => x.Fixed == "left"))
-                .If($"{prefixCls}-has-fix-right {prefixCls}-ping-right ", () => ColumnContext.Columns.Any(x => x.Fixed == "right"))
+                .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ScrollX != null)
+                .If($"{prefixCls}-has-fix-left", () => _hasFixLeft)
+                .If($"{prefixCls}-has-fix-right", () => _hasFixRight)
+                .If($"{prefixCls}-ping-left", () => _pingLeft)
+                .If($"{prefixCls}-ping-right", () => _pingRight)
                 ;
         }
 
@@ -195,10 +250,7 @@ namespace AntDesign
                 ChildContent = RowTemplate;
             }
 
-            if (TreeChildren != null && DataSource.Any(x => TreeChildren(x).Any()))
-            {
-                _treeMode = true;
-            }
+            this.ColumnContext = new ColumnContext(this);
 
             SetClass();
 
@@ -232,6 +284,28 @@ namespace AntDesign
             }
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+
+            if (firstRender)
+            {
+                DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
+                if (ScrollX != null)
+                {
+                    await SetScrollPositionClassName();
+
+                    DomEventService.AddEventListener("window", "resize", OnResize, false);
+                    DomEventService.AddEventListener(_tableBodyRef, "scroll", OnScroll);
+                }
+
+                if (ScrollY != null && ScrollX != null)
+                {
+                    await JsInvokeAsync(JSInteropConstants.BindTableHeaderAndBodyScroll, _tableBodyRef, _tableHeaderRef);
+                }
+            }
+        }
+
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
@@ -250,17 +324,100 @@ namespace AntDesign
 
         protected override bool ShouldRender() => this._shouldRender;
 
-        private static void ToggleExpandRow(RowData<TItem> rowData)
-        {
-            rowData.Expanded = !rowData.Expanded;
-        }
-
         private void RowClick(RowData<TItem> item)
         {
             if (OnRowClick.HasDelegate)
             {
                 OnRowClick.InvokeAsync(item);
             }
+        }
+
+        void ITable.HasFixLeft() => _hasFixLeft = true;
+
+        void ITable.HasFixRight() => _hasFixRight = true;
+
+        void ITable.TableLayoutIsFixed() => _tableLayoutIsFixed = true;
+
+        private async void OnResize(JsonElement _) => await SetScrollPositionClassName();
+
+        private async void OnScroll(JsonElement _) => await SetScrollPositionClassName();
+
+        private async Task SetScrollPositionClassName(bool clear = false)
+        {
+            if (_isReloading)
+                return;
+
+            var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tableBodyRef);
+            var scrollWidth = element.scrollWidth;
+            var scrollLeft = element.scrollLeft;
+            var clientWidth = element.clientWidth;
+
+            var beforePingLeft = _pingLeft;
+            var beforePingRight = _pingRight;
+
+            if ((scrollWidth == clientWidth && scrollWidth != 0) || clear)
+            {
+                _pingLeft = false;
+                _pingRight = false;
+            }
+            else if (scrollLeft == 0)
+            {
+                _pingLeft = false;
+                _pingRight = true;
+            }
+            // allow the gap between 1 px, it's magic ✨
+            else if (Math.Abs(scrollWidth - (scrollLeft + clientWidth)) < 1)
+            {
+                _pingRight = false;
+                _pingLeft = true;
+            }
+            else
+            {
+                _pingLeft = true;
+                _pingRight = true;
+            }
+
+            _shouldRender = beforePingLeft != _pingLeft || beforePingRight != _pingRight;
+            if (!clear)
+            {
+                StateHasChanged();
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnResize);
+            DomEventService.RemoveEventListerner<JsonElement>(_tableBodyRef, "scroll", OnScroll);
+            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            base.Dispose(disposing);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (!_isReloading)
+            {
+                await this.SetScrollPositionClassName(true);
+                if (ScrollY != null && ScrollX != null)
+                {
+                    await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);
+                }
+            }
+            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+        }
+
+        bool ITable.RowExpandable(RowData rowData)
+        {
+            return RowExpandable(rowData as RowData<TItem>);
+        }
+
+        /// <summary>
+        /// Indicates that a page is being refreshed
+        /// </summary>
+        private bool _isReloading;
+
+        private void Reloading(JsonElement jsonElement)
+        {
+            _isReloading = true;
         }
     }
 }

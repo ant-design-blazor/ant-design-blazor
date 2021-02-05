@@ -30,10 +30,10 @@
       "monthSelect": "மாதத்தைத் தேர்வுசெய்க",
       "yearSelect": "வருடத்தைத் தேர்வுசெய்க",
       "decadeSelect": "தசாப்தத்தைத் தேர்வுசெய்க",
-      "yearFormat": "YYYY",
-      "dateFormat": "M/D/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "M/D/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "M/d/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "M/d/yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "முந்தைய மாதம் (PageUp)",
       "nextMonth": "அடுத்த மாதம் (PageDown)",
@@ -69,10 +69,10 @@
       "monthSelect": "மாதத்தைத் தேர்வுசெய்க",
       "yearSelect": "வருடத்தைத் தேர்வுசெய்க",
       "decadeSelect": "தசாப்தத்தைத் தேர்வுசெய்க",
-      "yearFormat": "YYYY",
-      "dateFormat": "M/D/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "M/D/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "M/d/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "M/d/yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "முந்தைய மாதம் (PageUp)",
       "nextMonth": "அடுத்த மாதம் (PageDown)",
@@ -101,8 +101,16 @@
   },
   "Modal": {
     "okText": "சரி",
+    "cancelText": "ரத்து செய்யவும்"
+  },
+  "Confirm": {
+    "okText": "சரி",
     "cancelText": "ரத்து செய்யவும்",
-    "justOkText": "பரவாயில்லை, சரி"
+    "yesText": "ஆம்",
+    "noText": "இல்லை",
+    "retryText": "திரும்ப முயற்சி",
+    "abortText": "கைவிடு",
+    "ignoreText": "புறக்கணி"
   },
   "Popconfirm": {
     "okText": "சரி",

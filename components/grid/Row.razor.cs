@@ -32,6 +32,9 @@ namespace AntDesign
         [Parameter]
         public GutterType Gutter { get; set; }
 
+        [Parameter]
+        public EventCallback<BreakpointType> OnBreakpoint { get; set; }
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -41,12 +44,21 @@ namespace AntDesign
 
         private static Hashtable _gridResponsiveMap = new Hashtable()
         {
-            [nameof(BreakpointEnum.xs)] = "(max-width: 575px)",
-            [nameof(BreakpointEnum.sm)] = "(max-width: 576px)",
-            [nameof(BreakpointEnum.md)] = "(max-width: 768px)",
-            [nameof(BreakpointEnum.lg)] = "(max-width: 992px)",
-            [nameof(BreakpointEnum.xl)] = "(max-width: 1200px)",
-            [nameof(BreakpointEnum.xxl)] = "(max-width: 1600px)",
+            [nameof(BreakpointType.Xs)] = "(max-width: 575px)",
+            [nameof(BreakpointType.Sm)] = "(max-width: 576px)",
+            [nameof(BreakpointType.Md)] = "(max-width: 768px)",
+            [nameof(BreakpointType.Lg)] = "(max-width: 992px)",
+            [nameof(BreakpointType.Xl)] = "(max-width: 1200px)",
+            [nameof(BreakpointType.Xxl)] = "(max-width: 1600px)",
+        };
+
+        private static BreakpointType[] _breakpoints = new[] {
+            BreakpointType.Xs,
+            BreakpointType.Sm,
+            BreakpointType.Md,
+            BreakpointType.Lg,
+            BreakpointType.Xl,
+            BreakpointType.Xxl
         };
 
         protected override async Task OnInitializedAsync()
@@ -70,31 +82,42 @@ namespace AntDesign
         {
             if (firstRender)
             {
-                DomEventService.AddEventListener<object>("window", "resize", OnResize, false);
-
-                await this.SetGutterStyle();
+                var dimensions = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow);
+                DomEventService.AddEventListener<Window>("window", "resize", OnResize, false);
+                OptimizeSize(dimensions.innerWidth);
             }
 
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        private async void OnResize(object o)
+        private async void OnResize(Window window)
         {
-            await SetGutterStyle();
+            OptimizeSize(window.innerWidth);
         }
 
-        private async Task SetGutterStyle()
+        private void OptimizeSize(decimal windowWidth)
         {
-            string breakPoint = null;
-
-            await typeof(BreakpointEnum).GetEnumNames().ForEachAsync(async bp =>
+            BreakpointType actualBreakpoint = _breakpoints[_breakpoints.Length - 1];
+            for (int i = 0; i < _breakpoints.Length; i++)
             {
-                if (await JsInvokeAsync<bool>(JSInteropConstants.MatchMedia, _gridResponsiveMap[bp]))
+                if (windowWidth <= _breakpoints[i].Width && (windowWidth >= (i > 0 ? _breakpoints[i - 1].Width : 0)))
                 {
-                    breakPoint = bp;
+                    actualBreakpoint = _breakpoints[i];
                 }
-            });
+            }
 
+            SetGutterStyle(actualBreakpoint.Name);
+
+            if (OnBreakpoint.HasDelegate)
+            {
+                OnBreakpoint.InvokeAsync(actualBreakpoint);
+            }
+
+            StateHasChanged();
+        }
+
+        private void SetGutterStyle(string breakPoint)
+        {
             var gutter = this.GetGutter(breakPoint);
             Cols.ForEach(x => x.RowGutterChanged(gutter));
 
@@ -108,7 +131,7 @@ namespace AntDesign
                 GutterStyle += $"margin-top: -{gutter.verticalGutter / 2}px;margin-bottom: -{gutter.verticalGutter / 2}px;";
             }
 
-            InvokeStateHasChanged();
+            StateHasChanged();
         }
 
         private (int horizontalGutter, int verticalGutter) GetGutter(string breakPoint)
@@ -128,7 +151,7 @@ namespace AntDesign
         {
             base.Dispose(disposing);
 
-            DomEventService.RemoveEventListerner<object>("window", "resize", OnResize);
+            DomEventService.RemoveEventListerner<Window>("window", "resize", OnResize);
         }
     }
 

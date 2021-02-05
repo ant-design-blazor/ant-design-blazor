@@ -1,9 +1,11 @@
 ﻿@namespace AntDesign
+@inherits ComponentBase
+@typeparam TItem
 
 <span class="@ClassMapper.Class" @onclick="OnClick">
     @if (IsShowSwitchIcon)
     {
-        @if (!SelfNode.IsLoading)
+        @if (!SelfNode.Loading)
         {
             if (TreeComponent.SwitcherIconTemplate != null)
             {
@@ -22,7 +24,7 @@
     }
     @if (TreeComponent.ShowLine)
     {
-        @if (!SelfNode.IsLoading)
+        @if (!SelfNode.Loading)
         {
             if (TreeComponent.SwitcherIconTemplate != null)
             {

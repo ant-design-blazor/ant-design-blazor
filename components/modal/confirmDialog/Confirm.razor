@@ -1,0 +1,185 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+@using OneOf;
+
+<DialogWrapper Visible="@Config.Visible"
+               DestroyOnClose="true"
+               Config="@_dialogOptions"
+               Style="@Config.Style"
+               >
+        <div class="ant-modal-confirm-body-wrapper">
+            <div class="ant-modal-confirm-body">
+                @if (Config.Icon != null)
+                {
+                    @(Config.Icon)
+                }
+
+                @if (Config.TitleTemplate != null)
+                {
+                    <span class="ant-modal-confirm-title">
+                        @Config.TitleTemplate
+                    </span>
+                }
+                else if (!string.IsNullOrWhiteSpace(Config.Title))
+                {
+                    <span class="ant-modal-confirm-title">
+                        @Config.Title
+                    </span>
+                }
+
+                <div class="ant-modal-confirm-content">
+                    @if (Config.Content.IsT0)
+                    {
+                        @(Config.Content.AsT0)
+                    }
+                    else
+                    {
+                        @(Config.Content.AsT1)
+                    }
+                </div>
+            </div>
+            <div class="ant-modal-confirm-btns">
+                @{
+                    RenderFragment BuildButton(ButtonProps props,
+                        Func<MouseEventArgs, Task> onClick, out Button btnRef)
+                    {
+                        btnRef = null;
+                        if (props == null) return null;
+                        var onClickEvent = new EventCallback<MouseEventArgs>(this, onClick);
+                        Button innerBtnRef = null;
+                        var children = props.ChildContent!.Value;
+                        RenderFragment compontent = (@<Button @ref="@innerBtnRef"
+                                                              OnClick="@onClickEvent"
+                                                              Block="@props.Block"
+                                                              Ghost="@props.Ghost"
+                                                              Search="@props.Search"
+                                                              Loading="@props.Loading"
+                                                              Type="@props.Type"
+                                                              Shape="@props.Shape"
+                                                              Size="@props.Size"
+                                                              Icon="@props.Icon"
+                                                              Disabled="@props.Disabled"
+                                                              Danger="@props.IsDanger">
+                        @{
+                            if (children.IsT0)
+                            {
+                                @(children.AsT0)
+                            }
+                            else
+                            {
+                                @(children.AsT1)
+                            }
+                        }
+                    </Button>);
+               btnRef = innerBtnRef;
+               return compontent;
+           }
+                }
+                @switch (Config.ConfirmButtons)
+                {
+                    case ConfirmButtons.OK:
+                        {
+                            @BuildButton(Config.Button1Props, async (e) =>
+                            {
+                                await HandleBtn1Click(e, ConfirmResult.OK);
+                            }, out _okBtn)
+                            ;
+                            break;
+                        }
+                    case ConfirmButtons.OKCancel:
+                        {
+
+                            @BuildButton(Config.Button1Props, async (e) =>
+                            {
+                                await HandleBtn1Click(e, ConfirmResult.OK);
+                            }, out _okBtn)
+                            ;
+
+                            @BuildButton(Config.Button2Props, async (e) =>
+                            {
+                                await HandleBtn2Click(e, ConfirmResult.Cancel);
+                            }, out _cancelBtn)
+                            ;
+
+                            break;
+                        }
+                    case ConfirmButtons.YesNo:
+                        {
+                            @BuildButton(Config.Button1Props, async (e) =>
+                            {
+                                await HandleBtn1Click(e, ConfirmResult.Yes);
+                            }, out _okBtn)
+                            ;
+
+                            @BuildButton(Config.Button2Props, async (e) =>
+                            {
+                                await HandleBtn2Click(e, ConfirmResult.No);
+                            }, out _cancelBtn)
+                            ;
+
+                            break;
+                        }
+                    case ConfirmButtons.YesNoCancel:
+                        {
+                            @BuildButton(Config.Button1Props, async (e) =>
+                            {
+                                await HandleBtn1Click(e, ConfirmResult.Yes);
+                            }, out _okBtn)
+                            ;
+
+                            @BuildButton(Config.Button2Props, async (e) =>
+                            {
+                                await HandleBtn2Click(e, ConfirmResult.No);
+                            }, out _cancelBtn)
+                            ;
+
+                            @BuildButton(Config.Button3Props, async (e) =>
+                            {
+                                await HandleBtn3Click(e, ConfirmResult.Cancel);
+                            }, out _)
+                            ;
+                            break;
+                        }
+
+                    case ConfirmButtons.RetryCancel:
+                        {
+                            @BuildButton(Config.Button1Props, async (e) =>
+                            {
+                                await HandleBtn1Click(e, ConfirmResult.Retry);
+                            }, out _okBtn)
+                            ;
+
+                            @BuildButton(Config.Button2Props, async (e) =>
+                            {
+                                await HandleBtn2Click(e, ConfirmResult.Cancel);
+                            }, out _cancelBtn)
+                            ;
+
+                            break;
+                        }
+                    case ConfirmButtons.AbortRetryIgnore:
+                        {
+                            @BuildButton(Config.Button1Props, async (e) =>
+                            {
+                                await HandleBtn1Click(e, ConfirmResult.Abort);
+                            }, out _okBtn)
+                            ;
+
+                            @BuildButton(Config.Button2Props, async (e) =>
+                            {
+                                await HandleBtn2Click(e, ConfirmResult.Retry);
+                            }, out _cancelBtn)
+                            ;
+
+                            @BuildButton(Config.Button3Props, async (e) =>
+                            {
+                                await HandleBtn3Click(e, ConfirmResult.Ignore);
+                            }, out _)
+                            ;
+
+                            break;
+                        }
+                }
+            </div>
+        </div>
+</DialogWrapper>

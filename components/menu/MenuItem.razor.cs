@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -40,10 +40,16 @@ namespace AntDesign
         [Parameter]
         public string Title { get; set; }
 
+        [Parameter]
+        public string Icon { get; set; }
+
         internal bool IsSelected { get; private set; }
+        internal bool FirstRun { get; set; } = true;
         private string _key;
 
-        private int PaddingLeft => RootMenu.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * 24 : 0;
+        private bool TooltipDisabled => ParentMenu?.IsOpen == true || ParentMenu?._overlayVisible == true || RootMenu?.InlineCollapsed == false;
+
+        private int PaddingLeft => RootMenu.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * RootMenu?.InlineIndent ?? 0 : 0;
 
         private void SetClass()
         {
@@ -56,7 +62,8 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            RootMenu.MenuItems.Remove(this);
+            RootMenu?.MenuItems?.Remove(this);
+
             base.Dispose(disposing);
         }
 
@@ -76,7 +83,7 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            if (RootMenu.SelectedKeys.Contains(Key))
+            if (RootMenu.SelectedKeys.Contains(Key) && !IsSelected)
                 Select();
         }
 
@@ -112,12 +119,14 @@ namespace AntDesign
         public void Select()
         {
             IsSelected = true;
+            FirstRun = false;
             ParentMenu?.Select();
         }
 
         public void Deselect()
         {
             IsSelected = false;
+            FirstRun = false;
             ParentMenu?.Deselect();
         }
     }

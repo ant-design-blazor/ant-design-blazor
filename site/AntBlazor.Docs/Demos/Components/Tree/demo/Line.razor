@@ -1,34 +1,33 @@
-
 <Switch @bind-Value="@_showLine"/>
 <br />
 
-<Tree ShowLine="@_showLine" Checkable>
+<Tree ShowLine="@_showLine" Checkable TItem="string">
     <Nodes>
-        <TreeNode Title="A">
+        <TreeNode Title="A" TItem="string">
             <Nodes>
-                <TreeNode Title="A1">
+                <TreeNode Title="A1" TItem="string">
                     <Nodes>
-                        <TreeNode Title="A1-1"></TreeNode>
-                        <TreeNode Title="A1-2"></TreeNode>
+                        <TreeNode Title="A1-1" TItem="string"></TreeNode>
+                        <TreeNode Title="A1-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A2" IsDisabled>
+                <TreeNode Title="A2" Disabled TItem="string">
                     <Nodes>
-                        <TreeNode Title="A2-1"></TreeNode>
-                        <TreeNode Title="A2-2"></TreeNode>
+                        <TreeNode Title="A2-1" TItem="string"></TreeNode>
+                        <TreeNode Title="A2-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A3" IsDisableCheckbox>
+                <TreeNode Title="A3" DisableCheckbox TItem="string">
                     <Nodes>
-                        <TreeNode Title="A3-1"></TreeNode>
-                        <TreeNode Title="A3-2" IsDisableCheckbox></TreeNode>
-                        <TreeNode Title="A3-3" IsDisabled></TreeNode>
+                        <TreeNode Title="A3-1" TItem="string"></TreeNode>
+                        <TreeNode Title="A3-2" DisableCheckbox TItem="string"></TreeNode>
+                        <TreeNode Title="A3-3" Disabled TItem="string"></TreeNode>
 
                     </Nodes>
                 </TreeNode>
             </Nodes>
         </TreeNode>
-        <TreeNode Title="B"></TreeNode>
+        <TreeNode Title="B" TItem="string"></TreeNode>
     </Nodes>
 </Tree>
 

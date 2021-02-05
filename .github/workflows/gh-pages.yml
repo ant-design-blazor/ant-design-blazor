@@ -1,7 +1,7 @@
 ﻿name: Publish Docs
 
 env:
-  Version: 0.5.0
+  Version: 0.7.0
   NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
 
 on:
@@ -43,13 +43,27 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Package Nightly Nuget 📦
+        id: pack
+        run: |
+          FULL_VERSION=$Version-nightly-`date "+%y%m%d%H%M"`
+          echo "Version: ${FULL_VERSION}"
+          echo "::set-output name=package_version::${FULL_VERSION}"
+          dotnet pack components/AntDesign.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
+
+      - name: Publish to Nuget ✔
+        run: |
+          dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
+
       - name: Publish Docs 🎉
         run: |
           npm install
           echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
-          dotnet build -c Release
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
+          sed -i s/{version}/$PACKAGE_VERSION/g ./cargo/wwwroot/index.html
+        env:
+          PACKAGE_VERSION: ${{ steps.pack.outputs.package_version }}
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
@@ -66,16 +80,7 @@ jobs:
           publish_branch: master
           publish_dir: ./cargo/wwwroot
           cname: antblazor.com
-
-      - name: Package Nightly Nuget 📦
-        run: |
-          FULL_VERSION=$Version-nightly-`date "+%y%m%d%H%M"`
-          echo "Version: ${FULL_VERSION}"
-          dotnet pack components/AntDesign.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish --no-build --no-restore
-
-      - name: Publish to Nuget ✔
-        run: |
-          dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
+          tag_name: ${{ steps.pack.outputs.package_version }}
 
       - name: Sync to Gitee 💕
         uses: wearerequired/git-mirror-action@master
@@ -85,9 +90,6 @@ jobs:
           source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
           destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
 
-      - name: Reload Gitee Pages 😆
-        uses: mizuka-wu/gitee-pages-action@v1.0.0
-        with:
-          repository: ant-design-blazor/ant-design-blazor
-          cookie: ${{ secrets.GITEE_COOKIE }}
-          branch: gh-pages
+      # - name: 🧹Purge jsDeliver CDN
+      #   run: |
+      #     bash ./scripts/purge-jsdelivr.sh ./cargo/wwwroot ant-design-blazor/ant-design-blazor.github.io

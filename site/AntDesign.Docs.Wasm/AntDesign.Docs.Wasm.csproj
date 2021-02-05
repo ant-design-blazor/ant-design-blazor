@@ -21,10 +21,6 @@
     <ProjectReference Include="..\AntBlazor.Docs\AntDesign.Docs.csproj" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' And '$(SolutionDir)'==''">
-    <SolutionDir>../../</SolutionDir>
-  </PropertyGroup>
-
   <ItemGroup>
     <Content Include="$(SolutionDir)scripts\gh-pages\**" LinkBase="gh-pages" />
   </ItemGroup>

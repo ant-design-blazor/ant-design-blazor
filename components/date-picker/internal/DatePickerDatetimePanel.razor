@@ -6,14 +6,21 @@
     var calendar = CultureInfo.Calendar;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
-    DayOfWeek monthFirstDayOfWeek = calendar.GetDayOfWeek(monthFirstDayDate);
+    int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
 
-    int diffDay = (int)CultureInfo.DateTimeFormat.FirstDayOfWeek - (int)monthFirstDayOfWeek;
+    // sunday should be 7
+    if (monthFirstDayOfWeek == 0)
+    {
+        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(Locale.FirstDayOfWeek);
+        Console.WriteLine($"{DateTime.Now} DatePickerDatePanel.razor monthFirstDayOfWeek: {monthFirstDayOfWeek}");
+    }
+
+    int diffDay = (int)Locale.FirstDayOfWeek - monthFirstDayOfWeek;
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 
 }
 
-<div class='@($"{PrefixCls}-datetime-panel")'>
+<div class='@($"{PrefixCls}-datetime-panel")' @ref="Ref">
     @if (IsShowTime)
     {
         <DatePickerTemplate TValue="TValue"
@@ -27,7 +34,7 @@
                             IsSelected="date => DateHelper.IsSameDay(date, Value)"
                             GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                             OnValueSelect="OnSelectDate"
-                            GetNextColValue="date => date.AddDays(1)">
+                            GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)">
             <RenderPickerHeader>
                 <DatePickerHeader TValue="TValue"
                                   @attributes="GetAttritubes()" />

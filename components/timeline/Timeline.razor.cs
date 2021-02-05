@@ -132,10 +132,16 @@ namespace AntDesign
                 .If($"{prefix}-reverse", () => Reverse);
         }
 
+        internal void RemoveItem(TimelineItem item)
+        {
+            this._items.Remove(item);
+            _waitingItemUpdate = true;
+        }
+
         internal void AddItem(TimelineItem item)
         {
             this._items.Add(item);
-            StateHasChanged();
+            _waitingItemUpdate = true;
         }
 
         protected IEnumerable<TimelineItem> UpdateChildren(IEnumerable<TimelineItem> items)

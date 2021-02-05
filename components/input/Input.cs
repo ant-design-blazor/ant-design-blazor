@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -89,10 +90,17 @@ namespace AntDesign
         [Parameter]
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
 
+        [Parameter]
+        public int DebounceMilliseconds { get; set; } = 250;
+
         public Dictionary<string, object> Attributes { get; set; }
 
+        public ForwardRef WrapperRefBack { get; set; }
+
         private TValue _inputValue;
-        private bool _compositionInputting = false;
+        private bool _compositionInputting;
+        private Timer _debounceTimer;
+        private bool DebounceEnabled => DebounceMilliseconds != 0;
 
         protected override void OnInitialized()
         {
@@ -124,7 +132,7 @@ namespace AntDesign
 
             Attributes ??= new Dictionary<string, object>();
 
-            if (MaxLength >= 0)
+            if (MaxLength >= 0 && !Attributes.ContainsKey("maxlength"))
             {
                 Attributes?.Add("maxlength", MaxLength);
             }
@@ -182,7 +190,7 @@ namespace AntDesign
         {
             if (args != null && args.Key == "Enter" && EnableOnPressEnter)
             {
-                await ChangeValue();
+                await ChangeValue(true);
                 await OnPressEnter.InvokeAsync(args);
                 await OnPressEnterAsync();
             }
@@ -204,7 +212,7 @@ namespace AntDesign
 
         protected async Task OnMouseUpAsync(MouseEventArgs args)
         {
-            await ChangeValue();
+            await ChangeValue(true);
 
             if (OnMouseUp.HasDelegate) await OnMouseUp.InvokeAsync(args);
         }
@@ -216,7 +224,7 @@ namespace AntDesign
                 _compositionInputting = false;
             }
 
-            await ChangeValue();
+            await ChangeValue(true);
 
             if (OnBlur.HasDelegate)
             {
@@ -268,8 +276,34 @@ namespace AntDesign
             };
         }
 
-        private async Task ChangeValue()
+        protected void DebounceChangeValue()
         {
+            _debounceTimer?.Dispose();
+            _debounceTimer = new Timer(DebounceTimerIntervalOnTick, null, DebounceMilliseconds, DebounceMilliseconds);
+        }
+
+        protected void DebounceTimerIntervalOnTick(object state)
+        {
+            InvokeAsync(async () => await ChangeValue(true));
+        }
+
+        private async Task ChangeValue(bool ignoreDebounce = false)
+        {
+            if (DebounceEnabled)
+            {
+                if (!ignoreDebounce)
+                {
+                    DebounceChangeValue();
+                    return;
+                }
+            
+                    _debounceTimer?.Dispose();
+                    if (_debounceTimer != null)
+                    {
+                        _debounceTimer = null;
+                    }
+            }
+
             if (!_compositionInputting)
             {
                 if (!EqualityComparer<TValue>.Default.Equals(CurrentValue, _inputValue))
@@ -303,6 +337,8 @@ namespace AntDesign
         {
             DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionstart", OnCompositionStart);
             DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionend", OnCompositionEnd);
+
+            _debounceTimer?.Dispose();
 
             base.Dispose(disposing);
         }
@@ -379,6 +415,10 @@ namespace AntDesign
                         container = "affixWrapper";
                         builder.AddAttribute(23, "style", Style);
                     }
+                    if (WrapperRefBack != null)
+                    {
+                        builder.AddElementReferenceCapture(24, r => WrapperRefBack.Current = r);
+                    }
                 }
 
                 if (Prefix != null)
@@ -398,43 +438,53 @@ namespace AntDesign
                     builder.AddAttribute(43, "style", Style);
                 }
 
+                bool needsDisabled = Disabled;
                 if (Attributes != null)
                 {
                     builder.AddMultipleAttributes(44, Attributes);
+                    if (!Attributes.TryGetValue("disabled", out object disabledAttribute))
+                    {
+                        needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
+                    }
                 }
 
                 if (AdditionalAttributes != null)
                 {
                     builder.AddMultipleAttributes(45, AdditionalAttributes);
+                    if (!AdditionalAttributes.TryGetValue("disabled", out object disabledAttribute))
+                    {
+                        needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
+                    }
                 }
 
                 builder.AddAttribute(50, "Id", Id);
                 builder.AddAttribute(51, "type", Type);
                 builder.AddAttribute(60, "placeholder", Placeholder);
                 builder.AddAttribute(61, "value", CurrentValue);
+                builder.AddAttribute(62, "disabled", needsDisabled);
 
                 // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
                 if (!IgnoreOnChangeAndBlur)
                 {
-                    builder.AddAttribute(62, "onchange", CallbackFactory.Create(this, OnChangeAsync));
-                    builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+                    builder.AddAttribute(70, "onchange", CallbackFactory.Create(this, OnChangeAsync));
+                    builder.AddAttribute(71, "onblur", CallbackFactory.Create(this, OnBlurAsync));
                 }
 
-                builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
-                builder.AddAttribute(63, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
-                builder.AddAttribute(63, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
-                builder.AddAttribute(64, "oninput", CallbackFactory.Create(this, OnInputAsync));
-                builder.AddAttribute(66, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
-                builder.AddAttribute(67, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
-                builder.AddElementReferenceCapture(68, r => Ref = r);
+                builder.AddAttribute(72, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
+                builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
+                builder.AddAttribute(74, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
+                builder.AddAttribute(75, "oninput", CallbackFactory.Create(this, OnInputAsync));
+                builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
+                builder.AddAttribute(77, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
+                builder.AddElementReferenceCapture(90, r => Ref = r);
                 builder.CloseElement();
 
                 if (Suffix != null)
                 {
                     // suffix
-                    builder.OpenElement(71, "span");
-                    builder.AddAttribute(72, "class", $"{PrefixCls}-suffix");
-                    builder.AddContent(73, Suffix);
+                    builder.OpenElement(91, "span");
+                    builder.AddAttribute(92, "class", $"{PrefixCls}-suffix");
+                    builder.AddContent(93, Suffix);
                     builder.CloseElement();
                 }
 
@@ -446,9 +496,9 @@ namespace AntDesign
                 if (AddOnAfter != null)
                 {
                     // addOnAfter
-                    builder.OpenElement(81, "span");
-                    builder.AddAttribute(82, "class", $"{PrefixCls}-group-addon");
-                    builder.AddContent(83, AddOnAfter);
+                    builder.OpenElement(100, "span");
+                    builder.AddAttribute(101, "class", $"{PrefixCls}-group-addon");
+                    builder.AddContent(102, AddOnAfter);
                     builder.CloseElement();
                 }
 

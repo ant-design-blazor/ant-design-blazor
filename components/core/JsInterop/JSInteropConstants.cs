@@ -39,7 +39,9 @@ namespace AntDesign
 
         public static string Blur => $"{FUNC_PREFIX}blur";
 
-        public static string BackTop => $"{FUNC_PREFIX}BackTop";
+        public static string BackTop => $"{FUNC_PREFIX}backTop";
+
+        public static string ScrollTo => $"{FUNC_PREFIX}scrollTo";
 
         public static string GetFirstChildDomInfo => $"{FUNC_PREFIX}getFirstChildDomInfo";
 
@@ -82,6 +84,12 @@ namespace AntDesign
         public static string DisposeObj => $"{FUNC_PREFIX}disposeObj";
 
         public static string ElementScrollIntoView => $"{FUNC_PREFIX}elementScrollIntoView";
+
+        public static string BindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}bindTableHeaderAndBodyScroll";
+        public static string UnbindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}unbindTableHeaderAndBodyScroll";
+        public static string AddPreventCursorMoveOnArrowUp => $"{FUNC_PREFIX}addPreventCursorMoveOnArrowUp";
+        public static string RemovePreventCursorMoveOnArrowUp => $"{FUNC_PREFIX}removePreventCursorMoveOnArrowUp";
+
         #region Draggable Modal
 
         public static string EnableDraggable => $"{FUNC_PREFIX}enableDraggable";

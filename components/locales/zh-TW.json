@@ -32,10 +32,10 @@
       "monthSelect": "選擇月份",
       "yearSelect": "選擇年份",
       "decadeSelect": "選擇年代",
-      "yearFormat": "YYYY年",
-      "dayFormat": "D日",
-      "dateFormat": "YYYY年M月D日",
-      "dateTimeFormat": "YYYY年M月D日 HH時mm分ss秒",
+      "yearFormat": "yyyy年",
+      "dayFormat": "d日",
+      "dateFormat": "yyyy年M月d日",
+      "dateTimeFormat": "yyyy年M月d日 HH時mm分ss秒",
       "previousYear": "上一年 (Control鍵加左方向鍵)",
       "nextYear": "下一年 (Control鍵加右方向鍵)",
       "previousDecade": "上一年代",
@@ -67,10 +67,10 @@
       "monthSelect": "選擇月份",
       "yearSelect": "選擇年份",
       "decadeSelect": "選擇年代",
-      "yearFormat": "YYYY年",
-      "dayFormat": "D日",
-      "dateFormat": "YYYY年M月D日",
-      "dateTimeFormat": "YYYY年M月D日 HH時mm分ss秒",
+      "yearFormat": "yyyy年",
+      "dayFormat": "d日",
+      "dateFormat": "yyyy年M月d日",
+      "dateTimeFormat": "yyyy年M月d日 HH時mm分ss秒",
       "previousYear": "上一年 (Control鍵加左方向鍵)",
       "nextYear": "下一年 (Control鍵加右方向鍵)",
       "previousDecade": "上一年代",
@@ -89,8 +89,16 @@
   },
   "Modal": {
     "okText": "確 定",
+    "cancelText": "取 消"
+  },
+  "Confirm": {
+    "okText": "確 定",
     "cancelText": "取 消",
-    "justOkText": "OK"
+    "yesText": "是",
+    "noText": "否",
+    "retryText": "重 試",
+    "abortText": "終 止",
+    "ignoreText": "忽 略"
   },
   "Popconfirm": {
     "okText": "確 定",

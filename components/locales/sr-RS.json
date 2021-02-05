@@ -28,10 +28,10 @@
       "monthSelect": "Izaberi mesec",
       "yearSelect": "Izaberi godinu",
       "decadeSelect": "Izaberi deceniju",
-      "yearFormat": "YYYY",
-      "dateFormat": "DD.MM.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "DD.MM.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "dd.MM.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "dd.MM.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Prethodni mesec (PageUp)",
       "nextMonth": "Sledeći mesec (PageDown)",
@@ -66,10 +66,10 @@
       "monthSelect": "Izaberi mesec",
       "yearSelect": "Izaberi godinu",
       "decadeSelect": "Izaberi deceniju",
-      "yearFormat": "YYYY",
-      "dateFormat": "DD.MM.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "DD.MM.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "dd.MM.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "dd.MM.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Prethodni mesec (PageUp)",
       "nextMonth": "Sledeći mesec (PageDown)",
@@ -93,8 +93,16 @@
   },
   "Modal": {
     "okText": "U redu",
+    "cancelText": "Otkaži"
+  },
+  "Confirm": {
+    "okText": "U redu",
     "cancelText": "Otkaži",
-    "justOkText": "U redu"
+    "yesText": "Da",
+    "noText": "Ne, ne",
+    "retryText": "Pokušaj ponovo",
+    "abortText": "Prekinite",
+    "ignoreText": "Ignoriraj"
   },
   "Popconfirm": {
     "okText": "U redu",

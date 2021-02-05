@@ -29,10 +29,10 @@
       "monthSelect": "Vybrať mesiac",
       "yearSelect": "Vybrať rok",
       "decadeSelect": "Vybrať dekádu",
-      "yearFormat": "YYYY",
-      "dateFormat": "D.M.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D.M.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d.M.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d.M.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Predchádzajúci mesiac (PageUp)",
       "nextMonth": "Nasledujúci mesiac (PageDown)",
@@ -67,10 +67,10 @@
       "monthSelect": "Vybrať mesiac",
       "yearSelect": "Vybrať rok",
       "decadeSelect": "Vybrať dekádu",
-      "yearFormat": "YYYY",
-      "dateFormat": "D.M.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D.M.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d.M.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d.M.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Predchádzajúci mesiac (PageUp)",
       "nextMonth": "Nasledujúci mesiac (PageDown)",
@@ -100,8 +100,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Zrušiť"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Zrušiť",
-    "justOkText": "OK"
+    "yesText": "Áno",
+    "noText": "Nie",
+    "retryText": "Opäť skúšať",
+    "abortText": "Prerušiť",
+    "ignoreText": "Ignorovať"
   },
   "Popconfirm": {
     "okText": "OK",

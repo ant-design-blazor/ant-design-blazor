@@ -32,10 +32,10 @@
       "monthSelect": "月を選択",
       "yearSelect": "年を選択",
       "decadeSelect": "年代を選択",
-      "yearFormat": "YYYY年",
-      "dayFormat": "D日",
-      "dateFormat": "YYYY年M月D日",
-      "dateTimeFormat": "YYYY年M月D日 HH時mm分ss秒",
+      "yearFormat": "yyyy年",
+      "dayFormat": "d日",
+      "dateFormat": "yyyy年M月d日",
+      "dateTimeFormat": "yyyy年M月d日 HH時mm分ss秒",
       "previousYear": "前年 (Controlを押しながら左キー)",
       "nextYear": "翌年 (Controlを押しながら右キー)",
       "previousDecade": "前の年代",
@@ -70,10 +70,10 @@
       "monthSelect": "月を選択",
       "yearSelect": "年を選択",
       "decadeSelect": "年代を選択",
-      "yearFormat": "YYYY年",
-      "dayFormat": "D日",
-      "dateFormat": "YYYY年M月D日",
-      "dateTimeFormat": "YYYY年M月D日 HH時mm分ss秒",
+      "yearFormat": "yyyy年",
+      "dayFormat": "d日",
+      "dateFormat": "yyyy年M月d日",
+      "dateTimeFormat": "yyyy年M月d日 HH時mm分ss秒",
       "previousYear": "前年 (Controlを押しながら左キー)",
       "nextYear": "翌年 (Controlを押しながら右キー)",
       "previousDecade": "前の年代",
@@ -94,8 +94,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "キャンセル"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "キャンセル",
-    "justOkText": "OK"
+    "yesText": "はい",
+    "noText": "なし",
+    "retryText": "再試行",
+    "abortText": "中止する",
+    "ignoreText": "無視"
   },
   "Popconfirm": {
     "okText": "OK",

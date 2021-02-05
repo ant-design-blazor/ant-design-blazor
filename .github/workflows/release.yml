@@ -34,8 +34,7 @@ jobs:
         run: |
           VERSION=`git describe --tags`
           echo "Publishing Version: ${VERSION}"
-          echo "::set-env name=VERSION::${VERSION}"
           npm install
           dotnet build components/AntDesign.csproj
-          dotnet pack components/AntDesign.csproj /p:PackageVersion=$VERSION -c Release -f net5 -o publish
+          dotnet pack components/AntDesign.csproj /p:PackageVersion=$VERSION -c Release -o publish
           dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate

@@ -29,10 +29,10 @@
       "monthSelect": "Kies een maand",
       "yearSelect": "Kies een jaar",
       "decadeSelect": "Kies een decennium",
-      "yearFormat": "YYYY",
-      "dateFormat": "D-M-YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D-M-YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d-M-yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d-M-yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Vorige maand (PageUp)",
       "nextMonth": "Volgende maand (PageDown)",
@@ -67,10 +67,10 @@
       "monthSelect": "Kies een maand",
       "yearSelect": "Kies een jaar",
       "decadeSelect": "Kies een decennium",
-      "yearFormat": "YYYY",
-      "dateFormat": "D-M-YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D-M-YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d-M-yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d-M-yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Vorige maand (PageUp)",
       "nextMonth": "Volgende maand (PageDown)",
@@ -100,8 +100,16 @@
   },
   "Modal": {
     "okText": "OK",
-    "cancelText": "Annuleren",
-    "justOkText": "OK"
+    "cancelText": "Annuleren"
+  },
+  "Confirm": {
+    "okText": "OK",
+    "cancelText": "Annuleer",
+    "yesText": "Ja",
+    "noText": "Nee",
+    "retryText": "Terugtrekken",
+    "abortText": "Afbreken",
+    "ignoreText": "Negeren"
   },
   "Popconfirm": {
     "okText": "OK",

@@ -12,9 +12,11 @@ namespace AntDesign.Docs.Shared
 {
     public partial class MainLayout : LayoutComponentBase, IDisposable
     {
-        private bool _isCollapsed = true;
+        private bool _drawerVisible = false;
 
         public string CurrentLanguage => LanguageService.CurrentCulture.Name;
+
+        private bool _isMobile;
 
         [Inject]
         public NavigationManager NavigationManager { get; set; }

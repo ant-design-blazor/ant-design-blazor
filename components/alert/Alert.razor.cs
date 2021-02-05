@@ -113,7 +113,7 @@ namespace AntDesign
                 .If($"{prefixName}-no-icon", () => !ShowIcon)
                 .If($"{prefixName}-closable", () => Closable)
                 .If($"{prefixName}-banner", () => Banner)
-                .If($"{prefixName}-with-description", () => !string.IsNullOrEmpty(Description))
+                .If($"{prefixName}-with-description", () => !string.IsNullOrEmpty(Description) || ChildContent != null)
                 .If($"{prefixName}-motion", () => _isClosing)
                 .If($"{prefixName}-motion-leave", () => _isClosing)
                 .If($"{prefixName}-motion-leave-active", () => _isClosing && _motionStage == 1)

@@ -60,7 +60,7 @@ namespace AntDesign
             await base.OnInitializedAsync();
         }
 
-        private void OnClickHeader()
+        private void OnHeaderClick()
         {
             if (!this.Disabled)
             {

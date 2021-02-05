@@ -29,10 +29,10 @@
       "monthSelect": "Escolher mês",
       "yearSelect": "Escolher ano",
       "decadeSelect": "Escolher década",
-      "yearFormat": "YYYY",
-      "dateFormat": "D/M/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D/M/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d/M/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d/M/yyyy HH:mm:ss",
       "monthBeforeYear": false,
       "previousMonth": "Mês anterior (PageUp)",
       "nextMonth": "Próximo mês (PageDown)",
@@ -67,10 +67,10 @@
       "monthSelect": "Escolher mês",
       "yearSelect": "Escolher ano",
       "decadeSelect": "Escolher década",
-      "yearFormat": "YYYY",
-      "dateFormat": "D/M/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D/M/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d/M/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d/M/yyyy HH:mm:ss",
       "monthBeforeYear": false,
       "previousMonth": "Mês anterior (PageUp)",
       "nextMonth": "Próximo mês (PageDown)",
@@ -94,8 +94,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Cancelar"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Cancelar",
-    "justOkText": "OK"
+    "yesText": "Sim",
+    "noText": "Não",
+    "retryText": "Tentar de novo",
+    "abortText": "Abortar",
+    "ignoreText": "Ignorar"
   },
   "Popconfirm": {
     "okText": "OK",

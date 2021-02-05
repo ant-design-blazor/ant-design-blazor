@@ -30,10 +30,10 @@
       "monthSelect": "Chọn tháng",
       "yearSelect": "Chọn năm",
       "decadeSelect": "Chọn thập kỷ",
-      "yearFormat": "YYYY",
-      "dateFormat": "D/M/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D/M/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d/M/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d/M/yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Tháng trước (PageUp)",
       "nextMonth": "Tháng sau (PageDown)",
@@ -69,10 +69,10 @@
       "monthSelect": "Chọn tháng",
       "yearSelect": "Chọn năm",
       "decadeSelect": "Chọn thập kỷ",
-      "yearFormat": "YYYY",
-      "dateFormat": "D/M/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D/M/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d/M/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d/M/yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Tháng trước (PageUp)",
       "nextMonth": "Tháng sau (PageDown)",
@@ -96,8 +96,16 @@
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Huỷ"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Huỷ",
-    "justOkText": "OK"
+    "yesText": "Phải",
+    "noText": "Không",
+    "retryText": "Description",
+    "abortText": "Hủy",
+    "ignoreText": "Bỏ"
   },
   "Popconfirm": {
     "okText": "OK",

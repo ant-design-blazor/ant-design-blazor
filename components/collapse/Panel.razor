@@ -1,8 +1,8 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" id="@Id">
-    <div class="ant-collapse-header" @onclick="OnClickHeader">
+<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+    <div class="ant-collapse-header" @onclick="OnHeaderClick" role="button" aria-expanded="@(Active?"true":"false")">
         @if (ShowArrow)
         {
             @if (Collapse.ExpandIconTemplate != null)
@@ -24,7 +24,7 @@
             </div>
         }
     </div>
-    <div class="ant-collapse-content @(Active?"":"ant-collapse-content-inactive")">
+    <div class="ant-collapse-content @(Active?"ant-collapse-content-active":"ant-collapse-content-inactive ant-collapse-content-hidden")">
         <div class="ant-collapse-content-box">
             @ChildContent
         </div>

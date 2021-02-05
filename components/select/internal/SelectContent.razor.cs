@@ -1,13 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 #pragma warning disable 1591 // Disable missing XML comment
 
 namespace AntDesign.Select.Internal
 {
-    public partial class SelectContent<TItemValue, TItem>
+    public partial class SelectContent<TItemValue, TItem>: IDisposable
     {
         [CascadingParameter(Name = "ParentSelect")] internal Select<TItemValue, TItem> ParentSelect { get; set; }
         [CascadingParameter(Name = "ParentLabelTemplate")] internal RenderFragment<TItem> ParentLabelTemplate { get; set; }
@@ -25,21 +29,38 @@ namespace AntDesign.Select.Internal
         [Parameter] public EventCallback<MouseEventArgs> OnClearClick { get; set; }
         [Parameter] public EventCallback<SelectOptionItem<TItemValue, TItem>> OnRemoveSelected { get; set; }
         [Parameter] public string SearchValue { get; set; }
+        [Parameter] public ForwardRef RefBack { get; set; } = new ForwardRef();
+        [Inject] protected IJSRuntime Js { get; set; }
+        [Inject] private DomEventService DomEventService { get; set; }
+        protected ElementReference Ref
+        {
+            get { return _ref; }
+            set
+            {
+                _ref = value;
+                RefBack?.Set(value);
+            }
+        }
 
         private string _inputStyle = string.Empty;
         private string _inputWidth;
         private bool _suppressInput;
+        private ElementReference _ref;
 
         protected override void OnInitialized()
         {
             SetSuppressInput();
         }
 
-        protected override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             SetSuppressInput();
-
-            return base.OnAfterRenderAsync(firstRender);
+            if (firstRender && ParentSelect.EnableSearch)
+            {
+                DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
+                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventCursorMoveOnArrowUp, ParentSelect._inputRef);
+            }
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         protected override Task OnParametersSetAsync()
@@ -103,6 +124,45 @@ namespace AntDesign.Select.Internal
                 dict.Add("tabindex", "-1");
 
             return dict;
+        }
+
+        /// <summary>
+        /// Indicates that a page is being refreshed 
+        /// </summary>
+        private bool _isReloading;
+
+        private void Reloading(JsonElement jsonElement) => _isReloading = true;
+
+
+        public bool IsDisposed { get; private set; }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isReloading)
+            {
+                _ = InvokeAsync(async () =>
+                {
+                    await Task.Delay(100);
+                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventCursorMoveOnArrowUp, ParentSelect._inputRef);
+                });
+            }
+            DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+
+            if (IsDisposed) return;
+
+            IsDisposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~SelectContent()
+        {
+            // Finalizer calls Dispose(false)
+            Dispose(false);
         }
     }
 }

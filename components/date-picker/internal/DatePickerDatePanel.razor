@@ -18,7 +18,7 @@
     DateTime startDate = monthFirstDayDate.AddDays(diffDay);
 }
 
-<div class='@($"{PrefixCls}-panel")'>
+<div class='@($"{PrefixCls}-panel")' @ref="Ref">
     <DatePickerTemplate TValue="TValue"
                         @attributes="GetAttritubes()"
                            MaxRow="6"
@@ -32,7 +32,7 @@
                            GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                            OnRowSelect="OnRowSelect"
                            OnValueSelect="OnValueSelect"
-                           GetNextColValue="date => date.AddDays(1)">
+                           GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)">
         <RenderPickerHeader>
             <DatePickerHeader TValue="TValue"
                               @attributes="GetAttritubes()"
@@ -48,7 +48,7 @@
                     <th></th>
                 }
                 @foreach(string weekDay in Locale.Lang.ShortWeekDays)
-                {
+                {                    
                     <th>@(weekDay)</th>
                 }
             </tr>

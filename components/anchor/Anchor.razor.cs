@@ -14,8 +14,7 @@ namespace AntDesign
     public partial class Anchor : AntDomComponentBase, IAnchor
     {
         private string _ballClass = "ant-anchor-ink-ball";
-        private string _ballStyle = string.Empty;
-        private ElementReference _self;
+        private string _ballStyle = string.Empty;        
         private ElementReference _ink;
         private DomRect _selfDom;
         private AnchorLink _activeLink;

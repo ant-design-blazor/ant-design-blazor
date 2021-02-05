@@ -14,7 +14,7 @@
     string inViewClass = $"{PrefixCls}-cell-in-view";
 }
 
-<div class='@($"{PrefixCls}-panel")'>
+<div class='@($"{PrefixCls}-panel")' @ref="Ref">
     <DatePickerTemplate @attributes="GetAttritubes()"
                         TValue="TValue"
                         MaxRow="MAX_ROW"
@@ -25,7 +25,7 @@
                         IsSelected="date => DateHelper.IsSameMonth(date, Value)"
                         GetColTitle='date => date.ToString(Locale.Lang.MonthFormat, CultureInfo)'
                         OnValueSelect="date => OnSelectMonth(date)"
-                        GetNextColValue="date => date.AddMonths(1)">
+                        GetNextColValue="date => DateHelper.AddMonthsSafely(date, 1)">
         <RenderPickerHeader>
             <DatePickerHeader @attributes="GetAttritubes()"
                               TValue="TValue"

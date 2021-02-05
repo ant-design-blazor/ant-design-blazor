@@ -92,14 +92,14 @@ namespace AntDesign
 
         private bool IsImage => Status.IsIn("403", "404", "500");
 
-        private async ValueTask LoadImage()
+        private void LoadImage()
         {
             if (!IsImage)
                 return;
 
             var iconType = DetermineIconType();
 
-            _svgImage = await IconService.GetIconImg(iconType.type, iconType.theme);
+            _svgImage = IconService.GetIconImg(iconType.type, iconType.theme);
         }
 
         private void SetClass()
@@ -114,7 +114,7 @@ namespace AntDesign
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            await LoadImage();
+            LoadImage();
         }
 
         protected override void OnParametersSet()

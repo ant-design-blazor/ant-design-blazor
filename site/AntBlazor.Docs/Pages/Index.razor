@@ -1,32 +1,9 @@
 ﻿@layout BlankLayout
 @page "/"
-@inject ILanguageService language
 
 <div id="react-content">
-    <header id="header" class="clearfix home-header">
-        <div class="ant-row" style="flex-flow: nowrap; height: 64px;">
-            <div class="ant-col" style="flex: 0 0 auto;">
-                <h1><a id="logo" href="/">
-                    <img alt="logo" src="/docs/assets/logo.svg">Ant Design Blazor
-                </a></h1>
-            </div>
-            <div class="ant-col menu-row" style="flex: 1 1 auto;">
-                <HeaderMenu />
-            </div>
-        </div>
-    </header>
+    <MainHeader IsHome />
     <div class="home-container">
-        <style>
-            .rc-footer-container {
-                padding-left: 0;
-                padding-right: 0;
-            }
-
-            .rc-footer-columns {
-                max-width: 1208px;
-                margin: 0 auto;
-            }
-        </style>
         <div class="home-banner">
             <div class="home-banner-background">
                 <img alt="background" src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*kJM2Q6uPXCAAAAAAAAAAAABkARQnAQ">
@@ -53,13 +30,13 @@
                             <h1 class="home-banner-normal" style="font-size: 3.7em;">Ant Design Blazor</h1>
                         </div>
                     </div>
-                    <p>@language.Resources["app.home.introduce"]</p>
+                    <p>@Language.Resources["app.home.introduce"]</p>
                     <div class="home-banner-content-operations">
-                        <a href="/@language.CurrentCulture.Name/docs">
-                            <Button Type="primary" Shape="round">@language.Resources["app.home.getting-started"]</Button>
+                        <a href="/@Language.CurrentCulture.Name/docs">
+                            <Button Type="primary" Shape="round">@Language.Resources["app.home.getting-started"]</Button>
                         </a>
-                        <a href="/@language.CurrentCulture.Name/components">
-                            <Button Shape="round">@language.Resources["app.home.components"]</Button>
+                        <a href="/@Language.CurrentCulture.Name/components">
+                            <Button Shape="round">@Language.Resources["app.home.components"]</Button>
                         </a>
                     </div>
                 </div>
@@ -69,7 +46,7 @@
             @if (_recommends.Any())
             {
                 <div class="home-block-content">
-                    <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">@language.Resources["app.home.recommend"]</h2>
+                    <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">@Language.Resources["app.home.recommend"]</h2>
                     <Row Style="margin: -12px -12px -36px;">
                         <AntDesign.Col Xs="24" Sm="14" Style="padding: 12px;">
                             <Recommend Data="_recommends[0]" Main />
@@ -91,7 +68,7 @@
             @if (_products.Any())
             {
                 <div class="home-block-content">
-                    <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">@language.Resources["app.home.products"]</h2>
+                    <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">@Language.Resources["app.home.products"]</h2>
                     <div style="margin-bottom: -28px;">
                         <Row Class="design-mini-panels" Style="margin: 40px -20px 20px;">
                             @foreach (var item in _products)
@@ -103,7 +80,7 @@
                                                 <img alt="@item.Title" src="@item.Img">
                                             </Cover>
                                             <Body>
-                                                <CardMeta Title="@item.Title" Description="@language.Resources[item.Description]" />
+                                                <CardMeta Title="@item.Title" Description="@Language.Resources[item.Description]" />
                                             </Body>
                                         </Card>
                                     </a>
@@ -118,7 +95,7 @@
             {
                 <div class="home-block-content">
                     <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">
-                        @language.Resources["app.home.more"]
+                        @Language.Resources["app.home.more"]
                         @* <div class="home-block-content-extra"><a href="/docs/resources-cn#文章">查看全部</a></div>*@
                     </h2>
                     <div class="ant-row" style="margin: -16px -12px 16px;">
@@ -131,7 +108,7 @@
                                             <img alt="@item.Title" src="@item.Img">
                                         </Cover>
                                         <Body>
-                                            <CardMeta Title="@item.Title" Description="@item.Description" /> 
+                                            <CardMeta Title="@item.Title" Description="@item.Description" />
                                             <div>
                                                 @item.Date
                                                 <span class="more-card-source">

@@ -12,6 +12,11 @@ Enter a number within certain range with the mouse or keyboard.
 - When a numeric value needs to be provided.
 
 
+## Types of Supports
+
+`sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double`, `decimal`
+
+Nullable types of the above types are also supported. For example, `ushort?`, `int?`, etc.
 
 ## API
 

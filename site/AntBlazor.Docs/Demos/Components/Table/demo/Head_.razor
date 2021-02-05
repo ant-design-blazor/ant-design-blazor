@@ -1,0 +1,36 @@
+﻿<Table DataSource="data" OnChange="OnChange" TItem="Column">
+    <Column TData="string" 
+        DataIndex="@nameof(context.Name)" 
+        SorterCompare="@((a,b)=> a.Length - b.Length)" 
+        SortDirections="new[] { SortDirection.Descending }"/>
+    <Column TData="int" 
+        DataIndex="@nameof(context.Age)" 
+        DefaultSortOrder="@SortDirection.Descending"
+        SorterCompare="@((a,b)=> a - b)"  />
+    <Column TData="string" 
+        DataIndex="@nameof(context.Address)" 
+        SorterCompare="@((a,b)=> a.Length - b.Length)" 
+        SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }"
+        />
+</Table>
+
+
+@using AntDesign.TableModels;
+@using System.Text.Json;
+@code {
+
+    record Column(string Name, int Age, string Address);
+
+    Column[] data =
+    {
+        new("John Brown",32,"New York No. 1 Lake Park"),
+        new("Jim Green",42, "London No. 1 Lake Park"),
+        new("Joe Black", 32,"Sidney No. 1 Lake Park"),
+        new("Jim Red",32,"London No. 2 Lake Park"),
+    };
+
+    void OnChange(QueryModel<Column> query)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(query));
+    }
+}
