@@ -83,10 +83,24 @@ namespace AntDesign
         public bool ShowToday { get; set; } = true;
 
         [Parameter]
-        public DatePickerLocale Locale { get; set; } = LocaleProvider.CurrentLocale.DatePicker;
+        public DatePickerLocale Locale
+        {
+            get { return _locale; }
+            set { 
+                _locale = value;
+                _isLocaleSetOutside = true;
+            }
+        }
 
         [Parameter]
-        public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
+        public CultureInfo CultureInfo
+        {
+            get { return _cultureInfo; }
+            set { 
+                _cultureInfo = value;
+                _isCultureSetOutside = true;
+            }
+        }
 
         public bool IsShowTime { get; protected set; }
         public string ShowTimeFormat { get; protected set; } = "HH:mm:ss";
@@ -217,6 +231,10 @@ namespace AntDesign
         protected Stack<string> _prePickerStack = new Stack<string>();
         protected bool _isClose = true;
         protected bool _needRefresh;
+        private bool _isCultureSetOutside;
+        private bool _isLocaleSetOutside;
+        private CultureInfo _cultureInfo = LocaleProvider.CurrentLocale.CurrentCulture;
+        private DatePickerLocale _locale = LocaleProvider.CurrentLocale.DatePicker;
 
         protected override void OnInitialized()
         {
@@ -225,7 +243,6 @@ namespace AntDesign
             {
                 Picker = DatePickerType.Date;
             }
-
             this.SetClass();
 
             base.OnInitialized();
@@ -355,6 +372,9 @@ namespace AntDesign
 
         protected void InitPicker(string picker)
         {
+            if (_isCultureSetOutside && !_isLocaleSetOutside)
+                Locale = LocaleProvider.GetLocale(_cultureInfo.Name).DatePicker;
+
             if (string.IsNullOrEmpty(_pickerStatus[0]._initPicker))
             {
                 _pickerStatus[0]._initPicker = picker;
