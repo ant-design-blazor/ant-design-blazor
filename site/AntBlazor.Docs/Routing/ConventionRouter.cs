@@ -104,7 +104,7 @@ namespace AntDesign.Docs.Routing
 
             if (string.IsNullOrWhiteSpace(segment))
             {
-                NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}", true);
+                NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}");
                 return;
             }
             else
@@ -115,11 +115,11 @@ namespace AntDesign.Docs.Routing
                 }
                 else if (currentCulture.Name.IsIn("zh-CN", "en-US"))
                 {
-                    NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}", true);
+                    NavigationManager.NavigateTo($"{currentCulture.Name}/{relativeUri}");
                 }
                 else
                 {
-                    NavigationManager.NavigateTo($"en-US/{relativeUri}", true);
+                    NavigationManager.NavigateTo($"en-US/{relativeUri}");
                     return;
                 }
             }
@@ -136,7 +136,7 @@ namespace AntDesign.Docs.Routing
             {
                 if (!string.IsNullOrEmpty(DefaultUrl))
                 {
-                    NavigationManager.NavigateTo($"{currentCulture}/{DefaultUrl}", true);
+                    NavigationManager.NavigateTo($"{currentCulture}/{DefaultUrl}");
                 }
 
                 _renderHandle.Render(NotFound);
