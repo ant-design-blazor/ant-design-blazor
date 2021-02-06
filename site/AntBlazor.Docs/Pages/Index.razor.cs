@@ -1,11 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Globalization;
+using System.Threading.Tasks;
 using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Docs.Pages
 {
-    public partial class Index : ComponentBase
+    public partial class Index : ComponentBase, IDisposable
     {
         private Recommend[] _recommends = { };
 
@@ -21,11 +23,13 @@ namespace AntDesign.Docs.Pages
             await base.OnInitializedAsync();
             await FetchData();
 
-            Language.LanguageChanged += async (sender, args) =>
-            {
-                await FetchData();
-                await InvokeAsync(StateHasChanged);
-            };
+            Language.LanguageChanged += HandleLanguageChanged;
+        }
+
+        private async void HandleLanguageChanged(object _, CultureInfo culture)
+        {
+            await FetchData();
+            await InvokeAsync(StateHasChanged);
         }
 
         private async Task FetchData()
@@ -34,6 +38,11 @@ namespace AntDesign.Docs.Pages
 
             _products = await DemoService.GetProduct();
             _moreArticles = await DemoService.GetMore();
+        }
+
+        public void Dispose()
+        {
+            Language.LanguageChanged -= HandleLanguageChanged;
         }
     }
 }
