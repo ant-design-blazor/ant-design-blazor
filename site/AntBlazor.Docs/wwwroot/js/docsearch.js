@@ -13,7 +13,7 @@ window.AntDesign.DocSearch = {
             algoliaOptions: { facetFilters: [`tags:${lang}`] },
             transformData(hits) {
                 hits.forEach(hit => {
-                    hit.url = hit.url.replace('ant-design-blazor.github.io', window.location.host);
+                    hit.url = hit.url.replace('antblazor.com', window.location.host);
                     hit.url = hit.url.replace('https:', window.location.protocol);
                 });
                 return hits;
