@@ -7,6 +7,8 @@ on:
 jobs:
   docsearch-scrape:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
+
     steps:
     - uses: actions/checkout@master
     - name: scrape

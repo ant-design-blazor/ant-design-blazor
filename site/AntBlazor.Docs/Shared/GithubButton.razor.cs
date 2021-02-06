@@ -10,7 +10,7 @@ namespace AntDesign.Docs.Shared
     {
         private string _org = "ant-design-blazor";
         private string _repo = "ant-design-blazor";
-        private int _starCount = 0;
+        private static int _starCount = 0;
 
         [Parameter]
         public string Responsive { get; set; }
@@ -21,9 +21,11 @@ namespace AntDesign.Docs.Shared
         {
             try
             {
-                var res = await HttpClient.GetFromJsonAsync<GithubResponse>(
-                    $"https://api.github.com/repos/{this._org}/{this._repo}");
-                this._starCount = res.StargazersCount;
+                if (_starCount > 0)
+                    return;
+
+                var res = await HttpClient.GetFromJsonAsync<GithubResponse>($"https://api.github.com/repos/{this._org}/{this._repo}");
+                _starCount = res.StargazersCount;
             }
             catch
             {

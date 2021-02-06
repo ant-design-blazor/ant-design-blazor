@@ -33,6 +33,8 @@
 
 @if (!IsMobile)
 {
+    <Button Class="header-button" Size="small">{version}</Button>
+
     @if (CurrentLanguage != "en-US")
     {
         <Button Class="header-button header-lang-button" Size="small" OnClick="@(_ => ChangeLanguage("en-US"))">English</Button>
