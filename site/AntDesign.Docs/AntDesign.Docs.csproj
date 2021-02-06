@@ -47,14 +47,14 @@
   <PropertyGroup>
     <CLIProjectDir>site/AntDesign.Docs.Build.CLI</CLIProjectDir>
     <CLIPath>$(CLIProjectDir)/bin/Debug/net5/AntDesign.Docs.Build.CLI.dll</CLIPath>
-    <ProjectDir>$(SolutionDir)/site/AntBlazor.Docs</ProjectDir>
+    <ProjectDir>$(SolutionDir)/site/AntDesign.Docs</ProjectDir>
   </PropertyGroup>
 
   <Target Name="RunCli" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug'">
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet build $(CLIProjectDir)" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) demo2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/meta" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) menu2json $(ProjectDir)/Demos docs $(ProjectDir)/wwwroot/meta" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) docs2html ./docs ./site/AntBlazor.Docs/wwwroot/docs" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) docs2html ./docs ./site/AntDesign.Docs/wwwroot/docs" />
   </Target>
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">

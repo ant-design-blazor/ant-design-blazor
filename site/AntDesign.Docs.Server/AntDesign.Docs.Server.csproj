@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AntBlazor.Docs\AntDesign.Docs.csproj" />
+    <ProjectReference Include="..\AntDesign.Docs\AntDesign.Docs.csproj" />
   </ItemGroup>
 
   <ItemGroup>

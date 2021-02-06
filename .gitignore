@@ -345,8 +345,8 @@ package-lock.json
 /components/wwwroot/js/ant-design-blazor.js.map
 /components/AntDesign.xml
 /site/**/wwwroot/docs
-/site/AntBlazor.Docs/wwwroot/css/docs.css
-/site/AntBlazor.Docs/wwwroot/meta
-/AntBlazor.Docs/wwwroot/docs
+/site/AntDesign.Docs/wwwroot/css/docs.css
+/site/AntDesign.Docs/wwwroot/meta
+/AntDesign.Docs/wwwroot/docs
 coverage.cobertura.xml
 scripts/previewEditor/index.html
