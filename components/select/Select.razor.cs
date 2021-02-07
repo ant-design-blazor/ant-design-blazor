@@ -25,7 +25,7 @@ namespace AntDesign
         [Parameter] public bool AutoClearSearchValue { get; set; } = true;
         [Parameter] public bool Bordered { get; set; } = true;
         [Parameter] public Action<string> OnCreateCustomTag { get; set; }
-        [Parameter] public bool DefaultActiveFirstItem { get; set; } = false;
+        [Parameter] public bool DefaultActiveFirstOption { get; set; } = false;
         [Parameter] public bool Disabled { get; set; }
         [Parameter] public string DisabledName { get; set; }
         [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
@@ -388,7 +388,7 @@ namespace AntDesign
                 if (SelectMode == SelectMode.Default)
                 {
                     if (_defaultValueIsNotNull && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstItem && !HasValue && SelectOptionItems.Any())
+                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
                     {
                         await TrySetDefaultValueAsync();
                     }
@@ -396,7 +396,7 @@ namespace AntDesign
                 else
                 {
                     if (_defaultValuesHasItems && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstItem && !HasValue && SelectOptionItems.Any())
+                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
                     {
                         await TrySetDefaultValuesAsync();
                     }
@@ -594,8 +594,8 @@ namespace AntDesign
         protected async Task SetDropdownStyleAsync()
         {
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
-
-            _dropdownStyle = $"min-width: {domRect.width}px; width: {domRect.width}px;";
+            var width = domRect.width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            _dropdownStyle = $"min-width: {width}px; width: {width}px;";
         }
 
         protected async Task OnOverlayVisibleChangeAsync(bool visible)
@@ -830,7 +830,7 @@ namespace AntDesign
                     await SetDefaultActiveFirstItemAsync();
                 }
             }
-            else if (DefaultActiveFirstItem)
+            else if (DefaultActiveFirstOption)
             {
                 await SetDefaultActiveFirstItemAsync();
             }
@@ -866,7 +866,7 @@ namespace AntDesign
 
                 if (!anySelected)
                 {
-                    if (DefaultActiveFirstItem)
+                    if (DefaultActiveFirstOption)
                     {
                         await SetDefaultActiveFirstItemAsync();
                     }
@@ -882,7 +882,7 @@ namespace AntDesign
                     await InvokeValuesChanged();
                 }
             }
-            else if (DefaultActiveFirstItem)
+            else if (DefaultActiveFirstOption)
             {
                 await SetDefaultActiveFirstItemAsync();
             }
