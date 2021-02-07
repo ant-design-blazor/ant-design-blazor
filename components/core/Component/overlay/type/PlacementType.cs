@@ -28,5 +28,28 @@
             SlideName = slideName;
             TranformOrigin = transformOrigin;
         }
+
+        public PlacementType GetReverseType()
+        {
+            if (this == TopLeft) return BottomLeft;
+            if (this == TopCenter) return BottomCenter;
+            if (this == Top) return Bottom;
+            if (this == TopRight) return BottomRight;
+
+            if (this == Left) return Right;
+            if (this == LeftTop) return RightTop;
+            if (this == LeftBottom) return RightBottom;
+
+            if (this == Right) return Left;
+            if (this == RightTop) return LeftTop;
+            if (this == RightBottom) return LeftBottom;
+
+            if (this == BottomLeft) return TopLeft;
+            if (this == BottomCenter) return TopCenter;
+            if (this == Bottom) return Top;
+            if (this == BottomRight) return TopRight;
+
+            return this;
+        }
     }
 }
