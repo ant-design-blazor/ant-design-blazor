@@ -25,7 +25,18 @@ namespace AntDesign
         [Parameter] public bool AutoClearSearchValue { get; set; } = true;
         [Parameter] public bool Bordered { get; set; } = true;
         [Parameter] public Action<string> OnCreateCustomTag { get; set; }
-        [Parameter] public bool DefaultActiveFirstItem { get; set; } = false;
+        [Parameter]
+        public bool DefaultActiveFirstOption
+        {
+            get { return _defaultActiveFirstOption; }
+            set { 
+                _defaultActiveFirstOption = value; 
+                if (!_defaultActiveFirstOption)
+                {
+                    _defaultActiveFirstOptionApplied = true;
+                }
+            }
+        }
         [Parameter] public bool Disabled { get; set; }
         [Parameter] public string DisabledName { get; set; }
         [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
@@ -194,7 +205,6 @@ namespace AntDesign
                         return;
 
                     _selectedValues = value;
-
                     _ = OnValuesChangeAsync(value);
                 }
                 else if (value != null && _selectedValues == null)
@@ -301,6 +311,7 @@ namespace AntDesign
         private bool _defaultValuesHasItems;
         private bool _isInitialized;
         private bool _defaultValueApplied;
+        private bool _defaultActiveFirstOptionApplied;
         private bool _waittingStateChange;
         private bool _isPrimitive;
         internal ElementReference _inputRef;
@@ -308,6 +319,7 @@ namespace AntDesign
         protected SelectContent<TItemValue, TItem> _selectContent;
         bool _isToken;
         private SelectOptionItem<TItemValue, TItem> _activeOption;
+        private bool _defaultActiveFirstOption;
 
         internal HashSet<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new HashSet<SelectOptionItem<TItemValue, TItem>>();
         internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
@@ -383,12 +395,12 @@ namespace AntDesign
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
             }
 
-            if (!_defaultValueApplied)
+            if (!_defaultValueApplied || !_defaultActiveFirstOptionApplied)
             {
                 if (SelectMode == SelectMode.Default)
                 {
                     if (_defaultValueIsNotNull && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstItem && !HasValue && SelectOptionItems.Any())
+                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
                     {
                         await TrySetDefaultValueAsync();
                     }
@@ -396,7 +408,7 @@ namespace AntDesign
                 else
                 {
                     if (_defaultValuesHasItems && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstItem && !HasValue && SelectOptionItems.Any())
+                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
                     {
                         await TrySetDefaultValuesAsync();
                     }
@@ -594,8 +606,8 @@ namespace AntDesign
         protected async Task SetDropdownStyleAsync()
         {
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
-
-            _dropdownStyle = $"min-width: {domRect.width}px; width: {domRect.width}px;";
+            var width = domRect.width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            _dropdownStyle = $"min-width: {width}px; width: {width}px;";
         }
 
         protected async Task OnOverlayVisibleChangeAsync(bool visible)
@@ -799,6 +811,7 @@ namespace AntDesign
             {
                 await ClearSelectedAsync();
             }
+            _defaultActiveFirstOptionApplied = true;
         }
 
         /// <summary>
@@ -830,7 +843,7 @@ namespace AntDesign
                     await SetDefaultActiveFirstItemAsync();
                 }
             }
-            else if (DefaultActiveFirstItem)
+            else if (DefaultActiveFirstOption)
             {
                 await SetDefaultActiveFirstItemAsync();
             }
@@ -866,7 +879,7 @@ namespace AntDesign
 
                 if (!anySelected)
                 {
-                    if (DefaultActiveFirstItem)
+                    if (DefaultActiveFirstOption)
                     {
                         await SetDefaultActiveFirstItemAsync();
                     }
@@ -882,7 +895,7 @@ namespace AntDesign
                     await InvokeValuesChanged();
                 }
             }
-            else if (DefaultActiveFirstItem)
+            else if (DefaultActiveFirstOption)
             {
                 await SetDefaultActiveFirstItemAsync();
             }
@@ -1148,7 +1161,7 @@ namespace AntDesign
             }
 
             var newSelectedItems = new List<TItem>();
-
+            var deselectList = SelectedOptionItems.ToDictionary(item => item.Value, item => item);
             foreach (var item in values.ToList())
             {
                 var result = SelectOptionItems.FirstOrDefault(x => x.IsSelected == false && EqualityComparer<TItemValue>.Default.Equals(x.Value, item));
@@ -1156,7 +1169,16 @@ namespace AntDesign
                 if (result != null && !result.IsDisabled)
                 {
                     result.IsSelected = true;
-                    newSelectedItems.Add(result.Item);
+                    SelectedOptionItems.Add(result);
+                }
+                deselectList.Remove(item);
+            }
+            if (deselectList.Count > 0)
+            {
+                foreach (var item in deselectList)
+                {
+                    item.Value.IsSelected = false;
+                    SelectedOptionItems.Remove(item.Value);
                 }
             }
 
@@ -1165,7 +1187,7 @@ namespace AntDesign
                 await UpdateOverlayPositionAsync();
             }
 
-            OnSelectedItemsChanged?.Invoke(newSelectedItems);
+            OnSelectedItemsChanged?.Invoke(SelectedOptionItems.Select(s => s.Item));
             await ValuesChanged.InvokeAsync(Values);
         }
 
