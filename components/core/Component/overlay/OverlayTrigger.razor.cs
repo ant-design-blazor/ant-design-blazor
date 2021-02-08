@@ -124,6 +124,9 @@ namespace AntDesign.Internal
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
+        [Parameter]
+        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
+
         [Inject]
         private DomEventService DomEventService { get; set; }
 
@@ -138,6 +141,7 @@ namespace AntDesign.Internal
             {
                 DomEventService.AddEventListener("document", "mouseup", OnMouseUp, false);
                 DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
+                DomEventService.AddEventListener("document", "scroll", OnWindowScroll, false);
             }
 
             base.OnAfterRender(firstRender);
@@ -183,6 +187,8 @@ namespace AntDesign.Internal
         {
             DomEventService.RemoveEventListerner<JsonElement>("document", "mouseup", OnMouseUp);
             DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnMouseUp);
+            DomEventService.RemoveEventListerner<JsonElement>("document", "scroll", OnWindowScroll);
+
             if (Unbound != null)
             {
                 DomEventService.RemoveEventListerner<JsonElement>(Ref, "click", OnUnboundClick);
@@ -334,6 +340,12 @@ namespace AntDesign.Internal
                 await GetOverlayComponent().UpdatePosition();
             }
         }
+
+        protected void OnWindowScroll(JsonElement element)
+        {
+            RestorePlacement();
+        }
+
         protected virtual bool IsContainTrigger(TriggerType triggerType)
         {
             return Trigger.Contains(triggerType);

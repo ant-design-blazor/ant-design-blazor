@@ -196,8 +196,8 @@ namespace AntDesign.Internal
             Element overlayElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
             Element containerElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.PopupContainerSelector);
 
-            int left = GetOverlayLeftWithBoundaryAdjust(trigger, overlayElement, containerElement);
-            int top = GetOverlayTopWithBoundaryAdjust(trigger, overlayElement, containerElement);
+            int left = await GetOverlayLeftWithBoundaryAdjust(trigger, overlayElement, containerElement);
+            int top = await GetOverlayTopWithBoundaryAdjust(trigger, overlayElement, containerElement);
 
             int zIndex = await JsInvokeAsync<int>(JSInteropConstants.GetMaxZIndex);
 
@@ -295,7 +295,7 @@ namespace AntDesign.Internal
                 _hasAddOverlayToBody = true;
             }
         }
-        private int GetOverlayTopWithBoundaryAdjust(Element trigger, Element overlay, Element containerElement)
+        private async Task<int> GetOverlayTopWithBoundaryAdjust(Element trigger, Element overlay, Element containerElement)
         {
             int top = GetOverlayTop(trigger, overlay, containerElement);
 
@@ -303,10 +303,10 @@ namespace AntDesign.Internal
              * 边界检测和方向调整
              * boundary detection and orientation adjustment
              */
-            return BoundaryAdjust(trigger, overlay, containerElement, top, "top");
+            return await BoundaryAdjust(trigger, overlay, containerElement, top, "top");
         }
 
-        private int GetOverlayLeftWithBoundaryAdjust(Element trigger, Element overlay, Element containerElement)
+        private async Task<int> GetOverlayLeftWithBoundaryAdjust(Element trigger, Element overlay, Element containerElement)
         {
             int left = GetOverlayLeft(trigger, overlay, containerElement);
 
@@ -314,7 +314,7 @@ namespace AntDesign.Internal
              * 边界检测和方向调整
              * boundary detection and orientation adjustment
              */
-            return BoundaryAdjust(trigger, overlay, containerElement, left, "left");
+            return await BoundaryAdjust(trigger, overlay, containerElement, left, "left");
         }
 
         private int GetOverlayTop(Element trigger, Element overlay, Element containerElement)
@@ -422,13 +422,17 @@ namespace AntDesign.Internal
          * 边界检测和方向调整
          * boundary detection and orientation adjustment
          */
-        private int BoundaryAdjust(
+        private async Task<int> BoundaryAdjust(
             Element trigger, Element overlay, Element containerElement,
             int curPos, string direction)
         {
-            int overlaySize = direction == "top" ? overlay.clientHeight : overlay.clientWidth;
-            int boundarySize = direction == "top" ? containerElement.scrollHeight : containerElement.scrollWidth;
+            if (Trigger.BoundaryAdjustMode == TriggerBoundaryAdjustMode.None)
+            {
+                return curPos;
+            }
 
+            int overlaySize = direction == "top" ? overlay.clientHeight : overlay.clientWidth;
+            int boundarySize = await GetWindowBoundarySize(direction, containerElement);
 
             if (Trigger.Trigger.Contains(TriggerType.ContextMenu))
             {
@@ -444,25 +448,87 @@ namespace AntDesign.Internal
                 return curPos;
             }
 
-            if (overlaySize + curPos > boundarySize || curPos < 0)
+            int overlayPosWithSize = GetOverlayPosWithSize(curPos, overlaySize);
+
+            if (overlayPosWithSize > boundarySize || overlayPosWithSize < 0)
             {
+                // 翻转位置/reverse placement
                 Trigger.ChangePlacementForShow(Trigger.Placement.GetReverseType());
 
-                int reversePso = direction switch
+                int reversePos = direction switch
                 {
                     "top" => GetOverlayTop(trigger, overlay, containerElement),
                     _ => GetOverlayLeft(trigger, overlay, containerElement)
                 };
 
-                curPos = reversePso;
+                curPos = reversePos;
             }
 
-            if (curPos < 0)
-            {
-                curPos = boundarySize - overlaySize;
-            }
+            /*
+                TODO： 翻转位置后仍然超出了边界/still outof boundary range after reverse placement
+             */
+            //overlayPosWithSize = GetOverlayPosWithSize(curPos, overlaySize);
+            //if (overlayPosWithSize > boundarySize)
+            //{
+            //    curPos = GetOverlayBoundaryPos(overlaySize, boundarySize);
+            //}
+            //else if (overlayPosWithSize < 0)
+            //{
+            //    curPos -= overlayPosWithSize;
+            //}
 
             return curPos;
+        }
+
+        private int GetOverlayPosWithSize(int overlayPos, int overlaySize)
+        {
+            PlacementDirection placementDirection = Trigger.Placement.GetDirection();
+
+            if (placementDirection.IsIn(PlacementDirection.Top, PlacementDirection.Left))
+            {
+                return overlayPos - overlaySize;
+            }
+            else
+            {
+                return overlayPos + overlaySize;
+            }
+        }
+
+        private int GetOverlayBoundaryPos(int overlaySize, int boundarySize)
+        {
+            PlacementDirection placementDirection = Trigger.Placement.GetDirection();
+
+            if (placementDirection.IsIn(PlacementDirection.Top, PlacementDirection.Left))
+            {
+                return 0;
+            }
+            else
+            {
+                return boundarySize - overlaySize;
+            }
+        }
+
+        private async Task<int> GetWindowBoundarySize(string direction, Element containerElement)
+        {
+            if (Trigger.BoundaryAdjustMode == TriggerBoundaryAdjustMode.InScroll)
+            {
+                return direction switch
+                {
+                    "top" => containerElement.scrollHeight,
+                    _ => containerElement.scrollWidth
+                };
+            }
+
+            Window windowElement = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow, Ref);
+            JsonElement scrollInfo = await JsInvokeAsync<JsonElement>(JSInteropConstants.GetScroll);
+            int windowScrollX = (int)scrollInfo.GetProperty("x").GetDouble();
+            int windowScrollY = (int)scrollInfo.GetProperty("y").GetDouble();
+
+            return direction switch
+            {
+                "top" => (int)windowElement.innerHeight + windowScrollY,
+                _ => (int)windowElement.innerWidth + windowScrollX
+            };
         }
 
         private string GetTransformOrigin()
@@ -544,8 +610,8 @@ namespace AntDesign.Internal
             Element overlayElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
             Element containerElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.PopupContainerSelector);
 
-            int left = GetOverlayLeftWithBoundaryAdjust(trigger, overlayElement, containerElement);
-            int top = GetOverlayTopWithBoundaryAdjust(trigger, overlayElement, containerElement);
+            int left = await GetOverlayLeftWithBoundaryAdjust(trigger, overlayElement, containerElement);
+            int top = await GetOverlayTopWithBoundaryAdjust(trigger, overlayElement, containerElement);
 
             int zIndex = await JsInvokeAsync<int>(JSInteropConstants.GetMaxZIndex);
 

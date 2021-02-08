@@ -29,7 +29,7 @@
             TranformOrigin = transformOrigin;
         }
 
-        public PlacementType GetReverseType()
+        internal PlacementType GetReverseType()
         {
             if (this == TopLeft) return BottomLeft;
             if (this == TopCenter) return BottomCenter;
@@ -51,5 +51,31 @@
 
             return this;
         }
+
+        internal PlacementDirection GetDirection()
+        {
+            if (this.IsIn(TopLeft, TopCenter, Top, TopRight))
+            {
+                return PlacementDirection.Top;
+            }
+
+            if (this.IsIn(Left, LeftTop, LeftBottom))
+            {
+                return PlacementDirection.Left;
+            }
+
+            if (this.IsIn(Right, RightTop, RightBottom))
+            {
+                return PlacementDirection.Right;
+            }
+
+            if (this.IsIn(BottomLeft, BottomCenter, Bottom, BottomRight))
+            {
+                return PlacementDirection.Bottom;
+            }
+
+            return PlacementDirection.Bottom;
+        }
+
     }
 }
