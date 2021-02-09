@@ -1391,6 +1391,15 @@ namespace AntDesign
                 {
                     CustomTagSelectOptionItem.Label = searchValue;
                     CustomTagSelectOptionItem.Value = value;
+                    if (_isPrimitive)
+                    {
+                        CustomTagSelectOptionItem.Item = (TItem)TypeDescriptor.GetConverter(typeof(TItem)).ConvertFromInvariantString(_searchValue);
+                    }
+                    else
+                    {
+                        typeof(TItem).GetProperty(LabelName).SetValue(CustomTagSelectOptionItem.Item, _searchValue);
+                        typeof(TItem).GetProperty(ValueName).SetValue(CustomTagSelectOptionItem.Item, value);
+                    }
                 }
             }
         }
