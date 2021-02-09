@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
@@ -67,40 +68,9 @@ namespace AntDesign
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
 
-        protected string FixedStyle
-        {
-            get
-            {
-                if (Fixed == null || Context == null)
-                {
-                    return "";
-                }
+        private string _fixedStyle;
 
-                var fixedWidth = 0;
-
-                if (Fixed == "left" && Context?.Columns.Count >= ColIndex)
-                {
-                    for (int i = 0; i < ColIndex; i++)
-                    {
-                        fixedWidth += ((CssSizeLength)Context?.Columns[i].Width).Value;
-                    }
-                }
-                else if (Fixed == "right")
-                {
-                    for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
-                    {
-                        fixedWidth += ((CssSizeLength)Context?.Columns[i].Width).Value;
-                    }
-                }
-
-                if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
-                {
-                    fixedWidth += Table.ScrollBarWidth;
-                }
-
-                return $"position: sticky; {Fixed}: {(CssSizeLength)fixedWidth};";
-            }
-        }
+        protected string FixedStyle => _fixedStyle;
 
         private void SetClass()
         {
@@ -150,6 +120,11 @@ namespace AntDesign
                 Context?.AddRowColumn(this);
             }
 
+            if (IsHeader || IsBody)
+            {
+                _fixedStyle = CalcFixedStyle();
+            }
+
             SetClass();
         }
 
@@ -160,6 +135,38 @@ namespace AntDesign
                 Context.Columns.Remove(this);
             }
             base.Dispose(disposing);
+        }
+
+        private string CalcFixedStyle()
+        {
+            if (Fixed == null || Context == null)
+            {
+                return "";
+            }
+
+            var fixedWidths = Array.Empty<string>();
+
+            if (Fixed == "left" && Context?.Columns.Count >= ColIndex)
+            {
+                for (int i = 0; i < ColIndex; i++)
+                {
+                    fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                }
+            }
+            else if (Fixed == "right")
+            {
+                for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
+                {
+                    fixedWidths = fixedWidths.Append($"{(CssSizeLength)Context?.Columns[i].Width}");
+                }
+            }
+
+            if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
+            {
+                fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
+            }
+
+            return $"position: sticky; {Fixed}: {(fixedWidths.Any() ? $"calc({string.Join(" + ", fixedWidths) })" : "0px")};";
         }
     }
 }
