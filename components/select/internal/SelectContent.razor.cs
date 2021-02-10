@@ -65,27 +65,35 @@ namespace AntDesign.Select.Internal
 
         protected override Task OnParametersSetAsync()
         {
-            if (ParentSelect.SelectMode != SelectMode.Default) // ToDo Fix class
-                SetInputWidth();
+            SetInputWidth(); // ToDo Fix class
 
             return base.OnParametersSetAsync();
         }
 
         private void SetInputWidth()
         {
-            if (!string.IsNullOrWhiteSpace(SearchValue))
+            if (ParentSelect.PrefixIcon != null || ParentSelect.SelectMode == SelectMode.Default)
+                _inputWidth = "left: 0px;";
+            if (ParentSelect.SelectMode != SelectMode.Default)
             {
-                _inputWidth = $"width: {4 + SearchValue.Length * 8}px;";
-            }
-            else
-            {
-                if (ParentSelect.HasValue)
+                if (!string.IsNullOrWhiteSpace(SearchValue))
                 {
-                    _inputWidth = "width: 4px;"; //ToDo fix class
+                    _inputWidth = $"{_inputWidth}width: {4 + SearchValue.Length * 8}px;";
                 }
                 else
                 {
-                    _inputWidth = "width: 4px; margin-left: 6.5px;"; //ToDo fix class
+                    if (ParentSelect.HasValue)
+                    {
+                        _inputWidth = $"{_inputWidth}width: 4px;"; //ToDo fix class
+                    }
+                    else if (ParentSelect.PrefixIcon != null)
+                    {
+                        _inputWidth = $"{_inputWidth}width: 4px; margin-left: 0px;"; //ToDo fix class
+                    }
+                    else
+                    {
+                        _inputWidth = $"{_inputWidth}width: 4px; margin-left: 10px;"; //ToDo fix class
+                    }
                 }
             }
         }
