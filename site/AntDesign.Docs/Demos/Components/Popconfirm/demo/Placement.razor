@@ -1,4 +1,4 @@
-@inject MessageService _message
+@inject MessageService MessageService
 
 <div class="demo">
     <div style="margin-left: @($"{ButtonWidth}px"); white-space: nowrap;">
@@ -47,16 +47,15 @@
     </div>
 </div>
 
-@code
-{
-
+@code {
     const int ButtonWidth = 70;
 
     private string _cancelText = "No";
     private string _okText = "Yes";
     private string _title = "Are you sure to delete this task?";
+
     private void Confirm()
     {
-        _message.Info("Clicked on Yes");
+        MessageService.Info("Clicked on Yes");
     }
 }

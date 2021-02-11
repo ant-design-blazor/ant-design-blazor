@@ -1,4 +1,4 @@
-﻿<Table DataSource="data">
+﻿<Table DataSource="_data">
     <Column @bind-Field="@context.Name" Width="150">
         <a>@context.Name</a>
     </Column>
@@ -10,7 +10,8 @@
 </Table>
 
 @code {
-    Column[] data = new Column[] {
+    private Column[] _data =
+    {
         new()
         {
             Name = "John Brown",
@@ -31,7 +32,7 @@
         },
     };
 
-    class Column
+    private class Column
     {
         public string Name { get; set; }
 
@@ -39,5 +40,4 @@
 
         public string Address { get; set; }
     }
-
 }

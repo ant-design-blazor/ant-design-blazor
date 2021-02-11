@@ -1,18 +1,14 @@
 <div>
-    <AntDesign.InputNumber DefaultValue="3" Disabled="@disabled" @bind-Value="myValue" />
+    <AntDesign.InputNumber DefaultValue="3" Disabled="@_disabled" @bind-Value="MyValue" />
     <div style="margin: 20px 0px 20px 0px;">
         <Button Type="@ButtonType.Primary" OnClick="(e)=> ToggleDisable()">Toggle disabled</Button>
     </div>
 </div>
 
-@code{
-    private bool disabled = true;
+@code {
+    private bool _disabled = true;
 
-    private double myValue { get; set; }
+    private double MyValue { get; set; }
 
-
-    private void ToggleDisable()
-    {
-        disabled = !disabled;
-    }
-}		
+    private void ToggleDisable() => _disabled = !_disabled;
+}

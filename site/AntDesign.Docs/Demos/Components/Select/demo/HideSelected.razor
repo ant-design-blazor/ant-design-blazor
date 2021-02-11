@@ -3,7 +3,7 @@
         Placeholder="Inserted are removed"
         EnableSearch
         HideSelected
-		TItemValue="string" 
+		TItemValue="string"
 		TItem="string"
 		OnSelectedItemsChanged="OnSelectedItemsChangedHandler">
 	<SelectOptions>
@@ -13,13 +13,19 @@
 		}
 	</SelectOptions>
 </Select>
-@code
-{
-    private readonly string[] _items = new[] { "Apples", "Nails", "Bananas", "Helicopters" };
-    private IEnumerable<string> _selectedValues;
+@code {
+	private readonly string[] _items =
+	{
+		"Apples",
+		"Nails",
+		"Bananas",
+		"Helicopters"
+	};
 
-    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
-    {
-        Console.WriteLine($"selected: ${string.Join(",", values)}");
-    }
+	private IEnumerable<string> _selectedValues;
+
+	private static void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+	{
+		Console.WriteLine($"selected: ${string.Join(",", values)}");
+	}
 }

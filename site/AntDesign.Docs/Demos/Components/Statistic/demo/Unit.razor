@@ -1,14 +1,13 @@
-﻿<Row Gutter=16>
-    <Col Span=12>
-    <Statistic Title="Feedback" Value="1128" PrefixTemplate="@prefix1" />
+﻿<Row Gutter="16">
+    <Col Span="12">
+        <Statistic Title="Feedback" Value="1128" PrefixTemplate="@_prefix1" />
     </Col>
-    <Col Span=12>
-    <Statistic Title="Unmerged" Value="93" Suffix="/ 100" />
+    <Col Span="12">
+        <Statistic Title="Unmerged" Value="93" Suffix="/ 100" />
     </Col>
 </Row>
 
 
-@code
-{
-    RenderFragment prefix1 =@<Icon Type="like" />;
+@code {
+    private readonly RenderFragment _prefix1 =@<Icon Type="like" />;
 }

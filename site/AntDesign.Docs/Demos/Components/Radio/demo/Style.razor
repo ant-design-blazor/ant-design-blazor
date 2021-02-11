@@ -1,5 +1,5 @@
 <div>
-    <RadioGroup @bind-Value="radioValue3">
+    <RadioGroup @bind-Value="_radioValue3">
         <Radio RadioButton Value="@("A")">Hangzhou</Radio>
         <Radio RadioButton Value="@("B")">Shanghai</Radio>
         <Radio RadioButton Value="@("C")">Beijing</Radio>
@@ -7,7 +7,7 @@
     </RadioGroup>
     <br />
     <br />
-    <RadioGroup @bind-Value="radioValue3">
+    <RadioGroup @bind-Value="_radioValue3">
         <Radio RadioButton Value="@("A")">Hangzhou</Radio>
         <Radio RadioButton Value="@("B")" Disabled>Shanghai</Radio>
         <Radio RadioButton Value="@("C")">Beijing</Radio>
@@ -23,7 +23,6 @@
     </RadioGroup>
 </div>
 
-@code
-{
-    string radioValue3 = "A";
+@code {
+    private string _radioValue3 = "A";
 }

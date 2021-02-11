@@ -1,88 +1,92 @@
 ﻿<AutoComplete TOption="string">
     <ChildContent>
-        <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" />
+        <AutoCompleteSearch Placeholder="input here" @bind-Value="@_value"/>
     </ChildContent>
     <OverlayTemplate>
-        @foreach (var group in optionGroups)
+        @foreach (var group in _optionGroups)
         {
             <AutoCompleteOptGroup>
                 <LabelFragment>
                     <span>
-                        @group.title<a style="float: right;" href="https://www.google.com/search?q=ng+zorro" target="_blank">更多</a>
+                        @group.Title<a style="float: right;" href="https://www.google.com/search?q=ng+zorro" target="_blank">更多</a>
                     </span>
                 </LabelFragment>
                 <ChildContent>
-                    @foreach (var option in group.children)
+                    @foreach (var option in group.Children)
                     {
-                        <AutoCompleteOption Value="@option.title" Label="@option.title">
-                            @option.title
-                            <span style="position: absolute; color: #999; right: 16px;">@option.count 人 关注</span>
+                        <AutoCompleteOption Value="@option.Title" Label="@option.Title">
+                            @option.Title
+                            <span style="position: absolute; color: #999; right: 16px;">@option.Count 人 关注</span>
                         </AutoCompleteOption>
                     }
-
                 </ChildContent>
             </AutoCompleteOptGroup>
         }
     </OverlayTemplate>
 </AutoComplete>
 
-@code
-{
+@code {
+    private string _value;
 
-    private string value;
-
-    CertainCategoryGroup[] optionGroups = new CertainCategoryGroup[] {
-    new CertainCategoryGroup() {
-        title= "话题",
-        children=new CertainCategoryOption[]{
-            new CertainCategoryOption() {
-                title= "Ant Design",
-                count= 10000
-            },
-            new CertainCategoryOption()  {
-                title= "Ant Design Blazor",
-                count= 10600
+    private readonly CertainCategoryGroup[] _optionGroups =
+    {
+        new()
+        {
+            Title = "话题",
+            Children = new[]
+            {
+                new CertainCategoryOption
+                {
+                    Title = "Ant Design",
+                    Count = 10000
+                },
+                new CertainCategoryOption
+                {
+                    Title = "Ant Design Blazor",
+                    Count = 10600
+                }
             }
         },
-    },
-    new CertainCategoryGroup() {
-        title= "问题",
-        children= new CertainCategoryOption[]{
-            new CertainCategoryOption()   {
-                title= "Ant Design Blazor 有多好",
-                count= 60100
-            },
-            new CertainCategoryOption()     {
-                title= "Ant Design 是啥",
-                count= 30010
+        new()
+        {
+            Title = "问题",
+            Children = new[]
+            {
+                new CertainCategoryOption
+                {
+                    Title = "Ant Design Blazor 有多好",
+                    Count = 60100
+                },
+                new CertainCategoryOption
+                {
+                    Title = "Ant Design 是啥",
+                    Count = 30010
+                }
             }
-
         },
-    },
-    new CertainCategoryGroup() {
-        title = "文章",
-        children =new CertainCategoryOption[]{
-            new CertainCategoryOption()   {
-                title = "Ant Design 是一个设计语言",
-                count = 100000
+        new()
+        {
+            Title = "文章",
+            Children = new[]
+            {
+                new CertainCategoryOption
+                {
+                    Title = "Ant Design 是一个设计语言",
+                    Count = 100000
+                }
             }
         }
-    }
-};
+    };
 
-
-    public class CertainCategoryGroup
+    private class CertainCategoryGroup
     {
-        public string title { get; set; }
-
-        public CertainCategoryOption[] children { get; set; }
-
+        public string Title { get; set; }
+        public CertainCategoryOption[] Children { get; set; }
     }
 
-    public class CertainCategoryOption
+    private class CertainCategoryOption
     {
-        public string title { get; set; }
-        public int count { get; set; }
+        public string Title { get; set; }
+        public int Count { get; set; }
     }
-
 }

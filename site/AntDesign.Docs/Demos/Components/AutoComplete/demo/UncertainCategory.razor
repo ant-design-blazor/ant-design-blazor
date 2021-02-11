@@ -1,6 +1,6 @@
-﻿<AutoComplete Options="options" OnInput="OnInput" AllowFilter="false">
+﻿<AutoComplete Options="_options" OnInput="OnInput" AllowFilter="false">
     <ChildContent>
-        <AutoCompleteSearch Placeholder="input here" @bind-Value="@value" />
+        <AutoCompleteSearch Placeholder="input here" @bind-Value="@_value" />
     </ChildContent>
     <OptionTemplate Context="option">
         <AutoCompleteOption Style="display: flex;" Value="@option.Value.Category">
@@ -16,30 +16,28 @@
     </OptionTemplate>
 </AutoComplete>
 
-@code{
-    private string value;
+@code {
+    private string _value;
 
-    List<UncertainCategoryOption> options = new List<UncertainCategoryOption>();
-
+    List<UncertainCategoryOption> _options = new();
 
     void OnInput(ChangeEventArgs e)
     {
         var v = e.Value.ToString();
-
         var r = new Random();
         var i = 0;
-        this.options = new int[7].Select(x => new UncertainCategoryOption()
+
+        _options = new int[7].Select(_ => new UncertainCategoryOption
         {
             Title = v,
             Category = $"{v}{i++}",
-            Count = r.Next(100, 200),
+            Count = r.Next(100, 200)
         }).ToList();
     }
 
-    public class UncertainCategoryOption
+    private class UncertainCategoryOption
     {
         public string Title { get; set; }
-
         public string Category { get; set; }
         public int Count { get; set; }
     }

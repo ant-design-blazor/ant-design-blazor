@@ -1,4 +1,4 @@
-﻿@inject ModalService _modalService
+﻿@inject ModalService ModalService
 
 <Button OnClick="@ShowConfirm">Confirm</Button>
 
@@ -7,28 +7,26 @@
 
 
 @code {
-
-    private Func<ModalClosingEventArgs, Task> OnOkClick = async (e) =>
+    private readonly Func<ModalClosingEventArgs, Task> _okClick = async e =>
     {
         await Task.Delay(1000);
     };
 
     private void ShowConfirm()
     {
-        RenderFragment icon =@<Icon Type="exclamation-circle" Theme="outline"></Icon>;
+        RenderFragment icon = @<Icon Type="exclamation-circle" Theme="outline"></Icon>;
 
-        _modalService.Confirm(new ConfirmOptions()
+        ModalService.Confirm(new ConfirmOptions
         {
             Title = "Do you want to delete these items?",
             Icon = icon,
             Content = "When clicked the OK button, this dialog will be closed after 1 second",
-            OnOk = OnOkClick
+            OnOk = _okClick
         });
     }
 
 
-
-    private Func<ModalClosingEventArgs, Task> OnNotOkClick = async (e) =>
+    private readonly Func<ModalClosingEventArgs, Task> _notOkClick = async e =>
     {
         await Task.Delay(1000);
         e.Cancel = true;
@@ -38,12 +36,12 @@
     {
         RenderFragment icon =@<Icon Type="exclamation-circle" Theme="outline"></Icon>;
 
-        _modalService.Confirm(new ConfirmOptions()
+        ModalService.Confirm(new ConfirmOptions
         {
             Title = "Do you want to delete these items?",
             Icon = icon,
             Content = "When clicked the OK button, this dialog will will cancel closing after 1 second, Not Close Modal",
-            OnOk = OnNotOkClick
+            OnOk = _notOkClick
         });
     }
 }

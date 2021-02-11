@@ -1,28 +1,39 @@
 ﻿<div>
-    <Avatar Style="@($"background-color: {color}; vertical-align: middle;")" Size="large">
-        @user
+    <Avatar Style="@($"background-color: {Color}; vertical-align: middle;")" Size="large">
+        @User
     </Avatar>
     <Button
         Size="small"
         Style="margin:0 16px; vertical-align: middle;"
-        OnClick="_=>changeUser()"
-    >
+        OnClick="_=>ChangeUser()">
         Change
     </Button>
 </div>
 
-@code
-{
-    private static string[] userList = {"U", "Lucy", "Tom", "Edward"};
-    private static string[] colorList = {"#f56a00", "#7265e6", "#ffbf00", "#00a2ae"};
-
-    private string user { get; set; } = userList[0];
-    private string color { get; set; } = colorList[0];
-
-    private void changeUser()
+@code {
+    private static readonly string[] _userList =
     {
-        var index = Array.IndexOf(userList, user);
-        user = index < userList.Length - 1 ? userList[index + 1] : userList[0];
-        color = index < colorList.Length - 1 ? colorList[index + 1] : colorList[0];
+        "U",
+        "Lucy",
+        "Tom",
+        "Edward"
+    };
+
+    private static readonly string[] _colorList =
+    {
+        "#f56a00",
+        "#7265e6",
+        "#ffbf00",
+        "#00a2ae"
+    };
+
+    private string User { get; set; } = _userList[0];
+    private string Color { get; set; } = _colorList[0];
+
+    private void ChangeUser()
+    {
+        var index = Array.IndexOf(_userList, User);
+        User = index < _userList.Length - 1 ? _userList[index + 1] : _userList[0];
+        Color = index < _colorList.Length - 1 ? _colorList[index + 1] : _colorList[0];
     }
 }

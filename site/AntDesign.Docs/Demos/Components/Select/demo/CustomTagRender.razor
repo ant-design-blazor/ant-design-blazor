@@ -8,11 +8,11 @@
         <LabelTemplateItem Context="item"
                            TItem="MyColor"
                            TItemValue="string"
-                           Class="@("ant-tag ant-tag-" + (context as MyColor).Name)"
+                           Class="@("ant-tag ant-tag-" + context.Name)"
                            Style="margin-right: 4px;"
                            RemoveIconStyle="margin-top: 1px; display: inline-block;">
             <LabelTemplateItemContent>
-                <span style="color: @((item as MyColor).Name);">@((item as MyColor).Name)</span>
+                <span style="color: @((item as MyColor).Name);">@item.Name</span>
             </LabelTemplateItemContent>
         </LabelTemplateItem>
     </LabelTemplate>
@@ -20,24 +20,40 @@
 
 @code
 {
-    class MyColor
+    private class MyColor
     {
         public string Value { get; set; }
         public string Name { get; set; }
     }
 
-    List<MyColor> _myColors;
-    IEnumerable<string> _selectedColorValues;
-    bool _toggleSearch;
+    private List<MyColor> _myColors;
+    private IEnumerable<string> _selectedColorValues;
+    private bool _toggleSearch;
 
     protected override void OnInitialized()
     {
         _myColors = new List<MyColor>
         {
-            new MyColor {Value = "gold", Name = "gold"}, 
-            new MyColor {Value = "lime", Name = "lime"}, 
-            new MyColor {Value = "green", Name = "green"}, 
-            new MyColor {Value = "cyan", Name = "cyan"}
+            new()
+            {
+                Value = "gold",
+                Name = "gold"
+            },
+            new()
+            {
+                Value = "lime",
+                Name = "lime"
+            },
+            new()
+            {
+                Value = "green",
+                Name = "green"
+            },
+            new()
+            {
+                Value = "cyan",
+                Name = "cyan"
+            }
         };
 
         _selectedColorValues = new List<string> { "gold", "cyan" };

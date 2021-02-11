@@ -1,4 +1,4 @@
-@inject MessageService _message
+@inject MessageService MessageService
 
 <Popconfirm Title="Are you sure delete this task?"
             OnConfirm="Confirm"
@@ -18,16 +18,14 @@
     </Unbound>
 </Popconfirm>
 
-@code{
-
+@code {
     private void Confirm()
     {
-        _message.Success("Clicked on Yes");
+        MessageService.Success("Clicked on Yes");
     }
 
     private void Cancel()
     {
-        _message.Error("Clicked on No");
+        MessageService.Error("Clicked on No");
     }
-
 }

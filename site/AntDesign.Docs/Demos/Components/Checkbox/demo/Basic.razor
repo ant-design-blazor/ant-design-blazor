@@ -1,20 +1,10 @@
-  <div>
-    <Checkbox Checked="@isChecked" Disabled="@disabled" CheckedChange="@ToggleChecked">
-                @($"{(isChecked ? "Check" : "Uncheck")}-{(disabled ? "Disable" : "Enable")}")
+<div>
+    <Checkbox Checked="@_isChecked" CheckedChange="@ToggleChecked">
+                @($"{(_isChecked ? "Check" : "Uncheck")}")
     </Checkbox>
-  </div>
-  
-  @code{
-    bool isChecked = true;
-    bool disabled = false;
-    void ToggleChecked(bool value)
-    {
-        isChecked = !isChecked;
-    }
-    void ToggleDisable()
-    {
-        disabled = !disabled;
-    }
-}
+</div>
 
-  
+@code {
+    bool _isChecked = true;
+    void ToggleChecked(bool value) => _isChecked = !_isChecked;
+}

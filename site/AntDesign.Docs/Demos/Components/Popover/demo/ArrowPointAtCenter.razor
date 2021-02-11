@@ -7,13 +7,11 @@
     </Popover>
 </div>
 
-@code
-{
-    private RenderFragment _text =@<span>Title</span>;
-    
-    private RenderFragment _content =
-        @<div>
-            <p>Content</p>
-            <p>Content</p>
-        </div>;
+@code {
+    private readonly RenderFragment _text =@<span>Title</span>;
+
+    private readonly RenderFragment _content = @<div>
+                                                   <p>Content</p>
+                                                   <p>Content</p>
+                                               </div>;
 }

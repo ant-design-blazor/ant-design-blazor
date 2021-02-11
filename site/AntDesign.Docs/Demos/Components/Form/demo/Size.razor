@@ -1,11 +1,11 @@
 ﻿@using System.Text.Json;
 
-<Form Model="@model"
+<Form Model="@_model"
       LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
-      Size="@model.Size">
+      Size="@_model.Size">
     <FormItem Label="Form Size">
         <RadioGroup @bind-Value="@context.Size">
             <Radio RadioButton Value="@AntSizeLDSType.Small">Small</Radio>
@@ -21,7 +21,7 @@
         <TextArea @bind-Value="@context.InputArea" />
     </FormItem>
     <FormItem Label="Cascader">
-        <Cascader @bind-Value="@context.Cascader" Options="districts" />
+        <Cascader @bind-Value="@context.Cascader" Options="_districts" />
     </FormItem>
     <FormItem Label="DatePicker">
         <DatePicker @bind-Value="@context.DatePicker" />
@@ -44,7 +44,7 @@
         </RadioGroup>
     </FormItem>
     <FormItem Label="AutoComplete">
-        <AutoComplete @bind-Value="@context.AutoComplete" Options="@autoCompleteOptions" Placeholder="Input here" />
+        <AutoComplete @bind-Value="@context.AutoComplete" Options="@_autoCompleteOptions" Placeholder="Input here" />
     </FormItem>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button HtmlType="submit">
@@ -55,53 +55,73 @@
 
 </Form>
 
-@code
-{
-    public class Model
+@code {
+    private class Model
     {
-        public string Size { get; set; } = AntSizeLDSType.Small;
-        public string Input { get; set; } = "input";
-        public string InputArea { get; set; } = "inputArea";
-        public string Cascader { get; set; } = "11";
-        public DateTime? DatePicker { get; set; } = DateTime.Now;
-        public DateTime?[] RangePicker { get; set; } = new DateTime?[] { DateTime.Now, DateTime.Now.AddDays(10) };
-        public double Number { get; set; } = 1;
-        public bool Switch { get; set; } = true;
-        public string Radio { get; set; } = "Beijing";
+        public string Size { get; } = AntSizeLDSType.Small;
+        public string Input { get; } = "input";
+        public string InputArea { get; } = "inputArea";
+        public string Cascader { get; } = "11";
+        public DateTime? DatePicker { get; } = DateTime.Now;
+
+        public DateTime?[] RangePicker { get; } = {
+            DateTime.Now,
+            DateTime.Now.AddDays(10)
+        };
+
+        public double Number { get; } = 1;
+        public bool Switch { get; } = true;
+        public string Radio { get; } = "Beijing";
         public string AutoComplete { get; set; }
     }
 
-    private Model model = new Model();
+    private Model _model = new();
 
-    private List<CascaderNode> districts = new List<CascaderNode>
-{
-        new CascaderNode()
+    private readonly List<CascaderNode> _districts = new()
+    {
+        new CascaderNode
         {
             Value = "1",
             Label = "Zhejianng",
-            Children = new []
-    {
-                new CascaderNode {Value = "11", Label = "Hangzhou"},
-                new CascaderNode {Value = "12", Label = "Wenzhou"},
+            Children = new[]
+            {
+                new CascaderNode
+                {
+                    Value = "11",
+                    Label = "Hangzhou"
+                },
+                new CascaderNode
+                {
+                    Value = "12",
+                    Label = "Wenzhou"
+                }
             }
         },
-        new CascaderNode()
+        new CascaderNode
         {
             Value = "2",
-            Label = "Shanghai",
+            Label = "Shanghai"
         }
     };
 
-    private List<string> autoCompleteOptions = new List<string> { "Primary", "Junior", "Senior", "Undergraduate", "Master", "Doctor" };
+    private readonly List<string> _autoCompleteOptions = new()
+    {
+        "Primary",
+        "Junior",
+        "Senior",
+        "Undergraduate",
+        "Master",
+        "Doctor"
+    };
 
     private void OnFinish(EditContext editContext)
     {
-        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(_model)}");
     }
 
     private void OnFinishFailed(EditContext editContext)
     {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(_model)}");
     }
 
 }

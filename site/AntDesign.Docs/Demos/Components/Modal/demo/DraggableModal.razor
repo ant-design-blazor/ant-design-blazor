@@ -14,9 +14,9 @@
 
 <Modal Title="@("DraggableModal")"
        Visible="@_visible1"
-       OnOk="(e)=>{_visible1 = false;}"
+       OnOk="_=>{_visible1 = false;}"
        Draggable="@(true)"
-       OnCancel="(e)=>{_visible1 = false;}">
+       OnCancel="_=>{_visible1 = false;}">
     <p>Some contents...</p>
     <p>Some contents...</p>
     <p>Some contents...</p>
@@ -24,17 +24,17 @@
 
 <Modal Title="@("DraggableModal")"
        Visible="@_visible2"
-       OnOk="(e)=>{_visible2 = false;}"
+       OnOk="_=>{_visible2 = false;}"
        Draggable="@(true)"
        DragInViewport="@(false)"
-       OnCancel="(e)=>{_visible2 = false;}">
+       OnCancel="_=>{_visible2 = false;}">
     <p>Some contents...</p>
     <p>Some contents...</p>
     <p>Some contents...</p>
 </Modal>
 
-@code{
-    string title = "DraggableModal";
-    bool _visible1 = false;
-    bool _visible2 = false;
+@code {
+    private string _title = "DraggableModal";
+    private bool _visible1;
+    private bool _visible2;
 }

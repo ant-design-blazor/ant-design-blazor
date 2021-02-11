@@ -1,5 +1,4 @@
-﻿
-<Button Type="primary" OnClick="@ShowModal">
+﻿<Button Type="primary" OnClick="@ShowModal">
     Open Modal with customized footer
 </Button>
 @{
@@ -25,16 +24,14 @@
     <p>Some contents...</p>
 </Modal>
 
-
-@code{
-    bool _visible = false;
-    bool _loading = false;
+@code {
+    bool _visible;
+    bool _loading;
 
     private void ShowModal()
     {
         _visible = true;
     }
-
 
     private async Task HandleOk(MouseEventArgs e)
     {

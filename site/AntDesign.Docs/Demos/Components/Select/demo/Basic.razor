@@ -28,7 +28,7 @@
 	</SelectOptions>
 </Select>
 <Select DataSource="@_list"
-		@bind-Value="@_selectedValue4"		
+		@bind-Value="@_selectedValue4"
 		ValueName="@nameof(Person.Value)"
 		LabelName="@nameof(Person.Name)"
 		DisabledName="@nameof(Person.IsDisabled)"
@@ -36,31 +36,50 @@
 		Placeholder="Choose"
 		AllowClear>
 </Select>
-@code
-{
-	List<Person> _list;
-	string _selectedValue1, _selectedValue2, _selectedValue3;
-	string _selectedValue4 = "lucy";
-	class Person
+@code {
+	private List<Person> _list;
+
+	private string _selectedValue1, _selectedValue2, _selectedValue3;
+
+	private string _selectedValue4 = "lucy";
+
+	private class Person
 	{
 		public string Value { get; set; }
 		public string Name { get; set; }
 		public bool IsDisabled { get; set; }
 	}
 
-    protected override void OnInitialized()
-    {
-        _list = new List<Person>
-        {
-            new Person {Value = "jack", Name = "Jack"},
-            new Person {Value = "lucy", Name = "Lucy"},
-            new Person {Value = "disabled", Name = "Disabled", IsDisabled = true},
-            new Person {Value = "yaoming", Name = "YaoMing"}
+	protected override void OnInitialized()
+	{
+		_list = new List<Person>
+		{
+			new()
+			{
+				Value = "jack",
+				Name = "Jack"
+			},
+			new()
+			{
+				Value = "lucy",
+				Name = "Lucy"
+			},
+			new()
+			{
+				Value = "disabled",
+				Name = "Disabled",
+				IsDisabled = true
+			},
+			new()
+			{
+				Value = "yaoming",
+				Name = "YaoMing"
+			}
 		};
-    }
+	}
 
-    private void OnSelectedItemChangedHandler(Person value)
-    {
-        Console.WriteLine($"selected: ${value?.Name}");
-    }
+	private static void OnSelectedItemChangedHandler(Person value)
+	{
+		Console.WriteLine($"selected: ${value?.Name}");
+	}
 }

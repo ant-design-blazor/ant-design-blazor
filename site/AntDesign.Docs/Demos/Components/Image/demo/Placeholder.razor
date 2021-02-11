@@ -1,6 +1,6 @@
 ﻿<Space Size="12px">
     <SpaceItem>
-        <Image Width="200px" Src="@($"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?{random}")">
+        <Image Width="200px" Src="@($"https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?{_random}")">
             <Placeholder>
                 <Image Preview="false" Src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?x-oss-process=image/blur,r_50,s_50/quality,q_1/resize,m_mfit,h_200,w_200" Width="200px" />
             </Placeholder>
@@ -13,11 +13,11 @@
     </SpaceItem>
 </Space>
 
-@code{
-    long random;
+@code {
+    private long _random;
 
     private void SetRandom()
     {
-        random = DateTime.Now.Ticks;
+        _random = DateTime.Now.Ticks;
     }
 }

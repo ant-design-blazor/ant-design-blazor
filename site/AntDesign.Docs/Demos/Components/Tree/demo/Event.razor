@@ -36,18 +36,18 @@
 <span>Events</span>
 <div style="width:100%;height:150px;overflow-y:scroll">
     <ul>
-        @foreach (var item in events)
+        @foreach (var item in Events)
         {
             <li>@item</li>
         }
     </ul>
 </div>
 
-@code{
-    public List<string> events { get; set; } = new List<string>();
+@code {
+    private List<string> Events { get; set; } = new();
 
-    public void EventRecord(TreeEventArgs<string> args, string eventName)
+    private void EventRecord(TreeEventArgs<string> args, string eventName)
     {
-        events.Insert(0, $"{eventName}:{args.Node.Title}");
+        Events.Insert(0, $"{eventName}:{args.Node.Title}");
     }
 }

@@ -1,4 +1,4 @@
-﻿<Descriptions Title="Responsive Descriptions" Bordered Column="@column">
+﻿<Descriptions Title="Responsive Descriptions" Bordered Column="@_column">
     <DescriptionsItem Title="Product">
         Cloud Database
     </DescriptionsItem>
@@ -23,15 +23,14 @@
     </DescriptionsItem>
 </Descriptions>
 
-@code{
-
-    private Dictionary<string, int> column = new Dictionary<string, int> {
-            { "xxl", 3 },
-            { "xl", 3},
-            { "lg", 2},
-            { "md", 2},
-            { "sm", 1},
-            { "xs", 1}
-        };
-
+@code {
+    private readonly Dictionary<string, int> _column = new()
+    {
+        { "xxl", 3 },
+        { "xl", 3},
+        { "lg", 2},
+        { "md", 2},
+        { "sm", 1},
+        { "xs", 1}
+    };
 }

@@ -6,7 +6,7 @@
 		Style="width: 200px;"
 		OnSelectedItemChanged="OnSelectedItemChangedHandler">
     <ItemTemplate>
-        <span>@((context as Item).DisplayName)</span>
+        <span>@context.DisplayName</span>
     </ItemTemplate>
 </Select>
 <br /><br />
@@ -14,33 +14,53 @@
     Selected Value: @_selectedValue <br/>
     Selected Item Name: @_selectedItem?.Name
 </p>
-@code
-{
-    public class Item
+
+@code {
+    private class Item
     {
         public string Value { get; set; }
         public string Name { get; set; }
 		public string DisplayName { get; set; }
     }
 
-    List<Item> _items;
-    string _selectedValue;
-	Item _selectedItem;
-	
+    private List<Item> _items;
+    private string _selectedValue;
+    private Item _selectedItem;
+
     protected override void OnInitialized()
     {
-        _items = new List<Item> 
+        _items = new List<Item>
         {
-            new Item { Value = "china", Name = "China", DisplayName = "China (中国)"}, 
-            new Item { Value = "usa", Name = "USA", DisplayName = "USA (美国)"}, 
-            new Item { Value = "japan", Name = "Japan", DisplayName = "Japan (日本)"}, 
-            new Item { Value = "korea", Name = "Korea", DisplayName = "Korea (韩国)"}
+            new()
+            {
+                Value = "china",
+                Name = "China",
+                DisplayName = "China (中国)"
+            },
+            new()
+            {
+                Value = "usa",
+                Name = "USA",
+                DisplayName = "USA (美国)"
+            },
+            new()
+            {
+                Value = "japan",
+                Name = "Japan",
+                DisplayName = "Japan (日本)"
+            },
+            new()
+            {
+                Value = "korea",
+                Name = "Korea",
+                DisplayName = "Korea (韩国)"
+            }
         };
     }
-	
-	private void OnSelectedItemChangedHandler(Item value)
+
+    private void OnSelectedItemChangedHandler(Item value)
     {
         _selectedItem = value;
-		Console.WriteLine($"selected: ${value?.Name}");
+        Console.WriteLine($"selected: ${value?.Name}");
     }
 }

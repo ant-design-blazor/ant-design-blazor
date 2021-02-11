@@ -1,20 +1,20 @@
 ﻿<div>
     <Pagination
         Total="85"
-        ShowTotal=showTotal
+        ShowTotal="_showTotal"
         PageSize="20"
         DefaultCurrent="1"
     />
     <br />
     <Pagination
         Total="85"
-        ShowTotal=showTotal2
+        ShowTotal="_showTotal2"
         PageSize="20"
         DefaultCurrent="1"
     />
 </div>
 
-@code{
-    Func<PaginationTotalContext, string> showTotal =  ctx => $"Total {ctx.Total} items";
-    Func<PaginationTotalContext, string> showTotal2 =  ctx => $"{ctx.Range.Item1}-{ctx.Range.Item2} of {ctx.Total} items";
+@code {
+    private readonly Func<PaginationTotalContext, string> _showTotal =  ctx => $"Total {ctx.Total} items";
+    private readonly Func<PaginationTotalContext, string> _showTotal2 =  ctx => $"{ctx.Range.Item1}-{ctx.Range.Item2} of {ctx.Total} items";
 }

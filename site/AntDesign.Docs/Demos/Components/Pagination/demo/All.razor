@@ -3,10 +3,10 @@
         Total="85"
         ShowSizeChanger
         ShowQuickJumper
-        ShowTotal=@showTotal
+        ShowTotal="@_showTotal"
     />
 </div>
 
-@code{
-    Func<PaginationTotalContext, string> showTotal =  ctx => $"Total {ctx.Total} items";
+@code {
+    private readonly Func<PaginationTotalContext, string> _showTotal =  ctx => $"Total {ctx.Total} items";
 }

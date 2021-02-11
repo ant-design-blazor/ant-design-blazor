@@ -1,4 +1,4 @@
-@inject IconService iconService;
+@inject IconService IconService;
 
 <div class="icons-list">
     <IconFont Type="icon-tuichu" />
@@ -10,6 +10,6 @@
 {
     protected override async Task OnInitializedAsync()
     {
-        await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js");
+        await IconService.CreateFromIconfontCN("//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js");
     }
 }

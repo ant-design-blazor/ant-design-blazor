@@ -2,16 +2,17 @@
 @using System.Reflection
 @using System.Web
 
+@inject NavigationManager NavigationManager
 
 <div class="router-pagging-table">
-    <Input @bind-Value="_url" OnPressEnter="()=> navigation.NavigateTo(_url,true)" />
-    <Table @ref="table"
-           DataSource="@forecasts"
+    <Input @bind-Value="_url" OnPressEnter="()=> NavigationManager.NavigateTo(_url,true)" />
+    <Table @ref="_table"
+           DataSource="@_forecasts"
            Total="_total"
            Loading="_loading"
            @bind-PageIndex="_pageIndex"
            @bind-PageSize="_pageSize"
-           OnPageIndexChange="fetchData"
+           OnPageIndexChange="FetchData"
            @bind-SelectedRows="selectedRows">
         <Selection Key="@(context.Id.ToString())" />
         <Column @bind-Field="@context.Id" Sortable />
@@ -25,39 +26,47 @@
     <p>PageIndex: @_pageIndex | PageSize: @_pageSize | Total: @_total</p>
 </div>
 
-@inject NavigationManager navigation
+<style>
+    .router-pagging-table {
+        padding: 1em;
+    }
+
+        .router-pagging-table input {
+            margin-bottom: 1em;
+        }
+</style>
+
 @code {
+    private WeatherForecast[] _forecasts;
 
-    WeatherForecast[] forecasts;
+    private IEnumerable<WeatherForecast> _selectedRows;
+    private ITable _table;
 
-    IEnumerable<WeatherForecast> selectedRows;
-    ITable table;
-
-    int _pageIndex = 1;
-    int _pageSize = 5;
-    int _total = 0;
-    string _url;
-    bool _loading;
+    private int _pageIndex = 1;
+    private int _pageSize = 5;
+    private int _total;
+    private string _url;
+    private bool _loading;
 
     protected override async Task OnInitializedAsync()
     {
-        _url = navigation.Uri;
+        _url = NavigationManager.Uri;
         var query = HttpUtility.ParseQueryString(_url);
         _pageIndex = int.TryParse(query["page"], out var index) ? index > 0 ? index : 1 : 1;
         _pageSize = int.TryParse(query["size"], out var size) ? size > 0 ? size : 5 : 5;
 
         _loading = true;
-        forecasts = await GetForecastAsync(_pageIndex, _pageSize);
+        _forecasts = await GetForecastAsync(_pageIndex, _pageSize);
         _total = 50;
         _loading = false;
     }
 
-    void fetchData(PaginationEventArgs args)
+    private void FetchData(PaginationEventArgs args)
     {
-        navigation.NavigateTo($"mock?type={GetType().ToString().Replace($"{Assembly.GetExecutingAssembly().GetName().Name}.", "")}&page={args.PageIndex}&size={args.PageSize}");
+        NavigationManager.NavigateTo($"mock?type={GetType() .ToString() .Replace($"{Assembly.GetExecutingAssembly() .GetName() .Name}.", "")}&page={args.PageIndex}&size={args.PageSize}");
     }
 
-    public class WeatherForecast
+    private class WeatherForecast
     {
         public int Id { get; set; }
 
@@ -70,42 +79,42 @@
         [DisplayName("Summary")]
         public string Summary { get; set; }
 
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        public int TemperatureF => 32 + (int) (TemperatureC / 0.5556);
 
         public bool Hot { get; set; }
     }
 
-    private static readonly string[] Summaries = new[]
+    private static readonly string[] Summaries =
     {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        "Freezing",
+        "Bracing",
+        "Chilly",
+        "Cool",
+        "Mild",
+        "Warm",
+        "Balmy",
+        "Hot",
+        "Sweltering",
+        "Scorching"
     };
 
-    public async Task<WeatherForecast[]> GetForecastAsync(int pageIndex, int pageSize)
+    private static async Task<WeatherForecast[]> GetForecastAsync(int pageIndex, int pageSize)
     {
         await Task.Delay(1000);
         var rng = new Random();
-        return await Task.FromResult(Enumerable.Range((pageIndex - 1) * pageSize + 1, pageSize).Select(index =>
-        {
-            var temperatureC = rng.Next(-20, 55);
-            return new WeatherForecast
+        return await Task.FromResult(Enumerable.Range((pageIndex - 1) * pageSize + 1, pageSize)
+            .Select(index =>
             {
-                Id = index,
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = temperatureC,
-                Summary = Summaries[rng.Next(Summaries.Length)],
-                Hot = temperatureC > 30,
-            };
-        }).ToArray());
+                var temperatureC = rng.Next(-20, 55);
+                return new WeatherForecast
+                {
+                    Id = index,
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = temperatureC,
+                    Summary = Summaries[rng.Next(Summaries.Length)],
+                    Hot = temperatureC > 30,
+                };
+            })
+            .ToArray());
     }
 }
-
-
-<style>
-    .router-pagging-table {
-        padding: 1em;
-    }
-
-        .router-pagging-table input {
-            margin-bottom: 1em;
-        }
-</style>

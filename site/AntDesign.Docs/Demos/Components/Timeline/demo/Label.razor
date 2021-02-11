@@ -1,10 +1,10 @@
 <div>
-    <RadioGroup @bind-Value="@mode" Style="margin-bottom:20px">
+    <RadioGroup @bind-Value="@_mode" Style="margin-bottom:20px">
         <Radio Value="@("left")">Left</Radio>
         <Radio Value="@("right")">Right</Radio>
         <Radio Value="@("alternate")">Alternate</Radio>
     </RadioGroup>
-    <Timeline Mode="@mode">
+    <Timeline Mode="@_mode">
         <TimelineItem>Create a services 2015-09-01</TimelineItem>
         <TimelineItem>Solve initial network problems 2015-09-01 09:12:11</TimelineItem>
         <TimelineItem>Technical testing</TimelineItem>
@@ -12,8 +12,6 @@
     </Timeline>
 </div>
 
-@code{
-    private string mode = "left";
-
-
+@code {
+    private string _mode = "left";
 }

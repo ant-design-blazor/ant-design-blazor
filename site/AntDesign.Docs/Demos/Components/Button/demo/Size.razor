@@ -1,35 +1,35 @@
 ﻿<div>
-    <RadioGroup @bind-Value="@size">
+    <RadioGroup @bind-Value="@_size">
         <Radio RadioButton Value="@("large")">Large</Radio>
         <Radio RadioButton Value="@("default")">Default</Radio>
         <Radio RadioButton Value="@("small")">Small</Radio>
     </RadioGroup>
     <br />
     <br />
-    <Button Type="primary" Size=@size>
+    <Button Type="primary" Size="@_size">
         Primary
     </Button>
-    <Button Size="@size">Default</Button>
-    <Button Type="dashed" Size=@size>
+    <Button Size="@_size">Default</Button>
+    <Button Type="dashed" Size="@_size">
         Dashed
     </Button>
     <br />
-    <Button Type="link" Size=@size>
+    <Button Type="link" Size="@_size">
         Link
     </Button>
     <br />
-    <Button Type="primary" Icon="download" Size=@size />
-    <Button Type="primary" Shape="circle" Icon="download" Size=@size />
-    <Button Type="primary" Shape="round" Icon="download" Size=@size />
-    <Button Type="primary" Shape="round" Icon="download" Size=@size>
+    <Button Type="primary" Icon="download" Size="@_size" />
+    <Button Type="primary" Shape="circle" Icon="download" Size="@_size" />
+    <Button Type="primary" Shape="round" Icon="download" Size="@_size" />
+    <Button Type="primary" Shape="round" Icon="download" Size="@_size">
         Download
     </Button>
-    <Button Type="primary" Icon="download" Size=@size>
+    <Button Type="primary" Icon="download" Size="@_size">
         Download
     </Button>
 </div>
 
 @code
 {
-    string size = "large";
+    private string _size = "large";
 }

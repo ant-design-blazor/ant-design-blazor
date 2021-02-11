@@ -1,20 +1,20 @@
 ﻿<div>
-    <Switch Checked="theme == MenuTheme.Dark" OnChange=changeTheme CheckedChildren=@("Dark") UnCheckedChildren=@("Light") />
+    <Switch Checked="_theme == MenuTheme.Dark" OnChange="ChangeTheme" CheckedChildren=@("Dark") UnCheckedChildren=@("Light") />
     <br />
     <br />
-    <Menu Theme=theme
-          OnMenuItemClicked=handleClick
+    <Menu Theme="_theme"
+          OnMenuItemClicked="HandleClick"
           Style=" width: 256px "
           DefaultOpenKeys=@(new []{"sub1"})
-          SelectedKeys=@(new []{current})
+          SelectedKeys="@(new []{_current})"
           Mode="MenuMode.Inline">
-        <SubMenu Key="sub1" TitleTemplate=@sub1Title>
+        <SubMenu Key="sub1" TitleTemplate="@_sub1Title">
             <MenuItem Key="1">Option 1</MenuItem>
             <MenuItem Key="2">Option 2</MenuItem>
             <MenuItem Key="3">Option 3</MenuItem>
             <MenuItem Key="4">Option 4</MenuItem>
         </SubMenu>
-        <SubMenu Key="sub2" TitleTemplate=@sub2Title>
+        <SubMenu Key="sub2" TitleTemplate="@_sub2Title">
             <MenuItem Key="5">Option 5</MenuItem>
             <MenuItem Key="6">Option 6</MenuItem>
             <SubMenu Key="sub3" Title="Submenu">
@@ -22,7 +22,7 @@
                 <MenuItem Key="8">Option 8</MenuItem>
             </SubMenu>
         </SubMenu>
-        <SubMenu Key="sub4" TitleTemplate=@sub4Title>
+        <SubMenu Key="sub4" TitleTemplate="@_sub4Title">
             <MenuItem Key="9">Option 9</MenuItem>
             <MenuItem Key="10">Option 10</MenuItem>
             <MenuItem Key="11">Option 11</MenuItem>
@@ -32,36 +32,31 @@
 </div>
 
 @code {
+    private readonly RenderFragment _sub1Title = @<span>
+                                                     <Icon Type="mail" Theme="outline"></Icon>
+                                                     <span>Navigation One</span>
+                                                 </span>;
 
-    RenderFragment sub1Title =
-        @<span>
-            <Icon Type="mail" Theme="outline"></Icon>
-            <span>Navigation One</span>
-        </span>;
+    private readonly RenderFragment _sub2Title = @<span>
+                                                     <Icon Type="appstore" Theme="outline"></Icon>
+                                                     <span>Navigation Two</span>
+                                                 </span>;
 
-    RenderFragment sub2Title =
-        @<span>
-            <Icon Type="appstore" Theme="outline"></Icon>
-            <span>Navigation Two</span>
-        </span>;
+    private readonly RenderFragment _sub4Title = @<span>
+                                                     <Icon Type="setting" Theme="outline"></Icon>
+                                                     <span>Navigation Three</span>
+                                                 </span>;
 
-    RenderFragment sub4Title =
-        @<span>
-            <Icon Type="setting" Theme="outline"></Icon>
-            <span>Navigation Three</span>
-        </span>;
+    private MenuTheme _theme = MenuTheme.Dark;
+    string _current = "1";
 
-    MenuTheme theme = MenuTheme.Dark;
-    string current = "1";
-
-    void changeTheme(bool value)
+    void ChangeTheme(bool value)
     {
-        this.theme = value ? MenuTheme.Dark : MenuTheme.Light;
+        _theme = value ? MenuTheme.Dark : MenuTheme.Light;
     }
 
-    void handleClick(MenuItem e)
+    void HandleClick(MenuItem e)
     {
-        current = e.Key;
+        _current = e.Key;
     }
-
 }

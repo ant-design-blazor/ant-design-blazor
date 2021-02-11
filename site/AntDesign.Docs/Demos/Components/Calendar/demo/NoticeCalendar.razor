@@ -1,69 +1,107 @@
-﻿ <Calendar DateCellRender="DateCellRender" MonthCellRender="MonthCellRender" />
+﻿<Calendar DateCellRender="DateCellRender" MonthCellRender="MonthCellRender" />
 
-@code
-{
-    class ListData
+@code {
+
+    private class ListData
     {
-        public string type;
-        public string content;
+        public string Type;
+        public string Content;
     }
 
-    private List<ListData> GetListData(DateTime value) {
-        List<ListData> listData = null;
-        switch (value.Day) {
-            case 8:
-                listData = new List<ListData>
+    private static IEnumerable<ListData> GetListData(DateTime value)
+    {
+        var listData = value.Day switch
+        {
+            8 => new List<ListData>
+            {
+                new()
                 {
-                    new ListData { type = "warning", content = "This is warning event." },
-                    new ListData { type = "success", content = "This is usual event." },
-                };
-                break;
-            case 10:
-                listData = new List<ListData> {
-                    new ListData { type = "warning", content = "This is warning event." },
-                    new ListData { type = "success", content = "This is usual event." },
-                    new ListData { type = "error", content = "This is error event." },
-                };
-                break;
-            case 15:
-                listData = new List<ListData> {
-                    new ListData { type = "warning", content = "This is warning event" },
-                    new ListData { type = "success", content = "This is very long usual event。。...." },
-                    new ListData { type = "error", content = "This is error event 1." },
-                    new ListData { type = "error", content = "This is error event 2." },
-                    new ListData { type = "error", content = "This is error event 3." },
-                    new ListData { type = "error", content = "This is error event 4." },
-                };
-                break;
-        }
+                    Type = "warning",
+                    Content = "This is warning event."
+                },
+                new()
+                {
+                    Type = "success",
+                    Content = "This is usual event."
+                }
+            },
+            10 => new List<ListData>
+            {
+                new()
+                {
+                    Type = "warning",
+                    Content = "This is warning event."
+                },
+                new()
+                {
+                    Type = "success",
+                    Content = "This is usual event."
+                },
+                new()
+                {
+                    Type = "error",
+                    Content = "This is error event."
+                }
+            },
+            15 => new List<ListData>
+            {
+                new()
+                {
+                    Type = "warning",
+                    Content = "This is warning event"
+                },
+                new()
+                {
+                    Type = "success",
+                    Content = "This is very long usual event。。...."
+                },
+                new()
+                {
+                    Type = "error",
+                    Content = "This is error event 1."
+                },
+                new()
+                {
+                    Type = "error",
+                    Content = "This is error event 2."
+                },
+                new()
+                {
+                    Type = "error",
+                    Content = "This is error event 3."
+                },
+                new()
+                {
+                    Type = "error",
+                    Content = "This is error event 4."
+                }
+            },
+            _ => null
+            };
 
         return listData ?? new List<ListData>();
     }
 
-    private RenderFragment DateCellRender(DateTime value) {
+    private RenderFragment DateCellRender(DateTime value)
+    {
         var listData = GetListData(value);
         return @<Template>
-                    <ul class="events">
-                        @foreach (var data in listData)
-                        {
-                            <li key="@data.content">
-                                <Badge Status="@data.type" Text="@data.content" />
-                            </li>
-                        }
-                    </ul>
-                </Template>;
+                   <ul class="events">
+                       @foreach (var data in listData)
+                       {
+                           <li key="@data.Content">
+                               <Badge Status="@data.Type" Text="@data.Content"/>
+                           </li>
+                       }
+                   </ul>
+               </Template>;
     }
 
-    private int? GetMonthData(DateTime value) {
-        if (value.Month == 8) {
-            return 1394;
-        }
+    private static int? GetMonthData(DateTime value) => value.Month == 8 ? (int?) 1394 : null;
 
-        return null;
-    }
-
-    private RenderFragment MonthCellRender(DateTime value) {
-        int? num = GetMonthData(value);
+    private RenderFragment MonthCellRender(DateTime value)
+    {
+        var num = GetMonthData(value);
 
         if (num == null)
         {
@@ -71,11 +109,11 @@
         }
 
         return @<Template>
-                    <div className="notes-month">
-                        <section>@num</section>
-                        <span>Backlog number</span>
-                    </div>
-        </Template>;
+                   <div className="notes-month">
+                       <section>@num</section>
+                       <span>Backlog number</span>
+                   </div>
+               </Template>;
     }
 }
 

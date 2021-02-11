@@ -4,15 +4,14 @@
 <br />
 <RangePicker TValue="DateTime?[]" ShowTime='@("HH:mm")' OnChange="OnRangeChange" />
 
-@code
-{
-    private void OnChange(DateTimeChangedEventArgs args)
+@code {
+    private static void OnChange(DateTimeChangedEventArgs args)
     {
         Console.WriteLine($"Selected Time: {args.Date}");
         Console.WriteLine($"Formatted Selected Time: {args.DateString}");
     }
 
-    private void OnRangeChange(DateRangeChangedEventArgs args)
+    private static void OnRangeChange(DateRangeChangedEventArgs args)
     {
         Console.WriteLine($"Selected Time: {JsonSerializer.Serialize(args.Dates)}");
         Console.WriteLine($"Formatted Selected Time: {JsonSerializer.Serialize(args.DateStrings)}");

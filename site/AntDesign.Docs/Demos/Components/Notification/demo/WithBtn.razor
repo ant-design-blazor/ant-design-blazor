@@ -1,23 +1,23 @@
-﻿@inject NotificationService _notice
+﻿@inject NotificationService NotificationService
 
 <Button Type="@ButtonType.Primary" OnClick="@OnClick">
     custom button
 </Button>
 
-@code{
-
+@code {
     private async Task OnClick()
     {
-        string key = $"open{DateTime.Now}";
-        RenderFragment btn = @<Button Type="@ButtonType.Primary" OnClick="() => { _notice.Close(key); }">
-                                confirm
-                            </Button>;
-        await _notice.Open(new NotificationConfig()
+        var key = $"open{DateTime.Now}";
+        RenderFragment btn = @<Button Type="@ButtonType.Primary" OnClick="() => { NotificationService.Close(key); }">
+                                 confirm
+                             </Button>;
+
+        await NotificationService.Open(new NotificationConfig
         {
             Message = "Notification Title",
             Key = key,
             Description = "A function will be be called after the notification is closed (automatically after the \"duration\" time of manually).",
-            Btn = btn 
+            Btn = btn
         });
     }
 }

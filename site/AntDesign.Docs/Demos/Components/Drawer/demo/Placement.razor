@@ -1,32 +1,31 @@
 ﻿<div>
-    <RadioGroup @bind-Value="placement">
+    <RadioGroup @bind-Value="_placement">
         <Radio Value="@("top")">top</Radio>
         <Radio Value="@("right")">right</Radio>
         <Radio Value="@("bottom")">bottom</Radio>
         <Radio Value="@("left")">left</Radio>
     </RadioGroup>
 
-    <Button Type="primary" @onclick="_ => open()">Open</Button>
-    <Drawer Visible="@visible" Placement="@placement" Title='("Basic Drawer")' OnClose="_ => close()">
+    <Button Type="primary" @onclick="_ => Open()">Open</Button>
+    <Drawer Visible="@_visible" Placement="@_placement" Title='("Basic Drawer")' OnClose="_ => Close()">
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
     </Drawer>
 </div>
 
-@code{
+@code {
+    private string _placement = "right";
 
-    string placement = "right";
+    private bool _visible;
 
-    bool visible = false;
-
-    void open()
+    private void Open()
     {
-        this.visible = true;
+        _visible = true;
     }
 
-    void close()
+    private void Close()
     {
-        this.visible = false;
+        _visible = false;
     }
 }

@@ -1,10 +1,11 @@
-﻿<div>
-    <Transfer DataSource="dataSource"
-              Disabled="Disabled"
-              TargetKeys="targetKeys.ToArray()"
-              SelectedKeys="selectedKeys"
-              Titles="titles"
-              Operations="operations"
+﻿@using OneOf
+<div>
+    <Transfer DataSource="_dataSource"
+              Disabled="_disabled"
+              TargetKeys="_targetKeys.ToArray()"
+              SelectedKeys="_selectedKeys"
+              Titles="_titles"
+              Operations="_operations"
               OnChange="OnChange"
               OnScroll="OnScroll"
               OnSelectChange="OnSelectChange"
@@ -18,17 +19,28 @@
 </div>
 
 @code {
-    private List<TransferItem> dataSource = new List<TransferItem>();
-    private List<string> targetKeys = new List<string>();
-    private string[] selectedKeys = Array.Empty<string>();
-    private string[] titles = { "Source", "Target" };
-    private string[] operations = { "to right", "to left" };
-    private bool Disabled = false;
+    private List<TransferItem> _dataSource = new();
+    private List<string> _targetKeys = new();
+    private string[] _selectedKeys = Array.Empty<string>();
+
+    private string[] _titles =
+    {
+        "Source",
+        "Target"
+    };
+
+    private string[] _operations =
+    {
+        "to right",
+        "to left"
+    };
+
+    private bool _disabled = false;
 
     protected override void OnInitialized()
     {
         var random = new Random();
-        for (int i = 0; i < 20; i++)
+        for (var i = 0; i < 20; i++)
         {
             var data = new TransferItem
             {
@@ -40,33 +52,29 @@
 
             if (data["Chosen"] is bool _bool && _bool)
             {
-                targetKeys.Add(data.Key);
+                _targetKeys.Add(data.Key);
             }
 
-            dataSource.Add(data);
+            _dataSource.Add(data);
         }
         base.OnInitialized();
     }
 
-    private OneOf.OneOf<string, RenderFragment> Render(TransferItem item)
-    {
-        //return new RenderFragment(buildTree);
-        return $"{item.Title} - {item.Description}";
-    }
+    private OneOf<string, RenderFragment> Render(TransferItem item) => $"{item.Title} - {item.Description}";
 
-    private void OnChange(TransferChangeArgs e)
+    private static void OnChange(TransferChangeArgs e)
     {
         Console.WriteLine(e.Direction);
         Console.WriteLine($"MoveKeys:{string.Join(',', e.MoveKeys)}");
         Console.WriteLine($"TargetKeys:{string.Join(',', e.TargetKeys)}");
     }
 
-    private void OnScroll(TransferScrollArgs e)
+    private static void OnScroll(TransferScrollArgs e)
     {
         Console.WriteLine(e.Direction);
     }
 
-    private void OnSelectChange(TransferSelectChangeArgs e)
+    private static void OnSelectChange(TransferSelectChangeArgs e)
     {
         Console.WriteLine($"SourceSelectedKeys:{string.Join(',', e.SourceSelectedKeys)}");
         Console.WriteLine($"TargetSelectedKeys:{string.Join(',', e.TargetSelectedKeys)}");

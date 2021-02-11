@@ -1,5 +1,5 @@
-﻿@inject MessageService _message
-@inject ConfirmService _confirmService
+﻿@inject MessageService MessageService
+@inject ConfirmService ConfirmService
 
 
 <Divider>Buttons</Divider>
@@ -50,72 +50,72 @@
     <SpaceItem>
         <Button OnClick="@(async ()=> await ShowConfirmIcon(ConfirmIcon.Info))">Info</Button>
     </SpaceItem>
-</Space>   
+</Space>
  <Space>
     <SpaceItem>
         <Button OnClick="@(async ()=> await ShowConfirmIcon(ConfirmIcon.None))">None</Button>
     </SpaceItem>
-</Space>   
+</Space>
  <Space>
     <SpaceItem>
         <Button OnClick="@(async ()=> await ShowConfirmIcon(ConfirmIcon.Question))">Question</Button>
     </SpaceItem>
-</Space>  
+</Space>
   <Space>
     <SpaceItem>
         <Button OnClick="@(async ()=> await ShowConfirmIcon(ConfirmIcon.Success))">Success</Button>
     </SpaceItem>
-</Space>  
+</Space>
   <Space>
     <SpaceItem>
         <Button OnClick="@(async ()=> await ShowConfirmIcon(ConfirmIcon.Warning))">Warning</Button>
     </SpaceItem>
 </Space>
 
-@code{
-
+@code {
     private async Task ShowConfirm(ConfirmButtons confirmButtons)
     {
-        var content = "Here is a blocking confirm, you can get OK or cancel button is click";
-        var title = "Info";
-        var confirmResult = await _confirmService.Show(content, title, confirmButtons);
+        const string content = "Here is a blocking confirm, you can get OK or cancel button is click";
+        const string title = "Info";
+        var confirmResult = await ConfirmService.Show(content, title, confirmButtons);
 
-        var _ = _message.Info($"{confirmResult} button is clicked", 2);
+        var _ = MessageService.Info($"{confirmResult} button is clicked", 2);
     }
 
     private async Task ShowConfirmIcon(ConfirmIcon confirmIcon)
     {
-        var content = "You can set different icons";
+        const string content = "You can set different icons";
         var title = confirmIcon.ToString();
-        var confirmResult = await _confirmService.Show(content, title, ConfirmButtons.OK, confirmIcon);
+        var confirmResult = await ConfirmService.Show(content, title, ConfirmButtons.OK, confirmIcon);
 
-        var _ = _message.Info($"{confirmResult} button is clicked", 2);
+        var _ = MessageService.Info($"{confirmResult} button is clicked", 2);
     }
 
     private async Task ShowAbortRetryIgnore()
     {
-        var content = "Here is from ConfirmService, you can get which button is click from result";
-        var title = "Info";
+        const string content = "Here is from ConfirmService, you can get which button is click from result";
+        const string title = "Info";
+
         var confirmResult =
-            await _confirmService.Show(
+            await ConfirmService.Show(
                 content,
                 title,
                 ConfirmButtons.AbortRetryIgnore,
                 ConfirmIcon.Error,
-                new ConfirmButtonOptions()
+                new ConfirmButtonOptions
                 {
-                    Button1Props = new AntDesign.ButtonProps()
+                    Button1Props = new AntDesign.ButtonProps
                     {
-                        Type = AntDesign.ButtonType.Dashed
+                        Type = ButtonType.Dashed
                     },
-                    Button2Props = new AntDesign.ButtonProps()
+                    Button2Props = new AntDesign.ButtonProps
                     {
-                        Type = AntDesign.ButtonType.Primary,
+                        Type = ButtonType.Primary,
                         Disabled = true
                     }
                 }
             );
 
-        var _ = _message.Info($"{confirmResult} button is clicked", 2);
+        var _ = MessageService.Info($"{confirmResult} button is clicked", 2);
     }
 }

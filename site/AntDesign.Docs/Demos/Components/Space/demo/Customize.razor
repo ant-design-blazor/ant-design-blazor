@@ -1,8 +1,8 @@
 ﻿
-<Slider Type="double" Value=size OnChange="v=>setSize(v)" />
+<Slider Type="double" Value="_size" OnChange="v=>SetSize(v)" />
 <br />
 <br />
-<Space Size="@($"{size}")">
+<Space Size="@($"{_size}")">
     <SpaceItem>
         <Button Type="primary">Primary</Button>
     </SpaceItem>
@@ -17,12 +17,12 @@
     </SpaceItem>
 </Space>
 
-@code{
-    double size = 8;
+@code {
+    private double _size = 8;
 
-    void setSize(double value)
+    private void SetSize(double value)
     {
-        size = value;
+        _size = value;
         StateHasChanged();
     }
 }

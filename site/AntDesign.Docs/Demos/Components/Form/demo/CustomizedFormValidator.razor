@@ -1,6 +1,6 @@
 @using System.ComponentModel.DataAnnotations;
 
-<Form Model="@model1"
+<Form Model="@_model1"
       LabelColSpan="8"
       WrapperColSpan="16"
       Validator="null">
@@ -8,7 +8,7 @@
         <AntDesign.InputNumber @bind-Value="@context.Number"/>
     </FormItem>
 </Form>
-<Form Model="@model2"
+<Form Model="@_model2"
       LabelColSpan="8"
       WrapperColSpan="16">
     <Validator>
@@ -21,23 +21,20 @@
     </ChildContent>
 </Form>
 
-@code
-{
-    public class Model1
+@code {
+    private class Model1
     {
         [Required]
         public int Number { get; set; }
     }
 
-    public class Model2
+    private class Model2
     {
         [Required]
         public int Number { get; set; }
     }
 
-    private Model1 model1 = new Model1();
+    private readonly Model1 _model1 = new();
 
-    private Model2 model2 = new Model2();
-
-    private RenderFragment validator = @<CustomValidator/>;
+    private readonly Model2 _model2 = new();
 }

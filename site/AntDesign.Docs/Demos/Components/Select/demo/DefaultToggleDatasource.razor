@@ -1,7 +1,7 @@
-<Select DataSource="@_persons" 
+<Select DataSource="@_persons"
         @bind-Value="@_selectedValue"
-        LabelName="@nameof(Person.Name)" 
-        ValueName="@nameof(Person.Id)" 
+        LabelName="@nameof(Person.Name)"
+        ValueName="@nameof(Person.Id)"
         DisabledName="@nameof(Person.NotAvailable)"
         DefaultValue="12"
         Placeholder="Select a person"
@@ -11,7 +11,7 @@
         AllowClear
         Style="width: calc(100% - 68px);">
 </Select>
-<Dropdown Style="padding-left: 8px;" Trigger="@(new TriggerType[] { TriggerType.Click })">
+<Dropdown Style="padding-left: 8px;" Trigger="@(new[] { TriggerType.Click })">
     <Overlay>
         <Menu Selectable="false">
             <MenuItem OnClick="@SetDatasource1">Set Datasource 1</MenuItem>
@@ -23,7 +23,7 @@
         </Menu>
     </Overlay>
     <ChildContent>
-        <a class="ant-dropdown-link" @onclick:preventDefault>Actions<Icon Type="down" /></a>        
+        <a class="ant-dropdown-link" @onclick:preventDefault>Actions<Icon Type="down" /></a>
     </ChildContent>
 </Dropdown>
 <br /><br />
@@ -31,11 +31,12 @@
     Selected Value: @_selectedValue <br/>
     Selected Item: @_selectedItem?.Name
 </p>
-@code
-{
-    class Person
+@code {
+    private class Person
     {
-        public Person(){}
+        public Person()
+        {
+        }
 
         public Person(Person obj)
         {
@@ -49,34 +50,90 @@
         public bool NotAvailable { get; set; }
     }
 
-    List<Person> _persons;
-    List<Person> _persons1;
-    List<Person> _persons2;
+    private List<Person> _persons;
+    private List<Person> _persons1;
+    private List<Person> _persons2;
 
-    int? _selectedValue;
-    Person _selectedItem;
+    private int? _selectedValue;
+    private Person _selectedItem;
 
     protected override void OnInitialized()
     {
         _persons1 = new List<Person>
         {
-            new Person {Id = 1, Name = "Jack"}, 
-            new Person {Id = 2, Name = "Lucy"}, 
-            new Person {Id = 3, Name = "Yaoming"}, 
-            new Person {Id = 4, Name = "Frieda"}, 
-            new Person {Id = 5, Name = "Kathy", NotAvailable = true}, 
-            new Person {Id = 6, Name = "Kate"}, 
-            new Person {Id = 7, Name = "Eric"}
+            new()
+            {
+                Id = 1,
+                Name = "Jack"
+            },
+            new()
+            {
+                Id = 2,
+                Name = "Lucy"
+            },
+            new()
+            {
+                Id = 3,
+                Name = "Yaoming"
+            },
+            new()
+            {
+                Id = 4,
+                Name = "Frieda"
+            },
+            new()
+            {
+                Id = 5,
+                Name = "Kathy",
+                NotAvailable = true
+            },
+            new()
+            {
+                Id = 6,
+                Name = "Kate"
+            },
+            new()
+            {
+                Id = 7,
+                Name = "Eric"
+            }
         };
 
-        _persons2 = new List<Person> 
+        _persons2 = new List<Person>
         {
-            new Person {Id = 8, Name = "Jake", NotAvailable = true}, 
-            new Person {Id = 9, Name = "Olaf"},
-            new Person {Id = 10, Name = "Sven"}, 
-            new Person {Id = 11, Name = "Bernd", NotAvailable = true}, 
-            new Person {Id = 12, Name = "Jane"}, 
-            new Person {Id = 13, Name = "John"}};
+            new()
+            {
+                Id = 8,
+                Name = "Jake",
+                NotAvailable = true
+            },
+            new()
+            {
+                Id = 9,
+                Name = "Olaf"
+            },
+            new()
+            {
+                Id = 10,
+                Name = "Sven"
+            },
+            new()
+            {
+                Id = 11,
+                Name = "Bernd",
+                NotAvailable = true
+            },
+            new()
+            {
+                Id = 12,
+                Name = "Jane"
+            },
+            new()
+            {
+                Id = 13,
+                Name = "John"
+            }
+        };
     }
 
     private void SetDatasource1()
@@ -101,8 +158,13 @@
 
     private void AddPerson()
     {
-        if (_persons != null && _persons.All(x => x.Id != 13))
-            _persons.Add(new Person() {Id = 13, Name = "John"});
+        if (_persons != null &&
+            _persons.All(x => x.Id != 13))
+            _persons.Add(new Person
+            {
+                Id = 13,
+                Name = "John"
+            });
     }
 
     private void RemovePerson()

@@ -1,6 +1,7 @@
 @using System.ComponentModel
+
 <p>Middle size table</p>
-<Table DataSource="@data" Bordered=@true Size=@TableSize.Middle>
+<Table DataSource="@_data" Bordered="@true" Size="@TableSize.Middle">
     <Column @bind-Field="@context.Name">
         <a>@context.Name</a>
     </Column>
@@ -29,7 +30,7 @@
     </ActionColumn>
 </Table>
 <p>Small size table</p>
-<Table DataSource="@data" Bordered=@true Size=@TableSize.Small>
+<Table DataSource="@_data" Bordered="@true" Size="@TableSize.Small">
     <Column @bind-Field="@context.Name">
         <a>@context.Name</a>
     </Column>
@@ -58,36 +59,47 @@
     </ActionColumn>
 </Table>
 
-@code{
-    Data[] data =
+@code {
+    private Data[] _data =
     {
-        new Data()
+        new()
         {
             Key = "1",
             Name = "John Brown",
             Age = 32,
             Address = "New York No. 1 Lake Park",
-            Tags = new[] {"nice", "developer"}
+            Tags = new[]
+            {
+                "nice",
+                "developer"
+            }
         },
-        new Data()
+        new()
         {
             Key = "2",
             Name = "Jim Green",
             Age = 42,
             Address = "London No. 1 Lake Park",
-            Tags = new[] { "loser"}
+            Tags = new[]
+            {
+                "loser"
+            }
         },
-        new Data()
+        new()
         {
             Key = "3",
             Name = "Joe Black",
             Age = 32,
             Address = "Sidney No. 1 Lake Park",
-            Tags = new[] { "cool", "teacher" }
+            Tags = new[]
+            {
+                "cool",
+                "teacher"
+            }
         }
     };
 
-    public class Data
+    private class Data
     {
         [DisplayName("Key")]
         public string Key { get; set; }

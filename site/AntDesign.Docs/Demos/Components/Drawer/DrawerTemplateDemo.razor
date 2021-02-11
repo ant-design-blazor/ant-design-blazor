@@ -2,25 +2,24 @@
 @inherits DrawerTemplate<string, string>
 
 <div>
-    value: <Input @bind-Value="value" />
+    value: <Input @bind-Value="_value" />
     <br/>
     <br/>
     <Button Type="primary" OnClick="OnClose">Confirm</Button>
 </div>
 
-@code{
+@code {
 
-    string value;
+    private string _value;
 
     protected override void OnInitialized()
     {
-        value = this.Options;
+        _value = Options;
         base.OnInitialized();
     }
 
-
-    async void OnClose()
+    private async void OnClose()
     {
-        await this.CloseAsync(value);
+        await CloseAsync(_value);
     }
 }

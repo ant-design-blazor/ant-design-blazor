@@ -1,51 +1,54 @@
-﻿<AntList DataSource="@datas" TItem="Data" Header="header" Class="comment-list">
+﻿<AntList DataSource="@Datas" TItem="Data" Header="@Header" Class="comment-list">
     <ListItem >
-        <Comment Actions="context.Actions" Avatar="context.Avatar" Author="context.Author" Datetime="context.Datetime" Content="context.Content"></Comment>
+        <Comment Actions="context.Actions" Avatar="@context.Avatar" Author="@context.Author" Datetime="@context.Datetime" Content="@context.Content"></Comment>
     </ListItem>
 </AntList>
 
-@code{
-
-    List<Data> datas => new List<Data>()
+@code {
+    private List<Data> Datas => new()
     {
-        new Data()
+        new Data
         {
             Author = "Han Solo",
             Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
             Content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
             Datetime = @<Tooltip Title="@(DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss"))">
-                               <span>
-                                   @(MomentHelper.FromNow(DateTime.Now.AddDays(-1)))
-                               </span>
-                            </Tooltip>,
-                Actions = new List<RenderFragment>() {replyAction}
-            },
-            new Data()
+                           <span>
+                               @(MomentHelper.FromNow(DateTime.Now.AddDays(-1)))
+                           </span>
+                       </Tooltip>,
+            Actions = new List<RenderFragment>
             {
-                Author = "Han Solo",
-                Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-                Content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
-                Datetime = @<Tooltip Title="@(DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd HH:mm:ss"))">
-                               <span>
-                                   @(MomentHelper.FromNow(DateTime.Now.AddDays(-2)))
-                               </span>
-                            </Tooltip>,
-                Actions = new List<RenderFragment>() {replyAction}
+                _replyAction
             }
-        };
-
-    RenderFragment replyAction =@<span>Reply to</span>;
-
-
-    RenderFragment header =>
-        @<div>
-            @if (datas.Any())
+        },
+        new Data
+        {
+            Author = "Han Solo",
+            Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+            Content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
+            Datetime = @<Tooltip Title="@(DateTime.Now.AddDays(-2).ToString("yyyy-MM-dd HH:mm:ss"))">
+                           <span>
+                               @(MomentHelper.FromNow(DateTime.Now.AddDays(-2)))
+                           </span>
+                       </Tooltip>,
+            Actions = new List<RenderFragment>
             {
-                <span>
-                    @($"{datas.Count} {(datas.Count > 1 ? "replies" : "reply")}")
-                </span>
+                _replyAction
             }
-        </div>;
+        }
+    };
+
+    private readonly RenderFragment _replyAction =@<span>Reply to</span>;
+
+    private RenderFragment Header => @<div>
+                                 @if (Datas.Any())
+                                 {
+                                     <span>
+                                         @($"{Datas.Count} {(Datas.Count > 1 ? "replies" : "reply")}")
+                                     </span>
+                                 }
+                             </div>;
 
     class Data
     {

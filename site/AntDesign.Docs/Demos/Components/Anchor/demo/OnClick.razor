@@ -1,10 +1,10 @@
-﻿<Anchor OnClick="(e)=>OnLinkClick(e)">
+﻿<Anchor OnClick="OnLinkClick">
     <AnchorLink Href="/en-US/components/anchor#components-anchor-demo-basic" Title="@("Basic demo")" />
     <AnchorLink Href="/en-US/components/anchor#components-anchor-demo-onClick" Title="@("OnClick demo")" />
     <AnchorLink Href="/en-US/components/anchor#components-anchor-demo-targetOffset" Title="@("TargetOffset demo")" />
 </Anchor>
 
-@code{
+@code {
     public void OnLinkClick(Tuple<MouseEventArgs, AnchorLink> tuple)
     {
         Console.WriteLine($"OnClick {tuple.Item2.Href}");

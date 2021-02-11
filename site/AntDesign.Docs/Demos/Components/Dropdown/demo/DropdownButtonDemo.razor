@@ -43,33 +43,27 @@
     </ChildContent>
 </Dropdown>
 
-@code
-{
-private RenderFragment _overlayMenu =@<Menu>
-    <MenuItem>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-            1st menu item
-        </a>
-    </MenuItem>
-    <MenuItem>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-            2nd menu item
-        </a>
-    </MenuItem>
-    <MenuItem>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
-            3rd menu item
-        </a>
-    </MenuItem>
-</Menu>; 
+@code {
+    private readonly RenderFragment _overlayMenu = @<AntDesign.Menu>
+                                                       <AntDesign.MenuItem>
+                                                           <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                                                               1st menu item
+                                                           </a>
+                                                       </AntDesign.MenuItem>
+                                                       <AntDesign.MenuItem>
+                                                           <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+                                                               2nd menu item
+                                                           </a>
+                                                       </AntDesign.MenuItem>
+                                                       <AntDesign.MenuItem>
+                                                           <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">
+                                                               3rd menu item
+                                                           </a>
+                                                       </AntDesign.MenuItem>
+                                                   </AntDesign.Menu>;
 
-private RenderFragment ButtonsRender(RenderFragment leftButton, RenderFragment rightButton)
-{
-return @<Template>
-    <span>@leftButton</span>
-    @rightButton
-</Template>;
-}
-
-
+    private RenderFragment ButtonsRender(RenderFragment leftButton, RenderFragment rightButton) => @<Template>
+                                                                                                       <span>@leftButton</span>
+                                                                                                       @rightButton
+                                                                                                   </Template>
 }

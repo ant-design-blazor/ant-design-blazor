@@ -1,4 +1,4 @@
-﻿@inject IconService iconService;
+﻿@inject IconService IconService;
 
 <div class="icons-list">
     <IconFont Type="icon-javascript" />
@@ -7,11 +7,10 @@
     <IconFont Type="icon-python" />
 </div>
 
-@code
-{
+@code {
     protected override async Task OnInitializedAsync()
     {
-        await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_1788044_0dwu4guekcwr.js");
-        await iconService.CreateFromIconfontCN("//at.alicdn.com/t/font_1788592_a5xf2bdic3u.js");
+        await IconService.CreateFromIconfontCN("//at.alicdn.com/t/font_1788044_0dwu4guekcwr.js");
+        await IconService.CreateFromIconfontCN("//at.alicdn.com/t/font_1788592_a5xf2bdic3u.js");
     }
 }

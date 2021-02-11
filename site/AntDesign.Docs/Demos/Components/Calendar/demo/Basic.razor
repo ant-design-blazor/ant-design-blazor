@@ -1,9 +1,8 @@
 ﻿<Calendar OnPanelChange="OnPanelChange" />
 
-@code
-{
-    private void OnPanelChange(DateTime value, string mode)
+@code {
+    private static void OnPanelChange(DateTime value, string mode)
     {
-        Console.WriteLine($"{value.ToString("yyyy-MM-dd")} {mode}");
+        Console.WriteLine($"{value:yyyy-MM-dd} {mode}");
     }
 }

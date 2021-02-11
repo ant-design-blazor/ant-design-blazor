@@ -1,13 +1,13 @@
 ﻿<div>
-    <Progress Percent=_percent/>
+    <Progress Percent="_percent"/>
     <ButtonGroup>
-        <Button OnClick=Decline Icon=Minus />
-        <Button OnClick=Increase Icon=Plus />
+        <Button OnClick="Decline" Icon="Minus" />
+        <Button OnClick="Increase" Icon="Plus" />
     </ButtonGroup>
 </div>
 
-@code{
-    private int _percent = 0;
+@code {
+    private int _percent;
 
     private void Decline()
     {

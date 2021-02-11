@@ -5,27 +5,14 @@
 </div>
 
 
-@code{
+@code {
+    private double MyValue { get; set; }
 
-    private double myValue { get; set; }
+    private string Format1(double value) => "$ " + value.ToString("n0");
 
-    private string Format1(double value)
-    {
-        return "$ " + value.ToString("n0");
-    }
+    private string Parse1(string value) => Regex.Replace(value, @"\$\s?|(,*)", "");
 
-    private string Parse1(string value)
-    {
-       return Regex.Replace(value, @"\$\s?|(,*)", "");
-    }
+    private string Format2(double value) => value.ToString() + "%";
 
-    private string Format2(double value)
-    {
-        return value.ToString() + "%";
-    }
-
-    private string Parse2(string value)
-    {
-        return value.Replace("%", "");
-    }
-}		
+    private string Parse2(string value) => value.Replace("%", "");
+}

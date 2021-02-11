@@ -29,7 +29,7 @@
         </Body>
     </Card>
     <br />
-    <Card Size="small" TitleTemplate="titleTemplate" Style="width:300px;">
+    <Card Size="small" TitleTemplate="_titleTemplate" Style="width:300px;">
         <Extra>
             <a>More</a>
         </Extra>
@@ -39,7 +39,9 @@
     </Card>
 </div>
 
-@code{
-    RenderFragment titleTemplate =@<div><Icon Type="credit-card" Theme="outline" /> Title is Template</div>;
-
+@code {
+    private readonly RenderFragment _titleTemplate =
+        @<div>
+            <Icon Type="credit-card" Theme="outline"/> Title is Template
+        </div>;
 }

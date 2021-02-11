@@ -1,19 +1,17 @@
-﻿@inject ModalService _modalService
+﻿@inject ModalService ModalService
 
 <Button OnClick="@CountDown">Open modal to close in 5s</Button>
 
-
 @code {
-
     private async Task CountDown()
     {
         var secondsToGo = 5;
-        var props = new ConfirmOptions()
+        var props = new ConfirmOptions
         {
             Title = "This is a notification message",
             Content = $"This modal will be destroyed after {secondsToGo} second."
         };
-        var modelRef = _modalService.Success(props);
+        var modelRef = ModalService.Success(props);
         while (secondsToGo > 0)
         {
             secondsToGo -= 1;
@@ -21,6 +19,6 @@
             props.Content = $"This modal will be destroyed after {secondsToGo} second.";
             await modelRef.UpdateConfigAsync();
         }
-        await _modalService.DestroyConfirmAsync(modelRef);
+        await ModalService.DestroyConfirmAsync(modelRef);
     }
 }

@@ -2,11 +2,10 @@
     <Calendar FullScreen="@false" OnPanelChange="OnPanelChange" />
 </div>
 
-@code
-{
-    private void OnPanelChange(DateTime value, string mode)
+@code {
+    private static void OnPanelChange(DateTime value, string mode)
     {
-        Console.WriteLine($"{value.ToString("YYYY-MM-DD")} {mode}");
+        Console.WriteLine($"{value:YYYY-MM-DD} {mode}");
     }
 }
 

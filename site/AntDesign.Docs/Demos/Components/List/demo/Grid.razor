@@ -1,4 +1,4 @@
-﻿<AntList Grid="gutter" DataSource="@Data">
+﻿<AntList Grid="_gutter" DataSource="@_data">
     <ListItem >
         <Card Bordered Title="@(context.Title)">
             <Body>
@@ -8,19 +8,34 @@
     </ListItem>
 </AntList>
 
-@code{
-
-    public ListGridType gutter = new ListGridType { Gutter = 16, Column = 4 };
-
-    public List<BasicItem> Data = new List<BasicItem>
+@code {
+    private readonly ListGridType _gutter = new()
     {
-        new BasicItem { Title = "Title 1"},
-        new BasicItem { Title = "Title 2"},
-        new BasicItem { Title = "Title 3"},
-        new BasicItem { Title = "Title 4"},
+        Gutter = 16,
+        Column = 4
     };
 
-    public class BasicItem
+    private readonly List<BasicItem> _data = new()
+    {
+        new BasicItem
+        {
+            Title = "Title 1"
+        },
+        new BasicItem
+        {
+            Title = "Title 2"
+        },
+        new BasicItem
+        {
+            Title = "Title 3"
+        },
+        new BasicItem
+        {
+            Title = "Title 4"
+        }
+    };
+
+    private class BasicItem
     {
         public string Title { get; set; }
     }

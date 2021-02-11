@@ -1,28 +1,35 @@
 ﻿@inject ModalService ModalService
 
-<Input @bind-Value="@value" />
+<Input @bind-Value="@_value" />
 <br />
 <br />
 <Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
 <Button OnClick="OpenComponent" Type="primary">Use Component</Button>
 
-@code{
-
-    private string value = "blazor";
+@code {
+    private string _value = "blazor";
 
     private ConfirmRef _confirmRef;
 
     private async Task OpenTemplate()
     {
-        RenderFragment content =@<div>value: @value <br /><Button OnClick="CloseModal">close</Button></div>;
+        RenderFragment content =@<div>value: @_value <br/><Button OnClick="CloseModal">close</Button></div>;
 
-        var options = new ConfirmOptions()
+        var options = new ConfirmOptions
         {
             Title = "Modal",
             Width = 350,
             Content = content,
-            OnOk = e => { Console.WriteLine("OnOk"); return Task.CompletedTask; },
-            OnCancel = e => { Console.WriteLine("OnCancel"); return Task.CompletedTask; }
+            OnOk = _ =>
+            {
+                Console.WriteLine("OnOk");
+                return Task.CompletedTask;
+            },
+            OnCancel = _ =>
+            {
+                Console.WriteLine("OnCancel");
+                return Task.CompletedTask;
+            }
         };
 
         _confirmRef = await ModalService.CreateConfirmAsync(options);
@@ -50,12 +57,12 @@
 
     private async Task OpenComponent()
     {
-        var options = new ConfirmOptions()
+        var options = new ConfirmOptions
         {
-            Title = "Component",
+            Title = "Component"
         };
 
-        var confirmRef = await ModalService.CreateConfirmAsync<ConfirmTemplateDemo, string, string>(options, value);
+        var confirmRef = await ModalService.CreateConfirmAsync<ConfirmTemplateDemo, string, string>(options, _value);
 
         confirmRef.OnOpen = () =>
         {
@@ -69,7 +76,7 @@
             return Task.CompletedTask;
         };
 
-        confirmRef.OnOk = (result) =>
+        confirmRef.OnOk = result =>
         {
             Console.WriteLine($"OnOk:{result}");
             return Task.CompletedTask;

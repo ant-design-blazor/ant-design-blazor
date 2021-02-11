@@ -1,4 +1,4 @@
-<Tree @ref="tree" Checkable Multiple TItem="string">
+<Tree @ref="_tree" Checkable Multiple TItem="string">
     <Nodes>
         <TreeNode Title="A" Key="100" TItem="string">
             <Nodes>
@@ -45,59 +45,59 @@
 
 <Button OnClick="CollapseAll">Collapse All Nodes</Button>
 
-@if (string.IsNullOrWhiteSpace(printType) == false)
+@if (string.IsNullOrWhiteSpace(_printType) == false)
 {
-    <div>@printType</div>
+    <div>@_printType</div>
     <ul>
-        @foreach (var item in printTexts)
+        @foreach (var item in _printTexts)
         {
             <li>@item</li>
         }
     </ul>
 }
-@code{
 
-    string printType;
+@code {
+    private string _printType;
 
-    List<string> printTexts = new List<string>();
+    private List<string> _printTexts = new List<string>();
 
-    Tree<string> tree;
+    private Tree<string> _tree;
 
     private void PrintCheckedNodesTitle()
     {
-        printType = "CheckedNodesTitle";
-        printTexts = tree.CheckedTitles;
+        _printType = "CheckedNodesTitle";
+        _printTexts = _tree.CheckedTitles;
     }
 
     private void PrintCheckedNodesKey()
     {
-        printType = "CheckedNodesKey";
-        printTexts = tree.CheckedKeys;
+        _printType = "CheckedNodesKey";
+        _printTexts = _tree.CheckedKeys;
     }
 
     private void DecheckedAll()
     {
-        tree.DecheckedAll();
+        _tree.DecheckedAll();
     }
 
     private void PrintSelectedNodes()
     {
-        printType = "SelectedNodes";
-        printTexts = tree.SelectedTitles;
+        _printType = "SelectedNodes";
+        _printTexts = _tree.SelectedTitles;
     }
 
     private void DeselectAll()
     {
-        tree.DeselectAll();
+        _tree.DeselectAll();
     }
 
     private void ExpandAll()
     {
-        tree.ExpandAll();
+        _tree.ExpandAll();
     }
 
     private void CollapseAll()
     {
-        tree.CollapseAll();
+        _tree.CollapseAll();
     }
 }

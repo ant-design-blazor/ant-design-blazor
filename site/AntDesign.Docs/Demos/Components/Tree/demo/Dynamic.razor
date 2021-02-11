@@ -7,25 +7,28 @@
           OnNodeLoadDelayAsync="OnNodeLoadDelayAsync" TItem="Data"></Tree>
 </div>
 
-@code{
+@code {
     public record Data(string Title)
     {
-        public List<Data> Childs { get; set; } = new List<Data>();
+        public List<Data> Childs { get; set; } = new();
     }
 
-    List<Data> _datas = new() { new("A"), new("B"), new("C") };
-
-    public async Task OnNodeLoadDelayAsync(TreeEventArgs<Data> args)
+    List<Data> _datas = new()
     {
-        await Task.Delay(2000);//Ä£ÄâÒì²½Ö´ÐÐ
+        new Data("A"),
+        new Data("B"),
+        new Data("C")
+    };
 
-        var dataItem = ((Data)args.Node.DataItem);
+    private static async Task OnNodeLoadDelayAsync(TreeEventArgs<Data> args)
+    {
+        await Task.Delay(2000);
+
+        var dataItem = args.Node.DataItem;
         dataItem.Childs.Clear();
         dataItem.Childs.Add(new Data($"{dataItem.Title}-1"));
         dataItem.Childs.Add(new Data($"{dataItem.Title}-2"));
     }
-
-
 }
 
 

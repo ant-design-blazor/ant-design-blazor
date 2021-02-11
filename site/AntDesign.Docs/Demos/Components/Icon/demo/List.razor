@@ -1,14 +1,20 @@
-﻿
+﻿@using AntDesign.Docs.Services
+@inject Services.IconListService IconListService
+@inject IconService IconService
+@inject ILanguageService LanguageService
+@inject MessageService MessageService
+@inject IJSRuntime JsRuntime
+
 <div style="display: flex; justify-content: space-between;">
-    <RadioGroup @bind-Value="currentTheme" ButtonStyle="solid" Size="large" TValue="string" OnChange="OnThemeChanged">
+    <RadioGroup @bind-Value="_currentTheme" ButtonStyle="solid" Size="large" TValue="string" OnChange="OnThemeChanged">
         <Radio RadioButton Value="@("outline")">
-            <Icon Component="OutlineSvg" Style="font-size:16px" />@LanguageService.Resources["app.docs.components.icon.outlined"]
+            <Icon Component="_outlineSvg" Style="font-size:16px" />@LanguageService.Resources["app.docs.components.icon.outlined"]
         </Radio>
         <Radio RadioButton Value="@("fill")">
-            <Icon Component="FilledSvg" Style="font-size:16px" />@LanguageService.Resources["app.docs.components.icon.filled"]
+            <Icon Component="_filledSvg" Style="font-size:16px" />@LanguageService.Resources["app.docs.components.icon.filled"]
         </Radio>
         <Radio RadioButton Value="@("twotone")">
-            <Icon Component="TwoToneSvg" Style="font-size:16px" />@LanguageService.Resources["app.docs.components.icon.two-tone"]
+            <Icon Component="_twoToneSvg" Style="font-size:16px" />@LanguageService.Resources["app.docs.components.icon.two-tone"]
         </Radio>
     </RadioGroup>
     <Search Size="@InputSize.Large"
@@ -17,7 +23,7 @@
             OnInput="@(args => OnSearching(args.Value?.ToString()))" />
 </div>
 
-@if (displayIcons == null || displayIcons.Count == 0)
+@if (DisplayIcons == null || DisplayIcons.Count == 0)
 {
     <div style="text-align:center; margin-top:20px;">
         <Spin Size="large" Tip="Loading..." />
@@ -25,15 +31,15 @@
 }
 else
 {
-    foreach (var item in displayIcons)
+    foreach (var item in DisplayIcons)
     {
         <h3>@LanguageService.Resources["app.docs.components.icon.category." + @item.Category]</h3>
 
         <ul class="anticons-list">
             @foreach (var name in item.IconNames)
             {
-                <li class="@item.Category" @onclick="(() => OnCopyClick(currentTheme, name))">
-                    <Icon Type="@name" Theme="@currentTheme" Style="font-size:36px" @key="@($"{currentTheme}-{name}")"></Icon>
+                <li class="@item.Category" @onclick="(() => OnCopyClick(_currentTheme, name))">
+                    <Icon Type="@name" Theme="@_currentTheme" Style="font-size:36px" @key="@($"{_currentTheme}-{name}")"></Icon>
                     <div class="anticon-class">
                         <Badge>@name</Badge>
                     </div>
@@ -43,26 +49,27 @@ else
     }
 }
 
+@code {
 
-@inject AntDesign.Docs.Services.IconListService iconListService
-@inject IconService IconService
-@inject ILanguageService LanguageService
-@inject MessageService messageService
-@inject IJSRuntime JsRuntime
+    private readonly string _currentTheme = "outline";
 
-@code{
+    private readonly RenderFragment _outlineSvg =@<svg width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false" class="" viewBox="0 0 1024 1024">
+                                            <path d="M864 64H160C107 64 64 107 64 160v704c0 53 43 96 96 96h704c53 0 96-43 96-96V160c0-53-43-96-96-96z m-12 800H172c-6.6 0-12-5.4-12-12V172c0-6.6 5.4-12 12-12h680c6.6 0 12 5.4 12 12v680c0 6.6-5.4 12-12 12z"></path>
+                                        </svg>;
 
-    private string currentTheme = "outline";
-    RenderFragment OutlineSvg =@<svg width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false" class="" viewBox="0 0 1024 1024"><path d="M864 64H160C107 64 64 107 64 160v704c0 53 43 96 96 96h704c53 0 96-43 96-96V160c0-53-43-96-96-96z m-12 800H172c-6.6 0-12-5.4-12-12V172c0-6.6 5.4-12 12-12h680c6.6 0 12 5.4 12 12v680c0 6.6-5.4 12-12 12z"></path></svg>;
-    RenderFragment FilledSvg =@<svg width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false" class="" viewBox="0 0 1024 1024"><path d="M864 64H160C107 64 64 107 64 160v704c0 53 43 96 96 96h704c53 0 96-43 96-96V160c0-53-43-96-96-96z"></path></svg>;
-    RenderFragment TwoToneSvg =@<svg width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false" class="" viewBox="0 0 1024 1024"><path d="M16 512c0 273.932 222.066 496 496 496s496-222.068 496-496S785.932 16 512 16 16 238.066 16 512z m496 368V144c203.41 0 368 164.622 368 368 0 203.41-164.622 368-368 368z"></path></svg>;
+    private readonly RenderFragment _filledSvg =@<svg width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false" class="" viewBox="0 0 1024 1024">
+                                           <path d="M864 64H160C107 64 64 107 64 160v704c0 53 43 96 96 96h704c53 0 96-43 96-96V160c0-53-43-96-96-96z"></path>
+                                       </svg>;
 
-    private IList<AntDesign.Docs.Services.IconItem> lstIcons { get; set; }
-    private IList<AntDesign.Docs.Services.IconItem> displayIcons { get; set; }
+    private readonly RenderFragment _twoToneSvg =@<svg width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false" class="" viewBox="0 0 1024 1024">
+                                            <path d="M16 512c0 273.932 222.066 496 496 496s496-222.068 496-496S785.932 16 512 16 16 238.066 16 512z m496 368V144c203.41 0 368 164.622 368 368 0 203.41-164.622 368-368 368z"></path>
+                                        </svg>;
+
+    private IList<IconItem> LstIcons { get; set; }
+    private IList<IconItem> DisplayIcons { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-
         await base.OnInitializedAsync();
 
         LanguageService.LanguageChanged += async (_, args) =>
@@ -70,30 +77,32 @@ else
             await InvokeAsync(StateHasChanged);
         };
 
-        lstIcons = iconListService.GetIcons();      
-        await OnThemeChanged(currentTheme);
+        LstIcons = IconListService.GetIcons();
+        await OnThemeChanged(_currentTheme);
     }
 
     private async Task OnSearching(string word)
     {
-        lstIcons = iconListService.Search(word);
-        await OnThemeChanged(currentTheme);
-
+        LstIcons = IconListService.Search(word);
+        await OnThemeChanged(_currentTheme);
     }
 
     private async Task OnThemeChanged(string newTheme)
     {
-        displayIcons = null;
+        DisplayIcons = null;
 
-        displayIcons = new List<Services.IconItem>();
-        foreach (var categorys in lstIcons)
+        DisplayIcons = new List<IconItem>();
+        foreach (var categories in LstIcons)
         {
-            var itemIcons = new AntDesign.Docs.Services.IconItem();
-            itemIcons.Category = categorys.Category;
-            itemIcons.IconNames = new List<string>();
-            foreach (var item in categorys.IconNames)
+            var itemIcons = new IconItem
             {
-                var isExist = IconService.IconExists(currentTheme, item);
+                Category = categories.Category,
+                IconNames = new List<string>()
+            };
+
+            foreach (var item in categories.IconNames)
+            {
+                var isExist = IconService.IconExists(_currentTheme, item);
 
                 if (isExist)
                 {
@@ -103,24 +112,21 @@ else
 
             if (itemIcons.IconNames.Count > 0)
             {
-                displayIcons.Add(itemIcons);
+                DisplayIcons.Add(itemIcons);
             }
         }
 
         await InvokeAsync(StateHasChanged);
     }
 
-    protected override bool ShouldRender()
-    {
-        return displayIcons.Any();
-    }
+    protected override bool ShouldRender() => DisplayIcons.Any();
 
 
     private void OnCopyClick(string theme, string iconName)
     {
-        string htmlIcon = $"<Icon Type=\"{iconName}\" Theme=\"{theme}\"/>";
+        var htmlIcon = $"<Icon Type=\"{iconName}\" Theme=\"{theme}\"/>";
         JsRuntime.InvokeAsync<object>(JSInteropConstants.Copy, htmlIcon);
 
-        messageService.Success(htmlIcon+ "  copied 🎉!");
+        MessageService.Success(htmlIcon + "  copied 🎉!");
     }
-    }
+}

@@ -45,15 +45,13 @@
     </div>
 </div>
 
-@code
-{
-    private RenderFragment _text =@<span>Title</span>;
-        
+@code {
+    private readonly RenderFragment _text =@<span>Title</span>;
+
     const int ButtonWidth = 70;
 
-    private RenderFragment _content =
-        @<div>
-            <p>Content</p>
-            <p>Content</p>
-        </div>;
+    private readonly RenderFragment _content = @<div>
+                                                   <p>Content</p>
+                                                   <p>Content</p>
+                                               </div>;
 }

@@ -16,25 +16,36 @@
     Selected Item Name: @_selectedItem?.Name
 </p>
 
-@code
-{
-    class Person
+@code {
+    private class Person
     {
         public string Value { get; set; }
         public string Name { get; set; }
     }
 
-    List<Person> _persons;
-    string _selectedValue;
-    Person _selectedItem;
+    private List<Person> _persons;
+    private string _selectedValue;
+    private Person _selectedItem;
 
     protected override void OnInitialized()
     {
         _persons = new List<Person>
         {
-            new Person { Value = "jack", Name = "Jack" },
-            new Person { Value = "lucy", Name = "Lucy" },
-            new Person { Value = "tom" , Name = "Tom" }
+            new()
+            {
+                Value = "jack",
+                Name = "Jack"
+            },
+            new()
+            {
+                Value = "lucy",
+                Name = "Lucy"
+            },
+            new()
+            {
+                Value = "tom",
+                Name = "Tom"
+            }
         };
     }
 
@@ -44,17 +55,17 @@
         Console.WriteLine($"selected: ${value?.Name}");
     }
 
-	private void OnBlur()
+    private static void OnBlur()
     {
         Console.WriteLine("blur");
     }
 
-    private void OnFocus()
+    private static void OnFocus()
     {
         Console.WriteLine("focus");
     }
 
-    private void OnSearch(string value)
+    private static void OnSearch(string value)
     {
         Console.WriteLine($"search: {value}");
     }

@@ -1,6 +1,6 @@
 @inject MessageService _message
 
-<Upload @attributes="attrs"
+<Upload @attributes="@_attrs"
          OnSingleCompleted="OnSingleCompleted"
          OnRemove="HandleRemove">
     <Button Icon="upload">
@@ -9,78 +9,13 @@
 </Upload>
 <br />
 <br />
-<Upload @attributes="attrs1"
+<Upload @attributes="@_attrs1"
          OnSingleCompleted="OnSingleCompleted"
          OnRemove="HandleRemove">
     <Button Icon="upload">
         <span>点击上传</span>
     </Button>
 </Upload>
-
-@code
-{
-
-    static List<UploadFileItem> fileList = new List<UploadFileItem>
-{
-        new UploadFileItem
-        {
-            Id = "1",
-            FileName = "xxx.png",
-            State = UploadState.Success,
-            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-        },
-        new UploadFileItem
-        {
-            Id = "1",
-            FileName = "yyy.png",
-            State = UploadState.Fail
-        }
-    };
-
-    Dictionary<string, object> attrs = new Dictionary<string, object>
-{
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" },
-        {"DefaultFileList", fileList},
-        {"ListType", "picture" }
-    };
-
-    Dictionary<string, object> attrs1 = new Dictionary<string, object>
-{
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" },
-        {"DefaultFileList", fileList},
-        {"ListType", "picture" },
-        {"Class", "upload-list-inline" }
-    };
-
-    void OnSingleCompleted(UploadInfo fileinfo)
-    {
-        if (fileinfo.File.State == UploadState.Success)
-        {
-            var result = fileinfo.File.GetResponse<ResponseModel>();
-            fileinfo.File.Url = result.url;
-        }
-    }
-
-    async Task<bool> HandleRemove(UploadFileItem file)
-    {
-        await _message.Loading($"removing {file.FileName}",2);
-        return await Task.FromResult(true);
-    }
-
-    public class ResponseModel
-    {
-        public string name { get; set; }
-
-        public string status { get; set; }
-
-        public string url { get; set; }
-
-        public string thumbUrl { get; set; }
-    }
-
-}
 
 <style>
     /* tile uploaded pictures */
@@ -102,3 +37,82 @@
         animation-name: uploadAnimateInlineOut;
     }
 </style>
+
+@code {
+    private static List<UploadFileItem> _fileList = new()
+    {
+        new UploadFileItem
+        {
+            Id = "1",
+            FileName = "xxx.png",
+            State = UploadState.Success,
+            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+        },
+        new UploadFileItem
+        {
+            Id = "1",
+            FileName = "yyy.png",
+            State = UploadState.Fail
+        }
+    };
+
+    private Dictionary<string, object> _attrs = new()
+    {
+        {
+            "Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        },
+        {
+            "Name", "files"
+        },
+        {
+            "DefaultFileList", _fileList
+        },
+        {
+            "ListType", "picture"
+        }
+    };
+
+    private Dictionary<string, object> _attrs1 = new()
+    {
+        {
+            "Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        },
+        {
+            "Name", "files"
+        },
+        {
+            "DefaultFileList", _fileList
+        },
+        {
+            "ListType", "picture"
+        },
+        {
+            "Class", "upload-list-inline"
+        }
+    };
+
+    private static void OnSingleCompleted(UploadInfo fileInfo)
+    {
+        if (fileInfo.File.State != UploadState.Success) return;
+
+        var result = fileInfo.File.GetResponse<ResponseModel>();
+        fileInfo.File.Url = result.url;
+    }
+
+    private async Task<bool> HandleRemove(UploadFileItem file)
+    {
+        await _message.Loading($"removing {file.FileName}", 2);
+        return await Task.FromResult(true);
+    }
+
+    private class ResponseModel
+    {
+        public string name { get; set; }
+
+        public string status { get; set; }
+
+        public string url { get; set; }
+
+        public string thumbUrl { get; set; }
+    }
+}

@@ -1,12 +1,12 @@
 ﻿<div>
     <div>
-        @foreach (var item in lstTags)
+        @foreach (var item in LstTags)
         {
-            <Tag Mode="closeable" OnClose="()=>onClose(item)">@item</Tag>
+            <Tag Mode="closeable" OnClose="()=>OnClose(item)">@item</Tag>
         }
-        @if (inputVisible)
+        @if (InputVisible)
         {
-            <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="handleInputConfirm" OnPressEnter="handleInputConfirm" />
+            <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="HandleInputConfirm" OnPressEnter="HandleInputConfirm" />
         }
         else
         {
@@ -22,50 +22,44 @@
         border-style: dashed;
     }
 </style>
-@code{
-    private bool inputVisible { get; set; } = false;
-    string _inputValue;
-    Input<string> _inputRef;
-    List<string> lstTags { get; set; } = new List<string>();
+
+@code {
+    private bool InputVisible { get; set; }
+    private string _inputValue;
+    private Input<string> _inputRef;
+    private List<string> LstTags { get; set; } = new();
 
     protected override void OnInitialized()
     {
-        lstTags.Add("Apple");
-        lstTags.Add("Mongo");
-        lstTags.Add("Peach");
+        LstTags.Add("Apple");
+        LstTags.Add("Mongo");
+        LstTags.Add("Peach");
     }
 
-    void ValueChange(ChangeEventArgs value)
+    private async Task OnChecked()
     {
-        lstTags.Add(value.Value.ToString());
-    }
-
-    async Task OnChecked()
-    {
-        inputVisible = !inputVisible;
+        InputVisible = !InputVisible;
         if (_inputRef != null)
             await _inputRef.Focus();
     }
 
-    void onClose(string item)
+    private void OnClose(string item)
     {
-        lstTags.Remove(item);
+        LstTags.Remove(item);
     }
 
-    void handleInputConfirm()
+    private void HandleInputConfirm()
     {
         if (string.IsNullOrEmpty(_inputValue)) return;
 
-        string res = lstTags.Find(s => s == _inputValue);
+        var res = LstTags.Find(s => s == _inputValue);
 
         if (string.IsNullOrEmpty(res))
         {
-            lstTags.Add(_inputValue);
+            LstTags.Add(_inputValue);
         }
 
-        this._inputValue = "";
-        this.inputVisible = false;
+        _inputValue = "";
+        InputVisible = false;
     }
-
-
 }

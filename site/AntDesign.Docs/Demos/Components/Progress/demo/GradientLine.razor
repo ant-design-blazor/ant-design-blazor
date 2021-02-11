@@ -1,12 +1,12 @@
 ﻿<div>
-    <Progress StrokeColor=_gradients Percent=99.9 />
-    <Progress StrokeColor=_gradients Percent=99.9 Status=ProgressStatus.Active />
-    <Progress Type=ProgressType.Circle StrokeColor=_gradients Percent=90 />
-    <Progress Type=ProgressType.Circle StrokeColor=_gradients Percent=100 />
+    <Progress StrokeColor="_gradients" Percent="99.9" />
+    <Progress StrokeColor="_gradients" Percent="99.9" Status="ProgressStatus.Active" />
+    <Progress Type="ProgressType.Circle" StrokeColor="_gradients" Percent="90" />
+    <Progress Type="ProgressType.Circle" StrokeColor="_gradients" Percent="100" />
 </div>
 
-@code{
-    private Dictionary<string, string> _gradients = new()
+@code {
+    private readonly Dictionary<string, string> _gradients = new()
     {
         { "0%", "#108ee9" },
         { "100%", "#87d068" }

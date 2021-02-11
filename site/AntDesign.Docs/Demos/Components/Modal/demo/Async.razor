@@ -10,17 +10,15 @@
     <p>@_modalText</p>
 </Modal>
 
-
-@code{
-    bool _visible = false;
-    bool _confirmLoading = false;
-    string _modalText = "Content of the modal";
+@code {
+    private bool _visible;
+    private bool _confirmLoading;
+    private string _modalText = "Content of the modal";
 
     private void ShowModal()
     {
         _visible = true;
     }
-
 
     private async Task HandleOk(MouseEventArgs e)
     {

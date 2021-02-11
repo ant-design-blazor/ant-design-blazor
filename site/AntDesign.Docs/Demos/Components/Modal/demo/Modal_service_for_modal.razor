@@ -1,41 +1,39 @@
 ﻿@inject ModalService ModalService
 
-<Input @bind-Value="@value" placeholder="user name" />
+<Input @bind-Value="@_value" placeholder="user name" />
 <br />
 <br />
 <Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
 
-@code{
-
-    private string value = "AntDesignBlazor";
+@code {
+    private string _value = "AntDesignBlazor";
 
     private ModalRef _modalRef;
 
     private async Task OpenTemplate()
     {
-        var templateOptions = new Form.demo.Basic.Model();
-        templateOptions.Username = value;
-
-        var modalConfig = new ModalOptions();
-        modalConfig.Title = "Basic Form";
-        modalConfig.OnCancel = async (e) =>
+        var templateOptions = new Form.demo.Basic.Model
         {
-            Console.WriteLine("OnCancel");
-            await _modalRef.CloseAsync();
+            Username = _value
         };
 
-        modalConfig.AfterClose = () =>
+        var modalConfig = new ModalOptions
         {
-            Console.WriteLine("AfterClose");
-            value = templateOptions.Username;
-            InvokeAsync(StateHasChanged);
-            return Task.CompletedTask;
+            Title = "Basic Form",
+            OnCancel = async _ =>
+            {
+                Console.WriteLine("OnCancel");
+                await _modalRef.CloseAsync();
+            },
+            AfterClose = () =>
+            {
+                Console.WriteLine("AfterClose");
+                _value = templateOptions.Username;
+                InvokeAsync(StateHasChanged);
+                return Task.CompletedTask;
+            }
         };
 
-        _modalRef = await ModalService
-            .CreateModalAsync<ModalTemplateDemo, Form.demo.Basic.Model>
-            (modalConfig, templateOptions);
-
+        _modalRef = await ModalService.CreateModalAsync<ModalTemplateDemo, Form.demo.Basic.Model>(modalConfig, templateOptions);
     }
-
 }

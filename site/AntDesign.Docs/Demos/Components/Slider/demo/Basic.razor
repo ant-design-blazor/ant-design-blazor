@@ -1,12 +1,10 @@
 ﻿<div>
     <Slider TValue="double" DefaultValue="35" Disabled="@_disabled"  />
     <Slider TValue="(double, double)" DefaultValue="(20, 50)" Disabled="@_disabled" />
-    Disabled: <Switch Size="small" Checked="@_disabled" OnChange="(e)=>OnSwitch(e)" />
+    Disabled: <Switch Size="small" Checked="@_disabled" OnChange="OnSwitch" />
 </div>
 
-@code
-{
-
+@code {
     private bool _disabled;
 
     private void OnSwitch(bool args)

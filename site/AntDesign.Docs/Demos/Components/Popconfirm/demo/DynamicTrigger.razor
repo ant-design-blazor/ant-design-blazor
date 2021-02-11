@@ -1,4 +1,4 @@
-@inject MessageService _message
+@inject MessageService MessageService
 
 <div>
     <Popconfirm Title="Are you sure delete this task?"
@@ -12,29 +12,30 @@
     </Popconfirm>
     <br />
     <br />
-    Whether directly execute£º
+    Whether directly executeï¿½ï¿½
     <Switch Checked="_condition" OnChange="OnConditionChange" />
 </div>
 
-@code{
+@code {
     private void Confirm()
     {
         _visible = false;
-        _message.Success("Next step.");
+        MessageService.Success("Next step.");
     }
 
     private void Cancel()
     {
         _visible = false;
-        _message.Error("Click on cancel.");
+        MessageService.Error("Click on cancel.");
     }
 
-    private bool _visible = false;
+    private bool _visible;
+
     private void OnVisibleChange(bool visible)
     {
         if (!visible)
         {
-            _visible = visible;
+            _visible = false;
             return;
         }
         if (_condition)
@@ -43,11 +44,12 @@
         }
         else
         {
-            _visible = visible;
+            _visible = true;
         }
     }
 
     private bool _condition = true;
+
     private void OnConditionChange(bool condition)
     {
         _condition = condition;

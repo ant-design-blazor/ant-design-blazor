@@ -1,19 +1,17 @@
-﻿@using AntDesign;
-
-<div>
-    <TextArea Placeholder="Autosize height based on content lines" AutoSize="true" OnResize="OnResize" @bind-Value="@txtValue"/>
+﻿<div>
+    <TextArea Placeholder="Autosize height based on content lines" AutoSize="true" OnResize="OnResize" @bind-Value="@TxtValue"/>
     <br />
     <br />
-    <TextArea Placeholder="Autosize height based on content lines" MinRows="2" MaxRows="6" OnResize="OnResize" @bind-Value="@txtValue"/>
+    <TextArea Placeholder="Autosize height based on content lines" MinRows="2" MaxRows="6" OnResize="OnResize" @bind-Value="@TxtValue"/>
     <br />
     <br />
-    <TextArea Placeholder="Autosize height based on content lines" MinRows="3" MaxRows="5" OnResize="OnResize" @bind-Value="@txtValue"/>
+    <TextArea Placeholder="Autosize height based on content lines" MinRows="3" MaxRows="5" OnResize="OnResize" @bind-Value="@TxtValue"/>
 </div>
 
-@code{
-    string txtValue { get; set; }
+@code {
+    private string TxtValue { get; set; }
 
-    private void OnResize(OnResizeEventArgs args)
+    private static void OnResize(OnResizeEventArgs args)
     {
         Console.WriteLine($"OnResizeEvent width:{args.Width},height:{args.Height}");
     }

@@ -1,56 +1,89 @@
 ﻿@using System.ComponentModel
 
-<Table DataSource="@data" Bordered>
-    <Column @bind-Field="@context.name" ColSpan="@GetColSpan(context.key,"name")"></Column>
-    <Column @bind-Field="@context.age" ColSpan="@GetColSpan(context.key)"></Column>
-    <Column @bind-Field="@context.tel" Title="Home phone" HeaderColSpan="2" RowSpan="@GetRowSpan(context.key)" ColSpan="@GetColSpan(context.key)"></Column>
-    <Column @bind-Field="@context.phone" HeaderColSpan="0" ColSpan="@GetColSpan(context.key)"></Column>
-    <Column @bind-Field="@context.address" ColSpan="@GetColSpan(context.key)"></Column>
+<Table DataSource="@_data" Bordered>
+    <Column @bind-Field="@context.Name" ColSpan="@GetColSpan(context.Key,"name")"></Column>
+    <Column @bind-Field="@context.Age" ColSpan="@GetColSpan(context.Key)"></Column>
+    <Column @bind-Field="@context.Tel" Title="Home phone" HeaderColSpan="2" RowSpan="@GetRowSpan(context.Key)" ColSpan="@GetColSpan(context.Key)"></Column>
+    <Column @bind-Field="@context.Phone" HeaderColSpan="0" ColSpan="@GetColSpan(context.Key)"></Column>
+    <Column @bind-Field="@context.Address" ColSpan="@GetColSpan(context.Key)"></Column>
 </Table>
 
-@code{ 
-    Data[] data =
-            {
-        new Data(){ key="1",name="John Brown",age=32,tel="0571-22098909",phone="18889898989",address="New York No. 1 Lake Park"},
-        new Data(){key="2",name="Jim Green",tel="0571-22098333",phone = "18889898888",age = 42,address="London No. 1 Lake Park"},
-        new Data(){key="3",name="Joe Black",age = 32,tel="0575-22098909",phone = "18900010002",address="Sidney No. 1 Lake Park"},
-        new Data(){key="4",name="Jim Red",age = 18,tel="0575-22098909",phone = "18900010002",address="London No. 2 Lake Park"},
-        new Data(){key="5",name="Jake White",age = 18,tel="0575-22098909",phone = "18900010002",address="Dublin No. 2 Lake Park"}
+@code {
+    private readonly Data[] _data =
+    {
+        new()
+        {
+            Key = "1",
+            Name = "John Brown",
+            Age = 32,
+            Tel = "0571-22098909",
+            Phone = "18889898989",
+            Address = "New York No. 1 Lake Park"
+        },
+        new()
+        {
+            Key = "2",
+            Name = "Jim Green",
+            Tel = "0571-22098333",
+            Phone = "18889898888",
+            Age = 42,
+            Address = "London No. 1 Lake Park"
+        },
+        new()
+        {
+            Key = "3",
+            Name = "Joe Black",
+            Age = 32,
+            Tel = "0575-22098909",
+            Phone = "18900010002",
+            Address = "Sidney No. 1 Lake Park"
+        },
+        new()
+        {
+            Key = "4",
+            Name = "Jim Red",
+            Age = 18,
+            Tel = "0575-22098909",
+            Phone = "18900010002",
+            Address = "London No. 2 Lake Park"
+        },
+        new()
+        {
+            Key = "5",
+            Name = "Jake White",
+            Age = 18,
+            Tel = "0575-22098909",
+            Phone = "18900010002",
+            Address = "Dublin No. 2 Lake Park"
+        }
     };
 
-    public class Data
+    private class Data
     {
-        public string key { get; set; }
+        public string Key { get; set; }
 
-        public string name { get; set; }
+        public string Name { get; set; }
 
-        public int age { get; set; }
+        public int Age { get; set; }
 
-        public string tel { get; set; }
+        public string Tel { get; set; }
 
-        public string phone { get; set; }
+        public string Phone { get; set; }
 
-        public string address { get; set; }
+        public string Address { get; set; }
     }
 
-    private int GetRowSpan(string key)
+    private static int GetRowSpan(string key) => key switch
     {
-        if (key == "3")
-            return 2;
-        else if (key == "4")
-            return 0;
-        else
-            return 1;
-    }
+        "3" => 2,
+        "4" => 0,
+        _ => 1
+    };
 
-    private int GetColSpan(string key, string columnTitle = "")
+    private static int GetColSpan(string key, string columnTitle = "") => key switch
     {
-        if (key == "5")
-            if (columnTitle == "name")
-                return 5;
-            else
-                return 0;
-        else
-            return 1;
-    } 
+        "5" when columnTitle == "name" => 5,
+        "5" => 0,
+        _ => 1
+    };
 }

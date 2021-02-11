@@ -1,5 +1,7 @@
+@inject MessageService MessageService
+
 <div>
-    <Steps Current="current">
+    <Steps Current="Current">
         @foreach (var item in steps)
         {
             <Step Title="@item.Title" Subtitle="@item.Content" />
@@ -7,20 +9,20 @@
     </Steps>
 
     <div class="steps-content">
-        @steps[current].Content
+        @steps[Current].Content
     </div>
     <div class="steps-action">
-        @if (current > 0)
+        @if (Current > 0)
         {
             <Button Type="primary" OnClick="OnPreClick">Previous</Button>
         }
-        @if (current < steps.Length - 1)
+        @if (Current < steps.Length - 1)
         {
             <Button Type="primary" OnClick="OnNextClick">Next</Button>
         }
-        @if (current == steps.Length - 1)
+        @if (Current == steps.Length - 1)
         {
-            <Button Type="primary" OnClick=@(() => message.Success("Processing complete!"))>
+            <Button Type="primary" OnClick=@(() => MessageService.Success("Processing complete!"))>
                 Done
             </Button>
         }
@@ -44,32 +46,46 @@
     }
 </style>
 
-@inject MessageService message
 @code {
-
-    public class StepItem
+    private class StepItem
     {
         public string Title { get; set; }
         public string Content { get; set; }
     }
 
-    public int current { get; set; } = 0;
+    private int Current { get; set; }
 
-    public StepItem[] steps =
+    private StepItem[] steps =
     {
-        new StepItem {Title = "First", Content = "First-content"},
-        new StepItem {Title = "Second", Content = "Second-content"},
-        new StepItem {Title = "Third", Content = "Third-content"},
-        new StepItem {Title = "Last", Content = "Last-content"}
+        new()
+        {
+            Title = "First",
+            Content = "First-content"
+        },
+        new()
+        {
+            Title = "Second",
+            Content = "Second-content"
+        },
+        new()
+        {
+            Title = "Third",
+            Content = "Third-content"
+        },
+        new()
+        {
+            Title = "Last",
+            Content = "Last-content"
+        }
     };
 
-    void OnPreClick()
+    private void OnPreClick()
     {
-        current--;
+        Current--;
     }
 
-    void OnNextClick()
+    private void OnNextClick()
     {
-        current++;
+        Current++;
     }
 }

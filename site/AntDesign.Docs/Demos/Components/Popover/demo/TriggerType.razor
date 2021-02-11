@@ -1,19 +1,18 @@
 ﻿<div>
-    <Popover ContentTemplate="@_content" Title="Title" Trigger="@(new AntDesign.TriggerType[] { AntDesign.TriggerType.Hover})">
+    <Popover ContentTemplate="@_content" Title="Title" Trigger="@(new[] { AntDesign.TriggerType.Hover})">
         <AntDesign.Button>Hover me</AntDesign.Button>
     </Popover>
-    <Popover ContentTemplate="@_content" Title="Title" Trigger="@(new AntDesign.TriggerType[] { AntDesign.TriggerType.Focus})">
+    <Popover ContentTemplate="@_content" Title="Title" Trigger="@(new[] { AntDesign.TriggerType.Focus})">
         <AntDesign.Button>Focus me</AntDesign.Button>
     </Popover>
-    <Popover ContentTemplate="@_content" Title="Title" Trigger="@(new AntDesign.TriggerType[] { AntDesign.TriggerType.Click})">
+    <Popover ContentTemplate="@_content" Title="Title" Trigger="@(new[] { AntDesign.TriggerType.Click})">
         <AntDesign.Button>Click me</AntDesign.Button>
     </Popover>
 </div>
 
-@code{
-    private RenderFragment _content =
-    @<div>
-        <p>Content</p>
-        <p>Content</p>
-    </div>;
+@code {
+    private readonly RenderFragment _content = @<div>
+                                                   <p>Content</p>
+                                                   <p>Content</p>
+                                               </div>;
 }

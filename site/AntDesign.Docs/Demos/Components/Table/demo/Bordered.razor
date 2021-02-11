@@ -1,6 +1,6 @@
 @using System.ComponentModel
 
-<Table DataSource="@data" Bordered=@true Title="@title" Footer="@footer" HidePagination="@true">
+<Table DataSource="@_data" Bordered="@true" Title="@Title" Footer="@Footer" HidePagination="@true">
     <Column @bind-Field="@context.Name">
         <a>@context.Name</a>
     </Column>
@@ -8,37 +8,36 @@
     <Column @bind-Field="@context.Address"></Column>
 </Table>
 
-@code{
+@code {
+    private const string Title = "Header";
+    private const string Footer = "Footer";
 
-    string title = "Header";
-    string footer = "Footer";
-
-    Data[] data =
+    private readonly Data[] _data =
     {
-        new Data()
+        new()
         {
             Key = "1",
             Name = "John Brown",
             Money = "￥300,000.00",
-            Address = "New York No. 1 Lake Park",
+            Address = "New York No. 1 Lake Park"
         },
-        new Data()
+        new()
         {
             Key = "2",
             Name = "Jim Green",
             Money = "￥1,256,000.00",
-            Address = "London No. 1 Lake Park",
+            Address = "London No. 1 Lake Park"
         },
-        new Data()
+        new()
         {
             Key = "3",
             Name = "Joe Black",
             Money = "￥120,000.00",
-            Address = "Sidney No. 1 Lake Park",
+            Address = "Sidney No. 1 Lake Park"
         }
     };
 
-    public class Data
+    private class Data
     {
         [DisplayName("Key")]
         public string Key { get; set; }

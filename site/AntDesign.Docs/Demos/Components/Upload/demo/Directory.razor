@@ -4,17 +4,17 @@
     </Button>
 </Upload>
 
-@code{
-    void OnSingleCompleted(UploadInfo fileinfo)
+@code {
+    private static void OnSingleCompleted(UploadInfo fileInfo)
     {
-        if (fileinfo.File.State == UploadState.Success)
-        {
-            var result = fileinfo.File.GetResponse<ResponseModel>();
-            fileinfo.File.Url = result.url;
-        }
+        if (fileInfo.File.State != UploadState.Success)
+            return;
+
+        var result = fileInfo.File.GetResponse<ResponseModel>();
+        fileInfo.File.Url = result.url;
     }
 
-    public class ResponseModel
+    private class ResponseModel
     {
         public string name { get; set; }
 
@@ -24,5 +24,4 @@
 
         public string thumbUrl { get; set; }
     }
-
 }

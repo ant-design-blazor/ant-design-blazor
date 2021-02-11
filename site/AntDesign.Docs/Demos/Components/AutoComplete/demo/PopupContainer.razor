@@ -1,17 +1,16 @@
 ﻿<div style="margin: 10px; overflow: scroll; height: 200px">
     <div style="padding: 100px; height: 1000px; background: #eee; position: relative " id="area">
         <AutoComplete PopupContainerSelector="#area"
-                      @bind-Value="@value"
-                      Options="@options" />
+                      @bind-Value="@_value"
+                      Options="@_options" />
     </div>
 </div>
 
-@code
-{
-    private string value;
+@code {
+    private string _value;
 
-    List<string> options = new List<string>(){
-        "Beijing","Shanghai","Guangzhou","Shenzhen","Chongqing","Wuhan"
+    private readonly List<string> _options = new()
+    {
+        "Beijing", "Shanghai", "Guangzhou", "Shenzhen", "Chongqing", "Wuhan"
     };
-
 }

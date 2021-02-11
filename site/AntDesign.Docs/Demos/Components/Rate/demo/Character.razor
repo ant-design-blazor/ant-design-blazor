@@ -1,23 +1,19 @@
-﻿<Rate Character="@Character1" AllowHalf="true" DefaultValue="3" />
+﻿<Rate Character="@_character1" AllowHalf="true" DefaultValue="3" />
 <br />
-<Rate Character="@Character2" AllowHalf="true" DefaultValue="3" />
+<Rate Character="@_character2" AllowHalf="true" DefaultValue="3" />
 <br />
-<Rate Character="@Character3" AllowHalf="true" DefaultValue="3" />
+<Rate Character="@_character3" AllowHalf="true" DefaultValue="3" />
 
-@code
-{
-    RenderFragment<RateItemRenderContext> Character1 = (builder) =>
-    @<Template>
-        <Icon Type="heart" Theme="fill" />
-    </Template>;
+@code {
+    private readonly RenderFragment<RateItemRenderContext> _character1 = _ => @<Template>
+                                                                                  <Icon Type="heart" Theme="fill"/>
+                                                                              </Template>;
 
-    RenderFragment<RateItemRenderContext> Character2 = (builder) =>
-    @<Template>
-        A
-    </Template>;
+    private readonly RenderFragment<RateItemRenderContext> _character2 = _ => @<Template>
+                                                                                  A
+                                                                              </Template>;
 
-    RenderFragment<RateItemRenderContext> Character3 = (builder) =>
-    @<Template>
-        好
-    </Template>;
+    private readonly RenderFragment<RateItemRenderContext> _character3 = _ => @<Template>
+                                                                                  好
+                                                                              </Template>;
 }

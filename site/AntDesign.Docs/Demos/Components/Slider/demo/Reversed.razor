@@ -1,16 +1,15 @@
 ﻿<div>
-    <Slider TValue="double" Reverse="@reversed" DefaultValue="33" />
-    <Slider TValue="(double, double)" Reverse="@reversed" DefaultValue="(20, 50)" />
-    Reversed: <Switch Size="small" Checked="@reversed" OnChange="(e)=>OnSwitchReverse(e)" />
+    <Slider TValue="double" Reverse="@_reversed" DefaultValue="33" />
+    <Slider TValue="(double, double)" Reverse="@_reversed" DefaultValue="(20, 50)" />
+    Reversed: <Switch Size="small" Checked="@_reversed" OnChange="OnSwitchReverse" />
 </div>
 
 
-@code
-{
-    private bool reversed = true;
+@code {
+    private bool _reversed = true;
 
     private void OnSwitchReverse(bool args)
     {
-        reversed = args;
+        _reversed = args;
     }
 }

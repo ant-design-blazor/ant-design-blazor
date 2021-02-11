@@ -2,8 +2,8 @@
 
 <AntList Class="demo-loadmore-list" DataSource="@Data" ItemLayout="ListItemLayout.Horizontal" Loading="@InitLoading">
     <ChildContent Context="item">
-        <ListItem Actions="actions">
-            <ListItemMeta Avatar="avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
+        <ListItem Actions="_actions">
+            <ListItemMeta Avatar="@_avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
                 <TitleTemplate>
                     <a href="https://ant.design">@item.Name.Last</a>
                 </TitleTemplate>
@@ -36,77 +36,80 @@
 </style>
 
 @code {
+    private static RenderFragment _avatar =@<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
 
-    static RenderFragment avatar =@<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
+    private static readonly RenderFragment _edit = @<a key="list-loadmore-edit">edit</a>;
 
-static RenderFragment edit = @<a key="list-loadmore-edit">edit</a>;
-
-static RenderFragment add = @<a key="list-loadmore-more">more</a>;
+    private static readonly RenderFragment _add = @<a key="list-loadmore-more">more</a>;
 
 
-public RenderFragment[] actions = new[] { edit, add };
+    private readonly RenderFragment[] _actions =
+    {
+        _edit,
+        _add
+    };
 
-public int count = 3;
+    private int _count = 3;
 
-public string FakeDataUrl { get { return $"https://randomuser.me/api/?results={count}&inc=name,gender,email,nat&noinfo"; } }
+    private string FakeDataUrl => $"https://randomuser.me/api/?results={_count}&inc=name,gender,email,nat&noinfo";
 
-public List<DataModel> Data { get; set; }
+    private List<DataModel> Data { get; set; }
 
-public bool InitLoading { get; set; } = true;
+    private bool InitLoading { get; set; } = true;
 
-public bool Loading { get; set; } = false;
+    private bool Loading { get; set; }
 
-protected override async Task OnInitializedAsync()
-{
-Data = await GetData();
-InitLoading = false;
-await base.OnInitializedAsync();
-}
+    protected override async Task OnInitializedAsync()
+    {
+        Data = await GetData();
+        InitLoading = false;
+        await base.OnInitializedAsync();
+    }
 
-public async Task OnLoadMore()
-{
-Loading = true;
-var res = await GetData();
-Data.AddRange(res);
-Loading = false;
-}
+    private async Task OnLoadMore()
+    {
+        Loading = true;
+        var res = await GetData();
+        Data.AddRange(res);
+        Loading = false;
+    }
 
-public async Task<List<DataModel>> GetData()
-{
-try
-{
-var res = await HttpClient.GetFromJsonAsync<Response>(FakeDataUrl);
-return res.Results;
-}
-catch (Exception ex)
-{
-Console.WriteLine(ex);
-return new List<DataModel>();
-}
-}
+    private async Task<List<DataModel>> GetData()
+    {
+        try
+        {
+            var res = await HttpClient.GetFromJsonAsync<Response>(FakeDataUrl);
+            return res.Results;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return new List<DataModel>();
+        }
+    }
 
-public class Response
-{
-public List<DataModel> Results { get; set; }
-}
+    private class Response
+    {
+        public List<DataModel> Results { get; set; }
+    }
 
-public class DataModel
-{
-public string Gender { get; set; }
+    private class DataModel
+    {
+        public string Gender { get; set; }
 
-public Name Name { get; set; }
+        public Name Name { get; set; }
 
-public string Email { get; set; }
+        public string Email { get; set; }
 
-public string Nat { get; set; }
-}
+        public string Nat { get; set; }
+    }
 
-public class Name
-{
-public string Title { get; set; }
+    private class Name
+    {
+        public string Title { get; set; }
 
-public string First { get; set; }
+        public string First { get; set; }
 
-public string Last { get; set; }
-}
+        public string Last { get; set; }
+    }
 }

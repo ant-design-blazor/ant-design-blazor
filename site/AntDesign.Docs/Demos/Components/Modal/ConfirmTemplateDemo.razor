@@ -1,32 +1,29 @@
 ﻿@inherits ConfirmTemplate<string, string>
 
 <div>
-    <Text>Please input "@config"</Text>
-    value: <Input @bind-Value="value" Placeholder="@config" />
+    <Text>Please input "@_config"</Text>
+    value: <Input @bind-Value="_value" Placeholder="@_config" />
 </div>
 
-@code{
+@code {
+    private string _config;
 
-    string config;
-
-    string value;
+    private string _value;
 
     protected override void OnInitialized()
     {
-        config = this.Options;
+        _config = Options;
         base.OnInitialized();
     }
-
 
     public override async Task OkAsync(ModalClosingEventArgs args)
     {
         ConfirmRef.Config.OkButtonProps.Loading = true;
         await Task.Delay(1000);
+
         // only the input's value equals the initialized value, the OK button will close the confirm dialog box
-        if (value != config)
-            args.Cancel = true;
-        else
-            await this.OnOkAsync(value);
+        if (_value != _config) args.Cancel = true;
+        else await OnOkAsync(_value);
 
         await base.OkAsync(args);
     }

@@ -1,15 +1,12 @@
 ﻿<div>
-    <Card Hoverable Style="width: 240px" Cover="coverTemplate">
+    <Card Hoverable Style="width: 240px" Cover="_coverTemplate">
         <CardMeta Title="Europe Street beat" Description="www.instagram.com"/>
     </Card>
 </div>
 
-
-@code
-{
-
-    private RenderFragment coverTemplate =@<img alt="example"  src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />;
-
+@code {
+    private readonly RenderFragment _coverTemplate =
+        @<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />;
 }
 
 

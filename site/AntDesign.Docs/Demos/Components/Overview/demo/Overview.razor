@@ -1,5 +1,7 @@
 ﻿@using AntDesign.Docs.Services
 
+@inject ILanguageService LanguageService
+@inject DemoService DemoService
 
 <Divider />
 
@@ -11,7 +13,7 @@
 
 <Divider />
 
-@foreach (var menuGroup in menuItems)
+@foreach (var menuGroup in _menuItems)
 {
     if (menuGroup.Order == -1)
     {
@@ -47,25 +49,24 @@
     </div>
 }
 
-@inject ILanguageService LanguageService
-@inject DemoService demoService
-
-@code{
-
+@code {
     private string CurrentLanguage => LanguageService.CurrentCulture.Name;
-    DemoMenuItem[] menuItems = { };
 
-    protected override bool ShouldRender() => menuItems.Any();
+    private DemoMenuItem[] _menuItems = { };
+
+    protected override bool ShouldRender() => _menuItems.Any();
 
     protected override async Task OnInitializedAsync()
     {
-        var menu = await demoService.GetMenuAsync();
-        menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")?.Children ?? Array.Empty<DemoMenuItem>();
+        var menu = await DemoService.GetMenuAsync();
+        _menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")
+            ?.Children ?? Array.Empty<DemoMenuItem>();
 
-        LanguageService.LanguageChanged += async (sender, args) =>
+        LanguageService.LanguageChanged += async (_, _) =>
         {
-            var menu = await demoService.GetMenuAsync();
-            menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")?.Children ?? Array.Empty<DemoMenuItem>();
+            var menuItems = await DemoService.GetMenuAsync();
+            _menuItems = menuItems.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")
+                ?.Children ?? Array.Empty<DemoMenuItem>();
 
             await InvokeAsync(StateHasChanged);
         };
@@ -73,8 +74,9 @@
 
     private async Task OnSearchEnter(string value)
     {
-        var menu = await demoService.GetMenuAsync();
-        menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")?.Children ?? Array.Empty<DemoMenuItem>();
+        var menu = await DemoService.GetMenuAsync();
+        _menuItems = menu.FirstOrDefault(x => x.Url.ToLowerInvariant() == "components")
+            ?.Children ?? Array.Empty<DemoMenuItem>();
 
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -83,23 +85,24 @@
 
         IList<DemoMenuItem> result = new List<DemoMenuItem>();
 
-        foreach (var item in menuItems)
+        foreach (var item in _menuItems)
         {
-            var lst = item.Children.Where(x => x.Title.Contains(value, StringComparison.OrdinalIgnoreCase)).ToArray();
+            var lst = item.Children.Where(x => x.Title.Contains(value, StringComparison.OrdinalIgnoreCase))
+                .ToArray();
 
             if (lst.Any())
             {
-                result.Add(new DemoMenuItem()
+                result.Add(new DemoMenuItem
                 {
                     Title = item.Title,
                     SubTitle = item.SubTitle,
                     Order = item.Order,
                     Type = item.Type,
-                    Children = lst,
+                    Children = lst
                 });
             }
         }
 
-        menuItems = result.ToArray();
+        _menuItems = result.ToArray();
     }
 }

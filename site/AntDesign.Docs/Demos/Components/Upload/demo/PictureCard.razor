@@ -1,38 +1,46 @@
-@inject MessageService _message
-
 <Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         Name="avatar"
         @bind-FileList="fileList"
-        ShowButton="fileList?.Count < 8"
+        ShowButton="_fileList?.Count < 8"
         ListType="picture-card"
         OnPreview="(file)=> {
                            Console.WriteLine(file.FileName);
                            Console.WriteLine(file.Url);
-                           previewVisible = true;
-                           previewTitle = file.FileName;
-                           imgUrl = file.Url;
+                           _previewVisible = true; _imgUrl = file.Url;
                        }"
         OnChange="HandleChange">
     <div>
         <Icon Type="plus"></Icon>
-        <div className="ant-upload-text">Upload</div>
+        <div class="ant-upload-text">Upload</div>
     </div>
 
 </Upload>
-<Modal Visible="previewVisible"
+<Modal Visible="_previewVisible"
        Title="previewTitle"
-       OnCancel="()=> previewVisible=false">
-    <img style="width: 100%" src="@imgUrl" />
+       OnCancel="()=> _previewVisible=false">
+    <img style="width: 100%" src="@_imgUrl" />
 </Modal>
 
-@code
-{
-    bool previewVisible = false;
-    string previewTitle = string.Empty;
-    string imgUrl = string.Empty;
 
-    List<UploadFileItem> fileList = new List<UploadFileItem>
-{
+<style>
+    /* you can make up upload button and sample style by using stylesheets */
+    .ant-upload-select-picture-card i {
+        color: #999;
+        font-size: 32px;
+    }
+
+    .ant-upload-select-picture-card .ant-upload-text {
+        margin-top: 8px;
+        color: #666;
+    }
+</style>
+
+@code {
+    private bool _previewVisible;
+    private string _imgUrl = string.Empty;
+
+    private List<UploadFileItem> _fileList = new()
+    {
         new UploadFileItem
         {
             Id = "1",
@@ -69,7 +77,7 @@
             Percent = 50,
             Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         },
-         new UploadFileItem
+        new UploadFileItem
         {
             Id = "5",
             FileName = "image.png",
@@ -77,35 +85,11 @@
         },
     };
 
-    void HandleChange(UploadInfo fileinfo)
+    private static void HandleChange(UploadInfo fileInfo)
     {
-        if (fileinfo.File.State == UploadState.Success)
+        if (fileInfo.File.State == UploadState.Success)
         {
-            fileinfo.File.Url = fileinfo.File.ObjectURL;
+            fileInfo.File.Url = fileInfo.File.ObjectURL;
         }
     }
-
-    public class ResponseModel
-    {
-        public string name { get; set; }
-
-        public string status { get; set; }
-
-        public string url { get; set; }
-
-        public string thumbUrl { get; set; }
-    }
 }
-
-<style>
-    /* you can make up upload button and sample style by using stylesheets */
-    .ant-upload-select-picture-card i {
-        color: #999;
-        font-size: 32px;
-    }
-
-    .ant-upload-select-picture-card .ant-upload-text {
-        margin-top: 8px;
-        color: #666;
-    }
-</style>

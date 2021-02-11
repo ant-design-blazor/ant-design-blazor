@@ -1,15 +1,18 @@
-﻿@{
-    RenderFragment menu = @<Menu>
-        <MenuItem Key="1">1st item</MenuItem>
-        <MenuItem Key="2">2nd item</MenuItem>
-        <MenuItem Key="3">3rd item</MenuItem>
-    </Menu>;
-}
-
-<Button Type="primary">primary</Button>
+﻿<Button Type="primary">primary</Button>
 <Button>secondary</Button>
-<Dropdown Overlay=@menu>
+<Dropdown Overlay="@_menu">
     <Button>
-        Actions <Icon Type="down" />
+        Actions <Icon Type="down"/>
     </Button>
 </Dropdown>
+
+@code {
+    // Most IDEs cannot tell the difference between HTML <menuitem>
+    // and AntDesign Blazor menu item, so the full name fixes the highlighting
+    private readonly RenderFragment _menu =
+        @<Menu>
+            <AntDesign.MenuItem Key="1">1st item</AntDesign.MenuItem>
+            <AntDesign.MenuItem Key="2">2nd item</AntDesign.MenuItem>
+            <AntDesign.MenuItem Key="3">3rd item</AntDesign.MenuItem>
+        </Menu>;
+}

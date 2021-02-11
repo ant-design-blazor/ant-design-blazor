@@ -1,15 +1,15 @@
-<Switch @bind-Value="@checkable" />Checkable
+<Switch @bind-Value="@_checkable" />Checkable
 <br />
-<Switch @bind-Value="@blockNode" />BlockNode
+<Switch @bind-Value="@_blockNode" />BlockNode
 <br />
-<Switch @bind-Value="@showExpand" />ShowExpand
+<Switch @bind-Value="@_showExpand" />ShowExpand
 <br />
-<Switch @bind-Value="@showIcon" />ShowIcon
+<Switch @bind-Value="@_showIcon" />ShowIcon
 <br />
-<Switch @bind-Value="@multiple" />Multiple
+<Switch @bind-Value="@_multiple" />Multiple
 <br />
 <br />
-<Tree Checkable="@checkable" BlockNode="@blockNode" ShowExpand="@showExpand" ShowIcon="@showIcon" Multiple="@multiple" TItem="string">
+<Tree Checkable="@_checkable" BlockNode="@_blockNode" ShowExpand="@_showExpand" ShowIcon="@_showIcon" Multiple="@_multiple" TItem="string">
     <Nodes>
         <TreeNode Title="A" Icon="folder-open" TItem="string">
             <Nodes>
@@ -41,14 +41,14 @@
 
 @code
 {
-    private bool checkable = true;
+    private bool _checkable = true;
 
-    private bool blockNode = true;
+    private bool _blockNode = true;
 
-    private bool showExpand = true;
+    private bool _showExpand = true;
 
-    private bool showIcon = true;
+    private bool _showIcon = true;
 
-    private bool multiple;
+    private bool _multiple;
 
 }

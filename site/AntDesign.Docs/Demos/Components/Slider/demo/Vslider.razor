@@ -10,17 +10,17 @@
     </div>
 </div>
 
-@code
-{
-        private SliderMark[] _marks1 =
+@code {
+    private readonly SliderMark[] _marks1 =
+    {
+        new(0, "0℃"),
+        new(26, "26℃"),
+        new(37, "37℃"),
+        new(100, b =>
         {
-            new SliderMark(0, "0℃"),
-            new SliderMark(26, "26℃"),
-            new SliderMark(37, "37℃"),
-            new SliderMark(100, (b)=>{
-                b.OpenElement(0,"strong");
-                b.AddContent(1,"100℃");
-                b.CloseElement();
-            }, "color: #f50;")
-        };
+            b.OpenElement(0, "strong");
+            b.AddContent(1, "100℃");
+            b.CloseElement();
+        }, "color: #f50;")
+    };
 }

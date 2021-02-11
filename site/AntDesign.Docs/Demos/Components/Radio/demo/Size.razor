@@ -1,5 +1,5 @@
 <div>
-    <RadioGroup @bind-Value="radioValue5" Size="large">
+    <RadioGroup @bind-Value="_radioValue5" Size="large">
         <Radio RadioButton Value="@("A")">Hangzhou</Radio>
         <Radio RadioButton Value="@("B")">Shanghai</Radio>
         <Radio RadioButton Value="@("C")">Beijing</Radio>
@@ -7,7 +7,7 @@
     </RadioGroup>
     <br />
     <br />
-    <RadioGroup @bind-Value="radioValue5">
+    <RadioGroup @bind-Value="_radioValue5">
         <Radio RadioButton Value="@("A")">Hangzhou</Radio>
         <Radio RadioButton Value="@("B")">Shanghai</Radio>
         <Radio RadioButton Value="@("C")">Beijing</Radio>
@@ -15,14 +15,14 @@
     </RadioGroup>
     <br />
     <br />
-    <RadioGroup @bind-Value="radioValue5" Size="small">
+    <RadioGroup @bind-Value="_radioValue5" Size="small">
         <Radio RadioButton Value="@("A")">Hangzhou</Radio>
         <Radio RadioButton Value="@("B")">Shanghai</Radio>
         <Radio RadioButton Value="@("C")">Beijing</Radio>
         <Radio RadioButton Value="@("D")">Chengdu</Radio>
     </RadioGroup>
 </div>
-@code
-{
-    string radioValue5 = "A";
+
+@code {
+    private string _radioValue5 = "A";
 }

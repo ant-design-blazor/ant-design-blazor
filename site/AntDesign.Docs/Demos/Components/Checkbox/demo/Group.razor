@@ -1,33 +1,63 @@
 <div>
-    <CheckboxGroup Options="@plainOptions" Value="@(new[]{"Apple"})" OnChange="OnChange" />
+    <CheckboxGroup Options="@_plainOptions" Value="@(new[]{"Apple"})" OnChange="OnChange" />
     <br />
     <br />
-    <CheckboxGroup Options="@options" Value="@(new[]{"Pear"})" OnChange="OnChange" />
+    <CheckboxGroup Options="@_options" Value="@(new[]{"Pear"})" OnChange="OnChange" />
     <br />
     <br />
-    <CheckboxGroup Options="@OptionsWithDisabled" Disabled Value="@(new[]{"Apple"})" OnChange="OnChange" />
+    <CheckboxGroup Options="@_optionsWithDisabled" Disabled Value="@(new[]{"Apple"})" OnChange="OnChange" />
 </div>
 
 @using System.Text.Json
-@code{
+@code {
 
-    string[] plainOptions = { "Apple", "Pear", "Orange" };
-
-    CheckboxOption[] options = new CheckboxOption[]
+    private readonly string[] _plainOptions =
     {
-        new CheckboxOption {Label = "Apple", Value = "Apple"},
-        new CheckboxOption {Label = "Pear", Value = "Pear"},
-        new CheckboxOption {Label = "Orange", Value = "Orange"},
+        "Apple",
+        "Pear",
+        "Orange"
     };
 
-    CheckboxOption[] OptionsWithDisabled = new CheckboxOption[]
+    private readonly CheckboxOption[] _options =
     {
-        new CheckboxOption {Label = "Apple", Value = "Apple"},
-        new CheckboxOption {Label = "Pear", Value = "Pear"},
-        new CheckboxOption {Label = "Orange", Value = "Orange", Disabled = true},
+        new()
+        {
+            Label = "Apple",
+            Value = "Apple"
+        },
+        new()
+        {
+            Label = "Pear",
+            Value = "Pear"
+        },
+        new()
+        {
+            Label = "Orange",
+            Value = "Orange"
+        }
     };
 
-    void OnChange(string[] checkedValues)
+    private readonly CheckboxOption[] _optionsWithDisabled =
+    {
+        new()
+        {
+            Label = "Apple",
+            Value = "Apple"
+        },
+        new()
+        {
+            Label = "Pear",
+            Value = "Pear"
+        },
+        new()
+        {
+            Label = "Orange",
+            Value = "Orange",
+            Disabled = true
+        }
+    };
+
+    private static void OnChange(string[] checkedValues)
     {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }

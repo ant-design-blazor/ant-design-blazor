@@ -1,7 +1,7 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 
-<Form Model="@model"
+<Form Model="@_model"
       LabelCol="new ColLayoutParam { Span = 8 }"
       WrapperCol="new ColLayoutParam { Span = 16 }">
     <FormItem Label="Username">
@@ -19,17 +19,20 @@
         </Button>
     </FormItem>
 </Form>
-@code
-{
-    public class Model
+
+@code {
+
+    private class Model
     {
         [Required]
         public string Username { get; set; }
+
         [Required]
         public string Password { get; set; }
+
         public bool RememberMe { get; set; } = true;
     }
 
-    private Model model = new Model();
+    private Model _model = new();
 
 }

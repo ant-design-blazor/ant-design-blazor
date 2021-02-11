@@ -1,26 +1,25 @@
 ﻿<div>
-    <Input Placeholder="large size"  Size="@InputSize.Large" @bind-Value="@txtValue" >
+    <Input Placeholder="large size"  Size="@InputSize.Large" @bind-Value="@TxtValue" >
         <Prefix>
             <Icon Type="user" />
         </Prefix>
     </Input>
     <br />
     <br />
-    <Input Placeholder="default size" @bind-Value="@txtValue" >
+    <Input Placeholder="default size" @bind-Value="@TxtValue" >
         <Prefix>
             <Icon Type="user" />
         </Prefix>
     </Input>
     <br />
     <br />
-    <Input Placeholder="small size" Size="@InputSize.Small" @bind-Value="@txtValue" >
+    <Input Placeholder="small size" Size="@InputSize.Small" @bind-Value="@TxtValue" >
         <Prefix>
             <Icon Type="user" />
         </Prefix>
     </Input>
 
 </div>
-@code{
-    private string txtValue { get; set; }
-  
+@code {
+    private string TxtValue { get; set; }
 }

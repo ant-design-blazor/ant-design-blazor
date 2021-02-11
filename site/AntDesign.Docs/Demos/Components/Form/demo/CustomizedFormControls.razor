@@ -13,17 +13,17 @@
     </FormItem>
 </Form>
 
-@code
-{
-    public class Model
+@code {
+    private class Model
     {
-        public Price Price { get; set; } = new Price() { 
+        public Price Price { get; } = new()
+        {
             Number = 0,
             Currency = "rmb"
         };
     }
 
-    private Model model = new Model();
+    private Model model = new();
 
     private void OnFinish(EditContext editContext)
     {

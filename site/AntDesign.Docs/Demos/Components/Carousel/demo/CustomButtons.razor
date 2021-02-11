@@ -17,12 +17,12 @@
 <div class="button-container">
     <Button OnClick="@( _=>_carousel.Previous())" Size="small">Prev</Button>
     <div>
-        @foreach (int i in Enumerable.Range(0, 4))
+        @foreach (var i in Enumerable.Range(0, 4))
         {
-            <Button OnClick="@( _=>_carousel.GoTo(i))" Size="small">@(i+1)</Button>
+            <Button OnClick="@(_ => _carousel.GoTo(i))" Size="small">@(i + 1)</Button>
         }
     </div>
-    <Button OnClick="@( _=>_carousel.Next())" Size="small">Next</Button>
+    <Button OnClick="@(_ => _carousel.Next())" Size="small">Next</Button>
 
 </div>
 
@@ -46,6 +46,6 @@
     }
 </style>
 
-@code{
-    Carousel _carousel;
+@code {
+    private Carousel _carousel;
 }

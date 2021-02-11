@@ -1,9 +1,8 @@
 ﻿<Result Status="404"
         Title="404"
         SubTitle="Sorry, the page you visited does not exist."
-        Extra="extra" />
+        Extra="_extra" />
 
-@code
-{
-    RenderFragment extra =@<Button Type="primary">Back Home</Button>;
+@code {
+    private readonly RenderFragment _extra =@<Button Type="primary">Back Home</Button>;
 }

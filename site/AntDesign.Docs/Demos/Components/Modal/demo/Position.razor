@@ -29,9 +29,9 @@
     </Modal>
 </div>
 @code {
-    string title = "BasicModal";
-    bool _visible1 = false;
-    bool _visible2 = false;
+    private string _title = "BasicModal";
+    bool _visible1;
+    bool _visible2;
 
     private void HideModal1()
     {
@@ -53,6 +53,7 @@
     {
         _visible1 = true;
     }
+
     private void SetModal2Visible()
     {
         _visible2 = true;

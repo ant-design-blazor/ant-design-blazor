@@ -8,7 +8,7 @@
 </Table>
 
 @code {
-    Data[] _data;
+    private Data[] _data;
 
     protected override async Task OnInitializedAsync()
     {
@@ -16,14 +16,15 @@
 
         await Task.Delay(500);
 
-        _data = data;
+        _data = _dataSource;
         await InvokeAsync(StateHasChanged);
 
         await Task.Delay(500);
 
         _data[1].Children = new Data[]
         {
-            new() {
+            new()
+            {
                 Key = "21",
                 Name = "Jim Green",
                 Age = 42,
@@ -32,57 +33,69 @@
         };
     }
 
-    Data[] data =
-{
-        new() {
+    private Data[] _dataSource =
+    {
+        new()
+        {
             Key = "1",
             Name = "John Brown sr.",
             Age = 60,
             Address = "New York No. 1 Lake Park",
-            Children = new Data[] {
-                new() {
+            Children = new Data[]
+            {
+                new()
+                {
                     Key = "11",
                     Name = "Jim Green",
                     Age = 42,
                     Address = "London No. 1 Lake Park",
                 },
-                new() {
-                    Key= "12",
-                    Name= "John Brown jr.",
-                    Age=30,
-                    Address= "New York No. 3 Lake Park",
-                    Children=new Data[] {
-                          new() {
-                              Key= "121",
-                              Name= "Jimmy Brown",
-                              Age= 16,
-                              Address= "New York No. 3 Lake Park",
+                new()
+                {
+                    Key = "12",
+                    Name = "John Brown jr.",
+                    Age = 30,
+                    Address = "New York No. 3 Lake Park",
+                    Children = new Data[]
+                    {
+                        new()
+                        {
+                            Key = "121",
+                            Name = "Jimmy Brown",
+                            Age = 16,
+                            Address = "New York No. 3 Lake Park",
                         },
                     }
                 },
-                new() {
-                    Key= "13",
-                    Name= "Jim Green sr.",
-                    Age= 72,
-                    Address= "London No. 1 Lake Park",
-                    Children= new Data[]{
-                        new() {
-                            Key= "131",
-                            Name= "Jim Green",
-                            Age= 42,
-                            Address= "London No. 2 Lake Park",
-                            Children= new Data[] {
-                                new() {
-                                    Key= "1311",
-                                    Name= "Jim Green jr.",
-                                    Age= 25,
-                                    Address= "London No. 3 Lake Park",
+                new()
+                {
+                    Key = "13",
+                    Name = "Jim Green sr.",
+                    Age = 72,
+                    Address = "London No. 1 Lake Park",
+                    Children = new Data[]
+                    {
+                        new()
+                        {
+                            Key = "131",
+                            Name = "Jim Green",
+                            Age = 42,
+                            Address = "London No. 2 Lake Park",
+                            Children = new Data[]
+                            {
+                                new()
+                                {
+                                    Key = "1311",
+                                    Name = "Jim Green jr.",
+                                    Age = 25,
+                                    Address = "London No. 3 Lake Park",
                                 },
-                                new() {
-                                   Key= "1312",
-                                   Name= "Jimmy Green sr.",
-                                   Age= 18,
-                                   Address= "London No. 4 Lake Park",
+                                new()
+                                {
+                                    Key = "1312",
+                                    Name = "Jimmy Green sr.",
+                                    Age = 18,
+                                    Address = "London No. 4 Lake Park",
                                 },
                             },
                         },
@@ -90,7 +103,8 @@
                 },
             },
         },
-        new() {
+        new()
+        {
             Key = "2",
             Name = "Joe Black",
             Age = 32,
@@ -98,7 +112,7 @@
         },
     };
 
-    public class Data
+    private class Data
     {
         [DisplayName("Key")]
         public string Key { get; set; }

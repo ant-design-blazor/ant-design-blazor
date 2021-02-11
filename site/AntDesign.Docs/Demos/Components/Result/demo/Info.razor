@@ -1,12 +1,9 @@
 ﻿<Result
     Title="Your operation has been executed"
-    Extra=extra
-/>
+    Extra="_extra"/>
+
 @code {
-
-    RenderFragment extra =
-        @<Button Type="primary">
-            Go Console
-        </Button>;
-
+    private readonly RenderFragment _extra = @<Button Type="primary">
+                                                 Go Console
+                                             </Button>;
 }

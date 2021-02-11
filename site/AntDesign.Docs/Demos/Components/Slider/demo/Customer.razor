@@ -1,16 +1,11 @@
 ﻿<div>
-    <Slider TValue="double" DefaultValue="34" Value="@value" TipFormatter="(d) => tipFormatter(d)"  />
+    <Slider TValue="double" DefaultValue="34" Value="@Value" TipFormatter="TipFormatter"  />
 </div>
 
-@code
-{
+@code {
+    private int Value { get; set; }
 
-    private int value { get; set; }
-
-    string tipFormatter(double currentEdgeValue)
-    {
-        return $"{currentEdgeValue}%";
-    }
+    static string TipFormatter(double currentEdgeValue) => $"{currentEdgeValue}%";
 }
 
 

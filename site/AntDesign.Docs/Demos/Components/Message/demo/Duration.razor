@@ -1,12 +1,12 @@
-﻿@inject MessageService _message
+﻿@inject MessageService MessageService
 
 <Button Type="default" OnClick="OnClick">
     Customized display duration
 </Button>
 
-@code{
+@code {
     private void OnClick()
     {
-        _message.Success("This is a prompt message for success, and it will disappear in 10 seconds", 10);
+        MessageService.Success("This is a prompt message for success, and it will disappear in 10 seconds", 10);
     }
 }

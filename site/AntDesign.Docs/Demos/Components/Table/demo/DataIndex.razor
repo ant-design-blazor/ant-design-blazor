@@ -1,4 +1,4 @@
-﻿<Table @ref="            table" TItem="TestData" DataSource="@testData">
+﻿<Table @ref="_table" TItem="TestData" DataSource="@_testData">
     <Column @bind-Field="@context.Id" Sortable/>
     <Column Title="DayOfWeek" @bind-Field="@context.DayOfWeek" Sortable/>
     <Column Title="DayOfWeek DataIndex" TData="int" DataIndex="DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)"/>
@@ -8,12 +8,11 @@
 </Table>
 
 @code {
+    private ITable _table;
 
-    ITable table;
+    private TestData[] _testData;
 
-    TestData[] testData;
-
-    public class TestData
+    private class TestData
     {
         public int Id { get; set; }
 
@@ -26,26 +25,36 @@
         public Nested1 N1 { get; set; }
     }
 
-    public class Nested1
+    private class Nested1
     {
         public int? N1A { get; set; }
 
         public Dictionary<string, Nested2> N12 { get; set; }
     }
 
-    public class Nested2
+    private class Nested2
     {
         public string N2A { get; set; }
 
         public DateTime? Time { get; set; }
     }
 
-    public string[] DayName = {"None", "Monday", "Tuesday", "Wednesdays", "Thursday", "Friday", "Saturday", "Sunday"};
-
-    Func<DateTime?, DateTime?, int> _dateTimeCompare = (t1, t2) =>
+    private readonly string[] _dayName =
     {
-        if (t1.HasValue && t2.HasValue)
-            return DateTime.Compare(t1.Value, t2.Value);
+        "None",
+        "Monday",
+        "Tuesday",
+        "Wednesdays",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+    };
+
+    private readonly Func<DateTime?, DateTime?, int> _dateTimeCompare = (t1, t2) =>
+    {
+        if (t1.HasValue &&
+            t2.HasValue) return DateTime.Compare(t1.Value, t2.Value);
         if (t1.HasValue)
             return 1;
         if (t2.HasValue)
@@ -57,58 +66,51 @@
     /// <inheritdoc />
     protected override void OnInitialized()
     {
-        testData = GetForecastAsync();
+        _testData = GetForecastAsync();
         base.OnInitialized();
     }
 
-    public TestData[] GetForecastAsync()
+    private TestData[] GetForecastAsync()
     {
         var rng = new Random();
         var startDate = new DateTime(DateTime.Today.Year - 5, 1, 1);
         var range = (DateTime.Today - startDate).TotalSeconds;
-        return Enumerable.Range(0, 5).Select(index =>
-        {
-            var data = new TestData
+        return Enumerable.Range(0, 5)
+            .Select(index =>
             {
-                Id = index,
-                DayOfWeek = rng.Next(1, 8),
-                Jobs = rng.Next(0, 20),
-                Popularity = rng.Next(0, 30),
-            };
-            data.N1 = new()
-            {
-                N1A = (index & 1) == 0 ? index : null,
-                N12 = new()
+                var data = new TestData
                 {
-                    {"no used", null},
+                    Id = index,
+                    DayOfWeek = rng.Next(1, 8),
+                    Jobs = rng.Next(0, 20),
+                    Popularity = rng.Next(0, 30)
+                };
+                data.N1 = new Nested1()
+                {
+                    N1A = (index & 1) == 0 ? index : null,
+                    N12 = new Dictionary<string, Nested2>
                     {
-                        "test", new Nested2()
                         {
-                            N2A = DayName[data.DayOfWeek] + " - DI",
-                            Time = startDate.AddSeconds(rng.Next((int)range))
+                            "no used", null
+                        },
+                        {
+                            "test", new Nested2
+                            {
+                                N2A = _dayName[data.DayOfWeek] + " - DI",
+                                Time = startDate.AddSeconds(rng.Next((int) range))
+                            }
                         }
                     }
-                }
-            };
-            return data;
-        }).ToArray();
+                };
+                return data;
+            })
+            .ToArray();
     }
 
-    public int CompareNullableInt(int? a, int? b)
+    private static int CompareNullableInt(int? a, int? b) => a switch
     {
-        if (a is null && b is null)
-        {
-            return 0;
-        }
-        if (a is null)
-        {
-            return -1;
-        }
-        if (b is null)
-        {
-            return 1;
-        }
-        return (a - b).Value;
-    }
-
+        null when b is null => 0,
+        null => -1,
+        _ => a - b ?? 1
+    };
 }

@@ -1,4 +1,4 @@
-﻿<Table DataSource="data" ScrollY="240px" PageSize="50">
+﻿<Table DataSource="_data" ScrollY="240px" PageSize="50">
     <Selection />
     <Column @bind-Field="@context.Name" Width="150" />
     <Column @bind-Field="@context.Age"  Width="150" />
@@ -6,7 +6,7 @@
 </Table>
 
 @code {
-    class Column
+    private class Column
     {
         public string Name { get; set; }
 
@@ -15,11 +15,12 @@
         public string Address { get; set; }
     }
 
-    Column[] data = Enumerable.Range(0, 100).Select(i => new Column()
-    {
-        Name = $"Edward King {i}",
-        Age = 32,
-        Address = $"Edward King {i}"
-    }).ToArray();
-
+    private Column[] _data = Enumerable.Range(0, 100)
+        .Select(i => new Column
+        {
+            Name = $"Edward King {i}",
+            Age = 32,
+            Address = $"Edward King {i}"
+        })
+        .ToArray();
 }

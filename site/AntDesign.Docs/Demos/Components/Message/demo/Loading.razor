@@ -1,18 +1,19 @@
-﻿@inject MessageService _message
+﻿@inject MessageService MessageService
 
-    <Button Type="default" OnClick="OnClick">
-        Display a loading indicator
-    </Button>
+<Button Type="default" OnClick="OnClick">
+    Display a loading indicator
+</Button>
 
-@code{
+@code {
     private async Task OnClick()
     {
-        var cofig = new MessageConfig()
+        var config = new MessageConfig
         {
             Content = "Action in progress..",
             Duration = 0
         };
-        var task =  _message.Loading(cofig);
+
+        var task =  MessageService.Loading(config);
         await Task.Delay(2000);
         task.Start();
     }

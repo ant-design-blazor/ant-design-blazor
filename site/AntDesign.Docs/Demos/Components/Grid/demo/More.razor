@@ -1,38 +1,37 @@
 ﻿<div>
     <Row>
-        <Col Xs="@xs1" Lg="lg1">
+        <Col Xs="@_xs1" Lg="@_lg1">
             Col
         </Col>
-        <Col Xs="@xs2" Lg="lg1">
+        <Col Xs="@_xs2" Lg="@_lg1">
             Col
         </Col>
-        <Col Xs="@xs3" Lg="lg1">
-                Col
+        <Col Xs="@_xs3" Lg="@_lg1">
+            Col
         </Col>
     </Row>
 </div>
 
-@code
-{
-    EmbeddedProperty xs1 = new EmbeddedProperty()
+@code {
+    private EmbeddedProperty _xs1 = new()
     {
         Span="5",
         Offset="1"
     };
 
-    EmbeddedProperty lg1 = new EmbeddedProperty()
+    private EmbeddedProperty _lg1 = new()
     {
         Span = "6",
         Offset = "2"
     };
 
-    EmbeddedProperty xs2 = new EmbeddedProperty()
+    private EmbeddedProperty _xs2 = new()
     {
         Span = "11",
         Offset = "1"
     };
 
-    EmbeddedProperty xs3= new EmbeddedProperty()
+    private EmbeddedProperty _xs3 = new()
     {
         Span = "5",
         Offset = "1"

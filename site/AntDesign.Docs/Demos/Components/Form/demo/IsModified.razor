@@ -1,7 +1,7 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 
-    <Form @ref="form" Model="@model"
+    <Form @ref="_form" Model="@_model"
           OnFinish="OnFinish"
           OnFinishFailed="OnFinishFailed"
       LabelColSpan="8"
@@ -16,33 +16,35 @@
             <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
         </FormItem>
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
-            <Button Type="@ButtonType.Primary" HtmlType="submit" Disabled="!form.IsModified">
+            <Button Type="@ButtonType.Primary" HtmlType="submit" Disabled="!_form.IsModified">
                 Submit
             </Button>
         </FormItem>
     </Form>
-@code
-{
-    public class Model
+@code {
+
+    private class Model
     {
         [Required]
         public string Username { get; set; }
+
         [Required]
         public string Password { get; set; }
-        public bool RememberMe { get; set; } = true;
+
+        public bool RememberMe { get; } = true;
     }
 
-    Form<Model> form;
+    private Form<Model> _form;
 
-    private Model model = new Model();
+    private Model _model = new();
 
     private void OnFinish(EditContext editContext)
     {
-        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(_model)}");
     }
 
     private void OnFinishFailed(EditContext editContext)
     {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(_model)}");
     }
 }

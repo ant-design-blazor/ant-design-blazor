@@ -1,7 +1,7 @@
-<Select DataSource="@_persons" 
+<Select DataSource="@_persons"
         @bind-Value="@_selectedValue"
-        LabelName="@nameof(Person.Name)" 
-        ValueName="@nameof(Person.Id)" 
+        LabelName="@nameof(Person.Name)"
+        ValueName="@nameof(Person.Id)"
         DisabledName="@nameof(Person.NotAvailable)"
         Style="width: 200px"
         DefaultValue="2"
@@ -17,40 +17,60 @@
     Selected Value: @_selectedValue <br/>
     Selected Item: @_selectedItem?.Name
 </p>
-@code
-{
-    class Person
+
+@code {
+    private class Person
     {
-        public Person(){}
-
-        public Person(Person obj)
-        {
-            Id = obj.Id;
-            Name = obj.Name;
-            NotAvailable = obj.NotAvailable;
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
         public bool NotAvailable { get; set; }
     }
 
-    List<Person> _persons;
+    private List<Person> _persons;
 
-    int? _selectedValue;
-    Person _selectedItem;
+    private int? _selectedValue;
+    private Person _selectedItem;
 
     protected override void OnInitialized()
     {
         _persons = new List<Person>
         {
-            new Person {Id = 1, Name = "Jack"}, 
-            new Person {Id = 2, Name = "Lucy"}, 
-            new Person {Id = 3, Name = "Yaoming"}, 
-            new Person {Id = 4, Name = "Frieda"}, 
-            new Person {Id = 5, Name = "Kathy", NotAvailable = true}, 
-            new Person {Id = 6, Name = "Kate"}, 
-            new Person {Id = 7, Name = "Eric"}
+            new()
+            {
+                Id = 1,
+                Name = "Jack"
+            },
+            new()
+            {
+                Id = 2,
+                Name = "Lucy"
+            },
+            new()
+            {
+                Id = 3,
+                Name = "Yaoming"
+            },
+            new()
+            {
+                Id = 4,
+                Name = "Frieda"
+            },
+            new()
+            {
+                Id = 5,
+                Name = "Kathy",
+                NotAvailable = true
+            },
+            new()
+            {
+                Id = 6,
+                Name = "Kate"
+            },
+            new()
+            {
+                Id = 7,
+                Name = "Eric"
+            }
         };
     }
 
@@ -58,14 +78,9 @@
     {
         var person = _persons.First(x => x.Id == 2);
 
-        if (person.Name.Equals("Lucy", StringComparison.InvariantCultureIgnoreCase))
-        {
-            person.Name = "Lucie";
-        }
-        else
-        {
-            person.Name = "Lucy";
-        }
+        person.Name = person.Name.Equals("Lucy", StringComparison.InvariantCultureIgnoreCase)
+            ? "Lucie"
+            : "Lucy";
     }
 
     private void OnSelectedItemChangedHandler(Person value)

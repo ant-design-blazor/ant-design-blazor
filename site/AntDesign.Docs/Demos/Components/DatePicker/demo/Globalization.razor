@@ -3,40 +3,40 @@
     <Col Span="12">
         <Text>en-US</Text>
         <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" Locale="@EN" CultureInfo="CiEn" />
+        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" Locale="@_en" CultureInfo="_ciEn" />
         <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Week" Locale="@EN" CultureInfo="CiEn" />
+        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Week" Locale="@_en" CultureInfo="_ciEn" />
         <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Month" Locale="@EN" CultureInfo="CiEn" />
+        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Month" Locale="@_en" CultureInfo="_ciEn" />
         <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Quarter" Locale="@EN" CultureInfo="CiEn" />
+        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Quarter" Locale="@_en" CultureInfo="_ciEn" />
         <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Year" Locale="@EN" CultureInfo="CiEn" />
+        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Year" Locale="@_en" CultureInfo="_ciEn" />
         <br />
     </Col>
 
     <Col Span="12">
         <Text>zh-CN</Text>
         <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" Locale="@CN" CultureInfo="CiCn" />
+        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" Locale="@_cn" CultureInfo="_ciCn" />
         <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Week" Locale="@CN" CultureInfo="CiCn" />
+        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Week" Locale="@_cn" CultureInfo="_ciCn" />
         <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Month" Locale="@CN" CultureInfo="CiCn" />
+        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Month" Locale="@_cn" CultureInfo="_ciCn" />
         <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Quarter" Locale="@CN" CultureInfo="CiCn" />
+        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Quarter" Locale="@_cn" CultureInfo="_ciCn" />
         <br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Year" Locale="@CN" CultureInfo="CiCn" />
+        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Year" Locale="@_cn" CultureInfo="_ciCn" />
         <br />
     </Col>
 </Row>
 
-@code{
-    CultureInfo CiEn = CultureInfo.GetCultureInfo("en-US");
-    CultureInfo CiCn = CultureInfo.GetCultureInfo("zh-CN");
+@code {
+    private readonly CultureInfo _ciEn = CultureInfo.GetCultureInfo("en-US");
+    private readonly CultureInfo _ciCn = CultureInfo.GetCultureInfo("zh-CN");
 
 
-    DatePickerLocale EN = new DatePickerLocale
+    private readonly DatePickerLocale _en = new()
     {
         FirstDayOfWeek = DayOfWeek.Monday,
         Lang = new DateLocale
@@ -51,7 +51,8 @@
             Today = "Today"
         }
     };
-    DatePickerLocale CN = new DatePickerLocale
+
+    private readonly DatePickerLocale _cn = new()
     {
         FirstDayOfWeek = DayOfWeek.Sunday,
         Lang = new DateLocale

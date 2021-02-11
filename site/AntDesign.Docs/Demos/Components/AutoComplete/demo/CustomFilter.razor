@@ -1,9 +1,8 @@
 ﻿<span>Contains</span>
-<AutoComplete  Options="@options" FilterExpression="@((option,value)=>option.Label.Contains(value??"", StringComparison.InvariantCultureIgnoreCase))" />
+<AutoComplete  Options="@_options" FilterExpression="@((option,value)=>option.Label.Contains(value??"", StringComparison.InvariantCultureIgnoreCase))" />
 <span>StartsWith</span>
-<AutoComplete  Options="@options" FilterExpression="@((option,value)=>option.Label.StartsWith(value??"", StringComparison.InvariantCultureIgnoreCase))" />
+<AutoComplete  Options="@_options" FilterExpression="@((option,value)=>option.Label.StartsWith(value??"", StringComparison.InvariantCultureIgnoreCase))" />
 
-@code
-{
-    private List<string> options = new List<string>() { "Burns Bay Road", "Downing Street", "Wall Street" };
+@code {
+    private readonly List<string> _options = new() { "Burns Bay Road", "Downing Street", "Wall Street" };
 }

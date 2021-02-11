@@ -3,36 +3,38 @@
               OnChange="Callback"
               ExpandIconPosition="@expandIconPosition"
               ExpandIcon="caret-right">
-        <Panel Header="This is panel header 1" Key="1" ExtraTemplate="@extra">
-            <div>@text</div>
+        <Panel Header="This is panel header 1" Key="1" ExtraTemplate="@_extra">
+            <div>@Text</div>
         </Panel>
-        <Panel Header="This is panel header 2" Key="2" ExtraTemplate="@extra">
-            <div>@text</div>
+        <Panel Header="This is panel header 2" Key="2" ExtraTemplate="@_extra">
+            <div>@Text</div>
         </Panel>
         <Panel Header="This is panel header 3" Key="3">
             <ExtraTemplate>
                 <div @onclick:stopPropagation><Icon Type="snippets" /></div>
             </ExtraTemplate>
             <ChildContent>
-                <div>@text</div>
+                <div>@Text</div>
             </ChildContent>
         </Panel>
     </Collapse>
 </div>
-@code{
-
-    string text = @"
+@code {
+    private const string Text = @"
 A dog is a type of domesticated animal.
 Known for its loyalty and faithfulness,
 it can be found as a welcome guest in many households across the world.
 ";
 
-    RenderFragment extra =@<div @onclick:stopPropagation><Icon Type="setting"></Icon></div>;
+    private readonly RenderFragment _extra =
+        @<div @onclick:stopPropagation>
+            <Icon Type="setting"></Icon>
+        </div>;
 
-        string expandIconPosition = "left";
+    private readonly string expandIconPosition = "left";
 
-        void Callback(string[] keys)
-        {
-            Console.WriteLine(string.Join(',',keys));
-        }
+    private static void Callback(string[] keys)
+    {
+        Console.WriteLine(string.Join(',',keys));
     }
+}

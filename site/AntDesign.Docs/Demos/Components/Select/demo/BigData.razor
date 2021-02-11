@@ -1,37 +1,37 @@
-<Title Level="4">@_options.Count() Items</Title>
+<Title Level="4">@_options.Count Items</Title>
 
 <Select Mode="multiple"
         Placeholder="Please select"
-		DataSource="@_options"
-		@bind-Values="@_selectedValues"
-		LabelName="@nameof(LabeledValue.Label)"
+        DataSource="@_options"
+        @bind-Values="@_selectedValues"
+        LabelName="@nameof(LabeledValue.Label)"
         ValueName="@nameof(LabeledValue.Value)"
-		DisabledName="@nameof(LabeledValue.Disabled)"
-		TItemValue="string"
-		TItem="LabeledValue"
-		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
-		EnableSearch>
+        DisabledName="@nameof(LabeledValue.Disabled)"
+        TItemValue="string"
+        TItem="LabeledValue"
+        OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
+        EnableSearch>
 </Select>
-@code
-{
-	class LabeledValue
+
+@code {
+	private class LabeledValue
 	{
-		public LabeledValue () {} 
-		public LabeledValue (string value, string label, bool disabled) 
+		public LabeledValue (string value, string label, bool disabled)
 		{
 			Value = value;
 			Label = label;
 			Disabled = disabled;
 		}
-		
+
 		public string Value { get; set; }
 		public string Label { get; set; }
 		public bool Disabled { get; set; }
 	}
-	
-    List<LabeledValue> _options;
-	IEnumerable<string> _selectedValues = new List<string> { "0a10", "0c12" };
-    protected override void OnInitialized()
+
+    private List<LabeledValue> _options;
+	private IEnumerable<string> _selectedValues = new List<string> { "0a10", "0c12" };
+
+	protected override void OnInitialized()
     {
         const int min = 0;
         const int max = 200;
@@ -40,12 +40,12 @@
         for (var i = min; max > i; i++)
         {
             var disabled = i == 10;
-            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i;
             _options.Add(new LabeledValue(value, value, disabled));
         }
     }
 
-    private void OnSelectedItemsChangedHandler(IEnumerable<LabeledValue> values)
+    private static void OnSelectedItemsChangedHandler(IEnumerable<LabeledValue> values)
     {
         Console.WriteLine($"selected: ${string.Join(",", values.Select(x => x.Label))}");
     }

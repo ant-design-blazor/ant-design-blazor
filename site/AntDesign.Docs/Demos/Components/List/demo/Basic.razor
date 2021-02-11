@@ -1,6 +1,6 @@
-﻿<AntList DataSource="@data" TItem="BasicItem" OnItemClick="ItemClick">
+﻿<AntList DataSource="@_data" TItem="BasicItem" OnItemClick="ItemClick">
     <ListItem>
-        <ListItemMeta Avatar="avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
+        <ListItemMeta Avatar="@_avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
             <TitleTemplate>
                 <a href="https://ng.ant.design">@context.Title</a>
             </TitleTemplate>
@@ -9,24 +9,35 @@
 </AntList>
 
 
-@code{
+@code {
+    private readonly RenderFragment _avatar = @<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
 
-    RenderFragment avatar = @<Avatar Src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
-
-    public class BasicItem
+    private class BasicItem
     {
         public string Title { get; set; }
     }
 
-    public List<BasicItem> data = new List<BasicItem>
+    private readonly List<BasicItem> _data = new()
     {
-        new BasicItem { Title = "Ant Design Title 1"},
-        new BasicItem { Title = "Ant Design Title 2"},
-        new BasicItem { Title = "Ant Design Title 3"},
-        new BasicItem { Title = "Ant Design Title 4"},
+        new BasicItem
+        {
+            Title = "Ant Design Title 1"
+        },
+        new BasicItem
+        {
+            Title = "Ant Design Title 2"
+        },
+        new BasicItem
+        {
+            Title = "Ant Design Title 3"
+        },
+        new BasicItem
+        {
+            Title = "Ant Design Title 4"
+        }
     };
 
-    public void ItemClick(BasicItem item)
+    private void ItemClick(BasicItem item)
     {
         Console.WriteLine($"item was clicked: {item.Title}");
     }

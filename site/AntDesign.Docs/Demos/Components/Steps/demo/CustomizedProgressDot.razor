@@ -1,13 +1,12 @@
-<Steps Current=1 ProgressDot=@customDot>
+<Steps Current="1" ProgressDot="@_customDot">
     <Step Title="Finished" Description="You can hover on the dot." />
     <Step Title="In Progress" Description="You can hover on the dot." />
     <Step Title="Waiting" Description="You can hover on the dot." />
     <Step Title="Waiting" Description="You can hover on the dot." />
 </Steps>
 
-@code
-{
-    RenderFragment customDot = @<span>
-                                   step {index} status: {status}
-                               </span>;
+@code {
+    private RenderFragment _customDot = @<span>
+                                            step {index} status: {status}
+                                        </span>;
 }

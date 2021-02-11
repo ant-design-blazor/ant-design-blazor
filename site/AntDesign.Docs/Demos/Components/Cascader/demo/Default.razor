@@ -1,98 +1,183 @@
 ﻿<div>
-    <Cascader Options="@defaultNodes" @bind-Value="value"></Cascader>
-    <span>selected: @value</span>
+    <Cascader Options="@_defaultNodes" @bind-Value="_value"></Cascader>
+    <span>selected: @_value</span>
 </div>
 
 @code {
-    string value = "112";
+    private string _value = "112";
 
-    List<CascaderNode> defaultNodes = GetDefaultNodes();
+    readonly List<CascaderNode> _defaultNodes = GetDefaultNodes();
 
-    private static List<CascaderNode> GetDefaultNodes()
+    private static List<CascaderNode> GetDefaultNodes() => new()
     {
-        List<CascaderNode> list = new List<CascaderNode>()
+        new CascaderNode
         {
-            new CascaderNode()
+            Value = "1",
+            Label = "湖北",
+            Children = new CascaderNode[]
             {
-                Value = "1",
-                Label = "湖北",
-                Children = new CascaderNode[]
+                new()
                 {
-                    new CascaderNode
+                    Value = "11",
+                    Label = "武汉",
+                    Children = new CascaderNode[]
                     {
-                        Value = "11", Label = "武汉", Children = new CascaderNode[]
+                        new()
                         {
-                            new CascaderNode
+                            Value = "111",
+                            Label = "武昌区",
+                            Children = new CascaderNode[]
                             {
-                                Value = "111", Label = "武昌区", Children = new CascaderNode[]
+                                new()
                                 {
-                                    new CascaderNode {Value = "1111", Label = "黄鹤楼街道"},
-                                    new CascaderNode {Value = "1112", Label = "白沙洲街道"}
+                                    Value = "1111",
+                                    Label = "黄鹤楼街道"
+                                },
+                                new()
+                                {
+                                    Value = "1112",
+                                    Label = "白沙洲街道"
                                 }
-                            },
-                            new CascaderNode {Value = "112", Label = "洪山区"}
-                        }
-                    },
-                    new CascaderNode {Value = "12", Label = "黄石"},
-                    new CascaderNode {Value = "13", Label = "宜昌"}
-                }
-            },
-            new CascaderNode()
-            {
-                Value = "2",
-                Label = "浙江",
-                Children = new CascaderNode[]
-                {
-                    new CascaderNode {Value = "21", Label = "杭州"},
-                    new CascaderNode {Value = "22", Label = "温州"},
-                    new CascaderNode {Value = "23", Label = "义乌"},
-                    new CascaderNode {Value = "23", Label = "宁波"}
-                }
-            },
-            new CascaderNode()
-            {
-                Value = "3",
-                Label = "上海",
-                Children = new CascaderNode[]
-                {
-                    new CascaderNode {Value = "31", Label = "徐汇区"},
-                    new CascaderNode {Value = "32", Label = "黄浦区"},
-                    new CascaderNode {Value = "32", Label = "浦东新区"},
-                    new CascaderNode {Value = "32", Label = "崇明区"}
-                }
-            },
-            new CascaderNode()
-            {
-                Value = "4",
-                Label = "北京",
-                Children = new CascaderNode[]
-                {
-                    new CascaderNode {Value = "41", Label = "朝阳"},
-                    new CascaderNode {Value = "42", Label = "东城"},
-                    new CascaderNode {Value = "43", Label = "西城"}
-                }
-            },
-            new CascaderNode()
-            {
-                Value = "5",
-                Label = "江苏",
-                Children = new CascaderNode[]
-                {
-                    new CascaderNode
-                    {
-                        Value = "51", Label = "南京", Children = new CascaderNode[]
+                            }
+                        },
+                        new()
                         {
-                            new CascaderNode {Value = "511", Label = "鼓楼区"},
-                            new CascaderNode {Value = "512", Label = "玄武区"}
+                            Value = "112",
+                            Label = "洪山区"
                         }
-                    },
-                    new CascaderNode {Value = "52", Label = "苏州"},
-                    new CascaderNode {Value = "53", Label = "无锡"},
-                    new CascaderNode {Value = "53", Label = "扬州"}
+                    }
+                },
+                new()
+                {
+                    Value = "12",
+                    Label = "黄石"
+                },
+                new()
+                {
+                    Value = "13",
+                    Label = "宜昌"
                 }
             }
-        };
-        return list;
-    }
-
+        },
+        new CascaderNode
+        {
+            Value = "2",
+            Label = "浙江",
+            Children = new CascaderNode[]
+            {
+                new()
+                {
+                    Value = "21",
+                    Label = "杭州"
+                },
+                new()
+                {
+                    Value = "22",
+                    Label = "温州"
+                },
+                new()
+                {
+                    Value = "23",
+                    Label = "义乌"
+                },
+                new()
+                {
+                    Value = "23",
+                    Label = "宁波"
+                }
+            }
+        },
+        new CascaderNode
+        {
+            Value = "3",
+            Label = "上海",
+            Children = new CascaderNode[]
+            {
+                new()
+                {
+                    Value = "31",
+                    Label = "徐汇区"
+                },
+                new()
+                {
+                    Value = "32",
+                    Label = "黄浦区"
+                },
+                new()
+                {
+                    Value = "32",
+                    Label = "浦东新区"
+                },
+                new()
+                {
+                    Value = "32",
+                    Label = "崇明区"
+                }
+            }
+        },
+        new CascaderNode
+        {
+            Value = "4",
+            Label = "北京",
+            Children = new CascaderNode[]
+            {
+                new()
+                {
+                    Value = "41",
+                    Label = "朝阳"
+                },
+                new()
+                {
+                    Value = "42",
+                    Label = "东城"
+                },
+                new()
+                {
+                    Value = "43",
+                    Label = "西城"
+                }
+            }
+        },
+        new CascaderNode
+        {
+            Value = "5",
+            Label = "江苏",
+            Children = new CascaderNode[]
+            {
+                new()
+                {
+                    Value = "51",
+                    Label = "南京",
+                    Children = new CascaderNode[]
+                    {
+                        new()
+                        {
+                            Value = "511",
+                            Label = "鼓楼区"
+                        },
+                        new()
+                        {
+                            Value = "512",
+                            Label = "玄武区"
+                        }
+                    }
+                },
+                new()
+                {
+                    Value = "52",
+                    Label = "苏州"
+                },
+                new()
+                {
+                    Value = "53",
+                    Label = "无锡"
+                },
+                new()
+                {
+                    Value = "53",
+                    Label = "扬州"
+                }
+            }
+        }
+    };
 }

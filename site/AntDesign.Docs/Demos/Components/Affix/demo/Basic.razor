@@ -1,4 +1,3 @@
-
 <div>
 	<Affix OffsetTop="@_offsetTop">
 		<Button Type="@ButtonType.Primary" OnClick="AddTop">
@@ -13,19 +12,17 @@
 	</Affix>
 </div>
 
+@code {
+	private uint _offsetTop = 10;
+	private uint _offsetBottom = 10;
 
-@code
-{
-        private uint _offsetTop = 10;
-        private uint _offsetBottom = 10;
+	private void AddTop()
+	{
+		_offsetTop += 10;
+	}
 
-        private void AddTop()
-        {
-            _offsetTop += 10;
-        }
-
-        private void AddBottom()
-        {
-            _offsetBottom += 10;
-        }
+	private void AddBottom()
+	{
+		_offsetBottom += 10;
+	}
 }

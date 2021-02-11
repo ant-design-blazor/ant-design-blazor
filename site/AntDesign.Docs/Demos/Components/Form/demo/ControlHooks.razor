@@ -1,9 +1,9 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 
-<Form @ref="form" 
-      Model="@model" 
-      OnFinish="OnFinish" 
+<Form @ref="_form"
+      Model="@_model"
+      OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
       LabelColSpan="8"
       WrapperColSpan="16">
@@ -23,36 +23,35 @@
         </Button>
     </FormItem>
 </Form>
-@code
-{
-    public class Model
+@code {
+    private class Model
     {
         [Required]
         public string Note { get; set; }
     }
 
-    private Model model = new Model();
-    private Form<Model> form;
+    private Model _model = new();
+    private Form<Model> _form;
 
     private void OnFill(MouseEventArgs args)
     {
-        model.Note = "Hello world!";
+        _model.Note = "Hello world!";
 
-        Console.WriteLine($"form ref:{form}");
+        Console.WriteLine($"form ref:{_form}");
     }
 
     private void Reset(MouseEventArgs args)
     {
-        form.Reset();
+        _form.Reset();
     }
 
     private void OnFinish(EditContext editContext)
     {
-        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(_model)}");
     }
 
     private void OnFinishFailed(EditContext editContext)
     {
-        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(_model)}");
     }
 }

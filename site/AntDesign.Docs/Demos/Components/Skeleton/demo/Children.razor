@@ -6,7 +6,7 @@
             create their product prototypes beautifully and efficiently.
         </p>
     </Skeleton>
-    <Button @onclick="showSkeleton" Disabled="@_loading">
+    <Button @onclick="ShowSkeleton" Disabled="@_loading">
         Show Skeleton
     </Button>
 </div>
@@ -21,13 +21,13 @@
     }
 </style>
 
-@code{
-    private bool _loading = false;
+@code {
+    private bool _loading;
 
-    private async Task showSkeleton()
+    private async Task ShowSkeleton()
     {
-        this._loading = true;
+        _loading = true;
         await Task.Delay(3000);
-        this._loading = false;
+        _loading = false;
     }
 }

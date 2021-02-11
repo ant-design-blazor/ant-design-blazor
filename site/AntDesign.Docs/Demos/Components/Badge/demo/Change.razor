@@ -1,45 +1,40 @@
 ﻿<div>
     <div>
-        <Badge Count="@count">
+        <Badge Count="@_count">
             <a href="#" class="head-example" />
         </Badge>
         <ButtonGroup>
-            <Button @onclick="_=>decline()">
+            <Button @onclick="_=>Decline()">
                 <Icon Type="minus"></Icon>
             </Button>
-            <Button @onclick="_=>increase()">
+            <Button @onclick="_=>Increase()">
                 <Icon Type="plus"></Icon>
             </Button>
         </ButtonGroup>
     </div>
     <div style="margin-top: 10px">
-        <Badge Dot="@show">
+        <Badge Dot="@_show">
             <a href="#" class="head-example" />
         </Badge>
-        <Switch OnChange="onChange" Checked="@show" />
+        <Switch OnChange="OnChange" Checked="@_show" />
     </div>
 </div>
 
 @code {
-    int count = 5;
-    bool show = true;
+    private int _count = 5;
+    private bool _show = true;
 
-    void increase()
-    {
-        count++;
-    }
+    private void Increase() => _count++;
 
-    void decline()
+    private void Decline()
     {
-        count--;
-        if (count < 0)
+        _count--;
+
+        if (_count < 0)
         {
-            count = 0;
+            _count = 0;
         }
     }
 
-    void onChange(bool show)
-    {
-        this.show = show;
-    }
+    void OnChange(bool show) => _show = show;
 }

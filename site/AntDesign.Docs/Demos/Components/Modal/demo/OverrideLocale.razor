@@ -1,5 +1,5 @@
-﻿@inject ConfirmService _confirmService
-@inject ModalService _modalService
+﻿@inject ConfirmService ConfirmService
+@inject ModalService ModalService
 
 
 <Divider>Modal</Divider>
@@ -41,11 +41,11 @@
 </Space>
 
 
-@code{
-    string _okText = "OK!";
-    string _cancelText = "Cancel?";
-    string _title = "Override Locale";
-    bool _visible = false;
+@code {
+    private string _okText = "OK!";
+    private string _cancelText = "Cancel?";
+    private string _title = "Override Locale";
+    private bool _visible;
 
     private void HandleOk(MouseEventArgs e)
     {
@@ -63,16 +63,24 @@
     {
         RenderFragment content =@<div>confirm content</div>;
 
-        var options = new ConfirmOptions()
+        var options = new ConfirmOptions
         {
             Title = "Modal",
             Width = 350,
             Content = content,
-            OnOk = e => { Console.WriteLine("OnOk"); return Task.CompletedTask; },
-            OnCancel = e => { Console.WriteLine("OnCancel"); return Task.CompletedTask; }
+            OnOk = _ =>
+            {
+                Console.WriteLine("OnOk");
+                return Task.CompletedTask;
+            },
+            OnCancel = _ =>
+            {
+                Console.WriteLine("OnCancel");
+                return Task.CompletedTask;
+            }
         };
 
-        var confirmRef = await _modalService.CreateConfirmAsync(options);
+        var confirmRef = await ModalService.CreateConfirmAsync(options);
 
         confirmRef.OnOpen = () =>
         {
@@ -97,26 +105,20 @@
             Content = @<div>some content</div>
         };
 
-        await _modalService.CreateModalAsync(modalConfig);
+        await ModalService.CreateModalAsync(modalConfig);
     }
 
     private async Task OpenConfirmByConfirmService()
     {
         var content = "some content";
-        var options = new ConfirmButtonOptions()
+        var options = new ConfirmButtonOptions
         {
-            Button1Props = new AntDesign.ButtonProps()
+            Button1Props = new AntDesign.ButtonProps
             {
                 ChildContent = _okText
             }
         };
-        var confirmResult = await 
-            _confirmService.Show(
-                content, 
-                _title, 
-                ConfirmButtons.OK, 
-                ConfirmIcon.Info, 
-                options);
-    }
 
+        _ = await ConfirmService.Show(content, _title, ConfirmButtons.OK, ConfirmIcon.Info, options);
+    }
 }

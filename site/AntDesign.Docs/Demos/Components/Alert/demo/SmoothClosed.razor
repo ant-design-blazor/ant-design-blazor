@@ -1,16 +1,16 @@
 ﻿<div>
-    @if (visible)
+    @if (_visible)
     {
-        <Alert Message="Alert Message Text" Type="success" Closable AfterClose="handleClose" />
+        <Alert Message="Alert Message Text" Type="success" Closable AfterClose="HandleClose" />
     }
     <p>placeholder text here</p>
 </div>
 
-@code{
-    bool visible = true;
+@code {
+    private bool _visible = true;
 
-    void handleClose()
+    private void HandleClose()
     {
-        visible = false;
+        _visible = false;
     }
 }

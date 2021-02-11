@@ -1,5 +1,5 @@
 ﻿@using System.ComponentModel
-<Table DataSource="data" PageSize="50" ScrollX="1300">
+<Table DataSource="_data" PageSize="50" ScrollX="1300">
     <Column @bind-Field="@context.Name" Width="100" Fixed="left" />
     <Column @bind-Field="@context.Age" Width="100" Fixed="left" />
     <Column Title="Column 1" @bind-Field="@context.Address" />
@@ -16,7 +16,7 @@
 </Table>
 
 @code {
-    class Column
+    private class Column
     {
         [DisplayName("Full Name")]
         public string Name { get; set; }
@@ -26,7 +26,8 @@
         public string Address { get; set; }
     }
 
-    Column[] data = new Column[] {
+    private Column[] _data =
+    {
         new()
         {
             Name = "John Brown",
@@ -38,7 +39,6 @@
             Name = "Jim Green",
             Age = 40,
             Address = "London Park"
-        },
+        }
     };
-
 }

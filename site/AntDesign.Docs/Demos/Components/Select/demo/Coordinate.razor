@@ -22,42 +22,74 @@
     Selected City: @_selectedCity
 </p>
 
-@code
-{
-    class Province
+@code {
+    private class Province
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<City> Cities { get; set; } = new List<City>();
+        public List<City> Cities { get; set; } = new();
     }
 
-    class City
+    private class City
     {
         public int Id { get; set; }
         public string Name { get; set; }
     }
 
-    List<Province> _provinces;
-    List<City> _cities = new List<City>();
+    private List<Province> _provinces;
+    private List<City> _cities = new();
 
-    int? _selectedProvince;
-    int? _selectedCity;
+    private int? _selectedProvince;
+    private int? _selectedCity;
 
     protected override void OnInitialized()
     {
-        _provinces = new List<Province>() {
-            new Province() { Id = 1, Name = "Zhejiang", Cities = new List<City>()
+        _provinces = new List<Province>
+        {
+            new()
+            {
+                Id = 1,
+                Name = "Zhejiang",
+                Cities = new List<City>
                 {
-                    new City { Id = 100, Name = "Hangzhou" },
-                    new City { Id = 101, Name = "Ningbo" },
-                    new City { Id = 102, Name = "Wenzhou" }
+                    new()
+                    {
+                        Id = 100,
+                        Name = "Hangzhou"
+                    },
+                    new()
+                    {
+                        Id = 101,
+                        Name = "Ningbo"
+                    },
+                    new()
+                    {
+                        Id = 102,
+                        Name = "Wenzhou"
+                    }
                 }
             },
-            new Province() { Id = 2, Name = "Jiangsu", Cities = new List<City>()
+            new()
+            {
+                Id = 2,
+                Name = "Jiangsu",
+                Cities = new List<City>
                 {
-                    new City { Id = 200, Name = "Nanjing" },
-                    new City { Id = 201, Name = "Suzhou" },
-                    new City { Id = 202, Name = "Zhenjiang" }
+                    new()
+                    {
+                        Id = 200,
+                        Name = "Nanjing"
+                    },
+                    new()
+                    {
+                        Id = 201,
+                        Name = "Suzhou"
+                    },
+                    new()
+                    {
+                        Id = 202,
+                        Name = "Zhenjiang"
+                    }
                 }
             }
         };

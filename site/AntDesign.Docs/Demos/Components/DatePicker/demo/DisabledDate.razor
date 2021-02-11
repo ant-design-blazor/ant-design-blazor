@@ -2,7 +2,7 @@
                DefaultValue="new DateTime(2020, 05, 11, 0, 0, 0)"
                Format="yyyy-MM-dd HH:mm:ss"
                DisabledDate="date => date <= DateTime.Now"
-               DisabledTime="date => GetDisabledTime(date)" 
+               DisabledTime="date => GetDisabledTime(date)"
                />
 <br />
 <DatePicker TValue="DateTime?" Picker="@DatePickerType.Month"
@@ -11,15 +11,15 @@
 <br />
 <RangePicker TValue="DateTime?[]" DisabledDate="date => date <= DateTime.Now"/>
 <br />
-<RangePicker TValue="DateTime?[]" ShowTime='@true'
-                DisabledDate="date => date <= DateTime.Now" 
+<RangePicker TValue="DateTime?[]" ShowTime="@true"
+                DisabledDate="date => date <= DateTime.Now"
                 />
 
 @code {
-    private DatePickerDisabledTime GetDisabledTime(DateTime date)
+    private static DatePickerDisabledTime GetDisabledTime(DateTime date)
     {
-        int[] timeRange = new int[60];
-        for (int i = 0; i < timeRange.Length; i++)
+        var timeRange = new int[60];
+        for (var i = 0; i < timeRange.Length; i++)
         {
             timeRange[i] = i;
         }

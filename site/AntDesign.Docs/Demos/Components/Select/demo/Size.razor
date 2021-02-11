@@ -48,43 +48,51 @@
 		</SelectOptions>
 </Select>
 
-@code
-{
-	List<string> _items;
-	string _selectedValue;
-    IEnumerable<string> _selectedValues1, _selectedValues2;
+@code {
+	private List<string> _items;
+	private string _selectedValue;
+	private IEnumerable<string> _selectedValues1, _selectedValues2;
     private string _sizeValue = AntSizeLDSType.Default;
 
 	protected override void OnInitialized()
-    {
-        const int min = 10;
-        const int max = 36;
-        _items = new List<string>();
+	{
+		const int min = 10;
+		const int max = 36;
+		_items = new List<string>();
 
-        for (var i = min; max > i; i++)
-        {
-            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
-            _items.Add(value);
-        }
+		for (var i = min; max > i; i++)
+		{
+			var value = Convert.ToString(i, 16)
+				.PadLeft(2, '0') + i;
+			_items.Add(value);
+		}
 		_selectedValue = "0a10";
-		_selectedValues1 = new List<string> { "0a10" , "0c12"};
-		_selectedValues2 = new List<string> { "0a10" , "0c12"};
-    }
+		_selectedValues1 = new List<string>
+		{
+			"0a10",
+			"0c12"
+		};
+		_selectedValues2 = new List<string>
+		{
+			"0a10",
+			"0c12"
+		};
+	}
 
-    private void OnChangeSize(string value)
-    {
-        _sizeValue = value;
-        Console.WriteLine($"selected size: ${value}");
-    }
+	private void OnChangeSize(string value)
+	{
+		_sizeValue = value;
+		Console.WriteLine($"selected size: ${value}");
+	}
 
-	private void OnSelectedItemChangedHandler(string value)
-    {
+	private static void OnSelectedItemChangedHandler(string value)
+	{
 		Console.WriteLine($"selected: ${value}");
-    }
+	}
 
-    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
-    {
+	private static void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+	{
 		if (values != null)
 			Console.WriteLine($"selected: ${string.Join(",", values)}");
-    }
+	}
 }

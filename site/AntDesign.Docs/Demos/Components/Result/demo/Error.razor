@@ -2,30 +2,27 @@
     Status="error"
     Title="Submission Failed"
     SubTitle="Please check and modify the following information before resubmitting."
-    Extra=extra
->
-<div class="desc">
-    <Paragraph>
-        <Text Strong Style="font-size: 16px;">
-            The content you submitted has the following error:
-        </Text>
-    </Paragraph>
-    <Paragraph>
-        <Icon Type="close-circle" Theme="Outline" Class="site-result-demo-error-icon" /> Your account has been frozen
-        <a>Thaw immediately &gt;</a>
-    </Paragraph>
-    <Paragraph>
-        <Icon Type="close-circle" Theme="Outline" Class="site-result-demo-error-icon" /> Your account is not yet
-        eligible to apply <a>Apply Unlock &gt;</a>
-    </Paragraph>
-</div>
+    Extra="_extra">
+    <div class="desc">
+        <Paragraph>
+            <Text Strong Style="font-size: 16px;">
+                The content you submitted has the following error:
+            </Text>
+        </Paragraph>
+        <Paragraph>
+            <Icon Type="close-circle" Theme="Outline" Class="site-result-demo-error-icon"/> Your account has been frozen
+            <a>Thaw immediately &gt;</a>
+        </Paragraph>
+        <Paragraph>
+            <Icon Type="close-circle" Theme="Outline" Class="site-result-demo-error-icon"/> Your account is not yet
+            eligible to apply <a>Apply Unlock &gt;</a>
+        </Paragraph>
+    </div>
 </Result>
 
 @code {
-    RenderFragment extra =
-        @<Template>
-            <Button Type="primary">Go Console</Button>
-            <Button>Buy Again</Button>
-        </Template>
-        ;
+    private readonly RenderFragment _extra = @<Template>
+                                                 <Button Type="primary">Go Console</Button>
+                                                 <Button>Buy Again</Button>
+                                             </Template>;
 }

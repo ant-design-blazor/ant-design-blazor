@@ -4,97 +4,80 @@
               OnPanelChange="OnPanelChange" />
 </div>
 
-@code
-{
-    private void OnPanelChange(DateTime value, string mode)
+@code {
+    private static void OnPanelChange(DateTime value, string mode)
+        => Console.WriteLine($"{value} {mode}");
+
+    private RenderFragment GetMonthOptions() =>
+        @<Template>
+            @for (var i = 1; i <= 12; i++)
+            {
+                <option class="month-item" key="@i" value="@i">
+                    @(i)月
+                </option>
+            }
+        </Template>;
+
+
+    private RenderFragment GetYearOptions(int currentYear) =>
+        @<Template>
+            @for (var i = currentYear - 10; i < currentYear + 10; i += 1)
+            {
+                <option class="year-item" key="@i" value="@i">
+                    @(i)年
+                </option>
+            }
+        </Template>;
+
+    private static void OnSelectYear(ChangeEventArgs args, CalendarHeaderRenderArgs renderArgs)
     {
-        Console.WriteLine($"{value} {mode}");
+        var year = Convert.ToInt32(args.Value);
+        renderArgs.OnChange.InvokeAsync(DateHelper.CombineNewDate(renderArgs.Value, year));
     }
 
-    private RenderFragment GetMonthOptions()
+    private static void OnSelectMonth(ChangeEventArgs args, CalendarHeaderRenderArgs renderArgs)
     {
-        return@<Template>
-                  @for (int index = 1; index <= 12; index++)
-                  {
-                      <option class="month-item" key="@index" value="@index">
-                          @(index)月
-                      </option>
-                  }
-
-              </Template>;
-    }
-
-    private RenderFragment GetYearOptions(int currentYear)
-    {
-        return @<Template>
-                   @for (int i = currentYear - 10; i < currentYear + 10; i += 1)
-                   {
-                       <option class="year-item" key="@i" value="@i">
-                           @(i)年
-                       </option>
-                   }
-
-               </Template>;
-    }
-
-    private void OnSelectYear(ChangeEventArgs args, CalendarHeaderRenderArgs renderArgs)
-    {
-        int year = Convert.ToInt32(args.Value);
-        renderArgs.OnChange.InvokeAsync(DateHelper.CombineNewDate(renderArgs.Value, year: year));
-    }
-
-    private void OnSelectMonth(ChangeEventArgs args, CalendarHeaderRenderArgs renderArgs)
-    {
-        int month = Convert.ToInt32(args.Value);
+        var month = Convert.ToInt32(args.Value);
         renderArgs.OnChange.InvokeAsync(DateHelper.CombineNewDate(renderArgs.Value, month: month));
-    }
-
-    private void OnTypeChange()
-    {
-
     }
 
     private RenderFragment HeaderRender(CalendarHeaderRenderArgs args)
     {
-        int start = 0;
-        int end = 12;
+        var month = args.Value.Month;
+        var year = args.Value.Year;
 
-        int month = args.Value.Month;
-        int year = args.Value.Year;
-
-        return
-            @<Template>
-                <div style="padding: 8px">
-                    <Title Level="4">
-                        Custom header
-                    </Title>
-                    <Row Gutter="8">
-                        <AntDesign.Col>
-                            <RadioGroup size="small" OnChange="value => args.OnTypeChange.InvokeAsync(value)" Value="@args.Type" TValue="string">
-                                <Radio RadioButton Value="@DatePickerType.Month">Month</Radio>
-                                <Radio RadioButton Value="@DatePickerType.Year">Year</Radio>
-                            </RadioGroup>
-                        </AntDesign.Col>
-                        <AntDesign.Col>
-                            <select size="small"
-                                    dropdownMatchSelectWidth="@false"
-                                    class="my-year-select"
-                                    @onchange="e => OnSelectYear(e, args)"
-                                    value="@year">
-                                @GetYearOptions(year)
-                            </select>
-                        </AntDesign.Col>
-                        <AntDesign.Col>
-                            <select size="small"
-                                    dropdownMatchSelectWidth="@false"
-                                    value="@month"
-                                    @onchange="e => OnSelectMonth(e, args)">
-                                @GetMonthOptions()
-                            </select>
-                        </AntDesign.Col>
-                    </Row>
-                </div>
-            </Template>;
+        return @<Template>
+                   <div style="padding: 8px">
+                       <Title Level="4">
+                           Custom header
+                       </Title>
+                       <Row Gutter="8">
+                           <AntDesign.Col>
+                               <RadioGroup size="small" OnChange="value => args.OnTypeChange.InvokeAsync(value)" Value="@args.Type" TValue="string">
+                                   <Radio RadioButton Value="@DatePickerType.Month">Month</Radio>
+                                   <Radio RadioButton Value="@DatePickerType.Year">Year</Radio>
+                               </RadioGroup>
+                           </AntDesign.Col>
+                           <AntDesign.Col>
+                               <select size="small"
+                                       dropdownMatchSelectWidth="@false"
+                                       class="my-year-select"
+                                       @onchange="e => OnSelectYear(e, args)"
+                                       value="@year">
+                                   @GetYearOptions(year)
+                               </select>
+                           </AntDesign.Col>
+                           <AntDesign.Col>
+                               <select size="small"
+                                       dropdownMatchSelectWidth="@false"
+                                       value="@month"
+                                       @onchange="e => OnSelectMonth(e, args)">
+                                   @GetMonthOptions()
+                               </select>
+                           </AntDesign.Col>
+                       </Row>
+                   </div>
+               </Template>;
     }
 }
 

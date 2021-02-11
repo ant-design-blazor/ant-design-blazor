@@ -1,8 +1,8 @@
 ﻿@inject MessageService _message
 
 <div>
-    <Button Type="primary" @onclick="_=>open()">Open</Button>
-    <Drawer Width="500" Closable="true" Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
+    <Button Type="primary" @onclick="_=>Open()">Open</Button>
+    <Drawer Width="500" Closable="true" Visible="_visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>Close()">
         <b>Select:</b><br />
 
         <Form Model="_formModal">
@@ -64,25 +64,25 @@
     </Drawer>
 </div>
 
-@code{
-    class FormModal
+@code {
+    private class FormModal
     {
         public string Name { get; set; }
         public int Type { get; set; }
     }
 
-    private FormModal _formModal = new FormModal();
+    private FormModal _formModal = new();
 
-    bool visible = false;
+    private bool _visible;
 
-    void open()
+    private void Open()
     {
-        this.visible = true;
+        _visible = true;
     }
 
-    void close()
+    private void Close()
     {
-        this.visible = false;
+        _visible = false;
     }
 
 }

@@ -1,31 +1,30 @@
-﻿@inject MessageService _message
-
-<Upload @attributes="attrs"
+﻿<Upload @attributes="@_attrs"
         OnSingleCompleted="OnSingleCompleted">
     <Button Icon="upload">
         <span>点击上传</span>
     </Button>
 </Upload>
 
-@code
-{
-
-    Upload upload;
-
-    Dictionary<string, object> attrs = new Dictionary<string, object>
-{
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" },
-        {"DefaultFileList", new List<UploadFileItem>
+@code {
+    private readonly Dictionary<string, object> _attrs = new()
+    {
+        {
+            "Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        },
+        {
+            "Name", "files"
+        },
+        {
+            "DefaultFileList", new List<UploadFileItem>
             {
-                new UploadFileItem
+                new()
                 {
                     Id = "1",
                     FileName = "1.jpg",
                     Url = "https://www.baidu.com/1.jpg",
                     State = UploadState.Success
                 },
-                new UploadFileItem
+                new()
                 {
                     Id = "2",
                     FileName = "2.jpg",
@@ -36,16 +35,16 @@
         }
     };
 
-    void OnSingleCompleted(UploadInfo fileinfo)
+    private static void OnSingleCompleted(UploadInfo fileInfo)
     {
-        if (fileinfo.File.State == UploadState.Success)
-        {
-            var result = fileinfo.File.GetResponse<ResponseModel>();
-            fileinfo.File.Url = result.url;
-        }
+        if (fileInfo.File.State != UploadState.Success)
+            return;
+
+        var result = fileInfo.File.GetResponse<ResponseModel>();
+        fileInfo.File.Url = result.url;
     }
 
-    public class ResponseModel
+    private class ResponseModel
     {
         public string name { get; set; }
 

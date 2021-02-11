@@ -3,17 +3,11 @@
     <Tag>
         <a href="https://github.com/ant-design-blazor/ant-design-blazor">Link</a>
     </Tag>
-    <Tag Mode="closeable" OnClose="()=>onClose()">Tag 2</Tag>
-    <Tag Mode="closeable" OnClose="preventDefault">Prevent Default</Tag>
+    <Tag Mode="closeable" OnClose="OnClose">Tag 2</Tag>
+    <Tag Mode="closeable" OnClose="PreventDefault">Prevent Default</Tag>
 </div>
 
-@code{
-    void onClose()
-    {
-
-    }
-    void preventDefault()
-    {
-
-    }
+@code {
+    private void OnClose() { }
+    private void PreventDefault() { }
 }

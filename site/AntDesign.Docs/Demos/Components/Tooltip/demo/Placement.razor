@@ -1,52 +1,51 @@
 ﻿<div class="demo">
     <div style="margin-left: @($"{ButtonWidth}px"); white-space: nowrap;">
-        <Tooltip Placement="@PlacementType.TopLeft" Title="Text">
+        <Tooltip Placement="@PlacementType.TopLeft" Title="_text">
             <Button>TL</Button>
         </Tooltip>
-        <Tooltip Placement="@PlacementType.Top" Title="Text">
+        <Tooltip Placement="@PlacementType.Top" Title="_text">
             <Button>Top</Button>
         </Tooltip>
-        <Tooltip Placement="@PlacementType.TopRight" Title="Text">
+        <Tooltip Placement="@PlacementType.TopRight" Title="_text">
             <Button>TR</Button>
         </Tooltip>
     </div>
     <div style="width: @($"{ButtonWidth}px"); float: left;">
-        <Tooltip Placement="@PlacementType.LeftTop" Title="Text">
+        <Tooltip Placement="@PlacementType.LeftTop" Title="_text">
             <Button>LT</Button>
         </Tooltip>
-        <Tooltip Placement="@PlacementType.Left" Title="Text">
+        <Tooltip Placement="@PlacementType.Left" Title="_text">
             <Button>Left</Button>
         </Tooltip>
-        <Tooltip Placement="@PlacementType.LeftBottom" Title="Text">
+        <Tooltip Placement="@PlacementType.LeftBottom" Title="_text">
             <Button>LB</Button>
         </Tooltip>
     </div>
     <div style="width: @($"{ButtonWidth}px"); margin-left: @($"{ButtonWidth * 4 + 24}px");">
-        <Tooltip Placement="@PlacementType.RightTop" Title="Text">
+        <Tooltip Placement="@PlacementType.RightTop" Title="_text">
             <Button>RT</Button>
         </Tooltip>
-        <Tooltip Placement="@PlacementType.Right" Title="Text">
+        <Tooltip Placement="@PlacementType.Right" Title="_text">
             <Button>Right</Button>
         </Tooltip>
-        <Tooltip Placement="@PlacementType.RightBottom" Title="Text">
+        <Tooltip Placement="@PlacementType.RightBottom" Title="_text">
             <Button>RB</Button>
         </Tooltip>
     </div>
     <div style="margin-left: @($"{ButtonWidth}px"); clear: both; white-space: nowrap;">
-        <Tooltip Placement="@PlacementType.BottomLeft" Title="Text">
+        <Tooltip Placement="@PlacementType.BottomLeft" Title="_text">
             <Button>BL</Button>
         </Tooltip>
-        <Tooltip Placement="@PlacementType.Bottom" Title="Text">
+        <Tooltip Placement="@PlacementType.Bottom" Title="_text">
             <Button>Bottom</Button>
         </Tooltip>
-        <Tooltip Placement="@PlacementType.BottomRight" Title="Text">
+        <Tooltip Placement="@PlacementType.BottomRight" Title="_text">
             <Button>BR</Button>
         </Tooltip>
     </div>
 </div>
 
-@code
-{
-    public string Text = "prompt text";
+@code {
+    private string _text = "prompt text";
     const int ButtonWidth = 70;
 }

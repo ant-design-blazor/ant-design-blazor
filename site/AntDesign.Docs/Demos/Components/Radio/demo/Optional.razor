@@ -1,12 +1,17 @@
 <RadioGroup @bind-Value="_radioValue">
-    @foreach (var item in options)
+    @foreach (var item in _options)
     {
         <Radio Value="@item">@item</Radio>
     }
 </RadioGroup>
 
 @code {
-    string _radioValue = "Apple";
-    string[] options = new string[] { "Apple", "Pear", "Orange" };
+    private string _radioValue = "Apple";
 
+    private readonly string[] _options =
+    {
+        "Apple",
+        "Pear",
+        "Orange"
+    };
 }

@@ -1,51 +1,53 @@
-﻿@inject MessageService _message
-
-<Upload @attributes="attrs"
-        FileList="fileList"
+﻿<Upload @attributes="@_attrs"
+        FileList="_fileList"
         OnChange="HandleChange">
     <Button Icon="upload">
         <span>点击上传</span>
     </Button>
 </Upload>
 
-@code
-{
+@code {
 
-    Upload upload;
-
-    List<UploadFileItem> fileList = new List<UploadFileItem>
-            {
-                new UploadFileItem
-                {
-                    Id = "1",
-                    FileName = "1.jpg",
-                    Url = "https://www.baidu.com/1.jpg",
-                    State = UploadState.Success
-                }
-            };
-
-    Dictionary<string, object> attrs = new Dictionary<string, object>
+    private List<UploadFileItem> _fileList = new()
     {
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" },
-        {"Multiple", true }
+        new UploadFileItem
+        {
+            Id = "1",
+            FileName = "1.jpg",
+            Url = "https://www.baidu.com/1.jpg",
+            State = UploadState.Success
+        }
     };
 
-    void HandleChange(UploadInfo fileinfo)
+    private Dictionary<string, object> _attrs = new()
     {
-        if(fileList.Count > 2)
         {
-            fileList.RemoveRange(0, fileList.Count - 2);
+            "Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        },
+        {
+            "Name", "files"
+        },
+        {
+            "Multiple", true
         }
-        fileList.Where(file => file.State == UploadState.Success && !string.IsNullOrWhiteSpace(file.Response)).ForEach(file => {
-            var result = file.GetResponse<ResponseModel>();
-            file.Url = result.url;
-        });
+    };
+
+    private void HandleChange(UploadInfo fileInfo)
+    {
+        if (_fileList.Count > 2)
+        {
+            _fileList.RemoveRange(0, _fileList.Count - 2);
+        }
+
+        _fileList.Where(file => file.State == UploadState.Success && !string.IsNullOrWhiteSpace(file.Response))
+            .ForEach(file =>
+            {
+                var result = file.GetResponse<ResponseModel>();
+                file.Url = result.url;
+            });
     }
 
-
-
-    public class ResponseModel
+    private class ResponseModel
     {
         public string name { get; set; }
 
@@ -55,5 +57,4 @@
 
         public string thumbUrl { get; set; }
     }
-
 }

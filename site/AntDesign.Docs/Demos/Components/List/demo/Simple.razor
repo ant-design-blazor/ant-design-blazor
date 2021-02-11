@@ -1,6 +1,6 @@
 ﻿<Divider Orientation="left">Default Size</Divider>
 
-<AntList Bordered DataSource="@data">
+<AntList Bordered DataSource="@_data">
     <Header>Header</Header>
     <ChildContent Context="item">
         <ListItem>
@@ -13,7 +13,7 @@
 
 <Divider Orientation="left">Small Size</Divider>
 
-<AntList Bordered DataSource="@data" Size="small">
+<AntList Bordered DataSource="@_data" Size="small">
     <Header>Header</Header>
     <ChildContent Context="item">
         <ListItem>
@@ -25,7 +25,7 @@
 
 <Divider Orientation="left">Large Size</Divider>
 
-<AntList Bordered DataSource="@data" Size="large">
+<AntList Bordered DataSource="@_data" Size="large">
     <Header>Header</Header>
     <Header>Header</Header>
     <ChildContent Context="item">
@@ -36,10 +36,9 @@
     <Footer>Footer</Footer>
 </AntList>
 
-@code{
-
-    public List<string> data = new List<string>
-{
+@code {
+    private List<string> _data = new()
+    {
         "Racing car sprays burning fuel into crowd.",
         "Japanese princess to wed commoner.",
         "Australian walks 100km after outback crash.",

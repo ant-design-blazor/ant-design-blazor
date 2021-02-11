@@ -1,11 +1,11 @@
 ﻿<div>
-    <RadioGroup @bind-Value="position" Style="margin-bottom: 16px;">
+    <RadioGroup @bind-Value="_position" Style="margin-bottom: 16px;">
         <Radio RadioButton Value="@TabPosition.Top">Top</Radio>
         <Radio RadioButton Value="@TabPosition.Left">Left</Radio>
         <Radio RadioButton Value="@TabPosition.Right">Right</Radio>
         <Radio RadioButton Value="@TabPosition.Bottom">Bottom</Radio>
     </RadioGroup>
-    <Tabs DefaultActiveKey="1" TabPosition="@position">
+    <Tabs DefaultActiveKey="1" TabPosition="@_position">
         <TabPane Key="1">
             <Tab>Tab 1</Tab>
             <ChildContent>Content of Tab Pane 1</ChildContent>
@@ -21,6 +21,6 @@
     </Tabs>
 </div>
 
-@code{
-    private string position = TabPosition.Top;
+@code {
+    private string _position = TabPosition.Top;
 }

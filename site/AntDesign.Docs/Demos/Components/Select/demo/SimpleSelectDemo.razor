@@ -1,4 +1,4 @@
-﻿<SimpleSelect DefaultValue="lucy" Style="width:120px;" OnSelectedItemChanged="handleChange">
+﻿<SimpleSelect DefaultValue="lucy" Style="width:120px;" OnSelectedItemChanged="HandleChange">
     <SelectOptions>
         <SimpleSelectOption Value="jack" Label="Jack"></SimpleSelectOption>
         <SimpleSelectOption Value="lucy" Label="Lucy"></SimpleSelectOption>
@@ -7,7 +7,7 @@
     </SelectOptions>
 </SimpleSelect>
 
-<SimpleSelect DefaultValues=@(new[]{"lucy","jack"}) Mode="multiple" Style="width:200px;" OnSelectedItemsChanged="handleItemsChange">
+<SimpleSelect DefaultValues=@(new[]{"lucy","jack"}) Mode="multiple" Style="width:200px;" OnSelectedItemsChanged="HandleItemsChange">
     <SelectOptions>
         <SimpleSelectOption Value="jack" Label="Jack"></SimpleSelectOption>
         <SimpleSelectOption Value="lucy" Label="Lucy"></SimpleSelectOption>
@@ -16,13 +16,13 @@
     </SelectOptions>
 </SimpleSelect>
 
-@code{
-    void handleChange(string value)
+@code {
+    private static void HandleChange(string value)
     {
         Console.WriteLine(value);
     }
 
-    void handleItemsChange(IEnumerable<string> value)
+    private static void HandleItemsChange(IEnumerable<string> value)
     {
         Console.WriteLine(value);
     }

@@ -1,25 +1,25 @@
-﻿@inject NotificationService _notice
+﻿@inject NotificationService NotificationService
 
     <Button Type="@ButtonType.Primary" OnClick="@OnClick">
         Open the notification box
     </Button>
 
-@code{
+@code {
     private async Task OnClick()
     {
-        string key = $"open{DateTime.Now}";
-        var task = _notice.Open(new NotificationConfig()
+        var key = $"open{DateTime.Now}";
+        NotificationService.Open(new NotificationConfig
         {
             Message = "Notification Title",
             Key = key,
-            Description = "description.",
+            Description = "description."
         });
         await Task.Delay(1000);
-        await _notice.Open(new NotificationConfig()
+        await NotificationService.Open(new NotificationConfig
         {
             Message = "New Title",
             Key = key,
-            Description = "New description.",
+            Description = "New description."
         });
     }
 }

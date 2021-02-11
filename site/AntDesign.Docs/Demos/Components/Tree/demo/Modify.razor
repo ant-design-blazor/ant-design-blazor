@@ -1,12 +1,12 @@
-<Tree @ref="tree"
+<Tree @ref="_tree"
       SelectedKey="100"
-      ShowIcon DataSource="games"
+      ShowIcon DataSource="_games"
       TitleExpression="x => x.DataItem.Text"
       ChildrenExpression="x => x.DataItem.Items"
       IconExpression="x => x.DataItem.Icon"
       IsLeafExpression="x => x.DataItem.Items?.Count == 0"
       KeyExpression="x => x.DataItem.Id"
-      @bind-SelectedNode="@selectedNode"
+      @bind-SelectedNode="@_selectedNode"
       TItem="GameElement">
 </Tree>
 
@@ -23,99 +23,96 @@
 <Button OnClick="NodeDowngrade">Downgrade</Button>
 <Button OnClick="NodeUpgrade">Upgrade</Button>
 
-@code{
-    Tree<GameElement> tree;
+@code {
+    private Tree<GameElement> _tree;
 
-    TreeNode<GameElement> selectedNode;
+    private TreeNode<GameElement> _selectedNode;
 
-    int i;
+    private int _i;
 
-    GameElement GenerateDataItem()
+    GameElement GenerateDataItem() => new(_i++.ToString(), $"Node {_i}")
     {
-        return new GameElement(i++.ToString(), $"Node {i}")
-        {
-            Items = new List<GameElement>()
-        };
-    }
+        Items = new List<GameElement>()
+    };
 
     void AddSon()
     {
-        selectedNode?.AddChildNode(GenerateDataItem());
+        _selectedNode?.AddChildNode(GenerateDataItem());
     }
 
     void AddNext()
     {
-        selectedNode?.AddNextNode(GenerateDataItem());
+        _selectedNode?.AddNextNode(GenerateDataItem());
     }
 
     void AddPrevious()
     {
-        selectedNode?.AddPreviousNode(GenerateDataItem());
+        _selectedNode?.AddPreviousNode(GenerateDataItem());
     }
 
     void RemoveSelf()
     {
-        selectedNode?.Remove();
+        _selectedNode?.Remove();
     }
 
     void NodeMove()
     {
-        var firstNode = tree.ChildNodes.First();
-        selectedNode?.MoveInto(firstNode);
+        var firstNode = _tree.ChildNodes.First();
+        _selectedNode?.MoveInto(firstNode);
     }
 
     void NodeMoveUp()
     {
-        selectedNode?.MoveUp();
+        _selectedNode?.MoveUp();
     }
 
     void NodeMoveDown()
     {
-        selectedNode?.MoveDown();
+        _selectedNode?.MoveDown();
     }
 
     void NodeDowngrade()
     {
-        selectedNode?.Downgrade();
+        _selectedNode?.Downgrade();
     }
 
     void NodeUpgrade()
     {
-        selectedNode?.Upgrade();
+        _selectedNode?.Upgrade();
     }
 
-    List<GameElement> games = new List<GameElement>()
-{
-        new ("100","XBox","windows")
+    List<GameElement> _games = new()
+    {
+        new GameElement("100", "XBox", "windows")
         {
-            Items=new List<GameElement>()
-{
-                new ("101","Halo"),
-                 new ("102","Gears of War"),
-                 new ("103","Forza Motosport"),
+            Items = new List<GameElement>
+            {
+                new("101", "Halo"),
+                new("102", "Gears of War"),
+                new("103", "Forza Motosport"),
             }
         },
-        new ("200","PlayStation","desktop")
+        new GameElement("200", "PlayStation", "desktop")
         {
-            Items=new List<GameElement>()
-{
-                new ("201","Uncharted"),
-                 new ("202","God Of War"),
-                 new ("203","The Order:1886"),
+            Items = new List<GameElement>
+            {
+                new("201", "Uncharted"),
+                new("202", "God Of War"),
+                new("203", "The Order:1886"),
             }
         },
-                new ("300","Switch","mobile")
+        new GameElement("300", "Switch", "mobile")
         {
-            Items=new List<GameElement>()
-{
-                new ("301","Super Mario Bros"),
-                 new ("302","The Legend of Zelda"),
+            Items = new List<GameElement>
+            {
+                new("301", "Super Mario Bros"),
+                new("302", "The Legend of Zelda"),
             }
         }
     };
 
     private record GameElement(string Id, string Text, string Icon = null)
     {
-        public List<GameElement> Items { get; set; } = new List<GameElement>();
+        public List<GameElement> Items { get; set; } = new();
     }
 }

@@ -1,7 +1,7 @@
-<Select DataSource="@_persons" 
+<Select DataSource="@_persons"
         @bind-Value="@_selectedValue"
-        ValueName="@nameof(Person.Value)" 
-        LabelName="@nameof(Person.Name)" 
+        ValueName="@nameof(Person.Value)"
+        LabelName="@nameof(Person.Name)"
         GroupName="@nameof(Person.Role)"
         SortByLabel="@SortDirection.Ascending"
         SortByGroup="@SortDirection.Ascending"
@@ -14,32 +14,48 @@
     Selected Value: @_selectedValue <br/>
     Selected Item Name: @_selectedItem?.Name
 </p>
-@code
-{
-    class Person
+
+@code {
+
+    private class Person
     {
         public string Value { get; set; }
         public string Name { get; set; }
         public string Role { get; set; }
     }
 
-    List<Person> _persons;
-    string _selectedValue;
-    Person _selectedItem;
+    private List<Person> _persons;
+    private string _selectedValue;
+    private Person _selectedItem;
 
     protected override void OnInitialized()
     {
         _persons = new List<Person>
         {
-            new Person {Value = "jack", Name = "Jack", Role = "Manager"}, 
-            new Person {Value = "lucy", Name = "Lucy", Role = "Manager"}, 
-            new Person {Value = "yaoming", Name = "Yaoming", Role = "Engineer"}
+            new()
+            {
+                Value = "jack",
+                Name = "Jack",
+                Role = "Manager"
+            },
+            new()
+            {
+                Value = "lucy",
+                Name = "Lucy",
+                Role = "Manager"
+            },
+            new()
+            {
+                Value = "yaoming",
+                Name = "Yaoming",
+                Role = "Engineer"
+            }
         };
     }
 
     private void OnSelectedItemChangedHandler(Person value)
     {
         _selectedItem = value;
-		Console.WriteLine($"selected: ${value?.Name}");
+        Console.WriteLine($"selected: ${value?.Name}");
     }
 }

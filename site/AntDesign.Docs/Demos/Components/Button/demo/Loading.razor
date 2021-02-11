@@ -8,45 +8,42 @@
         Loading
     </Button>
     <br />
-    <Button Type="primary" Loading="loading" OnClick=enterLoading>
+    <Button Type="primary" Loading="_loading" OnClick="EnterLoading">
         Click me!
     </Button>
     <Button
         Type="primary"
         Icon="poweroff"
-    Loading="iconLoading"
-    OnClick="enterIconLoading"
-    >
+    Loading="_iconLoading"
+    OnClick="EnterIconLoading">
     Click me!
     </Button>
 </div>
 
-@code
-{
-    bool loading = false;
-    bool iconLoading = false;
+@code {
+    private bool _loading;
+    private bool _iconLoading;
 
-    private void enterLoading()
+    private void EnterLoading()
     {
-        loading = true;
+        _loading = true;
         Task.Run(async () =>
         {
             await Task.Delay(8000);
-            loading = false;
+            _loading = false;
             await InvokeAsync(StateHasChanged);
             Console.WriteLine("Timer2 ended" + DateTime.Now);
         });
-
     }
 
-    private void enterIconLoading()
+    private void EnterIconLoading()
     {
-        iconLoading = true;
+        _iconLoading = true;
 
         Task.Run(async () =>
         {
             await Task.Delay(8000);
-            iconLoading = false;
+            _iconLoading = false;
             await InvokeAsync(StateHasChanged);
         });
     }

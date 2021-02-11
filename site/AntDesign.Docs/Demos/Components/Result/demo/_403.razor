@@ -1,9 +1,8 @@
 ﻿<Result Status="403"
         Title="403"
         SubTitle="Sorry, you are not authorized to access this page."
-        Extra="extra" />
+        Extra="_extra" />
 
-@code
-{
-    RenderFragment extra = @<Button Type="primary">Back Home</Button>;
+@code {
+    private readonly RenderFragment _extra = @<Button Type="primary">Back Home</Button>;
 }

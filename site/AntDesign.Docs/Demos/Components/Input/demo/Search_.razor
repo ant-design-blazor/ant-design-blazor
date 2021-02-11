@@ -1,28 +1,27 @@
-﻿<div>
-    <Search Placeholder="input search text" Size="@InputSize.Small" @bind-Value="@txtValue" OnPressEnter="OnSearch" />
+﻿@inject MessageService MessageService
+
+<div>
+    <Search Placeholder="input search text" Size="@InputSize.Small" @bind-Value="@TxtValue" OnPressEnter="OnSearch" />
     <br />
     <br />
-    <Search Placeholder="input search text" OnChange="(e)=>Handle(e)" EnterButton="true" @bind-Value="@txtValue" />
+    <Search Placeholder="input search text" OnChange="Handle" EnterButton="true" @bind-Value="@TxtValue" />
     <br />
     <br />
-    <Search Placeholder="input search text" Size="@InputSize.Large" EnterButton="@("Search")" @bind-Value="@txtValue" OnSearch="OnSearch"/>
+    <Search Placeholder="input search text" Size="@InputSize.Large" EnterButton="@("Search")" @bind-Value="@TxtValue" OnSearch="OnSearch"/>
 </div>
 
-@inject MessageService message;
 
-@code{
+@code {
+    private string TxtValue { get; set; }
 
-    private string txtValue { get; set; }
-
-    private void Handle(string value)
+    private static void Handle(string value)
     {
         Console.WriteLine(value);
     }
 
-    public async Task OnSearch()
+    private async Task OnSearch()
     {
-        await message.Loading($"searching {txtValue}", 2);
+        await MessageService.Loading($"searching {TxtValue}", 2);
     }
-
 }
 

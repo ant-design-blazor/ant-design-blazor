@@ -1,5 +1,5 @@
 ﻿<Layout Style="min-height: 100vh; ">
-    <Sider Collapsible Collapsed=@collapsed OnCollapse=@onCollapse>
+    <Sider Collapsible Collapsed="@_collapsed" OnCollapse="@OnCollapse">
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" DefaultSelectedKeys=@(new[]{"1"}) Mode="MenuMode.Inline">
             <MenuItem Key="1">
@@ -17,7 +17,7 @@
                         <span>User</span>
                     </span>;
             }
-            <SubMenu Key="sub1" TitleTemplate=sub1Title>
+            <SubMenu Key="sub1" TitleTemplate="sub1Title">
                 <MenuItem Key="3">Tom</MenuItem>
                 <MenuItem Key="4">Bill</MenuItem>
                 <MenuItem Key="5">Alex</MenuItem>
@@ -29,7 +29,7 @@
                         <span>Team</span>
                     </span>;
             }
-            <SubMenu Key="sub2" TitleTemplate=sub2Title>
+            <SubMenu Key="sub2" TitleTemplate="sub2Title">
                 <MenuItem Key="6">Team 1</MenuItem>
                 <MenuItem Key="8">Team 2</MenuItem>
             </SubMenu>
@@ -53,17 +53,6 @@
     </Layout>
 </Layout>
 
-
-@code {
-    bool collapsed;
-
-   void onCollapse(bool collapsed) {
-        Console.WriteLine(collapsed);
-        this.collapsed =collapsed;
-    }
-}
-
-
 <style>
     #components-layout-demo-side .logo {
         height: 32px;
@@ -75,3 +64,13 @@
         background: #fff;
     }
 </style>
+
+@code {
+    private bool _collapsed;
+
+    private void OnCollapse(bool collapsed)
+    {
+        Console.WriteLine(collapsed);
+        _collapsed = collapsed;
+    }
+}

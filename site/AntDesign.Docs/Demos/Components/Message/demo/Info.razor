@@ -1,13 +1,13 @@
-﻿@inject MessageService _message
+﻿@inject MessageService MessageService
 
 <Button Type="primary" OnClick="OnClick">
     Display normal message
 </Button>
 
-@code{
+@code {
     private void OnClick()
     {
         Console.WriteLine("onclick");
-        _message.Info("This is a normal message");
+        MessageService.Info("This is a normal message");
     }
 }

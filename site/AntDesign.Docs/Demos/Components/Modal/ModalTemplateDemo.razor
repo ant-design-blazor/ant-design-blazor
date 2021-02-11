@@ -1,5 +1,5 @@
-﻿@using System.ComponentModel.DataAnnotations
-@using System.Text.Json
+﻿@using System.Text.Json
+@using AntDesign.Docs.Demos.Components.Form.demo
 @inherits ModalTemplate<Form.demo.Basic.Model>
 
 <Form Model="@_model"
@@ -27,21 +27,19 @@
 <br />
 
 
-@code{
-
-
-    private Form.demo.Basic.Model _model;
+@code {
+    private Basic.Model _model;
 
     protected override void OnInitialized()
     {
-        _model = base.Options ?? new Form.demo.Basic.Model();
+        _model = Options ?? new Basic.Model();
         base.OnInitialized();
     }
 
     private void OnFinish(EditContext editContext)
     {
         Console.WriteLine($"Success:{JsonSerializer.Serialize(_model)}");
-        _ = base.ModalRef.CloseAsync();
+        _ = ModalRef.CloseAsync();
     }
 
     private void OnFinishFailed(EditContext editContext)

@@ -1,5 +1,5 @@
 ﻿@using System.ComponentModel
-<Table DataSource="data" PageSize="10" ScrollX="1500" ScrollY="300">
+<Table DataSource="_data" PageSize="10" ScrollX="1500" ScrollY="300">
     <Column @bind-Field="@context.Name" Width="100" Fixed="left" />
     <Column @bind-Field="@context.Age" Width="100" Fixed="left" />
     <Column @bind-Field="@context.Address" Width="150" Title="Column 1" />
@@ -16,7 +16,7 @@
 </Table>
 
 @code {
-    class Column
+    private class Column
     {
         [DisplayName("Full Name")]
         public string Name { get; set; }
@@ -26,11 +26,12 @@
         public string Address { get; set; }
     }
 
-    Column[] data = Enumerable.Range(0, 100).Select(i => new Column()
-    {
-        Name = $"Edrward {i}",
-        Age = 32,
-        Address = $"London Park no. {i}"
-    }).ToArray();
-
+    private Column[] _data = Enumerable.Range(0, 100)
+        .Select(i => new Column
+        {
+            Name = $"Edward {i}",
+            Age = 32,
+            Address = $"London Park no. {i}"
+        })
+        .ToArray();
 }

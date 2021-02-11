@@ -1,14 +1,14 @@
-﻿<Comment Author="@author" Avatar="@avatar" Content="@content" Actions="@(new []{replyAction})">
-    <Comment Author="@author" Avatar="@avatar" Content="@content" Actions="@(new []{replyAction})">
-        <Comment Author="@author" Avatar="@avatar" Content="@content" Actions="@(new []{replyAction})"/>
-        <Comment Author="@author" Avatar="@avatar" Content="@content" Actions="@(new []{replyAction})"/>
+﻿<Comment Author="@Author" Avatar="@Avatar" Content="@Content" Actions="@(new []{_replyAction})">
+    <Comment Author="@Author" Avatar="@Avatar" Content="@Content" Actions="@(new []{_replyAction})">
+        <Comment Author="@Author" Avatar="@Avatar" Content="@Content" Actions="@(new []{_replyAction})"/>
+        <Comment Author="@Author" Avatar="@Avatar" Content="@Content" Actions="@(new []{_replyAction})"/>
     </Comment>
 </Comment>
 
+@code {
+    private const string Author = "Han Solo";
+    private const string Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
+    private const string Content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.";
 
-@code{
-    string author = "Han Solo";
-    string avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
-    string content = "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.";
-    RenderFragment replyAction =@<span>Reply to</span>;
+    readonly RenderFragment _replyAction =@<span>Reply to</span>;
 }

@@ -1,7 +1,7 @@
 ﻿<div>
     <h4 style="margin-bottom: 16px">Presets:</h4>
     <div>
-        @foreach (var color in colors)
+        @foreach (var color in _colors)
         {
             <div key="@color">
                 <Badge Color="@color" Text="@color" />
@@ -26,9 +26,8 @@
     }
 </style>
 
-@code
-{
-    string[] colors =
+@code {
+    private readonly string[] _colors =
     {
         "pink",
         "red",

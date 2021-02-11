@@ -1,74 +1,72 @@
 ﻿<div>
-    @if (datas.Count > 0)
+    @if (_data.Count > 0)
     {
-        <AntList DataSource="datas" TItem="Data" Header="@header">
+        <AntList DataSource="_data" Header="@Header">
             <ListItem>
-                <Comment Avatar="context.Avatar" Author="context.Author" Datetime="context.Datetime" Content="context.Content"></Comment>
+                <Comment Avatar="@context.Avatar" Author="@context.Author" Datetime="@context.Datetime" Content="@context.Content"></Comment>
             </ListItem>
         </AntList>
     }
     <Comment Avatar="@(@"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png")">
         <ContentTemplate>
-            @GetEditor(@onSubmit)
+            @GetEditor()
         </ContentTemplate>
 </Comment>
 </div>
 
 
-@code{
-    List<Data> datas=new List<Data>();
-    RenderFragment replyAction =@<span>Reply to</span>;
+@code {
+    private readonly List<Data> _data = new();
 
-    RenderFragment header =>
-        @<div>
-            @if (datas.Any())
-            {
-                <span>
-                    @($"{datas.Count} {(datas.Count > 1 ? "replies" : "reply")}")
-                </span>
-            }
-        </div>;
+    private RenderFragment _replyAction =@<span>Reply to</span>;
 
-    async void onSubmit()
+    private RenderFragment Header => @<div>
+                                         @if (_data.Any())
+                                         {
+                                             <span>
+                                                 @($"{_data.Count} {(_data.Count > 1 ? "replies" : "reply")}")
+                                             </span>
+                                         }
+                                     </div>;
+
+    private async Task OnSubmitAsync()
     {
-        submitting = true;
+        _submitting = true;
 
         await Task.Delay(1000);
-        this.datas.Add(new Data()
+        _data.Add(new Data
         {
             Author = "Han Solo",
             Avatar = @"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
             Content = _value,
-            Datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+            Datetime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
         });
-        submitting = false;
+        _submitting = false;
         _value = "";
         await InvokeAsync(StateHasChanged);
     }
 
-    bool submitting=false;
+    bool _submitting;
     string _value = "";
 
     //TODO::Form
-    RenderFragment GetEditor(Action onSubmit)
+    RenderFragment GetEditor()
     {
-        return
-            @<div>
-                <TextArea MinRows="4" @bind-Value="@_value" />
-                <br/>
-                <br/>
-                <Button Loading="@submitting" OnClick="onSubmit " type="primary">
-                    Add Comment
-                </Button>
-            </div>;
+        return @<div>
+                   <TextArea MinRows="4" @bind-Value="@_value" />
+                   <br/>
+                   <br/>
+                   <Button Loading="@_submitting" OnClick="@OnSubmitAsync" type="primary">
+                       Add Comment
+                   </Button>
+               </div>;
     }
 
-
-    class Data
+    private class Data
     {
         public string Author { get; set; }
         public string Avatar { get; set; }
         public string Content { get; set; }
-        public string Datetime;
+        public string Datetime { get; set; }
     }
 }

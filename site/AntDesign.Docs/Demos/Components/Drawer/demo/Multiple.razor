@@ -1,42 +1,39 @@
 ﻿<div>
-    <Button  Type="primary" OnClick="_=>open()">Open</Button>
+    <Button  Type="primary" OnClick="_=>Open()">Open</Button>
 
-    <Drawer Width="@wdFirstLayer" Closable="true" Visible="visible1" Title='("Multi-level drawer")' OnClose="_=>close()">
+    <Drawer Width="@_wdFirstLayer" Closable="true" Visible="_visible1" Title='("Multi-level drawer")' OnClose="_=>Close()">
         <Button Type="primary" OnClick="_=>ShowDrawer()">Two-level Drawer</Button>
-        <Drawer Width="260" Closable="true" Visible="visible2" Title='("two-level drawer")' OnClose="_=>CloseDrawer()">
+        <Drawer Width="260" Closable="true" Visible="_visible2" Title='("two-level drawer")' OnClose="_=>CloseDrawer()">
             <Button Type="primary">This is two-level drawer</Button>
         </Drawer>
 
     </Drawer>
 </div>
 
-   @code{
+@code {
+    private bool _visible1;
+    private bool _visible2;
+    private int _wdFirstLayer = 520;
 
-       bool visible1 = false;
-       bool visible2 = false;
-       int wdFirstLayer = 520;
+    private void Open()
+    {
+        _visible1 = true;
+    }
 
-       void open()
-       {
-           this.visible1 = true;
-       }
+    private void ShowDrawer()
+    {
+        _visible2 = true;
+        _wdFirstLayer += 260;
+    }
 
-       void ShowDrawer()
-       {
+    private void Close()
+    {
+        _visible1 = false;
+    }
 
-           this.visible2 = true;
-           wdFirstLayer += 260;
-       }
-
-       void close()
-       {
-           this.visible1 = false;
-       }
-
-       void CloseDrawer()
-       {
-           wdFirstLayer -= 260;
-           this.visible2 = false;
-       }
-
+    private void CloseDrawer()
+    {
+        _wdFirstLayer -= 260;
+        _visible2 = false;
+    }
 }

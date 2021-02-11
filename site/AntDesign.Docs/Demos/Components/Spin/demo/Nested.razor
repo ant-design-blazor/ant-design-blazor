@@ -1,5 +1,5 @@
 ﻿<div>
-    <Spin Spinning=loading>
+    <Spin Spinning="_loading">
         <Alert
             Message="Alert message title"
             Description="Further details about the context of this alert."
@@ -8,12 +8,12 @@
     </Spin>
     <div style="margin-top: 16px">
         Loading state：
-        <Switch Checked=loading OnChange=toggle />
+        <Switch Checked="_loading" OnChange="Toggle" />
     </div>
 </div>
 
 @code {
-    bool loading = false;
+    private bool _loading;
 
-    void toggle(bool value) => loading = value;
+    private void Toggle(bool value) => _loading = value;
 }

@@ -2,7 +2,7 @@
     <Timeline>
         <TimelineItem>Create a services site 2015-09-01</TimelineItem>
         <TimelineItem>Solve initial network problems 2015-09-01</TimelineItem>
-        <TimelineItem Dot="dotTemplate"  Color="red">
+        <TimelineItem Dot="_dotTemplate"  Color="red">
         Technical testing 2015-09-01
         </TimelineItem>
        <TimelineItem>Network problems being solved 2015-09-01</TimelineItem>
@@ -10,8 +10,7 @@
 </div>
 
 @code {
-    RenderFragment dotTemplate =
-        @<Template>
-            <Icon Type="clock-circle" Style="font-size: 16px;" />
-        </Template>;
+    private RenderFragment _dotTemplate = @<Template>
+                                              <Icon Type="clock-circle" Style="font-size: 16px;"/>
+                                          </Template>;
 }

@@ -1,10 +1,10 @@
 ﻿<div>
-    <Progress Type=ProgressType.Circle Percent=75 Format=_fortmat1 />
-    <Progress Type=ProgressType.Circle Percent=100 Format=_fortmat2 />
+    <Progress Type="ProgressType.Circle" Percent="75" Format="_format" />
+    <Progress Type="ProgressType.Circle" Percent="100" Format="_format2" />
 
 </div>
 
-@code{
-    private Func<double, string> _fortmat1 = (p) => $"{p} Days";
-    private Func<double, string> _fortmat2 = (p) => "Done";
+@code {
+    private readonly Func<double, string> _format = p => $"{p} Days";
+    private readonly Func<double, string> _format2 = _ => "Done";
 }

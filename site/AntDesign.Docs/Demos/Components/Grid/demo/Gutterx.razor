@@ -29,7 +29,7 @@
         Responsive
     </Divider>
     <div class="Gutter-example">
-        <Row Gutter="@Gutter1">
+        <Row Gutter="@_gutter1">
             <Col class="Gutter-row" Span="6">
                 <div >col-6</div>
             </Col>
@@ -76,8 +76,8 @@
         </Row>
     </div>
 </div>
-@code{
-    Dictionary<string, int> Gutter1 = new Dictionary<string, int>()
+@code {
+    private readonly Dictionary<string, int> _gutter1 = new()
     {
         ["xs"] = 8,
         ["sm"] = 16,
@@ -86,6 +86,4 @@
         ["xl"] = 48,
         ["xxl"] = 64
     };
-   
-
 }

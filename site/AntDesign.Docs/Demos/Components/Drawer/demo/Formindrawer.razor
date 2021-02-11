@@ -1,6 +1,6 @@
 ﻿<div>
-    <Button Icon="plus" Type="primary" @onclick="_=>open()">New account</Button>
-    <Drawer Closable="true" Width="720" Visible="visible" Title='("Submit from in Drawer")' OnClose="_=>close()">
+    <Button Icon="plus" Type="primary" @onclick="_=>Open()">New account</Button>
+    <Drawer Closable="true" Width="720" Visible="_visible" Title='("Submit from in Drawer")' OnClose="_=>Close()">
         <Template style="height:90%">
             <Row Gutter="16">
                 <AntDesign.Col Span="12">
@@ -51,16 +51,16 @@
 </div>
 
 
-@code{
-    bool visible = false;
+@code {
+    bool _visible;
 
-    void open()
+    void Open()
     {
-        this.visible = true;
+        _visible = true;
     }
 
-    void close()
+    void Close()
     {
-        this.visible = false;
+        _visible = false;
     }
 }

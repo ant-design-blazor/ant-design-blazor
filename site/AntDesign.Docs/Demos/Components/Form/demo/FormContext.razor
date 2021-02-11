@@ -59,44 +59,50 @@
 
 
 @code {
-    public class User
+    private class User
     {
         [Required]
         public string Name { get; set; }
+
         [Required]
         public int Age { get; set; }
     }
 
-    public class UserGroup
+    private class UserGroup
     {
         [Required]
         public string GroupName { get; set; }
+
         [ValidateComplexType]
-        public List<User> Users { get; set; } = new List<User>();
+        public List<User> Users { get; } = new();
     }
 
     private Form<User> _userForm;
-    private User _userFormModel = new User();
-    private UserGroup _baseFormModel = new UserGroup();
-    private bool _modelVisible = false;
+    private readonly User _userFormModel = new();
+    private readonly UserGroup _baseFormModel = new();
+    private bool _modelVisible;
 
     private void OnFormFinish(FormProviderFinishEventArgs args)
     {
         if (args.FinishForm.Name == "userForm")
         {
             // if you can't get the reference of _userForm and _baseFormModel, you should:
-            User user = (User)args.FinishForm.Model;
-            UserGroup userGroup = (UserGroup)args.Forms["basicForm"].Model;
- 
-            userGroup.Users.Add(new User { Name = user.Name, Age = user.Age });
+            var user = (User) args.FinishForm.Model;
+            var userGroup = (UserGroup) args.Forms["basicForm"].Model;
+
+            userGroup.Users.Add(new User
+            {
+                Name = user.Name,
+                Age = user.Age
+            });
 
             // if you have the reference of _userForm and _baseFormModel, you can:
-            //_baseFormModel.Users.Add(new User { Name = _userFormModel.Name, Age = _userFormModel.Age });
+            // _baseFormModel.Users.Add(new User { Name = _userFormModel.Name, Age = _userFormModel.Age });
         }
         HideUserModal();
     }
 
-    private void OnBasicFinish(EditContext editContext)
+    private static void OnBasicFinish(EditContext editContext)
     {
         Console.WriteLine($"Success:{JsonSerializer.Serialize(editContext.Model)}");
     }

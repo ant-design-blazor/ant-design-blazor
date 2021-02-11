@@ -1,5 +1,5 @@
 <div>
-    <RadioGroup @bind-Value="radioValue1" Name="radiogroup1">
+    <RadioGroup @bind-Value="_radioValue1" Name="radiogroup1">
         <Radio Value="@("A")">A</Radio>
         <Radio Value="@("B")">B</Radio>
         <Radio Value="@("C")">C</Radio>
@@ -7,16 +7,15 @@
     </RadioGroup>
 </div>
 <div>
-    <RadioGroup @bind-Value="radioValue2" Name="radiogroup2">
+    <RadioGroup @bind-Value="_radioValue2" Name="radiogroup2">
         <Radio Value="@("A")">A</Radio>
         <Radio Value="@("B")">B</Radio>
         <Radio Value="@("C")">C</Radio>
         <Radio Value="@("D")">D</Radio>
     </RadioGroup>
 </div>
-@code
-{
-    string radioValue1 = "A";
 
-    string radioValue2 = "A";
+@code {
+    private string _radioValue1 = "A";
+    private string _radioValue2 = "A";
 }

@@ -1,14 +1,14 @@
 ﻿<div>
-    <Tag Mode="closeable" Visible="bVisible">Movies</Tag>
+    <Tag Mode="closeable" Visible="BVisible">Movies</Tag>
     <br />
     <br />
-    <Button Size="small" OnClick="onClick">Toggle</Button>
+    <Button Size="small" OnClick="OnClick">Toggle</Button>
 </div>
 
-@code{
-    bool bVisible { get; set; } = true;
-    void onClick()
+@code {
+    private bool BVisible { get; set; } = true;
+    private void OnClick()
     {
-        bVisible = !bVisible;
+        BVisible = !BVisible;
     }
 }

@@ -1,23 +1,24 @@
 <div>
 	<Paragraph Copyable>Simple copyable text</Paragraph>
-	<Paragraph Copyable CopyConfig="@selfDefinedText">Copy a self defiend text</Paragraph>
-	<Paragraph Copyable CopyConfig="@selfDefinedCopy">在控制台中查看此文本的log</Paragraph>
+	<Paragraph Copyable CopyConfig="@_selfDefinedText">Copy a self defiend text</Paragraph>
+	<Paragraph Copyable CopyConfig="@_selfDefinedCopy">在控制台中查看此文本的log</Paragraph>
 	<Title Copyable>可复制的标题</Title>
 	<Paragraph >不可复制的段落中穿插着<Text Strong Copyable>可复制的文字</Text>以及其他</Paragraph>
 </div>
 
 
-@code 
-{
-    public TypographyCopyableConfig selfDefinedText;
-    public TypographyCopyableConfig selfDefinedCopy;
+@code {
+	private TypographyCopyableConfig _selfDefinedText;
+	private TypographyCopyableConfig _selfDefinedCopy;
 
     protected override void OnInitialized()
     {
-        selfDefinedText = new TypographyCopyableConfig() { Text = "Just copied from self defined text" };
-        selfDefinedCopy = new TypographyCopyableConfig();
-        selfDefinedCopy.OnCopy += () => System.Console.WriteLine("Log in console as a self defined copy behavior");
-        base.OnInitialized();
+	    _selfDefinedText = new TypographyCopyableConfig
+	    {
+		    Text = "Just copied from self defined text"
+	    };
+	    _selfDefinedCopy = new TypographyCopyableConfig();
+	    _selfDefinedCopy.OnCopy += () => Console.WriteLine("Log in console as a self defined copy behavior");
+	    base.OnInitialized();
     }
-
 }

@@ -2,27 +2,27 @@
     <Panel Header="This is panel header 1" Key="1">
         <Collapse DefaultActiveKey=@(new[]{"1"})>
             <Panel Header="This is panel nest panel" Key="1">
-                <p>@text</p>
+                <p>@Text</p>
             </Panel>
         </Collapse>
     </Panel>
     <Panel Header="This is panel header 2" Key="2">
-        <p>@text</p>
+        <p>@Text</p>
     </Panel>
     <Panel Header="This is panel header 3" Key="3">
-        <p>@text</p>
+        <p>@Text</p>
     </Panel>
 </Collapse>
 
-@code{
+@code {
 
-    string text = @"
+    private const string Text = @"
 A dog is a type of domesticated animal.
 Known for its loyalty and faithfulness,
 it can be found as a welcome guest in many households across the world.
 ";
 
-    void Callback(string[] keys)
+    private static void Callback(string[] keys)
     {
         Console.WriteLine(string.Join(',', keys));
     }

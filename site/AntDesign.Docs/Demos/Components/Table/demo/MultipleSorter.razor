@@ -1,25 +1,25 @@
-﻿<Table DataSource="data" OnChange="OnChange" TItem="Data">
+﻿@using AntDesign.TableModels;
+@using System.Text.Json;
+
+<Table DataSource="_data" OnChange="OnChange" TItem="Data">
     <Column Title="Name" DataIndex="name" TData="string" />
     <Column Title="Chinese Score" DataIndex="chinese" TData="int" SorterMultiple="3" SorterCompare="(a,b)=>a-b" />
     <Column Title="Math Score" DataIndex="math" TData="int" SorterMultiple="2" SorterCompare="(a,b)=>a-b" />
     <Column Title="English Score" DataIndex="english" TData="int" SorterMultiple="1" SorterCompare="(a,b)=>a-b" />
 </Table>
 
-@using AntDesign.TableModels;
-@using System.Text.Json;
 @code {
+    private record Data(string Name, int Chinese, int Math, int English);
 
-    public record Data(string Name, int Chinese, int Math, int English);
-
-    public Data[] data =
+    private Data[] _data =
     {
-        new("John Brown",98,60,70),
-        new("Jim Green",98,66,89),
-        new("Joe Black",98,90,70),
-        new("Jim Red",88,99,89),
+        new("John Brown", 98, 60, 70),
+        new("Jim Green", 98, 66, 89),
+        new("Joe Black", 98, 90, 70),
+        new("Jim Red", 88, 99, 89)
     };
 
-    void OnChange(QueryModel<Data> query)
+    private static void OnChange(QueryModel<Data> query)
     {
         Console.WriteLine(JsonSerializer.Serialize(query));
     }

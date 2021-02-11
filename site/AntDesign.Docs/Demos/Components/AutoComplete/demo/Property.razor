@@ -1,46 +1,49 @@
-﻿<AutoComplete @bind-Value="@value"
-              OptionDataItems="@options"
-              Backfill="@switchBackfill"
-              AllowFilter="@allowFilter"
-              DefaultActiveFirstOption="@switchDefaultActiveFirstOption"
+﻿<AutoComplete @bind-Value="@_value"
+              OptionDataItems="@_options"
+              Backfill="@SwitchBackfill"
+              AllowFilter="@AllowFilter"
+              DefaultActiveFirstOption="@SwitchDefaultActiveFirstOption"
               Width="120"
               OnPanelVisibleChange="OnPanelVisibleChange"
-              Disabled="@disabled" />
+              Disabled="@Disabled" />
 <Divider Text="Properties"></Divider>
 
 <div>
-    <Switch @bind-Value="switchBackfill" />Backfill
+    <Switch @bind-Value="SwitchBackfill" />Backfill
     <br />
-    <Switch @bind-Value="switchDefaultActiveFirstOption" />DefaultActiveFirstOption
+    <Switch @bind-Value="SwitchDefaultActiveFirstOption" />DefaultActiveFirstOption
     <br />
-    <Switch @bind-Value="disabled" />Disabled
+    <Switch @bind-Value="Disabled" />Disabled
     <br />
-    <Switch @bind-Value="allowFilter" />AllowFilter
+    <Switch @bind-Value="AllowFilter" />AllowFilter
 </div>
 
 <Divider></Divider>
-<span>bind-Value:@value</span>
+<span>bind-Value:@_value</span>
 
 
-@code
-{
-    private string value;
+@code {
+    private string _value;
 
-    List<AutoCompleteDataItem<string>> options = new List<AutoCompleteDataItem<string>>() {
-        new AutoCompleteDataItem<string>("Burns Bay Road","Burns Bay Road"),
-        new AutoCompleteDataItem<string>("Downing Street","Downing Street"){ IsDisabled=true },
-        new AutoCompleteDataItem<string>("Wall Street","Wall Street")
-        };
+    private readonly List<AutoCompleteDataItem<string>> _options = new()
+    {
+        new AutoCompleteDataItem<string>("Burns Bay Road", "Burns Bay Road"),
+        new AutoCompleteDataItem<string>("Downing Street", "Downing Street")
+        {
+            IsDisabled = true
+        },
+        new AutoCompleteDataItem<string>("Wall Street", "Wall Street")
+    };
 
-    bool switchBackfill { get; set; } = false;
+    private bool SwitchBackfill { get; } = false;
 
-    bool switchDefaultActiveFirstOption { get; set; } = true;
+    private bool SwitchDefaultActiveFirstOption { get; } = true;
 
-    bool disabled { get; set; } = false;
+    private bool Disabled { get; } = false;
 
-    bool allowFilter { get; set; } = true;
+    private bool AllowFilter { get; } = true;
 
-    private void OnPanelVisibleChange(bool visible)
+    private static void OnPanelVisibleChange(bool visible)
     {
         Console.WriteLine(visible);
     }

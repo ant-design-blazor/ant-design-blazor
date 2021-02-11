@@ -1,9 +1,9 @@
-﻿@inject MessageService _message
+﻿@inject MessageService MessageService
 
 <Button Type="primary" OnClick="@(()=>{ _visible = true; })">
     Open Modal
 </Button>
-<Modal Title="@title"
+<Modal Title="@_title"
        Visible="@_visible"
        OnOk="@HandleOk"
        OnCancel="@HandleCancel">
@@ -19,10 +19,10 @@
         @if (context.Type == 1)
         {
             <FormItem>
-                <Select DataSource="@_persons" 
+                <Select DataSource="@_persons"
                         @bind-Value="@context.SelectedValue"
-                        LabelName="@nameof(Person.Name)" 
-                        ValueName="@nameof(Person.Id)" 
+                        LabelName="@nameof(Person.Name)"
+                        ValueName="@nameof(Person.Id)"
                         Placeholder="Select a person"
                         Style="width:120px"
                         AllowClear>
@@ -73,40 +73,50 @@
 
 </Modal>
 
-@code{
-    class FormModal
+@code {
+    private class FormModal
     {
         public string Name { get; set; }
         public int Type { get; set; }
         public int SelectedValue { get; set; }
     }
 
-    class Person
+    private class Person
     {
         public int Id { get; set; }
         public string Name { get; set; }
     }
 
-    string title = "BasicModal";
-    bool _visible = false;
-    List<Person> _persons;
+    private string _title = "BasicModal";
+    private bool _visible;
+    private List<Person> _persons;
 
-    RenderFragment _content =
-    @<div>
-        <p>Content</p>
-        <p>Content</p>
-    </div>;
-
-    private FormModal _formModal = new FormModal();
+    private readonly FormModal _formModal = new();
 
     protected override void OnInitialized()
     {
-        _persons = new List<Person> 
+        _persons = new List<Person>
         {
-            new Person {Id = 1, Name = "Jack"}, 
-            new Person {Id = 2, Name = "Lucy"}, 
-            new Person {Id = 3, Name = "Yaoming"}, 
-            new Person {Id = 4, Name = "Frieda"}, 
+            new()
+            {
+                Id = 1,
+                Name = "Jack"
+            },
+            new()
+            {
+                Id = 2,
+                Name = "Lucy"
+            },
+            new()
+            {
+                Id = 3,
+                Name = "Yaoming"
+            },
+            new()
+            {
+                Id = 4,
+                Name = "Frieda"
+            }
         };
     }
 

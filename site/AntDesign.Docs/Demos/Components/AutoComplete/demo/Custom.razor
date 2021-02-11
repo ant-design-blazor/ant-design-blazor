@@ -1,25 +1,22 @@
-﻿
-<Divider>Input</Divider>
-<AutoComplete Options="@options">
-    <AutoCompleteInput Placeholder="input here" @bind-Value="@inputValue" />
+﻿<Divider>Input</Divider>
+<AutoComplete Options="@_options">
+    <AutoCompleteInput Placeholder="input here" @bind-Value="@_inputValue" />
 </AutoComplete>
 <br />
-<span>bind-Value:@inputValue</span>
+<span>bind-Value:@_inputValue</span>
 
 <Divider>Search</Divider>
-<AutoComplete Options="@options">
-    <AutoCompleteSearch Placeholder="input here" @bind-Value="@searchValue" />
+<AutoComplete Options="@_options">
+    <AutoCompleteSearch Placeholder="input here" @bind-Value="@_searchValue" />
 </AutoComplete>
 <br />
-<span>bind-Value:@searchValue</span>
+<span>bind-Value:@_searchValue</span>
 
+@code {
+    private string _inputValue;
+    private string _searchValue;
 
-@code
-{
-    private string inputValue;
-    private string searchValue;
-
-    List<string> options = new List<string>(){
+    private readonly List<string> _options = new(){
         "Beijing","Shanghai","Guangzhou","Shenzhen","Chongqing","Wuhan"
     };
 }

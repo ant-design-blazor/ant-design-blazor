@@ -1,9 +1,9 @@
-﻿<Popover Style="{width: 500}" OnVisibleChange="OnHoverVisibleChange" Visible="_hoverVisible" Title="Hover title" Trigger="@(new AntDesign.TriggerType[] { AntDesign.TriggerType.Hover})">
+﻿<Popover Style="{width: 500}" OnVisibleChange="OnHoverVisibleChange" Visible="_hoverVisible" Title="Hover title" Trigger="@(new[] { AntDesign.TriggerType.Hover})">
     <ContentTemplate>
         <div> This is hover content.</div>
     </ContentTemplate>
     <ChildContent>
-        <Popover OnVisibleChange="OnClickVisibleChange" Visible="_clickVisible" Content="_clickContent" Title="Click title" Trigger="@(new AntDesign.TriggerType[] { AntDesign.TriggerType.Click})">
+        <Popover OnVisibleChange="OnClickVisibleChange" Visible="_clickVisible" Content="_clickContent" Title="Click title" Trigger="@(new[] { AntDesign.TriggerType.Click})">
             <ContentTemplate>
                 <div>
                     <div>This is click content.</div>
@@ -18,10 +18,9 @@
     </ChildContent>
 </Popover>
 
-@code{
-
-    private bool _hoverVisible = false;
-    private bool _clickVisible = false;
+@code {
+    private bool _hoverVisible;
+    private bool _clickVisible;
 
     private void OnHoverVisibleChange(bool visible)
     {

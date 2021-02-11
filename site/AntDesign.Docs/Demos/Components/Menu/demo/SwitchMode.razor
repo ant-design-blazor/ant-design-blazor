@@ -1,14 +1,14 @@
 ﻿<div>
-    <Switch OnChange=changeMode /> Change Mode
+    <Switch OnChange="ChangeMode" /> Change Mode
     <div class="ant-divider ant-divider-vertical" role="separator"></div>
-    <Switch OnChange=changeTheme/> Change Style
+    <Switch OnChange="ChangeTheme"/> Change Style
     <br />
     <br />
     <Menu Style=" width: 256px ;"
           DefaultSelectedKeys=@(new[]{"1"})
           DefaultOpenKeys=@(new[]{"sub1"})
-          Mode=this.mode
-          Theme=this.theme>
+          Mode="this._mode"
+          Theme="this._theme">
         <MenuItem Key="1">
             <Icon Type="mail" Theme="outline"></Icon>
             Navigation One
@@ -17,7 +17,7 @@
             <Icon Type="calendar" Theme="outline"></Icon>
             Navigation Two
         </MenuItem>
-        <SubMenu Key="sub1" TitleTemplate=@sub1Title>
+        <SubMenu Key="sub1" TitleTemplate="@_sub1Title">
             <MenuItem Key="3">Option 3</MenuItem>
             <MenuItem Key="4">Option 4</MenuItem>
             <SubMenu Key="sub1-2" Title="Submenu">
@@ -25,7 +25,7 @@
                 <MenuItem Key="6">Option 6</MenuItem>
             </SubMenu>
         </SubMenu>
-        <SubMenu Key="sub2" TitleTemplate=@sub2Title>
+        <SubMenu Key="sub2" TitleTemplate="@_sub2Title">
             <MenuItem Key="7">Option 7</MenuItem>
             <MenuItem Key="8">Option 8</MenuItem>
             <MenuItem Key="9">Option 9</MenuItem>
@@ -35,30 +35,26 @@
 </div>
 
 @code {
+    private readonly RenderFragment _sub1Title = @<span>
+                                                     <Icon Type="appstore" Theme="outline"></Icon>
+                                                     <span>Navigation Three</span>
+                                                 </span>;
 
-    RenderFragment sub1Title =
-        @<span>
-            <Icon Type="appstore" Theme="outline"></Icon>
-            <span>Navigation Three</span>
-        </span>;
+    private readonly RenderFragment _sub2Title = @<span>
+                                                     <Icon Type="setting" Theme="outline"></Icon>
+                                                     <span>Navigation Four</span>
+                                                 </span>;
 
-    RenderFragment sub2Title =
-        @<span>
-            <Icon Type="setting" Theme="outline"></Icon>
-            <span>Navigation Four</span>
-        </span>;
+    private MenuMode _mode = MenuMode.Inline;
+    private MenuTheme _theme = MenuTheme.Light;
 
-    MenuMode mode = MenuMode.Inline;
-    MenuTheme theme = MenuTheme.Light;
-
-    void changeMode(bool value)
+    void ChangeMode(bool value)
     {
-        this.mode = value ? MenuMode.Vertical : MenuMode.Inline;
+        _mode = value ? MenuMode.Vertical : MenuMode.Inline;
     }
 
-    void changeTheme(bool value)
+    void ChangeTheme(bool value)
     {
-        this.theme = value ? MenuTheme.Dark : MenuTheme.Light;
+        _theme = value ? MenuTheme.Dark : MenuTheme.Light;
     }
-
 }

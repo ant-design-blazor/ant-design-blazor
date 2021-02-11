@@ -1,29 +1,28 @@
 <Collapse DefaultActiveKey="@(new[]{"1"})" OnChange="Callback">
     <Panel Header="This is panel header 1" Key="1">
-        <p>@text</p>
+        <p>@Text</p>
     </Panel>
     <Panel Key="2">
         <HeaderTemplate>
             This is panel header 2
         </HeaderTemplate>
         <ChildContent>
-            <p>@text</p>
+            <p>@Text</p>
         </ChildContent>
     </Panel>
     <Panel Header="This is panel header 3" Key="3" Disabled>
-        <p>@text</p>
+        <p>@Text</p>
     </Panel>
 </Collapse>
 
-@code{
-
-    string text = @"
+@code {
+    private const string Text = @"
 A dog is a type of domesticated animal.
 Known for its loyalty and faithfulness,
 it can be found as a welcome guest in many households across the world.
 ";
 
-    void Callback(string[] keys)
+    private static void Callback(string[] keys)
     {
         Console.WriteLine(string.Join(',', keys));
     }

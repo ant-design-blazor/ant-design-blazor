@@ -1,24 +1,22 @@
 ﻿<div>
-    <Button Type="primary" @onclick="_=>open()">Open</Button>
-    <Drawer Closable="true" Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
+    <Button Type="primary" @onclick="_ => Open()">Open</Button>
+    <Drawer Closable="true" Visible="_visible" Placement="right" Title='"Basic Drawer"' OnClose="_ => Close()">
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
     </Drawer>
 </div>
 
-   @code{
+@code {
+    private bool _visible;
 
-    bool visible = false;
-
-    void open()
+    private void Open()
     {
-        this.visible = true;
+        _visible = true;
     }
 
-    void close()
+    private void Close()
     {
-        this.visible = false;
+        _visible = false;
     }
-
 }

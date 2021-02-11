@@ -1,62 +1,35 @@
 <div>
     <p style="margin-bottom: 20px">
-        <Checkbox Checked="@checkValue"  
-                    Disabled="@disableValue" 
-                    CheckedChange="CheckChanged">
-        @label
+        <Checkbox Checked="@CheckValue"
+                    Disabled="@DisableValue"
+                    CheckedChange="CheckClick">
+            @Label
         </Checkbox>
-    </p>     
+    </p>
         <p>
-        <Button Type="primary" Size="small"  @onclick="@CheckClick">@checkTitle</Button>
-        <Button Type="primary" Size="small"  @onclick="@DisableClick">@disableTitle</Button>
-      </p>     
+        <Button Type="primary" Size="small"  @onclick="@CheckClick">@CheckTitle</Button>
+        <Button Type="primary" Size="small"  @onclick="@DisableClick">@DisableTitle</Button>
+      </p>
   </div>
 
-  @code{
-
-      private bool checkValue { get; set; } = false;
-      private bool disableValue { get; set; } = false;
-      private string label { get; set; } = "Check-Enable";
-      private string checkTitle { get; set; } = "Check";
-      private string disableTitle { get; set; } = "Enable";
-
-      void CheckChanged()
-      {
-          CheckClick();
-      }
-
-
+  @code {
+      private bool CheckValue { get; set; }
+      private bool DisableValue { get; set; }
+      private string Label { get; set; } = "Check-Enable";
+      private string CheckTitle { get; set; } = "Check";
+      private string DisableTitle { get; set; } = "Enable";
 
       void CheckClick()
       {
-          if (checkValue)
-          {
-              checkTitle = "Check";
-              checkValue = false;
-          }
-          else
-          {
-              checkTitle = "Uncheck";
-              checkValue = true;
-          }
-
-          label = $"{checkTitle}-{disableTitle}";
+          CheckTitle = CheckValue ? "Check" : "Uncheck";
+          CheckValue = !CheckValue;
+          Label = $"{CheckTitle}-{DisableTitle}";
       }
-
-
 
       void DisableClick()
       {
-          if (disableValue)
-          {
-              disableTitle = "Enabled";
-              disableValue = false;
-          }
-          else
-          {
-              disableTitle = "Disabled";
-              disableValue = true;
-          }
-          label = $"{checkTitle}-{disableTitle}";
+          DisableTitle = DisableValue ? "Enabled" : "Disabled";
+          DisableValue = !DisableValue;
+          Label = $"{CheckTitle}-{DisableTitle}";
       }
   }

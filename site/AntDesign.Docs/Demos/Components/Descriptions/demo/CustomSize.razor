@@ -1,11 +1,11 @@
-﻿<RadioGroup @bind-Value="@size">
+﻿<RadioGroup @bind-Value="@_size">
     <Radio Value="DescriptionsSize.Default">default</Radio>
     <Radio Value="DescriptionsSize.Middle">middle</Radio>
     <Radio Value="DescriptionsSize.Small">small</Radio>
 </RadioGroup>
 <br />
 <br />
-<Descriptions Title="Custom Size" Bordered Size="@size">
+<Descriptions Title="Custom Size" Bordered Size="@_size">
     <DescriptionsItem Title="Product">
         Cloud Database
     </DescriptionsItem>
@@ -30,6 +30,6 @@
     </DescriptionsItem>
 </Descriptions>
 
-@code{
-    private string size = DescriptionsSize.Default;
+@code {
+    private string _size = DescriptionsSize.Default;
 }

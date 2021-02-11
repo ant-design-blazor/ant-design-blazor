@@ -3,10 +3,10 @@
         LabelCol="new ColLayoutParam { Span = 6 }"
         WrapperCol="new ColLayoutParam { Span = 18 }">
     <FormItem Label="Basic Select">
-        <Select DataSource="@_persons" 
+        <Select DataSource="@_persons"
                 @bind-Value="@context.SelectValue1"
-                LabelName="@nameof(Person.Name)" 
-                ValueName="@nameof(Person.Id)" 
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
                 DisabledName="@nameof(Person.NotAvailable)"
                 Placeholder="Select a person"
                 AllowClear>
@@ -17,8 +17,8 @@
                 DataSource="@_persons"
                 @bind-Value="@context.Dummy"
                 @bind-Values="@context.SelectValue2"
-                LabelName="@nameof(Person.Name)" 
-                ValueName="@nameof(Person.Id)" 
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
                 DisabledName="@nameof(Person.NotAvailable)"
                 Placeholder="Select a person"
                 DefaultActiveFirstItem="false"
@@ -37,43 +37,98 @@
     Selected 2 Count: @_formModel.SelectValue2?.Count()
 </p>
 
-@code
-{
-    class FormModel
+@code {
+    private class FormModel
     {
-        public int Dummy { get; set;} = 0;
+        public int Dummy { get; set; } = 0;
         public int? SelectValue1 { get; set; } = 7;
         public IEnumerable<int> SelectValue2 { get; set; }
     }
 
-    class Person
+    private class Person
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public bool NotAvailable { get; set; }
     }
 
-    FormModel _formModel = new FormModel();
-    Form<FormModel> _form;
-    List<Person> _persons;
-    
+    private  FormModel _formModel = new();
+    private Form<FormModel> _form;
+    private List<Person> _persons;
+
     protected override void OnInitialized()
     {
-        _persons = new List<Person> 
+        _persons = new List<Person>
         {
-            new Person {Id = 1, Name = "Jack", NotAvailable = true}, 
-            new Person {Id = 2, Name = "Lucy"}, 
-            new Person {Id = 3, Name = "Yaoming"}, 
-            new Person {Id = 4, Name = "Frieda"}, 
-            new Person {Id = 5, Name = "Kathy", NotAvailable = true}, 
-            new Person {Id = 6, Name = "Kate"}, 
-            new Person {Id = 7, Name = "Eric"}, 
-            new Person {Id = 8, Name = "Jake", NotAvailable = true}, 
-            new Person {Id = 9, Name = "Olaf"}, 
-            new Person {Id = 10, Name = "Sven"}, 
-            new Person {Id = 11, Name = "Bernd", NotAvailable = true}, 
-            new Person {Id = 12, Name = "Jane"}, 
-            new Person {Id = 13, Name = "John"}
+            new()
+            {
+                Id = 1,
+                Name = "Jack",
+                NotAvailable = true
+            },
+            new()
+            {
+                Id = 2,
+                Name = "Lucy"
+            },
+            new()
+            {
+                Id = 3,
+                Name = "Yaoming"
+            },
+            new()
+            {
+                Id = 4,
+                Name = "Frieda"
+            },
+            new()
+            {
+                Id = 5,
+                Name = "Kathy",
+                NotAvailable = true
+            },
+            new()
+            {
+                Id = 6,
+                Name = "Kate"
+            },
+            new()
+            {
+                Id = 7,
+                Name = "Eric"
+            },
+            new()
+            {
+                Id = 8,
+                Name = "Jake",
+                NotAvailable = true
+            },
+            new()
+            {
+                Id = 9,
+                Name = "Olaf"
+            },
+            new()
+            {
+                Id = 10,
+                Name = "Sven"
+            },
+            new()
+            {
+                Id = 11,
+                Name = "Bernd",
+                NotAvailable = true
+            },
+            new()
+            {
+                Id = 12,
+                Name = "Jane"
+            },
+            new()
+            {
+                Id = 13,
+                Name = "John"
+            }
         };
     }
 

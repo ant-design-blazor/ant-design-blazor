@@ -1,9 +1,9 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 
-<Switch @bind-Value="@auto" CheckedChildren="True" UnCheckedChildren="False" />
-<Form @ref="form"
-      ValidateOnChange="@auto"
-      Model="@model"
+<Switch @bind-Value="@_auto" CheckedChildren="True" UnCheckedChildren="False" />
+<Form @ref="_form"
+      ValidateOnChange="@_auto"
+      Model="@_model"
       LabelColSpan="8"
       WrapperColSpan="16">
     <FormItem Label="Username">
@@ -23,7 +23,7 @@
 </Form>
 @code
 {
-    public class Model
+    private class Model
     {
         [Required]
         public string Username { get; set; }
@@ -32,14 +32,14 @@
         public bool RememberMe { get; set; } = true;
     }
 
-    private Model model = new Model();
+    private Model _model = new();
 
-    AntDesign.Form<Model> form;
+    Form<Model> _form;
 
-    private bool auto = false;
+    private bool _auto = false;
 
-    public void OnValidate()
+    private void OnValidate()
     {
-        form.Validate();
+        _form.Validate();
     }
 }

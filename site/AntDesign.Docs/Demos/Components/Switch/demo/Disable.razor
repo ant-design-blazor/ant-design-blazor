@@ -1,15 +1,14 @@
 ﻿<div>
-    <Switch Checked="switchValue" Disabled="isDisabled"/>
+    <Switch Checked="_switchValue" Disabled="_isDisabled"/>
     <br />
     <br />
-    <Button Type="@ButtonType.Primary" @onclick="(_)=>isDisabled = !isDisabled">Toggle disabled</Button>
+    <Button Type="@ButtonType.Primary" @onclick="_ => _isDisabled = !_isDisabled">Toggle disabled</Button>
 </div>
 
 
-@code{
-    bool switchValue = false;
-
-    bool isDisabled = true;
+@code {
+    private bool _switchValue = false;
+    private bool _isDisabled = true;
 }
 
 

@@ -1,17 +1,17 @@
 ﻿<Row Gutter="16">
     <GridCol Span="8">
-        <Card Style="width:300px;" Bordered Cover="coverTemplate"
+        <Card Style="width:300px;" Bordered Cover="_coverTemplate"
               Actions="@(new[] {
-                actionSetting(()=> OnClick("setting")) ,
-                actionEdit(()=> OnClick("edit")),
-                actionEllipsis(()=> OnClick("ellipsis")) })">
-            <CardMeta AvatarTemplate="@avatarTemplate" Title="Meta Card" Description="This is the description" />
+                ActionSetting(()=> OnClick("setting")) ,
+                ActionEdit(()=> OnClick("edit")),
+                ActionEllipsis(()=> OnClick("ellipsis")) })">
+            <CardMeta AvatarTemplate="@_avatarTemplate" Title="Meta Card" Description="This is the description" />
         </Card>
     </GridCol>
     <GridCol Span="8">
-        <Card Style="width:300px;" Bordered Cover="coverTemplate">
+        <Card Style="width:300px;" Bordered Cover="_coverTemplate">
             <ChildContent>
-                <CardMeta AvatarTemplate="@avatarTemplate" Title="Meta Card" Description="This is the description" />
+                <CardMeta AvatarTemplate="@_avatarTemplate" Title="Meta Card" Description="This is the description" />
             </ChildContent>
             <ActionTemplate>
                 <CardAction><Icon Type="setting" OnClick="@(()=> OnClick("setting"))" /></CardAction>
@@ -22,23 +22,19 @@
     </GridCol>
 </Row>
 
-@code
-{
-    RenderFragment actionSetting(Action clickAction) =>@<Icon Type="setting" OnClick="@clickAction" />;
+@code {
 
-    RenderFragment actionEdit(Action clickAction) =>@<Icon Type="edit" OnClick="@clickAction" />;
+    private RenderFragment ActionSetting(Action clickAction) => @<Icon Type="setting" OnClick="@clickAction"/>;
 
-    RenderFragment actionEllipsis(Action clickAction) => @<Icon Type="ellipsis" OnClick="@clickAction" />;
+    private RenderFragment ActionEdit(Action clickAction) =>@<Icon Type="edit" OnClick="@clickAction"/>;
 
-    RenderFragment avatarTemplate = @<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
+    private RenderFragment ActionEllipsis(Action clickAction) => @<Icon Type="ellipsis" OnClick="@clickAction"/>;
 
-    RenderFragment coverTemplate = @<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />;
+    private readonly RenderFragment _avatarTemplate = @<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
 
-    void OnClick(string icon)
-    {
-        Console.WriteLine($"icon {icon} is clicked");
-    }
+    private readonly RenderFragment _coverTemplate = @<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"/>;
 
+    private static void OnClick(string icon) => Console.WriteLine($"icon {icon} is clicked");
 }
 
 

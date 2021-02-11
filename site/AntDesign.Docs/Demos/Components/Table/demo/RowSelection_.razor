@@ -1,23 +1,23 @@
 ﻿<div>
-    <RadioGroup @bind-Value="selectionType">
+    <RadioGroup @bind-Value="_selectionType">
         <Radio Value="@("checkbox")">Checkbox</Radio>
         <Radio Value="@("radio")">radio</Radio>
     </RadioGroup>
 
     <h5>
-        selections: 
-        @if (selectedRows != null)
+        selections:
+        @if (_selectedRows != null)
         {
-            @foreach (var selected in selectedRows)
+            @foreach (var selected in _selectedRows)
             {
                 <Tag  Closable OnClose="e=>RemoveSelection(selected.Name)">@selected.Name</Tag>
             }
-            <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Clear</Button>
+            <Button Danger Size="small" OnClick="@(e => { _table.SetSelection(null); })">Clear</Button>
         }
     </h5>
 
-    <Table @ref="table" DataSource="@data" SelectedRows="selectedRows">
-        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name=="Disabled User")"/>
+    <Table @ref="_table" DataSource="@_data" SelectedRows="_selectedRows">
+        <Selection Key="@context.Name" Type="@_selectionType" Disabled="@(context.Name=="Disabled User")"/>
         <Column @bind-Field="@context.Name">
             <a>@context.Name</a>
         </Column>
@@ -28,10 +28,9 @@
 
 
 @code {
+    private ITable _table;
 
-    ITable table;
-
-    class Column
+    private class Column
     {
         public string Name { get; set; }
 
@@ -40,27 +39,27 @@
         public string Address { get; set; }
     }
 
-    Column[] data =
+    private Column[] _data =
     {
-        new Column()
+        new()
         {
             Name = "John Brown",
             Age = 32,
             Address = "New York No. 1 Lake Park",
         },
-        new Column()
+        new()
         {
             Name = "Jim Green",
             Age = 42,
             Address = "London No. 1 Lake Park",
         },
-        new Column()
+        new()
         {
             Name = "Joe Black",
             Age = 32,
             Address = "Sidney No. 1 Lake Park",
         },
-        new Column()
+        new()
         {
             Name = "Disabled User",
             Age = 99,
@@ -68,12 +67,12 @@
         }
     };
 
-    IEnumerable<Column> selectedRows;
-    string selectionType = "checkbox";
+    private IEnumerable<Column> _selectedRows;
+    private string _selectionType = "checkbox";
 
-    public void RemoveSelection(string key)
+    private void RemoveSelection(string key)
     {
-        var selected = selectedRows.Where(x => x.Name != key).ToList();
-        table.SetSelection(selected.Select(x => x.Name).ToArray());
+        var selected = _selectedRows.Where(x => x.Name != key).ToList();
+        _table.SetSelection(selected.Select(x => x.Name).ToArray());
     }
 }

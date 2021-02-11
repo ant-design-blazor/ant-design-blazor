@@ -1,18 +1,17 @@
-﻿<DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" DateRender="CustomRender"/><br />
-<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Date" DateRender="CustomRender" />
+﻿<DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" DateRender="_customRender"/><br />
+<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Date" DateRender="_customRender" />
 
-@code
-{
-    private Func<DateTime, DateTime, RenderFragment> CustomRender = (currentViewDate, today) =>
+@code {
+    private readonly Func<DateTime, DateTime, RenderFragment> _customRender = (currentViewDate, today) =>
     {
-        string style = "";
+        var style = "";
         if (currentViewDate.Day == 1)
         {
             style = "border: 1px solid #1890ff; borderRadius: 50%";
         }
 
         return @<div class="ant-picker-cell-inner" style="@style">
-            @currentViewDate.Day
-        </div>;
+                   @currentViewDate.Day
+               </div>;
     };
 }

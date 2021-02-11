@@ -1,28 +1,26 @@
 ﻿<div>
     <Row>
         <Col Span="12">
-        <Slider TValue="double" Min="1" Max="20" @bind-Value="@inputValue1" />
+        <Slider TValue="double" Min="1" Max="20" @bind-Value="@_inputValue1" />
         </Col>
         <Col Span="4">
-        <AntDesign.InputNumber Min="1" Max="20" Style="margin:0 16px;" @bind-Value="@inputValue1" TValue="double" />
+        <AntDesign.InputNumber Min="1" Max="20" Style="margin:0 16px;" @bind-Value="@_inputValue1" TValue="double" />
         </Col>
     </Row>
     <Row>
         <Col Span="12">
-        <Slider TValue="double" Min="0" Max="1" Step="0.01" @bind-Value="@inputValue2" />
+        <Slider TValue="double" Min="0" Max="1" Step="0.01" @bind-Value="@_inputValue2" />
         </Col>
         <Col Span="4">
-        <AntDesign.InputNumber Min="0" Max="10" Step="0.1" Style="margin:0 16px;" @bind-Value="@inputValue2" TValue="double" />
+        <AntDesign.InputNumber Min="0" Max="10" Step="0.1" Style="margin:0 16px;" @bind-Value="@_inputValue2" TValue="double" />
         </Col>
     </Row>
 </div>
 
 
-@code
-{
-    private double inputValue1 = 1;
-
-    private double inputValue2 = 0.5;
+@code {
+    private double _inputValue1 = 1;
+    private double _inputValue2 = 0.5;
 }
 
 

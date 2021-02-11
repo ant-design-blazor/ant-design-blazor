@@ -1,14 +1,14 @@
 ﻿<Menu Mode="MenuMode.Inline"
-      OpenKeys=this.openKeys
-      OnOpenChange=this.onOpenChange
+      OpenKeys="this._openKeys"
+      OnOpenChange="this.OnOpenChange"
       Style="width:256px ;">
-    <SubMenu Key="sub1" TitleTemplate=@sub1Title>
+    <SubMenu Key="sub1" TitleTemplate="@_sub1Title">
         <MenuItem Key="1">Option 1</MenuItem>
         <MenuItem Key="2">Option 2</MenuItem>
         <MenuItem Key="3">Option 3</MenuItem>
         <MenuItem Key="4">Option 4</MenuItem>
     </SubMenu>
-    <SubMenu Key="sub2" TitleTemplate=@sub2Title>
+    <SubMenu Key="sub2" TitleTemplate="@_sub2Title">
         <MenuItem Key="5">Option 5</MenuItem>
         <MenuItem Key="6">Option 6</MenuItem>
         <SubMenu Key="sub3" Title="Submenu">
@@ -16,7 +16,7 @@
             <MenuItem Key="8">Option 8</MenuItem>
         </SubMenu>
     </SubMenu>
-    <SubMenu Key="sub4" TitleTemplate=@sub4Title>
+    <SubMenu Key="sub4" TitleTemplate="@_sub4Title">
         <MenuItem Key="9">Option 9</MenuItem>
         <MenuItem Key="10">Option 10</MenuItem>
         <MenuItem Key="11">Option 11</MenuItem>
@@ -25,39 +25,47 @@
 </Menu>
 
 @code {
-    RenderFragment sub1Title =
-        @<span>
-            <Icon Type="mail" Theme="outline"></Icon>
-            <span>Navigation One</span>
-        </span>;
+    private readonly RenderFragment _sub1Title = @<span>
+                                                     <Icon Type="mail" Theme="outline"></Icon>
+                                                     <span>Navigation One</span>
+                                                 </span>;
 
-    RenderFragment sub2Title =
-        @<span>
-            <Icon Type="appstore" Theme="outline"></Icon>
-            <span>Navigation Two</span>
-        </span>;
+    private readonly RenderFragment _sub2Title = @<span>
+                                                     <Icon Type="appstore" Theme="outline"></Icon>
+                                                     <span>Navigation Two</span>
+                                                 </span>;
 
-    RenderFragment sub4Title =
-        @<span>
-            <Icon Type="setting" Theme="outline"></Icon>
-            <span>Navigation Three</span>
-        </span>;
+    private readonly RenderFragment _sub4Title = @<span>
+                                                     <Icon Type="setting" Theme="outline"></Icon>
+                                                     <span>Navigation Three</span>
+                                                 </span>;
 
     // submenu keys of first level
-    string[] rootSubmenuKeys = {"sub1", "sub2", "sub4"};
-
-    string[] openKeys = {"sub1"};
-
-    void onOpenChange(string[] openKeys)
+    private readonly string[] _rootSubmenuKeys =
     {
-        var latestOpenKey = openKeys.FirstOrDefault(key => !this.openKeys.Contains(key));
-        if (!rootSubmenuKeys.Contains(latestOpenKey))
+        "sub1",
+        "sub2",
+        "sub4"
+    };
+
+    private string[] _openKeys =
+    {
+        "sub1"
+    };
+
+    private void OnOpenChange(string[] openKeys)
+    {
+        var latestOpenKey = openKeys.FirstOrDefault(key => !_openKeys.Contains(key));
+        if (!_rootSubmenuKeys.Contains(latestOpenKey))
         {
-            this.openKeys = openKeys;
+            _openKeys = openKeys;
         }
         else
         {
-            this.openKeys = !string.IsNullOrEmpty(latestOpenKey) ? new[] {latestOpenKey} : Array.Empty<string>();
+            _openKeys = !string.IsNullOrEmpty(latestOpenKey) ? new[]
+            {
+                latestOpenKey
+            } : Array.Empty<string>();
         }
     }
 }

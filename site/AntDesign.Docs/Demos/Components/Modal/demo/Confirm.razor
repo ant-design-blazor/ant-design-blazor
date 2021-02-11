@@ -19,57 +19,61 @@
         <Button OnClick="@BlockingConfirm">Blocking Confirm</Button>
     </SpaceItem>
 </Space>
-@code{
-    Func<ModalClosingEventArgs, Task> onOk = (e) =>
+
+@code {
+
+    private readonly Func<ModalClosingEventArgs, Task> _onOk = e =>
     {
         Console.WriteLine("Ok");
         return Task.CompletedTask;
     };
-    Func<ModalClosingEventArgs, Task> onCancel = (e) =>
+
+    private readonly Func<ModalClosingEventArgs, Task> _onCancel = e =>
     {
         Console.WriteLine("Cancel");
         return Task.CompletedTask;
     };
-    RenderFragment icon = @<Icon Type="exclamation-circle" Theme="outline"></Icon>;
+
+    private readonly RenderFragment _icon = @<Icon Type="exclamation-circle" Theme="outline"></Icon>;
 
     private void ShowConfirm()
     {
-        _modalService.Confirm(new ConfirmOptions()
+        _modalService.Confirm(new ConfirmOptions
         {
             Title = "Do you Want to delete these items?",
-            Icon = icon,
+            Icon = _icon,
             Content = "Some descriptions",
-            OnOk = onOk,
-            OnCancel = onCancel
+            OnOk = _onOk,
+            OnCancel = _onCancel
         });
     }
 
     private void ShowDeleteConfirm()
     {
-        _modalService.Confirm(new ConfirmOptions()
+        _modalService.Confirm(new ConfirmOptions
         {
             Title = "Are you sure delete this task?",
-            Icon = icon,
+            Icon = _icon,
             Content = "Some descriptions",
-            OnOk = onOk,
-            OnCancel = onCancel,
-            OkType = "danger",
+            OnOk = _onOk,
+            OnCancel = _onCancel,
+            OkType = "danger"
         });
     }
 
     private void ShowPropsConfirm()
     {
-        _modalService.Confirm(new ConfirmOptions()
+        _modalService.Confirm(new ConfirmOptions
         {
             Title = "Are you sure delete this task?",
-            Icon = icon,
+            Icon = _icon,
             Content = "Some descriptions",
-            OnOk = onOk,
-            OnCancel = onCancel,
+            OnOk = _onOk,
+            OnCancel = _onCancel,
             OkType = "danger",
-            OkButtonProps = new AntDesign.ButtonProps()
+            OkButtonProps = new AntDesign.ButtonProps
             {
-                Disabled = true,
+                Disabled = true
             }
         });
     }
@@ -77,10 +81,10 @@
 
     private async Task BlockingConfirm()
     {
-        var content = "Here is a blocking confirm, you can get OK or cancel button is click";
-        var title = "Info";
+        const string content = "Here is a blocking confirm, you can get OK or cancel button is click";
+        const string title = "Info";
 
-        var isTrue = await _modalService.ConfirmAsync(new ConfirmOptions()
+        var isTrue = await _modalService.ConfirmAsync(new ConfirmOptions
         {
             Content = content,
             Title = title

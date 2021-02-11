@@ -14,30 +14,30 @@
     }
 </style>
 
-@code{
-    Data[] data = new Data[]
+@code {
+    private readonly Data[] data =
     {
         new()
         {
             Key = "1",
             Name = "John Brown",
-            Score = 95,
+            Score = 95
         },
         new()
         {
             Key = "2",
             Name = "Jim Green",
-            Score = 87,
+            Score = 87
         },
         new()
         {
             Key = "3",
             Name = "Joe Black",
-            Score = 65,
+            Score = 65
         }
     };
 
-    public class Data
+    private class Data
     {
         [DisplayName("Key")]
         public string Key { get; set; }
@@ -51,7 +51,7 @@
         public string RowClass => Score < 70 ? "danger" : "";
     }
 
-    void OnRowClick(RowData<Data> row)
+    private static void OnRowClick(RowData<Data> row)
     {
         Console.WriteLine($"row {row.Data.Key} was clicked");
     }

@@ -1,4 +1,4 @@
-﻿@inject ModalService _modalService
+﻿@inject ModalService ModalService
 
 <div>
     <Button Type="primary" OnClick="@ShowModal">
@@ -16,12 +16,10 @@
     </Modal>
 
     <Button OnClick="@HandleConfirm">Confirm</Button>
-
 </div>
 
-
 @code {
-    private bool _visible = false;
+    private bool _visible;
     private void ShowModal()
     {
         _visible = true;
@@ -34,7 +32,7 @@
 
     private void HandleConfirm()
     {
-        _modalService.Confirm(new ConfirmOptions()
+        ModalService.Confirm(new ConfirmOptions
         {
             Title = "Confirm",
             Icon =@<Icon Type="exclamation-circle" Theme="Outline"></Icon>,
