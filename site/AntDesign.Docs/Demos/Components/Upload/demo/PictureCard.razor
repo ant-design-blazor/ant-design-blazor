@@ -1,6 +1,6 @@
 <Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         Name="avatar"
-        @bind-FileList="fileList"
+        @bind-FileList="@_fileList"
         ShowButton="_fileList?.Count < 8"
         ListType="picture-card"
         OnPreview="(file)=> {
