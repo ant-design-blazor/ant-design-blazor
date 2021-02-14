@@ -16,7 +16,7 @@ namespace AntDesign.TableModels
 
         public string FieldName { get; }
 
-        public string Sort => _sortDirection.Name;
+        public string Sort => _sortDirection?.Name;
 
         SortDirection ITableSortModel.SortDirection => _sortDirection;
 
