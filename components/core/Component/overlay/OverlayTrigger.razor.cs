@@ -77,8 +77,30 @@ namespace AntDesign.Internal
         [Parameter]
         public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
 
+        /*
+         * 通过参数赋值的placement，不应该通过其它方式赋值
+         * Placement set by Parameter, should not be change by other way
+         */
+        private PlacementType _paramPlacement = PlacementType.BottomLeft;
+
+        /*
+         * 当前的placement，某些情况下可能会被Overlay组件修改（通过ChangePlacementForShow函数）
+         * Current placement, would change by overlay in some cases(via ChangePlacementForShow function)
+         */
+        private PlacementType _placement = PlacementType.BottomLeft;
         [Parameter]
-        public PlacementType Placement { get; set; } = PlacementType.BottomLeft;
+        public PlacementType Placement
+        {
+            get
+            {
+                return _placement;
+            }
+            set
+            {
+                _placement = value;
+                _paramPlacement = value;
+            }
+        }
 
         [Parameter] public Action OnMouseEnter { get; set; }
 
@@ -102,6 +124,9 @@ namespace AntDesign.Internal
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
+        [Parameter]
+        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
+
         [Inject]
         private DomEventService DomEventService { get; set; }
 
@@ -116,6 +141,7 @@ namespace AntDesign.Internal
             {
                 DomEventService.AddEventListener("document", "mouseup", OnMouseUp, false);
                 DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
+                DomEventService.AddEventListener("document", "scroll", OnWindowScroll, false);
             }
 
             base.OnAfterRender(firstRender);
@@ -161,6 +187,8 @@ namespace AntDesign.Internal
         {
             DomEventService.RemoveEventListerner<JsonElement>("document", "mouseup", OnMouseUp);
             DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnMouseUp);
+            DomEventService.RemoveEventListerner<JsonElement>("document", "scroll", OnWindowScroll);
+
             if (Unbound != null)
             {
                 DomEventService.RemoveEventListerner<JsonElement>(Ref, "click", OnUnboundClick);
@@ -305,11 +333,19 @@ namespace AntDesign.Internal
 
         protected async void OnWindowResize(JsonElement element)
         {
+            RestorePlacement();
+
             if (IsOverlayShow())
             {
                 await GetOverlayComponent().UpdatePosition();
             }
         }
+
+        protected void OnWindowScroll(JsonElement element)
+        {
+            RestorePlacement();
+        }
+
         protected virtual bool IsContainTrigger(TriggerType triggerType)
         {
             return Trigger.Contains(triggerType);
@@ -327,6 +363,16 @@ namespace AntDesign.Internal
 
         protected virtual void OnOverlayShow() { }
         protected virtual void OnOverlayHide() { }
+
+        internal void ChangePlacementForShow(PlacementType placement)
+        {
+            _placement = placement;
+        }
+
+        internal void RestorePlacement()
+        {
+            _placement = _paramPlacement;
+        }
 
         internal virtual string GetPlacementClass()
         {
