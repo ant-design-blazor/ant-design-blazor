@@ -156,10 +156,12 @@ export function getBoundingClientRect(element) {
 export function addDomEventListener(element, eventName, preventDefault, invoker) {
   let callback = args => {
     const obj = {};
-    for (let k in args) {
-      obj[k] = args[k];
-    }
-    let json = JSON.stringify(obj, (k, v) => {
+    for (let k in args) {                
+      if (k !== 'originalTarget') { //firefox occasionally raises Permission Denied when this property is being stringified
+        obj[k] = args[k];
+      }
+    }    
+    let json = JSON.stringify(obj, (k, v) => {          
       if (v instanceof Node) return 'Node';
       if (v instanceof Window) return 'Window';
       return v;
@@ -177,7 +179,7 @@ export function addDomEventListener(element, eventName, preventDefault, invoker)
       window.addEventListener(eventName, callback);
     }
   } else {
-    let dom = getDom(element);
+    let dom = getDom(element);    
     (dom as HTMLElement).addEventListener(eventName, callback);
   }
 }
