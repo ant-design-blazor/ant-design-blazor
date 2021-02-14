@@ -116,18 +116,20 @@ namespace AntDesign
             }
         }
 
-        public void Select()
+        public void Select(bool skipParentSelection = false)
         {
             IsSelected = true;
             FirstRun = false;
-            ParentMenu?.Select();
+            if (!skipParentSelection)
+                ParentMenu?.Select();
         }
 
-        public void Deselect()
+        public void Deselect(bool sameParentAsSelected = false)
         {
             IsSelected = false;
             FirstRun = false;
-            ParentMenu?.Deselect();
+            if (!sameParentAsSelected)
+                ParentMenu?.Deselect();
         }
     }
 }

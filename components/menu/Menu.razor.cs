@@ -128,6 +128,7 @@ namespace AntDesign
                 return;
             }
             var selectedKeys = new List<string>();
+            bool skipParentSelection = false;
             if (!Multiple)
             {
                 foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
@@ -139,14 +140,16 @@ namespace AntDesign
                     }
                     else if (menuitem.IsSelected || menuitem.FirstRun)
                     {
-                        menuitem.Deselect();
+                        if (!menuitem.FirstRun) 
+                            skipParentSelection = item.ParentMenu?.Key == menuitem.ParentMenu?.Key;
+                        menuitem.Deselect(skipParentSelection);
                     }
                 }
             }
 
             if (!item.IsSelected)
             {
-                item.Select();
+                item.Select(skipParentSelection);
             }
             selectedKeys.Add(item.Key);
             _selectedKeys = selectedKeys.ToArray();
