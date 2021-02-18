@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.core.Extensions;
 using AntDesign.Internal;
@@ -643,6 +644,22 @@ namespace AntDesign
                 }
             }
             return orderedValue;
+        }
+
+        protected bool IsDateStringFullDate(string possibleDate)
+        {
+            if (possibleDate is null)
+                return false;
+            char? separator = possibleDate.FirstOrDefault(c => !char.IsDigit(c));
+            if (separator is not null)
+            {
+                var dateParts = possibleDate.Split(separator.Value);
+                if (dateParts.Length >= 3 && dateParts[2].Length >= 2 && char.IsDigit(dateParts[2][0]))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

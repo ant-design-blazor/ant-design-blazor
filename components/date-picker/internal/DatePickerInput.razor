@@ -6,8 +6,9 @@
     <div class="@(PrefixCls)-input">
         <input @ref="Ref"
                 @onclick="OnClick"
-                @onkeyup='OnKeyUp'
-                @oninput='OnInput'
+                @onkeyup="OnKeyUp"
+                @oninput="OnInput"
+                @onfocus="Onfocus"
                 @bind-value="@Value"
                 disabled="@Disabled"
                 placeholder="@Placeholder"
@@ -44,8 +45,9 @@ else
     <div class="@(PrefixCls)-input">
         <input @ref="Ref"
                 @onclick="OnClick"
-                @onkeyup='OnKeyUp'
-                @oninput='OnInput'
+                @onkeyup="OnKeyUp"
+                @oninput="OnInput"
+                @onfocus="Onfocus"
                 @bind-value="@Value"
                 disabled="@Disabled"
                 placeholder="@Placeholder"
@@ -122,7 +124,7 @@ else
     public EventCallback Onfocusout { get; set; }
 
     [Parameter]
-    public EventCallback OnKeyUp { get; set; }
+    public EventCallback<KeyboardEventArgs> OnKeyUp { get; set; }
 
     [Parameter]
     public EventCallback<ChangeEventArgs> OnInput { get; set; }
