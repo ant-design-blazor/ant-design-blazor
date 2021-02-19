@@ -94,7 +94,7 @@ namespace AntDesign
                 }
                 else
                     array.SetValue(changeValue, index);
-                PickerValues[index] = changeValue;
+                ChangePickerValue(changeValue, index);
 
                 StateHasChanged();
             }
@@ -154,7 +154,7 @@ namespace AntDesign
                 }
             }
             else
-            {
+            {                
                 if (!_inputEnd.IsOnFocused)
                 {
                     await Blur(0);
@@ -299,7 +299,7 @@ namespace AntDesign
 
         private async Task OnInputClick(int index)
         {
-            //Reset Picker to default in case it the picker value was changed
+            //Reset Picker to default in case the picker value was changed
             //but no value was selected (for example when a user clicks next
             //month but does not select any value)
             if (UseDefaultPickerValue[index] && DefaultPickerValue != null)
@@ -361,6 +361,9 @@ namespace AntDesign
 
         private TValue CreateInstance()
         {
+            if (DefaultValue is not null)
+                return (TValue)(DefaultValue as Array).Clone();
+
             if (IsNullable)
             {
                 return (TValue)Array.CreateInstance(typeof(DateTime?), 2).Clone();
