@@ -11,9 +11,9 @@ using Microsoft.JSInterop;
 
 namespace AntDesign.Select.Internal
 {
-    public partial class SelectContent<TItemValue, TItem>: IDisposable
+    public partial class SelectContent<TItemValue, TItem> : IDisposable
     {
-        [CascadingParameter(Name = "ParentSelect")] internal Select<TItemValue, TItem> ParentSelect { get; set; }
+        [CascadingParameter(Name = "ParentSelect")] internal SelectBase<TItemValue, TItem> ParentSelect { get; set; }
         [CascadingParameter(Name = "ParentLabelTemplate")] internal RenderFragment<TItem> ParentLabelTemplate { get; set; }
         [CascadingParameter(Name = "ShowSearchIcon")] internal bool ShowSearchIcon { get; set; }
         [CascadingParameter(Name = "ShowArrowIcon")] internal bool ShowArrowIcon { get; set; }
@@ -32,6 +32,7 @@ namespace AntDesign.Select.Internal
         [Parameter] public ForwardRef RefBack { get; set; } = new ForwardRef();
         [Inject] protected IJSRuntime Js { get; set; }
         [Inject] private DomEventService DomEventService { get; set; }
+
         protected ElementReference Ref
         {
             get { return _ref; }
@@ -135,12 +136,11 @@ namespace AntDesign.Select.Internal
         }
 
         /// <summary>
-        /// Indicates that a page is being refreshed 
+        /// Indicates that a page is being refreshed
         /// </summary>
         private bool _isReloading;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
-
 
         public bool IsDisposed { get; private set; }
 

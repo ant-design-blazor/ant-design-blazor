@@ -24,12 +24,14 @@ namespace AntDesign
         [Parameter] public Action OnFocus { get; set; }
         [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
         [Parameter] public SortDirection SortByLabel { get; set; } = SortDirection.None;
-        [Parameter] public RenderFragment SuffixIcon { get; set; }
         [Parameter] public bool HideSelected { get; set; }
         [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
         [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
+        [Parameter] public RenderFragment SuffixIcon { get; set; }
+        [Parameter] public RenderFragment PrefixIcon { get; set; }
 
         internal HashSet<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new HashSet<SelectOptionItem<TItemValue, TItem>>();
+        internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
 
         internal SelectMode SelectMode => Mode.ToSelectMode();
 
