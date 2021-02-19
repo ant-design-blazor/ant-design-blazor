@@ -186,9 +186,12 @@ namespace AntDesign
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
-                if (col is IFieldColumn fieldColumn && fieldColumn.SortModel != null)
+                if (col is IFieldColumn fieldColumn)
                 {
-                    queryModel.AddSortModel(fieldColumn.SortModel);
+                    if (fieldColumn.SortModel != null)
+                    {
+                        queryModel.AddSortModel(fieldColumn.SortModel);
+                    }
                 }
             }
 

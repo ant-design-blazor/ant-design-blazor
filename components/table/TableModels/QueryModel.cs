@@ -30,6 +30,11 @@ namespace AntDesign.TableModels
             SortModel.Add(model);
         }
 
+        internal void AddFilterModel(ITableFilterModel model)
+        {
+            FilterModel.Add(model);
+        }
+
         internal void SetQueryableLambda(IQueryable<TItem> query)
         {
             this.QueryableLambda = query;

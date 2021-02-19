@@ -57,7 +57,7 @@ namespace AntDesign
         public bool FilterMultiple { get; set; }
 
         [Parameter]
-        public Func<string[], TData> OnFilter { get; set; }
+        public Func<TData, bool> OnFilter { get; set; }
 
         private PropertyReflector? _propertyReflector;
 
@@ -142,6 +142,8 @@ namespace AntDesign
                 };
             }
         }
+
+        public ITableFilterModel FilterModel => throw new NotImplementedException();
 
         private SortDirection NextSortDirection()
         {

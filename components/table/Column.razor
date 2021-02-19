@@ -40,7 +40,7 @@ else if (IsHeader && HeaderColSpan != 0)
         <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
     }
 
-    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" @onclick="HandelHeaderClick" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")">
+    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")">
         @if (Sortable || Filters?.Any() == true)
         {
             @FilterToolTipSorter(this)
@@ -172,7 +172,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                         <Menu AutoCloseDropdown="false">
                             @foreach (var filter in col.Filters)
                             {
-                                <MenuItem @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<bool>(col, value => filter.Selected = value) })">
+                                <MenuItem @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => filter.Selected = !filter.Selected) })">
                                     <Checkbox Value="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<bool>(col, value => filter.Selected = value) })">@filter.Text</Checkbox>
                                 </MenuItem>
                             }

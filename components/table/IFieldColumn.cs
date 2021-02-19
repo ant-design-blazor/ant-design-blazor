@@ -17,6 +17,8 @@ namespace AntDesign
 
         public ITableSortModel SortModel { get; }
 
+        public ITableFilterModel FilterModel { get; }
+
         internal void ClearSorter();
     }
 }
