@@ -94,7 +94,7 @@ namespace AntDesign
                 GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-small");
             }
 
-            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-search");
+            AffixWrapperClass = string.Join(" ", AffixWrapperClass, (IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : ""), $"{PrefixCls}-search");
             GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search");
             GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-enter-button");
         }
@@ -118,6 +118,18 @@ namespace AntDesign
                 await OnSearch.InvokeAsync(CurrentValue);
             }
             Loading = false;
+        }
+
+        internal override async Task OnFocusAsync(FocusEventArgs e)
+        {
+            await base.OnFocusAsync(e);
+            SetClasses();
+        }
+
+        internal override async Task OnBlurAsync(FocusEventArgs e)
+        {
+            await base.OnBlurAsync(e);
+            SetClasses();
         }
     }
 }
