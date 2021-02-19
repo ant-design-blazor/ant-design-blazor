@@ -78,6 +78,7 @@ namespace AntDesign
                 .Get(() => $"{RootMenu?.PrefixCls}-{RootMenu?.Theme}")
                 .Get(() => $"{RootMenu?.PrefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
                 //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
+                .If($"{RootMenu?.PrefixCls}-hidden", () => RootMenu?.InternalMode == MenuMode.Inline && !IsOpen)
                 ;
 
             if (RootMenu?.InternalMode != MenuMode.Inline && _overlayTrigger != null)
