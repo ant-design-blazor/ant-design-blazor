@@ -102,6 +102,8 @@ namespace AntDesign
         private Timer _debounceTimer;
         private bool DebounceEnabled => DebounceMilliseconds != 0;
 
+        protected bool IsFocused { get; set; }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -219,6 +221,9 @@ namespace AntDesign
 
         internal virtual async Task OnBlurAsync(FocusEventArgs e)
         {
+            IsFocused = false;
+            if (Type == "password")
+                SetClasses();
             if (_compositionInputting)
             {
                 _compositionInputting = false;
@@ -234,6 +239,9 @@ namespace AntDesign
 
         internal virtual async Task OnFocusAsync(FocusEventArgs e)
         {
+            IsFocused = true;
+            if (Type == "password")
+                SetClasses();
             if (OnFocus.HasDelegate)
             {
                 await OnFocus.InvokeAsync(e);
