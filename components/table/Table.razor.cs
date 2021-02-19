@@ -396,7 +396,6 @@ namespace AntDesign
         {
             if (!_isReloading)
             {
-                await this.SetScrollPositionClassName(true);
                 if (ScrollY != null && ScrollX != null)
                 {
                     await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);
