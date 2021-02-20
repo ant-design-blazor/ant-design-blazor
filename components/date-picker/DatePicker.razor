@@ -34,6 +34,7 @@
                                  ReadOnly="@InputReadOnly"
                                  AutoFocus="@AutoFocus"
                                  OnClick="async e => { await OnInputClick(); }"
+                                 OnKeyUp="@OnKeyUp"
                                  OnInput="e => OnInput(e, 0)"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  OnClickClear="e => ClearValue(0)"
