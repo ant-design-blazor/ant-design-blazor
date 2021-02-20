@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -12,13 +13,15 @@ namespace AntDesign
             get => _selectedRows;
             set
             {
+                _dataSourceCache ??= new Dictionary<int, RowData<TItem>>();
+
                 if (value != null && value.Any())
                 {
-                    _dataSourceCache?.Values.ForEach(x => x.Selected = x.Data.IsIn(value));
+                    _dataSourceCache.Values.ForEach(x => x.Selected = x.Data.IsIn(value));
                 }
                 else if (_selectedRows != null)
                 {
-                    _dataSourceCache?.Values.ForEach(x => x.Selected = false);
+                    _dataSourceCache.Values.ForEach(x => x.Selected = false);
                 }
 
                 _selectedRows = value;
