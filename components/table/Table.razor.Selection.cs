@@ -14,11 +14,11 @@ namespace AntDesign
             {
                 if (value != null && value.Any())
                 {
-                    _dataSourceCache.Values.ForEach(x => x.Selected = x.Data.IsIn(value));
+                    _dataSourceCache?.Values.ForEach(x => x.Selected = x.Data.IsIn(value));
                 }
                 else if (_selectedRows != null)
                 {
-                    _dataSourceCache.Values.ForEach(x => x.Selected = false);
+                    _dataSourceCache?.Values.ForEach(x => x.Selected = false);
                 }
 
                 _selectedRows = value;
