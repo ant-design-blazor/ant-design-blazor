@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -81,9 +83,16 @@ namespace AntDesign
                 return;
             }
 
-            if (TryParseValueFromString(args.Value.ToString(), out TValue changeValue, out _))
+            if (BindConverter.TryConvertTo(args.Value.ToString(), CultureInfo, out TValue changeValue))
             {
-                CurrentValue = changeValue;
+                if (Picker == DatePickerType.Date)
+                {
+                    if (IsDateStringFullDate(args.Value.ToString()))
+                        CurrentValue = changeValue;
+
+                }
+                else
+                    CurrentValue = changeValue;
 
                 GetIfNotNull(changeValue, (notNullValue) =>
                 {
@@ -94,6 +103,37 @@ namespace AntDesign
             }
 
             UpdateCurrentValueAsString();
+        }
+
+        /// <summary>
+        /// Method is called via EventCallBack if the keyboard key is no longer pressed inside the Input element.
+        /// </summary>
+        /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
+        protected async Task OnKeyUp(KeyboardEventArgs e)
+        {
+            if (e == null) throw new ArgumentNullException(nameof(e));
+
+            var key = e.Key.ToUpperInvariant();
+            if (key == "ENTER")
+            {
+                if (string.IsNullOrWhiteSpace(_inputStart.Value))
+                    ClearValue();
+                else
+                {
+                    if (BindConverter.TryConvertTo(_inputStart.Value, CultureInfo, out TValue changeValue))
+                        Value = changeValue;
+                    Close();
+                }
+            }
+
+            if (key == "ARROWDOWN" && !_dropDown.IsOverlayShow())
+            {
+                await _dropDown.Show();
+            }
+            if (key == "ARROWUP" && _dropDown.IsOverlayShow())
+            {
+                Close();
+            }
         }
 
         /// <summary>
