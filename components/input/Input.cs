@@ -18,6 +18,7 @@ namespace AntDesign
 
         private bool _allowClear;
         protected string AffixWrapperClass { get; set; } = $"{PrefixCls}-affix-wrapper";
+        private bool _hasAffixWrapper;
         protected string GroupWrapperClass { get; set; } = $"{PrefixCls}-group-wrapper";
 
         //protected string ClearIconClass { get; set; }
@@ -118,7 +119,7 @@ namespace AntDesign
 
         protected virtual void SetClasses()
         {
-            AffixWrapperClass = $"{PrefixCls}-affix-wrapper";
+            AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper";
 
             if (!string.IsNullOrWhiteSpace(Class))
@@ -222,7 +223,7 @@ namespace AntDesign
         internal virtual async Task OnBlurAsync(FocusEventArgs e)
         {
             IsFocused = false;
-            if (Type == "password")
+            if (_hasAffixWrapper)
                 SetClasses();
             if (_compositionInputting)
             {
@@ -240,7 +241,7 @@ namespace AntDesign
         internal virtual async Task OnFocusAsync(FocusEventArgs e)
         {
             IsFocused = true;
-            if (Type == "password")
+            if (_hasAffixWrapper)
                 SetClasses();
             if (OnFocus.HasDelegate)
             {
@@ -304,12 +305,12 @@ namespace AntDesign
                     DebounceChangeValue();
                     return;
                 }
-            
-                    _debounceTimer?.Dispose();
-                    if (_debounceTimer != null)
-                    {
-                        _debounceTimer = null;
-                    }
+
+                _debounceTimer?.Dispose();
+                if (_debounceTimer != null)
+                {
+                    _debounceTimer = null;
+                }
             }
 
             if (!_compositionInputting)
@@ -398,6 +399,7 @@ namespace AntDesign
                 if (AddOnBefore != null || AddOnAfter != null)
                 {
                     container = "groupWrapper";
+                    _hasAffixWrapper = true;
                     builder.OpenElement(1, "span");
                     builder.AddAttribute(2, "class", GroupWrapperClass);
                     builder.AddAttribute(3, "style", Style);
@@ -407,6 +409,7 @@ namespace AntDesign
 
                 if (AddOnBefore != null)
                 {
+                    _hasAffixWrapper = true;
                     // addOnBefore
                     builder.OpenElement(11, "span");
                     builder.AddAttribute(12, "class", $"{PrefixCls}-group-addon");
@@ -416,6 +419,7 @@ namespace AntDesign
 
                 if (Prefix != null || Suffix != null)
                 {
+                    _hasAffixWrapper = true;
                     builder.OpenElement(21, "span");
                     builder.AddAttribute(22, "class", AffixWrapperClass);
                     if (container == "input")
@@ -431,6 +435,7 @@ namespace AntDesign
 
                 if (Prefix != null)
                 {
+                    _hasAffixWrapper = true;
                     // prefix
                     builder.OpenElement(31, "span");
                     builder.AddAttribute(32, "class", $"{PrefixCls}-prefix");
@@ -489,6 +494,7 @@ namespace AntDesign
 
                 if (Suffix != null)
                 {
+                    _hasAffixWrapper = true;
                     // suffix
                     builder.OpenElement(91, "span");
                     builder.AddAttribute(92, "class", $"{PrefixCls}-suffix");
@@ -503,6 +509,7 @@ namespace AntDesign
 
                 if (AddOnAfter != null)
                 {
+                    _hasAffixWrapper = true;
                     // addOnAfter
                     builder.OpenElement(100, "span");
                     builder.AddAttribute(101, "class", $"{PrefixCls}-group-addon");

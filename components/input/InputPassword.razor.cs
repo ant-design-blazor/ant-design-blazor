@@ -27,7 +27,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-password-large", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-password-small", () => Size == InputSize.Small);
 
-            AffixWrapperClass = string.Join(" ", AffixWrapperClass, (IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : ""), $"{PrefixCls}-password");
+            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-password");
 
             if (VisibilityToggle)
             {
