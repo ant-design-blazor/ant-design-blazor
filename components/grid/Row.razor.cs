@@ -7,7 +7,17 @@ using OneOf;
 
 namespace AntDesign
 {
-    using GutterType = OneOf<int, Dictionary<string, int>, (int, int)>;
+
+    /*
+     * Possible values and meaning
+     * int                                                  - horizontal gutter
+     * Dictionary<string, int>                              - horizontal gutters for different screen sizes
+     * (int, int)                                           - horizontal gutter, vertical gutter
+     * (Dictionary<string, int>, int)                       - horizontal gutters for different screen sizes, vertical gutter
+     * (int, Dictionary<string, int>)                       - horizontal gutter, vertical gutter for different screen sizes
+     * (Dictionary<string, int>, Dictionary<string, int>)   - horizontal gutters for different screen sizes, vertical gutter for different screen sizes
+     */
+    using GutterType = OneOf<int, Dictionary<string, int>, (int, int), (Dictionary<string, int>, int), (int, Dictionary<string, int>), (Dictionary<string, int>, Dictionary<string, int>)>;
 
     public partial class Row : AntDomComponentBase
     {
@@ -124,12 +134,9 @@ namespace AntDesign
             GutterStyle = "";
             if (gutter.horizontalGutter > 0)
             {
-                GutterStyle = $"margin-left: -{gutter.horizontalGutter / 2}px;margin-right: -{gutter.horizontalGutter / 2}px;";
+                GutterStyle = $"margin-left: -{gutter.horizontalGutter / 2}px; margin-right: -{gutter.horizontalGutter / 2}px; ";
             }
-            if (gutter.verticalGutter > 0)
-            {
-                GutterStyle += $"margin-top: -{gutter.verticalGutter / 2}px;margin-bottom: -{gutter.verticalGutter / 2}px;";
-            }
+            GutterStyle += $"row-gap: {gutter.verticalGutter}px; ";
 
             StateHasChanged();
         }
@@ -143,7 +150,10 @@ namespace AntDesign
             return gutter.Match(
                 num => (num, 0),
                 dic => breakPoint != null && dic.ContainsKey(breakPoint) ? (dic[breakPoint], 0) : (0, 0),
-                tuple => tuple
+                tuple => tuple,
+                tupleDicInt => (tupleDicInt.Item1.ContainsKey(breakPoint) ? tupleDicInt.Item1[breakPoint] : 0, tupleDicInt.Item2),
+                tupleIntDic => (tupleIntDic.Item1, tupleIntDic.Item2.ContainsKey(breakPoint) ? tupleIntDic.Item2[breakPoint] : 0),
+                tupleDicDic => (tupleDicDic.Item1.ContainsKey(breakPoint) ? tupleDicDic.Item1[breakPoint] : 0, tupleDicDic.Item2.ContainsKey(breakPoint) ? tupleDicDic.Item2[breakPoint] : 0)
             );
         }
 
