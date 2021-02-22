@@ -485,6 +485,13 @@ export function getMaxZIndex() {
   return [...document.all].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
 }
 
+export function getStyle(element, styleProp) {        
+  if (element.currentStyle)
+    return element.currentStyle[styleProp];
+  else if (window.getComputedStyle)
+    return document.defaultView.getComputedStyle(element, null).getPropertyValue(styleProp);
+}
+
 const objReferenceDict = {};
 export function disposeObj(objReferenceName) {
   delete objReferenceDict[objReferenceName];

@@ -130,27 +130,44 @@ namespace AntDesign
             element.ToString();
             _hiddenWidth = $"width: {element.offsetWidth}px;";
 
-            // save the content in the textarea
-            string str = Value;
+            var calculatedLineHeight = await JsInvokeAsync<string>(JSInteropConstants.GetStyle, _hiddenEle, "line-height");
+            var calculatedPaddingTop = await JsInvokeAsync<string>(JSInteropConstants.GetStyle, _hiddenEle, "padding-top");
+            var calculatedPaddingBottom = await JsInvokeAsync<string>(JSInteropConstants.GetStyle, _hiddenEle, "padding-bottom");
+            double paddingBottom, paddingTop;
+            if (double.TryParse(calculatedLineHeight.TrimEnd("px".ToCharArray()), out _rowHeight)
+                &&
+                double.TryParse(calculatedPaddingTop.TrimEnd("px".ToCharArray()), out paddingTop)
+                &&
+                double.TryParse(calculatedPaddingBottom.TrimEnd("px".ToCharArray()), out paddingBottom)
+                )
+            {
+                _offsetHeight = paddingTop + paddingBottom;
+            }
+            else //fallback to old method
+            {
+                // save the content in the textarea
+                string str = Value;
 
-            // total height of 1 row
-            Value = " ";
-            StateHasChanged();
-            element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _hiddenEle);
-            double rHeight = element.scrollHeight;
+                // total height of 1 row
+                Value = " ";
+                StateHasChanged();
+                element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _hiddenEle);
+                double rHeight = element.scrollHeight;
 
-            // total height of 2 rows
-            Value = " \r\n ";
-            StateHasChanged();
-            element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _hiddenEle);
-            double rrHeight = element.scrollHeight;
+                // total height of 2 rows
+                Value = " \r\n ";
+                StateHasChanged();
+                element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _hiddenEle);
+                double rrHeight = element.scrollHeight;
 
-            _rowHeight = rrHeight - rHeight;
-            _offsetHeight = rHeight - _rowHeight;
+                _rowHeight = rrHeight - rHeight;
 
-            // revert the value back to original content
-            Value = str;
-            StateHasChanged();
+                _offsetHeight = rHeight - _rowHeight;
+
+                // revert the value back to original content
+                Value = str;
+                StateHasChanged();
+            }
             await ChangeSizeAsync();
         }
 
