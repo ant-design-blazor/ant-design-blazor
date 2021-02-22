@@ -384,8 +384,6 @@ namespace AntDesign
             {
                 CurrentValueAsString = value;
             }
-
-            OnChange?.Invoke(_selectedNodes, value, _displayText);
         }
 
         private void RefreshDisplayValue()
