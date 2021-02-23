@@ -18,7 +18,7 @@ namespace AntDesign
         /// <summary>
         /// 当前节点
         /// </summary>
-        [CascadingParameter(Name = "SelfNode")]
+        [Parameter]
         public TreeNode<TItem> SelfNode { get; set; }
 
         private bool CanDraggable => TreeComponent.Draggable && !SelfNode.Disabled;
