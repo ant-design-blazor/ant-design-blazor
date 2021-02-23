@@ -72,11 +72,7 @@ namespace AntDesign
             GutterStyle = "";
             if (gutter.horizontalGutter > 0)
             {
-                GutterStyle = $"padding-left: {gutter.horizontalGutter / 2}px;padding-right: {gutter.horizontalGutter / 2}px;";
-            }
-            if (gutter.verticalGutter > 0)
-            {
-                GutterStyle += $"padding-top: {gutter.verticalGutter / 2}px;padding-bottom: {gutter.verticalGutter / 2}px;";
+                GutterStyle = $"padding-left: {gutter.horizontalGutter / 2}px; padding-right: {gutter.horizontalGutter / 2}px;";
             }
         }
 
