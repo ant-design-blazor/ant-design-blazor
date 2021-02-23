@@ -7,7 +7,6 @@ using OneOf;
 
 namespace AntDesign
 {
-
     /*
      * Possible values and meaning
      * int                                                  - horizontal gutter
@@ -17,6 +16,7 @@ namespace AntDesign
      * (int, Dictionary<string, int>)                       - horizontal gutter, vertical gutter for different screen sizes
      * (Dictionary<string, int>, Dictionary<string, int>)   - horizontal gutters for different screen sizes, vertical gutter for different screen sizes
      */
+
     using GutterType = OneOf<int, Dictionary<string, int>, (int, int), (Dictionary<string, int>, int), (int, Dictionary<string, int>), (Dictionary<string, int>, Dictionary<string, int>)>;
 
     public partial class Row : AntDomComponentBase
@@ -45,22 +45,18 @@ namespace AntDesign
         [Parameter]
         public EventCallback<BreakpointType> OnBreakpoint { get; set; }
 
+        /// <summary>
+        /// Used to set gutter during pre-rendering
+        /// </summary>
+        [Parameter]
+        public BreakpointType DefaultBreakpoint { get; set; }
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
         private string GutterStyle { get; set; }
 
         public IList<Col> Cols { get; } = new List<Col>();
-
-        private static Hashtable _gridResponsiveMap = new Hashtable()
-        {
-            [nameof(BreakpointType.Xs)] = "(max-width: 575px)",
-            [nameof(BreakpointType.Sm)] = "(max-width: 576px)",
-            [nameof(BreakpointType.Md)] = "(max-width: 768px)",
-            [nameof(BreakpointType.Lg)] = "(max-width: 992px)",
-            [nameof(BreakpointType.Xl)] = "(max-width: 1200px)",
-            [nameof(BreakpointType.Xxl)] = "(max-width: 1600px)",
-        };
 
         private static BreakpointType[] _breakpoints = new[] {
             BreakpointType.Xs,
@@ -84,6 +80,11 @@ namespace AntDesign
                 .If($"{prefixCls}-space-around", () => Justify == "space-around")
                 .If($"{prefixCls}-space-between", () => Justify == "space-between")
                 ;
+
+            if (DefaultBreakpoint != null)
+            {
+                SetGutterStyle(DefaultBreakpoint.Name);
+            }
 
             await base.OnInitializedAsync();
         }
