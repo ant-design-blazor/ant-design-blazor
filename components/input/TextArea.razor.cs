@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -130,18 +131,11 @@ namespace AntDesign
             element.ToString();
             _hiddenWidth = $"width: {element.offsetWidth}px;";
 
-            var calculatedLineHeight = await JsInvokeAsync<string>(JSInteropConstants.GetStyle, _hiddenEle, "line-height");
-            var calculatedPaddingTop = await JsInvokeAsync<string>(JSInteropConstants.GetStyle, _hiddenEle, "padding-top");
-            var calculatedPaddingBottom = await JsInvokeAsync<string>(JSInteropConstants.GetStyle, _hiddenEle, "padding-bottom");
-            double paddingBottom, paddingTop;
-            if (double.TryParse(calculatedLineHeight.TrimEnd("px".ToCharArray()), out _rowHeight)
-                &&
-                double.TryParse(calculatedPaddingTop.TrimEnd("px".ToCharArray()), out paddingTop)
-                &&
-                double.TryParse(calculatedPaddingBottom.TrimEnd("px".ToCharArray()), out paddingBottom)
-                )
+            var textAreaInfo = await JsInvokeAsync<TextAreaInfo>(JSInteropConstants.GetTextAreaInfo, _hiddenEle);
+            if (textAreaInfo.IsLoaded())
             {
-                _offsetHeight = paddingTop + paddingBottom;
+                _rowHeight = textAreaInfo.LineHeight;
+                _offsetHeight = textAreaInfo.PaddingTop + textAreaInfo.PaddingBottom;
             }
             else //fallback to old method
             {
@@ -174,6 +168,15 @@ namespace AntDesign
         protected override string GetClearIconCls()
         {
             return $"{PrefixCls}-textarea-clear-icon";
+        }
+
+        private class TextAreaInfo
+        {
+            public double LineHeight { get; set; }
+            public double PaddingTop { get; set; }
+            public double PaddingBottom { get; set; }
+
+            public bool IsLoaded() => LineHeight > 0;
         }
     }
 }

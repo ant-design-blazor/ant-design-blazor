@@ -492,6 +492,22 @@ export function getStyle(element, styleProp) {
     return document.defaultView.getComputedStyle(element, null).getPropertyValue(styleProp);
 }
 
+export function getTextAreaInfo(element) {
+  var result = {};
+
+  if (element.currentStyle) {
+    result["lineHeight"] = parseFloat(element.currentStyle["line-height"].slice(0, -1));
+    result["paddingTop"] = parseFloat(element.currentStyle["padding-top"].slice(0, -1));
+    result["paddingBottom"] = parseFloat(element.currentStyle["padding-bottom"].slice(0, -1));
+  }
+  else if (window.getComputedStyle) {
+    result["lineHeight"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("line-height").slice(0, -1));
+    result["paddingTop"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("padding-top").slice(0, -1));
+    result["paddingBottom"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("padding-bottom").slice(0, -1));
+  }
+  return result;
+}
+
 const objReferenceDict = {};
 export function disposeObj(objReferenceName) {
   delete objReferenceDict[objReferenceName];

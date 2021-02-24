@@ -90,6 +90,7 @@ namespace AntDesign
         public static string AddPreventCursorMoveOnArrowUp => $"{FUNC_PREFIX}addPreventCursorMoveOnArrowUp";
         public static string RemovePreventCursorMoveOnArrowUp => $"{FUNC_PREFIX}removePreventCursorMoveOnArrowUp";
         public static string GetStyle => $"{FUNC_PREFIX}getStyle";
+        public static string GetTextAreaInfo => $"{FUNC_PREFIX}getTextAreaInfo";
 
         #region Draggable Modal
 
