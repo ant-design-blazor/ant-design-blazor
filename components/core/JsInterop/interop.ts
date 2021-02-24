@@ -496,14 +496,14 @@ export function getTextAreaInfo(element) {
   var result = {};
 
   if (element.currentStyle) {
-    result["lineHeight"] = parseFloat(element.currentStyle["line-height"].slice(0, -1));
-    result["paddingTop"] = parseFloat(element.currentStyle["padding-top"].slice(0, -1));
-    result["paddingBottom"] = parseFloat(element.currentStyle["padding-bottom"].slice(0, -1));
+    result["lineHeight"] = parseFloat(element.currentStyle["line-height"]);
+    result["paddingTop"] = parseFloat(element.currentStyle["padding-top"]);
+    result["paddingBottom"] = parseFloat(element.currentStyle["padding-bottom"]);
   }
   else if (window.getComputedStyle) {
-    result["lineHeight"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("line-height").slice(0, -1));
-    result["paddingTop"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("padding-top").slice(0, -1));
-    result["paddingBottom"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("padding-bottom").slice(0, -1));
+    result["lineHeight"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("line-height"));
+    result["paddingTop"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("padding-top"));
+    result["paddingBottom"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("padding-bottom"));
   }
   return result;
 }
