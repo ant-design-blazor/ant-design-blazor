@@ -17,3 +17,26 @@ A table displays rows of data.
 
 Specify `dataSource` of Table as an array of data.
 
+#### onRow usage
+
+Same as `onRow` `onHeaderRow` `onCell` `onHeaderCell`
+
+```jsx
+<Table OnRow="OnRow" />
+
+@code {
+    Dictionary<string, object> OnRow(RowData<Data> row)
+        {
+            Action<MouseEventArgs> OnClick = (args) =>
+            {
+                Console.WriteLine($"row {row.Data.Key} was clicked");
+            };
+
+            return new Dictionary<string, object>()
+            {
+                { "onclick", OnClick },
+                { "id", row.Data.Key },
+            };
+        }
+    }
+```

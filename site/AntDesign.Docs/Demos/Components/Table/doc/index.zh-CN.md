@@ -17,3 +17,27 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 ## 如何使用
 
 指定表格的数据源 `dataSource` 为一个数组。
+
+#### onRow 用法
+
+适用于 `onRow` `onHeaderRow` `onCell` `onHeaderCell`。
+
+```jsx
+<Table OnRow="OnRow" />
+
+@code {
+    Dictionary<string, object> OnRow(RowData<Data> row)
+        {
+            Action<MouseEventArgs> OnClick = (args) =>
+            {
+                Console.WriteLine($"row {row.Data.Key} was clicked");
+            };
+
+            return new Dictionary<string, object>()
+            {
+                { "onclick", OnClick },
+                { "id", row.Data.Key },
+            };
+        }
+    }
+```

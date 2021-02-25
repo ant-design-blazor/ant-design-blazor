@@ -53,7 +53,7 @@ namespace AntDesign
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
 
         [Parameter]
-        public EventCallback<RowData<TItem>> OnRowClick { get; set; }
+        public Func<RowData<TItem>, Dictionary<string, object>> OnRow { get; set; }
 
         [Parameter]
         public bool Loading { get; set; }
@@ -331,14 +331,6 @@ namespace AntDesign
         }
 
         protected override bool ShouldRender() => this._shouldRender;
-
-        private void RowClick(RowData<TItem> item)
-        {
-            if (OnRowClick.HasDelegate)
-            {
-                OnRowClick.InvokeAsync(item);
-            }
-        }
 
         void ITable.HasFixLeft() => _hasFixLeft = true;
 
