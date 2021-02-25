@@ -22,8 +22,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 
 适用于 `onRow` `onHeaderRow` `onCell` `onHeaderCell`。
 
-```jsx
-<Table OnRow="OnRow" />
+```razor
+<Table TItem="Data" OnRow="OnRow">
+    <Column @bind-Field="@context.Name" OnCell="OnCell">
+        <a>@context.Name</a>
+    </Column>
+</Table>
 
 @code {
     Dictionary<string, object> OnRow(RowData<Data> row)
@@ -39,5 +43,20 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
                 { "id", row.Data.Key },
             };
         }
+    }
+
+    Dictionary<string, object> OnCell(RowData rowData)
+    {
+        var row = (RowData<Data>)rowData;
+
+        Action<MouseEventArgs> OnClick = args =>
+        {
+            Console.WriteLine($"cell {row.Data.Name} was clicked");
+        };
+
+        return new Dictionary<string, object>()
+        {
+            { "onclick", OnClick },
+        };
     }
 ```
