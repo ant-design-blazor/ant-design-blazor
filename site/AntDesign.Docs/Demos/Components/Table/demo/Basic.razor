@@ -2,7 +2,7 @@
 @using AntDesign.TableModels
 
 <Table TItem="Data" DataSource="@data" OnRow="OnRow">
-    <Column @bind-Field="@context.Name">
+    <Column @bind-Field="@context.Name" OnCell="OnCell">
         <a>@context.Name</a>
     </Column>
     <Column @bind-Field="@context.Age"></Column>
@@ -92,6 +92,21 @@
         {
             { "onclick", OnClick },
             { "id", row.Data.Key },
+        };
+    }
+
+    Dictionary<string, object> OnCell(RowData rowData)
+    {
+        var row = (RowData<Data>)rowData;
+
+        Action<MouseEventArgs> OnClick = args =>
+        {
+            Console.WriteLine($"cell {row.Data.Name} was clicked");
+        };
+
+        return new Dictionary<string, object>()
+        {
+            { "onclick", OnClick },
         };
     }
 }

@@ -1,7 +1,7 @@
 @using System.ComponentModel
 @using AntDesign.TableModels
 
-<Table TItem="Data" DataSource="@data" OnRowClick="OnRowClick" RowClassName="@(x => x.Data.RowClass)">
+<Table TItem="Data" DataSource="@data" OnRow="OnRow" RowClassName="@(x => x.Data.RowClass)">
     <Column @bind-Field="@context.Name">
         <a>@context.Name</a>
     </Column>
@@ -35,7 +35,7 @@
             Name = "Joe Black",
             Score = 65,
         }
-    };
+        };
 
     public class Data
     {
@@ -51,8 +51,16 @@
         public string RowClass => Score < 70 ? "danger" : "";
     }
 
-    void OnRowClick(RowData<Data> row)
+    Dictionary<string, object> OnRow(RowData<Data> row)
     {
-        Console.WriteLine($"row {row.Data.Key} was clicked");
+        Action<MouseEventArgs> OnClick = args =>
+        {
+            Console.WriteLine($"row {row.Data.Key} was clicked");
+        };
+
+        return new Dictionary<string, object>
+        {
+            { "onclick", OnClick },
+        };
     }
 }

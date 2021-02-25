@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using AntDesign.Core.Reflection;
@@ -48,6 +49,9 @@ namespace AntDesign
 
         [Parameter]
         public SortDirection DefaultSortOrder { get; set; }
+
+        [Parameter]
+        public Func<RowData, Dictionary<string, object>> OnCell { get; set; }
 
         private PropertyReflector? _propertyReflector;
 

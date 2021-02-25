@@ -79,7 +79,9 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         </td>
     }
 
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis? fieldText:"")">
+    var cellAttributes = OnCell?.Invoke(RowData);
+
+    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis? fieldText:"")" @attributes="cellAttributes">
         @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
         {
             <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>

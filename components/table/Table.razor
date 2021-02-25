@@ -170,9 +170,9 @@ RenderFragment<(Table<TItem> table, bool header)> colGroup = ctx =>
                 currentRowData.Level = level;
                 currentRowData.HasChildren = hasChildren;
 
-                var trAttributes = table.OnRow?.Invoke(currentRowData);
+                var rowAttributes = table.OnRow?.Invoke(currentRowData);
 
-                <tr @attributes="trAttributes"
+                <tr @attributes="rowAttributes"
                     data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "") @table.RowClassName(currentRowData)">
                     <CascadingValue Value="currentRowData" Name="RowData" IsFixed>
                         <CascadingValue Value="true" Name="IsBody" IsFixed>
