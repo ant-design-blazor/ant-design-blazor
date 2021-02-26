@@ -51,13 +51,13 @@ namespace AntDesign
         public SortDirection DefaultSortOrder { get; set; }
 
         [Parameter]
-        public IEnumerable<FilterModel<TData>> Filters { get; set; }
+        public IEnumerable<TableFilter<TData>> Filters { get; set; }
 
         [Parameter]
         public bool FilterMultiple { get; set; }
 
         [Parameter]
-        public Func<TData, bool> OnFilter { get; set; }
+        public Expression<Func<TData, TData, bool>> OnFilter { get; set; }
 
         private PropertyReflector? _propertyReflector;
 
@@ -67,14 +67,17 @@ namespace AntDesign
 
         public ITableSortModel SortModel { get; private set; }
 
+        public IEnumerable<ITableFilterModel> FilterModel => _filterModels;
+
         private SortDirection _sortDirection;
 
         public Func<RowData, TData> GetValue { get; private set; }
 
         void IFieldColumn.ClearSorter() => SetSorter(SortDirection.None);
 
-        private static EventCallbackFactory _callbackFactory = new EventCallbackFactory();
+        private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
+        private IEnumerable<ITableFilterModel> _filterModels;
         private bool _filterOpened;
 
         protected override void OnInitialized()
@@ -143,8 +146,6 @@ namespace AntDesign
             }
         }
 
-        public ITableFilterModel FilterModel => throw new NotImplementedException();
-
         private SortDirection NextSortDirection()
         {
             if (_sortDirection == SortDirection.None)
@@ -178,6 +179,7 @@ namespace AntDesign
         private void FilterConfirm()
         {
             _filterOpened = false;
+            _filterModels = Filters?.Select(x => new FilterModel<TData>(_propertyReflector.Value.PropertyInfo, x.Text, x.Value, OnFilter, x.Selected));
             Table?.ReloadAndInvokeChange();
         }
     }

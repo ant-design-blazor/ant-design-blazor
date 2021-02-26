@@ -1,26 +1,37 @@
 ﻿<Table DataSource="data" OnChange="OnChange" TItem="Data">
-    <Column TData="string" 
-        DataIndex="@nameof(context.Name)" 
-        SorterCompare="@((a,b)=> a.Length - b.Length)" 
-        SortDirections="new[] { SortDirection.Descending }"
-        Filters="filters" />
-    <Column TData="int" 
-        DataIndex="@nameof(context.Age)" 
-        DefaultSortOrder="@SortDirection.Descending"
-        SorterCompare="@((a,b)=> a - b)"  />
-    <Column TData="string" 
-        DataIndex="@nameof(context.Address)" 
-        SorterCompare="@((a,b)=> a.Length - b.Length)" 
-        SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }"
-        />
+    <Column TData="string"
+            @bind-Field="context.Name"
+            SorterCompare="@((a,b)=> a.Length - b.Length)"
+            SortDirections="new[] { SortDirection.Descending }"
+            Filters="filters"
+            OnFilter="((value,name)=>name.StartsWith(value))" />
+    <Column TData="int"
+            DataIndex="@nameof(context.Age)"
+            DefaultSortOrder="@SortDirection.Descending"
+            SorterCompare="@((a,b)=> a - b)" />
+    <Column TData="string"
+            DataIndex="@nameof(context.Address)"
+            SorterCompare="@((a,b)=> a.Length - b.Length)"
+            SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }" />
 </Table>
-
 
 @using AntDesign.TableModels;
 @using System.Text.Json;
 @code {
 
-    record Data(string Name, int Age, string Address);
+    class Data
+    {
+        public Data(string name, int age, string address)
+        {
+            Name = name;
+            Age = age;
+            Address = address;
+        }
+
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Address { get; set; }
+    }
 
     Data[] data =
 {
@@ -30,9 +41,9 @@
         new("Jim Red",32,"London No. 2 Lake Park"),
     };
 
-    public FilterModel<string>[] filters = new FilterModel<string>[] {
-        new(){Text="Joe",Value="Joe"},
-        new(){Text="Jim",Value="Jim"},
+    public TableFilter<string>[] filters = new TableFilter<string>[] {
+        new() { Text = "Joe", Value = "Joe" },
+        new() { Text = "Jim", Value = "Jim" },
     };
 
     void OnChange(QueryModel<Data> query)

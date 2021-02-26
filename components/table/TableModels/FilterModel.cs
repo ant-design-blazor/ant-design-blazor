@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
 namespace AntDesign.TableModels
 {
@@ -13,28 +11,32 @@ namespace AntDesign.TableModels
 
         public TField Value { get; set; }
 
-        public bool Selected { get; set; }
-
         public string FieldName { get; }
 
-        public Expression<Func<TField, bool>> OnFilter { get; set; }
+        public Expression<Func<TField, TField, bool>> OnFilter { get; set; }
+
+        public bool Selected { get; set; }
 
         private PropertyInfo _propertyInfo;
 
-        public FilterModel(PropertyInfo propertyInfo)
+        public FilterModel(PropertyInfo propertyInfo, string text, TField value, Expression<Func<TField, TField, bool>> onFilter, bool selected)
         {
             this._propertyInfo = propertyInfo;
+            this.Text = text;
+            this.Value = value;
+            this.OnFilter = onFilter;
+            this.Selected = selected;
         }
 
         public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source)
         {
             var sourceExpression = Expression.Parameter(typeof(TItem));
-
             var propertyExpression = Expression.Property(sourceExpression, _propertyInfo);
 
-            var lambda = Expression.Lambda<Func<TItem, bool>>(propertyExpression, sourceExpression);
+            var invocationExpression = Expression.Invoke(OnFilter, Expression.Constant(Value), propertyExpression);
+            var lambda = Expression.Lambda<Func<TItem, bool>>(invocationExpression, sourceExpression);
 
-            throw new NotImplementedException();
+            return source.Where(lambda);
         }
     }
 }

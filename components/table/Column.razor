@@ -113,13 +113,12 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 
     string HeaderTitle => Title ?? DisplayName ?? FieldName ?? DataIndex;
 
-
     readonly RenderFragment<Column<TData>> SortHeader = col =>
     @<div class="ant-table-column-sorters">
         <span>
             @if (col.TitleTemplate != null)@col.TitleTemplate else @col.HeaderTitle
         </span>
-        @{ 
+        @{
             bool hasDescendingSorter = SortDirection.Descending.IsIn(col.SortDirections);
             bool hasAscendingSorter = SortDirection.Ascending.IsIn(col.SortDirections);
         }
@@ -167,24 +166,6 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                 }
             </span>
             <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight">
-                <Overlay>
-                    <div class="ant-table-filter-dropdown">
-                        <Menu AutoCloseDropdown="false">
-                            @foreach (var filter in col.Filters)
-                            {
-                                <MenuItem @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => filter.Selected = !filter.Selected) })">
-                                    <Checkbox Value="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<bool>(col, value => filter.Selected = value) })">@filter.Text</Checkbox>
-                                </MenuItem>
-                            }
-                        </Menu>
-                        <div class="ant-table-filter-dropdown-btns">
-                            <Button Size="small" Type="link">@col.Table?.Locale.FilterReset</Button>
-                            <Button Size="small" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=>col.FilterConfirm()) })">
-                                @col.Table?.Locale.FilterConfirm
-                            </Button>
-                        </div>
-                    </div>
-                </Overlay>
                 <ChildContent>
                     <span class="ant-table-filter-trigger-container @(col._filterOpened?" ant-table-filter-trigger-container-open":"")">
                         <span role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger"
@@ -193,6 +174,24 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                         </span>
                     </span>
                 </ChildContent>
+                <Overlay>
+                    <div class="ant-table-filter-dropdown">
+                        <Menu AutoCloseDropdown="false">
+                            @foreach (var filter in col.Filters)
+                            {
+                                <MenuItem @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => { filter.Selected = !filter.Selected; col.StateHasChanged(); } ) })">
+                                    <Checkbox Value="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<bool>(col, value => { filter.Selected = value;  col.StateHasChanged();}) })">@filter.Text</Checkbox>
+                                </MenuItem>
+                            }
+                        </Menu>
+                        <div class="ant-table-filter-dropdown-btns">
+                            <Button Size="small" Type="link">@col.Table?.Locale.FilterReset</Button>
+                            <Button Size="small" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.FilterConfirm()) })">
+                                @col.Table?.Locale.FilterConfirm
+                            </Button>
+                        </div>
+                    </div>
+                </Overlay>
             </Dropdown>
         </div>
     }

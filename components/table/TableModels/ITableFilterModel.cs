@@ -7,6 +7,10 @@ namespace AntDesign.TableModels
 {
     public interface ITableFilterModel
     {
+        public string Text { get; }
+
+        public bool Selected { get; set; }
+
         public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source);
     }
 }

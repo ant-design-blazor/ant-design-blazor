@@ -1,4 +1,5 @@
-﻿using AntDesign.TableModels;
+﻿using System.Collections.Generic;
+using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -17,7 +18,7 @@ namespace AntDesign
 
         public ITableSortModel SortModel { get; }
 
-        public ITableFilterModel FilterModel { get; }
+        public IEnumerable<ITableFilterModel> FilterModel { get; }
 
         internal void ClearSorter();
     }
