@@ -2,12 +2,12 @@
 order: 1
 title:
   en-US: OnRow usage
-  zh-CN: OnRow ”√∑®
+  zh-CN: OnRow Áî®Ê≥ï
 ---
 
 ## zh-CN
 
-  ”√”⁄ `OnRow` `OnHeaderRow` `OnCell` `OnHeaderCell`°£
+ÈÄÇÁî®‰∫é `OnRow` `OnHeaderRow` `OnCell` `OnHeaderCell`„ÄÇ
 
 ## en-US
 
