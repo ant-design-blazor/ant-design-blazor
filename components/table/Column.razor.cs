@@ -53,6 +53,9 @@ namespace AntDesign
         [Parameter]
         public Func<RowData, Dictionary<string, object>> OnCell { get; set; }
 
+        [Parameter]
+        public Func<Dictionary<string, object>> OnHeaderCell { get; set; }
+
         private PropertyReflector? _propertyReflector;
 
         public string DisplayName => _propertyReflector?.DisplayName;
@@ -109,7 +112,7 @@ namespace AntDesign
                 .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortDirection.IsIn(SortDirection.Ascending, SortDirection.Descending));
         }
 
-        private void HandelHeaderClick()
+        private void HandleSort()
         {
             if (Sortable)
             {

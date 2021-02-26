@@ -40,27 +40,31 @@ else if (IsHeader && HeaderColSpan != 0)
         <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
     }
 
-    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" @onclick="HandelHeaderClick" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")">
-        @if (Sortable)
+    var headerCellAttributes = OnHeaderCell?.Invoke();
+
+<th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")" @attributes="headerCellAttributes">
+    @if (Sortable)
+    {
+    <div @onclick="HandleSort">
+        @if (ShowSorterTooltip)
         {
-            if (ShowSorterTooltip)
-            {
-                @ToolTipSorter(this)
-            }
-            else
-            {
-                @SortHeader(this)
-            }
-        }
-        else if (TitleTemplate != null)
-        {
-            @TitleTemplate
+            @ToolTipSorter(this)
         }
         else
         {
-            @HeaderTitle
+            @SortHeader(this)
         }
-    </th>
+    </div>
+    }
+    else if (TitleTemplate != null)
+    {
+        @TitleTemplate
+    }
+    else
+    {
+        @HeaderTitle
+    }
+</th>
 }
 else if (IsBody && RowSpan != 0 && ColSpan != 0)
 {

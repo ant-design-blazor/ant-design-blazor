@@ -56,6 +56,9 @@ namespace AntDesign
         public Func<RowData<TItem>, Dictionary<string, object>> OnRow { get; set; }
 
         [Parameter]
+        public Func<Dictionary<string, object>> OnHeaderRow { get; set; }
+
+        [Parameter]
         public bool Loading { get; set; }
 
         [Parameter]

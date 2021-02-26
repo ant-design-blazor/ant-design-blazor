@@ -1,13 +1,14 @@
 ﻿@using System.ComponentModel
+@using AntDesign.TableModels
 
-<Table TItem="Data" DataSource="@data">
-    <Column @bind-Field="@context.Name">
+<Table TItem="Data" DataSource="@data" OnRow="OnRow" OnHeaderRow="OnHeaderRow">
+    <Column @bind-Field="@context.Name" OnCell="OnCell" OnHeaderCell="OnHeaderCell">
         <a>@context.Name</a>
     </Column>
     <Column @bind-Field="@context.Age"></Column>
     <Column @bind-Field="@context.Address">
         <TitleTemplate>
-            <span> <Icon Type="environment"/> Address </span>
+            <span> <Icon Type="environment" /> Address </span>
         </TitleTemplate>
     </Column>
     <Column @bind-Field="@context.Tags">
@@ -21,16 +22,6 @@
             <Tag Color="@color">@tag</Tag>
         }
     </Column>
-    <ActionColumn Title="Acton">
-        <Space Size="middle">
-            <SpaceItem>
-                <a>Invite @context.Name</a>
-            </SpaceItem>
-            <SpaceItem>
-                <a>Delete</a>
-            </SpaceItem>
-        </Space>
-    </ActionColumn>
 </Table>
 
 @code{
@@ -78,5 +69,57 @@
 
         [DisplayName("Tags")]
         public string[] Tags { get; set; }
+    }
+
+    Dictionary<string, object> OnRow(RowData<Data> row)
+    {
+        Action<MouseEventArgs> OnClick = args =>
+        {
+            Console.WriteLine($"row {row.Data.Key} was clicked");
+        };
+
+        return new Dictionary<string, object> {
+            { "onclick", OnClick },
+            { "id", row.Data.Key },
+        };
+    }
+
+    Dictionary<string, object> OnHeaderRow()
+    {
+        Action<MouseEventArgs> OnClick = args =>
+        {
+            Console.WriteLine("header row was clicked");
+        };
+
+        return new Dictionary<string, object> {
+            { "onclick", OnClick },
+            { "id", "header-row" },
+        };
+    }
+
+    Dictionary<string, object> OnCell(RowData rowData)
+    {
+        var row = (RowData<Data>)rowData;
+
+        Action<MouseEventArgs> OnClick = args =>
+        {
+            Console.WriteLine($"cell {row.Data.Name} was clicked");
+        };
+
+        return new Dictionary<string, object> {
+            { "onclick", OnClick },
+        };
+    }
+
+    Dictionary<string, object> OnHeaderCell()
+    {
+        Action<MouseEventArgs> onClick = args =>
+        {
+            Console.WriteLine("header cell was clicked");
+        };
+
+        return new Dictionary<string, object> {
+            { "onclick", onClick },
+        };
     }
 }
