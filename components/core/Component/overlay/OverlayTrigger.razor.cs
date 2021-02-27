@@ -88,6 +88,7 @@ namespace AntDesign.Internal
          * Current placement, would change by overlay in some cases(via ChangePlacementForShow function)
          */
         private PlacementType _placement = PlacementType.BottomLeft;
+
         [Parameter]
         public PlacementType Placement
         {
@@ -127,6 +128,17 @@ namespace AntDesign.Internal
         [Parameter]
         public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
+        [Parameter]
+        public ElementReference TriggerReference
+        {
+            get => _triggerReference;
+            set
+            {
+                _triggerReference = value;
+                RefBack.Set(value);
+            }
+        }
+
         [Inject]
         private DomEventService DomEventService { get; set; }
 
@@ -134,6 +146,7 @@ namespace AntDesign.Internal
         private bool _mouseInOverlay = false;
 
         protected Overlay _overlay = null;
+        private ElementReference _triggerReference;
 
         protected override void OnAfterRender(bool firstRender)
         {
@@ -158,14 +171,16 @@ namespace AntDesign.Internal
                 DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn, true);
                 DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut, true);
                 DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
-
             }
             return base.OnAfterRenderAsync(firstRender);
         }
 
         private void OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
+
         private void OnUnboundMouseLeave(JsonElement jsonElement) => OnTriggerMouseLeave();
+
         private void OnUnboundFocusIn(JsonElement jsonElement) => OnTriggerFocusIn();
+
         private void OnUnboundFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
 
         private async void OnUnboundClick(JsonElement jsonElement)
@@ -175,6 +190,7 @@ namespace AntDesign.Internal
 
             await OnClickDiv(eventArgs);
         }
+
         private async void OnContextMenu(JsonElement jsonElement)
         {
             var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
@@ -361,8 +377,13 @@ namespace AntDesign.Internal
             await OnOverlayHiding.InvokeAsync(visible);
         }
 
-        protected virtual void OnOverlayShow() { }
-        protected virtual void OnOverlayHide() { }
+        protected virtual void OnOverlayShow()
+        {
+        }
+
+        protected virtual void OnOverlayHide()
+        {
+        }
 
         internal void ChangePlacementForShow(PlacementType placement)
         {
