@@ -67,7 +67,7 @@ namespace AntDesign
 
         public ITableSortModel SortModel { get; private set; }
 
-        public IEnumerable<ITableFilterModel> FilterModel => _filterModels;
+        public ITableFilterModel FilterModel { get; private set; }
 
         private SortDirection _sortDirection;
 
@@ -77,8 +77,10 @@ namespace AntDesign
 
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
-        private IEnumerable<ITableFilterModel> _filterModels;
         private bool _filterOpened;
+        private bool _hasFilterSelected;
+
+        private ElementReference _filterTriggerRef;
 
         protected override void OnInitialized()
         {
@@ -179,8 +181,17 @@ namespace AntDesign
         private void FilterConfirm()
         {
             _filterOpened = false;
-            _filterModels = Filters?.Select(x => new FilterModel<TData>(_propertyReflector.Value.PropertyInfo, x.Text, x.Value, OnFilter, x.Selected));
+            _hasFilterSelected = Filters?.Any(x => x.Selected) == true;
+
+            FilterModel = _hasFilterSelected ? new FilterModel<TData>(_propertyReflector.Value.PropertyInfo, OnFilter, Filters.Where(x => x.Selected).ToList()) : null;
+
             Table?.ReloadAndInvokeChange();
+        }
+
+        private void FilterReset()
+        {
+            Filters.ForEach(x => x.Selected = false);
+            FilterConfirm();
         }
     }
 }

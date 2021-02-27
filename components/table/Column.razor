@@ -122,7 +122,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             bool hasDescendingSorter = SortDirection.Descending.IsIn(col.SortDirections);
             bool hasAscendingSorter = SortDirection.Ascending.IsIn(col.SortDirections);
         }
-        <span class="ant-table-column-sorter @((hasDescendingSorter && hasAscendingSorter)?"ant-table-column-sorter-full":"")">
+        <span class="ant-table-column-sorter @(hasDescendingSorter && hasAscendingSorter?"ant-table-column-sorter-full":"")">
             <span class="ant-table-column-sorter-inner">
                 @if (hasAscendingSorter)
                 {
@@ -165,15 +165,15 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                     @col.ToolTipSorter(col)
                 }
             </span>
-            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight">
-                <ChildContent>
-                    <span class="ant-table-filter-trigger-container @(col._filterOpened?" ant-table-filter-trigger-container-open":"")">
-                        <span role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger"
+            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef">
+                <Unbound>
+                    <span @ref="@col._filterTriggerRef" class="ant-table-filter-trigger-container @(col._filterOpened?" ant-table-filter-trigger-container-open":"")">
+                        <span role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._hasFilterSelected?"active":"")"
                               @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col._filterOpened = !col._filterOpened )})">
-                            <Icon Type="filter" />
+                            <Icon Type="filter" Theme="fill" />
                         </span>
                     </span>
-                </ChildContent>
+                </Unbound>
                 <Overlay>
                     <div class="ant-table-filter-dropdown">
                         <Menu AutoCloseDropdown="false">
@@ -185,7 +185,9 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                             }
                         </Menu>
                         <div class="ant-table-filter-dropdown-btns">
-                            <Button Size="small" Type="link">@col.Table?.Locale.FilterReset</Button>
+                            <Button Size="small" Type="link" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.FilterReset()) })">
+                                @col.Table?.Locale.FilterReset
+                            </Button>
                             <Button Size="small" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.FilterConfirm()) })">
                                 @col.Table?.Locale.FilterConfirm
                             </Button>

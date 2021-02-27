@@ -193,12 +193,9 @@ namespace AntDesign
                         queryModel.AddSortModel(fieldColumn.SortModel);
                     }
 
-                    if (fieldColumn.FilterModel?.Any() == true)
+                    if (fieldColumn.FilterModel != null)
                     {
-                        foreach (var filter in fieldColumn.FilterModel.Where(x => x.Selected))
-                        {
-                            queryModel.AddFilterModel(filter);
-                        }
+                        queryModel.AddFilterModel(fieldColumn.FilterModel);
                     }
                 }
             }
