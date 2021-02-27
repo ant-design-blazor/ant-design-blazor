@@ -102,6 +102,7 @@ namespace AntDesign
             set
             {
                 _selectedKeys = value;
+                MenuItems.ForEach(x => x.UpdateStelected());
             }
         }
 
@@ -140,7 +141,7 @@ namespace AntDesign
                     }
                     else if (menuitem.IsSelected || menuitem.FirstRun)
                     {
-                        if (!menuitem.FirstRun) 
+                        if (!menuitem.FirstRun)
                             skipParentSelection = item.ParentMenu?.Key == menuitem.ParentMenu?.Key;
                         menuitem.Deselect(skipParentSelection);
                     }

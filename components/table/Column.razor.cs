@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using AntDesign.Core.Reflection;
 using AntDesign.Internal;
@@ -49,6 +50,24 @@ namespace AntDesign
         [Parameter]
         public SortDirection DefaultSortOrder { get; set; }
 
+        [Parameter]
+        public IEnumerable<TableFilter<TData>> Filters { get; set; }
+
+        [Parameter]
+        public bool FilterMultiple { get; set; } = true;
+
+        /// <summary>
+        /// Function that determines if the row is displayed when filtered
+        /// <para>
+        /// Parameter 1: The value of the filter item
+        /// </para>
+        /// <para>
+        /// Parameter 2: The value of the column
+        /// </para>
+        /// </summary>
+        [Parameter]
+        public Expression<Func<TData, TData, bool>> OnFilter { get; set; }
+
         private PropertyReflector? _propertyReflector;
 
         public string DisplayName => _propertyReflector?.DisplayName;
@@ -57,11 +76,21 @@ namespace AntDesign
 
         public ITableSortModel SortModel { get; private set; }
 
+        public ITableFilterModel FilterModel { get; private set; }
+
         private SortDirection _sortDirection;
 
         public Func<RowData, TData> GetValue { get; private set; }
 
         void IFieldColumn.ClearSorter() => SetSorter(SortDirection.None);
+
+        private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
+
+        private bool _filterOpened;
+        private bool _hasFilterSelected;
+        private string[] _selectedFilterValues;
+
+        private ElementReference _filterTriggerRef;
 
         protected override void OnInitialized()
         {
@@ -157,6 +186,38 @@ namespace AntDesign
         {
             RowData.Expanded = !RowData.Expanded;
             Table?.Refresh();
+        }
+
+        private void FilterSelected(TableFilter<TData> filter)
+        {
+            if (!FilterMultiple)
+            {
+                Filters.ForEach(x => x.Selected = false);
+                filter.Selected = true;
+            }
+            else
+            {
+                filter.Selected = !filter.Selected;
+            }
+
+            _selectedFilterValues = Filters.Where(x => x.Selected).Select(x => x.Value.ToString()).ToArray();
+            StateHasChanged();
+        }
+
+        private void FilterConfirm()
+        {
+            _filterOpened = false;
+            _hasFilterSelected = Filters?.Any(x => x.Selected) == true;
+
+            FilterModel = _hasFilterSelected ? new FilterModel<TData>(_propertyReflector.Value.PropertyInfo, OnFilter, Filters.Where(x => x.Selected).ToList()) : null;
+
+            Table?.ReloadAndInvokeChange();
+        }
+
+        private void FilterReset()
+        {
+            Filters.ForEach(x => x.Selected = false);
+            FilterConfirm();
         }
     }
 }
