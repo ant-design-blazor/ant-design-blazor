@@ -87,6 +87,18 @@ namespace AntDesign
                 Select();
         }
 
+        internal void UpdateStelected()
+        {
+            if (RootMenu.SelectedKeys.Contains(Key))
+            {
+                if (!IsSelected) Select();
+            }
+            else if (IsSelected)
+            {
+                Deselect();
+            }
+        }
+
         public async Task HandleOnClick(MouseEventArgs args)
         {
             if (Disabled)

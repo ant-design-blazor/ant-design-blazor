@@ -8,10 +8,6 @@ namespace AntDesign.TableModels
 {
     public class SortModel<TField> : ITableSortModel, IComparer<TField>
     {
-        private PropertyInfo _propertyInfo;
-
-        private readonly Func<TField, TField, int> _comparer;
-
         public int Priority { get; }
 
         public string FieldName { get; }
@@ -20,14 +16,17 @@ namespace AntDesign.TableModels
 
         SortDirection ITableSortModel.SortDirection => _sortDirection;
 
+        private readonly PropertyInfo _propertyInfo;
+        private readonly Func<TField, TField, int> _comparer;
+
         private SortDirection _sortDirection;
 
         public SortModel(PropertyInfo propertyInfo, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
         {
-            this._propertyInfo = propertyInfo;
-            _comparer = comparer;
             this.Priority = priority;
             this.FieldName = propertyInfo?.Name;
+            this._propertyInfo = propertyInfo;
+            this._comparer = comparer;
             this._sortDirection = defaultSortOrder ?? SortDirection.None;
         }
 
