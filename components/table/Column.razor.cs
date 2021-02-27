@@ -54,8 +54,17 @@ namespace AntDesign
         public IEnumerable<TableFilter<TData>> Filters { get; set; }
 
         [Parameter]
-        public bool FilterMultiple { get; set; }
+        public bool FilterMultiple { get; set; } = true;
 
+        /// <summary>
+        /// Function that determines if the row is displayed when filtered
+        /// <para>
+        /// Parameter 1: The value of the filter item
+        /// </para>
+        /// <para>
+        /// Parameter 2: The value of the column
+        /// </para>
+        /// </summary>
         [Parameter]
         public Expression<Func<TData, TData, bool>> OnFilter { get; set; }
 
@@ -79,6 +88,7 @@ namespace AntDesign
 
         private bool _filterOpened;
         private bool _hasFilterSelected;
+        private string[] _selectedFilterValues;
 
         private ElementReference _filterTriggerRef;
 
@@ -176,6 +186,22 @@ namespace AntDesign
         {
             RowData.Expanded = !RowData.Expanded;
             Table?.Refresh();
+        }
+
+        private void FilterSelected(TableFilter<TData> filter)
+        {
+            if (!FilterMultiple)
+            {
+                Filters.ForEach(x => x.Selected = false);
+                filter.Selected = true;
+            }
+            else
+            {
+                filter.Selected = !filter.Selected;
+            }
+
+            _selectedFilterValues = Filters.Where(x => x.Selected).Select(x => x.Value.ToString()).ToArray();
+            StateHasChanged();
         }
 
         private void FilterConfirm()

@@ -3,16 +3,19 @@
             @bind-Field="context.Name"
             SorterCompare="@((a,b)=> a.Length - b.Length)"
             SortDirections="new[] { SortDirection.Descending }"
-            Filters="filters"
+            Filters="nameFilters"
             OnFilter="((value,name)=>name.StartsWith(value))" />
     <Column TData="int"
             DataIndex="@nameof(context.Age)"
             DefaultSortOrder="@SortDirection.Descending"
             SorterCompare="@((a,b)=> a - b)" />
     <Column TData="string"
-            DataIndex="@nameof(context.Address)"
+            @bind-Field="context.Address"
             SorterCompare="@((a,b)=> a.Length - b.Length)"
-            SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }" />
+            SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }"
+            Filters="addressFilters"
+            FilterMultiple="false"
+            OnFilter="(value,address)=>address.StartsWith(value)" />
 </Table>
 
 @using AntDesign.TableModels;
@@ -41,9 +44,14 @@
         new("Jim Red",32,"London No. 2 Lake Park"),
     };
 
-    public TableFilter<string>[] filters = new TableFilter<string>[] {
+    public TableFilter<string>[] nameFilters = new TableFilter<string>[] {
         new() { Text = "Joe", Value = "Joe" },
         new() { Text = "Jim", Value = "Jim" },
+    };
+
+    public TableFilter<string>[] addressFilters = new TableFilter<string>[] {
+        new() { Text = "London", Value = "London" },
+        new() { Text = "New York", Value = "New York" },
     };
 
     void OnChange(QueryModel<Data> query)

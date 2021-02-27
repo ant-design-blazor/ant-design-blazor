@@ -11,5 +11,10 @@ namespace AntDesign
         public TValue Value { get; set; }
 
         public bool Selected { get; set; }
+
+        internal void SelectValue(bool selected)
+        {
+            this.Selected = selected;
+        }
     }
 }

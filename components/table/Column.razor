@@ -176,11 +176,18 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                 </Unbound>
                 <Overlay>
                     <div class="ant-table-filter-dropdown">
-                        <Menu AutoCloseDropdown="false">
+                        <Menu AutoCloseDropdown="false" SelectedKeys="col._selectedFilterValues">
                             @foreach (var filter in col.Filters)
                             {
-                                <MenuItem @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => { filter.Selected = !filter.Selected; col.StateHasChanged(); } ) })">
-                                    <Checkbox Value="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<bool>(col, value => { filter.Selected = value;  col.StateHasChanged();}) })">@filter.Text</Checkbox>
+                                <MenuItem Key="@filter.Value.ToString()" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col.FilterSelected(filter))})">
+                                    @if (col.FilterMultiple)
+                                    {
+                                        <Checkbox Value="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<bool>(col, value => col.FilterSelected(filter)) })">@filter.Text</Checkbox>
+                                    }
+                                    else
+                                    {
+                                        <Radio TValue="bool" Checked="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["CheckedChanged"] = _callbackFactory.Create<bool>(col, value => col.FilterSelected(filter))})">@filter.Text</Radio>
+                                    }
                                 </MenuItem>
                             }
                         </Menu>
