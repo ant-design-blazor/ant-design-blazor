@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -86,13 +87,80 @@ namespace AntDesign
 
             if (BindConverter.TryConvertTo(args.Value.ToString(), CultureInfo, out DateTime changeValue))
             {
-                array.SetValue(changeValue, index);
-                PickerValues[index] = changeValue;
+                if (Picker == DatePickerType.Date)
+                {
+                    if (IsDateStringFullDate(args.Value.ToString()))
+                        array.SetValue(changeValue, index);
+                }
+                else
+                    array.SetValue(changeValue, index);
+                ChangePickerValue(changeValue, index);
 
                 StateHasChanged();
             }
 
             UpdateCurrentValueAsString();
+        }
+
+        /// <summary>
+        /// Method is called via EventCallBack if the keyboard key is no longer pressed inside the Input element.
+        /// </summary>
+        /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
+        /// <param name="index">Refers to picker index - 0 for starting date, 1 for ending date</param>
+        protected async Task OnKeyUp(KeyboardEventArgs e, int index)
+        {
+            if (e == null) throw new ArgumentNullException(nameof(e));
+
+            var key = e.Key.ToUpperInvariant();
+            if (key == "ENTER")
+            {
+                var input = (index == 0 ? _inputStart : _inputEnd);
+                if (string.IsNullOrWhiteSpace(input.Value))
+                    ClearValue(index);
+                else
+                {
+                    if (BindConverter.TryConvertTo(input.Value, CultureInfo, out DateTime changeValue))
+                    {
+                        var array = Value as Array;
+                        array.SetValue(changeValue, index);
+                    }
+                    if (index == 0)
+                    {
+                        await Blur(0);
+                        await Focus(1);
+                    }
+                    else
+                        Close();
+                }
+            }
+            if (key == "ARROWDOWN" && !_dropDown.IsOverlayShow())
+            {
+                await _dropDown.Show();
+            }
+            if (key == "ARROWUP" && _dropDown.IsOverlayShow())
+            {
+                Close();
+            }
+        }
+
+        private async Task OnFocus(int index)
+        {
+            if (index == 0)
+            {
+                if (!_inputStart.IsOnFocused)
+                {
+                    await Blur(1);
+                    await Focus(0);
+                }
+            }
+            else
+            {                
+                if (!_inputEnd.IsOnFocused)
+                {
+                    await Blur(0);
+                    await Focus(1);
+                }
+            }
         }
 
         protected override void OnInitialized()
@@ -231,7 +299,7 @@ namespace AntDesign
 
         private async Task OnInputClick(int index)
         {
-            //Reset Picker to default in case it the picker value was changed
+            //Reset Picker to default in case the picker value was changed
             //but no value was selected (for example when a user clicks next
             //month but does not select any value)
             if (UseDefaultPickerValue[index] && DefaultPickerValue != null)
@@ -293,6 +361,9 @@ namespace AntDesign
 
         private TValue CreateInstance()
         {
+            if (DefaultValue is not null)
+                return (TValue)(DefaultValue as Array).Clone();
+
             if (IsNullable)
             {
                 return (TValue)Array.CreateInstance(typeof(DateTime?), 2).Clone();

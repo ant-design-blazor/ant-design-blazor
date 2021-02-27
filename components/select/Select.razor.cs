@@ -725,6 +725,7 @@ namespace AntDesign
 
                     if (selectOption.IsAddedTag && SelectOptions != null)
                     {
+                        CustomTagSelectOptionItem = null;
                         AddedTags.Add(selectOption);
                         SelectOptionItems.Add(selectOption);
                     }
@@ -1512,11 +1513,9 @@ namespace AntDesign
                     }
                     else if (firstActive != null && !firstActive.IsDisabled)
                     {
-                        CustomTagSelectOptionItem = null;
                         await SetValueAsync(firstActive);
                     }
 
-                    ClearSearch();
                     return;
                 }
             }

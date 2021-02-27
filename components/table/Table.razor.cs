@@ -103,6 +103,9 @@ namespace AntDesign
         [Parameter]
         public SortDirection[] SortDirections { get; set; } = SortDirection.Preset.Default;
 
+        [Parameter]
+        public string TableLayout { get; set; }
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -120,8 +123,8 @@ namespace AntDesign
         private bool _hasFixRight;
         private bool _pingRight;
         private bool _pingLeft;
-        private bool _tableLayoutIsFixed;
         private int _treeExpandIconColumnIndex;
+        private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
@@ -266,6 +269,11 @@ namespace AntDesign
 
             SetClass();
 
+            if (ScrollX != null || ScrollY != null)
+            {
+                TableLayout = "fixed";
+            }
+
             InitializePagination();
 
             FlushCache();
@@ -348,7 +356,7 @@ namespace AntDesign
 
         void ITable.HasFixRight() => _hasFixRight = true;
 
-        void ITable.TableLayoutIsFixed() => _tableLayoutIsFixed = true;
+        void ITable.TableLayoutIsFixed() => TableLayout = "fixed";
 
         private async void OnResize(JsonElement _) => await SetScrollPositionClassName();
 
@@ -408,7 +416,6 @@ namespace AntDesign
         {
             if (!_isReloading)
             {
-                await this.SetScrollPositionClassName(true);
                 if (ScrollY != null && ScrollX != null)
                 {
                     await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);

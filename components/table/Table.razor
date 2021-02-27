@@ -32,13 +32,13 @@
                             @if (ScrollY != null)
                             {
                                 <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
-                                    <table style="table-layout: fixed;">
+                                    <table style="@TableLayoutStyle" >
                                         @colGroup((this, true))
                                         @header(this)
                                     </table>
                                 </div>
                                 <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY)">
-                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") table-layout: fixed;">
+                                    <table style="@(ScrollX!=null?$" width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle">
                                         @colGroup((this, false))
                                         <tbody class="ant-table-tbody">
                                             <tr aria-hidden="true" class="ant-table-measure-row" style="height: 0px; font-size: 0px;">
@@ -54,7 +54,7 @@
                             else if (ScrollX != null)
                             {
                                 <div class="ant-table-content" @ref="_tableBodyRef" style="overflow: auto hidden;">
-                                    <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; table-layout: fixed;">
+                                    <table style="width: @((CssSizeLength)ScrollX); min-width: 100%; @TableLayoutStyle">
                                         @colGroup((this, true))
                                         @header(this)
                                         <tbody class="ant-table-tbody">
@@ -71,7 +71,7 @@
                             else
                             {
                                 <div class="ant-table-content">
-                                    <table style="table-layout: @(_tableLayoutIsFixed?"fixed":"auto");">
+                                    <table style="@TableLayoutStyle">
                                         @colGroup((this, true))
                                         @header(this)
                                         <tbody class="ant-table-tbody">
