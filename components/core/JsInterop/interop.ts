@@ -493,7 +493,9 @@ export function getStyle(element, styleProp) {
 }
 
 export function getTextAreaInfo(element) {
-  var result = {};
+    var result = {};
+    var dom = getDom(element);
+    result["scrollHeight"] = dom.scrollHeight || 0;
 
   if (element.currentStyle) {
     result["lineHeight"] = parseFloat(element.currentStyle["line-height"]);
@@ -507,6 +509,62 @@ export function getTextAreaInfo(element) {
   }
   return result;
 }
+
+
+const funcDict = {};
+
+export function registerResizeTextArea(element, minRows, maxRows, objReference) {
+    if (!objReference) {
+        disposeResizeTextArea(element);
+    }
+    else {
+        objReferenceDict[element.id] = objReference;
+        funcDict[element.id + "input"] = function () { resizeTextArea(element, minRows, maxRows); }
+        element.addEventListener("input", funcDict[element.id + "input"]);
+        return getTextAreaInfo(element);
+    }
+}
+
+export function disposeResizeTextArea(element) {
+    element.removeEventListener("input", funcDict[element.id + "input"]);
+    objReferenceDict[element.id] = null;
+    funcDict[element.id + "input"] = null;
+
+}
+
+export function resizeTextArea(element, minRows, maxRows) {
+    var dims = getTextAreaInfo(element);
+    var rowHeight = dims["lineHeight"];
+    var offsetHeight = dims["paddingTop"] + dims["paddingBottom"];
+    var oldHeight = element.style.height;
+    element.style.height = 'auto';
+    
+    var rows = element.scrollHeight / rowHeight;
+    rows = Math.max(minRows, rows);
+
+    var newHeight = 0;
+    if (rows > maxRows) {
+        rows = maxRows;
+
+        newHeight = (rows * rowHeight + offsetHeight);
+        element.style.height = newHeight + "px";
+        element.style.overflowY = "visible";
+    }
+    else {
+        newHeight = rows * rowHeight + offsetHeight;
+        element.style.height = newHeight + "px";
+        element.style.overflowY = "hidden";
+    }
+
+    if (oldHeight !== newHeight) {
+        let textAreaObj = objReferenceDict[element.id];
+        //textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", parseInt(element.scrollWidth), Math.trunc(newHeight));
+        textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", parseFloat(element.scrollWidth), newHeight);
+    }
+    //return [parseInt(element.scrollWidth), Math.trunc(newHeight)];
+}
+
+
 
 const objReferenceDict = {};
 export function disposeObj(objReferenceName) {
