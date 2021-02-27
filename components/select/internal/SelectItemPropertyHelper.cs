@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -17,9 +18,9 @@ namespace AntDesign.Select.Internal
 
         private const string Nullable_Value = "Value";
 
-        private static readonly ConcurrentDictionary<DelegateCacheKey, Delegate> _getValueDelegateCache = new();
+        private static readonly ConcurrentDictionary<DelegateCacheKey, Delegate> _getValueDelegateCache = new(new DelegateCacheKeyComparer());
 
-        private static readonly ConcurrentDictionary<DelegateCacheKey, Delegate> _setValuedDelegateCache = new();
+        private static readonly ConcurrentDictionary<DelegateCacheKey, Delegate> _setValuedDelegateCache = new(new DelegateCacheKeyComparer());
 
         internal static Func<TItem, TItemValue> CreateGetValueFunc<TItem, TItemValue>(string valueName)
         {
@@ -202,6 +203,21 @@ namespace AntDesign.Select.Internal
                 ItemType = itemType;
                 ValueType = valueType;
                 PropertyName = propertyName;
+            }
+        }
+
+        private class DelegateCacheKeyComparer : IEqualityComparer<DelegateCacheKey>
+        {
+            public bool Equals(DelegateCacheKey x, DelegateCacheKey y)
+            {
+                return x.ItemType == y.ItemType
+                    && x.ValueType == y.ValueType
+                    && x.PropertyName == y.PropertyName;
+            }
+
+            public int GetHashCode(DelegateCacheKey obj)
+            {
+                return HashCode.Combine(obj.ItemType, obj.ValueType, obj.PropertyName);
             }
         }
     }
