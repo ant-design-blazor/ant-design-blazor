@@ -38,10 +38,32 @@ namespace AntDesign
             }
         }
         [Parameter] public bool Disabled { get; set; }
-        [Parameter] public string DisabledName { get; set; }
+
+        [Parameter]
+        public string DisabledName
+        {
+            get => _disabledName;
+            set
+            {
+                _getDisabled = string.IsNullOrWhiteSpace(value) ? null : SelectItemPropertyHelper.CreateGetDisabledFunc<TItem>(value);
+                _disabledName = value;
+            }
+        }
+
         [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
         [Parameter] public bool EnableSearch { get; set; }
-        [Parameter] public string GroupName { get; set; } = string.Empty;
+
+        [Parameter]
+        public string GroupName
+        {
+            get => _groupName;
+            set
+            {
+                _getGroup = string.IsNullOrWhiteSpace(value) ? null : SelectItemPropertyHelper.CreateGetGroupFunc<TItem>(value);
+                _groupName = value;
+            }
+        }
+
         [Parameter] public bool HideSelected { get; set; }
         [Parameter] public bool IgnoreItemChanges { get; set; } = true;
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
@@ -51,7 +73,18 @@ namespace AntDesign
         /// </summary>
         [Parameter] public bool LabelInValue { get; set; }
 
-        [Parameter] public string LabelName { get; set; }
+        [Parameter]
+        public string LabelName
+        {
+            get => _labelName;
+            set
+            {
+                _getLabel = SelectItemPropertyHelper.CreateGetLabelFunc<TItem>(value);
+                _setLabel = SelectItemPropertyHelper.CreateSetLabelFunc<TItem>(value);
+                _labelName = value;
+            }
+        }
+
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
         [Parameter] public bool Loading { get; set; }
         [Parameter] public string Mode { get; set; } = "default";
@@ -86,7 +119,19 @@ namespace AntDesign
         [Parameter] public RenderFragment PrefixIcon { get; set; }
         [Parameter] public char[] TokenSeparators { get; set; }
         [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
-        [Parameter] public string ValueName { get; set; }
+
+        [Parameter]
+        public string ValueName
+        {
+            get => _valueName;
+            set
+            {
+                _getValue = SelectItemPropertyHelper.CreateGetValueFunc<TItem, TItemValue>(value);
+                _setValue = SelectItemPropertyHelper.CreateSetValueFunc<TItem, TItemValue>(value);
+                _valueName = value;
+            }
+        }
+
         [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
 
         /// <summary>
@@ -340,7 +385,28 @@ namespace AntDesign
             }
         }
 
+        private string _labelName;
+
+        private Func<TItem, string> _getLabel;
+
+        private Action<TItem, string> _setLabel;
+
+        private string _groupName = string.Empty;
+
+        private Func<TItem, string> _getGroup;
+        
+        private string _disabledName;
+
+        private Func<TItem, bool> _getDisabled;
+
+        private string _valueName;
+
+        private Func<TItem, TItemValue>   _getValue;
+
+        private Action<TItem, TItemValue> _setValue;
+
         #endregion Properties
+
         private static bool IsSimpleType(Type type)
         {
             return
@@ -462,7 +528,7 @@ namespace AntDesign
 
             foreach (var item in _datasource)
             {
-                TItemValue value = GetPropertyValueAsTItemValue(item, ValueName);
+                TItemValue value = _getValue(item);
 
                 var exists = false;
                 SelectOptionItem<TItemValue, TItem> selectOption;
@@ -481,13 +547,13 @@ namespace AntDesign
 
                 var disabled = false;
                 var groupName = string.Empty;
-                var label = GetPropertyValueAsObject(item, LabelName)?.ToString();
+                var label = _getLabel(item);
 
                 if (!string.IsNullOrWhiteSpace(DisabledName))
-                    disabled = (bool)GetPropertyValueAsObject(item, DisabledName);
+                    disabled = _getDisabled(item);
 
                 if (!string.IsNullOrWhiteSpace(GroupName))
-                    groupName = GetPropertyValueAsObject(item, GroupName)?.ToString();
+                    groupName = _getGroup(item);
 
                 if (!exists)
                 {
@@ -1001,8 +1067,8 @@ namespace AntDesign
             else
             {
                 item = Activator.CreateInstance<TItem>();
-                typeof(TItem).GetProperty(LabelName).SetValue(item, _searchValue);
-                typeof(TItem).GetProperty(ValueName).SetValue(item, value);
+                _setLabel(item, _searchValue);
+                _setValue(item, value);
             }
             return new SelectOptionItem<TItemValue, TItem>() { Label = label, Value = value, Item = item, IsActive = isActive, IsSelected = false, IsAddedTag = true };
         }
@@ -1084,22 +1150,6 @@ namespace AntDesign
         internal async Task UpdateOverlayPositionAsync()
         {
             await _dropDown.GetOverlayComponent().UpdatePosition();
-        }
-
-        private static object GetPropertyValueAsObject(object obj, string propertyName)
-        {
-            return obj.GetType().GetProperties()
-                .Single(p => p.Name == propertyName)
-                .GetValue(obj, null);
-        }
-
-        private static TItemValue GetPropertyValueAsTItemValue(object obj, string propertyName)
-        {
-            var result = obj.GetType().GetProperties()
-                .Single(p => p.Name == propertyName)
-                .GetValue(obj, null);
-
-            return (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(result.ToString());
         }
 
         #region Events
@@ -1398,8 +1448,8 @@ namespace AntDesign
                     }
                     else
                     {
-                        typeof(TItem).GetProperty(LabelName).SetValue(CustomTagSelectOptionItem.Item, _searchValue);
-                        typeof(TItem).GetProperty(ValueName).SetValue(CustomTagSelectOptionItem.Item, value);
+                        _setLabel(CustomTagSelectOptionItem.Item, _searchValue);
+                        _setValue(CustomTagSelectOptionItem.Item, value);
                     }
                 }
             }
