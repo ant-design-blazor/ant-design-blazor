@@ -226,6 +226,7 @@ namespace AntDesign
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
+                    _total = _showItems.Count();
                 }
             }
 
