@@ -80,7 +80,10 @@ namespace AntDesign
             set
             {
                 _getLabel = SelectItemPropertyHelper.CreateGetLabelFunc<TItem>(value);
-                _setLabel = SelectItemPropertyHelper.CreateSetLabelFunc<TItem>(value);
+                if (SelectMode == SelectMode.Tags)
+                {
+                    _setLabel = SelectItemPropertyHelper.CreateSetLabelFunc<TItem>(value);                    
+                }
                 _labelName = value;
             }
         }
