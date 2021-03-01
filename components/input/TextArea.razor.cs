@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -19,14 +21,16 @@ namespace AntDesign
         /// </summary>
         private double _offsetHeight;
 
-        private string _hiddenWidth;
+        private uint _minRows = DEFAULT_MIN_ROWS;
+        private uint _maxRows = uint.MaxValue;
+        private bool _hasMinOrMaxSet;
+        private DotNetObjectReference<TextArea> _reference;
 
-        private ElementReference _hiddenEle;
 
         [Parameter]
         public bool AutoSize { get; set; }
 
-        private uint _minRows = DEFAULT_MIN_ROWS;
+
 
         [Parameter]
         public uint MinRows
@@ -37,6 +41,7 @@ namespace AntDesign
             }
             set
             {
+                _hasMinOrMaxSet = true;
                 if (value >= DEFAULT_MIN_ROWS && value <= MaxRows)
                 {
                     _minRows = value;
@@ -49,8 +54,6 @@ namespace AntDesign
             }
         }
 
-        private uint _maxRows = uint.MaxValue;
-
         [Parameter]
         public uint MaxRows
         {
@@ -60,6 +63,7 @@ namespace AntDesign
             }
             set
             {
+                _hasMinOrMaxSet = true;
                 if (value >= MinRows)
                 {
                     _maxRows = value;
@@ -81,82 +85,86 @@ namespace AntDesign
 
             if (AutoSize)
             {
+                DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
+
                 await CalculateRowHeightAsync();
             }
         }
 
-        protected override async void OnInputAsync(ChangeEventArgs args)
-        {
-            base.OnInputAsync(args);
 
-            if (AutoSize)
+        protected override void Dispose(bool disposing)
+        {
+            if (AutoSize && !_isReloading)
             {
-                await ChangeSizeAsync();
+                _reference?.Dispose();
+                DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+
+                _ = InvokeAsync(async () =>
+                {
+                    await JsInvokeAsync(JSInteropConstants.DisposeResizeTextArea, Ref);
+                });
             }
+
+            base.Dispose(disposing);
         }
 
-        private async Task ChangeSizeAsync()
+        /// <summary>
+        /// Indicates that a page is being refreshed 
+        /// </summary>
+        private bool _isReloading;
+        private void Reloading(JsonElement jsonElement) => _isReloading = true;
+
+        [JSInvokable]
+        public void ChangeSizeAsyncJs(float width, float height)
         {
-            // Ant-design use a hidden textarea to calculate row height, totalHeight = rows * rowHeight
-            // TODO: compare with maxheight
-
-            Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _hiddenEle);
-            System.Diagnostics.Debug.WriteLine($"hidden\t{element.scrollHeight}");
-
-            // do not use %mod in case _rowheight is not an integer
-            uint rows = (uint)(element.scrollHeight / _rowHeight);
-            rows = Math.Max((uint)MinRows, rows);
-
-            int height = 0;
-            if (rows > MaxRows)
-            {
-                rows = MaxRows;
-
-                height = (int)(rows * _rowHeight + _offsetHeight);
-                Style = $"height: {height}px;";
-            }
-            else
-            {
-                height = (int)(rows * _rowHeight + _offsetHeight);
-                Style = $"height: {height}px;overflow-y: hidden;";
-            }
-
-            await OnResize.InvokeAsync(new OnResizeEventArgs { Width = element.scrollWidth, Height = height });
+            OnResize.InvokeAsync(new OnResizeEventArgs { Width = width, Height = height });
         }
 
         private async Task CalculateRowHeightAsync()
         {
-            Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
-            element.ToString();
-            _hiddenWidth = $"width: {element.offsetWidth}px;";
+            if (_reference == null)
+            {
+                _reference = DotNetObjectReference.Create<TextArea>(this);
+            }
+            var textAreaInfo = await JsInvokeAsync<TextAreaInfo>(JSInteropConstants.RegisterResizeTextArea, Ref, MinRows, MaxRows, _reference);
 
-            // save the content in the textarea
-            string str = Value;
+//            var textAreaInfo = await JsInvokeAsync<TextAreaInfo>(JSInteropConstants.GetTextAreaInfo, Ref);
+            _rowHeight = textAreaInfo.LineHeight;
+            _offsetHeight = textAreaInfo.PaddingTop + textAreaInfo.PaddingBottom 
+                + textAreaInfo.BorderTop + textAreaInfo.BorderBottom;
 
-            // total height of 1 row
-            Value = " ";
-            StateHasChanged();
-            element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _hiddenEle);
-            double rHeight = element.scrollHeight;
+            uint rows = (uint)(textAreaInfo.ScrollHeight / _rowHeight);
+            if (_hasMinOrMaxSet)
+                rows = Math.Max((uint)MinRows, rows);
 
-            // total height of 2 rows
-            Value = " \r\n ";
-            StateHasChanged();
-            element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _hiddenEle);
-            double rrHeight = element.scrollHeight;
+            double height = 0;
+            if (rows > MaxRows)
+            {
+                rows = MaxRows;
 
-            _rowHeight = rrHeight - rHeight;
-            _offsetHeight = rHeight - _rowHeight;
-
-            // revert the value back to original content
-            Value = str;
-            StateHasChanged();
-            await ChangeSizeAsync();
+                height = rows * _rowHeight + _offsetHeight;
+                Style = $"height: {height}px;";
+            }
+            else
+            {
+                height = rows * _rowHeight + _offsetHeight;
+                Style = $"height: {height}px;overflow-y: hidden;";
+            }
         }
 
         protected override string GetClearIconCls()
         {
             return $"{PrefixCls}-textarea-clear-icon";
+        }
+
+        private class TextAreaInfo
+        {
+            public double ScrollHeight { get; set; }
+            public double LineHeight { get; set; }
+            public double PaddingTop { get; set; }
+            public double PaddingBottom { get; set; }
+            public double BorderTop { get; set; }
+            public double BorderBottom { get; set; }
         }
     }
 }

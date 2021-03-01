@@ -119,3 +119,4 @@ jobs:
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
           BRANCH: ${{ steps.get_next_version.outputs.current_branch }}
+

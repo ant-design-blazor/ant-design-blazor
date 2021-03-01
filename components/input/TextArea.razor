@@ -30,16 +30,11 @@
 @if (Suffix != null)
 {
     <span class=@($"{PrefixCls}-affix-wrapper {PrefixCls}-affix-wrapper-textarea-with-clear-btn")>
-        <textarea @ref="Ref" @attributes="attributes" />
+        <textarea @ref="Ref" @attributes="attributes"/>
         @Suffix
     </span>
 }
 else
 {
-    <textarea @ref="Ref" @attributes="attributes" />
-}
-
-@if (AutoSize)
-{
-    <textarea class="@ClassMapper.Class" style="position: absolute;left:0; z-index: -1;visibility: hidden;height: 0px;overflow-y: hidden; @_hiddenWidth" @ref="_hiddenEle">@Value</textarea>
+    <textarea @ref="Ref" @attributes="attributes"/>
 }
