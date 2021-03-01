@@ -110,13 +110,14 @@ jobs:
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
         env:
-          PACKAGE_VERSION: ${{ steps.get_next_version.outputs.package_version }}
+
+          PACKAGE_VERSION: ${{ steps.get_next_version.outputs.next_version }}
 
       - name: Deploy Preview 🚀
-        env:
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-          DEPLOY_DOMAIN: preview-antblazor.surge.sh
-          BRANCH: ${{ steps.pack.outputs.current_branch }}
         run: |
           npm install -g surge
           surge --project ./cargo/wwwroot --domain $BRANCH-antblazor.surge.sh
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          BRANCH: ${{ steps.get_next_version.outputs.current_branch }}
+
