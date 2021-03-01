@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -49,6 +50,12 @@ namespace AntDesign
 
         [Parameter]
         public SortDirection DefaultSortOrder { get; set; }
+
+        [Parameter]
+        public Func<RowData, Dictionary<string, object>> OnCell { get; set; }
+
+        [Parameter]
+        public Func<Dictionary<string, object>> OnHeaderCell { get; set; }
 
         [Parameter]
         public IEnumerable<TableFilter<TData>> Filters { get; set; }
@@ -134,7 +141,7 @@ namespace AntDesign
                 .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortDirection.IsIn(SortDirection.Ascending, SortDirection.Descending));
         }
 
-        private void HandelHeaderClick()
+        private void HandleSort()
         {
             if (Sortable)
             {

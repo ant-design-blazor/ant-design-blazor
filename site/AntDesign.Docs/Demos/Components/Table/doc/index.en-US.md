@@ -16,4 +16,3 @@ A table displays rows of data.
 ## How To Use
 
 Specify `dataSource` of Table as an array of data.
-
