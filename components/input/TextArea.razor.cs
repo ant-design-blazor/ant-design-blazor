@@ -130,23 +130,24 @@ namespace AntDesign
 
 //            var textAreaInfo = await JsInvokeAsync<TextAreaInfo>(JSInteropConstants.GetTextAreaInfo, Ref);
             _rowHeight = textAreaInfo.LineHeight;
-            _offsetHeight = textAreaInfo.PaddingTop + textAreaInfo.PaddingBottom;
+            _offsetHeight = textAreaInfo.PaddingTop + textAreaInfo.PaddingBottom 
+                + textAreaInfo.BorderTop + textAreaInfo.BorderBottom;
 
             uint rows = (uint)(textAreaInfo.ScrollHeight / _rowHeight);
             if (_hasMinOrMaxSet)
                 rows = Math.Max((uint)MinRows, rows);
 
-            int height = 0;
+            double height = 0;
             if (rows > MaxRows)
             {
                 rows = MaxRows;
 
-                height = (int)(rows * _rowHeight + _offsetHeight);
+                height = rows * _rowHeight + _offsetHeight;
                 Style = $"height: {height}px;";
             }
             else
             {
-                height = (int)(rows * _rowHeight + _offsetHeight);
+                height = rows * _rowHeight + _offsetHeight;
                 Style = $"height: {height}px;overflow-y: hidden;";
             }
         }
@@ -162,6 +163,8 @@ namespace AntDesign
             public double LineHeight { get; set; }
             public double PaddingTop { get; set; }
             public double PaddingBottom { get; set; }
+            public double BorderTop { get; set; }
+            public double BorderBottom { get; set; }
         }
     }
 }

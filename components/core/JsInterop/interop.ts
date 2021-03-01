@@ -501,11 +501,15 @@ export function getTextAreaInfo(element) {
     result["lineHeight"] = parseFloat(element.currentStyle["line-height"]);
     result["paddingTop"] = parseFloat(element.currentStyle["padding-top"]);
     result["paddingBottom"] = parseFloat(element.currentStyle["padding-bottom"]);
+    result["borderBottom"] = parseFloat(element.currentStyle["border-bottom"]);
+    result["borderTop"] = parseFloat(element.currentStyle["border-top"]);
   }
   else if (window.getComputedStyle) {
     result["lineHeight"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("line-height"));
     result["paddingTop"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("padding-top"));
     result["paddingBottom"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("padding-bottom"));
+    result["borderBottom"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("border-bottom"));
+    result["borderTop"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("border-top"));
   }
   return result;
 }
@@ -535,11 +539,11 @@ export function disposeResizeTextArea(element) {
 export function resizeTextArea(element, minRows, maxRows) {
     var dims = getTextAreaInfo(element);
     var rowHeight = dims["lineHeight"];
-    var offsetHeight = dims["paddingTop"] + dims["paddingBottom"];
-    var oldHeight = element.style.height;
+    var offsetHeight = dims["paddingTop"] + dims["paddingBottom"] + dims["borderTop"] + dims["borderBottom"];
+    var oldHeight = parseFloat(element.style.height);
     element.style.height = 'auto';
     
-    var rows = element.scrollHeight / rowHeight;
+    var rows = Math.trunc(element.scrollHeight / rowHeight);
     rows = Math.max(minRows, rows);
 
     var newHeight = 0;
@@ -555,13 +559,10 @@ export function resizeTextArea(element, minRows, maxRows) {
         element.style.height = newHeight + "px";
         element.style.overflowY = "hidden";
     }
-
     if (oldHeight !== newHeight) {
         let textAreaObj = objReferenceDict[element.id];
-        //textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", parseInt(element.scrollWidth), Math.trunc(newHeight));
         textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", parseFloat(element.scrollWidth), newHeight);
     }
-    //return [parseInt(element.scrollWidth), Math.trunc(newHeight)];
 }
 
 
