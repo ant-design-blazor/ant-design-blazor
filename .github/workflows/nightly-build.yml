@@ -1,0 +1,121 @@
+﻿name: Publish Docs
+
+env:
+  NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
+
+on:
+  push:
+    branches:
+      - master
+      - feature
+
+jobs:
+  publish-and-deploy:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET Core 3.1
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.300
+
+      - name: Setup .NET Core 5.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.100
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+
+      - name: Test And Coverage Report 📝
+        run: |
+          dotnet build
+          dotnet test --collect:"XPlat Code Coverage"
+          find ./tests -name "coverage.cobertura.xml" -type f -exec cp {} ./ \;
+          bash <(curl -s https://codecov.io/bash) -Z -f coverage.cobertura.xml -t $CODECOV_TOKEN
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: 'Get Last Release'
+        id: previoustag
+        run: |
+          git fetch --tags
+          # This suppress an error occurred when the repository is a complete one.
+          git fetch --prune --unshallow || true
+          LAST_VERSION=$(git describe --abbrev=0 --tags)
+          echo "Last Version: ${LAST_VERSION}"
+          echo "::set-output name=previous_tag::${LAST_VERSION}"
+
+      - name: 'Get Next Semantic Version'
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@v1"
+        with:
+          version: ${{ steps.previoustag.outputs.previous_tag }}
+
+      - name: 'Get Next Version'
+        id: get_next_version
+        run: |
+          current_branch=$(git symbolic-ref --short -q HEAD)
+          echo Current git branch is $current_branch
+          next_version=''
+          if [ "$current_branch" == 'master' ] ; 
+            then
+              next_version=$patch_version
+            else
+              next_version=$minor_version
+          fi
+          echo Will release version $next_version for branch $current_branch
+          echo "::set-output name=next_version::${next_version}"
+          echo "::set-output name=current_branch::${current_branch}"
+        env:
+          patch_version: ${{ steps.semvers.outputs.patch }}
+          minor_version: ${{ steps.semvers.outputs.minor }}
+
+      - name: Package Nightly Nuget 📦
+        id: pack
+        run: |
+          FULL_VERSION=$next_version-nightly-`date "+%y%m%d%H%M"`
+          echo "Version: ${FULL_VERSION}"
+          echo "::set-output name=package_version::${FULL_VERSION}"
+          dotnet pack components/AntDesign.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
+        env:
+          next_version: ${{ steps.get_next_version.outputs.next_version }}
+
+      - name: Push to GitHub package registry
+        run: dotnet nuget push ./publish/*.nupkg --source ${{ env.REPOSITORY_URL }} --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate --no-symbols true
+        env:
+          REPOSITORY_URL: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+
+      - name: Sync to Gitee 💕
+        uses: wearerequired/git-mirror-action@master
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        with:
+          source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
+          destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
+
+      - name: Publish Docs 🎉
+        run: |
+          npm install
+          echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
+          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
+          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
+          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
+        env:
+          PACKAGE_VERSION: ${{ steps.get_next_version.outputs.next_version }}
+
+      - name: Deploy Preview 🚀
+        run: |
+          npm install -g surge
+          surge --project ./cargo/wwwroot --domain $BRANCH-antblazor.surge.sh
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          BRANCH: ${{ steps.get_next_version.outputs.current_branch }}
