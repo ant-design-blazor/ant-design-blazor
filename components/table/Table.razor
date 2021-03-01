@@ -148,7 +148,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
         var level = context.level;
     }
 
-    @if (table.Total <= 0)
+    @if (table._total <= 0)
     {
         <tr class="ant-table-placeholder">
             <td colspan="@(table.ColumnContext.Columns.Count + (table.ExpandTemplate != null? 1 : 0))" class="ant-table-cell">
@@ -176,7 +176,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
             var rowAttributes = table.OnRow?.Invoke(currentRowData);
 
             <tr @attributes="rowAttributes"
-                data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "") @table.RowClassName(currentRowData)">
+                data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "") @table.RowClassName(currentRowData) @rowAttributes?.GetValueOrDefault("class")">
                 <CascadingValue Value="currentRowData" Name="RowData" IsFixed>
                     <CascadingValue Value="true" Name="IsBody" IsFixed>
                         @table.ChildContent(data)

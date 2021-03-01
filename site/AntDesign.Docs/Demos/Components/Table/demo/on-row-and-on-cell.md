@@ -1,8 +1,8 @@
 ---
 order: 1
 title:
-  en-US: OnRow usage
-  zh-CN: OnRow 用法
+  en-US: OnRow and OnCell usage
+  zh-CN: OnRow 和 OnCell 用法
 ---
 
 ## zh-CN

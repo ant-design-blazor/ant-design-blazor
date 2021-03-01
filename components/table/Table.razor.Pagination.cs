@@ -49,6 +49,7 @@ namespace AntDesign
                 }
             }
         }
+
         [Parameter]
         public EventCallback<int> PageIndexChanged { get; set; }
 
@@ -65,6 +66,7 @@ namespace AntDesign
                 }
             }
         }
+
         [Parameter]
         public EventCallback<int> PageSizeChanged { get; set; }
 
@@ -74,8 +76,8 @@ namespace AntDesign
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
-        private int _total = 0;
-        private int _dataSourceCount = 0;
+        private int _total;
+        private int _dataSourceCount;
         private string _paginationPosition = "bottomRight";
         private string _paginationClass;
         private int _pageIndex = 1;

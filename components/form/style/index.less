@@ -191,21 +191,20 @@
 
   .@{ant-prefix}-input-textarea-show-count {
     &::after {
-      position: absolute;
-      bottom: -22px;
-      width: 100%;
+      margin-bottom: -22px;
     }
   }
 }
 
 .show-help-motion(@className, @keyframeName, @duration: @animation-duration-slow) {
-  .make-motion(@className, @keyframeName, @duration);
-  .@{className}-enter,
-  .@{className}-appear {
+  @name: ~'@{ant-prefix}-@{className}';
+  .make-motion(@name, @keyframeName, @duration);
+  .@{name}-enter,
+  .@{name}-appear {
     opacity: 0;
     animation-timing-function: @ease-in-out;
   }
-  .@{className}-leave {
+  .@{name}-leave {
     animation-timing-function: @ease-in-out;
   }
 }

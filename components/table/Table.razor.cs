@@ -192,9 +192,17 @@ namespace AntDesign
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
-                if (col is IFieldColumn fieldColumn && fieldColumn.SortModel != null)
+                if (col is IFieldColumn fieldColumn)
                 {
-                    queryModel.AddSortModel(fieldColumn.SortModel);
+                    if (fieldColumn.SortModel != null)
+                    {
+                        queryModel.AddSortModel(fieldColumn.SortModel);
+                    }
+
+                    if (fieldColumn.FilterModel != null)
+                    {
+                        queryModel.AddFilterModel(fieldColumn.FilterModel);
+                    }
                 }
             }
 
@@ -207,16 +215,21 @@ namespace AntDesign
                 if (_dataSource != null)
                 {
                     var query = _dataSource.AsQueryable();
-                    var orderedSortModels = queryModel.SortModel.OrderBy(x => x.Priority);
-                    foreach (var sort in orderedSortModels)
+                    foreach (var sort in queryModel.SortModel.OrderBy(x => x.Priority))
                     {
                         query = sort.SortList(query);
+                    }
+
+                    foreach (var filter in queryModel.FilterModel)
+                    {
+                        query = filter.FilterList(query);
                     }
 
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
+                    _total = _showItems.Count();
                 }
             }
 
