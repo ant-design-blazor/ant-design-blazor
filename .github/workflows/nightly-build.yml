@@ -110,7 +110,6 @@ jobs:
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
         env:
-
           PACKAGE_VERSION: ${{ steps.get_next_version.outputs.next_version }}
 
       - name: Deploy Preview 🚀
