@@ -40,7 +40,9 @@ else if (IsHeader && HeaderColSpan != 0)
         <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
     }
 
-    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")">
+    var headerCellAttributes = OnHeaderCell?.Invoke();
+
+    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")" @attributes="headerCellAttributes">
         @if (Sortable || Filters?.Any() == true)
         {
             @FilterToolTipSorter(this)
@@ -72,7 +74,9 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         </td>
     }
 
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis? fieldText:"")">
+    var cellAttributes = OnCell?.Invoke(RowData);
+
+    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis? fieldText:"")" @attributes="cellAttributes">
         @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
         {
             <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
@@ -159,7 +163,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
     @if (col.Filters?.Any() == true)
     {
         <div class="ant-table-filter-column">
-            <span class="ant-table-filter-column-title" @attributes="@(new Dictionary<string, object>() { ["onclick"]=_callbackFactory.Create(col, col.HandelHeaderClick )})">
+            <span class="ant-table-filter-column-title" @attributes="@(new Dictionary<string, object>() { ["onclick"]=_callbackFactory.Create(col, col.HandleSort )})">
                 @if (col.Sortable)
                 {
                     @col.ToolTipSorter(col)
@@ -208,7 +212,9 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
     {
         @if (col.Sortable)
         {
-            @col.ToolTipSorter(col)
+             <div @attributes="@(new Dictionary<string, object>() { ["onclick"]=_callbackFactory.Create(col, col.HandleSort )})">
+                 @col.ToolTipSorter(col)
+             </div>
         }
         else if (col.TitleTemplate != null)
         {

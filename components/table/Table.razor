@@ -107,8 +107,11 @@
 {
     RenderFragment<Table<TItem>> header = table =>
     @<Template>
+        @{
+            var headerRowAttributes = table.OnHeaderRow?.Invoke();
+        }
         <thead class="ant-table-thead">
-            <tr>
+            <tr @attributes="headerRowAttributes">
                 <CascadingValue Name="IsHeader" Value="true" IsFixed>
                     @table.ChildContent(_fieldModel)
                 </CascadingValue>
@@ -170,8 +173,10 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
             currentRowData.Level = level;
             currentRowData.HasChildren = hasChildren;
 
-            <tr @attributes="@(new Dictionary<string,object> { {"onclick", _callbackFactory.Create(table, () => table.RowClick(currentRowData)) } })"
-                data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "") @table.RowClassName(currentRowData)">
+            var rowAttributes = table.OnRow?.Invoke(currentRowData);
+
+            <tr @attributes="rowAttributes"
+                data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "") @table.RowClassName(currentRowData) @rowAttributes?.GetValueOrDefault("class")">
                 <CascadingValue Value="currentRowData" Name="RowData" IsFixed>
                     <CascadingValue Value="true" Name="IsBody" IsFixed>
                         @table.ChildContent(data)
