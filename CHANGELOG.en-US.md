@@ -14,6 +14,46 @@ timeline: true
 - Major version release is not included in this schedule for breaking change and new features.
 
 ---
+## 0.7.0
+
+`2021-03-02`
+
+- 🚫 use Func to get/set value instead of reflection. [#1168](https://github.com/ant-design/ant-design/pull/1168) [@Zonciu](https://github.com/Zonciu)
+- 🚫 add table filters. [#1178](https://github.com/ant-design/ant-design/pull/1178) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix(module:select): click to select on new tag. [#1162](https://github.com/ant-design/ant-design/pull/1162) [@anddrzejb](https://github.com/anddrzejb)
+- 🚫 update docs. [536ba1a](https://github.com/ant-design/ant-design/commit/536ba1a) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix(module: tree) selected highlight confusion. [#1161](https://github.com/ant-design/ant-design/pull/1161) [@qinhuaihe](https://github.com/qinhuaihe)
+- 🐞 fix(module:row): grid gutter fix. [#1158](https://github.com/ant-design/ant-design/pull/1158) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 Removed unintended console output from SetGutterStyle. [#1159](https://github.com/ant-design/ant-design/pull/1159) [@superjerry88](https://github.com/superjerry88)
+- 🐞 fix(module:inputpassword): focus fix. [#1146](https://github.com/ant-design/ant-design/pull/1146) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 fix(module:cascader): OnChange called twice. [#1151](https://github.com/ant-design/ant-design/pull/1151) [@anddrzejb](https://github.com/anddrzejb)
+- 🚫 add editable cell/row demo. [#1152](https://github.com/ant-design/ant-design/pull/1152) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix(module:datepicker):date typing, enter behavior, overlay toggle. [#1145](https://github.com/ant-design/ant-design/pull/1145) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 fix(module:table): set selectedRows exception. [#1148](https://github.com/ant-design/ant-design/pull/1148) [@qinhuaihe](https://github.com/qinhuaihe)
+- 🐞 Nav Menu Collapse Unresponsive. [#1144](https://github.com/ant-design/ant-design/pull/1144) [@mutouzdl](https://github.com/mutouzdl)
+- 🐞 support more generic units for scroll x/y. [#1137](https://github.com/ant-design/ant-design/pull/1137) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix(module:select): new tag item label and value fix. [#1121](https://github.com/ant-design/ant-design/pull/1121) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 fix(module:menu): active parent menu for routed links. [#1134](https://github.com/ant-design/ant-design/pull/1134) [@anddrzejb](https://github.com/anddrzejb)
+- 🚫 add overlay boundary detection and orientation adjustment. [#1109](https://github.com/ant-design/ant-design/pull/1109) [@mutouzdl](https://github.com/mutouzdl)
+- 🐞 fix(module:select): property rename to follow docs. [#1115](https://github.com/ant-design/ant-design/pull/1115) [@anddrzejb](https://github.com/anddrzejb)
+- 🚫 Add a pull-down effect to Cascader (integrated Overlay components). [#1112](https://github.com/ant-design/ant-design/pull/1112) [@mutouzdl](https://github.com/mutouzdl)
+- 🚫 rename the docs project. [49a2d13](https://github.com/ant-design/ant-design/commit/49a2d13) [@ElderJames](https://github.com/ElderJames)
+- 🐞 docs: fix anchor and improvement. [#1107](https://github.com/ant-design/ant-design/pull/1107) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix missing value for the sort property of SortModel. [#1105](https://github.com/ant-design/ant-design/pull/1105) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix(module:datepicker): for not nullable - on clear set to defaults. [#1100](https://github.com/ant-design/ant-design/pull/1100) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 fix(module:datepicker): incorrect date format strings fix. [#1097](https://github.com/ant-design/ant-design/pull/1097) [@anddrzejb](https://github.com/anddrzejb)
+- 🚫 Fix pressing enter not updating the value. [#1094](https://github.com/ant-design/ant-design/pull/1094) [@Hona](https://github.com/Hona)
+- 🐞 New `MondayIndex` property on `DatePickerLocale.cs` class that stores Monday index in `ShortWeekDays`. [#1054](https://github.com/ant-design/ant-design/pull/1054) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 fix(module:rangepicker): placeholder and value equals null. [#1088](https://github.com/ant-design/ant-design/pull/1088) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 removed `AllowCustomTags` and `OnCreateCustomTag` <br>    added `PrefixIcon`. [#1087](https://github.com/ant-design/ant-design/pull/1087) [@anddrzejb](https://github.com/anddrzejb)
+- 🚫 add MenuItem tooltip and SubMenu trigger type. [#1082](https://github.com/ant-design/ant-design/pull/1082) [@ElderJames](https://github.com/ElderJames)
+- 🚫 update the package version. [0e23bd0](https://github.com/ant-design/ant-design/commit/0e23bd0) [@ElderJames](https://github.com/ElderJames)
+- 🚫 x. [#1077](https://github.com/ant-design/ant-design/pull/1077) [@MutatePat](https://github.com/MutatePat)
+- 🚫 add inline indent parameter. [#1076](https://github.com/ant-design/ant-design/pull/1076) [@ElderJames](https://github.com/ElderJames)
+- 💄 Fix steps wrong progress style. [#1072](https://github.com/ant-design/ant-design/pull/1072) [@ElderJames](https://github.com/ElderJames)
+- 🚫 chore: sync ant-design v4.12.0. [#1067](https://github.com/ant-design/ant-design/pull/1067) [@ElderJames](https://github.com/ElderJames)
+- 🐞 fix: steps navigation was blocked. [#1071](https://github.com/ant-design/ant-design/pull/1071) [@Tfurrer](https://github.com/Tfurrer)
+- 🐞 fix the menu can't collapse follow the sider. [#1069](https://github.com/ant-design/ant-design/pull/1069) [@ElderJames](https://github.com/ElderJames)
 
 ## 0.6.0
 
