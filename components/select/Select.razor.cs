@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AntDesign
 {
-    public partial class Select<TItemValue, TItem>
+    public partial class Select<TItemValue, TItem>: AntInputComponentBase<TItemValue>
     {
         #region Parameters
 
@@ -219,7 +219,13 @@ namespace AntDesign
                 {
                     _selectedValue = value;
                     if (_isInitialized)
+                    {
                         OnValueChange(value);
+                        if (Form?.ValidateOnChange == true)
+                        {
+                            EditContext?.NotifyFieldChanged(FieldIdentifier);
+                        }
+                    }
                 }
             }
         }
@@ -345,6 +351,8 @@ namespace AntDesign
         {
             get => !string.IsNullOrWhiteSpace(GroupName);
         }
+
+        internal ElementReference DropDownRef => _dropDown.GetOverlayComponent().Ref;
 
         internal SelectMode SelectMode => Mode.ToSelectMode();
         internal bool Focused { get; private set; }
@@ -1889,6 +1897,11 @@ namespace AntDesign
                 {
                     await CloseAsync();
                 }
+            }
+
+            if ((key == "DELETE" || key == "BACKSPACE") && AllowClear)
+            {
+                await OnInputClearClickAsync(new MouseEventArgs());
             }
         }
 

@@ -611,19 +611,41 @@ export function unbindTableHeaderAndBodyScroll(bodyRef) {
   }
 }
 
-function preventCursorMoveOnArrowUp(e) {
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+function preventKeys(e, keys: string[]) {
+  if (keys.indexOf(e.key.toUpperCase()) !== -1) {
     e.preventDefault();
     return false;
   }
 }
 
-export function addPreventCursorMoveOnArrowUp(inputElement) {
-  let dom = getDom(inputElement);
-  (dom as HTMLElement).addEventListener("keydown", preventCursorMoveOnArrowUp, false);
+export function addPreventKeys(inputElement, keys: string[]) {
+  let dom = getDom(inputElement);   
+  keys = keys.map(function (x) { return x.toUpperCase(); })
+  funcDict[inputElement.id + "keydown"] = (e) => preventKeys(e, keys);
+  (dom as HTMLElement).addEventListener("keydown", funcDict[inputElement.id + "input"], false);
 }
 
-export function removePreventCursorMoveOnArrowUp(inputElement) {
-  let dom = getDom(inputElement);
-  (dom as HTMLElement).removeEventListener("keydown", preventCursorMoveOnArrowUp);
+export function removePreventKeys(inputElement) {
+  let dom = getDom(inputElement);            
+  (dom as HTMLElement).removeEventListener("keydown", funcDict[inputElement.id + "keydown"]);
+  funcDict[inputElement.id + "keydown"] = null;
+}
+
+function preventKeyOnCondition(e, key: string, check: () => boolean) {
+  if (e.key.toUpperCase() === key.toUpperCase() && check()) {
+    e.preventDefault();
+    return false;
+  }
+}
+
+export function addPreventEnterOnOverlayVisible(element, overlayElement) {
+  let dom = getDom(element);   
+  funcDict[element.id + "keydown:Enter"] = (e) => preventKeyOnCondition(e, "enter", () => overlayElement.offsetParent !== null);
+  (dom as HTMLElement).addEventListener("keydown", funcDict[element.id + "keydown:Enter"], false);
+}
+
+export function removePreventEnterOnOverlayVisible(element) {
+  let dom = getDom(element);
+  (dom as HTMLElement).removeEventListener("keydown", funcDict[element.id + "keydown:Enter"]);
+  funcDict[element.id + "keydown:Enter"] = null;
 }
