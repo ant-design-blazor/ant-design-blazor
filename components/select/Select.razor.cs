@@ -80,7 +80,10 @@ namespace AntDesign
             set
             {
                 _getLabel = SelectItemPropertyHelper.CreateGetLabelFunc<TItem>(value);
-                _setLabel = SelectItemPropertyHelper.CreateSetLabelFunc<TItem>(value);
+                if (SelectMode == SelectMode.Tags)
+                {
+                    _setLabel = SelectItemPropertyHelper.CreateSetLabelFunc<TItem>(value);                    
+                }
                 _labelName = value;
             }
         }
@@ -370,6 +373,11 @@ namespace AntDesign
         internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
+
+        /// <summary>
+        /// Currently active (highlighted) option. 
+        /// It does not have to be equal to selected option.
+        /// </summary>
         internal SelectOptionItem<TItemValue, TItem> ActiveOption
         {
             get { return _activeOption; }
@@ -394,7 +402,7 @@ namespace AntDesign
         private string _groupName = string.Empty;
 
         private Func<TItem, string> _getGroup;
-        
+
         private string _disabledName;
 
         private Func<TItem, bool> _getDisabled;
@@ -459,6 +467,7 @@ namespace AntDesign
                 await SetDropdownStyleAsync();
 
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
+                _defaultActiveFirstOptionApplied = !_defaultActiveFirstOption;
             }
 
             if (!_defaultValueApplied || !_defaultActiveFirstOptionApplied)
@@ -789,7 +798,7 @@ namespace AntDesign
                         await SetInputFocusAsync();
                     }
 
-                    if (selectOption.IsAddedTag && SelectOptions != null)
+                    if (selectOption.IsAddedTag)
                     {
                         CustomTagSelectOptionItem = null;
                         AddedTags.Add(selectOption);
@@ -994,7 +1003,7 @@ namespace AntDesign
                         }
 
                         result.IsSelected = true;
-
+                        ActiveOption = result;
                         if (HideSelected)
                             result.IsHidden = true;
                         SelectedOptionItems.Add(result);
@@ -1187,10 +1196,37 @@ namespace AntDesign
 
             result.IsSelected = true;
 
+            EvaluateValueChangedOutsideComponent(result, value);
+
             if (HideSelected)
                 result.IsHidden = true;
 
             ValueChanged.InvokeAsync(result.Value);
+        }
+
+        /// <summary>
+        /// When bind-Value is changed outside of the component, then component 
+        /// selected items have to be reselected according to new value passed.
+        /// </summary>
+        /// <param name="optionItem">The option item that has been selected.</param>
+        /// <param name="value">The value of the selected option item.</param>
+        private void EvaluateValueChangedOutsideComponent(SelectOptionItem<TItemValue, TItem> optionItem, TItemValue value)
+        {
+            if (ActiveOption != null && !ActiveOption.Value.Equals(value))
+            {
+                ActiveOption.IsSelected = false;
+                ActiveOption = optionItem;
+            }
+            if (SelectedOptionItems.Count > 0)
+            {
+                if (!SelectedOptionItems[0].Value.Equals(value))
+                {
+                    SelectedOptionItems[0].IsSelected = false;
+                    SelectedOptionItems[0] = optionItem;
+                }
+            }
+            else
+                SelectedOptionItems.Add(optionItem);
         }
 
         /// <summary>
@@ -1211,18 +1247,63 @@ namespace AntDesign
                 return;
             }
 
+            EvaluateValuesChangedOutsideComponent(values);
+
+            if (_dropDown.IsOverlayShow())
+            {
+                //A delay forces a refresh better than StateHasChanged().
+                //For example when a tag is added that is causing SelectContent to grow,
+                //this Task.Delay will actually allow to reposition the Overlay to match
+                //new size of SelectContent.
+                await Task.Delay(1);
+                await UpdateOverlayPositionAsync();
+            }
+
+            OnSelectedItemsChanged?.Invoke(SelectedOptionItems.Select(s => s.Item));
+            await ValuesChanged.InvokeAsync(Values);
+        }
+
+        /// <summary>
+        /// When bind-Values is changed outside of the component, then component
+        /// selected items have to be reselected according to new values passed.
+        /// TODO: (Perf) Consider using hash to identify if the passed values are different from currently selected.
+        /// </summary>
+        /// <param name="values">The values that need to be selected.</param>
+        private void EvaluateValuesChangedOutsideComponent(IEnumerable<TItemValue> values)
+        {
             var newSelectedItems = new List<TItem>();
             var deselectList = SelectedOptionItems.ToDictionary(item => item.Value, item => item);
-            foreach (var item in values.ToList())
+            foreach (var value in values.ToList())
             {
-                var result = SelectOptionItems.FirstOrDefault(x => x.IsSelected == false && EqualityComparer<TItemValue>.Default.Equals(x.Value, item));
-
-                if (result != null && !result.IsDisabled)
+                SelectOptionItem<TItemValue, TItem> result;
+                if (SelectMode == SelectMode.Multiple)
                 {
-                    result.IsSelected = true;
-                    SelectedOptionItems.Add(result);
+                    result = SelectOptionItems.FirstOrDefault(x => !x.IsSelected && EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
+                    if (result != null && !result.IsDisabled)
+                    {
+                        result.IsSelected = true;
+                        SelectedOptionItems.Add(result);
+                    }
+                    deselectList.Remove(value);
                 }
-                deselectList.Remove(item);
+                else
+                {
+                    result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
+                    if (result is null) //tag delivered from outside, needs to be added to the list of options
+                    {
+                        result = CreateSelectOptionItem(value.ToString(), true);
+                        result.IsSelected = true;
+                        AddedTags.Add(result);
+                        SelectOptionItems.Add(result);
+                        SelectedOptionItems.Add(result);
+                    }
+                    else if (result != null && !result.IsSelected && !result.IsDisabled)
+                    {
+                        result.IsSelected = true;
+                        SelectedOptionItems.Add(result);
+                    }
+                    deselectList.Remove(value);
+                }
             }
             if (deselectList.Count > 0)
             {
@@ -1230,16 +1311,13 @@ namespace AntDesign
                 {
                     item.Value.IsSelected = false;
                     SelectedOptionItems.Remove(item.Value);
+                    if (item.Value.IsAddedTag)
+                    {
+                        SelectOptionItems.Remove(item.Value);
+                        AddedTags.Remove(item.Value);
+                    }
                 }
             }
-
-            if (_dropDown.IsOverlayShow())
-            {
-                await UpdateOverlayPositionAsync();
-            }
-
-            OnSelectedItemsChanged?.Invoke(SelectedOptionItems.Select(s => s.Item));
-            await ValuesChanged.InvokeAsync(Values);
         }
 
         /// <summary>
