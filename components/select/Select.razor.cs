@@ -1249,10 +1249,15 @@ namespace AntDesign
 
             EvaluateValuesChangedOutsideComponent(values);
 
-            //if (_dropDown.IsOverlayShow())
-            //{
-            //    await UpdateOverlayPositionAsync();
-            //}
+            if (_dropDown.IsOverlayShow())
+            {
+                //A delay forces a refresh better than StateHasChanged().
+                //For example when a tag is added that is causing SelectContent to grow,
+                //this Task.Delay will actually allow to reposition the Overlay to match
+                //new size of SelectContent.
+                await Task.Delay(1);
+                await UpdateOverlayPositionAsync();
+            }
 
             OnSelectedItemsChanged?.Invoke(SelectedOptionItems.Select(s => s.Item));
             await ValuesChanged.InvokeAsync(Values);
