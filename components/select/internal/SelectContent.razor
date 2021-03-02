@@ -38,7 +38,7 @@
             @if (ParentSelect.SelectMode == SelectMode.Default)
             {                            
                 var selectedItem = ParentSelect.SelectedOptionItems.FirstOrDefault();
-
+                //Console.WriteLine($"({ParentSelect.Id}): {selectedItem.Value} => {selectedItem.Label}");
                 if (string.IsNullOrEmpty(SearchValue) && selectedItem != null)
                 {
                     @if (ParentLabelTemplate != null)
