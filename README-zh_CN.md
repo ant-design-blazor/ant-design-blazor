@@ -61,7 +61,9 @@ WebAssembly 静态托管页面示例
 ## 💿 当前版本
 
 - 正式发布： [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
-- 开发构建： [![AntDesign](https://img.shields.io/nuget/vpre/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
+- 每日构建: [![AntDesign](https://img.shields.io/myget/ant-design-blazor/vpre/AntDesign?style=flat-square)](https://www.myget.org/feed/ant-design-blazor/package/nuget/AntDesign)
+
+  *[如何安装每日构建版本](docs/nightly-build.zh-CN.md)*
 
 ## 🎨 设计规范
 

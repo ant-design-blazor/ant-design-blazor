@@ -89,9 +89,7 @@ jobs:
           next_version: ${{ steps.get_next_version.outputs.next_version }}
 
       - name: Push to GitHub package registry
-        run: dotnet nuget push ./publish/*.nupkg --source ${{ env.REPOSITORY_URL }} --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate --no-symbols true
-        env:
-          REPOSITORY_URL: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        run: dotnet nuget push ./publish/*.nupkg --source https://www.myget.org/F/ant-design-blazor/api/v3/index.json --api-key ${{ secrets.MYGET_API_KEY }} --skip-duplicate
 
       - name: Sync to Gitee 💕
         uses: wearerequired/git-mirror-action@master
@@ -110,7 +108,7 @@ jobs:
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
         env:
-          PACKAGE_VERSION: ${{ steps.get_next_version.outputs.next_version }}
+          PACKAGE_VERSION: ${{ steps.pack.outputs.package_version }}
 
       - name: Deploy Preview 🚀
         run: |

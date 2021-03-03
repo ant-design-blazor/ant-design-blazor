@@ -62,7 +62,9 @@ WebAssembly static hosting examples:
 ## 💿 Current Version
 
 - Release: [![AntDesign](https://img.shields.io/nuget/v/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
-- Development: [![AntDesign](https://img.shields.io/nuget/vpre/AntDesign.svg?color=red&style=flat-square)](https://www.nuget.org/packages/AntDesign/)
+- Nightly: [![AntDesign](https://img.shields.io/myget/ant-design-blazor/vpre/AntDesign?style=flat-square)](https://www.myget.org/feed/ant-design-blazor/package/nuget/AntDesign)
+
+  *[Download our latest nightly builds](docs/nightly-build.en-US.md)*
 
 ## 🎨 Design Specification
 
