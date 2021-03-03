@@ -31,6 +31,7 @@ jobs:
           node-version: "10.x"
 
       - name: Package and publish to Nuget📦
+        id: pack
         run: |
           VERSION=`git describe --tags`
           echo "Publishing Version: ${VERSION}"
@@ -66,6 +67,7 @@ jobs:
           publish_branch: master
           publish_dir: ./cargo/wwwroot
           cname: antblazor.com
+          keep_files: true
           tag_name: ${{ steps.pack.outputs.package_version }}
 
       - name: Sync to Gitee 💕
