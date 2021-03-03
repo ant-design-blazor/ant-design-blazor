@@ -8,7 +8,7 @@
             if (Options.IsT0)
             {
                 @foreach (var option in Options.AsT0)
-                { 
+                {
                     <Checkbox class="ant-checkbox-group-item"
                               Disabled="option.Disabled || Disabled"
                               Checked="@option.Checked"
@@ -17,9 +17,21 @@
                     </Checkbox>
                 }
             }
-            else
+            else if (Options.IsT1)
             {
                 @foreach (var option in Options.AsT1)
+                {
+                    <Checkbox class="ant-checkbox-group-item"
+                              Disabled="Disabled"
+                              Checked="@option.IsIn(_selectedValues)"
+                              Label="@option">
+                        <span>@option</span>
+                    </Checkbox>
+                }
+            }
+            else
+            {
+                @foreach (var option in _optionsAsArrayOfStrings)
                 {
                     <Checkbox class="ant-checkbox-group-item"
                               Disabled="Disabled"

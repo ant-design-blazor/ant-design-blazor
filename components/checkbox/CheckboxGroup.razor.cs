@@ -12,14 +12,28 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public OneOf<CheckboxOption[], string[]> Options { get; set; }
+        public OneOf<CheckboxOption[], string[], Enum> Options
+        {
+            get { return _options; }
+            set
+            {
+                _options = value;
+                if (_options.IsT2)
+                {
+                    _optionsAsArrayOfStrings = Enum.GetNames(Options.AsT2.GetType());
+                }
+            }
+        }
 
         [Parameter]
         public EventCallback<string[]> OnChange { get; set; }
 
         private string[] _selectedValues;
+        private string[] _optionsAsArrayOfStrings;
+
 
         private IList<Checkbox> _checkboxItems;
+        private OneOf<CheckboxOption[], string[], Enum> _options;
 
         [Parameter]
         public bool Disabled { get; set; }
@@ -77,6 +91,18 @@ namespace AntDesign
                 else
                 {
                     _selectedValues = _selectedValues.Except(new[] { opts[index] }).ToArray();
+                }
+
+                CurrentValue = _selectedValues;
+            }, opts =>
+            {
+                if (checkbox.Checked && !_optionsAsArrayOfStrings[index].IsIn(_selectedValues))
+                {
+                    _selectedValues = _selectedValues.Append(_optionsAsArrayOfStrings[index]);
+                }
+                else
+                {
+                    _selectedValues = _selectedValues.Except(new[] { _optionsAsArrayOfStrings[index] }).ToArray();
                 }
 
                 CurrentValue = _selectedValues;
