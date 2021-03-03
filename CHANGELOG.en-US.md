@@ -5,7 +5,7 @@ toc: false
 timeline: true
 ---
 
-`ant-design-blazor` strictly follows [Semantic Versioning 2.0.0](http://semver.org/).
+`Ant Design Blazor` strictly follows [Semantic Versioning 2.0.0](http://semver.org/).
 
 #### Release Schedule
 
