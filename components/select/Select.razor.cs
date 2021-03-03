@@ -50,6 +50,29 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Default behavior for Select component on a Form is to submit
+        /// on Enter. The exception is when Enter is pressed while select 
+        /// options are visible (then Enter will set picked option as the value).
+        /// If DisableSubmitFormOnEnter = true then Enter will not submit on 
+        /// a Form.
+        /// </summary>
+        [Parameter]
+        public bool DisableSubmitFormOnEnter
+        {
+            get { return _disableSubmitFormOnEnter; }
+            set
+            {
+                if (_disableSubmitFormOnEnter != value)
+                {
+                    _disableSubmitFormOnEnter = value;
+                    if (_isInitialized)
+                    {
+                        _selectContent.ApplyEnterBehavior(_disableSubmitFormOnEnter);
+                    }
+                }
+            }
+        }
         [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
         [Parameter] public bool EnableSearch { get; set; }
 
@@ -82,7 +105,7 @@ namespace AntDesign
                 _getLabel = SelectItemPropertyHelper.CreateGetLabelFunc<TItem>(value);
                 if (SelectMode == SelectMode.Tags)
                 {
-                    _setLabel = SelectItemPropertyHelper.CreateSetLabelFunc<TItem>(value);                    
+                    _setLabel = SelectItemPropertyHelper.CreateSetLabelFunc<TItem>(value);
                 }
                 _labelName = value;
             }
@@ -140,7 +163,8 @@ namespace AntDesign
         /// <summary>
         /// Converts custom tag (a string) to TItemValue type.
         /// </summary>
-        [Parameter] public Func<string, TItemValue> CustomTagLabelToValue { get; set; } = (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
+        [Parameter] public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
+            (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
 
         [Parameter]
         public IEnumerable<TItem> DataSource
@@ -417,9 +441,10 @@ namespace AntDesign
 
         private string _valueName;
 
-        private Func<TItem, TItemValue>   _getValue;
+        private Func<TItem, TItemValue> _getValue;
 
         private Action<TItem, TItemValue> _setValue;
+        private bool _disableSubmitFormOnEnter;
 
         #endregion Properties
 

@@ -622,7 +622,7 @@ export function addPreventKeys(inputElement, keys: string[]) {
   let dom = getDom(inputElement);   
   keys = keys.map(function (x) { return x.toUpperCase(); })
   funcDict[inputElement.id + "keydown"] = (e) => preventKeys(e, keys);
-  (dom as HTMLElement).addEventListener("keydown", funcDict[inputElement.id + "input"], false);
+    (dom as HTMLElement).addEventListener("keydown", funcDict[inputElement.id + "keydown"], false);
 }
 
 export function removePreventKeys(inputElement) {
