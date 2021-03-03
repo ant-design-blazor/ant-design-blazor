@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign
-@inherits AntInputComponentBase<string[]>
+@inherits AntInputComponentBase<OneOf<string[], Enum>>
+@using OneOf
 
 <CascadingValue Value="this" IsFixed="@true">
     <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
@@ -23,7 +24,7 @@
                 {
                     <Checkbox class="ant-checkbox-group-item"
                               Disabled="Disabled"
-                              Checked="@option.IsIn(_selectedValues)"
+                              Checked="@option.IsIn(_selectedValues.AsT0)"
                               Label="@option">
                         <span>@option</span>
                     </Checkbox>
@@ -31,12 +32,12 @@
             }
             else
             {
-                @foreach (var option in _optionsAsArrayOfStrings)
+                @foreach (var option in Enum.GetValues(_enumType))
                 {
                     <Checkbox class="ant-checkbox-group-item"
                               Disabled="Disabled"
-                              Checked="@option.IsIn(_selectedValues)"
-                              Label="@option">
+                              Checked="@_selectedValues.AsT1.HasFlag((Enum)option)"
+                              Label="@option.ToString()">
                         <span>@option</span>
                     </Checkbox>
                 }
