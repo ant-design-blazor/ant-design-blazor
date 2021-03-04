@@ -58,7 +58,8 @@ namespace AntDesign.Select.Internal
             if (firstRender && ParentSelect.EnableSearch)
             {
                 DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
-                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventCursorMoveOnArrowUp, ParentSelect._inputRef);
+                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
+                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect.DropDownRef);
             }
             await base.OnAfterRenderAsync(firstRender);
         }
@@ -141,7 +142,6 @@ namespace AntDesign.Select.Internal
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
-
         public bool IsDisposed { get; private set; }
 
         protected virtual void Dispose(bool disposing)
@@ -151,7 +151,8 @@ namespace AntDesign.Select.Internal
                 _ = InvokeAsync(async () =>
                 {
                     await Task.Delay(100);
-                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventCursorMoveOnArrowUp, ParentSelect._inputRef);
+                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, ParentSelect._inputRef);
+                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);                    
                 });
             }
             DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
