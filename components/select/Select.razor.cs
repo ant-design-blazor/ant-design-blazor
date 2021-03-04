@@ -50,29 +50,6 @@ namespace AntDesign
             }
         }
 
-        /// <summary>
-        /// Default behavior for Select component on a Form is to submit
-        /// on Enter. The exception is when Enter is pressed while select 
-        /// options are visible (then Enter will set picked option as the value).
-        /// If DisableSubmitFormOnEnter = true then Enter will not submit on 
-        /// a Form.
-        /// </summary>
-        [Parameter]
-        public bool DisableSubmitFormOnEnter
-        {
-            get { return _disableSubmitFormOnEnter; }
-            set
-            {
-                if (_disableSubmitFormOnEnter != value)
-                {
-                    _disableSubmitFormOnEnter = value;
-                    if (_isInitialized)
-                    {
-                        _selectContent.ApplyEnterBehavior(_disableSubmitFormOnEnter);
-                    }
-                }
-            }
-        }
         [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
         [Parameter] public bool EnableSearch { get; set; }
 

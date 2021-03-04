@@ -58,16 +58,8 @@ namespace AntDesign.Select.Internal
             if (firstRender && ParentSelect.EnableSearch)
             {
                 DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
-                if (ParentSelect.DisableSubmitFormOnEnter)
-                {
-                    Console.WriteLine("Disable Enter for submit.");
-                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown", "Enter" });
-                }
-                else
-                {
-                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
-                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect.DropDownRef);
-                }
+                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
+                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect.DropDownRef);
             }
             await base.OnAfterRenderAsync(firstRender);
         }
@@ -150,25 +142,6 @@ namespace AntDesign.Select.Internal
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
-        internal void ApplyEnterBehavior(bool disableSubmitFormOnEnter)
-        {
-            _ = InvokeAsync(async () =>
-            {
-                await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, ParentSelect._inputRef);
-                if (disableSubmitFormOnEnter)
-                {
-                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);
-                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown", "Enter" });
-                }
-                else
-                {
-                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
-                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect.DropDownRef);
-                }
-            });
-        }
-
-
         public bool IsDisposed { get; private set; }
 
         protected virtual void Dispose(bool disposing)
@@ -179,10 +152,7 @@ namespace AntDesign.Select.Internal
                 {
                     await Task.Delay(100);
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, ParentSelect._inputRef);
-                    if (!ParentSelect.DisableSubmitFormOnEnter)
-                    {
-                        await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);
-                    }
+                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);                    
                 });
             }
             DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
