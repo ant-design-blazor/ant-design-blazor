@@ -156,6 +156,31 @@ namespace AntDesign
             this.Reload();
         }
 
+        public QueryModel GetQueryModel() => BuildQueryModel();
+
+        private QueryModel<TItem> BuildQueryModel()
+        {
+            var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
+
+            foreach (var col in ColumnContext.HeaderColumns)
+            {
+                if (col is IFieldColumn fieldColumn)
+                {
+                    if (fieldColumn.SortModel != null)
+                    {
+                        queryModel.AddSortModel(fieldColumn.SortModel);
+                    }
+
+                    if (fieldColumn.FilterModel != null)
+                    {
+                        queryModel.AddFilterModel(fieldColumn.FilterModel);
+                    }
+                }
+            }
+
+            return queryModel;
+        }
+
         void ITable.Refresh()
         {
             _shouldRender = true;
@@ -191,23 +216,7 @@ namespace AntDesign
 
         private QueryModel<TItem> Reload()
         {
-            var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
-
-            foreach (var col in ColumnContext.HeaderColumns)
-            {
-                if (col is IFieldColumn fieldColumn)
-                {
-                    if (fieldColumn.SortModel != null)
-                    {
-                        queryModel.AddSortModel(fieldColumn.SortModel);
-                    }
-
-                    if (fieldColumn.FilterModel != null)
-                    {
-                        queryModel.AddFilterModel(fieldColumn.FilterModel);
-                    }
-                }
-            }
+            var queryModel = BuildQueryModel();
 
             if (ServerSide)
             {

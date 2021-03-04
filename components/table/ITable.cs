@@ -38,6 +38,8 @@ namespace AntDesign
 
         void ReloadData();
 
+        QueryModel GetQueryModel();
+
         internal void HasFixLeft();
 
         internal void HasFixRight();
