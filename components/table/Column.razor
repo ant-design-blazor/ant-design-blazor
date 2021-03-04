@@ -67,7 +67,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         <td class="ant-table-cell ant-table-row-expand-icon-cell">
             @if (Table.RowExpandable(RowData) && (!Table.TreeMode || !RowData.HasChildren))
             {
-                <button type="button" @onclick="()=> RowData.Expanded = !RowData.Expanded"
+                <button type="button" @onclick="ToggleTreeNode"
                         class="ant-table-row-expand-icon @(RowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
                         aria-label="@(RowData.Expanded?Table.Locale.Collapse:Table.Locale.Expand)"></button>
             }
