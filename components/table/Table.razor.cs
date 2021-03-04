@@ -109,6 +109,9 @@ namespace AntDesign
         [Parameter]
         public string TableLayout { get; set; }
 
+        [Parameter]
+        public EventCallback<RowData<TItem>> OnRowClick { get; set; }
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
