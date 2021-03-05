@@ -32,18 +32,24 @@ jobs:
       - name: checkout
         uses: actions/checkout@master
 
-      - name: npm run site
+      - name:  build site
         id: site
         run: |
           npm install
           dotnet build
+          echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
+          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
+          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
+          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o _site
+        width:
+          PACKAGE_VERSION: ${{ github.event.number }}
 
       - name: upload site artifact
         uses: actions/upload-artifact@v2
         with:
           name: site
-          path: _site/
+          path: _site/wwwroot/
           retention-days: 5
 
       # Upload PR id for next workflow use
