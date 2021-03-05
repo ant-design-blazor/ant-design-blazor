@@ -28,6 +28,8 @@ namespace AntDesign
 
         internal void SelectionChanged();
 
+        internal void OnExpandChange(int cacheKey);
+
         internal void Refresh();
 
         internal void ReloadAndInvokeChange();
