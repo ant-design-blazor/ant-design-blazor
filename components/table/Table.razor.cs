@@ -104,6 +104,9 @@ namespace AntDesign
         public Func<RowData<TItem>, string> ExpandedRowClassName { get; set; } = _ => "";
 
         [Parameter]
+        public EventCallback<RowData<TItem>> OnExpand { get; set; }
+
+        [Parameter]
         public SortDirection[] SortDirections { get; set; } = SortDirection.Preset.Default;
 
         [Parameter]
@@ -145,7 +148,16 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex;
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+
         SortDirection[] ITable.SortDirections => SortDirections;
+
+        void ITable.OnExpandChange(int cacheKey)
+        {
+            if (OnExpand.HasDelegate && _dataSourceCache.TryGetValue(cacheKey, out var currentRowData))
+            {
+                OnExpand.InvokeAsync(currentRowData);
+            }
+        }
 
         public void ReloadData()
         {
