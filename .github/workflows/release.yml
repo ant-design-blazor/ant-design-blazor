@@ -37,13 +37,12 @@ jobs:
           echo "Publishing Version: ${VERSION}"
           echo "::set-output name=package_version::${VERSION}"
           npm install
-          dotnet build components/AntDesign.csproj
+          dotnet build
           dotnet pack components/AntDesign.csproj /p:PackageVersion=$VERSION -c Release -o publish
           dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
 
       - name: Publish Docs 🎉
         run: |
-          npm install
           echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
