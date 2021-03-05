@@ -14,6 +14,16 @@ timeline: true
 - Major version release is not included in this schedule for breaking change and new features.
 
 ---
+
+## 0.7.1
+
+`2021-03-05`
+
+- 🐞 Fixed `Input Search` loading animation toggling. [#1195](https://github.com/ant-design-blazor/ant-design-blazor/pull/1195) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 Fixed table doesn't refresh when expand row. [#1199](https://github.com/ant-design-blazor/ant-design-blazor/pull/1199) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed bring OnRowClick back [#1200](https://github.com/ant-design-blazor/ant-design-blazor/pull/1200) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed select press enter on form cause validation to fail [#1196](https://github.com/ant-design-blazor/ant-design-blazor/pull/1196) [@anddrzejb](https://github.com/anddrzejb)
+
 ## 0.7.0
 
 `2021-03-02`
