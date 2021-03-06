@@ -76,7 +76,7 @@ namespace AntDesign.Select.Internal
                     }
                     else
                     {
-                        var resultExp = Expression.Call(labelExp, labelPropType.GetMethod(ToStringMethodName) ?? throw new MissingMethodException(labelPropType.Name, ToStringMethodName));
+                        var resultExp = Expression.Call(labelExp, labelPropType.GetMethod(ToStringMethodName, Array.Empty<Type>()) ?? throw new MissingMethodException(labelPropType.Name, ToStringMethodName));
                         var funExp = Expression.Lambda<Func<TItem, string>>(resultExp, itemParamExp);
                         return funExp.Compile();
                     }
@@ -101,7 +101,7 @@ namespace AntDesign.Select.Internal
                     }
                     else
                     {
-                        var resultExp = Expression.Call(groupExp, groupPropType.GetMethod(ToStringMethodName) ?? throw new MissingMethodException(groupPropType.Name, ToStringMethodName));
+                        var resultExp = Expression.Call(groupExp, groupPropType.GetMethod(ToStringMethodName, Array.Empty<Type>()) ?? throw new MissingMethodException(groupPropType.Name, ToStringMethodName));
                         var funExp = Expression.Lambda<Func<TItem, string>>(resultExp, itemParamExp);
                         return funExp.Compile();
                     }
