@@ -7,7 +7,9 @@
        Total="_total"
        @bind-PageIndex="_pageIndex"
        @bind-PageSize="_pageSize"
-       @bind-SelectedRows="selectedRows">
+       @bind-SelectedRows="selectedRows"
+       OnChange="OnChange"
+>
     <Selection Key="@(context.Id.ToString())" />
     <Column @bind-Field="@context.Id" Sortable />
     <Column @bind-Field="@context.Date" Format="yyyy-MM-dd" Sortable />
@@ -42,21 +44,22 @@
 <Button OnClick="()=> { _pageIndex--; }">Previous page</Button>
 <Button OnClick="()=> { _pageIndex++; }">Next Page</Button>
 
+@using System.Text.Json;
 @code {
 
-    WeatherForecast[] forecasts;
+        WeatherForecast[] forecasts;
 
-    IEnumerable<WeatherForecast> selectedRows;
-    ITable table;
+        IEnumerable<WeatherForecast> selectedRows;
+        ITable table;
 
-    int _pageIndex = 1;
-    int _pageSize = 10;
-    int _total = 0;
+        int _pageIndex = 1;
+        int _pageSize = 10;
+        int _total = 0;
 
     protected override async Task OnInitializedAsync()
     {
         forecasts = await GetForecastAsync(_pageIndex, _pageSize);
-        _total = forecasts.Length;
+        _total = 50;
     }
 
     public class WeatherForecast
@@ -81,6 +84,13 @@
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
+
+    public async Task OnChange(QueryModel<WeatherForecast> queryModel)
+    {
+        forecasts = await GetForecastAsync(queryModel.PageIndex, queryModel.PageSize);
+        _total = 50;
+        Console.WriteLine(JsonSerializer.Serialize(queryModel));
+    }
 
     public Task<WeatherForecast[]> GetForecastAsync(int pageIndex, int pageSize)
     {
