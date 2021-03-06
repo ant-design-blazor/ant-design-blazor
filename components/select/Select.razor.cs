@@ -1183,17 +1183,22 @@ namespace AntDesign
 
             if (EqualityComparer<TItemValue>.Default.Equals(value, default))
             {
-                OnSelectedItemChanged?.Invoke(default);
-                ValueChanged.InvokeAsync(default);
+                _ = InvokeAsync(() => OnInputClearClickAsync(new())); 
                 return;
             }
 
             var result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
 
-            if (result == null && !AllowClear)
+            if (result == null)
             {
-                _ = TrySetDefaultValueAsync();
-
+                if (!AllowClear)
+                    _ = TrySetDefaultValueAsync();
+                else 
+                {
+                    //Reset value if not found - needed if value changed 
+                    //outside of the component
+                    _ = InvokeAsync(() => OnInputClearClickAsync(new()));
+                }
                 return;
             }
 
