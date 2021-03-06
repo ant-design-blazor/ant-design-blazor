@@ -29,7 +29,7 @@
         if (_showSup)
         {
             <sup class="@CountClassMapper.Class" style="@CountStyle @DotColorStyle @Style" title="@Count">
-                @if (!Dot)
+                @if (!Dot && !HasStatusOrColor)
                 {
                     @if (Count <= OverflowCount)
                     {
