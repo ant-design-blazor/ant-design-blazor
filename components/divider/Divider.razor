@@ -4,62 +4,15 @@
 <span class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
     @if (Text != null || ChildContent != null)
     {
-    <span class="ant-divider-inner-text">
-        @if (Text != null)
-        {
-            @Text
-        }
-        else
-        {
-            @ChildContent
-        }
-    </span>
+        <span class="ant-divider-inner-text">
+            @if (Text != null)
+            {
+                @Text
+            }
+            else
+            {
+                @ChildContent
+            }
+        </span>
     }
 </span>
-
-@code {
-
-    [Parameter] public RenderFragment ChildContent { get; set; }
-
-
-    [Parameter] public string Text { get; set; }
-
-    [Parameter] public Boolean Plain { get; set; } = false;
-
-    /// <summary>
-    ///  'horizontal' | 'vertical'
-    /// </summary>
-    [Parameter] public string Type { get; set; } = "horizontal";
-
-    /// <summary>
-    /// 'left' | 'right' | 'center'
-    /// </summary>
-    [Parameter] public string Orientation { get; set; } = "center";
-
-    [Parameter] public bool Dashed { get; set; } = false;
-
-    private void setClass()
-    {
-        ClassMapper.Clear()
-            .Add("ant-divider")
-            .Add($"ant-divider-{this.Type}")
-            .If("ant-divider-with-text", () => Text != null || ChildContent != null)
-            .If($"ant-divider-with-text-{this.Orientation}", () => Text != null || ChildContent != null)
-            .If($"ant-divider-plain", () => Plain == true || Text != null || ChildContent != null)
-            .If("ant-divider-dashed", () => Dashed)
-            ;
-    }
-
-    protected override void OnParametersSet()
-    {
-        setClass();
-        base.OnParametersSet();
-    }
-
-    protected override void OnInitialized()
-    {
-        setClass();
-        base.OnInitialized();
-    }
-
-}
