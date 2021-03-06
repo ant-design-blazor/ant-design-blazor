@@ -42,7 +42,7 @@ jobs:
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o _site
-        with:
+        env:
           PACKAGE_VERSION: ${{ github.event.number }}
 
       - name: upload site artifact
