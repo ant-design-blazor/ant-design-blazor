@@ -4,11 +4,14 @@
             <a href="#" class="head-example" />
         </Badge>
         <ButtonGroup>
-            <Button @onclick="_=>decline()">
+            <Button OnClick="decline">
                 <Icon Type="minus"></Icon>
             </Button>
-            <Button @onclick="_=>increase()">
+            <Button OnClick="increase">
                 <Icon Type="plus"></Icon>
+            </Button>
+            <Button OnClick="random">
+                <Icon Type="question"></Icon>
             </Button>
         </ButtonGroup>
     </div>
@@ -23,6 +26,7 @@
 @code {
     int count = 5;
     bool show = true;
+    Random _random = new Random();
 
     void increase()
     {
@@ -36,6 +40,11 @@
         {
             count = 0;
         }
+    }
+
+    void random()
+    {
+        count = _random.Next(0, 99);
     }
 
     void onChange(bool show)

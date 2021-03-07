@@ -115,7 +115,7 @@ namespace AntDesign
 
         private string StatusOrPresetColor => Status.IsIn(_badgeStatusTypes) ? Status : PresetColor;
 
-        private string PresetColor => Color.IsIn(_badgePresetColors) ? Color : "red";
+        private string PresetColor => Color.IsIn(_badgePresetColors) ? Color : null;
 
         private bool HasStatusOrColor => !string.IsNullOrWhiteSpace(Status) || !string.IsNullOrWhiteSpace(Color);
 
@@ -180,42 +180,44 @@ namespace AntDesign
             var delayDot = false;
             await base.SetParametersAsync(parameters);
 
-            if (showSupBefore != ShowSup)
+            if (showSupBefore == ShowSup)
+                return;
+
+            if (ShowSup)
             {
-                if (ShowSup)
+                _dotEnter = true;
+
+                if (!beforeDot && Dot)
                 {
-                    _dotEnter = true;
-
-                    if (!beforeDot && Dot)
-                    {
-                        Dot = true;
-                    }
-
-                    _showSup = true;
-
-                    await Task.Delay(200);
-                    _dotEnter = false;
+                    Dot = true;
                 }
-                else
+
+                _showSup = true;
+
+                await Task.Delay(200);
+                _dotEnter = false;
+            }
+            else
+            {
+                _dotLeave = true;
+
+                if (beforeDot && !Dot)
                 {
-                    _dotLeave = true;
+                    delayDot = true;
+                    Dot = true;
+                }
 
-                    if (beforeDot && !Dot)
-                    {
-                        delayDot = true;
-                        Dot = true;
-                    }
+                await Task.Delay(200);
+                _dotLeave = false;
+                _showSup = false;
 
-                    await Task.Delay(200);
-                    _dotLeave = false;
-                    _showSup = false;
-
-                    if (delayDot)
-                    {
-                        Dot = false;
-                    }
+                if (delayDot)
+                {
+                    Dot = false;
                 }
             }
+
+            StateHasChanged();
         }
 
         private void GenerateMaxNumberArray()
