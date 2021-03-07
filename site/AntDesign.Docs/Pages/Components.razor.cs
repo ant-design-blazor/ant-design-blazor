@@ -31,7 +31,13 @@ namespace AntDesign.Docs.Pages
 
         private bool _expanded;
 
+        private bool _expandAllCode;
+
         private string CurrentLanguage => LanguageService.CurrentCulture.Name;
+
+        private string _filePath;
+
+        private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/blob/master/{_filePath}";
 
         protected override async Task OnInitializedAsync()
         {
@@ -40,7 +46,6 @@ namespace AntDesign.Docs.Pages
 
             await HandleNavigate();
         }
-
 
         private async void OnLanguageChanged(object sender, CultureInfo args)
         {
@@ -79,6 +84,9 @@ namespace AntDesign.Docs.Pages
             {
                 await MainLayout.ChangePrevNextNav(Name);
                 _demoComponent = await DemoService.GetComponentAsync(Name);
+                _filePath = $"site/AntDesign.Docs/Demos/Components/{_demoComponent?.Title}/doc/index.{CurrentLanguage}.md";
+
+                StateHasChanged();
             }
         }
 
