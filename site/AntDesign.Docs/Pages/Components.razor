@@ -36,11 +36,13 @@
                     @_demoComponent.Title
                     <span class="subtitle">@_demoComponent.SubTitle</span>
                     <span class="widget"></span>
-                    <a class="edit-button" rel="noopener noreferrer" target="_blank">
-                        <i nz-icon="" nztype="edit" class="anticon anticon-edit">
-                            <svg viewBox="64 64 896 896" fill="currentColor" width="1em" height="1em" data-icon="edit" aria-hidden="true"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"></path></svg>
-                        </i>
-                    </a>
+                    <Tooltip Title="@LanguageService.Resources["app.content.edit-demo"]">
+                        <Unbound>
+                            <a @ref="context.Current" href="@EditUrl" class="edit-button" rel="noopener noreferrer" target="_blank">
+                                <Icon Type="edit" />
+                            </a>
+                        </Unbound>
+                    </Tooltip>
                 </h1>
                 <section class="markdown">
                     @((MarkupString) _demoComponent.Desc)
@@ -67,8 +69,8 @@
                                     <Icon Type="expand" Class="code-box-expand-trigger" OnClick="() => _expanded = true " />
                                 }
                             }
-                            <Icon Type="code" Class="code-box-expand-trigger" />
-                            <Icon Type="bug" Class="code-box-expand-trigger" />
+                            <Icon Type="code" Theme="@(_expandAllCode ? "fill":"outline")" Class="code-box-expand-trigger" OnClick="()=>_expandAllCode=!_expandAllCode" />
+                            @*<Icon Type="bug" Class="code-box-expand-trigger" />*@
                         </span>
                     </h2>
                 }
@@ -81,7 +83,7 @@
                         foreach (var demo in demos)
                         {
                             <AntDesign.Col Span="24" Class="code-boxes-col-1-1" Style="padding-left: 8px; padding-right: 8px;">
-                                <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
                             </AntDesign.Col>
                         }
                     }
@@ -93,13 +95,13 @@
                         <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in leftList)
                             {
-                                <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
                         <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in rightList)
                             {
-                                <CodeBox Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="@($"{_demoComponent.Title}-{demo.Title}")" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
                     }
@@ -112,5 +114,6 @@
 
         }
     </article>
+    <ContributorsList FilePath="@_filePath" />
     @*<ul class="contributors-list" style="display: flex; list-style: none; margin: 0px; padding: 0px; flex-flow: wrap;"></ul>*@
 </section>

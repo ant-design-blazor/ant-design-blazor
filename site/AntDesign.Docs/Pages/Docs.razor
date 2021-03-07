@@ -6,8 +6,19 @@
         {
             var title = $"{_file.Title} - Ant Design of Blazor";
             <Microsoft.AspNetCore.Components.Web.Extensions.Head.Title Value="@title" />
-            <h1>@_file.Title</h1>
+            <h1>
+                @_file.Title
+                <Tooltip Title="@LanguageService.Resources["app.content.edit-demo"]">
+                    <Unbound>
+                        <a @ref="context.Current" class="edit-button" href="@EditUrl" target="_blank" rel="noopener noreferrer">
+                            <Icon Type="edit" />
+                        </a>
+                    </Unbound>
+                </Tooltip>
+            </h1>
+
             @((MarkupString) _file.Html)
         }
     </article>
+    <ContributorsList FilePath="@_filePath" />
 </section>
