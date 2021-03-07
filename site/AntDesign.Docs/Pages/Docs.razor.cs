@@ -23,6 +23,9 @@ namespace AntDesign.Docs.Pages
 
         private bool _waitingHighlight = false;
 
+        private string _filePath;
+        private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/{_filePath}";
+
         private string CurrentLanguage => LanguageService.CurrentCulture.Name;
 
         [Inject] private NavigationManager NavigationManager { get; set; }
@@ -58,6 +61,8 @@ namespace AntDesign.Docs.Pages
                 _waitingHighlight = true;
 
                 await MainLayout.ChangePrevNextNav(FileName);
+
+                _filePath = $"docs/{FileName}.{CurrentLanguage}.md";
             }
         }
 
@@ -65,7 +70,6 @@ namespace AntDesign.Docs.Pages
         {
             await SetDocUrl();
             await base.OnParametersSetAsync();
-
         }
 
         private async void OnLocationChanged(object sender, LocationChangedEventArgs args)

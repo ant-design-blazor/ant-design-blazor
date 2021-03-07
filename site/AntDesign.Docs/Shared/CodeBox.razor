@@ -14,9 +14,16 @@
         }
     </section>
     <section class="code-box-meta markdown">
-        <a class="code-box-title" @onclick="@AnchorClick" >
-            @Demo.Title
-        </a>
+        <div class="code-box-title" @onclick="@AnchorClick">
+            <a @onclick="AnchorClick">@Demo.Title</a>
+            <Tooltip Title="@lang.Resources["app.content.edit-demo"]">
+                <Unbound>
+                    <a @ref="context.Current" class="edit-button" href="@EditUrl" target="_blank" rel="noopener noreferrer">
+                        <Icon Type="edit" />
+                    </a>
+                </Unbound>
+            </Tooltip>
+        </div>
         <div class="code-box-description">
             @((MarkupString)Demo.Description)
         </div>
@@ -26,20 +33,20 @@
                     <Icon RefBack="context" Type="@(_copied?"check" : "snippets")" Class="code-box-code-copy code-box-code-action" OnClick="Copy" />
                 </Unbound>
             </Tooltip>
-            <Tooltip Title="@(codeExpand?lang.Resources["app.demo.code.hide"] : lang.Resources["app.demo.code.show"])">
+            <Tooltip Title="@(CodeExpand?lang.Resources["app.demo.code.hide"] : lang.Resources["app.demo.code.show"])">
                 <Unbound>
-                    <span @ref="context.Current" class="code-expand-icon code-box-code-action" @onclick="_ => codeExpand = !codeExpand">
-                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(codeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
-                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="@(!codeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
+                    <span @ref="context.Current" class="code-expand-icon code-box-code-action" @onclick="_ => CodeExpand = !CodeExpand">
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(CodeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="@(!CodeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
                     </span>
                 </Unbound>
             </Tooltip>
             @DebugIcon
         </div>
     </section>
-    <section class="highlight-wrapper @(codeExpand?"highlight-wrapper-expand":"")">
+    <section class="highlight-wrapper @(CodeExpand?"highlight-wrapper-expand":"")">
         <div class="highlight">
-            <HighlightedCode Code="@Demo.Code" CanLoad="codeExpand" Language="html"></HighlightedCode>
+            <HighlightedCode Code="@Demo.Code" CanLoad="CodeExpand" Language="html"></HighlightedCode>
         </div>
     </section>
     <style>
@@ -59,15 +66,18 @@
     [Parameter]
     public DemoItem Demo { get; set; }
 
+    [Parameter]
+    public bool CodeExpand { get; set; }
+
     RenderFragment Component;
 
     RenderFragment DebugIcon;
 
-    private bool codeExpand { get; set; }
-
     private bool _copied;
 
     protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
+
+    private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/{ComponentName}/demo/{Demo.Name}.razor";
 
     protected override async Task OnInitializedAsync()
     {
