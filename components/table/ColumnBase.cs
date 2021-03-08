@@ -34,6 +34,9 @@ namespace AntDesign
         [CascadingParameter(Name = "IsMeasure")]
         public bool IsMeasure { get; set; }
 
+        [CascadingParameter(Name = "IsSummary")]
+        public bool IsSummary { get; set; }
+
         [Parameter]
         public string Title { get; set; }
 
@@ -120,7 +123,7 @@ namespace AntDesign
                 Context?.AddRowColumn(this);
             }
 
-            if (IsHeader || IsBody)
+            if (IsHeader || IsBody || IsSummary)
             {
                 _fixedStyle = CalcFixedStyle();
             }
