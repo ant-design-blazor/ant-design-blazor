@@ -124,6 +124,8 @@ namespace AntDesign
 
         private IEnumerable<TItem> _dataSource;
 
+        private IList<SummaryRow> _summaryRows;
+
         private bool _waitingReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
@@ -157,6 +159,12 @@ namespace AntDesign
             {
                 OnExpand.InvokeAsync(currentRowData);
             }
+        }
+
+        void ITable.AddSummaryRow(SummaryRow summaryRow)
+        {
+            _summaryRows ??= new List<SummaryRow>();
+            _summaryRows.Add(summaryRow);
         }
 
         public void ReloadData()

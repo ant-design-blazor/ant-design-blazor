@@ -51,5 +51,7 @@ namespace AntDesign
         internal void ColumnSorterChange(IFieldColumn column);
 
         internal bool RowExpandable(RowData rowData);
+
+        internal void AddSummaryRow(SummaryRow summaryRow);
     }
 }
