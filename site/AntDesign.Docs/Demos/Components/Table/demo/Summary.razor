@@ -23,6 +23,17 @@
     </SummaryRow>
 </Table>
 
+<br/>
+
+<Table DataSource="fixedData" ScrollX="2000" Bordered HidePagination>
+    <Column Title="Name" DataIndex="name" TData="string" Fixed="left" Width="100"></Column>
+    <Column Title="Description" DataIndex="description" TData="string"></Column>
+    <SummaryRow>
+        <SummaryCell Fixed="left">Summary</SummaryCell>
+        <SummaryCell>This is a summary content</SummaryCell>
+    </SummaryRow>
+</Table>
+
 @code {
 
     record Data(string key, string name, int borrow, int repayment);
@@ -34,5 +45,13 @@
         new("3","Joe Black",10,10),
         new("4","Jim Red",75,45),
     };
+
+    record FixedData(string name,string description);
+
+    FixedData[] fixedData = Enumerable.Range(0, 6)
+        .Select(i => new FixedData(
+               name: (i % 2) > 0 ? "Light" : "Bamboo", 
+               description: "Everything that has a beginning, has an end.")
+        ).ToArray();
 }
 

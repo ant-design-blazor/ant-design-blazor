@@ -1,12 +1,5 @@
 ﻿@namespace AntDesign
+@inherits ColumnBase
 
+<td class="@ClassMapper.Class" style="@FixedStyle @Style" colspan="@ColSpan">@ChildContent</td>
 
-<td class="ant-table-cell" colspan="@ColSpan">@ChildContent</td>
-
-@code {
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
-
-    [Parameter]
-    public int ColSpan { get; set; } = 1;
-}

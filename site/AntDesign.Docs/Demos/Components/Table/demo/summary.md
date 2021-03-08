@@ -7,11 +7,11 @@ title:
 
 ## zh-CN
 
-通过 `summary` 设置总结栏。使用 `Table.Summary.Cell` 同步 Column 的固定状态。
+通过 `SummaryRow` 设置总结栏。使用 `SummaryCell` 同步 Column 的固定状态。
 
 ## en-US
 
-Set summary content by `summary` prop. Sync column fixed status with `Table.Summary.Cell`.
+Set summary content by `SummaryRow` prop. Sync column fixed status with `SummaryCell`.
 
 
 <style>

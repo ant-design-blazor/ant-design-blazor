@@ -211,7 +211,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
 RenderFragment<Table<TItem>> tfoot = table =>@<Template>
     @if (table._summaryRows?.Any() == true)
     {
-        <CascadingValue Value="true" Name="IsSummary">
+        <CascadingValue Value="true" Name="IsSummary" IsFixed>
             <tfoot class="ant-table-summary">
                 @foreach (var row in table._summaryRows)
                 {
