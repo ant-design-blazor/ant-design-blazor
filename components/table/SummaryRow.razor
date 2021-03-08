@@ -1,0 +1,31 @@
+﻿@namespace AntDesign
+
+@if (IsSummary)
+{
+    <tr>@ChildContent</tr>
+}
+
+@code{
+
+    [CascadingParameter]
+    private ITable Table { get; set; }
+
+    [CascadingParameter(Name ="IsSummary")]
+    private bool IsSummary { get; set; }
+
+    [CascadingParameter(Name = "IsInitialize")]
+    private bool IsInitialize { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (IsInitialize)
+        {
+            Table.AddSummaryRow(this);
+        }
+    }
+}

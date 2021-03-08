@@ -1,0 +1,12 @@
+﻿@namespace AntDesign
+
+
+<td class="ant-table-cell" colspan="@ColSpan">@ChildContent</td>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public int ColSpan { get; set; } = 1;
+}
