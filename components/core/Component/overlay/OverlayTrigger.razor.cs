@@ -126,6 +126,9 @@ namespace AntDesign.Internal
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         [Parameter]
+        public EventCallback OnMaskClick { get; set; }
+
+        [Parameter]
         public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
         [Parameter]
@@ -343,6 +346,11 @@ namespace AntDesign.Internal
         {
             if (_mouseInOverlay == false && _mouseInTrigger == false)
             {
+                if (OnMaskClick.HasDelegate)
+                {
+                    OnMaskClick.InvokeAsync(null);
+                }
+
                 Hide();
             }
         }
