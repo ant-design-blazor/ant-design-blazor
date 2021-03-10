@@ -191,8 +191,11 @@ namespace AntDesign
 
         private void ToggleTreeNode()
         {
+            bool expandValueBeforeChange = RowData.Expanded;
             RowData.Expanded = !RowData.Expanded;
-            Table?.Refresh();
+            Table?.OnExpandChange(RowData.CacheKey);
+            if (RowData.Expanded != expandValueBeforeChange)
+                Table?.Refresh();
         }
 
         private void FilterSelected(TableFilter<TData> filter)

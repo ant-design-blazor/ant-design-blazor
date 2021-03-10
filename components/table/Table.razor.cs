@@ -104,6 +104,9 @@ namespace AntDesign
         public Func<RowData<TItem>, string> ExpandedRowClassName { get; set; } = _ => "";
 
         [Parameter]
+        public EventCallback<RowData<TItem>> OnExpand { get; set; }
+
+        [Parameter]
         public SortDirection[] SortDirections { get; set; } = SortDirection.Preset.Default;
 
         [Parameter]
@@ -120,6 +123,8 @@ namespace AntDesign
         private IEnumerable<TItem> _showItems;
 
         private IEnumerable<TItem> _dataSource;
+
+        private IList<SummaryRow> _summaryRows;
 
         private bool _waitingReload;
         private bool _waitingReloadAndInvokeChange;
@@ -145,7 +150,22 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex;
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+
         SortDirection[] ITable.SortDirections => SortDirections;
+
+        void ITable.OnExpandChange(int cacheKey)
+        {
+            if (OnExpand.HasDelegate && _dataSourceCache.TryGetValue(cacheKey, out var currentRowData))
+            {
+                OnExpand.InvokeAsync(currentRowData);
+            }
+        }
+
+        void ITable.AddSummaryRow(SummaryRow summaryRow)
+        {
+            _summaryRows ??= new List<SummaryRow>();
+            _summaryRows.Add(summaryRow);
+        }
 
         public void ReloadData()
         {
@@ -154,6 +174,31 @@ namespace AntDesign
             FlushCache();
 
             this.Reload();
+        }
+
+        public QueryModel GetQueryModel() => BuildQueryModel();
+
+        private QueryModel<TItem> BuildQueryModel()
+        {
+            var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
+
+            foreach (var col in ColumnContext.HeaderColumns)
+            {
+                if (col is IFieldColumn fieldColumn)
+                {
+                    if (fieldColumn.SortModel != null)
+                    {
+                        queryModel.AddSortModel(fieldColumn.SortModel);
+                    }
+
+                    if (fieldColumn.FilterModel != null)
+                    {
+                        queryModel.AddFilterModel(fieldColumn.FilterModel);
+                    }
+                }
+            }
+
+            return queryModel;
         }
 
         void ITable.Refresh()
@@ -191,23 +236,7 @@ namespace AntDesign
 
         private QueryModel<TItem> Reload()
         {
-            var queryModel = new QueryModel<TItem>(PageIndex, PageSize);
-
-            foreach (var col in ColumnContext.HeaderColumns)
-            {
-                if (col is IFieldColumn fieldColumn)
-                {
-                    if (fieldColumn.SortModel != null)
-                    {
-                        queryModel.AddSortModel(fieldColumn.SortModel);
-                    }
-
-                    if (fieldColumn.FilterModel != null)
-                    {
-                        queryModel.AddFilterModel(fieldColumn.FilterModel);
-                    }
-                }
-            }
+            var queryModel = BuildQueryModel();
 
             if (ServerSide)
             {
