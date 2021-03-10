@@ -4,8 +4,10 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -275,7 +277,13 @@ namespace AntDesign
                 .If($"{PrefixCls}-disabled", () => this.Disabled);
         }
 
-        private async Task Increase()
+        #region Value Increase and Decrease Methods
+
+        private readonly int _interval = 200;
+        private CancellationTokenSource _increaseTokenSource;
+        private CancellationTokenSource _decreaseTokenSource;
+
+        private async Task IncreaseDown()
         {
             if (_isNullable && Value == null)
             {
@@ -288,9 +296,30 @@ namespace AntDesign
             await SetFocus();
             var num = _increaseFunc(Value, _step);
             await ChangeValueAsync(num);
+
+            _increaseTokenSource = new CancellationTokenSource();
+            _ = Increase(_increaseTokenSource.Token).ConfigureAwait(false);
         }
 
-        private async Task Decrease()
+        private void IncreaseUp() => _increaseTokenSource.Cancel();
+
+        private async Task Increase(CancellationToken cancellationToken)
+        {
+            await Task.Delay(600, CancellationToken.None);
+            while (true)
+            {
+                if (_equalToFunc(Value, Max) || cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                var num = _increaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+                await Task.Delay(_interval, CancellationToken.None);
+            }
+        }
+
+        private async Task DecreaseDown()
         {
             if (_isNullable && Value == null)
             {
@@ -303,7 +332,58 @@ namespace AntDesign
             await SetFocus();
             var num = _decreaseFunc(Value, _step);
             await ChangeValueAsync(num);
+
+            _decreaseTokenSource = new CancellationTokenSource();
+            _ = Decrease(_decreaseTokenSource.Token).ConfigureAwait(false);
         }
+
+        private void DecreaseUp() => _decreaseTokenSource.Cancel();
+
+        private async Task Decrease(CancellationToken cancellationToken)
+        {
+            await Task.Delay(600, CancellationToken.None);
+            while (true)
+            {
+                if (_equalToFunc(Value, Min) || cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                var num = _decreaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+                await Task.Delay(_interval, CancellationToken.None);
+            }
+        }
+
+        private async Task OnKeyDown(KeyboardEventArgs e)
+        {
+            if (_isNullable && Value == null)
+            {
+                return;
+            }
+            if (e.Key == "ArrowUp")
+            {
+                if (_equalToFunc(Value, Max))
+                {
+                    return;
+                }
+                var num = _increaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+            }
+            else if (e.Key == "ArrowDown")
+            {
+                if (_equalToFunc(Value, Min))
+                {
+                    return;
+                }
+                var num = _decreaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+            }
+        }
+
+        #endregion
 
         private async Task SetFocus()
         {

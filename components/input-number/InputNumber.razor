@@ -4,15 +4,18 @@
 
 <div class="@ClassMapper.Class" style="@Style" id="@Id">
     <div class="ant-input-number-handler-wrap">
-        <span unselectable="unselectable" role="button" aria-label="Increase Value" class="@GetIconClass("up")" @onmousedown="Increase">
+        <span unselectable="unselectable" role="button" aria-label="Increase Value" class="@GetIconClass("up")"
+            @onmousedown="IncreaseDown" @onmouseup="IncreaseUp">
             <Icon Class="ant-input-number-handler-up-inner" Type="up"  />
         </span>
-        <span unselectable="unselectable" role="button" aria-label="Decrease Value" class="@GetIconClass("down")" @onmousedown="Decrease">
+        <span unselectable="unselectable" role="button" aria-label="Decrease Value" class="@GetIconClass("down")"
+            @onmousedown="DecreaseDown" @onmouseup="DecreaseUp">
             <Icon Class="ant-input-number-handler-down-inner" Type="down"  />
         </span>
     </div>
     <div class="ant-input-number-input-wrap">
         <input @ref="Ref" role="spinbutton" aria-valuemin="@Min" aria-valuemax="@Max" autocomplete="off" max="@Max" min="@Min" step="@Step"
-               aria-valuenow="@CurrentValue" class="ant-input-number-input" @bind="@CurrentValueAsString" @oninput="OnInput" @onfocus="@OnFocus" @onblur="@OnBlurAsync" disabled="@Disabled" />
+               aria-valuenow="@CurrentValue" class="ant-input-number-input" @bind="@CurrentValueAsString"
+               @oninput="OnInput" @onfocus="@OnFocus" @onblur="@OnBlurAsync" @onkeydown="OnKeyDown" disabled="@Disabled" />
     </div>
 </div>
