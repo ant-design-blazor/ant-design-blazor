@@ -105,7 +105,7 @@ namespace AntDesign
                     {
                         Menu.SelectItem(MenuItem);
                     }
-                    else if (MenuItem.IsSelected)
+                    else if (!_isActive && MenuItem.IsSelected)
                     {
                         MenuItem.Deselect();
                     }

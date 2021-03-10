@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C60BCE84-4AF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign", "components\AntDesign.csproj", "{0D3995E9-EBD9-4BBB-9E6C-3A3DE8C4611A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Docs", "site\AntBlazor.Docs\AntDesign.Docs.csproj", "{E2E6E4E8-2156-4B55-8164-40349D86330B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Docs", "site\AntDesign.Docs\AntDesign.Docs.csproj", "{E2E6E4E8-2156-4B55-8164-40349D86330B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Docs.WasmHost", "site\AntDesign.Docs.WasmHost\AntDesign.Docs.WasmHost.csproj", "{7FD7BCA7-058C-468C-BD8B-8496074651FD}"
 EndProject

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
-using System;
 using System.Threading.Tasks;
 
 namespace AntDesign
@@ -52,12 +51,8 @@ namespace AntDesign
                     builder.AddAttribute(7, "Class", $"{PrefixCls}-search-button");
                     builder.AddAttribute(8, "Type", "primary");
                     builder.AddAttribute(9, "Size", Size);
-
-                    if (Loading)
-                    {
-                        builder.AddAttribute(10, "Loading", true);
-                    }
-                    else
+                    builder.AddAttribute(10, "Loading", Loading);
+                    if (!Loading)
                     {
                         builder.AddAttribute(11, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                     }

@@ -6,10 +6,10 @@ namespace AntDesign
 {
     public sealed class ModalAnimation
     {
-        public const string ModalEnter = " zoom-enter zoom-enter-active";
-        public const string ModalLeave = " zoom-leave zoom-leave-active";
+        public const string ModalEnter = " ant-zoom-enter ant-zoom-enter-active ant-zoom-enter";
+        public const string ModalLeave = " ant-zoom-leave ant-zoom-leave-active ant-zoom";
 
-        public const string MaskEnter = " fade-enter fade-enter-active";
-        public const string MaskLeave = " fade-leave fade-leave-active";
+        public const string MaskEnter = " ant-fade-enter ant-fade-enter-active ant-fade";
+        public const string MaskLeave = " ant-fade-leave ant-fade-leave-active ant-fade";
     }
 }

@@ -77,8 +77,31 @@ namespace AntDesign.Internal
         [Parameter]
         public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
 
+        /*
+         * 通过参数赋值的placement，不应该通过其它方式赋值
+         * Placement set by Parameter, should not be change by other way
+         */
+        private PlacementType _paramPlacement = PlacementType.BottomLeft;
+
+        /*
+         * 当前的placement，某些情况下可能会被Overlay组件修改（通过ChangePlacementForShow函数）
+         * Current placement, would change by overlay in some cases(via ChangePlacementForShow function)
+         */
+        private PlacementType _placement = PlacementType.BottomLeft;
+
         [Parameter]
-        public PlacementType Placement { get; set; } = PlacementType.BottomLeft;
+        public PlacementType Placement
+        {
+            get
+            {
+                return _placement;
+            }
+            set
+            {
+                _placement = value;
+                _paramPlacement = value;
+            }
+        }
 
         [Parameter] public Action OnMouseEnter { get; set; }
 
@@ -102,6 +125,20 @@ namespace AntDesign.Internal
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
+        [Parameter]
+        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
+
+        [Parameter]
+        public ElementReference TriggerReference
+        {
+            get => _triggerReference;
+            set
+            {
+                _triggerReference = value;
+                RefBack.Set(value);
+            }
+        }
+
         [Inject]
         private DomEventService DomEventService { get; set; }
 
@@ -109,6 +146,7 @@ namespace AntDesign.Internal
         private bool _mouseInOverlay = false;
 
         protected Overlay _overlay = null;
+        private ElementReference _triggerReference;
 
         protected override void OnAfterRender(bool firstRender)
         {
@@ -116,6 +154,7 @@ namespace AntDesign.Internal
             {
                 DomEventService.AddEventListener("document", "mouseup", OnMouseUp, false);
                 DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
+                DomEventService.AddEventListener("document", "scroll", OnWindowScroll, false);
             }
 
             base.OnAfterRender(firstRender);
@@ -132,14 +171,16 @@ namespace AntDesign.Internal
                 DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn, true);
                 DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut, true);
                 DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
-
             }
             return base.OnAfterRenderAsync(firstRender);
         }
 
         private void OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
+
         private void OnUnboundMouseLeave(JsonElement jsonElement) => OnTriggerMouseLeave();
+
         private void OnUnboundFocusIn(JsonElement jsonElement) => OnTriggerFocusIn();
+
         private void OnUnboundFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
 
         private async void OnUnboundClick(JsonElement jsonElement)
@@ -149,6 +190,7 @@ namespace AntDesign.Internal
 
             await OnClickDiv(eventArgs);
         }
+
         private async void OnContextMenu(JsonElement jsonElement)
         {
             var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
@@ -161,6 +203,8 @@ namespace AntDesign.Internal
         {
             DomEventService.RemoveEventListerner<JsonElement>("document", "mouseup", OnMouseUp);
             DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnMouseUp);
+            DomEventService.RemoveEventListerner<JsonElement>("document", "scroll", OnWindowScroll);
+
             if (Unbound != null)
             {
                 DomEventService.RemoveEventListerner<JsonElement>(Ref, "click", OnUnboundClick);
@@ -305,11 +349,19 @@ namespace AntDesign.Internal
 
         protected async void OnWindowResize(JsonElement element)
         {
+            RestorePlacement();
+
             if (IsOverlayShow())
             {
                 await GetOverlayComponent().UpdatePosition();
             }
         }
+
+        protected void OnWindowScroll(JsonElement element)
+        {
+            RestorePlacement();
+        }
+
         protected virtual bool IsContainTrigger(TriggerType triggerType)
         {
             return Trigger.Contains(triggerType);
@@ -325,8 +377,23 @@ namespace AntDesign.Internal
             await OnOverlayHiding.InvokeAsync(visible);
         }
 
-        protected virtual void OnOverlayShow() { }
-        protected virtual void OnOverlayHide() { }
+        protected virtual void OnOverlayShow()
+        {
+        }
+
+        protected virtual void OnOverlayHide()
+        {
+        }
+
+        internal void ChangePlacementForShow(PlacementType placement)
+        {
+            _placement = placement;
+        }
+
+        internal void RestorePlacement()
+        {
+            _placement = _paramPlacement;
+        }
 
         internal virtual string GetPlacementClass()
         {

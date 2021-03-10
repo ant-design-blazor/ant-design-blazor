@@ -1,0 +1,65 @@
+﻿@using System.ComponentModel
+@using AntDesign.TableModels
+
+<Table TItem="Data" DataSource="@data" OnRow="OnRow" OnHeaderRow="OnHeaderRow">
+    <Column DataIndex="@nameof(context.Name)" TData="string" OnCell="OnCell" OnHeaderCell="OnHeaderCell">
+        <a>@context.Name</a>
+    </Column>
+    <Column DataIndex="@nameof(context.Age)" TData="int"></Column>
+    <Column Title="Address" TData="string">
+        <TitleTemplate>
+            <span> <Icon Type="environment" /> Address </span>
+        </TitleTemplate>
+    </Column>
+    <Column Title="Tag" TData="string">
+        @foreach (var tag in context.Tags)
+        {
+            <Tag Color="@(tag == "loser" ? "volcano" : tag.Length > 5 ? "geekblue" : "green")">@tag</Tag>
+        }
+    </Column>
+</Table>
+
+@code{
+    record Data(string Key, string Name, int Age, string Address, string[] Tags);
+
+    Data[] data = new Data[]
+    {
+        new("1", "John Brown",32, "New York No. 1 Lake Park",new[] {"nice", "developer"}),
+        new("2", "Jim Green",42, "London No. 1 Lake Park",new[] { "loser"}),
+        new("3", "Joe Black",32, "Sidney No. 1 Lake Park",new[] { "cool", "teacher" }),
+        };
+
+    Dictionary<string, object> OnRow(RowData<Data> row) => new()
+    {
+        ["id"] = row.Data.Key,
+        ["onclick"] = ((Action)delegate
+        {
+            Console.WriteLine($"row {row.Data.Key} was clicked");
+        })
+    };
+
+    Dictionary<string, object> OnHeaderRow() => new()
+    {
+        ["id"] = "header-row",
+        ["onclick"] = ((Action)delegate
+        {
+            Console.WriteLine("header row was clicked");
+        })
+    };
+
+    Dictionary<string, object> OnCell(RowData rowData) => new()
+    {
+        ["onclick"] = ((Action)delegate
+        {
+            Console.WriteLine($"cell { ((RowData<Data>)rowData).Data.Name} was clicked");
+        }),
+    };
+
+    Dictionary<string, object> OnHeaderCell() => new()
+    {
+        ["onclick"] = ((Action)delegate
+        {
+            Console.WriteLine("header cell was clicked");
+        }),
+    };
+}

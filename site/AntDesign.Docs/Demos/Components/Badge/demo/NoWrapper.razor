@@ -1,0 +1,39 @@
+﻿<Space>
+    <SpaceItem>
+        <Switch Checked="show" OnChange="()=>show=!show" />
+    </SpaceItem>
+    <SpaceItem>
+        <Badge Count="show ? 25 : 0" />
+    </SpaceItem>
+    <SpaceItem>
+        <Badge>
+            <CountTemplate>
+                @if (show)
+                {
+                    <Icon Type="clock-circle" Style="color: #f5222d;" />
+                }
+            </CountTemplate>
+        </Badge>
+    </SpaceItem>
+    <SpaceItem>
+        <Badge Count="show ? 4 : 0" Class="site-badge-count-4" />
+    </SpaceItem>
+    <SpaceItem>
+        <Badge Class="site-badge-count-109"
+               Count="show ? 109 : 0"
+               Style="background-color: #52c41a; " />
+    </SpaceItem>
+</Space>
+
+
+<style>
+    .site-badge-count-4 .ant-badge-count {
+        background-color: #fff;
+        color: #999;
+        box-shadow: 0 0 0 1px #d9d9d9 inset;
+    }
+</style>
+
+@code{
+    bool show = true;
+}

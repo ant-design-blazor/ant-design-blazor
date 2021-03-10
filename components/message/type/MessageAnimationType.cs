@@ -6,7 +6,7 @@ namespace AntDesign
 {
     internal class MessageAnimationType
     {
-        public const string Enter = "move-up-enter move-up-enter-active";
-        public const string Leave = "move-up-leave move-up-leave-active";
+        public const string Enter = "ant-move-up-enter ant-move-up-enter-active ant-move-up";
+        public const string Leave = "ant-move-up-leave ant-move-up-leave-active ant-move-up";
     }
 }

@@ -89,7 +89,6 @@ namespace AntDesign
                     .If($"{prefixCls}-selected", () => overlay != null && overlay.IsPopup());
 
                 SubMenuMapper
-                    .If($"{RootMenu?.PrefixCls}-hidden", () => overlay != null && overlay.IsHiding() == false && overlay.IsPopup() == false)
                     .If($"zoom-big zoom-big-enter zoom-big-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsPopup() && !overlay.IsHiding())
                     .If($"zoom-big zoom-big-leave zoom-big-leave-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsHiding())
                     .If($"slide-up slide-up-enter slide-up-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Horizontal && overlay.IsPopup() && !overlay.IsHiding())

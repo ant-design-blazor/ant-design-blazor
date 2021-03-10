@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;net5</TargetFrameworks>
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AntDesign.Charts" Version="0.2.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(SolutionDir)docs\**" LinkBase="docs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\*.json" />
+    <EmbeddedResource Include="Resources\*.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\DemoComponent.cs" Link="Services\DemoComponent.cs" />
+    <Compile Include="..\Shared\DemoMenuItem.cs" Link="Services\DemoMenuItem.cs" />
+    <Compile Include="..\Shared\DocsFile.cs" Link="Services\DocsFile.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\components\AntDesign.csproj" />
+  </ItemGroup>
+
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
+  </Target>
+
+  <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:docs" />
+  </Target>
+
+  <PropertyGroup>
+    <CLIProjectDir>site/AntDesign.Docs.Build.CLI</CLIProjectDir>
+    <CLIPath>$(CLIProjectDir)/bin/Debug/net5/AntDesign.Docs.Build.CLI.dll</CLIPath>
+    <ProjectDir>$(SolutionDir)/site/AntDesign.Docs</ProjectDir>
+  </PropertyGroup>
+
+  <Target Name="RunCli" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug'">
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet build $(CLIProjectDir)" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) demo2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/meta" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) menu2json $(ProjectDir)/Demos docs $(ProjectDir)/wwwroot/meta" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) docs2html ./docs ./site/AntDesign.Docs/wwwroot/docs" />
+  </Target>
+
+  <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run gulp:docs" />
+  </Target>
+</Project>

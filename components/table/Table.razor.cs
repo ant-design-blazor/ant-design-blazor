@@ -53,7 +53,10 @@ namespace AntDesign
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
 
         [Parameter]
-        public EventCallback<RowData<TItem>> OnRowClick { get; set; }
+        public Func<RowData<TItem>, Dictionary<string, object>> OnRow { get; set; }
+
+        [Parameter]
+        public Func<Dictionary<string, object>> OnHeaderRow { get; set; }
 
         [Parameter]
         public bool Loading { get; set; }
@@ -103,6 +106,12 @@ namespace AntDesign
         [Parameter]
         public SortDirection[] SortDirections { get; set; } = SortDirection.Preset.Default;
 
+        [Parameter]
+        public string TableLayout { get; set; }
+
+        [Parameter]
+        public EventCallback<RowData<TItem>> OnRowClick { get; set; }
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -120,8 +129,8 @@ namespace AntDesign
         private bool _hasFixRight;
         private bool _pingRight;
         private bool _pingLeft;
-        private bool _tableLayoutIsFixed;
         private int _treeExpandIconColumnIndex;
+        private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
@@ -186,9 +195,17 @@ namespace AntDesign
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
-                if (col is IFieldColumn fieldColumn && fieldColumn.SortModel != null)
+                if (col is IFieldColumn fieldColumn)
                 {
-                    queryModel.AddSortModel(fieldColumn.SortModel);
+                    if (fieldColumn.SortModel != null)
+                    {
+                        queryModel.AddSortModel(fieldColumn.SortModel);
+                    }
+
+                    if (fieldColumn.FilterModel != null)
+                    {
+                        queryModel.AddFilterModel(fieldColumn.FilterModel);
+                    }
                 }
             }
 
@@ -201,20 +218,25 @@ namespace AntDesign
                 if (_dataSource != null)
                 {
                     var query = _dataSource.AsQueryable();
-                    var orderedSortModels = queryModel.SortModel.OrderBy(x => x.Priority);
-                    foreach (var sort in orderedSortModels)
+                    foreach (var sort in queryModel.SortModel.OrderBy(x => x.Priority))
                     {
                         query = sort.SortList(query);
+                    }
+
+                    foreach (var filter in queryModel.FilterModel)
+                    {
+                        query = filter.FilterList(query);
                     }
 
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
+                    _total = _showItems.Count();
                 }
             }
 
-            _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x).Any()) == true);
+            _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
             if (_treeMode)
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null ? 1 : 0);
@@ -253,6 +275,11 @@ namespace AntDesign
             this.ColumnContext = new ColumnContext(this);
 
             SetClass();
+
+            if (ScrollX != null || ScrollY != null)
+            {
+                TableLayout = "fixed";
+            }
 
             InitializePagination();
 
@@ -324,19 +351,11 @@ namespace AntDesign
 
         protected override bool ShouldRender() => this._shouldRender;
 
-        private void RowClick(RowData<TItem> item)
-        {
-            if (OnRowClick.HasDelegate)
-            {
-                OnRowClick.InvokeAsync(item);
-            }
-        }
-
         void ITable.HasFixLeft() => _hasFixLeft = true;
 
         void ITable.HasFixRight() => _hasFixRight = true;
 
-        void ITable.TableLayoutIsFixed() => _tableLayoutIsFixed = true;
+        void ITable.TableLayoutIsFixed() => TableLayout = "fixed";
 
         private async void OnResize(JsonElement _) => await SetScrollPositionClassName();
 
@@ -396,7 +415,6 @@ namespace AntDesign
         {
             if (!_isReloading)
             {
-                await this.SetScrollPositionClassName(true);
                 if (ScrollY != null && ScrollX != null)
                 {
                     await JsInvokeAsync(JSInteropConstants.UnbindTableHeaderAndBodyScroll, _tableBodyRef);

@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AntDesign
 {
-    public partial class Select<TItemValue, TItem>
+    public partial class Select<TItemValue, TItem>: AntInputComponentBase<TItemValue>
     {
         #region Parameters
 
@@ -25,12 +25,45 @@ namespace AntDesign
         [Parameter] public bool AutoClearSearchValue { get; set; } = true;
         [Parameter] public bool Bordered { get; set; } = true;
         [Parameter] public Action<string> OnCreateCustomTag { get; set; }
-        [Parameter] public bool DefaultActiveFirstItem { get; set; } = false;
+        [Parameter]
+        public bool DefaultActiveFirstOption
+        {
+            get { return _defaultActiveFirstOption; }
+            set { 
+                _defaultActiveFirstOption = value; 
+                if (!_defaultActiveFirstOption)
+                {
+                    _defaultActiveFirstOptionApplied = true;
+                }
+            }
+        }
         [Parameter] public bool Disabled { get; set; }
-        [Parameter] public string DisabledName { get; set; }
+
+        [Parameter]
+        public string DisabledName
+        {
+            get => _disabledName;
+            set
+            {
+                _getDisabled = string.IsNullOrWhiteSpace(value) ? null : SelectItemPropertyHelper.CreateGetDisabledFunc<TItem>(value);
+                _disabledName = value;
+            }
+        }
+
         [Parameter] public Func<RenderFragment, RenderFragment> DropdownRender { get; set; }
         [Parameter] public bool EnableSearch { get; set; }
-        [Parameter] public string GroupName { get; set; } = string.Empty;
+
+        [Parameter]
+        public string GroupName
+        {
+            get => _groupName;
+            set
+            {
+                _getGroup = string.IsNullOrWhiteSpace(value) ? null : SelectItemPropertyHelper.CreateGetGroupFunc<TItem>(value);
+                _groupName = value;
+            }
+        }
+
         [Parameter] public bool HideSelected { get; set; }
         [Parameter] public bool IgnoreItemChanges { get; set; } = true;
         [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
@@ -40,7 +73,21 @@ namespace AntDesign
         /// </summary>
         [Parameter] public bool LabelInValue { get; set; }
 
-        [Parameter] public string LabelName { get; set; }
+        [Parameter]
+        public string LabelName
+        {
+            get => _labelName;
+            set
+            {
+                _getLabel = SelectItemPropertyHelper.CreateGetLabelFunc<TItem>(value);
+                if (SelectMode == SelectMode.Tags)
+                {
+                    _setLabel = SelectItemPropertyHelper.CreateSetLabelFunc<TItem>(value);
+                }
+                _labelName = value;
+            }
+        }
+
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
         [Parameter] public bool Loading { get; set; }
         [Parameter] public string Mode { get; set; } = "default";
@@ -75,13 +122,26 @@ namespace AntDesign
         [Parameter] public RenderFragment PrefixIcon { get; set; }
         [Parameter] public char[] TokenSeparators { get; set; }
         [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
-        [Parameter] public string ValueName { get; set; }
+
+        [Parameter]
+        public string ValueName
+        {
+            get => _valueName;
+            set
+            {
+                _getValue = SelectItemPropertyHelper.CreateGetValueFunc<TItem, TItemValue>(value);
+                _setValue = SelectItemPropertyHelper.CreateSetValueFunc<TItem, TItemValue>(value);
+                _valueName = value;
+            }
+        }
+
         [Parameter] public EventCallback<IEnumerable<TItemValue>> ValuesChanged { get; set; }
 
         /// <summary>
         /// Converts custom tag (a string) to TItemValue type.
         /// </summary>
-        [Parameter] public Func<string, TItemValue> CustomTagLabelToValue { get; set; } = (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
+        [Parameter] public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
+            (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
 
         [Parameter]
         public IEnumerable<TItem> DataSource
@@ -160,7 +220,13 @@ namespace AntDesign
                 {
                     _selectedValue = value;
                     if (_isInitialized)
+                    {
                         OnValueChange(value);
+                        if (Form?.ValidateOnChange == true)
+                        {
+                            EditContext?.NotifyFieldChanged(FieldIdentifier);
+                        }
+                    }
                 }
             }
         }
@@ -194,7 +260,6 @@ namespace AntDesign
                         return;
 
                     _selectedValues = value;
-
                     _ = OnValuesChangeAsync(value);
                 }
                 else if (value != null && _selectedValues == null)
@@ -288,6 +353,8 @@ namespace AntDesign
             get => !string.IsNullOrWhiteSpace(GroupName);
         }
 
+        internal ElementReference DropDownRef => _dropDown.GetOverlayComponent().Ref;
+
         internal SelectMode SelectMode => Mode.ToSelectMode();
         internal bool Focused { get; private set; }
         private string _searchValue = string.Empty;
@@ -301,6 +368,7 @@ namespace AntDesign
         private bool _defaultValuesHasItems;
         private bool _isInitialized;
         private bool _defaultValueApplied;
+        private bool _defaultActiveFirstOptionApplied;
         private bool _waittingStateChange;
         private bool _isPrimitive;
         internal ElementReference _inputRef;
@@ -308,11 +376,17 @@ namespace AntDesign
         protected SelectContent<TItemValue, TItem> _selectContent;
         bool _isToken;
         private SelectOptionItem<TItemValue, TItem> _activeOption;
+        private bool _defaultActiveFirstOption;
 
         internal HashSet<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new HashSet<SelectOptionItem<TItemValue, TItem>>();
         internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new List<SelectOptionItem<TItemValue, TItem>>();
         internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
+
+        /// <summary>
+        /// Currently active (highlighted) option. 
+        /// It does not have to be equal to selected option.
+        /// </summary>
         internal SelectOptionItem<TItemValue, TItem> ActiveOption
         {
             get { return _activeOption; }
@@ -328,7 +402,29 @@ namespace AntDesign
             }
         }
 
+        private string _labelName;
+
+        private Func<TItem, string> _getLabel;
+
+        private Action<TItem, string> _setLabel;
+
+        private string _groupName = string.Empty;
+
+        private Func<TItem, string> _getGroup;
+
+        private string _disabledName;
+
+        private Func<TItem, bool> _getDisabled;
+
+        private string _valueName;
+
+        private Func<TItem, TItemValue> _getValue;
+
+        private Action<TItem, TItemValue> _setValue;
+        private bool _disableSubmitFormOnEnter;
+
         #endregion Properties
+
         private static bool IsSimpleType(Type type)
         {
             return
@@ -381,14 +477,15 @@ namespace AntDesign
                 await SetDropdownStyleAsync();
 
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
+                _defaultActiveFirstOptionApplied = !_defaultActiveFirstOption;
             }
 
-            if (!_defaultValueApplied)
+            if (!_defaultValueApplied || !_defaultActiveFirstOptionApplied)
             {
                 if (SelectMode == SelectMode.Default)
                 {
                     if (_defaultValueIsNotNull && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstItem && !HasValue && SelectOptionItems.Any())
+                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
                     {
                         await TrySetDefaultValueAsync();
                     }
@@ -396,7 +493,7 @@ namespace AntDesign
                 else
                 {
                     if (_defaultValuesHasItems && !HasValue && SelectOptionItems.Any()
-                        || DefaultActiveFirstItem && !HasValue && SelectOptionItems.Any())
+                        || DefaultActiveFirstOption && !HasValue && SelectOptionItems.Any())
                     {
                         await TrySetDefaultValuesAsync();
                     }
@@ -450,7 +547,7 @@ namespace AntDesign
 
             foreach (var item in _datasource)
             {
-                TItemValue value = GetPropertyValueAsTItemValue(item, ValueName);
+                TItemValue value = _getValue(item);
 
                 var exists = false;
                 SelectOptionItem<TItemValue, TItem> selectOption;
@@ -469,13 +566,13 @@ namespace AntDesign
 
                 var disabled = false;
                 var groupName = string.Empty;
-                var label = GetPropertyValueAsObject(item, LabelName)?.ToString();
+                var label = _getLabel(item);
 
                 if (!string.IsNullOrWhiteSpace(DisabledName))
-                    disabled = (bool)GetPropertyValueAsObject(item, DisabledName);
+                    disabled = _getDisabled(item);
 
                 if (!string.IsNullOrWhiteSpace(GroupName))
-                    groupName = GetPropertyValueAsObject(item, GroupName)?.ToString();
+                    groupName = _getGroup(item);
 
                 if (!exists)
                 {
@@ -594,8 +691,8 @@ namespace AntDesign
         protected async Task SetDropdownStyleAsync()
         {
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
-
-            _dropdownStyle = $"min-width: {domRect.width}px; width: {domRect.width}px;";
+            var width = domRect.width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            _dropdownStyle = $"min-width: {width}px; width: {width}px;";
         }
 
         protected async Task OnOverlayVisibleChangeAsync(bool visible)
@@ -711,8 +808,9 @@ namespace AntDesign
                         await SetInputFocusAsync();
                     }
 
-                    if (selectOption.IsAddedTag && SelectOptions != null)
+                    if (selectOption.IsAddedTag)
                     {
+                        CustomTagSelectOptionItem = null;
                         AddedTags.Add(selectOption);
                         SelectOptionItems.Add(selectOption);
                     }
@@ -799,6 +897,7 @@ namespace AntDesign
             {
                 await ClearSelectedAsync();
             }
+            _defaultActiveFirstOptionApplied = true;
         }
 
         /// <summary>
@@ -830,7 +929,7 @@ namespace AntDesign
                     await SetDefaultActiveFirstItemAsync();
                 }
             }
-            else if (DefaultActiveFirstItem)
+            else if (DefaultActiveFirstOption)
             {
                 await SetDefaultActiveFirstItemAsync();
             }
@@ -866,7 +965,7 @@ namespace AntDesign
 
                 if (!anySelected)
                 {
-                    if (DefaultActiveFirstItem)
+                    if (DefaultActiveFirstOption)
                     {
                         await SetDefaultActiveFirstItemAsync();
                     }
@@ -882,7 +981,7 @@ namespace AntDesign
                     await InvokeValuesChanged();
                 }
             }
-            else if (DefaultActiveFirstItem)
+            else if (DefaultActiveFirstOption)
             {
                 await SetDefaultActiveFirstItemAsync();
             }
@@ -914,7 +1013,7 @@ namespace AntDesign
                         }
 
                         result.IsSelected = true;
-
+                        ActiveOption = result;
                         if (HideSelected)
                             result.IsHidden = true;
                         SelectedOptionItems.Add(result);
@@ -987,8 +1086,8 @@ namespace AntDesign
             else
             {
                 item = Activator.CreateInstance<TItem>();
-                typeof(TItem).GetProperty(LabelName).SetValue(item, _searchValue);
-                typeof(TItem).GetProperty(ValueName).SetValue(item, value);
+                _setLabel(item, _searchValue);
+                _setValue(item, value);
             }
             return new SelectOptionItem<TItemValue, TItem>() { Label = label, Value = value, Item = item, IsActive = isActive, IsSelected = false, IsAddedTag = true };
         }
@@ -1072,22 +1171,6 @@ namespace AntDesign
             await _dropDown.GetOverlayComponent().UpdatePosition();
         }
 
-        private static object GetPropertyValueAsObject(object obj, string propertyName)
-        {
-            return obj.GetType().GetProperties()
-                .Single(p => p.Name == propertyName)
-                .GetValue(obj, null);
-        }
-
-        private static TItemValue GetPropertyValueAsTItemValue(object obj, string propertyName)
-        {
-            var result = obj.GetType().GetProperties()
-                .Single(p => p.Name == propertyName)
-                .GetValue(obj, null);
-
-            return (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(result.ToString());
-        }
-
         #region Events
 
         /// <summary>
@@ -1100,17 +1183,22 @@ namespace AntDesign
 
             if (EqualityComparer<TItemValue>.Default.Equals(value, default))
             {
-                OnSelectedItemChanged?.Invoke(default);
-                ValueChanged.InvokeAsync(default);
+                _ = InvokeAsync(() => OnInputClearClickAsync(new())); 
                 return;
             }
 
             var result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
 
-            if (result == null && !AllowClear)
+            if (result == null)
             {
-                _ = TrySetDefaultValueAsync();
-
+                if (!AllowClear)
+                    _ = TrySetDefaultValueAsync();
+                else 
+                {
+                    //Reset value if not found - needed if value changed 
+                    //outside of the component
+                    _ = InvokeAsync(() => OnInputClearClickAsync(new()));
+                }
                 return;
             }
 
@@ -1123,10 +1211,37 @@ namespace AntDesign
 
             result.IsSelected = true;
 
+            EvaluateValueChangedOutsideComponent(result, value);
+
             if (HideSelected)
                 result.IsHidden = true;
 
             ValueChanged.InvokeAsync(result.Value);
+        }
+
+        /// <summary>
+        /// When bind-Value is changed outside of the component, then component 
+        /// selected items have to be reselected according to new value passed.
+        /// </summary>
+        /// <param name="optionItem">The option item that has been selected.</param>
+        /// <param name="value">The value of the selected option item.</param>
+        private void EvaluateValueChangedOutsideComponent(SelectOptionItem<TItemValue, TItem> optionItem, TItemValue value)
+        {
+            if (ActiveOption != null && !ActiveOption.Value.Equals(value))
+            {
+                ActiveOption.IsSelected = false;
+                ActiveOption = optionItem;
+            }
+            if (SelectedOptionItems.Count > 0)
+            {
+                if (!SelectedOptionItems[0].Value.Equals(value))
+                {
+                    SelectedOptionItems[0].IsSelected = false;
+                    SelectedOptionItems[0] = optionItem;
+                }
+            }
+            else
+                SelectedOptionItems.Add(optionItem);
         }
 
         /// <summary>
@@ -1147,26 +1262,77 @@ namespace AntDesign
                 return;
             }
 
-            var newSelectedItems = new List<TItem>();
-
-            foreach (var item in values.ToList())
-            {
-                var result = SelectOptionItems.FirstOrDefault(x => x.IsSelected == false && EqualityComparer<TItemValue>.Default.Equals(x.Value, item));
-
-                if (result != null && !result.IsDisabled)
-                {
-                    result.IsSelected = true;
-                    newSelectedItems.Add(result.Item);
-                }
-            }
+            EvaluateValuesChangedOutsideComponent(values);
 
             if (_dropDown.IsOverlayShow())
             {
+                //A delay forces a refresh better than StateHasChanged().
+                //For example when a tag is added that is causing SelectContent to grow,
+                //this Task.Delay will actually allow to reposition the Overlay to match
+                //new size of SelectContent.
+                await Task.Delay(1);
                 await UpdateOverlayPositionAsync();
             }
 
-            OnSelectedItemsChanged?.Invoke(newSelectedItems);
+            OnSelectedItemsChanged?.Invoke(SelectedOptionItems.Select(s => s.Item));
             await ValuesChanged.InvokeAsync(Values);
+        }
+
+        /// <summary>
+        /// When bind-Values is changed outside of the component, then component
+        /// selected items have to be reselected according to new values passed.
+        /// TODO: (Perf) Consider using hash to identify if the passed values are different from currently selected.
+        /// </summary>
+        /// <param name="values">The values that need to be selected.</param>
+        private void EvaluateValuesChangedOutsideComponent(IEnumerable<TItemValue> values)
+        {
+            var newSelectedItems = new List<TItem>();
+            var deselectList = SelectedOptionItems.ToDictionary(item => item.Value, item => item);
+            foreach (var value in values.ToList())
+            {
+                SelectOptionItem<TItemValue, TItem> result;
+                if (SelectMode == SelectMode.Multiple)
+                {
+                    result = SelectOptionItems.FirstOrDefault(x => !x.IsSelected && EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
+                    if (result != null && !result.IsDisabled)
+                    {
+                        result.IsSelected = true;
+                        SelectedOptionItems.Add(result);
+                    }
+                    deselectList.Remove(value);
+                }
+                else
+                {
+                    result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
+                    if (result is null) //tag delivered from outside, needs to be added to the list of options
+                    {
+                        result = CreateSelectOptionItem(value.ToString(), true);
+                        result.IsSelected = true;
+                        AddedTags.Add(result);
+                        SelectOptionItems.Add(result);
+                        SelectedOptionItems.Add(result);
+                    }
+                    else if (result != null && !result.IsSelected && !result.IsDisabled)
+                    {
+                        result.IsSelected = true;
+                        SelectedOptionItems.Add(result);
+                    }
+                    deselectList.Remove(value);
+                }
+            }
+            if (deselectList.Count > 0)
+            {
+                foreach (var item in deselectList)
+                {
+                    item.Value.IsSelected = false;
+                    SelectedOptionItems.Remove(item.Value);
+                    if (item.Value.IsAddedTag)
+                    {
+                        SelectOptionItems.Remove(item.Value);
+                        AddedTags.Remove(item.Value);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -1369,6 +1535,15 @@ namespace AntDesign
                 {
                     CustomTagSelectOptionItem.Label = searchValue;
                     CustomTagSelectOptionItem.Value = value;
+                    if (_isPrimitive)
+                    {
+                        CustomTagSelectOptionItem.Item = (TItem)TypeDescriptor.GetConverter(typeof(TItem)).ConvertFromInvariantString(_searchValue);
+                    }
+                    else
+                    {
+                        _setLabel(CustomTagSelectOptionItem.Item, _searchValue);
+                        _setValue(CustomTagSelectOptionItem.Item, value);
+                    }
                 }
             }
         }
@@ -1481,11 +1656,9 @@ namespace AntDesign
                     }
                     else if (firstActive != null && !firstActive.IsDisabled)
                     {
-                        CustomTagSelectOptionItem = null;
                         await SetValueAsync(firstActive);
                     }
 
-                    ClearSearch();
                     return;
                 }
             }
@@ -1731,6 +1904,11 @@ namespace AntDesign
                 {
                     await CloseAsync();
                 }
+            }
+
+            if ((key == "DELETE" || key == "BACKSPACE") && AllowClear)
+            {
+                await OnInputClearClickAsync(new MouseEventArgs());
             }
         }
 

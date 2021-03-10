@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Data;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using OneOf;
 
 namespace AntDesign
 {
@@ -23,7 +20,21 @@ namespace AntDesign
         /// Number to show in badge
         /// </summary>
         [Parameter]
-        public int? Count { get; set; }
+        public int? Count
+        {
+            get => _count;
+            set
+            {
+                if (_count != value)
+                {
+                    _count = value;
+                    if (_count != null)
+                    {
+                        this._countArray = DigitsFromInteger(Count.Value);
+                    }
+                }
+            }
+        }
 
         [Parameter]
         public RenderFragment CountTemplate { get; set; }
@@ -44,7 +55,22 @@ namespace AntDesign
         /// Max count to show
         /// </summary>
         [Parameter]
-        public int OverflowCount { get; set; } = 99;
+        public int OverflowCount
+        {
+            get => _overflowCount;
+            set
+            {
+                if (_overflowCount != value)
+                {
+                    _overflowCount = value;
+                }
+
+                if (_overflowCount > 0)
+                {
+                    GenerateMaxNumberArray();
+                }
+            }
+        }
 
         /// <summary>
         /// Whether to show badge when count is zero
@@ -106,6 +132,8 @@ namespace AntDesign
         private bool _dotLeave;
 
         private bool _showSup;
+        private int? _count;
+        private int _overflowCount = 99;
 
         /// <summary>
         /// Sets the default CSS classes.
@@ -115,14 +143,14 @@ namespace AntDesign
             var prefixName = "ant-badge";
             ClassMapper.Clear()
                 .Add(prefixName)
-                .If($"{prefixName}-status", () => !string.IsNullOrEmpty(Status) || !string.IsNullOrEmpty(Color))
+                .If($"{prefixName}-status", () => HasStatusOrColor)
                 .If($"{prefixName}-not-a-wrapper", () => ChildContent == null)
                 ;
 
             CountClassMapper.Clear()
                 .Add("ant-scroll-number")
-                .If($"{prefixName}-count", () => !Dot)
-                .If($"{prefixName}-dot", () => Dot)
+                .If($"{prefixName}-count", () => !Dot && !HasStatusOrColor)
+                .If($"{prefixName}-dot", () => Dot || HasStatusOrColor)
                 .If($"{prefixName}-count-sm", () => !string.IsNullOrWhiteSpace(Size) && Size.Equals("small", StringComparison.OrdinalIgnoreCase))
                 .GetIf(() => $"ant-badge-status-{StatusOrPresetColor}", () => StatusOrPresetColor != null)
                 .If($"{prefixName}-multiple-words", () => _countArray.Length >= 2)
@@ -137,8 +165,6 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            if (!string.IsNullOrEmpty(Color) && !string.IsNullOrEmpty(Status))
-                throw new ArgumentException($"You cannot provide a {nameof(Status)} and a {nameof(Color)}, choose one.");
 
             _showSup = ShowSup;
 
@@ -154,66 +180,49 @@ namespace AntDesign
             var delayDot = false;
             await base.SetParametersAsync(parameters);
 
-            if (showSupBefore != ShowSup)
+            if (showSupBefore == ShowSup)
+                return;
+
+            if (ShowSup)
             {
-                if (ShowSup)
+                _dotEnter = true;
+
+                if (!beforeDot && Dot)
                 {
-                    _dotEnter = true;
-
-                    if (!beforeDot && Dot)
-                    {
-                        Dot = true;
-                    }
-
-                    _showSup = true;
-
-                    await Task.Delay(200);
-                    _dotEnter = false;
+                    Dot = true;
                 }
-                else
+
+                _showSup = true;
+
+                await Task.Delay(200);
+                _dotEnter = false;
+            }
+            else
+            {
+                _dotLeave = true;
+
+                if (beforeDot && !Dot)
                 {
-                    _dotLeave = true;
+                    delayDot = true;
+                    Dot = true;
+                }
 
-                    if (beforeDot && !Dot)
-                    {
-                        delayDot = true;
-                        Dot = true;
-                    }
+                await Task.Delay(200);
+                _dotLeave = false;
+                _showSup = false;
 
-                    await Task.Delay(200);
-                    _dotLeave = false;
-                    _showSup = false;
-
-                    if (delayDot)
-                    {
-                        Dot = false;
-                    }
+                if (delayDot)
+                {
+                    Dot = false;
                 }
             }
-        }
 
-        /// <summary>
-        /// Runs every time a parameter is set.
-        /// </summary>
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            SetClassMap();
-
-            if (Count.HasValue)
-            {
-                this._countArray = DigitsFromInteger(Count.Value);
-            }
-
-            if (OverflowCount > 0)
-            {
-                GenerateMaxNumberArray();
-            }
+            StateHasChanged();
         }
 
         private void GenerateMaxNumberArray()
         {
-            this._maxNumberArray = OverflowCount.ToString(CultureInfo.InvariantCulture).ToCharArray();
+            this._maxNumberArray = _overflowCount.ToString(CultureInfo.InvariantCulture).ToCharArray();
         }
 
         private static int[] DigitsFromInteger(int number)
@@ -223,7 +232,7 @@ namespace AntDesign
             var digits = new int[length];
             for (var i = 0; i < length; i++)
             {
-                digits[(length - i) - 1] = n % 10;
+                digits[length - i - 1] = n % 10;
                 n /= 10;
             }
 
@@ -233,7 +242,7 @@ namespace AntDesign
             return digits;
         }
 
-        private readonly string[] _badgePresetColors =
+        private readonly static string[] _badgePresetColors =
         {
             "pink",
             "red",
@@ -250,7 +259,7 @@ namespace AntDesign
             "lime"
         };
 
-        private readonly string[] _badgeStatusTypes =
+        private readonly static string[] _badgeStatusTypes =
         {
             "success",
             "processing",

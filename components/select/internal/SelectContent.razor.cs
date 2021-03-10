@@ -58,34 +58,43 @@ namespace AntDesign.Select.Internal
             if (firstRender && ParentSelect.EnableSearch)
             {
                 DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
-                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventCursorMoveOnArrowUp, ParentSelect._inputRef);
+                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
+                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect.DropDownRef);
             }
             await base.OnAfterRenderAsync(firstRender);
         }
 
         protected override Task OnParametersSetAsync()
         {
-            if (ParentSelect.SelectMode != SelectMode.Default) // ToDo Fix class
-                SetInputWidth();
+            SetInputWidth(); // ToDo Fix class
 
             return base.OnParametersSetAsync();
         }
 
         private void SetInputWidth()
         {
-            if (!string.IsNullOrWhiteSpace(SearchValue))
+            if (ParentSelect.PrefixIcon != null || ParentSelect.SelectMode == SelectMode.Default)
+                _inputWidth = "left: 0px;";
+            if (ParentSelect.SelectMode != SelectMode.Default)
             {
-                _inputWidth = $"width: {4 + SearchValue.Length * 8}px;";
-            }
-            else
-            {
-                if (ParentSelect.HasValue)
+                if (!string.IsNullOrWhiteSpace(SearchValue))
                 {
-                    _inputWidth = "width: 4px;"; //ToDo fix class
+                    _inputWidth = $"{_inputWidth}width: {4 + SearchValue.Length * 8}px;";
                 }
                 else
                 {
-                    _inputWidth = "width: 4px; margin-left: 6.5px;"; //ToDo fix class
+                    if (ParentSelect.HasValue)
+                    {
+                        _inputWidth = $"{_inputWidth}width: 4px;"; //ToDo fix class
+                    }
+                    else if (ParentSelect.PrefixIcon != null)
+                    {
+                        _inputWidth = $"{_inputWidth}width: 4px; margin-left: 0px;"; //ToDo fix class
+                    }
+                    else
+                    {
+                        _inputWidth = $"{_inputWidth}width: 4px; margin-left: 10px;"; //ToDo fix class
+                    }
                 }
             }
         }
@@ -133,7 +142,6 @@ namespace AntDesign.Select.Internal
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
-
         public bool IsDisposed { get; private set; }
 
         protected virtual void Dispose(bool disposing)
@@ -143,7 +151,8 @@ namespace AntDesign.Select.Internal
                 _ = InvokeAsync(async () =>
                 {
                     await Task.Delay(100);
-                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventCursorMoveOnArrowUp, ParentSelect._inputRef);
+                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, ParentSelect._inputRef);
+                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);                    
                 });
             }
             DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);

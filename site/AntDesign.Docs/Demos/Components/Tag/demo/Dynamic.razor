@@ -1,0 +1,77 @@
+﻿<div>
+    <div>
+        @foreach (var item in lstTags)
+        {
+            <Tag @key="item" Mode="closeable" OnClose="()=>onClose(item)">@item</Tag>
+        }
+        @if (inputVisible)
+        {
+            <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="handleInputConfirm" OnPressEnter="handleInputConfirm" AutoFocus/>
+        }
+        else
+        {
+            <Tag Class="site-tag-plus" OnClick="OnChecked">
+                <Icon Type="plus" />New Tag
+            </Tag>
+        }
+    </div>
+</div>
+<style>
+    .site-tag-plus {
+        background: #fff;
+        border-style: dashed;
+    }
+</style>
+@code{
+    private bool inputVisible { get; set; } = false;
+    string _inputValue;
+    Input<string> _inputRef;
+    List<string> lstTags { get; set; } = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        lstTags.Add("Apple");
+        lstTags.Add("Mongo");
+        lstTags.Add("Peach");
+    }
+
+    void ValueChange(ChangeEventArgs value)
+    {
+        lstTags.Add(value.Value.ToString());
+    }
+
+    async Task OnChecked()
+    {
+        inputVisible = !inputVisible;
+    }
+
+    void onClose(string item)
+    {
+        lstTags.Remove(item);
+    }
+
+    void handleInputConfirm()
+    {
+        if (string.IsNullOrEmpty(_inputValue))
+        {
+            cancelInput();
+            return;
+        }
+
+        string res = lstTags.Find(s => s == _inputValue);
+
+        if (string.IsNullOrEmpty(res))
+        {
+            lstTags.Add(_inputValue);
+        }
+
+        cancelInput();
+    }
+
+    void cancelInput()
+    {
+        this._inputValue = "";
+        this.inputVisible = false;
+    }
+
+}
