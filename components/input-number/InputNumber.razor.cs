@@ -4,76 +4,16 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
     public partial class InputNumber<TValue> : AntInputComponentBase<TValue>
     {
-        private string _format;
         protected const string PrefixCls = "ant-input-number";
-
-        [Parameter]
-        public Func<TValue, string> Formatter { get; set; }
-
-        [Parameter]
-        public Func<string, string> Parser { get; set; }
-
-        private TValue _step;
-
-        [Parameter]
-        public TValue Step
-        {
-            get
-            {
-                return _step;
-            }
-            set
-            {
-                _step = value;
-                var stepStr = _step.ToString();
-                if (string.IsNullOrEmpty(_format))
-                {
-                    _format = string.Join('.', stepStr.Split('.').Select(n => new string('0', n.Length)));
-                }
-                else
-                {
-                    if (stepStr.IndexOf('.') > 0)
-                        _decimalPlaces = stepStr.Length - stepStr.IndexOf('.') - 1;
-                    else
-                        _decimalPlaces = 0;
-                }
-            }
-        }
-
-        private int? _decimalPlaces;
-
-        [Parameter]
-        public TValue DefaultValue { get; set; }
-
-        [Parameter]
-        public TValue Max { get; set; }
-
-        [Parameter]
-        public TValue Min { get; set; }
-
-        [Parameter]
-        public bool Disabled { get; set; }
-
-        [Parameter]
-        public EventCallback<TValue> OnChange { get; set; }
-
-        private readonly bool _isNullable;
-
-        private readonly Func<TValue, TValue, TValue> _increaseFunc;
-        private readonly Func<TValue, TValue, TValue> _decreaseFunc;
-        private readonly Func<TValue, TValue, bool> _greaterThanFunc;
-        private readonly Func<TValue, TValue, bool> _equalToFunc;
-        private readonly Func<TValue, string, string> _toStringFunc;
-        private readonly Func<TValue, int, TValue> _roundFunc;
-        private readonly Func<string, TValue, TValue> _parseFunc;
-
         private static readonly Type _surfaceType = typeof(TValue);
 
         private static readonly Type[] _smallIntegerType = new Type[]
@@ -141,8 +81,73 @@ namespace AntDesign
         };
 
         private static Type[] _floatTypes = new Type[] { typeof(float), typeof(double), typeof(decimal) };
+        private readonly bool _isNullable;
+        private readonly Func<TValue, TValue, TValue> _increaseFunc;
+        private readonly Func<TValue, TValue, TValue> _decreaseFunc;
+        private readonly Func<TValue, TValue, bool> _greaterThanFunc;
+        private readonly Func<TValue, TValue, bool> _equalToFunc;
+        private readonly Func<TValue, string, string> _toStringFunc;
+        private readonly Func<TValue, int, TValue> _roundFunc;
+        private readonly Func<string, TValue, TValue> _parseFunc;
+        private readonly int _interval = 200;
+        private string _format;
+        private TValue _step;
+
+        private int? _decimalPlaces;
+
         private string _inputString;
+
         private bool _focused;
+
+        private CancellationTokenSource _increaseTokenSource;
+
+        private CancellationTokenSource _decreaseTokenSource;
+
+        [Parameter]
+        public Func<TValue, string> Formatter { get; set; }
+
+        [Parameter]
+        public Func<string, string> Parser { get; set; }
+
+        [Parameter]
+        public TValue Step
+        {
+            get
+            {
+                return _step;
+            }
+            set
+            {
+                _step = value;
+                var stepStr = _step.ToString();
+                if (string.IsNullOrEmpty(_format))
+                {
+                    _format = string.Join('.', stepStr.Split('.').Select(n => new string('0', n.Length)));
+                }
+                else
+                {
+                    if (stepStr.IndexOf('.') > 0)
+                        _decimalPlaces = stepStr.Length - stepStr.IndexOf('.') - 1;
+                    else
+                        _decimalPlaces = 0;
+                }
+            }
+        }
+
+        [Parameter]
+        public TValue DefaultValue { get; set; }
+
+        [Parameter]
+        public TValue Max { get; set; }
+
+        [Parameter]
+        public TValue Min { get; set; }
+
+        [Parameter]
+        public bool Disabled { get; set; }
+
+        [Parameter]
+        public EventCallback<TValue> OnChange { get; set; }
 
         public InputNumber()
         {
@@ -220,6 +225,7 @@ namespace AntDesign
             SetClass();
             CurrentValue = Value ?? DefaultValue;
         }
+
         /// <summary>
         /// Always return true, if input string is invalid, result = default, if input string is null or empty, result = DefaultValue
         /// </summary>
@@ -265,6 +271,19 @@ namespace AntDesign
             return true;
         }
 
+        protected override string FormatValueAsString(TValue value)
+        {
+            if (Formatter != null)
+            {
+                return Formatter(Value);
+            }
+
+            if (EqualityComparer<TValue>.Default.Equals(value, default) == false)
+                return _toStringFunc(value, _format);
+            else
+                return default(TValue)?.ToString();
+        }
+
         private void SetClass()
         {
             ClassMapper.Clear()
@@ -275,7 +294,9 @@ namespace AntDesign
                 .If($"{PrefixCls}-disabled", () => this.Disabled);
         }
 
-        private async Task Increase()
+        #region Value Increase and Decrease Methods
+
+        private async Task IncreaseDown()
         {
             if (_isNullable && Value == null)
             {
@@ -288,9 +309,30 @@ namespace AntDesign
             await SetFocus();
             var num = _increaseFunc(Value, _step);
             await ChangeValueAsync(num);
+
+            _increaseTokenSource = new CancellationTokenSource();
+            _ = Increase(_increaseTokenSource.Token).ConfigureAwait(false);
         }
 
-        private async Task Decrease()
+        private void IncreaseUp() => _increaseTokenSource.Cancel();
+
+        private async Task Increase(CancellationToken cancellationToken)
+        {
+            await Task.Delay(600, CancellationToken.None);
+            while (true)
+            {
+                if (_equalToFunc(Value, Max) || cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                var num = _increaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+                await Task.Delay(_interval, CancellationToken.None);
+            }
+        }
+
+        private async Task DecreaseDown()
         {
             if (_isNullable && Value == null)
             {
@@ -303,7 +345,58 @@ namespace AntDesign
             await SetFocus();
             var num = _decreaseFunc(Value, _step);
             await ChangeValueAsync(num);
+
+            _decreaseTokenSource = new CancellationTokenSource();
+            _ = Decrease(_decreaseTokenSource.Token).ConfigureAwait(false);
         }
+
+        private void DecreaseUp() => _decreaseTokenSource.Cancel();
+
+        private async Task Decrease(CancellationToken cancellationToken)
+        {
+            await Task.Delay(600, CancellationToken.None);
+            while (true)
+            {
+                if (_equalToFunc(Value, Min) || cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                var num = _decreaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+                await Task.Delay(_interval, CancellationToken.None);
+            }
+        }
+
+        private async Task OnKeyDown(KeyboardEventArgs e)
+        {
+            if (_isNullable && Value == null)
+            {
+                return;
+            }
+            if (e.Key == "ArrowUp")
+            {
+                if (_equalToFunc(Value, Max))
+                {
+                    return;
+                }
+                var num = _increaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+            }
+            else if (e.Key == "ArrowDown")
+            {
+                if (_equalToFunc(Value, Min))
+                {
+                    return;
+                }
+                var num = _decreaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+            }
+        }
+
+        #endregion
 
         private async Task SetFocus()
         {
@@ -376,19 +469,6 @@ namespace AntDesign
             }
 
             return cls;
-        }
-
-        protected override string FormatValueAsString(TValue value)
-        {
-            if (Formatter != null)
-            {
-                return Formatter(Value);
-            }
-
-            if (EqualityComparer<TValue>.Default.Equals(value, default) == false)
-                return _toStringFunc(value, _format);
-            else
-                return default(TValue)?.ToString();
         }
     }
 }
