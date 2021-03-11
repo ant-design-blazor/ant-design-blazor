@@ -226,6 +226,7 @@ namespace AntDesign
             SetClass();
             CurrentValue = Value ?? DefaultValue;
         }
+
         /// <summary>
         /// Always return true, if input string is invalid, result = default, if input string is null or empty, result = DefaultValue
         /// </summary>
@@ -301,7 +302,7 @@ namespace AntDesign
             _ = Increase(_increaseTokenSource.Token).ConfigureAwait(false);
         }
 
-        private void IncreaseUp() => _increaseTokenSource.Cancel();
+        private void IncreaseUp() => _increaseTokenSource?.Cancel();
 
         private async Task Increase(CancellationToken cancellationToken)
         {
@@ -337,7 +338,7 @@ namespace AntDesign
             _ = Decrease(_decreaseTokenSource.Token).ConfigureAwait(false);
         }
 
-        private void DecreaseUp() => _decreaseTokenSource.Cancel();
+        private void DecreaseUp() => _decreaseTokenSource?.Cancel();
 
         private async Task Decrease(CancellationToken cancellationToken)
         {
@@ -383,7 +384,7 @@ namespace AntDesign
             }
         }
 
-        #endregion
+        #endregion Value Increase and Decrease Methods
 
         private async Task SetFocus()
         {
