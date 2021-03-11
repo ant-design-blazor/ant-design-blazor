@@ -54,7 +54,7 @@
 
     void fetchData(PaginationEventArgs args)
     {
-        navigation.NavigateTo($"mock?type={GetType().ToString().Replace($"{Assembly.GetExecutingAssembly().GetName().Name}.", "")}&page={args.PageIndex}&size={args.PageSize}");
+        navigation.NavigateTo($"mock?type={GetType().ToString().Replace($"{Assembly.GetExecutingAssembly().GetName().Name}.", "")}&page={args.Page}&size={args.PageSize}");
     }
 
     public class WeatherForecast

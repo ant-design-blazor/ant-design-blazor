@@ -10,9 +10,8 @@
             <Pagination Class="@_paginationClass"
                         Total="Total"
                         PageSize="PageSize"
-                        PageIndex="PageIndex"
-                        OnPageIndexChange="HandlePageIndexChange"
-                        OnPageSizeChange="HandlePageSizeChange" />
+                        Current="PageIndex"
+                        OnChange="HandlePageChange"/>
         }
 
         <CascadingValue Value="@this" TValue="ITable" IsFixed>
@@ -99,9 +98,8 @@
             <Pagination Class="@_paginationClass"
                         Total="Total"
                         PageSize="PageSize"
-                        PageIndex="PageIndex"
-                        OnPageIndexChange="HandlePageIndexChange"
-                        OnPageSizeChange="HandlePageSizeChange" />
+                        Current="PageIndex"
+                        OnChange="HandlePageChange" />
         }
     </Spin>
 </div>
