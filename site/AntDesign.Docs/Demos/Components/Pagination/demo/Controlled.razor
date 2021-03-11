@@ -1,15 +1,16 @@
 ﻿<div>
-    <Pagination Current="@current" CurrentChanged=onChange Total="50" />
+    <Pagination Current="@current" OnChange="OnChange" Total="50" />
 </div>
 
+Page: @current
 
 @code {
 
     int current = 3;
 
-    void onChange(int page)
+    void OnChange(PaginationEventArgs args)
     {
-        Console.WriteLine(page);
-        current = page;
+        Console.WriteLine(args.Page);
+        current = args.Page;
     }
 }

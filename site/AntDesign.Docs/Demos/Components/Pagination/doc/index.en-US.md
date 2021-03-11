@@ -15,9 +15,6 @@ A long list can be divided into several pages using `Pagination`, and only one p
 
 ## API
 
-```jsx
-<Pagination onChange={onChange} total={50} />
-```
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
@@ -26,17 +23,18 @@ A long list can be divided into several pages using `Pagination`, and only one p
 | DefaultPageSize | Default number of data items per page | number | 10 |  |
 | Disabled | Disable pagination | boolean | - |  |
 | HideOnSinglePage | Whether to hide pager on single page | boolean | false |  |
-| ItemRender | To customize item's innerHTML | (page, type: 'page' \| 'prev' \| 'next', originalElement) => React.ReactNode | - |  |
+| ItemRender | To customize item's innerHTML | RenderFragment(PaginationItemRenderContext) | - |  |
 | PageSize | Number of data items per page | number | - |  |
-| PageSizeOptions | Specify the sizeChanger options | string\[] | \['10', '20', '50', '100'] |  |
+| PageSizeOptions | Specify the sizeChanger options | int\[] | \{10, 20, 50, 100} |  |
 | ShowLessItems | Show less page items | boolean | false |  |
-| ShowQuickJumper | Determine whether you can jump to pages directly | boolean \| `{ goButton: ReactNode }` | false |  |
+| ShowQuickJumper | Determine whether you can jump to pages directly | boolean | false |  |
+| GoButton | Quick jumper confirm button, this is for react version `ShowQuickJumper: { goButton: ReactNode }` | RenderFragment? | null |  |
 | ShowSizeChanger | Determine whether to show `pageSize` select, it will be `true` when `total>=50` | boolean | - |  |
 | ShowTitle | Show page item's title | boolean | true |  |
-| ShowTotal | To display the total number and range | Function(total, range) | - |  |
+| ShowTotal | To display the total number and range | Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext> | - |  |
 | Simple | Whether to use simple mode | boolean | - |  |
-| Size | Specify the size of `Pagination`, can be set to `small`. | 'default' \| 'small'. | "" |  |
-| Responsive | If `size` is not specified, `Pagination` would resize according to the width of the window | boolean | - |  |
+| Size | Specify the size of `Pagination`, can be set to `small`. | "default" \| "small". | "" |  |
+| Responsive | (Not implemented) If `size` is not specified, `Pagination` would resize according to the width of the window | boolean | - |  |
 | Total | Total number of data items | number | 0 |  |
-| OnChange | Called when the page number is changed, and it takes the resulting page number and pageSize as its arguments | Function(page, pageSize) | noop |  |
-| OnShowSizeChange | Called when `pageSize` is changed | Function(current, size) | noop |  |
+| OnChange | Called when the page number is changed, and it takes the resulting page number and pageSize as its arguments | Function(PaginationEventArgs) | null |  |
+| OnShowSizeChange | Called when `pageSize` is changed | Function(PaginationEventArgs) | null |  |
