@@ -13,19 +13,3 @@ title:
 
 Jump to a page directly.
 
-```jsx
-import { Pagination } from 'antd';
-
-function onChange(pageNumber) {
-  console.log('Page: ', pageNumber);
-}
-
-ReactDOM.render(
-  <div>
-    <Pagination showQuickJumper defaultCurrent={2} total={500} onChange={onChange} />
-    <br />
-    <Pagination showQuickJumper defaultCurrent={2} total={500} onChange={onChange} disabled />
-  </div>,
-  mountNode,
-);
-```
