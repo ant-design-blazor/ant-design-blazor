@@ -51,8 +51,11 @@ namespace AntDesign.Internal
             }
             set
             {
-                _disabledChanged = value != _disabled;
-                _disabled = value;
+                if (value != _disabled)
+                {
+                    _disabled = value;
+                    _ = InvokeAsync(() => ToggleDisabled());
+                }
             }
         }
 
@@ -66,9 +69,7 @@ namespace AntDesign.Internal
 
         private string _fileId = Guid.NewGuid().ToString();
 
-        private bool _beforeTheFirstRender;
         private bool _disabled;
-        private bool _disabledChanged;
 
         private UploadInfo _uploadInfo = new UploadInfo();
 
@@ -81,29 +82,24 @@ namespace AntDesign.Internal
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
-            {
-                _beforeTheFirstRender = true;
-            }
-
             if (firstRender && !Disabled)
             {
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.AddFileClickEventListener, _btn);
             }
 
-            if (_beforeTheFirstRender && _disabledChanged)
-            {
-                _disabledChanged = false;
-                if (Disabled)
-                {
-                    await JSRuntime.InvokeVoidAsync(JSInteropConstants.RemoveFileClickEventListener, _btn);
-                }
-                else
-                {
-                    await JSRuntime.InvokeVoidAsync(JSInteropConstants.AddFileClickEventListener, _btn);
-                }
-            }
             await base.OnAfterRenderAsync(firstRender);
+        }
+
+        private async Task ToggleDisabled()
+        {
+            if (Disabled)
+            {
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.RemoveFileClickEventListener, _btn);
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.AddFileClickEventListener, _btn);
+            }
         }
 
         private async Task FileNameChanged(ChangeEventArgs e)

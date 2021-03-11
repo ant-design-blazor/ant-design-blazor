@@ -64,10 +64,10 @@ namespace AntDesign
             if (_table.ScrollX != null && Columns.Any(x => x.Width == null))
             {
                 var zeroWidthCols = Columns.Where(x => x.Width == null).ToArray();
-                var totalWidth = Columns.Where(x => x.Width != null).Sum(x => ((CssSizeLength)x.Width).Value);
+                var totalWidth = string.Join(" + ", Columns.Where(x => x.Width != null).Select(x => (CssSizeLength)x.Width));
                 foreach (var col in Columns.Where(x => x.Width == null))
                 {
-                    col.Width = $"{(((CssSizeLength)_table.ScrollX).Value - totalWidth + 3) / zeroWidthCols.Length}";
+                    col.Width = $"calc(({(CssSizeLength)_table.ScrollX} - ({totalWidth}) + 3px) / {zeroWidthCols.Length})";
                 }
             }
 

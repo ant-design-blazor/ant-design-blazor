@@ -40,6 +40,7 @@
             {
                 var tips = string.Empty;
                 var stateClass = string.Empty;
+                string picture = "";
 
                 switch (file.State)
                 {
@@ -89,13 +90,7 @@
                                                     {
                                                         <Icon Type="paper-clip" />
                                                     }
-                                                </div>
-                                                <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@file.Url">@file.FileName</a>
-                                                <span class="ant-upload-list-item-card-actions">
-                                                    <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)">
-                                                        <Icon Type="delete" />
-                                                    </button>
-                                                </span>
+                                                </div>                                                
                                             }
                                             else
                                             {
@@ -118,8 +113,14 @@
                                                         <Icon Type="picture" />
                                                     </div>
                                                 }
-                                                <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@file.Url">@file.FileName</a>
+                                                picture = "picture";
                                             }
+                                            <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@file.Url">@file.FileName</a>
+                                            <span class="ant-upload-list-item-card-actions @picture">
+                                                <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)" disabled="@Disabled">
+                                                    <Icon Type="delete" />
+                                                </button>
+                                            </span>
                                         </span>
                                     </div>
                                     @if (IsPictureCard)
@@ -128,7 +129,7 @@
                                             <a href="@(OnPreview.HasDelegate ? null : file.Url)" target="_blank" rel="noopener noreferrer" title="@Locale.PreviewFile" @onclick="() => PreviewFile(file)" style="@(file.State==UploadState.Fail?"pointer-events: none; opacity: 0.5;":"")">
                                                 <Icon Type="eye" />
                                             </a>
-                                            <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)">
+                                            <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)" disabled="@Disabled">
                                                 <Icon Type="delete" />
                                             </button>
                                         </span>

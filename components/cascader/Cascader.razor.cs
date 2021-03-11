@@ -45,6 +45,8 @@ namespace AntDesign
         /// </summary>
         [Parameter] public string PlaceHolder { get; set; } = "请选择";
 
+        [Parameter] public string PopupContainerSelector { get; set; } = "body";
+
         /// <summary>
         /// 在选择框中显示搜索框
         /// </summary>
@@ -382,8 +384,6 @@ namespace AntDesign
             {
                 CurrentValueAsString = value;
             }
-
-            OnChange?.Invoke(_selectedNodes, value, _displayText);
         }
 
         private void RefreshDisplayValue()

@@ -1,0 +1,47 @@
+﻿<div>
+    <Divider Orientation="left">Presets</Divider>
+    <div>
+        @foreach (var color in colors)
+        {
+            <div key="@color">
+                <Badge Color="@color" Text="@color" />
+            </div>
+        }
+    </div>
+    <Divider Orientation="left">Custom</Divider>
+    <div>
+        <Badge Color="#f50" Text="#f50" />
+        <br />
+        <Badge Color="#2db7f5" Text="#2db7f5" />
+        <br />
+        <Badge Color="#87d068" Text="#87d068" />
+        <br />
+        <Badge Color="#108ee9" Text="#108ee9" />
+    </div>
+</div>
+
+<style>
+    .ant-tag {
+        margin-bottom: 8px;
+    }
+</style>
+
+@code
+{
+    string[] colors =
+    {
+        "pink",
+        "red",
+        "yellow",
+        "orange",
+        "cyan",
+        "green",
+        "blue",
+        "purple",
+        "geekblue",
+        "magenta",
+        "volcano",
+        "gold",
+        "lime",
+    };
+}

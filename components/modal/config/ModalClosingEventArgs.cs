@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Components.Web;
+﻿using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -21,6 +18,8 @@ namespace AntDesign
         /// <summary>
         /// 获取或设置一个值，该值指示是否应取消事件。
         /// 返回结果: true 如果应取消事件;否则为 false。
+        /// Gets or sets a value indicating whether the event should be cancelled.
+        /// Return result: true if the event should be cancelled; otherwise false.
         /// </summary>
         public bool Cancel { get; set; }
     }

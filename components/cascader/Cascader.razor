@@ -1,56 +1,42 @@
-﻿@namespace AntDesign
+﻿@using AntDesign.Internal
+@namespace AntDesign
 @inherits AntInputComponentBase<string>
 
-<div style="@Style" class="@ClassMapper.Class" @ref="Ref">
-    <span class="ant-cascader-picker @_pickerSizeClass" tabindex="1" @onclick="InputOnToggle" @onblur="CascaderOnBlur" @onmouseover="InputOnMouseOver" @onmouseout="InputOnMouseOut">
-        <span class="ant-cascader-picker-label"></span>
-        <input autocomplete="off" tabindex="-1" placeholder="@PlaceHolder" class="ant-input ant-cascader-input @_inputSizeClass" readonly="@Readonly" type="text" value="@_displayText">
-        @if (string.IsNullOrWhiteSpace(Value) || !ShowClearIcon)
-        {
-            <Icon Type="down" Class="@($"ant-cascader-picker-arrow {(ToggleState ? "ant-cascader-picker-arrow-expand" : string.Empty)}")" />
-        }
-        else
-        {
-            <Icon Type="close-circle" Class="ant-cascader-picker-clear" OnClick="ClearSelected" StopPropagation />
-        }
-    </span>
-
-    @if (ToggleState && _nodelist != null && _nodelist.Any())
-    {
-        <div class="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" tabindex="-1" @onblur="CascaderOnBlur">
-            <div @onmouseover="NodesOnMouseOver" @onmouseout="NodesOnMouseOut">
-                <ul class="ant-cascader-menu">
-                    @foreach (CascaderNode nd in _nodelist)
+<CascadingValue Value=@("ant-cascader-menus") Name="PrefixCls">
+    <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
+        <OverlayTrigger Visible="@(ToggleState && _nodelist != null && _nodelist.Any())"
+                        ComplexAutoCloseAndVisible="true"
+                        Trigger="new[] { TriggerType.Click }"
+                        PopupContainerSelector="@PopupContainerSelector"
+                        OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
+                        OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up">
+            <Unbound>
+                <span @ref="context.Current" class="ant-cascader-picker @_pickerSizeClass" tabindex="1" @onclick="InputOnToggle" @onblur="CascaderOnBlur" @onmouseover="InputOnMouseOver" @onmouseout="InputOnMouseOut">
+                    <span class="ant-cascader-picker-label"></span>
+                    <input autocomplete="off" tabindex="-1" placeholder="@PlaceHolder" class="ant-input ant-cascader-input @_inputSizeClass" readonly="@Readonly" type="text" value="@_displayText">
+                    @if (string.IsNullOrWhiteSpace(Value) || !ShowClearIcon)
                     {
-                        bool isActive = _renderNodes.Where(n => n == nd).Any();
-                        string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
-
-                        <li class="ant-cascader-menu-item ant-cascader-menu-item-expand @activeClass @(nd.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty)" title="@nd.Label" role="menuitem"
-                            @onclick="@(e => NodeOnClick(nd))" @onmouseover="@(e => NodeOnMouseOver(nd))">
-                            @nd.Label
-                            @if (nd.HasChildren)
-                            {
-                                <span class="ant-cascader-menu-item-expand-icon">
-                                    <Icon Type="right" />
-                                </span>
-                            }
-                        </li>
+                        <Icon Type="down" Class="@($"ant-cascader-picker-arrow {(ToggleState ? "ant-cascader-picker-arrow-expand" : string.Empty)}")" />
                     }
-                </ul>
-                @foreach (CascaderNode node in _renderNodes)
-                {
-                    if (node.HasChildren)
+                    else
                     {
+                        <Icon Type="close-circle" Class="ant-cascader-picker-clear" OnClick="ClearSelected" StopPropagation />
+                    }
+                </span>
+            </Unbound>
+            <Overlay>
+                <div class="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" tabindex="-1" @onblur="CascaderOnBlur">
+                    <div @onmouseover="NodesOnMouseOver" @onmouseout="NodesOnMouseOut">
                         <ul class="ant-cascader-menu">
-                            @foreach (CascaderNode m in node.Children)
+                            @foreach (CascaderNode nd in _nodelist)
                             {
-                                bool isActive = _renderNodes.Where(n => n == m).Any();
+                                bool isActive = _renderNodes.Where(n => n == nd).Any();
                                 string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
 
-                                <li class="ant-cascader-menu-item ant-cascader-menu-item-expand @activeClass @(m.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty)" title="@m.Label" role="menuitem"
-                                    @onclick="@(e => NodeOnClick(m))" @onmouseover="@(e => NodeOnMouseOver(m))">
-                                    @m.Label
-                                    @if (m.HasChildren)
+                                <li class="ant-cascader-menu-item ant-cascader-menu-item-expand @activeClass @(nd.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty)" title="@nd.Label" role="menuitem"
+                                    @onclick="@(e => NodeOnClick(nd))" @onmouseover="@(e => NodeOnMouseOver(nd))">
+                                    @nd.Label
+                                    @if (nd.HasChildren)
                                     {
                                         <span class="ant-cascader-menu-item-expand-icon">
                                             <Icon Type="right" />
@@ -59,9 +45,33 @@
                                 </li>
                             }
                         </ul>
-                    }
-                }
-            </div>
-        </div>
-    }
-</div>
+                        @foreach (CascaderNode node in _renderNodes)
+                        {
+                            if (node.HasChildren)
+                            {
+                                <ul class="ant-cascader-menu">
+                                    @foreach (CascaderNode m in node.Children)
+                                    {
+                                        bool isActive = _renderNodes.Where(n => n == m).Any();
+                                        string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
+
+                                        <li class="ant-cascader-menu-item ant-cascader-menu-item-expand @activeClass @(m.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty)" title="@m.Label" role="menuitem"
+                                            @onclick="@(e => NodeOnClick(m))" @onmouseover="@(e => NodeOnMouseOver(m))">
+                                            @m.Label
+                                            @if (m.HasChildren)
+                                            {
+                                                <span class="ant-cascader-menu-item-expand-icon">
+                                                    <Icon Type="right" />
+                                                </span>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        }
+                    </div>
+                </div>
+            </Overlay>
+        </OverlayTrigger>
+    </div>
+</CascadingValue>

@@ -49,6 +49,7 @@ namespace AntDesign
                 }
             }
         }
+
         [Parameter]
         public EventCallback<int> PageIndexChanged { get; set; }
 
@@ -65,6 +66,7 @@ namespace AntDesign
                 }
             }
         }
+
         [Parameter]
         public EventCallback<int> PageSizeChanged { get; set; }
 
@@ -74,8 +76,8 @@ namespace AntDesign
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
-        private int _total = 0;
-        private int _dataSourceCount = 0;
+        private int _total;
+        private int _dataSourceCount;
         private string _paginationPosition = "bottomRight";
         private string _paginationClass;
         private int _pageIndex = 1;
@@ -88,10 +90,17 @@ namespace AntDesign
 
         private async Task HandlePageIndexChange(PaginationEventArgs args)
         {
-            PageIndex = args.PageIndex;
+            _pageIndex = args.PageIndex;
 
-            await PageIndexChanged.InvokeAsync(args.PageIndex);
-            await OnPageIndexChange.InvokeAsync(args);
+            if (PageIndexChanged.HasDelegate)
+            {
+                await PageIndexChanged.InvokeAsync(args.PageIndex);
+            }
+
+            if (OnPageIndexChange.HasDelegate)
+            {
+                await OnPageIndexChange.InvokeAsync(args);
+            }
 
             ReloadAndInvokeChange();
 
@@ -100,12 +109,19 @@ namespace AntDesign
 
         private void HandlePageSizeChange(PaginationEventArgs args)
         {
-            PageSize = args.PageSize;
+            _pageSize = args.PageSize;
 
             ReloadAndInvokeChange();
 
-            PageSizeChanged.InvokeAsync(args.PageSize);
-            OnPageSizeChange.InvokeAsync(args);
+            if (PageSizeChanged.HasDelegate)
+            {
+                PageSizeChanged.InvokeAsync(args.PageSize);
+            }
+
+            if (OnPageSizeChange.HasDelegate)
+            {
+                OnPageSizeChange.InvokeAsync(args);
+            }
         }
     }
 }

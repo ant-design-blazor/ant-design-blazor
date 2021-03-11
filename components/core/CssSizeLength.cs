@@ -22,27 +22,39 @@ namespace AntDesign
         Vmin,
         Vmax,
         Fr,
+        Calc,
     }
 
     public readonly struct CssSizeLength : IEquatable<CssSizeLength>
     {
-        public int Value => _value;
+        public int Value => _value ?? 0;
+
+        public string StringValue => _stringValue;
 
         internal CssSizeLengthUnit Unit => _unit;
 
-        private readonly int _value;
+        private readonly int? _value;
+        private readonly string _stringValue;
 
         private readonly CssSizeLengthUnit _unit;
 
-        public override string ToString() => _value.ToString(CultureInfo.InvariantCulture) + _unit switch
+        public override string ToString()
         {
-            CssSizeLengthUnit.Percent => "%",
-            _ => Enum.GetName(typeof(CssSizeLengthUnit), _unit).ToLowerInvariant()
-        };
+            var intValue = _value?.ToString(CultureInfo.InvariantCulture);
+            var unit = _unit switch
+            {
+                CssSizeLengthUnit.Percent => "%",
+                CssSizeLengthUnit.Calc => "",
+                _ => Enum.GetName(typeof(CssSizeLengthUnit), _unit).ToLowerInvariant()
+            };
+
+            return $"{intValue ?? StringValue}{unit}";
+        }
 
         private CssSizeLength(int value, CssSizeLengthUnit unit)
         {
             _value = value;
+            _stringValue = null;
             _unit = unit;
         }
 
@@ -53,6 +65,15 @@ namespace AntDesign
         public CssSizeLength(string value)
         {
             value = value?.ToLowerInvariant() ?? throw new ArgumentNullException(nameof(value));
+            _stringValue = value;
+
+            if (value.StartsWith("calc", StringComparison.OrdinalIgnoreCase))
+            {
+                _stringValue = value;
+                _value = null;
+                _unit = CssSizeLengthUnit.Calc;
+                return;
+            }
 
             var index = value
                 .Select((c, i) => ((char c, int i)?)(c, i))
@@ -70,6 +91,7 @@ namespace AntDesign
             if (index == value.Length)
             {
                 _unit = CssSizeLengthUnit.Px;
+                _stringValue = null;
                 return;
             }
 

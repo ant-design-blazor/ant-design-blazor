@@ -34,7 +34,7 @@ namespace AntDesign.JsInterop
             AddEventListener<JsonElement>(dom, eventName, callback, exclusive, preventDefault);
         }
 
-        public void AddEventListener<T>(object dom, string eventName, Action<T> callback, bool exclusive = true, bool preventDefault = false)
+        public virtual void AddEventListener<T>(object dom, string eventName, Action<T> callback, bool exclusive = true, bool preventDefault = false)
         {
             if (exclusive)
             {

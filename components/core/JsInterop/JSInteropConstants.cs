@@ -86,9 +86,22 @@ namespace AntDesign
         public static string ElementScrollIntoView => $"{FUNC_PREFIX}elementScrollIntoView";
 
         public static string BindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}bindTableHeaderAndBodyScroll";
+
         public static string UnbindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}unbindTableHeaderAndBodyScroll";
-        public static string AddPreventCursorMoveOnArrowUp => $"{FUNC_PREFIX}addPreventCursorMoveOnArrowUp";
-        public static string RemovePreventCursorMoveOnArrowUp => $"{FUNC_PREFIX}removePreventCursorMoveOnArrowUp";
+
+        public static string AddPreventKeys => $"{FUNC_PREFIX}addPreventKeys";
+
+        public static string RemovePreventKeys => $"{FUNC_PREFIX}removePreventKeys";
+
+        public static string AddPreventEnterOnOverlayVisible => $"{FUNC_PREFIX}addPreventEnterOnOverlayVisible";
+
+        public static string RemovePreventEnterOnOverlayVisible => $"{FUNC_PREFIX}removePreventEnterOnOverlayVisible";
+
+        public static string GetStyle => $"{FUNC_PREFIX}getStyle";
+
+        public static string RegisterResizeTextArea => $"{FUNC_PREFIX}registerResizeTextArea";
+
+        public static string DisposeResizeTextArea => $"{FUNC_PREFIX}disposeResizeTextArea";
 
         #region Draggable Modal
 

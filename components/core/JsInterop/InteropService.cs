@@ -18,7 +18,7 @@ namespace AntDesign.JsInterop
             await this.JsInvokeAsync(JSInteropConstants.Copy, text);
         }
 
-        private async Task<T> JsInvokeAsync<T>(string code, params object[] args)
+        public async Task<T> JsInvokeAsync<T>(string code, params object[] args)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace AntDesign.JsInterop
             }
         }
 
-        private async Task JsInvokeAsync(string code, params object[] args)
+        public async Task JsInvokeAsync(string code, params object[] args)
         {
             try
             {

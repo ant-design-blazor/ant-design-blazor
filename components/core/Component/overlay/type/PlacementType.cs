@@ -28,5 +28,54 @@
             SlideName = slideName;
             TranformOrigin = transformOrigin;
         }
+
+        internal PlacementType GetReverseType()
+        {
+            if (this == TopLeft) return BottomLeft;
+            if (this == TopCenter) return BottomCenter;
+            if (this == Top) return Bottom;
+            if (this == TopRight) return BottomRight;
+
+            if (this == Left) return Right;
+            if (this == LeftTop) return RightTop;
+            if (this == LeftBottom) return RightBottom;
+
+            if (this == Right) return Left;
+            if (this == RightTop) return LeftTop;
+            if (this == RightBottom) return LeftBottom;
+
+            if (this == BottomLeft) return TopLeft;
+            if (this == BottomCenter) return TopCenter;
+            if (this == Bottom) return Top;
+            if (this == BottomRight) return TopRight;
+
+            return this;
+        }
+
+        internal PlacementDirection GetDirection()
+        {
+            if (this.IsIn(TopLeft, TopCenter, Top, TopRight))
+            {
+                return PlacementDirection.Top;
+            }
+
+            if (this.IsIn(Left, LeftTop, LeftBottom))
+            {
+                return PlacementDirection.Left;
+            }
+
+            if (this.IsIn(Right, RightTop, RightBottom))
+            {
+                return PlacementDirection.Right;
+            }
+
+            if (this.IsIn(BottomLeft, BottomCenter, Bottom, BottomRight))
+            {
+                return PlacementDirection.Bottom;
+            }
+
+            return PlacementDirection.Bottom;
+        }
+
     }
 }
