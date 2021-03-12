@@ -60,10 +60,12 @@ namespace AntDesign
 
         private void SetClassMap()
         {
-            ClassMapper.Clear().Add("ant-page-header")
+            ClassMapper
+                .Add("ant-page-header")
                 .If("has-footer", () => PageHeaderFooter != null)
                 .If("ant-page-header-ghost", () => this.Ghost)
-                .If("has-breadcrumb", () => PageHeaderBreadcrumb != null);
+                .If("has-breadcrumb", () => PageHeaderBreadcrumb != null)
+                .If("ant-page-header-rtl", () => RTL);
         }
 
         protected override void OnInitialized()

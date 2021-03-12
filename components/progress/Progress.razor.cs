@@ -114,7 +114,7 @@ namespace AntDesign
         [Parameter]
         public ProgressGapPosition GapPosition { get; set; } = ProgressGapPosition.Bottom;
 
-        #endregion
+        #endregion Parameters
 
         public async override Task SetParametersAsync(ParameterView parameters)
         {
@@ -158,12 +158,13 @@ namespace AntDesign
         {
             ClassMapper.Clear()
                 .Add(PrefixCls)
-                .Add($"{PrefixCls}-{Size.Name}")
-                .If($"{PrefixCls}-{Type.Name}", () => Type != ProgressType.Dashboard)
-                .If($"{PrefixCls}-{ProgressType.Circle.Name}", () => Type == ProgressType.Dashboard)
-                .If($"{PrefixCls}-status-{Status.Name}", () => Status != null)
-                .If($"{PrefixCls}-show-info", () => ShowInfo)
-                .If($"{PrefixCls}-steps", () => Steps > 0);
+                .Get(() => $"{PrefixCls}-{Size.Name}")
+                .GetIf(() => $"{PrefixCls}-{Type.Name}", () => Type != ProgressType.Dashboard)
+                .GetIf(() => $"{PrefixCls}-{ProgressType.Circle.Name}", () => Type == ProgressType.Dashboard)
+                .GetIf(() => $"{PrefixCls}-status-{Status.Name}", () => Status != null)
+                .GetIf(() => $"{PrefixCls}-show-info", () => ShowInfo)
+                .GetIf(() => $"{PrefixCls}-steps", () => Steps > 0)
+                .GetIf(() => $"{PrefixCls}-rtl", () => RTL);
         }
 
         private void SetStyle()

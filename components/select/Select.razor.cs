@@ -17,7 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AntDesign
 {
-    public partial class Select<TItemValue, TItem>: AntInputComponentBase<TItemValue>
+    public partial class Select<TItemValue, TItem> : AntInputComponentBase<TItemValue>
     {
         #region Parameters
 
@@ -25,18 +25,21 @@ namespace AntDesign
         [Parameter] public bool AutoClearSearchValue { get; set; } = true;
         [Parameter] public bool Bordered { get; set; } = true;
         [Parameter] public Action<string> OnCreateCustomTag { get; set; }
+
         [Parameter]
         public bool DefaultActiveFirstOption
         {
             get { return _defaultActiveFirstOption; }
-            set { 
-                _defaultActiveFirstOption = value; 
+            set
+            {
+                _defaultActiveFirstOption = value;
                 if (!_defaultActiveFirstOption)
                 {
                     _defaultActiveFirstOptionApplied = true;
                 }
             }
         }
+
         [Parameter] public bool Disabled { get; set; }
 
         [Parameter]
@@ -140,7 +143,8 @@ namespace AntDesign
         /// <summary>
         /// Converts custom tag (a string) to TItemValue type.
         /// </summary>
-        [Parameter] public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
+        [Parameter]
+        public Func<string, TItemValue> CustomTagLabelToValue { get; set; } =
             (label) => (TItemValue)TypeDescriptor.GetConverter(typeof(TItemValue)).ConvertFromInvariantString(label);
 
         [Parameter]
@@ -374,7 +378,7 @@ namespace AntDesign
         internal ElementReference _inputRef;
         protected OverlayTrigger _dropDown;
         protected SelectContent<TItemValue, TItem> _selectContent;
-        bool _isToken;
+        private bool _isToken;
         private SelectOptionItem<TItemValue, TItem> _activeOption;
         private bool _defaultActiveFirstOption;
 
@@ -384,13 +388,14 @@ namespace AntDesign
         internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
 
         /// <summary>
-        /// Currently active (highlighted) option. 
+        /// Currently active (highlighted) option.
         /// It does not have to be equal to selected option.
         /// </summary>
         internal SelectOptionItem<TItemValue, TItem> ActiveOption
         {
             get { return _activeOption; }
-            set {
+            set
+            {
                 if (_activeOption != value)
                 {
                     if (_activeOption != null && _activeOption.IsActive)
@@ -443,7 +448,6 @@ namespace AntDesign
                 ;
         }
 
-
         protected override void OnInitialized()
         {
             SetClassMap();
@@ -455,7 +459,6 @@ namespace AntDesign
                 _isPrimitive = IsSimpleType(typeof(TItem));
 
             _isInitialized = true;
-
 
             base.OnInitialized();
         }
@@ -670,7 +673,8 @@ namespace AntDesign
                 .If($"{ClassPrefix}-show-search", () => EnableSearch || SelectMode == SelectMode.Tags)
                 .If($"{ClassPrefix}-bordered", () => Bordered)
                 .If($"{ClassPrefix}-loading", () => Loading)
-                .If($"{ClassPrefix}-disabled", () => Disabled);
+                .If($"{ClassPrefix}-disabled", () => Disabled)
+                .If($"{ClassPrefix}-rtl", () => RTL);
         }
 
         /// <summary>
@@ -921,7 +925,7 @@ namespace AntDesign
                     if (SelectedOptionItems.Count == 0)
                         SelectedOptionItems.Add(result);
                     else
-                        SelectedOptionItems[0] =result;
+                        SelectedOptionItems[0] = result;
                     await ValueChanged.InvokeAsync(result.Value);
                 }
                 else
@@ -1160,7 +1164,6 @@ namespace AntDesign
                 Values = newSelectedValues;
                 StateHasChanged();
             }
-
         }
 
         /// <summary>
@@ -1183,7 +1186,7 @@ namespace AntDesign
 
             if (EqualityComparer<TItemValue>.Default.Equals(value, default))
             {
-                _ = InvokeAsync(() => OnInputClearClickAsync(new())); 
+                _ = InvokeAsync(() => OnInputClearClickAsync(new()));
                 return;
             }
 
@@ -1193,9 +1196,9 @@ namespace AntDesign
             {
                 if (!AllowClear)
                     _ = TrySetDefaultValueAsync();
-                else 
+                else
                 {
-                    //Reset value if not found - needed if value changed 
+                    //Reset value if not found - needed if value changed
                     //outside of the component
                     _ = InvokeAsync(() => OnInputClearClickAsync(new()));
                 }
@@ -1220,7 +1223,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// When bind-Value is changed outside of the component, then component 
+        /// When bind-Value is changed outside of the component, then component
         /// selected items have to be reselected according to new value passed.
         /// </summary>
         /// <param name="optionItem">The option item that has been selected.</param>
@@ -1377,7 +1380,7 @@ namespace AntDesign
             {
                 FilterOptionItems(_searchValue);
             }
-            else 
+            else
             {
                 SelectOptionItems.Where(x => x.IsHidden).ForEach(i => i.IsHidden = false);
                 if (SelectMode == SelectMode.Tags && CustomTagSelectOptionItem is not null)
@@ -1492,7 +1495,7 @@ namespace AntDesign
 
             foreach (var item in selectOptionItems)
             {
-                if (!(CustomTagSelectOptionItem != null && item.Equals(CustomTagSelectOptionItem))) //ignore if analyzing CustomTagSelectOptionItem 
+                if (!(CustomTagSelectOptionItem != null && item.Equals(CustomTagSelectOptionItem))) //ignore if analyzing CustomTagSelectOptionItem
                 {
                     if (item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -1576,7 +1579,6 @@ namespace AntDesign
                 }
                 else
                     firstActive = ActiveOption; // SelectOptionItems.FirstOrDefault(x => x.IsActive);
-
 
                 if (AllOptionsHidden() || firstActive is null)
                 {
@@ -2011,7 +2013,6 @@ namespace AntDesign
                             item.IsHidden = false;
                     }
                 }
-
             }
 
             _searchValue = string.Empty;
@@ -2102,6 +2103,7 @@ namespace AntDesign
         {
             await _dropDown.OnClickDiv(args);
         }
+
         #endregion Events
     }
 }

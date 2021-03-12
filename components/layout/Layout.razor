@@ -21,7 +21,8 @@
         base.OnInitialized();
         ClassMapper
             .Add("ant-layout")
-            .If("ant-layout-has-sider", () => _hasSider);
+            .If("ant-layout-has-sider", () => _hasSider)
+            .If("ant-layout-rtl", () => RTL);
     }
 
     internal void HasSider()

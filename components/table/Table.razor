@@ -3,7 +3,7 @@
 @using AntDesign.TableModels
 @typeparam TItem
 
-<div class="ant-table-wrapper" @ref="Ref">
+<div class="@_wrapperClassMapper.Class" @ref="Ref">
     <Spin Spinning="Loading">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {

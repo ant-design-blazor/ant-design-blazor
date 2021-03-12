@@ -8,7 +8,6 @@ namespace AntDesign
 {
     public partial class Rate : AntDomComponentBase
     {
-
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         /// <summary>
@@ -83,6 +82,7 @@ namespace AntDesign
         /// 是否允许半选
         /// </summary>
         private bool _hasHalf = false;
+
         /// <summary>
         /// 鼠标悬停时从最左到光标位置的星星数。
         /// </summary>
@@ -102,13 +102,14 @@ namespace AntDesign
         {
             this._isFocused = false;
             OnBlur.InvokeAsync(e);
-
         }
+
         private void Focus(FocusEventArgs e)
         {
             this._isFocused = true;
             OnFocus.InvokeAsync(e);
         }
+
         private void KeyDown(KeyboardEventArgs e)
         {
             decimal oldVal = this.Value;
@@ -127,6 +128,7 @@ namespace AntDesign
                 this._hoverValue = (int)Math.Ceiling(this.Value);
             }
         }
+
         private void MouseLeave()
         {
             this._hasHalf = !(this.Value == (int)this.Value);
@@ -165,7 +167,6 @@ namespace AntDesign
             }
         }
 
-
         protected override void OnInitialized()
         {
             if (DefaultValue > 0)
@@ -177,6 +178,7 @@ namespace AntDesign
             RateMetaDatas = Enumerable.Range(1, Count).Select(c => new RateMetaData() { SerialNumber = c - 1, ToolTipText = this.Tooltips?[c - 1] });
             base.OnInitialized();
         }
+
         protected override void OnParametersSet()
         {
             if (RateMetaDatas == null)
@@ -191,7 +193,8 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(clsPrefix)
-            .If("ant-rate-disabled", () => Disabled);
+                .If($"{clsPrefix}-disabled", () => Disabled)
+                .If($"{clsPrefix}-rtl", () => RTL);
         }
     }
 
@@ -200,7 +203,6 @@ namespace AntDesign
         public int SerialNumber { get; set; }
 
         public string ToolTipText { get; set; }
-
     }
 
     public class RateItemRenderContext
