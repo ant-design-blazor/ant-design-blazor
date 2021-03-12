@@ -1,4 +1,5 @@
 ﻿#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -195,16 +196,21 @@ namespace AntDesign
                .Add(PrefixCls)
                .If($"{PrefixCls}-simple", () => Simple)
                .If($"{PrefixCls}-disabled", () => Disabled)
-               .If("mini", () => !Simple && Size == "small");
+               .If("mini", () => !Simple && Size == "small")
+               .If($"{PrefixCls}-rtl", () => RTL);
+
             _prevClass
                .Add($"{PrefixCls}-prev")
                .If($"{PrefixCls}-disabled", () => !HasPrev());
+
             _nextClass
                .Add($"{PrefixCls}-next")
                .If($"{PrefixCls}-disabled", () => !HasNext());
+
             _jumpPrevClass
                .Add($"{PrefixCls}-jump-prev")
                .If($"{PrefixCls}-jump-prev-custom-icon", () => JumpPrevIcon != null);
+
             _jumpNextClass
                .Add($"{PrefixCls}-jump-next")
                .If($"{PrefixCls}-jump-next-custom-icon", () => JumpNextIcon != null);

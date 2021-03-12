@@ -279,7 +279,8 @@ namespace AntDesign
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-focused", () => _focused)
-                .If($"{PrefixCls}-disabled", () => this.Disabled);
+                .If($"{PrefixCls}-disabled", () => this.Disabled)
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
 
         #region Value Increase and Decrease Methods

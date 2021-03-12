@@ -86,6 +86,7 @@ namespace AntDesign
                 .If($"{prefix}-{Color}", () => _presetColor)
                 .If($"{prefix}-checkable", () => Mode == "checkable")
                 .If($"{prefix}-checkable-checked", () => Checked)
+                .If($"{prefix}-rtl", () => RTL)
                 ;
         }
 

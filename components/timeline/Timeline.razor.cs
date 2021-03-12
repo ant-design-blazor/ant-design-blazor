@@ -129,7 +129,8 @@ namespace AntDesign
                 .If($"{prefix}-right", () => Mode == "right")
                 .If($"{prefix}-alternate", () => Mode == "alternate")
                 .If($"{prefix}-pending", () => Pending.Value != null)
-                .If($"{prefix}-reverse", () => Reverse);
+                .If($"{prefix}-reverse", () => Reverse)
+                .If($"{prefix}-rtl", () => RTL);
         }
 
         internal void RemoveItem(TimelineItem item)

@@ -145,6 +145,7 @@ namespace AntDesign
                 .Add(prefixName)
                 .If($"{prefixName}-status", () => HasStatusOrColor)
                 .If($"{prefixName}-not-a-wrapper", () => ChildContent == null)
+                .If($"{prefixName}-rtl", () => RTL)
                 ;
 
             CountClassMapper.Clear()

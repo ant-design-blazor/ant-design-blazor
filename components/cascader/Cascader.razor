@@ -11,9 +11,9 @@
                         OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
                         OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up">
             <Unbound>
-                <span @ref="context.Current" class="ant-cascader-picker @_pickerSizeClass" tabindex="1" @onclick="InputOnToggle" @onblur="CascaderOnBlur" @onmouseover="InputOnMouseOver" @onmouseout="InputOnMouseOut">
+                <span @ref="context.Current" class="@_pickerClassMapper.Class" tabindex="1" @onclick="InputOnToggle" @onblur="CascaderOnBlur" @onmouseover="InputOnMouseOver" @onmouseout="InputOnMouseOut">
                     <span class="ant-cascader-picker-label"></span>
-                    <input autocomplete="off" tabindex="-1" placeholder="@PlaceHolder" class="ant-input ant-cascader-input @_inputSizeClass" readonly="@Readonly" type="text" value="@_displayText">
+                    <input autocomplete="off" tabindex="-1" placeholder="@PlaceHolder" class="@_inputClassMapper.Class" readonly="@Readonly" type="text" value="@_displayText">
                     @if (string.IsNullOrWhiteSpace(Value) || !ShowClearIcon)
                     {
                         <Icon Type="down" Class="@($"ant-cascader-picker-arrow {(ToggleState ? "ant-cascader-picker-arrow-expand" : string.Empty)}")" />
@@ -27,7 +27,7 @@
             <Overlay>
                 <div class="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" tabindex="-1" @onblur="CascaderOnBlur">
                     <div @onmouseover="NodesOnMouseOver" @onmouseout="NodesOnMouseOut">
-                        <ul class="ant-cascader-menu">
+                        <ul class="@_menuClassMapper.Class">
                             @foreach (CascaderNode nd in _nodelist)
                             {
                                 bool isActive = _renderNodes.Where(n => n == nd).Any();

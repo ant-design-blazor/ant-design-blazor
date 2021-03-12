@@ -15,7 +15,12 @@ namespace AntDesign.Docs.Shared
 
         [Inject] private NavigationManager NavigationManager { get; set; }
 
+        [CascadingParameter] public ConfigProvider ConfigProvider { get; set; }
+
         string CurrentLanguage => LanguageService.CurrentCulture.Name;
+
+        string Direction => ConfigProvider?.Direction;
+
         private DemoMenuItem[] _menuItems = { };
 
         protected override async Task OnInitializedAsync()
