@@ -173,13 +173,13 @@ namespace AntDesign
                 _bgStyle = GetLineBGStyle();
                 if (SuccessPercent != 0)
                 {
-                    _bgSuccessStyle = $"width: {SuccessPercent}%; height: {StrokeWidth}px;";
+                    _bgSuccessStyle = $" width: {SuccessPercent}%; height: {StrokeWidth}px;";
                 }
             }
             else if (Type == ProgressType.Circle)
             {
                 _bgStyle = Size == ProgressSize.Default ? $"width: {Width}px; height: {Width}px; font-size: 24px;" : $"width: 80px; height: 80px; font-size: 18px;";
-                _circleTrailStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash}px, {CircleDash}px; stroke-dashoffset: 0px;";
+                _circleTrailStyle = $"stroke:{TrailColor}; transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash}px, {CircleDash}px; stroke-dashoffset: 0px;";
                 if (SuccessPercent == 0)
                 {
                     _circlePathStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash * Percent / 100}px, {CircleDash}px; stroke-dashoffset: 0px;";
@@ -195,7 +195,7 @@ namespace AntDesign
                 _bgStyle = Size == ProgressSize.Default ? $"width: 120px; height: 120px; font-size: 24px;" : $"width: 80px; height: 80px; font-size: 18px;";
                 double circumference = CircleDash - GapDegree;
                 double dashoffset = -GapDegree / 2.0;
-                _circleTrailStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;";
+                _circleTrailStyle = $"stroke:{TrailColor}; transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;";
                 if (SuccessPercent == 0)
                 {
                     _circlePathStyle = $"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * Percent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;";
