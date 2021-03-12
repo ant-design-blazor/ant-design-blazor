@@ -145,7 +145,8 @@ namespace AntDesign
         {
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
-                .Add($"{_prefixCls}-{Layout.ToLower()}")
+                .Get(() => $"{_prefixCls}-{Layout.ToLowerInvariant()}")
+                .If($"{_prefixCls}-rtl", () => RTL)
                ;
         }
 

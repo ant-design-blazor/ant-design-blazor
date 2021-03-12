@@ -62,6 +62,7 @@ namespace AntDesign
 
             base.OnInitialized();
         }
+
         protected void SetClassMap()
         {
             // large => lg
@@ -84,6 +85,7 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add(PrefixName)
                 .If($"{PrefixName}-split", () => Split)
+                .If($"{PrefixName}-rtl", () => RTL)
                 .If($"{PrefixName}-bordered", () => Bordered)
                 .GetIf(() => $"{PrefixName}-{sizeCls}", () => !string.IsNullOrEmpty(sizeCls))
                 .If($"{PrefixName}-vertical", () => ItemLayout == ListItemLayout.Vertical)

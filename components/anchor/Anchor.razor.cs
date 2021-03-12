@@ -14,7 +14,7 @@ namespace AntDesign
     public partial class Anchor : AntDomComponentBase, IAnchor
     {
         private string _ballClass = "ant-anchor-ink-ball";
-        private string _ballStyle = string.Empty;        
+        private string _ballStyle = string.Empty;
         private ElementReference _ink;
         private DomRect _selfDom;
         private AnchorLink _activeLink;
@@ -111,6 +111,15 @@ namespace AntDesign
         public EventCallback<string> OnChange { get; set; }
 
         #endregion Parameters
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            string prefixCls = "ant-anchor";
+            ClassMapper.Add(prefixCls)
+                .If($"{prefixCls}-rtl", () => RTL);
+        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -226,7 +235,7 @@ namespace AntDesign
                 string activeKey = _linkTops.Where(p => (int)p.Value <= 0).OrderBy(p => p.Value).LastOrDefault().Key;
                 if (!string.IsNullOrEmpty(activeKey))
                 {
-                    _activeLink = _flatLinks.Single(l => l.Href == activeKey);
+                    _activeLink = _flatLinks.FirstOrDefault(l => l.Href == activeKey);
                     await ActivateAsync(_activeLink, true);
                 }
 
@@ -250,7 +259,10 @@ namespace AntDesign
 
         private async Task ActivateAsync(AnchorLink anchorLink, bool active)
         {
-            anchorLink.Activate(active);
+            if (anchorLink == null)
+                return;
+
+            anchorLink?.Activate(active);
 
             if (active && _activeLink != _lastActiveLink)
             {
