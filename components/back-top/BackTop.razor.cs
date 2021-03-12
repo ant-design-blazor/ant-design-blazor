@@ -71,8 +71,8 @@ namespace AntDesign
 
             BackTopContentClassMapper
                 .If($"{prefixCls}-content", () => ChildContent == null)
-                .If("fade fade-leave fade-leave-active", () => !_visible)
-                .If("fade fade-enter fade-enter-active", () => _visible)
+                .If("ant-fade ant-fade-leave ant-fade-leave-active", () => !_visible)
+                .If("ant-fade ant-fade-enter ant-fade-enter-active", () => _visible)
                 ;
 
             BackTopIconClassMapper.Add($"{prefixCls}-icon");

@@ -89,10 +89,10 @@ namespace AntDesign
                     .If($"{prefixCls}-selected", () => overlay != null && overlay.IsPopup());
 
                 SubMenuMapper
-                    .If($"zoom-big zoom-big-enter zoom-big-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsPopup() && !overlay.IsHiding())
-                    .If($"zoom-big zoom-big-leave zoom-big-leave-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsHiding())
-                    .If($"slide-up slide-up-enter slide-up-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Horizontal && overlay.IsPopup() && !overlay.IsHiding())
-                    .If($"slide-up slide-up-leave slide-up-leave-active", () => overlay != null && RootMenu?.Mode == MenuMode.Horizontal && overlay.IsHiding())
+                    .If($"ant-zoom-big ant-zoom-big-enter ant-zoom-big-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsPopup() && !overlay.IsHiding())
+                    .If($"ant-zoom-big ant-zoom-big-leave ant-zoom-big-leave-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsHiding())
+                    .If($"ant-slide-up ant-slide-up-enter ant-slide-up-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Horizontal && overlay.IsPopup() && !overlay.IsHiding())
+                    .If($"ant-slide-up ant-slide-up-leave ant-slide-up-leave-active", () => overlay != null && RootMenu?.Mode == MenuMode.Horizontal && overlay.IsHiding())
                     ;
             }
         }
