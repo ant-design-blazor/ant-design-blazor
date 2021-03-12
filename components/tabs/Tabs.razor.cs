@@ -207,7 +207,8 @@ namespace AntDesign
                 .If($"{PrefixCls}-head-tabs", () => Card != null)
                 .If($"{PrefixCls}-small", () => Size == TabSize.Small)
                 .GetIf(() => $"{PrefixCls}-{TabType.Card}", () => Type == TabType.EditableCard)
-                .If($"{PrefixCls}-no-animation", () => !Animated);
+                .If($"{PrefixCls}-no-animation", () => !Animated)
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
 
         public override Task SetParametersAsync(ParameterView parameters)

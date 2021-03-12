@@ -24,7 +24,6 @@ namespace AntDesign
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public string Value { get; set; }
         [Parameter] public string Placement { get; set; } = "bottom";
-        [Parameter] public string Direction { get; set; } = "ltr";
         [Parameter] public int Rows { get; set; } = 1;
         [Parameter] public bool Loading { get; set; } = false;
         [Parameter] public RenderFragment ChildContent { get; set; }
@@ -51,7 +50,7 @@ namespace AntDesign
                 .Add(prefixCls)
                 .If($"{prefixCls}-disable", () => this.Disable)
                 .If($"{prefixCls}-focused", () => this.Focused)
-                .If($"{prefixCls}-rtl", () => this.Direction == "rtl")
+                .If($"{prefixCls}-rtl", () => RTL)
                 ;
         }
 
@@ -106,8 +105,8 @@ namespace AntDesign
             await InvokeStateHasChangedAsync();
         }
 
-        DotNetObjectReference<Mentions> _reference;
-        const string ReferenceName = "mentions";
+        private DotNetObjectReference<Mentions> _reference;
+        private const string ReferenceName = "mentions";
 
         protected async Task SetDropdownStyle()
         {

@@ -87,7 +87,8 @@ namespace AntDesign
         public DatePickerLocale Locale
         {
             get { return _locale; }
-            set { 
+            set
+            {
                 _locale = value;
                 _isLocaleSetOutside = true;
             }
@@ -97,7 +98,8 @@ namespace AntDesign
         public CultureInfo CultureInfo
         {
             get { return _cultureInfo; }
-            set { 
+            set
+            {
                 _cultureInfo = value;
                 _isCultureSetOutside = true;
             }
@@ -163,6 +165,7 @@ namespace AntDesign
         public string Format { get; set; }
 
         private TValue _defaultValue;
+
         [Parameter]
         public TValue DefaultValue
         {
@@ -172,6 +175,7 @@ namespace AntDesign
 
         protected bool[] UseDefaultPickerValue { get; } = new bool[2];
         private TValue _defaultPickerValue;
+
         [Parameter]
         public TValue DefaultPickerValue
         {
@@ -237,6 +241,9 @@ namespace AntDesign
         private CultureInfo _cultureInfo = LocaleProvider.CurrentLocale.CurrentCulture;
         private DatePickerLocale _locale = LocaleProvider.CurrentLocale.DatePicker;
 
+        protected ClassMapper _dropdownClassMapper = new ClassMapper();
+        protected ClassMapper _panelClassMapper = new ClassMapper();
+
         protected override void OnInitialized()
         {
             // set default picker type
@@ -256,18 +263,12 @@ namespace AntDesign
             return base.SetParametersAsync(parameters);
         }
 
-        protected override void OnParametersSet()
-        {
-            this.SetClass();
-
-            base.OnParametersSet();
-        }
-
         protected void SetClass()
         {
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
-                .Add($"{PrefixCls}-{Size}")
+                .Get(() => $"{PrefixCls}-{Size}")
+                .If($"{PrefixCls}-rtl", () => RTL)
                 .If($"{PrefixCls}-borderless", () => Bordered == false)
                 .If($"{PrefixCls}-disabled", () => Disabled == true)
                 .If($"{ClassName}", () => !string.IsNullOrEmpty(ClassName))
@@ -276,6 +277,14 @@ namespace AntDesign
                //.If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == Empty.PRESENTED_IMAGE_SIMPLE)
                //.If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                ;
+
+            _dropdownClassMapper
+                .Add($"{PrefixCls}-dropdown")
+                .If($"{PrefixCls}-dropdown-rtl", () => RTL);
+
+            _panelClassMapper
+                .Add($"{PrefixCls}-panel")
+                .If($"{PrefixCls}-panel-rtl", () => RTL);
         }
 
         protected async override Task OnAfterRenderAsync(bool firstRender)
@@ -481,7 +490,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Get pickerValue by picker index. Note that index refers to a picker panel 
+        /// Get pickerValue by picker index. Note that index refers to a picker panel
         /// and not to input text. For RangePicker 2 inputs generate 2 panels.
         /// </summary>
         /// <param name="index"></param>
@@ -495,7 +504,7 @@ namespace AntDesign
             }
             else
             {
-                //First picker panel will show the value, second panel shows next 
+                //First picker panel will show the value, second panel shows next
                 //expected value that depends on Picker type
                 return Picker switch
                 {
@@ -539,7 +548,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Changes what date(s) will be visible on the picker. 
+        /// Changes what date(s) will be visible on the picker.
         /// </summary>
         /// <param name="date">New date to be saved.</param>
         /// <param name="index">Index of the input box, where 0 = inputStart and 1 = inputEnd (only RangePicker)</param>

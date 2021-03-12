@@ -135,6 +135,7 @@ namespace AntDesign
         private bool _pingRight;
         private bool _pingLeft;
         private int _treeExpandIconColumnIndex;
+        private ClassMapper _wrapperClassMapper = new ClassMapper();
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
         private ElementReference _tableHeaderRef;
@@ -289,7 +290,12 @@ namespace AntDesign
                 .If($"{prefixCls}-has-fix-right", () => _hasFixRight)
                 .If($"{prefixCls}-ping-left", () => _pingLeft)
                 .If($"{prefixCls}-ping-right", () => _pingRight)
+                .If($"{prefixCls}-rtl", () => RTL)
                 ;
+
+            _wrapperClassMapper
+                .Add($"{prefixCls}-wrapper")
+                .If($"{prefixCls}-wrapper-rtl", () => RTL);
         }
 
         protected override void OnInitialized()

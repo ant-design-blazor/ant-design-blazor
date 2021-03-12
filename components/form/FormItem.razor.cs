@@ -123,6 +123,7 @@ namespace AntDesign
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
+                .If($"{_prefixCls}-rtl", () => RTL)
                ;
         }
 

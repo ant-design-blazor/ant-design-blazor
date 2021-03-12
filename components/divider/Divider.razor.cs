@@ -29,6 +29,7 @@ namespace AntDesign
         {
             ClassMapper.Clear()
                 .Add("ant-divider")
+                .If("ant-divider", () => RTL)
                 .Get(() => $"ant-divider-{this.Type.ToLowerInvariant()}")
                 .If("ant-divider-with-text", () => Text != null || ChildContent != null)
                 .GetIf(() => $"ant-divider-with-text-{this.Orientation.ToLowerInvariant()}", () => Text != null || ChildContent != null)
