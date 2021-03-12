@@ -80,6 +80,7 @@ namespace AntDesign
             ClassMapper
                 .Add("ant-table-cell")
                 .GetIf(() => $"ant-table-cell-fix-{Fixed}", () => Fixed.IsIn("right", "left"))
+                .If("ant-table-cell-fix-sticky", () => Table.Sticky && Fixed.IsIn("right", "left"))
                 .If($"ant-table-cell-fix-right-first", () => Fixed == "right" && Context?.Columns.FirstOrDefault(x => x.Fixed == "right")?.ColIndex == this.ColIndex)
                 .If($"ant-table-cell-fix-left-last", () => Fixed == "left" && Context?.Columns.LastOrDefault(x => x.Fixed == "left")?.ColIndex == this.ColIndex)
                 .If($"ant-table-cell-with-append", () => ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)

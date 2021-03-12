@@ -1,0 +1,24 @@
+﻿<Table DataSource="data" ScrollX="1500" Sticky>
+    <Column TData="string" Title="Full Name" DataIndex="name" Width="100" Fixed="left" />
+    <Column TData="int" Title="Age" DataIndex="age" Width="100" Fixed="left" />
+    <Column TData="string" Title="Column 1" DataIndex="address" Width="150" />
+    <Column TData="string" Title="Column 2" DataIndex="address" Width="150" />
+    <Column TData="string" Title="Column 3" DataIndex="address" Width="150" />
+    <Column TData="string" Title="Column 4" DataIndex="address" Width="150" />
+    <Column TData="string" Title="Column 5" DataIndex="address" Width="150" />
+    <Column TData="string" Title="Column 6" DataIndex="address" Width="150" />
+    <Column TData="string" Title="Column 7" DataIndex="address" Width="150" />
+    <Column TData="string" Title="Column 8" DataIndex="address" />
+    <ActionColumn Title="Action" Width="100" Fixed="right">
+        <a>action</a>
+    </ActionColumn>
+</Table>
+
+@code {
+
+    record Data(string name,int age,string address);
+
+    IEnumerable<Data> data = Enumerable.Range(0, 100)
+            .Select(i => new Data($"Edrward {i}", 32, $"London Park no. {i}"));
+
+}

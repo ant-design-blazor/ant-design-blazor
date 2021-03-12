@@ -115,6 +115,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<RowData<TItem>> OnRowClick { get; set; }
 
+        [Parameter]
+        public bool Sticky { get; set; }
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -151,7 +154,7 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex;
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
-
+        bool ITable.Sticky => Sticky;
         SortDirection[] ITable.SortDirections => SortDirections;
 
         void ITable.OnExpandChange(int cacheKey)

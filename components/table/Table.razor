@@ -30,7 +30,7 @@
                         <div class="ant-table-container">
                             @if (ScrollY != null)
                             {
-                                <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
+                                <div class="ant-table-header @(Sticky?"ant-table-sticky-header":"")" style="overflow: hidden; @(Sticky?"top:0px;":"")" @ref="_tableHeaderRef">
                                     <table style="@TableLayoutStyle">
                                         @colGroup((this, true))
                                         @header(this)

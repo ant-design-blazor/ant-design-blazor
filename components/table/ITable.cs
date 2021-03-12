@@ -22,6 +22,8 @@ namespace AntDesign
 
         internal bool HasExpandTemplate { get; }
 
+        internal bool Sticky { get; }
+
         internal SortDirection[] SortDirections { get; }
 
         public TableLocale Locale { get; set; }
