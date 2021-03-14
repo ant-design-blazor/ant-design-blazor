@@ -15,6 +15,24 @@ timeline: true
 
 ---
 
+## 0.7.2
+
+`2021-03-14`
+
+- Table
+  - 🐞 修复 翻页时 `OnChange` 事件被触发两次。 [#1211](https://github.com/ant-design-blazor/ant-design-blazor/pull/1211) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 筛选展开后，点击外部时不能关闭的问题。[#1232](https://github.com/ant-design-blazor/ant-design-blazor/pull/1232) [@mutouzdl](https://github.com/mutouzdl)
+
+- Select
+  - 🐞 修复 使用绑定变量修改选中值时，当修改的值不在选项中时报异常的问题。 [#1209](https://github.com/ant-design-blazor/ant-design-blazor/pull/1209) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 修复 表达式编译后调用 `ToString` 报 AmbigiousMethod 异常问题。 [#1214](https://github.com/ant-design-blazor/ant-design-blazor/pull/1214) [@anddrzejb](https://github.com/anddrzejb)
+
+- 🐞 修复 Divider 样式总为 plain 的问题。 [#1215](https://github.com/ant-design-blazor/ant-design-blazor/pull/1215) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Upload 图片设置为 Disable 时删除按钮仍可点击的问题。 [#1219](https://github.com/ant-design-blazor/ant-design-blazor/pull/1219) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 修复 动画因样式同步后未及时修改，缺失前缀导致的失效问题。 [#1243](https://github.com/ant-design-blazor/ant-design-blazor/pull/1243) [@Zonciu](https://github.com/Zonciu)
+- 🐞 修复 Progress 属性 TrailColor 不能设置未完整线段的背景色的问题 [#1241](https://github.com/ant-design-blazor/ant-design-blazor/pull/1241) [@NPadrutt](https://github.com/NPadrutt)
+- 🐞 修复 Badge 属性 Color 的行为 [#1216](https://github.com/ant-design-blazor/ant-design-blazor/pull/1216) [@ElderJames](https://github.com/ElderJames)
+
 ## 0.7.1
 
 `2021-03-05`
