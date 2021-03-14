@@ -15,6 +15,24 @@ timeline: true
 
 ---
 
+## 0.7.2
+
+`2021-03-14`
+
+- Table
+  - 🐞 Fixed invoke `OnChange` twice on pagination was changed [#1211](https://github.com/ant-design-blazor/ant-design-blazor/pull/1211) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed clicking outside couldn't close filter panel [#1232](https://github.com/ant-design-blazor/ant-design-blazor/pull/1232) [@mutouzdl](https://github.com/mutouzdl)
+
+- Select
+  - 🐞 Fixed reset when changed to a not existing value [#1209](https://github.com/ant-design-blazor/ant-design-blazor/pull/1209) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 Fixed Compiled method `.ToString()` was throwing AmbigiousMethod [#1214](https://github.com/ant-design-blazor/ant-design-blazor/pull/1214) [@anddrzejb](https://github.com/anddrzejb)
+
+- 🐞 Fixed divider style was default to plain [#1215](https://github.com/ant-design-blazor/ant-design-blazor/pull/1215) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed upload Disable and delete button [#1219](https://github.com/ant-design-blazor/ant-design-blazor/pull/1219) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 Fixed animation missing prefix [#1243](https://github.com/ant-design-blazor/ant-design-blazor/pull/1243) [@Zonciu](https://github.com/Zonciu)
+- 🐞 Fixed progress add missing trailing color [#1241](https://github.com/ant-design-blazor/ant-design-blazor/pull/1241) [@NPadrutt](https://github.com/NPadrutt)
+- 🐞 Fixed badge color behavior [#1216](https://github.com/ant-design-blazor/ant-design-blazor/pull/1216) [@ElderJames](https://github.com/ElderJames)
+
 ## 0.7.1
 
 `2021-03-05`
