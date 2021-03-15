@@ -22,9 +22,9 @@
             {
                 <div class="ant-alert-message">@Message</div>
             }
-            @if (Messages != null && Messages.Any())
+            @if (MessagesLoop != null && MessagesLoop.Any())
             {
-                <AntDesign.Internal.LoopText Messages="@Messages" msDelay="@MsDelay" />
+                <AntDesign.Internal.LoopText Messages="@MessagesLoop" msDelay="@MsDelay" />
             }
             @if (!string.IsNullOrEmpty(Description))
             {
