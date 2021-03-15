@@ -75,6 +75,18 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
+        
+        /// <summary>
+        /// Delay of Loop
+        /// </summary>
+        [Parameter]
+        public int MsDelay { get; set; }
+        
+        /// <summary>
+        /// Messages to Loop
+        /// </summary>
+        [Parameter]
+        public IEnumerable<string> MessagesLoop { get; set; }
 
         /// <summary>
         /// Icon to show.
