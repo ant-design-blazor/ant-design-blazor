@@ -1,0 +1,55 @@
+@namespace AntDesign.Internal
+
+<div class="ant-alert-message">@displayedMsg</div>
+
+@code {
+    [Parameter]
+    public IEnumerable<String> Messages { get; set; }
+    
+    [Parameter]
+    public int msDelay { get; set; } = 1000;
+    
+    private int showingIndex = -1;
+    private string displayedMsg = "";
+    
+    private bool isWaiting = false;
+
+    private async Task SwitchMessage()
+    {
+        showingIndex += 1;
+        try
+        {
+            displayedMsg = Messages.ElementAt(showingIndex);
+        }
+        catch (ArgumentOutOfRangeException) //This loops the list back to the first element
+        {
+            showingIndex = 0;
+            displayedMsg = Messages.ElementAt(showingIndex);
+        }
+
+        StateHasChanged();
+
+        isWaiting = true;
+        await Task.Delay(msDelay);
+        isWaiting = false;
+
+        StateHasChanged(); //This makes sure we call the switch messages func again
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+    
+    /*
+    if (Messages.Count() == 0) 
+    {
+      throw new ArgumentNullException("Please set Messages enumerable");
+    }
+    */
+    
+        if (!isWaiting && Messages.Count() > 0)
+        {
+            _ = SwitchMessage();
+        }
+    }
+}
