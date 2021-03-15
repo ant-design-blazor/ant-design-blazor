@@ -1,0 +1,121 @@
+<AntDesign.Alert Banner="Banner" Closable="Closable" CloseText="@CloseText" 
+				 Description="@Description" ShowIcon="ShowIcon" Type="@Type"
+				 Message="@displayedMsg" @attributes="attri"/>
+
+@code {
+	//Alert API
+  //Attribute dictionary used for parameters where null causes an exception
+	Dictionary<string, object> attri = new Dictionary<string, object>();
+
+	[Parameter]
+	public EventCallback<MouseEventArgs> AfterClose {get;set;}
+
+	[Parameter]
+	public bool Banner { get; set; }
+
+	[Parameter]
+	public bool Closable { get; set; }
+
+	[Parameter]
+	public string CloseText { get; set; }
+
+	[Parameter]
+	public string Description { get; set; }
+
+	[Parameter]
+	public RenderFragment Icon { get; set; }
+
+	[Parameter]
+	public bool ShowIcon { get; set; }
+
+	[Parameter]
+	public string Type { get; set; }
+
+	[Parameter]
+	public EventCallback<MouseEventArgs> OnClose { get; set; }
+
+	[Parameter]
+	public RenderFragment ChildContent { get;set;}
+	//end
+
+  //List of messages to be displayed
+	[Parameter]
+	public IEnumerable<String> Messages { get; set; }
+
+  //Time in milliseconds between each message
+	[Parameter]
+	public int msDelay { get; set; } = 1000;
+
+  //Which index on the Messages enumerable is shown
+	int showingIndex = -1;
+	private string displayedMsg = "";
+
+  //Is in waiting loop
+	private bool isWaiting = false;
+
+	private async Task SwitchMessage()
+	{
+		showingIndex += 1;
+		try
+		{
+			displayedMsg = Messages.ElementAt(showingIndex);
+		}
+		catch (ArgumentOutOfRangeException) //This loops the list back to the first element
+		{
+			showingIndex = 0;
+			displayedMsg = Messages.ElementAt(showingIndex);
+		}
+
+		StateHasChanged();
+
+		isWaiting = true;
+		await Task.Delay(msDelay);
+		isWaiting = false;
+
+		StateHasChanged(); //This makes sure we call the switch messages func again
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		await base.OnAfterRenderAsync(firstRender);
+    
+    /*
+    if (Messages.Count() == 0) 
+    {
+      throw new ArgumentNullException("Please set Messages enumerable");
+    }
+    */
+    
+		if (!isWaiting && Messages.Count() > 0)
+		{
+			_ = SwitchMessage();
+		}
+	}
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		if (AfterClose.HasDelegate)
+		{
+			attri.Add("AfterClose", AfterClose);
+		}
+
+		if (Icon != null)
+		{
+			attri.Add("Icon", Icon);
+		}
+
+		if (OnClose.HasDelegate)
+		{
+			attri.Add("OnClose", OnClose);
+		}
+
+		if (ChildContent != null)
+		{
+			attri.Add("ChildContent", ChildContent);
+		}
+
+		StateHasChanged();
+	}
+}
