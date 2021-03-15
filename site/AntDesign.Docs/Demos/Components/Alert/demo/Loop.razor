@@ -1,0 +1,14 @@
+<span>Basic Use: </span>
+<Alert Messages="messages" />
+
+<span>Custom Speed( 2x faster): </span>
+<Alert Messages="messages" msDelay="500" />
+
+@code {
+
+    private List<string> messages = new List<string>()
+    {
+        "One", "Two", "Three", "Four"
+    };
+
+}
