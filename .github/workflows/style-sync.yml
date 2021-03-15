@@ -22,6 +22,7 @@ jobs:
           echo "Last Version of ant-design: ${LAST_VERSION}"
           git checkout ${LAST_VERSION}
           cd ../ant-design-blazor
+          git checkout feature
           BRANCH_NAME="sync-style/${LAST_VERSION}"
           if [ $( git branch -a | egrep "remotes/origin/${BRANCH_NAME}" | wc -l) -gt 0 ]; then
             echo "Branch ${BRANCH_NAME} already exists."
@@ -48,4 +49,4 @@ jobs:
           cat>PR<<EOF
           chore: sync ant-design v${LAST_VERSION}
           EOF
-          bin/hub pull-request -F PR -b ant-design-blazor:master -h ant-design-blazor:${BRANCH_NAME} -a ElderJames
+          bin/hub pull-request -F PR -b ant-design-blazor:feature -h ant-design-blazor:${BRANCH_NAME} -a ElderJames
