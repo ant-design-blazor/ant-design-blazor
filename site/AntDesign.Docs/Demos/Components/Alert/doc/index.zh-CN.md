@@ -30,4 +30,6 @@ cover: https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg
 | Type | 指定警告提示的样式，有四种选择 `success` \| `info` \| `warning` \| `error` | string | warning |  |
 | OnClose | 关闭时触发的回调函数 | EventCallback&lt;MouseEventArgs> | - |  |
 | ChildContent | 附加内容 | RenderFragment | - |  |
+| Messages | 到循环的消息 | IEnumerable<string> | - | |
+| MsDelay | 循环速度（毫秒） | int | 1000 | |
 
