@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public class ModalRef
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ModalRef : DefaultFeedbackRef
     {
-        internal readonly ModalOptions Config;
+        public ModalOptions Config { get; private set; }
         private readonly ModalService _service;
 
         internal ModalRef(ModalOptions config, ModalService modalService)
@@ -20,7 +23,7 @@ namespace AntDesign
         /// open the Modal dialog
         /// </summary>
         /// <returns></returns>
-        public async Task OpenAsync()
+        public override async Task OpenAsync()
         {
             if (!Config.Visible)
             {
@@ -30,13 +33,52 @@ namespace AntDesign
             await _service.CreateOrOpenModalAsync(this);
         }
 
+
         /// <summary>
         /// close the Modal dialog
         /// </summary>
         /// <returns></returns>
-        public async Task CloseAsync()
+        public override async Task CloseAsync()
         {
             await _service.CloseModalAsync(this);
+        }
+
+        /// <summary>
+        /// Update modal
+        /// </summary>
+        /// <returns></returns>
+        public override async Task UpdateConfigAsync()
+        {
+            await _service.UpdateModalAsync(this);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    public class ModalRef<TResult> : ModalRef, IFeedbackRef<TResult>
+    {
+        internal ModalRef(ModalOptions config, ModalService modalService) : base(config, modalService)
+        {
+        }
+
+        /// <inheritdoc />
+        public new Func<TResult, Task> OnCancel { get; set; }
+
+        /// <inheritdoc />
+        public new Func<TResult, Task> OnOk { get; set; }
+
+        /// <inheritdoc />
+        public async Task OkAsync(TResult result)
+        {
+            await (OnOk?.Invoke(result) ?? Task.CompletedTask);
+        }
+
+        /// <inheritdoc />
+        public async Task CancelAsync(TResult result)
+        {
+            await (OnOk?.Invoke(result) ?? Task.CompletedTask);
         }
     }
 }

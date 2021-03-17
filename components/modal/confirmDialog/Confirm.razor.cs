@@ -110,12 +110,17 @@ namespace AntDesign
 
         internal async Task Close()
         {
-            Config.Visible = false;
-            await InvokeAsync(StateHasChanged);
-            await Task.Delay(250);
-            if (OnRemove.HasDelegate)
+            if (Config.Visible)
             {
-                await OnRemove.InvokeAsync(ConfirmRef);
+                Config.Visible = false;
+                await InvokeAsync(StateHasChanged);
+                await Task.Delay(250);
+                if (OnRemove.HasDelegate)
+                {
+                    await OnRemove.InvokeAsync(ConfirmRef);
+                }
+
+                ConfirmRef.OnClose?.Invoke();
             }
         }
 
@@ -123,8 +128,9 @@ namespace AntDesign
         {
             var args = new ModalClosingEventArgs(e, false);
 
-            if (ConfirmRef.ModalTemplate != null)
-                await ConfirmRef.ModalTemplate.OkAsync(args);
+            var modalTemplate = (ConfirmRef as IFeedbackRef)?.ModalTemplate;
+            if (modalTemplate != null)
+                await modalTemplate.OnFeedbackOkAsync(args);
 
             if (!args.Cancel && Config.OnOk != null)
             {
@@ -149,8 +155,10 @@ namespace AntDesign
         {
             var args = new ModalClosingEventArgs(e, false);
 
-            if (ConfirmRef.ModalTemplate != null)
-                await ConfirmRef.ModalTemplate.CancelAsync(args);
+            var modalTemplate = (ConfirmRef as IFeedbackRef)?.ModalTemplate;
+            if (modalTemplate != null)
+                await modalTemplate.OnFeedbackCancelAsync(args);
+
             if (!args.Cancel && Config.OnCancel != null)
             {
                 Config.CancelButtonProps.Loading = true;
