@@ -59,8 +59,6 @@ namespace AntDesign
             await (Service?.OpenConfirmAsync(this) ?? Task.CompletedTask);
         }
 
-        #endregion
-
         /// <summary>
         /// update Confirm dialog config which Visible=true
         /// </summary>
@@ -80,6 +78,8 @@ namespace AntDesign
             Config = config;
             await UpdateConfigAsync();
         }
+
+        #endregion
     }
 
 
