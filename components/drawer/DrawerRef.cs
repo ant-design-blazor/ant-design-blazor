@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public class DrawerRef : DefaultFeedbackRef
+    public class DrawerRef : FeedbackRefBase
     {
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Please replace it with Config")]
@@ -73,7 +73,6 @@ namespace AntDesign
             Config = config;
             await UpdateConfigAsync();
         }
-
     }
 
     public class DrawerRef<TResult> : DrawerRef

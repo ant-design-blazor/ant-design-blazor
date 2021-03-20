@@ -37,7 +37,9 @@
         if (value != config)
             args.Cancel = true;
         else
-            await (FeedbackRef as IFeedbackRef<string>)!.OkAsync(value);
+            // method 1(not recommended): await (FeedbackRef as ConfirmRef<string>)!.OkAsync(value);
+            // method 2: await (FeedbackRef as IOkCancelRef<string>)!.OkAsync(value);
+            await base.OkCancelRefWithResult!.OnOk(value);
 
         await base.OnFeedbackOkAsync(args);
     }

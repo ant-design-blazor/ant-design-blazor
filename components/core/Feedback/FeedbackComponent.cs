@@ -34,6 +34,11 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public IOkCancelRef OkCancelRef => FeedbackRef as IOkCancelRef;
+
+        /// <summary>
         /// In order that the user can close the template through the button
         /// 为了用户可以在模板内通过按钮主动关闭
         /// </summary>
@@ -92,6 +97,6 @@ namespace AntDesign
         /// <summary>
         /// 
         /// </summary>
-        public IFeedbackRef<TResult> FeedbackRefWithResult => FeedbackRef as IFeedbackRef<TResult>;
+        public IOkCancelRef<TResult> OkCancelRefWithResult => FeedbackRef as IOkCancelRef<TResult>;
     }
 }

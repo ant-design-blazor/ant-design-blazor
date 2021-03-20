@@ -8,7 +8,7 @@ namespace AntDesign
     /// <summary>
     /// 
     /// </summary>
-    public class ModalRef : DefaultFeedbackRef
+    public class ModalRef : FeedbackRefWithOkCancelBase
     {
         public ModalOptions Config { get; private set; }
         private readonly ModalService _service;
@@ -57,7 +57,7 @@ namespace AntDesign
     /// 
     /// </summary>
     /// <typeparam name="TResult"></typeparam>
-    public class ModalRef<TResult> : ModalRef, IFeedbackRef<TResult>
+    public class ModalRef<TResult> : ModalRef, IOkCancelRef<TResult>
     {
         internal ModalRef(ModalOptions config, ModalService modalService) : base(config, modalService)
         {

@@ -8,7 +8,7 @@ namespace AntDesign
     /// <summary>
     /// 
     /// </summary>
-    public class ConfirmRef : DefaultFeedbackRef
+    public class ConfirmRef : FeedbackRefWithOkCancelBase
     {
         #region internal
 
@@ -87,7 +87,7 @@ namespace AntDesign
     /// ConfirmRef for 
     /// </summary>
     /// <typeparam name="TResult"></typeparam>
-    public class ConfirmRef<TResult> : ConfirmRef, IFeedbackRef<TResult>
+    public class ConfirmRef<TResult> : ConfirmRef, IOkCancelRef<TResult>
     {
         internal ConfirmRef(ConfirmOptions config, ModalService service) : base(config, service)
         {
