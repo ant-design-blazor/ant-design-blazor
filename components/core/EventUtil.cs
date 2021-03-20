@@ -9,10 +9,13 @@ using Microsoft.AspNetCore.Components;
 namespace AntDesign
 {
     /// <summary>
-    /// avoid component re-rendering caused by events to Blazor components
-    /// https://github.com/dotnet/aspnetcore/issues/18919#issuecomment-735969441
-    /// 
-    /// from https://gist.github.com/SteveSandersonMS/8a19d8e992f127bb2d2a315ec6c5a373
+    /// avoid component re-rendering caused by events to Blazor components.(pure event handlers)
+    /// <para>
+    ///     author: SteveSandersonMS, from <see cref="https://gist.github.com/SteveSandersonMS/8a19d8e992f127bb2d2a315ec6c5a373"/>.
+    /// </para>
+    /// <para>
+    ///     issue: <seealso cref="https://github.com/dotnet/aspnetcore/issues/18919#issuecomment-735969441"/>.
+    /// </para>
     /// </summary>
     public static class EventUtil
     {
