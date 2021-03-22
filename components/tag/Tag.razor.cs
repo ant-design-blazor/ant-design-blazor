@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AntDesign.core;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -38,10 +39,13 @@ namespace AntDesign
         public bool NoAnimation { get; set; }
 
         [Parameter]
-        public EventCallback AfterClose { get; set; }
-
-        [Parameter]
         public EventCallback<MouseEventArgs> OnClose { get; set; }
+
+        /// <summary>
+        /// 点击关闭按钮前触发，且可以终止关闭操作
+        /// </summary>
+        [Parameter]
+        public EventCallback<CloseEventArgs<MouseEventArgs>> OnClosing { get; set; }
 
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
@@ -101,6 +105,9 @@ namespace AntDesign
 
         private async Task CloseTag(MouseEventArgs e)
         {
+            var closeEvent = new CloseEventArgs<MouseEventArgs>(e);
+            await this.OnClosing.InvokeAsync(closeEvent);
+            if (closeEvent.Cancel == true) return;
             await this.OnClose.InvokeAsync(e);
             this._closed = true;
         }
@@ -115,4 +122,6 @@ namespace AntDesign
             }
         }
     }
+
+ 
 }

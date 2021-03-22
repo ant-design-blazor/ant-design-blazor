@@ -1,0 +1,31 @@
+﻿@inject ConfirmService _confirmService
+
+<div>
+    <Tag OnClick="onClick">onClick</Tag>
+    <Tag Mode="closeable" OnClose="onClose">onClose</Tag>
+    <Tag Mode="closeable" OnClosing="async e=>await onClosing(e)" OnClose="onClose">onClosing</Tag>
+</div>
+
+@code{
+    void onClick()
+    {
+        Console.WriteLine("onClick");
+    }
+
+    async Task onClosing(CloseEventArgs<MouseEventArgs> e)
+    {
+        Console.WriteLine("onClosing");
+
+        if (await _confirmService.Show("是否关闭", "提示") == ConfirmResult.Cancel)
+        {
+            e.Cancel = true;//通过Cancel属性决定是否取消关闭
+        }
+    }
+
+
+    void onClose()
+    {
+        Console.WriteLine("onClose");
+    }
+
+}
