@@ -3,7 +3,6 @@
 @inherits AntInputComponentBase<string>
 
 <CascadingValue Value=@("ant-cascader-menus") Name="PrefixCls">
-    <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
         <OverlayTrigger Visible="@(ToggleState && _nodelist != null && _nodelist.Any())"
                         ComplexAutoCloseAndVisible="true"
                         Trigger="new[] { TriggerType.Click }"
@@ -11,9 +10,9 @@
                         OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                         OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
             <Unbound>
-                <span @ref="context.Current" class="ant-cascader-picker @_pickerSizeClass" tabindex="1" @onclick="InputOnToggle" @onblur="CascaderOnBlur" @onmouseover="InputOnMouseOver" @onmouseout="InputOnMouseOut">
+                <span @ref="context.Current" style="@Style" id="@Id" class="@ClassMapper.Class" tabindex="1" @onclick="InputOnToggle" @onblur="CascaderOnBlur" @onmouseover="InputOnMouseOver" @onmouseout="InputOnMouseOut">
                     <span class="ant-cascader-picker-label"></span>
-                    <input autocomplete="off" tabindex="-1" placeholder="@PlaceHolder" class="ant-input ant-cascader-input @_inputSizeClass" readonly="@Readonly" type="text" value="@_displayText">
+                    <input autocomplete="off" tabindex="-1" placeholder="@PlaceHolder" class="@_inputClassMapper.Class" readonly="@Readonly" type="text" value="@_displayText">
                     @if (string.IsNullOrWhiteSpace(Value) || !ShowClearIcon)
                     {
                         <Icon Type="down" Class="@($"ant-cascader-picker-arrow {(ToggleState ? "ant-cascader-picker-arrow-expand" : string.Empty)}")" />
@@ -73,5 +72,4 @@
                 </div>
             </Overlay>
         </OverlayTrigger>
-    </div>
 </CascadingValue>
