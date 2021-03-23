@@ -77,7 +77,7 @@ namespace AntDesign
                 else if (_nodelist.Count != 0) _nodelist.Clear();
                 _nodelist.AddRange(value);
 
-                _optionsNeedInitialize = true;
+                ProcessParentAndDefault();
             }
         }
 
@@ -98,9 +98,6 @@ namespace AntDesign
         /// </summary>
         internal List<CascaderNode> _renderNodes = new List<CascaderNode>();
 
-        private string _pickerSizeClass = string.Empty;
-        private string _inputSizeClass = string.Empty;
-
         /// <summary>
         /// 浮层 展开/折叠状态
         /// </summary>
@@ -117,36 +114,28 @@ namespace AntDesign
         /// </summary>
         private SelectedTypeEnum SelectedType { get; set; }
 
+        private ClassMapper _inputClassMapper = new ClassMapper();
         private string _displayText;
-        private bool _optionsNeedInitialize;
+
+        private static Hashtable _sizeMap = new Hashtable()
+        {
+            ["large"] = "lg",
+            ["small"] = "sm"
+        };
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-        }
 
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
+            ClassMapper.Add("ant-cascader-picker")
+                .GetIf(() => $"ant-cascader-picker-{Size}", () => _sizeMap.ContainsKey(Size))
+                .GetIf(() => $"ant-input-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
+                ;
 
-            Hashtable sizeMap = new Hashtable()
-            {
-                ["large"] = "lg",
-                ["small"] = "sm"
-            };
-
-            if (sizeMap.ContainsKey(Size))
-            {
-                _pickerSizeClass = $"ant-cascader-picker-{Size}";
-                _inputSizeClass = $"ant-input-{sizeMap[Size]}";
-            }
-            else
-            {
-                _pickerSizeClass = "";
-                _inputSizeClass = "";
-            }
-
-            ProcessParentAndDefault();
+            _inputClassMapper
+                .Add("ant-input")
+                .Add("ant-cascader-input")
+                .GetIf(() => $"ant-input-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size));
         }
 
         protected override void OnValueChange(string value)
@@ -310,13 +299,8 @@ namespace AntDesign
         /// </summary>
         private void ProcessParentAndDefault()
         {
-            if (_optionsNeedInitialize)
-            {
-                _optionsNeedInitialize = false;
-
-                InitCascaderNodeState(_nodelist, null, 0);
-                SetDefaultValue(Value ?? DefaultValue);
-            }
+            InitCascaderNodeState(_nodelist, null, 0);
+            SetDefaultValue(Value ?? DefaultValue);
         }
 
         /// <summary>
