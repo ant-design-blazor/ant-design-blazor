@@ -134,7 +134,8 @@ namespace AntDesign.Internal
 
         private bool IsDateInRange(DateTime currentColDate)
         {
-            if (!IsRange || !Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month))
+            if (!IsRange ||
+                !Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter))
             {
                 return false;
             }
@@ -209,7 +210,7 @@ namespace AntDesign.Internal
         private string GetRangeHoverCls(DateTime currentColDate)
         {
             if (!IsRange || DatePicker.HoverDateTime == null
-                || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month) == false)
+                || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter) == false)
             {
                 return "";
             }
@@ -291,7 +292,7 @@ namespace AntDesign.Internal
 
         private string GetRangeStartCls(DateTime currentColDate)
         {
-            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month) == false)
+            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter) == false)
             {
                 return "";
             }
@@ -332,7 +333,7 @@ namespace AntDesign.Internal
 
         private string GetRangeEndCls(DateTime currentColDate)
         {
-            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month) == false)
+            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter) == false)
             {
                 return "";
             }
@@ -374,7 +375,7 @@ namespace AntDesign.Internal
 
         private string GetRangeEdgeCls(DateTime currentColDate)
         {
-            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month) == false)
+            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter) == false)
             {
                 return "";
             }
