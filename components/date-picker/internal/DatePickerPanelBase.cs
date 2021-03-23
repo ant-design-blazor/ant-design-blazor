@@ -176,7 +176,7 @@ namespace AntDesign
             int? second = null)
         {
             return DateHelper.CombineNewDate(
-                GetIndexPickerValue(0),
+                PickerValue,
                 year,
                 month,
                 day,
@@ -188,16 +188,12 @@ namespace AntDesign
 
         protected void ChangePickerYearValue(int interval)
         {
-            var currentValue = GetIndexPickerValue(0);
-
-            ChangePickerValue(DateHelper.AddYearsSafely(currentValue, interval), null);
+            ChangePickerValue(DateHelper.AddYearsSafely(PickerValue, interval), null);
         }
 
         protected void ChangePickerMonthValue(int interval)
         {
-            var currentValue = GetIndexPickerValue(0);
-
-            ChangePickerValue(DateHelper.AddMonthsSafely(currentValue, interval), null);
+            ChangePickerValue(DateHelper.AddMonthsSafely(PickerValue, interval), null);
         }
 
         protected void Close()
