@@ -103,6 +103,8 @@ namespace AntDesign
 
         public static string DisposeResizeTextArea => $"{FUNC_PREFIX}disposeResizeTextArea";
 
+        public static string SetDomAttribute => $"{FUNC_PREFIX}setDomAttribute";
+
         #region Draggable Modal
 
         public static string EnableDraggable => $"{FUNC_PREFIX}enableDraggable";

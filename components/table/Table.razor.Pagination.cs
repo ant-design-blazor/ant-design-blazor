@@ -88,13 +88,26 @@ namespace AntDesign
             _paginationClass = $"ant-table-pagination ant-table-pagination-{Regex.Replace(_paginationPosition, "bottom|top", "").ToLowerInvariant()}";
         }
 
+        private async Task HandlePageChange(PaginationEventArgs args)
+        {
+            if (_pageIndex != args.Page)
+            {
+                await HandlePageIndexChange(args);
+            }
+
+            if (_pageSize != args.PageSize)
+            {
+                await HandlePageSizeChange(args);
+            }
+        }
+
         private async Task HandlePageIndexChange(PaginationEventArgs args)
         {
-            _pageIndex = args.PageIndex;
+            _pageIndex = args.Page;
 
             if (PageIndexChanged.HasDelegate)
             {
-                await PageIndexChanged.InvokeAsync(args.PageIndex);
+                await PageIndexChanged.InvokeAsync(args.Page);
             }
 
             if (OnPageIndexChange.HasDelegate)
@@ -107,21 +120,23 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        private void HandlePageSizeChange(PaginationEventArgs args)
+        private async Task HandlePageSizeChange(PaginationEventArgs args)
         {
             _pageSize = args.PageSize;
 
-            ReloadAndInvokeChange();
-
             if (PageSizeChanged.HasDelegate)
             {
-                PageSizeChanged.InvokeAsync(args.PageSize);
+                await PageSizeChanged.InvokeAsync(args.PageSize);
             }
 
             if (OnPageSizeChange.HasDelegate)
             {
-                OnPageSizeChange.InvokeAsync(args);
+                await OnPageSizeChange.InvokeAsync(args);
             }
+
+            ReloadAndInvokeChange();
+
+            StateHasChanged();
         }
     }
 }

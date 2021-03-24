@@ -485,7 +485,7 @@ export function getMaxZIndex() {
   return [...document.all].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
 }
 
-export function getStyle(element, styleProp) {        
+export function getStyle(element, styleProp) {
   if (element.currentStyle)
     return element.currentStyle[styleProp];
   else if (window.getComputedStyle)
@@ -493,9 +493,9 @@ export function getStyle(element, styleProp) {
 }
 
 export function getTextAreaInfo(element) {
-    var result = {};
-    var dom = getDom(element);
-    result["scrollHeight"] = dom.scrollHeight || 0;
+  var result = {};
+  var dom = getDom(element);
+  result["scrollHeight"] = dom.scrollHeight || 0;
 
   if (element.currentStyle) {
     result["lineHeight"] = parseFloat(element.currentStyle["line-height"]);
@@ -514,58 +514,54 @@ export function getTextAreaInfo(element) {
   return result;
 }
 
-
 const funcDict = {};
 
 export function registerResizeTextArea(element, minRows, maxRows, objReference) {
-    if (!objReference) {
-        disposeResizeTextArea(element);
-    }
-    else {
-        objReferenceDict[element.id] = objReference;
-        funcDict[element.id + "input"] = function () { resizeTextArea(element, minRows, maxRows); }
-        element.addEventListener("input", funcDict[element.id + "input"]);
-        return getTextAreaInfo(element);
-    }
+  if (!objReference) {
+    disposeResizeTextArea(element);
+  }
+  else {
+    objReferenceDict[element.id] = objReference;
+    funcDict[element.id + "input"] = function () { resizeTextArea(element, minRows, maxRows); }
+    element.addEventListener("input", funcDict[element.id + "input"]);
+    return getTextAreaInfo(element);
+  }
 }
 
 export function disposeResizeTextArea(element) {
-    element.removeEventListener("input", funcDict[element.id + "input"]);
-    objReferenceDict[element.id] = null;
-    funcDict[element.id + "input"] = null;
-
+  element.removeEventListener("input", funcDict[element.id + "input"]);
+  objReferenceDict[element.id] = null;
+  funcDict[element.id + "input"] = null;
 }
 
 export function resizeTextArea(element, minRows, maxRows) {
-    var dims = getTextAreaInfo(element);
-    var rowHeight = dims["lineHeight"];
-    var offsetHeight = dims["paddingTop"] + dims["paddingBottom"] + dims["borderTop"] + dims["borderBottom"];
-    var oldHeight = parseFloat(element.style.height);
-    element.style.height = 'auto';
-    
-    var rows = Math.trunc(element.scrollHeight / rowHeight);
-    rows = Math.max(minRows, rows);
+  var dims = getTextAreaInfo(element);
+  var rowHeight = dims["lineHeight"];
+  var offsetHeight = dims["paddingTop"] + dims["paddingBottom"] + dims["borderTop"] + dims["borderBottom"];
+  var oldHeight = parseFloat(element.style.height);
+  element.style.height = 'auto';
 
-    var newHeight = 0;
-    if (rows > maxRows) {
-        rows = maxRows;
+  var rows = Math.trunc(element.scrollHeight / rowHeight);
+  rows = Math.max(minRows, rows);
 
-        newHeight = (rows * rowHeight + offsetHeight);
-        element.style.height = newHeight + "px";
-        element.style.overflowY = "visible";
-    }
-    else {
-        newHeight = rows * rowHeight + offsetHeight;
-        element.style.height = newHeight + "px";
-        element.style.overflowY = "hidden";
-    }
-    if (oldHeight !== newHeight) {
-        let textAreaObj = objReferenceDict[element.id];
-        textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", parseFloat(element.scrollWidth), newHeight);
-    }
+  var newHeight = 0;
+  if (rows > maxRows) {
+    rows = maxRows;
+
+    newHeight = (rows * rowHeight + offsetHeight);
+    element.style.height = newHeight + "px";
+    element.style.overflowY = "visible";
+  }
+  else {
+    newHeight = rows * rowHeight + offsetHeight;
+    element.style.height = newHeight + "px";
+    element.style.overflowY = "hidden";
+  }
+  if (oldHeight !== newHeight) {
+    let textAreaObj = objReferenceDict[element.id];
+    textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", parseFloat(element.scrollWidth), newHeight);
+  }
 }
-
-
 
 const objReferenceDict = {};
 export function disposeObj(objReferenceName) {
@@ -619,14 +615,14 @@ function preventKeys(e, keys: string[]) {
 }
 
 export function addPreventKeys(inputElement, keys: string[]) {
-  let dom = getDom(inputElement);   
+  let dom = getDom(inputElement);
   keys = keys.map(function (x) { return x.toUpperCase(); })
   funcDict[inputElement.id + "keydown"] = (e) => preventKeys(e, keys);
-    (dom as HTMLElement).addEventListener("keydown", funcDict[inputElement.id + "keydown"], false);
+  (dom as HTMLElement).addEventListener("keydown", funcDict[inputElement.id + "keydown"], false);
 }
 
 export function removePreventKeys(inputElement) {
-  let dom = getDom(inputElement);            
+  let dom = getDom(inputElement);
   (dom as HTMLElement).removeEventListener("keydown", funcDict[inputElement.id + "keydown"]);
   funcDict[inputElement.id + "keydown"] = null;
 }
@@ -639,7 +635,7 @@ function preventKeyOnCondition(e, key: string, check: () => boolean) {
 }
 
 export function addPreventEnterOnOverlayVisible(element, overlayElement) {
-  let dom = getDom(element);   
+  let dom = getDom(element);
   funcDict[element.id + "keydown:Enter"] = (e) => preventKeyOnCondition(e, "enter", () => overlayElement.offsetParent !== null);
   (dom as HTMLElement).addEventListener("keydown", funcDict[element.id + "keydown:Enter"], false);
 }
@@ -648,4 +644,9 @@ export function removePreventEnterOnOverlayVisible(element) {
   let dom = getDom(element);
   (dom as HTMLElement).removeEventListener("keydown", funcDict[element.id + "keydown:Enter"]);
   funcDict[element.id + "keydown:Enter"] = null;
+}
+
+export function setDomAttribute(element, attribute, value) {
+  let dom = getDom(element);
+  (dom as HTMLElement).setAttribute(attribute, value);
 }

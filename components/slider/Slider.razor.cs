@@ -222,7 +222,9 @@ namespace AntDesign
         /// The granularity the slider can step through values. Must greater than 0, and be divided by (<see cref="Max"/> - <see cref="Min"/>) . When <see cref="Marks"/> no null, <see cref="Step"/> can be null.
         /// </summary>
         private double? _step = 1;
+
         private int _precision;
+
         [Parameter]
         public double? Step
         {
@@ -344,9 +346,11 @@ namespace AntDesign
 
         /// <summary>
         /// Slider will pass its value to tipFormatter, and display its value in Tooltip
-        /// </summary>        
+        /// </summary>
         private bool _isTipFormatterDefault = true;
+
         private Func<double, string> _tipFormatter = (d) => d.ToString(LocaleProvider.CurrentLocale.CurrentCulture);
+
         [Parameter]
         public Func<double, string> TipFormatter
         {
@@ -368,8 +372,10 @@ namespace AntDesign
         /// If true, Tooltip will show always, or it will not show anyway, even if dragging or hovering.
         /// </summary>
         private bool _tooltipVisible;
+
         private bool _tooltipRightVisible;
         private bool _tooltipLeftVisible;
+
         [Parameter]
         public bool TooltipVisible
         {
@@ -380,7 +386,7 @@ namespace AntDesign
                 {
                     _tooltipVisible = value;
                     //ensure parameter loading is not happening because values are changing during mouse moving
-                    //otherwise the tooltip will be vanishing when mouse moves out of the edge 
+                    //otherwise the tooltip will be vanishing when mouse moves out of the edge
                     if (!_mouseDown)
                     {
                         _tooltipRightVisible = _tooltipVisible;
@@ -473,7 +479,8 @@ namespace AntDesign
                 .Add(PreFixCls)
                 .If($"{PreFixCls}-disabled", () => Disabled)
                 .If($"{PreFixCls}-vertical", () => Vertical)
-                .If($"{PreFixCls}-with-marks", () => Marks != null);
+                .If($"{PreFixCls}-with-marks", () => Marks != null)
+                .If($"{PreFixCls}-rtl", () => RTL);
         }
 
         protected override void OnAfterRender(bool firstRender)
@@ -547,6 +554,7 @@ namespace AntDesign
 
         private double _trackedClientX;
         private double _trackedClientY;
+
         private void OnMouseDownEdge(MouseEventArgs args, bool right)
         {
             _right = right;

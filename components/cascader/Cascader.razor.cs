@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using System.Linq;
 using System.Collections;
+using System.Threading.Tasks;
 
 namespace AntDesign
 {
@@ -98,8 +99,12 @@ namespace AntDesign
         /// </summary>
         internal List<CascaderNode> _renderNodes = new List<CascaderNode>();
 
-        private string _pickerSizeClass = string.Empty;
-        private string _inputSizeClass = string.Empty;
+        //private string _pickerSizeClass = string.Empty;
+        //private string _inputSizeClass = string.Empty;
+
+        private ClassMapper _menuClassMapper = new ClassMapper();
+        private ClassMapper _pickerClassMapper = new ClassMapper();
+        private ClassMapper _inputClassMapper = new ClassMapper();
 
         /// <summary>
         /// 浮层 展开/折叠状态
@@ -120,31 +125,34 @@ namespace AntDesign
         private string _displayText;
         private bool _optionsNeedInitialize;
 
+        private static Dictionary<string, string> _sizeMap = new Dictionary<string, string>()
+        {
+            ["large"] = "lg",
+            ["small"] = "sm"
+        };
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            _pickerClassMapper
+                .Add("ant-cascader-picker")
+                .GetIf(() => $"ant-cascader-picker-{Size}", () => _sizeMap.ContainsKey(Size))
+                .If("ant-cascader-picker-rtl", () => RTL);
+
+            _inputClassMapper
+                .Add("ant-cascader-input")
+                .GetIf(() => $"ant-cascader-input-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
+                .If("ant-cascader-input-rtl", () => RTL);
+
+            _menuClassMapper
+                .Add("ant-cascader-menu")
+                .If($"ant-cascader-menu-rtl", () => RTL);
         }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-
-            Hashtable sizeMap = new Hashtable()
-            {
-                ["large"] = "lg",
-                ["small"] = "sm"
-            };
-
-            if (sizeMap.ContainsKey(Size))
-            {
-                _pickerSizeClass = $"ant-cascader-picker-{Size}";
-                _inputSizeClass = $"ant-input-{sizeMap[Size]}";
-            }
-            else
-            {
-                _pickerSizeClass = "";
-                _inputSizeClass = "";
-            }
 
             ProcessParentAndDefault();
         }

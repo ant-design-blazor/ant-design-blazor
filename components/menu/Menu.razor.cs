@@ -214,7 +214,8 @@ namespace AntDesign
                 .If($"{PrefixCls}-{MenuMode.Vertical}", () => InternalMode == MenuMode.Vertical)
                 .If($"{PrefixCls}-{MenuMode.Horizontal}", () => InternalMode == MenuMode.Horizontal)
                 .If($"{PrefixCls}-inline-collapsed", () => InlineCollapsed)
-                .If($"{PrefixCls}-unselectable", () => !Selectable);
+                .If($"{PrefixCls}-unselectable", () => !Selectable)
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
 
         protected override void OnInitialized()
