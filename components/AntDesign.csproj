@@ -13,7 +13,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>James Yeung</Copyright>
+    <Copyright>.NET Foundation and Contributors</Copyright>
     <Authors>James Yeung</Authors>
     <PackageIcon>logo.png</PackageIcon>
     <NoWarn>CA2007</NoWarn>
