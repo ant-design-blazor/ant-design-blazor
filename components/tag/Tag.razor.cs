@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AntDesign.core;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -21,7 +17,18 @@ namespace AntDesign
         public string Mode { get; set; } = "default";
 
         [Parameter]
-        public string Color { get; set; }
+        public string Color
+        {
+            get => _color;
+            set
+            {
+                if (_color != value)
+                {
+                    _color = value;
+                    _presetColor = IsPresetColor(_color);
+                }
+            }
+        }
 
         [Parameter]
         public bool Closable { get; set; }
@@ -55,17 +62,12 @@ namespace AntDesign
 
         private bool _presetColor;
         private bool _closed;
+        private string _color;
 
-        protected override Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             this.UpdateClassMap();
-            return base.OnInitializedAsync();
-        }
-
-        protected override void OnParametersSet()
-        {
-            this.UpdateClassMap();
-            base.OnParametersSet();
+            base.OnInitialized();
         }
 
         private static bool IsPresetColor(string color)
@@ -82,12 +84,11 @@ namespace AntDesign
 
         private void UpdateClassMap()
         {
-            this._presetColor = IsPresetColor(this.Color);
             string prefix = "ant-tag";
-            this.ClassMapper.Clear().Add(prefix)
+            this.ClassMapper.Add(prefix)
                 .If($"{prefix}-has-color", () => !string.IsNullOrEmpty(Color) && !_presetColor)
                 .If($"{prefix}-hidden", () => Visible == false)
-                .If($"{prefix}-{Color}", () => _presetColor)
+                .GetIf(() => $"{prefix}-{Color}", () => _presetColor)
                 .If($"{prefix}-checkable", () => Mode == "checkable")
                 .If($"{prefix}-checkable-checked", () => Checked)
                 ;
@@ -99,7 +100,6 @@ namespace AntDesign
             {
                 this.Checked = !this.Checked;
                 await this.CheckedChange.InvokeAsync(this.Checked);
-                this.UpdateClassMap();
             }
         }
 
@@ -107,7 +107,10 @@ namespace AntDesign
         {
             var closeEvent = new CloseEventArgs<MouseEventArgs>(e);
             await this.OnClosing.InvokeAsync(closeEvent);
-            if (closeEvent.Cancel == true) return;
+            if (closeEvent.Cancel)
+            {
+                return;
+            }
             await this.OnClose.InvokeAsync(e);
             this._closed = true;
         }
@@ -122,6 +125,4 @@ namespace AntDesign
             }
         }
     }
-
- 
 }
