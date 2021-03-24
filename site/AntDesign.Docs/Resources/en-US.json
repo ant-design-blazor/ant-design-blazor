@@ -1,7 +1,8 @@
 ﻿{
-  "app.theme.switch.default": "Default theme",
-  "app.theme.switch.dark": "Dark theme",
-  "app.theme.switch.compact": "Compact theme",
+  "app.theme.switch.default": "Default Theme",
+  "app.theme.switch.dark": "Dark Theme",
+  "app.theme.switch.compact": "Compact Theme",
+  "app.theme.switch.aliyun": "Aliyun Theme",
   "app.header.search": "Search...",
   "app.header.menu.documentation": "Docs",
   "app.header.menu.components": "Components",

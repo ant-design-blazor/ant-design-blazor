@@ -340,7 +340,7 @@ ASALocalRun/
 healthchecksdb
 package-lock.json
 /components/wwwroot/less
-/components/wwwroot/css/ant-design-blazor.css
+/components/wwwroot/css
 /components/wwwroot/js/ant-design-blazor.js
 /components/wwwroot/js/ant-design-blazor.js.map
 /components/AntDesign.xml
