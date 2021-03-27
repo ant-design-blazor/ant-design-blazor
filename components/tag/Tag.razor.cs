@@ -49,7 +49,7 @@ namespace AntDesign
         public EventCallback<MouseEventArgs> OnClose { get; set; }
 
         /// <summary>
-        /// 点击关闭按钮前触发，且可以终止关闭操作
+        /// Triggered before true closing, can prevent the closing
         /// </summary>
         [Parameter]
         public EventCallback<CloseEventArgs<MouseEventArgs>> OnClosing { get; set; }

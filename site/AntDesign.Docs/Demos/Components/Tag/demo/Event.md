@@ -1,14 +1,14 @@
 ﻿---
-order: 10
+order: 9
 title:
-  zh-CN: 事件
-  en-US: Event
+  zh-CN: 关闭前确认
+  en-US: Confirm before closing
 ---
 
 ## zh-CN
 
-Tag的事件
+Tag 在关闭前，可以通过 `OnClosing` 事件中，用 `Cancel` 属性来取消关闭。
 
 ## en-US
 
-Tag Event
+Tag can be stopped closing with the `Cancel` property in the `OnClosing` event before closing.
