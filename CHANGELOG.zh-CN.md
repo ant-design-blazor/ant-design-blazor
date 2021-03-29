@@ -15,6 +15,17 @@ timeline: true
 
 ---
 
+## 0.7.3
+
+`2021-03-29`
+
+- 🐞 修复 Dropdown 下拉列表动画反向的问题。[#1274](https://github.com/ant-design/ant-design/pull/1274) [@mutouzdl](https://github.com/mutouzdl)
+- 🐞 修正 Tree 组件节点无法展开的问题。[#1275](https://github.com/ant-design/ant-design/pull/1275) [@TimChen44](https://github.com/TimChen44)
+- 💄 修复  Cascader 不能通过 Style 属性影响的样式的问题。[#1269](https://github.com/ant-design/ant-design/pull/1269) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 DatePicker [从结束日期面板选择的日期]、[季度面板的日期范围效果]  不正确。[#1260](https://github.com/ant-design/ant-design/pull/1260) [@mutouzdl](https://github.com/mutouzdl)
+- 📖 增加 .NET Foundation 版权信息。[#1272](https://github.com/ant-design/ant-design/pull/1272) [@ElderJames](https://github.com/ElderJames)
+- 📖 修复样式同步和 PR 预览的脚本。[68c7539](https://github.com/ant-design/ant-design/commit/68c7539) [@ElderJames](https://github.com/ElderJames)
+
 ## 0.7.2
 
 `2021-03-14`
