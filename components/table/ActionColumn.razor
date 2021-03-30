@@ -15,6 +15,11 @@ else if (IsMeasure)
 }
 else if (IsColGroup)
 {
+    @if (AppendExpandColumn)
+    {
+        <col class="ant-table-expand-icon-col">
+    }
+
     if (Width != null)
     {
         <col style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
@@ -26,12 +31,29 @@ else if (IsColGroup)
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
+    @if (AppendExpandColumn)
+    {
+        <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
+    }
+
     <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan">
         @if (TitleTemplate != null)@TitleTemplate else @Title
     </th>
 }
 else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 {
+    @if (AppendExpandColumn)
+    {
+        <td class="ant-table-cell ant-table-row-expand-icon-cell">
+            @if (Table.RowExpandable(RowData) && (!Table.TreeMode || !RowData.HasChildren))
+            {
+                <button type="button" @onclick="ToggleTreeNode"
+                        class="ant-table-row-expand-icon @(RowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
+                        aria-label="@(RowData.Expanded?Table.Locale.Collapse:Table.Locale.Expand)"></button>
+            }
+        </td>
+    }
+
     <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan">
         @ChildContent
     </td>
