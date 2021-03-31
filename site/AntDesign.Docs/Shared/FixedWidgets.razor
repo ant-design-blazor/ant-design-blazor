@@ -1,4 +1,6 @@
-﻿<div class="fixed-widgets">
+﻿@inherits AntDomComponentBase
+
+<div class="@ClassMapper.Class">
     <Dropdown Placement="PlacementType.TopCenter">
         <Unbound>
             <div @ref="context.Current" class="ant-avatar ant-avatar-circle ant-avatar-icon fixed-widgets-avatar"

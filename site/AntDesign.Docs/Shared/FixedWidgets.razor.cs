@@ -2,10 +2,11 @@
 using AntDesign.Docs.Localization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign.Docs.Shared
 {
-    public partial class FixedWidgets
+    public partial class FixedWidgets : AntDomComponentBase
     {
         [Inject] private ILanguageService Language { get; set; }
         [Inject] private IJSRuntime JS { get; set; }
@@ -13,6 +14,12 @@ namespace AntDesign.Docs.Shared
         private ElementReference _linkRef;
 
         private string _themeFileUrl;
+
+        protected override void OnInitialized()
+        {
+            ClassMapper.Add("fixed-widgets")
+                .If("fixed-widgets-rtl", () => RTL);
+        }
 
         private async Task ChangeTheme(string theme)
         {
