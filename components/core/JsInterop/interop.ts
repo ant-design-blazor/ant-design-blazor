@@ -646,7 +646,9 @@ export function removePreventEnterOnOverlayVisible(element) {
   funcDict[element.id + "keydown:Enter"] = null;
 }
 
-export function setDomAttribute(element, attribute, value) {
+export function setDomAttribute(element, attributes) {
   let dom = getDom(element);
-  (dom as HTMLElement).setAttribute(attribute, value);
+  for (var key in attributes) {
+    (dom as HTMLElement).setAttribute(key, attributes[key]);
+  }
 }
