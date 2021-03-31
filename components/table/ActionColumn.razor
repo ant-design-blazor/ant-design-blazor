@@ -55,6 +55,18 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
     }
 
     <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan">
+        @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
+        {
+            <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
+            @if (RowData.HasChildren)
+            {
+                <button type="button" @onclick="ToggleTreeNode" class="ant-table-row-expand-icon @(RowData?.Expanded==true?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded==true?Table.Locale.Collapse:Table.Locale.Expand)"></button>
+            }
+            else
+            {
+                <button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
+            }
+        }
         @ChildContent
     </td>
 }
