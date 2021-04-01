@@ -50,6 +50,7 @@ namespace AntDesign
                 .If($"{_prefixCls}-disabled", () => Disabled || Loading)
                 .If($"{_prefixCls}-loading", () => Loading)
                 .If($"{_prefixCls}-small", () => Size == "small")
+                .If($"{_prefixCls}-rtl", () => RTL)
                 ;
         }
 

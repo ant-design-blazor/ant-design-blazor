@@ -25,7 +25,8 @@ namespace AntDesign
             //ant-input-password-large ant-input-affix-wrapper ant-input-affix-wrapper-lg
             ClassMapper
                 .If($"{PrefixCls}-password-large", () => Size == InputSize.Large)
-                .If($"{PrefixCls}-password-small", () => Size == InputSize.Small);
+                .If($"{PrefixCls}-password-small", () => Size == InputSize.Small)
+                .If($"{PrefixCls}-password-rtl", () => RTL);
 
             AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-password");
 

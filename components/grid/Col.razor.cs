@@ -89,6 +89,7 @@ namespace AntDesign
                 .If($"{prefixCls}-offset-{this.Offset.Value}", () => this.Offset.Value != null)
                 .If($"{prefixCls}-pull-{this.Pull.Value}", () => this.Pull.Value != null)
                 .If($"{prefixCls}-push-{this.Push.Value}", () => this.Push.Value != null)
+                .If($"{prefixCls}-rtl", () => RTL)
                 .If($"ant-form-item-label-left", () => this.LableAlignType == AntLableAlignType.Left)
                 ;
 

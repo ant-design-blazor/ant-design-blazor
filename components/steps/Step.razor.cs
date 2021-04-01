@@ -113,6 +113,7 @@ namespace AntDesign
                 .If($"{prefixName}-disabled", () => Disabled)
                 .If($"{prefixName}-custom", () => !string.IsNullOrEmpty(Icon))
                 .If($"ant-steps-next-error", () => GroupStatus == "error" && Parent.Current == Index + 1)
+                .If($"{prefixName}-rtl", () => RTL)
                 ;
         }
 
