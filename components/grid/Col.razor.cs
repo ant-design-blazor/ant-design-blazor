@@ -63,7 +63,7 @@ namespace AntDesign
         [CascadingParameter]
         public Row Row { get; set; }
 
-        private string _hostFlexStyle = null;
+        private string _hostFlexStyle;
 
         private string GutterStyle { get; set; }
 
@@ -121,12 +121,12 @@ namespace AntDesign
                 {
                     if (Regex.Match(str, "^\\d+(\\.\\d+)?(px|em|rem|%)$").Success)
                     {
-                        return $"0 0 {Flex}";
+                        return $"flex: 0 0 {str}";
                     }
 
-                    return Flex.AsT0;
+                    return $"flex: {str}";
                 },
-                num => $"{Flex} {Flex} auto");
+                num => $"flex: {num} {num} auto");
         }
 
         protected override void OnInitialized()
