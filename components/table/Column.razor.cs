@@ -213,6 +213,7 @@ namespace AntDesign
         {
             _sortDirection = sortDirection;
             SortModel.SetSortDirection(sortDirection);
+            StateHasChanged();
         }
 
         private void FilterSelected(TableFilter<TData> filter)
