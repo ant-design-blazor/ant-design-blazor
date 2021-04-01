@@ -31,25 +31,25 @@ namespace AntDesign
 
         public OneOf<int, EmbeddedProperty> Xxl { get; set; }
 
-        public AntLableAlignType LableAlignType { get; set; } = AntLableAlignType.Right;
+        public AntLableAlignType LableAlign { get; set; } = AntLableAlignType.Right;
 
         public Dictionary<string, object> ToAttributes()
         {
             Dictionary<string, object> attributes = new Dictionary<string, object>();
 
-            attributes.Add("Flex", Flex);
-            attributes.Add("Span", Span);
-            attributes.Add("Order", Order);
-            attributes.Add("Offset", Offset);
-            attributes.Add("Push", Push);
-            attributes.Add("Pull", Pull);
-            attributes.Add("Xs", Xs);
-            attributes.Add("Sm", Sm);
-            attributes.Add("Md", Md);
-            attributes.Add("Lg", Lg);
-            attributes.Add("Xl", Xl);
-            attributes.Add("Xxl", Xxl);
-            attributes.Add("LableAlignType", LableAlignType);
+            attributes.Add(nameof(Col.Flex), Flex);
+            attributes.Add(nameof(Col.Span), Span);
+            attributes.Add(nameof(Col.Order), Order);
+            attributes.Add(nameof(Col.Offset), Offset);
+            attributes.Add(nameof(Col.Push), Push);
+            attributes.Add(nameof(Col.Pull), Pull);
+            attributes.Add(nameof(Col.Xs), Xs);
+            attributes.Add(nameof(Col.Sm), Sm);
+            attributes.Add(nameof(Col.Md), Md);
+            attributes.Add(nameof(Col.Lg), Lg);
+            attributes.Add(nameof(Col.Xl), Xl);
+            attributes.Add(nameof(Col.Xxl), Xxl);
+            attributes.Add(nameof(Col.LableAlign), LableAlign);
 
             return attributes;
         }

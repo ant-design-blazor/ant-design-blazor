@@ -60,7 +60,7 @@ namespace AntDesign
         [Parameter]
         public OneOf<int, EmbeddedProperty> Xxl { get; set; }
         [Parameter]
-        public AntLableAlignType LableAlignType { get; set; } = AntLableAlignType.Right;
+        public AntLableAlignType LableAlign { get; set; } = AntLableAlignType.Right;
 
         [CascadingParameter]
         public Row Row { get; set; }
@@ -89,7 +89,7 @@ namespace AntDesign
                 .GetIf(() => $"{prefixCls}-pull-{this.Pull.Value}", () => this.Pull.Value != null)
                 .GetIf(() => $"{prefixCls}-push-{this.Push.Value}", () => this.Push.Value != null)
                 .If($"{prefixCls}-rtl", () => RTL)
-                .If($"ant-form-item-label-left", () => this.LableAlignType == AntLableAlignType.Left)
+                .If($"ant-form-item-label-left", () => this.LableAlign == AntLableAlignType.Left)
                 ;
 
             SetSizeClassMapper(prefixCls, Xs, "xs");
