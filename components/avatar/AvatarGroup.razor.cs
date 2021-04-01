@@ -17,11 +17,26 @@ namespace AntDesign
         [Parameter]
         public PlacementType MaxPopoverPlacement { get; set; } = PlacementType.Top;
 
+        private ClassMapper _popoverClassMapper = new ClassMapper();
+
         private bool _overflow;
         private string _prefixCls = "ant-avatar-group";
 
         private IList<Avatar> _shownAvatarList = new List<Avatar>();
         private IList<Avatar> _hiddenAvatarList = new List<Avatar>();
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            ClassMapper
+                .Add(_prefixCls)
+                .If($"{_prefixCls}-rtl", () => RTL);
+
+            _popoverClassMapper
+                .Add($"{_prefixCls}-popover")
+                .If($"{_prefixCls}-popover-rtl", () => RTL);
+        }
 
         internal void AddAvatar(Avatar item)
         {

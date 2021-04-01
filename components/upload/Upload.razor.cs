@@ -86,6 +86,24 @@ namespace AntDesign
         private bool IsPicture => ListType == "picture";
         private bool IsPictureCard => ListType == "picture-card";
 
+        private ClassMapper _listClassMapper = new ClassMapper();
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            var prefixCls = "ant-upload";
+
+            ClassMapper
+                .Add(prefixCls)
+                .If($"{prefixCls}-rtl", () => RTL);
+
+            _listClassMapper
+                .Add($"{prefixCls}-list")
+                .Get(() => $"{prefixCls}-list-{ListType}")
+                .If($"{prefixCls}-list-rtl", () => RTL);
+        }
+
         protected override Task OnInitializedAsync()
         {
             FileList.InsertRange(0, DefaultFileList);

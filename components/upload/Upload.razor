@@ -24,7 +24,7 @@
 
     @if (ShowUploadList)
     {
-        <div class="ant-upload-list ant-upload-list-@ListType">
+        <div class="@_listClassMapper.Class">
             @{
                 var containerClass = ListType switch
                 {

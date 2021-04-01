@@ -1,5 +1,13 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AntDesign.Internal;
+using AntDesign.Locales;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntDesign
@@ -7,200 +15,385 @@ namespace AntDesign
     public partial class Pagination : AntDomComponentBase
     {
         [Parameter]
-        public EventCallback<int> PageSizeChanged { get; set; }
+        public int Total { get; set; } = 0;
 
         [Parameter]
-        public EventCallback<int> PageIndexChanged { get; set; }
+        public int DefaultCurrent { get; set; } = InitCurrent;
 
         [Parameter]
-        public EventCallback<PaginationEventArgs> OnPageIndexChange { get; set; }
+        public bool Disabled { get; set; } = false;
 
         [Parameter]
-        public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
-
-        [Parameter]
-        public OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>> ShowTotal { get; set; }
-
-        [Parameter]
-        public int Current { get; set; }
-
-        [Parameter]
-        public EventCallback<int> CurrentChanged { get; set; }
-
-        /// <summary>
-        /// 'default' | 'small'
-        /// </summary>
-        [Parameter]
-        public string Size { get; set; } = "default";
-
-        [Parameter]
-        public int[] PageSizeOptions { get; set; } = { 10, 20, 30, 40 };
-
-        [Parameter] public RenderFragment<PaginationItemRenderContext> ItemRender { get; set; } = null;
-
-        [Parameter]
-        public bool Disabled { get; set; }
-
-        [Parameter]
-        public bool ShowSizeChanger { get; set; }
-
-        [Parameter]
-        public bool HideOnSinglePage { get; set; }
-
-        [Parameter]
-        public bool ShowQuickJumper { get; set; }
-
-        [Parameter]
-        public bool Simple { get; set; }
-
-        [Parameter]
-        public bool Responsive { get; set; }
-
-        [Parameter]
-        public int Total
+        public int Current
         {
-            get => _total;
+            get => _current;
             set
             {
-                if (_total != value)
+                if (value == 0)
                 {
-                    _total = value;
-                    OnTotalChange(value);
+                    return;
+                }
+
+                if (value != _current)
+                {
+                    _current = value;
+                    _currentInputValue = _current;
                 }
             }
         }
 
         [Parameter]
-        public int PageIndex { get; set; } = 1;
+        public int DefaultPageSize { get; set; } = InitPageSize;
 
         [Parameter]
-        public int PageSize { get; set; } = 10;
-
-        [Parameter] public int DefaultCurrent { get; set; } = 1;
-
-        [Parameter] public int DefaultPageSize { get; set; } = 10;
-
-        [Parameter] public PaginationLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Pagination;
-
-        private bool _showPagination = true;
-
-        private string _size = "default";
-
-        private int _total = 0;
-
-        private void SetClass()
+        public int PageSize
         {
-            var clsPrefix = "ant-pagination";
-            ClassMapper
-                .Add(clsPrefix)
-                .If($"{clsPrefix}-simple", () => Simple)
-                .If($"{clsPrefix}-disabled", () => Disabled)
-                .If($"mini", () => !Simple && Size == "small")
-                ;
+            get => _pageSize;
+            set
+            {
+                if (value == 0)
+                {
+                    return;
+                }
+
+                if (value != _pageSize)
+                {
+                    var current = _current;
+                    var newCurrent = CalculatePage(value, _pageSize, Total);
+                    current = current > newCurrent ? newCurrent : current;
+
+                    _current = current;
+                    _currentInputValue = current;
+
+                    _pageSize = value;
+                }
+            }
         }
+
+        [Parameter]
+        public EventCallback<PaginationEventArgs> OnChange { get; set; }
+
+        [Parameter]
+        public bool HideOnSinglePage { get; set; } = false;
+
+        [Parameter]
+        public bool ShowSizeChanger { get; set; } = false;
+
+        [Parameter]
+        public int[] PageSizeOptions { get; set; } = PaginationOptions.DefaultPageSizeOptions;
+
+        [Parameter]
+        public EventCallback<PaginationEventArgs> OnShowSizeChange { get; set; }
+
+        [Parameter]
+        public bool ShowQuickJumper { get; set; } = false;
+
+        [Parameter]
+        public RenderFragment? GoButton { get; set; }
+
+        [Parameter]
+        public bool ShowTitle { get; set; } = true;
+
+        [Parameter]
+        public OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>>? ShowTotal { get; set; }
+
+        [Parameter]
+        public string Size { get; set; } = "default";
+
+        [Parameter]
+        public bool Responsive { get; set; } = true;
+
+        [Parameter]
+        public bool Simple { get; set; } = false;
+
+        [Parameter]
+        public PaginationLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Pagination;
+
+        [Parameter]
+        public RenderFragment<PaginationItemRenderContext>? ItemRender { get; set; } = context => context.OriginalElement(context);
+
+        [Parameter]
+        public bool ShowLessItems { get; set; } = false;
+
+        [Parameter]
+        public bool ShowPrevNextJumpers { get; set; } = true;
+
+        [Parameter]
+        public string Direction { get; set; } = "ltr";
+
+        [Parameter]
+        public RenderFragment<PaginationItemRenderContext>? PrevIcon { get; set; }
+
+        [Parameter]
+        public RenderFragment<PaginationItemRenderContext>? NextIcon { get; set; }
+
+        [Parameter]
+        public RenderFragment<PaginationItemRenderContext>? JumpPrevIcon { get; set; }
+
+        [Parameter]
+        public RenderFragment<PaginationItemRenderContext>? JumpNextIcon { get; set; }
+
+        [Parameter(CaptureUnmatchedValues = true)]
+        public Dictionary<string, object>? UnmatchedAttributes { get; set; }
+
+        private const string PrefixCls = "ant-pagination";
+
+        private ClassMapper _prevClass = new();
+
+        private ClassMapper _nextClass = new();
+
+        private ClassMapper _jumpPrevClass = new();
+
+        private ClassMapper _jumpNextClass = new();
+
+        private int _current = InitCurrent;
+
+        private int _pageSize = InitPageSize;
+
+        private const int InitCurrent = 1;
+
+        private const int InitPageSize = 10;
+
+        private int _currentInputValue;
+
+        private bool IsSmall => !Simple && Size == "small";
 
         protected override void OnInitialized()
         {
             SetClass();
-            this.PageIndex = Current > 0 ? Current : DefaultCurrent;
-            this.PageSize = DefaultPageSize;
+            SetIcon();
+            var hasOnChange = OnChange.HasDelegate;
+            var hasCurrent = _current != 0;
+            if (hasCurrent && !hasOnChange)
+            {
+                Console.WriteLine("Warning: You provided a `current` prop to a Pagination component without an `onChange` handler. This will render a read-only component.");
+            }
+
+            var current = DefaultCurrent;
+            if (Current != 0)
+            {
+                current = Current;
+            }
+
+            var pageSize = DefaultPageSize;
+            if (PageSize != 0)
+            {
+                pageSize = PageSize;
+            }
+
+            current = Math.Min(current, CalculatePage(pageSize, PageSize, Total));
+
+            Current = current;
+            _currentInputValue = current;
+            PageSize = pageSize;
+
+            base.OnInitialized();
         }
 
-        protected override void OnParametersSet()
+        private void SetClass()
         {
-            if (this.PageSize <= 0)
-            {
-                this.PageSize = DefaultPageSize;
-            }
+            ClassMapper
+               .Add(PrefixCls)
+               .If($"{PrefixCls}-simple", () => Simple)
+               .If($"{PrefixCls}-disabled", () => Disabled)
+               .If("mini", () => !Simple && Size == "small")
+               .If($"{PrefixCls}-rtl", () => RTL);
+
+            _prevClass
+               .Add($"{PrefixCls}-prev")
+               .If($"{PrefixCls}-disabled", () => !HasPrev());
+
+            _nextClass
+               .Add($"{PrefixCls}-next")
+               .If($"{PrefixCls}-disabled", () => !HasNext());
+
+            _jumpPrevClass
+               .Add($"{PrefixCls}-jump-prev")
+               .If($"{PrefixCls}-jump-prev-custom-icon", () => JumpPrevIcon != null);
+
+            _jumpNextClass
+               .Add($"{PrefixCls}-jump-next")
+               .If($"{PrefixCls}-jump-next-custom-icon", () => JumpNextIcon != null);
         }
 
-        private static int ValidatePageIndex(int value, int lastIndex)
+        private int CalculatePage(int? p, int pageSize, int total)
         {
-            if (value > lastIndex)
+            var size = p ?? pageSize;
+            return (int)Math.Floor((double)(total - 1) / size) + 1;
+        }
+
+        private int GetJumpPrevPage()
+        {
+            return Math.Max(1, _current - (ShowLessItems ? 3 : 5));
+        }
+
+        private int GetJumpNextPage()
+        {
+            return Math.Min(CalculatePage(null, _pageSize, Total), _current + (ShowLessItems ? 3 : 5));
+        }
+
+        private int GetValidValue(string inputValue)
+        {
+            var allPages = CalculatePage(null, _pageSize, Total);
+            var currentInputValue = _currentInputValue;
+            int value;
+            if (string.IsNullOrWhiteSpace(inputValue))
             {
-                return lastIndex;
+                value = default;
             }
-            else if (value < 1)
+            else if (int.TryParse(inputValue, out var inputNumber))
             {
-                return 1;
+                value = inputNumber >= allPages ? allPages : inputNumber;
             }
             else
             {
-                return value;
+                value = currentInputValue;
             }
+
+            return value;
         }
 
-        private void HandlePageIndexChange(int index)
+        private bool IsValid(int page) => page != _current;
+
+        private bool ShouldDisplayQuickJumper() => ShowQuickJumper && Total > _pageSize;
+
+        private void HandleKeyUp(EventArgs e)
         {
-            var lastIndex = GetLastIndex(this.Total, this.PageSize);
-            var validIndex = ValidatePageIndex(index, lastIndex);
-            if (validIndex != this.PageIndex && !this.Disabled)
+            if (e is KeyboardEventArgs ke)
             {
-                this.PageIndex = validIndex;
-                this.PageIndexChanged.InvokeAsync(this.PageIndex);
-                this.CurrentChanged.InvokeAsync(this.PageIndex);
-                this.OnPageIndexChange.InvokeAsync(new PaginationEventArgs()
+                var value = GetValidValue(ke.Key);
+                _currentInputValue = value;
+
+                if (ke.Key == "Enter")
                 {
-                    PageCount = lastIndex,
-                    PageIndex = PageIndex,
-                    PageSize = PageSize,
-                    Total = Total
-                });
-            }
-        }
-
-        private void HandlePageSizeChange(int size)
-        {
-            this.PageSize = size;
-            this.PageSizeChanged.InvokeAsync(size);
-            var lastIndex = GetLastIndex(this.Total, this.PageSize);
-            if (this.PageIndex > lastIndex)
-            {
-                this.HandlePageIndexChange(lastIndex);
-            }
-            else
-            {
-                this.OnPageSizeChange.InvokeAsync(new PaginationEventArgs()
+                    HandleChange(value);
+                }
+                else if (ke.Key == "ArrowUp")
                 {
-                    PageCount = lastIndex,
-                    PageIndex = PageIndex,
-                    PageSize = PageSize,
-                    Total = Total
-                });
+                    HandleChange(value - 1);
+                }
+                else if (ke.Key == "ArrowDown")
+                {
+                    HandleChange(value + 1);
+                }
             }
         }
 
-        private void OnTotalChange(int total)
+        private async Task ChangePageSize(int size)
         {
-            var lastIndex = GetLastIndex(total, this.PageSize);
-            if (this.PageIndex > lastIndex)
+            var current = _current;
+            var newCurrent = CalculatePage(size, _pageSize, Total);
+            current = current > newCurrent ? newCurrent : current;
+
+            // fix the issue:
+            // Once 'total' is 0, 'current' in 'onShowSizeChange' is 0, which is not correct.
+            if (newCurrent == 0)
             {
-                this.HandlePageIndexChange(lastIndex);
+                current = _current;
+            }
+
+            PageSize = size;
+            Current = current;
+
+            if (OnShowSizeChange.HasDelegate)
+            {
+                await OnShowSizeChange.InvokeAsync(new(current, size));
+            }
+
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(new(current, size));
             }
         }
 
-        private static int GetLastIndex(int total, int pageSize)
+        private async void HandleChange(int p)
         {
-            return (total - 1) / pageSize + 1;
+            var disabled = Disabled;
+
+            var page = p;
+            if (IsValid(page) && !disabled)
+            {
+                var currentPage = CalculatePage(null, _pageSize, Total);
+                if (page > currentPage)
+                {
+                    page = currentPage;
+                }
+                else if (page < 1)
+                {
+                    page = 1;
+                }
+
+                Current = page;
+
+                var pageSize = _pageSize;
+                if (OnChange.HasDelegate)
+                {
+                    await OnChange.InvokeAsync(new(page, pageSize));
+                }
+            }
         }
-    }
 
-    public class PaginationTotalContext
-    {
-        public int Total { get; set; }
+        private void Prev()
+        {
+            if (HasPrev())
+            {
+                HandleChange(_current - 1);
+            }
+        }
 
-        public (int, int) Range { get; set; }
-    }
+        private void Next()
+        {
+            if (HasNext())
+            {
+                HandleChange(_current + 1);
+            }
+        }
 
-    public class PaginationItemRenderContext
-    {
-        /// <summary>
-        ///  'page' | 'prev' | 'next' | 'prev_5' | 'next_5'
-        /// </summary>
-        public string Type { get; set; }
+        private void JumpPrev() => HandleChange(GetJumpPrevPage());
 
-        public int Page { get; set; }
+        private void JumpNext() => HandleChange(GetJumpNextPage());
 
-        public RenderFragment<PaginationItemRenderContext> DefaultRender { get; set; }
+        private bool HasPrev() => _current > 1;
+
+        private bool HasNext() => _current < CalculatePage(null, _pageSize, Total);
+
+        private void RunIfEnter(KeyboardEventArgs @event, Action callback)
+        {
+            if (@event.Code == "Enter")
+            {
+                callback();
+            }
+        }
+
+        private void RunIfEnterPrev(KeyboardEventArgs e) => this.RunIfEnter(e, Prev);
+
+        private void RunIfEnterNext(KeyboardEventArgs e) => this.RunIfEnter(e, Next);
+
+        private void RunIfEnterJumpPrev(KeyboardEventArgs e) => this.RunIfEnter(e, JumpPrev);
+
+        private void RunIfEnterJumpNext(KeyboardEventArgs e) => this.RunIfEnter(e, JumpNext);
+
+        private void HandleGoTO(EventArgs e)
+        {
+            if (e is KeyboardEventArgs ke && ke.Key == "Enter" || e is MouseEventArgs me && me.Type == "click")
+            {
+                HandleChange(_currentInputValue);
+            }
+        }
+
+        private RenderFragment RenderPrev(int prevPage)
+        {
+            var disabled = !this.HasPrev();
+            var prevButton = ItemRender.Invoke(new(prevPage, PaginationItemType.Prev, GetItemIcon(PrevIcon, "prev page"), disabled));
+
+            return prevButton;
+        }
+
+        private RenderFragment RenderNext(int nextPage)
+        {
+            var disabled = !this.HasNext();
+            var nextButton = ItemRender.Invoke(new(nextPage, PaginationItemType.Next, GetItemIcon(NextIcon, "next page"), disabled));
+            return nextButton;
+        }
     }
 }

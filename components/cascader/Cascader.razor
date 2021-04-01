@@ -26,7 +26,7 @@
             <Overlay>
                 <div class="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" tabindex="-1" @onblur="CascaderOnBlur">
                     <div @onmouseover="NodesOnMouseOver" @onmouseout="NodesOnMouseOut">
-                        <ul class="ant-cascader-menu">
+                        <ul class="@_menuClassMapper.Class">
                             @foreach (CascaderNode nd in _nodelist)
                             {
                                 bool isActive = _renderNodes.Where(n => n == nd).Any();

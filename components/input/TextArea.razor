@@ -19,7 +19,7 @@
             { "style", Style },
             { "class", ClassMapper.Class },
             { "disabled", Disabled },
-                                    };
+         };
 
     if (Attributes != null)
     {
@@ -29,7 +29,7 @@
 
 @if (Suffix != null)
 {
-    <span class=@($"{PrefixCls}-affix-wrapper {PrefixCls}-affix-wrapper-textarea-with-clear-btn")>
+    <span class="@_warpperClassMapper.Class">
         <textarea @ref="Ref" @attributes="attributes"/>
         @Suffix
     </span>

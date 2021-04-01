@@ -42,11 +42,13 @@ namespace AntDesign
 
         private void SetClassMapper()
         {
-            ClassMapper.Clear().Add("ant-tree")
+            ClassMapper
+                .Add("ant-tree")
                 .If("ant-tree-show-line", () => ShowLine)
                 .If("ant-tree-icon-hide", () => ShowIcon)
                 .If("ant-tree-block-node", () => BlockNode)
-                .If("draggable-tree", () => Draggable);
+                .If("draggable-tree", () => Draggable)
+                .If("ant-tree-rtl", () => RTL);
         }
 
         #endregion Tree

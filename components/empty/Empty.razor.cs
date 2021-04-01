@@ -8,12 +8,6 @@ namespace AntDesign
         [Parameter]
         public string PrefixCls { get; set; } = "ant-empty";
 
-        /// <summary>
-        /// "ltr"|"rtl"
-        /// </summary>
-        [Parameter]
-        public string Direction { get; set; } = "ltr";
-
         [Parameter]
         public string ImageStyle { get; set; }
 
@@ -43,8 +37,8 @@ namespace AntDesign
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-normal", () => Simple)
-                .GetIf(() => $"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                 .If($"{PrefixCls}-small", () => Small)
+                .If($"{PrefixCls}-rtl", () => RTL)
                 ;
         }
 

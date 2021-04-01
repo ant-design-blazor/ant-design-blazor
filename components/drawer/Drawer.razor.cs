@@ -192,6 +192,7 @@ namespace AntDesign
                 .Add(prefixCls)
                 .If($"{prefixCls}-open", () => _isOpen)
                 .If($"{prefixCls}-{Placement}", () => Placement.IsIn("top", "bottom", "right", "left"))
+                .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
             this.TitleClassMapper.Clear()

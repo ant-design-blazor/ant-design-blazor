@@ -68,14 +68,15 @@ namespace AntDesign
             string prefixName = "ant-checkbox";
             ClassMapper.Clear()
                 .Add(prefixName)
-                .If($"{prefixName}-wrapper", () => true)
+                .Add($"{prefixName}-wrapper")
                 .If($"{prefixName}-wrapper-checked", () => Checked);
 
             ClassMapperSpan.Clear()
                 .Add(prefixName)
                 .If($"{prefixName}-checked", () => Checked && !Indeterminate)
                 .If($"{prefixName}-disabled", () => Disabled)
-                .If($"{prefixName}-indeterminate", () => Indeterminate);
+                .If($"{prefixName}-indeterminate", () => Indeterminate)
+                .If($"{prefixName}-rtl", () => RTL);
         }
 
         protected override void OnValueChange(bool value)
