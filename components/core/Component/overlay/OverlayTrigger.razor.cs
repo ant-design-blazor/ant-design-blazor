@@ -126,6 +126,9 @@ namespace AntDesign.Internal
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         [Parameter]
+        public EventCallback OnMaskClick { get; set; }
+
+        [Parameter]
         public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
         [Parameter]
@@ -343,6 +346,11 @@ namespace AntDesign.Internal
         {
             if (_mouseInOverlay == false && _mouseInTrigger == false)
             {
+                if (OnMaskClick.HasDelegate)
+                {
+                    OnMaskClick.InvokeAsync(null);
+                }
+
                 Hide();
             }
         }
@@ -410,7 +418,7 @@ namespace AntDesign.Internal
             {
                 return OverlayEnterCls;
             }
-            return $"slide-{Placement.SlideName}-enter slide-{Placement.SlideName}-enter-active slide-{Placement.SlideName}";
+            return $"ant-slide-{Placement.SlideName}-enter ant-slide-{Placement.SlideName}-enter-active ant-slide-{Placement.SlideName}";
         }
 
         internal virtual string GetOverlayLeaveClass()
@@ -419,7 +427,7 @@ namespace AntDesign.Internal
             {
                 return OverlayLeaveCls;
             }
-            return $"slide-{Placement.SlideName}-leave slide-{Placement.SlideName}-leave-active slide-{Placement.SlideName}";
+            return $"ant-slide-{Placement.SlideName}-leave ant-slide-{Placement.SlideName}-leave-active ant-slide-{Placement.SlideName}";
         }
 
         internal virtual string GetOverlayHiddenClass()
