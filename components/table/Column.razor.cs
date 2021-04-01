@@ -189,12 +189,6 @@ namespace AntDesign
             SortModel.SetSortDirection(sortDirection);
         }
 
-        private void ToggleTreeNode()
-        {
-            RowData.Expanded = !RowData.Expanded;
-            Table?.Refresh();
-        }
-
         private void FilterSelected(TableFilter<TData> filter)
         {
             if (!FilterMultiple)
