@@ -31,7 +31,7 @@ namespace AntDesign
 
         public OneOf<int, EmbeddedProperty> Xxl { get; set; }
 
-        public AntLableAlignType LableAlign { get; set; } = AntLableAlignType.Right;
+        public AntLabelAlignType LabelAlign { get; set; } = AntLabelAlignType.Right;
 
         public Dictionary<string, object> ToAttributes()
         {
@@ -49,7 +49,7 @@ namespace AntDesign
             attributes.Add(nameof(Col.Lg), Lg);
             attributes.Add(nameof(Col.Xl), Xl);
             attributes.Add(nameof(Col.Xxl), Xxl);
-            attributes.Add(nameof(Col.LableAlign), LableAlign);
+            attributes.Add(nameof(Col.LabelAlign), LabelAlign);
 
             return attributes;
         }
