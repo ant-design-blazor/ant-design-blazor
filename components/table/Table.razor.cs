@@ -241,7 +241,7 @@ namespace AntDesign
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
-
+            _waitingReload = false;
             StateHasChanged();
 
             return queryModel;
@@ -349,7 +349,15 @@ namespace AntDesign
             }
         }
 
-        protected override bool ShouldRender() => this._shouldRender;
+        protected override bool ShouldRender()
+        {
+            if (_waitingReload)
+            {
+                _waitingReload = false;
+                Reload();
+            }
+            return this._shouldRender;
+        }
 
         void ITable.HasFixLeft() => _hasFixLeft = true;
 
