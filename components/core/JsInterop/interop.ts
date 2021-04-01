@@ -74,32 +74,31 @@ export function clearFile(element) {
 }
 
 export function getFileInfo(element) {
-  if (element.files && element.files.length > 0) {
-    var fileInfo = [];
-    for (var i = 0; i < element.files.length; i++) {
-      var file = element.files[i];
-      var objectUrl = getObjectURL(element);
-      fileInfo.push({
-        fileName: file.name,
-        size: file.size,
-        objectURL: objectUrl,
-        type: file.type
-      });
-    }
+    if (element.files && element.files.length > 0) {
+        var fileInfo = [];
+        for (var i = 0; i < element.files.length; i++) {
+            var file = element.files[i];
+            var objectUrl = getObjectURL(file);
+            fileInfo.push({
+                fileName: file.name,
+                size: file.size,
+                objectURL: objectUrl,
+                type: file.type
+            });
+        }
 
-    return fileInfo;
-  }
+        return fileInfo;
+    }
 }
 
-export function getObjectURL(element) {
-  var url = null;
-  var file = element.files[0];
-  if (window.URL != undefined) {
-    url = window.URL.createObjectURL(file);
-  } else if (window.webkitURL != undefined) {
-    url = window.webkitURL.createObjectURL(file);
-  }
-  return url;
+export function getObjectURL(file: File) {
+    var url = null;
+    if (window.URL != undefined) {
+        url = window.URL.createObjectURL(file);
+    } else if (window.webkitURL != undefined) {
+        url = window.webkitURL.createObjectURL(file);
+    }
+    return url;
 }
 
 export function uploadFile(element, index, data, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod) {
