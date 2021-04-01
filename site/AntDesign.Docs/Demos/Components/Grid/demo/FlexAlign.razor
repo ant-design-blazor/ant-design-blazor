@@ -1,48 +1,59 @@
 ﻿<div>
-    <Divider Orientation="left" Style="color: #333; font-weight:normal">
-        Align Top
-    </Divider>
+    <Divider Orientation="left">Align Top</Divider>
+    <Row Justify="center" Align="top">
+        <Col Span="4">
+            @DemoBox((100, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((50, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((120, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((80, "col-4"))
+        </Col>
+    </Row>
 
-    <div class="flex-demo">
-        <Row Justify="center" Align="top">
-            <Col Span="4"><p class="height-100">col-4</p></Col>
-            <Col Span="4"><p class="height-50">col-4</p></Col>
-            <Col Span="4"><p class="height-120">col-4</p></Col>
-            <Col Span="4"><p class="height-80">col-4</p></Col>
-        </Row>
-    </div>
+    <Divider Orientation="left">Align Middle</Divider>
+    <Row Justify="space-around" Align="middle">
+        <Col Span="4">
+            @DemoBox((100, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((50, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((120, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((80, "col-4"))
+        </Col>
+    </Row>
 
+    <Divider Orientation="left">Align Bottom</Divider>
+    <Row Justify="space-between" Align="bottom">
+        <Col Span="4">
+            @DemoBox((100, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((50, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((120, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((80, "col-4"))
+        </Col>
+    </Row>
+</div>
 
-    <Divider Orientation="left" Style="color: #333; font-weight:normal">
-        Align Center
-    </Divider>
-    <div class="flex-demo">
-        <Row Justify="space-around" Align="middle">
-            <Col  Span="4"><p class="height-100">col-4</p></Col>
-            <Col Span="4"><p class="height-50">col-4</p></Col>
-            <Col Span="4"><p class="height-120">col-4</p></Col>
-            <Col Span="4"><p class="height-80">col-4</p></Col>
-        </Row>
-    </div>
-
-    <Divider Orientation="left" Style="color: #333; font-weight:normal">
-        Align Bottom
-    </Divider>
-    <div class="flex-demo">
-        <Row Justify="space-between" Align="bottom">
-            <Col Span="4"><p class="height-100">col-4</p></Col>
-            <Col Span="4"><p class="height-50">col-4</p></Col>
-            <Col Span="4"><p class="height-120">col-4</p></Col>
-            <Col Span="4"><p class="height-80">col-4</p></Col>
-        </Row>
-    </div>
-    </div>
-    <style>
-        .flex-demo {
-            background-color: rgba(128, 128, 128, 0.08);
-        }
-    </style>
-
-    @code{
-
+<style>
+    #components-grid-demo-flex-align [class~='ant-row'] {
+        background: rgba(128, 128, 128, 0.08);
     }
+</style>
+
+@code{
+    RenderFragment<(int value, string children)> DemoBox = props =>@<p class="@($"height-{props.value}")">@props.children</p>;
+}

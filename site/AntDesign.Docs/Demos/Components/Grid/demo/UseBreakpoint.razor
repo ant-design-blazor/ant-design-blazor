@@ -1,0 +1,22 @@
+﻿<Row OnBreakpoint="HandleBreakpoint">
+    Current break point: @current.Name
+    @foreach (var type in types)
+    {
+        if (type.Width < current.Width)
+        {
+            <Tag Color="blue">@type.Name</Tag>
+        }
+    }
+</Row>
+
+@code{
+
+    BreakpointType[] types = new[] { BreakpointType.Xxl, BreakpointType.Xl, BreakpointType.Lg, BreakpointType.Md, BreakpointType.Sm, BreakpointType.Xs };
+
+    BreakpointType current;
+
+    void HandleBreakpoint(BreakpointType breakpoint)
+    {
+        current = breakpoint;
+    }
+}

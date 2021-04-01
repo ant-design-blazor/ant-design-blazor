@@ -1,85 +1,24 @@
-﻿<div>
-    <style>
-        .Gutter-box {
-            background: rgb(0, 146, 255);
-            padding: 8px 0;
-            color: #fff;
-            text-align: center;
-        }
-    </style>
-    <AntDesign.Divider Orientation="left" Style="color: #333; font-weight:normal">
-        Horizontal
-    </AntDesign.Divider>
-
-    <div class="Gutter-example">
-        <AntDesign.Row Gutter="16">
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-        </AntDesign.Row>
-    </div>
-    <Divider Orientation="left" Style="color: #333; font-weight:normal">
-        Responsive
-    </Divider>
-    <div class="Gutter-example">
-        <AntDesign.Row Gutter="@Gutter1">
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-        </AntDesign.Row>
-    </div>
-    <Divider Orientation="left" Style="color: #333; font-weight:normal">
-        Vertical
-    </Divider>
-    <div class="Gutter-example">
-        <AntDesign.Row Gutter="(16,24)">
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-            <AntDesign.Col class="gutter-row" Span="6">
-                <div class="Gutter-box">col-6</div>
-            </AntDesign.Col>
-        </AntDesign.Row>
-    </div>
-</div>
-@code{
-    Dictionary<string, int> Gutter1 = new Dictionary<string, int>()
+﻿@{
+    string style="background: #0092ff; padding: 8px 0;";
+}
+<div>
+    <Divider Orientation="left">Horizontal</Divider>
+    <Row Gutter="16">
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+    </Row>
+    <Divider Orientation="left">Responsive</Divider>
+    <Row Gutter="@(new Dictionary<string,int>()
     {
         ["xs"] = 8,
         ["sm"] = 16,
@@ -87,7 +26,53 @@
         ["lg"] = 32,
         ["xl"] = 48,
         ["xxl"] = 64
-    };
-   
+    })">
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+    </Row>
+    <Divider Orientation="left">Vertical</Divider>
+    <Row Gutter="(16,24)">
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+        <AntDesign.Col Class="gutter-row" Span="6">
+            <div style="@style">col-6</div>
+        </AntDesign.Col>
+    </Row>
 
-}
+</div>
+
+<style>
+    .gutter-box {
+        padding: 8px 0;
+        background: #00a0e9;
+    }
+</style>

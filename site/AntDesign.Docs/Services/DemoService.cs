@@ -110,7 +110,8 @@ namespace AntDesign.Docs.Services
             _showCaseCache ??= new ConcurrentCache<string, RenderFragment>();
             return _showCaseCache.GetOrAdd(type, t =>
             {
-                var showCase = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{type}");
+                var showCase = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{type}") ?? typeof(Template);
+
                 void ShowCase(RenderTreeBuilder builder)
                 {
                     builder.OpenComponent(0, showCase);
