@@ -2,7 +2,7 @@
 order: 6
 title:
   zh-CN: 复杂一点的控件
-  en-US: complex form control
+  en-US: Complex form control
 ---
 
 ## zh-CN
