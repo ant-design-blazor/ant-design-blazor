@@ -27,9 +27,9 @@ namespace AntDesign.Internal
 
         private static ColumnCacheItem CreateDataIndexConfig(ColumnCacheKey key)
         {
-            var (itemType, propType, dataIndex, sortable, sort, sorterMultiple, sorterCompare) = key;
+            var (itemType, propType, dataIndex) = key;
             Func<RowData, TProp> getValue = null;
-            ITableSortModel sortModel = null;
+            LambdaExpression getFieldExpression = null;
             var properties = dataIndex?.Split(".");
             if (properties is {Length: > 0})
             {
@@ -40,21 +40,17 @@ namespace AntDesign.Internal
                 var rowData1Exp = Expression.TypeAs(rowDataExp, rowData1Type);
                 var dataMemberExp = Expression.Property(rowData1Exp, nameof(RowData<object>.Data));
 
-                Expression memberExp = canBeNull
-                                           ? dataMemberExp.AccessNullableProperty(properties)
-                                           : dataMemberExp.AccessProperty(properties);
+                var memberExp = canBeNull
+                                    ? dataMemberExp.AccessNullableProperty(properties)
+                                    : dataMemberExp.AccessProperty(properties);
                 getValue = Expression.Lambda<Func<RowData, TProp>>(memberExp, rowDataExp).Compile();
 
-                if (sortable)
-                {
-                    var propertySelector = canBeNull
-                                               ? itemType.BuildAccessNullablePropertyLambdaExpression(properties)
-                                               : itemType.BuildAccessPropertyLambdaExpression(properties);
-                    sortModel = new DataIndexSortModel<TProp>(dataIndex, propertySelector, sorterMultiple, sort, sorterCompare);
-                }
+                getFieldExpression = canBeNull
+                                         ? itemType.BuildAccessNullablePropertyLambdaExpression(properties)
+                                         : itemType.BuildAccessPropertyLambdaExpression(properties);
             }
 
-            return new ColumnCacheItem(getValue, sortModel);
+            return new ColumnCacheItem(getValue, getFieldExpression);
         }
 
         internal readonly struct ColumnCacheKey
@@ -65,39 +61,23 @@ namespace AntDesign.Internal
 
             internal readonly string DataIndex;
 
-            internal readonly bool Sortable;
-
-            internal readonly SortDirection DefaultSortOrder;
-
-            internal readonly int SorterMultiple;
-
-            internal readonly Func<TProp, TProp, int> SorterCompare;
-
             internal static ColumnCacheKey Create(Column<TProp> column)
             {
-                return new(column.ItemType, typeof(TProp), column.DataIndex, column.Sortable, column.DefaultSortOrder, column.SorterMultiple, column.SorterCompare);
+                return new(column.ItemType, typeof(TProp), column.DataIndex);
             }
 
-            internal ColumnCacheKey(Type itemType, Type propType, string dataIndex, bool sortable, SortDirection defaultSortOrder, int sorterMultiple, Func<TProp, TProp, int> sorterCompare)
+            internal ColumnCacheKey(Type itemType, Type propType, string dataIndex)
             {
                 ItemType = itemType;
                 PropType = propType;
                 DataIndex = dataIndex;
-                Sortable = sortable;
-                DefaultSortOrder = defaultSortOrder;
-                SorterMultiple = sorterMultiple;
-                SorterCompare = sorterCompare;
             }
 
-            internal void Deconstruct(out Type itemType, out Type propType, out string dataIndex, out bool sortable, out SortDirection defaultSortOrder, out int sorterMultiple, out Func<TProp, TProp, int> sorterCompare)
+            internal void Deconstruct(out Type itemType, out Type propType, out string dataIndex)
             {
                 itemType = ItemType;
                 propType = PropType;
                 dataIndex = DataIndex;
-                sortable = Sortable;
-                defaultSortOrder = DefaultSortOrder;
-                sorterMultiple = SorterMultiple;
-                sorterCompare = SorterCompare;
             }
         }
 
@@ -105,18 +85,18 @@ namespace AntDesign.Internal
         {
             internal readonly Func<RowData, TProp> GetValue;
 
-            internal readonly ITableSortModel SortModel;
+            internal readonly LambdaExpression GetFieldExpression;
 
-            internal ColumnCacheItem(Func<RowData, TProp> getValue, ITableSortModel sortModel)
+            internal ColumnCacheItem(Func<RowData, TProp> getValue, LambdaExpression getFieldExpression)
             {
                 GetValue = getValue;
-                SortModel = sortModel;
+                GetFieldExpression = getFieldExpression;
             }
 
-            internal void Deconstruct(out Func<RowData, TProp> getValue, out ITableSortModel sortModel)
+            internal void Deconstruct(out Func<RowData, TProp> getValue, out LambdaExpression getFieldExpression)
             {
                 getValue = GetValue;
-                sortModel = SortModel;
+                getFieldExpression = GetFieldExpression;
             }
         }
     }

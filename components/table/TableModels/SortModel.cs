@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using AntDesign.Internal;
 
 namespace AntDesign.TableModels
 {
@@ -16,16 +18,18 @@ namespace AntDesign.TableModels
 
         SortDirection ITableSortModel.SortDirection => _sortDirection;
 
-        private readonly PropertyInfo _propertyInfo;
         private readonly Func<TField, TField, int> _comparer;
 
         private SortDirection _sortDirection;
 
-        public SortModel(PropertyInfo propertyInfo, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
+        private LambdaExpression _getFieldExpression;
+
+        public SortModel(LambdaExpression getFieldExpression, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
         {
             this.Priority = priority;
-            this.FieldName = propertyInfo?.Name;
-            this._propertyInfo = propertyInfo;
+            this._getFieldExpression = getFieldExpression;
+            var member = ColumnExpressionHelper.GetReturnMemberInfo(_getFieldExpression);
+            this.FieldName = member.GetCustomAttribute<DisplayAttribute>(true)?.Name ?? member.Name;
             this._comparer = comparer;
             this._sortDirection = defaultSortOrder ?? SortDirection.None;
         }
@@ -42,11 +46,7 @@ namespace AntDesign.TableModels
                 return source as IOrderedQueryable<TItem>;
             }
 
-            var sourceExpression = Expression.Parameter(typeof(TItem));
-
-            var propertyExpression = Expression.Property(sourceExpression, _propertyInfo);
-
-            var lambda = Expression.Lambda<Func<TItem, TField>>(propertyExpression, sourceExpression);
+            var lambda = (Expression<Func<TItem, TField>>)_getFieldExpression;
 
             if (_sortDirection == SortDirection.Ascending)
             {

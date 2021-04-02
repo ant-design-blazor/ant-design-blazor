@@ -1,15 +1,15 @@
-﻿<Table @ref="            table" TItem="TestData" DataSource="@testData">
+﻿@using AntDesign.TableModels
+
+<Table TItem="TestData" DataSource="@testData">
     <Column @bind-Field="@context.Id" Sortable/>
     <Column Title="DayOfWeek" @bind-Field="@context.DayOfWeek" Sortable/>
-    <Column Title="DayOfWeek DataIndex" TData="int" DataIndex="DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)"/>
-    <Column Title="N1.N12.N2A DataIndex" TData="string" DataIndex=@("N1.N12[\"test\"].N2A") Sortable SorterCompare="@((v1, v2) => string.CompareOrdinal(v1, v2))"/>
+    <Column Title="DayOfWeek DataIndex" TData="int" DataIndex="DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)" Filters="DayOfWeekFilter" OnFilter="(a, b) => a == b"/>
+    <Column Title="N1.N12.N2A DataIndex" TData="string" DataIndex=@("N1.N12[\"test\"].N2A") Sortable/>
     <Column Title="N1.N1A DataIndex Nullable" TData="int?" DataIndex="N1.N1A" Sortable SorterCompare="CompareNullableInt"/>
     <Column Title="Time" TData="DateTime?" DataIndex=@(@"N1.N12[""test""].Time") Format="yyyy-MM-dd hh:mm:ss" Sortable SorterCompare="_dateTimeCompare"></Column>
 </Table>
 
 @code {
-
-    ITable table;
 
     TestData[] testData;
 
@@ -40,6 +40,17 @@
         public DateTime? Time { get; set; }
     }
 
+    public TableFilter<int>[] DayOfWeekFilter =
+    {
+        new() {Text = "Monday", Value = 1},
+        new() {Text = "Tuesday", Value = 2},
+        new() {Text = "Wednesdays", Value = 3},
+        new() {Text = "Thursday", Value = 4},
+        new() {Text = "Friday", Value = 5},
+        new() {Text = "Saturday", Value = 6},
+        new() {Text = "Sunday", Value = 7},
+    };
+
     public string[] DayName = {"None", "Monday", "Tuesday", "Wednesdays", "Thursday", "Friday", "Saturday", "Sunday"};
 
     Func<DateTime?, DateTime?, int> _dateTimeCompare = (t1, t2) =>
@@ -63,7 +74,7 @@
 
     public TestData[] GetForecastAsync()
     {
-        var rng = new Random();
+        var rng = new Random(42);
         var startDate = new DateTime(DateTime.Today.Year - 5, 1, 1);
         var range = (DateTime.Today - startDate).TotalSeconds;
         return Enumerable.Range(0, 5).Select(index =>
