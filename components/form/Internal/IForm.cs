@@ -10,6 +10,8 @@ namespace AntDesign.Internal
 
         internal ColLayoutParam LabelCol { get; }
 
+        internal AntLabelAlignType? LabelAlign { get; }
+
         internal EditContext EditContext { get; }
 
         internal string Size { get; }

@@ -5,7 +5,7 @@
 <Row Class="@ClassMapper.Class" Style="@Style" Id="@Id">
     @if (!string.IsNullOrEmpty(Label))
     {
-        <AntDesign.Col @attributes="GetLabelColAttributes()" Class=@($"{_prefixCls}-label")>
+        <AntDesign.Col @attributes="GetLabelColAttributes()" Class="@_labelClassMapper.Class">
             <label class=@(Required ? $"{_prefixCls}-required" : _labelCls)> @(Label)</label>
         </AntDesign.Col>
     }

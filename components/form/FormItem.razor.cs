@@ -35,6 +35,9 @@ namespace AntDesign
         public ColLayoutParam LabelCol { get; set; }
 
         [Parameter]
+        public AntLabelAlignType? LabelAlign { get; set; }
+
+        [Parameter]
         public OneOf<string, int> LabelColSpan
         {
             get { return LabelCol?.Span ?? null; }
@@ -99,6 +102,9 @@ namespace AntDesign
 
         private PropertyReflector _propertyReflector;
 
+        private ClassMapper _labelClassMapper = new ClassMapper();
+        private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -108,23 +114,23 @@ namespace AntDesign
                 throw new InvalidOperationException("Form is null.FormItem should be childContent of Form.");
             }
 
-            Form.AddFormItem(this);
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-
             SetClass();
+
+            Form.AddFormItem(this);
         }
 
         protected void SetClass()
         {
-            this.ClassMapper.Clear()
+            this.ClassMapper
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
                 .If($"{_prefixCls}-rtl", () => RTL)
                ;
+
+            _labelClassMapper
+                .Add($"{_prefixCls}-label")
+                .If($"{_prefixCls}-label-left", () => FormLabelAlign == AntLabelAlignType.Left)
+                ;
         }
 
         private Dictionary<string, object> GetLabelColAttributes()
