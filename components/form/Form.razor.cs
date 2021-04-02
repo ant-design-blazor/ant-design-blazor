@@ -23,6 +23,9 @@ namespace AntDesign
         public ColLayoutParam LabelCol { get; set; } = new ColLayoutParam();
 
         [Parameter]
+        public AntLabelAlignType? LabelAlign { get; set; }
+
+        [Parameter]
         public OneOf<string, int> LabelColSpan
         {
             get { return LabelCol.Span; }
@@ -113,6 +116,7 @@ namespace AntDesign
 
         EditContext IForm.EditContext => _editContext;
 
+        AntLabelAlignType? IForm.LabelAlign => LabelAlign;
         string IForm.Size => Size;
         string IForm.Name => Name;
         object IForm.Model => Model;
