@@ -23,7 +23,8 @@ Uploading is the process of publishing information (web pages, text, pictures, v
 | action | Uploading URL | string\|(file) => `Promise` | - |  |
 | method | http method of upload request | string | 'post' |  |
 | directory | support upload whole directory ([caniuse](https://caniuse.com/#feat=input-file-directory)) | boolean | false |  |
-| beforeUpload | Hook function which will be executed before uploading. Uploading will be stopped with `false` or a rejected Promise returned. **Warning：this function is not supported in IE9**。 | (file, fileList) => `boolean | Promise` | - |  |
+| BeforeUpload | Hook function which will be executed before uploading each file. Uploading will be stopped with `false` or a rejected Promise returned. **Warning：this function is not supported in IE9**。 | (file, fileList) => `boolean | Promise` | - |  |
+| BeforeAllUpload & BeforeAllUploadAsync  | Hook function which will be executed before uploading. Uploading will be stopped with `false` or a rejected Promise returned. **Warning：this function is not supported in IE9**。 | (file, fileList) => `boolean | Promise` | - |  |
 | customRequest | override for the default xhr behavior allowing for additional customization and ability to implement your own XMLHttpRequest | Function | - |  |
 | data | Uploading extra params or function which can return uploading extra params. | object\|function(file) | - |  |
 | defaultFileList | Default list of files that have been uploaded. | object\[] | - |  |
