@@ -87,8 +87,6 @@
 
     public async Task OnChange(QueryModel<WeatherForecast> queryModel)
     {
-        forecasts = await GetForecastAsync(queryModel.PageIndex, queryModel.PageSize);
-        _total = 50;
         Console.WriteLine(JsonSerializer.Serialize(queryModel));
     }
 

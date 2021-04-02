@@ -174,12 +174,7 @@ namespace AntDesign.Internal
             string selectedCls = isSelected ? $"{PrefixCls}-cell-selected" : "";
             string inRangeCls = isInRange ? $"{PrefixCls}-cell-in-range" : "";
 
-            string disabledCls = "";
-            if (DisabledDate != null && DisabledDate(currentColDate))
-            {
-                disabledCls = $"{PrefixCls}-cell-disabled";
-            }
-
+            string disabledCls = GetDisabledCls(currentColDate);
             string rangeStartCls = GetRangeStartCls(currentColDate);
             string rangeEndCls = GetRangeEndCls(currentColDate);
             string rangeHoverCls = GetRangeHoverCls(currentColDate);
@@ -418,6 +413,20 @@ namespace AntDesign.Internal
             return cls.ToString();
         }
 
+        private string GetDisabledCls(DateTime currentColDate)
+        {
+            string disabledCls = "";
+
+            var nextStartDate = GetNextStartDate(currentColDate);
+
+            if (DisabledDate?.Invoke(DateHelper.AddDaysSafely(nextStartDate, -1)) == true)
+            {
+                disabledCls = $"{PrefixCls}-cell-disabled";
+            }
+
+            return disabledCls;
+        }
+
         private DateTime? FormatDateByPicker(DateTime? dateTime)
         {
             return DateHelper.FormatDateByPicker(dateTime, Picker);
@@ -456,6 +465,21 @@ namespace AntDesign.Internal
                 DatePickerType.Month => DateHelper.AddMonthsSafely(dateTime, 1),
                 DatePickerType.Quarter => DateHelper.AddMonthsSafely(dateTime, 3),
                 _ => dateTime,
+            };
+        }
+
+        private DateTime GetNextStartDate(DateTime currentDateTime)
+        {
+            return Picker switch
+            {
+                DatePickerType.Decade => DateHelper.GetNextStartDateOfDecade(currentDateTime),
+                DatePickerType.Year => DateHelper.GetNextStartDateOfYear(currentDateTime),
+                DatePickerType.Quarter => DateHelper.GetNextStartDateOfQuarter(currentDateTime),
+                DatePickerType.Month => DateHelper.GetNextStartDateOfMonth(currentDateTime),
+                DatePickerType.Week => DateHelper.GetNextStartDateOfDay(currentDateTime),
+                DatePickerType.Date => DateHelper.GetNextStartDateOfDay(currentDateTime),
+                DatePickerType.Time => DateHelper.GetNextStartDateOfDay(currentDateTime),
+                _ => currentDateTime,
             };
         }
 

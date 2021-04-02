@@ -3,10 +3,17 @@
 @using AntDesign.Internal;
 
 <Row class="@ClassMapper.Class" style="@Style" id="@Id">
-    @if (!string.IsNullOrEmpty(Label))
+    @if (!string.IsNullOrEmpty(Label) || LabelTemplate != null)
     {
         <AntDesign.Col @attributes="GetLabelColAttributes()" class=@($"{_prefixCls}-label")>
-            <label class=@(Required ? $"{_prefixCls}-required" : _labelCls)> @(Label)</label>
+            @if (LabelTemplate != null)
+            {
+                @LabelTemplate
+            }
+            else
+            {
+                <label class=@GetLabelClass()>@(Label)</label>
+            }
         </AntDesign.Col>
     }
     <AntDesign.Col @attributes="GetWrapperColAttributes()" class=@($"{_prefixCls}-control")>

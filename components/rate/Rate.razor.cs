@@ -50,6 +50,7 @@ namespace AntDesign
             get { return _currentValue; }
             set
             {
+                _valueWasSet = true;
                 if (_currentValue != value)
                 {
                     this._currentValue = value;
@@ -81,22 +82,31 @@ namespace AntDesign
 
         /// <summary>
         /// 是否允许半选
+        /// Whether to allow half-selection
         /// </summary>
         private bool _hasHalf = false;
         /// <summary>
         /// 鼠标悬停时从最左到光标位置的星星数。
+        /// The number of stars from the far left to the cursor position when the hovered with mouse.
         /// </summary>
         private int _hoverValue = 0;
 
         /// <summary>
         /// 当前被选中的星星数量
+        /// Number of stars currently selected
         /// </summary>
         private decimal _currentValue;
 
         /// <summary>
         /// 是否获取的输入焦点
+        /// Wheter to get input focus.
         /// </summary>
         private bool _isFocused = false;
+
+        /// <summary>
+        /// Indicates if Value has been changed. Needed to avoid reseting to DefaultValue if exists.
+        /// </summary>
+        private bool _valueWasSet;
 
         private void Blur(FocusEventArgs e)
         {
@@ -165,10 +175,9 @@ namespace AntDesign
             }
         }
 
-
         protected override void OnInitialized()
         {
-            if (DefaultValue > 0)
+            if (DefaultValue > 0 && !_valueWasSet)
             {
                 this.Value = DefaultValue;
             }

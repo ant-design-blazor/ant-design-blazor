@@ -141,6 +141,7 @@ namespace AntDesign.Internal
         public async Task UploadSuccess(string id, string returnData)
         {
             var file = Upload.FileList.FirstOrDefault(x => x.Id.Equals(id));
+            _uploadInfo.FileList = Upload.FileList;
             if (file == null)
             {
                 return;
@@ -173,6 +174,7 @@ namespace AntDesign.Internal
             file.State = UploadState.Fail;
             file.Percent = 100;
             _uploadInfo.File = file;
+            _uploadInfo.FileList = Upload.FileList;
             file.Response ??= reponseCode;
             await UploadChanged(id, 100);
             await InvokeAsync(StateHasChanged);
@@ -196,6 +198,7 @@ namespace AntDesign.Internal
             }
             file.Percent = progress;
             _uploadInfo.File = file;
+            _uploadInfo.FileList = Upload.FileList;
             await InvokeAsync(StateHasChanged);
             if (Upload.OnChange.HasDelegate)
             {

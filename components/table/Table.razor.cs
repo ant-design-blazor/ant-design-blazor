@@ -142,7 +142,7 @@ namespace AntDesign
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
         int ITable.ScrollBarWidth => ScrollBarWidth;
-        int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex;
+        int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
         SortDirection[] ITable.SortDirections => SortDirections;
@@ -239,7 +239,7 @@ namespace AntDesign
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
             if (_treeMode)
             {
-                _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null ? 1 : 0);
+                _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
 
             StateHasChanged();
