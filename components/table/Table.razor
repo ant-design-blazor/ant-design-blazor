@@ -182,7 +182,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
 
             <tr @attributes="rowAttributes"
                 data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "") @table.RowClassName(currentRowData) @rowAttributes?.GetValueOrDefault("class")">
-                <CascadingValue Value="currentRowData" Name="RowData" IsFixed>
+                <CascadingValue Value="currentRowData" Name="RowData" IsFixed="false">
                     <CascadingValue Value="true" Name="IsBody" IsFixed>
                         @table.ChildContent(data)
                     </CascadingValue>
