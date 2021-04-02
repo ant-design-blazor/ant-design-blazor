@@ -13,6 +13,12 @@ namespace AntDesign
         public Func<UploadFileItem, bool> BeforeUpload { get; set; }
 
         [Parameter]
+        public Func<List<UploadFileItem>, Task<bool>> BeforeAllUploadAsync { get; set; }
+
+        [Parameter]
+        public Func<List<UploadFileItem>, bool> BeforeAllUpload { get; set; }
+
+        [Parameter]
         public string Name { get; set; }
 
         [Parameter]
@@ -70,6 +76,9 @@ namespace AntDesign
         public EventCallback<UploadFileItem> OnPreview { get; set; }
 
         [Parameter]
+        public EventCallback<UploadFileItem> OnDownload { get; set; }
+
+        [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
@@ -110,7 +119,6 @@ namespace AntDesign
             {
                 this.FileList.Remove(item);
                 await this.FileListChanged.InvokeAsync(this.FileList);
-
                 StateHasChanged();
             }
         }
@@ -120,6 +128,14 @@ namespace AntDesign
             if (item.State == UploadState.Success && OnPreview.HasDelegate)
             {
                 await OnPreview.InvokeAsync(item);
+            }
+        }
+
+        private async Task DownloadFile(UploadFileItem item)
+        {
+            if (item.State == UploadState.Success && OnDownload.HasDelegate)
+            {
+                await OnDownload.InvokeAsync(item);
             }
         }
     }
