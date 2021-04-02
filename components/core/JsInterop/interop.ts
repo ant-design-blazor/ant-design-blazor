@@ -78,7 +78,7 @@ export function getFileInfo(element) {
     var fileInfo = [];
     for (var i = 0; i < element.files.length; i++) {
       var file = element.files[i];
-      var objectUrl = getObjectURL(element);
+      var objectUrl = getObjectURL(file);
       fileInfo.push({
         fileName: file.name,
         size: file.size,
@@ -91,9 +91,8 @@ export function getFileInfo(element) {
   }
 }
 
-export function getObjectURL(element) {
+export function getObjectURL(file: File) {
   var url = null;
-  var file = element.files[0];
   if (window.URL != undefined) {
     url = window.URL.createObjectURL(file);
   } else if (window.webkitURL != undefined) {
