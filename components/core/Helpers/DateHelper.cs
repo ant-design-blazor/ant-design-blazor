@@ -6,6 +6,8 @@ namespace AntDesign
     public static class DateHelper
     {
         private static readonly System.Globalization.Calendar _calendar = CultureInfo.InvariantCulture.Calendar;
+        private const int DECADE_YEAR_COUNT = 10;
+        private const int QUARTER_MONTH_COUNT = 3;
 
         public static bool IsSameDate(DateTime date, DateTime compareDate)
         {
@@ -43,16 +45,99 @@ namespace AntDesign
 
         public static string GetDayOfQuarter(DateTime date)
         {
-            int offset = date.Month % 3 > 0 ? 1 : 0;
-            int quarter = date.Month / 3 + offset;
+            return $"Q{GetQuarter(date)}";
+        }
 
-            return $"Q{quarter}";
+        public static int GetQuarter(DateTime date)
+        {
+            int offset = date.Month % QUARTER_MONTH_COUNT > 0 ? 1 : 0;
+            int quarter = date.Month / QUARTER_MONTH_COUNT + offset;
+
+            return quarter;
+        }
+
+        public static DateTime GetStartDateOfQuarter(DateTime date)
+        {
+            int quarter = GetQuarter(date);
+            return new DateTime(date.Year, 1 + ((quarter - 1) * QUARTER_MONTH_COUNT), 1);
         }
 
         public static int GetWeekOfYear(DateTime date)
         {
             return _calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
         }
+
+        /// <summary>
+        /// for example,
+        /// when currentDateTime is 2020-01-04 05:34:55 then: 
+        ///     the next date shouble be 2030-01-01 00:00:00, it's the start date of next 10 years
+        ///     
+        /// when currentDateTime is 2023-01-04 05:34:55 then: 
+        ///     the next date shouble be 2030-01-01 00:00:00, it's the start date of next 10 years
+        ///     
+        /// when currentDateTime is 2018-01-04 05:34:55 then: 
+        ///     the next date shouble be 2020-01-01 00:00:00, it's the start date of next 10 years
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime GetNextStartDateOfDecade(DateTime date)
+        {
+            int year = date.Year / DECADE_YEAR_COUNT * DECADE_YEAR_COUNT;
+
+            if (year < DateTime.MinValue.Year)
+            {
+                year = DateTime.MinValue.Year;
+            }
+
+            return AddYearsSafely(new DateTime(year, 1, 1), DECADE_YEAR_COUNT);
+        }
+
+        /// <summary>
+        /// for example, when currentDateTime is 2020-01-04 05:34:55 then: 
+        ///     the next date shouble be 2021-01-01 00:00:00, it's the start date of next year
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime GetNextStartDateOfYear(DateTime date)
+        {
+            return AddYearsSafely(new DateTime(date.Year, 1, 1), 1);
+        }
+
+        /// <summary>
+        /// for example, when currentDateTime is 2020-01-04 05:34:55 then: 
+        ///     the next date shouble be 2020-04-01 00:00:00, it's the start date of the next quarter in 2020
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime GetNextStartDateOfQuarter(DateTime date)
+        {
+            var nextQuarterDate = AddMonthsSafely(new DateTime(date.Year, date.Month, 1), QUARTER_MONTH_COUNT);
+
+            return GetStartDateOfQuarter(nextQuarterDate);
+        }
+
+        /// <summary>
+        /// for example, when currentDateTime is 2020-01-04 05:34:55 then: 
+        ///     the next date shouble be 2020-02-01 00:00:00 , it's the start date of next month
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime GetNextStartDateOfMonth(DateTime date)
+        {
+            return AddMonthsSafely(new DateTime(date.Year, date.Month, 1), 1);
+        }
+
+        /// <summary>
+        /// for example, when currentDateTime is 2020-01-04 05:34:55 then: 
+        ///     the next date shouble be 2021-01-05 00:00:00, it's the start date of next day
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime GetNextStartDateOfDay(DateTime date)
+        {
+            return AddDaysSafely(new DateTime(date.Year, date.Month, date.Day), 1);
+        }
+
 
         public static DateTime CombineNewDate(
             DateTime date,
