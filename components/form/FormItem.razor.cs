@@ -102,6 +102,9 @@ namespace AntDesign
 
         private PropertyReflector _propertyReflector;
 
+        private ClassMapper _labelClassMapper = new ClassMapper();
+        private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -111,23 +114,23 @@ namespace AntDesign
                 throw new InvalidOperationException("Form is null.FormItem should be childContent of Form.");
             }
 
-            Form.AddFormItem(this);
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-
             SetClass();
+
+            Form.AddFormItem(this);
         }
 
         protected void SetClass()
         {
-            this.ClassMapper.Clear()
+            this.ClassMapper
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
                 .If($"{_prefixCls}-rtl", () => RTL)
                ;
+
+            _labelClassMapper
+                .Add($"{_prefixCls}-label")
+                .If($"{_prefixCls}-label-left", () => FormLabelAlign == AntLabelAlignType.Left)
+                ;
         }
 
         private Dictionary<string, object> GetLabelColAttributes()
@@ -178,27 +181,6 @@ namespace AntDesign
             }
 
             return wrapperColParameter.ToAttributes();
-        }
-
-        private string GetLabelColClasses()
-        {
-            ClassMapper labelClassMapper = new ClassMapper();
-            labelClassMapper.Add($"{_prefixCls}-label");
-
-            AntLabelAlignType? labelAlignParameter = null;
-            if (LabelAlign != null)
-            {
-                labelAlignParameter = LabelAlign.Value;
-            }
-            else if (Form.LabelAlign != null)
-            {
-                labelAlignParameter = Form.LabelAlign.Value;
-            }
-            labelClassMapper
-                .If($"{_prefixCls}-label-left", () => labelAlignParameter != null && labelAlignParameter.Value == AntLabelAlignType.Left)
-                .If($"{_prefixCls}-label-right", () => labelAlignParameter != null && labelAlignParameter.Value == AntLabelAlignType.Right)
-                ;
-            return labelClassMapper.Class;
         }
 
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
