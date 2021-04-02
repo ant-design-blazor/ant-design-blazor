@@ -35,6 +35,9 @@ namespace AntDesign
         public ColLayoutParam LabelCol { get; set; }
 
         [Parameter]
+        public AntLabelAlignType? LabelAlign { get; set; }
+
+        [Parameter]
         public OneOf<string, int> LabelColSpan
         {
             get { return LabelCol?.Span ?? null; }
@@ -175,6 +178,27 @@ namespace AntDesign
             }
 
             return wrapperColParameter.ToAttributes();
+        }
+
+        private string GetLabelColClasses()
+        {
+            ClassMapper labelClassMapper = new ClassMapper();
+            labelClassMapper.Add($"{_prefixCls}-label");
+
+            AntLabelAlignType? labelAlignParameter = null;
+            if (LabelAlign != null)
+            {
+                labelAlignParameter = LabelAlign.Value;
+            }
+            else if (Form.LabelAlign != null)
+            {
+                labelAlignParameter = Form.LabelAlign.Value;
+            }
+            labelClassMapper
+                .If($"{_prefixCls}-label-left", () => labelAlignParameter != null && labelAlignParameter.Value == AntLabelAlignType.Left)
+                .If($"{_prefixCls}-label-right", () => labelAlignParameter != null && labelAlignParameter.Value == AntLabelAlignType.Right)
+                ;
+            return labelClassMapper.Class;
         }
 
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
