@@ -153,7 +153,7 @@ namespace AntDesign.Internal
 
         public override Task SetParametersAsync(ParameterView parameters)
         {
-            if (RTL && IsButton == false)
+            if (RTL)
             {
                 _paramPlacement = PlacementType.BottomRight;
                 _placement = PlacementType.BottomRight;

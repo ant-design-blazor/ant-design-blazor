@@ -3,7 +3,7 @@
 @typeparam TValue
 @using AntDesign.Internal;
 
-<CascadingValue Value="@_dropdownClassMapper.Class" Name="PrefixCls">
+<CascadingValue Value='$"{PrefixCls}-dropdown"' Name="PrefixCls">
     <OverlayTrigger @ref="_dropDown"
                     Visible="Open"
                     IsButton="@true"

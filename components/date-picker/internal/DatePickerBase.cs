@@ -241,7 +241,6 @@ namespace AntDesign
         private CultureInfo _cultureInfo = LocaleProvider.CurrentLocale.CurrentCulture;
         private DatePickerLocale _locale = LocaleProvider.CurrentLocale.DatePicker;
 
-        protected ClassMapper _dropdownClassMapper = new ClassMapper();
         protected ClassMapper _panelClassMapper = new ClassMapper();
 
         protected override void OnInitialized()
@@ -277,10 +276,6 @@ namespace AntDesign
                //.If($"{PrefixCls}-normal", () => Image.IsT1 && Image.AsT1 == Empty.PRESENTED_IMAGE_SIMPLE)
                //.If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                ;
-
-            _dropdownClassMapper
-                .Add($"{PrefixCls}-dropdown")
-                .If($"{PrefixCls}-dropdown-rtl", () => RTL);
 
             _panelClassMapper
                 .Add($"{PrefixCls}-panel")
