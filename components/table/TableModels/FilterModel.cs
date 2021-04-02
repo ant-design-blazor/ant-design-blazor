@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace AntDesign.TableModels
 {
@@ -16,12 +15,12 @@ namespace AntDesign.TableModels
 
         public Expression<Func<TField, TField, bool>> OnFilter { get; set; }
 
-        private PropertyInfo _propertyInfo;
+        public LambdaExpression GetFieldExpression { get; set; }
 
-        public FilterModel(PropertyInfo propertyInfo, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter<TField>> filters)
+        public FilterModel(LambdaExpression getFieldExpression, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter<TField>> filters)
         {
-            this._propertyInfo = propertyInfo;
-            this.FieldName = _propertyInfo.Name;
+            this.GetFieldExpression = getFieldExpression;
+            this.FieldName = GetFieldExpression.ReturnType.Name;
             this.OnFilter = onFilter;
             this.SelectedValues = filters.Select(x => x.Value.ToString());
             this.Filters = filters;
@@ -34,14 +33,13 @@ namespace AntDesign.TableModels
                 return source;
             }
 
-            var sourceExpression = Expression.Parameter(typeof(TItem));
-            var propertyExpression = Expression.Property(sourceExpression, _propertyInfo);
+            var sourceExpression = GetFieldExpression.Parameters[0];
 
-            Expression invocationExpression = Expression.Invoke((Expression<Func<bool>>)(() => false));
+            Expression invocationExpression = Expression.Constant(false, typeof(bool));
 
             foreach (var filter in Filters)
             {
-                invocationExpression = Expression.OrElse(invocationExpression, Expression.Invoke(OnFilter, Expression.Constant(filter.Value), propertyExpression));
+                invocationExpression = Expression.OrElse(invocationExpression, Expression.Invoke(OnFilter, Expression.Constant(filter.Value), GetFieldExpression.Body));
             }
 
             var lambda = Expression.Lambda<Func<TItem, bool>>(invocationExpression, sourceExpression);
