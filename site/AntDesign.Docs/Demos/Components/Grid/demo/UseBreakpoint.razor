@@ -1,8 +1,8 @@
 ﻿<Row OnBreakpoint="HandleBreakpoint">
-    Current break point: @current.Name
+    Current break point: @current?.Name
     @foreach (var type in types)
     {
-        if (type.Width < current.Width)
+        if (type.Width < current?.Width)
         {
             <Tag Color="blue">@type.Name</Tag>
         }

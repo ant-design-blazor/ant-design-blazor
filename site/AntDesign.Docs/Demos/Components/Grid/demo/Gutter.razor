@@ -1,5 +1,14 @@
 ﻿@{
     string style="background: #0092ff; padding: 8px 0;";
+    Dictionary<string, int> gutter = new()
+    {
+        ["xs"] = 8,
+        ["sm"] = 16,
+        ["md"] = 24,
+        ["lg"] = 32,
+        ["xl"] = 48,
+        ["xxl"] = 64
+    };
 }
 <div>
     <Divider Orientation="left">Horizontal</Divider>
@@ -18,15 +27,7 @@
         </AntDesign.Col>
     </Row>
     <Divider Orientation="left">Responsive</Divider>
-    <Row Gutter="@(new Dictionary<string,int>()
-    {
-        ["xs"] = 8,
-        ["sm"] = 16,
-        ["md"] = 24,
-        ["lg"] = 32,
-        ["xl"] = 48,
-        ["xxl"] = 64
-    })">
+    <Row Gutter="@gutter">
         <AntDesign.Col Class="gutter-row" Span="6">
             <div style="@style">col-6</div>
         </AntDesign.Col>
