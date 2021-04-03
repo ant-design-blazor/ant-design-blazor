@@ -115,7 +115,7 @@ namespace AntDesign
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
         [Parameter] public bool PopupContainerGrowToMatchWidestItem { get; set; }
-        [Parameter] public string PopupContainerMaxWidth { get; set; } = "*";
+        [Parameter] public string PopupContainerMaxWidth { get; set; } = "auto";
         [Parameter] public bool ShowArrowIcon { get; set; } = true;
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
         [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
@@ -313,6 +313,8 @@ namespace AntDesign
 
         #endregion Parameters
 
+        [Inject] private DomEventService DomEventService { get; set; }
+
         #region Properties
 
         private const string ClassPrefix = "ant-select";
@@ -477,6 +479,7 @@ namespace AntDesign
             {
                 await SetInitialValuesAsync();
 
+                DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
                 await SetDropdownStyleAsync();
 
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
@@ -514,6 +517,18 @@ namespace AntDesign
 
             await base.OnAfterRenderAsync(firstRender);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
+            base.Dispose(disposing);
+        }
+
+        protected async void OnWindowResize(JsonElement element)
+        {
+            await SetDropdownStyleAsync();
+        }
+
 
         /// <summary>
         /// Create or delete SelectOption when the datasource changed
@@ -730,7 +745,7 @@ namespace AntDesign
         protected async Task SetDropdownStyleAsync()
         {
             string maxWidth = "";
-            if (PopupContainerMaxWidth != "*")
+            if (PopupContainerMaxWidth != "auto")
                 maxWidth = $"max-width: {PopupContainerMaxWidth};";
             string minWidth = "";
             if (!PopupContainerGrowToMatchWidestItem)
