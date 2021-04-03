@@ -40,6 +40,9 @@ namespace AntDesign
         public string Justify { get; set; }
 
         [Parameter]
+        public bool Wrap { get; set; } = true;
+
+        [Parameter]
         public GutterType Gutter { get; set; }
 
         [Parameter]
@@ -79,6 +82,7 @@ namespace AntDesign
                 .If($"{prefixCls}-center", () => Justify == "center")
                 .If($"{prefixCls}-space-around", () => Justify == "space-around")
                 .If($"{prefixCls}-space-between", () => Justify == "space-between")
+                .If($"{prefixCls}-no-wrap", () => !Wrap)
                 ;
 
             if (DefaultBreakpoint != null)
