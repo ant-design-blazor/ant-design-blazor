@@ -163,7 +163,7 @@ namespace AntDesign
                     else
                     {
                         SelectOptionItems.Clear();
-
+                        SelectedOptionItems.Clear();
                         Value = default;
 
                         _datasource = null;
@@ -176,6 +176,7 @@ namespace AntDesign
                 if (value != null && !value.Any() && SelectOptionItems.Any())
                 {
                     SelectOptionItems.Clear();
+                    SelectedOptionItems.Clear();
 
                     Value = default;
 
@@ -538,12 +539,22 @@ namespace AntDesign
                         if (exists is null)
                         {
                             SelectOptionItems.Remove(selectOption);
+                            if (selectOption.IsSelected)
+                                SelectedOptionItems.Remove(selectOption);
                         }
                         else
                             dataStoreToSelectOptionItemsMatch.Add(exists, selectOption);
                     }
                 }
             }
+
+            //A simple approach to avoid unnecessary scanning through _selectedValues once
+            //all of SelectOptionItem where already marked as selected
+            int processedSelectedCount = 0;
+            if (SelectMode == SelectMode.Default && _selectedValue != null)
+                processedSelectedCount = 1;
+            else if (SelectMode != SelectMode.Default && _selectedValues != null)
+                processedSelectedCount = _selectedValues.Count();
 
             foreach (var item in _datasource)
             {
@@ -568,6 +579,15 @@ namespace AntDesign
                 var groupName = string.Empty;
                 var label = _getLabel(item);
 
+                bool isSelected = false;
+                if (processedSelectedCount > 0)
+                {
+                    if (SelectMode == SelectMode.Default)
+                        isSelected = value.Equals(_selectedValue);
+                    else
+                        isSelected = _selectedValues.Contains(value);
+                }
+
                 if (!string.IsNullOrWhiteSpace(DisabledName))
                     disabled = _getDisabled(item);
 
@@ -582,16 +602,33 @@ namespace AntDesign
                         GroupName = groupName,
                         IsDisabled = disabled,
                         Item = item,
-                        Value = value
+                        Value = value,
+                        IsSelected = isSelected,
+                        IsHidden = isSelected && HideSelected
                     };
 
                     SelectOptionItems.Add(newItem);
+                    if (isSelected)
+                    {
+                        processedSelectedCount--;
+                        SelectedOptionItems.Add(newItem);
+                    }
                 }
                 else if (exists && !IgnoreItemChanges)
                 {
                     updateSelectOption.Label = label;
                     updateSelectOption.IsDisabled = disabled;
                     updateSelectOption.GroupName = groupName;
+                    updateSelectOption.IsHidden = isSelected && HideSelected;
+                    if (isSelected)
+                    {
+                        if (!updateSelectOption.IsSelected)
+                        {
+                            updateSelectOption.IsSelected = isSelected;
+                            SelectedOptionItems.Add(updateSelectOption);
+                        }
+                        processedSelectedCount--;
+                    }
                 }
             }
         }
