@@ -292,19 +292,6 @@ namespace AntDesign
         {
             base.OnAfterRender(firstRender);
 
-            if (_waitingReloadAndInvokeChange)
-            {
-                _waitingReloadAndInvokeChange = false;
-                _waitingReload = false;
-
-                ReloadAndInvokeChange();
-            }
-            else if (_waitingReload)
-            {
-                _waitingReload = false;
-                Reload();
-            }
-
             if (!firstRender)
             {
                 this.FinishLoadPage();
@@ -351,7 +338,14 @@ namespace AntDesign
 
         protected override bool ShouldRender()
         {
-            if (_waitingReload)
+            if (_waitingReloadAndInvokeChange)
+            {
+                _waitingReloadAndInvokeChange = false;
+                _waitingReload = false;
+
+                ReloadAndInvokeChange();
+            }
+            else if (_waitingReload)
             {
                 _waitingReload = false;
                 Reload();
