@@ -114,6 +114,8 @@ namespace AntDesign
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
+        [Parameter] public bool PopupContainerGrowToMatchWidestItem { get; set; }
+        [Parameter] public string PopupContainerMaxWidth { get; set; } = "*";
         [Parameter] public bool ShowArrowIcon { get; set; } = true;
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
         [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
@@ -727,9 +729,17 @@ namespace AntDesign
         /// </summary>
         protected async Task SetDropdownStyleAsync()
         {
-            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
-            var width = domRect.width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-            _dropdownStyle = $"min-width: {width}px; width: {width}px;";
+            string maxWidth = "";
+            if (PopupContainerMaxWidth != "*")
+                maxWidth = $"max-width: {PopupContainerMaxWidth};";
+            string minWidth = "";
+            if (!PopupContainerGrowToMatchWidestItem)
+            {
+                var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
+                var width = domRect.width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+                minWidth = $"min-width: {width}px; width: {width}px;";
+            }
+            _dropdownStyle = minWidth + maxWidth;
         }
 
         protected async Task OnOverlayVisibleChangeAsync(bool visible)
