@@ -82,7 +82,7 @@
                         <span class="@Prefix-selection-item">
                             <span class="@Prefix-selection-item-content">@selectedOption.Label</span>
                             <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
-                                  @onclick="()=> OnRemoveSelected.InvokeAsync(selectedOption)" @onclick:stopPropagation="true">
+                                  @onmousedown="()=> OnRemoveSelected.InvokeAsync(selectedOption)" onclick="event.stopPropagation()">
                                 <Icon Type="close"></Icon>
                             </span>
                         </span>
