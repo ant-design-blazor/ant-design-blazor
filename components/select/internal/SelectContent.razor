@@ -5,38 +5,38 @@
 @{
     bool showPrefixAsSeparate = false;
     bool showPrefixInSelected = false;
-        
+
     if (ParentSelect.PrefixIcon != null)
     {
         showPrefixAsSeparate = ParentSelect.PrefixIcon != null && !(ParentSelect.SelectMode != SelectMode.Default && ParentSelect.SelectedOptionItems.Any());
         showPrefixInSelected = !showPrefixAsSeparate;
-    }       
+    }
 }
 
 
 <div class="@Prefix-selector" @ref="@Ref" style="@(ParentSelect.PrefixIcon is null?"":"padding-left: 4px;")">
     @if (showPrefixAsSeparate)
     {
-        <span class="@Prefix-prefix" unselectable="on" aria-hidden="true" style="user-select: none;display:flex;align-items: center;padding-right: 4px;" >
+        <span class="@Prefix-prefix" unselectable="on" aria-hidden="true" style="user-select: none;display:flex;align-items: center;padding-right: 4px;">
             @ParentSelect.PrefixIcon
-        </span>        
+        </span>
     }
     <div style="display: flex;position: relative;flex-grow: 1;flex-wrap: wrap;align-items: center;">
         @if (ShowPlaceholder)
-        {                    
+        {
             @if (showPrefixAsSeparate)
             {
                 <span class="@Prefix-selection-placeholder" style="left: 0px;">@Placeholder</span>
             }
             else
-            {                
+            {
                 <span class="@Prefix-selection-placeholder">@Placeholder</span>
             }
         }
         else
         {
             @if (ParentSelect.SelectMode == SelectMode.Default)
-            {                            
+            {
                 var selectedItem = ParentSelect.SelectedOptionItems.FirstOrDefault();
                 //Console.WriteLine($"({ParentSelect.Id}): {selectedItem.Value} => {selectedItem.Label}");
                 if (string.IsNullOrEmpty(SearchValue) && selectedItem != null)
@@ -44,13 +44,13 @@
                     @if (ParentLabelTemplate != null)
                     {
                         <CascadingValue Value="this" Name="SelectContent">
-                            <CascadingValue Value="@selectedItem" Name="SelectOption">                                
-                                @ParentLabelTemplate(selectedItem.Item)                                
+                            <CascadingValue Value="@selectedItem" Name="SelectOption">
+                                @ParentLabelTemplate(selectedItem.Item)
                             </CascadingValue>
                         </CascadingValue>
                     }
                     else
-                    {                        
+                    {
                         <span class="@Prefix-selection-item">
                             <span class="@Prefix-selection-item-content">@selectedItem.Label</span>
                         </span>
@@ -61,31 +61,31 @@
             {
                 var selectedItems = ParentSelect.SelectedOptionItems;
 
-                @if (showPrefixInSelected) 
+                @if (showPrefixInSelected)
                 {
-                    <span class="@Prefix-prefix" unselectable="on" aria-hidden="true" style="user-select: none;display:flex;align-items: center;padding-right: 4px;" >
+                    <span class="@Prefix-prefix" unselectable="on" aria-hidden="true" style="user-select: none;display:flex;align-items: center;padding-right: 4px;">
                         @ParentSelect.PrefixIcon
                     </span>
-                }                
+                }
                 @foreach (var selectedOption in selectedItems)
                 {
                     @if (ParentLabelTemplate != null)
                     {
                         <CascadingValue Value="this" Name="SelectContent">
                             <CascadingValue Value="@selectedOption" Name="SelectOption">
-                                @ParentLabelTemplate(selectedOption.Item)                            
+                                @ParentLabelTemplate(selectedOption.Item)
                             </CascadingValue>
-                            </CascadingValue>
+                        </CascadingValue>
                     }
                     else
                     {
                         <span class="@Prefix-selection-item">
                             <span class="@Prefix-selection-item-content">@selectedOption.Label</span>
                             <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
-                                    @onclick="()=> OnRemoveSelected.InvokeAsync(selectedOption)" @onclick:stopPropagation="true">
+                                  @onclick="()=> OnRemoveSelected.InvokeAsync(selectedOption)" @onclick:stopPropagation="true">
                                 <Icon Type="close"></Icon>
                             </span>
-                        </span>                                        
+                        </span>
                     }
                 }
             }
@@ -93,25 +93,25 @@
 
         <span class="@Prefix-selection-search" style="@_inputWidth">
             <input @ref="ParentSelect._inputRef"
-                    @oninput="OnInput"
-                    @onkeyup="OnKeyUp"
-                    @onkeydown="OnKeyDown"
-                    @onfocus="OnFocus"
-                    @onblur="OnBlur"
-                    @attributes=@AdditonalAttributes() 
-                    @onkeypress="@OnKeyPressEventHandler"
-                    @onkeypress:preventDefault="@_suppressInput"
-                    @onkeypress:stopPropagation="true"
-                    @bind-value="@SearchValue"
-                    id="@ParentSelect.Id"
-                    role="combobox"
-                    class="@Prefix-selection-search-input"
-                    autocomplete="off"
-                    aria-owns="@(ParentSelect.Id)_list"
-                    aria-expanded="@IsOverlayShow"
-                    aria-autocomplete="list"
-                    aria-controls="@(ParentSelect.Id)_list"
-                    style="@_inputStyle"/>
+                   @oninput="OnInput"
+                   @onkeyup="OnKeyUp"
+                   @onkeydown="OnKeyDown"
+                   @onfocus="OnFocus"
+                   @onblur="OnBlur"
+                   @attributes=@AdditonalAttributes()
+                   @onkeypress="@OnKeyPressEventHandler"
+                   @onkeypress:preventDefault="@_suppressInput"
+                   @onkeypress:stopPropagation="true"
+                   @bind-value="@SearchValue"
+                   id="@ParentSelect.Id"
+                   role="combobox"
+                   class="@Prefix-selection-search-input"
+                   autocomplete="off"
+                   aria-owns="@(ParentSelect.Id)_list"
+                   aria-expanded="@IsOverlayShow"
+                   aria-autocomplete="list"
+                   aria-controls="@(ParentSelect.Id)_list"
+                   style="@_inputStyle"/>
 
             @if (ParentSelect.SelectMode != SelectMode.Default)
             {
@@ -165,7 +165,7 @@
                 }
             </span>
         }
-        
+
         @if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
         {
             <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick" @onclick:stopPropagation="true">
@@ -180,6 +180,12 @@ else
     {
         <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="@ParentSelect.OnArrowClick" @onclick:stopPropagation="true">
             @ParentSelect.SuffixIcon
+        </span>
+    }
+    else if (ParentSelect.Loading)
+    {
+        <span class="ant-select-arrow ant-select-arrow-loading" unselectable="on" aria-hidden="true" style="user-select: none;">
+            <Icon Type="loading"></Icon>
         </span>
     }
     @if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
