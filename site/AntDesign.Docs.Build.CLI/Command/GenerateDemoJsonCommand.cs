@@ -49,7 +49,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
                     return -1;
                 }
 
