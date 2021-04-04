@@ -22,5 +22,13 @@ namespace AntDesign
         /// Return result: true if the event should be cancelled; otherwise false.
         /// </summary>
         public bool Cancel { get; set; }
+
+        /// <summary>
+        /// Reject to close 
+        /// </summary>
+        public void Reject()
+        {
+            Cancel = true;
+        }
     }
 }
