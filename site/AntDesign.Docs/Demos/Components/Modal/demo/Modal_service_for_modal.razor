@@ -4,10 +4,13 @@
 <br />
 <br />
 <Button OnClick="OpenTemplate" Type="primary">Use Template</Button>
+<br />
+<br />
+<Button OnClick="OpenTemplateWithResult" Type="primary">Use Template With Result</Button>
 
 @code{
 
-    private string value = "AntDesignBlazor";
+    private string value = "blazor";
 
     private ModalRef _modalRef;
 
@@ -36,6 +39,50 @@
             .CreateModalAsync<ModalTemplateDemo, Form.demo.Basic.Model>
             (modalConfig, templateOptions);
 
+        _modalRef.OnOpen = () =>
+        {
+            Console.WriteLine("ModalRef OnOpen");
+            return Task.CompletedTask;
+        };
+
+        _modalRef.OnOk = () =>
+        {
+            Console.WriteLine("ModalRef OnOk");
+            return Task.CompletedTask;
+        };
+
+        _modalRef.OnCancel = () =>
+        {
+            Console.WriteLine("ModalRef OnCancel");
+            return Task.CompletedTask;
+        };
+
+        _modalRef.OnClose = () =>
+        {
+            Console.WriteLine("ModalRef OnClose");
+            return Task.CompletedTask;
+        };
+    }
+
+
+    private async Task OpenTemplateWithResult()
+    {
+        var modalConfig = new ModalOptions();
+        modalConfig.Title = "TemplateWithResult";
+
+        var modalRef = await ModalService.CreateModalAsync<ConfirmTemplateDemo, string, string>(modalConfig, value);
+
+        modalRef.OnOk = (result) =>
+        {
+            Console.WriteLine($"OnOk:{result}");
+            return Task.CompletedTask;
+        };
+
+        modalRef.OnCancel = (result) =>
+        {
+            Console.WriteLine($"OnCancel:{result}");
+            return Task.CompletedTask;
+        };
     }
 
 }

@@ -1,0 +1,77 @@
+﻿<Alert Banner>
+    <MessageTemplate>
+        <div id="loop-text">
+            <ul>
+                <li>Notice message one</li>
+                <li>Notice message two</li>
+                <li>Notice message three</li>
+                <li>Notice message four</li>
+            </ul>
+        </div>
+    </MessageTemplate>
+</Alert>
+
+<style>
+    #loop-text {
+        height: 30px;
+        overflow: hidden;
+    }
+
+        #loop-text ul {
+            height: 100%;
+            width: 100%;
+            -webkit-animation: scroll 5s infinite;
+        }
+
+        #loop-text li {
+            line-height: 30px;
+            height: 30px;
+        }
+
+    @@keyframes scroll {
+        0% {
+            -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+        }
+
+        20% {
+            -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+        }
+
+        25% {
+            -webkit-transform: translateY(-30px);
+            transform: translateY(-30px);
+        }
+
+        45% {
+            -webkit-transform: translateY(-30px);
+            transform: translateY(-30px);
+        }
+
+        50% {
+            -webkit-transform: translateY(-60px);
+            transform: translateY(-60px);
+        }
+
+        70% {
+            -webkit-transform: translateY(-60px);
+            transform: translateY(-60px);
+        }
+
+        75% {
+            -webkit-transform: translateY(-90px);
+            transform: translateY(-90px);
+        }
+
+        95% {
+            -webkit-transform: translateY(-90px);
+            transform: translateY(-90px);
+        }
+
+        100% {
+            -webkit-transform: translateY(-120px);
+            transform: translateY(-120px);
+        }
+    }
+</style>

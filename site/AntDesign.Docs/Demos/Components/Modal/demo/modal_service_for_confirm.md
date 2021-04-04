@@ -13,7 +13,8 @@ title:
 
 ``` c#
 
-@inherits ConfirmTemplate<string, string>
+@using System.ComponentModel
+@inherits FeedbackComponent<string, string>
 
 <div>
     <Text>Please input "@config"</Text>
@@ -35,13 +36,17 @@ title:
 
     public override async Task OkAsync(ModalClosingEventArgs args)
     {
-        ConfirmRef.Config.OkButtonProps.Loading = true;
+        if (FeedbackRef is ConfirmRef confirmRef)
+        {
+            confirmRef.Config.OkButtonProps.Loading = true;
+        }
+
         await Task.Delay(1000);
         // only the input's value equals the initialized value, the OK button will close the confirm dialog box
         if (value != config)
             args.Cancel = true;
         else
-            await this.OnOkAsync(value);
+            await (FeedbackRef as IFeedbackRef<string>)!.OkAsync(value);
 
         await base.OkAsync(args);
     }

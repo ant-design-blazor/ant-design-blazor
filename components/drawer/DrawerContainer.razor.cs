@@ -15,23 +15,26 @@ namespace AntDesign
         {
             DrawerService.OnCloseEvent += DrawerService_OnClose;
             DrawerService.OnOpenEvent += DrawerService_OnCreate;
+            DrawerService.OnUpdateEvent += DrawerService_OnUpdateEvent;
         }
 
         protected override void Dispose(bool disposing)
         {
             DrawerService.OnCloseEvent -= DrawerService_OnClose;
             DrawerService.OnOpenEvent -= DrawerService_OnCreate;
+            DrawerService.OnUpdateEvent -= DrawerService_OnUpdateEvent;
+
             base.Dispose(disposing);
         }
 
-        private List<IDrawerRef> _drawerRefs = new List<IDrawerRef>();
+        private readonly List<DrawerRef> _drawerRefs = new List<DrawerRef>();
 
         /// <summary>
         /// Create and Open a drawer
         /// </summary>
-        private async Task DrawerService_OnCreate(IDrawerRef drawerRef)
+        private async Task DrawerService_OnCreate(DrawerRef drawerRef)
         {
-            drawerRef.Options.Visible = true;
+            drawerRef.Config.Visible = true;
             if (!_drawerRefs.Contains(drawerRef))
             {
                 _drawerRefs.Add(drawerRef);
@@ -40,11 +43,24 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Update drawer
+        /// </summary>
+        /// <param name="drawerRef"></param>
+        /// <returns></returns>
+        private async Task DrawerService_OnUpdateEvent(DrawerRef drawerRef)
+        {
+            if (_drawerRefs.Contains(drawerRef))
+            {
+                await InvokeStateHasChangedAsync();
+            }
+        }
+
+        /// <summary>
         /// Close the drawer
         /// </summary>
-        private async Task DrawerService_OnClose(IDrawerRef drawerRef)
+        private async Task DrawerService_OnClose(DrawerRef drawerRef)
         {
-            drawerRef.Options.Visible = false;
+            drawerRef.Config.Visible = false;
             await InvokeAsync(StateHasChanged);
             await Task.Delay(300);
             if (_drawerRefs.Contains(drawerRef))
