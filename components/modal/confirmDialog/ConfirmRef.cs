@@ -8,11 +8,10 @@ namespace AntDesign
     /// <summary>
     /// 
     /// </summary>
-    public class ConfirmRef
+    public class ConfirmRef : FeedbackRefWithOkCancelBase
     {
         #region internal
 
-        internal IModalTemplate ModalTemplate { get; set; }
         internal bool IsCreateByModalService => Service != null;
         internal TaskCompletionSource<ConfirmResult> TaskCompletionSource { get; set; }
 
@@ -26,7 +25,6 @@ namespace AntDesign
             Config = config;
             Service = service;
         }
-        internal Confirm Confirm { get; set; }
 
         #endregion
 
@@ -40,39 +38,32 @@ namespace AntDesign
         /// </summary>
         public ConfirmOptions Config { get; private set; }
 
-        /// <summary>
-        /// on Confirm open
-        /// </summary>
-        public Func<Task> OnOpen { get; set; }
-
-        /// <summary>
-        /// on Confirm close
-        /// </summary>
-        public Func<Task> OnClose { get; set; }
-
-        /// <summary>
-        /// open Confirm dialog
-        /// </summary>
-        /// <returns></returns>
-        public async Task OpenAsync()
-        {
-            await (Service?.OpenConfirmAsync(this) ?? Task.CompletedTask);
-        }
+        #region base inheritdoc
 
         /// <summary>
         /// close Confirm dialog
         /// </summary>
         /// <returns></returns>
-        public async Task CloseAsync()
+        public override async Task CloseAsync()
         {
             await (Service?.DestroyConfirmAsync(this) ?? Task.CompletedTask);
+        }
+
+
+        /// <summary>
+        /// Open Confirm dialog
+        /// </summary>
+        /// <returns></returns>
+        public override async Task OpenAsync()
+        {
+            await (Service?.OpenConfirmAsync(this) ?? Task.CompletedTask);
         }
 
         /// <summary>
         /// update Confirm dialog config which Visible=true
         /// </summary>
         /// <returns></returns>
-        public async Task UpdateConfigAsync()
+        public override async Task UpdateConfigAsync()
         {
             await (Service?.UpdateConfirmAsync(this) ?? Task.CompletedTask);
         }
@@ -87,46 +78,36 @@ namespace AntDesign
             Config = config;
             await UpdateConfigAsync();
         }
+
+        #endregion
     }
+
 
     /// <summary>
     /// ConfirmRef for 
     /// </summary>
     /// <typeparam name="TResult"></typeparam>
-    public class ConfirmRef<TResult> : ConfirmRef
+    public class ConfirmRef<TResult> : ConfirmRef, IOkCancelRef<TResult>
     {
-        /// <summary>
-        /// on Cancel button click
-        /// </summary>
-        public Func<TResult, Task> OnCancel { get; set; }
-
-        /// <summary>
-        /// on OK button click
-        /// </summary>
-        public Func<TResult, Task> OnOk { get; set; }
-
         internal ConfirmRef(ConfirmOptions config, ModalService service) : base(config, service)
         {
-
         }
 
-        /// <summary>
-        /// Trigger OK button
-        /// </summary>
-        /// <returns></returns>
-        public async Task TriggerOkAsync(TResult result)
+        /// <inheritdoc />
+        public new Func<TResult, Task> OnCancel { get; set; }
+
+        /// <inheritdoc />
+        public new Func<TResult, Task> OnOk { get; set; }
+
+        /// <inheritdoc />
+        public async Task OkAsync(TResult result)
         {
-            await base.CloseAsync();
             await (OnOk?.Invoke(result) ?? Task.CompletedTask);
         }
 
-        /// <summary>
-        /// Trigger cancel button
-        /// </summary>
-        /// <returns></returns>
-        public async Task TriggerCancelAsync(TResult result)
+        /// <inheritdoc />
+        public async Task CancelAsync(TResult result)
         {
-            await base.CloseAsync();
             await (OnCancel?.Invoke(result) ?? Task.CompletedTask);
         }
     }

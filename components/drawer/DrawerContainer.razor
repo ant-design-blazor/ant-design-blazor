@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-@foreach (IDrawerRef drawerRef in _drawerRefs)
+@foreach (DrawerRef drawerRef in _drawerRefs)
 {
     var drawerConfig = drawerRef.Options;
     <Drawer @ref="@drawerRef.Drawer"
