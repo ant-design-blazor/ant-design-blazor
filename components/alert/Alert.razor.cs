@@ -2,6 +2,7 @@
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using System.Collections.Generic;
 
 namespace AntDesign
 {
@@ -52,17 +53,20 @@ namespace AntDesign
         [Parameter]
         public string Message { get; set; }
 
+        [Parameter]
+        public RenderFragment MessageTemplate { get; set; }
+
         /// <summary>
         /// Whether to show icon.
         /// </summary>
         [Parameter]
-        public bool ShowIcon { get; set; }
+        public bool? ShowIcon { get; set; }
 
         /// <summary>
         /// Type of Alert styles, options: success, info, warning, error
         /// </summary>
         [Parameter]
-        public string Type { get; set; } = AlertType.Default;
+        public string Type { get; set; }
 
         /// <summary>
         /// Callback when Alert is closed.
@@ -79,11 +83,14 @@ namespace AntDesign
         /// <summary>
         /// Icon to show.
         /// </summary>
-        protected string IconType =>
-                         Type == AlertType.Success ? "check-circle"
-                        : Type == AlertType.Info ? "info-circle"
-                        : Type == AlertType.Warning ? "exclamation-circle"
-                        : Type == AlertType.Error ? "close-circle" : null;
+        protected string IconType => CalcType switch
+        {
+            AlertType.Success => "check-circle",
+            AlertType.Info => "info-circle",
+            AlertType.Warning => "exclamation-circle",
+            AlertType.Error => "close-circle",
+            _ => "exclamation-circle",
+        };
 
         /// <summary>
         /// Indicator if the component is closed or not.
@@ -101,6 +108,10 @@ namespace AntDesign
 
         private string _innerStyle = string.Empty;
 
+        private bool IsShowIcon => (Banner && ShowIcon == null) ? true : ShowIcon == true;
+
+        private string CalcType => Type ?? (Banner ? AlertType.Warning : AlertType.Info);
+
         /// <summary>
         /// Sets the default classes.
         /// </summary>
@@ -109,8 +120,8 @@ namespace AntDesign
             string prefixName = "ant-alert";
             ClassMapper
                 .Add("ant-alert")
-                .If($"{prefixName}-{Type}", () => !string.IsNullOrEmpty(Type))
-                .If($"{prefixName}-no-icon", () => !ShowIcon)
+                .GetIf(() => $"{prefixName}-{CalcType}", () => !string.IsNullOrEmpty(CalcType))
+                .If($"{prefixName}-no-icon", () => !IsShowIcon)
                 .If($"{prefixName}-closable", () => Closable)
                 .If($"{prefixName}-banner", () => Banner)
                 .If($"{prefixName}-with-description", () => !string.IsNullOrEmpty(Description) || ChildContent != null)
@@ -127,11 +138,6 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
-            if (Banner && string.IsNullOrEmpty(Type) && Icon == null)
-            {
-                ShowIcon = false;
-            }
 
             SetClassMap();
         }
