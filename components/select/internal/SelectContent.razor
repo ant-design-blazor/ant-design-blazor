@@ -21,7 +21,14 @@
             @ParentSelect.PrefixIcon
         </span>
     }
-    <div style="display: flex;position: relative;flex-grow: 1;flex-wrap: wrap;align-items: center;">
+    @{
+        string overflowStyle = "";
+        if (ParentSelect.SelectMode == SelectMode.Default 
+            && !(ParentSelect.DropdownMatchSelectWidth.IsT0 && ParentSelect.DropdownMatchSelectWidth.AsT0))
+            overflowStyle = "overflow-x:hidden;text-overflow:ellipsis;";
+
+    }
+    <div style="display: flex;position: relative;flex-grow: 1;flex-wrap: wrap;align-items: center;@overflowStyle">
         @if (ShowPlaceholder)
         {
             @if (showPrefixAsSeparate)
@@ -52,7 +59,7 @@
                     else
                     {
                         <span class="@Prefix-selection-item">
-                            <span class="@Prefix-selection-item-content">@selectedItem.Label</span>
+                            @selectedItem.Label
                         </span>
                     }
                 }

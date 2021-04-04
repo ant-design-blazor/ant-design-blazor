@@ -10,6 +10,7 @@ using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Diagnostics.CodeAnalysis;
+using OneOf;
 
 #pragma warning disable 1591 // Disable missing XML comment
 #pragma warning disable CA1716 // Disable Select name warning
@@ -29,8 +30,8 @@ namespace AntDesign
         public bool DefaultActiveFirstOption
         {
             get { return _defaultActiveFirstOption; }
-            set { 
-                _defaultActiveFirstOption = value; 
+            set {
+                _defaultActiveFirstOption = value;
                 if (!_defaultActiveFirstOption)
                 {
                     _defaultActiveFirstOptionApplied = true;
@@ -114,8 +115,8 @@ namespace AntDesign
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
-        [Parameter] public bool PopupContainerGrowToMatchWidestItem { get; set; }
-        [Parameter] public string PopupContainerMaxWidth { get; set; } = "auto";
+        [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
+        [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
         [Parameter] public bool ShowArrowIcon { get; set; } = true;
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
         [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
@@ -744,17 +745,21 @@ namespace AntDesign
         /// </summary>
         protected async Task SetDropdownStyleAsync()
         {
-            string maxWidth = "";
-            if (PopupContainerMaxWidth != "auto")
-                maxWidth = $"max-width: {PopupContainerMaxWidth};";
-            string minWidth = "";
-            if (!PopupContainerGrowToMatchWidestItem)
+            string maxWidth = "", minWidth = "", definedWidth = "";
+            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
+            var width = domRect.width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            minWidth = $"min-width: {width}px;";
+            if (DropdownMatchSelectWidth.IsT0 && DropdownMatchSelectWidth.AsT0)
             {
-                var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
-                var width = domRect.width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-                minWidth = $"min-width: {width}px; width: {width}px;";
+                definedWidth = $"width: {width}px;";
             }
-            _dropdownStyle = minWidth + maxWidth;
+            else if (DropdownMatchSelectWidth.IsT1)
+            {
+                definedWidth = $"width: {DropdownMatchSelectWidth.AsT1};";
+            }
+            if (!DropdownMaxWidth.Equals("auto", StringComparison.CurrentCultureIgnoreCase))
+                maxWidth = $"max-width: {DropdownMaxWidth};";
+            _dropdownStyle = minWidth + definedWidth + maxWidth;
         }
 
         protected async Task OnOverlayVisibleChangeAsync(bool visible)
