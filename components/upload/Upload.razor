@@ -24,7 +24,7 @@
 
     @if (ShowUploadList)
     {
-        <div class="ant-upload-list ant-upload-list-@ListType">
+        <div class="@_listClassMapper.Class">
             @{
                 var containerClass = ListType switch
                 {
@@ -115,7 +115,14 @@
                                                 }
                                                 picture = "picture";
                                             }
-                                            <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@file.Url">@file.FileName</a>
+                                            @if (OnDownload.HasDelegate)
+                                            {
+                                                <a rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" @onclick="() => DownloadFile(file)">@file.FileName</a>
+                                            }
+                                            else
+                                            {
+                                                <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@file.Url">@file.FileName</a>
+                                            }
                                             <span class="ant-upload-list-item-card-actions @picture">
                                                 <button title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-card-actions-btn" @onclick="() => RemoveFile(file)" disabled="@Disabled">
                                                     <Icon Type="delete" />

@@ -24,9 +24,10 @@ namespace AntDesign
         {
             ClassMapper
                 .Add(PrefixCls)
-                .If($"{PrefixCls}-{Direction}", () => Direction.IsIn("horizontal", "vertical"))
-                .If($"{PrefixCls}-align-{Align}", () => HasAlign)
-                .If($"{PrefixCls}-align-center", () => !HasAlign && Direction == "horizontal");
+                .GetIf(() => $"{PrefixCls}-{Direction}", () => Direction.IsIn("horizontal", "vertical"))
+                .GetIf(() => $"{PrefixCls}-align-{Align}", () => HasAlign)
+                .If($"{PrefixCls}-align-center", () => !HasAlign && Direction == "horizontal")
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
 
         protected override void OnInitialized()

@@ -28,6 +28,8 @@ namespace AntDesign
 
         internal void SelectionChanged();
 
+        internal void OnExpandChange(int cacheKey);
+
         internal void Refresh();
 
         internal void ReloadAndInvokeChange();
@@ -38,6 +40,8 @@ namespace AntDesign
 
         void ReloadData();
 
+        QueryModel GetQueryModel();
+
         internal void HasFixLeft();
 
         internal void HasFixRight();
@@ -47,5 +51,7 @@ namespace AntDesign
         internal void ColumnSorterChange(IFieldColumn column);
 
         internal bool RowExpandable(RowData rowData);
+
+        internal void AddSummaryRow(SummaryRow summaryRow);
     }
 }

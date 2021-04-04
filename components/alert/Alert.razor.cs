@@ -107,7 +107,7 @@ namespace AntDesign
         private void SetClassMap()
         {
             string prefixName = "ant-alert";
-            ClassMapper.Clear()
+            ClassMapper
                 .Add("ant-alert")
                 .If($"{prefixName}-{Type}", () => !string.IsNullOrEmpty(Type))
                 .If($"{prefixName}-no-icon", () => !ShowIcon)
@@ -117,6 +117,7 @@ namespace AntDesign
                 .If($"{prefixName}-motion", () => _isClosing)
                 .If($"{prefixName}-motion-leave", () => _isClosing)
                 .If($"{prefixName}-motion-leave-active", () => _isClosing && _motionStage == 1)
+                .If($"{prefixName}-rtl", () => RTL)
                 ;
         }
 

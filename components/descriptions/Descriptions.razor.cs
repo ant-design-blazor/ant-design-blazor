@@ -37,7 +37,7 @@ namespace AntDesign
         [Parameter]
         public bool Colon { get; set; }
 
-        #endregion Parameters        
+        #endregion Parameters
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -73,7 +73,9 @@ namespace AntDesign
 
         private void SetClassMap()
         {
-            ClassMapper.Clear().Add("ant-descriptions")
+            ClassMapper
+                .Add("ant-descriptions")
+                .If("ant-descriptions", () => RTL)
                 .If("ant-descriptions-bordered", () => this.Bordered)
                 .If("ant-descriptions-middle", () => this.Size == DescriptionsSize.Middle)
                 .If("ant-descriptions-small", () => this.Size == DescriptionsSize.Small);
@@ -120,7 +122,6 @@ namespace AntDesign
 
         protected override async Task OnParametersSetAsync()
         {
-            SetClassMap();
             PrepareMatrix();
             await InvokeAsync(StateHasChanged);
             await base.OnParametersSetAsync();
@@ -169,7 +170,6 @@ namespace AntDesign
 
         private async Task SetRealColumn()
         {
-
             if (Column.IsT0)
             {
                 _realColumn = Column.AsT0 == 0 ? 3 : Column.AsT0;
@@ -182,7 +182,5 @@ namespace AntDesign
                 _realColumn = Column.AsT1.ContainsKey(bp.ToString()) ? Column.AsT1[bp.ToString()] : _defaultColumnMap[bp.ToString()];
             }
         }
-
-
     }
 }

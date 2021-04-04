@@ -7,11 +7,9 @@ using OneOf;
 
 namespace AntDesign
 {
-
     public partial class Skeleton : AntDomComponentBase
     {
         #region Parameters
-
 
         [Parameter]
         public bool Active { get; set; }
@@ -24,9 +22,9 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Title { get; set; } = true;
+
         [Parameter]
         public OneOf<int?, string> TitleWidth { get; set; }
-
 
         /// <summary>
         /// 是否显示头像占位图
@@ -40,14 +38,15 @@ namespace AntDesign
         [Parameter]
         public string AvatarShape { get; set; }
 
-
         /// <summary>
         /// 是否显示段落占位图
         /// </summary>
         [Parameter]
         public bool Paragraph { get; set; } = true;
+
         [Parameter]
         public int? ParagraphRows { get; set; }
+
         [Parameter]
         public OneOf<int?, string, IList<OneOf<int?, string>>> ParagraphWidth { get; set; }
 
@@ -60,9 +59,11 @@ namespace AntDesign
 
         private void SetClassMap()
         {
-            ClassMapper.Clear().Add("ant-skeleton")
+            ClassMapper
+                .Add("ant-skeleton")
                 .If("ant-skeleton-with-avatar", () => this.Avatar)
-                .If("ant-skeleton-active", () => this.Active);
+                .If("ant-skeleton-active", () => this.Active)
+                .If("ant-skeleton-rtl", () => RTL);
         }
 
         protected override void OnInitialized()
@@ -108,7 +109,6 @@ namespace AntDesign
                     TitleWidth = "";
                 }
             }
-
         }
 
         public void SetAvatarProps()
@@ -167,6 +167,5 @@ namespace AntDesign
             rowlist.Add(lastWidth);
             return rowlist;
         }
-
     }
 }

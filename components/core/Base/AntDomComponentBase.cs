@@ -10,6 +10,11 @@ namespace AntDesign
         [Parameter]
         public string Id { get; set; }
 
+        [CascadingParameter]
+        public ConfigProvider ConfigProvider { get; set; }
+
+        protected bool RTL => ConfigProvider?.Direction == "RTL";
+
         //[Parameter(CaptureUnmatchedValues = true)]
         //public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
 
