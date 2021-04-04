@@ -4,7 +4,7 @@
 @if (!_isClosed)
 {
     <div data-show="@(!_isClosing||_isClosed?"true":"false")" class="@ClassMapper.Class" style="@_innerStyle @Style " Id="@Id" @ref="Ref">
-        @if (ShowIcon)
+        @if (IsShowIcon)
         {
             @if (Icon != null)
             {
@@ -18,21 +18,22 @@
             }
         }
         <div class="ant-alert-content">
-            @if (!string.IsNullOrEmpty(Message))
+            @if (MessageTemplate != null)
+            {
+                <div class="ant-alert-message">@MessageTemplate</div>
+            }
+            else if (!string.IsNullOrEmpty(Message))
             {
                 <div class="ant-alert-message">@Message</div>
             }
-            @if (MessagesLoop != null && MessagesLoop.Any())
-            {
-                <AntDesign.Internal.LoopText Messages="@MessagesLoop" msDelay="@MsDelay" />
-            }
-            @if (!string.IsNullOrEmpty(Description))
-            {
-                <div class="ant-alert-description">@Description</div>
-            }
+
             @if (ChildContent != null)
             {
                 <div class="ant-alert-description">@ChildContent</div>
+            }
+            else if (!string.IsNullOrEmpty(Description))
+            {
+                <div class="ant-alert-description">@Description</div>
             }
         </div>
         @if (Closable)
