@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TestKit\AntDesign.TestKit.csproj" />
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
+    <ProjectReference Include="..\AntDesign.TestKit\AntDesign.TestKit.csproj" />
   </ItemGroup>
 </Project>
