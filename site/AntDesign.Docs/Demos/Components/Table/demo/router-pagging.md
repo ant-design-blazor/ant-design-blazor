@@ -1,6 +1,6 @@
 ---
 order: 2
-iframe: 480
+iframe: 550
 title:
   en-US: Router pagging
   zh-CN: 通过路由参数进行翻页
