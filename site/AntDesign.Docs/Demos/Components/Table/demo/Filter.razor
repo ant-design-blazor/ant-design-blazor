@@ -1,0 +1,79 @@
+﻿@page "/filter"
+
+<Table DataSource="data" OnChange="OnChange" TItem="Data">
+    <Column TData="string"
+            @bind-Field="context.Name"
+            SorterCompare="@((a,b)=> a.Length - b.Length)"
+            SortDirections="new[] { SortDirection.Descending }"
+            Filterable />
+
+    <Column TData="string"
+            @bind-Field="context.Address"
+            SorterCompare="@((a,b)=> a.Length - b.Length)"
+            SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }"
+            Filterable />
+    <Column TData="DateTime"
+            @bind-Field="context.BirthDate"
+            Sortable
+            Filterable Format="dd/MM/yyyy" />
+
+    <Column TData="bool"
+            @bind-Field="context.IsActive"
+            Sortable
+            Filterable />
+
+    <Column TData="string"
+            @bind-Field="context.Gender"
+            Sortable
+            Filterable
+            Filters="genderFilters"
+            OnFilter="((value,name)=>name.Equals(value))" />
+</Table>
+
+@using AntDesign.TableModels;
+@using System.Text.Json;
+@code {
+
+    class Data
+    {
+        public Data(string name, string address, DateTime birthDate, bool isActive, string gender)
+        {
+            Name = name;
+            Address = address;
+            BirthDate = birthDate;
+            IsActive = isActive;
+            Gender = gender;
+        }
+
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public DateTime BirthDate { get; set; }
+        public bool IsActive { get; set; }
+        public string Gender { get; set; }
+    }
+
+    Data[] data =
+{
+        new("John Brown","New York No. 1 Lake Park",new DateTime(1980,1,1),true,"Male"),
+        new("Sara Green","London No. 1 Lake Park",new DateTime(1983,12,1),true,"Female"),
+        new("Joe Black", "Sidney No. 1 Lake Park",new DateTime(1977,11,1),true,"Male"),
+        new("Jim Red","London No. 2 Lake Park",new DateTime(1985,1,1),false,"Male"),
+    };
+
+
+
+    public TableFilter<string>[] genderFilters = new TableFilter<string>[] {
+        new() { Text = "Male", Value = "Male" },
+        new() { Text = "Female", Value = "Female" },
+    };
+
+    void OnChange(QueryModel<Data> query)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(query));
+    }
+
+    void OnRowClick(RowData<Data> row)
+    {
+        Console.WriteLine($"row {row.Data.Name} was clicked");
+    }
+}
