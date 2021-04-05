@@ -160,7 +160,7 @@ readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
 
 readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
 @<Template>
-    @if (col.Filters?.Any() == true)
+    @if (col.Filterable)
     {
         <div class="ant-table-filter-column">
             <span class="ant-table-filter-column-title" @attributes="@(new Dictionary<string, object>() { ["onclick"]=_callbackFactory.Create(col, col.HandleSort )})">
@@ -169,13 +169,10 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                     @col.ToolTipSorter(col)
                 }
             </span>
-            <Dropdown 
-                Trigger="new[] { TriggerType.Click }"
-                Visible="col._filterOpened" 
-                Placement="PlacementType.BottomRight" 
-                TriggerReference="col._filterTriggerRef"
-                @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, ()=> col.FilterConfirm()) })"
-            >
+
+
+
+            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef">
                 <Unbound>
                     <span @ref="@col._filterTriggerRef" class="ant-table-filter-trigger-container @(col._filterOpened?" ant-table-filter-trigger-container-open":"")">
                         <span role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._hasFilterSelected?"active":"")"
@@ -186,25 +183,111 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                 </Unbound>
                 <Overlay>
                     <div class="ant-table-filter-dropdown">
-                        <Menu AutoCloseDropdown="false" SelectedKeys="col._selectedFilterValues">
-                            @foreach (var filter in col.Filters)
+                        @if (col.Filters?.Any() == true && col._columnFilterType == TableFilterType.List)
+                        {
+                            <Menu AutoCloseDropdown="false" SelectedKeys="col._selectedFilterValues">
+                                @foreach (var filter in col.Filters)
+                                {
+                                    <MenuItem Key="@filter.Value.ToString()" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col.FilterSelected(filter))})">
+                                        @if (col.FilterMultiple)
+                                        {
+                                            <Checkbox Value="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<bool>(col, value => col.FilterSelected(filter)) })">@filter.Text</Checkbox>
+                                        }
+                                        else
+                                        {
+                                            <Radio TValue="bool" Checked="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["CheckedChanged"] = _callbackFactory.Create<bool>(col, value => col.FilterSelected(filter))})">@filter.Text</Radio>
+                                        }
+                                    </MenuItem>
+                                }
+                            </Menu>
+                        }
+                        else
+                        {
+                            @for (int index = 0; index < col.Filters.Count(); index++)
                             {
-                                <MenuItem Key="@filter.Value.ToString()" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col.FilterSelected(filter))})">
-                                    @if (col.FilterMultiple)
-                                    {
-                                        <Checkbox Value="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<bool>(col, value => col.FilterSelected(filter)) })">@filter.Text</Checkbox>
-                                    }
-                                    else
-                                    {
-                                        <Radio TValue="bool" Checked="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["CheckedChanged"] = _callbackFactory.Create<bool>(col, value => col.FilterSelected(filter))})">@filter.Text</Radio>
-                                    }
-                                </MenuItem>
+                                var filter = col.Filters.ElementAt(index);
+                                @if (index > 0)
+                                {
+                                    <div style="border-top: 1px solid #f0f0f0">
+                                        <Space Style="margin:10px">
+                                            <SpaceItem>
+                                                <Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCondition>(col, value => col.SetFilterCondition(filter,value)) })">
+                                                    <SelectOptions>
+                                                        <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.And" Label="@col.Table?.Locale.AndFilterCondition"></SelectOption>
+                                                        <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.Or" Label="@col.Table?.Locale.OrFilterCondition"></SelectOption>
+                                                    </SelectOptions>
+                                                </Select>
+                                            </SpaceItem>
+                                            <SpaceItem>
+                                                <Button Size="small" Icon="close" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.RemoveFilter(filter)) })">
+                                                </Button>
+                                            </SpaceItem>
+                                        </Space>
+                                    </div>
+                                }
+                                <Space Style="margin:10px">
+
+                                    <SpaceItem>
+
+                                        <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="overflow:visible" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })">
+                                            <SelectOptions>
+                                                <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Equals" Label="@col.Table?.Locale.EqualCompareOperator"></SelectOption>
+                                                <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotEquals" Label="@col.Table?.Locale.NotEqualCompareOperator"></SelectOption>
+                                                @if (col._columnDataType == typeof(string))
+                                                {
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Contains" Label="@col.Table?.Locale.ContainsCompareOperator"></SelectOption>
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.StartsWith" Label="@col.Table?.Locale.StartWithCompareOperator"></SelectOption>
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.EndsWidth" Label="@col.Table?.Locale.EndWithCompareOperator"></SelectOption>
+                                                }
+                                                @if (col._columnDataType != typeof(string))
+                                                {
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.GreaterThan" Label="@col.Table?.Locale.GreaterThanCompareOperator"></SelectOption>
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.LessThan" Label="@col.Table?.Locale.LessThanCompareOperator"></SelectOption>
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.GreaterThanOrEquals" Label="@col.Table?.Locale.GreaterThanOrEqualCompareOperator"></SelectOption>
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.LessThanOrEquals" Label="@col.Table?.Locale.LessThanOrEqualCompareOperator"></SelectOption>
+                                                }
+                                                @if (THelper.IsTypeNullable<TData>() || col._columnDataType == typeof(string))
+                                                {
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.IsNull" Label="@col.Table?.Locale.IsNullCompareOperator"></SelectOption>
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.IsNotNull" Label="@col.Table?.Locale.IsNotNullCompareOperator"></SelectOption>
+                                                }
+                                            </SelectOptions>
+                                        </Select>
+
+                                    </SpaceItem>
+
+                                    <SpaceItem>
+                                        @if (col._columnDataType == typeof(DateTime))
+                                        {
+                                            <DatePicker Value="col.FilterDateTimeValue(filter)" Format="@col.Format" TValue="DateTime?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<DateTime?>(col, value => col.SetFilterValue(filter,value)) })"></DatePicker>
+                                        }
+                                        else
+                                        {
+                                            if (THelper.IsNumericType<TData>())
+                                            {
+                                                <InputNumber Value="filter.Value" Formatter="col.NumberFormatter" TValue="TData" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter,value)) })"></InputNumber>
+                                            }
+                                            else
+                                            {
+                                                <Input TValue="TData" Value="filter.Value" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter,value)) })" />
+                                            }
+                                        }
+
+                                    </SpaceItem>
+
+                                </Space>
                             }
-                        </Menu>
+                        }
                         <div class="ant-table-filter-dropdown-btns">
-                            <Button Size="small" Type="link" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.FilterReset()) })">
+                            <Button Size="small" Type="link" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.ResetFilters()) })">
                                 @col.Table?.Locale.FilterReset
                             </Button>
+                            @if (col._columnFilterType == TableFilterType.FeildType)
+                            {
+                                <Button Size="small" Icon="plus" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.AddFilter()) })">
+                                </Button>
+                            }
+
                             <Button Size="small" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.FilterConfirm()) })">
                                 @col.Table?.Locale.FilterConfirm
                             </Button>
@@ -218,9 +301,9 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
     {
         @if (col.Sortable)
         {
-             <div @attributes="@(new Dictionary<string, object>() { ["onclick"]=_callbackFactory.Create(col, col.HandleSort )})">
-                 @col.ToolTipSorter(col)
-             </div>
+            <div @attributes="@(new Dictionary<string, object>() { ["onclick"]=_callbackFactory.Create(col, col.HandleSort )})">
+                @col.ToolTipSorter(col)
+            </div>
         }
         else if (col.TitleTemplate != null)
         {
@@ -231,6 +314,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
             @col.HeaderTitle
         }
     }
+
 </Template>;
 
 }
