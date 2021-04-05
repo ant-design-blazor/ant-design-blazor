@@ -3,6 +3,7 @@
   less = require("gulp-less");
 
 var rename = require('gulp-rename');
+const colorGenerate = require('../../scripts/generateColorLess');
 
 gulp.task("less-default", function () {
   return gulp.src('docs.less')
@@ -34,4 +35,6 @@ gulp.task("less-dark", function () {
 });
 
 
-gulp.task('default', gulp.parallel('less-default', 'less-aliyun', 'less-compact', 'less-dark'), function () { });
+gulp.task('default', gulp.parallel('less-default', 'less-aliyun', 'less-compact', 'less-dark'), function () {
+  colorGenerate();
+});

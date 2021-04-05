@@ -114,6 +114,11 @@
                         </span>*@
                     @language.Resources["app.footer.more-product"]
                 </h2>
+                <div class="rc-footer-item" style="margin-top: 20px;">
+                    <div class="theme-pick-wrap">
+                        <input type="color" class="theme-pick" name="head" value="@colorHex" @onchange="ChangeColor">
+                    </div>
+                </div>
             </div>
         </section>
     </section>
@@ -126,6 +131,10 @@
 </footer>
 
 @code{
+    // region: color
+    string colorHex = "#1890ff";
+    bool lessLoaded;
+    string lessUrl = "https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js";
 
     protected override async Task OnInitializedAsync()
     {
@@ -134,6 +143,16 @@
         {
             InvokeAsync(StateHasChanged);
         };
+    }
+
+    private void ChangeColor(ChangeEventArgs args)
+    {
+        colorHex = args.Value.ToString();
+
+        void ChangeColor()
+        {
+
+        }
     }
 
 }
