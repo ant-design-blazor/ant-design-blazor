@@ -297,7 +297,14 @@ namespace AntDesign
                 else if (_inputEnd.IsOnFocused)
                 {
                     Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _inputEnd.Ref);
-                    _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d({element.clientWidth + 16}px, 0px, 0px);";
+                    int translateDistance = element.clientWidth + 16;
+
+                    if (RTL)
+                    {
+                        translateDistance = -translateDistance;
+                    }
+
+                    _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d({translateDistance}px, 0px, 0px);";
                     _rangeArrowStyle = $"left: {element.clientWidth + 30}px";
                 }
                 else

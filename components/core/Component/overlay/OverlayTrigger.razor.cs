@@ -153,11 +153,8 @@ namespace AntDesign.Internal
 
         public override Task SetParametersAsync(ParameterView parameters)
         {
-            if (RTL)
-            {
-                _paramPlacement = PlacementType.BottomRight;
-                _placement = PlacementType.BottomRight;
-            }
+            _paramPlacement = RTL ? PlacementType.BottomRight : PlacementType.BottomLeft;
+            _placement = RTL ? PlacementType.BottomRight : PlacementType.BottomLeft;
 
             return base.SetParametersAsync(parameters);
         }
