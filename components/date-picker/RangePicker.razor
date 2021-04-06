@@ -3,7 +3,7 @@
 @typeparam TValue
 @using AntDesign.Internal;
 
-<CascadingValue Value="@_dropdownClassMapper.Class" Name="PrefixCls">
+<CascadingValue Value='$"{PrefixCls}-dropdown"' Name="PrefixCls">
     <OverlayTrigger @ref="_dropDown"
                     Visible="Open"
                     IsButton="@true"
@@ -18,10 +18,10 @@
             <div class="@(PrefixCls)-panel-container">
                 <div class="@(PrefixCls)-panels">
                     <div class="@_panelClassMapper.Class">
-                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="0" OnSelect="async (date, index) => await OnSelect(date)" />
+                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 1 : 0)" OnSelect="async (date, index) => await OnSelect(date)" />
                     </div>
                     <div class="@_panelClassMapper.Class">
-                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="1" OnSelect="async (date, index) => await OnSelect(date)" />
+                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" PickerIndex="@(RTL ? 0 : 1)" OnSelect="async (date, index) => await OnSelect(date)" />
                     </div>
                 </div>
                 @if (RenderExtraFooter != null && !IsShowTime)
