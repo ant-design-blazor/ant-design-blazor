@@ -151,6 +151,14 @@ namespace AntDesign.Internal
         protected Overlay _overlay = null;
         private ElementReference _triggerReference;
 
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            _paramPlacement = RTL ? PlacementType.BottomRight : PlacementType.BottomLeft;
+            _placement = RTL ? PlacementType.BottomRight : PlacementType.BottomLeft;
+
+            return base.SetParametersAsync(parameters);
+        }
+
         protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender)

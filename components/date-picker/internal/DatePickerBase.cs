@@ -241,7 +241,6 @@ namespace AntDesign
         private CultureInfo _cultureInfo = LocaleProvider.CurrentLocale.CurrentCulture;
         private DatePickerLocale _locale = LocaleProvider.CurrentLocale.DatePicker;
 
-        protected ClassMapper _dropdownClassMapper = new ClassMapper();
         protected ClassMapper _panelClassMapper = new ClassMapper();
 
         protected override void OnInitialized()
@@ -278,10 +277,6 @@ namespace AntDesign
                //.If($"{PrefixCls}-{Direction}", () => Direction.IsIn("ltr", "rlt"))
                ;
 
-            _dropdownClassMapper
-                .Add($"{PrefixCls}-dropdown")
-                .If($"{PrefixCls}-dropdown-rtl", () => RTL);
-
             _panelClassMapper
                 .Add($"{PrefixCls}-panel")
                 .If($"{PrefixCls}-panel-rtl", () => RTL);
@@ -302,7 +297,14 @@ namespace AntDesign
                 else if (_inputEnd.IsOnFocused)
                 {
                     Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _inputEnd.Ref);
-                    _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d({element.clientWidth + 16}px, 0px, 0px);";
+                    int translateDistance = element.clientWidth + 16;
+
+                    if (RTL)
+                    {
+                        translateDistance = -translateDistance;
+                    }
+
+                    _activeBarStyle = $"width: {element.clientWidth - 10}px; position: absolute; transform: translate3d({translateDistance}px, 0px, 0px);";
                     _rangeArrowStyle = $"left: {element.clientWidth + 30}px";
                 }
                 else
