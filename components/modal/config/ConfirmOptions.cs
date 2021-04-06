@@ -22,7 +22,7 @@ namespace AntDesign
             Locale = LocaleProvider.CurrentLocale.Confirm;
         }
 
-        #region const
+        #region internal
 
         /// <summary>
         /// OK

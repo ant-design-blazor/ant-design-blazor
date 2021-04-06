@@ -17,6 +17,7 @@ namespace AntDesign
         {
             ModalService.OnModalOpenEvent += ModalService_OnModalOpenEvent;
             ModalService.OnModalCloseEvent += ModalService_OnModalCloseEvent;
+            ModalService.OnModalUpdateEvent += ModalService_OnModalUpdateEvent;
         }
 
         private async Task ModalService_OnModalOpenEvent(ModalRef modalRef)
@@ -40,11 +41,17 @@ namespace AntDesign
             }
         }
 
+        private async Task ModalService_OnModalUpdateEvent(ModalRef arg)
+        {
+            await InvokeStateHasChangedAsync();
+        }
+
 
         protected override void Dispose(bool disposing)
         {
             ModalService.OnModalOpenEvent -= ModalService_OnModalOpenEvent;
             ModalService.OnModalCloseEvent -= ModalService_OnModalCloseEvent;
+            ModalService.OnModalUpdateEvent -= ModalService_OnModalUpdateEvent;
 
             base.Dispose(disposing);
         }

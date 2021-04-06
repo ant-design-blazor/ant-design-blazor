@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -130,7 +131,7 @@ namespace AntDesign
         /// <summary>
         /// check is dialog click
         /// </summary>
-        private bool _dialogMouseDown = false;
+        private bool _dialogMouseDown;
 
         private void OnDialogMouseDown()
         {
@@ -148,8 +149,7 @@ namespace AntDesign
 
         private async Task OnMaskClick()
         {
-            if (Config.MaskClosable
-                && !_dialogMouseDown)
+            if (Config.MaskClosable && !_dialogMouseDown)
             {
                 await CloseAsync();
             }
@@ -271,12 +271,13 @@ namespace AntDesign
 
             if (!Visible)
             {
+                _hasShow = false;
+
                 _maskAnimationClsName = ModalAnimation.MaskLeave;
                 _modalAnimationClsName = ModalAnimation.ModalLeave;
                 await Task.Delay(200);
                 _wrapStyle = "display: none;";
                 _maskHideClsName = "ant-modal-mask-hidden";
-                _hasShow = false;
                 await InvokeStateHasChangedAsync();
                 if (Config.OnClosed != null)
                 {

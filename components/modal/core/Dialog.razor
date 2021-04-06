@@ -8,12 +8,12 @@
             <div class=@($"{Config.PrefixCls}-mask {GetMaskClsName()}") style="@Config.MaskStyle"></div>
         }
         <div tabindex="-1" id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}") class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended()}") role="dialog"
-             @onclick="@OnMaskClick"
-             @onmouseup="@OnMaskMouseUp"
+             @onclick="@EventUtil.AsNonRenderingEventHandler(OnMaskClick)"
+             @onmouseup="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseUp)"
              @onkeydown="@OnKeyDown"
              style="@_wrapStyle">
             <div @ref="@_modal" role="document" class=@($"{Config.PrefixCls} {GetModalClsName()}")
-                 @onmousedown="@OnDialogMouseDown"
+                 @onmousedown="@EventUtil.AsNonRenderingEventHandler(OnDialogMouseDown)"
                  style="@GetStyle()">
                 <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
                 <div class=@($"{Config.PrefixCls}-content")>

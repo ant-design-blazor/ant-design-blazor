@@ -25,8 +25,8 @@ Alert component for feedback.
 | Description | Additional content of Alert | string | - |  |
 | Icon | Custom icon, effective when `ShowIcon` is `true` | RenderFragment | - |  |
 | Message | Content of Alert | string | - |  |
+| MessageTemplate | Template for message | RenderFragment | - | |
 | ShowIcon | Whether to show icon | bool | false |  |
 | Type | Type of Alert styles, options: `success` \| `info` \| `warning` \| `error` | string | warning |  |
 | OnClose | Callback when Alert is closed | EventCallback&lt;MouseEventArgs> | - |  |
-| ChildContent | Additional Content | RenderFragment | - |  |
-
+| ChildContent | Additional Content shown like description| RenderFragment | - |  |
