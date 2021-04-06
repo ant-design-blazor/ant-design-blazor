@@ -1,5 +1,4 @@
-﻿
-<Slider Type="double" Value=size OnChange="v=>setSize(v)" />
+﻿<Slider Value=size OnChange="v=>setSize(v)" />
 <br />
 <br />
 <Space Size="@($"{size}")">
@@ -23,6 +22,6 @@
     void setSize(double value)
     {
         size = value;
-        StateHasChanged();
+        //StateHasChanged();
     }
 }

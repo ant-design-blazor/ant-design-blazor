@@ -12,12 +12,6 @@ namespace AntDesign
         Inline
     }
 
-    public enum AntDirectionVHType
-    {
-        Vertical,
-        Horizontal
-    }
-
     public enum AntFourDirectionType
     {
         Top,
