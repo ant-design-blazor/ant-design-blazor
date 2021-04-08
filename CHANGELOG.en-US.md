@@ -20,31 +20,31 @@ timeline: true
 `2021-04-08`
 
 - Table
-  - 🐞 Fixed issue with table not being re-rendered when setting ScrollX. [#1311](https://github.com/ant-design/ant-design/pull/1311) [@Zonciu](https://github.com/Zonciu)
-  - 🐞 Fixed an issue where modifying a DataSource would throw an exception. [5b0dbfb](https://github.com/ant-design/ant-design/commit/5b0dbfb) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
-  - 🐞 Fix DataIndex Column Filter, make DataIndex column refresh correctly. [#1295](https://github.com/ant-design/ant-design/pull/1295) [@Zonciu](https://github.com/Zonciu)
-  - 🐞 ExpandIconColumnIndex invalid when specified to the ActionColumn. [#1285](https://github.com/ant-design/ant-design/pull/1285) [@Magehernan](https://github.com/Magehernan)
+  - 🐞 Fixed issue with table not being re-rendered when setting ScrollX. [#1311](https://github.com/ant-design-blazor/ant-design-blazor/pull/1311) [@Zonciu](https://github.com/Zonciu)
+  - 🐞 Fixed an issue where modifying a DataSource would throw an exception. [5b0dbfb](https://github.com/ant-design-blazor/ant-design-blazor/commit/5b0dbfb) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
+  - 🐞 Fix DataIndex Column Filter, make DataIndex column refresh correctly. [#1295](https://github.com/ant-design-blazor/ant-design-blazor/pull/1295) [@Zonciu](https://github.com/Zonciu)
+  - 🐞 ExpandIconColumnIndex invalid when specified to the ActionColumn. [#1285](https://github.com/ant-design-blazor/ant-design-blazor/pull/1285) [@Magehernan](https://github.com/Magehernan)
 - Select
-  - 🐞 Fixed an issue where clicking the Close option on multiple selections would trigger a drop-down menu. [#1308](https://github.com/ant-design/ant-design/pull/1308) [@anddrzejb](https://github.com/anddrzejb)
-  - 🐞 Fixed Loading icon in Tag mode. [12ca2f7](https://github.com/ant-design/ant-design/commit/12ca2f7) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
-- 💄 fix missing flex and wrap style. [#1296](https://github.com/ant-design/ant-design/pull/1296) [@ElderJames](https://github.com/ElderJames)
-- 🐞 default to empty string. [6944c13](https://github.com/ant-design/ant-design/commit/6944c13) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
-- 🐞 Fix Upload list [53c1285](https://github.com/ant-design/ant-design/commit/53c1285) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
-- 🐞 Fix DatePicker DisabledDate works incorect. [#1298](https://github.com/ant-design/ant-design/pull/1298) [@mutouzdl](https://github.com/mutouzdl)
-- 🆕 Added LabelTemplate in FormItem. [#1293](https://github.com/ant-design/ant-design/pull/1293) [@ldsenow](https://github.com/ldsenow)
-- 🐞 Value has priority over DefaultValue. [5f14377](https://github.com/ant-design/ant-design/commit/5f14377) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
-- 📖 fix Table RouterPagging demo. [#1313](https://github.com/ant-design/ant-design/pull/1313) [@Zonciu](https://github.com/Zonciu)
+  - 🐞 Fixed an issue where clicking the Close option on multiple selections would trigger a drop-down menu. [#1308](https://github.com/ant-design-blazor/ant-design-blazor/pull/1308) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 Fixed Loading icon in Tag mode. [12ca2f7](https://github.com/ant-design-blazor/ant-design-blazor/commit/12ca2f7) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
+- 💄 fix missing flex and wrap style. [#1296](https://github.com/ant-design-blazor/ant-design-blazor/pull/1296) [@ElderJames](https://github.com/ElderJames)
+- 🐞 default to empty string. [6944c13](https://github.com/ant-design-blazor/ant-design-blazor/commit/6944c13) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
+- 🐞 Fix Upload list [53c1285](https://github.com/ant-design-blazor/ant-design-blazor/commit/53c1285) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
+- 🐞 Fix DatePicker DisabledDate works incorect. [#1298](https://github.com/ant-design-blazor/ant-design-blazor/pull/1298) [@mutouzdl](https://github.com/mutouzdl)
+- 🆕 Added LabelTemplate in FormItem. [#1293](https://github.com/ant-design-blazor/ant-design-blazor/pull/1293) [@ldsenow](https://github.com/ldsenow)
+- 🐞 Value has priority over DefaultValue. [5f14377](https://github.com/ant-design-blazor/ant-design-blazor/commit/5f14377) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
+- 📖 fix Table RouterPagging demo. [#1313](https://github.com/ant-design-blazor/ant-design-blazor/pull/1313) [@Zonciu](https://github.com/Zonciu)
 
 ## 0.7.3
 
 `2021-03-29`
 
-- 🐞 Fixed Dropdown: Animations for down and up are inverse. [#1274](https://github.com/ant-design/ant-design/pull/1274) [@mutouzdl](https://github.com/mutouzdl)
-- 🐞 Fixed Tree nodes expand incorrectly. [#1275](https://github.com/ant-design/ant-design/pull/1275) [@TimChen44](https://github.com/TimChen44)
-- 💄 Fixed Cascader an issue where the style attribute could not affect the style. [#1269](https://github.com/ant-design/ant-design/pull/1269) [@ElderJames](https://github.com/ElderJames)
-- 🐞 Fixed Datepicker [selected date on end picker]、[quarter panel's ranges] are incorrect. [#1260](https://github.com/ant-design/ant-design/pull/1260) [@mutouzdl](https://github.com/mutouzdl)
-- 📖 chore: add the copyright of .NET Foundation. [#1272](https://github.com/ant-design/ant-design/pull/1272) [@ElderJames](https://github.com/ElderJames)
-- 📖 chore: fix cmd for preview site and style sync. [68c7539](https://github.com/ant-design/ant-design/commit/68c7539) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Dropdown: Animations for down and up are inverse. [#1274](https://github.com/ant-design-blazor/ant-design-blazor/pull/1274) [@mutouzdl](https://github.com/mutouzdl)
+- 🐞 Fixed Tree nodes expand incorrectly. [#1275](https://github.com/ant-design-blazor/ant-design-blazor/pull/1275) [@TimChen44](https://github.com/TimChen44)
+- 💄 Fixed Cascader an issue where the style attribute could not affect the style. [#1269](https://github.com/ant-design-blazor/ant-design-blazor/pull/1269) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Datepicker [selected date on end picker]、[quarter panel's ranges] are incorrect. [#1260](https://github.com/ant-design-blazor/ant-design-blazor/pull/1260) [@mutouzdl](https://github.com/mutouzdl)
+- 📖 chore: add the copyright of .NET Foundation. [#1272](https://github.com/ant-design-blazor/ant-design-blazor/pull/1272) [@ElderJames](https://github.com/ElderJames)
+- 📖 chore: fix cmd for preview site and style sync. [68c7539](https://github.com/ant-design-blazor/ant-design-blazor/commit/68c7539) [@ElderJames](https://github.com/ElderJames)
 
 ## 0.7.2
 
