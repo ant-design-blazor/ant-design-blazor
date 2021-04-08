@@ -10,6 +10,7 @@ using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using System.Diagnostics.CodeAnalysis;
+using OneOf;
 
 #pragma warning disable 1591 // Disable missing XML comment
 #pragma warning disable CA1716 // Disable Select name warning
@@ -29,8 +30,8 @@ namespace AntDesign
         public bool DefaultActiveFirstOption
         {
             get { return _defaultActiveFirstOption; }
-            set { 
-                _defaultActiveFirstOption = value; 
+            set {
+                _defaultActiveFirstOption = value;
                 if (!_defaultActiveFirstOption)
                 {
                     _defaultActiveFirstOptionApplied = true;
@@ -114,7 +115,19 @@ namespace AntDesign
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
-        [Parameter] public bool ShowArrowIcon { get; set; } = true;
+        [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
+        [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
+
+        private bool _showArrowIconChanged;
+        [Parameter]
+        public bool ShowArrowIcon
+        {
+            get { return _showArrowIcon; }
+            set { 
+                _showArrowIcon = value;
+                _showArrowIconChanged = true;
+            }
+        }
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
         [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
         [Parameter] public SortDirection SortByLabel { get; set; } = SortDirection.None;
@@ -311,6 +324,8 @@ namespace AntDesign
 
         #endregion Parameters
 
+        [Inject] private DomEventService DomEventService { get; set; }
+
         #region Properties
 
         private const string ClassPrefix = "ant-select";
@@ -359,6 +374,7 @@ namespace AntDesign
         internal SelectMode SelectMode => Mode.ToSelectMode();
         internal bool Focused { get; private set; }
         private string _searchValue = string.Empty;
+        private string _prevSearchValue = string.Empty;
         private string _dropdownStyle = string.Empty;
         private TItemValue _selectedValue;
         private TItemValue _defaultValue;
@@ -423,6 +439,7 @@ namespace AntDesign
 
         private Action<TItem, TItemValue> _setValue;
         private bool _disableSubmitFormOnEnter;
+        private bool _showArrowIcon = true;
 
         #endregion Properties
 
@@ -453,8 +470,12 @@ namespace AntDesign
                 Style = DefaultWidth;
 
             if (!_isInitialized)
+            {
                 _isPrimitive = IsSimpleType(typeof(TItem));
+                if (!_showArrowIconChanged && SelectMode != SelectMode.Default)
+                    _showArrowIcon = SuffixIcon != null;
 
+            }
             _isInitialized = true;
 
 
@@ -475,6 +496,7 @@ namespace AntDesign
             {
                 await SetInitialValuesAsync();
 
+                DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
                 await SetDropdownStyleAsync();
 
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
@@ -512,6 +534,18 @@ namespace AntDesign
 
             await base.OnAfterRenderAsync(firstRender);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
+            base.Dispose(disposing);
+        }
+
+        protected async void OnWindowResize(JsonElement element)
+        {
+            await SetDropdownStyleAsync();
+        }
+
 
         /// <summary>
         /// Create or delete SelectOption when the datasource changed
@@ -727,9 +761,21 @@ namespace AntDesign
         /// </summary>
         protected async Task SetDropdownStyleAsync()
         {
+            string maxWidth = "", minWidth = "", definedWidth = "";
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
             var width = domRect.width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-            _dropdownStyle = $"min-width: {width}px; width: {width}px;";
+            minWidth = $"min-width: {width}px;";
+            if (DropdownMatchSelectWidth.IsT0 && DropdownMatchSelectWidth.AsT0)
+            {
+                definedWidth = $"width: {width}px;";
+            }
+            else if (DropdownMatchSelectWidth.IsT1)
+            {
+                definedWidth = $"width: {DropdownMatchSelectWidth.AsT1};";
+            }
+            if (!DropdownMaxWidth.Equals("auto", StringComparison.CurrentCultureIgnoreCase))
+                maxWidth = $"max-width: {DropdownMaxWidth};";
+            _dropdownStyle = minWidth + definedWidth + maxWidth;
         }
 
         protected async Task OnOverlayVisibleChangeAsync(bool visible)
@@ -762,6 +808,7 @@ namespace AntDesign
                 return;
 
             _searchValue = string.Empty;
+            _prevSearchValue = string.Empty;
 
             if (SelectMode != SelectMode.Default && HideSelected)
             {
@@ -839,11 +886,7 @@ namespace AntDesign
                         selectOption.IsHidden = true;
 
                     if (IsSearchEnabled && !string.IsNullOrWhiteSpace(_searchValue))
-                    {
                         ClearSearch();
-
-                        await SetInputFocusAsync();
-                    }
 
                     if (selectOption.IsAddedTag)
                     {
@@ -866,6 +909,8 @@ namespace AntDesign
                         }
                     }
                 }
+                if (EnableSearch || SelectMode == SelectMode.Tags)
+                    await SetInputFocusAsync();
                 await InvokeValuesChanged(selectOption);
                 await UpdateOverlayPositionAsync();
             }
@@ -1380,7 +1425,6 @@ namespace AntDesign
         protected async void OnInputAsync(ChangeEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
-
             if (!IsSearchEnabled)
             {
                 return;
@@ -1392,6 +1436,7 @@ namespace AntDesign
             }
 
             bool containsToken = false;
+            _prevSearchValue = _searchValue;
             if (_isToken)
                 _searchValue = e.Value?.ToString().TrimEnd(TokenSeparators);
             else
@@ -1944,9 +1989,13 @@ namespace AntDesign
                 }
             }
 
-            if ((key == "DELETE" || key == "BACKSPACE") && AllowClear)
+            if (key == "BACKSPACE" && string.IsNullOrEmpty(_searchValue) && 
+                (EnableSearch || SelectMode == SelectMode.Tags || AllowClear))
             {
-                await OnInputClearClickAsync(new MouseEventArgs());
+                if (string.IsNullOrEmpty(_prevSearchValue) && SelectedOptionItems.Count > 0)
+                    await OnRemoveSelectedAsync(SelectedOptionItems.Last());
+                else if (!string.IsNullOrEmpty(_prevSearchValue))
+                    _prevSearchValue = _searchValue;
             }
         }
 
@@ -2053,6 +2102,7 @@ namespace AntDesign
             }
 
             _searchValue = string.Empty;
+            _prevSearchValue = string.Empty;
         }
 
         /// <summary>
