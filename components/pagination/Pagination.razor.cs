@@ -77,7 +77,14 @@ namespace AntDesign
         public bool HideOnSinglePage { get; set; } = false;
 
         [Parameter]
-        public bool ShowSizeChanger { get; set; } = false;
+        public bool ShowSizeChanger
+        {
+            get => GetShowSizeChanger();
+            set
+            {
+                _showSizeChanger = value;
+            }
+        }
 
         [Parameter]
         public int[] PageSizeOptions { get; set; } = PaginationOptions.DefaultPageSizeOptions;
@@ -133,6 +140,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment<PaginationItemRenderContext>? JumpNextIcon { get; set; }
 
+        [Parameter]
+        public int TotalBoundaryShowSizeChanger { get; set; } = 50;
+
         [Parameter(CaptureUnmatchedValues = true)]
         public Dictionary<string, object>? UnmatchedAttributes { get; set; }
 
@@ -157,6 +167,8 @@ namespace AntDesign
         private int _currentInputValue;
 
         private bool IsSmall => !Simple && Size == "small";
+
+        private bool? _showSizeChanger;
 
         protected override void OnInitialized()
         {
@@ -356,6 +368,16 @@ namespace AntDesign
         private bool HasPrev() => _current > 1;
 
         private bool HasNext() => _current < CalculatePage(null, _pageSize, Total);
+
+        private bool GetShowSizeChanger()
+        {
+            if (_showSizeChanger.HasValue)
+            {
+                return _showSizeChanger.Value;
+            }
+
+            return Total > TotalBoundaryShowSizeChanger;
+        }
 
         private void RunIfEnter(KeyboardEventArgs @event, Action callback)
         {
