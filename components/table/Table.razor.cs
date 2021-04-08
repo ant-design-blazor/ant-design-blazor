@@ -398,7 +398,11 @@ namespace AntDesign
                 _pingRight = true;
             }
 
-            _shouldRender = beforePingLeft != _pingLeft || beforePingRight != _pingRight;
+            if (beforePingLeft != _pingLeft || beforePingRight != _pingRight)
+            {
+                _shouldRender = true;
+            }
+            
             if (!clear)
             {
                 StateHasChanged();

@@ -1250,7 +1250,8 @@ namespace AntDesign
         /// </summary>
         internal async Task UpdateOverlayPositionAsync()
         {
-            await _dropDown.GetOverlayComponent().UpdatePosition();
+            if (_dropDown.Visible)
+                await _dropDown.GetOverlayComponent().UpdatePosition();
         }
 
         #region Events
