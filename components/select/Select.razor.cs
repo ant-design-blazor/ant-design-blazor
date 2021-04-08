@@ -1988,15 +1988,13 @@ namespace AntDesign
                 }
             }
 
-            if (key == "BACKSPACE")
+            if (key == "BACKSPACE" && string.IsNullOrEmpty(_searchValue) && 
+                (EnableSearch || SelectMode == SelectMode.Tags || AllowClear))
             {
-                if (string.IsNullOrEmpty(_searchValue))
-                {
-                    if (string.IsNullOrEmpty(_prevSearchValue) && SelectedOptionItems.Count > 0)
-                        await OnRemoveSelectedAsync(SelectedOptionItems.Last());
-                    else if (!string.IsNullOrEmpty(_prevSearchValue))
-                        _prevSearchValue = _searchValue;
-                }
+                if (string.IsNullOrEmpty(_prevSearchValue) && SelectedOptionItems.Count > 0)
+                    await OnRemoveSelectedAsync(SelectedOptionItems.Last());
+                else if (!string.IsNullOrEmpty(_prevSearchValue))
+                    _prevSearchValue = _searchValue;
             }
         }
 
