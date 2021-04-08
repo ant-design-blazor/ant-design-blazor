@@ -15,6 +15,8 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 
 ## API
 
+### Common API
+
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
 | AddOnBefore | The label text displayed before (on the left side of) the input field.                             | RenderFragment        | -         |
@@ -32,3 +34,9 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | OnChange |callback when the content is change                                | function(e)        | 0         |
 | OnPressEnter |The callback function that is triggered when Enter key is pressed.                           | function(e)        | -         |
 | OnInput |callback when user input                              | function(e)        | -         |
+
+### TextArea
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| DefaultToEmptyString | When `false`, value will be set to `null` when content is empty or whitespace. When `true`, value will be set to empty string. | boolean        | false         |
