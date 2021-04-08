@@ -171,5 +171,11 @@ namespace AntDesign
 
             return $"position: sticky; {Fixed}: {(fixedWidths.Any() ? $"calc({string.Join(" + ", fixedWidths) })" : "0px")};";
         }
+
+        protected void ToggleTreeNode()
+        {
+            RowData.Expanded = !RowData.Expanded;
+            Table?.Refresh();
+        }
     }
 }

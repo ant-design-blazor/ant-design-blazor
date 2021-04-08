@@ -50,11 +50,17 @@
     <ProjectDir>$(SolutionDir)/site/AntDesign.Docs</ProjectDir>
   </PropertyGroup>
 
+  <ItemGroup>
+    <DocFiles Include="$(SolutionDir)docs\**\*.*" />
+    <DocFiles Include="$(SolutionDir)\CHANGELOG.*.*" />
+  </ItemGroup>
+
   <Target Name="RunCli" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug'">
+    <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet build $(CLIProjectDir)" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) demo2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/meta" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) menu2json $(ProjectDir)/Demos docs $(ProjectDir)/wwwroot/meta" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) docs2html ./docs ./site/AntDesign.Docs/wwwroot/docs" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) menu2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/docs $(ProjectDir)/wwwroot/meta" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet $(CLIPath) docs2html $(ProjectDir)/wwwroot/docs ./site/AntDesign.Docs/wwwroot/docs" />
   </Target>
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
