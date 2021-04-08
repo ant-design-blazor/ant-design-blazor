@@ -174,8 +174,11 @@ namespace AntDesign
 
         protected void ToggleTreeNode()
         {
+            bool expandValueBeforeChange = RowData.Expanded;
             RowData.Expanded = !RowData.Expanded;
-            Table?.Refresh();
+            Table?.OnExpandChange(RowData.CacheKey);
+            if (RowData.Expanded != expandValueBeforeChange)
+                Table?.Refresh();
         }
     }
 }
