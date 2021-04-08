@@ -17,7 +17,16 @@ namespace AntDesign.Select.Internal
         [CascadingParameter(Name = "ParentLabelTemplate")] internal RenderFragment<TItem> ParentLabelTemplate { get; set; }
         [CascadingParameter(Name = "ShowSearchIcon")] internal bool ShowSearchIcon { get; set; }
         [CascadingParameter(Name = "ShowArrowIcon")] internal bool ShowArrowIcon { get; set; }
-        [Parameter] public string Prefix { get; set; }
+        [Parameter]
+        public string Prefix
+        {
+            get { return _prefix; }
+            set {
+                _prefix = value;
+                if (_isInitialized)
+                    SetInputWidth();
+            }
+        }
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public bool IsOverlayShow { get; set; }
         [Parameter] public bool ShowPlaceholder { get; set; }
@@ -46,9 +55,14 @@ namespace AntDesign.Select.Internal
         private string _inputWidth;
         private bool _suppressInput;
         private ElementReference _ref;
+        private bool _isInitialized;
+        private string _prefix;
 
         protected override void OnInitialized()
         {
+            if (!_isInitialized)
+                SetInputWidth();
+            _isInitialized = true;
             SetSuppressInput();
         }
 
@@ -64,17 +78,13 @@ namespace AntDesign.Select.Internal
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        protected override Task OnParametersSetAsync()
-        {
-            SetInputWidth(); // ToDo Fix class
-
-            return base.OnParametersSetAsync();
-        }
-
         private void SetInputWidth()
         {
-            if (ParentSelect.PrefixIcon != null || ParentSelect.SelectMode == SelectMode.Default)
-                _inputWidth = "left: 0px;";
+            _inputWidth = string.Empty;
+            if (ParentSelect.PrefixIcon != null && ParentSelect.SelectMode == SelectMode.Default)
+            {
+                _inputWidth = "left: 22px;";
+            }
             if (ParentSelect.SelectMode != SelectMode.Default)
             {
                 if (!string.IsNullOrWhiteSpace(SearchValue))
@@ -136,9 +146,52 @@ namespace AntDesign.Select.Internal
         }
 
         /// <summary>
+        /// Any item may overflow. In case of first item, when there 
+        /// are any other elements inside SelectContent (prefix, suffix, clear btn, etc)
+        /// default MaxWidth will force th SelectContent to grow. Changing the MaxWidth
+        /// allows the overflowing item to fit in a single line. 
+        /// TODO: use relative units
+        /// </summary>
+        /// <returns></returns>
+        private int GetFirstItemMaxWidth()
+        {
+            int percentValue = 98;
+            if (ParentSelect.PrefixIcon != null)
+            {
+                if (ShowArrowIcon || ShowSearchIcon)
+                {
+                    if (ParentSelect.AllowClear)
+                    {
+                        percentValue = 90;
+                    }
+                    else
+                    {
+                        percentValue = 93;
+                    }
+                }
+                else
+                {
+                    percentValue = 94;
+                }
+            }
+            else if (ShowArrowIcon || ShowSearchIcon)
+            {
+                if (ParentSelect.AllowClear)
+                {
+                    percentValue = 94;
+                }
+                else
+                {
+                    percentValue = 96;
+                }
+            }
+            return percentValue;
+        }
+
+        /// <summary>
         /// Indicates that a page is being refreshed 
         /// </summary>
-        private bool _isReloading;
+        private bool _isReloading;        
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 

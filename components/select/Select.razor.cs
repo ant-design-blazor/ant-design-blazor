@@ -117,7 +117,17 @@ namespace AntDesign
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
         [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
         [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
-        [Parameter] public bool ShowArrowIcon { get; set; } = true;
+
+        private bool _showArrowIconChanged;
+        [Parameter]
+        public bool ShowArrowIcon
+        {
+            get { return _showArrowIcon; }
+            set { 
+                _showArrowIcon = value;
+                _showArrowIconChanged = true;
+            }
+        }
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
         [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
         [Parameter] public SortDirection SortByLabel { get; set; } = SortDirection.None;
@@ -364,6 +374,7 @@ namespace AntDesign
         internal SelectMode SelectMode => Mode.ToSelectMode();
         internal bool Focused { get; private set; }
         private string _searchValue = string.Empty;
+        private string _prevSearchValue = string.Empty;
         private string _dropdownStyle = string.Empty;
         private TItemValue _selectedValue;
         private TItemValue _defaultValue;
@@ -428,6 +439,7 @@ namespace AntDesign
 
         private Action<TItem, TItemValue> _setValue;
         private bool _disableSubmitFormOnEnter;
+        private bool _showArrowIcon = true;
 
         #endregion Properties
 
@@ -458,8 +470,12 @@ namespace AntDesign
                 Style = DefaultWidth;
 
             if (!_isInitialized)
+            {
                 _isPrimitive = IsSimpleType(typeof(TItem));
+                if (!_showArrowIconChanged && SelectMode != SelectMode.Default)
+                    _showArrowIcon = SuffixIcon != null;
 
+            }
             _isInitialized = true;
 
 
@@ -792,6 +808,7 @@ namespace AntDesign
                 return;
 
             _searchValue = string.Empty;
+            _prevSearchValue = string.Empty;
 
             if (SelectMode != SelectMode.Default && HideSelected)
             {
@@ -869,11 +886,7 @@ namespace AntDesign
                         selectOption.IsHidden = true;
 
                     if (IsSearchEnabled && !string.IsNullOrWhiteSpace(_searchValue))
-                    {
                         ClearSearch();
-
-                        await SetInputFocusAsync();
-                    }
 
                     if (selectOption.IsAddedTag)
                     {
@@ -896,6 +909,8 @@ namespace AntDesign
                         }
                     }
                 }
+                if (EnableSearch || SelectMode == SelectMode.Tags)
+                    await SetInputFocusAsync();
                 await InvokeValuesChanged(selectOption);
                 await UpdateOverlayPositionAsync();
             }
@@ -1409,7 +1424,6 @@ namespace AntDesign
         protected async void OnInputAsync(ChangeEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
-
             if (!IsSearchEnabled)
             {
                 return;
@@ -1421,6 +1435,7 @@ namespace AntDesign
             }
 
             bool containsToken = false;
+            _prevSearchValue = _searchValue;
             if (_isToken)
                 _searchValue = e.Value?.ToString().TrimEnd(TokenSeparators);
             else
@@ -1973,9 +1988,15 @@ namespace AntDesign
                 }
             }
 
-            if ((key == "DELETE" || key == "BACKSPACE") && AllowClear)
+            if (key == "BACKSPACE")
             {
-                await OnInputClearClickAsync(new MouseEventArgs());
+                if (string.IsNullOrEmpty(_searchValue))
+                {
+                    if (string.IsNullOrEmpty(_prevSearchValue) && SelectedOptionItems.Count > 0)
+                        await OnRemoveSelectedAsync(SelectedOptionItems.Last());
+                    else if (!string.IsNullOrEmpty(_prevSearchValue))
+                        _prevSearchValue = _searchValue;
+                }
             }
         }
 
@@ -2082,6 +2103,7 @@ namespace AntDesign
             }
 
             _searchValue = string.Empty;
+            _prevSearchValue = string.Empty;
         }
 
         /// <summary>
