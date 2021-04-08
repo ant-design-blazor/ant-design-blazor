@@ -147,6 +147,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
         var table = context.table;
         var showItems = context.showItems;
         var level = context.level;
+        var count = Math.Min(showItems.Count(), table._dataSourceCount);
     }
 
     @if (table._total <= 0)
@@ -159,7 +160,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
     }
     else if (showItems != null && table.ColumnContext.Columns.Count > 0)
     {
-        for (int i = 0; i < showItems.Count(); i++)
+        for (int i = 0; i < count; i++)
         {
             var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
             var data = showItems.ElementAt(i);
@@ -183,7 +184,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
 
             <tr @attributes="rowAttributes"
                 data-row-key="@(rowIndex-1)" class="ant-table-row ant-table-row-level-@level @(currentRowData.Selected ? "ant-table-row-selected" : "") @table.RowClassName(currentRowData) @rowAttributes?.GetValueOrDefault("class")">
-                <CascadingValue Value="currentRowData" Name="RowData" IsFixed>
+                <CascadingValue Value="currentRowData" Name="RowData" IsFixed="false">
                     <CascadingValue Value="true" Name="IsBody" IsFixed>
                         @table.ChildContent(data)
                     </CascadingValue>
@@ -193,7 +194,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
             {
                 @table.body((table, table.TreeChildren(data), level + 1));
             }
-            @if (!hasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData))
+            @if (!hasChildren && table.ExpandTemplate != null && table.RowExpandable(currentRowData) && currentRowData.Expanded)
             {
                 <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @table.ExpandedRowClassName(currentRowData)"
                     style="@(currentRowData.Expanded?"":"display: none;")">

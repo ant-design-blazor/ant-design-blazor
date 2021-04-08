@@ -148,7 +148,7 @@ namespace AntDesign
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
         int ITable.ScrollBarWidth => ScrollBarWidth;
-        int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex;
+        int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
 
@@ -269,9 +269,9 @@ namespace AntDesign
             _treeMode = TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true);
             if (_treeMode)
             {
-                _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null ? 1 : 0);
+                _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
-
+            _waitingReload = false;
             StateHasChanged();
 
             return queryModel;
@@ -327,19 +327,6 @@ namespace AntDesign
         {
             base.OnAfterRender(firstRender);
 
-            if (_waitingReloadAndInvokeChange)
-            {
-                _waitingReloadAndInvokeChange = false;
-                _waitingReload = false;
-
-                ReloadAndInvokeChange();
-            }
-            else if (_waitingReload)
-            {
-                _waitingReload = false;
-                Reload();
-            }
-
             if (!firstRender)
             {
                 this.FinishLoadPage();
@@ -384,7 +371,22 @@ namespace AntDesign
             }
         }
 
-        protected override bool ShouldRender() => this._shouldRender;
+        protected override bool ShouldRender()
+        {
+            if (_waitingReloadAndInvokeChange)
+            {
+                _waitingReloadAndInvokeChange = false;
+                _waitingReload = false;
+
+                ReloadAndInvokeChange();
+            }
+            else if (_waitingReload)
+            {
+                _waitingReload = false;
+                Reload();
+            }
+            return this._shouldRender;
+        }
 
         void ITable.HasFixLeft() => _hasFixLeft = true;
 
@@ -431,7 +433,11 @@ namespace AntDesign
                 _pingRight = true;
             }
 
-            _shouldRender = beforePingLeft != _pingLeft || beforePingRight != _pingRight;
+            if (beforePingLeft != _pingLeft || beforePingRight != _pingRight)
+            {
+                _shouldRender = true;
+            }
+            
             if (!clear)
             {
                 StateHasChanged();
