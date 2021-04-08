@@ -163,7 +163,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
     @if (col.Filterable)
     {
         <div class="ant-table-filter-column">
-            <span class="ant-table-filter-column-title" @attributes="@(new Dictionary<string, object>() { ["onclick"]=_callbackFactory.Create(col, col.HandleSort )})">
+            <span class="ant-table-filter-column-title" @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create(col, col.HandleSort) })">
                 @if (col.Sortable)
                 {
                     @col.ToolTipSorter(col)
@@ -172,7 +172,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
 
 
 
-            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" >
+            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(true); }) })">
                 <Unbound>
                     <span @ref="@col._filterTriggerRef" class="ant-table-filter-trigger-container @(col._filterOpened?" ant-table-filter-trigger-container-open":"")">
                         <span role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._hasFilterSelected?"active":"")"
@@ -229,7 +229,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
 
                                     <SpaceItem>
 
-                                        <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="overflow:visible" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })">
+                                        <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="overflow:visible" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })" PopupContainerSelector="@("#popupSelForOperator" + col.Id)">
                                             <SelectOptions>
                                                 <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Equals" Label="@col.Table?.Locale.EqualCompareOperator"></SelectOption>
                                                 <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotEquals" Label="@col.Table?.Locale.NotEqualCompareOperator"></SelectOption>
@@ -253,13 +253,14 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                                 }
                                             </SelectOptions>
                                         </Select>
-
+                                        <div id="@("popupSelForOperator" + col.Id)"  style="position:relative!important" ></div>
                                     </SpaceItem>
 
                                     <SpaceItem>
                                         @if (col._columnDataType == typeof(DateTime))
                                         {
-                                            <DatePicker Value="col.FilterDateTimeValue(filter)" Format="@col.Format" TValue="DateTime?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<DateTime?>(col, value => col.SetFilterValue(filter,value)) })"></DatePicker>
+                                            <DatePicker  Value="col.FilterDateTimeValue(filter)" Format="@col.Format" TValue="DateTime?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<DateTime?>(col, value => col.SetFilterValue(filter,value)) })" PopupContainerSelector="@("#popupSelForValue" + col.Id)"></DatePicker>
+                                            <div id="@("popupSelForValue" + col.Id)" ></div>
                                         }
                                         else
                                         {
