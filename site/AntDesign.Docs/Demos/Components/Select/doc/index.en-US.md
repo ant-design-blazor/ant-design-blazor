@@ -54,6 +54,8 @@ Select component to select value from options.
 | Placeholder | Placeholder of select. | string | - |  |
 | PopupContainerMaxHeight | The maximum height of the popup container. | string | `256px` |  |
 | PopupContainerSelector | Use this to fix overlay problems e.g. #area | string | body |  |
+| PopupContainerGrowToMatchWidestItem | Will allow the popup container to grow to match widest item. | bool | false |  |
+| PopupContainerMaxWidth  | The maximum width of the popup container. | string | `auto` |  |
 | PrefixIcon | The custom prefix icon. For mode `multiple` and `tags` visible only when no data selected. | RenderFragment | - |  |
 | ShowArrowIcon | Whether to show the drop-down arrow | bool | true |  |
 | ShowSearchIcon | Whether show search input in single mode. | bool | true |  |
