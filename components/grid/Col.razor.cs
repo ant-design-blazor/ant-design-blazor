@@ -63,7 +63,7 @@ namespace AntDesign
         [CascadingParameter]
         public Row Row { get; set; }
 
-        private string _hostFlexStyle = null;
+        private string _hostFlexStyle;
 
         private string GutterStyle { get; set; }
 
@@ -105,11 +105,11 @@ namespace AntDesign
             }, embedded =>
             {
                 ClassMapper
-                    .If($"{prefixCls}-{sizeName}-{embedded.Span.Value}", () => embedded.Span.Value != null)
-                    .If($"{prefixCls}-{sizeName}-order-{embedded.Order.Value}", () => embedded.Order.Value != null)
-                    .If($"{prefixCls}-{sizeName}-offset-{embedded.Offset.Value}", () => embedded.Offset.Value != null)
-                    .If($"{prefixCls}-{sizeName}-push-{embedded.Push.Value}", () => embedded.Push.Value != null)
-                    .If($"{prefixCls}-{sizeName}-pull-{embedded.Pull.Value}", () => embedded.Pull.Value != null);
+                    .GetIf(() => $"{prefixCls}-{sizeName}-{embedded.Span.Value}", () => embedded.Span.Value != null)
+                    .GetIf(() => $"{prefixCls}-{sizeName}-order-{embedded.Order.Value}", () => embedded.Order.Value != null)
+                    .GetIf(() => $"{prefixCls}-{sizeName}-offset-{embedded.Offset.Value}", () => embedded.Offset.Value != null)
+                    .GetIf(() => $"{prefixCls}-{sizeName}-push-{embedded.Push.Value}", () => embedded.Push.Value != null)
+                    .GetIf(() => $"{prefixCls}-{sizeName}-pull-{embedded.Pull.Value}", () => embedded.Pull.Value != null);
             });
         }
 
@@ -122,12 +122,12 @@ namespace AntDesign
                 {
                     if (Regex.Match(str, "^\\d+(\\.\\d+)?(px|em|rem|%)$").Success)
                     {
-                        return $"0 0 {Flex}";
+                        return $"flex: 0 0 {str}";
                     }
 
-                    return Flex.AsT0;
+                    return $"flex: {str}";
                 },
-                num => $"{Flex} {Flex} auto");
+                num => $"flex: {num} {num} auto");
         }
 
         protected override void OnInitialized()

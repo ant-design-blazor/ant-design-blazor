@@ -78,7 +78,7 @@ export function getFileInfo(element) {
     var fileInfo = [];
     for (var i = 0; i < element.files.length; i++) {
       var file = element.files[i];
-      var objectUrl = getObjectURL(element);
+      var objectUrl = getObjectURL(file);
       fileInfo.push({
         fileName: file.name,
         size: file.size,
@@ -91,9 +91,8 @@ export function getFileInfo(element) {
   }
 }
 
-export function getObjectURL(element) {
+export function getObjectURL(file: File) {
   var url = null;
-  var file = element.files[0];
   if (window.URL != undefined) {
     url = window.URL.createObjectURL(file);
   } else if (window.webkitURL != undefined) {
@@ -511,6 +510,11 @@ export function getTextAreaInfo(element) {
     result["borderBottom"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("border-bottom"));
     result["borderTop"] = parseFloat(document.defaultView.getComputedStyle(element, null).getPropertyValue("border-top"));
   }
+  //Firefox can return this as NaN, so it has to be handled here like that.
+  if (Object.is(NaN, result["borderTop"]))
+    result["borderTop"] = 1;
+  if (Object.is(NaN, result["borderBottom"]))
+    result["borderBottom"] = 1;
   return result;
 }
 
@@ -615,16 +619,20 @@ function preventKeys(e, keys: string[]) {
 }
 
 export function addPreventKeys(inputElement, keys: string[]) {
-  let dom = getDom(inputElement);
-  keys = keys.map(function (x) { return x.toUpperCase(); })
-  funcDict[inputElement.id + "keydown"] = (e) => preventKeys(e, keys);
-  (dom as HTMLElement).addEventListener("keydown", funcDict[inputElement.id + "keydown"], false);
+  if (inputElement) {
+    let dom = getDom(inputElement);
+    keys = keys.map(function (x) { return x.toUpperCase(); })
+    funcDict[inputElement.id + "keydown"] = (e) => preventKeys(e, keys);
+    (dom as HTMLElement).addEventListener("keydown", funcDict[inputElement.id + "keydown"], false);
+  }
 }
 
 export function removePreventKeys(inputElement) {
-  let dom = getDom(inputElement);
-  (dom as HTMLElement).removeEventListener("keydown", funcDict[inputElement.id + "keydown"]);
-  funcDict[inputElement.id + "keydown"] = null;
+  if (inputElement) {
+    let dom = getDom(inputElement);
+    (dom as HTMLElement).removeEventListener("keydown", funcDict[inputElement.id + "keydown"]);
+    funcDict[inputElement.id + "keydown"] = null;
+  }
 }
 
 function preventKeyOnCondition(e, key: string, check: () => boolean) {
@@ -635,15 +643,19 @@ function preventKeyOnCondition(e, key: string, check: () => boolean) {
 }
 
 export function addPreventEnterOnOverlayVisible(element, overlayElement) {
-  let dom = getDom(element);
-  funcDict[element.id + "keydown:Enter"] = (e) => preventKeyOnCondition(e, "enter", () => overlayElement.offsetParent !== null);
-  (dom as HTMLElement).addEventListener("keydown", funcDict[element.id + "keydown:Enter"], false);
+  if (element && overlayElement) {
+    let dom = getDom(element);
+    funcDict[element.id + "keydown:Enter"] = (e) => preventKeyOnCondition(e, "enter", () => overlayElement.offsetParent !== null);
+    (dom as HTMLElement).addEventListener("keydown", funcDict[element.id + "keydown:Enter"], false);
+  }
 }
 
 export function removePreventEnterOnOverlayVisible(element) {
-  let dom = getDom(element);
-  (dom as HTMLElement).removeEventListener("keydown", funcDict[element.id + "keydown:Enter"]);
-  funcDict[element.id + "keydown:Enter"] = null;
+  if (element) {
+    let dom = getDom(element);
+    (dom as HTMLElement).removeEventListener("keydown", funcDict[element.id + "keydown:Enter"]);
+    funcDict[element.id + "keydown:Enter"] = null;
+  }
 }
 
 export function setDomAttribute(element, attributes) {
