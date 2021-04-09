@@ -32,6 +32,9 @@ namespace AntDesign
         public string Label { get; set; }
 
         [Parameter]
+        public RenderFragment LabelTemplate { get; set; }
+
+        [Parameter]
         public ColLayoutParam LabelCol { get; set; }
 
         [Parameter]
@@ -181,6 +184,11 @@ namespace AntDesign
             }
 
             return wrapperColParameter.ToAttributes();
+        }
+
+        private string GetLabelClass()
+        {
+            return Required ? $"{_prefixCls}-required" : _labelCls;
         }
 
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
