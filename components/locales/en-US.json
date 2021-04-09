@@ -132,7 +132,22 @@
     "collapse": "Collapse row",
     "triggerDesc": "Click sort by descend",
     "triggerAsc": "Click sort by ascend",
-    "cancelSort": "Click to cancel sort"
+    "cancelSort": "Click to cancel sort",
+    "trueFilterOption": "True",
+    "falseFilterOption": "False",
+    "andFilterCondition": "And",
+    "orFilterCondition": "Or",
+    "equalCompareOperator": "Equal",
+    "notEqualCompareOperator": "Not Equal",
+    "containsCompareOperator": "Contains",
+    "startWithCompareOperator": "Start With",
+    "endWithCompareOperator": "End With",
+    "greaterThanCompareOperator": "Greater Than",
+    "lessThanCompareOperator": "Less Than",
+    "greaterThanOrEqualCompareOperator": "Greater Than Or Equals",
+    "lessThanOrEqualCompareOperator": "Less Than Or Equals",
+    "isNullCompareOperator": "Is Null",
+    "isNotNullCompareOperator": "Is Not Null"
   },
   "Modal": {
     "okText": "OK",
