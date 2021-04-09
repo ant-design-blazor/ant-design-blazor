@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq.Expressions;
+using System.Reflection;
 using AntDesign.Core.Reflection;
 using AntDesign.Internal;
 using AntDesign.TableModels;
@@ -25,7 +27,22 @@ namespace AntDesign
         public RenderFragment<TData> CellRender { get; set; }
 
         [Parameter]
-        public TData Field { get; set; }
+        public TData Field
+        {
+            get
+            {
+                return GetValue != null ? GetValue(RowData) : _field;
+            }
+            set
+            {
+                if (GetValue == null)
+                {
+                    _field = value;
+                }
+            }
+        }
+
+        private TData _field;
 
         [Parameter]
         public string DataIndex { get; set; }
@@ -75,11 +92,9 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<TData, TData, bool>> OnFilter { get; set; }
 
-        private PropertyReflector? _propertyReflector;
+        public string DisplayName { get; private set; }
 
-        public string DisplayName => _propertyReflector?.DisplayName;
-
-        public string FieldName => _propertyReflector?.PropertyName;
+        public string FieldName { get; private set; }
 
         public ITableSortModel SortModel { get; private set; }
 
@@ -89,12 +104,16 @@ namespace AntDesign
 
         public Func<RowData, TData> GetValue { get; private set; }
 
+        public LambdaExpression GetFieldExpression { get; private set; }
+
         void IFieldColumn.ClearSorter() => SetSorter(SortDirection.None);
 
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
         private bool _filterOpened;
+
         private bool _hasFilterSelected;
+
         private string[] _selectedFilterValues;
 
         private ElementReference _filterTriggerRef;
@@ -109,19 +128,26 @@ namespace AntDesign
             {
                 if (FieldExpression != null)
                 {
-                    _propertyReflector = PropertyReflector.Create(FieldExpression);
+                    var paramExp = Expression.Parameter(ItemType);
+                    var member = ColumnExpressionHelper.GetReturnMemberInfo(FieldExpression);
+                    var bodyExp = Expression.MakeMemberAccess(paramExp, member);
+                    GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
+                }
+                else if (DataIndex != null)
+                {
+                    (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
                 }
 
-                if (Sortable)
+                if (Sortable && GetFieldExpression != null)
                 {
-                    if (_propertyReflector.HasValue)
-                    {
-                        SortModel = new SortModel<TData>(_propertyReflector.Value.PropertyInfo, SorterMultiple, DefaultSortOrder, SorterCompare);
-                    }
-                    else
-                    {
-                        (GetValue, SortModel) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
-                    }
+                    SortModel = new SortModel<TData>(GetFieldExpression, SorterMultiple, DefaultSortOrder, SorterCompare);
+                }
+
+                if (GetFieldExpression != null)
+                {
+                    var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
+                    DisplayName = member.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ?? member.Name;
+                    FieldName = member.Name;
                 }
             }
             else if (IsBody)
@@ -137,8 +163,8 @@ namespace AntDesign
             _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
 
             ClassMapper
-                .If("ant-table-column-has-sorters", () => Sortable)
-                .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortDirection.IsIn(SortDirection.Ascending, SortDirection.Descending));
+               .If("ant-table-column-has-sorters", () => Sortable)
+               .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortDirection.IsIn(SortDirection.Ascending, SortDirection.Descending));
         }
 
         private void HandleSort()
@@ -189,15 +215,6 @@ namespace AntDesign
             SortModel.SetSortDirection(sortDirection);
         }
 
-        private void ToggleTreeNode()
-        {
-            bool expandValueBeforeChange = RowData.Expanded;
-            RowData.Expanded = !RowData.Expanded;
-            Table?.OnExpandChange(RowData.CacheKey);
-            if (RowData.Expanded != expandValueBeforeChange)
-                Table?.Refresh();
-        }
-
         private void FilterSelected(TableFilter<TData> filter)
         {
             if (!FilterMultiple)
@@ -219,7 +236,7 @@ namespace AntDesign
             _filterOpened = false;
             _hasFilterSelected = Filters?.Any(x => x.Selected) == true;
 
-            FilterModel = _hasFilterSelected ? new FilterModel<TData>(_propertyReflector.Value.PropertyInfo, OnFilter, Filters.Where(x => x.Selected).ToList()) : null;
+            FilterModel = _hasFilterSelected ? new FilterModel<TData>(GetFieldExpression, OnFilter, Filters.Where(x => x.Selected).ToList()) : null;
 
             Table?.ReloadAndInvokeChange();
         }

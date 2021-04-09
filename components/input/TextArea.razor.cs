@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -28,6 +29,9 @@ namespace AntDesign
 
         [Parameter]
         public bool AutoSize { get; set; }
+
+        [Parameter]
+        public bool DefaultToEmptyString { get; set; }
 
         [Parameter]
         public uint MinRows
@@ -97,6 +101,37 @@ namespace AntDesign
                 DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
 
                 await CalculateRowHeightAsync();
+            }
+        }
+
+        protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                if (DefaultToEmptyString)
+                    result = string.Empty;
+                else
+                    result = default;
+                validationErrorMessage = null;
+                return true;
+            }
+
+            var success = BindConverter.TryConvertTo<string>(
+               value, CultureInfo.CurrentCulture, out var parsedValue);
+
+            if (success)
+            {
+                result = parsedValue;
+                validationErrorMessage = null;
+
+                return true;
+            }
+            else
+            {
+                result = default;
+                validationErrorMessage = $"{FieldIdentifier.FieldName} field isn't valid.";
+
+                return false;
             }
         }
 

@@ -1,60 +1,80 @@
-﻿@using System.ComponentModel
+﻿@implements IDisposable
+@using System.ComponentModel
 @using System.Reflection
 @using System.Web
 
-
 <div class="router-pagging-table">
-    <Input @bind-Value="_url" OnPressEnter="()=> navigation.NavigateTo(_url,true)" />
-    <Table @ref="table"
-           DataSource="@forecasts"
-           Total="_total"
-           Loading="_loading"
-           @bind-PageIndex="_pageIndex"
-           @bind-PageSize="_pageSize"
-           OnPageIndexChange="fetchData"
-           @bind-SelectedRows="selectedRows">
-        <Selection Key="@(context.Id.ToString())" />
-        <Column @bind-Field="@context.Id" Sortable />
-        <Column @bind-Field="@context.Date" Format="yyyy-MM-dd" Sortable />
-        <Column @bind-Field="@context.TemperatureC" Sortable />
-        <Column Title="Temp. (F)" Field="@context.TemperatureF" />
-        <Column @bind-Field="@context.Summary" Sortable />
+    <Input @bind-Value="_url" OnPressEnter="() => _navigation.NavigateTo(_url, true)"/>
+    <Table
+        DataSource="@_forecasts"
+        Total="_total"
+        Loading="_loading"
+        PageIndex="@_pageIndex"
+        PageSize="@_pageSize"
+        OnPageIndexChange="PageIndexChanged">
+        <Column @bind-Field="@context.Id"/>
+        <Column @bind-Field="@context.Date" Format="yyyy-MM-dd"/>
+        <Column @bind-Field="@context.TemperatureC"/>
+        <Column Title="Temp. (F)" Field="@context.TemperatureF"/>
+        <Column @bind-Field="@context.Summary"/>
     </Table>
 
-    <br />
+    <br/>
     <p>PageIndex: @_pageIndex | PageSize: @_pageSize | Total: @_total</p>
 </div>
 
-@inject NavigationManager navigation
+@inject NavigationManager _navigation
+
 @code {
 
-    WeatherForecast[] forecasts;
-
-    IEnumerable<WeatherForecast> selectedRows;
-    ITable table;
+    WeatherForecast[] _forecasts;
 
     int _pageIndex = 1;
+
     int _pageSize = 5;
+
     int _total = 0;
+
     string _url;
+
     bool _loading;
 
     protected override async Task OnInitializedAsync()
     {
-        _url = navigation.Uri;
-        var query = HttpUtility.ParseQueryString(_url);
-        _pageIndex = int.TryParse(query["page"], out var index) ? index > 0 ? index : 1 : 1;
-        _pageSize = int.TryParse(query["size"], out var size) ? size > 0 ? size : 5 : 5;
-
-        _loading = true;
-        forecasts = await GetForecastAsync(_pageIndex, _pageSize);
+        _url = _navigation.Uri;
         _total = 50;
-        _loading = false;
+        _navigation.LocationChanged += LocationChanged;
+        LoadTableParameter();
+        await LoadDataAsync();
     }
 
-    void fetchData(PaginationEventArgs args)
+    private async void LocationChanged(object sender, LocationChangedEventArgs e)
     {
-        navigation.NavigateTo($"mock?type={GetType().ToString().Replace($"{Assembly.GetExecutingAssembly().GetName().Name}.", "")}&page={args.Page}&size={args.PageSize}");
+        _url = e.Location;
+        LoadTableParameter();
+        await LoadDataAsync();
+    }
+
+    private void LoadTableParameter()
+    {
+        var uri = _navigation.ToAbsoluteUri(_url);
+        var query = HttpUtility.ParseQueryString(uri.Query);
+        _pageIndex = int.TryParse(query["page"], out var index) ? index > 0 ? index : 1 : 1;
+        _pageSize = int.TryParse(query["size"], out var size) ? size > 0 ? size : 5 : 5;
+    }
+
+    private void PageIndexChanged(PaginationEventArgs args)
+    {
+        _navigation.NavigateTo($"mock?type={GetType().ToString().Replace($"{Assembly.GetExecutingAssembly().GetName().Name}.", "")}&page={args.Page}&size={args.PageSize}");
+    }
+
+    private async Task LoadDataAsync()
+    {
+        _loading = true;
+        StateHasChanged();
+        _forecasts = await GetForecastAsync(_pageIndex, _pageSize);
+        _loading = false;
+        StateHasChanged();
     }
 
     public class WeatherForecast
@@ -82,7 +102,7 @@
 
     public async Task<WeatherForecast[]> GetForecastAsync(int pageIndex, int pageSize)
     {
-        await Task.Delay(1000);
+        await Task.Delay(200);
         var rng = new Random();
         return await Task.FromResult(Enumerable.Range((pageIndex - 1) * pageSize + 1, pageSize).Select(index =>
         {
@@ -97,8 +117,13 @@
             };
         }).ToArray());
     }
-}
 
+    public void Dispose()
+    {
+        _navigation.LocationChanged -= LocationChanged;
+    }
+
+}
 
 <style>
     .router-pagging-table {
