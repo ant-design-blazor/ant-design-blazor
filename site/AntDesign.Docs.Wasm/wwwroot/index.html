@@ -10,6 +10,8 @@
     <link rel="icon" href="logo.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.css" />
     <link href="_content/AntDesign.Docs/css/docs.css" rel="stylesheet">
+
+    <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/assets/color.less">
 </head>
 
 <body>
@@ -197,6 +199,29 @@
     <script src="_content/AntDesign.Docs/js/prism.js"></script>
     <!-- use compression via https://docs.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly?view=aspnetcore-5.0#compression -->
     <script src="decode.js"></script>
+
+    <script>
+        window.AntDesign.Prism = {};
+        window.AntDesign.Prism.highlight = function (code, language) {
+            return Prism.highlight(code, Prism.languages[language], language);
+        }
+
+        window.AntDesign.Prism.highlightAll = function () {
+            Prism.highlightAll();
+        }
+
+        window.less = {
+            async: true
+        };
+
+        window.changeColor = function (hex, ref) {
+            window.less
+                .modifyVars({
+                    '@primary-color': hex
+                }).then(() => ref.invokeMethodAsync('OnColorChanged'))
+        }
+    </script>
+
     <script src="_framework/blazor.webassembly.js" autostart="false"></script>
     <script>
         Blazor.start({
@@ -220,16 +245,7 @@
         });
     </script>
 
-    <script>
-        window.AntDesign.Prism = {};
-        window.AntDesign.Prism.highlight = function (code, language) {
-            return Prism.highlight(code, Prism.languages[language], language);
-        }
-
-        window.AntDesign.Prism.highlightAll = function () {
-            Prism.highlightAll();
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/less@2.7.2/dist/less.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.js" integrity="sha256-qybEsgf0PGiQS22AmoozPs09oRnSC7Gu7eBu4fbS2Ac=" crossorigin="anonymous"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
 </body>
