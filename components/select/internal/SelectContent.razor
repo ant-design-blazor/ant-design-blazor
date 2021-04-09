@@ -127,34 +127,78 @@ else //ParentSelect.SelectMode != SelectMode.Default
             }
             @if (!ShowPlaceholder)
             {
-                var selectedItems = ParentSelect.SelectedOptionItems;
-                                
-                string firstAfterPrefix = $"max-width: {GetFirstItemMaxWidth()}%;";
-                @foreach (var selectedOption in selectedItems)
-                {
-                    @if (ParentLabelTemplate != null)
+                var selectedItems = ParentSelect.SelectedOptionItems;                                                
+                @if (ParentSelect.HasTagCount)
+                {                    
+                    @for (int i = 0; i < Math.Min(ParentSelect.MaxTagCount.AsT0, selectedItems.Count); i++)
                     {
-                        <CascadingValue Value="this" Name="SelectContent">
-                            <CascadingValue Value="@selectedOption" Name="SelectOption">
-                                <div class="@Prefix-selection-overflow-item" style="opacity: 1;@firstAfterPrefix">
-                                    @ParentLabelTemplate(selectedOption.Item)
-                                </div>
+                        var selectedOption = selectedItems[i];
+                        <div class="@Prefix-selection-overflow-item" style="@OverflowStyle(i)">
+                        @if (ParentLabelTemplate != null)
+                        {
+                            <CascadingValue Value="this" Name="SelectContent">
+                                <CascadingValue Value="@selectedOption" Name="SelectOption">
+                                    @ParentLabelTemplate(selectedOption.Item)                                    
+                                </CascadingValue>
                             </CascadingValue>
-                        </CascadingValue>
-                    }
-                    else
-                    {
-                        <div class="@Prefix-selection-overflow-item" style="opacity: 1;@firstAfterPrefix">
+                        }
+                        else
+                        {
                             <span class="@Prefix-selection-item">
-                                <span class="@Prefix-selection-item-content">@selectedOption.Label</span>
+                                <span class="@Prefix-selection-item-content">@FormatLabel(selectedOption.Label)</span>
                                 <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
                                         @onclick="()=> OnRemoveSelected.InvokeAsync(selectedOption)" @onclick:stopPropagation="true">
                                     <Icon Type="close"></Icon>
                                 </span>
                             </span>
+                        }
                         </div>
                     }
-                    firstAfterPrefix = "max-width: 98%;";                    
+                    @if (selectedItems.Count > ParentSelect.MaxTagCount.AsT0)
+                    {
+                        @if (ParentMaxTagPlaceholerTemplate != null)
+                        {
+                            <CascadingValue Value="this" Name="SelectContent">
+                                @ParentMaxTagPlaceholerTemplate(selectedItems.Skip(ParentSelect.MaxTagCount.AsT0).Select(i => i.Item))
+                            </CascadingValue>
+                        }
+                        else 
+                        {
+                            <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-rest" style="opacity 1">
+                                <span class="@Prefix-selection-item">
+                                    <span class="@Prefix-selection-item-content">+ @(selectedItems.Count - ParentSelect.MaxTagCount.AsT0)@Ellipse</span>
+                                </span>
+                            </div>
+                        }
+                    }
+                }                
+                else
+                {
+                    string firstAfterPrefix = $"max-width: {GetFirstItemMaxWidth()}%;";
+                    @foreach (var selectedOption in selectedItems)
+                    {
+                        <div class="@Prefix-selection-overflow-item" style="opacity: 1;@firstAfterPrefix">
+                        @if (ParentLabelTemplate != null)
+                        {
+                            <CascadingValue Value="this" Name="SelectContent">
+                                <CascadingValue Value="@selectedOption" Name="SelectOption">
+                                    @ParentLabelTemplate(selectedOption.Item)
+                                </CascadingValue>
+                            </CascadingValue>
+                        }
+                        else
+                        {
+                            <span class="@Prefix-selection-item">
+                                <span class="@Prefix-selection-item-content">@FormatLabel(selectedOption.Label)</span>
+                                <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@Prefix-selection-item-remove"
+                                        @onclick="()=> OnRemoveSelected.InvokeAsync(selectedOption)" @onclick:stopPropagation="true">
+                                    <Icon Type="close"></Icon>
+                                </span>
+                            </span>
+                        }
+                        </div>
+                        firstAfterPrefix = "max-width: 98%;";                    
+                    }                    
                 }
             }
             <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-suffix" style="opacity: 1;">

@@ -15,6 +15,7 @@ namespace AntDesign.Select.Internal
     {
         [CascadingParameter(Name = "ParentSelect")] internal Select<TItemValue, TItem> ParentSelect { get; set; }
         [CascadingParameter(Name = "ParentLabelTemplate")] internal RenderFragment<TItem> ParentLabelTemplate { get; set; }
+        [CascadingParameter(Name = "ParentMaxTagPlaceholerTemplate")] internal RenderFragment<IEnumerable<TItem>> ParentMaxTagPlaceholerTemplate { get; set; }
         [CascadingParameter(Name = "ShowSearchIcon")] internal bool ShowSearchIcon { get; set; }
         [CascadingParameter(Name = "ShowArrowIcon")] internal bool ShowArrowIcon { get; set; }
         [Parameter]
@@ -49,6 +50,33 @@ namespace AntDesign.Select.Internal
                 _ref = value;
                 RefBack?.Set(value);
             }
+        }
+
+        private const char Ellipse = (char)0x2026;
+
+        private string OverflowStyle(int order)
+        {
+            string width = "max-width: 98%;";
+            if (order == 0)
+                width = $"max-width: {GetFirstItemMaxWidth()}%;";
+            if (ParentSelect.HasTagCount)
+            {
+                return $"opacity: 1;order {order};{width}";
+            }
+            else if (ParentSelect.IsResponsive && ParentSelect.MaxTagCount.AsT0 < order + 1)
+            {
+                return $"opacity: 0.2;order {order};height: 0px; overflow-y: hidden; pointer-events:none;";
+            }
+            return "opacity: 1;" + width;
+        }
+
+        private string FormatLabel(string label)
+        {
+            if (ParentSelect.MaxTagTextLength > 0)
+            {
+                return label.Length <= ParentSelect.MaxTagTextLength ? label : label.Substring(0, ParentSelect.MaxTagTextLength) + Ellipse;
+            }
+            return label;
         }
 
         private string _inputStyle = string.Empty;
