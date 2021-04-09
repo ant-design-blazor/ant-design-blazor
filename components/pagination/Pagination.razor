@@ -313,7 +313,7 @@
                 IsSmall="@IsSmall"
                 Disabled="@Disabled"
                 RootPrefixCls="@PrefixCls"
-                ChangeSize="@(ShowSizeChanger ? ChangePageSize : null)"
+                ChangeSize="@(GetShowSizeChanger() ? ChangePageSize : null)"
                 Current="@Current"
                 PageSize="@PageSize"
                 PageSizeOptions="@PageSizeOptions"
