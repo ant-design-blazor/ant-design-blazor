@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.css" />
     <link href="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_content/AntDesign.Docs/css/docs.default.css" rel="stylesheet">
     <link href="manifest.json" rel="manifest" />
+    <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/color.less">
 </head>
 
 <body>
@@ -268,6 +269,28 @@
     <script src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_content/AntDesign/js/ant-design-blazor.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_content/AntDesign.Docs/js/prism.js"></script>
+    <script>
+        window.AntDesign.Prism = {};
+        window.AntDesign.Prism.highlight = function (code, language) {
+            return Prism.highlight(code, Prism.languages[language], language);
+        }
+
+        window.AntDesign.Prism.highlightAll = function () {
+            Prism.highlightAll();
+        }
+
+        window.less = {
+            async: true
+        };
+
+        window.changeColor = function (hex, ref) {
+            window.less
+                .modifyVars({
+                    '@primary-color': hex
+                }).then(() => ref.invokeMethodAsync('OnColorChanged'))
+        }
+    </script>
+
     <!-- use compression via https://docs.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly?view=aspnetcore-5.0#compression -->
     <script src="https://cdn.jsdelivr.net/gh/google/brotli/js/decode.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_framework/blazor.webassembly.js" autostart="false"></script>
@@ -293,18 +316,9 @@
             }
         });
     </script>
-    <script>
-        window.AntDesign.Prism = {};
-        window.AntDesign.Prism.highlight = function (code, language) {
-            return Prism.highlight(code, Prism.languages[language], language);
-        }
-
-        window.AntDesign.Prism.highlightAll = function () {
-            Prism.highlightAll();
-        }
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/docsearch.js@2.6.3/dist/cdn/docsearch.min.js" integrity="sha256-qybEsgf0PGiQS22AmoozPs09oRnSC7Gu7eBu4fbS2Ac=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/gh/ant-design-blazor/ant-design-blazor.github.io@{version}/_content/AntDesign.Docs/js/docsearch.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/less@2.7.2/dist/less.min.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>
 </html>
