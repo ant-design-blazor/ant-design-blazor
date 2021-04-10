@@ -118,7 +118,24 @@
     "collapse": "关闭行",
     "triggerDesc": "点击降序",
     "triggerAsc": "点击升序",
-    "cancelSort": "取消排序"
+    "cancelSort": "取消排序",
+    "filterOptions": {
+      "true": "是",
+      "false": "否",
+      "and": "且",
+      "or": "或",
+      "equals": "等于",
+      "notEquals": "不等于",
+      "contains": "包含",
+      "startsWith": "开头是",
+      "endsWith": "结尾是",
+      "greaterThan": "大于",
+      "lessThan": "小于",
+      "greaterThanOrEquals": "大于或等于",
+      "lessThanOrEquals": "小于或等于",
+      "isNull": "为 Null",
+      "isNotNull": "不为 Null"
+    }
   },
   "Modal": {
     "okText": "确定",

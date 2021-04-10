@@ -11,16 +11,15 @@ namespace AntDesign
 {
     public class TableFilter<TValue>
     {
-
         public string Text { get; set; }
 
         public TValue Value { get; set; }
 
-        public TableFilterCompareOperator FilterCompareOperator { get; set; }
-
-        public TableFilterCondition FilterCondition { get; set; }
-
         public bool Selected { get; set; }
+
+        internal TableFilterCompareOperator FilterCompareOperator { get; set; }
+
+        internal TableFilterCondition FilterCondition { get; set; }
 
         internal void SelectValue(bool selected)
         {

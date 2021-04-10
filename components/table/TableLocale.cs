@@ -32,34 +32,39 @@ namespace AntDesign
 
         public string CancelSort { get; set; }
 
-        public string TrueFilterOption { get; set; } = "True";
+        public FilterOptions FilterOptions { get; set; }
+    }
 
-        public string FalseFilterOption { get; set; } = "False";
+    public class FilterOptions
+    {
+        public string True { get; set; }
 
-        public string AndFilterCondition { get; set; } = "And";
+        public string False { get; set; }
 
-        public string OrFilterCondition { get; set; } = "Or";
+        public string And { get; set; }
 
-        public string EqualCompareOperator { get; set; } = "Equal";
+        public string Or { get; set; }
 
-        public string NotEqualCompareOperator { get; set; } = "Not Equal";
+        public new string Equals { get; set; }
 
-        public string ContainsCompareOperator { get; set; } = "Contains";
+        public string NotEquals { get; set; }
 
-        public string StartWithCompareOperator { get; set; } = "Start With";
+        public string Contains { get; set; }
 
-        public string EndWithCompareOperator { get; set; } = "End With";
+        public string StartsWith { get; set; }
 
-        public string GreaterThanCompareOperator { get; set; } = "Greater Than";
+        public string EndsWith { get; set; }
 
-        public string LessThanCompareOperator { get; set; } = "Less Than";
+        public string GreaterThan { get; set; }
 
-        public string GreaterThanOrEqualCompareOperator { get; set; } = "Greater Than Or Equals";
+        public string LessThan { get; set; }
 
-        public string LessThanOrEqualCompareOperator { get; set; } = "Less Than Or Equals";
+        public string GreaterThanOrEquals { get; set; }
 
-        public string IsNullCompareOperator { get; set; } = "Is Null";
+        public string LessThanOrEquals { get; set; }
 
-        public string IsNotNullCompareOperator { get; set; } = "Is Not Null";
+        public string IsNull { get; set; }
+
+        public string IsNotNull { get; set; }
     }
 }
