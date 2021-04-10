@@ -92,7 +92,24 @@
     "filterConfirm": "تأكيد",
     "filterReset": "إعادة ضبط",
     "selectAll": "اختيار الكل",
-    "selectInvert": "إلغاء الاختيار"
+    "selectInvert": "إلغاء الاختيار",
+    "filterOptions": {
+      "true": "صحيح",
+      "false": "خطأ",
+      "and": "و",
+      "or": "أو",
+      "equals": "يساوي",
+      "notEquals": "لا يساوي",
+      "contains": "يحتوي",
+      "startsWith": "يبدأ ب",
+      "endsWith": "ينتهي ب",
+      "greaterThan": "أكبر من",
+      "lessThan": "أصغر من",
+      "greaterThanOrEquals": "أكبر من أو يساوي",
+      "lessThanOrEquals": "أصغر من أو يساوي",
+      "isNull": "لا يحتوي قيمة",
+      "isNotNull": "يحتوي قيمة"
+    }
   },
   "Modal": {
     "okText": "تأكيد",

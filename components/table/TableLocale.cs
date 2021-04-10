@@ -31,5 +31,40 @@ namespace AntDesign
         public string TriggerAsc { get; set; }
 
         public string CancelSort { get; set; }
+
+        public FilterOptions FilterOptions { get; set; }
+    }
+
+    public class FilterOptions
+    {
+        public string True { get; set; }
+
+        public string False { get; set; }
+
+        public string And { get; set; }
+
+        public string Or { get; set; }
+
+        public new string Equals { get; set; }
+
+        public string NotEquals { get; set; }
+
+        public string Contains { get; set; }
+
+        public string StartsWith { get; set; }
+
+        public string EndsWith { get; set; }
+
+        public string GreaterThan { get; set; }
+
+        public string LessThan { get; set; }
+
+        public string GreaterThanOrEquals { get; set; }
+
+        public string LessThanOrEquals { get; set; }
+
+        public string IsNull { get; set; }
+
+        public string IsNotNull { get; set; }
     }
 }
