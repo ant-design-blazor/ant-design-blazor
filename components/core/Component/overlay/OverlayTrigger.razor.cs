@@ -352,7 +352,7 @@ namespace AntDesign.Internal
 
         protected virtual void OnMouseUp(JsonElement element)
         {
-            if (_mouseInOverlay == false && _mouseInTrigger == false)
+            if (_mouseInOverlay == false && _mouseInTrigger == false && Visible)
             {
                 if (OnMaskClick.HasDelegate)
                 {
