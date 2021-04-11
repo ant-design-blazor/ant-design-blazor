@@ -61,7 +61,7 @@ namespace AntDesign
 
         private (string type, string theme) DetermineIconType()
         {
-            if (Icon != null)
+            if (!string.IsNullOrEmpty(Icon))
             {
                 var separatorIndex = Icon.LastIndexOf("-", StringComparison.CurrentCultureIgnoreCase);
                 var type = Icon.Substring(0, separatorIndex);
