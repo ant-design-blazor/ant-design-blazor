@@ -6,8 +6,8 @@ title:
 ---
 
 ## zh-CN
-用 `target` 设置 `Affix` 需要监听其滚动事件的元素，默认为 `window`。
+用 `TargetId` 设置 `Affix` 需要监听其滚动事件的元素，默认为 `window`。
 
 
 ## en-US
-Set a `Target for` `Affix`, which listen to scroll event of target element (default is `window`).
+Set a `TargetId for` `Affix`, which listen to scroll event of target element (default is `window`).

@@ -10,9 +10,9 @@
 		background-image: url("https://zos.alipayobjects.com/rmsportal/RmjwQiJorKyobvI.jpg")
 	}
 </style>
-<div class="scrollable-container" @ref="_container">
+<div class="scrollable-container" id="@TargetId">
 	<div class="background">
-		<Affix Target="@_container">
+		<Affix TargetId="@TargetId">
 			<Button Type="@ButtonType.Primary">
 				Fixed at the top of container
 			</Button>
@@ -21,6 +21,5 @@
 </div>
 
 @code{
-
-        private ElementReference _container;
-	}
+    const string TargetId = "id-scrollable-container";
+}
