@@ -61,7 +61,7 @@ namespace AntDesign
 
         private (string type, string theme) DetermineIconType()
         {
-            if (Icon != null)
+            if (!string.IsNullOrEmpty(Icon))
             {
                 var separatorIndex = Icon.LastIndexOf("-", StringComparison.CurrentCultureIgnoreCase);
                 var type = Icon.Substring(0, separatorIndex);
@@ -104,23 +104,22 @@ namespace AntDesign
 
         private void SetClass()
         {
-            ClassMapper.Add(PrefixCls)
-                .Add($"{PrefixCls}-{Status}");
+            ClassMapper.Get(() => $"{PrefixCls}-{Status}");
 
-            IconClassMapper.Add($"{PrefixCls}-icon")
-                .If($"{PrefixCls}-image", () => IsImage);
+            IconClassMapper.Get(() => $"{PrefixCls}-{(IsImage ? "image" : "icon")}");
         }
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+            SetClass();
             LoadImage();
         }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            SetClass();
+            LoadImage();
         }
     }
 }
