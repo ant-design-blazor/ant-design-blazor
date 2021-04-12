@@ -12,16 +12,3 @@ title:
 ## en-US
 
 Dynamically modify the result display page through code.
-
-```jsx
-import { Result } from 'antd';
-import { SmileOutlined } from '@ant-design/icons';
-
-ReactDOM.render(
-  <Result
-    icon={<SmileOutlined />}
-    title="Great, we have done all the operations!"
-  />,
-  mountNode,
-);
-```
