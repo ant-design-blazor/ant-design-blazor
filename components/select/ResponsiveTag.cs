@@ -1,6 +1,6 @@
 ﻿#pragma warning disable 1591 // Disable missing XML comment
 
-namespace AntDesign.Select.Internal
+namespace AntDesign.Select
 {
     public enum ResponsiveTag
     {

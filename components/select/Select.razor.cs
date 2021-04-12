@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
+using AntDesign.Select;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -470,7 +471,7 @@ namespace AntDesign
 
         private Action<TItem, TItemValue> _setValue;
         private bool _disableSubmitFormOnEnter;
-        private bool _showArrowIcon = true;        
+        private bool _showArrowIcon = true;
 
         #endregion Properties
 
@@ -492,7 +493,7 @@ namespace AntDesign
                 ;
         }
 
-
+        internal bool IsDropdownShown() => _dropDown.IsOverlayShow();
         protected override void OnInitialized()
         {
             SetClassMap();
@@ -939,6 +940,8 @@ namespace AntDesign
                             AddedTags.Remove(selectOption);
                         }
                     }
+                    if (IsResponsive)
+                        await _selectContent.RemovedItem();
                 }
                 if (EnableSearch || SelectMode == SelectMode.Tags)
                     await SetInputFocusAsync();
@@ -2213,7 +2216,6 @@ namespace AntDesign
         protected async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
-
             await SetValueAsync(selectOption);
         }
 
