@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using AntDesign.Core.Extensions;
 
 namespace AntDesign
 {
@@ -102,6 +103,8 @@ namespace AntDesign
                 throw;
             }
         }
+
+        protected async Task FocusAsync(ElementReference target, bool preventScroll = false) => await Js.FocusAsync(target, preventScroll);
 
         protected bool IsDisposed { get; private set; }
 

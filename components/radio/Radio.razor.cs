@@ -97,7 +97,7 @@ namespace AntDesign
         {
             if (this.AutoFocus)
             {
-                await this.Focus();
+                await FocusAsync(this.InputRef);
             }
 
             await base.OnFirstAfterRenderAsync();
@@ -138,11 +138,6 @@ namespace AntDesign
             {
                 await Select();
             }
-        }
-
-        protected async Task Focus()
-        {
-            await JsInvokeAsync(JSInteropConstants.Focus, this.InputRef);
         }
 
         protected async Task Blur()

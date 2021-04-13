@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,7 +45,15 @@ namespace AntDesign
         public string Placeholder { get; set; }
 
         [Parameter]
-        public bool AutoFocus { get; set; }
+        public bool AutoFocus
+        {
+            get { return _autoFocus; }
+            set { 
+                _autoFocus = value;
+                if (!_isInitialized && _autoFocus)
+                    IsFocused = _autoFocus;
+            }
+        }
 
         [Parameter]
         public TValue DefaultValue { get; set; }
@@ -101,6 +110,9 @@ namespace AntDesign
         private TValue _inputValue;
         private bool _compositionInputting;
         private Timer _debounceTimer;
+        private bool _autoFocus;
+        private bool _isInitialized;
+
         private bool DebounceEnabled => DebounceMilliseconds != 0;
 
         protected bool IsFocused { get; set; }
@@ -115,6 +127,7 @@ namespace AntDesign
             }
 
             SetClasses();
+            _isInitialized = true;
         }
 
         protected virtual void SetClasses()
@@ -171,11 +184,6 @@ namespace AntDesign
             base.OnParametersSet();
 
             SetClasses();
-        }
-
-        public async Task Focus()
-        {
-            await JsInvokeAsync(JSInteropConstants.Focus, Ref);
         }
 
         protected virtual async Task OnChangeAsync(ChangeEventArgs args)
@@ -236,6 +244,12 @@ namespace AntDesign
             {
                 await OnBlur.InvokeAsync(e);
             }
+        }
+
+        private async void OnFocusInternal(JsonElement e)
+        {
+            Console.WriteLine("OnFocusInternal called");
+            await OnFocusAsync(new());
         }
 
         internal virtual async Task OnFocusAsync(FocusEventArgs e)
@@ -334,11 +348,12 @@ namespace AntDesign
             {
                 DomEventService.AddEventListener(Ref, "compositionstart", OnCompositionStart);
                 DomEventService.AddEventListener(Ref, "compositionend", OnCompositionEnd);
-
                 if (this.AutoFocus)
                 {
-                    await this.Focus();
+                    IsFocused = true;
+                    await this.FocusAsync(Ref, true);
                 }
+                DomEventService.AddEventListener(Ref, "focus", OnFocusInternal, true);
             }
         }
 
@@ -346,6 +361,7 @@ namespace AntDesign
         {
             DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionstart", OnCompositionStart);
             DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionend", OnCompositionEnd);
+            DomEventService.RemoveEventListerner<JsonElement>(Ref, "focus", OnFocusInternal);
 
             _debounceTimer?.Dispose();
 
@@ -487,7 +503,7 @@ namespace AntDesign
                 builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
                 builder.AddAttribute(74, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
                 builder.AddAttribute(75, "oninput", CallbackFactory.Create(this, OnInputAsync));
-                builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
+                //builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
                 builder.AddAttribute(77, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
                 builder.AddElementReferenceCapture(90, r => Ref = r);
                 builder.CloseElement();

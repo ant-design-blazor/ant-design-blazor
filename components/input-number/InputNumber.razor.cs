@@ -308,7 +308,7 @@ namespace AntDesign
         private async Task SetFocus()
         {
             _focused = true;
-            await JsInvokeAsync(JSInteropConstants.Focus, Ref);
+            await FocusAsync(Ref);
         }
 
         private void OnInput(ChangeEventArgs args)

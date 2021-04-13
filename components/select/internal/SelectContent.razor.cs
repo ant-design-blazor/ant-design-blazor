@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using AntDesign.Core.Extensions;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -120,6 +120,8 @@ namespace AntDesign.Select.Internal
                     DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
                     await CalculateResponsiveTags();
                 }
+                DomEventService.AddEventListener(ParentSelect._inputRef, "focusout", OnBlurInternal, true);
+                DomEventService.AddEventListener(ParentSelect._inputRef, "focus", OnFocusInternal, true);
             }
             else if (_currentItemCount != ParentSelect.SelectedOptionItems.Count)
             {
@@ -137,11 +139,13 @@ namespace AntDesign.Select.Internal
 
         internal async Task CalculateResponsiveTags(bool forceInputFocus = false)
         {
+            if (!ParentSelect.IsResponsive)
+                return;
+
             _overflowElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _overflow);
 
             //distance between items is margin-inline-left=4px
             decimal accumulatedWidth = _prefixElement.width + _suffixElement.width + (4 + (SearchValue?.Length ?? 0) * 8);
-            var accumulatedWidthSource = new StringBuilder(accumulatedWidth.ToString());
             int i = 0;
             bool overflowing = false;
             bool renderAgain = false;
@@ -179,7 +183,6 @@ namespace AntDesign.Select.Internal
                     else
                     {
                         accumulatedWidth += item.Width;
-                        accumulatedWidthSource.Append("," + item.Width.ToString());
                     }
                     i++;
                 }
@@ -198,15 +201,10 @@ namespace AntDesign.Select.Internal
                 var isFocused = await Js.InvokeAsync<bool>(JSInteropConstants.HasFocus, ParentSelect._inputRef);
                 if (!isFocused)
                 {
-#if NET5_0
-                    await ParentSelect._inputRef.FocusAsync();
-#else
-                    await Js.InvokeVoidAsync(JSInteropConstants.Focus, ParentSelect._inputRef);
-#endif
+                    await Js.FocusAsync(ParentSelect._inputRef);
                 }
             }
         }
-
 
         private void SetInputWidth()
         {
@@ -373,6 +371,17 @@ namespace AntDesign.Select.Internal
             await OnClearClick.InvokeAsync(args);
         }
 
+        private async void OnFocusInternal(JsonElement e)
+        {
+            await OnFocus.InvokeAsync(new());
+        }
+
+        private async void OnBlurInternal(JsonElement e)
+        {
+            Console.WriteLine("OnBlurInternal");
+            await OnBlur.InvokeAsync(new());
+        }
+
         public bool IsDisposed { get; private set; }
 
         protected virtual void Dispose(bool disposing)
@@ -386,6 +395,8 @@ namespace AntDesign.Select.Internal
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);
                 });
             }
+            DomEventService.RemoveEventListerner<JsonElement>(ParentSelect._inputRef, "focus", OnFocusInternal);
+            DomEventService.RemoveEventListerner<JsonElement>(ParentSelect._inputRef, "focusout", OnBlurInternal);
             DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
             if (ParentSelect.IsResponsive)
                 DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
