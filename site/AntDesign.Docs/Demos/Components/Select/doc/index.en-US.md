@@ -38,6 +38,9 @@ Select component to select value from options.
 | LabelName | The name of the property to be used for the label. | string |  |  |
 | LabelTemplate | Is used to customize the label style. | RenderFragment&lt;TItem> |  |  |
 | Loading | Show loading indicator. You have to write the loading logic by your own. | bool | false |  |
+| MaxTagCount | Max tag count to show. responsive will cost render performance. | int | `ResponsiveTag.Responsive` | - |  |
+| MaxTagPlaceholder | Placeholder for not showing tags. If used with `ResponsiveTag.Responsive`, implement your own handling logic. | RenderFragment<IEnumerable<TItem>>> | - |  |
+| MaxTagTextLength | Max tag text length (number of characters) to show. | int | - |  |
 | Mode | Set mode of Select - `default` \| `multiple` \| `tags` | string | default |  |
 | NotFoundContent | Specify content to show when no result matches. | RenderFragment | `Not Found` |  |
 | OnBlur | Called when blur. | Action | - |  |

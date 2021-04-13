@@ -1,5 +1,4 @@
-﻿using AntDesign.Select.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,9 +6,10 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
+using AntDesign.Select;
+using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System.Diagnostics.CodeAnalysis;
 using OneOf;
 
 #pragma warning disable 1591 // Disable missing XML comment
@@ -91,6 +91,38 @@ namespace AntDesign
 
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
         [Parameter] public bool Loading { get; set; }
+
+        /// <summary>
+        /// How long (number of characters) a tag will be. 
+        /// Only for Mode = "multiple" or Mode = "tags"
+        /// </summary>
+        /// <value>
+        /// The maximum length of the tag text.
+        /// </value>
+        [Parameter] public int MaxTagTextLength { get; set; }
+
+        private OneOf<int, ResponsiveTag> _maxTagCount;
+        [Parameter]
+        public OneOf<int, ResponsiveTag> MaxTagCount
+        {
+            get { return _maxTagCount; }
+            set { 
+                _maxTagCount = value;
+
+                value.Switch(intValue =>
+                {
+                    IsResponsive = false;
+                    HasTagCount = intValue > 0;
+                }, enumValue =>
+                {
+                    IsResponsive = enumValue == ResponsiveTag.Responsive;
+                    HasTagCount = false;
+                });
+            }
+        }
+        internal bool IsResponsive { get; set; }
+        internal bool HasTagCount { get; set; }
+        [Parameter] public RenderFragment<IEnumerable<TItem>> MaxTagPlaceholder { get; set; }
         [Parameter] public string Mode { get; set; } = "default";
         [Parameter] public RenderFragment NotFoundContent { get; set; }
         [Parameter] public Action OnBlur { get; set; }
@@ -461,7 +493,7 @@ namespace AntDesign
                 ;
         }
 
-
+        internal bool IsDropdownShown() => _dropDown.IsOverlayShow();
         protected override void OnInitialized()
         {
             SetClassMap();
@@ -908,6 +940,8 @@ namespace AntDesign
                             AddedTags.Remove(selectOption);
                         }
                     }
+                    if (IsResponsive)
+                        await _selectContent.RemovedItem();
                 }
                 if (EnableSearch || SelectMode == SelectMode.Tags)
                     await SetInputFocusAsync();
@@ -2182,7 +2216,6 @@ namespace AntDesign
         protected async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
-
             await SetValueAsync(selectOption);
         }
 
