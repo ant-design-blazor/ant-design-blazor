@@ -35,7 +35,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | LabelInValue | 是否把每个选项的 label 包装到 value 中，会把 Select 的 value 类型从 `string` 变为 `{key: string, label: RenderFragment}` 的格式 | Boolean | false |  |
 | ListHeight | 设置弹窗滚动高度 | number | 256 |  |
 | MaxTagCount | 最多显示多少个 tag，响应式模式会对性能产生损耗 | int | `ResponsiveTag.Responsive` | - |  |
-| MaxTagPlaceholder | 隐藏 tag 时显示的内容。 If used with `ResponsiveTag.Responsive`, implement your own handling logic. | RenderFragment<IEnumerable<TItem>>> | - |  |
+| MaxTagPlaceholder | 隐藏 tag 时显示的内容。 当 `MaxTagCount` 是 `ResponsiveTag.Responsive` 时，使用这个属性来处理要显示的逻辑。 | RenderFragment<IEnumerable<TItem>>> | - |  |
 | MaxTagTextLength | 隐藏 tag 时显示的内容 | int | - |  |
 | TagRender | 自定义 tag 内容 render | (props:Properties) => RenderFragment | - |  |
 | Mode | 设置 Select 的模式为多选或标签 | `multiple` \| `tags` | - |  |
