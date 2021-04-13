@@ -2,6 +2,7 @@
 @using System.Text.Json;
 
     <Form @ref="form" Model="@model"
+          ValidateOnChange="@true"
           OnFinish="OnFinish"
           OnFinishFailed="OnFinishFailed"
       LabelColSpan="8"
