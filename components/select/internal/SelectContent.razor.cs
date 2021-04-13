@@ -371,16 +371,12 @@ namespace AntDesign.Select.Internal
             await OnClearClick.InvokeAsync(args);
         }
 
-        private async void OnFocusInternal(JsonElement e)
-        {
-            await OnFocus.InvokeAsync(new());
-        }
+        //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
+        private async void OnFocusInternal(JsonElement e) => await OnFocus.InvokeAsync(new());
 
-        private async void OnBlurInternal(JsonElement e)
-        {
-            Console.WriteLine("OnBlurInternal");
-            await OnBlur.InvokeAsync(new());
-        }
+        //TODO: Use built in @onblur once https://github.com/dotnet/aspnetcore/issues/30070 is solved
+        private async void OnBlurInternal(JsonElement e) => await OnBlur.InvokeAsync(new());
+
 
         public bool IsDisposed { get; private set; }
 

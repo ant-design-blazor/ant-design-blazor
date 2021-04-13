@@ -246,11 +246,7 @@ namespace AntDesign
             }
         }
 
-        private async void OnFocusInternal(JsonElement e)
-        {
-            Console.WriteLine("OnFocusInternal called");
-            await OnFocusAsync(new());
-        }
+        private async void OnFocusInternal(JsonElement e) => await OnFocusAsync(new());
 
         internal virtual async Task OnFocusAsync(FocusEventArgs e)
         {
@@ -505,6 +501,8 @@ namespace AntDesign
                 builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
                 builder.AddAttribute(74, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
                 builder.AddAttribute(75, "oninput", CallbackFactory.Create(this, OnInputAsync));
+                
+                //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
                 //builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
                 builder.AddAttribute(77, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
                 builder.AddElementReferenceCapture(90, r => Ref = r);
