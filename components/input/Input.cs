@@ -288,11 +288,13 @@ namespace AntDesign
                 {
                     builder.AddAttribute(34, "Style", "visibility: visible;");
                 }
-                builder.AddAttribute(35, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
+                builder.AddAttribute(35, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
                 {
                     CurrentValue = default;
+                    IsFocused = true;
+                    await this.FocusAsync(Ref);
                     if (OnChange.HasDelegate)
-                        OnChange.InvokeAsync(Value);
+                        await OnChange.InvokeAsync(Value);
                     ToggleClearBtn();
                 }));
                 builder.CloseComponent();
@@ -351,7 +353,7 @@ namespace AntDesign
                 if (this.AutoFocus)
                 {
                     IsFocused = true;
-                    await this.FocusAsync(Ref, true);
+                    await this.FocusAsync(Ref);
                 }
                 DomEventService.AddEventListener(Ref, "focus", OnFocusInternal, true);
             }
