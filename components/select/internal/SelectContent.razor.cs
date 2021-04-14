@@ -101,12 +101,15 @@ namespace AntDesign.Select.Internal
                 if (ParentSelect.IsResponsive)
                 {
                     _currentItemCount = ParentSelect.SelectedOptionItems.Count;
-                    Console.WriteLine("Getting _aggregateTagElement from OnAfterRenderAsync");
-                    //in blazor Wasm there has to be a delay here, otherwise _aggregateTagElement is not found and is set to null
-                    if (Js.IsBrowser())
+                    //even though it is run in OnAfterRender, it may happen that the browser
+                    //did not manage to render yet the element; force a continuous check 
+                    //until the element appears
+                    do
+                    {
                         await Task.Delay(1);
+                        _aggregateTagElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _aggregateTag);
+                    } while (_aggregateTagElement is null);
 
-                    _aggregateTagElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _aggregateTag);
                     if (_prefixRef.Id != default)
                     {
                         _prefixElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _prefixRef);
