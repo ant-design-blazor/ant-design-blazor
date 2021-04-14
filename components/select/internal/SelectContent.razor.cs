@@ -103,12 +103,13 @@ namespace AntDesign.Select.Internal
                     _currentItemCount = ParentSelect.SelectedOptionItems.Count;
                     //even though it is run in OnAfterRender, it may happen that the browser
                     //did not manage to render yet the element; force a continuous check 
-                    //until the element appears
-                    do
+                    //until the element gets the id                    
+                    while (_aggregateTag.Id is null)
                     {
                         await Task.Delay(1);
-                        _aggregateTagElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _aggregateTag);
-                    } while (_aggregateTagElement is null);
+                    }
+
+                    _aggregateTagElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _aggregateTag, _aggregateTag.Id, true);
 
                     if (_prefixRef.Id != default)
                     {
