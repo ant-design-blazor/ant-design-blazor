@@ -9,8 +9,9 @@ namespace AntDesign
     {
         private const string PrefixCls = "ant-affix";
         private const string RootScollSelector = "window";
-        //private const string RootRectSelector = "app";
+
         private bool _affixed;
+
         private bool _rootListened;
         private bool _targetListened;
 
@@ -52,14 +53,8 @@ namespace AntDesign
         [Parameter]
         public uint? OffsetTop { get; set; } = 0;
 
-        /// <summary>
-        /// Specifies the scrollable area DOM node
-        /// </summary>
         [Parameter]
-        public ElementReference Target { get; set; }
-
-        [Parameter]
-        public string TargetId { get; set; }
+        public string TargetSelector { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -91,18 +86,18 @@ namespace AntDesign
             DomEventService.AddEventListener(RootScollSelector, "scroll", OnWindowScroll, false);
             DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize, false);
             await RenderAffixAsync();
-            if (!_rootListened && string.IsNullOrEmpty(TargetId))
+            if (!_rootListened && string.IsNullOrEmpty(TargetSelector))
             {
                 _rootListened = true;
             }
-            else if (!string.IsNullOrEmpty(TargetId))
+            else if (!string.IsNullOrEmpty(TargetSelector))
             {
-                var targetStr = $"#{TargetId}";
-                DomEventService.AddEventListener(targetStr, "scroll", OnTargetScroll);
-                DomEventService.AddEventListener(targetStr, "resize", OnTargetResize);
+                DomEventService.AddEventListener(TargetSelector, "scroll", OnTargetScroll);
+                DomEventService.AddEventListener(TargetSelector, "resize", OnTargetResize);
                 _targetListened = true;
             }
         }
+
         private async void OnWindowScroll(JsonElement obj)
         {
             await RenderAffixAsync(true);
@@ -117,6 +112,7 @@ namespace AntDesign
         {
             await RenderAffixAsync();
         }
+
         private async void OnTargetResize(JsonElement obj)
         {
             await RenderAffixAsync();
@@ -130,7 +126,7 @@ namespace AntDesign
 
         private async Task RenderAffixAsync(bool windowscrolled = false)
         {
-            if (windowscrolled && !string.IsNullOrEmpty(TargetId))
+            if (windowscrolled && !string.IsNullOrEmpty(TargetSelector))
             {
                 if (!Affixed)
                 {
@@ -170,7 +166,7 @@ namespace AntDesign
             _hiddenStyle = $"width: {childRect.width}px; height: {childRect.height}px;";
 
             DomRect containerRect;
-            if (string.IsNullOrEmpty(TargetId))
+            if (string.IsNullOrEmpty(TargetSelector))
             {
                 containerRect = new DomRect()
                 {
@@ -181,7 +177,7 @@ namespace AntDesign
             }
             else
             {
-                containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, $"#{TargetId}");
+                containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, TargetSelector);
             }
             // become affixed
             if (OffsetBottom.HasValue)
