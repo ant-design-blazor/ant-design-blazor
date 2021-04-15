@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -201,7 +202,9 @@ namespace AntDesign.Internal
 
             int zIndex = await JsInvokeAsync<int>(JSInteropConstants.GetMaxZIndex);
 
-            _overlayStyle = $"z-index:{zIndex};left: {left}px;top: {top}px;{GetTransformOrigin()}";
+            _overlayStyle = $"z-index:{zIndex.ToString(CultureInfo.InvariantCulture)};" +
+                $"left: {left.ToString(CultureInfo.InvariantCulture)}px;" +
+                $"top: {top.ToString(CultureInfo.InvariantCulture)}px;{GetTransformOrigin()}";
 
             _overlayCls = Trigger.GetOverlayEnterClass();
 
@@ -615,7 +618,9 @@ namespace AntDesign.Internal
 
             int zIndex = await JsInvokeAsync<int>(JSInteropConstants.GetMaxZIndex);
 
-            _overlayStyle = $"z-index:{zIndex};left: {left}px;top: {top}px;{GetTransformOrigin()}";
+            _overlayStyle = $"z-index:{zIndex.ToString(CultureInfo.InvariantCulture)};" +
+                $"left: {left.ToString(CultureInfo.InvariantCulture)}px;" +
+                $"top: {top.ToString(CultureInfo.InvariantCulture)}px;{GetTransformOrigin()}";
 
             StateHasChanged();
         }
