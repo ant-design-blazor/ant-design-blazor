@@ -12,4 +12,11 @@
     <Watch Include="$(SolutionDir)**\*.razor" />
   </ItemGroup>
 
+  <ItemGroup>
+    <DocFiles Include="$(SolutionDir)docs\**\*.*"></DocFiles>
+  </ItemGroup>
+
+  <Target Name="CopyDocs" BeforeTargets="Build">
+    <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />
+  </Target>
 </Project>
