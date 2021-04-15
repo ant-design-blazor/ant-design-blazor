@@ -103,6 +103,9 @@ namespace AntDesign
         [Parameter]
         public int DebounceMilliseconds { get; set; } = 250;
 
+        [Parameter]
+        public string WrapperStyle { get; set; }
+
         public Dictionary<string, object> Attributes { get; set; }
 
         public ForwardRef WrapperRefBack { get; set; }
@@ -416,7 +419,7 @@ namespace AntDesign
                     _hasAffixWrapper = true;
                     builder.OpenElement(1, "span");
                     builder.AddAttribute(2, "class", GroupWrapperClass);
-                    builder.AddAttribute(3, "style", Style);
+                    builder.AddAttribute(3, "style", WrapperStyle);
                     builder.OpenElement(4, "span");
                     builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
                 }
@@ -439,7 +442,7 @@ namespace AntDesign
                     if (container == "input")
                     {
                         container = "affixWrapper";
-                        builder.AddAttribute(23, "style", Style);
+                        builder.AddAttribute(3, "style", WrapperStyle);
                     }
                     if (WrapperRefBack != null)
                     {
@@ -501,7 +504,7 @@ namespace AntDesign
                 builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
                 builder.AddAttribute(74, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
                 builder.AddAttribute(75, "oninput", CallbackFactory.Create(this, OnInputAsync));
-                
+
                 //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
                 //builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
                 builder.AddAttribute(77, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));

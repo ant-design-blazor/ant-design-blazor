@@ -29,6 +29,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | AllowClear |可以点击清除图标删除内容                               | boolean        | false         |
 | Prefix | 带有前缀图标的 input                               | RenderFragment        | -        |
 | Suffix | 带有后缀图标的 input                               | RenderFragment        | -         |
+| Style | Set CSS style. When using, be aware that some styles can be set only by `WrapperStyle` | string | - |  |
+| WrapperStyle | Set CSS style of wrapper. Is used when component has visible: `Prefix`/`Suffix` or has paramter set `AllowClear` or for components: `Password` & `Search`. In these cases, html `<span>` elements is used to wrap the html `<input>` element. `WrapperStyle` is used on the `<span>` element.   | string | - |  |
 | Type            |声明 input 类型，同原生 input 标签的 type 属性，见：MDN(请直接使用 Input.TextArea 代替 type="textarea")。         | string  | -         |
 | OnChange |输入框内容变化时的回调                                | function(e)        | -        |
 | OnPressEnter | 按下回车的回调                              | function(e)        | -         |
