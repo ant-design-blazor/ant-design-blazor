@@ -30,7 +30,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | Prefix | 带有前缀图标的 input                               | RenderFragment        | -        |
 | Suffix | 带有后缀图标的 input                               | RenderFragment        | -         |
 | Style | 设置 `<input>` HTML 元素的 CSS 样式 | string | - |  |
-| WrapperStyle | 设置外部 `<span>` 元素的样式。当使用了 `Prefix` 、 `Suffix`、 `AllowClear` 属性或者是 `Password` & `Search` 组件时，需要用 `WrapperStyle` 来设置整个组件的样式。  | string | - |  |
+| WrapperStyle | 设置外部 `<span>` 元素的样式。当使用了 `Prefix` 、 `Suffix`、 `AllowClear` 属性或者是 `Password` 或 `Search` 组件时，需要用 `WrapperStyle` 来设置整个组件的样式。  | string | - |  |
 | Type            |声明 input 类型，同原生 input 标签的 type 属性，见：MDN(请直接使用 Input.TextArea 代替 type="textarea")。         | string  | -         |
 | OnChange |输入框内容变化时的回调                                | function(e)        | -        |
 | OnPressEnter | 按下回车的回调                              | function(e)        | -         |
