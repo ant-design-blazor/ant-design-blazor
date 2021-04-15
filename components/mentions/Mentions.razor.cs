@@ -232,7 +232,7 @@ namespace AntDesign
             if (OnFocus.HasDelegate)
                 await OnFocus.InvokeAsync(args);
 
-            await JsInvokeAsync(JSInteropConstants.Focus, Ref);
+            await FocusAsync(Ref);
             StateHasChanged();
         }
 
