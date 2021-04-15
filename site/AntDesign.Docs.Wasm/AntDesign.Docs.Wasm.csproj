@@ -25,4 +25,11 @@
     <Content Include="$(SolutionDir)scripts\gh-pages\**" LinkBase="gh-pages" />
   </ItemGroup>
 
+  <ItemGroup>
+    <DocFiles Include="$(SolutionDir)docs\**\*.*"></DocFiles>
+  </ItemGroup>
+
+  <Target Name="CopyDocs" BeforeTargets="Build">
+    <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />
+  </Target>
 </Project>

@@ -222,9 +222,18 @@ export function copy(text) {
   });
 }
 
-export function focus(selector) {
+export function focus(selector, noScroll: boolean=false) {
+  let dom = getDom(selector);     
+  if (!(dom instanceof HTMLElement))
+      throw new Error("Unable to focus an invalid element.");
+  dom.focus({
+      preventScroll: noScroll
+  })
+}
+
+export function hasFocus(selector) {
   let dom = getDom(selector);
-  dom.focus();
+  return (document.activeElement === dom);
 }
 
 export function blur(selector) {

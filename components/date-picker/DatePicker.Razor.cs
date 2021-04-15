@@ -89,7 +89,6 @@ namespace AntDesign
                 {
                     if (IsDateStringFullDate(args.Value.ToString()))
                         CurrentValue = changeValue;
-
                 }
                 else
                     CurrentValue = changeValue;
@@ -98,6 +97,15 @@ namespace AntDesign
                 {
                     PickerValues[0] = notNullValue;
                 });
+
+                if (OnChange.HasDelegate)
+                {
+                    OnChange.InvokeAsync(new DateTimeChangedEventArgs
+                    {
+                        Date = Convert.ToDateTime(changeValue, this.CultureInfo),
+                        DateString = GetInputValue(index)
+                    });
+                }
 
                 StateHasChanged();
             }

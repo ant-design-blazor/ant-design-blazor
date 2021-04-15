@@ -34,9 +34,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | GetPopupContainer | 菜单渲染父节点。默认渲染到 body 上，如果你遇到菜单滚动定位问题，试试修改为滚动的区域，并相对其定位。[示例](https://codesandbox.io/s/4j168r7jw0) | Function(triggerNode) | () => document.body |  |
 | LabelInValue | 是否把每个选项的 label 包装到 value 中，会把 Select 的 value 类型从 `string` 变为 `{key: string, label: RenderFragment}` 的格式 | Boolean | false |  |
 | ListHeight | 设置弹窗滚动高度 | number | 256 |  |
-| MaxTagCount | 最多显示多少个 tag | number | - |  |
-| MaxTagTextLength | 最大显示的 tag 文本长度 | number | - |  |
-| MaxTagPlaceholder | 隐藏 tag 时显示的内容 | RenderFragment/function(omittedValues) | - |  |
+| MaxTagCount | 最多显示多少个 tag，响应式模式会对性能产生损耗 | int | `ResponsiveTag.Responsive` | - |  |
+| MaxTagPlaceholder | 隐藏 tag 时显示的内容。 当 `MaxTagCount` 是 `ResponsiveTag.Responsive` 时，使用这个属性来处理要显示的逻辑。 | RenderFragment<IEnumerable<TItem>>> | - |  |
+| MaxTagTextLength | 隐藏 tag 时显示的内容 | int | - |  |
 | TagRender | 自定义 tag 内容 render | (props:Properties) => RenderFragment | - |  |
 | Mode | 设置 Select 的模式为多选或标签 | `multiple` \| `tags` | - |  |
 | NotFoundContent | 当下拉列表为空时显示的内容 | RenderFragment | 'Not Found' |  |

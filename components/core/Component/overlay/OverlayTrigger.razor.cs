@@ -205,7 +205,7 @@ namespace AntDesign.Internal
         protected override void Dispose(bool disposing)
         {
             DomEventService.RemoveEventListerner<JsonElement>("document", "mouseup", OnMouseUp);
-            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnMouseUp);
+            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
             DomEventService.RemoveEventListerner<JsonElement>("document", "scroll", OnWindowScroll);
 
             if (Unbound != null)
