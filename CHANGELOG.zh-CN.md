@@ -65,6 +65,8 @@ timeline: true
   - 🐞 修改修改DataSource会抛出异常的问题。[5b0dbfb](https://github.com/ant-design-blazor/ant-design-blazor/commit/5b0dbfb) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
   - 🐞 修复DataIndex列过滤器无效的问题, 修复DataIndex列不刷新的问题。[#1295](https://github.com/ant-design-blazor/ant-design-blazor/pull/1295) [@Zonciu](https://github.com/Zonciu)
   - 🐞 ExpandIconColumnIndex 指定到 ActionColumn 时无效的问题。[#1285](https://github.com/ant-design-blazor/ant-design-blazor/pull/1285) [@Magehernan](https://github.com/Magehernan)
+  - 🐞 优化性能并修复 DataSource 更新问题 [#1304](https://github.com/ant-design-blazor/ant-design-blazor/pull/1304) [@anddrzejb](https://github.com/anddrzejb)
+
 - Select
   - 🐞 修复多选时点击关闭选项时，会触发下拉菜单的问题。[#1308](https://github.com/ant-design-blazor/ant-design-blazor/pull/1308) [@anddrzejb](https://github.com/anddrzejb)
   - 🐞 修复 Tag模式的 Loading 图标问题。[12ca2f7](https://github.com/ant-design-blazor/ant-design-blazor/commit/12ca2f7) [@Andrzej Bakun](https://github.com/Andrzej Bakun)

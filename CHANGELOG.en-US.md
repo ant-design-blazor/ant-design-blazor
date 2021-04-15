@@ -65,6 +65,8 @@ timeline: true
   - 🐞 Fixed an issue where modifying a DataSource would throw an exception. [5b0dbfb](https://github.com/ant-design-blazor/ant-design-blazor/commit/5b0dbfb) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
   - 🐞 Fix DataIndex Column Filter, make DataIndex column refresh correctly. [#1295](https://github.com/ant-design-blazor/ant-design-blazor/pull/1295) [@Zonciu](https://github.com/Zonciu)
   - 🐞 ExpandIconColumnIndex invalid when specified to the ActionColumn. [#1285](https://github.com/ant-design-blazor/ant-design-blazor/pull/1285) [@Magehernan](https://github.com/Magehernan)
+  - 🐞 perf optimization & data source change issue [#1304](https://github.com/ant-design-blazor/ant-design-blazor/pull/1304) [@anddrzejb](https://github.com/anddrzejb)
+
 - Select
   - 🐞 Fixed an issue where clicking the Close option on multiple selections would trigger a drop-down menu. [#1308](https://github.com/ant-design-blazor/ant-design-blazor/pull/1308) [@anddrzejb](https://github.com/anddrzejb)
   - 🐞 Fixed Loading icon in Tag mode. [12ca2f7](https://github.com/ant-design-blazor/ant-design-blazor/commit/12ca2f7) [@Andrzej Bakun](https://github.com/Andrzej Bakun)
