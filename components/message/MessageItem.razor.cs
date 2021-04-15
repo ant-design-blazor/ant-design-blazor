@@ -6,13 +6,12 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class MessageItem
+    public partial class MessageItem : AntDomComponentBase
     {
         [Parameter]
         public MessageConfig Config { get; set; }
 
-        [Parameter]
-        public bool IsRtl { get; set; } 
+        protected const string PrefixCls = "ant-message";
 
         private CultureInfo _cultureInfo = new CultureInfo("en-us", false);
 
@@ -20,7 +19,7 @@ namespace AntDesign
         {
             var className = $"{PrefixCls}-{Config.Type.ToString().ToLower(_cultureInfo)}";
 
-            if (IsRtl)
+            if (RTL)
             {
                 className += " ant-message-rtl";
             }

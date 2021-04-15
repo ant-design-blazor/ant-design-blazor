@@ -1,25 +1,83 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-@*<nz-select
-    class="ant-pagination-options-size-changer"
-    *ngIf="showSizeChanger"
-    [nzDisabled]="disabled"
-    [nzSize]="nzSize"
-    [ngModel]="pageSize"
-    (ngModelChange)="onPageSizeChange($event)"
->
-    <nz-option
-        *ngFor="let option of listOfPageSizeOption; trackBy: trackByOption"
-        [nzLabel]="option.label"
-        [nzValue]="option.value"
-    ></nz-option>
-</nz-select>*@
-@if (ShowQuickJumper)
-{
-    <div class="ant-pagination-options-quick-jumper">
-        @Pagination?.Locale.JumpTo
-        <input disabled="@Disabled" @bind="_inputValue" @onkeyup="JumpToPageViaInput" />
-        @Pagination?.Locale.Page
-    </div>
+@{
+    var prefixCls = $"{RootPrefixCls}-options";
+    RenderFragment changeSelect = null;
+    RenderFragment goInput = null;
+    RenderFragment gotoButton = null;
+
+    if (!ChangeSize.HasDelegate && !QuickGo.HasDelegate)
+    {
+        return;
+    }
+
+    var pageSizeOptions = GetPageSizeOptions();
+
+    if (ChangeSize.HasDelegate)
+    {
+        changeSelect =
+            @<Select
+                 TItem="int"
+                 TItemValue="int"
+                 Disabled="@Disabled"
+                 Style="width: auto"
+                 Size="@(IsSmall ? "small" : "default")"
+                 Class="@($"{prefixCls}-size-changer")"
+                 DefaultValue="@(PageSize > 0 ? PageSize : pageSizeOptions[0])"
+                 OnSelectedItemChanged="@(i => {if (ChangeSize.HasDelegate)ChangeSize.InvokeAsync(i);})">
+                <SelectOptions>
+                    @foreach(var opt in pageSizeOptions)
+                    {
+                        <SelectOption TItem="int" TItemValue="int" Label="@BuildOptionText(opt)" Value="@opt" />
+                    }
+                </SelectOptions>
+            </Select>;
+    }
+
+    if (QuickGo.HasDelegate)
+    {
+        if (GoButton.HasValue)
+        {
+            var goBtn = GoButton.Value;
+            if (goBtn.IsT0 && goBtn.AsT0 == true)
+            {
+                gotoButton =
+                    @<button
+                         type="button"
+                         @onclick="Go"
+                         @onkeyup="Go"
+                         disabled="@Disabled"
+                         class="@prefixCls-quick-jumper-button">
+                        @Locale.JumpToConfirm
+                    </button>;
+            }
+            else if (goBtn.IsT1)
+            {
+                gotoButton =
+                    @<span @onclick="Go" @onkeyup="Go">
+                        @goBtn.AsT1
+                    </span>;
+            }
+        }
+        goInput =
+            @<div class="@prefixCls-quick-jumper">
+                @Locale.JumpTo
+                <input
+                    disabled="@Disabled"
+                    type="text"
+                    value="@_goInputText"
+                    @onchange="HandleChange"
+                    @onkeyup="Go"
+                    @onblur="HandleBlur"/>
+                @Locale.Page
+                @gotoButton
+            </div>;
+    }
+
+    <li class="@prefixCls">
+        @changeSelect
+        @goInput
+    </li>
+
 }

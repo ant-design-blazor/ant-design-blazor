@@ -65,7 +65,7 @@
 
     private void PageIndexChanged(PaginationEventArgs args)
     {
-        _navigation.NavigateTo($"mock?type={GetType().ToString().Replace($"{Assembly.GetExecutingAssembly().GetName().Name}.", "")}&page={args.PageIndex}&size={args.PageSize}");
+        _navigation.NavigateTo($"mock?type={GetType().ToString().Replace($"{Assembly.GetExecutingAssembly().GetName().Name}.", "")}&page={args.Page}&size={args.PageSize}");
     }
 
     private async Task LoadDataAsync()

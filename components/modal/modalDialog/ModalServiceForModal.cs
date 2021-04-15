@@ -14,6 +14,8 @@ namespace AntDesign
     {
         internal event Func<ModalRef, Task> OnModalOpenEvent;
         internal event Func<ModalRef, Task> OnModalCloseEvent;
+        internal event Func<ModalRef, Task> OnModalUpdateEvent;
+
 
         private readonly NavigationManager _navigationManager;
         private readonly IJSRuntime _jsRuntime;
@@ -60,6 +62,21 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Create and open a Modal
+        /// </summary>
+        /// <returns></returns>
+        public Task<ModalRef<TResult>> CreateModalAsync<TResult>(ModalOptions config)
+        {
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+            var modalRef = new ModalRef<TResult>(config, this);
+            config.ModalRef = modalRef;
+            return CreateOrOpenModalAsync(modalRef);
+        }
+
+        /// <summary>
         /// Create and open a Modal with template
         /// </summary>
         /// <typeparam name="TComponent"></typeparam>
@@ -67,7 +84,7 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="componentOptions"></param>
         /// <returns></returns>
-        public Task<ModalRef> CreateModalAsync<TComponent, TComponentOptions>(ModalOptions config, TComponentOptions componentOptions) where TComponent : ModalTemplate<TComponentOptions>
+        public Task<ModalRef> CreateModalAsync<TComponent, TComponentOptions>(ModalOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions>
         {
             if (config == null)
             {
@@ -78,7 +95,36 @@ namespace AntDesign
             void Child(RenderTreeBuilder builder)
             {
                 builder.OpenComponent<TComponent>(0);
-                builder.AddAttribute(1, "ModalRef", modalRef);
+                builder.AddAttribute(1, "FeedbackRef", modalRef);
+                builder.AddAttribute(2, "Options", componentOptions);
+                builder.CloseComponent();
+            }
+            config.Content = Child;
+            config.ModalRef = modalRef;
+            return CreateOrOpenModalAsync(modalRef);
+        }
+
+        /// <summary>
+        /// Create and open a Modal with template
+        /// </summary>
+        /// <typeparam name="TComponent"></typeparam>
+        /// <typeparam name="TComponentOptions"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="componentOptions"></param>
+        /// <returns></returns>
+        public Task<ModalRef<TResult>> CreateModalAsync<TComponent, TComponentOptions, TResult>(ModalOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions, TResult>
+        {
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+            var modalRef = new ModalRef<TResult>(config, this);
+
+            void Child(RenderTreeBuilder builder)
+            {
+                builder.OpenComponent<TComponent>(0);
+                builder.AddAttribute(1, "FeedbackRef", modalRef);
                 builder.AddAttribute(2, "Options", componentOptions);
                 builder.CloseComponent();
             }
@@ -98,6 +144,18 @@ namespace AntDesign
             ReusedModals.Add(modalRef);
             return Task.FromResult(modalRef);
         }
+        /// <summary>
+        /// create or open a Modal dialog
+        /// </summary>
+        /// <param name="modalRef"></param>
+        /// <returns></returns>
+        internal Task<ModalRef<TResult>> CreateOrOpenModalAsync<TResult>(ModalRef<TResult> modalRef)
+        {
+            OnModalOpenEvent?.Invoke(modalRef);
+            ReusedModals.Add(modalRef);
+            return Task.FromResult(modalRef);
+        }
+
 
         /// <summary>
         /// close modal dialog
@@ -120,6 +178,12 @@ namespace AntDesign
         {
             _navigationManager.LocationChanged -= NavigationManager_LocationChanged;
             GC.SuppressFinalize(this);
+        }
+
+
+        public async Task UpdateModalAsync(ModalRef modalRef)
+        {
+            await(OnModalUpdateEvent?.Invoke(modalRef) ?? Task.CompletedTask);
         }
     }
 }

@@ -209,5 +209,13 @@ namespace AntDesign
         {
             ChangePickerType(type, PickerIndex);
         }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            ClassMapper.Add($"{PrefixCls}-panel")
+                .If($"{PrefixCls}-panel-rtl", () => RTL);
+        }
     }
 }

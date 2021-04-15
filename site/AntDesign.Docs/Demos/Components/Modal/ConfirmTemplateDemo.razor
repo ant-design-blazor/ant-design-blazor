@@ -1,4 +1,5 @@
-﻿@inherits ConfirmTemplate<string, string>
+﻿@using System.ComponentModel
+@inherits FeedbackComponent<string, string>
 
 <div>
     <Text>Please input "@config"</Text>
@@ -18,16 +19,28 @@
     }
 
 
-    public override async Task OkAsync(ModalClosingEventArgs args)
+    public override async Task OnFeedbackOkAsync(ModalClosingEventArgs args)
     {
-        ConfirmRef.Config.OkButtonProps.Loading = true;
+        if (FeedbackRef is ConfirmRef confirmRef)
+        {
+            confirmRef.Config.OkButtonProps.Loading = true;
+            await confirmRef.UpdateConfigAsync();
+        }
+        else if (FeedbackRef is ModalRef modalRef)
+        {
+            modalRef.Config.ConfirmLoading = true;
+            await modalRef.UpdateConfigAsync();
+        }
+
         await Task.Delay(1000);
         // only the input's value equals the initialized value, the OK button will close the confirm dialog box
         if (value != config)
             args.Cancel = true;
         else
-            await this.OnOkAsync(value);
+            // method 1(not recommended): await (FeedbackRef as ConfirmRef<string>)!.OkAsync(value);
+            // method 2: await (FeedbackRef as IOkCancelRef<string>)!.OkAsync(value);
+            await base.OkCancelRefWithResult!.OnOk(value);
 
-        await base.OkAsync(args);
+        await base.OnFeedbackOkAsync(args);
     }
 }

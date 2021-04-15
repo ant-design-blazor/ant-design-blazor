@@ -1,6 +1,6 @@
 ﻿@using System.ComponentModel.DataAnnotations
 @using System.Text.Json
-@inherits ModalTemplate<Form.demo.Basic.Model>
+@inherits FeedbackComponent<Form.demo.Basic.Model>
 
 <Form Model="@_model"
       LabelCol="new ColLayoutParam { Span = 8 }"
@@ -41,7 +41,7 @@
     private void OnFinish(EditContext editContext)
     {
         Console.WriteLine($"Success:{JsonSerializer.Serialize(_model)}");
-        _ = base.ModalRef.CloseAsync();
+        _ = base.FeedbackRef.CloseAsync();
     }
 
     private void OnFinishFailed(EditContext editContext)

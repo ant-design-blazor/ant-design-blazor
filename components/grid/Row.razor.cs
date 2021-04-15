@@ -83,6 +83,7 @@ namespace AntDesign
                 .If($"{prefixCls}-space-around", () => Justify == "space-around")
                 .If($"{prefixCls}-space-between", () => Justify == "space-between")
                 .If($"{prefixCls}-no-wrap", () => !Wrap)
+                .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
             if (DefaultBreakpoint != null)

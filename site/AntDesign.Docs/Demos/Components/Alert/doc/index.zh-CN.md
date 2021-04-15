@@ -26,8 +26,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg
 | Description | A自定义关闭按钮 | string | - |  |
 | Icon | 自定义图标，`ShowIcon` 为 `true` 时有效 | RenderFragment | - |  |
 | Message | 警告提示内容 | string | - |  |
+| MessageTemplate | Message 的模板 | RenderFragment | - | |
 | ShowIcon | 是否显示辅助图标 | bool | false |  |
 | Type | 指定警告提示的样式，有四种选择 `success` \| `info` \| `warning` \| `error` | string | warning |  |
 | OnClose | 关闭时触发的回调函数 | EventCallback&lt;MouseEventArgs> | - |  |
 | ChildContent | 附加内容 | RenderFragment | - |  |
-

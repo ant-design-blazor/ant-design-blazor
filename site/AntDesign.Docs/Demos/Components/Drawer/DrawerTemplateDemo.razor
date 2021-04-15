@@ -1,5 +1,5 @@
 ﻿@namespace AntDesign
-@inherits DrawerTemplate<string, string>
+@inherits FeedbackComponent<string, string>
 
 <div>
     value: <Input @bind-Value="value" />
@@ -14,13 +14,13 @@
 
     protected override void OnInitialized()
     {
-        value = this.Options;
+        value = base.Options;
         base.OnInitialized();
     }
 
 
     async void OnClose()
     {
-        await this.CloseAsync(value);
+        await ((DrawerRef<string>) base.FeedbackRef)?.CloseAsync(value);
     }
 }
