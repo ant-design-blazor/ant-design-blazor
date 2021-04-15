@@ -24,7 +24,8 @@ namespace AntDesign
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
-                .If($"{PrefixCls}-compact", () => Compact);
+                .If($"{PrefixCls}-compact", () => Compact)
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
     }
 }

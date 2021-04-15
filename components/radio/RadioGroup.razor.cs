@@ -32,7 +32,9 @@ namespace AntDesign
             ClassMapper.Add(prefixCls)
                 .If($"{prefixCls}-large", () => Size == "large")
                 .If($"{prefixCls}-small", () => Size == "small")
-                .If($"{prefixCls}-{ButtonStyle}", () => ButtonStyle.IsIn("outline", "solid"));
+                .GetIf(() => $"{prefixCls}-{ButtonStyle}", () => ButtonStyle.IsIn("outline", "solid"))
+                .If($"{prefixCls}-rtl", () => RTL)
+                ;
 
             base.OnInitialized();
         }
@@ -50,7 +52,6 @@ namespace AntDesign
             }
             StateHasChanged();
         }
-
 
         protected override async Task OnParametersSetAsync()
         {

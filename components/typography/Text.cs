@@ -23,16 +23,11 @@ namespace AntDesign
         protected void SetClassMap()
         {
             string prefixName = "ant-typography";
-            ClassMapper.Clear()
+            ClassMapper
                 .Add("ant-typography")
-                .If($"{prefixName}-{Type}", () => !string.IsNullOrEmpty(Type))
-                .If($"{prefixName}-disabled", () => Disabled);
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-            SetClassMap();
+                .GetIf(() => $"{prefixName}-{Type}", () => !string.IsNullOrEmpty(Type))
+                .If($"{prefixName}-disabled", () => Disabled)
+                .If($"{prefixName}-rtl", () => RTL);
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)

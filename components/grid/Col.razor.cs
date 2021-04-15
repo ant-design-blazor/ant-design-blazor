@@ -81,11 +81,12 @@ namespace AntDesign
             var prefixCls = "ant-col";
             this.ClassMapper.Clear()
                 .Add(prefixCls)
-                .GetIf(()=>$"{prefixCls}-{this.Span.Value}", () => this.Span.Value != null)
+                .GetIf(() => $"{prefixCls}-{this.Span.Value}", () => this.Span.Value != null)
                 .GetIf(() => $"{prefixCls}-order-{this.Order.Value}", () => this.Order.Value != null)
                 .GetIf(() => $"{prefixCls}-offset-{this.Offset.Value}", () => this.Offset.Value != null)
                 .GetIf(() => $"{prefixCls}-pull-{this.Pull.Value}", () => this.Pull.Value != null)
                 .GetIf(() => $"{prefixCls}-push-{this.Push.Value}", () => this.Push.Value != null)
+                .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
             SetSizeClassMapper(prefixCls, Xs, "xs");

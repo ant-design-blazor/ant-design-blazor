@@ -29,6 +29,7 @@ namespace AntDesign
 
         private async Task HandleOk(MouseEventArgs e)
         {
+            Console.WriteLine("HandleOk");
             var onOk = ModalProps.OnOk;
             if (onOk != null)
             {

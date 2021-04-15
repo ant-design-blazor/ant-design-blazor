@@ -6,7 +6,7 @@
     string display = GetDisplayStyle();
     string overlayCls = GetOverlayCls();
 
-    <div class="@(Trigger.PrefixCls) @(Trigger.OverlayClassName) @(Trigger.GetPlacementClass()) @overlayCls"
+    <div class="@(Trigger.PrefixCls) @(RTL?$"{Trigger.PrefixCls}-rtl":"") @(Trigger.OverlayClassName) @(Trigger.GetPlacementClass()) @overlayCls"
          style="position: absolute; @display @Trigger.OverlayStyle @_overlayStyle"
          @ref="Ref"
          @onmouseenter="OnOverlayMouseEnter"

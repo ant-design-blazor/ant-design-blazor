@@ -28,6 +28,14 @@
         {
             <MenuItem Class="header-button header-lang-button" OnClick="@(_ => ChangeLanguage("zh-CN"))">简体中文</MenuItem>
         }
+        @if (Direction?.ToUpperInvariant() != "RTL")
+        {
+            <MenuItem Class="header-button" OnClick="@(()=>ConfigProvider?.ChangeDirection("rtl"))">RTL</MenuItem>
+        }
+        else
+        {
+            <MenuItem Class="header-button" OnClick="@(()=>ConfigProvider?.ChangeDirection("ltr"))">LTR</MenuItem>
+        }
     }
 </Menu>
 
@@ -42,6 +50,15 @@
     else
     {
         <Button Class="header-button header-lang-button" Size="small" OnClick="@(_ => ChangeLanguage("zh-CN"))">简体中文</Button>
+    }
+
+    @if (Direction?.ToUpperInvariant() != "RTL")
+    {
+        <Button Class="header-button" Size="small" OnClick="@(()=>ConfigProvider?.ChangeDirection("rtl"))">RTL</Button>
+    }
+    else
+    {
+        <Button Class="header-button" Size="small" OnClick="@(()=>ConfigProvider?.ChangeDirection("ltr"))">LTR</Button>
     }
 
     <GithubButton />

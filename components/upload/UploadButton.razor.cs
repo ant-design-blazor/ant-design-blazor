@@ -111,17 +111,26 @@ namespace AntDesign.Internal
             }
             var flist = await JSRuntime.InvokeAsync<List<UploadFileItem>>(JSInteropConstants.GetFileInfo, _file);
             var index = 0;
+            if (Upload.BeforeAllUploadAsync != null && !(await Upload.BeforeAllUploadAsync.Invoke(flist)))
+            {
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
+                return;
+            }
+            if (Upload.BeforeAllUpload != null && !Upload.BeforeAllUpload.Invoke(flist))
+            {
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
+                return;
+            }
+
             foreach (var fileItem in flist)
             {
                 var fileName = fileItem.FileName;
                 fileItem.Ext = fileItem.FileName.Substring(fileName.LastIndexOf('.'));
                 var id = Guid.NewGuid().ToString();
-                if (Upload.BeforeUpload != null)
+                if (Upload.BeforeUpload != null && !Upload.BeforeUpload.Invoke(fileItem))
                 {
-                    if (!Upload.BeforeUpload.Invoke(fileItem))
-                    {
-                        return;
-                    }
+                    await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
+                    return;
                 }
                 fileItem.Percent = 0;
                 fileItem.State = UploadState.Uploading;

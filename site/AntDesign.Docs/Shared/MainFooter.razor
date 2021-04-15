@@ -1,10 +1,8 @@
-﻿@inject ILanguageService language
-
-<footer class="rc-footer rc-footer-dark">
+﻿<footer class="rc-footer rc-footer-dark">
     <section class="rc-footer-container">
         <section class="rc-footer-columns">
             <div class="rc-footer-column">
-                <h2>@language.Resources["app.footer.resources"]</h2>
+                <h2>@Language.Resources["app.footer.resources"]</h2>
                 <div class="rc-footer-item">
                     <a href="https://ant.design" target="_blank">Ant Design</a>
                 </div>
@@ -34,7 +32,7 @@
                 </div>
             </div>
             <div class="rc-footer-column">
-                <h2>@language.Resources["app.footer.community"]</h2>
+                <h2>@Language.Resources["app.footer.community"]</h2>
                 <div class="rc-footer-item">
                     <a href="https://github.com/websemantics/awesome-ant-design" target="_blank">
                         <span class="rc-footer-item-icon">
@@ -73,7 +71,7 @@
                 </div>
             </div>
             <div class="rc-footer-column">
-                <h2>@language.Resources["app.footer.help"]</h2>
+                <h2>@Language.Resources["app.footer.help"]</h2>
                 <div class="rc-footer-item">
                     <a href="https://github.com/ant-design-blazor/ant-design-blazor" target="_blank" rel="noopener noreferrer">
                         <span class="rc-footer-item-icon">
@@ -109,11 +107,16 @@
             </div>
             <div class="rc-footer-column">
                 <h2>
-                    @*<span class="rc-footer-column-icon">
-                            <img src="https://gw.alipayobjects.com/zos/rmsportal/nBVXkrFdWHxbZlmMbsaH.svg" alt="Ant XTech">
-                        </span>*@
-                    @language.Resources["app.footer.more-product"]
+                    <span class="rc-footer-column-icon">
+                        <img src="https://gw.alipayobjects.com/zos/rmsportal/nBVXkrFdWHxbZlmMbsaH.svg" alt="Ant XTech">
+                    </span>
+                    @Language.Resources["app.footer.more-product"]
                 </h2>
+                <div class="rc-footer-item" style="margin-top: 20px;">
+                    <div class="theme-pick-wrap">
+                        <input type="color" class="theme-pick" name="head" style="width:100%;" value="@_colorHex" @onchange="ChangeColor">
+                    </div>
+                </div>
             </div>
         </section>
     </section>
@@ -124,16 +127,3 @@
         </div>
     </section>
 </footer>
-
-@code{
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        language.LanguageChanged += (sender, args) =>
-        {
-            InvokeAsync(StateHasChanged);
-        };
-    }
-
-}

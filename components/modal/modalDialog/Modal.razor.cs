@@ -16,9 +16,16 @@ namespace AntDesign
         #region Parameter
 
         /// <summary>
+        /// 
+        /// </summary>
+        [Parameter]
+        public ModalRef ModalRef { get; set; }
+
+        /// <summary>
         /// Specify a function that will be called when modal is closed
         /// </summary>
-        [Parameter] public Func<Task> AfterClose { get; set; }
+        [Parameter] 
+        public Func<Task> AfterClose { get; set; }
 
         /// <summary>
         /// Body style for modal body element. Such as height, padding etc
@@ -251,16 +258,41 @@ namespace AntDesign
                 ZIndex = ZIndex,
                 OnCancel = async (e) =>
                 {
-                    if (OnCancel.HasDelegate)
+                    var args = new ModalClosingEventArgs(e, false);
+
+                    var modalTemplate = (ModalRef as IFeedbackRef)?.ModalTemplate;
+                    if (modalTemplate != null)
+                        await modalTemplate.OnFeedbackCancelAsync(args);
+                    if (!args.Cancel)
                     {
-                        await OnCancel.InvokeAsync(e);
+                        await (ModalRef?.OnCancel?.Invoke() ?? Task.CompletedTask);
+
+                        if (OnCancel.HasDelegate)
+                        {
+                            await OnCancel.InvokeAsync(e);
+                        }
                     }
                 },
                 OnOk = async (e) =>
                 {
-                    if (OnOk.HasDelegate)
+                    var args = new ModalClosingEventArgs(e, false);
+
+                    var modalTemplate = (ModalRef as IFeedbackRef)?.ModalTemplate;
+                    if (modalTemplate != null)
+                        await modalTemplate.OnFeedbackOkAsync(args);
+                    if (!args.Cancel)
                     {
-                        await OnOk.InvokeAsync(e);
+                        await (ModalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
+
+                        if (OnOk.HasDelegate)
+                        {
+                            await OnOk.InvokeAsync(e);
+                        }
+                    }
+                    else
+                    {
+                        ConfirmLoading = false;
+                        await InvokeStateHasChangedAsync();
                     }
                 },
                 OkButtonProps = OkButtonProps,
@@ -281,6 +313,18 @@ namespace AntDesign
             {
                 await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{_dialogWrapper.Dialog.SentinelStart}");
                 _hasFocus = true;
+                if (ModalRef?.OnOpen != null)
+                {
+                    await ModalRef.OnOpen();
+                }
+            }
+        }
+
+        private async Task OnAfterHide()
+        {
+            if (ModalRef?.OnClose != null)
+            {
+                await ModalRef.OnClose();
             }
         }
 

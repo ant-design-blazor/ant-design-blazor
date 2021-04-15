@@ -89,7 +89,9 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            ClassMapper.Add(PrefixName);
+            ClassMapper
+                .Add(PrefixName)
+                .If($"{PrefixName}-rtl", () => RTL);
 
             _targetKeys = TargetKeys.ToList();
             var selectedKeys = SelectedKeys.ToList();
@@ -190,7 +192,6 @@ namespace AntDesign
             else
             {
                 _targetKeys.AddRange(moveKeys);
-
             }
 
             InitData();

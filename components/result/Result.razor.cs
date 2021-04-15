@@ -104,7 +104,9 @@ namespace AntDesign
 
         private void SetClass()
         {
-            ClassMapper.Get(() => $"{PrefixCls}-{Status}");
+            ClassMapper.Add(PrefixCls)
+                .Get(() => $"{PrefixCls}-{Status}")
+                .If($"{PrefixCls}-rtl", () => RTL);
 
             IconClassMapper.Get(() => $"{PrefixCls}-{(IsImage ? "image" : "icon")}");
         }

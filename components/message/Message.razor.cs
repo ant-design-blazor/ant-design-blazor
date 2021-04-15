@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class Message
+    public partial class Message : AntDomComponentBase
     {
         [Inject]
         private MessageService MessageService { get; set; }
@@ -23,6 +23,10 @@ namespace AntDesign
                 MessageService.OnDestroy += Destroy;
                 MessageService.OnConfig += Config;
             }
+
+            ClassMapper
+                .Add(PrefixCls)
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
 
         protected override void Dispose(bool disposing)
@@ -35,20 +39,20 @@ namespace AntDesign
 
         #region global config
 
+        protected const string PrefixCls = "ant-message";
+
         private double _duration = 3;
 
         private int _maxCount = 0;
 
         private double _top = 24;
 
-        private bool _rtl = false;
-
         private void Config(MessageGlobalConfig globalConfig)
         {
             _duration = globalConfig.Duration;
             _maxCount = globalConfig.MaxCount;
             _top = globalConfig.Top;
-            _rtl = globalConfig.Rtl;
+            //_rtl = globalConfig.Rtl;
         }
 
         private MessageConfig Extend(MessageConfig config)
@@ -61,7 +65,7 @@ namespace AntDesign
             return config;
         }
 
-        #endregion
+        #endregion global config
 
         private readonly List<MessageConfig> _configs
             = new List<MessageConfig>();
@@ -149,7 +153,6 @@ namespace AntDesign
                         _configs.Remove(config);
                         InvokeAsync(StateHasChanged);
                     }, TaskScheduler.Current);
-
             }
 
             return Task.CompletedTask;
@@ -161,6 +164,5 @@ namespace AntDesign
             _configs.Clear();
             InvokeAsync(StateHasChanged);
         }
-
     }
 }
