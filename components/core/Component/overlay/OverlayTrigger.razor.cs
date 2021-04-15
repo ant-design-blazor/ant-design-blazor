@@ -94,7 +94,7 @@ namespace AntDesign.Internal
         {
             get
             {
-                return _placement;
+                return RTL ? _placement.GetRTLPlacement() : _placement;
             }
             set
             {

@@ -1,30 +1,388 @@
 ﻿@namespace AntDesign
+@using AntDesign.Internal
 @inherits AntDomComponentBase
 
-<CascadingValue Value="this" IsFixed="@true">
-    <ul class="@ClassMapper.Class" style="@Style" @ref="Ref" id="@Id">
-        @if (Simple)
+@{
+
+    // When hideOnSinglePage is true and there is only 1 page, hide the pager
+    if (HideOnSinglePage == true && Total <= PageSize)
+    {
+        return;
+    }
+
+    var allPages = CalculatePage(null, _pageSize, Total);
+    var pagerList = new LinkedList<RenderFragment>();
+    RenderFragment jumpPrev = null;
+    RenderFragment jumpNext = null;
+    RenderFragment firstPager = null;
+    RenderFragment lastPager = null;
+    RenderFragment gotoButton = null;
+
+    var goButton = ShowQuickJumper ? GoButton : null;
+    var pageBufferSize = ShowLessItems ? 1 : 2;
+
+    var prevPage = _current - 1 > 0 ? _current - 1 : 0;
+    var nextPage = _current + 1 < allPages ? _current + 1 : allPages;
+    var dataOrAriaAttributeProps = UnmatchedAttributes?
+        .Where(pair => pair.Key.StartsWith("data-") || pair.Key.StartsWith("aria-") || pair.Key == "role")
+        .ToDictionary(e => e.Key, e => e.Value);
+    if (Simple)
+    {
+        RenderFragment? goButtonRender;
+        if (ShowQuickJumper)
         {
-            <PaginationSimple
-                Disabled="Disabled"
-                PageSize="PageSize"
-                Total="Total"
-                PageIndex="PageIndex"
-                PageIndexChange="HandlePageIndexChange"/>
+            if (goButton == null)
+            {
+                goButtonRender =
+                    @<button type="button" @onclick="HandleGoTO" @onkeyup="HandleGoTO">
+                        @Locale.JumpToConfirm
+                    </button>;
+            }
+            else
+            {
+                goButtonRender =
+                    @<span @onclick="HandleGoTO" @onkeyup="HandleGoTO">
+                        @goButton
+                    </span>;
+            }
+            gotoButton =
+                @<li
+                     title="@(ShowTitle ? $"{Locale.JumpTo}{_current}/{allPages}" : null)"
+                     class="@($"{PrefixCls}-simple-pager")">
+                    @goButtonRender
+                </li>;
+        }
+        <ul
+            class="@ClassMapper.Class"
+            style="@Style"
+            @ref="Ref"
+            @attributes="@dataOrAriaAttributeProps">
+            <li
+                title="@(ShowTitle ? Locale.PrevPage : null)"
+                @onclick="Prev"
+                tabIndex="@(HasPrev() ? 0 : null)"
+                @onkeypress="RunIfEnterPrev"
+                class="@_prevClass.Class"
+                aria-disabled="@(!HasPrev())">
+                @RenderPrev(prevPage)
+            </li>
+            <li
+                title="@(ShowTitle ? $"{_current}/{allPages}" : null)"
+                class="@($"{PrefixCls}-simple-pager")">
+                <input
+                    type="text"
+                    value="@_currentInputValue"
+                    disabled="@Disabled"
+                    @onkeyup="HandleKeyUp"
+                    @onchange="HandleKeyUp"
+                    size="3"/>
+                <span class="@($"{PrefixCls}-slash")">/</span>
+                @allPages
+            </li>
+            <li
+                title="@(ShowTitle ? Locale.NextPage : null)"
+                @onclick="Next"
+                tabIndex="@(HasPrev() ? 0 : null)"
+                @onkeypress="RunIfEnterNext"
+                class="@_nextClass.Class"
+                aria-disabled="@(!HasNext())">
+                @RenderNext(nextPage)
+            </li>
+            @gotoButton
+        </ul>
+    }
+    else
+    {
+        if (allPages <= 3 + pageBufferSize * 2)
+        {
+            if (allPages == 0)
+            {
+                pagerList.AddLast(
+                    @<PaginationPager
+                         RootPrefixCls="@PrefixCls"
+                         OnClick="HandleChange"
+                         OnKeyPress="args => RunIfEnter(args.e, args.callback)"
+                         ShowTitle="ShowTitle"
+                         @key="@("noPager")"
+                         Page="@allPages"
+                         Class="@($"{PrefixCls}-disabled")"
+                         ItemRender="@ItemRender"/>
+                    );
+            }
+            for (var i = 1; i <= allPages; i += 1)
+            {
+                var key = i;
+                pagerList.AddLast(
+                    @<PaginationPager
+                         RootPrefixCls="@PrefixCls"
+                         OnClick="HandleChange"
+                         OnKeyPress="args => RunIfEnter(args.e, args.callback)"
+                         ShowTitle="ShowTitle"
+                         @key="@key"
+                         Page="@key"
+                         Active="@(_current == key)"
+                         ItemRender="@ItemRender"/>
+                    );
+            }
         }
         else
         {
-            <PaginationDefault
-                Size="@Size"
-                Disabled="Disabled"
-                ShowSizeChanger="ShowSizeChanger"
-                ShowQuickJumper="ShowQuickJumper"
-                Total="Total"
-                PageIndex="PageIndex"
-                PageSize="PageSize"
-                PageSizeOptions="PageSizeOptions"
-                PageIndexChange="HandlePageIndexChange"
-                PageSizeChange="HandlePageSizeChange"/>
+            var prevItemTitle = ShowLessItems ? Locale.Prev3 : Locale.Prev5;
+            var nextItemTitle = ShowLessItems ? Locale.Next3 : Locale.Next5;
+            if (ShowPrevNextJumpers)
+            {
+                jumpPrev =
+                    @<li
+                         title="@(ShowTitle ? prevItemTitle : null)"
+                         @key="@("prev")"
+                         @onclick="JumpPrev"
+                         tabIndex="0"
+                         @onkeypress="RunIfEnterJumpPrev"
+                         class="@_jumpPrevClass.Class">
+                        @ItemRender(new(
+                            GetJumpPrevPage(),
+                            PaginationItemType.JumpPrev,
+                            GetItemIcon(JumpPrevIcon, "prev page")
+                            ))
+                    </li>;
+
+                jumpNext =
+                    @<li
+                         title="@(ShowTitle ? nextItemTitle : null)"
+                         @key="@("next")"
+                         tabIndex="0"
+                         @onclick="JumpNext"
+                         @onkeypress="RunIfEnterJumpNext"
+                         class="@_jumpNextClass.Class">
+                        @ItemRender(new(
+                            GetJumpNextPage(),
+                            PaginationItemType.JumpNext,
+                            GetItemIcon(JumpNextIcon, "next page")
+                            ))
+                    </li>;
+            }
+            lastPager =
+                @<PaginationPager
+                     Last
+                     RootPrefixCls="@PrefixCls"
+                     OnClick="HandleChange"
+                     OnKeyPress="args => RunIfEnter(args.e, args.callback)"
+                     @key="@("allPages")"
+                     Page="allPages"
+                     Active="@false"
+                     ShowTitle="ShowTitle"
+                     ItemRender="@ItemRender"/>;
+            firstPager =
+                @<PaginationPager
+                     RootPrefixCls="@PrefixCls"
+                     OnClick="HandleChange"
+                     OnKeyPress="args => RunIfEnter(args.e, args.callback)"
+                     @key="1"
+                     Page="1"
+                     Active="@false"
+                     ShowTitle="ShowTitle"
+                     ItemRender="@ItemRender"/>;
+
+            var left = Math.Max(1, _current - pageBufferSize);
+            var right = Math.Min(_current + pageBufferSize, allPages);
+
+            if (_current - 1 <= pageBufferSize)
+            {
+                right = 1 + pageBufferSize * 2;
+            }
+
+            if (allPages - _current <= pageBufferSize)
+            {
+                left = allPages - pageBufferSize * 2;
+            }
+            var itemAfterJumpPrev = _current - 1 >= pageBufferSize * 2 && _current != 1 + 2;
+            var itemBeforeJumpNext = allPages - _current >= pageBufferSize * 2 && _current != allPages - 2;
+            for (var i = left; i <= right; i += 1)
+            {
+                var key = i;
+                pagerList.AddLast(
+                    @<PaginationPager
+                         RootPrefixCls="@PrefixCls"
+                         OnClick="HandleChange"
+                         OnKeyPress="args => RunIfEnter(args.e, args.callback)"
+                         @key="@key"
+                         Page="@key"
+                         Active="@(_current == key)"
+                         ShowTitle="ShowTitle"
+                         ItemRender="@ItemRender"/>
+                    );
+            }
+
+            if (itemAfterJumpPrev)
+            {
+                pagerList.First.Value =
+                    @<PaginationPager
+                         RootPrefixCls="@PrefixCls"
+                         OnClick="HandleChange"
+                         OnKeyPress="args => RunIfEnter(args.e, args.callback)"
+                         @key="@left"
+                         Page="@left"
+                         Active="@(_current == left)"
+                         ShowTitle="ShowTitle"
+                         Class="@($"{PrefixCls}-item-after-jump-prev")"
+                         ItemRender="@ItemRender"/>;
+                pagerList.AddFirst(jumpPrev);
+            }
+            if (itemBeforeJumpNext)
+            {
+                pagerList.Last.Value =
+                    @<PaginationPager
+                         RootPrefixCls="@PrefixCls"
+                         OnClick="HandleChange"
+                         OnKeyPress="args => RunIfEnter(args.e, args.callback)"
+                         @key="@right"
+                         Page="@right"
+                         Active="@(_current == right)"
+                         ShowTitle="ShowTitle"
+                         Class="@($"{PrefixCls}-item-after-jump-prev")"
+                         ItemRender="@ItemRender"/>;
+                pagerList.AddLast(jumpNext);
+            }
+
+            if (left != 1)
+            {
+                pagerList.AddFirst(firstPager);
+            }
+            if (right != allPages)
+            {
+                pagerList.AddLast(lastPager);
+            }
         }
-    </ul>
-</CascadingValue>
+
+        RenderFragment totalText = null;
+
+        if (ShowTotal.HasValue)
+        {
+            totalText =
+                @<li class="@PrefixCls-total-text">
+                    @if (ShowTotal.Value.IsT0)
+                    {
+                        @ShowTotal.Value.AsT0(new(Total, (
+                            Total == 0 ? 0 : (_current - 1) * _pageSize + 1,
+                                _current * _pageSize > Total ? Total : _current * _pageSize
+                            )))
+                    }
+                    else if (ShowTotal.Value.IsT1)
+                    {
+                        @ShowTotal.Value.AsT1(new(Total, (
+                            Total == 0 ? 0 : (_current - 1) * _pageSize + 1,
+                                _current * _pageSize > Total ? Total : _current * _pageSize
+                            )))
+                    }
+                </li>;
+        }
+        var prevDisabled = !HasPrev() || allPages != 0;
+        var nextDisabled = !HasNext() || allPages != 0;
+
+        <ul
+            class="@ClassMapper.Class"
+            style="@Style"
+            unselectable="unselectable"
+            @ref="Ref"
+            @attributes="@dataOrAriaAttributeProps">
+            @totalText
+            <li
+                title="@(ShowTitle ? Locale.PrevPage : null)"
+                @onclick="Prev"
+                tabIndex="@(prevDisabled ? null : 0)"
+                @onkeypress="RunIfEnterPrev"
+                class="@_prevClass.Class"
+                aria-disabled="prevDisabled">
+                @RenderPrev(prevPage)
+            </li>
+            @foreach (var pager in pagerList)
+            {
+                @pager
+            }
+            <li
+                title="@(ShowTitle ? Locale.NextPage : null)"
+                @onclick="Next"
+                tabIndex="@(nextDisabled ? null : 0)"
+                @onkeypress="RunIfEnterNext"
+                class="@_nextClass.Class"
+                aria-disabled="nextDisabled">
+                @RenderNext(nextPage)
+            </li>
+
+            <PaginationOptions
+                IsSmall="@IsSmall"
+                Disabled="@Disabled"
+                RootPrefixCls="@PrefixCls"
+                ChangeSize="@(GetShowSizeChanger() ? ChangePageSize : null)"
+                Current="@Current"
+                PageSize="@PageSize"
+                PageSizeOptions="@PageSizeOptions"
+                QuickGo="@(ShouldDisplayQuickJumper() ? HandleChange : null)"
+                GoButton="@goButton"/>
+        </ul>
+    }
+}
+
+@code {
+
+    private void SetIcon()
+    {
+        RenderFragment ellipsis = @<span class="@($"{PrefixCls}-item-ellipsis")">•••</span>;
+        RenderFragment<PaginationItemRenderContext> prevIcon = context =>
+            @<button class="@($"{PrefixCls}-item-link")" type="button" tabIndex="-1" disabled="@context.Disabled">
+                <Icon Type="left" Theme="outline"/>
+            </button>;
+        RenderFragment<PaginationItemRenderContext> nextIcon = context =>
+            @<button class="@($"{PrefixCls}-item-link")" type="button" tabIndex="-1" disabled="@context.Disabled">
+                <Icon Type="right" Theme="outline"/>
+            </button>;
+        RenderFragment<PaginationItemRenderContext> jumpPrevIcon = _ =>
+            @<a class="@($"{PrefixCls}-item-link")">
+                @* You can use transition effects in the container :) *@
+                <div class="@($"{PrefixCls}-item-container")">
+                    <Icon Type="double-left" Class="@($"{PrefixCls}-item-link-icon")"></Icon>
+                    @ellipsis
+                </div>
+            </a>;
+        RenderFragment<PaginationItemRenderContext> jumpNextIcon = _ =>
+            @<a class="@($"{PrefixCls}-item-link")">
+                @* You can use transition effects in the container :) *@
+                <div class="@($"{PrefixCls}-item-container")">
+                    <Icon Type="double-right" Class="@($"{PrefixCls}-item-link-icon")"></Icon>
+                    @ellipsis
+                </div>
+            </a>;
+
+        // change arrows direction in right-to-left direction
+        if (Direction == "rtl")
+        {
+            PrevIcon ??= prevIcon;
+            NextIcon ??= nextIcon;
+            JumpPrevIcon ??= jumpPrevIcon;
+            JumpNextIcon ??= jumpNextIcon;
+        }
+        else
+        {
+            PrevIcon ??= prevIcon;
+            NextIcon ??= nextIcon;
+            JumpPrevIcon ??= jumpPrevIcon;
+            JumpNextIcon ??= jumpNextIcon;
+        }
+    }
+
+    /// <summary>
+    /// computed icon node that need to be rendered.
+    /// </summary>
+    /// <param name="icon"></param>
+    /// <param name="label"></param>
+    /// <returns></returns>
+    private RenderFragment<PaginationItemRenderContext> GetItemIcon(RenderFragment<PaginationItemRenderContext>? icon, string label)
+    {
+        RenderFragment<PaginationItemRenderContext> defaultIconRender = ctx =>
+            @<button type="button" aria-label="@label" class="@PrefixCls-item-link" disabled="@ctx.Disabled"/>;
+
+        var iconNode = icon ?? defaultIconRender;
+        return iconNode;
+    }
+
+}

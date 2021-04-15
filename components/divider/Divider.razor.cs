@@ -16,7 +16,7 @@ namespace AntDesign
         /// <summary>
         ///  'horizontal' | 'vertical'
         /// </summary>
-        [Parameter] public string Type { get; set; } = "horizontal";
+        [Parameter] public DirectionVHType Type { get; set; } = DirectionVHType.Horizontal;
 
         /// <summary>
         /// 'left' | 'right' | 'center'
@@ -29,7 +29,8 @@ namespace AntDesign
         {
             ClassMapper.Clear()
                 .Add("ant-divider")
-                .Get(() => $"ant-divider-{this.Type.ToLowerInvariant()}")
+                .If("ant-divider", () => RTL)
+                .Get(() => $"ant-divider-{this.Type.Name.ToLowerInvariant()}")
                 .If("ant-divider-with-text", () => Text != null || ChildContent != null)
                 .GetIf(() => $"ant-divider-with-text-{this.Orientation.ToLowerInvariant()}", () => Text != null || ChildContent != null)
                 .If($"ant-divider-plain", () => Plain && (Text != null || ChildContent != null))

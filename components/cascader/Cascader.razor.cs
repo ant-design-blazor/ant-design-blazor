@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using System.Linq;
 using System.Collections;
+using System.Threading.Tasks;
 
 namespace AntDesign
 {
@@ -98,6 +99,9 @@ namespace AntDesign
         /// </summary>
         internal List<CascaderNode> _renderNodes = new List<CascaderNode>();
 
+        private ClassMapper _menuClassMapper = new ClassMapper();
+        private ClassMapper _inputClassMapper = new ClassMapper();
+
         /// <summary>
         /// 浮层 展开/折叠状态
         /// </summary>
@@ -114,10 +118,9 @@ namespace AntDesign
         /// </summary>
         private SelectedTypeEnum SelectedType { get; set; }
 
-        private ClassMapper _inputClassMapper = new ClassMapper();
         private string _displayText;
 
-        private static Hashtable _sizeMap = new Hashtable()
+        private static Dictionary<string, string> _sizeMap = new Dictionary<string, string>()
         {
             ["large"] = "lg",
             ["small"] = "sm"
@@ -127,15 +130,27 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            ClassMapper.Add("ant-cascader-picker")
+            ClassMapper
+                .Add("ant-cascader-picker")
                 .GetIf(() => $"ant-cascader-picker-{Size}", () => _sizeMap.ContainsKey(Size))
-                .GetIf(() => $"ant-input-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
-                ;
+                .If("ant-cascader-picker-rtl", () => RTL);
 
             _inputClassMapper
                 .Add("ant-input")
                 .Add("ant-cascader-input")
-                .GetIf(() => $"ant-input-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size));
+                .GetIf(() => $"ant-cascader-input-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
+                .If("ant-cascader-input-rtl", () => RTL);
+
+            _menuClassMapper
+                .Add("ant-cascader-menu")
+                .If($"ant-cascader-menu-rtl", () => RTL);
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            ProcessParentAndDefault();
         }
 
         protected override void OnValueChange(string value)

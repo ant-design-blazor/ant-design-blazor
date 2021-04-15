@@ -283,7 +283,7 @@ namespace AntDesign
         /// <returns></returns>
         [Obsolete("Use the CreateAsync method instead")]
         public Task<ConfirmRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>
-        (ConfirmOptions config, TComponentOptions componentOptions) where TComponent : ConfirmTemplate<TComponentOptions, TResult>
+        (ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             return CreateConfirmAsync<TComponent, TComponentOptions, TResult>(config, componentOptions);
         }
@@ -297,7 +297,7 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="componentOptions"></param>
         /// <returns></returns>
-        public Task<ConfirmRef<TResult>> CreateConfirmAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : ConfirmTemplate<TComponentOptions, TResult>
+        public Task<ConfirmRef<TResult>> CreateConfirmAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             CheckConfirmOptionsIsNull(config);
 
@@ -307,7 +307,7 @@ namespace AntDesign
             RenderFragment child = (builder) =>
             {
                 builder.OpenComponent<TComponent>(0);
-                builder.AddAttribute(1, "ConfirmRef", confirmRef);
+                builder.AddAttribute(1, "FeedbackRef", confirmRef);
                 builder.AddAttribute(2, "Options", componentOptions);
                 builder.CloseComponent();
             };

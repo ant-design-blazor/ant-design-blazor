@@ -147,7 +147,9 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add($"{PrefixCls}")
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
-                .If($"{PrefixCls}-sm", () => Size == InputSize.Small);
+                .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
+                .If($"{PrefixCls}-rtl", () => RTL)
+                ;
 
             Attributes ??= new Dictionary<string, object>();
 

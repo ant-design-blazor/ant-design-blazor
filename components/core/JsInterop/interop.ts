@@ -493,7 +493,7 @@ export function getMaxZIndex() {
   return [...document.all].reduce((r, e) => Math.max(r, +window.getComputedStyle(e).zIndex || 0), 0)
 }
 
-export function getStyle(element, styleProp) {        
+export function getStyle(element, styleProp) {
   if (element.currentStyle)
     return element.currentStyle[styleProp];
   else if (window.getComputedStyle)
@@ -501,9 +501,9 @@ export function getStyle(element, styleProp) {
 }
 
 export function getTextAreaInfo(element) {
-    var result = {};
-    var dom = getDom(element);
-    result["scrollHeight"] = dom.scrollHeight || 0;
+  var result = {};
+  var dom = getDom(element);
+  result["scrollHeight"] = dom.scrollHeight || 0;
 
   if (element.currentStyle) {
     result["lineHeight"] = parseFloat(element.currentStyle["line-height"]);
@@ -521,9 +521,9 @@ export function getTextAreaInfo(element) {
   }
   //Firefox can return this as NaN, so it has to be handled here like that.
   if (Object.is(NaN, result["borderTop"]))
-      result["borderTop"] = 1;
+    result["borderTop"] = 1;
   if (Object.is(NaN, result["borderBottom"]))
-      result["borderBottom"] = 1;
+    result["borderBottom"] = 1;
   return result;
 }
 
@@ -545,7 +545,6 @@ export function disposeResizeTextArea(element) {
   element.removeEventListener("input", funcDict[element.id + "input"]);
   objReferenceDict[element.id] = null;
   funcDict[element.id + "input"] = null;
-
 }
 
 export function resizeTextArea(element, minRows, maxRows) {
@@ -576,8 +575,6 @@ export function resizeTextArea(element, minRows, maxRows) {
     textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", parseFloat(element.scrollWidth), newHeight);
   }
 }
-
-
 
 const objReferenceDict = {};
 export function disposeObj(objReferenceName) {
@@ -667,5 +664,12 @@ export function removePreventEnterOnOverlayVisible(element) {
     let dom = getDom(element);
     (dom as HTMLElement).removeEventListener("keydown", funcDict[element.id + "keydown:Enter"]);
     funcDict[element.id + "keydown:Enter"] = null;
+  }
+}
+
+export function setDomAttribute(element, attributes) {
+  let dom = getDom(element);
+  for (var key in attributes) {
+    (dom as HTMLElement).setAttribute(key, attributes[key]);
   }
 }

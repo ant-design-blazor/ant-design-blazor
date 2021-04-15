@@ -26,7 +26,9 @@ namespace AntDesign
 
         public CheckboxGroup()
         {
-            ClassMapper.Add("ant-checkbox-group");
+            ClassMapper
+                .Add("ant-checkbox-group")
+                .If("ant-checkbox-group-rtl", () => RTL);
         }
 
         internal void AddItem(Checkbox checkbox)

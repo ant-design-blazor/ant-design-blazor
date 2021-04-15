@@ -6,12 +6,13 @@
                Visible="@Visible"
                DestroyOnClose="@DestroyOnClose"
                OnAfterShow="@OnAfterDialogShow"
+               OnAfterHide="@OnAfterHide"
                OnBeforeDestroy="@OnBeforeDialogWrapperDestroy"
                Style="@Style">
     <CascadingValue Value=@($"#ant-modal-wrap_{_dialogWrapper.Id}") Name="PopupContainerSelector">
         <CascadingValue Value="true" Name="InModal">
             <CascadingValue Value="@_dialogWrapper.Dialog.IsShow()" Name="ModalCompleteShow">
-                @ChildContent
+                    @ChildContent
             </CascadingValue>
         </CascadingValue>
     </CascadingValue>

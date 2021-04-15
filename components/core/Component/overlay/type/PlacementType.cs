@@ -77,5 +77,23 @@
             return PlacementDirection.Bottom;
         }
 
+        internal PlacementType GetRTLPlacement()
+        {
+            if (this == TopLeft) return TopRight;
+            if (this == TopRight) return TopLeft;
+
+            if (this == Left) return Right;
+            if (this == LeftTop) return RightTop;
+            if (this == LeftBottom) return RightBottom;
+
+            if (this == Right) return Left;
+            if (this == RightTop) return LeftTop;
+            if (this == RightBottom) return LeftBottom;
+
+            if (this == BottomLeft) return BottomRight;
+            if (this == BottomRight) return BottomLeft;
+
+            return this;
+        }
     }
 }

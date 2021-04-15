@@ -19,7 +19,7 @@ namespace AntDesign.Tests
 
             Context.Services.AddScoped<NavigationManager>(sp => NavigationManager);
             Context.Services.AddAntDesign();
-            
+
             //Needed for Tests using Overlay
             Context.Services.AddScoped<AntDesign.JsInterop.DomEventService>(sp => new TestDomEventService(Context.JSInterop.JSRuntime));
 

@@ -16,5 +16,12 @@ Avoid components clinging together and set a unified space.
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| size | space size | `small` \| `middle` \| `large` \| `number` | `small` | 4.1.0 |
-| direction | space direction | `vertical` \| `horizontal` | `horizontal` | 4.1.0 |
+| Align | Align items | `start` \| `end` \|`center` \|`baseline` | - | 4.2.0 |
+| Direction | The space direction | `vertical` \| `horizontal` | `horizontal` | 4.1.0 |
+| Size | The space size | [Size](#Size) \| [Size\[\]](#Size) | `small` | 4.1.0 \| Array: 4.9.0 |
+| Split | Set split | ReactNode | - | 4.7.0 |
+| Wrap | Auto wrap line, when `horizontal` effective | boolean | false | 4.9.0 |
+
+### Size
+
+`'small' | 'middle' | 'large' | number`

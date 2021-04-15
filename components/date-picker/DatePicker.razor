@@ -15,7 +15,7 @@
                     Trigger="new TriggerType[] { TriggerType.Click }">
         <Overlay>
             <div class="@(PrefixCls)-panel-container">
-                <div class="@(PrefixCls)-panel">
+                <div class="@_panelClassMapper.Class">
                     <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)" />
                 </div>
             </div>
