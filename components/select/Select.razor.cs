@@ -1,5 +1,4 @@
-﻿using AntDesign.Select.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,9 +6,11 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
+using AntDesign.Select;
+using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using System.Diagnostics.CodeAnalysis;
+using OneOf;
 
 #pragma warning disable 1591 // Disable missing XML comment
 #pragma warning disable CA1716 // Disable Select name warning
@@ -93,6 +94,38 @@ namespace AntDesign
 
         [Parameter] public RenderFragment<TItem> LabelTemplate { get; set; }
         [Parameter] public bool Loading { get; set; }
+
+        /// <summary>
+        /// How long (number of characters) a tag will be.
+        /// Only for Mode = "multiple" or Mode = "tags"
+        /// </summary>
+        /// <value>
+        /// The maximum length of the tag text.
+        /// </value>
+        [Parameter] public int MaxTagTextLength { get; set; }
+
+        private OneOf<int, ResponsiveTag> _maxTagCount;
+        [Parameter]
+        public OneOf<int, ResponsiveTag> MaxTagCount
+        {
+            get { return _maxTagCount; }
+            set {
+                _maxTagCount = value;
+
+                value.Switch(intValue =>
+                {
+                    IsResponsive = false;
+                    HasTagCount = intValue > 0;
+                }, enumValue =>
+                {
+                    IsResponsive = enumValue == ResponsiveTag.Responsive;
+                    HasTagCount = false;
+                });
+            }
+        }
+        internal bool IsResponsive { get; set; }
+        internal bool HasTagCount { get; set; }
+        [Parameter] public RenderFragment<IEnumerable<TItem>> MaxTagPlaceholder { get; set; }
         [Parameter] public string Mode { get; set; } = "default";
         [Parameter] public RenderFragment NotFoundContent { get; set; }
         [Parameter] public Action OnBlur { get; set; }
@@ -117,7 +150,19 @@ namespace AntDesign
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
-        [Parameter] public bool ShowArrowIcon { get; set; } = true;
+        [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
+        [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
+
+        private bool _showArrowIconChanged;
+        [Parameter]
+        public bool ShowArrowIcon
+        {
+            get { return _showArrowIcon; }
+            set {
+                _showArrowIcon = value;
+                _showArrowIconChanged = true;
+            }
+        }
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
         [Parameter] public SortDirection SortByGroup { get; set; } = SortDirection.None;
         [Parameter] public SortDirection SortByLabel { get; set; } = SortDirection.None;
@@ -315,6 +360,8 @@ namespace AntDesign
 
         #endregion Parameters
 
+        [Inject] private DomEventService DomEventService { get; set; }
+
         #region Properties
 
         private const string ClassPrefix = "ant-select";
@@ -363,6 +410,7 @@ namespace AntDesign
         internal SelectMode SelectMode => Mode.ToSelectMode();
         internal bool Focused { get; private set; }
         private string _searchValue = string.Empty;
+        private string _prevSearchValue = string.Empty;
         private string _dropdownStyle = string.Empty;
         private TItemValue _selectedValue;
         private TItemValue _defaultValue;
@@ -428,6 +476,7 @@ namespace AntDesign
 
         private Action<TItem, TItemValue> _setValue;
         private bool _disableSubmitFormOnEnter;
+        private bool _showArrowIcon = true;
 
         #endregion Properties
 
@@ -449,6 +498,7 @@ namespace AntDesign
                 ;
         }
 
+        internal bool IsDropdownShown() => _dropDown.IsOverlayShow();
         protected override void OnInitialized()
         {
             SetClassMap();
@@ -457,8 +507,11 @@ namespace AntDesign
                 Style = DefaultWidth;
 
             if (!_isInitialized)
+            {
                 _isPrimitive = IsSimpleType(typeof(TItem));
-
+                if (!_showArrowIconChanged && SelectMode != SelectMode.Default)
+                    _showArrowIcon = SuffixIcon != null;
+            }
             _isInitialized = true;
 
             base.OnInitialized();
@@ -478,6 +531,7 @@ namespace AntDesign
             {
                 await SetInitialValuesAsync();
 
+                DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
                 await SetDropdownStyleAsync();
 
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
@@ -514,6 +568,17 @@ namespace AntDesign
             }
 
             await base.OnAfterRenderAsync(firstRender);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
+            base.Dispose(disposing);
+        }
+
+        protected async void OnWindowResize(JsonElement element)
+        {
+            await SetDropdownStyleAsync();
         }
 
         /// <summary>
@@ -731,9 +796,21 @@ namespace AntDesign
         /// </summary>
         protected async Task SetDropdownStyleAsync()
         {
+            string maxWidth = "", minWidth = "", definedWidth = "";
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
             var width = domRect.width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-            _dropdownStyle = $"min-width: {width}px; width: {width}px;";
+            minWidth = $"min-width: {width}px;";
+            if (DropdownMatchSelectWidth.IsT0 && DropdownMatchSelectWidth.AsT0)
+            {
+                definedWidth = $"width: {width}px;";
+            }
+            else if (DropdownMatchSelectWidth.IsT1)
+            {
+                definedWidth = $"width: {DropdownMatchSelectWidth.AsT1};";
+            }
+            if (!DropdownMaxWidth.Equals("auto", StringComparison.CurrentCultureIgnoreCase))
+                maxWidth = $"max-width: {DropdownMaxWidth};";
+            _dropdownStyle = minWidth + definedWidth + maxWidth;
         }
 
         protected async Task OnOverlayVisibleChangeAsync(bool visible)
@@ -766,6 +843,7 @@ namespace AntDesign
                 return;
 
             _searchValue = string.Empty;
+            _prevSearchValue = string.Empty;
 
             if (SelectMode != SelectMode.Default && HideSelected)
             {
@@ -843,11 +921,7 @@ namespace AntDesign
                         selectOption.IsHidden = true;
 
                     if (IsSearchEnabled && !string.IsNullOrWhiteSpace(_searchValue))
-                    {
                         ClearSearch();
-
-                        await SetInputFocusAsync();
-                    }
 
                     if (selectOption.IsAddedTag)
                     {
@@ -869,7 +943,11 @@ namespace AntDesign
                             AddedTags.Remove(selectOption);
                         }
                     }
+                    if (IsResponsive)
+                        await _selectContent.RemovedItem();
                 }
+                if (EnableSearch || SelectMode == SelectMode.Tags)
+                    await SetInputFocusAsync();
                 await InvokeValuesChanged(selectOption);
                 await UpdateOverlayPositionAsync();
             }
@@ -1383,7 +1461,6 @@ namespace AntDesign
         protected async void OnInputAsync(ChangeEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
-
             if (!IsSearchEnabled)
             {
                 return;
@@ -1395,6 +1472,7 @@ namespace AntDesign
             }
 
             bool containsToken = false;
+            _prevSearchValue = _searchValue;
             if (_isToken)
                 _searchValue = e.Value?.ToString().TrimEnd(TokenSeparators);
             else
@@ -1946,9 +2024,13 @@ namespace AntDesign
                 }
             }
 
-            if ((key == "DELETE" || key == "BACKSPACE") && AllowClear)
+            if (key == "BACKSPACE" && string.IsNullOrEmpty(_searchValue) &&
+                (EnableSearch || SelectMode == SelectMode.Tags || AllowClear))
             {
-                await OnInputClearClickAsync(new MouseEventArgs());
+                if (string.IsNullOrEmpty(_prevSearchValue) && SelectedOptionItems.Count > 0)
+                    await OnRemoveSelectedAsync(SelectedOptionItems.Last());
+                else if (!string.IsNullOrEmpty(_prevSearchValue))
+                    _prevSearchValue = _searchValue;
             }
         }
 
@@ -2054,6 +2136,7 @@ namespace AntDesign
             }
 
             _searchValue = string.Empty;
+            _prevSearchValue = string.Empty;
         }
 
         /// <summary>
@@ -2133,7 +2216,6 @@ namespace AntDesign
         protected async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
-
             await SetValueAsync(selectOption);
         }
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using AntDesign.Core.Extensions;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -15,9 +17,19 @@ namespace AntDesign.Select.Internal
     {
         [CascadingParameter(Name = "ParentSelect")] internal Select<TItemValue, TItem> ParentSelect { get; set; }
         [CascadingParameter(Name = "ParentLabelTemplate")] internal RenderFragment<TItem> ParentLabelTemplate { get; set; }
+        [CascadingParameter(Name = "ParentMaxTagPlaceholerTemplate")] internal RenderFragment<IEnumerable<TItem>> ParentMaxTagPlaceholerTemplate { get; set; }
         [CascadingParameter(Name = "ShowSearchIcon")] internal bool ShowSearchIcon { get; set; }
         [CascadingParameter(Name = "ShowArrowIcon")] internal bool ShowArrowIcon { get; set; }
-        [Parameter] public string Prefix { get; set; }
+        [Parameter]
+        public string Prefix
+        {
+            get { return _prefix; }
+            set {
+                _prefix = value;
+                if (_isInitialized)
+                    SetInputWidth();
+            }
+        }
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public bool IsOverlayShow { get; set; }
         [Parameter] public bool ShowPlaceholder { get; set; }
@@ -42,44 +54,177 @@ namespace AntDesign.Select.Internal
             }
         }
 
+        private const char Ellipse = (char)0x2026;
+        private const int ItemMargin = 4; //taken from each tag item 
         private string _inputStyle = string.Empty;
         private string _inputWidth;
         private bool _suppressInput;
+        private bool _isInitialized;
+        private string _prefix;
+        private int _calculatedMaxCount;
+        private int _lastInputWidth;
+
         private ElementReference _ref;
+        private ElementReference _overflow;
+        private ElementReference _aggregateTag;
+        private ElementReference _prefixRef;
+        private ElementReference _suffixRef;
+        private DomRect _overflowElement;
+        private DomRect _aggregateTagElement;
+        private DomRect _prefixElement = new();
+        private DomRect _suffixElement = new();
+        private int _currentItemCount;
+        private Guid _internalId = Guid.NewGuid();
+        private bool _refocus;
 
         protected override void OnInitialized()
         {
+            if (!_isInitialized)
+            {
+                SetInputWidth();
+            }
+            _isInitialized = true;
             SetSuppressInput();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             SetSuppressInput();
-            if (firstRender && ParentSelect.EnableSearch)
+            if (firstRender)
             {
-                DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
-                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
-                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect.DropDownRef);
+                if (ParentSelect.EnableSearch)
+                {
+                    DomEventService.AddEventListener("window", "beforeunload", Reloading, false);
+                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
+                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect.DropDownRef);
+                }
+                if (ParentSelect.IsResponsive)
+                {
+                    _currentItemCount = ParentSelect.SelectedOptionItems.Count;
+                    Console.WriteLine("Getting _aggregateTagElement from OnAfterRenderAsync");
+                    //in blazor Wasm there has to be a delay here, otherwise _aggregateTagElement is not found and is set to null
+                    if (Js.IsBrowser())
+                        await Task.Delay(1);
+
+                    _aggregateTagElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _aggregateTag);
+                    if (_prefixRef.Id != default)
+                    {
+                        _prefixElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _prefixRef);
+                        _prefixElement.width += ItemMargin;
+                    }
+                    if (_suffixRef.Id != default)
+                    {
+                        _suffixElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _suffixRef);
+                        _suffixElement.width += 7;
+                    }
+                    DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
+                    await CalculateResponsiveTags();
+                }
+            }
+            else if (_currentItemCount != ParentSelect.SelectedOptionItems.Count)
+            {
+                _currentItemCount = ParentSelect.SelectedOptionItems.Count;
+                _aggregateTagElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _aggregateTag);
+                await CalculateResponsiveTags(_refocus);
             }
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        protected override Task OnParametersSetAsync()
+        protected async void OnWindowResize(JsonElement element)
         {
-            SetInputWidth(); // ToDo Fix class
-
-            return base.OnParametersSetAsync();
+            await CalculateResponsiveTags();
         }
+
+        internal async Task CalculateResponsiveTags(bool forceInputFocus = false)
+        {
+            _overflowElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _overflow);
+
+            //distance between items is margin-inline-left=4px
+            decimal accumulatedWidth = _prefixElement.width + _suffixElement.width + (4 + (SearchValue?.Length ?? 0) * 8);
+            var accumulatedWidthSource = new StringBuilder(accumulatedWidth.ToString());
+            int i = 0;
+            bool overflowing = false;
+            bool renderAgain = false;
+            foreach (var item in ParentSelect.SelectedOptionItems)
+            {
+                if (item.Width == 0)
+                {
+                    var itemElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, item.SelectedTagRef);
+                    item.Width = itemElement.width;
+                }
+
+                if (!overflowing)
+                {
+                    if (accumulatedWidth + item.Width > _overflowElement.width)
+                    {
+                        //current item will overflow; check if with aggregateTag will overflow
+                        if (accumulatedWidth + _aggregateTagElement.width > _overflowElement.width)
+                        {
+                            if (_calculatedMaxCount != Math.Max(0, i - 1))
+                            {
+                                _calculatedMaxCount = Math.Max(0, i - 1);
+                                renderAgain = true;
+                            }
+                        }
+                        else //aggregateTag will not overflow, so start aggregating from current item
+                        {
+                            if (_calculatedMaxCount != i)
+                            {
+                                _calculatedMaxCount = i;
+                                renderAgain = true;
+                            }
+                        }
+                        overflowing = true;
+                    }
+                    else
+                    {
+                        accumulatedWidth += item.Width;
+                        accumulatedWidthSource.Append("," + item.Width.ToString());
+                    }
+                    i++;
+                }
+            }
+            if (!overflowing && _calculatedMaxCount != i)
+            {
+                _calculatedMaxCount = i;
+                renderAgain = true;
+            }
+            if (renderAgain)
+                StateHasChanged();
+
+            //force focus on cursor 
+            if (ParentSelect.IsDropdownShown() || forceInputFocus)
+            {
+                var isFocused = await Js.InvokeAsync<bool>(JSInteropConstants.HasFocus, ParentSelect._inputRef);
+                if (!isFocused)
+                {
+#if NET5_0
+                    await ParentSelect._inputRef.FocusAsync();
+#else
+                    await Js.InvokeVoidAsync(JSInteropConstants.Focus, ParentSelect._inputRef);
+#endif
+                }
+            }
+        }
+
 
         private void SetInputWidth()
         {
-            if (ParentSelect.PrefixIcon != null || ParentSelect.SelectMode == SelectMode.Default)
-                _inputWidth = "left: 0px;";
+            _inputWidth = string.Empty;
+            if (ParentSelect.PrefixIcon != null && ParentSelect.SelectMode == SelectMode.Default)
+            {
+                _inputWidth = "left: 22px;";
+            }
             if (ParentSelect.SelectMode != SelectMode.Default)
             {
                 if (!string.IsNullOrWhiteSpace(SearchValue))
                 {
                     _inputWidth = $"{_inputWidth}width: {4 + SearchValue.Length * 8}px;";
+                    if (ParentSelect.IsResponsive && _lastInputWidth != SearchValue.Length)
+                    {
+                        _lastInputWidth = SearchValue.Length;
+                        InvokeAsync(async() => await CalculateResponsiveTags());
+                    }
                 }
                 else
                 {
@@ -119,10 +264,39 @@ namespace AntDesign.Select.Internal
             }
         }
 
+        private string OverflowStyle(int order)
+        {
+            string width = "max-width: 98%;";
+            if (order == 0)
+                width = $"max-width: {GetFirstItemMaxWidth()}%;";
+            if (ParentSelect.HasTagCount || ParentSelect.IsResponsive)
+            {
+                if (_calculatedMaxCount < order + 1)
+                {
+                    return $"opacity: 0.2; order: {order}; height: 0px; overflow-y: hidden; pointer-events: none; {width}";
+                }
+                return $"opacity: 1; order: {order}; {width}";
+            }
+            return "opacity: 1;" + width;
+        }
+
+        private string FormatLabel(string label)
+        {
+            if (ParentSelect.MaxTagTextLength > 0)
+            {
+                return label.Length <= ParentSelect.MaxTagTextLength ? label : label.Substring(0, ParentSelect.MaxTagTextLength) + Ellipse;
+            }
+            return label;
+        }
+
         protected void OnKeyPressEventHandler(KeyboardEventArgs _)
         {
             if (!ParentSelect.IsSearchEnabled)
                 SearchValue = string.Empty;
+            else if (ParentSelect.IsResponsive)
+            {
+
+            }
         }
 
         private Dictionary<string, object> AdditonalAttributes()
@@ -136,11 +310,68 @@ namespace AntDesign.Select.Internal
         }
 
         /// <summary>
+        /// Any item may overflow. In case of first item, when there 
+        /// are any other elements inside SelectContent (prefix, suffix, clear btn, etc)
+        /// default MaxWidth will force th SelectContent to grow. Changing the MaxWidth
+        /// allows the overflowing item to fit in a single line. 
+        /// TODO: use relative units
+        /// </summary>
+        /// <returns></returns>
+        private int GetFirstItemMaxWidth()
+        {
+            int percentValue = 98;
+            if (ParentSelect.PrefixIcon != null)
+            {
+                if (ShowArrowIcon || ShowSearchIcon)
+                {
+                    if (ParentSelect.AllowClear)
+                    {
+                        percentValue = 90;
+                    }
+                    else
+                    {
+                        percentValue = 93;
+                    }
+                }
+                else
+                {
+                    percentValue = 94;
+                }
+            }
+            else if (ShowArrowIcon || ShowSearchIcon)
+            {
+                if (ParentSelect.AllowClear)
+                {
+                    percentValue = 94;
+                }
+                else
+                {
+                    percentValue = 96;
+                }
+            }
+            return percentValue;
+        }
+
+        /// <summary>
         /// Indicates that a page is being refreshed 
         /// </summary>
         private bool _isReloading;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
+
+        internal async Task RemovedItem()
+        {
+            if (ParentSelect.IsResponsive)
+            {
+                _refocus = true;
+                await CalculateResponsiveTags();
+            }
+        }
+
+        private async Task OnClearClickAsync(MouseEventArgs args)
+        {
+            await OnClearClick.InvokeAsync(args);
+        }
 
         public bool IsDisposed { get; private set; }
 
@@ -152,10 +383,12 @@ namespace AntDesign.Select.Internal
                 {
                     await Task.Delay(100);
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, ParentSelect._inputRef);
-                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);                    
+                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);
                 });
             }
             DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
+            if (ParentSelect.IsResponsive)
+                DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
 
             if (IsDisposed) return;
 

@@ -147,7 +147,6 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
         var table = context.table;
         var showItems = context.showItems;
         var level = context.level;
-        var count = Math.Min(showItems.Count(), table._dataSourceCount);
     }
 
     @if (table._total <= 0)
@@ -160,7 +159,7 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
     }
     else if (showItems != null && table.ColumnContext.Columns.Count > 0)
     {
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < showItems.Count(); i++)
         {
             var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
             var data = showItems.ElementAt(i);
