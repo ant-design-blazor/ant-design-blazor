@@ -21,7 +21,7 @@ ReactDOM.render(
     status="warning"
     title="There are some problems with your operation."
     extra={
-      <Button type="primary" key="console">
+      <Button Type="@ButtonType.Primary" key="console">
         Go Console
       </Button>
     }

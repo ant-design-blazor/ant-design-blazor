@@ -19,7 +19,7 @@ Drawer 的 service 用法，示例中演示了用户自定义模板、自定义c
     value: <Input @bind-Value="value" />
     <br/>
     <br/>
-    <Button Type="primary" OnClick="OnClose">Confirm</Button>
+    <Button Type="@ButtonType.Primary" OnClick="OnClose">Confirm</Button>
 </div>
 
 @code{

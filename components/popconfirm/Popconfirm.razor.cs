@@ -22,8 +22,7 @@ namespace AntDesign
         public string OkText { get; set; } = "OK";
 
         [Parameter]
-        public string OkType { get; set; } = "primary";
-
+        public ButtonType OkType { get; set; } = ButtonType.Primary;
         [Parameter]
         public ButtonProps OkButtonProps { get; set; }
 

@@ -40,7 +40,7 @@ class App extends React.Component {
         visible={this.state.visible}
         onVisibleChange={this.handleVisibleChange}
       >
-        <Button type="primary">Click me</Button>
+        <Button Type="@ButtonType.Primary">Click me</Button>
       </Popover>
     );
   }

@@ -33,7 +33,7 @@
 <h5>selections:</h5>
 @if (selectedRows != null && selectedRows.Any())
 {
-    <Button Danger Size="small" OnClick="@(e => { selectedRows = null; })">Clear</Button>
+    <Button Danger Size="@ButtonSize.Small" OnClick="@(e => { selectedRows = null; })">Clear</Button>
 
     @foreach (var selected in selectedRows)
     {

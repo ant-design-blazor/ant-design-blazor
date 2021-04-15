@@ -99,7 +99,7 @@ namespace AntDesign
         /// <summary>
         /// Button type of the OK button
         /// </summary>
-        public string OkType { get; set; } = ButtonType.Primary;
+        public ButtonType OkType { get; set; } = ButtonType.Primary;
 
         /// <summary>
         /// The modal dialog's title of String

@@ -47,7 +47,7 @@ class App extends React.Component {
     const { visible, loading } = this.state;
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
+        <Button Type="@ButtonType.Primary" onClick={this.showModal}>
           Open Modal with customized footer
         </Button>
         <Modal

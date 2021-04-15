@@ -31,13 +31,13 @@ namespace AntDesign
         }
 
         [Parameter]
-        public string Type { get; set; } = ButtonType.Default;
+        public ButtonType Type { get; set; } = ButtonType.Default;
 
         [Parameter]
         public string HtmlType { get; set; } = "button";
 
         [Parameter]
-        public string Shape { get; set; } = null;
+        public ButtonShape? Shape { get; set; } = null;
 
         private bool _animating = false;
 
@@ -56,12 +56,17 @@ namespace AntDesign
             {
                 _formSize = value;
 
-                Size = value;
+                Size = value switch
+                {
+                    "large" => ButtonSize.Large,
+                    "middle" => ButtonSize.Middle,
+                    _ => ButtonSize.Middle,
+                };
             }
         }
 
         [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public ButtonSize Size { get; set; } = ButtonSize.Middle;
 
         [Parameter]
         public string Icon { get; set; }
@@ -93,11 +98,11 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(prefixName)
-                .GetIf(() => $"{prefixName}-{this.Type}", () => !string.IsNullOrEmpty(Type))
+                .GetIf(() => $"{prefixName}-{this.Type.ToDescription()}", () => !string.IsNullOrEmpty(Type.ToDescription()))
                 .If($"{prefixName}-dangerous", () => Danger)
-                .GetIf(() => $"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
-                .If($"{prefixName}-lg", () => Size == "large")
-                .If($"{prefixName}-sm", () => Size == "small")
+                .GetIf(() => $"{prefixName}-{Shape.ToDescription()}", () => !string.IsNullOrEmpty(Shape.ToDescription()))
+                .If($"{prefixName}-lg", () => Size == ButtonSize.Large)
+                .If($"{prefixName}-sm", () => Size == ButtonSize.Small)
                 .If($"{prefixName}-loading", () => Loading)
                 .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && !this.Search && this.ChildContent == null)
                 .If($"{prefixName}-background-ghost", () => Ghost)

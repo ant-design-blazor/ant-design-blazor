@@ -20,7 +20,7 @@ ReactDOM.render(
   <Result
     title="Your operation has been executed"
     extra={
-      <Button type="primary" key="console">
+      <Button Type="@ButtonType.Primary" key="console">
         Go Console
       </Button>
     }

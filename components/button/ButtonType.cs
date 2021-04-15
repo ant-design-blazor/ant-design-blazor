@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public static class ButtonType
+    public enum ButtonType
     {
-        public const string Default = "default";
-        public const string Primary = "primary";
-        public const string Dashed = "dashed";
-        public const string Link = "link";
+        [Description("default")]
+        Default,
+        [Description("primary")]
+        Primary,
+        [Description("dashed")]
+        Dashed,
+        [Description("link")]
+        Link,
+        [Description("ghost")]
+        Ghost,
+        [Description("text")]
+        Text,
     }
 }

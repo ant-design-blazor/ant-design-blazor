@@ -1,10 +1,10 @@
 ﻿<Popover ContentTemplate="@_content" Title="Title">
-    <Button type="primary">Hover me</Button>
+    <Button Type="@ButtonType.Primary">Hover me</Button>
 </Popover>
 <br />
 <Popover ContentTemplate="@_content" Title="Title">
     <Unbound>
-        <Button type="primary" RefBack="@context">Hover me (unbound)</Button>
+        <Button Type="@ButtonType.Primary" RefBack="@context">Hover me (unbound)</Button>
     </Unbound>
 </Popover>
 

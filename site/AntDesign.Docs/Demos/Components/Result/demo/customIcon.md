@@ -21,7 +21,7 @@ ReactDOM.render(
   <Result
     icon={<SmileOutlined />}
     title="Great, we have done all the operations!"
-    extra={<Button type="primary">Next</Button>}
+    extra={<Button Type="@ButtonType.Primary">Next</Button>}
   />,
   mountNode,
 );

@@ -19,9 +19,9 @@ namespace AntDesign
             }
         }
 
-        private string _size = AntSizeLDSType.Default;
+        private ButtonSize _size = ButtonSize.Middle;
         [Parameter]
-        public string Size
+        public ButtonSize Size
         {
             get
             {
@@ -34,9 +34,9 @@ namespace AntDesign
             }
         }
 
-        private string _type = ButtonType.Default;
+        private ButtonType _type = ButtonType.Default;
         [Parameter]
-        public string Type
+        public ButtonType Type
         {
             get
             {

@@ -21,7 +21,7 @@ function SpaceDemo() {
   return (
     <Space>
       Space
-      <Button type="primary">Button</Button>
+      <Button Type="@ButtonType.Primary">Button</Button>
       <Upload>
         <Button>
           <UploadOutlined /> Click to Upload

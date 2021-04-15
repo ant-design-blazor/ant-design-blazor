@@ -1,10 +1,10 @@
 ﻿<div>
-    <Button  Type="primary" OnClick="_=>open()">Open</Button>
+    <Button  Type="@ButtonType.Primary" OnClick="_=>open()">Open</Button>
 
     <Drawer Width="@wdFirstLayer" Closable="true" Visible="visible1" Title='("Multi-level drawer")' OnClose="_=>close()">
-        <Button Type="primary" OnClick="_=>ShowDrawer()">Two-level Drawer</Button>
+        <Button Type="@ButtonType.Primary" OnClick="_=>ShowDrawer()">Two-level Drawer</Button>
         <Drawer Width="260" Closable="true" Visible="visible2" Title='("two-level drawer")' OnClose="_=>CloseDrawer()">
-            <Button Type="primary">This is two-level drawer</Button>
+            <Button Type="@ButtonType.Primary">This is two-level drawer</Button>
         </Drawer>
 
     </Drawer>

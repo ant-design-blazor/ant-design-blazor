@@ -217,7 +217,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                                 </Select>
                                             </SpaceItem>
                                             <SpaceItem>
-                                                <Button Size="small" Icon="close" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.RemoveFilter(filter)) })">
+                                                <Button Size="@ButtonSize.Small" Icon="close" Type="@ButtonType.Primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.RemoveFilter(filter)) })">
                                                 </Button>
                                             </SpaceItem>
                                         </Space>
@@ -274,16 +274,16 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                             }
                         }
                         <div class="ant-table-filter-dropdown-btns">
-                            <Button Size="small" Type="link" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.ResetFilters()) })">
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.ResetFilters()) })">
                                 @col.Table?.Locale.FilterReset
                             </Button>
                             @if (col._columnFilterType == TableFilterType.FeildType)
                             {
-                                <Button Size="small" Icon="plus" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.AddFilter()) })">
+                                <Button Size="@ButtonSize.Small" Icon="plus" Type="@ButtonType.Primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.AddFilter()) })">
                                 </Button>
                             }
 
-                            <Button Size="small" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.FilterConfirm()) })">
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.FilterConfirm()) })">
                                 @col.Table?.Locale.FilterConfirm
                             </Button>
                         </div>

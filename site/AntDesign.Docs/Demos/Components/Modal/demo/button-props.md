@@ -42,7 +42,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Button type="primary" onClick={this.showModal}>
+        <Button Type="@ButtonType.Primary" onClick={this.showModal}>
           Open Modal with customized button props
         </Button>
         <Modal

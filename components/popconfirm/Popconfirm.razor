@@ -50,7 +50,7 @@
                         <div class="ant-popover-buttons">
                             @if (CancelButtonProps != null)
                             {
-                                <Button OnClick="@Cancel" Size="@AntSizeLDSType.Small"
+                                <Button OnClick="@Cancel" Size="@ButtonSize.Small"
                                         Block="@CancelButtonProps.Block"
                                         Ghost="@CancelButtonProps.Ghost"
                                         Search="@CancelButtonProps.Search"
@@ -65,13 +65,13 @@
                             }
                             else
                             {
-                                <Button OnClick="@Cancel" Size="@AntSizeLDSType.Small">
+                                <Button OnClick="@Cancel" Size="@ButtonSize.Small">
                                     @CancelText
                                 </Button>
                             }
                             @if (OkButtonProps != null)
                             {
-                                <Button OnClick="@Confirm" Size="small" Type="@OkType"
+                                <Button OnClick="@Confirm" Size="@ButtonSize.Small" Type="@OkType"
                                         Block="@OkButtonProps.Block"
                                         Ghost="@OkButtonProps.Ghost"
                                         Search="@OkButtonProps.Search"
@@ -85,7 +85,7 @@
                             }
                             else
                             {
-                                <Button OnClick="@Confirm" Size="small" type="@OkType">
+                                <Button OnClick="@Confirm" Size="@ButtonSize.Small" type="@OkType">
                                     @OkText
                                 </Button>
                             }

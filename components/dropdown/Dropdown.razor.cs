@@ -12,8 +12,8 @@ namespace AntDesign
         public Func<RenderFragment, RenderFragment, RenderFragment> ButtonsRender { get; set; }
 
         private string _rightButtonIcon = "ellipsis";
-        private string _buttonSize = AntSizeLDSType.Default;
-        private string _buttonType = ButtonType.Default;
+        private ButtonSize _buttonSize = ButtonSize.Middle;
+        private ButtonType _buttonType = ButtonType.Default;
 
         private RenderFragment _leftButton;
         private RenderFragment _rightButton;
@@ -25,14 +25,14 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        protected void ChangeButtonSize(string size)
+        protected void ChangeButtonSize(ButtonSize size)
         {
             _buttonSize = size;
 
             StateHasChanged();
         }
 
-        protected void ChangeButtonType(string type)
+        protected void ChangeButtonType(ButtonType type)
         {
             _buttonType = type;
 

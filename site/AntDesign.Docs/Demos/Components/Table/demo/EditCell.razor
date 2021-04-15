@@ -1,5 +1,5 @@
 ﻿<div>
-    <Button OnClick="addRow" Type="primary" Style="margin-bottom:16px">
+    <Button OnClick="addRow" Type="@ButtonType.Primary" Style="margin-bottom:16px">
         Add a row
     </Button>
     <Table DataSource="listOfData" RowClassName="@(_=>"editable-row")" Bordered>

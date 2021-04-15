@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AntDesign
 {
-    public static class ButtonShape
+    public enum ButtonShape
     {
-        public const string Circle = "circle";
-        public const string CircleOutline = "circle-outline";
-        public const string Round = "round";
+        [Description("circle")]
+        Circle,
+        [Description("round")]
+        Round,
     }
 }

@@ -63,7 +63,7 @@ const FormLayoutDemo = () => {
           <Input placeholder="input placeholder" />
         </Form.Item>
         <Form.Item {...buttonItemLayout}>
-          <Button type="primary">Submit</Button>
+          <Button Type="@ButtonType.Primary">Submit</Button>
         </Form.Item>
       </Form>
     </div>

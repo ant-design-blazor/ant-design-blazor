@@ -1,18 +1,18 @@
 ﻿@using System.Timers
 
 <div>
-    <Button Type="primary" Loading>
+    <Button Type="@ButtonType.Primary" Loading>
         Loading
     </Button>
-    <Button Type="primary" Size="small" Loading>
+    <Button Type="@ButtonType.Primary" Size="@ButtonSize.Small" Loading>
         Loading
     </Button>
     <br />
-    <Button Type="primary" Loading="loading" OnClick=enterLoading>
+    <Button Type="@ButtonType.Primary" Loading="loading" OnClick=enterLoading>
         Click me!
     </Button>
     <Button
-        Type="primary"
+        Type="@ButtonType.Primary"
         Icon="poweroff"
     Loading="iconLoading"
     OnClick="enterIconLoading"

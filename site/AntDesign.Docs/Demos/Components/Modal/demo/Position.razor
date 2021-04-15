@@ -1,5 +1,5 @@
 ﻿<div>
-    <Button Type="primary" OnClick="@SetModal1Visible">
+    <Button Type="@ButtonType.Primary" OnClick="@SetModal1Visible">
         Display a modal dialog at 20px to Top
     </Button>
     <Modal Title="@("20px to Top")"
@@ -14,7 +14,7 @@
     </Modal>
     <br />
     <br />
-    <Button Type="primary" OnClick="@SetModal2Visible">
+    <Button Type="@ButtonType.Primary" OnClick="@SetModal2Visible">
         Vertically centered modal dialog
     </Button>
     <Modal Title="@("Vertically centered modal dialog")"

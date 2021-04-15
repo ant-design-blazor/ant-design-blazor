@@ -1,7 +1,7 @@
 ﻿@inject ModalService _modalService
 
 <div>
-    <Button Type="primary" OnClick="@ShowModal">
+    <Button Type="@ButtonType.Primary" OnClick="@ShowModal">
         Modal
     </Button>
     <Modal Title="@("Modal")"

@@ -63,12 +63,12 @@ class App extends React.Component {
         <div className="steps-content">{steps[current].content}</div>
         <div className="steps-action">
           {current < steps.length - 1 && (
-            <Button type="primary" onClick={() => this.next()}>
+            <Button Type="@ButtonType.Primary" onClick={() => this.next()}>
               Next
             </Button>
           )}
           {current === steps.length - 1 && (
-            <Button type="primary" onClick={() => message.success('Processing complete!')}>
+            <Button Type="@ButtonType.Primary" onClick={() => message.success('Processing complete!')}>
               Done
             </Button>
           )}

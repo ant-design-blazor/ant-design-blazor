@@ -6,7 +6,7 @@
         <Radio Value="@("left")">left</Radio>
     </RadioGroup>
 
-    <Button Type="primary" @onclick="_ => open()">Open</Button>
+    <Button Type="@ButtonType.Primary" @onclick="_ => open()">Open</Button>
     <Drawer Visible="@visible" Placement="@placement" Title='("Basic Drawer")' OnClose="_ => close()">
         <p>Some contents...</p>
         <p>Some contents...</p>

@@ -26,7 +26,7 @@ function SpaceCutomizeSize() {
       <br />
       <br />
       <Space size={size}>
-        <Button type="primary">Primary</Button>
+        <Button Type="@ButtonType.Primary">Primary</Button>
         <Button>Default</Button>
         <Button type="dashed">Dashed</Button>
         <Button type="link">Link</Button>
