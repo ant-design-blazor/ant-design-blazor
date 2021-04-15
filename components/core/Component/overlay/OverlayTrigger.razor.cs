@@ -94,7 +94,7 @@ namespace AntDesign.Internal
         {
             get
             {
-                return _placement;
+                return RTL ? _placement.GetRTLPlacement() : _placement;
             }
             set
             {
@@ -150,14 +150,6 @@ namespace AntDesign.Internal
 
         protected Overlay _overlay = null;
         private ElementReference _triggerReference;
-
-        public override Task SetParametersAsync(ParameterView parameters)
-        {
-            _paramPlacement = RTL ? PlacementType.BottomRight : PlacementType.BottomLeft;
-            _placement = RTL ? PlacementType.BottomRight : PlacementType.BottomLeft;
-
-            return base.SetParametersAsync(parameters);
-        }
 
         protected override void OnAfterRender(bool firstRender)
         {
@@ -352,7 +344,7 @@ namespace AntDesign.Internal
 
         protected virtual void OnMouseUp(JsonElement element)
         {
-            if (_mouseInOverlay == false && _mouseInTrigger == false && Visible)
+            if (_mouseInOverlay == false && _mouseInTrigger == false)
             {
                 if (OnMaskClick.HasDelegate)
                 {
