@@ -106,7 +106,7 @@ namespace AntDesign.Select.Internal
                     //until the element gets the id                    
                     while (_aggregateTag.Id is null)
                     {
-                        await Task.Delay(1);
+                        await Task.Delay(5);
                     }
 
                     _aggregateTagElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _aggregateTag, _aggregateTag.Id, true);
