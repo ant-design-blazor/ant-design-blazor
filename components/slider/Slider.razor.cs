@@ -660,8 +660,8 @@ namespace AntDesign
                     _right = false;
                     if (_mouseDown)
                         RightValue = _initialLeftValue;
-                    LeftValue = rightV;
-                    await JsInvokeAsync(JSInteropConstants.Focus, _leftHandle);
+                    LeftValue = rightV;                    
+                    await FocusAsync(_leftHandle);
                 }
                 else
                 {
@@ -707,8 +707,8 @@ namespace AntDesign
                     _right = true;
                     if (_mouseDown)
                         LeftValue = _initialRightValue;
-                    RightValue = leftV;
-                    await JsInvokeAsync(JSInteropConstants.Focus, _rightHandle);
+                    RightValue = leftV;                    
+                    await FocusAsync(_rightHandle);
                 }
                 else
                 {

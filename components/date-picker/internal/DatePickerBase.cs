@@ -439,7 +439,7 @@ namespace AntDesign
             if (input != null)
             {
                 input.IsOnFocused = true;
-                await JsInvokeAsync(JSInteropConstants.Focus, input.Ref);
+                await FocusAsync(input.Ref);
                 _needRefresh = true;
             }
         }

@@ -163,7 +163,7 @@ namespace AntDesign
                 }
             }
             else
-            {                
+            {
                 if (!_inputEnd.IsOnFocused)
                 {
                     await Blur(0);

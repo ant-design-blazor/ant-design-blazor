@@ -2079,7 +2079,7 @@ namespace AntDesign
 
                 SetClassMap();
 
-                await JsInvokeAsync(JSInteropConstants.Focus, _inputRef);
+                await FocusAsync(_inputRef);
 
                 OnFocus?.Invoke();
             }
