@@ -98,8 +98,6 @@ namespace AntDesign
 
         private TableFilterType _columnFilterType;
 
-        private PropertyReflector? _propertyReflector;
-
         private Type _columnDataType;
 
         public string DisplayName { get; private set; }
@@ -138,7 +136,6 @@ namespace AntDesign
             {
                 if (FieldExpression != null)
                 {
-                    _propertyReflector = PropertyReflector.Create(FieldExpression);
                     var paramExp = Expression.Parameter(ItemType);
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(FieldExpression);
                     var bodyExp = Expression.MakeMemberAccess(paramExp, member);
@@ -336,7 +333,7 @@ namespace AntDesign
             _filterOpened = false;
             if (!isReset && _columnFilterType == TableFilterType.FeildType) Filters?.ForEach(f => { if (!f.Selected && f.Value != null) f.Selected = true; });
             _hasFilterSelected = Filters?.Any(x => x.Selected) == true;
-            FilterModel = _hasFilterSelected && _propertyReflector != null ? new FilterModel<TData>(_propertyReflector.Value.PropertyInfo, FieldName, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
+            FilterModel = _hasFilterSelected ? new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 
             Table?.ReloadAndInvokeChange();
         }
