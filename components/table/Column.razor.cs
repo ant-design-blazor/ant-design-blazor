@@ -171,20 +171,6 @@ namespace AntDesign
 
             Sortable = Sortable || SortModel != null;
             _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
-            _columnDataType = THelper.GetUnderlyingType<TData>();
-            if (_columnDataType == typeof(bool) && Filters?.Any() != true)
-            {
-                Filters = new List<TableFilter<TData>>();
-
-                var trueFilterOption = GetNewFilter();
-                trueFilterOption.Text = Table.Locale.FilterOptions.True;
-                trueFilterOption.Value = THelper.ChangeType<TData>(true); //(TData)Convert.ChangeType(true, typeof(TData));
-                ((List<TableFilter<TData>>)Filters).Add(trueFilterOption);
-                var falseFilterOption = GetNewFilter();
-                falseFilterOption.Text = Table.Locale.FilterOptions.False;
-                falseFilterOption.Value = THelper.ChangeType<TData>(false);
-                ((List<TableFilter<TData>>)Filters).Add(falseFilterOption);
-            }
 
             if (Filters?.Any() == true)
             {
@@ -193,8 +179,27 @@ namespace AntDesign
             }
             else if (Filterable)
             {
-                _columnFilterType = TableFilterType.FeildType;
-                InitFilters();
+                _columnDataType = THelper.GetUnderlyingType<TData>();
+                if (_columnDataType == typeof(bool))
+                {
+                    _columnFilterType = TableFilterType.List;
+
+                    Filters = new List<TableFilter<TData>>();
+
+                    var trueFilterOption = GetNewFilter();
+                    trueFilterOption.Text = Table.Locale.FilterOptions.True;
+                    trueFilterOption.Value = THelper.ChangeType<TData>(true);
+                    ((List<TableFilter<TData>>)Filters).Add(trueFilterOption);
+                    var falseFilterOption = GetNewFilter();
+                    falseFilterOption.Text = Table.Locale.FilterOptions.False;
+                    falseFilterOption.Value = THelper.ChangeType<TData>(false);
+                    ((List<TableFilter<TData>>)Filters).Add(falseFilterOption);
+                }
+                else
+                {
+                    _columnFilterType = TableFilterType.FeildType;
+                    InitFilters();
+                }
             }
 
             ClassMapper

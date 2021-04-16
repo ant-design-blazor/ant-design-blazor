@@ -113,7 +113,31 @@
     "filterConfirm": "OK",
     "filterReset": "Wyczyść",
     "selectAll": "Zaznacz bieżącą stronę",
-    "selectInvert": "Odwróć zaznaczenie"
+    "selectInvert": "Odwróć zaznaczenie",
+    "selectionAll": "Zaznacz wszystko",
+    "sortTitle": "Sortuj",
+    "expand": "Rozwiń wiersz",
+    "collapse": "Zwiń wiersz",
+    "triggerDesc": "Kliknij by sortować malejąco",
+    "triggerAsc": "Kliknij by sortować rosnąco",
+    "cancelSort": "Kliknij by anulować sortowanie",
+    "filterOptions": {
+      "true": "Prawda",
+      "false": "Fałsz",
+      "and": "I",
+      "or": "Lub",
+      "equals": "Równe",
+      "notEquals": "Nie równe",
+      "contains": "Zawiera",
+      "startsWith": "Zaczyna się od",
+      "endsWith": "Kończy się na",
+      "greaterThan": "Większe niż",
+      "lessThan": "Mniejsze niż",
+      "greaterThanOrEquals": "Większe lub równe",
+      "lessThanOrEquals": "Mniejsze lub równe",
+      "isNull": "Jest puste",
+      "isNotNull": "Nie jest puste"
+    }
   },
   "Modal": {
     "okText": "OK",

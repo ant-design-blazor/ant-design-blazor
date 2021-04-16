@@ -99,7 +99,31 @@
     "filterConfirm": "OK",
     "filterReset": "Reset",
     "selectAll": "Select current page",
-    "selectInvert": "Invert current page"
+    "selectInvert": "Invert current page",
+    "selectionAll": "Select all data",
+    "sortTitle": "Sort",
+    "expand": "Expand row",
+    "collapse": "Collapse row",
+    "triggerDesc": "Click sort by descend",
+    "triggerAsc": "Click sort by ascend",
+    "cancelSort": "Click to cancel sort",
+    "filterOptions": {
+      "true": "True",
+      "false": "False",
+      "and": "And",
+      "or": "Or",
+      "equals": "Equal",
+      "notEquals": "Not Equal",
+      "contains": "Contains",
+      "startsWith": "Start With",
+      "endsWith": "End With",
+      "greaterThan": "Greater Than",
+      "lessThan": "Less Than",
+      "greaterThanOrEquals": "Greater Than Or Equals",
+      "lessThanOrEquals": "Less Than Or Equals",
+      "isNull": "Is Null",
+      "isNotNull": "Is Not Null"
+    }
   },
   "Modal": {
     "okText": "OK",
