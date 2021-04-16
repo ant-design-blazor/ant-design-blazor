@@ -373,7 +373,7 @@ namespace AntDesign
         /// <returns>true if SelectOptions has any selected Items, otherwise false</returns>
         internal bool HasValue
         {
-            get => SelectOptionItems.Where(x => x.IsSelected).Any() || (AddedTags?.Any() ?? false);
+            get => SelectedOptionItems.Any() || (AddedTags?.Any() ?? false);
         }
 
         /// <summary>
@@ -424,6 +424,7 @@ namespace AntDesign
         private bool _defaultActiveFirstOptionApplied;
         private bool _waittingStateChange;
         private bool _isPrimitive;
+        private bool _isValueEnum;
         internal ElementReference _inputRef;
         protected OverlayTrigger _dropDown;
         protected SelectContent<TItemValue, TItem> _selectContent;
@@ -509,6 +510,7 @@ namespace AntDesign
             if (!_isInitialized)
             {
                 _isPrimitive = IsSimpleType(typeof(TItem));
+                _isValueEnum = typeof(TItemValue).IsEnum;
                 if (!_showArrowIconChanged && SelectMode != SelectMode.Default)
                     _showArrowIcon = SuffixIcon != null;
             }
@@ -896,7 +898,6 @@ namespace AntDesign
         protected internal async Task SetValueAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
-
             if (SelectMode == SelectMode.Default)
             {
                 if (SelectedOptionItems.Count > 0)
@@ -1300,7 +1301,7 @@ namespace AntDesign
             if (!_isInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
                 return;
 
-            if (EqualityComparer<TItemValue>.Default.Equals(value, default))
+            if (!_isValueEnum && EqualityComparer<TItemValue>.Default.Equals(value, default))
             {
                 _ = InvokeAsync(() => OnInputClearClickAsync(new()));
                 return;
