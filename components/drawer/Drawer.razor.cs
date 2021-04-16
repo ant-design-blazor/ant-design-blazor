@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.AspNetCore.Components;
@@ -78,7 +77,19 @@ namespace AntDesign
 
         [Parameter] public int Height { get; set; } = 256;
 
-        [Parameter] public int ZIndex { get; set; } = 1000;
+        [Parameter]
+        public int ZIndex
+        {
+            get { return _zIndex; }
+            set 
+            { 
+                _zIndex = value;
+                if (_zIndex == 1000)
+                    _zIndexStyle = "";
+                else
+                    _zIndexStyle = $"z-index: {_zIndex};";
+            }
+        }
 
         [Parameter] public int OffsetX { get; set; } = 0;
 
@@ -268,6 +279,8 @@ namespace AntDesign
         }
 
         private Timer _timer;
+        private int _zIndex = 1000;
+        private string _zIndexStyle = "";
 
         private void TriggerPlacementChangeCycleOnce()
         {
