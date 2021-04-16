@@ -45,13 +45,13 @@ namespace AntDesign
         /// Offset from the bottom of the viewport (in pixels)
         /// </summary>
         [Parameter]
-        public uint? OffsetBottom { get; set; }
+        public int OffsetBottom { get; set; }
 
         /// <summary>
         /// Offset from the top of the viewport (in pixels)
         /// </summary>
         [Parameter]
-        public uint? OffsetTop { get; set; } = 0;
+        public int OffsetTop { get; set; }
 
         [Parameter]
         public string TargetSelector { get; set; }
@@ -128,12 +128,12 @@ namespace AntDesign
         {
             if (windowscrolled && !string.IsNullOrEmpty(TargetSelector))
             {
-                if (!Affixed)
+                if (!_affixed)
                 {
                     return;
                 }
                 _affixStyle = string.Empty;
-                Affixed = false;
+                _affixed = false;
                 StateHasChanged();
                 return;
             }
@@ -179,35 +179,32 @@ namespace AntDesign
             {
                 containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, TargetSelector);
             }
-            // become affixed
-            if (OffsetBottom.HasValue)
+
+            var topDist = containerRect.top + OffsetTop;
+            var bottomDist = containerRect.bottom - OffsetBottom;
+
+            if (OffsetBottom > 0) // only affix bottom
             {
-                // domRect.bottom / domRect.top have the identical value here.
-                var bottom = containerRect.bottom - OffsetBottom;
-                if (domRect.bottom > bottom)
+                if (domRect.bottom > bottomDist)
                 {
-                    _affixStyle = _hiddenStyle + $"bottom: { window.innerHeight - bottom}px; position: fixed;";
-                    Affixed = true;
+                    _affixStyle = _hiddenStyle + $"bottom: { window.innerHeight - bottomDist}px; position: fixed;";
+                    _affixed = true;
                 }
                 else
                 {
                     _affixStyle = string.Empty;
-                    Affixed = false;
+                    _affixed = false;
                 }
             }
-            else if (OffsetTop.HasValue)
+            else if (domRect.top < topDist)
             {
-                var top = containerRect.top + OffsetTop;
-                if (domRect.top < top && top > 0)
-                {
-                    _affixStyle = _hiddenStyle + $"top: {top}px; position: fixed;";
-                    Affixed = true;
-                }
-                else
-                {
-                    _affixStyle = string.Empty;
-                    Affixed = false;
-                }
+                _affixStyle = _hiddenStyle + $"top: {topDist}px; position: fixed;";
+                _affixed = true;
+            }
+            else
+            {
+                _affixStyle = string.Empty;
+                _affixed = false;
             }
 
             StateHasChanged();
