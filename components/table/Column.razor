@@ -168,6 +168,14 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                 {
                     @col.ToolTipSorter(col)
                 }
+                else if (@col.TitleTemplate != null)
+                {
+                    @col.TitleTemplate
+                }
+                else
+                {
+                    @col.HeaderTitle
+                }
             </span>
 
             <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(true); }) })">
