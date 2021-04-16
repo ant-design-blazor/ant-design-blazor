@@ -68,7 +68,8 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            SetClasses();
+            ClassMapper
+               .If(PrefixCls, () => _affixed);
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
@@ -80,14 +81,20 @@ namespace AntDesign
         {
             await base.OnFirstAfterRenderAsync();
 
+            if (ChildContent == null)
+            {
+                return;
+            }
+
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _childRef);
             _hiddenStyle = $"width: {domRect.width}px; height: {domRect.height}px;";
 
-            DomEventService.AddEventListener(RootScollSelector, "scroll", OnWindowScroll, false);
-            DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize, false);
             await RenderAffixAsync();
             if (!_rootListened && string.IsNullOrEmpty(TargetSelector))
             {
+                DomEventService.AddEventListener(RootScollSelector, "scroll", OnWindowScroll, false);
+                DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize, false);
+
                 _rootListened = true;
             }
             else if (!string.IsNullOrEmpty(TargetSelector))
@@ -98,46 +105,16 @@ namespace AntDesign
             }
         }
 
-        private async void OnWindowScroll(JsonElement obj)
-        {
-            await RenderAffixAsync(true);
-        }
+        private async void OnWindowScroll(JsonElement obj) => await RenderAffixAsync();
 
-        private async void OnWindowResize(JsonElement obj)
-        {
-            await RenderAffixAsync(true);
-        }
+        private async void OnWindowResize(JsonElement obj) => await RenderAffixAsync();
 
-        private async void OnTargetScroll(JsonElement obj)
-        {
-            await RenderAffixAsync();
-        }
+        private async void OnTargetScroll(JsonElement obj) => await RenderAffixAsync();
 
-        private async void OnTargetResize(JsonElement obj)
-        {
-            await RenderAffixAsync();
-        }
+        private async void OnTargetResize(JsonElement obj) => await RenderAffixAsync();
 
-        private void SetClasses()
+        private async Task RenderAffixAsync()
         {
-            ClassMapper.Clear()
-                .If(PrefixCls, () => _affixed);
-        }
-
-        private async Task RenderAffixAsync(bool windowscrolled = false)
-        {
-            if (windowscrolled && !string.IsNullOrEmpty(TargetSelector))
-            {
-                if (!_affixed)
-                {
-                    return;
-                }
-                _affixStyle = string.Empty;
-                _affixed = false;
-                StateHasChanged();
-                return;
-            }
-
             DomRect childRect = null;
             DomRect domRect = null;
             Window window = null;
@@ -188,33 +165,40 @@ namespace AntDesign
                 if (domRect.bottom > bottomDist)
                 {
                     _affixStyle = _hiddenStyle + $"bottom: { window.innerHeight - bottomDist}px; position: fixed;";
-                    _affixed = true;
+                    Affixed = true;
                 }
                 else
                 {
                     _affixStyle = string.Empty;
-                    _affixed = false;
+                    Affixed = false;
                 }
             }
             else if (domRect.top < topDist)
             {
                 _affixStyle = _hiddenStyle + $"top: {topDist}px; position: fixed;";
-                _affixed = true;
+                Affixed = true;
             }
             else
             {
                 _affixStyle = string.Empty;
-                _affixed = false;
+                Affixed = false;
             }
-
-            StateHasChanged();
         }
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
-            DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "resize", OnWindowResize);
+
+            if (string.IsNullOrEmpty(TargetSelector))
+            {
+                DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
+                DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "resize", OnWindowResize);
+            }
+            else
+            {
+                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "scroll", OnWindowScroll);
+                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "resize", OnWindowResize);
+            }
         }
     }
 }
