@@ -23,7 +23,7 @@ namespace AntDesign
                 if (_affixed != value)
                 {
                     _affixed = value;
-                    StateHasChanged();
+
                     if (OnChange.HasDelegate)
                     {
                         OnChange.InvokeAsync(_affixed);
@@ -115,6 +115,7 @@ namespace AntDesign
 
         private async Task RenderAffixAsync()
         {
+            var originalAffixStyle = _affixStyle;
             DomRect childRect = null;
             DomRect domRect = null;
             Window window = null;
@@ -182,6 +183,11 @@ namespace AntDesign
             {
                 _affixStyle = string.Empty;
                 Affixed = false;
+            }
+
+            if (originalAffixStyle != _affixStyle)
+            {
+                StateHasChanged();
             }
         }
 
