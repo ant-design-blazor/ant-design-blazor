@@ -27,10 +27,10 @@ namespace AntDesign.TableModels
 
         private TableFilterType FilterType { get; set; } = TableFilterType.List;
 
-        public FilterModel(PropertyInfo propertyInfo, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter<TField>> filters, TableFilterType filterType)
+        public FilterModel(PropertyInfo propertyInfo, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter<TField>> filters, TableFilterType filterType)
         {
             this._propertyInfo = propertyInfo;
-            this.FieldName = _propertyInfo.Name;
+            this.FieldName = fieldName;
             if (onFilter == null)
             {
                 this.OnFilter = (value, field) => field.Equals(value);

@@ -148,16 +148,16 @@ namespace AntDesign
                     (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
                 }
 
-                if (Sortable && GetFieldExpression != null)
-                {
-                    SortModel = new SortModel<TData>(GetFieldExpression, SorterMultiple, DefaultSortOrder, SorterCompare);
-                }
-
                 if (GetFieldExpression != null)
                 {
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
                     DisplayName = member.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ?? member.Name;
-                    FieldName = member.Name;
+                    FieldName = DataIndex ?? member.Name;
+                }
+
+                if (Sortable && GetFieldExpression != null)
+                {
+                    SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
             }
             else if (IsBody)
@@ -335,7 +335,7 @@ namespace AntDesign
             _filterOpened = false;
             if (!isReset && _columnFilterType == TableFilterType.FeildType) Filters?.ForEach(f => { if (!f.Selected && f.Value != null) f.Selected = true; });
             _hasFilterSelected = Filters?.Any(x => x.Selected) == true;
-            FilterModel = _hasFilterSelected && _propertyReflector != null ? new FilterModel<TData>(_propertyReflector.Value.PropertyInfo, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
+            FilterModel = _hasFilterSelected && _propertyReflector != null ? new FilterModel<TData>(_propertyReflector.Value.PropertyInfo, FieldName, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 
             Table?.ReloadAndInvokeChange();
         }
@@ -374,7 +374,7 @@ namespace AntDesign
 
         private void InitFilters()
         {
-            Filters = new List<TableFilter<TData>>() { GetNewFilter() };
+            Filters = new List<TableFilter<TData>>() {GetNewFilter()};
         }
     }
 }
