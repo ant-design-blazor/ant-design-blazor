@@ -49,12 +49,14 @@ timeline: true
 - 🆕 Tag 增加 `OnClosing` 事件，可阻止关闭。[#1268](https://github.com/ant-design-blazor/ant-design-blazor/pull/1268) [@TimChen44](https://github.com/TimChen44)
 - 🆕 InputNumber 增加长按和键盘操作。[#1235](https://github.com/ant-design-blazor/ant-design-blazor/pull/1235) [@lingrepo](https://github.com/lingrepo)
 - 🆕 增加单元测试辅助库 TestKit ，方便用户编写用例[#1248](https://github.com/ant-design-blazor/ant-design-blazor/pull/1248) [@MutatePat](https://github.com/MutatePat)
+- 🆕 Input 增加 WrapperStyle 属性，可配置当有前缀、后缀时外部 span 的样式 [#1351](https://github.com/ant-design-blazor/ant-design-blazor/pull/1351) [@anddrzejb](https://github.com/anddrzejb)
 - 🛠 统一 Modal、Comfirm 和 Drawer, 使用 FeedbackComponent 模板组件; 2. 增加纯事件处理 Helper，避免在事件中触发 StateHasChanged 导致重复渲染。[#1263](https://github.com/ant-design-blazor/ant-design-blazor/pull/1263) [@zxyao145](https://github.com/zxyao145)
-- 🛠 重构 Pagination 组件，完整实现功能[#1220](https://github.com/ant-design-blazor/ant-design-blazor/pull/1220) [@Zonciu](https://github.com/Zonciu)
+- 🛠 Pagination 重构组件，完整实现功能 [#1220](https://github.com/ant-design-blazor/ant-design-blazor/pull/1220) [@Zonciu](https://github.com/Zonciu)
 - 🐞 修复 JS 互操作的一些问题[#1342](https://github.com/ant-design-blazor/ant-design-blazor/pull/1342) [@anddrzejb](https://github.com/anddrzejb)
 - 🐞 Affix 修复在目标容器中固定的问题[#1335](https://github.com/ant-design-blazor/ant-design-blazor/pull/1335) [@skystardust](https://github.com/skystardust)
-- 🐞 修复 Result 动态切换图片的问题[#1336](https://github.com/ant-design-blazor/ant-design-blazor/pull/1336) [@JiaChengLuo](https://github.com/JiaChengLuo)
-
+- 🐞 Result 修复 动态切换图片的问题[#1336](https://github.com/ant-design-blazor/ant-design-blazor/pull/1336) [@JiaChengLuo](https://github.com/JiaChengLuo)
+- 🐞 Drawer 修复 ZIndex 无效的问题 [#1362](https://github.com/ant-design-blazor/ant-design-blazor/pull/1362) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 Avatar 修复 文本头像大小计算时的精度问题 [#1352] (https://github.com/ant-design-blazor/ant-design-blazor/pull/1352) [@anddrzejb](https://github.com/anddrzejb)
 
 ### 0.7.4
 

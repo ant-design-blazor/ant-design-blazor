@@ -50,11 +50,13 @@ timeline: true
 - 🛠 Pagination Port from react version. [#1220](https://github.com/ant-design-blazor/ant-design-blazor/pull/1220) [@Zonciu](https://github.com/Zonciu)
 - 🆕 InputNumber: add long-click and keyboard operation. [#1235](https://github.com/ant-design-blazor/ant-design-blazor/pull/1235) [@lingrepo](https://github.com/lingrepo)
 - 🆕 add TestKit for public tests [#1248](https://github.com/ant-design-blazor/ant-design-blazor/pull/1248) [@MutatePat](https://github.com/MutatePat)
+- 🆕 Input add parameter `WrapperStyle` [#1351](https://github.com/ant-design-blazor/ant-design-blazor/pull/1351) [@anddrzejb](https://github.com/anddrzejb)
 - 🐞 Result: fix the issue for modify status unsuccessfully after initialization(#1328). [#1336](https://github.com/ant-design-blazor/ant-design-blazor/pull/1336) [@JiaChengLuo](https://github.com/JiaChengLuo)
 - 🛠 1. Unified use of FeedbackComponent template components for modal comfirm and drawer; 2. Add "pure event handlers" helper class, avoid triggering statehaschanged in an event to cause repeated rendering. [#1263](https://github.com/ant-design-blazor/ant-design-blazor/pull/1263) [@zxyao145](https://github.com/zxyao145)
 - 🐞 fix: multiple bugs originating from js. [#1342](https://github.com/ant-design-blazor/ant-design-blazor/pull/1342) [@anddrzejb](https://github.com/anddrzejb)
-- 🐞 Affix: fix the issue for affix to the viewport (#1327). [#1335](https://github.com/ant-design-blazor/ant-design-blazor/pull/1335) [@skystardust](https://github.com/skystardust)
-
+- 🐞 Affix: fix the issue for affix to the viewport. [#1335](https://github.com/ant-design-blazor/ant-design-blazor/pull/1335) [@skystardust](https://github.com/skystardust)
+- 🐞 Drawer: fix ZIndex has no effect. [#1362](https://github.com/ant-design-blazor/ant-design-blazor/pull/1362) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 Avatar: fix text size calc regional independent [#1352] (https://github.com/ant-design-blazor/ant-design-blazor/pull/1352) [@anddrzejb](https://github.com/anddrzejb)
 
 ### 0.7.4
 
