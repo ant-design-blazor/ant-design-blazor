@@ -71,6 +71,7 @@ namespace AntDesign
         private bool _hasIcon;
 
         private string _textStyles = "";
+        private string _sizeStyles = "";
 
         protected ElementReference TextEl { get; set; }
 
@@ -144,13 +145,11 @@ namespace AntDesign
         {
             if (decimal.TryParse(Size, out var pxSize))
             {
-                var size = StyleHelper.ToCssPixel(pxSize.ToString(CultureInfo.InvariantCulture));
-                Style += $";width:{size};";
-                Style += $"height:{size};";
-                Style += $"line-height:{size};";
+                string size = new CssSizeLength(pxSize).ToString();
+                _sizeStyles = $"width:{size};height:{size};line-height:{size};";
                 if (_hasIcon)
                 {
-                    Style += $"font-size:calc(${size} / 2)";
+                    _sizeStyles += $"font-size:calc(${size} / 2);";
                 }
             }
         }
@@ -165,10 +164,10 @@ namespace AntDesign
             var childrenWidth = (await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, TextEl))?.offsetWidth ?? 0;
             var avatarWidth = (await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref))?.width ?? 0;
             var scale = childrenWidth != 0 && avatarWidth - 8 < childrenWidth ? (avatarWidth - 8) / childrenWidth : 1;
-            _textStyles = $"transform: scale({scale.ToString(CultureInfo.InvariantCulture)}) translateX(-50%);";
+            _textStyles = $"transform: scale({new CssSizeLength(scale, true)}) translateX(-50%);";
             if (decimal.TryParse(Size, out var pxSize))
             {
-                _textStyles += $"lineHeight:{pxSize.ToString(CultureInfo.InvariantCulture)}px;";
+                _textStyles += $"lineHeight:{(CssSizeLength)pxSize};";
             }
 
             StateHasChanged();
