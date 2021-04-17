@@ -385,6 +385,7 @@ namespace AntDesign
                 _waitingReload = false;
                 Reload();
             }
+
             return this._shouldRender;
         }
 
@@ -392,7 +393,11 @@ namespace AntDesign
 
         void ITable.HasFixRight() => _hasFixRight = true;
 
-        void ITable.TableLayoutIsFixed() => TableLayout = "fixed";
+        void ITable.TableLayoutIsFixed()
+        {
+            TableLayout = "fixed";
+            StateHasChanged();
+        }
 
         private async void OnResize(JsonElement _) => await SetScrollPositionClassName();
 
@@ -437,7 +442,7 @@ namespace AntDesign
             {
                 _shouldRender = true;
             }
-            
+
             if (!clear)
             {
                 StateHasChanged();
