@@ -15,8 +15,8 @@ namespace AntDesign.Tests.tabs
         private IRenderedComponent<Tabs> CreateTabs(Action<RenderTreeBuilder> childContent)
         {
             var jsRuntime = new Mock<IJSRuntime>();
-            jsRuntime.Setup(u => u.InvokeAsync<Element>(JSInteropConstants.GetDomInfo, It.IsAny<object[]>()))
-                .ReturnsAsync(new Element());
+            jsRuntime.Setup(u => u.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, It.IsAny<object[]>()))
+                .ReturnsAsync(new HtmlElement());
 
             Context.Services.AddScoped(_ => jsRuntime.Object);
 

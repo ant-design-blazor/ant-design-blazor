@@ -408,10 +408,10 @@ namespace AntDesign
             if (_isReloading)
                 return;
 
-            var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tableBodyRef);
-            var scrollWidth = element.scrollWidth;
-            var scrollLeft = element.scrollLeft;
-            var clientWidth = element.clientWidth;
+            var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _tableBodyRef);
+            var scrollWidth = element.ScrollWidth;
+            var scrollLeft = element.ScrollLeft;
+            var clientWidth = element.ClientWidth;
 
             var beforePingLeft = _pingLeft;
             var beforePingRight = _pingRight;

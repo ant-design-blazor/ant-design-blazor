@@ -459,9 +459,9 @@ namespace AntDesign.Internal
             return _overlay;
         }
 
-        internal async Task<Element> GetTriggerDomInfo()
+        internal async Task<HtmlElement> GetTriggerDomInfo()
         {
-            return await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Ref);
+            return await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Ref);
         }
 
         public async Task Close()
