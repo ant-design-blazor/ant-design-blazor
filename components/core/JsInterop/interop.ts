@@ -675,14 +675,12 @@ export function setDomAttribute(element, attributes) {
 }
 
 export function getSelectionStart(element) {
-    if (element) {
-        let dom = getDom(element);
-        return dom.selectionStart;
-    }
+    let dom = getDom(element);
+    return dom.selectionStart;
 }
 
 export function setSelectionStart(element, position) {
-    if (element && position >= 0) {
+    if (position >= 0) {
         let dom = getDom(element);
         if (position <= dom.value.length) {
             dom.selectionStart = position;
