@@ -106,6 +106,10 @@ namespace AntDesign
 
         public static string SetDomAttribute => $"{FUNC_PREFIX}setDomAttribute";
 
+        public static string GetSelectionStart => $"{FUNC_PREFIX}getSelectionStart";
+
+        public static string SetSelectionStart => $"{FUNC_PREFIX}setSelectionStart";
+
         #region Draggable Modal
 
         public static string EnableDraggable => $"{FUNC_PREFIX}enableDraggable";

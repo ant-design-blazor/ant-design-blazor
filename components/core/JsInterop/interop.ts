@@ -673,3 +673,19 @@ export function setDomAttribute(element, attributes) {
     (dom as HTMLElement).setAttribute(key, attributes[key]);
   }
 }
+
+export function getSelectionStart(element) {
+    if (element) {
+        let dom = getDom(element);
+        return dom.selectionStart;
+    }
+}
+
+export function setSelectionStart(element, position) {
+    if (element && position >= 0) {
+        let dom = getDom(element);
+        if (dom.text.length < position) {
+            dom.selectionStart = position;
+        }
+    }
+}
