@@ -684,7 +684,7 @@ export function getSelectionStart(element) {
 export function setSelectionStart(element, position) {
     if (element && position >= 0) {
         let dom = getDom(element);
-        if (dom.text.length < position) {
+        if (dom.text.length <= position) {
             dom.selectionStart = position;
         }
     }

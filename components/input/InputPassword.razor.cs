@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System;
+using AntDesign.Core.Extensions;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
@@ -42,10 +44,14 @@ namespace AntDesign
                     builder.AddAttribute(i++, "type", _eyeIcon);
                     builder.AddAttribute(i++, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async args =>
                     {
+                        var selectionStart = await Js.GetSelectionStartAsync(Ref);
+
                         IsFocused = true;
                         await this.FocusAsync(Ref);
 
                         ToggleVisibility(args);
+
+                        await Js.SetSelectionStartAsync(Ref, selectionStart);
                     }));
                     builder.CloseComponent();
                     builder.CloseElement();
