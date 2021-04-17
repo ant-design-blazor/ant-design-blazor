@@ -157,22 +157,22 @@ namespace AntDesign.Internal
                 return;
             }
 
-            Element trigger;
+            HtmlElement trigger;
             if (Trigger.ChildContent != null)
             {
-                trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+                trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
                 // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
                 // I try to render Overlay when OvelayTrigger’s OnAfterRender is called, but is still get negative absoluteLeft
                 // This may be a bad solution, but for now I can only do it this way.
-                while (trigger.absoluteLeft <= 0 && trigger.clientWidth <= 0)
+                while (trigger.AbsoluteLeft <= 0 && trigger.ClientWidth <= 0)
                 {
                     await Task.Delay(50);
-                    trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+                    trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
                 }
             }
             else //(Trigger.Unbound != null)
             {
-                trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.Ref);
+                trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Trigger.Ref);
             }
 
             _overlayLeft = overlayLeft;
@@ -193,8 +193,8 @@ namespace AntDesign.Internal
 
             await AddOverlayToBody();
 
-            Element overlayElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
-            Element containerElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.PopupContainerSelector);
+            HtmlElement overlayElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
+            HtmlElement containerElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Trigger.PopupContainerSelector);
 
             int left = await GetOverlayLeftWithBoundaryAdjust(trigger, overlayElement, containerElement);
             int top = await GetOverlayTopWithBoundaryAdjust(trigger, overlayElement, containerElement);
@@ -281,9 +281,10 @@ namespace AntDesign.Internal
         }
 
         /// <summary>
-        /// Indicates that a page is being refreshed 
+        /// Indicates that a page is being refreshed
         /// </summary>
         private bool _isReloading;
+
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
 
         private async Task AddOverlayToBody()
@@ -295,34 +296,35 @@ namespace AntDesign.Internal
                 _hasAddOverlayToBody = true;
             }
         }
-        private async Task<int> GetOverlayTopWithBoundaryAdjust(Element trigger, Element overlay, Element containerElement)
+
+        private async Task<int> GetOverlayTopWithBoundaryAdjust(HtmlElement trigger, HtmlElement overlay, HtmlElement containerElement)
         {
             int top = GetOverlayTop(trigger, overlay, containerElement);
 
-            /* 
+            /*
              * 边界检测和方向调整
              * boundary detection and orientation adjustment
              */
             return await BoundaryAdjust(trigger, overlay, containerElement, top, "top");
         }
 
-        private async Task<int> GetOverlayLeftWithBoundaryAdjust(Element trigger, Element overlay, Element containerElement)
+        private async Task<int> GetOverlayLeftWithBoundaryAdjust(HtmlElement trigger, HtmlElement overlay, HtmlElement containerElement)
         {
             int left = GetOverlayLeft(trigger, overlay, containerElement);
 
-            /* 
+            /*
              * 边界检测和方向调整
              * boundary detection and orientation adjustment
              */
             return await BoundaryAdjust(trigger, overlay, containerElement, left, "left");
         }
 
-        private int GetOverlayTop(Element trigger, Element overlay, Element containerElement)
+        private int GetOverlayTop(HtmlElement trigger, HtmlElement overlay, HtmlElement containerElement)
         {
             int top = 0;
 
-            int triggerTop = trigger.absoluteTop - containerElement.absoluteTop;
-            int triggerHeight = trigger.clientHeight != 0 ? trigger.clientHeight : trigger.offsetHeight;
+            int triggerTop = trigger.AbsoluteTop - containerElement.AbsoluteTop;
+            int triggerHeight = trigger.ClientHeight != 0 ? trigger.ClientHeight : trigger.OffsetHeight;
 
             // contextMenu
             if (_overlayTop != null)
@@ -333,7 +335,7 @@ namespace AntDesign.Internal
 
             if (Trigger.Placement.IsIn(PlacementType.Left, PlacementType.Right))
             {
-                top = triggerTop + triggerHeight / 2 - overlay.clientHeight / 2;
+                top = triggerTop + triggerHeight / 2 - overlay.ClientHeight / 2;
             }
             else if (Trigger.Placement.IsIn(PlacementType.LeftTop, PlacementType.RightTop))
             {
@@ -346,7 +348,7 @@ namespace AntDesign.Internal
             }
             else if (Trigger.Placement.IsIn(PlacementType.LeftBottom, PlacementType.RightBottom))
             {
-                top = triggerTop - overlay.clientHeight + triggerHeight;
+                top = triggerTop - overlay.ClientHeight + triggerHeight;
 
                 if (ArrowPointAtCenter)
                 {
@@ -359,22 +361,22 @@ namespace AntDesign.Internal
             }
             else if (Trigger.Placement.IsIn(PlacementType.TopLeft, PlacementType.TopCenter, PlacementType.Top, PlacementType.TopRight))
             {
-                top = triggerTop - overlay.clientHeight - VerticalOffset;
+                top = triggerTop - overlay.ClientHeight - VerticalOffset;
             }
 
             return top;
         }
 
-        private int GetOverlayLeft(Element trigger, Element overlay, Element containerElement)
+        private int GetOverlayLeft(HtmlElement trigger, HtmlElement overlay, HtmlElement containerElement)
         {
             int left = 0;
 
-            int triggerLeft = trigger.absoluteLeft - containerElement.absoluteLeft;
-            int triggerWidth = trigger.clientWidth != 0 ? trigger.clientWidth : trigger.offsetWidth;
+            int triggerLeft = trigger.AbsoluteLeft - containerElement.AbsoluteLeft;
+            int triggerWidth = trigger.ClientWidth != 0 ? trigger.ClientWidth : trigger.OffsetWidth;
 
-            if (overlay.clientWidth > 0)
+            if (overlay.ClientWidth > 0)
             {
-                _overlayClientWidth = overlay.clientWidth;
+                _overlayClientWidth = overlay.ClientWidth;
             }
 
             // contextMenu
@@ -418,12 +420,13 @@ namespace AntDesign.Internal
             return left;
         }
 
-        /* 
+        /*
          * 边界检测和方向调整
          * boundary detection and orientation adjustment
          */
+
         private async Task<int> BoundaryAdjust(
-            Element trigger, Element overlay, Element containerElement,
+            HtmlElement trigger, HtmlElement overlay, HtmlElement containerElement,
             int curPos, string direction)
         {
             if (Trigger.BoundaryAdjustMode == TriggerBoundaryAdjustMode.None)
@@ -431,7 +434,7 @@ namespace AntDesign.Internal
                 return curPos;
             }
 
-            int overlaySize = direction == "top" ? overlay.clientHeight : overlay.clientWidth;
+            int overlaySize = direction == "top" ? overlay.ClientHeight : overlay.ClientWidth;
             int boundarySize = await GetWindowBoundarySize(direction, containerElement);
 
             if (Trigger.Trigger.Contains(TriggerType.ContextMenu))
@@ -508,14 +511,14 @@ namespace AntDesign.Internal
             }
         }
 
-        private async Task<int> GetWindowBoundarySize(string direction, Element containerElement)
+        private async Task<int> GetWindowBoundarySize(string direction, HtmlElement containerElement)
         {
             if (Trigger.BoundaryAdjustMode == TriggerBoundaryAdjustMode.InScroll)
             {
                 return direction switch
                 {
-                    "top" => containerElement.scrollHeight,
-                    _ => containerElement.scrollWidth
+                    "top" => containerElement.ScrollHeight,
+                    _ => containerElement.ScrollWidth
                 };
             }
 
@@ -594,21 +597,21 @@ namespace AntDesign.Internal
 
         internal async Task UpdatePosition(int? overlayLeft = null, int? overlayTop = null)
         {
-            Element trigger;
+            HtmlElement trigger;
             if (Trigger.ChildContent != null)
             {
-                trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
+                trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
             }
             else //(Trigger.Unbound != null)
             {
-                trigger = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.Ref);
+                trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Trigger.Ref);
             }
 
             _overlayLeft = overlayLeft;
             _overlayTop = overlayTop;
 
-            Element overlayElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
-            Element containerElement = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Trigger.PopupContainerSelector);
+            HtmlElement overlayElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
+            HtmlElement containerElement = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Trigger.PopupContainerSelector);
 
             int left = await GetOverlayLeftWithBoundaryAdjust(trigger, overlayElement, containerElement);
             int top = await GetOverlayTopWithBoundaryAdjust(trigger, overlayElement, containerElement);
