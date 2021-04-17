@@ -51,7 +51,8 @@ namespace AntDesign
 
                         ToggleVisibility(args);
 
-                        await Js.SetSelectionStartAsync(Ref, selectionStart);
+                        if (selectionStart != 0)
+                            await Js.SetSelectionStartAsync(Ref, selectionStart);
                     }));
                     builder.CloseComponent();
                     builder.CloseElement();
