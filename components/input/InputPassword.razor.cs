@@ -40,7 +40,13 @@ namespace AntDesign
                     builder.OpenComponent<Icon>(i++);
                     builder.AddAttribute(i++, "class", $"{PrefixCls}-password-icon");
                     builder.AddAttribute(i++, "type", _eyeIcon);
-                    builder.AddAttribute(i++, "onclick", CallbackFactory.Create(this, ToggleVisibility));
+                    builder.AddAttribute(i++, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async args =>
+                    {
+                        IsFocused = true;
+                        await this.FocusAsync(Ref);
+
+                        ToggleVisibility(args);
+                    }));
                     builder.CloseComponent();
                     builder.CloseElement();
                 });
