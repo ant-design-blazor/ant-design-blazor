@@ -800,7 +800,7 @@ namespace AntDesign
         {
             string maxWidth = "", minWidth = "", definedWidth = "";
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
-            var width = domRect.width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            var width = domRect.Width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
             minWidth = $"min-width: {width}px;";
             if (DropdownMatchSelectWidth.IsT0 && DropdownMatchSelectWidth.AsT0)
             {
