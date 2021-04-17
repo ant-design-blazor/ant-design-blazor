@@ -12,6 +12,8 @@ namespace AntDesign
     {
         private const uint DEFAULT_MIN_ROWS = 1;
 
+        protected override string InputType => "textarea";
+
         /// <summary>
         /// scrollHeight of 1 row
         /// </summary>
