@@ -1,13 +1,13 @@
 ﻿<Table DataSource="data" OnChange="OnChange" TItem="Data">
     <Column TData="string"
             @bind-Field="context.Name"
-            SorterCompare="@((a,b)=> a.Length - b.Length)"
+            SorterCompare="@((a,b)=> string.Compare(a,b))"
             SortDirections="new[] { SortDirection.Descending }"
             Filterable />
 
     <Column TData="string"
-            @bind-Field="context.Address"
-            SorterCompare="@((a,b)=> a.Length - b.Length)"
+            DataIndex="Address"
+            SorterCompare="@((a,b)=> string.Compare(a,b))"
             SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending }"
             Filterable />
 

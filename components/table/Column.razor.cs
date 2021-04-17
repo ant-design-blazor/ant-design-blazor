@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Reflection;
 using AntDesign.Core.Reflection;
@@ -97,8 +98,6 @@ namespace AntDesign
 
         private TableFilterType _columnFilterType;
 
-        private PropertyReflector? _propertyReflector;
-
         private Type _columnDataType;
 
         public string DisplayName { get; private set; }
@@ -137,7 +136,6 @@ namespace AntDesign
             {
                 if (FieldExpression != null)
                 {
-                    _propertyReflector = PropertyReflector.Create(FieldExpression);
                     var paramExp = Expression.Parameter(ItemType);
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(FieldExpression);
                     var bodyExp = Expression.MakeMemberAccess(paramExp, member);
@@ -148,16 +146,16 @@ namespace AntDesign
                     (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
                 }
 
-                if (Sortable && GetFieldExpression != null)
-                {
-                    SortModel = new SortModel<TData>(GetFieldExpression, SorterMultiple, DefaultSortOrder, SorterCompare);
-                }
-
                 if (GetFieldExpression != null)
                 {
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
-                    DisplayName = member.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ?? member.Name;
-                    FieldName = member.Name;
+                    DisplayName = member.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ?? member.GetCustomAttribute<DisplayAttribute>(true)?.GetName() ?? member.Name;
+                    FieldName = DataIndex ?? member.Name;
+                }
+
+                if (Sortable && GetFieldExpression != null)
+                {
+                    SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
             }
             else if (IsBody)
@@ -335,7 +333,7 @@ namespace AntDesign
             _filterOpened = false;
             if (!isReset && _columnFilterType == TableFilterType.FeildType) Filters?.ForEach(f => { if (!f.Selected && f.Value != null) f.Selected = true; });
             _hasFilterSelected = Filters?.Any(x => x.Selected) == true;
-            FilterModel = _hasFilterSelected && _propertyReflector != null ? new FilterModel<TData>(_propertyReflector.Value.PropertyInfo, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
+            FilterModel = _hasFilterSelected ? new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 
             Table?.ReloadAndInvokeChange();
         }
@@ -374,7 +372,7 @@ namespace AntDesign
 
         private void InitFilters()
         {
-            Filters = new List<TableFilter<TData>>() { GetNewFilter() };
+            Filters = new List<TableFilter<TData>>() {GetNewFilter()};
         }
     }
 }
