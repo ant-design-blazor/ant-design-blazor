@@ -1,5 +1,6 @@
 ﻿using System;
 using AntDesign.Core.Extensions;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -44,15 +45,15 @@ namespace AntDesign
                     builder.AddAttribute(i++, "type", _eyeIcon);
                     builder.AddAttribute(i++, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async args =>
                     {
-                        var selectionStart = await Js.GetSelectionStartAsync(Ref);
+                        var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
 
                         IsFocused = true;
                         await this.FocusAsync(Ref);
 
                         ToggleVisibility(args);
 
-                        if (selectionStart != 0)
-                            await Js.SetSelectionStartAsync(Ref, selectionStart);
+                        if (element.selectionStart != 0)
+                            await Js.SetSelectionStartAsync(Ref, element.selectionStart);
                     }));
                     builder.CloseComponent();
                     builder.CloseElement();

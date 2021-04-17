@@ -29,5 +29,7 @@
         public int clientHeight { get; set; }
 
         public int clientWidth { get; set; }
+
+        public int selectionStart { get; set; }
     }
 }
