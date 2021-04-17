@@ -156,7 +156,9 @@ namespace AntDesign
                 if (GetFieldExpression != null)
                 {
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
-                    DisplayName = member.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ?? member.Name;
+                    DisplayName = member.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ??
+                        member.GetCustomAttribute<DisplayAttribute>(true)?.Name ??
+                        member.Name;
                     FieldName = member.Name;
                 }
             }
