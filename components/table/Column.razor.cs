@@ -164,7 +164,10 @@ namespace AntDesign
             {
                 SortModel = Context.HeaderColumns[ColIndex] is IFieldColumn fieldColumn ? fieldColumn.SortModel : null;
 
-                (GetValue, _) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                if (DataIndex != null)
+                {
+                    (GetValue, _) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                }
             }
 
             SortDirections ??= Table.SortDirections;
