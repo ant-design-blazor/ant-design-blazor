@@ -115,7 +115,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 @code
 {
 
-    string HeaderTitle => Title ?? DisplayName ?? FieldName ?? DataIndex;
+    string HeaderTitle => Title ?? DisplayName ?? FieldName;
 
     readonly RenderFragment<Column<TData>> SortHeader = col =>
     @<div class="ant-table-column-sorters">
@@ -167,6 +167,14 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                 @if (col.Sortable)
                 {
                     @col.ToolTipSorter(col)
+                }
+                else if (@col.TitleTemplate != null)
+                {
+                    @col.TitleTemplate
+                }
+                else
+                {
+                    @col.HeaderTitle
                 }
             </span>
 

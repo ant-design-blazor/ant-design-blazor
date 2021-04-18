@@ -45,15 +45,15 @@ namespace AntDesign
                     builder.AddAttribute(i++, "type", _eyeIcon);
                     builder.AddAttribute(i++, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async args =>
                     {
-                        var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
+                        var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
 
                         IsFocused = true;
                         await this.FocusAsync(Ref);
 
                         ToggleVisibility(args);
 
-                        if (element.selectionStart != 0)
-                            await Js.SetSelectionStartAsync(Ref, element.selectionStart);
+                        if (element.SelectionStart != 0)
+                            await Js.SetSelectionStartAsync(Ref, element.SelectionStart);
                     }));
                     builder.CloseComponent();
                     builder.CloseElement();

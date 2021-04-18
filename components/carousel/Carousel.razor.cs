@@ -137,13 +137,13 @@ namespace AntDesign
         private async void Resize(JsonElement e = default)
         {
             DomRect listRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
-            if ((SlickWidth != (int)listRect.width && IsHorizontal)
-                || (SlickHeight != (int)listRect.height && !IsHorizontal)
+            if ((SlickWidth != (int)listRect.Width && IsHorizontal)
+                || (SlickHeight != (int)listRect.Height && !IsHorizontal)
                 || IsHorizontal && !string.IsNullOrEmpty(SlickListStyle)
                 || !IsHorizontal && string.IsNullOrEmpty(SlickListStyle))
             {
-                SlickWidth = (int)listRect.width;
-                SlickHeight = (int)listRect.height;
+                SlickWidth = (int)listRect.Width;
+                SlickHeight = (int)listRect.Height;
                 StateHasChanged();
             }
         }

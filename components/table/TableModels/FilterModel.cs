@@ -23,14 +23,14 @@ namespace AntDesign.TableModels
 
         private readonly FilterExpressionResolver<TField> _filterExpressionResolver = new FilterExpressionResolver<TField>();
 
-        private PropertyInfo _propertyInfo;
+        private LambdaExpression _getFieldExpression;
 
         private TableFilterType FilterType { get; set; } = TableFilterType.List;
 
-        public FilterModel(PropertyInfo propertyInfo, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter<TField>> filters, TableFilterType filterType)
+        public FilterModel(LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter<TField>> filters, TableFilterType filterType)
         {
-            this._propertyInfo = propertyInfo;
-            this.FieldName = _propertyInfo.Name;
+            this._getFieldExpression = getFieldExpression;
+            this.FieldName = fieldName;
             if (onFilter == null)
             {
                 this.OnFilter = (value, field) => field.Equals(value);
@@ -50,13 +50,13 @@ namespace AntDesign.TableModels
             {
                 return source;
             }
-            var sourceExpression = Expression.Parameter(typeof(TItem));
-            var propertyExpression = Expression.Property(sourceExpression, _propertyInfo);
+
+            var sourceExpression = _getFieldExpression.Parameters[0];
 
             Expression lambda = null;
             if (this.FilterType == TableFilterType.List)
             {
-                lambda = Expression.Invoke((Expression<Func<bool>>)(() => false));
+                lambda = Expression.Constant(false, typeof(bool));
             }
 
             IFilterExpression filterExpression = null;
@@ -69,21 +69,20 @@ namespace AntDesign.TableModels
                 if (filter.Value == null && (filter.FilterCompareOperator != TableFilterCompareOperator.IsNull && filter.FilterCompareOperator != TableFilterCompareOperator.IsNotNull)) continue;
                 if (this.FilterType == TableFilterType.List)
                 {
-                    lambda = Expression.OrElse(lambda, Expression.Invoke(OnFilter, Expression.Constant(filter.Value, typeof(TField)), propertyExpression));
+                    lambda = Expression.OrElse(lambda!, Expression.Invoke(OnFilter, Expression.Constant(filter.Value, typeof(TField)), _getFieldExpression.Body));
                 }
-                else
+                else // TableFilterType.FeildType
                 {
-
                     Expression constantExpression = null;
                     if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull)
                     {
-                        constantExpression = Expression.Constant(null, _propertyInfo.PropertyType);
+                        constantExpression = Expression.Constant(null, typeof(TField));
                     }
                     else
                     {
                         constantExpression = Expression.Constant(filter.Value, typeof(TField));
                     }
-                    var expression = filterExpression.GetFilterExpression(filter.FilterCompareOperator, propertyExpression, constantExpression);
+                    var expression = filterExpression!.GetFilterExpression(filter.FilterCompareOperator, _getFieldExpression.Body, constantExpression);
                     if (lambda == null)
                     {
                         lambda = expression;
