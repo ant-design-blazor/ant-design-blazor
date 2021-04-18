@@ -14,16 +14,14 @@ namespace AntDesign.Internal
         {
             var accessorBody = expression.Body;
 
-            if (accessorBody is UnaryExpression unaryExpression
-             && unaryExpression.NodeType == ExpressionType.Convert
-             && unaryExpression.Type == typeof(object))
-            {
-                accessorBody = unaryExpression.Operand;
-            }
-
             if (accessorBody is ConditionalExpression conditionalExpression)
             {
                 accessorBody = conditionalExpression.IfTrue;
+            }
+
+            if (accessorBody is UnaryExpression unaryExpression && unaryExpression.NodeType == ExpressionType.Convert)
+            {
+                accessorBody = unaryExpression.Operand;
             }
 
             if (!(accessorBody is MemberExpression memberExpression))
