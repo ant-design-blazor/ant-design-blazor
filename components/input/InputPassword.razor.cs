@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System;
+using AntDesign.Core.Extensions;
+using AntDesign.JsInterop;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
@@ -40,7 +43,18 @@ namespace AntDesign
                     builder.OpenComponent<Icon>(i++);
                     builder.AddAttribute(i++, "class", $"{PrefixCls}-password-icon");
                     builder.AddAttribute(i++, "type", _eyeIcon);
-                    builder.AddAttribute(i++, "onclick", CallbackFactory.Create(this, ToggleVisibility));
+                    builder.AddAttribute(i++, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async args =>
+                    {
+                        var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
+
+                        IsFocused = true;
+                        await this.FocusAsync(Ref);
+
+                        ToggleVisibility(args);
+
+                        if (element.SelectionStart != 0)
+                            await Js.SetSelectionStartAsync(Ref, element.SelectionStart);
+                    }));
                     builder.CloseComponent();
                     builder.CloseElement();
                 });

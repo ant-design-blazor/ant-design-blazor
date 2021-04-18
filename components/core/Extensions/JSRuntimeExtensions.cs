@@ -26,5 +26,8 @@ namespace AntDesign.Core.Extensions
             }
 #endif
         }
+
+        public static ValueTask SetSelectionStartAsync(this IJSRuntime jSRuntime, ElementReference target, int selectionStart) =>
+            jSRuntime.InvokeVoidAsync(JSInteropConstants.SetSelectionStart, target, selectionStart);
     }
 }
