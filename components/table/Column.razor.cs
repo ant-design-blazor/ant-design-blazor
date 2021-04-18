@@ -114,7 +114,11 @@ namespace AntDesign
 
         public LambdaExpression GetFieldExpression { get; private set; }
 
-        void IFieldColumn.ClearSorter() => SetSorter(SortDirection.None);
+        void IFieldColumn.ClearSorter()
+        {
+            SetSorter(SortDirection.None);
+            StateHasChanged();
+        }
 
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
