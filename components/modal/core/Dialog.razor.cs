@@ -395,5 +395,16 @@ namespace AntDesign
             await base.OnAfterRenderAsync(isFirst);
         }
         #endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            // enable body scroll
+            if (_disableBodyScroll)
+            {
+                _disableBodyScroll = false;
+                _ = Task.Delay(250);
+                _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+            }
+        }
     }
 }
