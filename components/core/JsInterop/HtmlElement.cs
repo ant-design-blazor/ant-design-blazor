@@ -45,5 +45,8 @@ namespace AntDesign.JsInterop
 
         [JsonPropertyName("clientWidth")]
         public int ClientWidth { get; set; }
+
+        [JsonPropertyName("selectionStart")]
+        public int SelectionStart { get; set; }
     }
 }
