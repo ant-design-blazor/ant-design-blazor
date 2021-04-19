@@ -117,7 +117,10 @@ namespace AntDesign
         void IFieldColumn.ClearSorter()
         {
             SetSorter(SortDirection.None);
-            StateHasChanged();
+            if (FieldExpression == null)
+            {
+                StateHasChanged();
+            }
         }
 
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
