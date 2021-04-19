@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.core.Extensions;
+using AntDesign.Datepicker.Locale;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -528,25 +528,45 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        private string _internalFormat;
+        private string InternalFormat
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_internalFormat))
+                {
+                    if (!string.IsNullOrEmpty(Format))
+                        _internalFormat = Format;
+                    else
+                        _internalFormat = _pickerStatus[0]._initPicker switch
+                        {
+                            DatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
+                            DatePickerType.Month => "yyyy-MM",
+                            DatePickerType.Year => "yyyy",
+                            DatePickerType.Time => "HH:mm:dd",
+                            _ => "yyyy-MM-dd",
+                        };
+
+                }
+                return _internalFormat;
+            }
+        }
+        private FormatAnalyzer _formatAnalyzer;
+        public FormatAnalyzer FormatAnalyzer => _formatAnalyzer ??= new(InternalFormat);
+
         public string GetFormatValue(DateTime value, int index)
         {
-            if (!string.IsNullOrEmpty(Format))
-            {
-                return value.ToString(Format, CultureInfo);
-            }
-
-            string formater = _pickerStatus[index]._initPicker switch
-            {
-                DatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
-                DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}{Locale.Lang.Week}",
-                DatePickerType.Month => "yyyy-MM",
-                DatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
-                DatePickerType.Year => "yyyy",
-                DatePickerType.Time => "HH:mm:dd",
-                _ => "yyyy-MM-dd",
-            };
-
-            return value.ToString(formater, CultureInfo);
+            string format;
+            if (string.IsNullOrEmpty(Format))
+                format = _pickerStatus[index]._initPicker switch
+                {
+                    DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}{Locale.Lang.Week}",
+                    DatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
+                    _ => InternalFormat,
+                };
+            else
+                format = InternalFormat;
+            return value.ToString(format, CultureInfo);
         }
 
         /// <summary>
@@ -655,22 +675,6 @@ namespace AntDesign
                 }
             }
             return orderedValue;
-        }
-
-        protected bool IsDateStringFullDate(string possibleDate)
-        {
-            if (possibleDate is null)
-                return false;
-            char? separator = possibleDate.FirstOrDefault(c => !char.IsDigit(c));
-            if (separator is not null)
-            {
-                var dateParts = possibleDate.Split(separator.Value);
-                if (dateParts.Length >= 3 && dateParts[2].Length >= 2 && char.IsDigit(dateParts[2][0]))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

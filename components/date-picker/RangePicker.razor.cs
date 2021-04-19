@@ -88,8 +88,8 @@ namespace AntDesign
             if (BindConverter.TryConvertTo(args.Value.ToString(), CultureInfo, out DateTime changeValue))
             {
                 if (Picker == DatePickerType.Date)
-                {
-                    if (IsDateStringFullDate(args.Value.ToString()))
+                {                    
+                    if (FormatAnalyzer.IsFullString(args.Value.ToString()))
                         array.SetValue(changeValue, index);
                 }
                 else
