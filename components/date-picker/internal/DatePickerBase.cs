@@ -415,11 +415,11 @@ namespace AntDesign
             }
             else
             {
-                string first = DatePickerPlaceholder.GetPlaceholderByType(picker, Locale);
-                _placeholders[0] = first;
-                _placeholders[1] = first;
+                    string first = DatePickerPlaceholder.GetPlaceholderByType(picker, Locale);
+                    _placeholders[0] = first;
+                    _placeholders[1] = first;
+                }
             }
-        }
 
         protected virtual void UpdateCurrentValueAsString(int index = 0)
         {
@@ -540,17 +540,30 @@ namespace AntDesign
                     else
                         _internalFormat = _pickerStatus[0]._initPicker switch
                         {
-                            DatePickerType.Date => IsShowTime ? $"yyyy-MM-dd {ShowTimeFormat}" : "yyyy-MM-dd",
-                            DatePickerType.Month => "yyyy-MM",
-                            DatePickerType.Year => "yyyy",
-                            DatePickerType.Time => "HH:mm:dd",
-                            _ => "yyyy-MM-dd",
+                            DatePickerType.Date => GetTimeFormat(),
+                            DatePickerType.Month => Locale.Lang.YearMonthFormat,
+                            DatePickerType.Year => Locale.Lang.YearFormat,
+                            DatePickerType.Time => Locale.Lang.TimeFormat,
+                            _ => Locale.Lang.DateFormat,
                         };
 
                 }
                 return _internalFormat;
             }
         }
+        private string GetTimeFormat()
+        {
+            if (IsShowTime)
+            {
+                if (_timeFormatProvided)
+                {
+                    return $"{Locale.Lang.DateFormat} {ShowTimeFormat}";
+                }
+                return Locale.Lang.DateTimeFormat;
+            }
+            return Locale.Lang.DateFormat;
+        }
+
         private FormatAnalyzer _formatAnalyzer;
         public FormatAnalyzer FormatAnalyzer => _formatAnalyzer ??= new(InternalFormat);
 
