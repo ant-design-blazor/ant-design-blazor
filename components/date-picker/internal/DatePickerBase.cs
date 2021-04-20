@@ -109,6 +109,7 @@ namespace AntDesign
         public string ShowTimeFormat { get; protected set; } = "HH:mm:ss";
         protected OneOf<bool, string> _showTime = null;
 
+        private bool _timeFormatProvided;
         [Parameter]
         public OneOf<bool, string> ShowTime
         {
@@ -123,6 +124,7 @@ namespace AntDesign
                 }, strValue =>
                 {
                     IsShowTime = true;
+                    _timeFormatProvided = true;
                     ShowTimeFormat = strValue;
                 });
             }
@@ -415,11 +417,11 @@ namespace AntDesign
             }
             else
             {
-                    string first = DatePickerPlaceholder.GetPlaceholderByType(picker, Locale);
-                    _placeholders[0] = first;
-                    _placeholders[1] = first;
-                }
+                string first = DatePickerPlaceholder.GetPlaceholderByType(picker, Locale);
+                _placeholders[0] = first;
+                _placeholders[1] = first;
             }
+        }
 
         protected virtual void UpdateCurrentValueAsString(int index = 0)
         {
