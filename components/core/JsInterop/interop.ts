@@ -27,6 +27,7 @@ export function getDomInfo(element) {
   result["clientLeft"] = dom.clientLeft || 0;
   result["clientHeight"] = dom.clientHeight || 0;
   result["clientWidth"] = dom.clientWidth || 0;
+  result["selectionStart"] = dom.selectionStart || 0;
   var absolutePosition = getElementAbsolutePos(dom);
   result["absoluteTop"] = Math.round(absolutePosition.y);
   result["absoluteLeft"] = Math.round(absolutePosition.x);
@@ -671,5 +672,15 @@ export function setDomAttribute(element, attributes) {
   let dom = getDom(element);
   for (var key in attributes) {
     (dom as HTMLElement).setAttribute(key, attributes[key]);
+  }
+}
+
+export function setSelectionStart(element, position) {
+  if (position >= 0) {
+    let dom = getDom(element);
+    if (position <= dom.value.length) {
+      dom.selectionStart = position;
+      dom.selectionEnd = position;
+    }
   }
 }

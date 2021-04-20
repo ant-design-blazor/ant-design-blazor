@@ -87,7 +87,7 @@ namespace AntDesign
             }
 
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _childRef);
-            _hiddenStyle = $"width: {domRect.width}px; height: {domRect.height}px;";
+            _hiddenStyle = $"width: {domRect.Width}px; height: {domRect.Height}px;";
 
             await RenderAffixAsync();
             if (!_rootListened && string.IsNullOrEmpty(TargetSelector))
@@ -141,16 +141,16 @@ namespace AntDesign
                 return;
             }
 
-            _hiddenStyle = $"width: {childRect.width}px; height: {childRect.height}px;";
+            _hiddenStyle = $"width: {childRect.Width}px; height: {childRect.Height}px;";
 
             DomRect containerRect;
             if (string.IsNullOrEmpty(TargetSelector))
             {
                 containerRect = new DomRect()
                 {
-                    top = 0,
-                    bottom = window.innerHeight,
-                    height = window.innerHeight,
+                    Top = 0,
+                    Bottom = window.innerHeight,
+                    Height = window.innerHeight,
                 };
             }
             else
@@ -158,12 +158,12 @@ namespace AntDesign
                 containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, TargetSelector);
             }
 
-            var topDist = containerRect.top + OffsetTop;
-            var bottomDist = containerRect.bottom - OffsetBottom;
+            var topDist = containerRect.Top + OffsetTop;
+            var bottomDist = containerRect.Bottom - OffsetBottom;
 
             if (OffsetBottom > 0) // only affix bottom
             {
-                if (domRect.bottom > bottomDist)
+                if (domRect.Bottom > bottomDist)
                 {
                     _affixStyle = _hiddenStyle + $"bottom: { window.innerHeight - bottomDist}px; position: fixed;";
                     Affixed = true;
@@ -174,7 +174,7 @@ namespace AntDesign
                     Affixed = false;
                 }
             }
-            else if (domRect.top < topDist)
+            else if (domRect.Top < topDist)
             {
                 _affixStyle = _hiddenStyle + $"top: {topDist}px; position: fixed;";
                 Affixed = true;
