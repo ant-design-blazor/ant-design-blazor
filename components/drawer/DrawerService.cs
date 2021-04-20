@@ -101,7 +101,7 @@ namespace AntDesign
             bool closable = true,
             bool maskClosable = true,
             string title = null,
-            int width = 256,
+            string width = "256",
             bool mask = true,
             bool noAnimation = false,
              string placement = "right") where TComponent : FeedbackComponent<TComponentOptions, TResult>

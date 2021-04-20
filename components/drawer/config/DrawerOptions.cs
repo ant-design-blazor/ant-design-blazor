@@ -37,9 +37,9 @@ namespace AntDesign
 
         public string WrapClassName { get; set; }
 
-        public int Width { get; set; } = 256;
+        public string Width { get; set; } = "256";
 
-        public int Height { get; set; } = 256;
+        public string Height { get; set; } = "256";
 
         public int ZIndex { get; set; } = 1000;
 

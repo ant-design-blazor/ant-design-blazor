@@ -75,7 +75,7 @@ namespace AntDesign
 
         [Parameter] public string Width { get; set; } = "256";
 
-        [Parameter] public int Height { get; set; } = 256;
+        [Parameter] public string Height { get; set; } = "256";
 
         [Parameter]
         public int ZIndex
