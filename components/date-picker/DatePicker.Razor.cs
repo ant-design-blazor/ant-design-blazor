@@ -88,8 +88,9 @@ namespace AntDesign
                 if (Picker == DatePickerType.Date)
                 {
                     if (FormatAnalyzer.IsFullString(args.Value.ToString()))
-
                         CurrentValue = changeValue;
+                    else
+                        return;
                 }
                 else
                     CurrentValue = changeValue;
