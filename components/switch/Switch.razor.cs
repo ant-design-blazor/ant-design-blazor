@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -10,7 +12,24 @@ namespace AntDesign
         protected string _prefixCls = "ant-switch";
 
         [Parameter]
-        public bool Checked { get; set; }
+        public bool Checked
+        {
+            get { return _checked; }
+            set
+            {
+                _checked = value;
+                if (_checked != Value)
+                {
+                    Value = _checked;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a callback that updates the bound checked value.
+        /// </summary>
+        [Parameter]
+        public virtual EventCallback<bool> CheckedChanged { get; set; }
 
         [Parameter]
         public bool Disabled { get; set; }
@@ -37,6 +56,7 @@ namespace AntDesign
         public RenderFragment UnCheckedChildrenTemplate { get; set; }
 
         private bool _clickAnimating = false;
+        private bool _checked;
 
         protected override void OnInitialized()
         {
@@ -59,7 +79,6 @@ namespace AntDesign
             if (!Disabled && !Loading && !Control)
             {
                 this.CurrentValue = !CurrentValue;
-
                 this.OnChange.InvokeAsync(CurrentValue);
             }
         }
@@ -73,5 +92,13 @@ namespace AntDesign
         {
             _clickAnimating = false;
         }
+
+        protected override void OnValueChange(bool value)
+        {
+            base.OnValueChange(value);
+            Checked = value;
+            CheckedChanged.InvokeAsync(value);
+        }
+
     }
 }
