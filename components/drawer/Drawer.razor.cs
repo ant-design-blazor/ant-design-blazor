@@ -73,7 +73,7 @@ namespace AntDesign
 
         [Parameter] public string WrapClassName { get; set; }
 
-        [Parameter] public int Width { get; set; } = 256;
+        [Parameter] public string Width { get; set; } = "256";
 
         [Parameter] public int Height { get; set; } = 256;
 
