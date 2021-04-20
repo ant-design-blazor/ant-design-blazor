@@ -15,9 +15,9 @@ namespace AntDesign
     public partial class Slider<TValue> : AntInputComponentBase<TValue>
     {
         private const string PreFixCls = "ant-slider";
-        private Element _sliderDom;
-        private Element _leftHandleDom;
-        private Element _rightHandleDom;
+        private HtmlElement _sliderDom;
+        private HtmlElement _leftHandleDom;
+        private HtmlElement _rightHandleDom;
         private ElementReference _leftHandle;
         private ElementReference _rightHandle;
         private string _leftHandleStyle = "left: 0%; right: auto; transform: translateX(-50%);";
@@ -629,15 +629,15 @@ namespace AntDesign
 
         private async Task CalculateValueAsync(double clickClient)
         {
-            _sliderDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, Ref);
-            double sliderOffset = (double)(Vertical ? _sliderDom.absoluteTop : _sliderDom.absoluteLeft);
-            double sliderLength = (double)(Vertical ? _sliderDom.clientHeight : _sliderDom.clientWidth);
+            _sliderDom = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
+            double sliderOffset = (double)(Vertical ? _sliderDom.AbsoluteTop : _sliderDom.AbsoluteLeft);
+            double sliderLength = (double)(Vertical ? _sliderDom.ClientHeight : _sliderDom.ClientWidth);
             double handleNewPosition;
             if (_right)
             {
                 if (_rightHandleDom == null)
                 {
-                    _rightHandleDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _rightHandle);
+                    _rightHandleDom = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _rightHandle);
                 }
                 if (Reverse)
                 {
@@ -680,11 +680,11 @@ namespace AntDesign
             {
                 if (_leftHandleDom == null)
                 {
-                    _leftHandleDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _leftHandle);
+                    _leftHandleDom = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _leftHandle);
                 }
                 if (_rightHandleDom == null)
                 {
-                    _rightHandleDom = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _rightHandle);
+                    _rightHandleDom = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _rightHandle);
                 }
                 if (Reverse)
                 {

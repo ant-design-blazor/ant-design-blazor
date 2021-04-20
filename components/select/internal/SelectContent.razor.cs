@@ -114,12 +114,12 @@ namespace AntDesign.Select.Internal
                     if (_prefixRef.Id != default)
                     {
                         _prefixElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _prefixRef);
-                        _prefixElement.width += ItemMargin;
+                        _prefixElement.Width += ItemMargin;
                     }
                     if (_suffixRef.Id != default)
                     {
                         _suffixElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _suffixRef);
-                        _suffixElement.width += 7;
+                        _suffixElement.Width += 7;
                     }
                     await DomEventService.AddResizeObserver(_overflow, OnOveralyResize);
                     await CalculateResponsiveTags();
@@ -152,7 +152,7 @@ namespace AntDesign.Select.Internal
                 _overflowElement = entry;
 
             //distance between items is margin-inline-left=4px
-            decimal accumulatedWidth = _prefixElement.width + _suffixElement.width + (4 + (SearchValue?.Length ?? 0) * 8);
+            decimal accumulatedWidth = _prefixElement.Width + _suffixElement.Width + (4 + (SearchValue?.Length ?? 0) * 8);
             int i = 0;
             bool overflowing = false;
             bool renderAgain = false;
@@ -161,15 +161,15 @@ namespace AntDesign.Select.Internal
                 if (item.Width == 0)
                 {
                     var itemElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, item.SelectedTagRef);
-                    item.Width = itemElement.width;
+                    item.Width = itemElement.Width;
                 }
 
                 if (!overflowing)
                 {
-                    if (accumulatedWidth + item.Width > _overflowElement.width)
+                    if (accumulatedWidth + item.Width > _overflowElement.Width)
                     {
                         //current item will overflow; check if with aggregateTag will overflow
-                        if (accumulatedWidth + _aggregateTagElement.width > _overflowElement.width)
+                        if (accumulatedWidth + _aggregateTagElement.Width > _overflowElement.Width)
                         {
                             if (_calculatedMaxCount != Math.Max(0, i - 1))
                             {

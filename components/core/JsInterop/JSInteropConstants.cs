@@ -101,6 +101,8 @@
 
         public static string SetDomAttribute => $"{FUNC_PREFIX}setDomAttribute";
 
+        public static string SetSelectionStart => $"{FUNC_PREFIX}setSelectionStart";
+
         #region Draggable Modal
 
         public static string EnableDraggable => $"{FUNC_PREFIX}enableDraggable";
