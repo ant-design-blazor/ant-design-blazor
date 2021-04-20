@@ -94,13 +94,15 @@ namespace AntDesign
 
         private async Task UpdateCheckedStatus()
         {
-            if (Checkable)
+            if (!Checkable)
             {
-                this.Checked = !this.Checked;
-                if (this.CheckedChange.HasDelegate)
-                {
-                    await this.CheckedChange.InvokeAsync(this.Checked);
-                }
+                return;
+            }
+
+            this.Checked = !this.Checked;
+            if (this.CheckedChange.HasDelegate)
+            {
+                await this.CheckedChange.InvokeAsync(this.Checked);
             }
         }
 
