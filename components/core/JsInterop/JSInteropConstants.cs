@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-
-namespace AntDesign
+﻿namespace AntDesign
 {
     public static class JSInteropConstants
     {
@@ -115,5 +110,21 @@ namespace AntDesign
         public static string ResetModalPosition => $"{FUNC_PREFIX}resetModalPosition";
 
         #endregion Draggable Modal
+
+        public static class ObserverConstants
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "observable.";
+
+            public static class Resize
+            {
+                private const string FUNC_PREFIX = ObserverConstants.FUNC_PREFIX + "resize.";
+
+                public static string Create = $"{FUNC_PREFIX}create";
+                public static string Observe = $"{FUNC_PREFIX}observe";
+                public static string Unobserve = $"{FUNC_PREFIX}unobserve";
+                public static string Disconnect = $"{FUNC_PREFIX}disconnect";
+                public static string Dispose = $"{FUNC_PREFIX}dispose";
+            }
+        }
     }
 }

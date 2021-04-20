@@ -1,3 +1,7 @@
+import * as observable from './ObservableApi/observableApi';
+
+export { observable };
+
 export function getDom(element) {
   if (!element) {
     element = document.body;
@@ -164,7 +168,7 @@ export function addDomEventListener(element, eventName, preventDefault, invoker)
       if (v instanceof Node) return 'Node';
       if (v instanceof Window) return 'Window';
       return v;
-    }, ' ');    
+    }, ' ');
     setTimeout(function () { invoker.invokeMethodAsync('Invoke', json) }, 0);
     if (preventDefault === true) {
       args.preventDefault();
@@ -222,8 +226,8 @@ export function copy(text) {
   });
 }
 
-export function focus(selector, noScroll: boolean=false) {
-  let dom = getDom(selector);     
+export function focus(selector, noScroll: boolean = false) {
+  let dom = getDom(selector);
   if (!(dom instanceof HTMLElement))
     throw new Error("Unable to focus an invalid element.");
   dom.focus({
