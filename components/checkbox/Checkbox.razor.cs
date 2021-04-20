@@ -14,6 +14,11 @@ namespace AntDesign
 
         [Parameter] public EventCallback<bool> CheckedChange { get; set; }
 
+        /// <summary>
+        /// Gets or sets a callback that updates the bound checked value.
+        /// </summary>
+        [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
+
         [Parameter] public Expression<Func<bool>> CheckedExpression { get; set; }
 
         [Parameter] public bool AutoFocus { get; set; }
@@ -25,12 +30,13 @@ namespace AntDesign
         [Parameter]
         public bool Checked
         {
-            get => CurrentValue;
+            get { return _checked; }
             set
             {
-                if (CurrentValue != value)
+                _checked = value;
+                if (_checked != Value)
                 {
-                    CurrentValue = value;
+                    Value = _checked;
                 }
             }
         }
@@ -42,6 +48,8 @@ namespace AntDesign
         public CheckboxGroup CheckboxGroup { get; set; }
 
         protected Dictionary<string, object> InputAttributes { get; set; } = new Dictionary<string, object>();
+
+        private bool _checked;
 
         protected override void OnParametersSet()
         {
@@ -83,6 +91,8 @@ namespace AntDesign
         {
             base.OnValueChange(value);
             this.CurrentValue = value;
+            Checked = value;
+            CheckedChanged.InvokeAsync(value);
         }
 
         protected async Task InputCheckedChange(ChangeEventArgs args)
@@ -98,6 +108,7 @@ namespace AntDesign
         {
             if (!this.Disabled)
             {
+                await CheckedChanged.InvokeAsync(@checked);
                 if (this.CheckedChange.HasDelegate)
                 {
                     await this.CheckedChange.InvokeAsync(@checked);
