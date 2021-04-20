@@ -202,7 +202,7 @@ namespace AntDesign
 
             CurrentEditContext.OnValidationStateChanged += (s, e) =>
             {
-                control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).ToArray();
+                control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
                 this._isValid = !control.ValidationMessages.Any();
 
                 StateHasChanged();
