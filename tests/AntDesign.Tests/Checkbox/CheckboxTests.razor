@@ -1,0 +1,73 @@
+﻿@inherits AntDesignTestBase
+@code {
+	[Fact]
+	public void Renders_basic_checkbox()
+	{
+		var cut = Render(@<Checkbox>Test</Checkbox>);
+		cut.MarkupMatches(
+			@<label class="ant-checkbox ant-checkbox-wrapper" id:ignore>
+				<span class="ant-checkbox">
+					<input type="checkbox" class="ant-checkbox-input">
+					<span class="ant-checkbox-inner"></span>
+				</span>
+				<span>Test</span>
+			</label>);
+	}
+
+	[Fact]
+	public void Toggle_basic_checkbox()
+	{
+		//Arrange
+		IRenderedComponent<Checkbox> cut = Render<Checkbox>(@<Checkbox>Test</Checkbox>);
+		Checkbox checkboxComponent = cut.Instance;
+		var inputElement = cut.Find("[type=checkbox]");
+		var oldValue = checkboxComponent.Checked;
+		//Act
+		inputElement.Change(true);
+		
+        //Assert
+        Assert.True(checkboxComponent.Checked);
+        Assert.NotEqual(oldValue, checkboxComponent.Checked);
+	}
+
+	[Fact]
+	public void Bind_Checked_basic_checkbox()
+	{
+		//Arrange
+		bool isChecked = false;		
+		var cut = Render(@<Checkbox @bind-Checked=isChecked>Test</Checkbox>);
+		var inputElement = cut.Find("[type=checkbox]");		
+		//Act
+		inputElement.Change(true);
+        //Assert
+        Assert.True(isChecked);        
+	}
+
+	[Fact]
+	public void Bind_Value_basic_checkbox()
+	{
+		//Arrange
+		bool isChecked = false;		
+		var cut = Render(@<Checkbox @bind-Value=isChecked>Test</Checkbox>);
+		var inputElement = cut.Find("[type=checkbox]");		
+		//Act
+		inputElement.Change(true);
+        //Assert
+        Assert.True(isChecked);    
+		
+	}
+
+	[Fact]
+	public void Fires_OnChange()
+	{
+		//Arrange
+		bool handlerExecuted = false;
+		Action<bool> onChangeHandler = value => { handlerExecuted = true; };
+		var cut = Render(@<Checkbox OnChange="onChangeHandler">Test</Checkbox>);
+		var inputElement = cut.Find("[type=checkbox]");
+		//Act
+		inputElement.Change(true);
+		//Assert		
+		Assert.True(handlerExecuted);
+	}
+}

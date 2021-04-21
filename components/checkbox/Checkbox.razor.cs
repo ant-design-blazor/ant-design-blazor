@@ -15,7 +15,7 @@ namespace AntDesign
         public EventCallback<bool> CheckedChange { get; set; }
 
         [Parameter] public Expression<Func<bool>> CheckedExpression { get; set; }
-        
+
         [Parameter] public bool Indeterminate { get; set; }
         [Parameter] public string Label { get; set; }
 
