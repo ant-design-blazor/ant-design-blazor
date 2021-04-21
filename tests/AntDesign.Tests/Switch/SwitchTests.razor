@@ -1,0 +1,86 @@
+﻿@inherits AntDesignTestBase
+@code {
+	[Fact]
+	public void Renders_basic_switch()
+	{
+		var cut = Render(@<Switch/>);
+		cut.MarkupMatches(
+			@<button type="button" role="switch" aria-checked="false" class="ant-switch" ant-click-animating="false">
+				<div class="ant-switch-handle"></div>
+				<span class="ant-switch-inner"> </span>    
+				<div class="ant-click-animating-node"></div>
+			</button>);
+	}
+
+	[Fact]
+	public void Toggle_basic_switch()
+	{
+		//Arrange
+		IRenderedComponent<Switch> cut = Render<Switch>(@<Switch/>);
+		Switch switchComponent = cut.Instance;
+		var buttonElement = cut.Find("button");
+		var oldValue = switchComponent.Checked;
+		//Act
+		buttonElement.Click();
+		
+        //Assert
+        Assert.True(switchComponent.Checked);
+        Assert.NotEqual(oldValue, switchComponent.Checked);
+	}
+
+	[Fact]
+	public void Bind_Checked_basic_switch()
+	{
+		//Arrange
+		bool isChecked = false;		
+		var cut = Render(@<Switch @bind-Checked=isChecked/>);		
+		var buttonElement = cut.Find("button");		
+		//Act
+		buttonElement.Click();		
+        //Assert
+        Assert.True(isChecked);        
+	}
+
+	[Fact]
+	public void Bind_Value_basic_switch()
+	{
+		//Arrange
+		bool isChecked = false;		
+		var cut = Render(@<Switch @bind-Value=isChecked/>);		
+		var buttonElement = cut.Find("button");		
+		//Act
+		buttonElement.Click();		
+        //Assert
+        Assert.True(isChecked);        
+	}
+
+	[Fact]
+	public void Renders_switch_with_text()
+	{
+		string onChild = "On", offChild = "Off";		
+		var cut = Render(@<Switch Checked="false" CheckedChildren=@onChild UnCheckedChildren=@offChild/>);
+		var buttonElement = cut.Find("button");		
+		var spanWithOffText = cut.Find("span.ant-switch-inner");
+		string actuallOffText = spanWithOffText.TextContent.Trim();
+		//Act
+		buttonElement.Click();		
+		//Assert
+		var spanWithOnText = cut.Find("span.ant-switch-inner");
+		Assert.Equal(offChild, actuallOffText );
+		Assert.Equal(onChild, spanWithOnText.TextContent.Trim());
+	}
+
+	[Fact]
+	public void Fires_OnChange()
+	{
+		//Arrange
+		bool handlerExecuted = false;
+		Action<bool> onChangeHandler = value => { handlerExecuted = true; };
+		var cut = Render(@<Switch OnChange="onChangeHandler"/>);		
+		var buttonElement = cut.Find("button");		
+		//Act
+		buttonElement.Click();
+		//Assert		
+		Assert.True(handlerExecuted);
+	}
+}
