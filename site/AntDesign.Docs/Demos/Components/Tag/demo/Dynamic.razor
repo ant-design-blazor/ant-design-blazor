@@ -2,7 +2,7 @@
     <div>
         @foreach (var item in lstTags)
         {
-            <Tag @key="item" Mode="closeable" OnClose="()=>onClose(item)">@item</Tag>
+            <Tag @key="item" Closable OnClose="()=>onClose(item)">@item</Tag>
         }
         @if (inputVisible)
         {
