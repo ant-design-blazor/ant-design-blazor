@@ -1,8 +1,8 @@
 ﻿@inject ConfirmService _confirmService
 
 <div>
-    <Tag Mode="closeable" OnClosing="async e=>await onClosing(e)" OnClose="onClose">onClosing</Tag>
-    <Tag Mode="closeable" OnClosing="async e=>await onClosing(e)" OnClose="onClose">onClosing</Tag>
+    <Tag Closable OnClosing="async e=>await onClosing(e)" OnClose="onClose">onClosing</Tag>
+    <Tag Closable OnClosing="async e=>await onClosing(e)" OnClose="onClose">onClosing</Tag>
 </div>
 
 @code{
