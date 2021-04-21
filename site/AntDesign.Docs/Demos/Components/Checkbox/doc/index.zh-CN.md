@@ -23,7 +23,7 @@ Checkbox
 | Checked            | 指定当前是否选中         | boolean         |false|
 | Disabled            | 失效状态         | boolean         |false       |
 | Indeterminate |设置 indeterminate 状态，只负责样式控制       | boolean        | false         |
-| CheckedChange |变化时回调函数| function(e)|-     |
+| OnChange |变化时回调函数| function(e)|-     |
 
 Checkbox Group
 

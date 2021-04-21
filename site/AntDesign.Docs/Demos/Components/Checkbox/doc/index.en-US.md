@@ -24,7 +24,7 @@ Checkbox
 | Checked            | Specifies whether the checkbox is selected.           | boolean         |false|
 | Disabled            | Disable checkbox           | boolean         |false       |
 | Indeterminate |indeterminate checked state of checkbox       | boolean        | false         |
-| CheckedChange |The callback function that is triggered when the state changes| function(e)|-     |
+| OnChange |The callback function that is triggered when the state changes| function(e)|-     |
 
 Checkbox Group
 
