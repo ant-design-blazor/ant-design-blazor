@@ -17,6 +17,7 @@ Switching Selector.
 
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
+| AutoFocus | get focus when component mounted                             | boolean        | false         |
 | Checked            | determine whether the Switch is checked         | boolean         |
 | CheckedChildren            | content to be shown when the state is checked        | RenderFragment         |-       |
 | DefaultChecked |to set the initial state     | string        | -         |
