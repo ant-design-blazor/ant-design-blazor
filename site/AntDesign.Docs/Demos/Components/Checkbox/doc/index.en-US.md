@@ -32,6 +32,7 @@ Checkbox Group
 | --- | --- | --- | --- |
 | CheckboxItems | Check box items                             | IList<AntCheckbox>        | -         |
 | Disable | Disable all checkbox                               | boolean        | false         |
+| MixedMode            | Applies only when bot `Options` and `ChildContent` is used. Allows to select which section (`Options` or `ChildContent`) will be rendered first.           | (enum)CheckboxGroupMixedMode         |ChildContentFirst       |
 | Options            |Specifies options         | CheckboxOption[]         |-       |
 | Value | List of selected value     | IList<string>        | Array.Empty<string>()         |
 | ValueChanged |The callback function that is triggered when the state changes| function(checkValue)|-     |

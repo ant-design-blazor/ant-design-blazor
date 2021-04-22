@@ -1,0 +1,25 @@
+﻿<div>
+    <CheckboxGroup Style="width:100%" 
+                   Options="@plainOptions" 
+                   OnChange="OnChange" 
+                   Value="@(new[]{"B", "Pear"})" 
+                   MixMode="@CheckboxGroupMixedMode.ChildContentFirst">
+        <Row>
+            <Col Span="8">
+                <Checkbox Label="Banana">Banana</Checkbox>
+            </Col>
+            <Col Span="8">
+                <Checkbox Label="Kiwi">Kiwi</Checkbox>
+            </Col>            
+        </Row>
+    </CheckboxGroup>
+</div>
+@using System.Text.Json
+@code {
+    string[] plainOptions = { "Apple", "Pear", "Orange" };
+
+    void OnChange(string[] checkedValues)
+    {
+        Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
+    }
+}

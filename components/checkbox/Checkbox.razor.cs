@@ -20,10 +20,14 @@ namespace AntDesign
         [Parameter] public string Label { get; set; }
 
         [CascadingParameter] public CheckboxGroup CheckboxGroup { get; set; }
+
+        internal bool IsFromOptions { get; set; }
+        private bool _isInitalized;
         protected override void OnInitialized()
         {
             base.OnInitialized();
             CheckboxGroup?.AddItem(this);
+            _isInitalized = true;
         }
 
         protected override void Dispose(bool disposing)
@@ -60,6 +64,14 @@ namespace AntDesign
                     await CheckedChange.InvokeAsync(value);
                 CheckboxGroup?.OnCheckboxChange(this);
             }
+        }
+
+        internal void SetValue(bool value) => Checked = value;
+
+        protected override void OnValueChange(bool value)
+        {
+            if (_isInitalized)
+                base.OnValueChange(value);
         }
 
     }
