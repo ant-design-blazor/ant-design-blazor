@@ -15,6 +15,16 @@ namespace AntDesign
         [Parameter]
         public RenderFragment CheckedChildrenTemplate { get; set; }
 
+        /// <summary>
+        /// The status of Switch is completely up to the user and no longer 
+        /// automatically changes the data based on the click event.
+        /// </summary>
+        [Parameter]
+        public bool Control { get; set; }
+
+        [Parameter]
+        public EventCallback OnClick { get; set; }
+
         [Parameter]
         public string UnCheckedChildren { get; set; } = string.Empty;
 
@@ -36,7 +46,13 @@ namespace AntDesign
                 ;
         }
 
-        private async Task HandleClick(MouseEventArgs e) => await base.ChangeValue(!CurrentValue);
+        private async Task HandleClick(MouseEventArgs e)
+        {
+            if (!Control)
+                await base.ChangeValue(!CurrentValue);
+            if (OnClick.HasDelegate)
+                await OnClick.InvokeAsync(null);
+        }
 
         private void HandleMouseOver(MouseEventArgs e) => _clickAnimating = true;
 

@@ -83,4 +83,17 @@
 		//Assert		
 		Assert.True(handlerExecuted);
 	}
+
+	[Fact]
+	public void Control_parameter()
+	{
+		//Arrange
+		bool isChecked = false;		
+		var cut = Render(@<Switch @bind-Value=@isChecked Control/>);		
+		var buttonElement = cut.Find("button");		
+		//Act
+		buttonElement.Click();		
+        //Assert
+        Assert.False(isChecked);        
+	}
 }
