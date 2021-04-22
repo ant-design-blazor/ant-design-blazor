@@ -75,7 +75,7 @@ namespace AntDesign.Datepicker.Locale
                     }
                     else
                     {
-                        _separators[^0] += format[i];
+                        _separators[_separators.Count-1] += format[i];
                     }
                     isLastSeparator = true;
                 }

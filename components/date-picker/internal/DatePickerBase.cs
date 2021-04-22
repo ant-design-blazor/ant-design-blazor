@@ -581,7 +581,7 @@ namespace AntDesign
                 };
             else
                 format = InternalFormat;
-            return value.ToString(format, CultureInfo);
+            return value.ToString(format, CultureInfo.InvariantCulture);
         }
 
         /// <summary>

@@ -62,7 +62,15 @@ namespace AntDesign.Tests.DatePicker.Locale
             new object[] { "yyyy年M月d日", "2020年01月1 日", false },
             new object[] { "yyyy年M月d日", "2020年01月 1日", false },
 
-            new object[] { "yyyy-MM-dd HH:mm:ss", "2020-01-01 10:01:02", true },
+            new object[] { "yyyy年M月d日 HH时mm分ss秒", "2020年4月16日 21时17分10秒", true },
+            new object[] { "yyyy年M月d日 HH时mm分ss秒", "2020年4月16 21时17分10秒", false },
+            new object[] { "yyyy年M月d日 HH时mm分ss秒", "2020年4月16日 21:17:10", false },
+            new object[] { "yyyy年M月d日 HH时mm分ss秒", "2020年4月16日 21时1分10秒", false },
+            new object[] { "yyyy年M月d日 HH时mm分ss秒", "2020年4月16日 21时17分1秒", false },
+            new object[] { "yyyy年M月d日 HH时mm分ss秒", "2020年4月16日 21时 7分10秒", false },
+            new object[] { "yyyy年M月d日 HH时mm分ss秒", "2020年4月16日 21时17分 1秒", false },
+
+
             new object[] { "yyyy-MM-dd HH:mm:ss", "2020-01-01 10:01:02", true },
 
             new object[] { "yyyy-MM-dd HH:mm:ss", "2020-01-01 1:01:02", false },
