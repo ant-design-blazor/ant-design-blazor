@@ -84,4 +84,58 @@
 		Assert.Equal(options[0].Value, selectedValues[0]);
 	}
 
+	[Theory]
+	[InlineData(CheckboxGroupMixedMode.ChildContentFirst, "B")]
+	[InlineData(CheckboxGroupMixedMode.OptionsFirst, "A")]
+	public void Renders_Mixed(CheckboxGroupMixedMode mode, string expectedValue)
+	{
+		//Arrange				
+		var cut = Render(
+			@<CheckboxGroup Options="@(new string[] {"A"})" MixMode=@mode>
+				<Checkbox Label="B">B</Checkbox>
+			</CheckboxGroup>
+			);
+		var inputElement = cut.Find("[type=checkbox]");			
+		//Assert		
+		Assert.Equal(expectedValue, inputElement.GetAttribute("value").Trim());
+	}
+
+	[Fact]	
+	public void MixedMode_Fires_OnChange()
+	{
+		//Arrange		
+		string[] selectedValues = Array.Empty<string>();
+		Action<string[]> onChangeHandler = value => { selectedValues = value; };
+		
+		var cut = Render(
+			@<CheckboxGroup Options="@(new string[] {"A"})" OnChange="onChangeHandler" MixMode=@CheckboxGroupMixedMode.OptionsFirst>
+				<Checkbox Label="B">B</Checkbox>
+			</CheckboxGroup>
+	);
+		var inputElements = cut.FindAll("[type=checkbox]");			
+		//Act
+		foreach(var inputElement in inputElements)
+		{
+			inputElement.Change(true);
+		}
+		//Assert		
+		selectedValues.Should().BeEquivalentTo(new string[] {"A", "B"});		
+	}
+
+	[Fact]	
+	public void MixedMode_Sets_Defaults()
+	{
+		//Arrange				
+		string[] values = new[] { "A", "B" };
+		//Act
+		var cut = Render<CheckboxGroup>(
+			@<CheckboxGroup Options="@(new string[] {"A"})" Value="@values">
+				<Checkbox Label="B">B</Checkbox>
+			</CheckboxGroup>);
+		var inputElements = cut.FindComponents<Checkbox>();
+		var actual = inputElements.Where(e => e.Instance.Checked)
+			.Select(e => e.Instance.Label).ToArray();
+		//Assert		
+		actual.Should().BeEquivalentTo(values);		
+	}
 }

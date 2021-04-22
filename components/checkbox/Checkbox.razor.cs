@@ -26,6 +26,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            SetClass();
             CheckboxGroup?.AddItem(this);
             _isInitalized = true;
         }
@@ -38,19 +39,20 @@ namespace AntDesign
 
         protected ClassMapper ClassMapperLabel { get; } = new ClassMapper();
 
-        internal override string PrefixCls => "ant-checkbox";
-        protected override void SetClass()
+        private string _prefixCls = "ant-checkbox";
+        protected void SetClass()
         {
-            base.SetClass();
             ClassMapperLabel.Clear()
-                .Add(PrefixCls)
-                .Add($"{PrefixCls}-wrapper")
-                .If($"{PrefixCls}-wrapper-checked", () => Checked);
+                .Add(_prefixCls)
+                .Add($"{_prefixCls}-wrapper")
+                .If($"{_prefixCls}-wrapper-checked", () => Checked);
 
-            ClassMapper
-                .If($"{PrefixCls}-checked", () => Checked && !Indeterminate)
-                .If($"{PrefixCls}-disabled", () => Disabled)
-                .If($"{PrefixCls}-indeterminate", () => Indeterminate)
+            ClassMapper.Clear()
+                .Add(_prefixCls)
+                .If($"{_prefixCls}-checked", () => Checked && !Indeterminate)
+                .If($"{_prefixCls}-disabled", () => Disabled)
+                .If($"{_prefixCls}-indeterminate", () => Indeterminate)
+                .If($"{_prefixCls}-rtl", () => RTL);
                 ;
         }
 

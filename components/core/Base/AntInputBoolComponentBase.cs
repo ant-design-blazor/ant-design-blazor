@@ -36,19 +36,6 @@ namespace AntDesign
 
         internal virtual string PrefixCls { get; }
 
-        protected virtual void SetClass()
-        {
-            ClassMapper.Clear()
-                .Add(PrefixCls)
-                .If($"{PrefixCls}-rtl", () => RTL);
-        }
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            SetClass();
-
-        }
-
         protected override void OnValueChange(bool value)
         {
             base.OnValueChange(value);

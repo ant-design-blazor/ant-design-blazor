@@ -85,6 +85,20 @@
 	}
 
 	[Fact]
+	public void Fires_OnClick()
+	{
+		//Arrange
+		bool handlerExecuted = false;
+		Action onClickHandler = () => { handlerExecuted = true; };
+		var cut = Render(@<Switch OnClick="onClickHandler"/>);		
+		var buttonElement = cut.Find("button");		
+		//Act
+		buttonElement.Click();
+		//Assert		
+		Assert.True(handlerExecuted);
+	}
+
+	[Fact]
 	public void Control_parameter()
 	{
 		//Arrange

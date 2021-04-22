@@ -33,16 +33,23 @@ namespace AntDesign
 
         private bool _clickAnimating = false;
 
-        internal override string PrefixCls => "ant-switch";
+        private string _prefixCls = "ant-switch";
 
-        protected override void SetClass()
+        protected override void OnInitialized()
         {
-            base.SetClass();
-            ClassMapper
-                .If($"{PrefixCls}-checked", () => CurrentValue)
-                .If($"{PrefixCls}-disabled", () => Disabled || Loading)
-                .If($"{PrefixCls}-loading", () => Loading)
-                .If($"{PrefixCls}-small", () => Size == "small")
+            base.OnInitialized();
+            SetClass();
+        }
+
+        protected void SetClass()
+        {
+            ClassMapper.Clear()
+                .Add(_prefixCls)
+                .If($"{_prefixCls}-checked", () => CurrentValue)
+                .If($"{_prefixCls}-disabled", () => Disabled || Loading)
+                .If($"{_prefixCls}-loading", () => Loading)
+                .If($"{_prefixCls}-small", () => Size == "small")
+                .If($"{_prefixCls}-rtl", () => RTL);
                 ;
         }
 

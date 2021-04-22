@@ -12,13 +12,13 @@
         @onmouseout="HandleMouseOut"
         @onclick="HandleClick"
         @ref="Ref">
-    <div class="@($"{PrefixCls}-handle")">
+    <div class="@($"{_prefixCls}-handle")">
         @if (Loading)
         {
-            <Icon Type="loading" Class="@($"{PrefixCls}-loading-icon")" />
+            <Icon Type="loading" Class="@($"{_prefixCls}-loading-icon")" />
         }
     </div>
-    <span class="@($"{PrefixCls}-inner")">
+    <span class="@($"{_prefixCls}-inner")">
         @if (CurrentValue)
         {
             if (CheckedChildrenTemplate != null)@CheckedChildrenTemplate else @CheckedChildren

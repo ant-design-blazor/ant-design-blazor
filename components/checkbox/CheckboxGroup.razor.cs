@@ -6,12 +6,6 @@ using OneOf;
 
 namespace AntDesign
 {
-    public enum CheckboxGroupMixedMode
-    {
-        ChildContentFirst,
-        OptionsFirst
-    };
-
     public partial class CheckboxGroup : AntInputComponentBase<string[]>
     {
         [Parameter]
@@ -27,7 +21,6 @@ namespace AntDesign
                 _isOptionDefined = true;
             }
         }
-        private OneOf<CheckboxOption[], string[]> _constructedOptions;
 
         [Parameter]
         public CheckboxGroupMixedMode MixMode { get; set; } = CheckboxGroupMixedMode.ChildContentFirst;
@@ -39,6 +32,7 @@ namespace AntDesign
         private Func<string[]> _currentValue;
         private IList<Checkbox> _checkboxItems;
         private OneOf<CheckboxOption[], string[]> _options;
+        private OneOf<CheckboxOption[], string[]> _constructedOptions;
         private bool _isOptionDefined;
         private int _indexConstructedOptionsOffset = -1;
         private int _indexSetOptionsOffset = -1;
@@ -58,7 +52,7 @@ namespace AntDesign
             this._checkboxItems ??= new List<Checkbox>();
             this._checkboxItems?.Add(checkbox);
 
-            checkbox.IsFromOptions = IsIsFromOptions(checkbox);
+            checkbox.IsFromOptions = IsCheckboxFromOptions(checkbox);
             if (!checkbox.IsFromOptions)
             {
                 checkbox.SetValue(_selectedValues.Contains(checkbox.Label));
@@ -69,17 +63,15 @@ namespace AntDesign
                 _indexSetOptionsOffset = _checkboxItems.Count - 1;
         }
 
-        private bool IsIsFromOptions(Checkbox checkbox)
+        private bool IsCheckboxFromOptions(Checkbox checkbox)
         {
             if (Options.Value is not null)
             {
                 if (ChildContent is not null)
                 {
-                    bool result = false;
-                    Options.Switch(
-                        opt => result = opt.Any(o => o.Label.Equals(checkbox.Label)),
-                        arr => result = arr.Contains(checkbox.Label));
-                    return result;
+                    return Options.Match(
+                        opt => opt.Any(o => o.Label.Equals(checkbox.Label)),
+                        arr => arr.Contains(checkbox.Label));
                 }
                 return true;
             }
@@ -120,36 +112,42 @@ namespace AntDesign
             {
                 if (ChildContent is not null && _checkboxItems.Count > 0)
                 {
-                    if (Options.IsT0)
-                        _constructedOptions = _checkboxItems
-                            .Where(c => !c.IsFromOptions)
-                            .Select(c => new CheckboxOption { Label = c.Label, Value = c.Label, Checked = c.Value })
-                            .ToArray();
-                    else
-                    {
-                        _constructedOptions = _checkboxItems
-                            .Where(c => !c.IsFromOptions)
-                            .Select(c => c.Label).ToArray();
-                    }
+                    _constructedOptions = CreateConstructedOptions();
                 }
-
-                if (ChildContent is not null && _isOptionDefined)
-                {
-                    Options.Match(
-                        opt => _currentValue = () => opt.Where(x => x.Checked).Select(x => x.Value)
-                                                    .Union(_constructedOptions.AsT0.Where(x => x.Checked).Select(x => x.Value))
-                                                    .ToArray(),
-                        arr => _currentValue = () => _selectedValues);
-                }
-                else
-                {
-                    var workWith = (_isOptionDefined ? Options : _constructedOptions);
-                    workWith.Match(
-                        opt => _currentValue = () => opt.Where(x => x.Checked).Select(x => x.Value).ToArray(),
-                        arr => _currentValue = () => _selectedValues);
-                }
+                _currentValue = GetCurrentValueFunc();
             }
             base.OnAfterRender(firstRender);
+        }
+
+        private OneOf<CheckboxOption[], string[]> CreateConstructedOptions()
+        {
+            if (Options.IsT0)
+            {
+                return _checkboxItems
+                    .Where(c => !c.IsFromOptions)
+                    .Select(c => new CheckboxOption { Label = c.Label, Value = c.Label, Checked = c.Value })
+                    .ToArray();
+            }
+            return _checkboxItems
+                .Where(c => !c.IsFromOptions)
+                .Select(c => c.Label).ToArray();
+        }
+
+        private Func<string[]> GetCurrentValueFunc()
+        {
+            if (ChildContent is not null && _isOptionDefined)
+            {
+                return Options.Match<Func<string[]>>(
+                    opt => () => opt.Where(x => x.Checked).Select(x => x.Value)
+                                                .Union(_constructedOptions.AsT0.Where(x => x.Checked).Select(x => x.Value))
+                                                .ToArray(),
+                    arr => () => _selectedValues);
+            }
+            var workWith = (_isOptionDefined ? Options : _constructedOptions);
+            return workWith.Match<Func<string[]>>(
+                opt => () => opt.Where(x => x.Checked).Select(x => x.Value).ToArray(),
+                arr => () => _selectedValues);
+
         }
 
         /// <summary>
