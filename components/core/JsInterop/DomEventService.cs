@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using AntDesign.Core.JsInterop.ObservableApi;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -15,6 +16,7 @@ namespace AntDesign.JsInterop
         private ConcurrentDictionary<string, List<DomEventSubscription>> _domEventListeners = new ConcurrentDictionary<string, List<DomEventSubscription>>();
 
         private readonly IJSRuntime _jsRuntime;
+        private bool? _isIE11 = null;
 
         public DomEventService(IJSRuntime jsRuntime)
         {
@@ -88,21 +90,30 @@ namespace AntDesign.JsInterop
         public async ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
         {
             string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
-            if (!_domEventListeners.ContainsKey(key))
+            if (await IsIE11())
             {
-                _domEventListeners[key] = new List<DomEventSubscription>();
-                await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key, DotNetObjectReference.Create(new Invoker<string>((p) =>
-                {
-                    for (var i = 0; i < _domEventListeners[key].Count; i++)
-                    {
-                        var subscription = _domEventListeners[key][i];
-                        object tP = JsonSerializer.Deserialize(p, subscription.Type);
-                        subscription.Delegate.DynamicInvoke(tP);
-                    }
-                })));
-                await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Observe, key, dom);
+                Console.WriteLine("Registering window.resize");
+                Action<JsonElement> action = (je) => callback.Invoke(new List<ResizeObserverEntry> { new ResizeObserverEntry() });
+                AddEventListener("window", "resize", action, false);
             }
-            _domEventListeners[key].Add(new DomEventSubscription(callback, typeof(List<ResizeObserverEntry>)));
+            else
+            {
+                if (!_domEventListeners.ContainsKey(key))
+                {
+                    _domEventListeners[key] = new List<DomEventSubscription>();
+                    await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key, DotNetObjectReference.Create(new Invoker<string>((p) =>
+                    {
+                        for (var i = 0; i < _domEventListeners[key].Count; i++)
+                        {
+                            var subscription = _domEventListeners[key][i];
+                            object tP = JsonSerializer.Deserialize(p, subscription.Type);
+                            subscription.Delegate.DynamicInvoke(tP);
+                        }
+                    })));
+                    await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Observe, key, dom);
+                }
+                _domEventListeners[key].Add(new DomEventSubscription(callback, typeof(List<ResizeObserverEntry>)));
+            }
         }
 
         public async ValueTask RemoveResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
@@ -121,16 +132,20 @@ namespace AntDesign.JsInterop
         public async ValueTask DisposeResizeObserver(ElementReference dom)
         {
             string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
-
-            await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Dispose, key);
+            if (!(await IsIE11()))
+            {
+                await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Dispose, key);
+            }
             _domEventListeners.TryRemove(key, out _);
         }
 
         public async ValueTask DisconnectResizeObserver(ElementReference dom)
         {
             string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
-
-            await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Disconnect, key);
+            if (!(await IsIE11()))
+            {
+                await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Disconnect, key);
+            }
             if (_domEventListeners.ContainsKey(key))
             {
                 _domEventListeners[key].Clear();
@@ -151,6 +166,8 @@ namespace AntDesign.JsInterop
                 }
             }
         }
+
+        private async ValueTask<bool> IsIE11() => _isIE11 ??= await _jsRuntime.IsIE11();
     }
 
     public class Invoker<T>

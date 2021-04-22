@@ -29,5 +29,7 @@ namespace AntDesign.Core.Extensions
 
         public static ValueTask SetSelectionStartAsync(this IJSRuntime jSRuntime, ElementReference target, int selectionStart) =>
             jSRuntime.InvokeVoidAsync(JSInteropConstants.SetSelectionStart, target, selectionStart);
+
+        public static ValueTask<bool> IsIE11(this IJSRuntime jSRuntime) => jSRuntime.InvokeAsync<bool>(JSInteropConstants.IsIE11);
     }
 }

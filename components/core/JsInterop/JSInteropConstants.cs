@@ -4,6 +4,7 @@
     {
         private const string FUNC_PREFIX = "AntDesign.interop.";
 
+        public static string IsIE11 => $"{FUNC_PREFIX}isIE11";
         public static string GetDomInfo => $"{FUNC_PREFIX}getDomInfo";
 
         public static string TriggerEvent => $"{FUNC_PREFIX}triggerEvent";
