@@ -3,7 +3,7 @@
 
 <CascadingValue Value="this" IsFixed="@true">
     <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-		@if (MixMode == CheckboxGroupMixedMode.ChildContentFirst)
+		@if (MixedMode == CheckboxGroupMixedMode.ChildContentFirst)
 			@ChildContent
         @if (Options.Value != null)
         {
@@ -32,7 +32,7 @@
                 }
             }
         }
-        @if (MixMode == CheckboxGroupMixedMode.OptionsFirst)
+        @if (MixedMode == CheckboxGroupMixedMode.OptionsFirst)
 			@ChildContent
     </div>
 </CascadingValue>

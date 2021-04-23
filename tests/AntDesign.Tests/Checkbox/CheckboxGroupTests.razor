@@ -91,7 +91,7 @@
 	{
 		//Arrange				
 		var cut = Render(
-			@<CheckboxGroup Options="@(new string[] {"A"})" MixMode=@mode>
+			@<CheckboxGroup Options="@(new string[] {"A"})" MixedMode=@mode>
 				<Checkbox Label="B">B</Checkbox>
 			</CheckboxGroup>
 			);
@@ -108,7 +108,7 @@
 		Action<string[]> onChangeHandler = value => { selectedValues = value; };
 		
 		var cut = Render(
-			@<CheckboxGroup Options="@(new string[] {"A"})" OnChange="onChangeHandler" MixMode=@CheckboxGroupMixedMode.OptionsFirst>
+			@<CheckboxGroup Options="@(new string[] {"A"})" OnChange="onChangeHandler" MixedMode=@CheckboxGroupMixedMode.OptionsFirst>
 				<Checkbox Label="B">B</Checkbox>
 			</CheckboxGroup>
 	);
@@ -132,6 +132,21 @@
 			@<CheckboxGroup Options="@(new string[] {"A"})" Value="@values">
 				<Checkbox Label="B">B</Checkbox>
 			</CheckboxGroup>);
+		var inputElements = cut.FindComponents<Checkbox>();
+		var actual = inputElements.Where(e => e.Instance.Checked)
+			.Select(e => e.Instance.Label).ToArray();
+		//Assert		
+		actual.Should().BeEquivalentTo(values);		
+	}
+
+	[Fact]	
+	public void Sets_Defaults_When_CheckboxOption_Used()
+	{
+		//Arrange				
+		string[] values = new[] { "Pear" };
+		//Act
+		var cut = Render<CheckboxGroup>(
+			@<CheckboxGroup Options="@options" Value="@values"/>);
 		var inputElements = cut.FindComponents<Checkbox>();
 		var actual = inputElements.Where(e => e.Instance.Checked)
 			.Select(e => e.Instance.Label).ToArray();

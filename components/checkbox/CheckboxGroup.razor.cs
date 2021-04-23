@@ -23,7 +23,7 @@ namespace AntDesign
         }
 
         [Parameter]
-        public CheckboxGroupMixedMode MixMode { get; set; } = CheckboxGroupMixedMode.ChildContentFirst;
+        public CheckboxGroupMixedMode MixedMode { get; set; } = CheckboxGroupMixedMode.ChildContentFirst;
 
         [Parameter]
         public EventCallback<string[]> OnChange { get; set; }
@@ -89,8 +89,8 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            if (ChildContent is null && MixMode == CheckboxGroupMixedMode.ChildContentFirst)
-                MixMode = CheckboxGroupMixedMode.OptionsFirst;
+            if (ChildContent is null && MixedMode == CheckboxGroupMixedMode.ChildContentFirst)
+                MixedMode = CheckboxGroupMixedMode.OptionsFirst;
 
             base.OnInitialized();
 
