@@ -3,18 +3,17 @@ using System.Globalization;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace AntDesign.Tests
 {
-    public class AntDesignTestBase : IDisposable
+    public class AntDesignTestBase : TestContext, IDisposable
     {
-        public TestContext Context { get; }
         public TestNavigationManager NavigationManager { get; }
+
+        protected TestContext Context => this;
 
         public AntDesignTestBase()
         {
-            Context = new TestContext();
             NavigationManager = new TestNavigationManager();
 
             Context.Services.AddScoped<NavigationManager>(sp => NavigationManager);
