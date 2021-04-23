@@ -85,17 +85,10 @@ namespace AntDesign
 
             var array = Value as Array;
 
-            if (BindConverter.TryConvertTo(args.Value.ToString(), CultureInfo, out DateTime changeValue))
+            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, CultureInfo, false))
             {
-                if (Picker == DatePickerType.Date)
-                {
-                    if (FormatAnalyzer.IsFullString(args.Value.ToString()))
-                        array.SetValue(changeValue, index);
-                    else
-                        return;
-                }
-                else
-                    array.SetValue(changeValue, index);
+                array.SetValue(changeValue, index);
+
                 ChangePickerValue(changeValue, index);
 
                 if (OnChange.HasDelegate)

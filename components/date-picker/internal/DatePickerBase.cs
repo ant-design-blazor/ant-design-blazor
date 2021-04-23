@@ -567,7 +567,7 @@ namespace AntDesign
         }
 
         private FormatAnalyzer _formatAnalyzer;
-        public FormatAnalyzer FormatAnalyzer => _formatAnalyzer ??= new(InternalFormat);
+        public FormatAnalyzer FormatAnalyzer => _formatAnalyzer ??= new(InternalFormat, Picker, Locale);
 
         public string GetFormatValue(DateTime value, int index)
         {
@@ -575,8 +575,8 @@ namespace AntDesign
             if (string.IsNullOrEmpty(Format))
                 format = _pickerStatus[index]._initPicker switch
                 {
-                    DatePickerType.Week => $"{value.Year}-{DateHelper.GetWeekOfYear(value)}{Locale.Lang.Week}",
-                    DatePickerType.Quarter => $"{value.Year}-{DateHelper.GetDayOfQuarter(value)}",
+                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{DateHelper.GetWeekOfYear(value)}{Locale.Lang.Week}",
+                    DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
                     _ => InternalFormat,
                 };
             else

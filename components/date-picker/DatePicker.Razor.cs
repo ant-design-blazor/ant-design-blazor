@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -83,17 +82,9 @@ namespace AntDesign
                 return;
             }
 
-            if (BindConverter.TryConvertTo(args.Value.ToString(), CultureInfo, out TValue changeValue))
+            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, CultureInfo, IsNullable))
             {
-                if (Picker == DatePickerType.Date)
-                {
-                    if (FormatAnalyzer.IsFullString(args.Value.ToString()))
-                        CurrentValue = changeValue;
-                    else
-                        return;
-                }
-                else
-                    CurrentValue = changeValue;
+                CurrentValue = changeValue;
 
                 GetIfNotNull(changeValue, (notNullValue) =>
                 {
