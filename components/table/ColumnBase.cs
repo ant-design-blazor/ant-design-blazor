@@ -67,6 +67,9 @@ namespace AntDesign
         [Parameter]
         public bool Ellipsis { get; set; }
 
+        [Parameter]
+        public bool Hidden { get; set; }
+
         public int ColIndex { get; set; }
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
