@@ -123,10 +123,12 @@ namespace AntDesign
                     ClearValue(index);
                 else
                 {
-                    if (BindConverter.TryConvertTo(input.Value, CultureInfo, out DateTime changeValue))
+                    if (FormatAnalyzer.TryPickerStringConvert(input.Value, out DateTime changeValue, CultureInfo, false))
                     {
                         var array = Value as Array;
                         array.SetValue(changeValue, index);
+                        if (!(await ValidateRange(index, changeValue, array)))
+                            return;
                     }
                     if (index == 0)
                     {
@@ -145,6 +147,44 @@ namespace AntDesign
             {
                 Close();
             }
+        }
+
+        private async Task<bool> ValidateRange(int index, DateTime newDate, Array array)
+        {
+            if (index == 0 && ((DateTime)array.GetValue(1)).CompareTo(newDate) < 0)
+            {
+                ValidationClear(1, array);
+                await Blur(0);
+                await Focus(1);
+                return false;
+            }
+            else if (index == 1 && newDate.CompareTo((DateTime)array.GetValue(0)) < 0)
+            {
+                ValidationClear(0, array);
+                await Blur(1);
+                await Focus(0);
+                return false;
+            }
+            return true;
+        }
+
+        private void ValidationClear(int index, Array array)
+        {
+            if (!IsNullable && DefaultValue != null)
+            {
+                var defaults = DefaultValue as Array;
+                array.SetValue(defaults.GetValue(index), index);
+            }
+            else
+            {
+                array.SetValue(default, index);
+            }
+            (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(_pickerStatus[index]._initPicker, Locale);
+            if (index == 0)
+                _placeholders[index] = first;
+            else
+                _placeholders[index] = second;
+            _pickerStatus[index]._hadSelectValue = false;
         }
 
         private async Task OnFocus(int index)
