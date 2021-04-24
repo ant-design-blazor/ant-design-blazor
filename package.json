@@ -58,6 +58,5 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "antd-theme-generator": "1.2.2"
-    "vinyl-source-stream": "^2.0.0"
   }
 }
