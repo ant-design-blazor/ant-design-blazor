@@ -3,9 +3,8 @@
 	[Fact]
 	public void Renders_basic_divider()
 	{
-		var cut = Context.Render(@<AntDesign.Divider/>);
-		var id = (cut.Nodes.First() as IElement).GetAttribute("id");
-		cut.MarkupMatches(@<span class="ant-divider ant-divider-horizontal" id="@id"></span>);
+		var cut = Context.Render(@<AntDesign.Divider/>);		
+		cut.MarkupMatches(@<span class="ant-divider ant-divider-horizontal" id:ignore></span>);
 	}
 
 	[Fact]
@@ -14,10 +13,9 @@
 		var style = "font-weight:bold";
 		var orientation = "left";
 
-		var cut = Context.Render(@<AntDesign.Divider Orientation="@orientation" Style="@style">A Title</AntDesign.Divider>);
-		var id = (cut.Nodes.First() as IElement).GetAttribute("id");
+		var cut = Context.Render(@<AntDesign.Divider Orientation="@orientation" Style="@style">A Title</AntDesign.Divider>);		
 		cut.MarkupMatches(
-			@<span class="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-left" style="@style" id="@id">
+			@<span class="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-left" style="@style" id:ignore>
 				<span class="ant-divider-inner-text">A Title</span>
 			</span>
 		);
@@ -36,14 +34,12 @@
 			</text>
 	);
 		var spanNodes = cut.Nodes.GetElementsByTagName("span");
-		var id1 = spanNodes.First().GetAttribute("id");
-		var id2 = spanNodes.Last().GetAttribute("id");
 		cut.MarkupMatches(
 			@<text>
 				Text
-				<span class="ant-divider ant-divider-vertical" id="@id1"></span>
+				<span class="ant-divider ant-divider-vertical" id:ignore></span>
 				<a href="#">Link 1</a>
-				<span class="ant-divider ant-divider-vertical" id="@id2"></span>
+				<span class="ant-divider ant-divider-vertical" id:ignore></span>
 				<a href="#">Link 2</a>
 			</text>
 		);
