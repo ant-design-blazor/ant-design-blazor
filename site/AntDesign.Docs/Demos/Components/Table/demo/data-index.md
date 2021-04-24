@@ -13,7 +13,7 @@ title:
 
 Column使用DataIndex时，Table的OnChange参数 `QuerModel<TItem>.SortModel[].FieldName` 等于 `DataIndex`。
 
-DataIndex支持的访问操作类型，详见[路径式属性访问](/zh-CN/docs/path-based-property-access)
+DataIndex支持的访问操作类型，详见[成员路径助手](/zh-CN/docs/member-path-helper)
 
 ## en-US
 
@@ -23,4 +23,4 @@ When the bound property is ValueType and is Nullable, `TData` should be set to N
 
 When Column uses DataIndex, Table's OnChange event parameter `QuerModel<TItem>.SortModel[].FieldName` is equal to `DataIndex`.
 
-See [path-based-property-access](/en-US/docs/path-based-property-access) for details of the access modes supported by DataIndex.
+See [Member path helper](/en-US/docs/member-path-helper) for details of the access modes supported by DataIndex.

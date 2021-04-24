@@ -13,20 +13,23 @@ namespace AntDesign.Internal
         internal static MemberInfo GetReturnMemberInfo(LambdaExpression expression)
         {
             var accessorBody = expression.Body;
-
-            if (accessorBody is UnaryExpression unaryExpression
-             && unaryExpression.NodeType == ExpressionType.Convert
-             && unaryExpression.Type == typeof(object))
+            while (true)
             {
-                accessorBody = unaryExpression.Operand;
+                if (accessorBody is UnaryExpression unaryExpression)
+                {
+                    accessorBody = unaryExpression.Operand;
+                }
+                else if (accessorBody is ConditionalExpression conditionalExpression)
+                {
+                    accessorBody = conditionalExpression.IfTrue;
+                }
+                else
+                {
+                    break;
+                }
             }
 
-            if (accessorBody is ConditionalExpression conditionalExpression)
-            {
-                accessorBody = conditionalExpression.IfTrue;
-            }
-
-            if (!(accessorBody is MemberExpression memberExpression))
+            if (accessorBody is not MemberExpression memberExpression)
             {
                 throw new ArgumentException($"The type of the provided expression {accessorBody.GetType().Name} is not supported, it should be {nameof(MemberExpression)}.");
             }
