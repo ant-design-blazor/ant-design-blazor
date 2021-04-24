@@ -154,8 +154,8 @@ namespace AntDesign.Tests.DatePicker.Locale
             //Arrange
             var details = new FormatAnalyzer(dateFormat, DatePickerType.Year, new());
             //Act
-            var actualResult1 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
-            var actualResult2 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
+            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
+            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
             //Assert            
             Assert.Equal(expectedResult, actualResult1);
             Assert.Equal(expectedParsedDate, actualParsedDate1);
@@ -166,6 +166,7 @@ namespace AntDesign.Tests.DatePicker.Locale
         public static IEnumerable<object[]> TryParseYear_SoulReturnCorrectBool_seed => new List<object[]>
         {
             new object[] { "yyyy", "2020", true, new DateTime(2020, 1, 1) },
+            new object[] { "yyyy", "0020", true, new DateTime(20, 1, 1) },
             new object[] { "XXyyyyZ", "XX2020Z", true, new DateTime(2020, 1, 1) },
             new object[] { "yyyy年", "2021年", true, new DateTime(2021, 1, 1) },
             new object[] { "yyyy", "202", false, null },
@@ -175,14 +176,15 @@ namespace AntDesign.Tests.DatePicker.Locale
 
         [Theory]
         [MemberData(nameof(TryParseWeek_SoulReturnCorrectBool_seed))]
-        public void TryParseWeek_SoulReturnCorrectBool(
+        public void TryParseWeek_SoulReturnCorrectBool(string yearFormat, string dateFormat,
             string possibleDate, bool expectedResult, DateTime expectedParsedDate)
         {
             //Arrange            
-            var details = new FormatAnalyzer("0000-10Week", DatePickerType.Week, new());
+            var details = new FormatAnalyzer(dateFormat, DatePickerType.Week,
+                new() { Lang = new() { YearFormat = yearFormat } });
             //Act
-            var actualResult1 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
-            var actualResult2 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
+            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
+            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
             //Assert            
             Assert.Equal(expectedResult, actualResult1);
             Assert.Equal(expectedParsedDate, actualParsedDate1);
@@ -192,39 +194,43 @@ namespace AntDesign.Tests.DatePicker.Locale
 
         public static IEnumerable<object[]> TryParseWeek_SoulReturnCorrectBool_seed => new List<object[]>
         {
-            new object[] { "2020-1Week", true, new DateTime(2020, 1, 1) },
-            new object[] { "0120-1Week", true, new DateTime(120, 1, 1) },
-            new object[] { "2020-2Week", true, new DateTime(2020, 1, 6) },
-            new object[] { "2020- 1Week", true, new DateTime(2020, 1, 1) },
-            new object[] { "2020-12Week", true, new DateTime(2020,3, 16) },
-            new object[] { "2020-52Week", true, new DateTime(2020, 12, 21) },
-            new object[] { "2020-53Week", true, new DateTime(2020, 12, 28) },
-            new object[] { "2040-54Week", true, new DateTime(2040, 12, 31) }, //extremely rare, only when leap year + 1st of Jan is on Sunday
-            new object[] { "2020-54Week", false, null },
-            new object[] { "202-12Week", false, null },
-            new object[] { "2 20-12Week", false, null },
-            new object[] { " 020-12Week", false, null },
-            new object[] { "20201Week", false, null },
-            new object[] { "2020/1Week", false, null },
-            new object[] { "2020-1Weeks", false, null },
-            new object[] { "2020-1week", false, null },
-            new object[] { "2020-1week", false, null },
-            new object[] { "2020--1Week", false, null },
-            new object[] { "2020-0Week", false, null },
-            new object[] { "2020-AWeek", false, null },
-
+            new object[] { "yyyy", "yyyy-1Week","2020-1Week", true, new DateTime(2020, 1, 1) },
+            new object[] { "yyyy年", "yyyy年-1Week", "2020年-1Week", true, new DateTime(2020, 1, 1) },
+            new object[] { "AAyyyy年", "AAyyyy年-1Week", "AA2020年-1Week", true, new DateTime(2020, 1, 1) },
+            new object[] { "  AAyyyy年", "  AAyyyy年-1Week", "  AA2020年-1Week", true, new DateTime(2020, 1, 1) },
+            new object[] { " AAyyyy年", " AAyyyy年-1Week", "  AA2020年-1Week", false, null },
+            new object[] { "yyyy", "yyyy-1Week","0120-1Week", true, new DateTime(120, 1, 1) },
+            new object[] { "yyyy", "yyyy-1Week","2020-2Week", true, new DateTime(2020, 1, 6) },
+            new object[] { "yyyy", "yyyy-1Week","2020- 1Week", true, new DateTime(2020, 1, 1) },
+            new object[] { "yyyy", "yyyy-1Week","2020-12Week", true, new DateTime(2020,3, 16) },
+            new object[] { "yyyy", "yyyy-1Week","2020-52Week", true, new DateTime(2020, 12, 21) },
+            new object[] { "yyyy", "yyyy-1Week","2020-53Week", true, new DateTime(2020, 12, 28) },
+            new object[] { "yyyy", "yyyy-1Week","2040-54Week", true, new DateTime(2040, 12, 31) }, //extremely rare, only when leap year + 1st of Jan is on Sunday
+            new object[] { "yyyy", "yyyy-1Week","2020-54Week", false, null },
+            new object[] { "yyyy", "yyyy-1Week","202-12Week", false, null },
+            new object[] { "yyyy", "yyyy-1Week","2 20-12Week", false, null },
+            new object[] { "yyyy", "yyyy-1Week"," 020-12Week", false, null },
+            new object[] { "yyyy", "yyyy-1Week","20201Week", false, null },
+            new object[] { "yyyy", "yyyy-1Week","2020/1Week", false, null },
+            new object[] { "yyyy", "yyyy-1Week","2020-1Weeks", false, null },
+            new object[] { "yyyy", "yyyy-1Week","2020-1week", false, null },
+            new object[] { "yyyy", "yyyy-1Week","2020-1week", false, null },
+            new object[] { "yyyy", "yyyy-1Week","2020--1Week", false, null },
+            new object[] { "yyyy", "yyyy-1Week","2020-0Week", false, null },
+            new object[] { "yyyy", "yyyy-1Week","2020-AWeek", false, null },
         };
 
         [Theory]
         [MemberData(nameof(TryParseQuarter_SoulReturnCorrectBool_seed))]
-        public void TryParseQuarter_SoulReturnCorrectBool(
+        public void TryParseQuarter_SoulReturnCorrectBool(string yearFormat, string dateFormat,
             string possibleDate, bool expectedResult, DateTime expectedParsedDate)
         {
             //Arrange            
-            var details = new FormatAnalyzer("0000-Q0", DatePickerType.Quarter, new());
+            var details = new FormatAnalyzer(dateFormat, DatePickerType.Quarter, 
+                new() { Lang = new() { YearFormat = yearFormat } });
             //Act
-            var actualResult1 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
-            var actualResult2 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
+            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
+            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
             //Assert            
             Assert.Equal(expectedResult, actualResult1);
             Assert.Equal(expectedParsedDate, actualParsedDate1);
@@ -234,20 +240,24 @@ namespace AntDesign.Tests.DatePicker.Locale
 
         public static IEnumerable<object[]> TryParseQuarter_SoulReturnCorrectBool_seed => new List<object[]>
         {
-            new object[] { "2020-Q2", true, new DateTime(2020, 4, 1) },
-            new object[] { "2020-Q1", true, new DateTime(2020, 1, 1) },
-            new object[] { "2020-Q3", true, new DateTime(2020, 7, 1) },
-            new object[] { "2020-Q4", true, new DateTime(2020, 10, 1) },
-            new object[] { "0020-Q4", true, new DateTime(20, 10, 1) },
-            new object[] { "2020-q4", true, new DateTime(2020, 10, 1) },
-            new object[] { "2020-Q5", false, null },
-            new object[] { "2020-Q0", false, null },
-            new object[] { "2020-1", false, null },
-            new object[] { "202-Q1", false, null },
-            new object[] { "20 2-Q1", false, null },
-            new object[] { " 202-Q1", false, null },
-            new object[] { "2020/Q1", false, null },
-            new object[] { "2020 Q1", false, null },
+            new object[] { "yyyy", "yyyy-Q0", "2020-Q2", true, new DateTime(2020, 4, 1) },
+            new object[] { "yyyy年", "yyyy年-Q0", "2020年-Q1", true, new DateTime(2020, 1, 1) },
+            new object[] { "AAyyyy年", "AAyyyy年-Q0", "AA2020年-Q1", true, new DateTime(2020, 1, 1) },
+            new object[] { "  AAyyyy年", "  AAyyyy年-Q0", "  AA2020年-Q1", true, new DateTime(2020, 1, 1) },
+            new object[] { "  AAyyyy年", "  AAyyyy年-Q0", " AA2020年-Q1", false, null },
+            new object[] { "yyyy", "yyyy-Q0","2020-Q1", true, new DateTime(2020, 1, 1) },
+            new object[] { "yyyy", "yyyy-Q0","2020-Q3", true, new DateTime(2020, 7, 1) },
+            new object[] { "yyyy", "yyyy-Q0","2020-Q4", true, new DateTime(2020, 10, 1) },
+            new object[] { "yyyy", "yyyy-Q0","0020-Q4", true, new DateTime(20, 10, 1) },
+            new object[] { "yyyy", "yyyy-Q0","2020-q4", true, new DateTime(2020, 10, 1) },
+            new object[] { "yyyy", "yyyy-Q0","2020-Q5", false, null },
+            new object[] { "yyyy", "yyyy-Q0","2020-Q0", false, null },
+            new object[] { "yyyy", "yyyy-Q0","2020-1", false, null },
+            new object[] { "yyyy", "yyyy-Q0","202-Q1", false, null },
+            new object[] { "yyyy", "yyyy-Q0","20 2-Q1", false, null },
+            new object[] { "yyyy", "yyyy-Q0"," 202-Q1", false, null },
+            new object[] { "yyyy", "yyyy-Q0","2020/Q1", false, null },
+            new object[] { "yyyy", "yyyy-Q0", "2020 Q1", false, null },
         };
     }
 }

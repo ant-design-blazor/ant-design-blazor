@@ -43,8 +43,8 @@ namespace AntDesign.Datepicker.Locale
             _analyzerType = analyzerType;
             _locale = locale;
             //Quarter and Week have individual appoaches, so no need to analyze format
-            if (!(_analyzerType == DatePickerType.Quarter || _analyzerType == DatePickerType.Week))
-                AnalyzeFormat(format);
+            //if (!(_analyzerType == DatePickerType.Quarter || _analyzerType == DatePickerType.Week))
+            AnalyzeFormat(format);
         }
 
         private void AnalyzeFormat(string format)
@@ -172,9 +172,7 @@ namespace AntDesign.Datepicker.Locale
             if (arr.Length != 2)
                 return (false, default);
 
-            if (!(arr[0].Trim().Length >= _locale.Lang.YearFormat.Length
-                && arr[0].Trim().Length < 5
-                && int.TryParse(arr[0], out int year)))
+            if (!ExtractYearPartial(forEvaluation, arr[0], out int year))
                 return (false, default);
 
             if (!arr[1].StartsWith(quarterPrefix.ToUpper()) && !arr[1].StartsWith(quarterPrefix.ToLower()))
@@ -198,9 +196,7 @@ namespace AntDesign.Datepicker.Locale
             if (arr.Length != 2)
                 return (false, default);
 
-            if (!(arr[0].Trim().Length >= _locale.Lang.YearFormat.Length
-                && arr[0].Trim().Length < 5
-                && int.TryParse(arr[0], out int year)))
+            if (!ExtractYearPartial(forEvaluation, arr[0], out int year))
                 return (false, default);
 
             if (!arr[1].EndsWith(_locale.Lang.Week))
@@ -225,6 +221,23 @@ namespace AntDesign.Datepicker.Locale
                 return (true, resultDate);
 
             return (false, default);
+        }
+
+        private bool ExtractYearPartial(string forEvaluation, string partial, out int year)
+        {
+            year = 0;
+            if (!(partial.Length >= _locale.Lang.YearFormat.Length))
+                return false;
+
+            int startPosition = _startPosition, endingPosition;
+            endingPosition = forEvaluation.IndexOf(_separators[_separatorPrefixOffset][0], startPosition);
+            string yearPartial = partial.Substring(startPosition, endingPosition - startPosition).Trim();
+            if (!(_yearLength <= yearPartial.Length && yearPartial.Length <= 4))
+                return false;
+
+            if (!int.TryParse(yearPartial, out year))
+                return false;
+            return true;
         }
 
         Func<string, CultureInfo, (bool, DateTime)> _converter;
