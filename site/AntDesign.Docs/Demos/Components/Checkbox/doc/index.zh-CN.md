@@ -31,7 +31,7 @@ Checkbox Group
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | CheckboxItems | 自动获取焦点                             | IList<AntCheckbox>        | -         |
 | Disable | 整组失效                             | boolean        | false         |
-| MixedMode            | Applies only when bot `Options` and `ChildContent` is used. Allows to select which section (`Options` or `ChildContent`) will be rendered first.           | (enum)CheckboxGroupMixedMode         |ChildContentFirst       |
+| MixedMode            | 混合模式。用于当 `Options` 和 `ChildContent` 同时设置选项时，选择渲染的顺序。 | (enum)CheckboxGroupMixedMode         |ChildContentFirst       |
 | Options            |指定可选项         | CheckboxOption[]         |-       |
 | Value |选中组的值列表     | IList<string>        | Array.Empty<string>()         |
 | ValueChanged |变化时回调函数| function(e)|-     |
