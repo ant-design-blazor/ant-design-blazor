@@ -546,6 +546,8 @@ namespace AntDesign
                             DatePickerType.Month => Locale.Lang.YearMonthFormat,
                             DatePickerType.Year => Locale.Lang.YearFormat,
                             DatePickerType.Time => Locale.Lang.TimeFormat,
+                            DatePickerType.Week => $"{Locale.Lang.YearFormat}-0{Locale.Lang.Week}",
+                            DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-Q0",
                             _ => Locale.Lang.DateFormat,
                         };
 
