@@ -1,0 +1,20 @@
+﻿<div>
+    <Switch Checked="@_switchValue" Loading="@_isLoading" Control OnClick="Click"/>
+</div>
+
+@code
+{
+    bool _switchValue; 
+    bool _isLoading = false;
+
+    async Task Click()
+    {
+        if (!_isLoading) 
+        {
+            _isLoading = true;
+            await Task.Delay(3000);
+            _switchValue = !_switchValue;
+            _isLoading = false;
+        }
+    }
+}
