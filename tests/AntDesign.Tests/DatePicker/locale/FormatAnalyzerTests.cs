@@ -16,9 +16,11 @@ namespace AntDesign.Tests.DatePicker.Locale
             //Arrange
             var details = new FormatAnalyzer(dateFormat, DatePickerType.Date, new());
             //Act
-            var actual = details.IsFullString(possibleDate);
+            var actual1 = details.IsFullString(possibleDate);
+            var actual2 = details.IsFullString(possibleDate);
             //Assert
-            Assert.Equal(expectedResult, actual);
+            Assert.Equal(expectedResult, actual1);
+            Assert.Equal(expectedResult, actual2);
         }
 
         public static IEnumerable<object[]> FormatAnalyzer_values_seeds => new List<object[]>
@@ -28,6 +30,9 @@ namespace AntDesign.Tests.DatePicker.Locale
             new object[] { "yyyy", "202", false },
             new object[] { "yyyy", "20 0", false },
 
+            new object[] { "AAAyyyy-MM-dd", "AAA2020-01-01", true },
+            new object[] { "   AAAyyyy-MM-dd", "   AAA2020-01-01", true },
+            new object[] { "   AAAyyyy-MM-dd", "  AAA2020-01-01", false},
             new object[] { "yyyy-MM-dd", "2020-01-01", true },
             new object[] { "yyyy-MM-dd", "202-01-01", false },
             new object[] { "yyyy-MM-dd", "20-01-01", false },
@@ -149,15 +154,20 @@ namespace AntDesign.Tests.DatePicker.Locale
             //Arrange
             var details = new FormatAnalyzer(dateFormat, DatePickerType.Year, new());
             //Act
-            var actualResult = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate, CultureInfo.CurrentCulture, false);
+            var actualResult1 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
+            var actualResult2 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
             //Assert            
-            Assert.Equal(expectedResult, actualResult);
-            Assert.Equal(expectedParsedDate, actualParsedDate);
+            Assert.Equal(expectedResult, actualResult1);
+            Assert.Equal(expectedParsedDate, actualParsedDate1);
+            Assert.Equal(expectedResult, actualResult2);
+            Assert.Equal(expectedParsedDate, actualParsedDate2);
         }
 
         public static IEnumerable<object[]> TryParseYear_SoulReturnCorrectBool_seed => new List<object[]>
         {
             new object[] { "yyyy", "2020", true, new DateTime(2020, 1, 1) },
+            new object[] { "XXyyyyZ", "XX2020Z", true, new DateTime(2020, 1, 1) },
+            new object[] { "yyyy年", "2021年", true, new DateTime(2021, 1, 1) },
             new object[] { "yyyy", "202", false, null },
             new object[] { "yyyy", "2 20", false, null },
             new object[] { "yyyy", "20020", false, null },
@@ -171,10 +181,13 @@ namespace AntDesign.Tests.DatePicker.Locale
             //Arrange            
             var details = new FormatAnalyzer("0000-10Week", DatePickerType.Week, new());
             //Act
-            var actualResult = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate, CultureInfo.CurrentCulture, false);
+            var actualResult1 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
+            var actualResult2 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
             //Assert            
-            Assert.Equal(expectedResult, actualResult);
-            Assert.Equal(expectedParsedDate, actualParsedDate);
+            Assert.Equal(expectedResult, actualResult1);
+            Assert.Equal(expectedParsedDate, actualParsedDate1);
+            Assert.Equal(expectedResult, actualResult2);
+            Assert.Equal(expectedParsedDate, actualParsedDate2);
         }
 
         public static IEnumerable<object[]> TryParseWeek_SoulReturnCorrectBool_seed => new List<object[]>
@@ -210,10 +223,13 @@ namespace AntDesign.Tests.DatePicker.Locale
             //Arrange            
             var details = new FormatAnalyzer("0000-Q0", DatePickerType.Quarter, new());
             //Act
-            var actualResult = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate, CultureInfo.CurrentCulture, false);
+            var actualResult1 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
+            var actualResult2 = details.TryPickerStringConvert<DateTime>(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
             //Assert            
-            Assert.Equal(expectedResult, actualResult);
-            Assert.Equal(expectedParsedDate, actualParsedDate);
+            Assert.Equal(expectedResult, actualResult1);
+            Assert.Equal(expectedParsedDate, actualParsedDate1);
+            Assert.Equal(expectedResult, actualResult2);
+            Assert.Equal(expectedParsedDate, actualParsedDate2);
         }
 
         public static IEnumerable<object[]> TryParseQuarter_SoulReturnCorrectBool_seed => new List<object[]>

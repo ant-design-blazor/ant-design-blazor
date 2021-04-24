@@ -19,7 +19,11 @@ namespace AntDesign.Datepicker.Locale
 
         private List<string> _separators = new();
         private List<DateTimePartialType> _partialsOrder = new();
-        private readonly string _anaylzerType;
+        private Dictionary<DateTimePartialType, int> _parsedMap;
+        private readonly string _analyzerType;
+        private bool _hasPrefix;
+        private int _startPosition;
+        private int _separatorPrefixOffset;
         private readonly DatePickerLocale _locale;
 
         public enum DateTimePartialType
@@ -33,16 +37,19 @@ namespace AntDesign.Datepicker.Locale
             Year
         }
 
-        public FormatAnalyzer(string format, string anaylzerType, DatePickerLocale locale)
+        public FormatAnalyzer(string format, string analyzerType, DatePickerLocale locale)
         {
             _formatLength = format.Length;
-            AnalyzeFormat(format);
-            _anaylzerType = anaylzerType;
+            _analyzerType = analyzerType;
             _locale = locale;
+            //Quarter and Week have individual appoaches, so no need to analyze format
+            if (!(_analyzerType == DatePickerType.Quarter || _analyzerType == DatePickerType.Week))
+                AnalyzeFormat(format);
         }
 
         private void AnalyzeFormat(string format)
         {
+            _parsedMap = new();
             bool? inDate = null;
             bool isLastSeparator = false;
             int partialOrder = 0;
@@ -73,11 +80,13 @@ namespace AntDesign.Datepicker.Locale
                         _ => throw new ArgumentException("Character not covered")
                     };
                 }
-                else if (inDate is not null) //separators
+                else //separators
                 {
                     if (!isLastSeparator)
                     {
                         _separators.Add(format[i].ToString());
+                        if (inDate is null)
+                            _hasPrefix = true;
                     }
                     else
                     {
@@ -86,12 +95,18 @@ namespace AntDesign.Datepicker.Locale
                     isLastSeparator = true;
                 }
             }
+            if (_hasPrefix)
+            {
+                _startPosition = _separators[0].Length;
+                _separatorPrefixOffset = _hasPrefix ? 1 : 0;
+            }
         }
 
         private bool Increment(ref int lengthValue, ref int partialOrder, DateTimePartialType partialType)
         {
             if (lengthValue == 0)
             {
+                _parsedMap.Add(partialType, 0);
                 _partialsOrder.Add(partialType);
                 partialOrder++;
             }
@@ -104,11 +119,11 @@ namespace AntDesign.Datepicker.Locale
             if (forEvaluation.Length < _formatLength)
                 return false;
 
-            int startPosition = 0, endingPosition;
+            int startPosition = _startPosition, endingPosition, parsed;
             for (int i = 0; i < _partialsOrder.Count; i++)
             {
-                if (i < _separators.Count)
-                    endingPosition = forEvaluation.IndexOf(_separators[i], startPosition);
+                if (i < (_separators.Count - _separatorPrefixOffset))
+                    endingPosition = forEvaluation.IndexOf(_separators[i + _separatorPrefixOffset], startPosition);
                 else
                     endingPosition = forEvaluation.Length;
                 //handles situation when separator was removed from date
@@ -129,7 +144,7 @@ namespace AntDesign.Datepicker.Locale
                 if (!(borders.minLen <= partial.Length && partial.Length <= borders.maxLen))
                     return false;
                 //check if partial is pars-able and grater than 0                
-                if (int.TryParse(partial, out int parsed))
+                if (int.TryParse(partial, out parsed))
                 {
                     if ((parsed <= 0 && _partialsOrder[i] >= DateTimePartialType.Day)
                         || (parsed < 0 && _partialsOrder[i] < DateTimePartialType.Day))
@@ -144,7 +159,8 @@ namespace AntDesign.Datepicker.Locale
                     return false;
 
                 if (endingPosition < forEvaluation.Length)
-                    startPosition = endingPosition + _separators[i].Length;
+                    startPosition = endingPosition + _separators[i + _separatorPrefixOffset].Length;
+                _parsedMap[_partialsOrder[i]] = parsed;
             }
             return true;
         }
@@ -219,17 +235,16 @@ namespace AntDesign.Datepicker.Locale
             {
                 if (_converter is null)
                 {
-                    Console.WriteLine("Converter setup");
-                    switch (_anaylzerType)
+                    switch (_analyzerType)
                     {
                         case DatePickerType.Year:
-                            _converter = (pickerString, currentCultureInfo) => TryParseYear(pickerString);
+                            _converter = (pickerString, _) => TryParseYear(pickerString);
                             break;
                         case DatePickerType.Quarter:
-                            _converter = (pickerString, currentCultureInfo) => TryParseQuarterString(pickerString);
+                            _converter = (pickerString, _) => TryParseQuarterString(pickerString);
                             break;
                         case DatePickerType.Week:
-                            _converter = (pickerString, currentCultureInfo) => TryParseWeekString(pickerString);
+                            _converter = (pickerString, _) => TryParseWeekString(pickerString);
                             break;
                         default:
                             _converter = (pickerString, currentCultureInfo) => TryParseDate(pickerString, currentCultureInfo);
@@ -264,8 +279,7 @@ namespace AntDesign.Datepicker.Locale
         {
             if (IsFullString(pickerString))
             {
-                int value = int.Parse(pickerString);
-                return (true, new DateTime(value, 1, 1));
+                return (true, new DateTime(_parsedMap[DateTimePartialType.Year], 1, 1));
             }
             return (false, default);
         }
