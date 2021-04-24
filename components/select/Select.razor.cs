@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using AntDesign.Select;
@@ -51,7 +52,7 @@ namespace AntDesign
             get => _disabledName;
             set
             {
-                _getDisabled = string.IsNullOrWhiteSpace(value) ? null : SelectItemPropertyHelper.CreateGetDisabledFunc<TItem>(value);
+                _getDisabled = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, bool>(value);
                 _disabledName = value;
             }
         }
@@ -65,7 +66,7 @@ namespace AntDesign
             get => _groupName;
             set
             {
-                _getGroup = string.IsNullOrWhiteSpace(value) ? null : SelectItemPropertyHelper.CreateGetGroupFunc<TItem>(value);
+                _getGroup = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
                 _groupName = value;
             }
         }
@@ -85,10 +86,10 @@ namespace AntDesign
             get => _labelName;
             set
             {
-                _getLabel = SelectItemPropertyHelper.CreateGetLabelFunc<TItem>(value);
+                _getLabel = PathHelper.GetDelegate<TItem, string>(value);
                 if (SelectMode == SelectMode.Tags)
                 {
-                    _setLabel = SelectItemPropertyHelper.CreateSetLabelFunc<TItem>(value);
+                    _setLabel = PathHelper.SetDelegate<TItem, string>(value);
                 }
                 _labelName = value;
             }
@@ -179,8 +180,8 @@ namespace AntDesign
             get => _valueName;
             set
             {
-                _getValue = SelectItemPropertyHelper.CreateGetValueFunc<TItem, TItemValue>(value);
-                _setValue = SelectItemPropertyHelper.CreateSetValueFunc<TItem, TItemValue>(value);
+                _getValue = PathHelper.GetDelegate<TItem, TItemValue>(value);
+                _setValue = PathHelper.SetDelegate<TItem, TItemValue>(value);
                 _valueName = value;
             }
         }
