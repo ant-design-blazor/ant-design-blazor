@@ -53,7 +53,6 @@ namespace AntDesign
                 .If($"{_prefixCls}-disabled", () => Disabled)
                 .If($"{_prefixCls}-indeterminate", () => Indeterminate)
                 .If($"{_prefixCls}-rtl", () => RTL);
-                ;
         }
 
         protected async Task InputCheckedChange(ChangeEventArgs args)
