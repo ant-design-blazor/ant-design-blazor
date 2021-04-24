@@ -23,7 +23,20 @@ namespace AntDesign
         }
 
         [Parameter]
-        public CheckboxGroupMixedMode MixedMode { get; set; } = CheckboxGroupMixedMode.ChildContentFirst;
+        public CheckboxGroupMixedMode MixedMode
+        {
+            get { return _mixedMode; }
+            set {
+                bool isChanged = _afterFirstRender && _mixedMode != value;
+                _mixedMode = value;
+                if (isChanged)
+                {
+                    //were changed by RemoveItem
+                    _indexConstructedOptionsOffset = -1; //force recalculation
+                    _indexSetOptionsOffset = 0;
+                }
+            }
+        }
 
         [Parameter]
         public EventCallback<string[]> OnChange { get; set; }
@@ -34,8 +47,10 @@ namespace AntDesign
         private OneOf<CheckboxOption[], string[]> _options;
         private OneOf<CheckboxOption[], string[]> _constructedOptions;
         private bool _isOptionDefined;
+        private bool _afterFirstRender;
         private int _indexConstructedOptionsOffset = -1;
         private int _indexSetOptionsOffset = -1;
+        private CheckboxGroupMixedMode _mixedMode = CheckboxGroupMixedMode.ChildContentFirst;
 
         [Parameter]
         public bool Disabled { get; set; }
@@ -115,6 +130,7 @@ namespace AntDesign
                     _constructedOptions = CreateConstructedOptions();
                 }
                 _currentValue = GetCurrentValueFunc();
+                _afterFirstRender = true;
             }
             base.OnAfterRender(firstRender);
         }
