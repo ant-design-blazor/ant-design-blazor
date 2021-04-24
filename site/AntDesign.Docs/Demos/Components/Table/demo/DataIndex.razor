@@ -4,9 +4,9 @@
     <Column @bind-Field="@context.Id" Sortable/>
     <Column Title="DayOfWeek" @bind-Field="@context.DayOfWeek" Sortable/>
     <Column Title="DayOfWeek DataIndex" TData="int" DataIndex="DayOfWeek" Sortable SorterCompare="@((v1, v2) => v1 - v2)" Filters="DayOfWeekFilter" OnFilter="(a, b) => a == b"/>
-    <Column Title="N1.N12.N2A DataIndex" TData="string" DataIndex=@("N1.N12[\"test\"].N2A") Sortable/>
+    <Column Title="N1.N12.N2A DataIndex" TData="string" DataIndex=@("N1.N12['test'].N2A") Sortable/>
     <Column Title="N1.N1A DataIndex Nullable" TData="int?" DataIndex="N1.N1A" Sortable SorterCompare="CompareNullableInt"/>
-    <Column Title="Time" TData="DateTime?" DataIndex=@(@"N1.N12[""test""].Time") Format="yyyy-MM-dd hh:mm:ss" Sortable SorterCompare="_dateTimeCompare"></Column>
+    <Column Title="Time" TData="DateTime?" DataIndex=@(@"N1.N12['test'].Time") Format="yyyy-MM-dd hh:mm:ss" Sortable SorterCompare="_dateTimeCompare"></Column>
 </Table>
 
 @code {
