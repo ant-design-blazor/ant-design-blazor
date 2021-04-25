@@ -35,6 +35,7 @@ namespace AntDesign
 
         public static string Log => $"{FUNC_PREFIX}log";
 
+        [Obsolete("It will be removed in the future, because Blazor already has a native implementation.")]
         public static string Focus => $"{FUNC_PREFIX}focus";
         public static string HasFocus => $"{FUNC_PREFIX}hasFocus";
 
