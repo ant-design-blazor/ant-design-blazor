@@ -1,58 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using AntDesign.core.JsInterop.EventArg;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
-    public partial class Checkbox : AntInputComponentBase<bool>
+    public partial class Checkbox : AntInputBoolComponentBase
     {
         [Parameter] public RenderFragment ChildContent { get; set; }
 
-        [Parameter] public EventCallback<bool> CheckedChange { get; set; }
+        //[Obsolete] attribute does not work with [Parameter] for now. Tracking issue: https://github.com/dotnet/aspnetcore/issues/30967
+        [Obsolete("Instead use @bing-Checked or EventCallback<bool> CheckedChanged .")]
+        [Parameter]
+        public EventCallback<bool> CheckedChange { get; set; }
 
         [Parameter] public Expression<Func<bool>> CheckedExpression { get; set; }
 
-        [Parameter] public bool AutoFocus { get; set; }
-
-        [Parameter] public bool Disabled { get; set; }
-
         [Parameter] public bool Indeterminate { get; set; }
+        [Parameter] public string Label { get; set; }
 
-        [Parameter]
-        public bool Checked
-        {
-            get => CurrentValue;
-            set
-            {
-                if (CurrentValue != value)
-                {
-                    CurrentValue = value;
-                }
-            }
-        }
+        [CascadingParameter] public CheckboxGroup CheckboxGroup { get; set; }
 
-        [Parameter]
-        public string Label { get; set; }
-
-        [CascadingParameter]
-        public CheckboxGroup CheckboxGroup { get; set; }
-
-        protected Dictionary<string, object> InputAttributes { get; set; } = new Dictionary<string, object>();
-
-        protected override void OnParametersSet()
-        {
-            SetClass();
-            base.OnParametersSet();
-        }
-
+        internal bool IsFromOptions { get; set; }
+        private bool _isInitalized;
         protected override void OnInitialized()
         {
-            UpdateAutoFocus();
+            base.OnInitialized();
+            SetClass();
             CheckboxGroup?.AddItem(this);
+            _isInitalized = true;
         }
 
         protected override void Dispose(bool disposing)
@@ -61,63 +37,43 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        protected ClassMapper ClassMapperSpan { get; } = new ClassMapper();
+        protected ClassMapper ClassMapperLabel { get; } = new ClassMapper();
 
+        private string _prefixCls = "ant-checkbox";
         protected void SetClass()
         {
-            string prefixName = "ant-checkbox";
+            ClassMapperLabel.Clear()
+                .Add(_prefixCls)
+                .Add($"{_prefixCls}-wrapper")
+                .If($"{_prefixCls}-wrapper-checked", () => Checked);
+
             ClassMapper.Clear()
-                .Add(prefixName)
-                .Add($"{prefixName}-wrapper")
-                .If($"{prefixName}-wrapper-checked", () => Checked);
-
-            ClassMapperSpan.Clear()
-                .Add(prefixName)
-                .If($"{prefixName}-checked", () => Checked && !Indeterminate)
-                .If($"{prefixName}-disabled", () => Disabled)
-                .If($"{prefixName}-indeterminate", () => Indeterminate)
-                .If($"{prefixName}-rtl", () => RTL);
-        }
-
-        protected override void OnValueChange(bool value)
-        {
-            base.OnValueChange(value);
-            this.CurrentValue = value;
+                .Add(_prefixCls)
+                .If($"{_prefixCls}-checked", () => Checked && !Indeterminate)
+                .If($"{_prefixCls}-disabled", () => Disabled)
+                .If($"{_prefixCls}-indeterminate", () => Indeterminate)
+                .If($"{_prefixCls}-rtl", () => RTL);
         }
 
         protected async Task InputCheckedChange(ChangeEventArgs args)
         {
             if (args != null && args.Value is bool value)
             {
-                CurrentValue = value;
-                await InnerCheckedChange(value);
-            }
-        }
+                await base.ChangeValue(value);
 
-        protected async Task InnerCheckedChange(bool @checked)
-        {
-            if (!this.Disabled)
-            {
-                if (this.CheckedChange.HasDelegate)
-                {
-                    await this.CheckedChange.InvokeAsync(@checked);
-                }
+                if (CheckedChange.HasDelegate) //kept for compatibility reasons with previous versions
+                    await CheckedChange.InvokeAsync(value);
                 CheckboxGroup?.OnCheckboxChange(this);
             }
         }
 
-        protected void UpdateAutoFocus()
+        internal void SetValue(bool value) => Checked = value;
+
+        protected override void OnValueChange(bool value)
         {
-            if (this.AutoFocus)
-            {
-                if (InputAttributes.ContainsKey("autofocus") == false)
-                    InputAttributes.Add("autofocus", "autofocus");
-            }
-            else
-            {
-                if (InputAttributes.ContainsKey("autofocus") == true)
-                    InputAttributes.Remove("autofocus");
-            }
+            if (_isInitalized)
+                base.OnValueChange(value);
         }
+
     }
 }

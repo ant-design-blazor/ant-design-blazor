@@ -1,35 +1,31 @@
+@using System.Text.Json
 <div>
-    TO BE Defined
-    @*<CheckboxGroup Style="width:100%"  ValueChanged="@OnChange">
+    <CheckboxGroup Style="width:100%"  ValueChanged="@OnChange">
 
         <Row>
             <Col Span="8">
-                <Checkbox Value="A" >A</Checkbox>
+                <Checkbox Label="A">A</Checkbox>
             </Col>
             <Col Span="8">
-                <Checkbox Value="B"  >B</Checkbox>
+                <Checkbox Label="B">B</Checkbox>
             </Col>
             <Col Span="8">
-                <Checkbox Value="C"  >C</Checkbox>
+                <Checkbox Label="C">C</Checkbox>
             </Col>
             <Col Span="8">
-                <Checkbox Value="D" >D</Checkbox>
+                <Checkbox Label="D">D</Checkbox>
             </Col>
             <Col Span="8">
-                <Checkbox Value="E" >E</Checkbox>
+                <Checkbox Label="E">E</Checkbox>
             </Col>
         </Row>
-    </CheckboxGroup>*@
-
-
-
+    </CheckboxGroup>
 </div>
-@code
-{   
 
-    void OnChange()
+@code {    
+
+    void OnChange(string[] checkedValues)
     {
-
+        Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
     }
 }
-
