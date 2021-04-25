@@ -2,8 +2,8 @@ import * as observable from './ObservableApi/observableApi';
 
 export { observable };
 
-export function isIE11(): boolean {  
-  return !!navigator.userAgent.match(/Trident.*rv[ :]*11\./);
+export function isResizeObserverSupported(): boolean {  
+  return "ResizeObserver" in window;
 }
 
 export function getDom(element) {

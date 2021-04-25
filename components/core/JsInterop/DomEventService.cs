@@ -16,7 +16,7 @@ namespace AntDesign.JsInterop
         private ConcurrentDictionary<string, List<DomEventSubscription>> _domEventListeners = new ConcurrentDictionary<string, List<DomEventSubscription>>();
 
         private readonly IJSRuntime _jsRuntime;
-        private bool? _isIE11 = null;
+        private bool? _isResizeObserverSupported = null;
 
         public DomEventService(IJSRuntime jsRuntime)
         {
@@ -90,7 +90,7 @@ namespace AntDesign.JsInterop
         public async ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
         {
             string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
-            if (await IsIE11())
+            if (!(await IsResizeObserverSupported()))
             {
                 Console.WriteLine("Registering window.resize");
                 Action<JsonElement> action = (je) => callback.Invoke(new List<ResizeObserverEntry> { new ResizeObserverEntry() });
@@ -132,7 +132,7 @@ namespace AntDesign.JsInterop
         public async ValueTask DisposeResizeObserver(ElementReference dom)
         {
             string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
-            if (!(await IsIE11()))
+            if (await IsResizeObserverSupported())
             {
                 await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Dispose, key);
             }
@@ -142,7 +142,7 @@ namespace AntDesign.JsInterop
         public async ValueTask DisconnectResizeObserver(ElementReference dom)
         {
             string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
-            if (!(await IsIE11()))
+            if (await IsResizeObserverSupported())
             {
                 await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Disconnect, key);
             }
@@ -167,7 +167,7 @@ namespace AntDesign.JsInterop
             }
         }
 
-        private async ValueTask<bool> IsIE11() => _isIE11 ??= await _jsRuntime.IsIE11();
+        private async ValueTask<bool> IsResizeObserverSupported() => _isResizeObserverSupported ??= await _jsRuntime.IsResizeObserverSupported();
     }
 
     public class Invoker<T>
