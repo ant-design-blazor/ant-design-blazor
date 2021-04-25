@@ -1,0 +1,113 @@
+﻿@using System.ComponentModel
+
+<Table TItem="Data" DataSource="@data.Skip((pageIndex-1)*pageSize).Take(pageSize)">
+    <ChildContent>
+        <Column @bind-Field="@context.Name">
+            <a>@context.Name</a>
+        </Column>
+        <Column @bind-Field="@context.Age"></Column>
+        <Column @bind-Field="@context.Address">
+            <TitleTemplate>
+                <span> <Icon Type="environment" /> Address </span>
+            </TitleTemplate>
+        </Column>
+        <Column @bind-Field="@context.Tags">
+            @foreach (var tag in context.Tags)
+            {
+                var color = tag.Length > 5 ? "geekblue" : "green";
+                if (tag == "loser")
+                {
+                    color = "volcano";
+                }
+                <Tag Color="@color">@tag</Tag>
+            }
+        </Column>
+    </ChildContent>
+
+    <PaginationTemplate>
+        <div style="display: flex; align-items: center">
+            <Pagination Class="my-custom-pagination"
+                        Total="@total"
+                        PageSize="pageSize"
+                        Current="pageIndex"
+                        ShowSizeChanger="@true"
+                        OnChange="HandlePageChange" />
+        </div>
+    </PaginationTemplate>
+</Table>
+
+@code{
+    Data[] data = new Data[]
+    {
+        new()
+        {
+            Key = "1",
+            Name = "John Brown",
+            Age = 32,
+            Address = "New York No. 1 Lake Park",
+            Tags = new[] {"nice", "developer"}
+        },
+        new()
+        {
+            Key = "2",
+            Name = "Jim Green",
+            Age = 42,
+            Address = "London No. 1 Lake Park",
+            Tags = new[] { "loser"}
+        },
+        new()
+        {
+            Key = "3",
+            Name = "Joe Black",
+            Age = 32,
+            Address = "Sidney No. 1 Lake Park",
+            Tags = new[] { "cool", "teacher" }
+        }
+    };
+
+    private int total => data.Count();
+    private int pageSize { get; set; } = 1;
+    private int pageIndex { get; set; } = 1;
+
+    public class Data
+    {
+        [DisplayName("Key")]
+        public string Key { get; set; }
+
+        [DisplayName("Name")]
+        public string Name { get; set; }
+
+        [DisplayName("Age")]
+        public int Age { get; set; }
+
+        [DisplayName("Address")]
+        public string Address { get; set; }
+
+        [DisplayName("Tags")]
+        public string[] Tags { get; set; }
+    }
+
+    private void HandlePageChange(PaginationEventArgs args)
+    {
+        if (pageIndex != args.Page)
+        {
+            pageIndex = args.Page;
+        }
+
+        if (pageSize != args.PageSize)
+        {
+            pageSize = args.PageSize;
+        }
+    }
+}
+
+<style>
+    .my-custom-pagination {
+        margin: 15px 0;
+    }
+
+        .my-custom-pagination .ant-pagination-item,
+        .my-custom-pagination .ant-pagination-item-link {
+            border-radius: 100%;
+        }
+</style>
