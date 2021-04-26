@@ -437,6 +437,9 @@ namespace AntDesign.Internal
             int overlaySize = direction == "top" ? overlay.ClientHeight : overlay.ClientWidth;
             int boundarySize = await GetWindowBoundarySize(direction, containerElement);
 
+            // 距离边界的长度或宽度/distance from top or left boundry
+            int distanceFromBoundry = await GetOverlayDistanceFromBoundary(direction, curPos);
+
             if (Trigger.Trigger.Contains(TriggerType.ContextMenu))
             {
                 if (overlaySize + curPos > boundarySize)
@@ -453,7 +456,8 @@ namespace AntDesign.Internal
 
             int overlayPosWithSize = GetOverlayPosWithSize(curPos, overlaySize);
 
-            if (overlayPosWithSize > boundarySize || overlayPosWithSize < 0)
+            if ((overlayPosWithSize > boundarySize || overlayPosWithSize < 0)
+                && distanceFromBoundry >= overlaySize) // check if still outof boundary after reverse placement
             {
                 // 翻转位置/reverse placement
                 Trigger.ChangePlacementForShow(Trigger.Placement.GetReverseType());
@@ -467,20 +471,7 @@ namespace AntDesign.Internal
                 curPos = reversePos;
             }
 
-            /*
-                TODO： 翻转位置后仍然超出了边界/still outof boundary range after reverse placement
-             */
-            //overlayPosWithSize = GetOverlayPosWithSize(curPos, overlaySize);
-            //if (overlayPosWithSize > boundarySize)
-            //{
-            //    curPos = GetOverlayBoundaryPos(overlaySize, boundarySize);
-            //}
-            //else if (overlayPosWithSize < 0)
-            //{
-            //    curPos -= overlayPosWithSize;
-            //}
-
-            return curPos;
+            return curPos < 0 ? 0 : curPos;
         }
 
         private int GetOverlayPosWithSize(int overlayPos, int overlaySize)
@@ -509,6 +500,24 @@ namespace AntDesign.Internal
             {
                 return boundarySize - overlaySize;
             }
+        }
+
+        private async Task<int> GetOverlayDistanceFromBoundary(string direction, int overlayPos)
+        {
+            if (Trigger.BoundaryAdjustMode == TriggerBoundaryAdjustMode.InScroll)
+            {
+                return overlayPos;
+            }
+
+            JsonElement scrollInfo = await JsInvokeAsync<JsonElement>(JSInteropConstants.GetScroll);
+            int windowScrollX = (int)scrollInfo.GetProperty("x").GetDouble();
+            int windowScrollY = (int)scrollInfo.GetProperty("y").GetDouble();
+
+            return direction switch
+            {
+                "top" => overlayPos - windowScrollY,
+                _ => overlayPos - windowScrollX
+            };
         }
 
         private async Task<int> GetWindowBoundarySize(string direction, HtmlElement containerElement)
