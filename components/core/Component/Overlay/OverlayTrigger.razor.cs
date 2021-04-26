@@ -134,12 +134,8 @@ namespace AntDesign.Internal
         [Parameter]
         public ElementReference TriggerReference
         {
-            get => _triggerReference;
-            set
-            {
-                _triggerReference = value;
-                RefBack.Set(value);
-            }
+            get => Ref;
+            set => Ref = value;
         }
 
         [Inject]
@@ -173,7 +169,7 @@ namespace AntDesign.Internal
                 DomEventService.AddEventListener(Ref, "mouseout", OnUnboundMouseLeave, true);
                 DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn, true);
                 DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut, true);
-                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
+                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);                
             }
             return base.OnAfterRenderAsync(firstRender);
         }
@@ -190,7 +186,6 @@ namespace AntDesign.Internal
         {
             var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
             await OnClickDiv(eventArgs);
         }
 
