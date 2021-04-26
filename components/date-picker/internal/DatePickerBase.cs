@@ -346,7 +346,7 @@ namespace AntDesign
             _inputEnd.IsOnFocused = inputEndFocus;
         }
 
-        protected async Task OnSelect(DateTime date)
+        protected virtual async Task OnSelect(DateTime date)
         {
             int index = 0;
 

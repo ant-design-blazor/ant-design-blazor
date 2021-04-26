@@ -85,7 +85,7 @@ namespace AntDesign
 
             var array = Value as Array;
 
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, CultureInfo, false))
+            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, false))
             {
                 array.SetValue(changeValue, index);
 
@@ -123,7 +123,7 @@ namespace AntDesign
                     ClearValue(index);
                 else
                 {
-                    if (FormatAnalyzer.TryPickerStringConvert(input.Value, out DateTime changeValue, CultureInfo, false))
+                    if (FormatAnalyzer.TryPickerStringConvert(input.Value, out DateTime changeValue, false))
                     {
                         var array = Value as Array;
                         array.SetValue(changeValue, index);

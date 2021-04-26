@@ -82,7 +82,7 @@ namespace AntDesign
                 return;
             }
 
-            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, CultureInfo, IsNullable))
+            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
             {
                 CurrentValue = changeValue;
 
@@ -121,7 +121,7 @@ namespace AntDesign
                     ClearValue();
                 else
                 {
-                    if (BindConverter.TryConvertTo(_inputStart.Value, CultureInfo, out TValue changeValue))
+                    if (FormatAnalyzer.TryPickerStringConvert(_inputStart.Value, out TValue changeValue, IsNullable))
                         Value = changeValue;
                     Close();
                 }
