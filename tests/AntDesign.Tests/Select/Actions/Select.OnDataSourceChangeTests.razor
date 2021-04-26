@@ -1,0 +1,56 @@
+﻿@inherits AntDesignTestBase
+@code {
+    record Person(int Id, string Name);
+    List<Person> _persons = new List<Person>
+    {
+        new Person(1, "John"),
+        new Person(2, "Lucy"),
+        new Person(3, "Jack"),
+        new Person(4, "Emily"),
+    };
+
+    [Fact]
+    public async Task Action_fired_when_datasource_changed()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());        
+        bool handlerCalled = false;
+        Action OnDataSourceChangedHandler = () => handlerCalled = true;
+
+        var cut = Render<AntDesign.Select<int, Person>>(
+        @<AntDesign.Select DataSource="@_persons"            
+            LabelName="@nameof(Person.Name)"
+            ValueName="@nameof(Person.Id)"
+            Value="0"
+            OnDataSourceChanged="OnDataSourceChangedHandler">
+        </AntDesign.Select>);
+        //Act
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, new List<Person>()));        
+        //Assert
+        handlerCalled.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Action_not_fired_when_datasource_item_added()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());        
+        bool handlerCalled = false;
+        Action OnDataSourceChangedHandler = () => handlerCalled = true;
+        
+        var cut = Render<AntDesign.Select<int, Person>>(
+        @<AntDesign.Select DataSource="@_persons"            
+            LabelName="@nameof(Person.Name)"
+            ValueName="@nameof(Person.Id)"
+            Value="0"
+            OnDataSourceChanged="OnDataSourceChangedHandler">
+        </AntDesign.Select>);
+        //Act
+        _persons.Add(new Person(5, "Fank"));
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
+        //Assert
+        handlerCalled.Should().BeFalse();
+    }
+}  
