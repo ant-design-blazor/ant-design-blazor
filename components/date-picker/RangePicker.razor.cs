@@ -151,14 +151,14 @@ namespace AntDesign
 
         private async Task<bool> ValidateRange(int index, DateTime newDate, Array array)
         {
-            if (index == 0 && ((DateTime)array.GetValue(1)).CompareTo(newDate) < 0)
+            if (index == 0 && array.GetValue(1) is not null && ((DateTime)array.GetValue(1)).CompareTo(newDate) < 0)
             {
                 ValidationClear(1, array);
                 await Blur(0);
                 await Focus(1);
                 return false;
             }
-            else if (index == 1 && newDate.CompareTo((DateTime)array.GetValue(0)) < 0)
+            else if (index == 1 && array.GetValue(0) is not null && newDate.CompareTo((DateTime)array.GetValue(0)) < 0)
             {
                 ValidationClear(0, array);
                 await Blur(1);
