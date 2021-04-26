@@ -153,8 +153,8 @@ namespace AntDesign.Tests.DatePicker.Locale
             //Arrange
             var details = new FormatAnalyzer(dateFormat, DatePickerType.Date, new());
             //Act
-            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
-            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
+            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, false);
+            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, false);
             //Assert            
             Assert.Equal(expectedResult, actualResult1);
             Assert.Equal(expectedParsedDate, actualParsedDate1);
@@ -306,8 +306,8 @@ namespace AntDesign.Tests.DatePicker.Locale
             //Arrange
             var details = new FormatAnalyzer(dateFormat, DatePickerType.Year, new());
             //Act
-            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
-            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
+            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, false);
+            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, false);
             //Assert            
             Assert.Equal(expectedResult, actualResult1);
             Assert.Equal(expectedParsedDate, actualParsedDate1);
@@ -335,8 +335,8 @@ namespace AntDesign.Tests.DatePicker.Locale
             var details = new FormatAnalyzer(dateFormat, DatePickerType.Week,
                 new() { Lang = new() { YearFormat = yearFormat } });
             //Act
-            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
-            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
+            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, false);
+            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, false);
             //Assert            
             Assert.Equal(expectedResult, actualResult1);
             Assert.Equal(expectedParsedDate, actualParsedDate1);
@@ -381,8 +381,8 @@ namespace AntDesign.Tests.DatePicker.Locale
             var details = new FormatAnalyzer(dateFormat, DatePickerType.Quarter, 
                 new() { Lang = new() { YearFormat = yearFormat } });
             //Act
-            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, CultureInfo.CurrentCulture, false);
-            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, CultureInfo.CurrentCulture, false);
+            var actualResult1 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate1, false);
+            var actualResult2 = details.TryPickerStringConvert(possibleDate, out DateTime actualParsedDate2, false);
             //Assert            
             Assert.Equal(expectedResult, actualResult1);
             Assert.Equal(expectedParsedDate, actualParsedDate1);
