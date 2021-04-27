@@ -7,6 +7,7 @@ using AntDesign.Datepicker.Locale;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using OneOf;
 
 namespace AntDesign
@@ -238,6 +239,7 @@ namespace AntDesign
         protected Stack<string> _prePickerStack = new Stack<string>();
         protected bool _isClose = true;
         protected bool _needRefresh;
+        protected bool _duringManualInput;
         private bool _isCultureSetOutside;
         private bool _isLocaleSetOutside;
         private CultureInfo _cultureInfo = LocaleProvider.CurrentLocale.CurrentCulture;
@@ -288,6 +290,11 @@ namespace AntDesign
         {
             await base.OnAfterRenderAsync(firstRender);
 
+            if (firstRender)
+            {
+                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, _inputStart.Ref, new[] { "ArrowUp", "ArrowDown" });
+            }
+
             if (_needRefresh && IsRange)
             {
                 if (_inputStart.IsOnFocused)
@@ -320,10 +327,18 @@ namespace AntDesign
             _needRefresh = false;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            _ = InvokeAsync(async () =>
+            {
+                await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, _inputStart.Ref);
+            });
+        }
+
         protected string GetInputValue(int index = 0)
         {
             DateTime? tryGetValue = GetIndexValue(index);
-
             if (tryGetValue == null)
             {
                 return "";
@@ -340,7 +355,7 @@ namespace AntDesign
             {
                 return;
             }
-
+            _duringManualInput = false;
             _needRefresh = true;
             _inputStart.IsOnFocused = inputStartFocus;
             _inputEnd.IsOnFocused = inputEndFocus;
@@ -348,13 +363,8 @@ namespace AntDesign
 
         protected virtual async Task OnSelect(DateTime date)
         {
-            int index = 0;
-
-            // change focused picker
-            if (IsRange && _inputEnd.IsOnFocused)
-            {
-                index = 1;
-            }
+            int index = GetOnFocusPickerIndex();
+            _duringManualInput = false;
 
             // InitPicker is the finally value
             if (_picker == _pickerStatus[index]._initPicker)
@@ -375,6 +385,10 @@ namespace AntDesign
                         await Focus(0);
                     }
                 }
+                else
+                {
+                    await Focus(index);
+                }
             }
             else
             {
@@ -382,6 +396,10 @@ namespace AntDesign
             }
 
             ChangePickerValue(date, index);
+        }
+
+        protected virtual async Task OnBlur(int index)
+        {
         }
 
         protected void InitPicker(string picker)
@@ -433,6 +451,7 @@ namespace AntDesign
 
         public void Close()
         {
+            _duringManualInput = false;
             _dropDown?.Hide();
         }
 
@@ -460,7 +479,7 @@ namespace AntDesign
         public async Task Blur(int index = 0)
         {
             DatePickerInput input = null;
-
+            _duringManualInput = false;
             if (index == 0)
             {
                 input = _inputStart;
@@ -652,7 +671,7 @@ namespace AntDesign
         {
         }
 
-        public virtual void ClearValue(int index = 0)
+        public virtual void ClearValue(int index = 0, bool closeDropdown = true)
         {
         }
 

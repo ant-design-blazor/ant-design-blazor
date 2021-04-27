@@ -9,7 +9,7 @@
                     IsButton="@true"
                     Disabled="Disabled"
                     PopupContainerSelector="@PopupContainerSelector"
-                    OnVisibleChange="visible => { AutoFocus = visible; OnOpenChange.InvokeAsync(visible); }"
+                    OnVisibleChange="visible => OnOpenChange.InvokeAsync(visible)"
                     OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                     OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
                     Trigger="new TriggerType[] { TriggerType.Click }">
@@ -33,9 +33,11 @@
                                  Placeholder="@_placeholders[0]"
                                  ReadOnly="@InputReadOnly"
                                  AutoFocus="@AutoFocus"
-                                 OnClick="async e => { await OnInputClick(); }"
-                                 OnKeyUp="@OnKeyUp"
+                                 OnClick="async e => { await OnInputClick(); }"                                 
+                                 OnKeyDown="@OnKeyDown"
                                  OnInput="e => OnInput(e, 0)"
+                                 OnBlur="e => OnBlur(0)"
+                                 Onfocus="e => AutoFocus = true"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  OnClickClear="e => ClearValue(0)"
                                  AllowClear="@AllowClear" />

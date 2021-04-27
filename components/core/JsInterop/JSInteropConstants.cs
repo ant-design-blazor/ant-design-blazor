@@ -107,6 +107,7 @@ namespace AntDesign
         public static string SetDomAttribute => $"{FUNC_PREFIX}setDomAttribute";
 
         public static string SetSelectionStart => $"{FUNC_PREFIX}setSelectionStart";
+        public static string InvokeTabKey => $"{FUNC_PREFIX}invokeTabKey";
 
         #region Draggable Modal
 

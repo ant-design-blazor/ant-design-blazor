@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -50,6 +51,11 @@ namespace AntDesign
 
         private async Task OnInputClick()
         {
+            if (_duringManualInput)
+            {
+                return;
+            }
+            AutoFocus = true;
             //Reset Picker to default in case it the picker value was changed
             //but no value was selected (for example when a user clicks next 
             //month but does not select any value)
@@ -71,6 +77,8 @@ namespace AntDesign
             }
         }
 
+        private TValue _cacheDuringInput;
+
         protected void OnInput(ChangeEventArgs args, int index = 0)
         {
             if (index != 0)
@@ -81,24 +89,18 @@ namespace AntDesign
             {
                 return;
             }
-
+            if (!_duringManualInput)
+            {
+                _duringManualInput = true;
+                _cacheDuringInput = Value;
+            }
             if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
             {
-                CurrentValue = changeValue;
-
+                Value = changeValue;
                 GetIfNotNull(changeValue, (notNullValue) =>
                 {
                     PickerValues[0] = notNullValue;
                 });
-
-                if (OnChange.HasDelegate)
-                {
-                    OnChange.InvokeAsync(new DateTimeChangedEventArgs
-                    {
-                        Date = Convert.ToDateTime(changeValue, this.CultureInfo),
-                        DateString = GetInputValue(index)
-                    });
-                }
 
                 StateHasChanged();
             }
@@ -106,24 +108,49 @@ namespace AntDesign
             UpdateCurrentValueAsString();
         }
 
+        protected override Task OnBlur(int index)
+        {
+            if (_duringManualInput)
+            {
+                if (!Value.Equals(_cacheDuringInput))
+                {
+                    //reset picker to Value         
+                    Value = _cacheDuringInput;
+                    _pickerStatus[0]._hadSelectValue = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
+                    GetIfNotNull(Value ?? DefaultValue ?? DefaultPickerValue, (notNullValue) =>
+                    {
+                        PickerValues[0] = notNullValue;
+                    });
+                }
+                _duringManualInput = false;
+            }
+            if (_dropDown.IsOverlayShow())
+                Close();
+            AutoFocus = false;
+            return Task.CompletedTask;
+        }
+
         /// <summary>
         /// Method is called via EventCallBack if the keyboard key is no longer pressed inside the Input element.
         /// </summary>
         /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
-        protected async Task OnKeyUp(KeyboardEventArgs e)
+        protected async Task OnKeyDown(KeyboardEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
-
             var key = e.Key.ToUpperInvariant();
-            if (key == "ENTER")
+            if (key == "ENTER" || key == "TAB")
             {
+                _duringManualInput = false;
                 if (string.IsNullOrWhiteSpace(_inputStart.Value))
                     ClearValue();
                 else
+                    await TryApplyInputValue();
+
+                if (key == "ENTER")
                 {
-                    if (FormatAnalyzer.TryPickerStringConvert(_inputStart.Value, out TValue changeValue, IsNullable))
-                        Value = changeValue;
-                    Close();
+                    //needed only in wasm, details: https://github.com/dotnet/aspnetcore/issues/30070
+                    await Task.Yield();
+                    await Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
                 }
             }
 
@@ -134,6 +161,26 @@ namespace AntDesign
             if (key == "ARROWUP" && _dropDown.IsOverlayShow())
             {
                 Close();
+            }
+        }
+
+        private async Task TryApplyInputValue()
+        {
+            if (FormatAnalyzer.TryPickerStringConvert(_inputStart.Value, out TValue changeValue, IsNullable))
+            {
+                CurrentValue = changeValue;
+                GetIfNotNull(changeValue, (notNullValue) =>
+                {
+                    PickerValues[0] = notNullValue;
+                });
+                if (OnChange.HasDelegate)
+                {
+                    await OnChange.InvokeAsync(new DateTimeChangedEventArgs
+                    {
+                        Date = Convert.ToDateTime(changeValue, this.CultureInfo),
+                        DateString = GetInputValue(0)
+                    });
+                }
             }
         }
 
@@ -212,7 +259,7 @@ namespace AntDesign
             _pickerStatus[0]._hadSelectValue = true;
         }
 
-        public override void ClearValue(int index = 0)
+        public override void ClearValue(int index = 0, bool closeDropdown = true)
         {
             _isSetPicker = false;
 
@@ -220,7 +267,8 @@ namespace AntDesign
                 CurrentValue = DefaultValue;
             else
                 CurrentValue = default;
-            Close();
+            if (closeDropdown)
+                Close();
         }
 
         private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
