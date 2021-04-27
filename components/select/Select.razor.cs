@@ -228,10 +228,12 @@ namespace AntDesign
                     SelectedOptionItems.Clear();
 
                     Value = default;
+                    var sameObject = object.ReferenceEquals(_datasource, value);
 
                     _datasource = value;
 
-                    OnDataSourceChanged?.Invoke();
+                    if (!sameObject)
+                        OnDataSourceChanged?.Invoke();
 
                     return;
                 }
