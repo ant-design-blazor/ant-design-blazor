@@ -92,7 +92,6 @@ namespace AntDesign.JsInterop
             string key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
             if (!(await IsResizeObserverSupported()))
             {
-                Console.WriteLine("Registering window.resize");
                 Action<JsonElement> action = (je) => callback.Invoke(new List<ResizeObserverEntry> { new ResizeObserverEntry() });
                 AddEventListener("window", "resize", action, false);
             }
