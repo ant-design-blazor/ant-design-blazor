@@ -169,7 +169,7 @@ namespace AntDesign.Internal
                 DomEventService.AddEventListener(Ref, "mouseout", OnUnboundMouseLeave, true);
                 DomEventService.AddEventListener(Ref, "focusin", OnUnboundFocusIn, true);
                 DomEventService.AddEventListener(Ref, "focusout", OnUnboundFocusOut, true);
-                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);                
+                DomEventService.AddEventListener(Ref, "contextmenu", OnContextMenu, true, true);
             }
             return base.OnAfterRenderAsync(firstRender);
         }
