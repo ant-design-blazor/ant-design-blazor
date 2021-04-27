@@ -263,7 +263,7 @@ namespace AntDesign
         private void SetSorter(SortDirection sortDirection)
         {
             _sortDirection = sortDirection;
-            SortModel.SetSortDirection(sortDirection);
+            SortModel?.SetSortDirection(sortDirection);
         }
 
         private void ToggleTreeNode()
@@ -379,7 +379,7 @@ namespace AntDesign
 
         private void InitFilters()
         {
-            Filters = new List<TableFilter<TData>>() {GetNewFilter()};
+            Filters = new List<TableFilter<TData>>() { GetNewFilter() };
         }
     }
 }
