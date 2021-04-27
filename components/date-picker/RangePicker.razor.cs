@@ -168,21 +168,13 @@ namespace AntDesign
                 _duringManualInput = false;
                 var input = (index == 0 ? _inputStart : _inputEnd);
                 if (string.IsNullOrWhiteSpace(input.Value))
-                    ClearValue(index, false);
-                else if (!await TryApplyInputValue(index, input.Value))
                 {
-                    //needed only in wasm, details: https://github.com/dotnet/aspnetcore/issues/30070
-                    if (key != "TAB")
-                    {
-                        await Task.Yield();
-                        await Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
-                    }
-                    if (index == 1 && !(key == "TAB" && e.ShiftKey))
-                    {
-                        Close();
-                    }
+                    ClearValue(index, false);
+                    await Focus(index);
                     return;
                 }
+                else if (!await TryApplyInputValue(index, input.Value))
+                    return;
 
                 if (index == 1)
                 {
@@ -242,8 +234,7 @@ namespace AntDesign
                         DateStrings = new string[] { GetInputValue(0), GetInputValue(1) }
                     });
                 }
-                if (!validationSuccess)
-                    return true;
+                return validationSuccess;
             }
             return false;
         }
@@ -251,36 +242,28 @@ namespace AntDesign
         {
             if (index == 0 && array.GetValue(1) is not null && ((DateTime)array.GetValue(1)).CompareTo(newDate) < 0)
             {
-                ValidationClear(1, array);
+                ClearValue(1, false);
                 await Blur(0);
                 await Focus(1);
                 return false;
             }
-            else if (index == 1 && array.GetValue(0) is not null && newDate.CompareTo((DateTime)array.GetValue(0)) < 0)
+            else if (index == 1)
             {
-                ValidationClear(0, array);
-                return false;
+                if (array.GetValue(0) is not null && newDate.CompareTo((DateTime)array.GetValue(0)) < 0)
+                {
+                    ClearValue(0, false);
+                    await Blur(1);
+                    await Focus(0);
+                    return false;
+                }
+                else if (array.GetValue(0) is null)
+                {
+                    await Blur(1);
+                    await Focus(0);
+                    return false;
+                }
             }
             return true;
-        }
-
-        private void ValidationClear(int index, Array array)
-        {
-            if (!IsNullable && DefaultValue != null)
-            {
-                var defaults = DefaultValue as Array;
-                array.SetValue(defaults.GetValue(index), index);
-            }
-            else
-            {
-                array.SetValue(default, index);
-            }
-            (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(_pickerStatus[index]._initPicker, Locale);
-            if (index == 0)
-                _placeholders[index] = first;
-            else
-                _placeholders[index] = second;
-            _pickerStatus[index]._hadSelectValue = false;
         }
 
         private async Task OnFocus(int index)
