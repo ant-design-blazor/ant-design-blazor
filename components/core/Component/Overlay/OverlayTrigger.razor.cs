@@ -145,7 +145,6 @@ namespace AntDesign.Internal
         private bool _mouseInOverlay = false;
 
         protected Overlay _overlay = null;
-        private ElementReference _triggerReference;
 
         protected override void OnAfterRender(bool firstRender)
         {
