@@ -230,6 +230,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// When this method is called, Value is only has been modified, but the ValueChanged is not triggered, so the outside bound Value is not changed.
+        /// </summary>
+        /// <param name="value"></param>
         protected virtual void OnValueChange(TValue value)
         {
         }
