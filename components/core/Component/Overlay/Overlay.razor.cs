@@ -126,7 +126,6 @@ namespace AntDesign.Internal
             if (_isWaitForOverlayFirstRender && _isOverlayFirstRender)
             {
                 _isOverlayFirstRender = false;
-
                 await Show(_overlayLeft, _overlayTop);
 
                 _isWaitForOverlayFirstRender = false;
@@ -156,6 +155,7 @@ namespace AntDesign.Internal
             {
                 return;
             }
+            await Task.Yield();
 
             HtmlElement trigger;
             if (Trigger.ChildContent != null)

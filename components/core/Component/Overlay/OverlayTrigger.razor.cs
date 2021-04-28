@@ -134,12 +134,8 @@ namespace AntDesign.Internal
         [Parameter]
         public ElementReference TriggerReference
         {
-            get => _triggerReference;
-            set
-            {
-                _triggerReference = value;
-                RefBack.Set(value);
-            }
+            get => Ref;
+            set => Ref = value;
         }
 
         [Inject]
@@ -149,7 +145,6 @@ namespace AntDesign.Internal
         private bool _mouseInOverlay = false;
 
         protected Overlay _overlay = null;
-        private ElementReference _triggerReference;
 
         protected override void OnAfterRender(bool firstRender)
         {
@@ -190,7 +185,6 @@ namespace AntDesign.Internal
         {
             var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
             await OnClickDiv(eventArgs);
         }
 

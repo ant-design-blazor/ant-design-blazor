@@ -1,3 +1,11 @@
+import * as observable from './ObservableApi/observableApi';
+
+export { observable };
+
+export function isResizeObserverSupported(): boolean {  
+  return "ResizeObserver" in window;
+}
+
 export function getDom(element) {
   if (!element) {
     element = document.body;
@@ -165,7 +173,7 @@ export function addDomEventListener(element, eventName, preventDefault, invoker)
       if (v instanceof Node) return 'Node';
       if (v instanceof Window) return 'Window';
       return v;
-    }, ' ');    
+    }, ' ');
     setTimeout(function () { invoker.invokeMethodAsync('Invoke', json) }, 0);
     if (preventDefault === true) {
       args.preventDefault();
@@ -223,8 +231,8 @@ export function copy(text) {
   });
 }
 
-export function focus(selector, noScroll: boolean=false) {
-  let dom = getDom(selector);     
+export function focus(selector, noScroll: boolean = false) {
+  let dom = getDom(selector);
   if (!(dom instanceof HTMLElement))
     throw new Error("Unable to focus an invalid element.");
   dom.focus({
@@ -681,6 +689,24 @@ export function setSelectionStart(element, position) {
     if (position <= dom.value.length) {
       dom.selectionStart = position;
       dom.selectionEnd = position;
+    }
+  }
+}
+
+//copied from https://www.telerik.com/forums/trigger-tab-key-when-enter-key-is-pressed
+export function invokeTabKey() {  
+  var currInput = document.activeElement;
+  if (currInput.tagName.toLowerCase() == "input") {
+    var inputs = document.getElementsByTagName("input");
+    var currInput = document.activeElement;
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i] == currInput) {
+        var next = inputs[i + 1];
+        if (next && next.focus) {
+          next.focus();
+        }
+        break;
+      }
     }
   }
 }

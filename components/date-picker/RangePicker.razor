@@ -9,7 +9,7 @@
                     IsButton="@true"
                     Disabled="Disabled"
                     PopupContainerSelector="@PopupContainerSelector"
-                    OnVisibleChange="visible => { AutoFocus = visible; OnOpenChange.InvokeAsync(visible); }"
+                    OnVisibleChange="visible => OnOpenChange.InvokeAsync(visible)"
                     OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up ant-picker-dropdown-range"
                     OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up ant-picker-dropdown-range"
                     Trigger="new TriggerType[] { TriggerType.Click }">
@@ -49,13 +49,14 @@
                                  AutoFocus="@AutoFocus"
                                  OnClick="async e => { await OnInputClick(0); }"
                                  OnInput="e => OnInput(e, 0)"
-                                 OnKeyUp="e => OnKeyUp(e, 0)"
+                                 OnKeyDown="e => OnKeyDown(e, 0)"
                                  Onfocus="() => OnFocus(0)"
+                                 OnBlur="e => OnBlur(0)"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  ShowSuffixIcon="false"
                                  IsRange="@IsRange"
                                  AllowClear="@AllowClear"
-                                 OnClickClear="e => ClearValue(0)" />
+                                 OnClickClear="e => ClearValue(-1)" />
 
                 <div class="@(PrefixCls)-range-separator">
                     <span aria-label="to" class="@(PrefixCls)-separator">
@@ -73,12 +74,13 @@
                                  AutoFocus="@AutoFocus"
                                  OnClick="async e => { await OnInputClick(1); }"
                                  OnInput="e => OnInput(e, 1)"
-                                 OnKeyUp="e => OnKeyUp(e, 1)"
+                                 OnKeyDown="e => OnKeyDown(e, 1)"
                                  Onfocus="() => OnFocus(1)"
+                                 OnBlur="e => OnBlur(1)"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  IsRange="@IsRange"
                                  AllowClear="@AllowClear"
-                                 OnClickClear="e => ClearValue(0)" />
+                                 OnClickClear="e => ClearValue(-1)" />
                 <div class="@(PrefixCls)-active-bar" style="@_activeBarStyle"></div>
             </div>
         </Unbound>
