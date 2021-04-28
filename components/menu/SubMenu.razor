@@ -39,6 +39,7 @@ else
                         TriggerClass="@ClassMapper.Class"
                         Visible="IsOpen"
                         ComplexAutoCloseAndVisible="true"
+						BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None"
                         Disabled="Disabled"
                         Placement="Placement"
                         OnVisibleChange="OnOverlayVisibleChange"
@@ -73,11 +74,6 @@ else
 }
 
 <style>
-
-    .ant-menu-vertical.ant-menu-sub,
-    .ant-menu-vertical.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active), .ant-menu-vertical-left.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active), .ant-menu-vertical-right.ant-menu-sub:not(.zoom-big-enter-active):not(.zoom-big-leave-active) {
-        overflow: initial;
-    }
 
     .ant-menu.ant-menu-sub.ant-menu-vertical.ant-menu-submenu-popup {
         top: 0;
