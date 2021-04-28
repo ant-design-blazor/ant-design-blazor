@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -76,34 +77,75 @@ namespace AntDesign
             };
         }
 
+        private async Task OnInputClick(int index)
+        {
+            if (_duringManualInput)
+            {
+                return;
+            }
+            //Reset Picker to default in case the picker value was changed
+            //but no value was selected (for example when a user clicks next
+            //month but does not select any value)
+            if (UseDefaultPickerValue[index] && DefaultPickerValue != null)
+            {
+                PickerValues[index] = _pickerValuesAfterInit[index];
+            }
+            await _dropDown.Show();
+
+            // clear status
+            _pickerStatus[0]._currentShowHadSelectValue = false;
+            _pickerStatus[1]._currentShowHadSelectValue = false;
+
+            if (index == 0)
+            {
+                // change start picker value
+                if (!_inputStart.IsOnFocused && _pickerStatus[index]._hadSelectValue && !UseDefaultPickerValue[index])
+                {
+                    GetIfNotNull(Value, index, notNullValue =>
+                    {
+                        ChangePickerValue(notNullValue, index);
+                    });
+                }
+
+                ChangeFocusTarget(true, false);
+            }
+            else
+            {
+                // change end picker value
+                if (!_inputEnd.IsOnFocused && _pickerStatus[index]._hadSelectValue && !UseDefaultPickerValue[index])
+                {
+                    GetIfNotNull(Value, index, notNullValue =>
+                    {
+                        ChangePickerValue(notNullValue, index);
+                    });
+                }
+
+                ChangeFocusTarget(false, true);
+            }
+        }
+
+        private DateTime? _cacheDuringInput;
+        private DateTime _pickerValueCache;
+
         protected void OnInput(ChangeEventArgs args, int index = 0)
         {
             if (args == null)
             {
                 return;
             }
-
             var array = Value as Array;
-
-            if (BindConverter.TryConvertTo(args.Value.ToString(), CultureInfo, out DateTime changeValue))
+            if (!_duringManualInput)
             {
-                if (Picker == DatePickerType.Date)
-                {
-                    if (IsDateStringFullDate(args.Value.ToString()))
-                        array.SetValue(changeValue, index);
-                }
-                else
-                    array.SetValue(changeValue, index);
+                _duringManualInput = true;
+                _cacheDuringInput = array.GetValue(index) as DateTime?;
+                _pickerValueCache = PickerValues[index];
+            }
+            if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out DateTime changeValue, false))
+            {
+                array.SetValue(changeValue, index);
+
                 ChangePickerValue(changeValue, index);
 
-                if (OnChange.HasDelegate)
-                {
-                    OnChange.InvokeAsync(new DateRangeChangedEventArgs
-                    {
-                        Dates = new DateTime?[] { array.GetValue(0) as DateTime?, array.GetValue(1) as DateTime? },
-                        DateStrings = new string[] { GetInputValue(0), GetInputValue(1) }
-                    });
-                }
 
                 StateHasChanged();
             }
@@ -116,40 +158,112 @@ namespace AntDesign
         /// </summary>
         /// <param name="e">Contains the key (combination) which was pressed inside the Input element</param>
         /// <param name="index">Refers to picker index - 0 for starting date, 1 for ending date</param>
-        protected async Task OnKeyUp(KeyboardEventArgs e, int index)
+        protected async Task OnKeyDown(KeyboardEventArgs e, int index)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
 
             var key = e.Key.ToUpperInvariant();
-            if (key == "ENTER")
+            if (key == "ENTER" || key == "TAB")
             {
+                _duringManualInput = false;
                 var input = (index == 0 ? _inputStart : _inputEnd);
                 if (string.IsNullOrWhiteSpace(input.Value))
-                    ClearValue(index);
-                else
                 {
-                    if (BindConverter.TryConvertTo(input.Value, CultureInfo, out DateTime changeValue))
+                    ClearValue(index, false);
+                    await Focus(index);
+                    return;
+                }
+                else if (!await TryApplyInputValue(index, input.Value))
+                    return;
+
+                if (index == 1)
+                {
+                    if (key != "TAB")
                     {
-                        var array = Value as Array;
-                        array.SetValue(changeValue, index);
+                        //needed only in wasm, details: https://github.com/dotnet/aspnetcore/issues/30070
+                        await Task.Yield();
+                        await Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
+                        Close();
                     }
-                    if (index == 0)
+                    else if (!e.ShiftKey)
+                    {
+                        Close();
+                    }
+                }
+                if (index == 0)
+                {
+                    if (key == "TAB" && e.ShiftKey)
+                    {
+                        Close();
+                        AutoFocus = false;
+                    }
+                    else if (key != "TAB")
                     {
                         await Blur(0);
                         await Focus(1);
                     }
-                    else
-                        Close();
                 }
+                return;
             }
             if (key == "ARROWDOWN" && !_dropDown.IsOverlayShow())
             {
                 await _dropDown.Show();
+                return;
             }
             if (key == "ARROWUP" && _dropDown.IsOverlayShow())
             {
                 Close();
+                await Task.Yield();
+                AutoFocus = true;
+                return;
             }
+        }
+
+        private async Task<bool> TryApplyInputValue(int index, string inputValue)
+        {
+            if (FormatAnalyzer.TryPickerStringConvert(inputValue, out DateTime changeValue, false))
+            {
+                var array = Value as Array;
+                array.SetValue(changeValue, index);
+                var validationSuccess = await ValidateRange(index, changeValue, array);
+                if (OnChange.HasDelegate)
+                {
+                    await OnChange.InvokeAsync(new DateRangeChangedEventArgs
+                    {
+                        Dates = new DateTime?[] { array.GetValue(0) as DateTime?, array.GetValue(1) as DateTime? },
+                        DateStrings = new string[] { GetInputValue(0), GetInputValue(1) }
+                    });
+                }
+                return validationSuccess;
+            }
+            return false;
+        }
+        private async Task<bool> ValidateRange(int index, DateTime newDate, Array array)
+        {
+            if (index == 0 && array.GetValue(1) is not null && ((DateTime)array.GetValue(1)).CompareTo(newDate) < 0)
+            {
+                ClearValue(1, false);
+                await Blur(0);
+                await Focus(1);
+                return false;
+            }
+            else if (index == 1)
+            {
+                if (array.GetValue(0) is not null && newDate.CompareTo((DateTime)array.GetValue(0)) < 0)
+                {
+                    ClearValue(0, false);
+                    await Blur(1);
+                    await Focus(0);
+                    return false;
+                }
+                else if (array.GetValue(0) is null)
+                {
+                    await Blur(1);
+                    await Focus(0);
+                    return false;
+                }
+            }
+            return true;
         }
 
         private async Task OnFocus(int index)
@@ -170,6 +284,30 @@ namespace AntDesign
                     await Focus(1);
                 }
             }
+            AutoFocus = true;
+        }
+
+        protected override Task OnBlur(int index)
+        {
+            if (_duringManualInput)
+            {
+                var array = Value as Array;
+
+                if (!array.GetValue(index).Equals(_cacheDuringInput))
+                {
+                    //reset picker to Value
+                    if (IsNullable)
+                        array.SetValue(_cacheDuringInput, index);
+                    else
+                        array.SetValue(_cacheDuringInput.GetValueOrDefault(), index);
+
+                    _pickerStatus[index]._hadSelectValue = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
+                    ChangePickerValue(_pickerValueCache, index);
+                }
+                _duringManualInput = false;
+            }
+            AutoFocus = false;
+            return Task.CompletedTask;
         }
 
         protected override void OnInitialized()
@@ -279,74 +417,33 @@ namespace AntDesign
             }
         }
 
-        public override void ClearValue(int index = 0)
+        public override void ClearValue(int index = -1, bool closeDropdown = true)
         {
             _isSetPicker = false;
 
             var array = CurrentValue as Array;
-            if (!IsNullable && DefaultValue != null)
+            int[] indexToClear = index == -1 ? new[] { 0, 1 } : new[] { index };
+
+            string[] pickerHolders = new string[2];
+            (pickerHolders[0], pickerHolders[1]) = DatePickerPlaceholder.GetRangePlaceHolderByType(_pickerStatus[0]._initPicker, Locale);
+
+            foreach (var i in indexToClear)
             {
-                var defaults = DefaultValue as Array;
-                array.SetValue(defaults.GetValue(0), 0);
-                array.SetValue(defaults.GetValue(1), 1);
-            }
-            else
-            {
-                array.SetValue(default, 0);
-                array.SetValue(default, 1);
-            }
-
-            (string first, string second) = DatePickerPlaceholder.GetRangePlaceHolderByType(_pickerStatus[0]._initPicker, Locale);
-            _placeholders[0] = first;
-            _placeholders[1] = second;
-
-            _pickerStatus[0]._hadSelectValue = false;
-            _pickerStatus[1]._hadSelectValue = false;
-
-            Close();
-        }
-
-        private async Task OnInputClick(int index)
-        {
-            //Reset Picker to default in case the picker value was changed
-            //but no value was selected (for example when a user clicks next
-            //month but does not select any value)
-            if (UseDefaultPickerValue[index] && DefaultPickerValue != null)
-            {
-                PickerValues[index] = _pickerValuesAfterInit[index];
-            }
-            await _dropDown.Show();
-
-            // clear status
-            _pickerStatus[0]._currentShowHadSelectValue = false;
-            _pickerStatus[1]._currentShowHadSelectValue = false;
-
-            if (index == 0)
-            {
-                // change start picker value
-                if (!_inputStart.IsOnFocused && _pickerStatus[index]._hadSelectValue && !UseDefaultPickerValue[index])
+                if (!IsNullable && DefaultValue != null)
                 {
-                    GetIfNotNull(Value, index, notNullValue =>
-                    {
-                        ChangePickerValue(notNullValue, index);
-                    });
+                    var defaults = DefaultValue as Array;
+                    array.SetValue(defaults.GetValue(i), i);
                 }
-
-                ChangeFocusTarget(true, false);
-            }
-            else
-            {
-                // change end picker value
-                if (!_inputEnd.IsOnFocused && _pickerStatus[index]._hadSelectValue && !UseDefaultPickerValue[index])
+                else
                 {
-                    GetIfNotNull(Value, index, notNullValue =>
-                    {
-                        ChangePickerValue(notNullValue, index);
-                    });
+                    array.SetValue(default, i);
                 }
-
-                ChangeFocusTarget(false, true);
+                _placeholders[i] = pickerHolders[i];
+                _pickerStatus[i]._hadSelectValue = false;
             }
+
+            if (closeDropdown)
+                Close();
         }
 
         private void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
