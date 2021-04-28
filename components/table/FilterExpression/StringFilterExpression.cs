@@ -38,7 +38,7 @@ namespace AntDesign.FilterExpression
                 case TableFilterCompareOperator.IsNotNull:
                     return Expression.NotEqual(leftExpr, rightExpr);
                 case TableFilterCompareOperator.NotEquals:
-                    return Expression.AndAlso(notNull, Expression.NotEqual(lowerLeftExpr,  lowerRightExpr));
+                    return Expression.AndAlso(notNull, Expression.NotEqual(lowerLeftExpr, lowerRightExpr));
                 default:
                     string methodName = Enum.GetName(typeof(TableFilterCompareOperator), compareOperator);
                     MethodInfo mi = typeof(string).GetMethod(methodName, new[] { typeof(string) });
