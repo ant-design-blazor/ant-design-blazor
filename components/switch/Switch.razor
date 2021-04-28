@@ -1,11 +1,12 @@
 ﻿@namespace AntDesign
-@inherits AntInputComponentBase<bool>
+@inherits AntInputBoolComponentBase
 
 <button type="button" role="switch"
         aria-checked="@(CurrentValue?"true":"false")"
         disabled="@(Disabled||Loading)"
         class="@ClassMapper.Class"
         style="@Style"
+		autofocus=@AutoFocus
         ant-click-animating="@(_clickAnimating?"true":"false")"
         @onmouseover="HandleMouseOver"
         @onmouseout="HandleMouseOut"
