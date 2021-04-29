@@ -9,6 +9,7 @@ using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
+using System.ComponentModel.DataAnnotations;
 
 namespace AntDesign
 {
@@ -198,10 +199,34 @@ namespace AntDesign
                     falseFilterOption.Value = THelper.ChangeType<TData>(false);
                     ((List<TableFilter<TData>>)Filters).Add(falseFilterOption);
                 }
+                else if (_columnDataType.IsEnum)
+                {
+                    _columnFilterType = TableFilterType.List;
+
+                    Filters = new List<TableFilter<TData>>();
+
+                    foreach (var enumValue in Enum.GetValues(_columnDataType))
+                    {
+                        var enumName = Enum.GetName(_columnDataType, enumValue);
+                        var filterOption = GetNewFilter();
+                        // use DisplayAttribute only, DisplayNameAttribute is not valid for enum values
+                        filterOption.Text = _columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
+                        filterOption.Value = THelper.ChangeType<TData>(enumValue);
+                        ((List<TableFilter<TData>>)Filters).Add(filterOption);
+                    }
+                }
                 else
                 {
                     _columnFilterType = TableFilterType.FeildType;
                     InitFilters();
+                }
+
+                if (_columnFilterType == TableFilterType.List && THelper.IsTypeNullable<TData>())
+                {
+                    var nullFilterOption = GetNewFilter();
+                    nullFilterOption.Text = "<null>";
+                    nullFilterOption.Value = THelper.ChangeType<TData>(null);
+                    ((List<TableFilter<TData>>)Filters).Add(nullFilterOption);
                 }
             }
 
