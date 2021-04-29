@@ -241,7 +241,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                                 {
                                                     <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Contains" Label="@col.Table?.Locale.FilterOptions.Contains"></SelectOption>
                                                     <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.StartsWith" Label="@col.Table?.Locale.FilterOptions.StartsWith"></SelectOption>
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.EndsWidth" Label="@col.Table?.Locale.FilterOptions.EndsWith"></SelectOption>
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.EndsWith" Label="@col.Table?.Locale.FilterOptions.EndsWith"></SelectOption>
                                                 }
                                                 @if (col._columnDataType != typeof(string))
                                                 {
