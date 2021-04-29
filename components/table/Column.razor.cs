@@ -202,7 +202,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    _columnFilterType = TableFilterType.FeildType;
+                    _columnFilterType = TableFilterType.FieldType;
                     InitFilters();
                 }
             }
@@ -320,7 +320,7 @@ namespace AntDesign
 
         private void FilterSelected(TableFilter<TData> filter)
         {
-            if (_columnFilterType == TableFilterType.FeildType) return;
+            if (_columnFilterType == TableFilterType.FieldType) return;
             if (!FilterMultiple)
             {
                 Filters.ForEach(x => x.Selected = false);
@@ -338,7 +338,7 @@ namespace AntDesign
         private void FilterConfirm(bool isReset = false)
         {
             _filterOpened = false;
-            if (!isReset && _columnFilterType == TableFilterType.FeildType) Filters?.ForEach(f => { if (!f.Selected && f.Value != null) f.Selected = true; });
+            if (!isReset && _columnFilterType == TableFilterType.FieldType) Filters?.ForEach(f => { if (!f.Selected && f.Value != null) f.Selected = true; });
             _hasFilterSelected = Filters?.Any(x => x.Selected) == true;
             FilterModel = _hasFilterSelected ? new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 

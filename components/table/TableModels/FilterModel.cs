@@ -60,7 +60,7 @@ namespace AntDesign.TableModels
             }
 
             IFilterExpression filterExpression = null;
-            if (FilterType == TableFilterType.FeildType)
+            if (FilterType == TableFilterType.FieldType)
             {
                 filterExpression = _filterExpressionResolver.GetFilterExpression();
             }
