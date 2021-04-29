@@ -1,0 +1,10 @@
+﻿@namespace AntDesign
+@inherits AntComponentBase
+<div class="ant-upload">
+    <span tabindex="0" class="ant-upload" role="button">
+        <input id="File1" name="File1" type="file" @ref="InputFileElement" />
+        <button type="button" @onclick="StartUpload">开始上传</button>
+        <!--这里我想用内置的Progress 但是继承基类 报错 我先用span代替-->
+        <span @ref="ProgressElement">@UploadPercent</span>
+    </span>
+</div>
