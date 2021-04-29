@@ -201,18 +201,25 @@ namespace AntDesign
                 }
                 else if (_columnDataType.IsEnum)
                 {
-                    _columnFilterType = TableFilterType.List;
-
-                    Filters = new List<TableFilter<TData>>();
-
-                    foreach (var enumValue in Enum.GetValues(_columnDataType))
+                    if (_columnDataType.GetCustomAttribute<FlagsAttribute>() == null)
                     {
-                        var enumName = Enum.GetName(_columnDataType, enumValue);
-                        var filterOption = GetNewFilter();
-                        // use DisplayAttribute only, DisplayNameAttribute is not valid for enum values
-                        filterOption.Text = _columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
-                        filterOption.Value = THelper.ChangeType<TData>(enumValue);
-                        ((List<TableFilter<TData>>)Filters).Add(filterOption);
+                        _columnFilterType = TableFilterType.List;
+
+                        Filters = new List<TableFilter<TData>>();
+
+                        foreach (var enumValue in Enum.GetValues(_columnDataType))
+                        {
+                            var enumName = Enum.GetName(_columnDataType, enumValue);
+                            var filterOption = GetNewFilter();
+                            // use DisplayAttribute only, DisplayNameAttribute is not valid for enum values
+                            filterOption.Text = _columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
+                            filterOption.Value = THelper.ChangeType<TData>(enumValue);
+                            ((List<TableFilter<TData>>)Filters).Add(filterOption);
+                        }
+                    }
+                    else
+                    {
+                        throw new NotSupportedException("built-in filter for composable enum types is not supported");
                     }
                 }
                 else
