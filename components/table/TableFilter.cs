@@ -52,6 +52,6 @@ namespace AntDesign
     public enum TableFilterType
     {
         List = 1,
-        FeildType = 2
+        FieldType = 2
     }
 }
