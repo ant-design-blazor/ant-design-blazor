@@ -709,7 +709,7 @@ export function largeUploadFile(formData, file, index, totalSize, bufferSize, pr
     {
         formData.set('file', blockfile);
         var precent = (end * 100 / totalSize).toFixed(2);
-        proel.innerHTML = precent + "%";
+        dothelper.invokeMethodAsync('ShowPercent', precent);
         formData.set('isfinish', "1");//提示完成
         var xhrc = new XMLHttpRequest();
         xhrc.open('POST', url, true);
@@ -730,7 +730,8 @@ export function largeUploadFile(formData, file, index, totalSize, bufferSize, pr
     xhr.onreadystatechange = function () {
         if (this.readyState == 4) {
             var precent = (end * 100 / totalSize).toFixed(2);
-            proel.innerHTML = precent + "%";
+            dothelper.invokeMethodAsync('ShowPercent', precent);
+            dothelper.dispose();
             //递归调用
             largeUploadFile(formData, file, index + 1, totalSize, bufferSize, proel, url, dothelper);
         }
