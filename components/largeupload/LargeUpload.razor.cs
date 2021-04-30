@@ -35,7 +35,6 @@ namespace AntDesign
         public EventCallback<string> UploadFinish { get; set; }
         [Parameter]
         public double UploadPercent { get; set; }
-        private DotNetObjectReference<LargeUpload> _objRef;
         public async Task StartUpload()
         {
             await JsRuntime.InvokeVoidAsync("largeStart", InputFileElement, ProgressElement, ServerUrl, DotNetObjectReference.Create(this));
