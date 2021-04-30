@@ -285,7 +285,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                             <Button Size="small" Type="link" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.ResetFilters()) })">
                                 @col.Table?.Locale.FilterReset
                             </Button>
-                            @if (col._columnFilterType == TableFilterType.FeildType)
+                            @if (col._columnFilterType == TableFilterType.FieldType)
                             {
                                 <Button Size="small" Icon="plus" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.AddFilter()) })">
                                 </Button>
