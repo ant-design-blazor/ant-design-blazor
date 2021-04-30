@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <!-- The nuget package icon -->
+    <None Include="largeupload\LargeUpload.razor" />
     <None Include="logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
 

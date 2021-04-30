@@ -673,3 +673,67 @@ export function setDomAttribute(element, attributes) {
     (dom as HTMLElement).setAttribute(key, attributes[key]);
   }
 }
+export function filehash(path) {
+    var _hashCode = 0;
+    if (path.length === 0) return _hashCode;
+    for (var i = 0; i < path.length; i++) {
+        var character = path.charCodeAt(i);
+        _hashCode = ((_hashCode << 5) - _hashCode) + character;
+        _hashCode |= 0; // Convert to 32bit integer
+    }
+    return Math.abs(_hashCode);
+}
+
+//开始上传  初始化
+export function largeStart(element, proel, url, dothelper) {
+    var file = element.files[0];
+    var totalSize = file.size;
+    var filecode = filehash(element.value);
+    var bufferSize = 1024 * 1024;//大文件分块大小 1MB
+    var serverUrl = url;
+    var formdata = new FormData();
+    formdata.append('name', file.name);
+    formdata.append('hashcode', filecode.toString());
+    formdata.append('index', "1");
+    formdata.append('file', null);
+    formdata.append('isfinish', "0");
+    largeUploadFile(formdata, file, 1, totalSize, bufferSize, proel, serverUrl, dothelper);
+}
+// 实际上传
+export function largeUploadFile(formData, file, index, totalSize, bufferSize, proel, url, dothelper) {
+    var start = (index - 1) * bufferSize;
+    var end = Math.min(totalSize, start + bufferSize);
+    formData.set('index', index);
+    var blockfile = file.slice(start, end);//当前要上传的块
+    if (end >= totalSize)//最后一块文件流发送 ，并提示完成
+    {
+        formData.set('file', blockfile);
+        var precent = (end * 100 / totalSize).toFixed(2);
+        proel.innerHTML = precent + "%";
+        formData.set('isfinish', "1");//提示完成
+        var xhrc = new XMLHttpRequest();
+        xhrc.open('POST', url, true);
+        xhrc.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                console.log(xhrc.responseText);
+                var filejson = JSON.parse(xhrc.responseText);
+                dothelper.invokeMethodAsync('onUploadSuccess', filejson.file);
+                dothelper.dispose();
+            }
+        }
+        xhrc.send(formData);
+        return;
+    }
+    formData.set('file', blockfile);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4) {
+            var precent = (end * 100 / totalSize).toFixed(2);
+            proel.innerHTML = precent + "%";
+            //递归调用
+            largeUploadFile(formData, file, index + 1, totalSize, bufferSize, proel, url, dothelper);
+        }
+    }
+    xhr.send(formData);
+}
