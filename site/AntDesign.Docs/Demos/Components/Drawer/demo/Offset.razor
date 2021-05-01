@@ -1,0 +1,46 @@
+﻿
+
+<div>
+    <Space>
+        <SpaceItem>
+            <Button Type="primary" @onclick='_=>Open("left")'>Left</Button>
+        </SpaceItem>
+
+        <SpaceItem>
+            <Button Type="primary" @onclick="_=>Open()">Right</Button>
+        </SpaceItem>
+    </Space>
+    
+    <Space>
+        <SpaceItem>
+            <Button Type="primary" @onclick='_=>Open("top")'>Top</Button>
+        </SpaceItem>
+
+        <SpaceItem>
+            <Button Type="primary" @onclick='_=>Open("bottom")'>Bottom</Button>
+        </SpaceItem>
+    </Space>
+    
+    <Drawer OffsetX="200" OffsetY="100" Closable="true" Visible="@_visible" Placement="@_placement" Title='("OffsetX(Y)")' OnClose="_=>Close()">
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+    </Drawer>
+</div>
+
+   @code{
+
+       private bool _visible = false;
+       private string _placement = "right";
+
+       void Open(string placement = "right")
+       {
+           _placement = placement;
+           _visible = true;
+       }
+
+       void Close()
+       {
+           _visible = false;
+       }
+}

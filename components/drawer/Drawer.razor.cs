@@ -81,8 +81,8 @@ namespace AntDesign
         public int ZIndex
         {
             get { return _zIndex; }
-            set 
-            { 
+            set
+            {
                 _zIndex = value;
                 if (_zIndex == 1000)
                     _zIndexStyle = "";
@@ -133,17 +133,17 @@ namespace AntDesign
         {
             get
             {
-                if (!this._isOpen || this.OffsetX + this.OffsetY == 0)
+                if (!this._isOpen || this.OffsetX == 0 || this.OffsetY == 0)
                 {
                     return null;
                 }
 
                 return Placement switch
                 {
-                    "left" => $"translateX({this.OffsetX}px)",
-                    "right" => $"translateX(-{this.OffsetX}px)",
-                    "top" => $"translateY({this.OffsetY}px)",
-                    "bottom" => $"translateY(-{this.OffsetY}px)",
+                    "left" => $"translateX({this.OffsetX}px);",
+                    "right" => $"translateX(-{this.OffsetX}px);",
+                    "top" => $"translateY({this.OffsetY}px);",
+                    "bottom" => $"translateY(-{this.OffsetY}px);",
                     _ => null
                 };
             }

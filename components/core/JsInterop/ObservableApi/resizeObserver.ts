@@ -1,8 +1,10 @@
 ﻿import { getDom } from '../interop';
 
+// @ts-ignore
 const resizeObservers: Map<string, ResizeObserver> = new Map<string, ResizeObserver>();
 
 export function create(key, invoker) {
+  // @ts-ignore  
   const observer = new ResizeObserver((entries, observer) => observerCallBack(entries, observer, invoker));
   resizeObservers.set(key, observer)
 }
