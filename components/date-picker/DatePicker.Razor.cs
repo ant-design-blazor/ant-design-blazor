@@ -55,6 +55,8 @@ namespace AntDesign
             {
                 return;
             }
+            _openingOverlay = !_dropDown.IsOverlayShow();
+
             AutoFocus = true;
             //Reset Picker to default in case it the picker value was changed
             //but no value was selected (for example when a user clicks next 
@@ -110,6 +112,9 @@ namespace AntDesign
 
         protected override Task OnBlur(int index)
         {
+            if (_openingOverlay)
+                return Task.CompletedTask;
+
             if (_duringManualInput)
             {
                 if (!Value.Equals(_cacheDuringInput))
@@ -124,8 +129,7 @@ namespace AntDesign
                 }
                 _duringManualInput = false;
             }
-            if (_dropDown.IsOverlayShow())
-                Close();
+
             AutoFocus = false;
             return Task.CompletedTask;
         }
@@ -152,15 +156,20 @@ namespace AntDesign
                     await Task.Yield();
                     await Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
                 }
+                Close();
+                AutoFocus = false;
+                return;
             }
 
             if (key == "ARROWDOWN" && !_dropDown.IsOverlayShow())
             {
                 await _dropDown.Show();
+                return;
             }
             if (key == "ARROWUP" && _dropDown.IsOverlayShow())
             {
                 Close();
+                return;
             }
         }
 
@@ -231,14 +240,7 @@ namespace AntDesign
 
             UpdateCurrentValueAsString();
 
-            if (IsRange && !IsShowTime && Picker != DatePickerType.Time)
-            {
-                if (_pickerStatus[0]._hadSelectValue && _pickerStatus[1]._hadSelectValue)
-                {
-                    Close();
-                }
-            }
-            else if (!IsShowTime && Picker != DatePickerType.Time)
+            if (!IsShowTime && Picker != DatePickerType.Time)
             {
                 Close();
             }
@@ -285,6 +287,12 @@ namespace AntDesign
             {
                 notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
             }
+        }
+
+        private void OverlayVisibleChange(bool visible)
+        {
+            OnOpenChange.InvokeAsync(visible);
+            _openingOverlay = false;
         }
     }
 }

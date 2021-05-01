@@ -244,6 +244,7 @@ namespace AntDesign
         private bool _isLocaleSetOutside;
         private CultureInfo _cultureInfo = LocaleProvider.CurrentLocale.CurrentCulture;
         private DatePickerLocale _locale = LocaleProvider.CurrentLocale.DatePicker;
+        protected bool _openingOverlay;
 
         protected ClassMapper _panelClassMapper = new ClassMapper();
 
