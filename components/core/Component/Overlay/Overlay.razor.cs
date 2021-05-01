@@ -85,6 +85,12 @@ namespace AntDesign.Internal
 
         private int _overlayClientWidth = 0;
 
+        protected override void OnInitialized()
+        {
+            _overlayCls = Trigger.GetOverlayHiddenClass();
+            base.OnInitialized();
+        }
+
         protected override async Task OnParametersSetAsync()
         {
             if (!_isOverlayShow && Trigger.Visible && !_preVisible)
@@ -156,9 +162,8 @@ namespace AntDesign.Internal
                 return;
             }
             await Task.Yield();
-
             HtmlElement trigger;
-            if (Trigger.ChildContent != null)
+            if (Trigger.ChildContent is not null)
             {
                 trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
                 // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
@@ -583,6 +588,7 @@ namespace AntDesign.Internal
             if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
             {
                 overlayCls = Trigger.GetOverlayHiddenClass();
+                _overlayCls = Trigger.GetOverlayEnterClass();
             }
             else
             {
@@ -594,14 +600,17 @@ namespace AntDesign.Internal
 
         private string GetDisplayStyle()
         {
-            string display = _isOverlayShow ? "display: inline-flex;" : "visibility: hidden;";
-
             if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
-            {
-                display = "";
-            }
+                return "";
 
-            return display;
+            if (_isOverlayShow && _hasAddOverlayToBody)
+                return "display: inline-flex;";
+
+            if (_hasAddOverlayToBody)
+                return "visibility: hidden;";
+
+
+            return "display: inline-flex; visibility: hidden;";
         }
 
         internal async Task UpdatePosition(int? overlayLeft = null, int? overlayTop = null)
