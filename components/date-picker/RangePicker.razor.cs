@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -165,7 +166,7 @@ namespace AntDesign
             if (e == null) throw new ArgumentNullException(nameof(e));
 
             var key = e.Key.ToUpperInvariant();
-            if (key == "ENTER" || key == "TAB")
+            if (key == "ENTER" || key == "TAB" || key == "ESCAPE")
             {
                 _duringManualInput = false;
                 var input = (index == 0 ? _inputStart : _inputEnd);
@@ -173,6 +174,13 @@ namespace AntDesign
                     ClearValue(index, false);
                 else if (!await TryApplyInputValue(index, input.Value))
                     return;
+
+                if (key == "ESCAPE" && _dropDown.IsOverlayShow())
+                {
+                    Close();
+                    await Js.FocusAsync(input.Ref);
+                    return;
+                }
 
                 if (index == 1)
                 {

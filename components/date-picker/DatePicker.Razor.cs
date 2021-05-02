@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -142,7 +143,7 @@ namespace AntDesign
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             var key = e.Key.ToUpperInvariant();
-            if (key == "ENTER" || key == "TAB")
+            if (key == "ENTER" || key == "TAB" || key == "ESCAPE")
             {
                 _duringManualInput = false;
                 if (string.IsNullOrWhiteSpace(_inputStart.Value))
@@ -150,6 +151,12 @@ namespace AntDesign
                 else
                     await TryApplyInputValue();
 
+                if (key == "ESCAPE" && _dropDown.IsOverlayShow())
+                {
+                    Close();
+                    await Js.FocusAsync(_inputStart.Ref);
+                    return;
+                }
                 if (key == "ENTER")
                 {
                     //needed only in wasm, details: https://github.com/dotnet/aspnetcore/issues/30070
