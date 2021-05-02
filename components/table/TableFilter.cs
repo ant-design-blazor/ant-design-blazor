@@ -41,8 +41,7 @@ namespace AntDesign
         NotEquals = 10,
         IsNull = 11,
         IsNotNull = 12,
-        HasFlag = 13,
-        NotHasFlag = 14
+        NotContains = 13,
     }
 
     public enum TableFilterCondition

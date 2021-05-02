@@ -243,8 +243,8 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                                 }
                                                 else if (col._columnDataType.IsEnum)
                                                 {
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.HasFlag" Label="@col.Table?.Locale.FilterOptions.HasFlag"></SelectOption>
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotHasFlag" Label="@col.Table?.Locale.FilterOptions.NotHasFlag"></SelectOption>
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Contains" Label="@col.Table?.Locale.FilterOptions.Contains"></SelectOption>
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotContains" Label="@col.Table?.Locale.FilterOptions.NotContains"></SelectOption>
                                                 }
                                                 else
                                                 {
@@ -272,7 +272,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                         else if (col._columnDataType.IsEnum)
                                         {
                                             <Select TItem="TData" TItemValue="TData" Mode="multiple" Values="filter.Value?.ToString().Split(',').Select(x => (TData)Enum.Parse(col._columnDataType, x)) ?? Array.Empty<TData>()" PopupContainerSelector="@("#popupSelForValue" + col.Id)" Style="min-width:100px;"
-                                                    @attributes="@(new Dictionary<string, object>() { ["ValuesChanged"] = _callbackFactory.Create<IEnumerable<TData>>(col, value => col.SetFilterValue(filter, value?.Count() > 0 ? value.Aggregate((value1, value2) => (TData)Enum.ToObject(col._columnDataType, Convert.ToInt64(value1) | Convert.ToInt64(value2))) : default(TData))) })">
+                                                    @attributes="@(new Dictionary<string, object>() { ["ValuesChanged"] = _callbackFactory.Create<IEnumerable<TData>>(col, value => col.SetFilterValue(filter, EnumHelper.Combine(value))) })">
                                                 <SelectOptions>
                                                     @foreach (var enumValue in Enum.GetValues(col._columnDataType))
                                                     {

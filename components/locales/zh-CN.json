@@ -127,6 +127,7 @@
       "equals": "等于",
       "notEquals": "不等于",
       "contains": "包含",
+      "notContains": "不包含",
       "startsWith": "开头是",
       "endsWith": "结尾是",
       "greaterThan": "大于",
@@ -134,9 +135,7 @@
       "greaterThanOrEquals": "大于或等于",
       "lessThanOrEquals": "小于或等于",
       "isNull": "为 Null",
-      "isNotNull": "不为 Null",
-      "hasFlag": "包含",
-      "notHasFlag": "不包含"
+      "isNotNull": "不为 Null"
     }
   },
   "Modal": {

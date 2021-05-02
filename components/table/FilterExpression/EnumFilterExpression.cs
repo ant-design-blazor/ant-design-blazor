@@ -27,7 +27,7 @@ namespace AntDesign.FilterExpression
                 case TableFilterCompareOperator.IsNotNull:
                 case TableFilterCompareOperator.NotEquals:
                     return Expression.NotEqual(leftExpr, rightExpr);
-                case TableFilterCompareOperator.HasFlag:
+                case TableFilterCompareOperator.Contains:
                     {
                         MethodInfo mi = typeof(Enum).GetMethod(nameof(Enum.HasFlag));
                         if (leftExpr.Type.IsGenericType)
@@ -41,7 +41,7 @@ namespace AntDesign.FilterExpression
                         rightExpr = Expression.Convert(rightExpr, typeof(Enum));
                         return Expression.Call(leftExpr, mi, rightExpr);
                     }
-                case TableFilterCompareOperator.NotHasFlag:
+                case TableFilterCompareOperator.NotContains:
                     {
                         MethodInfo mi = typeof(Enum).GetMethod(nameof(Enum.HasFlag));
                         if (leftExpr.Type.IsGenericType)

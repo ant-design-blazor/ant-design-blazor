@@ -141,6 +141,7 @@
       "equals": "Equal",
       "notEquals": "Not Equal",
       "contains": "Contains",
+      "notContains": "Not Contains",
       "startsWith": "Start With",
       "endsWith": "End With",
       "greaterThan": "Greater Than",
@@ -148,9 +149,7 @@
       "greaterThanOrEquals": "Greater Than Or Equals",
       "lessThanOrEquals": "Less Than Or Equals",
       "isNull": "Is Null",
-      "isNotNull": "Is Not Null",
-      "hasFlag": "Contains",
-      "notHasFlag": "Not Contains"
+      "isNotNull": "Is Not Null"
     }
   },
   "Modal": {
