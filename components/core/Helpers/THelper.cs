@@ -27,6 +27,7 @@ namespace AntDesign
 
             return (T)Convert.ChangeType(value, t);
         }
+
         public static bool IsTypeNullable<T>()
         {
             return Nullable.GetUnderlyingType(typeof(T)) != null;
@@ -41,6 +42,7 @@ namespace AntDesign
             else
                 return type;
         }
+
         public static Type GetUnderlyingType<T>()
         {
             Type type = typeof(T);
@@ -58,7 +60,6 @@ namespace AntDesign
 
         public static bool IsNumericType<T>()
         {
-
             Type type = GetUnderlyingType<T>();
             if (type == null)
             {

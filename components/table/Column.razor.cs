@@ -202,7 +202,7 @@ namespace AntDesign
                     falseFilterOption.Value = THelper.ChangeType<TData>(false);
                     ((List<TableFilter<TData>>)Filters).Add(falseFilterOption);
                 }
-                else if (_columnDataType.IsEnum)
+                else if (_columnDataType.IsEnum && _columnDataType.GetCustomAttribute<FlagsAttribute>() == null)
                 {
                     _columnFilterType = TableFilterType.List;
 

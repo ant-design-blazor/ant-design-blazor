@@ -2,6 +2,8 @@
 @inherits ColumnBase
 @using AntDesign.Core.Helpers
 @using AntDesign.TableModels
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
 @typeparam TData
 
 @if (IsInitialize)
@@ -239,7 +241,12 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                                     <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.StartsWith" Label="@col.Table?.Locale.FilterOptions.StartsWith"></SelectOption>
                                                     <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.EndsWidth" Label="@col.Table?.Locale.FilterOptions.EndsWith"></SelectOption>
                                                 }
-                                                @if (col._columnDataType != typeof(string))
+                                                else if (col._columnDataType.IsEnum)
+                                                {
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.HasFlag" Label="@col.Table?.Locale.FilterOptions.HasFlag"></SelectOption>
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotHasFlag" Label="@col.Table?.Locale.FilterOptions.NotHasFlag"></SelectOption>
+                                                }
+                                                else
                                                 {
                                                     <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.GreaterThan" Label="@col.Table?.Locale.FilterOptions.GreaterThan"></SelectOption>
                                                     <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.LessThan" Label="@col.Table?.Locale.FilterOptions.LessThan"></SelectOption>
@@ -262,16 +269,29 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                             <DatePicker Value="col.FilterDateTimeValue(filter)" Format="@col.Format" TValue="DateTime?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<DateTime?>(col, value => col.SetFilterValue(filter,value)) })" PopupContainerSelector="@("#popupSelForValue" + col.Id)"></DatePicker>
                                             <div id="@("popupSelForValue" + col.Id)" style="position:relative!important"></div>
                                         }
+                                        else if (col._columnDataType.IsEnum)
+                                        {
+                                            <Select TItem="TData" TItemValue="TData" Mode="multiple" Values="filter.Value?.ToString().Split(',').Select(x => (TData)Enum.Parse(col._columnDataType, x)) ?? Array.Empty<TData>()" PopupContainerSelector="@("#popupSelForValue" + col.Id)" Style="min-width:100px;"
+                                                    @attributes="@(new Dictionary<string, object>() { ["ValuesChanged"] = _callbackFactory.Create<IEnumerable<TData>>(col, value => col.SetFilterValue(filter, value?.Count() > 0 ? value.Aggregate((value1, value2) => (TData)Enum.ToObject(col._columnDataType, Convert.ToInt64(value1) | Convert.ToInt64(value2))) : default(TData))) })">
+                                                <SelectOptions>
+                                                    @foreach (var enumValue in Enum.GetValues(col._columnDataType))
+                                                    {
+                                                        var enumName = Enum.GetName(col._columnDataType, enumValue);
+                                                        var text = col._columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
+                                                        var value = (TData)enumValue;
+                                                        <SelectOption TItemValue="TData" TItem="TData" Value="value" Label="@text" />
+                                                    }
+                                                </SelectOptions>
+                                            </Select>
+                                            <div id="@("popupSelForValue" + col.Id)" style="position:relative!important"></div>
+                                        }
+                                        else if (THelper.IsNumericType<TData>())
+                                        {
+                                            <InputNumber Value="filter.Value" Formatter="col.NumberFormatter" TValue="TData" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter,value)) })"></InputNumber>
+                                        }
                                         else
                                         {
-                                            if (THelper.IsNumericType<TData>())
-                                            {
-                                                <InputNumber Value="filter.Value" Formatter="col.NumberFormatter" TValue="TData" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter,value)) })"></InputNumber>
-                                            }
-                                            else
-                                            {
-                                                <Input TValue="TData" Value="filter.Value" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter,value)) })" />
-                                            }
+                                            <Input TValue="TData" Value="filter.Value" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter,value)) })" />
                                         }
                                     </SpaceItem>
                                 </Space>

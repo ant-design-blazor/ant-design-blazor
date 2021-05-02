@@ -66,5 +66,9 @@ namespace AntDesign
         public string IsNull { get; set; } = "Is Null";
 
         public string IsNotNull { get; set; } = "Is Not Null";
+
+        public string HasFlag { get; set; } = "Contains";
+
+        public string NotHasFlag { get; set; } = "Not Contains";
     }
 }
