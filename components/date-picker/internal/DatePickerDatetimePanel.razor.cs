@@ -35,21 +35,23 @@ namespace AntDesign.Internal
             List<int> disabledHours = new List<int>();
             List<int> disabledMinutes = new List<int>();
             List<int> disabledSeconds = new List<int>();
-
-            if (DisabledHours != null)
+            DatePickerDisabledTime userDisabledTime = null;
+            if (Value is not null)
             {
-                disabledHours.AddRange(DisabledHours(Value));
+                if (DisabledHours is not null)
+                {
+                    disabledHours.AddRange(DisabledHours(Value.Value));
+                }
+                if (DisabledMinutes is not null)
+                {
+                    disabledMinutes.AddRange(DisabledMinutes(Value.Value));
+                }
+                if (DisabledSeconds is not null)
+                {
+                    disabledSeconds.AddRange(DisabledSeconds(Value.Value));
+                }
+                userDisabledTime = DisabledTime?.Invoke(Value ?? DateTime.Now);
             }
-            if (DisabledMinutes != null)
-            {
-                disabledMinutes.AddRange(DisabledMinutes(Value));
-            }
-            if (DisabledSeconds != null)
-            {
-                disabledSeconds.AddRange(DisabledSeconds(Value));
-            }
-
-            DatePickerDisabledTime userDisabledTime = DisabledTime?.Invoke(Value);
 
             if (userDisabledTime != null)
             {

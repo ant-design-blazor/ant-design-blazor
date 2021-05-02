@@ -9,38 +9,50 @@ namespace AntDesign
         private const int DECADE_YEAR_COUNT = 10;
         private const int QUARTER_MONTH_COUNT = 3;
 
-        public static bool IsSameDate(DateTime date, DateTime compareDate)
+        public static bool IsSameDate(DateTime? date, DateTime? compareDate)
         {
+            if (date is null || compareDate is null)
+                return false;
             return date == compareDate;
         }
 
-        public static bool IsSameYear(DateTime date, DateTime compareDate)
+        public static bool IsSameYear(DateTime? date, DateTime? compareDate)
         {
-            return date.Year == compareDate.Year;
+            if (date is null || compareDate is null)
+                return false;
+            return date.Value.Year == compareDate.Value.Year;
         }
 
-        public static bool IsSameMonth(DateTime date, DateTime compareDate)
+        public static bool IsSameMonth(DateTime? date, DateTime? compareDate)
         {
+            if (date is null || compareDate is null)
+                return false;
             return IsSameYear(date, compareDate)
-                && date.Month == compareDate.Month;
+                && date.Value.Month == compareDate.Value.Month;
         }
 
-        public static bool IsSameDay(DateTime date, DateTime compareDate)
+        public static bool IsSameDay(DateTime? date, DateTime? compareDate)
         {
+            if (date is null || compareDate is null)
+                return false;
             return IsSameYear(date, compareDate)
-                && _calendar.GetDayOfYear(date) == _calendar.GetDayOfYear(compareDate);
+                && _calendar.GetDayOfYear(date.Value) == _calendar.GetDayOfYear(compareDate.Value);
         }
 
-        public static bool IsSameWeak(DateTime date, DateTime compareDate)
+        public static bool IsSameWeak(DateTime? date, DateTime? compareDate)
         {
+            if (date is null || compareDate is null)
+                return false;
             return IsSameYear(date, compareDate)
-                && GetWeekOfYear(date) == GetWeekOfYear(compareDate);
+                && GetWeekOfYear(date.Value) == GetWeekOfYear(compareDate.Value);
         }
 
-        public static bool IsSameQuarter(DateTime date, DateTime compareDate)
+        public static bool IsSameQuarter(DateTime? date, DateTime? compareDate)
         {
+            if (date is null || compareDate is null)
+                return false;
             return IsSameYear(date, compareDate)
-                && GetDayOfQuarter(date) == GetDayOfQuarter(compareDate);
+                && GetDayOfQuarter(date.Value) == GetDayOfQuarter(compareDate.Value);
         }
 
         public static string GetDayOfQuarter(DateTime date)
@@ -51,9 +63,7 @@ namespace AntDesign
         public static int GetQuarter(DateTime date)
         {
             int offset = date.Month % QUARTER_MONTH_COUNT > 0 ? 1 : 0;
-            int quarter = date.Month / QUARTER_MONTH_COUNT + offset;
-
-            return quarter;
+            return date.Month / QUARTER_MONTH_COUNT + offset;
         }
 
         public static DateTime GetStartDateOfQuarter(DateTime date)
