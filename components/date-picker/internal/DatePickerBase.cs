@@ -597,7 +597,7 @@ namespace AntDesign
             if (string.IsNullOrEmpty(Format))
                 format = _pickerStatus[index]._initPicker switch
                 {
-                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{DateHelper.GetWeekOfYear(value)}{Locale.Lang.Week}",
+                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{DateHelper.GetWeekOfYear(value, Locale.FirstDayOfWeek)}{Locale.Lang.Week}",
                     DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
                     _ => InternalFormat,
                 };

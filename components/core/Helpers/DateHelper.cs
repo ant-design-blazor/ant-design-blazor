@@ -39,12 +39,12 @@ namespace AntDesign
                 && _calendar.GetDayOfYear(date.Value) == _calendar.GetDayOfYear(compareDate.Value);
         }
 
-        public static bool IsSameWeak(DateTime? date, DateTime? compareDate)
+        public static bool IsSameWeak(DateTime? date, DateTime? compareDate, DayOfWeek firstDayOfWeek)
         {
             if (date is null || compareDate is null)
                 return false;
             return IsSameYear(date, compareDate)
-                && GetWeekOfYear(date.Value) == GetWeekOfYear(compareDate.Value);
+                && GetWeekOfYear(date.Value, firstDayOfWeek) == GetWeekOfYear(compareDate.Value, firstDayOfWeek);
         }
 
         public static bool IsSameQuarter(DateTime? date, DateTime? compareDate)
@@ -72,9 +72,9 @@ namespace AntDesign
             return new DateTime(date.Year, 1 + ((quarter - 1) * QUARTER_MONTH_COUNT), 1);
         }
 
-        public static int GetWeekOfYear(DateTime date)
+        public static int GetWeekOfYear(DateTime date, DayOfWeek firstDayOfWeek)
         {
-            return _calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+            return _calendar.GetWeekOfYear(date, CalendarWeekRule.FirstDay, firstDayOfWeek);
         }
 
         /// <summary>
