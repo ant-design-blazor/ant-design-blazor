@@ -46,13 +46,27 @@
     <FormItem Label="AutoComplete">
         <AutoComplete @bind-Value="@context.AutoComplete" Options="@autoCompleteOptions" Placeholder="Input here" />
     </FormItem>
+    <FormItem Label="Select">
+        <Select Mode="default"
+            DataSource="@_persons"            
+            @bind-Value="@context.Name"
+            LabelName="@nameof(Person.Name)"
+            ValueName="@nameof(Person.Name)">
+        </Select>
+    </FormItem>
+    <FormItem Label="Multiselect">
+        <Select Mode="multiple"
+            DataSource="@_persons"            
+            @bind-Values="@context.Names"
+            LabelName="@nameof(Person.Name)"
+            ValueName="@nameof(Person.Name)">
+        </Select>
+    </FormItem>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
         <Button HtmlType="submit">
             Submit
         </Button>
     </FormItem>
-
-
 </Form>
 
 @code
@@ -69,6 +83,8 @@
         public bool Switch { get; set; } = true;
         public string Radio { get; set; } = "Beijing";
         public string AutoComplete { get; set; }
+		public string Name { get; set; }
+		public IEnumerable<string> Names { get; set; } = Array.Empty<string>();
     }
 
     private Model model = new Model();
@@ -93,6 +109,15 @@
     };
 
     private List<string> autoCompleteOptions = new List<string> { "Primary", "Junior", "Senior", "Undergraduate", "Master", "Doctor" };
+
+	record Person(string Name);
+    private List<Person> _persons = new List<Person>
+        {
+            new Person("John"),
+            new Person("Lucy"),
+            new Person("Jack"),
+            new Person("Emily"),
+        };
 
     private void OnFinish(EditContext editContext)
     {
