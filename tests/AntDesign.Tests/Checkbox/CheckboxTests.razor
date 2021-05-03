@@ -26,8 +26,8 @@
 		inputElement.Change(true);
 		
         //Assert
-        Assert.True(checkboxComponent.Checked);
-        Assert.NotEqual(oldValue, checkboxComponent.Checked);
+        checkboxComponent.Checked.Should().BeTrue();
+		checkboxComponent.Checked.Should().Be(!oldValue);
 	}
 
 	[Fact]
@@ -40,7 +40,7 @@
 		//Act
 		inputElement.Change(true);
         //Assert
-        Assert.True(isChecked);        
+        isChecked.Should().BeTrue();
 	}
 
 	[Fact]
@@ -53,8 +53,29 @@
 		//Act
 		inputElement.Change(true);
         //Assert
-        Assert.True(isChecked);    
-		
+        isChecked.Should().BeTrue();
+	}
+
+	[Fact]
+	public void Bind_Value_basic_checkbox_initial()
+	{
+		//Arrange
+		bool isChecked = true;		
+		var cut = Render(@<Checkbox @bind-Value=isChecked>Test</Checkbox>);
+		ITokenList classList = cut.Find("span").ClassList;		
+        //Assert		
+		classList.Contains("ant-checkbox-checked").Should().BeTrue();
+	}
+
+	[Fact]
+	public void Bind_Checked_basic_checkbox_initial()
+	{
+		//Arrange
+		bool isChecked = true;		
+		var cut = Render(@<Checkbox @bind-Checked=isChecked>Test</Checkbox>);
+		ITokenList classList = cut.Find("span").ClassList;		
+        //Assert		
+		classList.Contains("ant-checkbox-checked").Should().BeTrue();
 	}
 
 	[Fact]
@@ -63,11 +84,25 @@
 		//Arrange
 		bool handlerExecuted = false;
 		Action<bool> onChangeHandler = value => { handlerExecuted = true; };
-		var cut = Render(@<Checkbox OnChange="onChangeHandler">Test</Checkbox>);
+		var cut = Render(@<Checkbox OnChange="onChangeHandler">Test</Checkbox>
+	);
 		var inputElement = cut.Find("[type=checkbox]");
 		//Act
 		inputElement.Change(true);
 		//Assert		
-		Assert.True(handlerExecuted);
+		handlerExecuted.Should().BeTrue();
+	}
+
+	[Fact]
+	public void Shound_Not_Fire_OnChange_initial()
+	{
+		//Arrange
+		bool handlerExecuted = false;
+		bool isChecked = true;		
+		Action<bool> onChangeHandler = value => { handlerExecuted = true; };
+		var cut = Render(
+	@<Checkbox @bind-Value=isChecked OnChange="onChangeHandler">Test</Checkbox>);
+	    //Assert		
+		handlerExecuted.Should().BeFalse();
 	}
 }
