@@ -210,5 +210,7 @@ namespace AntDesign
         {
             _editContext = new EditContext(Model);
         }
+
+        public IEnumerable<string> GetValidationMessages() => _editContext.GetValidationMessages();
     }
 }
