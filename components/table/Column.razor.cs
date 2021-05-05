@@ -140,7 +140,7 @@ namespace AntDesign
 
             Sortable = Sortable || SorterMultiple != default || SorterCompare != default || DefaultSortOrder != default || SortDirections?.Any() == true;
 
-            if (FieldExpression != null && DataIndex == null)
+            if (FieldExpression != null && DataIndex == null && FieldChanged.HasDelegate == false)
             {
                 DataIndex = FieldExpression.ToString();
                 DataIndex = Regex.Replace(DataIndex, @"^\(\) => value\([^)]*\)\.[^.]*\.", "");
@@ -152,6 +152,13 @@ namespace AntDesign
                 if (DataIndex != null)
                 {
                     (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                }
+                else if (FieldExpression != null)
+                {
+                    var paramExp = Expression.Parameter(ItemType);
+                    var member = ColumnExpressionHelper.GetReturnMemberInfo(FieldExpression);
+                    var bodyExp = Expression.MakeMemberAccess(paramExp, member);
+                    GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
                 }
 
                 if (GetFieldExpression != null)
