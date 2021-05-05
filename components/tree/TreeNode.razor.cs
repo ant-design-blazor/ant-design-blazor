@@ -188,6 +188,26 @@ namespace AntDesign
         [Parameter]
         public bool Loading { get; set; }
 
+        private bool _isSelected;
+
+        /// <summary>
+        /// 是否默认选中
+        /// </summary>
+        [Parameter]
+        public bool IsSelected
+        {
+            get
+            {
+                if (TreeComponent.IsSelectedExpression != null)
+                    return TreeComponent.IsSelectedExpression(this);
+                else
+                    return _isSelected;
+            }
+            set
+            {
+                _isSelected = value;
+            }
+        }
         private void SetTreeNodeClassMapper()
         {
             ClassMapper.Clear().Add("ant-tree-treenode")
@@ -590,6 +610,23 @@ namespace AntDesign
                 this.Expand(true);
                 tn.SetSelected(true);
             }
+        }
+
+        /// <summary>
+        /// 首次渲染完成处理默认选中项
+        /// </summary>
+        /// <returns></returns>
+        protected override Task OnFirstAfterRenderAsync()
+        {
+            if (IsSelected)
+                if (TreeComponent.Multiple)
+                    SetSelected(true);
+                else
+                {
+                    if (TreeComponent.SelectedNodesDictionary.Count <= 0)
+                        SetSelected(true);
+                }
+            return base.OnFirstAfterRenderAsync();
         }
     }
 }

@@ -285,8 +285,12 @@ namespace AntDesign
 
         #region DataBind
 
+        /// <summary>
+        /// 返回一个值是否是默认选中
+        /// </summary>
         [Parameter]
-        public IList<TItem> DataSource { get; set; }
+        public Func<TreeNode<TItem>, bool> IsSelectedExpression { get; set; }
+
 
         /// <summary>
         /// 指定一个方法，该表达式返回节点的文本。
@@ -317,6 +321,9 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
+
+        [Parameter]
+        public IList<TItem> DataSource { get; set; }
 
         #endregion DataBind
 
