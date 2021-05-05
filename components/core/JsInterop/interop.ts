@@ -156,7 +156,17 @@ export function triggerEvent(element, eventType, eventName) {
 export function getBoundingClientRect(element) {
   let dom = getDom(element);
   if (dom && dom.getBoundingClientRect) {
-    return dom.getBoundingClientRect();
+    let domRect = dom.getBoundingClientRect();
+    return {
+      width: domRect.width,
+      height: domRect.height,
+      top: domRect.top,
+      right: domRect.right,
+      bottom: domRect.bottom,
+      left: domRect.left,
+      x: domRect.x,
+      y: domRect.y
+    };
   }
   return null;
 }
