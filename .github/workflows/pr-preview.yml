@@ -41,7 +41,8 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: 6.0.x
+	      include-prerelease: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
@@ -58,7 +59,7 @@ jobs:
           git checkout fork
           npm install
           dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo
 
       - name: Deploy Preview 🚀
         env:

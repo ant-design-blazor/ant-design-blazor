@@ -9,10 +9,9 @@
     Persons _model = new();
     IEnumerable<string> _datasource = new List<string>{ "Lucy", "John", "Jack", "Emily" };	
 
-#if NET6_0
     [Fact]
 	public void Select_Validation_Shown() 
-    {
+    {		
         //Arrange
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
             .SetResult(new AntDesign.JsInterop.DomRect());        
@@ -72,5 +71,4 @@
 		cut.Invoking(c => cut.Find("div.ant-form-item-explain-error"))
 			.Should().Throw<ElementNotFoundException>();
 	}
-#endif
 }

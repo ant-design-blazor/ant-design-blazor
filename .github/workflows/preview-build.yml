@@ -17,7 +17,8 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: 6.0.x
+	      include-prerelease: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
@@ -38,7 +39,7 @@ jobs:
           npm install
           dotnet build
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o _site
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o _site
         env:
           PACKAGE_VERSION: ${{ github.event.number }}
 
