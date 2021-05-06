@@ -35,8 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Tests", "tests\An
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DFD13180-D1BF-44DA-BEBE-4A54EFDEFFE2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication2", "WebApplication2\WebApplication2.csproj", "{5C7EC5C1-9FCD-4C49-A944-A2EAE0DE5E31}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,10 +73,6 @@ Global
 		{51D7507D-48BA-43BB-8223-CE35A2D7D0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51D7507D-48BA-43BB-8223-CE35A2D7D0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51D7507D-48BA-43BB-8223-CE35A2D7D0D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C7EC5C1-9FCD-4C49-A944-A2EAE0DE5E31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C7EC5C1-9FCD-4C49-A944-A2EAE0DE5E31}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C7EC5C1-9FCD-4C49-A944-A2EAE0DE5E31}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C7EC5C1-9FCD-4C49-A944-A2EAE0DE5E31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
