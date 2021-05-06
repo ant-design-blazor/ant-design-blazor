@@ -93,6 +93,9 @@ namespace AntDesign
         [Parameter]
         public string Size { get; set; } = AntSizeLDSType.Default;
 
+        [Parameter]
+        public CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
+
         /// <summary>
         /// Gets the associated <see cref="EditContext"/>.
         /// </summary>
@@ -215,7 +218,7 @@ namespace AntDesign
             }
 
             var success = BindConverter.TryConvertTo<TValue>(
-               value, CultureInfo.CurrentCulture, out var parsedValue);
+               value, CultureInfo, out var parsedValue);
 
             if (success)
             {

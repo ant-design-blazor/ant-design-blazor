@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace AntDesign
@@ -86,114 +87,114 @@ namespace AntDesign
         #endregion
 
         #region Parse
-        public static sbyte Parse(string input, sbyte defaultValue)
+        public static sbyte Parse(string input, sbyte defaultValue, CultureInfo culture)
         {
-            return sbyte.TryParse(input, out var number) ? number : defaultValue;
+            return sbyte.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static sbyte? Parse(string input, sbyte? defaultValue)
+        public static sbyte? Parse(string input, sbyte? defaultValue, CultureInfo culture)
         {
-            return sbyte.TryParse(input, out var number) ? number : defaultValue;
+            return sbyte.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static byte Parse(string input, byte defaultValue)
+        public static byte Parse(string input, byte defaultValue, CultureInfo culture)
         {
-            return byte.TryParse(input, out var number) ? number : defaultValue;
+            return byte.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static byte? Parse(string input, byte? defaultValue)
+        public static byte? Parse(string input, byte? defaultValue, CultureInfo culture)
         {
-            return byte.TryParse(input, out var number) ? number : defaultValue;
+            return byte.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static short Parse(string input, short defaultValue)
+        public static short Parse(string input, short defaultValue, CultureInfo culture)
         {
-            return short.TryParse(input, out var number) ? number : defaultValue;
+            return short.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static short? Parse(string input, short? defaultValue)
+        public static short? Parse(string input, short? defaultValue, CultureInfo culture)
         {
-            return short.TryParse(input, out var number) ? number : defaultValue;
+            return short.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static ushort Parse(string input, ushort defaultValue)
+        public static ushort Parse(string input, ushort defaultValue, CultureInfo culture)
         {
-            return ushort.TryParse(input, out var number) ? number : defaultValue;
+            return ushort.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static ushort? Parse(string input, ushort? defaultValue)
+        public static ushort? Parse(string input, ushort? defaultValue, CultureInfo culture)
         {
-            return ushort.TryParse(input, out var number) ? number : defaultValue;
+            return ushort.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static int Parse(string input, int defaultValue)
+        public static int Parse(string input, int defaultValue, CultureInfo culture)
         {
-            return int.TryParse(input, out var number) ? number : defaultValue;
+            return int.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static int? Parse(string input, int? defaultValue)
+        public static int? Parse(string input, int? defaultValue, CultureInfo culture)
         {
-            return int.TryParse(input, out var number) ? number : defaultValue;
+            return int.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static uint Parse(string input, uint defaultValue)
+        public static uint Parse(string input, uint defaultValue, CultureInfo culture)
         {
-            return uint.TryParse(input, out var number) ? number : defaultValue;
+            return uint.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static uint? Parse(string input, uint? defaultValue)
+        public static uint? Parse(string input, uint? defaultValue, CultureInfo culture)
         {
-            return uint.TryParse(input, out var number) ? number : defaultValue;
+            return uint.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static long Parse(string input, long defaultValue)
+        public static long Parse(string input, long defaultValue, CultureInfo culture)
         {
-            return long.TryParse(input, out var number) ? number : defaultValue;
+            return long.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static long? Parse(string input, long? defaultValue)
+        public static long? Parse(string input, long? defaultValue, CultureInfo culture)
         {
-            return long.TryParse(input, out var number) ? number : defaultValue;
+            return long.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static ulong Parse(string input, ulong defaultValue)
+        public static ulong Parse(string input, ulong defaultValue, CultureInfo culture)
         {
-            return ulong.TryParse(input, out var number) ? number : defaultValue;
+            return ulong.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static ulong? Parse(string input, ulong? defaultValue)
+        public static ulong? Parse(string input, ulong? defaultValue, CultureInfo culture)
         {
-            return ulong.TryParse(input, out var number) ? number : defaultValue;
+            return ulong.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static float Parse(string input, float defaultValue)
+        public static float Parse(string input, float defaultValue, CultureInfo culture)
         {
-            return float.TryParse(input, out var number) ? number : defaultValue;
+            return float.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static float? Parse(string input, float? defaultValue)
+        public static float? Parse(string input, float? defaultValue, CultureInfo culture)
         {
-            return float.TryParse(input, out var number) ? number : defaultValue;
+            return float.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static double Parse(string input, double defaultValue)
+        public static double Parse(string input, double defaultValue, CultureInfo culture)
         {
-            return double.TryParse(input, out var number) ? number : defaultValue;
+            return double.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static double? Parse(string input, double? defaultValue)
+        public static double? Parse(string input, double? defaultValue, CultureInfo culture)
         {
-            return double.TryParse(input, out var number) ? number : defaultValue;
+            return double.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static decimal Parse(string input, decimal defaultValue)
+        public static decimal Parse(string input, decimal defaultValue, CultureInfo culture)
         {
-            return decimal.TryParse(input, out var number) ? number : defaultValue;
+            return decimal.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
 
-        public static decimal? Parse(string input, decimal? defaultValue)
+        public static decimal? Parse(string input, decimal? defaultValue, CultureInfo culture)
         {
-            return decimal.TryParse(input, out var number) ? number : defaultValue;
+            return decimal.TryParse(input, NumberStyles.Any, culture, out var number) ? number : defaultValue;
         }
     }
     #endregion
