@@ -88,6 +88,9 @@ namespace AntDesign
         public Expression<Func<TValue>> ValueExpression { get; set; }
 
         [Parameter]
+        public Expression<Func<IEnumerable<TValue>>> ValuesExpression { get; set; }
+
+        [Parameter]
         public string Size { get; set; } = AntSizeLDSType.Default;
 
         /// <summary>
@@ -176,7 +179,7 @@ namespace AntDesign
         }
 
         private TValue _firstValue;
-        private bool _isNotifyFieldChanged = true;
+        protected bool _isNotifyFieldChanged = true;
 
         /// <summary>
         /// Constructs an instance of <see cref="InputBase{TValue}"/>.
@@ -263,13 +266,16 @@ namespace AntDesign
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
-                if (ValueExpression == null)
+                if (ValueExpression == null && ValuesExpression == null)
                 {
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
                 EditContext = Form?.EditContext;
-                FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                if (ValuesExpression == null)
+                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                else
+                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
                 _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
 
                 EditContext.OnValidationStateChanged += _validationStateChangedHandler;
