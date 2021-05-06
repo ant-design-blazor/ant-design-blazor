@@ -351,3 +351,6 @@ package-lock.json
 coverage.cobertura.xml
 scripts/previewEditor/index.html
 /site/AntDesign.Docs/wwwroot/css
+/WebApplication1
+/WebApplication2
+/WebApplication3
