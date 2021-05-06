@@ -84,9 +84,6 @@ namespace AntDesign
         [Parameter]
         public bool FilterMultiple { get; set; } = true;
 
-        [Parameter]
-        public string FilterNullValueDisplayText { get; set; }
-
         /// <summary>
         /// Function that determines if the row is displayed when filtered
         /// <para>
@@ -227,7 +224,7 @@ namespace AntDesign
                 if (_columnFilterType == TableFilterType.List && THelper.IsTypeNullable<TData>())
                 {
                     var nullFilterOption = GetNewFilter();
-                    nullFilterOption.Text = FilterNullValueDisplayText ?? Table.Locale.FilterOptions.IsNull;
+                    nullFilterOption.Text = Table.Locale.FilterOptions.IsNull;
                     nullFilterOption.Value = THelper.ChangeType<TData>(null);
                     ((List<TableFilter<TData>>)Filters).Add(nullFilterOption);
                 }

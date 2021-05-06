@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,29 +8,37 @@ namespace AntDesign
 {
     public static class EnumHelper
     {
+        private static readonly ConcurrentDictionary<Type, Delegate> _aggregateFunctionCache = new();
+
         public static T Combine<T>(IEnumerable<T> enumValues)
         {
+            var type = typeof(T);
             var enumType = THelper.GetUnderlyingType<T>();
             if (enumType.IsEnum == false)
             {
-                throw new ArgumentException("EnumHelper.Combine only supports enumeration types");
+                throw new ArgumentException("Type parameter T should be of enumeration types");
             }
             if (enumValues?.Count() > 0)
             {
-                var underlyingType = Enum.GetUnderlyingType(enumType);
-                var param1Expression = Expression.Parameter(typeof(T));
-                var param2Expression = Expression.Parameter(typeof(T));
-                var param1ConvertExpression = Expression.Convert(param1Expression, underlyingType);
-                var param2ConvertExpression = Expression.Convert(param2Expression, underlyingType);
-                var orExpression = Expression.Or(param1ConvertExpression, param2ConvertExpression);
-                var bodyExpression = Expression.Convert(orExpression, typeof(T));
-                var lambdaExpression = (Expression<Func<T, T, T>>)Expression.Lambda(bodyExpression, param1Expression, param2Expression);
-                return enumValues.Aggregate(lambdaExpression.Compile());
+                return enumValues.Aggregate((Func<T, T, T>)_aggregateFunctionCache.GetOrAdd(type, t => BuildAggregateFunction(t, enumType)));
             }
             else
             {
                 return default;
             }
+        }
+
+        private static Delegate BuildAggregateFunction(Type type, Type enumType)
+        {
+            var underlyingType = Enum.GetUnderlyingType(enumType);
+            var param1 = Expression.Parameter(type);
+            var param2 = Expression.Parameter(type);
+            var body = Expression.Convert(
+                Expression.Or(
+                    Expression.Convert(param1, underlyingType),
+                    Expression.Convert(param2, underlyingType)),
+                type);
+            return Expression.Lambda(body, param1, param2).Compile();
         }
     }
 }
