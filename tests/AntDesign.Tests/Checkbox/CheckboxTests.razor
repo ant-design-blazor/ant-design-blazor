@@ -25,8 +25,8 @@
 		//Act
 		inputElement.Change(true);
 		
-        //Assert
-        checkboxComponent.Checked.Should().BeTrue();
+                //Assert
+                checkboxComponent.Checked.Should().BeTrue();
 		checkboxComponent.Checked.Should().Be(!oldValue);
 	}
 
@@ -39,8 +39,8 @@
 		var inputElement = cut.Find("[type=checkbox]");		
 		//Act
 		inputElement.Change(true);
-        //Assert
-        isChecked.Should().BeTrue();
+                //Assert
+                isChecked.Should().BeTrue();
 	}
 
 	[Fact]
@@ -52,8 +52,8 @@
 		var inputElement = cut.Find("[type=checkbox]");		
 		//Act
 		inputElement.Change(true);
-        //Assert
-        isChecked.Should().BeTrue();
+                //Assert
+                isChecked.Should().BeTrue();
 	}
 
 	[Fact]
@@ -63,7 +63,7 @@
 		bool isChecked = true;		
 		var cut = Render(@<Checkbox @bind-Value=isChecked>Test</Checkbox>);
 		ITokenList classList = cut.Find("span").ClassList;		
-        //Assert		
+                //Assert		
 		classList.Contains("ant-checkbox-checked").Should().BeTrue();
 	}
 
@@ -74,7 +74,7 @@
 		bool isChecked = true;		
 		var cut = Render(@<Checkbox @bind-Checked=isChecked>Test</Checkbox>);
 		ITokenList classList = cut.Find("span").ClassList;		
-        //Assert		
+                //Assert		
 		classList.Contains("ant-checkbox-checked").Should().BeTrue();
 	}
 
@@ -84,8 +84,7 @@
 		//Arrange
 		bool handlerExecuted = false;
 		Action<bool> onChangeHandler = value => { handlerExecuted = true; };
-		var cut = Render(@<Checkbox OnChange="onChangeHandler">Test</Checkbox>
-	);
+		var cut = Render(@<Checkbox OnChange="onChangeHandler">Test</Checkbox>);
 		var inputElement = cut.Find("[type=checkbox]");
 		//Act
 		inputElement.Change(true);
@@ -100,9 +99,8 @@
 		bool handlerExecuted = false;
 		bool isChecked = true;		
 		Action<bool> onChangeHandler = value => { handlerExecuted = true; };
-		var cut = Render(
-	@<Checkbox @bind-Value=isChecked OnChange="onChangeHandler">Test</Checkbox>);
-	    //Assert		
+		var cut = Render(@<Checkbox @bind-Value=isChecked OnChange="onChangeHandler">Test</Checkbox>);
+	        //Assert		
 		handlerExecuted.Should().BeFalse();
 	}
 }
