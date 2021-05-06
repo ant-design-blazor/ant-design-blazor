@@ -127,10 +127,10 @@ namespace AntDesign.Docs.Build.CLI.Utils
                 {
                     stylePart += blockHtml;
                 }
-                else if (isCodeBlock)
-                {
-                    codePart += blockHtml;
-                }
+                //else if (isCodeBlock)
+                //{
+                //    codePart += blockHtml;
+                //}
                 else
                 {
                     enPart += blockHtml;
