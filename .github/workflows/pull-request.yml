@@ -18,10 +18,15 @@ jobs:
         with:
           dotnet-version: 3.1.300
           
-      - name: Setup .NET 5
+      - name: Setup .NET 5.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: 5.0.x
+
+      - name: Setup .NET 6.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
 
       - uses: actions/setup-node@v1
         with:
@@ -32,7 +37,7 @@ jobs:
           npm install
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
           dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net6 -o cargo
 
       - name: Test 📝
         run: |

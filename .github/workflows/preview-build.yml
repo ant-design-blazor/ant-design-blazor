@@ -13,16 +13,15 @@ jobs:
       - name: checkout
         uses: actions/checkout@master
 
-      - name: Setup .NET Core
+      - name: Setup .NET 5.0
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: 5.0.x
 
       - name: Setup .NET 6.0
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: "6.0.x"
-          include-prerelease: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
