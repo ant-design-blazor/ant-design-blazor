@@ -23,6 +23,7 @@ Nullable types of the above types are also supported. For example, `ushort?`, `i
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
 | AutoFocus |get focus when component mounted                              | boolean        | -         |
+| CultureInfo          | What Culture will be used when converting string to value and value to string           | CultureInfo         | CultureInfo.CurrentCulture       |
 | DefaultValue            |initial value           | number         |
 | Disabled            | disable the input          | boolean         |-       |
 | Formatter |Specifies the format of the value presented      | function(double,string)        | -         |

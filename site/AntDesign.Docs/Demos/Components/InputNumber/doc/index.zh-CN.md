@@ -23,6 +23,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | AutoFocus | 自动获取焦点                              | boolean        | -         |
+| CultureInfo          | What Culture will be used when converting string to value and value to string           | CultureInfo         | CultureInfo.CurrentCulture       |
 | DefaultValue            | 初始值           | number         |
 | Disabled            |禁用           | boolean         |-       |
 | Formatter |指定输入框展示值的格式      | function(double,string)        | -         |
