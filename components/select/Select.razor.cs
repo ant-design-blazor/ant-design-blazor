@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Internal;
@@ -326,6 +327,10 @@ namespace AntDesign
 
                     _ = OnValuesChangeAsync(default);
                 }
+                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+                {
+                    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                }
             }
         }
 
@@ -480,6 +485,7 @@ namespace AntDesign
         private Action<TItem, TItemValue> _setValue;
         private bool _disableSubmitFormOnEnter;
         private bool _showArrowIcon = true;
+        private Expression<Func<TItemValue>> _valueExpression;
 
         #endregion Properties
 
