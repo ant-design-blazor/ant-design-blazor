@@ -108,6 +108,7 @@
       "placeholder": "Wybierz godzinę"
     }
   },
+  "global": { "placeholder": "Proszę wybrać" },
   "Table": {
     "filterTitle": "Menu filtra",
     "filterConfirm": "OK",
