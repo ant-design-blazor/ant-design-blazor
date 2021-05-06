@@ -156,7 +156,18 @@ export function triggerEvent(element, eventType, eventName) {
 export function getBoundingClientRect(element) {
   let dom = getDom(element);
   if (dom && dom.getBoundingClientRect) {
-    return dom.getBoundingClientRect();
+    let domRect = dom.getBoundingClientRect();
+    // Fixes #1468. This wrapping is necessary for old browsers. Remove this when one day we no longer support them.
+    return {
+      width: domRect.width,
+      height: domRect.height,
+      top: domRect.top,
+      right: domRect.right,
+      bottom: domRect.bottom,
+      left: domRect.left,
+      x: domRect.x,
+      y: domRect.y
+    };
   }
   return null;
 }

@@ -69,11 +69,5 @@ namespace AntDesign
 
         internal void SetValue(bool value) => Checked = value;
 
-        protected override void OnValueChange(bool value)
-        {
-            if (_isInitalized)
-                base.OnValueChange(value);
-        }
-
     }
 }
