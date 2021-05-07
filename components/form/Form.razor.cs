@@ -218,5 +218,7 @@ namespace AntDesign
         {
             _editContext = new EditContext(Model);
         }
+
+        public EditContext EditContext => _editContext;
     }
 }
