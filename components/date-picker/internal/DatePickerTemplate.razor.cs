@@ -17,7 +17,7 @@ namespace AntDesign.Internal
         public RenderFragment RenderTableHeader { get; set; }
 
         [Parameter]
-        public RenderFragment<DateTime> RenderFisrtCol { get; set; }
+        public RenderFragment<DateTime> RenderFirstCol { get; set; }
 
         [Parameter]
         public RenderFragment<DateTime> RenderColValue { get; set; }
