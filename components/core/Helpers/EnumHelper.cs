@@ -8,14 +8,14 @@ namespace AntDesign
 {
     public static class EnumHelper<T>
     {
-        private static Func<T, T, T> _aggregateFunction;
+        private static readonly Func<T, T, T> _aggregateFunction = BuildAggregateFunction();
 
         // There is no constraint or type check for type parameter T, be sure that T is an enumeration type  
         public static T Combine(IEnumerable<T> enumValues)
         {
             if (enumValues?.Count() > 0)
             {
-                return enumValues.Aggregate(_aggregateFunction ??= BuildAggregateFunction());
+                return enumValues.Aggregate(_aggregateFunction);
             }
             else
             {
