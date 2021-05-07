@@ -6,21 +6,16 @@ using System.Linq.Expressions;
 
 namespace AntDesign
 {
-    public static class EnumHelper
+    public static class EnumHelper<T>
     {
-        private static readonly ConcurrentDictionary<Type, Delegate> _aggregateFunctionCache = new();
+        private static Func<T, T, T> _aggregateFunction;
 
-        public static T Combine<T>(IEnumerable<T> enumValues)
+        // There is no constraint or type check for type parameter T, be sure that T is an enumeration type  
+        public static T Combine(IEnumerable<T> enumValues)
         {
-            var type = typeof(T);
-            var enumType = THelper.GetUnderlyingType<T>();
-            if (enumType.IsEnum == false)
-            {
-                throw new ArgumentException("Type parameter T should be of enumeration types");
-            }
             if (enumValues?.Count() > 0)
             {
-                return enumValues.Aggregate((Func<T, T, T>)_aggregateFunctionCache.GetOrAdd(type, t => BuildAggregateFunction(t, enumType)));
+                return enumValues.Aggregate(_aggregateFunction ??= BuildAggregateFunction());
             }
             else
             {
@@ -28,8 +23,10 @@ namespace AntDesign
             }
         }
 
-        private static Delegate BuildAggregateFunction(Type type, Type enumType)
+        private static Func<T, T, T> BuildAggregateFunction()
         {
+            var type = typeof(T);
+            var enumType = THelper.GetUnderlyingType<T>();
             var underlyingType = Enum.GetUnderlyingType(enumType);
             var param1 = Expression.Parameter(type);
             var param2 = Expression.Parameter(type);
@@ -38,7 +35,7 @@ namespace AntDesign
                     Expression.Convert(param1, underlyingType),
                     Expression.Convert(param2, underlyingType)),
                 type);
-            return Expression.Lambda(body, param1, param2).Compile();
+            return Expression.Lambda<Func<T, T, T>>(body, param1, param2).Compile();
         }
     }
 }

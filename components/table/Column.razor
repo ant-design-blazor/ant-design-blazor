@@ -272,7 +272,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                         else if (col._columnDataType.IsEnum)
                                         {
                                             <Select TItem="TData" TItemValue="TData" Mode="multiple" Values="filter.Value?.ToString().Split(',').Select(x => (TData)Enum.Parse(col._columnDataType, x)) ?? Array.Empty<TData>()" PopupContainerSelector="@("#popupSelForValue" + col.Id)" Style="width:180px;"
-                                                    @attributes="@(new Dictionary<string, object>() { ["ValuesChanged"] = _callbackFactory.Create<IEnumerable<TData>>(col, value => col.SetFilterValue(filter, EnumHelper.Combine(value))) })">
+                                                    @attributes="@(new Dictionary<string, object>() { ["ValuesChanged"] = _callbackFactory.Create<IEnumerable<TData>>(col, value => col.SetFilterValue(filter, EnumHelper<TData>.Combine(value))) })">
                                                 <SelectOptions>
                                                     @foreach (var enumValue in Enum.GetValues(col._columnDataType))
                                                     {
