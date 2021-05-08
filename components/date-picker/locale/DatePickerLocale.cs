@@ -4,7 +4,7 @@ namespace AntDesign
 {
     public class DatePickerLocale
     {
-        public DayOfWeek FirstDayOfWeek { get; set; }
+        public DayOfWeek FirstDayOfWeek { get; set; } = DayOfWeek.Sunday;
 
         public DateLocale Lang { get; set; } = new DateLocale();
 
@@ -12,7 +12,7 @@ namespace AntDesign
     }
 
     public class DateLocale
-    {       
+    {
         public string Placeholder { get; set; } = "Select date";
         public string YearPlaceholder { get; set; } = "Select year";
         public string QuarterPlaceholder { get; set; } = "Select quarter";

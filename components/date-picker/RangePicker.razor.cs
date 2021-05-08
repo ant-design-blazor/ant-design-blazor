@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -83,6 +84,8 @@ namespace AntDesign
             {
                 return;
             }
+            _openingOverlay = !_dropDown.IsOverlayShow();
+
             //Reset Picker to default in case the picker value was changed
             //but no value was selected (for example when a user clicks next
             //month but does not select any value)
@@ -163,18 +166,21 @@ namespace AntDesign
             if (e == null) throw new ArgumentNullException(nameof(e));
 
             var key = e.Key.ToUpperInvariant();
-            if (key == "ENTER" || key == "TAB")
+            if (key == "ENTER" || key == "TAB" || key == "ESCAPE")
             {
                 _duringManualInput = false;
                 var input = (index == 0 ? _inputStart : _inputEnd);
                 if (string.IsNullOrWhiteSpace(input.Value))
-                {
                     ClearValue(index, false);
-                    await Focus(index);
-                    return;
-                }
                 else if (!await TryApplyInputValue(index, input.Value))
                     return;
+
+                if (key == "ESCAPE" && _dropDown.IsOverlayShow())
+                {
+                    Close();
+                    await Js.FocusAsync(input.Ref);
+                    return;
+                }
 
                 if (index == 1)
                 {
@@ -188,6 +194,7 @@ namespace AntDesign
                     else if (!e.ShiftKey)
                     {
                         Close();
+                        AutoFocus = false;
                     }
                 }
                 if (index == 0)
@@ -289,6 +296,9 @@ namespace AntDesign
 
         protected override Task OnBlur(int index)
         {
+            if (_openingOverlay)
+                return Task.CompletedTask;
+
             if (_duringManualInput)
             {
                 var array = Value as Array;
@@ -523,6 +533,12 @@ namespace AntDesign
             }
 
             return false;
+        }
+
+        private void OverlayVisibleChange(bool visible)
+        {
+            OnOpenChange.InvokeAsync(visible);
+            _openingOverlay = false;
         }
     }
 }
