@@ -127,6 +127,7 @@
       "equals": "等于",
       "notEquals": "不等于",
       "contains": "包含",
+      "notContains": "不包含",
       "startsWith": "开头是",
       "endsWith": "结尾是",
       "greaterThan": "大于",
