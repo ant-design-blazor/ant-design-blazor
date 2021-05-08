@@ -51,6 +51,8 @@ namespace AntDesign
 
         public string Contains { get; set; } = "Contains";
 
+        public string NotContains { get; set; } = "Not Contains";
+
         public string StartsWith { get; set; } = "Start With";
 
         public string EndsWith { get; set; } = "End With";
