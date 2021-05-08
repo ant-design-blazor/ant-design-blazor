@@ -10,8 +10,9 @@
                     Disabled="Disabled"
                     PopupContainerSelector="@PopupContainerSelector"
                     OnVisibleChange="visible => OnOpenChange.InvokeAsync(visible)"
-                    OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up ant-picker-dropdown-range"
-                    OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up ant-picker-dropdown-range"
+					OverlayClassName="ant-picker-dropdown-range"
+                    OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
+                    OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
                     Trigger="new TriggerType[] { TriggerType.Click }">
         <Overlay>
             <div class="@(PrefixCls)-range-arrow" style="@_rangeArrowStyle"/>

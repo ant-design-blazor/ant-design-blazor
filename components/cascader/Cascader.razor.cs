@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using System.Linq;
-using System.Collections;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
+using AntDesign.JsInterop;
 
 namespace AntDesign
 {
     public partial class Cascader : AntInputComponentBase<string>
     {
-        [Parameter] public bool Readonly { get; set; } = true;
-
         [Parameter] public bool AllowClear { get; set; } = true;
-
-        private bool ShowClearIcon { get; set; }
 
         [Parameter] public bool ChangeOnSelect { get; set; }
 
@@ -21,9 +19,9 @@ namespace AntDesign
 
         [Parameter] public string ExpandTrigger { get; set; }
 
-        [Parameter] public string NotFoundContent { get; set; } = "Not Found";
+        [Parameter] public string NotFoundContent { get; set; } = LocaleProvider.CurrentLocale.Empty.Description;
 
-        [Parameter] public string PlaceHolder { get; set; } = LocaleProvider.CurrentLocale.Global.Placeholder;
+        [Parameter] public string Placeholder { get => _placeHolder; set => _placeHolder = value; }
 
         [Parameter] public string PopupContainerSelector { get; set; } = "body";
 
@@ -38,7 +36,7 @@ namespace AntDesign
         [Parameter] public EventCallback<CascaderNode[]> SelectedNodesChanged { get; set; }
 
         [Parameter]
-        public IReadOnlyCollection<CascaderNode> Options
+        public IEnumerable<CascaderNode> Options
         {
             get
             {
@@ -48,7 +46,7 @@ namespace AntDesign
             }
             set
             {
-                if (value == null || value.Count == 0)
+                if (value?.Any() != true)
                 {
                     _nodelist = null;
                     return;
@@ -62,24 +60,30 @@ namespace AntDesign
         }
 
         private List<CascaderNode> _nodelist;
-
-        internal List<CascaderNode> _selectedNodes = new List<CascaderNode>();
-
-        internal List<CascaderNode> _hoverSelectedNodes = new List<CascaderNode>();
-
-        internal List<CascaderNode> _renderNodes = new List<CascaderNode>();
+        private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
+        private List<CascaderNode> _hoverSelectedNodes = new List<CascaderNode>();
+        private List<CascaderNode> _renderNodes = new List<CascaderNode>();
+        private List<CascaderNode> _searchList = new List<CascaderNode>();
+        private IEnumerable<CascaderNode> _matchList;
 
         private ClassMapper _menuClassMapper = new ClassMapper();
         private ClassMapper _inputClassMapper = new ClassMapper();
 
-        private bool ToggleState { get; set; }
+        private EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
-        private bool IsOnCascader { get; set; }
+        private bool _dropdownOpened;
+        private bool _isOnCascader;
+        private SelectedTypeEnum _selectedType;
 
-        private SelectedTypeEnum SelectedType { get; set; }
-
+        private bool _showClearIcon;
         private string _displayText;
         private bool _initialized;
+        private string _searchValue;
+        private ElementReference _inputRef;
+        private string _placeHolder = LocaleProvider.CurrentLocale.Global.Placeholder;
+
+        private bool _focused;
+        private string _menuStyle;
 
         private static Dictionary<string, string> _sizeMap = new Dictionary<string, string>()
         {
@@ -90,21 +94,24 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            string prefixCls = "ant-cascader";
 
             ClassMapper
-                .Add("ant-cascader-picker")
-                .GetIf(() => $"ant-cascader-picker-{Size}", () => _sizeMap.ContainsKey(Size))
-                .If("ant-cascader-picker-rtl", () => RTL);
+                .Add($"{prefixCls}-picker")
+                .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
+                .If($"{prefixCls}-picker-show-search", () => ShowSearch)
+                .If($"{prefixCls}-picker-with-value", () => !string.IsNullOrEmpty(_searchValue))
+                .If($"{prefixCls}-picker-rtl", () => RTL);
 
             _inputClassMapper
                 .Add("ant-input")
-                .Add("ant-cascader-input")
                 .GetIf(() => $"ant-input-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
-                .If("ant-cascader-input-rtl", () => RTL);
+                .Add($"{prefixCls}-input")
+                .If($"{prefixCls}-input-rtl", () => RTL);
 
             _menuClassMapper
-                .Add("ant-cascader-menu")
-                .If($"ant-cascader-menu-rtl", () => RTL);
+                .Add($"{prefixCls}-menu")
+                .If($"{prefixCls}-menu-rtl", () => RTL);
 
             SetDefaultValue(Value ?? DefaultValue);
         }
@@ -112,20 +119,20 @@ namespace AntDesign
         protected override void OnValueChange(string value)
         {
             base.OnValueChange(value);
-
             RefreshNodeValue(value);
         }
-
-        #region event
 
         /// <summary>
         /// 输入框单击(显示/隐藏浮层)
         /// </summary>
         private void InputOnToggle()
         {
-            SelectedType = SelectedTypeEnum.Click;
+            _selectedType = SelectedTypeEnum.Click;
             _hoverSelectedNodes.Clear();
-            ToggleState = !ToggleState;
+            if (!_dropdownOpened)
+            {
+                _dropdownOpened = true;
+            }
         }
 
         /// <summary>
@@ -133,9 +140,9 @@ namespace AntDesign
         /// </summary>
         private void CascaderOnBlur()
         {
-            if (!IsOnCascader)
+            if (!_isOnCascader)
             {
-                ToggleState = false;
+                _dropdownOpened = false;
                 _renderNodes = _selectedNodes;
             }
         }
@@ -147,7 +154,7 @@ namespace AntDesign
         {
             if (!AllowClear) return;
 
-            ShowClearIcon = true;
+            _showClearIcon = !string.IsNullOrWhiteSpace(Value) || !string.IsNullOrEmpty(_searchValue);
         }
 
         /// <summary>
@@ -157,7 +164,7 @@ namespace AntDesign
         {
             if (!AllowClear) return;
 
-            ShowClearIcon = false;
+            _showClearIcon = false;
         }
 
         /// <summary>
@@ -169,6 +176,7 @@ namespace AntDesign
             _hoverSelectedNodes.Clear();
             _displayText = string.Empty;
             SetValue(string.Empty);
+            _dropdownOpened = false;
         }
 
         /// <summary>
@@ -178,7 +186,7 @@ namespace AntDesign
         {
             if (!AllowClear) return;
 
-            IsOnCascader = true;
+            _isOnCascader = true;
         }
 
         /// <summary>
@@ -188,7 +196,7 @@ namespace AntDesign
         {
             if (!AllowClear) return;
 
-            IsOnCascader = false;
+            _isOnCascader = false;
         }
 
         /// <summary>
@@ -198,7 +206,7 @@ namespace AntDesign
         private void NodeOnClick(CascaderNode node)
         {
             if (node.Disabled) return;
-
+            _searchValue = string.Empty;
             SetSelectedNode(node, SelectedTypeEnum.Click);
         }
 
@@ -216,18 +224,39 @@ namespace AntDesign
             SetSelectedNode(node, SelectedTypeEnum.Hover);
         }
 
-        #endregion event
+        private void OnSearchInput(ChangeEventArgs e)
+        {
+            _searchValue = e.Value?.ToString();
+        }
+
+        private async Task OnSearchKeyUp(KeyboardEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_searchValue))
+            {
+                _showClearIcon = false;
+                return;
+            }
+
+            var inputElemnet = await Js.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputRef);
+            _menuStyle = $"width:{inputElemnet.ClientWidth}px;";
+            _matchList = _searchList.Where(x => x.Label.Contains(_searchValue, StringComparison.OrdinalIgnoreCase));
+            _showClearIcon = true;
+            if (!_matchList.Any())
+            {
+                _menuStyle += "height:auto;";
+            }
+        }
 
         /// <summary>
-        /// 选中节点
+        /// Selected nodes
         /// </summary>
         /// <param name="cascaderNode"></param>
         /// <param name="selectedType"></param>
-        internal void SetSelectedNode(CascaderNode cascaderNode, SelectedTypeEnum selectedType)
+        private void SetSelectedNode(CascaderNode cascaderNode, SelectedTypeEnum selectedType)
         {
             if (cascaderNode == null) return;
 
-            SelectedType = selectedType;
+            _selectedType = selectedType;
             if (selectedType == SelectedTypeEnum.Click)
             {
                 _selectedNodes.Clear();
@@ -235,7 +264,9 @@ namespace AntDesign
                 _renderNodes = _selectedNodes;
 
                 if (ChangeOnSelect || !cascaderNode.HasChildren)
+                {
                     SetValue(cascaderNode.Value);
+                }
             }
             else
             {
@@ -247,13 +278,13 @@ namespace AntDesign
 
             if (!cascaderNode.HasChildren)
             {
-                ToggleState = false;
-                IsOnCascader = false;
+                _dropdownOpened = false;
+                _isOnCascader = false;
             }
         }
 
         /// <summary>
-        /// 设置选中所有父节点
+        /// Set all parent nodes to be selected
         /// </summary>
         /// <param name="node"></param>
         /// <param name="list"></param>
@@ -266,7 +297,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Options 更新后处理父节点和默认值
+        /// handles parent nodes and defaults after Options updating
         /// </summary>
         private void ProcessParentAndDefault()
         {
@@ -275,12 +306,12 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 初始化节点属性(Level, ParentNode)
+        /// Initialize nodes (Level, ParentNode)
         /// </summary>
         /// <param name="list"></param>
         /// <param name="parentNode"></param>
         /// <param name="level"></param>
-        private void InitCascaderNodeState(List<CascaderNode> list, CascaderNode parentNode, int level)
+        private void InitCascaderNodeState(List<CascaderNode> list, CascaderNode parentNode, int level, bool recursive = false)
         {
             if (list == null) return;
 
@@ -290,52 +321,68 @@ namespace AntDesign
                 node.ParentNode = parentNode;
 
                 if (node.HasChildren)
-                    InitCascaderNodeState(node.Children.ToList(), node, level + 1);
+                {
+                    InitCascaderNodeState(node.Children.ToList(), node, level + 1, true);
+                }
+                else
+                {
+                    _searchList.Add(new CascaderNode
+                    {
+                        Label = node.Label,
+                        ParentNode = node.ParentNode,
+                        Value = node.Value,
+                        Disabled = node.Disabled,
+                        Level = node.Level
+                    });
+                }
+            }
+
+            if (!recursive)
+            {
+                _searchList.ForEach(node =>
+                {
+                    var pathList = new List<CascaderNode>();
+                    SetSelectedNodeWithParent(node, ref pathList);
+                    pathList.Reverse();
+                    node.Label = string.Join(" / ", pathList.Select(x => x.Label));
+                });
             }
         }
 
         /// <summary>
-        /// 刷新选中的内容
+        /// Refresh the selected value
         /// </summary>
         /// <param name="value"></param>
         private void RefreshNodeValue(string value)
         {
             _selectedNodes.Clear();
-
             var node = GetNodeByValue(_nodelist, value);
             SetSelectedNodeWithParent(node, ref _selectedNodes);
             _renderNodes = _selectedNodes;
-
-            RefreshDisplayValue();
-
-            OnChange?.Invoke(_selectedNodes, value, _displayText);
         }
 
         /// <summary>
-        /// 设置默认选中
+        /// Set the default value
         /// </summary>
         /// <param name="defaultValue"></param>
         private void SetDefaultValue(string defaultValue)
         {
             if (!string.IsNullOrWhiteSpace(defaultValue))
             {
-                _selectedNodes.Clear();
-                var node = GetNodeByValue(_nodelist, defaultValue);
-                SetSelectedNodeWithParent(node, ref _selectedNodes);
-                _renderNodes = _selectedNodes;
-                SetValue(node?.Value);
+                RefreshNodeValue(defaultValue);
+                SetValue(defaultValue);
             }
 
             _initialized = true;
         }
 
         /// <summary>
-        /// 设置输入框选中值
+        /// Set the binding value
         /// </summary>
         /// <param name="value"></param>
         private void SetValue(string value)
         {
-            RefreshDisplayValue();
+            RefreshDisplayText();
 
             if (Value != value)
             {
@@ -345,36 +392,29 @@ namespace AntDesign
                 {
                     SelectedNodesChanged.InvokeAsync(_selectedNodes.ToArray());
                 }
-            }
-        }
 
-        private void RefreshDisplayValue()
-        {
-            _selectedNodes.Sort((x, y) => x.Level.CompareTo(y.Level));  //Level 升序排序
-            _displayText = string.Empty;
-            int count = 0;
-            foreach (var node in _selectedNodes)
-            {
-                if (node == null) continue;
-
-                if (count < _selectedNodes.Count - 1)
-                    _displayText += node.Label + " / ";
-                else
-                    _displayText += node.Label;
-                count++;
+                OnChange?.Invoke(_selectedNodes, value, _displayText);
             }
         }
 
         /// <summary>
-        /// 根据指定值获取节点
+        /// rebuild the display text
+        /// </summary>
+        private void RefreshDisplayText()
+        {
+            _selectedNodes.Sort((x, y) => x.Level.CompareTo(y.Level));  //Level 升序排序
+            _displayText = string.Join(" / ", _selectedNodes.Where(x => x != null).Select(x => x.Label));
+        }
+
+        /// <summary>
+        /// Get the node based on the specified value
         /// </summary>
         /// <param name="list"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        private CascaderNode GetNodeByValue(List<CascaderNode> list, string value)
+        private CascaderNode GetNodeByValue(IEnumerable<CascaderNode> list, string value)
         {
             if (list == null) return null;
-            CascaderNode result = null;
 
             foreach (var node in list)
             {
@@ -383,12 +423,14 @@ namespace AntDesign
 
                 if (node.HasChildren)
                 {
-                    var nd = GetNodeByValue(node.Children.ToList(), value);
+                    var nd = GetNodeByValue(node.Children, value);
                     if (nd != null)
-                        result = nd;
+                    {
+                        return nd;
+                    }
                 }
             }
-            return result;
+            return null;
         }
     }
 }

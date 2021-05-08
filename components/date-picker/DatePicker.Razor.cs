@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -55,6 +56,8 @@ namespace AntDesign
             {
                 return;
             }
+            _openingOverlay = !_dropDown.IsOverlayShow();
+
             AutoFocus = true;
             //Reset Picker to default in case it the picker value was changed
             //but no value was selected (for example when a user clicks next 
@@ -110,6 +113,9 @@ namespace AntDesign
 
         protected override Task OnBlur(int index)
         {
+            if (_openingOverlay)
+                return Task.CompletedTask;
+
             if (_duringManualInput)
             {
                 if (!Value.Equals(_cacheDuringInput))
@@ -124,8 +130,7 @@ namespace AntDesign
                 }
                 _duringManualInput = false;
             }
-            if (_dropDown.IsOverlayShow())
-                Close();
+
             AutoFocus = false;
             return Task.CompletedTask;
         }
@@ -138,7 +143,7 @@ namespace AntDesign
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             var key = e.Key.ToUpperInvariant();
-            if (key == "ENTER" || key == "TAB")
+            if (key == "ENTER" || key == "TAB" || key == "ESCAPE")
             {
                 _duringManualInput = false;
                 if (string.IsNullOrWhiteSpace(_inputStart.Value))
@@ -146,21 +151,32 @@ namespace AntDesign
                 else
                     await TryApplyInputValue();
 
+                if (key == "ESCAPE" && _dropDown.IsOverlayShow())
+                {
+                    Close();
+                    await Js.FocusAsync(_inputStart.Ref);
+                    return;
+                }
                 if (key == "ENTER")
                 {
                     //needed only in wasm, details: https://github.com/dotnet/aspnetcore/issues/30070
                     await Task.Yield();
                     await Js.InvokeVoidAsync(JSInteropConstants.InvokeTabKey);
                 }
+                Close();
+                AutoFocus = false;
+                return;
             }
 
             if (key == "ARROWDOWN" && !_dropDown.IsOverlayShow())
             {
                 await _dropDown.Show();
+                return;
             }
             if (key == "ARROWUP" && _dropDown.IsOverlayShow())
             {
                 Close();
+                return;
             }
         }
 
@@ -231,14 +247,7 @@ namespace AntDesign
 
             UpdateCurrentValueAsString();
 
-            if (IsRange && !IsShowTime && Picker != DatePickerType.Time)
-            {
-                if (_pickerStatus[0]._hadSelectValue && _pickerStatus[1]._hadSelectValue)
-                {
-                    Close();
-                }
-            }
-            else if (!IsShowTime && Picker != DatePickerType.Time)
+            if (!IsShowTime && Picker != DatePickerType.Time)
             {
                 Close();
             }
@@ -285,6 +294,12 @@ namespace AntDesign
             {
                 notNullAction?.Invoke(Convert.ToDateTime(value, CultureInfo));
             }
+        }
+
+        private void OverlayVisibleChange(bool visible)
+        {
+            OnOpenChange.InvokeAsync(visible);
+            _openingOverlay = false;
         }
     }
 }
