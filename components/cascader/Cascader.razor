@@ -3,73 +3,116 @@
 @inherits AntInputComponentBase<string>
 
 <CascadingValue Value=@("ant-cascader-menus") Name="PrefixCls">
-        <OverlayTrigger Visible="@(ToggleState && _nodelist != null && _nodelist.Any())"
-                        ComplexAutoCloseAndVisible="true"
-                        Trigger="new[] { TriggerType.Click }"
-                        PopupContainerSelector="@PopupContainerSelector"
-                        OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
-                        OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
-            <Unbound>
-                <span @ref="context.Current" style="@Style" id="@Id" class="@ClassMapper.Class" tabindex="1" @onclick="InputOnToggle" @onblur="CascaderOnBlur" @onmouseover="InputOnMouseOver" @onmouseout="InputOnMouseOut">
-                    <span class="ant-cascader-picker-label"></span>
-                    <input autocomplete="off" tabindex="-1" placeholder="@PlaceHolder" class="@_inputClassMapper.Class" readonly="@Readonly" type="text" value="@_displayText">
-                    @if (string.IsNullOrWhiteSpace(Value) || !ShowClearIcon)
+    <OverlayTrigger Visible="@_dropdownOpened"
+                    OnMaskClick="CascaderOnBlur"
+                    Trigger="new TriggerType[] { }"
+                    PopupContainerSelector="@PopupContainerSelector"
+                    OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
+                    OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
+        <Unbound>
+            <span @ref="context.Current" style="@Style" id="@Id" class="@ClassMapper.Class" tabindex="1"
+                  @onmouseover="InputOnMouseOver"
+                  @onmouseout="InputOnMouseOut"
+                  @onclick="InputOnToggle">
+                <span class="ant-cascader-picker-label">@_displayText</span>
+                <input @ref="_inputRef"
+                       autocomplete="off"
+                       tabindex="-1"
+                       placeholder="@(string.IsNullOrWhiteSpace(_displayText)?_placeHolder:"")"
+                       class="@_inputClassMapper.Class"
+                       readonly="@(!ShowSearch)"
+                       type="text"
+                       value="@_searchValue"
+                       @oninput="OnSearchInput"
+                       @onkeyup="OnSearchKeyUp">
+                @if (!_showClearIcon)
+                {
+                    <Icon Type="down" Class="@($"ant-cascader-picker-arrow {(_dropdownOpened ? "ant-cascader-picker-arrow-expand" : string.Empty)}")" StopPropagation />
+                }
+                else
+                {
+                    <Icon Type="close-circle" Theme="fill" Class="ant-cascader-picker-clear" OnClick="ClearSelected" StopPropagation />
+                }
+            </span>
+        </Unbound>
+        <Overlay>
+            <div class="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" tabindex="-1">
+                <div @onmouseover="NodesOnMouseOver" @onmouseout="NodesOnMouseOut">
+                    @if (!ShowSearch || string.IsNullOrWhiteSpace(_searchValue))
                     {
-                        <Icon Type="down" Class="@($"ant-cascader-picker-arrow {(ToggleState ? "ant-cascader-picker-arrow-expand" : string.Empty)}")" />
-                    }
-                    else
-                    {
-                        <Icon Type="close-circle" Class="ant-cascader-picker-clear" OnClick="ClearSelected" StopPropagation />
-                    }
-                </span>
-            </Unbound>
-            <Overlay>
-                <div class="ant-cascader-menus ant-cascader-menus-placement-bottomLeft" tabindex="-1" @onblur="CascaderOnBlur">
-                    <div @onmouseover="NodesOnMouseOver" @onmouseout="NodesOnMouseOut">
                         <ul class="@_menuClassMapper.Class">
-                            @foreach (CascaderNode nd in _nodelist)
-                            {
-                                bool isActive = _renderNodes.Where(n => n == nd).Any();
-                                string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
-
-                                <li class="ant-cascader-menu-item ant-cascader-menu-item-expand @activeClass @(nd.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty)" title="@nd.Label" role="menuitem"
-                                    @onclick="@(e => NodeOnClick(nd))" @onmouseover="@(e => NodeOnMouseOver(nd))">
-                                    @nd.Label
-                                    @if (nd.HasChildren)
-                                    {
-                                        <span class="ant-cascader-menu-item-expand-icon">
-                                            <Icon Type="right" />
-                                        </span>
-                                    }
-                                </li>
-                            }
+                            @menuList((_nodelist, this))
                         </ul>
                         @foreach (CascaderNode node in _renderNodes)
                         {
                             if (node.HasChildren)
                             {
                                 <ul class="ant-cascader-menu">
-                                    @foreach (CascaderNode m in node.Children)
-                                    {
-                                        bool isActive = _renderNodes.Where(n => n == m).Any();
-                                        string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
-
-                                        <li class="ant-cascader-menu-item ant-cascader-menu-item-expand @activeClass @(m.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty)" title="@m.Label" role="menuitem"
-                                            @onclick="@(e => NodeOnClick(m))" @onmouseover="@(e => NodeOnMouseOver(m))">
-                                            @m.Label
-                                            @if (m.HasChildren)
-                                            {
-                                                <span class="ant-cascader-menu-item-expand-icon">
-                                                    <Icon Type="right" />
-                                                </span>
-                                            }
-                                        </li>
-                                    }
+                                    @menuList((node.Children, this))
                                 </ul>
                             }
                         }
-                    </div>
+                    }
+                    else
+                    {
+                        <ul class="@_menuClassMapper.Class" style="@_menuStyle">
+                            @searchList(this)
+                        </ul>
+                    }
                 </div>
-            </Overlay>
-        </OverlayTrigger>
+            </div>
+        </Overlay>
+    </OverlayTrigger>
 </CascadingValue>
+
+@code{
+    RenderFragment<(IEnumerable<CascaderNode> nodes, Cascader cascader)> menuList = context =>@<Template>
+        @foreach (CascaderNode node in context.nodes)
+        {
+            var cascader = context.cascader;
+            bool isActive = cascader._renderNodes.Where(n => n == node).Any();
+            string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
+            string disabledClass = node.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty;
+            var events = new Dictionary<string, object>
+            {
+                ["onclick"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnClick(node)),
+                ["onmouseover"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnMouseOver(node))
+            };
+
+            <li class="ant-cascader-menu-item ant-cascader-menu-item-expand @activeClass @disabledClass" title="@node.Label" role="menuitem" @attributes="events">
+                @node.Label
+                @if (node.HasChildren)
+                {
+                    <span class="ant-cascader-menu-item-expand-icon">
+                        <Icon Type="right" />
+                    </span>
+                }
+            </li>
+        }
+    </Template>;
+
+    RenderFragment<Cascader> searchList = cascader =>@<Template>
+        @if (cascader._matchList?.Any() != true)
+        {
+            <div class="ant-empty ant-empty-normal ant-empty-small">
+                <div class="ant-empty-image">
+                    <svg class="ant-empty-img-simple" width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 1)" fill="none" fill-rule="evenodd"><ellipse class="ant-empty-img-simple-ellipse" cx="32" cy="33" rx="32" ry="7"></ellipse><g class="ant-empty-img-simple-g" fill-rule="nonzero"><path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z"></path><path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" class="ant-empty-img-simple-path"></path></g></g></svg>
+                </div>
+                <div class="ant-empty-description">@cascader.NotFoundContent</div>
+            </div>
+            return;
+        }
+        @foreach (var node in cascader._matchList)
+        {
+            bool isActive = cascader._renderNodes.Where(n => n == node).Any();
+            string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
+            string disabledClass = node.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty;
+            var events = new Dictionary<string, object>
+            {
+                ["onclick"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnClick(node)),
+            };
+            var label = node.Label.Replace(cascader._searchValue, $"<span class=\"ant-cascader-menu-item-keyword\">{cascader._searchValue}</span>");
+            <li class="ant-cascader-menu-item @activeClass @disabledClass" title="@node.Label" role="menuitem" @attributes="events">@((MarkupString)label)</li>
+        }
+    </Template>;
+}
