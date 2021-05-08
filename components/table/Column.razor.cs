@@ -100,7 +100,7 @@ namespace AntDesign
 
         private Type _columnDataType;
 
-        public string DisplayName { get; private set; }
+        public string? DisplayName { get; private set; }
 
         public string FieldName { get; private set; }
 
@@ -143,9 +143,13 @@ namespace AntDesign
             {
                 if (FieldExpression != null)
                 {
+                    if (FieldExpression.Body is not MemberExpression memberExp)
+                    {
+                        throw new ArgumentException("'Field' parameter must be child member");
+                    }
+
                     var paramExp = Expression.Parameter(ItemType);
-                    var member = ColumnExpressionHelper.GetReturnMemberInfo(FieldExpression);
-                    var bodyExp = Expression.MakeMemberAccess(paramExp, member);
+                    var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
                     GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
                 }
                 else if (DataIndex != null)
@@ -156,8 +160,10 @@ namespace AntDesign
                 if (GetFieldExpression != null)
                 {
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
-                    DisplayName = member.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ?? member.GetCustomAttribute<DisplayAttribute>(true)?.GetName() ?? member.Name;
-                    FieldName = DataIndex ?? member.Name;
+                    DisplayName = member?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName
+                               ?? member?.GetCustomAttribute<DisplayAttribute>(true)?.GetName()
+                               ?? member?.Name;
+                    FieldName = DataIndex ?? member?.Name;
                 }
 
                 if (Sortable && GetFieldExpression != null)
