@@ -17,20 +17,20 @@ namespace AntDesign.TableModels
 
         public IEnumerable<string> SelectedValues { get; set; }
 
-        public IList<TableFilter> Filters { get; }
+        public IList<TableFilter<TField>> Filters { get; }
 
         public Expression<Func<TField, TField, bool>> OnFilter { get; set; }
 
         private readonly FilterExpressionResolver<TField> _filterExpressionResolver = new FilterExpressionResolver<TField>();
 
-        private LambdaExpression _getFieldExpression;
+        private PropertyInfo _propertyInfo;
 
         private TableFilterType FilterType { get; set; } = TableFilterType.List;
 
-        public FilterModel(LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter> filters, TableFilterType filterType)
+        public FilterModel(PropertyInfo propertyInfo, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter<TField>> filters, TableFilterType filterType)
         {
-            this._getFieldExpression = getFieldExpression;
-            this.FieldName = fieldName;
+            this._propertyInfo = propertyInfo;
+            this.FieldName = _propertyInfo.Name;
             if (onFilter == null)
             {
                 this.OnFilter = (value, field) => field.Equals(value);
@@ -50,39 +50,39 @@ namespace AntDesign.TableModels
             {
                 return source;
             }
-
-            var sourceExpression = _getFieldExpression.Parameters[0];
+            var sourceExpression = Expression.Parameter(typeof(TItem));
+            var propertyExpression = Expression.Property(sourceExpression, _propertyInfo);
 
             Expression lambda = null;
             if (this.FilterType == TableFilterType.List)
             {
-                lambda = Expression.Constant(false, typeof(bool));
+                lambda = Expression.Invoke((Expression<Func<bool>>)(() => false));
             }
 
             IFilterExpression filterExpression = null;
-            if (FilterType == TableFilterType.FieldType)
+            if (FilterType == TableFilterType.FeildType)
             {
                 filterExpression = _filterExpressionResolver.GetFilterExpression();
             }
             foreach (var filter in Filters)
             {
-                if (filter.Value == null && (filter.FilterCompareOperator != TableFilterCompareOperator.IsNull && filter.FilterCompareOperator != TableFilterCompareOperator.IsNotNull)) continue;
                 if (this.FilterType == TableFilterType.List)
                 {
-                    lambda = Expression.OrElse(lambda!, Expression.Invoke(OnFilter, Expression.Constant(filter.Value, typeof(TField)), _getFieldExpression.Body));
+                    lambda = Expression.OrElse(lambda, Expression.Invoke(OnFilter, Expression.Constant(filter.Value, typeof(TField)), propertyExpression));
                 }
-                else // TableFilterType.FieldType
+                else
                 {
+                    if (filter.Value == null && (filter.FilterCompareOperator != TableFilterCompareOperator.IsNull && filter.FilterCompareOperator != TableFilterCompareOperator.IsNotNull)) continue;
                     Expression constantExpression = null;
                     if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull)
                     {
-                        constantExpression = Expression.Constant(null, typeof(TField));
+                        constantExpression = Expression.Constant(null, _propertyInfo.PropertyType);
                     }
                     else
                     {
                         constantExpression = Expression.Constant(filter.Value, typeof(TField));
                     }
-                    var expression = filterExpression!.GetFilterExpression(filter.FilterCompareOperator, _getFieldExpression.Body, constantExpression);
+                    var expression = filterExpression.GetFilterExpression(filter.FilterCompareOperator, propertyExpression, constantExpression);
                     if (lambda == null)
                     {
                         lambda = expression;

@@ -187,7 +187,7 @@ namespace AntDesign
                     IsDisabled = Disabled,
                     GroupName = _groupName,
                     Value = Value,
-                    Item = THelper.ChangeType<TItem>(Value, CultureInfo.CurrentCulture),
+                    Item = THelper.ChangeType<TItem>(Value),
                     ChildComponent = this
                 };
 
@@ -249,9 +249,8 @@ namespace AntDesign
         {
             if (SelectParent?.SelectOptions != null)
             {
-                // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource .
-                var selectOptionItem = SelectParent.SelectOptionItems
-                    .FirstOrDefault(x => x.InternalId == InternalId && !x.IsSelected);
+                // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource.
+                var selectOptionItem = SelectParent.SelectOptionItems.FirstOrDefault(x => x.InternalId == InternalId);
                 if (selectOptionItem is not null)
                     SelectParent.SelectOptionItems.Remove(selectOptionItem);
             }
