@@ -119,7 +119,6 @@ namespace AntDesign
         protected override void OnValueChange(string value)
         {
             base.OnValueChange(value);
-
             RefreshNodeValue(value);
         }
 
@@ -155,7 +154,7 @@ namespace AntDesign
         {
             if (!AllowClear) return;
 
-            _showClearIcon = true;
+            _showClearIcon = !string.IsNullOrWhiteSpace(Value) || !string.IsNullOrEmpty(_searchValue);
         }
 
         /// <summary>
@@ -232,9 +231,16 @@ namespace AntDesign
 
         private async Task OnSearchKeyUp(KeyboardEventArgs e)
         {
+            if (string.IsNullOrEmpty(_searchValue))
+            {
+                _showClearIcon = false;
+                return;
+            }
+
             var inputElemnet = await Js.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputRef);
             _menuStyle = $"width:{inputElemnet.ClientWidth}px;";
             _matchList = _searchList.Where(x => x.Label.Contains(_searchValue, StringComparison.OrdinalIgnoreCase));
+            _showClearIcon = true;
             if (!_matchList.Any())
             {
                 _menuStyle += "height:auto;";

@@ -25,7 +25,7 @@
                        value="@_searchValue"
                        @oninput="OnSearchInput"
                        @onkeyup="OnSearchKeyUp">
-                @if (string.IsNullOrWhiteSpace(Value) || !_showClearIcon)
+                @if (!_showClearIcon)
                 {
                     <Icon Type="down" Class="@($"ant-cascader-picker-arrow {(_dropdownOpened ? "ant-cascader-picker-arrow-expand" : string.Empty)}")" StopPropagation />
                 }
