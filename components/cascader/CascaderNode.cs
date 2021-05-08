@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace AntDesign
 {
@@ -14,9 +15,9 @@ namespace AntDesign
 
         internal CascaderNode ParentNode { get; set; }
 
-        internal bool HasChildren { get { return Children?.Count > 0; } }
+        internal bool HasChildren { get { return Children?.Any() == true; } }
 
-        public IReadOnlyCollection<CascaderNode> Children { get; set; }
+        public IEnumerable<CascaderNode> Children { get; set; }
     }
 
     internal enum SelectedTypeEnum
