@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -66,14 +66,13 @@ namespace AntDesign.TableModels
             }
             foreach (var filter in Filters)
             {
-                if (filter.Value == null && (filter.FilterCompareOperator != TableFilterCompareOperator.IsNull && filter.FilterCompareOperator != TableFilterCompareOperator.IsNotNull)) continue;
                 if (this.FilterType == TableFilterType.List)
                 {
                     lambda = Expression.OrElse(lambda, Expression.Invoke(OnFilter, Expression.Constant(filter.Value, typeof(TField)), propertyExpression));
                 }
                 else
                 {
-
+                    if (filter.Value == null && (filter.FilterCompareOperator != TableFilterCompareOperator.IsNull && filter.FilterCompareOperator != TableFilterCompareOperator.IsNotNull)) continue;
                     Expression constantExpression = null;
                     if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull)
                     {
