@@ -19,7 +19,7 @@ namespace AntDesign
 
         [Parameter] public string ExpandTrigger { get; set; }
 
-        [Parameter] public string NotFoundContent { get; set; } = "Not Found";
+        [Parameter] public string NotFoundContent { get; set; } = LocaleProvider.CurrentLocale.Empty.Description;
 
         [Parameter] public string Placeholder { get => _placeHolder; set => _placeHolder = value; }
 
@@ -64,6 +64,7 @@ namespace AntDesign
         private List<CascaderNode> _hoverSelectedNodes = new List<CascaderNode>();
         private List<CascaderNode> _renderNodes = new List<CascaderNode>();
         private List<CascaderNode> _searchList = new List<CascaderNode>();
+        private IEnumerable<CascaderNode> _matchList;
 
         private ClassMapper _menuClassMapper = new ClassMapper();
         private ClassMapper _inputClassMapper = new ClassMapper();
@@ -233,6 +234,11 @@ namespace AntDesign
         {
             var inputElemnet = await Js.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputRef);
             _menuStyle = $"width:{inputElemnet.ClientWidth}px;";
+            _matchList = _searchList.Where(x => x.Label.Contains(_searchValue, StringComparison.OrdinalIgnoreCase));
+            if (!_matchList.Any())
+            {
+                _menuStyle += "height:auto;";
+            }
         }
 
         /// <summary>
