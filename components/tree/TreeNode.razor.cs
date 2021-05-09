@@ -331,6 +331,11 @@ namespace AntDesign
         /// <param name="check"></param>
         public void SetChecked(bool check)
         {
+            if(TreeComponent.CheckStrictly)
+            {
+                this.Checked = check;
+                return;
+            }
             SetChildChecked(this, check);
             if (ParentNode != null)
                 ParentNode.UpdateCheckState();
@@ -633,9 +638,12 @@ namespace AntDesign
         {
             TreeComponent.DefaultCheckedKeys?.ForEach(k =>
             {
-                var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
-                if (node != null)
-                    node.SetChecked(true);
+                if (!String.IsNullOrEmpty(k))
+                {
+                    var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
+                    if (node != null)
+                        node.SetChecked(true);
+                }
             }); 
             return base.OnFirstAfterRenderAsync();
         }
