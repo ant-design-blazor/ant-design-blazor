@@ -18,7 +18,7 @@ namespace AntDesign
         internal List<TreeNode<TItem>> _allNodes = new List<TreeNode<TItem>>();
 
         /// <summary>
-        /// checked的nodes
+        /// 所有勾选的nodes
         /// </summary>
         private ConcurrentDictionary<long, TreeNode<TItem>> _checkedNodes = new ConcurrentDictionary<long, TreeNode<TItem>>();
 
@@ -62,6 +62,24 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
+
+        /// <summary>
+        /// 显示子叶图标
+        /// </summary>
+        [Parameter]
+        public bool ShowLeafIcon { get; set; } = false;
+
+        /// <summary>
+        /// 默认展开所有树节点
+        /// </summary>
+        [Parameter]
+        public bool DefaultExpandAll { get; set; }
+
+        /// <summary>
+        /// 默认展开父节点
+        /// </summary>
+        [Parameter]
+        public bool DefaultExpandParent { get; set; }
 
         private void SetClassMapper()
         {
@@ -541,6 +559,8 @@ namespace AntDesign
             return null;
         }
 
+        #region Expand
+
         /// <summary>
         /// from node expand to root
         /// </summary>
@@ -585,6 +605,10 @@ namespace AntDesign
             node.Expand(expanded);
             node.ChildNodes.ForEach(n => Switch(n, expanded));
         }
+
+
+        #endregion
+
 
         /// <summary>
         /// 

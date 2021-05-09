@@ -278,8 +278,14 @@ namespace AntDesign
                 await TreeComponent.OnExpandChanged.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
         }
 
+        /// <summary>
+        /// 展开
+        /// </summary>
         private bool SwitcherOpen => Expanded && !IsLeaf;
 
+        /// <summary>
+        /// 收起
+        /// </summary>
         private bool SwitcherClose => !Expanded && !IsLeaf;
 
         #endregion Switcher
@@ -611,9 +617,15 @@ namespace AntDesign
             if (ParentNode != null)
                 ParentNode.AddNode(this);
             else
+            {
                 TreeComponent.AddNode(this);
+                if (!TreeComponent.DefaultExpandAll && TreeComponent.DefaultExpandParent)
+                    Expand(true);
+            }
             System.Diagnostics.Debug.WriteLine($"TreeNode Initialized at {DateTime.Now}");
             TreeComponent._allNodes.Add(this);
+            if (TreeComponent.DefaultExpandAll)
+                Expand(true);
             base.OnInitialized();
         }
 
@@ -648,6 +660,11 @@ namespace AntDesign
                         node.SetChecked(true);
                 }
             });
+            if (!TreeComponent.DefaultExpandAll)
+            {
+                System.Diagnostics.Debug.WriteLine($"{Title} Expand is {Expanded}");
+                
+            }
             return base.OnFirstAfterRenderAsync();
         }
     }
