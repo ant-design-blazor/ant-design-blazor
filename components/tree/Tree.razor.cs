@@ -40,6 +40,12 @@ namespace AntDesign
         [Parameter]
         public bool Draggable { get; set; }
 
+        /// <summary>
+        /// 将树禁用
+        /// </summary>
+        [Parameter]
+        public bool Disabled { get; set; }
+
         private void SetClassMapper()
         {
             ClassMapper
@@ -64,8 +70,7 @@ namespace AntDesign
         /// <summary>
         /// 添加节点
         /// </summary>
-        /// <param name="treeNode"></param>
-        /// <param name=""></param>
+        /// <param name="treeNode"></param> 
         internal void AddNode(TreeNode<TItem> treeNode)
         {
             ChildNodes.Add(treeNode);
@@ -201,10 +206,23 @@ namespace AntDesign
         [Parameter]
         public bool Checkable { get; set; }
 
+        /// <summary>
+        /// checkable 状态下节点选择完全受控（父子节点选中状态不再关联）
+        /// </summary>
+        [Parameter]
+        public bool CheckStrictly { get; set; }
+
+
         public List<TreeNode<TItem>> CheckedNodes => GetCheckedNodes(ChildNodes);
 
+        /// <summary>
+        /// 勾选的数据 keys
+        /// </summary>
         public List<string> CheckedKeys => GetCheckedNodes(ChildNodes).Select(x => x.Key).ToList();
 
+        /// <summary>
+        /// 勾选的标题数据
+        /// </summary>
         public List<string> CheckedTitles => GetCheckedNodes(ChildNodes).Select(x => x.Title).ToList();
 
         private List<TreeNode<TItem>> GetCheckedNodes(List<TreeNode<TItem>> childs)
@@ -226,6 +244,13 @@ namespace AntDesign
                 item.SetChecked(false);
             }
         }
+
+        /// <summary>
+        /// 默认勾选的节点
+        /// </summary>
+        public IEnumerable[] DefaultCheckedKeys { get; set; }
+
+
 
         #endregion Checkable
 
