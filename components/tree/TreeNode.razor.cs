@@ -42,7 +42,7 @@ namespace AntDesign
         /// <summary>
         /// 添加节点
         /// </summary>
-        /// <param name=""></param>
+        /// <param name="treeNode"></param>
         internal void AddNode(TreeNode<TItem> treeNode)
         {
             ChildNodes.Add(treeNode);
@@ -141,11 +141,12 @@ namespace AntDesign
 
         /// <summary>
         /// 是否禁用
+        /// 禁用状态受制于父节点
         /// </summary>
         [Parameter]
         public bool Disabled
         {
-            get { return _disabled || (ParentNode?.Disabled ?? false); }//禁用状态受制于父节点
+            get { return _disabled || (ParentNode?.Disabled ?? false); }
             set { _disabled = value; }
         }
 
@@ -291,8 +292,11 @@ namespace AntDesign
         [Parameter]
         public bool Indeterminate { get; set; }
 
+        /// <summary>
+        /// 是否可以选择不受父节点控制
+        /// </summary>
         [Parameter]
-        public bool DisableCheckbox { get; set; }//是否可以选择不受父节点控制
+        public bool DisableCheckbox { get; set; }
 
         /// <summary>
         /// 当点击选择框是触发
