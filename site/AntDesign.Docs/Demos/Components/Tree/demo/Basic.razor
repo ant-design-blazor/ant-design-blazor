@@ -1,5 +1,5 @@
 
-<Tree Checkable BlockNode TItem="string" CheckStrictly>
+<Tree Checkable BlockNode TItem="string" OnClick="onClick">
     <Nodes>
         <TreeNode Title="A" Key="A" TItem="string">
             <Nodes>
@@ -27,3 +27,9 @@
         <TreeNode Title="B" Key="B" TItem="string"></TreeNode>
     </Nodes>
 </Tree>
+@code{
+    void onClick()
+        {
+        Console.WriteLine("a");
+        }
+}

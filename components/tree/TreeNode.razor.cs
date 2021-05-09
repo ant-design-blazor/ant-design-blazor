@@ -331,9 +331,10 @@ namespace AntDesign
         /// <param name="check"></param>
         public void SetChecked(bool check)
         {
-            if(TreeComponent.CheckStrictly)
+            if (TreeComponent.CheckStrictly)
             {
                 this.Checked = check;
+                TreeComponent.AddOrRemoveCheckNode(this);
                 return;
             }
             SetChildChecked(this, check);
@@ -351,6 +352,7 @@ namespace AntDesign
             if (Disabled) return;
             this.Checked = DisableCheckbox ? false : check;
             this.Indeterminate = false;
+            TreeComponent.AddOrRemoveCheckNode(this);
             if (subnode.HasChildNodes)
                 foreach (var child in subnode.ChildNodes)
                     child?.SetChildChecked(child, check);
@@ -398,6 +400,7 @@ namespace AntDesign
                     this.Indeterminate = true;
                 }
             }
+            TreeComponent.AddOrRemoveCheckNode(this);
 
             if (ParentNode != null)
                 ParentNode.UpdateCheckState(this.Indeterminate);
@@ -644,7 +647,7 @@ namespace AntDesign
                     if (node != null)
                         node.SetChecked(true);
                 }
-            }); 
+            });
             return base.OnFirstAfterRenderAsync();
         }
     }

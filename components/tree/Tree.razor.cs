@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,13 @@ namespace AntDesign
         /// </summary>
         internal List<TreeNode<TItem>> _allNodes = new List<TreeNode<TItem>>();
 
+        /// <summary>
+        /// checked的nodes
+        /// </summary>
+        private ConcurrentDictionary<long, TreeNode<TItem>> _checkedNodes = new ConcurrentDictionary<long, TreeNode<TItem>>();
+
         #endregion
+
 
         #region Tree
 
@@ -71,9 +78,15 @@ namespace AntDesign
 
         #region Node
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Parameter]
         public RenderFragment Nodes { get; set; }
 
+        /// <summary>
+        /// 子节点
+        /// </summary>
         [Parameter]
         public List<TreeNode<TItem>> ChildNodes { get; set; } = new List<TreeNode<TItem>>();
 
@@ -222,13 +235,23 @@ namespace AntDesign
         [Parameter]
         public bool CheckStrictly { get; set; }
 
+        /// <summary>
+        /// 勾选的数据 keys
+        /// </summary>
+        [Parameter]
+        public List<string> CheckedKeys { get; set; } = new List<string>();
+
+        /// <summary>
+        ///  勾选的数据 keys
+        /// </summary>
+        public EventCallback<string> CheckedKeysChanged { get; set; }
 
         public List<TreeNode<TItem>> CheckedNodes => GetCheckedNodes(ChildNodes);
 
         /// <summary>
         /// 勾选的数据 keys
         /// </summary>
-        public List<string> CheckedKeys => GetCheckedNodes(ChildNodes).Select(x => x.Key).ToList();
+        //public List<string> CheckedKeys => GetCheckedNodes(ChildNodes).Select(x => x.Key).ToList();
 
         /// <summary>
         /// 勾选的标题数据
@@ -262,9 +285,24 @@ namespace AntDesign
         public IEnumerable<string> DefaultCheckedKeys { get; set; }
 
         /// <summary>
-        /// 禁用勾选节点
+        /// 禁用节点Checkbox
         /// </summary>
         public IEnumerable<string> DisableCheckKeys { get; set; }
+
+        /// <summary>
+        /// 记录或移除勾选节点
+        /// </summary>
+        /// <param name="treeNode"></param>
+        internal void AddOrRemoveCheckNode(TreeNode<TItem> treeNode)
+        {
+            if (treeNode.Checked)
+                _checkedNodes.TryAdd(treeNode.NodeId, treeNode);
+            else
+                _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
+            CheckedKeys = _checkedNodes.Select(x => x.Value.Key).ToList();
+            System.Diagnostics.Debug.WriteLine(System.Text.Json.JsonSerializer.Serialize(CheckedKeys));
+
+        }
 
         #endregion Checkable
 
@@ -356,7 +394,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
-         
+
         #endregion DataBind
 
         #region Event
@@ -537,6 +575,11 @@ namespace AntDesign
             this.ChildNodes.ForEach(node => Switch(node, false));
         }
 
+        /// <summary>
+        /// 节点展开关闭
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="expanded"></param>
         private void Switch(TreeNode<TItem> node, bool expanded)
         {
             node.Expand(expanded);
