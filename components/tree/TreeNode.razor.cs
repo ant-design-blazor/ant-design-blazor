@@ -663,7 +663,7 @@ namespace AntDesign
             if (!TreeComponent.DefaultExpandAll)
             {
                 System.Diagnostics.Debug.WriteLine($"{Title} Expand is {Expanded}");
-                
+
             }
             return base.OnFirstAfterRenderAsync();
         }
