@@ -1,30 +1,29 @@
 
-<Tree Checkable BlockNode TItem="string">
+<Tree Checkable BlockNode TItem="string" DefaultCheckedKeys="@(new []{ "A1","A3-1" })">
     <Nodes>
-        <TreeNode Title="A" TItem="string">
+        <TreeNode Title="A" Key="A" TItem="string">
             <Nodes>
-                <TreeNode Title="A1" TItem="string">
+                <TreeNode Title="A1" Key="A1" TItem="string">
                     <Nodes>
-                        <TreeNode Title="A1-1" TItem="string"></TreeNode>
-                        <TreeNode Title="A1-2" TItem="string"></TreeNode>
+                        <TreeNode Title="A1-1" Key="A1-1" TItem="string"></TreeNode>
+                        <TreeNode Title="A1-2" Key="A1-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A2" TItem="string">
+                <TreeNode Title="A2" Key="A2" TItem="string">
                     <Nodes>
-                        <TreeNode Title="A2-1" TItem="string"></TreeNode>
-                        <TreeNode Title="A2-2" TItem="string"></TreeNode>
+                        <TreeNode Title="A2-1" Key="A2-1" TItem="string"></TreeNode>
+                        <TreeNode Title="A2-2" Key="A2-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A3" TItem="string">
+                <TreeNode Title="A3" Key="A3" TItem="string">
                     <Nodes>
-                        <TreeNode Title="A3-1" TItem="string"></TreeNode>
-                        <TreeNode Title="A3-2" DisableCheckbox TItem="string"></TreeNode>
-                        <TreeNode Title="A3-3" Disabled TItem="string"></TreeNode>
-
+                        <TreeNode Title="A3-1" Key="A3-1" TItem="string"></TreeNode>
+                        <TreeNode Title="A3-2" Key="A3-2" TItem="string"></TreeNode>
+                        <TreeNode Title="A3-3" Key="A3-3" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
             </Nodes>
         </TreeNode>
-        <TreeNode Title="B" TItem="string"></TreeNode>
+        <TreeNode Title="B" Key="B" TItem="string"></TreeNode>
     </Nodes>
 </Tree>

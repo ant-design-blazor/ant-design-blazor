@@ -2,12 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
     public partial class Tree<TItem> : AntDomComponentBase
     {
+        #region fields
+
+        /// <summary>
+        /// 记录所有的的node
+        /// </summary>
+        internal List<TreeNode<TItem>> _allNodes = new List<TreeNode<TItem>>();
+
+        #endregion
+
         #region Tree
 
         /// <summary>
@@ -458,6 +468,12 @@ namespace AntDesign
         {
             SetClassMapper();
             base.OnInitialized();
+
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
         }
 
         /// <summary>
@@ -525,6 +541,16 @@ namespace AntDesign
         {
             node.Expand(expanded);
             node.ChildNodes.ForEach(n => Switch(n, expanded));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        protected override Task OnFirstAfterRenderAsync()
+        {
+            System.Diagnostics.Debug.WriteLine($"Tree OnFirstAfterRenderAsync at {DateTime.Now}");
+            return base.OnFirstAfterRenderAsync();
         }
     }
 }

@@ -598,13 +598,14 @@ namespace AntDesign
         #endregion 节点数据操作
 
         protected override void OnInitialized()
-
         {
             SetTreeNodeClassMapper();
             if (ParentNode != null)
                 ParentNode.AddNode(this);
             else
                 TreeComponent.AddNode(this);
+            System.Diagnostics.Debug.WriteLine($"TreeNode Initialized at {DateTime.Now}");
+            TreeComponent._allNodes.Add(this);
             base.OnInitialized();
         }
 
@@ -622,6 +623,21 @@ namespace AntDesign
                 this.Expand(true);
                 tn.SetSelected(true);
             }
+        }
+
+        /// <summary>
+        /// 首次渲染
+        /// </summary>
+        /// <returns></returns>
+        protected override Task OnFirstAfterRenderAsync()
+        {
+            TreeComponent.DefaultCheckedKeys?.ForEach(k =>
+            {
+                var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
+                if (node != null)
+                    node.SetChecked(true);
+            }); 
+            return base.OnFirstAfterRenderAsync();
         }
     }
 }
