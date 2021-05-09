@@ -298,7 +298,7 @@ namespace AntDesign
 
         private bool _disableCheckbox;
         /// <summary>
-        /// 是否可以选择(不受父节点控制)
+        /// 是否可以选择
         /// </summary>
         [Parameter]
         public bool DisableCheckbox
@@ -331,39 +331,50 @@ namespace AntDesign
         /// <param name="check"></param>
         public void SetChecked(bool check)
         {
+            SetChildChecked(this, check);
+            if (ParentNode != null)
+                ParentNode.UpdateCheckState();
+        }
+
+        /// <summary>
+        /// 设置子节点状态
+        /// </summary>
+        /// <param name="subnode"></param>
+        /// <param name="check"></param>
+        private void SetChildChecked(TreeNode<TItem> subnode, bool check)
+        {
             if (Disabled) return;
             this.Checked = DisableCheckbox ? false : check;
             this.Indeterminate = false;
-            if (HasChildNodes)
-            {
-                foreach (var subnode in ChildNodes)
-                    subnode?.SetChecked(check);
-            }
-            if (ParentNode != null)
-                ParentNode.UpdateCheckState();
+            if (subnode.HasChildNodes)
+                foreach (var child in subnode.ChildNodes)
+                    child?.SetChildChecked(child, check);
         }
 
         /// <summary>
         /// 更新选中状态
         /// </summary>
         /// <param name="halfChecked"></param>
-        private void UpdateCheckState(bool? halfChecked = null)
+        public void UpdateCheckState(bool? halfChecked = null)
         {
-            if (halfChecked.HasValue && halfChecked.Value == true)
+            if (halfChecked == true)
             {//如果子元素存在不确定状态，父元素必定存在不确定状态
                 this.Checked = false;
                 this.Indeterminate = true;
             }
-            else if (HasChildNodes == true)
+            else if (HasChildNodes == true && !DisableCheckbox)
             {//判断当前节点的选择状态
                 bool hasChecked = false;
                 bool hasUnchecked = false;
 
                 foreach (var item in ChildNodes)
                 {
-                    if (item.Indeterminate == true) break;
-                    if (item.Checked == true) hasChecked = true;
-                    if (item.Checked == false) hasUnchecked = true;
+                    if (!item.DisableCheckbox && !item.Disabled)
+                    {
+                        if (item.Indeterminate == true) break;
+                        if (item.Checked == true) hasChecked = true;
+                        if (item.Checked == false) hasUnchecked = true;
+                    }
                 }
 
                 if (hasChecked && !hasUnchecked)
