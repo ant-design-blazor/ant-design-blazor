@@ -25,8 +25,7 @@ namespace AntDesign
             ClassMapper.Clear().Add("ant-tree-checkbox")
                 .If("ant-tree-checkbox-checked", () => SelfNode.Checked)
                 .If("ant-tree-checkbox-indeterminate", () => SelfNode.Indeterminate)
-                .If("ant-tree-checkbox-disabled", () => SelfNode.Disabled || SelfNode.DisableCheckbox)
-                ;
+                .If("ant-tree-checkbox-disabled", () => SelfNode.Disabled || SelfNode.DisableCheckbox);
         }
 
         protected override void OnInitialized()

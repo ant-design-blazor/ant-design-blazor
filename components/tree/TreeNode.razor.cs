@@ -286,23 +286,40 @@ namespace AntDesign
 
         #region Checkbox
 
+        /// <summary>
+        /// 显示勾选
+        /// </summary>
         [Parameter]
         public bool Checked { get; set; }
 
         [Parameter]
         public bool Indeterminate { get; set; }
 
+
+        private bool _disableCheckbox;
         /// <summary>
-        /// 是否可以选择不受父节点控制
+        /// 是否可以选择(不受父节点控制)
         /// </summary>
         [Parameter]
-        public bool DisableCheckbox { get; set; }
+        public bool DisableCheckbox
+        {
+            get
+            {
+                return _disableCheckbox || (TreeComponent?.DisableCheckKeys?.Any(k => k == Key) ?? false);
+            }
+            set
+            {
+                _disableCheckbox = value;
+            }
+        }
 
         /// <summary>
         /// 当点击选择框是触发
         /// </summary>
         private async void OnCheckBoxClick(MouseEventArgs args)
         {
+            if (DisableCheckbox)
+                return;
             SetChecked(!Checked);
             if (TreeComponent.OnCheckBoxChanged.HasDelegate)
                 await TreeComponent.OnCheckBoxChanged.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, this, args));
@@ -315,7 +332,7 @@ namespace AntDesign
         public void SetChecked(bool check)
         {
             if (Disabled) return;
-            this.Checked = check;
+            this.Checked = DisableCheckbox ? false : check;
             this.Indeterminate = false;
             if (HasChildNodes)
             {
@@ -330,7 +347,7 @@ namespace AntDesign
         /// 更新选中状态
         /// </summary>
         /// <param name="halfChecked"></param>
-        public void UpdateCheckState(bool? halfChecked = null)
+        private void UpdateCheckState(bool? halfChecked = null)
         {
             if (halfChecked.HasValue && halfChecked.Value == true)
             {//如果子元素存在不确定状态，父元素必定存在不确定状态

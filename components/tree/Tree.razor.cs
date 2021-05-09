@@ -249,9 +249,12 @@ namespace AntDesign
         /// 默认勾选的节点
         /// </summary>
         [Parameter]
-        public IEnumerable[] DefaultCheckedKeys { get; set; }
+        public IEnumerable<string> DefaultCheckedKeys { get; set; }
 
-
+        /// <summary>
+        /// 禁用勾选节点
+        /// </summary>
+        public IEnumerable<string> DisableCheckKeys { get; set; }
 
         #endregion Checkable
 
@@ -343,13 +346,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
-
-        /// <summary>
-        /// 禁用的keys
-        /// </summary>
-        [Parameter]
-        public Func<TreeNode<TItem>, string> DisableKeyExpression { get; set; }
-
+         
         #endregion DataBind
 
         #region Event
