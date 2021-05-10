@@ -68,7 +68,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool ShowLeafIcon { get; set; } = false;
-         
+
 
 
         private void SetClassMapper()
@@ -79,6 +79,7 @@ namespace AntDesign
                 .If("ant-tree-icon-hide", () => ShowIcon)
                 .If("ant-tree-block-node", () => BlockNode)
                 .If("draggable-tree", () => Draggable)
+                .If("ant-tree-unselectable", () => !Selectable)
                 .If("ant-tree-rtl", () => RTL);
         }
 
@@ -110,6 +111,12 @@ namespace AntDesign
         #endregion Node
 
         #region Selected
+
+        /// <summary>
+        /// 是否可选中
+        /// </summary>
+        [Parameter]
+        public bool Selectable { get; set; } = true;
 
         /// <summary>
         /// 支持点选多个节点（节点本身）
@@ -308,8 +315,6 @@ namespace AntDesign
             else
                 _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
             CheckedKeys = _checkedNodes.Select(x => x.Value.Key).ToList();
-            System.Diagnostics.Debug.WriteLine(System.Text.Json.JsonSerializer.Serialize(CheckedKeys));
-
         }
 
         #endregion Checkable

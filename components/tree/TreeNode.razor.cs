@@ -166,10 +166,19 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// 点击选择
+        /// </summary>
+        /// <param name="value"></param>
         public void SetSelected(bool value)
         {
+            if (Disabled) return;
+            if (!TreeComponent.Selectable && TreeComponent.Checkable)
+            {
+                SetChecked(!Checked);
+                return;
+            }
             if (_selected == value) return;
-            if (Disabled == true) return;
             _selected = value;
             if (value == true)
             {
@@ -361,6 +370,8 @@ namespace AntDesign
             SetChildChecked(this, check);
             if (ParentNode != null)
                 ParentNode.UpdateCheckState();
+            else
+                StateHasChanged();
         }
 
         /// <summary>
@@ -689,7 +700,6 @@ namespace AntDesign
                         node.OpenPropagation();
                 });
             }
-            System.Diagnostics.Debug.WriteLine(this.Expanded);
             return base.OnFirstAfterRenderAsync();
         }
     }
