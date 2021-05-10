@@ -315,6 +315,7 @@ namespace AntDesign
             else
                 _checkedNodes.TryRemove(treeNode.NodeId, out TreeNode<TItem> _);
             CheckedKeys = _checkedNodes.Select(x => x.Value.Key).ToList();
+            System.Diagnostics.Debug.WriteLine(System.Text.Json.JsonSerializer.Serialize(CheckedKeys));
         }
 
         #endregion Checkable
@@ -385,7 +386,7 @@ namespace AntDesign
         public Func<TreeNode<TItem>, string> TitleExpression { get; set; }
 
         /// <summary>
-        /// 指定一个返回节点名称的方法。
+        /// 指定一个返回节点Key的方法。
         /// </summary>
         [Parameter]
         public Func<TreeNode<TItem>, string> KeyExpression { get; set; }
@@ -407,6 +408,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Func<TreeNode<TItem>, IList<TItem>> ChildrenExpression { get; set; }
+
+        /// <summary>
+        /// 指定一个返回禁用节点的方法
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> DisabledExpression { get; set; }
 
         #endregion DataBind
 

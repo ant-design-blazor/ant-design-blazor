@@ -158,12 +158,13 @@ namespace AntDesign
         [Parameter]
         public bool Selected
         {
-            get => _selected;
-            set
-            {
-                if (_selected == value) return;
-                SetSelected(value);
-            }
+            get; set;
+            //get => _selected;
+            //set
+            //{
+            //    if (_selected == value) return;
+            //    SetSelected(value);
+            //}
         }
 
         /// <summary>
@@ -178,7 +179,7 @@ namespace AntDesign
                 SetChecked(!Checked);
                 return;
             }
-            if (_selected == value) return;
+            //if (_selected == value) return;
             _selected = value;
             if (value == true)
             {
@@ -361,19 +362,22 @@ namespace AntDesign
         /// <param name="check"></param>
         public void SetChecked(bool check)
         {
-            if (TreeComponent.CheckStrictly)
+            if (!Disabled)
             {
-                this.Checked = check;
-                TreeComponent.AddOrRemoveCheckNode(this);
-                return;
+                if (TreeComponent.CheckStrictly)
+                {
+                    this.Checked = check;
+                }
+                else
+                {
+                    SetChildChecked(this, check);
+                    if (ParentNode != null)
+                        ParentNode.UpdateCheckState();
+                }
             }
-            SetChildChecked(this, check);
-            if (ParentNode != null)
-                ParentNode.UpdateCheckState();
-            else
-                StateHasChanged();
+            TreeComponent.AddOrRemoveCheckNode(this);
+            StateHasChanged();
         }
-
         /// <summary>
         /// 设置子节点状态
         /// </summary>
@@ -394,7 +398,7 @@ namespace AntDesign
         /// 更新选中状态
         /// </summary>
         /// <param name="halfChecked"></param>
-        public void UpdateCheckState(bool? halfChecked = null)
+        private void UpdateCheckState(bool? halfChecked = null)
         {
             if (halfChecked == true)
             {//如果子元素存在不确定状态，父元素必定存在不确定状态
@@ -438,8 +442,8 @@ namespace AntDesign
                 ParentNode.UpdateCheckState(this.Indeterminate);
 
             //当达到最顶级后进行刷新状态，避免每一级刷新的性能问题
-            if (ParentNode == null)
-                StateHasChanged();
+            //if (ParentNode == null)
+            //    StateHasChanged();
         }
 
         #endregion Checkbox
@@ -648,14 +652,21 @@ namespace AntDesign
                 if (!TreeComponent.DefaultExpandAll && TreeComponent.DefaultExpandParent)
                     Expand(true);
             }
-            System.Diagnostics.Debug.WriteLine($"TreeNode Initialized at {DateTime.Now}");
             TreeComponent._allNodes.Add(this);
+
+            if (TreeComponent.DisabledExpression != null)
+                Disabled = TreeComponent.DisabledExpression(this);
 
             if (TreeComponent.DefaultExpandAll)
                 Expand(true);
             else if (TreeComponent.ExpandedKeys != null)
             {
                 Expand(TreeComponent.ExpandedKeys.Any(k => k == this.Key));
+            }
+
+            if (TreeComponent.Selectable && TreeComponent.SelectedKeys != null)
+            {
+                this.Selected = TreeComponent.SelectedKeys.Any(k => k == this.Key);
             }
             base.OnInitialized();
         }
@@ -682,13 +693,14 @@ namespace AntDesign
         /// <returns></returns>
         protected override Task OnFirstAfterRenderAsync()
         {
-            if (!TreeComponent.Disabled && TreeComponent.Checkable)
-                TreeComponent.DefaultCheckedKeys?.ForEach(k =>
-                {
-                    var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
-                    if (node != null)
-                        node.SetChecked(true);
-                });
+            if (this.Checked)
+                this.SetChecked(true);
+            TreeComponent.DefaultCheckedKeys?.ForEach(k =>
+            {
+                var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
+                if (node != null)
+                    node.SetChecked(true);
+            });
             if (!TreeComponent.DefaultExpandAll)
             {
                 if (this.Expanded)
@@ -701,6 +713,8 @@ namespace AntDesign
                 });
             }
             return base.OnFirstAfterRenderAsync();
+
         }
+
     }
 }
