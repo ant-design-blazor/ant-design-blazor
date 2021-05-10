@@ -1,46 +1,32 @@
-﻿
+﻿<div>
+    <RadioGroup @bind-Value="placement">
+        <Radio Value="@("top")">top</Radio>
+        <Radio Value="@("right")">right</Radio>
+        <Radio Value="@("bottom")">bottom</Radio>
+        <Radio Value="@("left")">left</Radio>
+    </RadioGroup>
 
-<div>
-    <Space>
-        <SpaceItem>
-            <Button Type="primary" @onclick='_=>Open("left")'>Left</Button>
-        </SpaceItem>
-
-        <SpaceItem>
-            <Button Type="primary" @onclick="_=>Open()">Right</Button>
-        </SpaceItem>
-    </Space>
-    
-    <Space>
-        <SpaceItem>
-            <Button Type="primary" @onclick='_=>Open("top")'>Top</Button>
-        </SpaceItem>
-
-        <SpaceItem>
-            <Button Type="primary" @onclick='_=>Open("bottom")'>Bottom</Button>
-        </SpaceItem>
-    </Space>
-    
-    <Drawer OffsetX="200" OffsetY="100" Closable="true" Visible="@_visible" Placement="@_placement" Title='("OffsetX(Y)")' OnClose="_=>Close()">
+    <Button Type="primary" @onclick="_ => open()">Open</Button>
+    <Drawer OffsetX="200" OffsetY="100" Visible="@visible" Placement="@placement" Title='("Basic Drawer")' OnClose="_ => close()">
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
     </Drawer>
 </div>
 
-   @code{
+@code{
 
-       private bool _visible = false;
-       private string _placement = "right";
+    string placement = "right";
 
-       void Open(string placement = "right")
-       {
-           _placement = placement;
-           _visible = true;
-       }
+    bool visible = false;
 
-       void Close()
-       {
-           _visible = false;
-       }
+    void open()
+    {
+        this.visible = true;
+    }
+
+    void close()
+    {
+        this.visible = false;
+    }
 }
