@@ -294,16 +294,13 @@ namespace AntDesign
         private bool SwitcherClose => !Expanded && !IsLeaf;
 
         /// <summary>
-        /// 展开父级
-        /// </summary>
-        /// <param name="treeNode"></param>
-        private void OpenParentNode(TreeNode<TItem> treeNode)
+        /// 冒泡展开
+        /// </summary> 
+        private void OpenPropagation()
         {
-            if (treeNode.ParentNode != null)
-            {
-                treeNode.ParentNode.Expand(true);
-                OpenParentNode(treeNode.ParentNode);
-            }
+            this.Expand(true);
+            if (this.ParentNode != null)
+                this.ParentNode.OpenPropagation();
         }
 
         #endregion Switcher
@@ -678,9 +675,14 @@ namespace AntDesign
                 });
             if (!TreeComponent.DefaultExpandAll)
             {
-                System.Diagnostics.Debug.WriteLine($"{Title} Expand is {Expanded}");
                 if (this.Expanded)
-                    OpenParentNode(this);
+                    this.OpenPropagation();
+                TreeComponent.DefaultExpandedKeys?.ForEach(k =>
+                {
+                    var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
+                    if (node != null)
+                        node.OpenPropagation();
+                });
             }
             return base.OnFirstAfterRenderAsync();
         }

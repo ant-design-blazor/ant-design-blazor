@@ -68,18 +68,8 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool ShowLeafIcon { get; set; } = false;
+         
 
-        /// <summary>
-        /// 默认展开所有树节点
-        /// </summary>
-        [Parameter]
-        public bool DefaultExpandAll { get; set; }
-
-        /// <summary>
-        /// 默认展开父节点
-        /// </summary>
-        [Parameter]
-        public bool DefaultExpandParent { get; set; }
 
         private void SetClassMapper()
         {
@@ -300,12 +290,12 @@ namespace AntDesign
         /// 默认勾选的节点
         /// </summary>
         [Parameter]
-        public IEnumerable<string> DefaultCheckedKeys { get; set; }
+        public IList<string> DefaultCheckedKeys { get; set; }
 
         /// <summary>
         /// 禁用节点Checkbox
         /// </summary>
-        public IEnumerable<string> DisableCheckKeys { get; set; }
+        public IList<string> DisableCheckKeys { get; set; }
 
         /// <summary>
         /// 记录或移除勾选节点
@@ -560,6 +550,24 @@ namespace AntDesign
         }
 
         #region Expand
+
+        /// <summary>
+        /// 默认展开所有树节点
+        /// </summary>
+        [Parameter]
+        public bool DefaultExpandAll { get; set; }
+
+        /// <summary>
+        /// 默认展开父节点
+        /// </summary>
+        [Parameter]
+        public bool DefaultExpandParent { get; set; }
+
+        /// <summary>
+        /// 默认展开指定的树节点
+        /// </summary>
+        [Parameter]
+        public IList<string> DefaultExpandedKeys { get; set; }
 
         /// <summary>
         /// from node expand to root

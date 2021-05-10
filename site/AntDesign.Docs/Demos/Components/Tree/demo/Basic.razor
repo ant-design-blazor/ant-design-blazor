@@ -1,5 +1,5 @@
 
-<Tree Checkable BlockNode TItem="string" IconExpression="@(_=> { return "edit"; })" ShowLine ShowLeafIcon="false" ShowIcon OnClick="onClick">
+<Tree Checkable BlockNode TItem="string" IconExpression="@(_=> { return "edit"; })" DefaultExpandedKeys="@(new List<string> { "A2" })" ShowLine ShowLeafIcon="false" ShowIcon OnClick="onClick">
     <Nodes>
         <TreeNode Title="A" Key="A" TItem="string">
             <Nodes>
@@ -9,7 +9,7 @@
                         <TreeNode Title="A1-2" Key="A1-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Expanded Title="A2" Key="A2" TItem="string">
+                <TreeNode Title="A2" Key="A2" TItem="string">
                     <Nodes>
                         <TreeNode Title="A2-1" Key="A2-1" IsLeaf="true" TItem="string"></TreeNode>
                         <TreeNode Title="A2-2" Key="A2-2" TItem="string"></TreeNode>
