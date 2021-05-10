@@ -263,6 +263,11 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// 节点开关
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         private async Task OnSwitcherClick(MouseEventArgs args)
         {
             this.Expanded = !this.Expanded;
@@ -284,9 +289,22 @@ namespace AntDesign
         private bool SwitcherOpen => Expanded && !IsLeaf;
 
         /// <summary>
-        /// 收起
+        /// 关闭
         /// </summary>
         private bool SwitcherClose => !Expanded && !IsLeaf;
+
+        /// <summary>
+        /// 展开父级
+        /// </summary>
+        /// <param name="treeNode"></param>
+        private void OpenParentNode(TreeNode<TItem> treeNode)
+        {
+            if (treeNode.ParentNode != null)
+            {
+                treeNode.ParentNode.Expand(true);
+                OpenParentNode(treeNode.ParentNode);
+            }
+        }
 
         #endregion Switcher
 
@@ -651,19 +669,18 @@ namespace AntDesign
         /// <returns></returns>
         protected override Task OnFirstAfterRenderAsync()
         {
-            TreeComponent.DefaultCheckedKeys?.ForEach(k =>
-            {
-                if (!String.IsNullOrEmpty(k))
+            if (!TreeComponent.Disabled && TreeComponent.Checkable)
+                TreeComponent.DefaultCheckedKeys?.ForEach(k =>
                 {
                     var node = TreeComponent._allNodes.FirstOrDefault(x => x.Key == k);
                     if (node != null)
                         node.SetChecked(true);
-                }
-            });
+                });
             if (!TreeComponent.DefaultExpandAll)
             {
                 System.Diagnostics.Debug.WriteLine($"{Title} Expand is {Expanded}");
-
+                if (this.Expanded)
+                    OpenParentNode(this);
             }
             return base.OnFirstAfterRenderAsync();
         }
