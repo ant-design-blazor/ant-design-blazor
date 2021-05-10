@@ -1,0 +1,71 @@
+﻿@inherits AntDesignTestBase
+@code {
+
+	class Model
+	{
+		public string Name { get; set; }
+	}
+	Model _model = new();
+	AntDesign.Form<Model> _form;
+
+#if NET6_0
+	[Fact]
+	public void Form_EditContext_fires_OnFieldChange()
+	{
+		//Arrange
+		JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+			.SetResult(new AntDesign.JsInterop.Window());
+
+		bool handlerExecuted = false;
+		Action<FieldChangedEventArgs> onFieldChanged = (e) => handlerExecuted = true;
+		var cut = Render<AntDesign.Form<Model>>(
+			@<AntDesign.Form @ref="@_form" Model="@_model"
+				OnFieldChanged="onFieldChanged"
+				ValidateOnChange="@true">
+				<AntDesign.FormItem Label="Name">
+					<AntDesign.Input @bind-Value=@context.Name DebounceMilliseconds="0"/>
+				</AntDesign.FormItem>    
+			</AntDesign.Form>
+			);		
+		var input = cut.FindComponent<AntDesign.Input<string>>();
+		//Act
+		input.Find("input").Input("newValue");
+		input.Find("input").KeyUp(String.Empty);
+		//Assert				
+		handlerExecuted.Should().BeTrue();
+	}
+#endif
+
+#if NET6_0
+	[Fact]
+	public void Form_EditContext_Build_keep_OnFieldChange_subscription()
+	{
+		//Arrange
+		JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+			.SetResult(new AntDesign.JsInterop.Window());
+
+		bool handlerExecuted = false;
+		Action<FieldChangedEventArgs> onFieldChanged = (e) => handlerExecuted = true;
+		var cut = Render<AntDesign.Form<Model>>(
+			@<AntDesign.Form @ref="@_form" Model="@_model"
+				OnFieldChanged="onFieldChanged"
+				ValidateOnChange="@true">
+				<AntDesign.FormItem Label="Name">
+					<AntDesign.Input @bind-Value=@context.Name DebounceMilliseconds="0"/>
+				</AntDesign.FormItem>    
+			</AntDesign.Form>
+		);				
+		//Act
+		cut.Find("input").Input("newValue");
+		cut.Find("input").KeyUp(String.Empty);
+		_model = new();
+		handlerExecuted = false;
+		cut.SetParametersAndRender(parameters => parameters.Add(p => p.Model, _model));
+		var input = cut.FindComponent<AntDesign.Input<string>>();
+		input.Find("input").Input("newValue");
+		input.Find("input").KeyUp(String.Empty);
+		//Assert				
+		handlerExecuted.Should().BeTrue();
+	}
+#endif
+}

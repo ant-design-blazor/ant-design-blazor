@@ -1,0 +1,33 @@
+﻿@inherits AntDesignTestBase
+@code {
+
+	class Model
+	{
+		public string Name { get; set; }
+	}
+	Model _model = new();
+	AntDesign.Form<Model> _form;
+
+#if NET6_0
+	[Fact]
+	public void Form_Model_is_updated()
+	{
+		//Arrange
+		JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+			.SetResult(new AntDesign.JsInterop.Window());
+		
+		var cut = Render<AntDesign.Form<Model>>(
+			@<AntDesign.Form @ref="@_form" Model="@_model">
+				<AntDesign.FormItem Label="Name">
+					<AntDesign.Input @bind-Value=@context.Name DebounceMilliseconds="0"/>
+				</AntDesign.FormItem>    
+			</AntDesign.Form>
+		);				
+		//Act
+		cut.Find("input").Input("newValue");
+		cut.Find("input").KeyUp(String.Empty);		
+		//Assert				
+		_model.Name.Should().Be("newValue");
+	}
+#endif
+}
