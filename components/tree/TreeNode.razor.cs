@@ -158,13 +158,12 @@ namespace AntDesign
         [Parameter]
         public bool Selected
         {
-            get; set;
-            //get => _selected;
-            //set
-            //{
-            //    if (_selected == value) return;
-            //    SetSelected(value);
-            //}
+            get => _selected;
+            set
+            {
+                if (_selected == value) return;
+                SetSelected(value);
+            }
         }
 
         /// <summary>
@@ -179,7 +178,7 @@ namespace AntDesign
                 SetChecked(!Checked);
                 return;
             }
-            //if (_selected == value) return;
+            if (_selected == value) return;
             _selected = value;
             if (value == true)
             {
@@ -442,8 +441,8 @@ namespace AntDesign
                 ParentNode.UpdateCheckState(this.Indeterminate);
 
             //当达到最顶级后进行刷新状态，避免每一级刷新的性能问题
-            //if (ParentNode == null)
-            //    StateHasChanged();
+            if (ParentNode == null)
+                StateHasChanged();
         }
 
         #endregion Checkbox

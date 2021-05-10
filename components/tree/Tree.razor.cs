@@ -147,6 +147,9 @@ namespace AntDesign
             UpdateBindData();
         }
 
+        /// <summary>
+        /// 取消所有选定
+        /// </summary>
         public void DeselectAll()
         {
             foreach (var item in SelectedNodesDictionary.Select(x => x.Value).ToList())

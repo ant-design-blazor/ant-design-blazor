@@ -1,5 +1,5 @@
 
-<Tree Checkable BlockNode TItem="string" IconExpression="@(_=> { return "edit"; })" ShowLine ShowIcon OnClick="onClick">
+<Tree Checkable BlockNode TItem="string" OnClick="onClick">
     <Nodes>
         <TreeNode Title="A" Key="A" TItem="string">
             <Nodes>
@@ -9,13 +9,13 @@
                         <TreeNode Title="A1-2" Key="A1-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A2" Key="A2" TItem="string">
+                <TreeNode Title="A2" Key="A2" Disabled  TItem="string">
                     <Nodes>
                         <TreeNode Title="A2-1" Key="A2-1" IsLeaf="true" TItem="string"></TreeNode>
                         <TreeNode Title="A2-2" Key="A2-2" TItem="string"></TreeNode>
                     </Nodes>
                 </TreeNode>
-                <TreeNode Title="A3" Key="A3" TItem="string">
+                <TreeNode Title="A3" Key="A3" DisableCheckbox  TItem="string">
                     <Nodes>
                         <TreeNode Title="A3-1" Key="A3-1" TItem="string"></TreeNode>
                         <TreeNode Title="A3-2" Key="A3-2" TItem="string"></TreeNode>
