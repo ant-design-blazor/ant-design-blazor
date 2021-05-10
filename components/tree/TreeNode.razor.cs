@@ -712,7 +712,6 @@ namespace AntDesign
                 });
             }
             return base.OnFirstAfterRenderAsync();
-
         }
 
     }

@@ -186,7 +186,7 @@ namespace AntDesign
         public EventCallback<TItem> SelectedDataChanged { get; set; }
 
         /// <summary>
-        /// 选择的Key集合
+        /// 选择的Key集合，初始存在时默认选中
         /// </summary>
         [Parameter]
         public string[] SelectedKeys { get; set; }
