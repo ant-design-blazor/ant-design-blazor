@@ -98,12 +98,17 @@ namespace AntDesign
         [Parameter]
         public override CultureInfo CultureInfo
         {
-            get { return base.CultureInfo; }
+            get
+            {
+                return base.CultureInfo;
+            }
             set
             {
+                if (!_isLocaleSetOutside && base.CultureInfo != value && base.CultureInfo.Name != value.Name)
+                {
+                    _locale = LocaleProvider.GetLocale(value.Name).DatePicker;
+                }
                 base.CultureInfo = value;
-                if (!_isLocaleSetOutside)
-                    _locale = LocaleProvider.GetLocale(base.CultureInfo.Name).DatePicker;
             }
         }
 
