@@ -570,6 +570,12 @@ namespace AntDesign
         public IList<string> DefaultExpandedKeys { get; set; }
 
         /// <summary>
+        /// （受控）展开指定的树节点
+        /// </summary>
+        [Parameter]
+        public IList<string> ExpandedKeys { get; set; }
+
+        /// <summary>
         /// from node expand to root
         /// </summary>
         /// <param name="node">Node</param>

@@ -639,8 +639,13 @@ namespace AntDesign
             }
             System.Diagnostics.Debug.WriteLine($"TreeNode Initialized at {DateTime.Now}");
             TreeComponent._allNodes.Add(this);
+
             if (TreeComponent.DefaultExpandAll)
                 Expand(true);
+            else if (TreeComponent.ExpandedKeys != null)
+            {
+                Expand(TreeComponent.ExpandedKeys.Any(k => k == this.Key));
+            }
             base.OnInitialized();
         }
 
@@ -684,6 +689,7 @@ namespace AntDesign
                         node.OpenPropagation();
                 });
             }
+            System.Diagnostics.Debug.WriteLine(this.Expanded);
             return base.OnFirstAfterRenderAsync();
         }
     }
