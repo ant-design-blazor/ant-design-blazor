@@ -198,6 +198,37 @@ namespace AntDesign
         [Parameter]
         public bool Loading { get; set; }
 
+        private bool _dragTarget;
+        /// <summary>
+        /// 是否是释放目标
+        /// </summary>
+        public bool DragTarget
+        {
+            get { return _dragTarget; }
+            set
+            {
+                _dragTarget = value;
+                SetTreeNodeClassMapper();
+                StateHasChanged();
+            }
+        }
+
+        private bool _dragTargetBottom;
+
+        /// <summary>
+        /// 是否是在释放目标底部
+        /// </summary>
+        public bool DragTargetBottom {
+
+            get { return _dragTargetBottom; }
+            set
+            {
+                _dragTargetBottom = value;
+                SetTreeNodeClassMapper();
+                StateHasChanged();
+            }
+        }
+
         private void SetTreeNodeClassMapper()
         {
             ClassMapper.Clear().Add("ant-tree-treenode")
@@ -207,7 +238,11 @@ namespace AntDesign
                 .If("ant-tree-treenode-checkbox-checked", () => Checked)
                 .If("ant-tree-treenode-checkbox-indeterminate", () => Indeterminate)
                 .If("ant-tree-treenode-selected", () => Selected)
-                .If("ant-tree-treenode-loading", () => Loading);
+                .If("ant-tree-treenode-loading", () => Loading)
+                .If("drop-target", () => DragTarget)
+                .If("drag-over-gap-bottom", () => DragTarget && DragTargetBottom)
+                .If("drag-over", () => DragTarget && !DragTargetBottom);
+
         }
 
         #endregion TreeNode

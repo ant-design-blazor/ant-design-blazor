@@ -30,17 +30,17 @@
 <style>
     .droptarget {
         float: left;
-        width: 100px;
-        height: 35px;
+        width: 200px;
+        height: 55px;
         margin: 15px;
         padding: 10px;
         border: 1px solid #aaaaaa;
     }
 </style>
-<div class="droptarget" @ondrop="drop" @ondragover="allowDrop">
+<div class="droptarget"  @ondrop="drop" >
     <p @ondragstart="dragStart" @ondragend="dragEnd" draggable="true" id="dragtarget">拖动我!</p>
 </div>
-<div class="droptarget" @ondrop="drop" @ondragover="allowDrop"></div>
+<div class="droptarget" ondragover="event.preventDefault();" @ondragleave="allowDrop"  @ondragenter="drag" @ondrop:preventDefault @ondrop="drop" id="droptarget"></div>
  
 @code{
 
@@ -121,7 +121,10 @@
     {
         public List<GameElement> Items { get; set; } = new List<GameElement>();
     }
-
+    void drag(DragEventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine($"drag {JsonSerializer.Serialize(e)}");
+    }
     void drop(DragEventArgs e)
     {
         System.Diagnostics.Debug.WriteLine($"drop {JsonSerializer.Serialize(e)}");
@@ -129,19 +132,19 @@
 
     void dragStart(DragEventArgs e)
     {
-        //System.Diagnostics.Debug.WriteLine($"dragStart {JsonSerializer.Serialize(e)}");
-
+        System.Diagnostics.Debug.WriteLine($"dragStart {JsonSerializer.Serialize(e)}");
+        e.DataTransfer.DropEffect = "move";
     }
 
     void dragEnd(DragEventArgs e)
     {
-        //System.Diagnostics.Debug.WriteLine($"dragEnd {JsonSerializer.Serialize(e)}");
+        System.Diagnostics.Debug.WriteLine($"dragEnd {JsonSerializer.Serialize(e)}");
 
     }
     void allowDrop(DragEventArgs e)
     {
-        //System.Diagnostics.Debug.WriteLine($"allowDrop {JsonSerializer.Serialize(e)}");
+        System.Diagnostics.Debug.WriteLine($"allowDrop {JsonSerializer.Serialize(e)}");
     }
 
-     
+
 }

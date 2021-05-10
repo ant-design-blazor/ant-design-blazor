@@ -68,9 +68,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool ShowLeafIcon { get; set; } = false;
-
-
-
+         
         private void SetClassMapper()
         {
             ClassMapper
@@ -465,35 +463,7 @@ namespace AntDesign
         [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnSearchValueChanged { get; set; }
 
-        ///// <summary>
-        ///// 开始拖拽时调用
-        ///// </summary>
-        //public EventCallback<TreeEventArgs> OnDragStart { get; set; }
-
-        ///// <summary>
-        ///// dragenter 触发时调用
-        ///// </summary>
-        //public EventCallback<TreeEventArgs> OnDragEnter { get; set; }
-
-        ///// <summary>
-        ///// dragover 触发时调用
-        ///// </summary>
-        //public EventCallback<TreeEventArgs> OnDragOver { get; set; }
-
-        ///// <summary>
-        ///// dragleave 触发时调用
-        ///// </summary>
-        //public EventCallback<TreeEventArgs> OnDragLeave { get; set; }
-
-        ///// <summary>
-        ///// drop 触发时调用
-        ///// </summary>
-        //public EventCallback<TreeEventArgs> OnDrop { get; set; }
-
-        ///// <summary>
-        ///// dragend 触发时调用
-        ///// </summary>
-        //public EventCallback<TreeEventArgs> OnDragEnd { get; set; }
+        
 
         #endregion Event
 
@@ -524,6 +494,55 @@ namespace AntDesign
         public RenderFragment<TreeNode<TItem>> SwitcherIconTemplate { get; set; }
 
         #endregion Template
+
+
+        #region DragDrop
+
+        /// <summary>
+        /// 当前拖拽项
+        /// </summary>
+        internal TreeNode<TItem> DragItem { get; set; }
+
+        /// <summary>
+        /// 拖拽可释放目标
+        /// </summary>
+        internal TreeNode<TItem> DragTargetItem { get; set; }
+
+        /// <summary>
+        /// 开始拖拽时调用
+        /// Node 当前拖拽节点
+        /// </summary>
+        public EventCallback<TreeEventArgs<TItem>> OnDragStart { get; set; }
+
+        /// <summary>
+        /// 拖拽进入可释放目标时调用
+        /// Node 当前进入的节点
+        /// </summary>
+        public EventCallback<TreeEventArgs<TItem>> OnDragEnter { get; set; }
+
+        ///// <summary>
+        ///// dragover 触发时调用
+        ///// </summary>
+        //public EventCallback<TreeEventArgs> OnDragOver { get; set; }
+
+        /// <summary>
+        /// 拖拽离开可释放目标时调用
+        /// Node 离开的节点
+        /// </summary>
+        public EventCallback<TreeEventArgs<TItem>> OnDragLeave { get; set; }
+
+        /// <summary>
+        /// 拖拽落入成功时触发
+        /// </summary>
+        public EventCallback<TreeEventArgs<TItem>> OnDrop { get; set; }
+
+        /// <summary>
+        /// 触发结束时调用 Node 为空
+        /// </summary>
+        public EventCallback<TreeEventArgs<TItem>> OnDragEnd { get; set; }
+
+        #endregion
+
 
         protected override void OnInitialized()
         {

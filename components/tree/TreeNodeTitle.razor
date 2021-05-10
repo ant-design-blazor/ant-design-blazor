@@ -1,36 +1,17 @@
 ﻿@namespace AntDesign
 @inherits ComponentBase
 @typeparam TItem
-
-<span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="@CanDraggable" aria-grabbed="@CanDraggable">
-    @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
-    {
-        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
-            <span class="ant-tree-iconEle ant-tree-icon__customize">
-                @TreeComponent.TitleIconTemplate(SelfNode)
-            </span>
-        </span>
-    }
-    else if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false && TreeComponent.ShowIcon)
-    {
-        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
-            <span class="ant-tree-iconEle ant-tree-icon__customize">
-                @if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false)
-                {
-                    <Icon Type="@SelfNode.Icon" Theme="outline" />
-                }
-            </span>
-        </span>
-    }
-
-    @if (TreeComponent.TitleTemplate != null)
-    {
-        @TreeComponent.TitleTemplate(SelfNode)
-    }
-    else
-    {
-        <span class="ant-tree-title">
-            @SelfNode.Title
-        </span>
-    }
-</span>
+@if (CanDraggable)
+{
+    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="true"
+          ondragover="event.preventDefault();" @ondragleave="OnDragLeave" @ondragenter="OnDragEnter" @ondrop:preventDefault @ondrop="OnDrop"
+          @ondragstart="OnDragStart" @ondragend="OnDragEnd" aria-grabbed="@CanDraggable">
+        <TreeNodeTitleContent TItem="TItem"></TreeNodeTitleContent>
+    </span>
+}
+else
+{
+    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick">
+        <TreeNodeTitleContent TItem="TItem"></TreeNodeTitleContent>
+    </span>
+}

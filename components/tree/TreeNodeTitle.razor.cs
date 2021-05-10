@@ -9,7 +9,7 @@ namespace AntDesign
 {
 
     public partial class TreeNodeTitle<TItem> : ComponentBase
-    { 
+    {
         /// <summary>
         /// 树控件本身
         /// </summary>
@@ -56,8 +56,8 @@ namespace AntDesign
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private async Task OnClick(MouseEventArgs args)
-        { 
+        public async Task OnClick(MouseEventArgs args)
+        {
             SelfNode.SetSelected(!SelfNode.Selected);
             if (TreeComponent.OnClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
@@ -70,10 +70,75 @@ namespace AntDesign
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        private async Task OnDblClick(MouseEventArgs args)
+        public async Task OnDblClick(MouseEventArgs args)
         {
             if (TreeComponent.OnDblClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnDblClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
+        }
+
+        /// <summary>
+        /// 拖拽开始
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDragStart(DragEventArgs e)
+        {
+            TreeComponent.DragItem = SelfNode;
+            if (TreeComponent.OnDragStart.HasDelegate)
+                TreeComponent.OnDragStart.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
+        }
+
+        /// <summary>
+        /// 离开可释放目标
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDragLeave(DragEventArgs e)
+        {
+            TreeComponent.DragTargetItem = null;
+            if (TreeComponent.OnDragLeave.HasDelegate)
+                TreeComponent.OnDragLeave.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
+        }
+
+        /// <summary>
+        /// 进入可释放目标
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDragEnter(DragEventArgs e)
+        {
+            SelfNode.DragTarget = true;
+            SelfNode.DragTargetBottom = true;
+            TreeComponent.DragTargetItem = SelfNode;
+
+
+            if (TreeComponent.OnDragEnter.HasDelegate)
+                TreeComponent.OnDragEnter.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
+        }
+
+        /// <summary>
+        /// 落入目标
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDrop(DragEventArgs e)
+        {
+            var parentNode = SelfNode.ParentNode;
+
+
+
+
+            if (TreeComponent.OnDragEnter.HasDelegate)
+                TreeComponent.OnDragEnter.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem, parentNode));
+        }
+
+
+        /// <summary>
+        /// 拖拽结束
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDragEnd(DragEventArgs e)
+        {
+            TreeComponent.DragTargetItem = null;
+            TreeComponent.DragItem = null;
+            if (TreeComponent.OnDragEnd.HasDelegate)
+                TreeComponent.OnDragEnd.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem));
         }
     }
 }
