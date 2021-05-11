@@ -10,7 +10,7 @@
       @bind-SelectedData="@selectedData"
       @bind-SelectedNode="@selectedNode"
       @bind-SelectedKeys="@selectedKeys"
-      TItem="GameElement">
+      TItem="GameElement" OnDragEnd="_=>{ }">
 </Tree>
 
 <Divider>Single</Divider>
@@ -40,10 +40,10 @@
 <div class="droptarget"  @ondrop="drop" >
     <p @ondragstart="dragStart" @ondragend="dragEnd" draggable="true" id="dragtarget">拖动我!</p>
 </div>
-<div class="droptarget" ondragover="event.preventDefault();" @ondragleave="allowDrop"  @ondragenter="drag" @ondrop:preventDefault @ondrop="drop" id="droptarget"></div>
+<div class="droptarget" ondragover="event.preventDefault();" @ondragleave="allowDrop"  @ondragenter="drag" @ondrop:preventDefault @ondrop="drop" id="droptarget">@_test</div>
  
 @code{
-
+    string _test = "";
     private bool multiple;
 
     Tree<GameElement> tree;
@@ -74,15 +74,16 @@
     {
         if (selectedNode != null)
         {
-            if (selectedNode.ParentNode != null)
-            {
-                selectedNode.ParentNode.DataItem.Items.Remove(selectedNode.DataItem);
-            }
-            else
-            {
-                tree.DataSource.Remove(selectedNode.DataItem);
-            }
-            StateHasChanged();
+            selectedNode.Remove();
+            //if (selectedNode.ParentNode != null)
+            //{
+            //    selectedNode.ParentNode.DataItem.Items.Remove(selectedNode.DataItem);
+            //}
+            //else
+            //{
+            //    tree.DataSource.Remove(selectedNode.DataItem);
+            //}
+            //StateHasChanged();
 
         }
     }
@@ -128,12 +129,15 @@
     void drop(DragEventArgs e)
     {
         System.Diagnostics.Debug.WriteLine($"drop {JsonSerializer.Serialize(e)}");
+
+        _test = $"drop {JsonSerializer.Serialize(e)}";
+
     }
 
     void dragStart(DragEventArgs e)
     {
         System.Diagnostics.Debug.WriteLine($"dragStart {JsonSerializer.Serialize(e)}");
-        e.DataTransfer.DropEffect = "move";
+        //e.DataTransfer.DropEffect = "move";
     }
 
     void dragEnd(DragEventArgs e)

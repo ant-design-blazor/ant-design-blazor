@@ -68,7 +68,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool ShowLeafIcon { get; set; } = false;
-         
+
         private void SetClassMapper()
         {
             ClassMapper
@@ -463,7 +463,7 @@ namespace AntDesign
         [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnSearchValueChanged { get; set; }
 
-        
+
 
         #endregion Event
 
@@ -503,21 +503,23 @@ namespace AntDesign
         /// </summary>
         internal TreeNode<TItem> DragItem { get; set; }
 
-        /// <summary>
-        /// 拖拽可释放目标
-        /// </summary>
-        internal TreeNode<TItem> DragTargetItem { get; set; }
+        ///// <summary>
+        ///// 拖拽可释放目标
+        ///// </summary>
+        //internal TreeNode<TItem> DragTargetItem { get; set; }
 
         /// <summary>
         /// 开始拖拽时调用
         /// Node 当前拖拽节点
         /// </summary>
+        [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnDragStart { get; set; }
 
         /// <summary>
         /// 拖拽进入可释放目标时调用
         /// Node 当前进入的节点
         /// </summary>
+        [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnDragEnter { get; set; }
 
         ///// <summary>
@@ -529,17 +531,22 @@ namespace AntDesign
         /// 拖拽离开可释放目标时调用
         /// Node 离开的节点
         /// </summary>
+        [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnDragLeave { get; set; }
 
         /// <summary>
         /// 拖拽落入成功时触发
         /// </summary>
+        [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnDrop { get; set; }
 
         /// <summary>
         /// 触发结束时调用 Node 为空
         /// </summary>
+        [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnDragEnd { get; set; }
+
+
 
         #endregion
 

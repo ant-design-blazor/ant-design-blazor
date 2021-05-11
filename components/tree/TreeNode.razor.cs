@@ -202,7 +202,7 @@ namespace AntDesign
         /// <summary>
         /// 是否是释放目标
         /// </summary>
-        public bool DragTarget
+        internal bool DragTarget
         {
             get { return _dragTarget; }
             set
@@ -216,10 +216,10 @@ namespace AntDesign
         private bool _dragTargetBottom;
 
         /// <summary>
-        /// 是否是在释放目标底部
+        /// 是否是在释放目标底部 True 底部添加，False 子项
         /// </summary>
-        public bool DragTargetBottom {
-
+        internal bool DragTargetBottom
+        {
             get { return _dragTargetBottom; }
             set
             {
@@ -617,6 +617,10 @@ namespace AntDesign
             parentChildDataItems.Remove(this.DataItem);
         }
 
+        /// <summary>
+        /// 节点移入子节点
+        /// </summary>
+        /// <param name="treeNode">目标元素</param>
         public void MoveInto(TreeNode<TItem> treeNode)
         {
             if (treeNode == this || this.DataItem.Equals(treeNode.DataItem)) return;
@@ -673,7 +677,51 @@ namespace AntDesign
             parentChildDataItems.Insert(index + 1, this.DataItem);
         }
 
+        /// <summary>
+        /// 拖拽移入子节点
+        /// </summary>
+        /// <param name="treeNode">目标</param>
+        public void DragMoveInto(TreeNode<TItem> treeNode)
+        {
+            if (treeNode == this) return;
+
+            if (TreeComponent.DataSource != null && TreeComponent.DataSource.Any())
+            {
+                Remove();
+
+                treeNode.AddChildNode(this.DataItem);
+                treeNode.IsLeaf = false;
+                treeNode.Expand(true);
+            }
+            else
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// 拖拽移入目标底部
+        /// </summary>
+        /// <param name="treeNode">目标</param>
+        internal void DragMoveDown(TreeNode<TItem> treeNode)
+        {
+            if (treeNode == this) return;
+
+            if (TreeComponent.DataSource != null && TreeComponent.DataSource.Any())
+            {
+                Remove();
+                var parentChildDataItems = treeNode.GetParentChildDataItems();
+                int index = parentChildDataItems.IndexOf(treeNode.DataItem);
+                parentChildDataItems.Insert(index + 1, this.DataItem);
+            }
+            else
+            {
+
+            }
+        }
+
         #endregion 节点数据操作
+
 
         protected override void OnInitialized()
         {

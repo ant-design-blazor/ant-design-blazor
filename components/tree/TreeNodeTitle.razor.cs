@@ -10,6 +10,20 @@ namespace AntDesign
 
     public partial class TreeNodeTitle<TItem> : ComponentBase
     {
+
+        #region fields
+
+        private const double OffSETX = 25;
+
+        /// <summary>
+        /// 可释放目标 ClientX
+        /// </summary>
+        private double _drag_target_clientx = 0;
+
+        #endregion
+
+
+
         /// <summary>
         /// 树控件本身
         /// </summary>
@@ -56,7 +70,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public async Task OnClick(MouseEventArgs args)
+        private async Task OnClick(MouseEventArgs args)
         {
             SelfNode.SetSelected(!SelfNode.Selected);
             if (TreeComponent.OnClick.HasDelegate && args.Button == 0)
@@ -70,7 +84,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public async Task OnDblClick(MouseEventArgs args)
+        private async Task OnDblClick(MouseEventArgs args)
         {
             if (TreeComponent.OnDblClick.HasDelegate && args.Button == 0)
                 await TreeComponent.OnDblClick.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode, args));
@@ -83,6 +97,7 @@ namespace AntDesign
         private void OnDragStart(DragEventArgs e)
         {
             TreeComponent.DragItem = SelfNode;
+            SelfNode.Expand(false);
             if (TreeComponent.OnDragStart.HasDelegate)
                 TreeComponent.OnDragStart.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
         }
@@ -93,7 +108,7 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDragLeave(DragEventArgs e)
         {
-            TreeComponent.DragTargetItem = null;
+            SelfNode.DragTarget = false;
             if (TreeComponent.OnDragLeave.HasDelegate)
                 TreeComponent.OnDragLeave.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
         }
@@ -104,14 +119,30 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDragEnter(DragEventArgs e)
         {
+            if (TreeComponent.DragItem == SelfNode) return;
             SelfNode.DragTarget = true;
             SelfNode.DragTargetBottom = true;
-            TreeComponent.DragTargetItem = SelfNode;
+            _drag_target_clientx = e.ClientX;
 
+            System.Diagnostics.Debug.WriteLine($"OnDragEnter {SelfNode.Title}  {System.Text.Json.JsonSerializer.Serialize(e)}");
 
             if (TreeComponent.OnDragEnter.HasDelegate)
                 TreeComponent.OnDragEnter.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
         }
+
+        /// <summary>
+        /// 可释放目标上往右移动超过 OffSETX距离时视为子项
+        /// </summary>
+        /// <param name="e"></param>
+        private void OnDragOver(DragEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine($"OnDragOver {SelfNode.Title}  {System.Text.Json.JsonSerializer.Serialize(e)}");
+            if (e.ClientX - _drag_target_clientx > OffSETX)
+                SelfNode.DragTargetBottom = false;
+            else
+                SelfNode.DragTargetBottom = true;
+        }
+
 
         /// <summary>
         /// 落入目标
@@ -119,15 +150,15 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDrop(DragEventArgs e)
         {
-            var parentNode = SelfNode.ParentNode;
-
-
-
+            SelfNode.DragTarget = false;
+            if (SelfNode.DragTargetBottom)
+                TreeComponent.DragItem.DragMoveDown(SelfNode);
+            else
+                TreeComponent.DragItem.DragMoveInto(SelfNode);
 
             if (TreeComponent.OnDragEnter.HasDelegate)
-                TreeComponent.OnDragEnter.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem, parentNode));
+                TreeComponent.OnDragEnter.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem) { TargetNode = SelfNode });
         }
-
 
         /// <summary>
         /// 拖拽结束
@@ -135,10 +166,8 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDragEnd(DragEventArgs e)
         {
-            TreeComponent.DragTargetItem = null;
-            TreeComponent.DragItem = null;
             if (TreeComponent.OnDragEnd.HasDelegate)
-                TreeComponent.OnDragEnd.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem));
+                TreeComponent.OnDragEnd.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent,null));
         }
     }
 }
