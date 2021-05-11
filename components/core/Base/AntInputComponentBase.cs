@@ -220,6 +220,7 @@ namespace AntDesign
             TValue parsedValue = default;
             bool success;
 
+            // BindConverter.TryConvertTo<Guid> doesn't work for a incomplete Guid fragment. Remove this when the BCL bug is fixed.
             if (THelper.GetUnderlyingType<TValue>() == typeof(Guid))
             {
                 success = Guid.TryParse(value, out Guid parsedGuidValue);
