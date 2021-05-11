@@ -198,6 +198,11 @@ namespace AntDesign
         [Parameter]
         public bool Loading { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        internal bool IsLast { get; set; }
+
         private bool _dragTarget;
         /// <summary>
         /// 是否是释放目标
@@ -213,20 +218,56 @@ namespace AntDesign
             }
         }
 
-        private bool _dragTargetBottom;
+        /// <summary>
+        /// 
+        /// </summary>
+        internal bool DragTargetBottom { get; private set; }
 
         /// <summary>
         /// 是否是在释放目标底部 True 底部添加，False 子项
         /// </summary>
-        internal bool DragTargetBottom
+        /// <param name="value"></param>
+        public void SetTargetBottom(bool value = false)
         {
-            get { return _dragTargetBottom; }
-            set
-            {
-                _dragTargetBottom = value;
-                SetTreeNodeClassMapper();
-                StateHasChanged();
-            }
+            if (DragTargetBottom == value) return;
+            this.DragTargetBottom = value;
+            SetTreeNodeClassMapper();
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private bool TargetContainer { get; set; }
+
+        /// <summary>
+        /// 是否是拖拽目标节点容器
+        /// </summary>
+        internal void SetParentTargetContainer(bool value = false)
+        {
+            if (this.ParentNode == null) return;
+            if (this.ParentNode.TargetContainer == value) return;
+            this.ParentNode.TargetContainer = value;
+            this.ParentNode.SetTreeNodeClassMapper();
+            this.ParentNode.StateHasChanged();
+        }
+
+
+        /// <summary>
+        /// 获取父节点的子节点
+        /// </summary>
+        /// <returns></returns>
+        private List<TreeNode<TItem>> GetParentChildNodes()
+        {
+            return this.ParentNode?.ChildNodes ?? TreeComponent.ChildNodes;
+        }
+
+        /// <summary>
+        /// 移除当前节点
+        /// </summary>
+        public void RemoveNode()
+        {
+            GetParentChildNodes().Remove(this);
         }
 
         private void SetTreeNodeClassMapper()
@@ -239,10 +280,11 @@ namespace AntDesign
                 .If("ant-tree-treenode-checkbox-indeterminate", () => Indeterminate)
                 .If("ant-tree-treenode-selected", () => Selected)
                 .If("ant-tree-treenode-loading", () => Loading)
+                .If("ant-tree-treenode-leaf-last", () => IsLast)
                 .If("drop-target", () => DragTarget)
                 .If("drag-over-gap-bottom", () => DragTarget && DragTargetBottom)
-                .If("drag-over", () => DragTarget && !DragTargetBottom);
-
+                .If("drag-over", () => DragTarget && !DragTargetBottom)
+                .If("drop-container", () => TargetContainer);
         }
 
         #endregion TreeNode
@@ -677,26 +719,31 @@ namespace AntDesign
             parentChildDataItems.Insert(index + 1, this.DataItem);
         }
 
+        private void AddNodeAndSelect(TItem dataItem)
+        {
+            var tn = ChildNodes.FirstOrDefault(treeNode => treeNode.DataItem.Equals(dataItem));
+            if (tn != null)
+            {
+                this.Expand(true);
+                tn.SetSelected(true);
+            }
+        }
+
         /// <summary>
         /// 拖拽移入子节点
         /// </summary>
         /// <param name="treeNode">目标</param>
         public void DragMoveInto(TreeNode<TItem> treeNode)
         {
-            if (treeNode == this) return;
+            if (TreeComponent.DataSource == null || !TreeComponent.DataSource.Any())
+                return;
+            if (treeNode == this || this.DataItem.Equals(treeNode.DataItem)) return;
 
-            if (TreeComponent.DataSource != null && TreeComponent.DataSource.Any())
-            {
-                Remove();
+            Remove();
 
-                treeNode.AddChildNode(this.DataItem);
-                treeNode.IsLeaf = false;
-                treeNode.Expand(true);
-            }
-            else
-            {
-
-            }
+            treeNode.AddChildNode(this.DataItem);
+            treeNode.IsLeaf = false;
+            treeNode.Expand(true);
         }
 
         /// <summary>
@@ -705,19 +752,11 @@ namespace AntDesign
         /// <param name="treeNode">目标</param>
         internal void DragMoveDown(TreeNode<TItem> treeNode)
         {
-            if (treeNode == this) return;
-
-            if (TreeComponent.DataSource != null && TreeComponent.DataSource.Any())
-            {
-                Remove();
-                var parentChildDataItems = treeNode.GetParentChildDataItems();
-                int index = parentChildDataItems.IndexOf(treeNode.DataItem);
-                parentChildDataItems.Insert(index + 1, this.DataItem);
-            }
-            else
-            {
-
-            }
+            if (TreeComponent.DataSource == null || !TreeComponent.DataSource.Any())
+                return;
+            if (treeNode == this || this.DataItem.Equals(treeNode.DataItem)) return;
+            Remove();
+            treeNode.AddNextNode(this.DataItem);
         }
 
         #endregion 节点数据操作
@@ -757,16 +796,6 @@ namespace AntDesign
         {
             SetTreeNodeClassMapper();
             base.OnParametersSet();
-        }
-
-        private void AddNodeAndSelect(TItem dataItem)
-        {
-            var tn = ChildNodes.FirstOrDefault(treeNode => treeNode.DataItem.Equals(dataItem));
-            if (tn != null)
-            {
-                this.Expand(true);
-                tn.SetSelected(true);
-            }
         }
 
         /// <summary>

@@ -502,12 +502,7 @@ namespace AntDesign
         /// 当前拖拽项
         /// </summary>
         internal TreeNode<TItem> DragItem { get; set; }
-
-        ///// <summary>
-        ///// 拖拽可释放目标
-        ///// </summary>
-        //internal TreeNode<TItem> DragTargetItem { get; set; }
-
+         
         /// <summary>
         /// 开始拖拽时调用
         /// Node 当前拖拽节点

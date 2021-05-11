@@ -21,9 +21,7 @@ namespace AntDesign
         private double _drag_target_clientx = 0;
 
         #endregion
-
-
-
+          
         /// <summary>
         /// 树控件本身
         /// </summary>
@@ -109,6 +107,7 @@ namespace AntDesign
         private void OnDragLeave(DragEventArgs e)
         {
             SelfNode.DragTarget = false;
+            SelfNode.SetParentTargetContainer();
             if (TreeComponent.OnDragLeave.HasDelegate)
                 TreeComponent.OnDragLeave.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, SelfNode));
         }
@@ -120,8 +119,7 @@ namespace AntDesign
         private void OnDragEnter(DragEventArgs e)
         {
             if (TreeComponent.DragItem == SelfNode) return;
-            SelfNode.DragTarget = true;
-            SelfNode.DragTargetBottom = true;
+            SelfNode.DragTarget = true; 
             _drag_target_clientx = e.ClientX;
 
             System.Diagnostics.Debug.WriteLine($"OnDragEnter {SelfNode.Title}  {System.Text.Json.JsonSerializer.Serialize(e)}");
@@ -136,21 +134,29 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDragOver(DragEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine($"OnDragOver {SelfNode.Title}  {System.Text.Json.JsonSerializer.Serialize(e)}");
+            if (TreeComponent.DragItem == SelfNode) return;
             if (e.ClientX - _drag_target_clientx > OffSETX)
-                SelfNode.DragTargetBottom = false;
+            {
+                SelfNode.SetTargetBottom();
+                SelfNode.SetParentTargetContainer();
+                SelfNode.Expand(true);
+            }
             else
-                SelfNode.DragTargetBottom = true;
+            {
+                SelfNode.SetTargetBottom(true);
+                SelfNode.SetParentTargetContainer(true);
+            }
         }
 
 
         /// <summary>
-        /// 落入目标
+        /// 投入目标
         /// </summary>
         /// <param name="e"></param>
         private void OnDrop(DragEventArgs e)
         {
             SelfNode.DragTarget = false;
+            SelfNode.SetParentTargetContainer();
             if (SelfNode.DragTargetBottom)
                 TreeComponent.DragItem.DragMoveDown(SelfNode);
             else
@@ -166,7 +172,6 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDragEnd(DragEventArgs e)
         {
-            StateHasChanged();
             if (TreeComponent.OnDragEnd.HasDelegate)
                 TreeComponent.OnDragEnd.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem) { TargetNode = SelfNode });
         }
