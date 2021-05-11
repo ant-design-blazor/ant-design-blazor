@@ -93,6 +93,13 @@ namespace AntDesign
         [Parameter]
         public bool Required { get; set; } = false;
 
+        /// <summary>
+        /// Style that will only be applied to <label></label> element.
+        /// Will not be applied if LabelTemplate is set.
+        /// </summary>
+        [Parameter]
+        public string LabelStyle { get; set; }
+
         private EditContext EditContext => Form?.EditContext;
 
         private bool _isValid = true;
