@@ -96,13 +96,19 @@ namespace AntDesign
         }
 
         [Parameter]
-        public CultureInfo CultureInfo
+        public override CultureInfo CultureInfo
         {
-            get { return _cultureInfo; }
+            get
+            {
+                return base.CultureInfo;
+            }
             set
             {
-                _cultureInfo = value;
-                _isCultureSetOutside = true;
+                if (!_isLocaleSetOutside && base.CultureInfo != value && base.CultureInfo.Name != value.Name)
+                {
+                    _locale = LocaleProvider.GetLocale(value.Name).DatePicker;
+                }
+                base.CultureInfo = value;
             }
         }
 
@@ -240,9 +246,7 @@ namespace AntDesign
         protected bool _isClose = true;
         protected bool _needRefresh;
         protected bool _duringManualInput;
-        private bool _isCultureSetOutside;
         private bool _isLocaleSetOutside;
-        private CultureInfo _cultureInfo = LocaleProvider.CurrentLocale.CurrentCulture;
         private DatePickerLocale _locale = LocaleProvider.CurrentLocale.DatePicker;
         protected bool _openingOverlay;
 
@@ -405,9 +409,6 @@ namespace AntDesign
 
         protected void InitPicker(string picker)
         {
-            if (_isCultureSetOutside && !_isLocaleSetOutside)
-                Locale = LocaleProvider.GetLocale(_cultureInfo.Name).DatePicker;
-
             if (string.IsNullOrEmpty(_pickerStatus[0]._initPicker))
             {
                 _pickerStatus[0]._initPicker = picker;
