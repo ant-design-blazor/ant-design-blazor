@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
@@ -93,6 +94,9 @@ namespace AntDesign
         [Parameter]
         public bool Required { get; set; } = false;
 
+        [Parameter]
+        public ValidationAttribute[] Rules { get; set; }
+
         private EditContext EditContext => Form?.EditContext;
 
         private bool _isValid = true;
@@ -100,6 +104,7 @@ namespace AntDesign
         private string _labelCls = "";
 
         private IControlValueAccessor _control;
+        private FieldIdentifier _fieldIdentifier;
 
         private RenderFragment _formValidationMessages;
 
@@ -191,12 +196,44 @@ namespace AntDesign
             return Required ? $"{_prefixCls}-required" : _labelCls;
         }
 
+        ValidationResult[] IFormItem.ValidateField()
+        {
+            if (Rules == null)
+            {
+                return Array.Empty<ValidationResult>();
+            }
+
+            var results = new List<ValidationResult>();
+
+            foreach (var rule in Rules)
+            {
+                var propertyInfo = _fieldIdentifier.Model.GetType().GetProperty(_fieldIdentifier.FieldName);
+                if (propertyInfo != null)
+                {
+                    var propertyValue = propertyInfo.GetValue(_fieldIdentifier.Model);
+
+                    var result = rule.IsValid(propertyValue);
+
+                    string displayName = string.IsNullOrEmpty(Label) ? _fieldIdentifier.FieldName : Label;
+
+                    if (result == false)
+                    {
+                        results.Add(new ValidationResult(rule.FormatErrorMessage(displayName), new string[] { _fieldIdentifier.FieldName }));
+                    }
+                }
+            }
+
+            return results.ToArray();
+        }
+
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
             if (control.FieldIdentifier.Model == null)
             {
                 throw new InvalidOperationException($"Please use @bind-Value (or @bind-Values for selected components) in the control with generic type `{typeof(TValue)}`.");
             }
+
+            _fieldIdentifier = control.FieldIdentifier;
 
             this._control = control;
 
@@ -221,10 +258,26 @@ namespace AntDesign
             else
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
 
-            if (_propertyReflector.RequiredAttribute != null)
+            bool isRequired = false;
+
+            if (Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex)
+                && _propertyReflector.RequiredAttribute != null)
+            {
+                isRequired = true;
+            }
+
+            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex)
+                && Rules.Any(rule => rule is RequiredAttribute))
+            {
+                isRequired = true;
+            }
+
+            if (isRequired)
             {
                 _labelCls = $"{_prefixCls}-required";
             }
         }
+
+        FieldIdentifier IFormItem.GetFieldIdentifier() => _fieldIdentifier;
     }
 }

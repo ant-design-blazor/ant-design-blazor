@@ -11,6 +11,7 @@ namespace AntDesign.Internal
         internal ColLayoutParam LabelCol { get; }
 
         internal AntLabelAlignType? LabelAlign { get; }
+        internal FormValidateMode ValidateMode { get; }
 
         internal EditContext EditContext { get; }
 
