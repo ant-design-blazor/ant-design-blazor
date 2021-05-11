@@ -274,11 +274,11 @@ namespace AntDesign
             {
                 // Not the first run
 
-                // We don't support changing EditContext because it's messy to be clearing up state and event
-                // handlers for the previous one, and there's no strong use case. If a strong use case
-                // emerges, we can consider changing this.
-                throw new InvalidOperationException($"{GetType()} does not support changing the " +
-                    $"{nameof(EditContext)} dynamically.");
+                //Be careful when changing this. New EditContext carried from Form should
+                //already have all events transferred from original EditContext. The
+                //transfer is done in Form.BuildEditContext() method. State is lost
+                //though.
+                EditContext = Form?.EditContext;
             }
 
             // For derived components, retain the usual lifecycle with OnInit/OnParametersSet/etc.

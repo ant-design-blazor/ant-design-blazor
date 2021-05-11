@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -70,8 +71,10 @@ namespace AntDesign
             {
                 if (!(_model?.Equals(value) ?? false))
                 {
+                    var wasNull = _model is null;
                     _model = value;
-                    _editContext = new EditContext(Model);
+                    if (!wasNull)
+                        BuildEditContext();
                 }
             }
         }
@@ -84,6 +87,15 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<EditContext> OnFinishFailed { get; set; }
+
+        [Parameter]
+        public EventCallback<FieldChangedEventArgs> OnFieldChanged { get; set; }
+
+        [Parameter]
+        public EventCallback<ValidationRequestedEventArgs> OnValidationRequested { get; set; }
+
+        [Parameter]
+        public EventCallback<ValidationStateChangedEventArgs> OnValidationStateChanged { get; set; }
 
         [Parameter]
         public RenderFragment Validator { get; set; } = _defaultValidator;
@@ -136,6 +148,30 @@ namespace AntDesign
             {
                 FormProvider.AddForm(this);
             }
+
+            if (OnFieldChanged.HasDelegate)
+                _editContext.OnFieldChanged += OnFieldChangedHandler;
+            if (OnValidationRequested.HasDelegate)
+                _editContext.OnValidationRequested += OnValidationRequestedHandler;
+            if (OnValidationStateChanged.HasDelegate)
+                _editContext.OnValidationStateChanged += OnValidationStateChangedHandler;
+
+        }
+
+        private void OnFieldChangedHandler(object sender, FieldChangedEventArgs e) => InvokeAsync(() => OnFieldChanged.InvokeAsync(e));
+        private void OnValidationRequestedHandler(object sender, ValidationRequestedEventArgs e) => InvokeAsync(() => OnValidationRequested.InvokeAsync(e));
+        private void OnValidationStateChangedHandler(object sender, ValidationStateChangedEventArgs e) => InvokeAsync(() => OnValidationStateChanged.InvokeAsync(e));
+
+
+        protected override void Dispose(bool disposing)
+        {
+            if (OnFieldChanged.HasDelegate)
+                _editContext.OnFieldChanged -= OnFieldChangedHandler;
+            if (OnValidationRequested.HasDelegate)
+                _editContext.OnValidationRequested -= OnValidationRequestedHandler;
+            if (OnValidationStateChanged.HasDelegate)
+                _editContext.OnValidationStateChanged -= OnValidationStateChangedHandler;
+            base.Dispose(disposing);
         }
 
         protected override void OnParametersSet()
@@ -169,7 +205,7 @@ namespace AntDesign
         public void Reset()
         {
             _controls.ForEach(item => item.Reset());
-            _editContext = new EditContext(Model);
+            BuildEditContext();
         }
 
         void IForm.AddFormItem(IFormItem formItem)
@@ -201,16 +237,59 @@ namespace AntDesign
             }
         }
 
-        public bool Validate()
-        {
-            return _editContext.Validate();
-        }
+        public bool Validate() => _editContext.Validate();
 
-        public void ValidationReset()
-        {
-            _editContext = new EditContext(Model);
-        }
+        public void ValidationReset() => BuildEditContext();
 
         public EditContext EditContext => _editContext;
+
+        public void BuildEditContext()
+        {
+            if (_editContext == null)
+                return;
+
+            var newContext = new EditContext(Model);
+            foreach (var kv in GetEventInfos())
+            {
+                FieldInfo fieldInfo = kv.Value.fi;
+                EventInfo eventInfo = kv.Value.ei;
+                Delegate mdel = fieldInfo.GetValue(_editContext) as Delegate;
+                if (mdel != null)
+                {
+                    foreach (Delegate del in mdel.GetInvocationList())
+                    {
+                        eventInfo.RemoveEventHandler(_editContext, del);
+                        eventInfo.AddEventHandler(newContext, del);
+                    }
+                }
+            }
+            _editContext = newContext;
+        }
+
+        static BindingFlags AllBindings
+        {
+            get { return BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance; }
+        }
+
+        static Dictionary<string, (FieldInfo fi, EventInfo ei)> _eventInfos;
+
+        static Dictionary<string, (FieldInfo fi, EventInfo ei)> GetEventInfos()
+        {
+            if (_eventInfos is null)
+            {
+                _eventInfos = new();
+                Type contextType = typeof(EditContext);
+                foreach (EventInfo eventInfo in contextType.GetEvents(AllBindings))
+                {
+                    Type declaringType = eventInfo.DeclaringType;
+                    FieldInfo fieldInfo = declaringType.GetField(eventInfo.Name, AllBindings);
+                    if (fieldInfo is not null)
+                    {
+                        _eventInfos.Add(eventInfo.Name, (fieldInfo, eventInfo));
+                    }
+                }
+            }
+            return _eventInfos;
+        }
     }
 }
