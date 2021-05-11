@@ -166,8 +166,9 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDragEnd(DragEventArgs e)
         {
+            StateHasChanged();
             if (TreeComponent.OnDragEnd.HasDelegate)
-                TreeComponent.OnDragEnd.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent,null));
+                TreeComponent.OnDragEnd.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem) { TargetNode = SelfNode });
         }
     }
 }
