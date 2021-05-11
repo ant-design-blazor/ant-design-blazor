@@ -94,7 +94,7 @@ namespace AntDesign
         public string Size { get; set; } = AntSizeLDSType.Default;
 
         [Parameter]
-        public CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
+        public virtual CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
 
         /// <summary>
         /// Gets the associated <see cref="EditContext"/>.
