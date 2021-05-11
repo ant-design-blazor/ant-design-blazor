@@ -42,7 +42,18 @@
     <Text>DateTime?</Text>
     <Input Placeholder="Null" @bind-Value="@_dateNull" />
     <p>value:@_dateNull</p>
-    
+    <br />
+
+    <Text>Guid</Text>
+    <Input @bind-Value="@_guid" />
+    <p>value:@_guid</p>
+    <br />
+
+    <Text>Guid?</Text>
+    <Input Placeholder="Null" @bind-Value="@_guidNull" />
+    <p>value:@_guidNull</p>
+    <br />
+
     <Text>Type=Number</Text>
     <Input Max="4" Type="number" Placeholder="0" @bind-Value="@_int" />
     <p>value:@_int</p>
@@ -59,4 +70,6 @@
     double? _doubleNull;
     DateTime _date;
     DateTime? _dateNull;
+    Guid _guid;
+    Guid? _guidNull;
 }
