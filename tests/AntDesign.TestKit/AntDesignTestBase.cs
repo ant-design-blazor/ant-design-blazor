@@ -3,25 +3,20 @@ using System.Globalization;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace AntDesign.Tests
 {
-    public class AntDesignTestBase : IDisposable
+    public class AntDesignTestBase : TestContext, IDisposable
     {
-        public TestContext Context { get; }
-        public TestNavigationManager NavigationManager { get; }
+        public TestContext Context => this;
+        public NavigationManager NavigationManager => Services.GetRequiredService<NavigationManager>();
 
         public AntDesignTestBase()
-        {
-            Context = new TestContext();
-            NavigationManager = new TestNavigationManager();
-
-            Context.Services.AddScoped<NavigationManager>(sp => NavigationManager);
-            Context.Services.AddAntDesign();
+        {            
+            Services.AddAntDesign();
 
             //Needed for Tests using Overlay
-            Context.Services.AddScoped<AntDesign.JsInterop.DomEventService>(sp => new TestDomEventService(Context.JSInterop.JSRuntime));
+            Services.AddScoped<AntDesign.JsInterop.DomEventService>(sp => new TestDomEventService(Context.JSInterop.JSRuntime));
 
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
         }
