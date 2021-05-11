@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
+using System.Text;
 
 namespace AntDesign
 {
@@ -16,22 +18,32 @@ namespace AntDesign
         [Parameter]
         public string Mode { get; set; } = "default";
 
+        //Here we keep the orginal string so we can support custom colors and inverse
         [Parameter]
-        public string Color
+        public OneOf<string, TagColor> Color
         {
             get => _color;
             set
             {
-                if (_color != value)
-                {
-                    _color = value;
+                if (value.IsT0) {
+                    _color = value.AsT0;
                     _presetColor = IsPresetColor(_color);
+                    _customColor = IsCustomColor(_color);    
+                } 
+                else 
+                {
+                    _color = value.AsT1.ToString();
+                    _presetColor = true;
+                    _customColor = false;
                 }
             }
         }
 
         [Parameter]
         public bool Closable { get; set; }
+        
+        [Parameter]
+        public bool Checkable { get; set; }
 
         [Parameter]
         public bool Visible { get; set; } = true;
@@ -61,6 +73,7 @@ namespace AntDesign
         public EventCallback OnClick { get; set; }
 
         private bool _presetColor;
+        private bool _customColor;
         private bool _closed;
         private string _color;
 
@@ -78,21 +91,46 @@ namespace AntDesign
             }
 
             bool result = Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime)(-inverse)?$");
-            if (!result) result = Regex.IsMatch(color, "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$");
             return result;
+        }
+
+        private static bool IsCustomColor(string color)
+        {
+            if (string.IsNullOrEmpty(color))
+            {
+                return false;
+            }
+
+            return color.StartsWith("#");
         }
 
         private void UpdateClassMap()
         {
             string prefix = "ant-tag";
             this.ClassMapper.Add(prefix)
-                .If($"{prefix}-has-color", () => !string.IsNullOrEmpty(Color) && !_presetColor)
+                .If($"{prefix}-has-color", () => !string.IsNullOrEmpty(Color.AsT0) && !_presetColor)
                 .If($"{prefix}-hidden", () => Visible == false)
-                .GetIf(() => $"{prefix}-{Color}", () => _presetColor)
-                .If($"{prefix}-checkable", () => Mode == "checkable")
+                .GetIf(() => $"{prefix}-{_color}", () => _presetColor)
+                .If($"{prefix}-checkable", () => Checkable)
                 .If($"{prefix}-checkable-checked", () => Checked)
                 .If($"{prefix}-rtl", () => RTL)
                 ;
+        }
+
+        private string GetStyle() {
+            StringBuilder style = new StringBuilder();
+
+            style.Append(style);
+
+            if (!string.IsNullOrEmpty(Style) && !Style.EndsWith(";")) {
+                style.Append(";");
+            }
+
+            if (_customColor) {
+                style.Append($"background-color: {_color};");
+            }
+
+            return style.ToString();
         }
 
         private async Task UpdateCheckedStatus()
