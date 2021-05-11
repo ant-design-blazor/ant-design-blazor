@@ -541,7 +541,8 @@ namespace AntDesign
         public EventCallback<TreeEventArgs<TItem>> OnDrop { get; set; }
 
         /// <summary>
-        /// 触发结束时调用 Node 为空
+        /// 触发结束时调用
+        /// OnDragEnd 回调必须设置 否则影响推拽功能
         /// </summary>
         [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnDragEnd { get; set; }
