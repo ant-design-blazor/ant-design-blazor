@@ -217,8 +217,19 @@ namespace AntDesign
                 return true;
             }
 
-            var success = BindConverter.TryConvertTo<TValue>(
-               value, CultureInfo, out var parsedValue);
+            TValue parsedValue = default;
+            bool success;
+
+            // BindConverter.TryConvertTo<Guid> doesn't work for a incomplete Guid fragment. Remove this when the BCL bug is fixed.
+            if (THelper.GetUnderlyingType<TValue>() == typeof(Guid))
+            {
+                success = Guid.TryParse(value, out Guid parsedGuidValue);
+                if (success) parsedValue = THelper.ChangeType<TValue>(parsedGuidValue);
+            }
+            else
+            {
+                success = BindConverter.TryConvertTo(value, CultureInfo, out parsedValue);
+            }
 
             if (success)
             {
