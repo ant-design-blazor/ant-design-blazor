@@ -1,5 +1,5 @@
 ---
-order: 9
+order: 3
 title:
   zh-CN: 拖拽
   en-US: Drag
