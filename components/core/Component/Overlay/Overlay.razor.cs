@@ -328,7 +328,7 @@ namespace AntDesign.Internal
         {
             int top = 0;
 
-            int triggerTop = trigger.AbsoluteTop - containerElement.AbsoluteTop;
+            int triggerTop = (int)(containerElement.ScrollTop + trigger.AbsoluteTop - containerElement.AbsoluteTop);
             int triggerHeight = trigger.ClientHeight != 0 ? trigger.ClientHeight : trigger.OffsetHeight;
 
             // contextMenu
