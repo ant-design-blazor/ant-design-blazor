@@ -69,6 +69,12 @@ namespace AntDesign
         [Parameter]
         public bool ShowLeafIcon { get; set; } = false;
 
+        /// <summary>
+        /// 设置虚拟滚动容器高度，设置后内部节点不再支持横向滚动
+        /// </summary>
+        [Parameter]
+        public int Height { get; set; }
+
         private void SetClassMapper()
         {
             ClassMapper
