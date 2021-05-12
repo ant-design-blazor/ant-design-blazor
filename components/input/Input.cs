@@ -349,6 +349,7 @@ namespace AntDesign
             {
                 builder.OpenComponent<Icon>(31);
                 builder.AddAttribute(32, "Type", "close-circle");
+                builder.AddAttribute(32, "Theme", "fill");
                 builder.AddAttribute(33, "Class", GetClearIconCls());
                 if (string.IsNullOrEmpty(Value?.ToString()))
                 {

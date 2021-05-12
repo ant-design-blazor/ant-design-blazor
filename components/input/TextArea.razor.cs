@@ -176,7 +176,7 @@ namespace AntDesign
         private bool _isReloading;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
-        
+
         [JSInvokable]
         public void ChangeSizeAsyncJs(float width, float height)
         {
@@ -214,11 +214,6 @@ namespace AntDesign
                 height = rows * _rowHeight + _offsetHeight;
                 Style = $"height: {height}px;overflow-y: hidden;";
             }
-        }
-
-        protected override string GetClearIconCls()
-        {
-            return $"{PrefixCls}-textarea-clear-icon";
         }
 
         private class TextAreaInfo
