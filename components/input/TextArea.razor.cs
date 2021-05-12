@@ -32,31 +32,18 @@ namespace AntDesign
         [Parameter]
         public bool AutoSize { get; set; }
 
+        /// <summary>
+        /// When `false`, value will be set to `null` when content is empty 
+        /// or whitespace. When `true`, value will be set to empty string.        
+        /// </summary>
         [Parameter]
         public bool DefaultToEmptyString { get; set; }
 
-        [Parameter]
-        public uint MinRows
-        {
-            get
-            {
-                return _minRows;
-            }
-            set
-            {
-                _hasMinOrMaxSet = true;
-                if (value >= DEFAULT_MIN_ROWS && value <= MaxRows)
-                {
-                    _minRows = value;
-                    AutoSize = true;
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException(nameof(MinRows), $"Please enter a value between {DEFAULT_MIN_ROWS} and {MaxRows}");
-                }
-            }
-        }
-
+        /// <summary>
+        /// `TextArea` will allow growing, but it will stop when visible 
+        /// rows = MaxRows (will not grow further).
+        /// Default value = uint.MaxValue
+        /// </summary>
         [Parameter]
         public uint MaxRows
         {
@@ -79,6 +66,36 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// `TextArea` will allow shrinking, but it will stop when visible 
+        /// rows = MinRows (will not shrink further).
+        /// Default value = DEFAULT_MIN_ROWS = 1
+        /// </summary>
+        [Parameter]
+        public uint MinRows
+        {
+            get
+            {
+                return _minRows;
+            }
+            set
+            {
+                _hasMinOrMaxSet = true;
+                if (value >= DEFAULT_MIN_ROWS && value <= MaxRows)
+                {
+                    _minRows = value;
+                    AutoSize = true;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(nameof(MinRows), $"Please enter a value between {DEFAULT_MIN_ROWS} and {MaxRows}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Callback when the size changes
+        /// </summary>
         [Parameter]
         public EventCallback<OnResizeEventArgs> OnResize { get; set; }
 
@@ -159,11 +176,12 @@ namespace AntDesign
         private bool _isReloading;
 
         private void Reloading(JsonElement jsonElement) => _isReloading = true;
-
+        
         [JSInvokable]
         public void ChangeSizeAsyncJs(float width, float height)
         {
-            OnResize.InvokeAsync(new OnResizeEventArgs { Width = width, Height = height });
+            if (OnResize.HasDelegate)
+                OnResize.InvokeAsync(new OnResizeEventArgs { Width = width, Height = height });
         }
 
         private async Task CalculateRowHeightAsync()

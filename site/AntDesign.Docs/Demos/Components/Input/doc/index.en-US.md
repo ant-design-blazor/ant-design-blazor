@@ -21,25 +21,35 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | --- | --- | --- | --- |
 | AddOnBefore | The label text displayed before (on the left side of) the input field.                             | RenderFragment        | -         |
 | AddOnAfter            | The label text displayed after (on the right side of) the input field.           | RenderFragment         |
-| ChildContent            | Child content           | RenderFragment         |-       |
-| CultureInfo          | What Culture will be used when converting string to value and value to string           | CultureInfo         | CultureInfo.CurrentCulture       |
-| Size |The size of the input box. Note: in the context of a form, the `large` size is used. Available: `large` `default` `small`       | string        | -         |
+| AllowClear | Allow to remove input content with clear icon                               | boolean        | false         |
+| AutoFocus            | Focus on input element.           | boolean         | false
+| CultureInfo          | What Culture will be used when converting string to value and value to string. Useful for InputNumber component.           | CultureInfo         | CultureInfo.CurrentCulture       |
+| DebounceMilliseconds | Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time | int        | 250         |
+| DefaultValue |  	The initial input content                              | TValue        | -         |
+| Disabled | Whether the input is disabled.                               | boolean        | false     |
+| MaxLength |  	 	Max length. -1 means unlimitted.      | int         | -1
+| OnBlur | Callback when input looses focus                              | Action<FocusEventArgs>        | -         |
+| OnChange |Callback when the content changes                                | Action<TValue>        | -         |
+| OnFocus |Callback when input receives focus                              | Action<FocusEventArgs>        | -         |
+| OnInput |Callback when value is inputed                              | Action<ChangeEventArgs>        | -         |
+| OnkeyDown |Callback when a key is pressed                                | Action<KeyboardEventArgs>        | -         |
+| OnkeyUp |Callback when a key is released                                | Action<KeyboardEventArgs>        | -         |
+| OnMouseUp |Callback when a mouse button is released                                | Action<MouseEventArgs>        | -         |
+| OnPressEnter |The callback function that is triggered when Enter key is pressed.                           | Action<KeyboardEventArgs>        | -         |
 | Placeholder              | Provide prompt information that describes the expected value of the input field        | string        | -        |
-| DefaultValue |  	The initial input content                              | string        | -         |
-| MaxLength |  	 	max length       | int         |
-| Disabled | Whether the input is disabled.                               | string        | -         |
-| AllowClear | allow to remove input content with clear icon                               | boolean        | -         |
 | Prefix | The prefix icon for the Input.                           | RenderFragment        | -        |
-| Suffix | The suffix icon for the Input.                            | RenderFragment        | -         |
+| Size |The size of the input box. Note: in the context of a form, the `large` size is used. Available: `large` `default` `small`       | string        | -         |
 | Style | Set CSS style. When using, be aware that some styles can be set only by `WrapperStyle` | string | - |  |
-| WrapperStyle | Set CSS style of wrapper. Is used when component has visible: `Prefix`/`Suffix` or has paramter set `AllowClear` or for components: `Password` & `Search`. In these cases, html `<span>` elements is used to wrap the html `<input>` element. `WrapperStyle` is used on the `<span>` element.   | string | - |  |
+| Suffix | The suffix icon for the Input.                            | RenderFragment        | -         |
 | Type            |The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)         | string  | -         |
-| OnChange |callback when the content is change                                | function(e)        | 0         |
-| OnPressEnter |The callback function that is triggered when Enter key is pressed.                           | function(e)        | -         |
-| OnInput |callback when user input                              | function(e)        | -         |
+| WrapperStyle | Set CSS style of wrapper. Is used when component has visible: `Prefix`/`Suffix` or has paramter set `AllowClear` or for components: `Password` & `Search`. In these cases, html `<span>` elements is used to wrap the html `<input>` element. `WrapperStyle` is used on the `<span>` element.   | string | - |  |
 
 ### TextArea
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
+| AutoSize |  | boolean        | false         |
 | DefaultToEmptyString | When `false`, value will be set to `null` when content is empty or whitespace. When `true`, value will be set to empty string. | boolean        | false         |
+| MinRows | `TextArea` will allow shrinking, but it will stop when visible rows = MinRows (will not shrink further).  | int        | 1         |
+| MaxRows | `TextArea` will allow growing, but it will stop when visible rows = MaxRows (will not grow further).  | int        | uint.MaxValue         |
+| OnResize | Callback when the size changes                                | Action<OnResizeEventArgs>        | -         |

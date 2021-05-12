@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Components.Web;
 namespace AntDesign
 {
     /// <summary>
-    ///
+    /// Base class for input type components.
     /// </summary>
     public class Input<TValue> : AntInputComponentBase<TValue>
     {
@@ -34,17 +34,24 @@ namespace AntDesign
         [Inject]
         public DomEventService DomEventService { get; set; }
 
-        [Parameter]
-        public string Type { get; set; } = "text";
-
+        /// <summary>
+        /// The label text displayed before (on the left side of) the input field.
+        /// </summary>
         [Parameter]
         public RenderFragment AddOnBefore { get; set; }
 
+        /// <summary>
+        /// The label text displayed after (on the right side of) the input field.
+        /// </summary>
         [Parameter]
         public RenderFragment AddOnAfter { get; set; }
 
+
+        /// <summary>
+        /// Allow to remove input content with clear icon 
+        /// </summary>
         [Parameter]
-        public string Placeholder { get; set; }
+        public bool AllowClear { get; set; }
 
         [Parameter]
         public bool AutoFocus
@@ -58,54 +65,110 @@ namespace AntDesign
             }
         }
 
-        [Parameter]
-        public TValue DefaultValue { get; set; }
-
-        [Parameter]
-        public int MaxLength { get; set; } = -1;
-
-        [Parameter]
-        public bool Disabled { get; set; }
-
-        [Parameter]
-        public bool AllowClear { get; set; }
-
-        [Parameter]
-        public RenderFragment Prefix { get; set; }
-
-        [Parameter]
-        public RenderFragment Suffix { get; set; }
-
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
-
-        [Parameter]
-        public EventCallback<TValue> OnChange { get; set; }
-
-        [Parameter]
-        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
-
-        [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyUp { get; set; }
-
-        [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
-
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnMouseUp { get; set; }
-
-        [Parameter]
-        public EventCallback<ChangeEventArgs> OnInput { get; set; }
-
-        [Parameter]
-        public EventCallback<FocusEventArgs> OnBlur { get; set; }
-
-        [Parameter]
-        public EventCallback<FocusEventArgs> OnFocus { get; set; }
-
+        /// <summary>
+        /// Delays the processing of the KeyUp event until the user has stopped 
+        /// typing for a predetermined amount of time
+        /// </summary>
         [Parameter]
         public int DebounceMilliseconds { get; set; } = 250;
 
+        /// <summary>
+        /// The initial input content  
+        /// </summary>
+        [Parameter]
+        public TValue DefaultValue { get; set; }
+
+        /// <summary>
+        /// Whether the input is disabled.
+        /// </summary>
+        [Parameter]
+        public bool Disabled { get; set; }
+
+        /// <summary>
+        /// Max length
+        /// </summary>
+        [Parameter]
+        public int MaxLength { get; set; } = -1;
+
+        /// <summary>
+        /// Callback when input looses focus
+        /// </summary>
+        [Parameter]
+        public EventCallback<FocusEventArgs> OnBlur { get; set; }
+
+        /// <summary>
+        /// Callback when the content changes
+        /// </summary>
+        [Parameter]
+        public EventCallback<TValue> OnChange { get; set; }
+
+        /// <summary>
+        /// Callback when input receives focus
+        /// </summary>
+        [Parameter]
+        public EventCallback<FocusEventArgs> OnFocus { get; set; }
+
+        /// <summary>
+        /// Callback when value is inputed
+        /// </summary>
+        [Parameter]
+        public EventCallback<ChangeEventArgs> OnInput { get; set; }
+
+        /// <summary>
+        /// Callback when a key is pressed
+        /// </summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
+
+        /// <summary>
+        /// Callback when a key is released
+        /// </summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnkeyUp { get; set; }
+
+        /// <summary>
+        /// Callback when a mouse button is released
+        /// </summary>
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnMouseUp { get; set; }
+
+        /// <summary>
+        /// The callback function that is triggered when Enter key is pressed
+        /// </summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }      
+
+        /// <summary>
+        /// Provide prompt information that describes the expected value of the input field
+        /// </summary>
+        [Parameter]
+        public string Placeholder { get; set; }
+
+        /// <summary>
+        /// The prefix icon for the Input.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Prefix { get; set; }
+
+        /// <summary>
+        /// The suffix icon for the Input.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Suffix { get; set; }
+
+
+        /// <summary>
+        /// The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)
+        /// </summary>
+        [Parameter]
+        public string Type { get; set; } = "text";
+
+        /// <summary>
+        /// Set CSS style of wrapper. Is used when component has visible: `Prefix`/`Suffix` 
+        /// or has paramter set `AllowClear` or for components: `Password` & `Search`. In 
+        /// these cases, html `<span>` elements is used to wrap the html `<input>` element. 
+        /// `WrapperStyle` is used on the `<span>` element.
+        /// </summary>
         [Parameter]
         public string WrapperStyle { get; set; }
 
