@@ -85,6 +85,12 @@ namespace AntDesign.Internal
 
         private int _overlayClientWidth = 0;
 
+        protected override void OnInitialized()
+        {
+            _overlayCls = Trigger.GetOverlayHiddenClass();
+            base.OnInitialized();
+        }
+
         protected override async Task OnParametersSetAsync()
         {
             if (!_isOverlayShow && Trigger.Visible && !_preVisible)
@@ -126,7 +132,6 @@ namespace AntDesign.Internal
             if (_isWaitForOverlayFirstRender && _isOverlayFirstRender)
             {
                 _isOverlayFirstRender = false;
-
                 await Show(_overlayLeft, _overlayTop);
 
                 _isWaitForOverlayFirstRender = false;
@@ -156,9 +161,9 @@ namespace AntDesign.Internal
             {
                 return;
             }
-
+            await Task.Yield();
             HtmlElement trigger;
-            if (Trigger.ChildContent != null)
+            if (Trigger.ChildContent is not null)
             {
                 trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
                 // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
@@ -323,7 +328,7 @@ namespace AntDesign.Internal
         {
             int top = 0;
 
-            int triggerTop = trigger.AbsoluteTop - containerElement.AbsoluteTop;
+            int triggerTop = (int)(containerElement.ScrollTop + trigger.AbsoluteTop - containerElement.AbsoluteTop);
             int triggerHeight = trigger.ClientHeight != 0 ? trigger.ClientHeight : trigger.OffsetHeight;
 
             // contextMenu
@@ -437,6 +442,9 @@ namespace AntDesign.Internal
             int overlaySize = direction == "top" ? overlay.ClientHeight : overlay.ClientWidth;
             int boundarySize = await GetWindowBoundarySize(direction, containerElement);
 
+            // 距离边界的长度或宽度/distance from top or left boundry
+            int distanceFromBoundry = await GetOverlayDistanceFromBoundary(direction, curPos);
+
             if (Trigger.Trigger.Contains(TriggerType.ContextMenu))
             {
                 if (overlaySize + curPos > boundarySize)
@@ -453,7 +461,8 @@ namespace AntDesign.Internal
 
             int overlayPosWithSize = GetOverlayPosWithSize(curPos, overlaySize);
 
-            if (overlayPosWithSize > boundarySize || overlayPosWithSize < 0)
+            if ((overlayPosWithSize > boundarySize || overlayPosWithSize < 0)
+                && distanceFromBoundry >= overlaySize) // check if still outof boundary after reverse placement
             {
                 // 翻转位置/reverse placement
                 Trigger.ChangePlacementForShow(Trigger.Placement.GetReverseType());
@@ -467,20 +476,7 @@ namespace AntDesign.Internal
                 curPos = reversePos;
             }
 
-            /*
-                TODO： 翻转位置后仍然超出了边界/still outof boundary range after reverse placement
-             */
-            //overlayPosWithSize = GetOverlayPosWithSize(curPos, overlaySize);
-            //if (overlayPosWithSize > boundarySize)
-            //{
-            //    curPos = GetOverlayBoundaryPos(overlaySize, boundarySize);
-            //}
-            //else if (overlayPosWithSize < 0)
-            //{
-            //    curPos -= overlayPosWithSize;
-            //}
-
-            return curPos;
+            return curPos < 0 ? 0 : curPos;
         }
 
         private int GetOverlayPosWithSize(int overlayPos, int overlaySize)
@@ -509,6 +505,24 @@ namespace AntDesign.Internal
             {
                 return boundarySize - overlaySize;
             }
+        }
+
+        private async Task<int> GetOverlayDistanceFromBoundary(string direction, int overlayPos)
+        {
+            if (Trigger.BoundaryAdjustMode == TriggerBoundaryAdjustMode.InScroll)
+            {
+                return overlayPos;
+            }
+
+            JsonElement scrollInfo = await JsInvokeAsync<JsonElement>(JSInteropConstants.GetScroll);
+            int windowScrollX = (int)scrollInfo.GetProperty("x").GetDouble();
+            int windowScrollY = (int)scrollInfo.GetProperty("y").GetDouble();
+
+            return direction switch
+            {
+                "top" => overlayPos - windowScrollY,
+                _ => overlayPos - windowScrollX
+            };
         }
 
         private async Task<int> GetWindowBoundarySize(string direction, HtmlElement containerElement)
@@ -574,6 +588,7 @@ namespace AntDesign.Internal
             if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
             {
                 overlayCls = Trigger.GetOverlayHiddenClass();
+                _overlayCls = Trigger.GetOverlayEnterClass();
             }
             else
             {
@@ -585,14 +600,17 @@ namespace AntDesign.Internal
 
         private string GetDisplayStyle()
         {
-            string display = _isOverlayShow ? "display: inline-flex;" : "visibility: hidden;";
-
             if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
-            {
-                display = "";
-            }
+                return "";
 
-            return display;
+            if (_isOverlayShow && _hasAddOverlayToBody)
+                return "display: inline-flex;";
+
+            if (_hasAddOverlayToBody)
+                return "visibility: hidden;";
+
+
+            return "display: inline-flex; visibility: hidden;";
         }
 
         internal async Task UpdatePosition(int? overlayLeft = null, int? overlayTop = null)

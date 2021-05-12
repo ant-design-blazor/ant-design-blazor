@@ -13,6 +13,11 @@ namespace AntDesign
     {
         public static T ChangeType<T>(object value)
         {
+            return ChangeType<T>(value, null);
+        }
+
+        public static T ChangeType<T>(object value, IFormatProvider provider)
+        {
             var t = typeof(T);
 
             if (t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
@@ -25,8 +30,10 @@ namespace AntDesign
                 t = Nullable.GetUnderlyingType(t);
             }
 
-            return (T)Convert.ChangeType(value, t);
+            if (provider == null) return (T)Convert.ChangeType(value, t);
+            return (T)Convert.ChangeType(value, t, provider);
         }
+
         public static bool IsTypeNullable<T>()
         {
             return Nullable.GetUnderlyingType(typeof(T)) != null;

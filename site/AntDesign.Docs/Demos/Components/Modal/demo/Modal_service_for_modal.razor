@@ -69,6 +69,7 @@
     {
         var modalConfig = new ModalOptions();
         modalConfig.Title = "TemplateWithResult";
+        modalConfig.Style = "top:20px;";
 
         var modalRef = await ModalService.CreateModalAsync<ConfirmTemplateDemo, string, string>(modalConfig, value);
 

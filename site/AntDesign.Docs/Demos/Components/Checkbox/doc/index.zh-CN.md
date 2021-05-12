@@ -23,7 +23,7 @@ Checkbox
 | Checked            | 指定当前是否选中         | boolean         |false|
 | Disabled            | 失效状态         | boolean         |false       |
 | Indeterminate |设置 indeterminate 状态，只负责样式控制       | boolean        | false         |
-| CheckedChange |变化时回调函数| function(e)|-     |
+| OnChange |变化时回调函数| function(e)|-     |
 
 Checkbox Group
 
@@ -31,6 +31,7 @@ Checkbox Group
 | ---------------- | -------------------------------------------- | ------------- | --------- |
 | CheckboxItems | 自动获取焦点                             | IList<AntCheckbox>        | -         |
 | Disable | 整组失效                             | boolean        | false         |
+| MixedMode            | 混合模式。用于当 `Options` 和 `ChildContent` 同时设置选项时，选择渲染的顺序。 | (enum)CheckboxGroupMixedMode         |ChildContentFirst       |
 | Options            |指定可选项         | CheckboxOption[]         |-       |
 | Value |选中组的值列表     | IList<string>        | Array.Empty<string>()         |
 | ValueChanged |变化时回调函数| function(e)|-     |

@@ -21,6 +21,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | AddOnBefore | 带标签的 input，设置前置标签                               | RenderFragment        | -         |
 | AddOnAfter            | 带标签的 input，设置后置标签           | RenderFragment         |
 | ChildContent            |子组件           | RenderFragment         |-       |
+| CultureInfo          | What Culture will be used when converting string to value and value to string           | CultureInfo         | CultureInfo.CurrentCulture       |
 | Size |抽屉元素之间的子组件  `default`, `large`, `small`        | string        | -         |
 | Placeholder              |提供可描述输入字段预期值的提示信息        | string        | -        |
 | DefaultValue |输入框默认内容                              | string        | -         |

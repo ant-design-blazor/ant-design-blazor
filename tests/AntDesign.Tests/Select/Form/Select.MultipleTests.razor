@@ -1,0 +1,76 @@
+﻿@using System.ComponentModel.DataAnnotations
+@inherits AntDesignTestBase
+@code {
+	class Persons
+    {
+        [MinLength(1, ErrorMessage = "At least 1 is required")]
+        public IEnumerable<string> Name { get; set; } = Array.Empty<string>();
+    }
+    Persons _model = new();
+    IEnumerable<string> _datasource = new List<string>{ "Lucy", "John", "Jack", "Emily" };	
+
+#if NET6_0
+    [Fact]
+	public void Select_Validation_Shown() 
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());        
+
+		JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+			.SetResult(new AntDesign.JsInterop.Window());
+		var cut = Render<AntDesign.Form<Persons>>(
+			@<Form Model="@_model" ValidateOnChange="@true">       
+				<FormItem Label="Allowed Email Domains">
+						<Select TItem="string" TItemValue="string" Mode="multiple"
+								@bind-Values=@context.Name>
+							<SelectOptions>
+								@foreach (var item in _datasource)
+								{
+									<SelectOption TItem="string" TItemValue="string" Value="@item" Label="@item" />
+								}
+							</SelectOptions>
+						</Select>
+				</FormItem>
+			</Form>
+		);
+        //Act
+		cut.InvokeAsync(() =>  cut.Instance.Validate());
+		var validationError = cut.Find("div.ant-form-item-explain-error");
+		//Assert		
+		validationError.Text().Should().Be("At least 1 is required");
+	}
+
+    [Fact]
+	public void Select_Validation_Not_Shown() 
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());        
+
+		JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+			.SetResult(new AntDesign.JsInterop.Window());
+		_model.Name = new List<string> { "Lucy", "John" };
+		var cut = Render<AntDesign.Form<Persons>>(
+			@<Form Model="@_model" ValidateOnChange="@true">       
+				<FormItem Label="Allowed Email Domains">
+						<Select TItem="string" TItemValue="string" Mode="multiple"
+								@bind-Values=@context.Name>
+							<SelectOptions>
+								@foreach (var item in _datasource)
+								{
+									<SelectOption TItem="string" TItemValue="string" Value="@item" Label="@item" />
+								}
+							</SelectOptions>
+						</Select>
+				</FormItem>
+			</Form>
+		);
+        //Act
+		cut.InvokeAsync(() =>  cut.Instance.Validate());
+		//Assert		
+		cut.Invoking(c => cut.Find("div.ant-form-item-explain-error"))
+			.Should().Throw<ElementNotFoundException>();
+	}
+#endif
+}

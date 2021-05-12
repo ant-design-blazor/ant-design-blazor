@@ -1,3 +1,11 @@
+import * as observable from './ObservableApi/observableApi';
+
+export { observable };
+
+export function isResizeObserverSupported(): boolean {  
+  return "ResizeObserver" in window;
+}
+
 export function getDom(element) {
   if (!element) {
     element = document.body;
@@ -149,7 +157,18 @@ export function triggerEvent(element, eventType, eventName) {
 export function getBoundingClientRect(element) {
   let dom = getDom(element);
   if (dom && dom.getBoundingClientRect) {
-    return dom.getBoundingClientRect();
+    let domRect = dom.getBoundingClientRect();
+    // Fixes #1468. This wrapping is necessary for old browsers. Remove this when one day we no longer support them.
+    return {
+      width: domRect.width,
+      height: domRect.height,
+      top: domRect.top,
+      right: domRect.right,
+      bottom: domRect.bottom,
+      left: domRect.left,
+      x: domRect.x,
+      y: domRect.y
+    };
   }
   return null;
 }
@@ -705,6 +724,24 @@ export function setSelectionStart(element, position) {
       if (position <= dom.value.length) {
         dom.selectionStart = position;
         dom.selectionEnd = position;
+      }
+    }
+  }
+}
+
+//copied from https://www.telerik.com/forums/trigger-tab-key-when-enter-key-is-pressed
+export function invokeTabKey() {  
+  var currInput = document.activeElement;
+  if (currInput.tagName.toLowerCase() == "input") {
+    var inputs = document.getElementsByTagName("input");
+    var currInput = document.activeElement;
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i] == currInput) {
+        var next = inputs[i + 1];
+        if (next && next.focus) {
+          next.focus();
+        }
+        break;
       }
     }
   }
