@@ -66,6 +66,12 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Whether has border style
+        /// </summary>
+        [Parameter]
+        public bool Bordered { get; set; } = true;
+
+        /// <summary>
         /// Delays the processing of the KeyUp event until the user has stopped 
         /// typing for a predetermined amount of time
         /// </summary>
@@ -136,7 +142,7 @@ namespace AntDesign
         /// The callback function that is triggered when Enter key is pressed
         /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }      
+        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
 
         /// <summary>
         /// Provide prompt information that describes the expected value of the input field
@@ -201,7 +207,7 @@ namespace AntDesign
 
         protected virtual void SetClasses()
         {
-            AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")}";
+            AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper";
 
             if (!string.IsNullOrWhiteSpace(Class))
@@ -212,6 +218,7 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add($"{PrefixCls}")
+                .If($"{PrefixCls}-borderless", () => !Bordered)
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-rtl", () => RTL)

@@ -23,6 +23,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | AddOnAfter            | The label text displayed after (on the right side of) the input field.           | RenderFragment         |
 | AllowClear | Allow to remove input content with clear icon                               | boolean        | false         |
 | AutoFocus            | Focus on input element.           | boolean         | false
+| Bordered | Whether has border style         | boolean         | true
 | CultureInfo          | What Culture will be used when converting string to value and value to string. Useful for InputNumber component.           | CultureInfo         | CultureInfo.CurrentCulture       |
 | DebounceMilliseconds | Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time | int        | 250         |
 | DefaultValue |  	The initial input content                              | TValue        | -         |

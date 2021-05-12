@@ -22,6 +22,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | AddOnAfter            | 带标签的 input，设置后置标签           | RenderFragment         |
 | AllowClear |可以点击清除图标删除内容                               | boolean        | false         |
 | AutoFocus            | Focus on input element.           | boolean         | false
+| Bordered | Whether has border style         | boolean         | true
 | CultureInfo          | What Culture will be used when converting string to value and value to string           | CultureInfo         | CultureInfo.CurrentCulture       |
 | DebounceMilliseconds | Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time | int        | 250         |
 | DefaultValue |输入框默认内容                              | TValue        | -         |
