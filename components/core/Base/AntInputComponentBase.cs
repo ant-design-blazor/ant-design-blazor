@@ -183,6 +183,8 @@ namespace AntDesign
 
         private TValue _firstValue;
         protected bool _isNotifyFieldChanged = true;
+        private bool _isValueGuid;
+
 
         /// <summary>
         /// Constructs an instance of <see cref="InputBase{TValue}"/>.
@@ -221,10 +223,11 @@ namespace AntDesign
             bool success;
 
             // BindConverter.TryConvertTo<Guid> doesn't work for a incomplete Guid fragment. Remove this when the BCL bug is fixed.
-            if (THelper.GetUnderlyingType<TValue>() == typeof(Guid))
+            if (_isValueGuid)
             {
                 success = Guid.TryParse(value, out Guid parsedGuidValue);
-                if (success) parsedValue = THelper.ChangeType<TValue>(parsedGuidValue);
+                if (success)
+                    parsedValue = THelper.ChangeType<TValue>(parsedGuidValue);
             }
             else
             {
@@ -257,6 +260,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            _isValueGuid = THelper.GetUnderlyingType<TValue>() == typeof(Guid);
             base.OnInitialized();
 
             FormItem?.AddControl(this);
