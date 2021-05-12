@@ -1,12 +1,12 @@
 ﻿<Tree @ref="tree" DefaultExpandAll Draggable BlockNode
-      ShowIcon DataSource="games" 
+      ShowIcon DataSource="games"
       TitleExpression="x => x.DataItem.Text"
       ChildrenExpression="x => x.DataItem.Items"
       IconExpression="x => x.DataItem.Icon"
       IsLeafExpression="x => x.DataItem.Items?.Count == 0"
-      KeyExpression="x => x.DataItem.Id" 
+      KeyExpression="x => x.DataItem.Id"
       TItem="GameElement" OnDragEnd="e=> { }">
-</Tree> 
+</Tree>
 
 @code{
 
@@ -17,33 +17,51 @@
     GameElement selectedData;
 
     TreeNode<GameElement> selectedNode;
-     
+
     List<GameElement> games = new List<GameElement>()
 {
-        new ("100","XBox","windows")
+        new ("0-0","0-0")
         {
             Items=new List<GameElement>()
 {
-                new ("101","Halo"),
-                 new ("102","Gears of War"),
-                 new ("103","Forza Motosport"),
+                new ("0-0-0","0-0-0"){
+                    Items=new List<GameElement>(){
+                         new ("0-0-0-0","0-0-0-0"),
+                         new ("0-0-0-1","0-0-0-1"),
+                         new ("0-0-0-2","0-0-0-2"),
+                    }
+                },
+                 new ("0-0-1","0-0-1"){
+                    Items=new List<GameElement>(){
+                         new ("0-0-1-0","0-0-1-0"),
+                         new ("0-0-1-1","0-0-1-1"),
+                         new ("0-0-1-2","0-0-1-2"),
+                    }
+                 },
+                 new ("0-0-2","0-0-2"){
+                    Items=new List<GameElement>(){
+                         new ("0-0-2-0","0-0-2-0"),
+                         new ("0-0-2-1","0-0-2-1"),
+                         new ("0-0-2-2","0-0-2-2"),
+                    }
+                 },
             }
         },
-        new ("200","PlayStation","desktop")
+        new ("0-1","0-1")
         {
             Items=new List<GameElement>()
 {
-                new ("201","Uncharted"),
-                 new ("202","God Of War"),
-                 new ("203","The Order:1886"),
+                new ("0-1-0","0-1-0"),
+                 new ("0-1-1","0-1-0"),
+                 new ("0-1-2","0-1-2"),
             }
         },
-                new ("300","Switch","mobile")
+        new ("0-2","0-2")
         {
             Items=new List<GameElement>()
 {
-                new ("301","Super Mario Bros"),
-                 new ("302","The Legend of Zelda"),
+                new ("0-2-0","0-2-0"),
+                 new ("0-2-1","0-2-1"),
             }
         }
     };
