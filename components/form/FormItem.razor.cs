@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
@@ -100,6 +101,9 @@ namespace AntDesign
         [Parameter]
         public string LabelStyle { get; set; }
 
+        [Parameter]
+        public Rule[] Rules { get; set; }
+
         private EditContext EditContext => Form?.EditContext;
 
         private bool _isValid = true;
@@ -114,6 +118,8 @@ namespace AntDesign
 
         private ClassMapper _labelClassMapper = new ClassMapper();
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
+
+        private FieldIdentifier _fieldIdentifier;
 
         protected override void OnInitialized()
         {
@@ -205,6 +211,7 @@ namespace AntDesign
                 throw new InvalidOperationException($"Please use @bind-Value (or @bind-Values for selected components) in the control with generic type `{typeof(TValue)}`.");
             }
 
+            _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
             CurrentEditContext.OnValidationStateChanged += (s, e) =>
@@ -228,10 +235,64 @@ namespace AntDesign
             else
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
 
-            if (_propertyReflector.RequiredAttribute != null)
+            bool isRequired = false;
+
+            if (Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex)
+                && _propertyReflector.RequiredAttribute != null)
+            {
+                isRequired = true;
+            }
+
+            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex)
+                && Rules.Any(rule => rule.Required == true))
+            {
+                isRequired = true;
+            }
+
+            if (isRequired)
             {
                 _labelCls = $"{_prefixCls}-required";
             }
         }
+
+        ValidationResult[] IFormItem.ValidateField()
+        {
+            if (Rules == null)
+            {
+                return Array.Empty<ValidationResult>();
+            }
+
+            var results = new List<ValidationResult>();
+
+            var propertyInfo = _fieldIdentifier.Model.GetType().GetProperty(_fieldIdentifier.FieldName);
+            var displayName = string.IsNullOrEmpty(Label) ? _fieldIdentifier.FieldName : Label;
+
+            if (propertyInfo != null)
+            {
+                foreach (var rule in Rules)
+                {
+                    var propertyValue = propertyInfo.GetValue(_fieldIdentifier.Model);
+
+                    var validationContext = new RuleValidationContext()
+                    {
+                        Rule = rule,
+                        Value = propertyValue,
+                        FieldName = _fieldIdentifier.FieldName,
+                        DisplayName = displayName,
+                    };
+
+                    var result = RuleValidateHelper.GetValidationResult(validationContext);
+
+                    if (result != null)
+                    {
+                        results.Add(result);
+                    }
+                }
+            }
+
+            return results.ToArray();
+        }
+
+        FieldIdentifier IFormItem.GetFieldIdentifier() => _fieldIdentifier;
     }
 }

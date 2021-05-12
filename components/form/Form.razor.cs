@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AntDesign.Forms;
@@ -106,6 +107,9 @@ namespace AntDesign
         [Parameter]
         public bool ValidateOnChange { get; set; }
 
+        [Parameter]
+        public FormValidateMode ValidateMode { get; set; } = FormValidateMode.Default;
+
         private static readonly RenderFragment _defaultValidator = builder =>
         {
             builder.OpenComponent<ObjectGraphDataAnnotationsValidator>(0);
@@ -121,6 +125,7 @@ namespace AntDesign
         private IList<IFormItem> _formItems = new List<IFormItem>();
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
         private TModel _model;
+        private RulesValidator _rulesValidator;
 
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
@@ -135,6 +140,8 @@ namespace AntDesign
         bool IForm.ValidateOnChange => ValidateOnChange;
 
         bool IForm.IsModified => _editContext.IsModified();
+
+        FormValidateMode IForm.ValidateMode => ValidateMode;
 
         public event Action<IForm> OnFinishEvent;
 
@@ -156,6 +163,11 @@ namespace AntDesign
             if (OnValidationStateChanged.HasDelegate)
                 _editContext.OnValidationStateChanged += OnValidationStateChangedHandler;
 
+            if (ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                _editContext.OnFieldChanged += RulesModeOnFieldChanged;
+                _editContext.OnValidationRequested += RulesModeOnValidationRequested;
+            }
         }
 
         private void OnFieldChangedHandler(object sender, FieldChangedEventArgs e) => InvokeAsync(() => OnFieldChanged.InvokeAsync(e));
@@ -171,6 +183,13 @@ namespace AntDesign
                 _editContext.OnValidationRequested -= OnValidationRequestedHandler;
             if (OnValidationStateChanged.HasDelegate)
                 _editContext.OnValidationStateChanged -= OnValidationStateChangedHandler;
+
+            if (ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                _editContext.OnFieldChanged -= RulesModeOnFieldChanged;
+                _editContext.OnValidationRequested -= RulesModeOnValidationRequested;
+            }
+
             base.Dispose(disposing);
         }
 
@@ -200,6 +219,52 @@ namespace AntDesign
         private async Task OnInvalidSubmit(EditContext editContext)
         {
             await OnFinishFailed.InvokeAsync(editContext);
+        }
+
+        private void RulesModeOnFieldChanged(object sender, FieldChangedEventArgs args)
+        {
+            if (!ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                return;
+            }
+
+            _rulesValidator.ClearErrors();
+
+            var formItem = _formItems
+                .Single(t => t.GetFieldIdentifier().FieldName == args.FieldIdentifier.FieldName);
+
+            var result = formItem.ValidateField();
+
+            if (result.Length > 0)
+            {
+                var errors = new Dictionary<string, List<string>>();
+                errors[args.FieldIdentifier.FieldName] = result.Select(r => r.ErrorMessage).ToList();
+
+                _rulesValidator.DisplayErrors(errors);
+            }
+        }
+
+        private void RulesModeOnValidationRequested(object sender, ValidationRequestedEventArgs args)
+        {
+            if (!ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                return;
+            }
+
+            _rulesValidator.ClearErrors();
+
+            var errors = new Dictionary<string, List<string>>();
+
+            foreach (var formItem in _formItems)
+            {
+                var result = formItem.ValidateField();
+                if (result.Length > 0)
+                {
+                    errors[formItem.GetFieldIdentifier().FieldName] = result.Select(r => r.ErrorMessage).ToList();
+                }
+            }
+
+            _rulesValidator.DisplayErrors(errors);
         }
 
         public void Reset()

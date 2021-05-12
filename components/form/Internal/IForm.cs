@@ -14,6 +14,8 @@ namespace AntDesign.Internal
 
         internal EditContext EditContext { get; }
 
+        internal FormValidateMode ValidateMode { get; }
+
         internal string Size { get; }
 
         internal void AddFormItem(IFormItem formItem);
