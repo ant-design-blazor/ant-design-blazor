@@ -1,4 +1,6 @@
-﻿namespace AntDesign
+﻿using System;
+
+namespace AntDesign
 {
     public static class JSInteropConstants
     {
