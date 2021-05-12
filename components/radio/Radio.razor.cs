@@ -51,7 +51,7 @@ namespace AntDesign
         private ClassMapper _inputClassMapper = new ClassMapper();
         private ClassMapper _innerClassMapper = new ClassMapper();
 
-        private ElementReference InputRef { get; set; }
+        private ElementReference _inputRef;
 
         private bool IsChecked => _checked ?? this.Checked;
 
@@ -133,7 +133,7 @@ namespace AntDesign
         {
             if (this.AutoFocus)
             {
-                await FocusAsync(this.InputRef);
+                await FocusAsync(this._inputRef);
             }
 
             await base.OnFirstAfterRenderAsync();
@@ -178,7 +178,7 @@ namespace AntDesign
 
         protected async Task Blur()
         {
-            await JsInvokeAsync(JSInteropConstants.Blur, this.InputRef);
+            await JsInvokeAsync(JSInteropConstants.Blur, this._inputRef);
         }
     }
 }
