@@ -91,6 +91,8 @@ namespace AntDesign
             }
         }
 
+        private string InnerZIndexStyle => _isOpen ? _zIndexStyle : "z-index: -9999;";
+
         [Parameter] public int OffsetX { get; set; } = 0;
 
         [Parameter] public int OffsetY { get; set; } = 0;
