@@ -107,5 +107,44 @@ namespace AntDesign.Tests.Form.Validation
             new object[] { RuleFieldType.Array, new int[] { 1, 2, 3 }, 3m, true },
             new object[] { RuleFieldType.Array, new int[] { 1, 2, 3 }, 10m, false },
         };
+
+
+        [Theory]
+        [MemberData(nameof(RuleValidate_Max_Values))]
+        public void RuleValidate_Max(RuleFieldType type, object value, decimal max, bool expectedValid)
+        {
+            var rule = new Rule()
+            {
+                Type = type,
+                Max = max,
+            };
+
+            var validationContext = new RuleValidationContext()
+            {
+                Rule = rule,
+                Value = value,
+                FieldName = "fieldName",
+                DisplayName = "displayName",
+            };
+
+            var isValid = RuleValidateHelper.GetValidationResult(validationContext) == null;
+
+            Assert.Equal(expectedValid, isValid);
+        }
+
+        public static List<object[]> RuleValidate_Max_Values => new()
+        {
+            new object[] { RuleFieldType.String, "hello", 5m, true },
+            new object[] { RuleFieldType.String, "hello", 3m, false },
+            new object[] { RuleFieldType.Number, 123m, 123m, true },
+            new object[] { RuleFieldType.Number, 123m, 122m, false },
+            new object[] { RuleFieldType.Number, (int)100, 100m, true }, // int value
+            new object[] { RuleFieldType.Number, (short)100, 100m, true }, // short value
+            new object[] { RuleFieldType.Number, (long)100, 100m, true }, // long value
+            new object[] { RuleFieldType.Number, (decimal)100, 100m, true }, // decimal value
+            new object[] { RuleFieldType.Number, (byte)1, 1m, true }, // byte value
+            new object[] { RuleFieldType.Array, new int[] { 1, 2, 3 }, 3m, true },
+            new object[] { RuleFieldType.Array, new int[] { 1, 2, 3 }, 2m, false },
+        };
     }
 }
