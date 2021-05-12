@@ -1,0 +1,9 @@
+﻿<TextArea ShowCount MaxLength=100 OnChange="onChange" />
+
+@code{
+
+    private void onChange(string value)
+    {
+        Console.WriteLine("onChange =>" + value);
+    }
+}

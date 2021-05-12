@@ -99,6 +99,18 @@ namespace AntDesign
         [Parameter]
         public EventCallback<OnResizeEventArgs> OnResize { get; set; }
 
+        /// <summary>
+        /// Show character counting.
+        /// </summary>
+        [Parameter]
+        public bool ShowCount
+        {
+            get => _showCount && MaxLength >= 0;
+            set => _showCount = value;
+        }
+
+        private bool _showCount;
+
         private ClassMapper _warpperClassMapper = new ClassMapper();
 
         protected override void OnInitialized()
