@@ -26,6 +26,7 @@ namespace AntDesign
         public decimal? Min { get; set; }
         public decimal? Max { get; set; }
         public bool? Required { get; set; }
+        public bool? Whitespace { get; set; }
         public RuleFieldType Type { get; set; } = RuleFieldType.String;
     }
 }

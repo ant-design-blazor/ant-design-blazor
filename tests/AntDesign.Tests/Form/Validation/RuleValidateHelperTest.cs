@@ -37,6 +37,35 @@ namespace AntDesign.Tests.Form.Validation
         }
 
         [Theory]
+        [InlineData(" ", true, false)]
+        [InlineData(" ", false, true)]
+        [InlineData(null, true, true)]
+        [InlineData(null, false, true)]
+        [InlineData("", true, true)]
+        [InlineData("", false, true)]
+        [InlineData(123, true, true)]
+        [InlineData(123, false, true)]
+        public void RuleValidate_Whitespace(object value, bool whitespace, bool expectedValid)
+        {
+            var rule = new Rule()
+            {
+                Whitespace = whitespace,
+            };
+
+            var validationContext = new RuleValidationContext()
+            {
+                Rule = rule,
+                Value = value,
+                FieldName = "fieldName",
+                DisplayName = "displayName",
+            };
+
+            var isValid = RuleValidateHelper.GetValidationResult(validationContext) == null;
+
+            Assert.Equal(expectedValid, isValid);
+        }
+
+        [Theory]
         [MemberData(nameof(RuleValidate_Len_Values))]
         public void RuleValidate_Len(RuleFieldType type, object value, decimal len, bool expectedValid)
         {

@@ -13,6 +13,7 @@ namespace AntDesign.Internal
             if (!LenIsValid(validationContext, out result)) return result;
             if (!MinIsValid(validationContext, out result)) return result;
             if (!MaxIsValid(validationContext, out result)) return result;
+            if (!WhitespaceIsValid(validationContext, out result)) return result;
 
             return null;
         }
@@ -138,6 +139,23 @@ namespace AntDesign.Internal
 
                         return false;
                     }
+                }
+            }
+
+            result = null;
+
+            return true;
+        }
+
+        private static bool WhitespaceIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        {
+            if (validationContext.Rule.Whitespace == true)
+            {
+                if (!IsValid(new WhitespaceAttribute(), validationContext, out ValidationResult validationResult))
+                {
+                    result = validationResult;
+
+                    return false;
                 }
             }
 
