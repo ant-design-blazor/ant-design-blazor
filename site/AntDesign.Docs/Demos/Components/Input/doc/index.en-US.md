@@ -28,7 +28,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | DebounceMilliseconds | Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time | int        | 250         |
 | DefaultValue |  	The initial input content                              | TValue        | -         |
 | Disabled | Whether the input is disabled.                               | boolean        | false     |
-| MaxLength |  	 	Max length. -1 means unlimitted.      | int         | -1
+| MaxLength |  	 	Max length. -1 means unlimited.      | int         | -1
 | OnBlur | Callback when input looses focus                              | Action<FocusEventArgs>        | -         |
 | OnChange |Callback when the content changes                                | Action<TValue>        | -         |
 | OnFocus |Callback when input receives focus                              | Action<FocusEventArgs>        | -         |
@@ -43,7 +43,12 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | Style | Set CSS style. When using, be aware that some styles can be set only by `WrapperStyle` | string | - |  |
 | Suffix | The suffix icon for the Input.                            | RenderFragment        | -         |
 | Type            |The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)         | string  | -         |
-| WrapperStyle | Set CSS style of wrapper. Is used when component has visible: `Prefix`/`Suffix` or has paramter set `AllowClear` or for components: `Password` & `Search`. In these cases, html `<span>` elements is used to wrap the html `<input>` element. `WrapperStyle` is used on the `<span>` element.   | string | - |  |
+| WrapperStyle | Set CSS style of wrapper. Is used when component has visible: `Prefix`/`Suffix` or has parameter set `AllowClear` or for components: `Password` & `Search`. In these cases, html `<span>` elements is used to wrap the html `<input>` element. `WrapperStyle` is used on the `<span>` element.   | string | - |  |
+
+### Common Methods
+| Name | Description | Parameters | Version |
+| --- | --- | --- | --- |
+| Focus() |Focus behavior for input component with optional behaviors.   | (FocusBehavior: {enum: FocusAtLast, FocusAtFirst, FocusAndSelectAll, FocusAndClear }, bool: preventScroll )        | 0.9         |
 
 ### TextArea
 
@@ -53,4 +58,5 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | DefaultToEmptyString | When `false`, value will be set to `null` when content is empty or whitespace. When `true`, value will be set to empty string. | boolean        | false         |
 | MinRows | `TextArea` will allow shrinking, but it will stop when visible rows = MinRows (will not shrink further).  | int        | 1         |
 | MaxRows | `TextArea` will allow growing, but it will stop when visible rows = MaxRows (will not grow further).  | int        | uint.MaxValue         |
-| OnResize | Callback when the size changes                                | Action<OnResizeEventArgs>        | -         |
+| OnResize | Callback when the size changes | Action<OnResizeEventArgs>        | -         |
+
