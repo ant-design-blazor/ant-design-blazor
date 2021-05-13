@@ -15,6 +15,60 @@ timeline: true
 
 ---
 
+### 0.8.1
+
+`2021-05-13`
+
+- Overlay
+  - 🐞 修复 计算高度时加上滚动高度[#1511](https://github.com/ant-design-blazor/ant-design-blazor/pull/1511) [@ocoka](https://github.com/ocoka)
+  - 🐞 修复 边界调整的问题[#1420](https://github.com/ant-design-blazor/ant-design-blazor/pull/1420) [@mutouzdl](https://github.com/mutouzdl)
+
+- Input
+  - 🐞 修复 不能使用 Guid 类型的问题。[#1510](https://github.com/ant-design-blazor/ant-design-blazor/pull/1510) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 字符串与特定类型的转换问题，增加了 `CultureInfo` 属性。[#1480](https://github.com/ant-design-blazor/ant-design-blazor/pull/1480) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 修复 按回车键的数据绑定问题。[#1375](https://github.com/ant-design-blazor/ant-design-blazor/pull/1375) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🐞 修复 内置筛选器选项菜单的宽度[#1500](https://github.com/ant-design-blazor/ant-design-blazor/pull/1500) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 使用“结尾是”过滤条件时的错误。[#1434](https://github.com/ant-design-blazor/ant-design-blazor/pull/1434) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 点击清除排序时不刷新的问题。[#1385](https://github.com/ant-design-blazor/ant-design-blazor/pull/1385) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 无法使用 DataIndex 绑定可空属性的问题[#1382](https://github.com/ant-design-blazor/ant-design-blazor/pull/1382) [@anranruye](https://github.com/anranruye)
+  - 🐞 修复 筛选器对 DataIndex 的支持，统一FieldName定义，添加列名DisplayAttribute支持。[#1372](https://github.com/ant-design-blazor/ant-design-blazor/pull/1372) [@Zonciu](https://github.com/Zonciu)
+  - 🐞 修复 ellipsis 无效的问题。[#1376](https://github.com/ant-design-blazor/ant-design-blazor/pull/1376) [@ElderJames](https://github.com/ElderJames)
+
+- Cascader
+  - 🐞 修复 搜索功能。[#1484](https://github.com/ant-design-blazor/ant-design-blazor/pull/1484) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 当点击清楚按钮时触发 SelectedNodesChanged。[#1437](https://github.com/ant-design-blazor/ant-design-blazor/pull/1437) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 无法设置 Size 的问题。[#1432](https://github.com/ant-design-blazor/ant-design-blazor/pull/1432) [@ElderJames](https://github.com/ElderJames)
+
+- Modal 
+  - 🆕 可通过 ModalOptions 设置 Style。 [#1400](https://github.com/ant-design-blazor/ant-design-blazor/pull/1400) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 修改 Dialog 组件中 Mask 点击判断 Task.Delay 的时间为 DOM_ MIN_ TIMEOUT_ VALUE (4ms)。[#1445](https://github.com/ant-design-blazor/ant-design-blazor/pull/1445) [@zxyao145](https://github.com/zxyao145)
+  - 🐞 修复 Dialog 关闭时不恢复显示滚动条的问题，为 Dialog 添加 Dispose。[#1379](https://github.com/ant-design-blazor/ant-design-blazor/pull/1379) [@zxyao145](https://github.com/zxyao145)
+ 
+- Form
+  - 🆕 使Form支持集合，Select可绑定Values[#1460](https://github.com/ant-design-blazor/ant-design-blazor/pull/1460) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 修复验证信息会重复的问题[#1391](https://github.com/ant-design-blazor/ant-design-blazor/pull/1391) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🐞 修复在SelectOption中使用可空值类型时的错误。[#1451](https://github.com/ant-design-blazor/ant-design-blazor/pull/1451) [@anranruye](https://github.com/anranruye)
+  - 🛠 使用 ResizeObserver 重构响应式时浏览器尺寸事件的订阅[#1392](https://github.com/ant-design-blazor/ant-design-blazor/pull/1392) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 当DataSource改变时触发OnDataSourceChanged[#1419](https://github.com/ant-design-blazor/ant-design-blazor/pull/1419) [@anddrzejb](https://github.com/anddrzejb)
+  - 🐞 修复值为枚举时的问题[#1368](https://github.com/ant-design-blazor/ant-design-blazor/pull/1368) [@anddrzejb](https://github.com/anddrzejb)
+
+- 🐞 修复 DatePicker 点击面板头部会关闭问题[#1452](https://github.com/ant-design-blazor/ant-design-blazor/pull/1452) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 修复 Checkbox 的 Value 在初始化时是阻塞[#1459](https://github.com/ant-design-blazor/ant-design-blazor/pull/1459) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 修复 InputNumber 按住时，离开组件还会自增的问题。[#1490](https://github.com/ant-design-blazor/ant-design-blazor/pull/1490) [@CAPCHIK](https://github.com/CAPCHIK)
+- 🐞 修复 验证手动输入格式的问题[#1389](https://github.com/ant-design-blazor/ant-design-blazor/pull/1389) [@anddrzejb](https://github.com/anddrzejb)
+- 🐞 修复 `Checkbox` and `Switch` 组件的 Value 和Checked 绑定问题[#1394](https://github.com/ant-design-blazor/ant-design-blazor/pull/1394) [@anddrzejb](https://github.com/anddrzejb)
+
+- 🆕 新增 Element 组件，用于动态渲染元素[#1378](https://github.com/ant-design-blazor/ant-design-blazor/pull/1378) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tag 的closable 拼写错误，和删除Mode属性[#1393](https://github.com/ant-design-blazor/ant-design-blazor/pull/1393) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 InputPassword 切换明文时，保持焦点和光标位置。[#1377](https://github.com/ant-design-blazor/ant-design-blazor/pull/1377) [@MihailsKuzmins](https://github.com/MihailsKuzmins)
+- 🐞 修复 Affix 当 OffsetTop 为0时不能钉住的问题。[#1373](https://github.com/ant-design-blazor/ant-design-blazor/pull/1373) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 getDom 函数可能返回 null 的bug。[#1417](https://github.com/ant-design-blazor/ant-design-blazor/pull/1417) [@zxyao145](https://github.com/zxyao145)
+- 🐞 修复 IE浏览器下拉选项宽度为 0 的问题。[#1469](https://github.com/ant-design-blazor/ant-design-blazor/pull/1469) [@anranruye](https://github.com/anranruye)
+
 ### 0.8.0
 
 `2021-04-15`
