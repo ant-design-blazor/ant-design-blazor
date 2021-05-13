@@ -125,7 +125,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
-
+        
         /// <summary>
         /// Callback when a key is released
         /// </summary>
@@ -181,6 +181,34 @@ namespace AntDesign
         public Dictionary<string, object> Attributes { get; set; }
 
         public ForwardRef WrapperRefBack { get; set; }
+
+        /// <summary>
+        /// Focus behavior for input component with optional behaviors.
+        /// </summary>
+        /// <param name="behavior">enum: AntDesign.FocusBehavior</param>
+        /// <param name="preventScroll">When true, element receiving focus will not be scrolled to.</param>
+        /// <returns></returns>
+        public async Task Focus(FocusBehavior behavior = default, bool preventScroll = false)
+        {
+            if (behavior == FocusBehavior.FocusAndClear)
+            {
+                await Clear();
+                StateHasChanged();
+            }
+            else
+            {
+                await FocusAsync(Ref, behavior, preventScroll);
+            }
+        }
+
+        private async Task Clear()
+        {
+            CurrentValue = default;
+            IsFocused = true;
+            await this.FocusAsync(Ref);
+            if (OnChange.HasDelegate)
+                await OnChange.InvokeAsync(Value);
+        }
 
         private TValue _inputValue;
         private bool _compositionInputting;
@@ -368,11 +396,12 @@ namespace AntDesign
                 }
                 builder.AddAttribute(35, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
                 {
-                    CurrentValue = default;
-                    IsFocused = true;
-                    await this.FocusAsync(Ref);
-                    if (OnChange.HasDelegate)
-                        await OnChange.InvokeAsync(Value);
+                    //CurrentValue = default;
+                    //IsFocused = true;
+                    //await this.FocusAsync(Ref);
+                    //if (OnChange.HasDelegate)
+                    //    await OnChange.InvokeAsync(Value);
+                    await Clear();
                     ToggleClearBtn();
                 }));
                 builder.CloseComponent();

@@ -104,7 +104,26 @@ namespace AntDesign
             }
         }
 
-        protected async Task FocusAsync(ElementReference target, bool preventScroll = false) => await Js.FocusAsync(target, preventScroll);
+        /// <summary>
+        /// Standard Focus. From Net5 uses Blazor extension method on ElementReference.
+        /// Before, uses JS implemented exactly the same as Net5 JS.
+        /// </summary>
+        /// <param name="target">Element that will receive focus.</param>
+        /// <param name="preventScroll">Whether to scroll to focused element</param>
+        /// <returns></returns>
+        protected async Task FocusAsync(ElementReference target, bool preventScroll = false) 
+            => await Js.FocusAsync(target, preventScroll);
+
+        /// <summary>
+        /// Focus with behaviors. Behavior will work only for elements that are
+        /// HTMLInputElement or HTMLTextAreaElement. Otherwise will only focus.
+        /// </summary>
+        /// <param name="target">Element that will receive focus.</param>
+        /// <param name="behavior">Behavior of focused element</param>
+        /// <param name="preventScroll">Whether to scroll to focused element</param>
+        /// <returns></returns>
+        protected async Task FocusAsync(ElementReference target, FocusBehavior behavior, bool preventScroll = false)
+            => await Js.FocusAsync(target, behavior, preventScroll);
 
         protected bool IsDisposed { get; private set; }
 

@@ -13,7 +13,7 @@ namespace AntDesign.Core.Extensions
         public static async Task FocusAsync(this IJSRuntime jSRuntime, ElementReference target, bool preventScroll = false)
         {
 #if NET5_0_OR_GREATER
-            await target.FocusAsync();                    
+            await target.FocusAsync(preventScroll);
 #else
             try
             {
@@ -26,6 +26,20 @@ namespace AntDesign.Core.Extensions
             }
 #endif
         }
+
+        public static async Task FocusAsync(this IJSRuntime jSRuntime, ElementReference target, FocusBehavior behavior, bool preventScroll = false)
+        {
+            try
+            {
+                await jSRuntime.InvokeVoidAsync(JSInteropConstants.Focus, target, preventScroll, behavior);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
 
         public static ValueTask SetSelectionStartAsync(this IJSRuntime jSRuntime, ElementReference target, int selectionStart) =>
             jSRuntime.InvokeVoidAsync(JSInteropConstants.SetSelectionStart, target, selectionStart);
