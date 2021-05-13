@@ -9,11 +9,17 @@ namespace AntDesign.Internal
     {
         public static ValidationResult GetValidationResult(RuleValidationContext validationContext)
         {
-            if (!RequiredIsValid(validationContext, out ValidationResult result)) return result;
+            validationContext.Value = validationContext.Rule.Transform(validationContext.Value);
+
+            ValidationResult result;
+
+            if (!RequiredIsValid(validationContext, out result)) return result;
             if (!LenIsValid(validationContext, out result)) return result;
             if (!MinIsValid(validationContext, out result)) return result;
             if (!MaxIsValid(validationContext, out result)) return result;
             if (!WhitespaceIsValid(validationContext, out result)) return result;
+            if (!PatternIsValid(validationContext, out result)) return result;
+            if (!ValidatorIsValid(validationContext, out result)) return result;
 
             return null;
         }
@@ -164,14 +170,56 @@ namespace AntDesign.Internal
             return true;
         }
 
+        private static bool PatternIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        {
+            var rule = validationContext.Rule;
+            if (!string.IsNullOrEmpty(rule.Pattern))
+            {
+                if (!IsValid(new RegularExpressionAttribute(rule.Pattern), validationContext, out ValidationResult validationResult))
+                {
+                    result = validationResult;
+
+                    return false;
+                }
+            }
+
+            result = null;
+
+            return true;
+        }
+
+        private static bool ValidatorIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        {
+            var rule = validationContext.Rule;
+            if (rule.Validator != null)
+            {
+                result = rule.Validator(validationContext);
+
+                if (result != null)
+                {
+                    return false;
+                }
+            }
+
+            result = null;
+
+            return true;
+        }
+
         #endregion Validations
 
         private static bool IsValid(ValidationAttribute validationAttribute, RuleValidationContext validationContext, out ValidationResult result)
         {
             if (validationAttribute.IsValid(validationContext.Value) == false)
             {
-                result = new ValidationResult(
-                    validationAttribute.FormatErrorMessage(validationContext.DisplayName), new string[] { validationContext.FieldName });
+                if (validationContext.Rule.Message != null)
+                {
+                    validationAttribute.ErrorMessage = validationContext.Rule.Message;
+                }
+
+                string errorMessage = validationAttribute.FormatErrorMessage(validationContext.DisplayName);
+
+                result = new ValidationResult(errorMessage, new string[] { validationContext.FieldName });
 
                 return false;
             }

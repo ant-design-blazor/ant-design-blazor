@@ -1,6 +1,6 @@
-﻿namespace AntDesign.Internal
+﻿namespace AntDesign
 {
-    internal class RuleValidationContext
+    public class RuleValidationContext
     {
         public Rule Rule { get; set; }
         public object Value { get; set; }

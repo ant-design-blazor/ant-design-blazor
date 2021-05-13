@@ -10,11 +10,6 @@ namespace AntDesign.Internal
         {
         }
 
-        public override string FormatErrorMessage(string name)
-        {
-            return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name);
-        }
-
         public override bool IsValid(object value)
         {
             if (value == null)
