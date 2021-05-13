@@ -35,7 +35,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | WrapperStyle | Set CSS style of wrapper. Is used when component has visible: `Prefix`/`Suffix` or has paramter set `AllowClear` or for components: `Password` & `Search`. In these cases, html `<span>` elements is used to wrap the html `<input>` element. `WrapperStyle` is used on the `<span>` element.   | string | - |  |
 | Type            |The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)         | string  | -         |
 | OnChange |callback when the content is change                                | function(e)        | 0         |
-| OnPressEnter |The callback function that is triggered when Enter key is pressed.                           | function(e)        | -         |
+| OnPressEnter |The callback function that is triggered when Enter key is pressed.                           | Action(KeyboardEventArgs args) or Action()       | -         |
 | OnInput |callback when user input                              | function(e)        | -         |
 
 ### TextArea
