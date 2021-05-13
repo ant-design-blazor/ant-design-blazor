@@ -11,7 +11,7 @@ namespace AntDesign.Tests.Form.Validation
 {
     public class RuleValidateHelperTest
     {
-        private static readonly ValidateMessages _defaultValidateMessages = new();
+        private static readonly ValidateMessages _defValidateMsgs = new();
         private static readonly string _customSuffix = "_custom";
         private static readonly string _fieldName = "fieldName";
         private static readonly string _displayName = "displayName";
@@ -423,16 +423,23 @@ namespace AntDesign.Tests.Form.Validation
 
         public static List<object[]> RuleValidate_ValidateMessages_Values => new()
         {
-            new object[] {
-                new Rule { Required = true },
-                null,
-                string.Format($"{_defaultValidateMessages.Required}{_customSuffix}", _displayName)
-            },
+            new object[] { new Rule { Required = true }, null, string.Format($"{_defValidateMsgs.Required}{_customSuffix}", _displayName) },
             new object[] {
                 new Rule { Type= RuleFieldType.Integer, OneOf = new object[] { 1, 2 } },
                 0,
-                string.Format($"{_defaultValidateMessages.OneOf}{_customSuffix}", _displayName, JsonSerializer.Serialize(new object[] { 1, 2 }))
+                string.Format($"{_defValidateMsgs.OneOf}{_customSuffix}", _displayName, JsonSerializer.Serialize(new object[] { 1, 2 }))
             },
+            new object[] { new Rule { Type = RuleFieldType.String }, 123, string.Format($"{_defValidateMsgs.Types.String }{_customSuffix}", _displayName, RuleFieldType.String) },
+            new object[] { new Rule { Type = RuleFieldType.Array }, 123, string.Format($"{_defValidateMsgs.Types.Array  }{_customSuffix}", _displayName, RuleFieldType.Array) },
+            new object[] { new Rule { Type = RuleFieldType.Enum }, 123, string.Format($"{_defValidateMsgs.Types.Enum   }{_customSuffix}", _displayName, RuleFieldType.Enum) },
+            new object[] { new Rule { Type = RuleFieldType.Number }, "str", string.Format($"{_defValidateMsgs.Types.Number }{_customSuffix}", _displayName, RuleFieldType.Number) },
+            new object[] { new Rule { Type = RuleFieldType.Date }, 123, string.Format($"{_defValidateMsgs.Types.Date   }{_customSuffix}", _displayName, RuleFieldType.Date) },
+            new object[] { new Rule { Type = RuleFieldType.Boolean }, "str", string.Format($"{_defValidateMsgs.Types.Boolean}{_customSuffix}", _displayName, RuleFieldType.Boolean) },
+            new object[] { new Rule { Type = RuleFieldType.Integer }, 1.0, string.Format($"{_defValidateMsgs.Types.Integer}{_customSuffix}", _displayName, RuleFieldType.Integer) },
+            new object[] { new Rule { Type = RuleFieldType.Float }, 123, string.Format($"{_defValidateMsgs.Types.Float  }{_customSuffix}", _displayName, RuleFieldType.Float) },
+            new object[] { new Rule { Type = RuleFieldType.Regexp }, 123, string.Format($"{_defValidateMsgs.Types.Regexp }{_customSuffix}", _displayName, RuleFieldType.Regexp) },
+            new object[] { new Rule { Type = RuleFieldType.Email }, "123", string.Format($"{_defValidateMsgs.Types.Email  }{_customSuffix}", _displayName, RuleFieldType.Email) },
+            new object[] { new Rule { Type = RuleFieldType.Url }, "123", string.Format($"{_defValidateMsgs.Types.Url    }{_customSuffix}", _displayName, RuleFieldType.Url) },
         };
 
         private ValidateMessages GetCustomValidateMessages()
@@ -443,9 +450,6 @@ namespace AntDesign.Tests.Form.Validation
             customValidateMessage.Default = $"{customValidateMessage.Default}{suffix}";
             customValidateMessage.Required = $"{customValidateMessage.Required}{suffix}";
             customValidateMessage.OneOf = $"{customValidateMessage.OneOf}{suffix}";
-            customValidateMessage.Date.Format = $"{customValidateMessage.Date.Format}{suffix}";
-            customValidateMessage.Date.Parse = $"{customValidateMessage.Date.Parse}{suffix}";
-            customValidateMessage.Date.Invalid = $"{customValidateMessage.Date.Invalid}{suffix}";
 
             customValidateMessage.Types.String = $"{customValidateMessage.Types.String}{suffix}";
             customValidateMessage.Types.Array = $"{customValidateMessage.Types.Array}{suffix}";

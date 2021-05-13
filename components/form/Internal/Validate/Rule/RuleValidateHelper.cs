@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace AntDesign.Internal
 {
@@ -107,11 +105,7 @@ namespace AntDesign.Internal
 
                 if (rule.Type.IsIn(RuleFieldType.Number, RuleFieldType.Integer, RuleFieldType.Float))
                 {
-                    var type = validationContext.Value.GetType();
-                    var typeMaxValue = GetMaxValueString(type);
-
-                    attribute = new RangeAttribute(type, ((decimal)rule.Min).ToString(), typeMaxValue);
-
+                    attribute = new NumberMinAttribute((decimal)rule.Min);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Min;
                 }
 
@@ -150,10 +144,7 @@ namespace AntDesign.Internal
 
                 if (rule.Type.IsIn(RuleFieldType.Number, RuleFieldType.Integer, RuleFieldType.Float))
                 {
-                    var type = validationContext.Value.GetType();
-                    var typeMinValue = GetMinValueString(type);
-
-                    attribute = new RangeAttribute(type, typeMinValue, ((decimal)rule.Max).ToString());
+                    attribute = new NumberMaxAttribute((decimal)rule.Max);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Max;
                 }
 

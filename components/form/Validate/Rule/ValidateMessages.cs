@@ -9,13 +9,6 @@
         public string OneOf { get; set; } = "'{0}' must be one of [{1}]";
         public string Whitespace { get; set; } = "'{0}' cannot be empty";
 
-        public DateMessage Date { get; set; } = new()
-        {
-            Format = "'{0}' is invalid for format date",
-            Parse = "'{0}' could not be parsed as date",
-            Invalid = "'{0}' is invalid date",
-        };
-
         public TypesMessage Types { get; set; } = new()
         {
             String = _typeTemplate,
