@@ -231,6 +231,70 @@ namespace AntDesign.Tests.Form.Validation
             Assert.Equal($"The field displayName should not max than {MAX}.", result.ErrorMessage);
         }
 
+        [Theory]
+        [MemberData(nameof(RuleValidate_Type_Values))]
+        public void RuleValidate_Type(RuleFieldType type, object value, bool expectedValid)
+        {
+            var rule = new Rule()
+            {
+                Type = type,
+            };
+
+            var isValid = GetValidationResult(rule, value) == null;
+
+            Assert.Equal(expectedValid, isValid);
+        }
+
+        public static List<object[]> RuleValidate_Type_Values => new()
+        {
+            new object[] { RuleFieldType.String, "string", true },
+            new object[] { RuleFieldType.String, 100, false },
+            new object[] { RuleFieldType.String, new string[] { }, false },
+
+            new object[] { RuleFieldType.Number, 100, true },
+            new object[] { RuleFieldType.Number, 100m, true },
+            new object[] { RuleFieldType.Number, 100.1, true },
+            new object[] { RuleFieldType.Number, "100", false },
+            new object[] { RuleFieldType.Number, new int[] { }, false },
+
+            new object[] { RuleFieldType.Array, new int[] { }, true },
+            new object[] { RuleFieldType.Array, new string[] { }, true },
+            new object[] { RuleFieldType.Array, "string", false },
+            new object[] { RuleFieldType.Array, 100, false },
+
+            new object[] { RuleFieldType.Boolean, true, true },
+            new object[] { RuleFieldType.Boolean, false, true },
+            new object[] { RuleFieldType.Boolean, 12312, false },
+            new object[] { RuleFieldType.Boolean, "true", false },
+
+            new object[] { RuleFieldType.Date, DateTime.Parse("2021-01-02"), true },
+            new object[] { RuleFieldType.Date, "2021-01-01", false },
+            new object[] { RuleFieldType.Date, 100, false },
+
+            new object[] { RuleFieldType.Email, "email@blazor.cn", true },
+            new object[] { RuleFieldType.Email, "email@blazor.cn.com", true },
+            new object[] { RuleFieldType.Email, "email#blazor.cn", false },
+
+            new object[] { RuleFieldType.Integer, 100, true },
+            new object[] { RuleFieldType.Integer, 100.9, false },
+            new object[] { RuleFieldType.Integer, "100", false },
+
+            new object[] { RuleFieldType.Float, 100.9, true },
+            new object[] { RuleFieldType.Float, 100, false },
+            new object[] { RuleFieldType.Float, "100", false },
+
+            new object[] { RuleFieldType.Enum, RuleValidateHelperEnum.None, true },
+            new object[] { RuleFieldType.Enum, 100, false },
+
+            new object[] { RuleFieldType.Regexp, "\\d", true },
+            new object[] { RuleFieldType.Regexp, "^????---))%%%$$3#@^^", false },
+
+            new object[] { RuleFieldType.Url, "http://blazor.cn", true },
+            new object[] { RuleFieldType.Url, "http://www.blazor.cn", true },
+            new object[] { RuleFieldType.Url, "www.blazor.cn", false },
+            new object[] { RuleFieldType.Url, "http:@www-blazor-cn", false },
+
+        };
 
         private ValidationResult GetValidationResult(Rule rule, object value)
         {
@@ -275,4 +339,9 @@ class CustomValidationAttribute : ValidationAttribute
 
         return valueAsInt < Max;
     }
+}
+
+enum RuleValidateHelperEnum
+{
+    None,
 }

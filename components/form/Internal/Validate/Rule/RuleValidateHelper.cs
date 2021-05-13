@@ -14,6 +14,7 @@ namespace AntDesign.Internal
             ValidationResult result;
 
             if (!RequiredIsValid(validationContext, out result)) return result;
+            if (!TypeIsValid(validationContext, out result)) return result;
             if (!LenIsValid(validationContext, out result)) return result;
             if (!MinIsValid(validationContext, out result)) return result;
             if (!MaxIsValid(validationContext, out result)) return result;
@@ -199,6 +200,21 @@ namespace AntDesign.Internal
                 {
                     return false;
                 }
+            }
+
+            result = null;
+
+            return true;
+        }
+
+        private static bool TypeIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        {
+            var rule = validationContext.Rule;
+            if (!IsValid(new TypeAttribute(rule.Type), validationContext, out ValidationResult validationResult))
+            {
+                result = validationResult;
+
+                return false;
             }
 
             result = null;
