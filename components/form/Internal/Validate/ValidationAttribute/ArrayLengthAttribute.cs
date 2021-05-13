@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using OneOf;
 
 namespace AntDesign.Internal
 {
@@ -9,7 +8,7 @@ namespace AntDesign.Internal
     {
         internal int Length { get; }
 
-        internal ArrayLengthAttribute(int length) : base("The length of field {0} must be {1}")// TODO: localizable
+        internal ArrayLengthAttribute(int length)
         {
             Length = length;
         }

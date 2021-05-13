@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Text.Json;
 using AntDesign;
 using AntDesign.Internal;
 using Xunit;
@@ -10,6 +11,11 @@ namespace AntDesign.Tests.Form.Validation
 {
     public class RuleValidateHelperTest
     {
+        private static readonly ValidateMessages _defaultValidateMessages = new();
+        private static readonly string _customSuffix = "_custom";
+        private static readonly string _fieldName = "fieldName";
+        private static readonly string _displayName = "displayName";
+
         [Theory]
         [InlineData(RuleFieldType.String, "hello", true, true)]
         [InlineData(RuleFieldType.String, "hello", false, true)]
@@ -198,9 +204,8 @@ namespace AntDesign.Tests.Form.Validation
             new object[] { "", "should be required", "should be required" },
             new object[] { "", "should not be null", "should not be null" },
             new object[] { "", "{0} should not be null", "displayName should not be null" },
-            new object[] { "", null, "The displayName field is required." },
+            new object[] { "", null, string.Format(new ValidateMessages().Required, _displayName) },
         };
-
 
         [Fact]
         public void RuleValidate_Validator()
@@ -397,14 +402,93 @@ namespace AntDesign.Tests.Form.Validation
             new object[] { RuleFieldType.Integer, 3, new object[] { 1, 2, 3 }, true },
             new object[] { RuleFieldType.Integer, 4, new object[] { 1, 2, 3 }, false },
         };
+
+        [Theory]
+        [MemberData(nameof(RuleValidate_ValidateMessages_Values))]
+        public void RuleValidate_ValidateMessages(Rule rule, object value, string expectedMessage)
+        {
+            var validationContext = new RuleValidationContext()
+            {
+                ValidateMessages = GetCustomValidateMessages(),
+                Rule = rule,
+                Value = value,
+                FieldName = _fieldName,
+                DisplayName = _displayName,
+            };
+
+            var resultMessage = RuleValidateHelper.GetValidationResult(validationContext)?.ErrorMessage;
+
+            Assert.Equal(expectedMessage, resultMessage);
+        }
+
+        public static List<object[]> RuleValidate_ValidateMessages_Values => new()
+        {
+            new object[] {
+                new Rule { Required = true },
+                null,
+                string.Format($"{_defaultValidateMessages.Required}{_customSuffix}", _displayName)
+            },
+            new object[] {
+                new Rule { Type= RuleFieldType.Integer, OneOf = new object[] { 1, 2 } },
+                0,
+                string.Format($"{_defaultValidateMessages.OneOf}{_customSuffix}", _displayName, JsonSerializer.Serialize(new object[] { 1, 2 }))
+            },
+        };
+
+        private ValidateMessages GetCustomValidateMessages()
+        {
+            var suffix = _customSuffix;
+
+            var customValidateMessage = new ValidateMessages();
+            customValidateMessage.Default = $"{customValidateMessage.Default}{suffix}";
+            customValidateMessage.Required = $"{customValidateMessage.Required}{suffix}";
+            customValidateMessage.OneOf = $"{customValidateMessage.OneOf}{suffix}";
+            customValidateMessage.Date.Format = $"{customValidateMessage.Date.Format}{suffix}";
+            customValidateMessage.Date.Parse = $"{customValidateMessage.Date.Parse}{suffix}";
+            customValidateMessage.Date.Invalid = $"{customValidateMessage.Date.Invalid}{suffix}";
+
+            customValidateMessage.Types.String = $"{customValidateMessage.Types.String}{suffix}";
+            customValidateMessage.Types.Array = $"{customValidateMessage.Types.Array}{suffix}";
+            customValidateMessage.Types.Object = $"{customValidateMessage.Types.Object}{suffix}";
+            customValidateMessage.Types.Enum = $"{customValidateMessage.Types.Enum}{suffix}";
+            customValidateMessage.Types.Number = $"{customValidateMessage.Types.Number}{suffix}";
+            customValidateMessage.Types.Date = $"{customValidateMessage.Types.Date}{suffix}";
+            customValidateMessage.Types.Boolean = $"{customValidateMessage.Types.Boolean}{suffix}";
+            customValidateMessage.Types.Integer = $"{customValidateMessage.Types.Integer}{suffix}";
+            customValidateMessage.Types.Float = $"{customValidateMessage.Types.Float}{suffix}";
+            customValidateMessage.Types.Regexp = $"{customValidateMessage.Types.Regexp}{suffix}";
+            customValidateMessage.Types.Email = $"{customValidateMessage.Types.Email}{suffix}";
+            customValidateMessage.Types.Url = $"{customValidateMessage.Types.Url}{suffix}";
+
+            customValidateMessage.String.Len = $"{customValidateMessage.String.Len}{suffix}";
+            customValidateMessage.String.Min = $"{customValidateMessage.String.Min}{suffix}";
+            customValidateMessage.String.Max = $"{customValidateMessage.String.Max}{suffix}";
+            customValidateMessage.String.Range = $"{customValidateMessage.String.Range}{suffix}";
+
+            customValidateMessage.Number.Len = $"{customValidateMessage.Number.Len}{suffix}";
+            customValidateMessage.Number.Min = $"{customValidateMessage.Number.Min}{suffix}";
+            customValidateMessage.Number.Max = $"{customValidateMessage.Number.Max}{suffix}";
+            customValidateMessage.Number.Range = $"{customValidateMessage.Number.Range}{suffix}";
+
+            customValidateMessage.Array.Len = $"{customValidateMessage.Array.Len}{suffix}";
+            customValidateMessage.Array.Min = $"{customValidateMessage.Array.Min}{suffix}";
+            customValidateMessage.Array.Max = $"{customValidateMessage.Array.Max}{suffix}";
+            customValidateMessage.Array.Range = $"{customValidateMessage.Array.Range}{suffix}";
+
+            customValidateMessage.Pattern.Mismatch = $"{customValidateMessage.Pattern.Mismatch}{suffix}";
+
+            return customValidateMessage;
+        }
+
         private ValidationResult GetValidationResult(Rule rule, object value)
         {
             var validationContext = new RuleValidationContext()
             {
+                ValidateMessages = new ValidateMessages(),
                 Rule = rule,
                 Value = value,
-                FieldName = "fieldName",
-                DisplayName = "displayName",
+                FieldName = _fieldName,
+                DisplayName = _displayName,
             };
 
             return RuleValidateHelper.GetValidationResult(validationContext);

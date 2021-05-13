@@ -1,7 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using OneOf;
 
 namespace AntDesign.Internal
 {
@@ -9,7 +7,7 @@ namespace AntDesign.Internal
     {
         internal decimal Number { get; }
 
-        internal NumberAttribute(decimal number) : base("The field {0} must be {1}")// TODO: localizable
+        internal NumberAttribute(decimal number)
         {
             Number = number;
         }

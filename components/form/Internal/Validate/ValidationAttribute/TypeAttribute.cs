@@ -8,7 +8,7 @@ namespace AntDesign.Internal
     internal class TypeAttribute : ValidationAttribute
     {
         internal RuleFieldType Type { get; set; }
-        internal TypeAttribute(RuleFieldType type) : base("The field {0} should be type of {1}")// TODO: localizable
+        internal TypeAttribute(RuleFieldType type)
         {
             Type = type;
         }

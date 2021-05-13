@@ -279,6 +279,7 @@ namespace AntDesign
                         Value = propertyValue,
                         FieldName = _fieldIdentifier.FieldName,
                         DisplayName = displayName,
+                        ValidateMessages = ConfigProvider?.ValidateMessages ?? new ValidateMessages(),
                     };
 
                     var result = RuleValidateHelper.GetValidationResult(validationContext);

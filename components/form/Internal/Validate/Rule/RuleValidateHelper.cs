@@ -21,7 +21,6 @@ namespace AntDesign.Internal
             if (!WhitespaceIsValid(validationContext, out result)) return result;
             if (!PatternIsValid(validationContext, out result)) return result;
             if (!ValidatorIsValid(validationContext, out result)) return result;
-            if (!EnumIsValid(validationContext, out result)) return result;
             if (!DefaultFieldIsValid(validationContext, out result)) return result;
             if (!FieldsIsValid(validationContext, out result)) return result;
             if (!OneOfIsValid(validationContext, out result)) return result;
@@ -34,7 +33,10 @@ namespace AntDesign.Internal
         {
             if (validationContext.Rule.Required == true)
             {
-                if (!IsValid(new RequiredAttribute(), validationContext, out ValidationResult validationResult))
+                var attribute = new RequiredAttribute();
+                attribute.ErrorMessage = validationContext.ValidateMessages.Required;
+
+                if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
                 {
                     result = validationResult;
 
@@ -52,32 +54,29 @@ namespace AntDesign.Internal
             var rule = validationContext.Rule;
             if (rule.Len != null)
             {
+                ValidationAttribute attribute = null;
+
                 if (rule.Type == RuleFieldType.String)
                 {
-                    if (!IsValid(new StringLengthAttribute((int)rule.Len), validationContext, out ValidationResult validationResult))
-                    {
-                        result = validationResult;
-
-                        return false;
-                    }
+                    attribute = new StringLengthAttribute((int)rule.Len);
+                    attribute.ErrorMessage = validationContext.ValidateMessages.String.Len;
                 }
                 if (rule.Type == RuleFieldType.Number)
                 {
-                    if (!IsValid(new NumberAttribute((decimal)rule.Len), validationContext, out ValidationResult validationResult))
-                    {
-                        result = validationResult;
-
-                        return false;
-                    }
+                    attribute = new NumberAttribute((decimal)rule.Len);
+                    attribute.ErrorMessage = validationContext.ValidateMessages.Number.Len;
                 }
                 if (rule.Type == RuleFieldType.Array)
                 {
-                    if (!IsValid(new ArrayLengthAttribute((int)rule.Len), validationContext, out ValidationResult validationResult))
-                    {
-                        result = validationResult;
+                    attribute = new ArrayLengthAttribute((int)rule.Len);
+                    attribute.ErrorMessage = validationContext.ValidateMessages.Array.Len;
+                }
 
-                        return false;
-                    }
+                if (attribute != null && !IsValid(attribute, validationContext, out ValidationResult validationResult))
+                {
+                    result = validationResult;
+
+                    return false;
                 }
             }
 
@@ -92,28 +91,35 @@ namespace AntDesign.Internal
 
             if (rule.Min != null)
             {
-                if (rule.Type.IsIn(RuleFieldType.String, RuleFieldType.Array))
-                {
-                    if (!IsValid(new MinLengthAttribute((int)rule.Min), validationContext, out ValidationResult validationResult))
-                    {
-                        result = validationResult;
+                ValidationAttribute attribute = null;
 
-                        return false;
-                    }
+                if (rule.Type.IsIn(RuleFieldType.String))
+                {
+                    attribute = new MinLengthAttribute((int)rule.Min);
+                    attribute.ErrorMessage = validationContext.ValidateMessages.String.Min;
                 }
-                if (rule.Type == RuleFieldType.Number)
+
+                if (rule.Type.IsIn(RuleFieldType.Array))
+                {
+                    attribute = new MinLengthAttribute((int)rule.Min);
+                    attribute.ErrorMessage = validationContext.ValidateMessages.Array.Min;
+                }
+
+                if (rule.Type.IsIn(RuleFieldType.Number, RuleFieldType.Integer, RuleFieldType.Float))
                 {
                     var type = validationContext.Value.GetType();
                     var typeMaxValue = GetMaxValueString(type);
 
-                    var attribute = new RangeAttribute(type, ((decimal)rule.Min).ToString(), typeMaxValue);
+                    attribute = new RangeAttribute(type, ((decimal)rule.Min).ToString(), typeMaxValue);
 
-                    if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
-                    {
-                        result = validationResult;
+                    attribute.ErrorMessage = validationContext.ValidateMessages.Number.Min;
+                }
 
-                        return false;
-                    }
+                if (attribute != null && !IsValid(attribute, validationContext, out ValidationResult validationResult))
+                {
+                    result = validationResult;
+
+                    return false;
                 }
             }
 
@@ -128,28 +134,34 @@ namespace AntDesign.Internal
 
             if (rule.Max != null)
             {
-                if (rule.Type.IsIn(RuleFieldType.String, RuleFieldType.Array))
-                {
-                    if (!IsValid(new MaxLengthAttribute((int)rule.Max), validationContext, out ValidationResult validationResult))
-                    {
-                        result = validationResult;
+                ValidationAttribute attribute = null;
 
-                        return false;
-                    }
+                if (rule.Type.IsIn(RuleFieldType.String))
+                {
+                    attribute = new MaxLengthAttribute((int)rule.Max);
+                    attribute.ErrorMessage = validationContext.ValidateMessages.String.Min;
                 }
-                if (rule.Type == RuleFieldType.Number)
+
+                if (rule.Type.IsIn(RuleFieldType.Array))
+                {
+                    attribute = new MaxLengthAttribute((int)rule.Max);
+                    attribute.ErrorMessage = validationContext.ValidateMessages.Array.Min;
+                }
+
+                if (rule.Type.IsIn(RuleFieldType.Number, RuleFieldType.Integer, RuleFieldType.Float))
                 {
                     var type = validationContext.Value.GetType();
                     var typeMinValue = GetMinValueString(type);
 
-                    var attribute = new RangeAttribute(type, typeMinValue, ((decimal)rule.Max).ToString());
+                    attribute = new RangeAttribute(type, typeMinValue, ((decimal)rule.Max).ToString());
+                    attribute.ErrorMessage = validationContext.ValidateMessages.Number.Max;
+                }
 
-                    if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
-                    {
-                        result = validationResult;
+                if (attribute != null && !IsValid(attribute, validationContext, out ValidationResult validationResult))
+                {
+                    result = validationResult;
 
-                        return false;
-                    }
+                    return false;
                 }
             }
 
@@ -162,7 +174,10 @@ namespace AntDesign.Internal
         {
             if (validationContext.Rule.Whitespace == true)
             {
-                if (!IsValid(new WhitespaceAttribute(), validationContext, out ValidationResult validationResult))
+                var attribute = new WhitespaceAttribute();
+                attribute.ErrorMessage = validationContext.ValidateMessages.Whitespace;
+
+                if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
                 {
                     result = validationResult;
 
@@ -180,7 +195,10 @@ namespace AntDesign.Internal
             var rule = validationContext.Rule;
             if (!string.IsNullOrEmpty(rule.Pattern))
             {
-                if (!IsValid(new RegularExpressionAttribute(rule.Pattern), validationContext, out ValidationResult validationResult))
+                var attribute = new RegularExpressionAttribute(rule.Pattern);
+                attribute.ErrorMessage = validationContext.ValidateMessages.Pattern.Mismatch;
+
+                if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
                 {
                     result = validationResult;
 
@@ -214,30 +232,16 @@ namespace AntDesign.Internal
         private static bool TypeIsValid(RuleValidationContext validationContext, out ValidationResult result)
         {
             var rule = validationContext.Rule;
-            if (!IsValid(new TypeAttribute(rule.Type), validationContext, out ValidationResult validationResult))
+
+            var attribute = new TypeAttribute(rule.Type);
+            attribute.ErrorMessage = validationContext.ValidateMessages.GetTypeMessage(rule.Type);
+
+            if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
             {
                 result = validationResult;
 
                 return false;
             }
-
-            result = null;
-
-            return true;
-        }
-
-        private static bool EnumIsValid(RuleValidationContext validationContext, out ValidationResult result)
-        {
-            // TODO
-            //if (validationContext.Rule.Enum != null)
-            //{
-            //    if (!IsValid(new EnumDataTypeAttribute(), validationContext, out ValidationResult validationResult))
-            //    {
-            //        result = validationResult;
-
-            //        return false;
-            //    }
-            //}
 
             result = null;
 
@@ -252,6 +256,7 @@ namespace AntDesign.Internal
 
                 var context = new RuleValidationContext()
                 {
+                    ValidateMessages = validationContext.ValidateMessages,
                     Rule = validationContext.Rule.DefaultField,
                     FieldName = validationContext.FieldName,
                 };
@@ -290,6 +295,7 @@ namespace AntDesign.Internal
 
             var context = new RuleValidationContext()
             {
+                ValidateMessages = validationContext.ValidateMessages,
                 DisplayName = validationContext.DisplayName,
                 FieldName = validationContext.FieldName,
             };
@@ -355,7 +361,10 @@ namespace AntDesign.Internal
 
             if (rule.Type != RuleFieldType.Array && rule.OneOf != null)
             {
-                if (!IsValid(new OneOfAttribute(rule.OneOf), validationContext, out ValidationResult validationResult))
+                var attribute = new OneOfAttribute(rule.OneOf);
+                attribute.ErrorMessage = validationContext.ValidateMessages.OneOf;
+
+                if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
                 {
                     result = validationResult;
 

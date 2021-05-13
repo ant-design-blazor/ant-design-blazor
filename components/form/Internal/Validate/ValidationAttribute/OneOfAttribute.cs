@@ -9,7 +9,7 @@ namespace AntDesign.Internal
     {
         internal object[] Values { get; set; }
 
-        internal OneOfAttribute(object[] values) : base("The field {0} should be one of {1}")// TODO: localizable
+        internal OneOfAttribute(object[] values)
         {
             Values = values;
         }

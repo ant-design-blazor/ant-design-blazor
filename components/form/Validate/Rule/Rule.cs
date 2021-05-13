@@ -7,8 +7,8 @@ namespace AntDesign
 {
     /*
         Done: defaultField	    仅在 type 为 array 类型时有效，用于指定数组元素的校验规则	                                rule
-        TODO: enum(replace by oneOf)	    是否匹配枚举中的值（需要将 type 设置为 enum）	                                any[]
-        TODO: oneOf	        是否匹配数组中的值（type 不能为 array 类型）	                                            object[]
+        would not support: enum(replace by oneOf)	    是否匹配枚举中的值（需要将 type 设置为 enum）	                                any[]
+        Done: oneOf	        是否匹配数组中的值（type 不能为 array 类型）	                                            object[]
         Done: fields	        仅在 type 为 array 或 object 类型时有效，用于指定子元素的校验规则	                        Record<string, rule>
         Done: len	            string 类型时为字符串长度；number 类型时为确定数字； array 类型时为数组长度	                number
         Done: max	            必须设置 type：string 类型为字符串最大长度；number 类型时为最大值；array 类型时为数组最大长度	number
@@ -34,7 +34,6 @@ namespace AntDesign
         public Rule DefaultField { get; set; }
         public object[] OneOf { get; set; }
         public Dictionary<object, Rule> Fields { get; set; }
-        //public object[] Enum { get; set; } TODO
         public Func<RuleValidationContext, ValidationResult> Validator { get; set; }
         public Func<object, object> Transform { get; set; } = (value) => value;
         public RuleFieldType Type { get; set; } = RuleFieldType.String;
