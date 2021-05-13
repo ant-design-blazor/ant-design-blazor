@@ -34,6 +34,7 @@ namespace AntDesign.Internal
                 RuleFieldType.Boolean => value is bool,
                 RuleFieldType.Regexp => IsRegexp(value),
                 RuleFieldType.Array => value is Array,
+                RuleFieldType.Object => value is object,
                 RuleFieldType.Enum => value is Enum,
                 RuleFieldType.Date => value is DateTime,
                 RuleFieldType.Url => new UrlAttribute().IsValid(value),
@@ -69,6 +70,7 @@ namespace AntDesign.Internal
         private bool IsNumber(object value)
         {
             Type[] numberTypes = new Type[] {
+                typeof(byte),
                 typeof(short),
                 typeof(int),
                 typeof(long),
@@ -92,6 +94,7 @@ namespace AntDesign.Internal
         private bool IsInteger(object value)
         {
             Type[] integerTypes = new Type[] {
+                typeof(byte),
                 typeof(short),
                 typeof(int),
                 typeof(long),

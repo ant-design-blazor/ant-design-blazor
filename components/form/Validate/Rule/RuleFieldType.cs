@@ -9,6 +9,7 @@
         Integer,
         Float,
         Array,
+        Object,
         Enum,
         Date,
         Url,

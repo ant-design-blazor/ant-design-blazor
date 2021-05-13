@@ -11,18 +11,19 @@ namespace AntDesign.Tests.Form.Validation
     public class RuleValidateHelperTest
     {
         [Theory]
-        [InlineData("hello", true, true)]
-        [InlineData("hello", false, true)]
-        [InlineData(null, true, false)]
-        [InlineData(null, false, true)]
-        [InlineData("", true, false)]
-        [InlineData("", false, true)]
-        [InlineData(123, true, true)]
-        [InlineData(123, false, true)]
-        public void RuleValidate_Required(object value, bool required, bool expectedValid)
+        [InlineData(RuleFieldType.String, "hello", true, true)]
+        [InlineData(RuleFieldType.String, "hello", false, true)]
+        [InlineData(RuleFieldType.String, null, true, false)]
+        [InlineData(RuleFieldType.String, null, false, true)]
+        [InlineData(RuleFieldType.String, "", true, false)]
+        [InlineData(RuleFieldType.String, "", false, true)]
+        [InlineData(RuleFieldType.Number, 123, true, true)]
+        [InlineData(RuleFieldType.Integer, 123, false, true)]
+        public void RuleValidate_Required(RuleFieldType type, object value, bool required, bool expectedValid)
         {
             var rule = new Rule()
             {
+                Type = type,
                 Required = required,
             };
 
@@ -32,18 +33,19 @@ namespace AntDesign.Tests.Form.Validation
         }
 
         [Theory]
-        [InlineData(" ", true, false)]
-        [InlineData(" ", false, true)]
-        [InlineData(null, true, true)]
-        [InlineData(null, false, true)]
-        [InlineData("", true, true)]
-        [InlineData("", false, true)]
-        [InlineData(123, true, true)]
-        [InlineData(123, false, true)]
-        public void RuleValidate_Whitespace(object value, bool whitespace, bool expectedValid)
+        [InlineData(RuleFieldType.String, " ", true, false)]
+        [InlineData(RuleFieldType.String, " ", false, true)]
+        [InlineData(RuleFieldType.String, null, true, true)]
+        [InlineData(RuleFieldType.String, null, false, true)]
+        [InlineData(RuleFieldType.String, "", true, true)]
+        [InlineData(RuleFieldType.String, "", false, true)]
+        [InlineData(RuleFieldType.Number, 123, true, true)]
+        [InlineData(RuleFieldType.Integer, 123, false, true)]
+        public void RuleValidate_Whitespace(RuleFieldType type, object value, bool whitespace, bool expectedValid)
         {
             var rule = new Rule()
             {
+                Type = type,
                 Whitespace = whitespace,
             };
 
@@ -208,6 +210,7 @@ namespace AntDesign.Tests.Form.Validation
 
             var rule = new Rule()
             {
+                Type = RuleFieldType.Integer,
                 Validator = (validationContext) =>
                 {
                     var validationAttribute = new CustomValidationAttribute(MAX);
@@ -296,6 +299,104 @@ namespace AntDesign.Tests.Form.Validation
 
         };
 
+        [Theory]
+        [MemberData(nameof(RuleValidate_DefaultField_Values))]
+        public void RuleValidate_DefaultField(RuleFieldType type, object value, Rule defaultField, bool expectedValid)
+        {
+            var rule = new Rule()
+            {
+                Type = type,
+                DefaultField = defaultField,
+            };
+
+            var isValid = GetValidationResult(rule, value) == null;
+
+            Assert.Equal(expectedValid, isValid);
+        }
+
+        public static List<object[]> RuleValidate_DefaultField_Values => new()
+        {
+            new object[] { RuleFieldType.Array, new string[] { "one", "there", "nine" }, new Rule { Type = RuleFieldType.String, Max = 5 }, true },
+            new object[] { RuleFieldType.Array, new string[] { "one", "there", "nine" }, new Rule { Type = RuleFieldType.String, Max = 3 }, false },
+        };
+
+        [Theory]
+        [MemberData(nameof(RuleValidate_Fields_Values))]
+        public void RuleValidate_Fields(RuleFieldType type, object value, Dictionary<object, Rule> fields, bool expectedValid)
+        {
+            var rule = new Rule()
+            {
+                Type = type,
+                Fields = fields,
+            };
+
+            var isValid = GetValidationResult(rule, value) == null;
+
+            Assert.Equal(expectedValid, isValid);
+        }
+
+        public static List<object[]> RuleValidate_Fields_Values => new()
+        {
+            new object[] {
+                RuleFieldType.Array,
+                new string[] { "one", "there", "nine" },
+                new Dictionary<object, Rule>{
+                    { 0, new Rule { Type = RuleFieldType.String, Max = 5 } },
+                    { 1, new Rule { Type = RuleFieldType.String, Len=5 } },
+                    { 2, new Rule { Type = RuleFieldType.String, Max = 4 } },
+                },
+                true
+            },
+            new object[] {
+                RuleFieldType.Array,
+                new string[] { "one", "there", "nine" },
+                new Dictionary<object, Rule>{
+                    { 0, new Rule { Type = RuleFieldType.String, Max = 2 } },
+                    { 1, new Rule { Type = RuleFieldType.String, Len=5 } },
+                    { 2, new Rule { Type = RuleFieldType.String, Max = 4 } },
+                },
+                false
+            },
+            new object[] {
+                RuleFieldType.Object,
+                new FieldsTestObj(),
+                new Dictionary<object, Rule>{
+                    { "_fieldName", new Rule { Type = RuleFieldType.String, Max = 3 } },
+                    { "_fieldAge", new Rule { Type = RuleFieldType.Integer, Len=10 } },
+                    { "PropertyName", new Rule { Type = RuleFieldType.String, Max = 3 } },
+                    { "PropertyAge", new Rule { Type = RuleFieldType.Integer, Len = 10 } },
+                },
+                true
+            },
+        };
+
+        [Theory]
+        [MemberData(nameof(RuleValidate_OneOf_Values))]
+        public void RuleValidate_OneOf(RuleFieldType type, object value, object[] oneOf, bool expectedValid)
+        {
+            var rule = new Rule()
+            {
+                Type = type,
+                OneOf = oneOf,
+            };
+
+            var isValid = GetValidationResult(rule, value) == null;
+
+            Assert.Equal(expectedValid, isValid);
+        }
+
+        public static List<object[]> RuleValidate_OneOf_Values => new()
+        {
+            new object[] { RuleFieldType.String, "one", new object[] { "one", "there", "nine" }, true },
+            new object[] { RuleFieldType.String, "there", new object[] { "one", "there", "nine" }, true },
+            new object[] { RuleFieldType.String, "nine", new object[] { "one", "there", "nine" }, true },
+            new object[] { RuleFieldType.String, "hello", new object[] { "one", "there", "nine" }, false },
+
+            new object[] { RuleFieldType.Integer, 1, new object[] { 1, 2, 3 }, true },
+            new object[] { RuleFieldType.Integer, 2, new object[] { 1, 2, 3 }, true },
+            new object[] { RuleFieldType.Integer, 3, new object[] { 1, 2, 3 }, true },
+            new object[] { RuleFieldType.Integer, 4, new object[] { 1, 2, 3 }, false },
+        };
         private ValidationResult GetValidationResult(Rule rule, object value)
         {
             var validationContext = new RuleValidationContext()
@@ -339,6 +440,14 @@ class CustomValidationAttribute : ValidationAttribute
 
         return valueAsInt < Max;
     }
+}
+
+class FieldsTestObj
+{
+    public string _fieldName = "one";
+    public int _fieldAge = 10;
+    public string PropertyName { get; set; } = "one";
+    public int PropertyAge { get; set; } = 10;
 }
 
 enum RuleValidateHelperEnum

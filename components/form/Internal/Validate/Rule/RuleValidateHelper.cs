@@ -21,6 +21,10 @@ namespace AntDesign.Internal
             if (!WhitespaceIsValid(validationContext, out result)) return result;
             if (!PatternIsValid(validationContext, out result)) return result;
             if (!ValidatorIsValid(validationContext, out result)) return result;
+            if (!EnumIsValid(validationContext, out result)) return result;
+            if (!DefaultFieldIsValid(validationContext, out result)) return result;
+            if (!FieldsIsValid(validationContext, out result)) return result;
+            if (!OneOfIsValid(validationContext, out result)) return result;
 
             return null;
         }
@@ -215,6 +219,148 @@ namespace AntDesign.Internal
                 result = validationResult;
 
                 return false;
+            }
+
+            result = null;
+
+            return true;
+        }
+
+        private static bool EnumIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        {
+            // TODO
+            //if (validationContext.Rule.Enum != null)
+            //{
+            //    if (!IsValid(new EnumDataTypeAttribute(), validationContext, out ValidationResult validationResult))
+            //    {
+            //        result = validationResult;
+
+            //        return false;
+            //    }
+            //}
+
+            result = null;
+
+            return true;
+        }
+
+        private static bool DefaultFieldIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        {
+            if (validationContext.Rule.Type == RuleFieldType.Array && validationContext.Rule.DefaultField != null)
+            {
+                Array values = validationContext.Value as Array;
+
+                var context = new RuleValidationContext()
+                {
+                    Rule = validationContext.Rule.DefaultField,
+                    FieldName = validationContext.FieldName,
+                };
+
+                int index = 0;
+                foreach (var value in values)
+                {
+                    context.Value = value;
+                    context.DisplayName = $"{validationContext.DisplayName}[{index}]";
+
+                    result = GetValidationResult(context);
+                    if (result != null)
+                    {
+                        return false;
+                    }
+
+                    index++;
+                }
+            }
+
+            result = null;
+
+            return true;
+        }
+
+        private static bool FieldsIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        {
+            var rule = validationContext.Rule;
+
+            if (!rule.Type.IsIn(RuleFieldType.Array, RuleFieldType.Object) || rule.Fields == null)
+            {
+                result = null;
+
+                return true;
+            }
+
+            var context = new RuleValidationContext()
+            {
+                DisplayName = validationContext.DisplayName,
+                FieldName = validationContext.FieldName,
+            };
+
+            Array arrValues = validationContext.Value as Array;
+            var objectType = validationContext.Value.GetType();
+
+            foreach (var key in rule.Fields.Keys)
+            {
+                if (rule.Type == RuleFieldType.Array)
+                {
+                    int index = (int)key;
+
+                    // out of range, ignore validation
+                    if (index >= arrValues.Length)
+                    {
+                        continue;
+                    }
+
+                    context.Value = arrValues.GetValue(index);
+                    context.DisplayName = $"{validationContext.DisplayName}[{index}]";
+                }
+                else
+                {
+                    var propertyValue = objectType.GetProperty(key.ToString());
+                    if (propertyValue != null)
+                    {
+                        context.Value = propertyValue.GetValue(validationContext.Value);
+                    }
+                    else
+                    {
+                        var fieldValue = objectType.GetField(key.ToString());
+
+                        // field not exists, ignore validation
+                        if (fieldValue == null)
+                        {
+                            continue;
+                        }
+
+                        context.Value = fieldValue.GetValue(validationContext.Value);
+                    }
+
+                    context.DisplayName = $"{validationContext.DisplayName}.{key}";
+                }
+
+                context.Rule = rule.Fields[key];
+
+                result = GetValidationResult(context);
+                if (result != null)
+                {
+                    return false;
+                }
+            }
+
+            result = null;
+
+            return true;
+        }
+
+        private static bool OneOfIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        {
+            var rule = validationContext.Rule;
+
+            if (rule.Type != RuleFieldType.Array && rule.OneOf != null)
+            {
+                if (!IsValid(new OneOfAttribute(rule.OneOf), validationContext, out ValidationResult validationResult))
+                {
+                    result = validationResult;
+
+                    return false;
+                }
             }
 
             result = null;
