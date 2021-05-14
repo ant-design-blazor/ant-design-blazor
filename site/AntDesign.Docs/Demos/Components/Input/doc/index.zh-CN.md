@@ -60,6 +60,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | DefaultToEmptyString | When `false`, value will be set to `null` when content is empty or whitespace. When `true`, value will be set to empty string. | boolean        | false         |
 | MinRows | `TextArea` will allow shrinking, but it will stop when visible rows = MinRows (will not shrink further).  | int        | 1         |
 | MaxRows | `TextArea` will allow growing, but it will stop when visible rows = MaxRows (will not grow further).  | int        | uint.MaxValue         |
+| ShowCount | Whether show text count. Requires `MaxLength` attribute to be present  | boolean | false         | 0.9
 | OnResize | Callback when the size changes                                | Action<OnResizeEventArgs>        | -         |
 
 ### Search
