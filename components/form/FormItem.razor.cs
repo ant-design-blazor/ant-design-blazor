@@ -275,6 +275,8 @@ namespace AntDesign
 
             if (propertyInfo != null)
             {
+                var validateMessages = Form.ValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new ValidateMessages();
+
                 foreach (var rule in Rules)
                 {
                     var propertyValue = propertyInfo.GetValue(_fieldIdentifier.Model);
@@ -285,7 +287,7 @@ namespace AntDesign
                         Value = propertyValue,
                         FieldName = _fieldIdentifier.FieldName,
                         DisplayName = displayName,
-                        ValidateMessages = ConfigProvider?.ValidateMessages ?? new ValidateMessages(),
+                        ValidateMessages = validateMessages,
                     };
 
                     var result = RuleValidateHelper.GetValidationResult(validationContext);

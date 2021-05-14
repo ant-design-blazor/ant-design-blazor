@@ -15,6 +15,7 @@ namespace AntDesign.Internal
         internal EditContext EditContext { get; }
 
         internal FormValidateMode ValidateMode { get; }
+        internal ValidateMessages ValidateMessages { get; }
 
         internal string Size { get; }
 

@@ -20,7 +20,7 @@ namespace AntDesign
         }
 
         [Parameter]
-        public ValidateMessages ValidateMessages { get; set; }
+        public FormConfig Form { get; set; }
 
         [Parameter] public RenderFragment ChildContent { get; set; }
 

@@ -117,6 +117,10 @@ namespace AntDesign
             builder.CloseComponent();
         };
 
+        [Parameter]
+        public ValidateMessages ValidateMessages { get; set; }
+
+
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
 
@@ -143,6 +147,7 @@ namespace AntDesign
         bool IForm.IsModified => _editContext.IsModified();
 
         FormValidateMode IForm.ValidateMode => ValidateMode;
+        ValidateMessages IForm.ValidateMessages => ValidateMessages;
 
         public event Action<IForm> OnFinishEvent;
 
