@@ -132,13 +132,13 @@ namespace AntDesign.Internal
                 if (rule.Type.IsIn(RuleFieldType.String))
                 {
                     attribute = new MaxLengthAttribute((int)rule.Max);
-                    attribute.ErrorMessage = validationContext.ValidateMessages.String.Min;
+                    attribute.ErrorMessage = validationContext.ValidateMessages.String.Max;
                 }
 
                 if (rule.Type.IsIn(RuleFieldType.Array))
                 {
                     attribute = new MaxLengthAttribute((int)rule.Max);
-                    attribute.ErrorMessage = validationContext.ValidateMessages.Array.Min;
+                    attribute.ErrorMessage = validationContext.ValidateMessages.Array.Max;
                 }
 
                 if (rule.Type.IsIn(RuleFieldType.Number, RuleFieldType.Integer, RuleFieldType.Float))
