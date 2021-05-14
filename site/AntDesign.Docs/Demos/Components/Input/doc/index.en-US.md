@@ -60,3 +60,11 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | MaxRows | `TextArea` will allow growing, but it will stop when visible rows = MaxRows (will not grow further).  | int        | uint.MaxValue         |
 | OnResize | Callback when the size changes | Action<OnResizeEventArgs>        | -         |
 
+### Search
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| ClassicSearchIcon | Search input is rendered with suffix search icon, not as a button. Will be ignored when EnterButton is not false. | boolean        | false         | 0.9
+| EnterButton | Whether to show an enter button after input. This property conflicts with the `AddonAfter` property | boolean / string        | false         |
+| Loading | Search box with loading. | boolean        | false         |
+| OnSearch | Search input is rendered with suffix search icon, not as a button. Will be ignored when EnterButton is not false. | Action<string>        | -    |

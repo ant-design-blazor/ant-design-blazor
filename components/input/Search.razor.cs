@@ -1,25 +1,42 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
+using System;
 using System.Threading.Tasks;
 
 namespace AntDesign
 {
     public partial class Search : Input<string>
     {
+        /// <summary>
+        /// Search input is rendered with suffix search icon, not as a button.
+        /// Will be ignored when EnterButton != false
+        /// </summary>
+        [Parameter]
+        public bool ClassicSearchIcon { get; set; }
+
+        /// <summary>
+        /// Whether to show an enter button after input. This property conflicts with the AddonAfter property
+        /// </summary>
+        [Parameter]
+        public OneOf<bool, string> EnterButton { get; set; } = false;
+
+        /// <summary>
+        /// Search box with loading
+        /// </summary>
         [Parameter]
         public bool Loading { get; set; }
 
+        /// <summary>
+        /// The callback function triggered when you click on the search-icon, the clear-icon or press the Enter key
+        /// </summary>
         [Parameter]
         public EventCallback<string> OnSearch { get; set; }
 
-        [Parameter]
-        public OneOf<bool, string> EnterButton { get; set; } = false;
 
         protected override bool IgnoreOnChangeAndBlur => OnSearch.HasDelegate;
 
         protected override bool EnableOnPressEnter => OnSearch.HasDelegate || OnPressEnter.HasDelegate;
-
 
         protected override void OnInitialized()
         {
@@ -27,47 +44,68 @@ namespace AntDesign
 
             if (EnterButton.IsT0 && !EnterButton.AsT0)
             {
-                Suffix = builder =>
+                if (ClassicSearchIcon)
                 {
-                    builder.OpenComponent<Icon>(1);
-                    builder.AddAttribute(2, "Class", $"{PrefixCls}-search-icon");
-                    if (Loading)
+                    Suffix = builder =>
                     {
-                        builder.AddAttribute(3, "Type", "loading");
-                    }
-                    else
+                        builder.OpenComponent<Icon>(1);
+                        builder.AddAttribute(2, "Class", $"{PrefixCls}-search-icon");
+                        if (Loading)
+                        {
+                            builder.AddAttribute(3, "Type", "loading");
+                        }
+                        else
+                        {
+                            builder.AddAttribute(4, "Type", "search");
+                        }
+                        builder.AddAttribute(5, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
+                        builder.CloseComponent();
+                    };
+                }
+                else
+                {
+                    AddOnAfter = builder =>
                     {
-                        builder.AddAttribute(4, "Type", "search");
-                    }
-                    builder.AddAttribute(5, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
-                    builder.CloseComponent();
-                };
+                        builder.OpenComponent<Button>(6);
+                        builder.AddAttribute(7, "Class", $"{PrefixCls}-search-button");
+                        builder.AddAttribute(8, "Type", "default");
+                        builder.AddAttribute(9, "Size", Size);
+                        builder.AddAttribute(10, "Loading", Loading);
+                        if (!Loading)
+                        {
+                            builder.AddAttribute(12, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
+                        }
+                        builder.AddAttribute(13, "Icon", "search");
+
+                        builder.CloseComponent();
+                    };
+                }
             }
             else
             {
                 AddOnAfter = builder =>
                 {
-                    builder.OpenComponent<Button>(6);
-                    builder.AddAttribute(7, "Class", $"{PrefixCls}-search-button");
-                    builder.AddAttribute(8, "Type", "primary");
-                    builder.AddAttribute(9, "Size", Size);
-                    builder.AddAttribute(10, "Loading", Loading);
+                    builder.OpenComponent<Button>(11);
+                    builder.AddAttribute(12, "Class", $"{PrefixCls}-search-button");
+                    builder.AddAttribute(13, "Type", "primary");
+                    builder.AddAttribute(14, "Size", Size);
+                    builder.AddAttribute(15, "Loading", Loading);
                     if (!Loading)
                     {
-                        builder.AddAttribute(11, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
+                        builder.AddAttribute(16, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                     }
 
                     EnterButton.Switch(boolean =>
                     {
                         if (boolean)
                         {
-                            builder.AddAttribute(12, "Icon", "search");
+                            builder.AddAttribute(17, "Icon", "search");
                         }
                     }, str =>
                     {
-                        builder.AddAttribute(13, "ChildContent", new RenderFragment((b) =>
+                        builder.AddAttribute(18, "ChildContent", new RenderFragment((b) =>
                         {
-                            b.AddContent(14, str);
+                            b.AddContent(19, str);
                         }));
                     });
 

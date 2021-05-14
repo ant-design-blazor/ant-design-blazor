@@ -58,3 +58,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | MinRows | `TextArea` will allow shrinking, but it will stop when visible rows = MinRows (will not shrink further).  | int        | 1         |
 | MaxRows | `TextArea` will allow growing, but it will stop when visible rows = MaxRows (will not grow further).  | int        | uint.MaxValue         |
 | OnResize | Callback when the size changes                                | Action<OnResizeEventArgs>        | -         |
+
+### Search
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| ClassicSearchIcon | Search input is rendered with suffix search icon, not as a button. Will be ignored when EnterButton is not false. | boolean        | false         | 0.9
+| EnterButton | 是否有确认按钮，可设为按钮文字。该属性会与 addonAfter 冲突。 | boolean / string        | false         |
+| Loading | 搜索 loading | boolean        | false         |
+| OnSearch | 点击搜索图标、清除图标，或按下回车键时的回调 | Action<string>        | -    |
