@@ -124,7 +124,7 @@ namespace AntDesign
             => await Js.FocusAsync(target, behavior, preventScroll);
 
         /// <summary>
-        /// Standard Blur. Uses JS introp.
+        /// Standard Blur. Uses JS interop.
         /// </summary>
         /// <param name="target">Element that will receive focus.</param>
         protected async Task BlurAsync(ElementReference target)
