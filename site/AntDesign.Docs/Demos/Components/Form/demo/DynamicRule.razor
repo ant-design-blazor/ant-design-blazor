@@ -10,6 +10,8 @@
       ValidateOnChange="@validateOnChange"
       LabelColSpan="10"
       WrapperColSpan="14"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
       Size="@AntSizeLDSType.Small">
     <FormItem Label="Rules-UserName" Rules=@(userNameRules)>
         <Input @bind-Value="@context.Username" />
@@ -60,6 +62,7 @@
         public string Validator { get; set; }
         public decimal Number { get; set; }
         public decimal Transform { get; set; } = 3;
+
         [ValidateComplexType]
         public Person Person { get; set; } = new();
     }
@@ -109,6 +112,16 @@
     private Rule[] transformRules = new Rule[]{
         new Rule { Type = RuleFieldType.Number, Max=10, Transform = value => (decimal)value + 1},
     };
+    
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(modelRules)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(modelRules)}");
+    }
 
     class CustomValidationAttribute : ValidationAttribute
     {
