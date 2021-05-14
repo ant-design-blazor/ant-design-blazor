@@ -25,7 +25,7 @@ namespace AntDesign.Core.Extensions
 
         public static async Task FocusAsync(this IJSRuntime jSRuntime, ElementReference target, bool preventScroll = false)
         {
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
             await target.FocusAsync(preventScroll);
 #else
             try
