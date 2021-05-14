@@ -199,8 +199,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="behavior">enum: AntDesign.FocusBehavior</param>
         /// <param name="preventScroll">When true, element receiving focus will not be scrolled to.</param>
-        /// <returns></returns>
-        public async Task Focus(FocusBehavior behavior = default, bool preventScroll = false)
+        public virtual async Task Focus(FocusBehavior behavior = default, bool preventScroll = false)
         {
             if (behavior == FocusBehavior.FocusAndClear)
             {
@@ -210,6 +209,7 @@ namespace AntDesign
             else
             {
                 await FocusAsync(Ref, behavior, preventScroll);
+                IsFocused = true;
             }
         }
 
@@ -254,7 +254,7 @@ namespace AntDesign
         }
 
         protected virtual void SetClasses()
-        {
+        {            
             AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper";
 

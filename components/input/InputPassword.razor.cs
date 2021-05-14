@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -57,8 +58,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-password-small", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-password-rtl", () => RTL);
 
-            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-password");
-
+            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-password");            
             if (VisibilityToggle)
             {
                 Suffix = new RenderFragment((builder) =>
@@ -72,15 +72,9 @@ namespace AntDesign
                         builder.AddAttribute(4, "type", _eyeIcon);
                         builder.AddAttribute(5, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async args =>
                         {
-                            var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
-
-                            IsFocused = true;
-                            await this.FocusAsync(Ref);
-
                             ToggleVisibility(args);
 
-                            if (element.SelectionStart != 0)
-                                await Js.SetSelectionStartAsync(Ref, element.SelectionStart);
+                            await Focus(FocusBehavior.FocusAtLast);
                         }));
                         builder.CloseComponent();
                     }
@@ -90,6 +84,26 @@ namespace AntDesign
                     }
                     builder.CloseElement();
                 });
+            }
+        }
+
+        /// <summary>
+        /// Focus behavior for InputPassword component with optional behaviors.
+        /// Special behavior required for wasm.
+        /// </summary>
+        /// <param name="behavior">enum: AntDesign.FocusBehavior</param>
+        /// <param name="preventScroll">When true, element receiving focus will not be scrolled to.</param>
+        public override async Task Focus(FocusBehavior behavior = FocusBehavior.FocusAtLast, bool preventScroll = false)
+        {
+            await base.Focus(behavior, preventScroll);
+
+            //An ugly solution for InputPassword in wasm to receive focus and keep 
+            //cursor at the last character. Any improvements are very welcome. 
+            if (Js.IsBrowser())
+            {
+                await Task.Yield();
+                StateHasChanged();
+                await base.Focus(behavior, preventScroll);
             }
         }
 

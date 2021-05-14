@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -61,7 +62,8 @@ namespace AntDesign
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException($"Please enter a value between {MinRows} and {uint.MaxValue}");
+                    _maxRows = uint.MaxValue;
+                    Debug.WriteLine($"Value of {nameof(MaxRows)}({MaxRows}) has to be between {nameof(MinRows)}({MinRows}) and {uint.MaxValue}");
                 }
             }
         }
@@ -88,7 +90,8 @@ namespace AntDesign
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException(nameof(MinRows), $"Please enter a value between {DEFAULT_MIN_ROWS} and {MaxRows}");
+                    _minRows = DEFAULT_MIN_ROWS;
+                    Debug.WriteLine($"Value of {nameof(MinRows)}({MinRows}) has to be between {DEFAULT_MIN_ROWS} and {nameof(MaxRows)}({MaxRows})");
                 }
             }
         }
