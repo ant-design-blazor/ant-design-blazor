@@ -27,6 +27,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | DebounceMilliseconds | Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time | int        | 250         |
 | DefaultValue |输入框默认内容                              | TValue        | -         |
 | Disabled |是否禁用状态，默认为 false                               | boolean        | false         |
+| InputElementSuffixClass |Css class that will be  added to input element class as the last class entry. | string        | -         | 0.9
 | MaxLength |最大长度   -1 means unlimitted.      | int         | -1
 | OnBlur | Callback when input looses focus                              | Action<FocusEventArgs>        | -         |
 | OnChange |输入框内容变化时的回调                                | Action<TValue>        | -        |
@@ -67,3 +68,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | EnterButton | 是否有确认按钮，可设为按钮文字。该属性会与 addonAfter 冲突。 | boolean / string        | false         |
 | Loading | 搜索 loading | boolean        | false         |
 | OnSearch | 点击搜索图标、清除图标，或按下回车键时的回调 | Action<string>        | -    |
+
+### InputGroup
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| ChildContent | Content wrapped by InputGroup. | RenderFragment | -         | 
+| Compact | 是否用紧凑模式 | boolean | false         |
+| Size | `InputGroup` 中所有的 `Input` 的大小，可选 `large` `default` `small` | InputSize / string        | InputSize.Default         |
+

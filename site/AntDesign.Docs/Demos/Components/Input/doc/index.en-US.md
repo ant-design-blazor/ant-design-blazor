@@ -28,6 +28,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | DebounceMilliseconds | Delays the processing of the KeyUp event until the user has stopped typing for a predetermined amount of time | int        | 250         |
 | DefaultValue |  	The initial input content                              | TValue        | -         |
 | Disabled | Whether the input is disabled.                               | boolean        | false     |
+| InputElementSuffixClass |Css class that will be  added to input element class as the last class entry. | string        | -         | 0.9
 | MaxLength |  	 	Max length. -1 means unlimited.      | int         | -1
 | OnBlur | Callback when input looses focus                              | Action<FocusEventArgs>        | -         |
 | OnChange |Callback when the content changes                                | Action<TValue>        | -         |
@@ -68,3 +69,12 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | EnterButton | Whether to show an enter button after input. This property conflicts with the `AddonAfter` property | boolean / string        | false         |
 | Loading | Search box with loading. | boolean        | false         |
 | OnSearch | Search input is rendered with suffix search icon, not as a button. Will be ignored when EnterButton is not false. | Action<string>        | -    |
+
+### InputGroup
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| ChildContent | Content wrapped by InputGroup. | RenderFragment | -         | 
+| Compact | Whether use compact style | boolean | false         |
+| Size | The size of `InputGroup` specifies the size of the included `Input` fields. Available: `large` `default` `small` | InputSize / string        | InputSize.Default         |
+

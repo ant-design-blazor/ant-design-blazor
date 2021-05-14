@@ -46,7 +46,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment AddOnAfter { get; set; }
 
-
         /// <summary>
         /// Allow to remove input content with clear icon 
         /// </summary>
@@ -91,6 +90,13 @@ namespace AntDesign
         public bool Disabled { get; set; }
 
         /// <summary>
+        /// Css class that will be  added to input element class
+        /// as the last class entry.
+        /// </summary>
+        [Parameter]
+        public string InputElementSuffixClass { get; set; }
+
+        /// <summary>
         /// Max length
         /// </summary>
         [Parameter]
@@ -125,7 +131,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
-        
+
         /// <summary>
         /// Callback when a key is released
         /// </summary>
@@ -250,6 +256,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-rtl", () => RTL)
+                .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass))
                 ;
 
             Attributes ??= new Dictionary<string, object>();
@@ -571,10 +578,7 @@ namespace AntDesign
                 // input
                 builder.OpenElement(41, "input");
                 builder.AddAttribute(42, "class", ClassMapper.Class);
-                if (container == "input")
-                {
-                    builder.AddAttribute(43, "style", Style);
-                }
+                builder.AddAttribute(43, "style", Style);
 
                 bool needsDisabled = Disabled;
                 if (Attributes != null)
