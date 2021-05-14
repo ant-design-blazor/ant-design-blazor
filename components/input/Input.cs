@@ -405,17 +405,17 @@ namespace AntDesign
             {
                 builder.OpenComponent<Icon>(31);
                 builder.AddAttribute(32, "Type", "close-circle");
-                builder.AddAttribute(32, "Theme", "fill");
-                builder.AddAttribute(33, "Class", GetClearIconCls());
+                builder.AddAttribute(33, "Theme", "fill");
+                builder.AddAttribute(34, "Class", GetClearIconCls());
                 if (string.IsNullOrEmpty(Value?.ToString()))
                 {
-                    builder.AddAttribute(34, "Style", "visibility: hidden;");
+                    builder.AddAttribute(35, "Style", "visibility: hidden;");
                 }
                 else
                 {
-                    builder.AddAttribute(34, "Style", "visibility: visible;");
+                    builder.AddAttribute(36, "Style", "visibility: visible;");
                 }
-                builder.AddAttribute(35, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
+                builder.AddAttribute(37, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
                 {
                     //CurrentValue = default;
                     //IsFocused = true;
@@ -618,7 +618,7 @@ namespace AntDesign
                 builder.AddAttribute(60, "placeholder", Placeholder);
                 builder.AddAttribute(61, "value", CurrentValue);
                 builder.AddAttribute(62, "disabled", needsDisabled);
-                builder.AddAttribute(62, "readonly", ReadOnly);
+                builder.AddAttribute(63, "readonly", ReadOnly);
 
                 // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
                 if (!IgnoreOnChangeAndBlur)
