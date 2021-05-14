@@ -11,6 +11,32 @@ namespace AntDesign
         private bool _visible = false;
         private string _eyeIcon;
 
+        /// <summary>
+        /// Custom icon render
+        /// </summary>
+        [Parameter]
+        public RenderFragment IconRender { get; set; }
+
+        /// <summary>
+        ///  Whether to show password
+        /// </summary>
+        [Parameter]
+        public bool ShowPassword
+        {
+            get => _visible;
+            set
+            {
+                _visible = value;
+                if (_visible)
+                    Type = "text";
+                else
+                    Type = "password";
+            }
+        }
+
+        /// <summary>
+        /// Whether show toggle button
+        /// </summary>
         [Parameter]
         public bool VisibilityToggle { get; set; } = true;
 
@@ -37,25 +63,31 @@ namespace AntDesign
             {
                 Suffix = new RenderFragment((builder) =>
                 {
-                    int i = 0;
-                    builder.OpenElement(i++, "span");
-                    builder.AddAttribute(i++, "class", $"{PrefixCls}-suffix");
-                    builder.OpenComponent<Icon>(i++);
-                    builder.AddAttribute(i++, "class", $"{PrefixCls}-password-icon");
-                    builder.AddAttribute(i++, "type", _eyeIcon);
-                    builder.AddAttribute(i++, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async args =>
+                    builder.OpenElement(0, "span");
+                    builder.AddAttribute(1, "class", $"{PrefixCls}-suffix");
+                    if (IconRender is null)
                     {
-                        var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
+                        builder.OpenComponent<Icon>(2);
+                        builder.AddAttribute(3, "class", $"{PrefixCls}-password-icon");
+                        builder.AddAttribute(4, "type", _eyeIcon);
+                        builder.AddAttribute(5, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async args =>
+                        {
+                            var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
 
-                        IsFocused = true;
-                        await this.FocusAsync(Ref);
+                            IsFocused = true;
+                            await this.FocusAsync(Ref);
 
-                        ToggleVisibility(args);
+                            ToggleVisibility(args);
 
-                        if (element.SelectionStart != 0)
-                            await Js.SetSelectionStartAsync(Ref, element.SelectionStart);
-                    }));
-                    builder.CloseComponent();
+                            if (element.SelectionStart != 0)
+                                await Js.SetSelectionStartAsync(Ref, element.SelectionStart);
+                        }));
+                        builder.CloseComponent();
+                    }
+                    else
+                    {
+                        builder.AddContent(6, IconRender);
+                    }
                     builder.CloseElement();
                 });
             }

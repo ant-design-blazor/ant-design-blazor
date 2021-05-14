@@ -78,3 +78,10 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | Compact | Whether use compact style | boolean | false         |
 | Size | The size of `InputGroup` specifies the size of the included `Input` fields. Available: `large` `default` `small` | InputSize / string        | InputSize.Default         |
 
+### InputPassword
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| IconRender | Custom toggle button. | RenderFragment | -         | 0.9
+| ShowPassowrd | Whether to show password | bool | false         | 0.9
+| VisibilityToggle | Whether show toggle button | bool        | true         |

@@ -77,3 +77,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | Compact | 是否用紧凑模式 | boolean | false         |
 | Size | `InputGroup` 中所有的 `Input` 的大小，可选 `large` `default` `small` | InputSize / string        | InputSize.Default         |
 
+### InputPassword
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| IconRender | 自定义切换按钮 | RenderFragment | -         | 0.9
+| ShowPassowrd | Whether to show password | bool | false         | 0.9
+| VisibilityToggle | 是否显示切换按钮 | bool        | true         |
