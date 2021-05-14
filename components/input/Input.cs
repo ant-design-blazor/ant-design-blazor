@@ -163,6 +163,12 @@ namespace AntDesign
         public RenderFragment Prefix { get; set; }
 
         /// <summary>
+        /// When present, it specifies that an input field is read-only.
+        /// </summary>
+        [Parameter]
+        public bool ReadOnly { get; set; }
+
+        /// <summary>
         /// The suffix icon for the Input.
         /// </summary>
         [Parameter]
@@ -612,6 +618,7 @@ namespace AntDesign
                 builder.AddAttribute(60, "placeholder", Placeholder);
                 builder.AddAttribute(61, "value", CurrentValue);
                 builder.AddAttribute(62, "disabled", needsDisabled);
+                builder.AddAttribute(62, "readonly", ReadOnly);
 
                 // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
                 if (!IgnoreOnChangeAndBlur)

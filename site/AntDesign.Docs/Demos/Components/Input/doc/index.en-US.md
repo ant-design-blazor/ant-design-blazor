@@ -40,6 +40,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | OnPressEnter |The callback function that is triggered when Enter key is pressed.                           | Action<KeyboardEventArgs>        | -         |
 | Placeholder              | Provide prompt information that describes the expected value of the input field        | string        | -        |
 | Prefix | The prefix icon for the Input.                           | RenderFragment        | -        |
+| ReadOnly | When present, it specifies that an input field is read-only. | boolean | false    | 0.9
 | Size |The size of the input box. Note: in the context of a form, the `large` size is used. Available: `large` `default` `small`       | string        | -         |
 | Style | Set CSS style. When using, be aware that some styles can be set only by `WrapperStyle` | string | - |  |
 | Suffix | The suffix icon for the Input.                            | RenderFragment        | -         |

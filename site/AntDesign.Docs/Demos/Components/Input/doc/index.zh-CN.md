@@ -39,6 +39,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | OnPressEnter | 按下回车的回调                              | Action<KeyboardEventArgs>        | -         |
 | Placeholder              |提供可描述输入字段预期值的提示信息        | string        | -        |
 | Prefix | 带有前缀图标的 input                               | RenderFragment        | -        |
+| ReadOnly | When present, it specifies that an input field is read-only. | boolean | false    | 0.9
 | Size |抽屉元素之间的子组件  `default`, `large`, `small`        | string        | -         |
 | Style | 设置 `<input>` HTML 元素的 CSS 样式 | string | - |  |
 | Suffix | 带有后缀图标的 input                               | RenderFragment        | -         |
