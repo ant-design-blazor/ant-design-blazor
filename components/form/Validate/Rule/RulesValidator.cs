@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
@@ -16,13 +18,19 @@ namespace AntDesign.Internal
             _validationMessageStore = new ValidationMessageStore(EditContext);
         }
 
-        public void DisplayErrors(Dictionary<string, List<string>> errors)
+        public void DisplayErrors(Dictionary<FieldIdentifier, List<string>> errors)
         {
             foreach (var err in errors)
             {
-                _validationMessageStore.Add(EditContext.Field(err.Key), err.Value);
+                _validationMessageStore.Add(err.Key, err.Value);
             }
 
+            EditContext.NotifyValidationStateChanged();
+        }
+
+        public void ClearError(FieldIdentifier fieldIdentifier)
+        {
+            _validationMessageStore.Clear(fieldIdentifier);
             EditContext.NotifyValidationStateChanged();
         }
 

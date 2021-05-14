@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -228,7 +229,7 @@ namespace AntDesign
                 return;
             }
 
-            _rulesValidator.ClearErrors();
+            _rulesValidator.ClearError(args.FieldIdentifier);
 
             var formItem = _formItems
                 .Single(t => t.GetFieldIdentifier().FieldName == args.FieldIdentifier.FieldName);
@@ -237,8 +238,8 @@ namespace AntDesign
 
             if (result.Length > 0)
             {
-                var errors = new Dictionary<string, List<string>>();
-                errors[args.FieldIdentifier.FieldName] = result.Select(r => r.ErrorMessage).ToList();
+                var errors = new Dictionary<FieldIdentifier, List<string>>();
+                errors[args.FieldIdentifier] = result.Select(r => r.ErrorMessage).ToList();
 
                 _rulesValidator.DisplayErrors(errors);
             }
@@ -253,14 +254,14 @@ namespace AntDesign
 
             _rulesValidator.ClearErrors();
 
-            var errors = new Dictionary<string, List<string>>();
+            var errors = new Dictionary<FieldIdentifier, List<string>>();
 
             foreach (var formItem in _formItems)
             {
                 var result = formItem.ValidateField();
                 if (result.Length > 0)
                 {
-                    errors[formItem.GetFieldIdentifier().FieldName] = result.Select(r => r.ErrorMessage).ToList();
+                    errors[formItem.GetFieldIdentifier()] = result.Select(r => r.ErrorMessage).ToList();
                 }
             }
 

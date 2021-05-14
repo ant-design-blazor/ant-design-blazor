@@ -16,7 +16,6 @@ namespace AntDesign.Internal
             if (!LenIsValid(validationContext, out result)) return result;
             if (!MinIsValid(validationContext, out result)) return result;
             if (!MaxIsValid(validationContext, out result)) return result;
-            if (!WhitespaceIsValid(validationContext, out result)) return result;
             if (!PatternIsValid(validationContext, out result)) return result;
             if (!ValidatorIsValid(validationContext, out result)) return result;
             if (!DefaultFieldIsValid(validationContext, out result)) return result;
@@ -149,26 +148,6 @@ namespace AntDesign.Internal
                 }
 
                 if (attribute != null && !IsValid(attribute, validationContext, out ValidationResult validationResult))
-                {
-                    result = validationResult;
-
-                    return false;
-                }
-            }
-
-            result = null;
-
-            return true;
-        }
-
-        private static bool WhitespaceIsValid(RuleValidationContext validationContext, out ValidationResult result)
-        {
-            if (validationContext.Rule.Whitespace == true)
-            {
-                var attribute = new WhitespaceAttribute();
-                attribute.ErrorMessage = validationContext.ValidateMessages.Whitespace;
-
-                if (!IsValid(attribute, validationContext, out ValidationResult validationResult))
                 {
                     result = validationResult;
 
@@ -382,7 +361,7 @@ namespace AntDesign.Internal
                 string errorMessage = validationAttribute.FormatErrorMessage(validationContext.DisplayName);
 
                 result = new ValidationResult(errorMessage, new string[] { validationContext.FieldName });
-
+                Console.WriteLine($"isvalid validationContext.FieldName:{validationContext.FieldName}");
                 return false;
             }
 

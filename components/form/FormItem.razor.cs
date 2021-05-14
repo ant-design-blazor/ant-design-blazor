@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -131,6 +132,7 @@ namespace AntDesign
             }
 
             SetClass();
+            SetRequiredCss();
 
             Form.AddFormItem(this);
         }
@@ -147,6 +149,28 @@ namespace AntDesign
                 .Add($"{_prefixCls}-label")
                 .If($"{_prefixCls}-label-left", () => FormLabelAlign == AntLabelAlignType.Left)
                 ;
+        }
+
+        private void SetRequiredCss()
+        {
+            bool isRequired = false;
+
+            if (Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex)
+                && _propertyReflector.RequiredAttribute != null)
+            {
+                isRequired = true;
+            }
+
+            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex)
+                 && Rules != null && Rules.Any(rule => rule.Required == true))
+            {
+                isRequired = true;
+            }
+
+            if (isRequired)
+            {
+                _labelCls = $"{_prefixCls}-required";
+            }
         }
 
         private Dictionary<string, object> GetLabelColAttributes()
@@ -230,29 +254,11 @@ namespace AntDesign
                 builder.CloseComponent();
             };
 
-            if (control.ValueExpression is not null)
+			if (control.ValueExpression is not null)
                 _propertyReflector = PropertyReflector.Create(control.ValueExpression);
             else
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
 
-            bool isRequired = false;
-
-            if (Form.ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex)
-                && _propertyReflector.RequiredAttribute != null)
-            {
-                isRequired = true;
-            }
-
-            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex)
-                && Rules.Any(rule => rule.Required == true))
-            {
-                isRequired = true;
-            }
-
-            if (isRequired)
-            {
-                _labelCls = $"{_prefixCls}-required";
-            }
         }
 
         ValidationResult[] IFormItem.ValidateField()

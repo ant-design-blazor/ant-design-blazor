@@ -20,7 +20,7 @@ namespace AntDesign
         Done: type	            类型，常见有 string |number |boolean |url | email。更多请参考此处	                        string
         TODO: validateTrigger	设置触发验证时机，必须是 Form.Item 的 validateTrigger 的子集	                            string | string[]
         Done: validator	        自定义校验，接收 Promise 作为返回值。示例参考	                                            (rule, value) => Promise
-        Done: whitespace	    如果字段仅包含空格则校验不通过	                                                            boolean
+        would not support: whitespace	    如果字段仅包含空格则校验不通过	                                                            boolean
      */
     public class Rule
     {
@@ -28,7 +28,6 @@ namespace AntDesign
         public decimal? Min { get; set; }
         public decimal? Max { get; set; }
         public bool? Required { get; set; }
-        public bool? Whitespace { get; set; }
         public string Pattern { get; set; }
         public string Message { get; set; }
         public Rule DefaultField { get; set; }
