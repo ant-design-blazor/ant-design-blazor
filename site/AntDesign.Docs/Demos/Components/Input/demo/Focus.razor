@@ -25,11 +25,11 @@
 	<SpaceItem>
 		@if (_isInput)
 		{
-			<AntDesign.Input @ref=@_input DefaultValue=@_defaultValue/>
+			<AntDesign.Input @ref=@_input DefaultValue=@_defaultValue OnkeyDown="Blur"/>
 		}
 		else
 		{
-			<AntDesign.TextArea @ref=@_input DefaultValue=@_defaultValue/>
+			<AntDesign.TextArea @ref=@_input DefaultValue=@_defaultValue OnkeyDown="Blur"/>
 		}
 	</SpaceItem>
 </Space>
@@ -39,10 +39,17 @@
 {
 	AntDesign.Input<string> _input;	
 	bool _isInput = true;
-	const string _defaultValue = "Ant Blazor loves you!";
+	const string _defaultValue = "Ant Blazor loves you! (Ctrl+Q to blur)";
 
 	async Task OnClick(FocusBehavior behavior, bool preventScroll = false) 
 	{
 		await _input.Focus(behavior, preventScroll);
+	}
+
+	async Task Blur(KeyboardEventArgs e) 
+	{
+		Console.WriteLine(e.Code);
+		if (e.CtrlKey && e.Code == "KeyQ")
+			await _input.Blur();
 	}
 }

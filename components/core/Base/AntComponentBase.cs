@@ -110,7 +110,6 @@ namespace AntDesign
         /// </summary>
         /// <param name="target">Element that will receive focus.</param>
         /// <param name="preventScroll">Whether to scroll to focused element</param>
-        /// <returns></returns>
         protected async Task FocusAsync(ElementReference target, bool preventScroll = false) 
             => await Js.FocusAsync(target, preventScroll);
 
@@ -121,9 +120,15 @@ namespace AntDesign
         /// <param name="target">Element that will receive focus.</param>
         /// <param name="behavior">Behavior of focused element</param>
         /// <param name="preventScroll">Whether to scroll to focused element</param>
-        /// <returns></returns>
         protected async Task FocusAsync(ElementReference target, FocusBehavior behavior, bool preventScroll = false)
             => await Js.FocusAsync(target, behavior, preventScroll);
+
+        /// <summary>
+        /// Standard Blur. Uses JS introp.
+        /// </summary>
+        /// <param name="target">Element that will receive focus.</param>
+        protected async Task BlurAsync(ElementReference target)
+            => await Js.BlurAsyc(target);
 
         protected bool IsDisposed { get; private set; }
 

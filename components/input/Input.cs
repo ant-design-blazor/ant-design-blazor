@@ -207,6 +207,14 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Removes focus from input element.
+        /// </summary>       
+        public async Task Blur()
+        {
+            await BlurAsync(Ref);
+        }
+
         private async Task Clear()
         {
             CurrentValue = default;

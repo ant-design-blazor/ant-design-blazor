@@ -49,6 +49,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 ### Common Methods
 | Name | Description | Parameters | Version |
 | --- | --- | --- | --- |
+| Blur() |Remove focus.   | -        | 0.9         |
 | Focus() |Focus behavior for input component with optional behaviors.   | (FocusBehavior: {enum: FocusAtLast, FocusAtFirst, FocusAndSelectAll, FocusAndClear }, bool: preventScroll )        | 0.9         |
 
 ### TextArea

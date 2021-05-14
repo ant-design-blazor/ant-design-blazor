@@ -10,6 +10,19 @@ namespace AntDesign.Core.Extensions
     {
         public static bool IsBrowser(this IJSRuntime jsRuntime) => RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER"));
 
+        public static async Task BlurAsyc(this IJSRuntime jSRuntime, ElementReference target)
+        {
+            try
+            {
+                await jSRuntime.InvokeVoidAsync(JSInteropConstants.Blur, target);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         public static async Task FocusAsync(this IJSRuntime jSRuntime, ElementReference target, bool preventScroll = false)
         {
 #if NET5_0_OR_GREATER
