@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using OneOf;
+using System;
 using System.Text;
 
 namespace AntDesign
@@ -18,25 +18,35 @@ namespace AntDesign
         [Parameter]
         public string Mode { get; set; } = "default";
 
-        //Here we keep the orginal string so we can support custom colors and inverse
         [Parameter]
-        public OneOf<string, TagColor> Color
+        public string Color
         {
             get => _color;
             set
             {
-                if (value.IsT0) {
-                    _color = value.AsT0;
-                    _presetColor = IsPresetColor(_color);
-                    _customColor = IsCustomColor(_color);    
-                } 
-                else 
-                {
-                    _color = value.AsT1.ToString();
-                    _presetColor = true;
-                    _customColor = false;
-                }
+                _color = value;
+                _isPresetColor = IsPresetColor(_color);
+                _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value      
             }
+        }
+
+        [Parameter]
+        public PresetColor? PresetColor 
+        { 
+            get 
+            {
+                object result;
+
+                if (Enum.TryParse(typeof(PresetColor), _color, true, out result) == false) {
+                    return null;
+                }
+            
+                return (PresetColor)result;
+            }
+            set 
+            { 
+                Color = Enum.GetName(typeof(PresetColor), value).ToLowerInvariant();
+            } 
         }
 
         [Parameter]
@@ -71,9 +81,8 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback OnClick { get; set; }
-
-        private bool _presetColor;
-        private bool _customColor;
+        private bool _isPresetColor;
+        private bool _isCustomColor;
         private bool _closed;
         private string _color;
 
@@ -94,23 +103,13 @@ namespace AntDesign
             return result;
         }
 
-        private static bool IsCustomColor(string color)
-        {
-            if (string.IsNullOrEmpty(color))
-            {
-                return false;
-            }
-
-            return color.StartsWith("#");
-        }
-
         private void UpdateClassMap()
         {
             string prefix = "ant-tag";
             this.ClassMapper.Add(prefix)
-                .If($"{prefix}-has-color", () => !string.IsNullOrEmpty(Color.AsT0) && !_presetColor)
+                .If($"{prefix}-has-color", () => _isCustomColor)
                 .If($"{prefix}-hidden", () => Visible == false)
-                .GetIf(() => $"{prefix}-{_color}", () => _presetColor)
+                .GetIf(() => $"{prefix}-{_color}", () => _isPresetColor)
                 .If($"{prefix}-checkable", () => Checkable)
                 .If($"{prefix}-checkable-checked", () => Checked)
                 .If($"{prefix}-rtl", () => RTL)
@@ -126,7 +125,7 @@ namespace AntDesign
                 style.Append(";");
             }
 
-            if (_customColor) {
+            if (_isCustomColor) {
                 style.Append($"background-color: {_color};");
             }
 

@@ -21,6 +21,7 @@ Tag for categorizing or markup.
 | Checked | 	Checked status of Tag| boolean         |-       |
 | CheckedChange | Callback executed when Tag is checked/unchecked| function(e)         |-       |
 | Color | Color of the Tag | string   | -         |
+| PresetColor | The Preset Color of the Tag | PresetColor   | -         |
 | OnClose | Callback executed when tag is closed     | function(e)        | -         |
 | Visible | Whether the Tag is closed or not | boolean         | true         |
 | Icon | Set the icon of tag  | string        | -         |
