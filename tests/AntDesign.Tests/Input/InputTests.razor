@@ -5,7 +5,8 @@
 	public void Input_Bordered_sets_class()
 	{
 		//Arrange
-		var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" Bordered="false"/>);
+		var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" Bordered="false"/>
+	);
 		//Act
 		ITokenList classList = cut.Find("input").ClassList;		
 		//Assert           
@@ -16,6 +17,7 @@
 	public void Input_FocusClear_behavior_should_clear()
 	{
 		//Arrange
+		JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
 		AntDesign.Input<string> input = null;
 		string value = "initial value";
 		var cut = Render<AntDesign.Input<string>>(
