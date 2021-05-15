@@ -1,4 +1,6 @@
-﻿namespace AntDesign
+﻿using System;
+
+namespace AntDesign
 {
     public static class JSInteropConstants
     {
@@ -31,7 +33,11 @@
 
         public static string Log => $"{FUNC_PREFIX}log";
 
+#if NET5_0_OR_GREATER
+        [Obsolete("It will be removed in the future, because Blazor already has a native implementation.")]
+#endif 
         public static string Focus => $"{FUNC_PREFIX}focus";
+
         public static string HasFocus => $"{FUNC_PREFIX}hasFocus";
 
         public static string Blur => $"{FUNC_PREFIX}blur";
