@@ -1,0 +1,65 @@
+﻿@inherits AntDesignTestBase
+@code {
+    [Fact]
+    public void Renders_basic_radio()
+    {
+        var cut = Context.Render(@<Radio TValue="bool">Radio</Radio>);
+        cut.MarkupMatches(
+        @<label class="ant-radio-wrapper" id:ignore>
+            <span class="ant-radio">
+                <input type="radio" class="ant-radio-input">
+                <span class="ant-radio-inner"></span>
+            </span><span>Radio</span>
+        </label>);
+    }
+
+    [Fact]
+    public void Renders_Value_basic_radio()
+    {
+        var cut = Context.Render(@<Radio TValue="string" Value="@("Test")">Radio</Radio>);
+        cut.MarkupMatches(
+        @<label class="ant-radio-wrapper" id:ignore>
+            <span class="ant-radio">
+                <input type="radio" class="ant-radio-input" value="Test">
+                <span class="ant-radio-inner"></span>
+            </span><span>Radio</span>
+        </label>);
+    }
+
+	[Fact]
+	public void Toggle_basic_radio()
+	{
+		//Arrange
+		IRenderedComponent<Radio<bool>> cut = Render<Radio<bool>>(@<Radio TValue="bool">Radio</Radio>);
+        var radioComponent = cut.Instance;
+        var inputElement = cut.Find("[type=radio]");
+        var oldValue = radioComponent.Checked;
+        //Act
+        inputElement.Click();
+
+        //Assert
+        radioComponent.Checked.Should().BeTrue();
+        radioComponent.Checked.Should().Be(!oldValue);
+    }
+
+	[Fact]
+	public void Bind_Checked_basic_radio()
+	{
+		//Arrange
+		bool isChecked = false;		
+		var cut = Render(@<Radio TValue="bool" @bind-Checked=isChecked>Radio</Radio>);
+        var inputElement = cut.Find("[type=radio]");
+        //Act
+        inputElement.Click();
+        //Assert
+        isChecked.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Bind_DefaultChecked_basic_radio()
+    {
+        var cut = Render<Radio<bool>>(@<Radio TValue="bool" DefaultChecked>Radio</Radio>);
+        var radioComponent = cut.Instance;
+        radioComponent.Checked.Should().BeTrue();
+    }
+}
