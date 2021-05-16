@@ -1,0 +1,156 @@
+﻿@inherits AntDesignTestBase
+@code {
+	string[] plainOptions = { "Apple", "Pear", "Orange" };
+
+    CheckboxOption[] options = new CheckboxOption[]
+    {
+        new CheckboxOption {Label = "Apple", Value = "Apple"},
+        new CheckboxOption {Label = "Pear", Value = "Pear"},
+        new CheckboxOption {Label = "Orange", Value = "Orange"},
+    };
+	
+
+	[Fact]
+	public void Renders_CheckboxGroup_From_StringArray()
+	{
+		var cut = Render(@<CheckboxGroup Options="@plainOptions"/>);
+		cut.MarkupMatches(
+			@<div class="ant-checkbox-group" id:ignore>
+				<label class="ant-checkbox ant-checkbox-wrapper" id:ignore>
+					<span class="ant-checkbox-group-item ant-checkbox">
+						<input type="checkbox" value="Apple" class="ant-checkbox-input">
+						<span class="ant-checkbox-inner"></span>
+					</span>
+					<span><span>Apple</span></span>
+				</label>
+				<label class="ant-checkbox ant-checkbox-wrapper" id:ignore>
+					<span class="ant-checkbox-group-item ant-checkbox">
+						<input type="checkbox" value="Pear" class="ant-checkbox-input">
+						<span class="ant-checkbox-inner"></span>
+					</span>
+					<span><span>Pear</span></span>
+				</label>
+				<label class="ant-checkbox ant-checkbox-wrapper" id:ignore>
+					<span class="ant-checkbox-group-item ant-checkbox">
+						<input type="checkbox" value="Orange" class="ant-checkbox-input">
+						<span class="ant-checkbox-inner"></span>
+					</span>
+					<span><span>Orange</span></span>
+				</label>
+			</div>);
+	}
+
+	[Fact]
+	public void Renders_CheckboxGroup_From_CheckboxOptionArray()
+	{
+		var cut = Render(@<CheckboxGroup Options="@options"/>);
+		cut.MarkupMatches(
+			@<div class="ant-checkbox-group" id:ignore>
+				<label class="ant-checkbox ant-checkbox-wrapper" id:ignore>
+					<span class="ant-checkbox-group-item ant-checkbox">
+						<input type="checkbox" value="Apple" class="ant-checkbox-input">
+						<span class="ant-checkbox-inner"></span>
+					</span>
+					<span><span>Apple</span></span>
+				</label>
+				<label class="ant-checkbox ant-checkbox-wrapper" id:ignore>
+					<span class="ant-checkbox-group-item ant-checkbox">
+						<input type="checkbox" value="Pear" class="ant-checkbox-input">
+						<span class="ant-checkbox-inner"></span>
+					</span>
+					<span><span>Pear</span></span>
+				</label>
+				<label class="ant-checkbox ant-checkbox-wrapper" id:ignore>
+					<span class="ant-checkbox-group-item ant-checkbox">
+						<input type="checkbox" value="Orange" class="ant-checkbox-input">
+						<span class="ant-checkbox-inner"></span>
+					</span>
+					<span><span>Orange</span></span>
+				</label>
+			</div>);
+	}
+
+	[Fact]
+	public void Fires_OnChange()
+	{
+		//Arrange		
+		string[] selectedValues = Array.Empty<string>();
+		Action<string[]> onChangeHandler = value => { selectedValues = value; };
+		var cut = Render(@<CheckboxGroup Options="@options" OnChange="onChangeHandler"/>);
+		var inputElement = cut.Find("[type=checkbox]");
+		//Act
+		inputElement.Change(true);
+		//Assert		
+		Assert.Equal(options[0].Value, selectedValues[0]);
+	}
+
+	[Theory]
+	[InlineData(CheckboxGroupMixedMode.ChildContentFirst, "B")]
+	[InlineData(CheckboxGroupMixedMode.OptionsFirst, "A")]
+	public void Renders_Mixed(CheckboxGroupMixedMode mode, string expectedValue)
+	{
+		//Arrange				
+		var cut = Render(
+			@<CheckboxGroup Options="@(new string[] {"A"})" MixedMode=@mode>
+				<Checkbox Label="B">B</Checkbox>
+			</CheckboxGroup>
+			);
+		var inputElement = cut.Find("[type=checkbox]");			
+		//Assert		
+		Assert.Equal(expectedValue, inputElement.GetAttribute("value").Trim());
+	}
+
+	[Fact]	
+	public void MixedMode_Fires_OnChange()
+	{
+		//Arrange		
+		string[] selectedValues = Array.Empty<string>();
+		Action<string[]> onChangeHandler = value => { selectedValues = value; };
+		
+		var cut = Render(
+			@<CheckboxGroup Options="@(new string[] {"A"})" OnChange="onChangeHandler" MixedMode=@CheckboxGroupMixedMode.OptionsFirst>
+				<Checkbox Label="B">B</Checkbox>
+			</CheckboxGroup>
+	);
+		var inputElements = cut.FindAll("[type=checkbox]");			
+		//Act
+		foreach(var inputElement in inputElements)
+		{
+			inputElement.Change(true);
+		}
+		//Assert		
+		selectedValues.Should().BeEquivalentTo(new string[] {"A", "B"});		
+	}
+
+	[Fact]	
+	public void MixedMode_Sets_Defaults()
+	{
+		//Arrange				
+		string[] values = new[] { "A", "B" };
+		//Act
+		var cut = Render<CheckboxGroup>(
+			@<CheckboxGroup Options="@(new string[] {"A"})" Value="@values">
+				<Checkbox Label="B">B</Checkbox>
+			</CheckboxGroup>);
+		var inputElements = cut.FindComponents<Checkbox>();
+		var actual = inputElements.Where(e => e.Instance.Checked)
+			.Select(e => e.Instance.Label).ToArray();
+		//Assert		
+		actual.Should().BeEquivalentTo(values);		
+	}
+
+	[Fact]	
+	public void Sets_Defaults_When_CheckboxOption_Used()
+	{
+		//Arrange				
+		string[] values = new[] { "Pear" };
+		//Act
+		var cut = Render<CheckboxGroup>(
+			@<CheckboxGroup Options="@options" Value="@values"/>);
+		var inputElements = cut.FindComponents<Checkbox>();
+		var actual = inputElements.Where(e => e.Instance.Checked)
+			.Select(e => e.Instance.Label).ToArray();
+		//Assert		
+		actual.Should().BeEquivalentTo(values);		
+	}
+}

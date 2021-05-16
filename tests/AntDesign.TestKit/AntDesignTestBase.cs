@@ -12,7 +12,7 @@ namespace AntDesign.Tests
         public NavigationManager NavigationManager => Services.GetRequiredService<NavigationManager>();
 
         public AntDesignTestBase()
-        {            
+        {
             Services.AddAntDesign();
 
             //Needed for Tests using Overlay

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers.MemberPath;
@@ -229,10 +230,12 @@ namespace AntDesign
                     SelectedOptionItems.Clear();
 
                     Value = default;
+                    var sameObject = object.ReferenceEquals(_datasource, value);
 
                     _datasource = value;
 
-                    OnDataSourceChanged?.Invoke();
+                    if (!sameObject)
+                        OnDataSourceChanged?.Invoke();
 
                     return;
                 }
@@ -325,6 +328,10 @@ namespace AntDesign
 
                     _ = OnValuesChangeAsync(default);
                 }
+                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+                {
+                    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                }
             }
         }
 
@@ -374,7 +381,7 @@ namespace AntDesign
         /// <returns>true if SelectOptions has any selected Items, otherwise false</returns>
         internal bool HasValue
         {
-            get => SelectOptionItems.Where(x => x.IsSelected).Any() || (AddedTags?.Any() ?? false);
+            get => SelectedOptionItems.Any() || (AddedTags?.Any() ?? false);
         }
 
         /// <summary>
@@ -425,6 +432,7 @@ namespace AntDesign
         private bool _defaultActiveFirstOptionApplied;
         private bool _waittingStateChange;
         private bool _isPrimitive;
+        private bool _isValueEnum;
         internal ElementReference _inputRef;
         protected OverlayTrigger _dropDown;
         protected SelectContent<TItemValue, TItem> _selectContent;
@@ -478,6 +486,7 @@ namespace AntDesign
         private Action<TItem, TItemValue> _setValue;
         private bool _disableSubmitFormOnEnter;
         private bool _showArrowIcon = true;
+        private Expression<Func<TItemValue>> _valueExpression;
 
         #endregion Properties
 
@@ -510,6 +519,7 @@ namespace AntDesign
             if (!_isInitialized)
             {
                 _isPrimitive = IsSimpleType(typeof(TItem));
+                _isValueEnum = typeof(TItemValue).IsEnum;
                 if (!_showArrowIconChanged && SelectMode != SelectMode.Default)
                     _showArrowIcon = SuffixIcon != null;
             }
@@ -799,7 +809,7 @@ namespace AntDesign
         {
             string maxWidth = "", minWidth = "", definedWidth = "";
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
-            var width = domRect.width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            var width = domRect.Width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
             minWidth = $"min-width: {width}px;";
             if (DropdownMatchSelectWidth.IsT0 && DropdownMatchSelectWidth.AsT0)
             {
@@ -897,7 +907,6 @@ namespace AntDesign
         protected internal async Task SetValueAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
-
             if (SelectMode == SelectMode.Default)
             {
                 if (SelectedOptionItems.Count > 0)
@@ -1301,7 +1310,7 @@ namespace AntDesign
             if (!_isInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
                 return;
 
-            if (EqualityComparer<TItemValue>.Default.Equals(value, default))
+            if (!_isValueEnum && EqualityComparer<TItemValue>.Default.Equals(value, default))
             {
                 _ = InvokeAsync(() => OnInputClearClickAsync(new()));
                 return;

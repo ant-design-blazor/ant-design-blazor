@@ -22,6 +22,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | AddOnBefore | The label text displayed before (on the left side of) the input field.                             | RenderFragment        | -         |
 | AddOnAfter            | The label text displayed after (on the right side of) the input field.           | RenderFragment         |
 | ChildContent            | Child content           | RenderFragment         |-       |
+| CultureInfo          | What Culture will be used when converting string to value and value to string           | CultureInfo         | CultureInfo.CurrentCulture       |
 | Size |The size of the input box. Note: in the context of a form, the `large` size is used. Available: `large` `default` `small`       | string        | -         |
 | Placeholder              | Provide prompt information that describes the expected value of the input field        | string        | -        |
 | DefaultValue |  	The initial input content                              | string        | -         |
