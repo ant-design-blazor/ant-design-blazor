@@ -24,12 +24,11 @@ namespace AntDesign.TableModels
 
         private LambdaExpression _getFieldExpression;
 
-        public SortModel(LambdaExpression getFieldExpression, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
+        public SortModel(LambdaExpression getFieldExpression, string fieldName, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
         {
             this.Priority = priority;
             this._getFieldExpression = getFieldExpression;
-            var member = ColumnExpressionHelper.GetReturnMemberInfo(_getFieldExpression);
-            this.FieldName = member.GetCustomAttribute<DisplayAttribute>(true)?.Name ?? member.Name;
+            this.FieldName = fieldName;
             this._comparer = comparer;
             this._sortDirection = defaultSortOrder ?? SortDirection.None;
         }

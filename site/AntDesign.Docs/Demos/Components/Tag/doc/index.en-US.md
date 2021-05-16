@@ -16,8 +16,8 @@ Tag for categorizing or markup.
 
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
-| Mode |mode select `default`, `closable`, `checkable`     | string         |
 | Closable | Whether the Tag can be closed| boolean         |-       |
+| Checkable | Whether the Tag can be checked | boolean         |-       |
 | Checked | 	Checked status of Tag| boolean         |-       |
 | CheckedChange | Callback executed when Tag is checked/unchecked| function(e)         |-       |
 | Color | Color of the Tag | string   | -         |

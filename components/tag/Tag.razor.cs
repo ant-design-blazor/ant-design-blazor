@@ -12,12 +12,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        /// <summary>
-        ///  'default' | 'closeable' | 'checkable'
-        /// </summary>
-        [Parameter]
-        public string Mode { get; set; } = "default";
-
         [Parameter]
         public string Color
         {
@@ -53,6 +47,9 @@ namespace AntDesign
         [Parameter]
         public bool Closable { get; set; }
         
+        [Parameter]
+        public bool Checkable { get; set; }
+
         [Parameter]
         public bool Checkable { get; set; }
 
@@ -136,9 +133,14 @@ namespace AntDesign
 
         private async Task UpdateCheckedStatus()
         {
-            if (Mode == "checkable")
+            if (!Checkable)
             {
-                this.Checked = !this.Checked;
+                return;
+            }
+
+            this.Checked = !this.Checked;
+            if (this.CheckedChange.HasDelegate)
+            {
                 await this.CheckedChange.InvokeAsync(this.Checked);
             }
         }
@@ -146,12 +148,22 @@ namespace AntDesign
         private async Task CloseTag(MouseEventArgs e)
         {
             var closeEvent = new CloseEventArgs<MouseEventArgs>(e);
-            await this.OnClosing.InvokeAsync(closeEvent);
+
+            if (OnClosing.HasDelegate)
+            {
+                await this.OnClosing.InvokeAsync(closeEvent);
+            }
+
             if (closeEvent.Cancel)
             {
                 return;
             }
-            await this.OnClose.InvokeAsync(e);
+
+            if (OnClose.HasDelegate)
+            {
+                await this.OnClose.InvokeAsync(e);
+            }
+
             this._closed = true;
         }
 
