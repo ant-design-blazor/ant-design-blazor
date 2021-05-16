@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Reflection;
 using AntDesign.Core.Reflection;
@@ -98,11 +99,9 @@ namespace AntDesign
 
         private TableFilterType _columnFilterType;
 
-        private PropertyReflector? _propertyReflector;
-
         private Type _columnDataType;
 
-        public string DisplayName { get; private set; }
+        public string? DisplayName { get; private set; }
 
         public string FieldName { get; private set; }
 
@@ -116,7 +115,14 @@ namespace AntDesign
 
         public LambdaExpression GetFieldExpression { get; private set; }
 
-        void IFieldColumn.ClearSorter() => SetSorter(SortDirection.None);
+        void IFieldColumn.ClearSorter()
+        {
+            SetSorter(SortDirection.None);
+            if (FieldExpression == null)
+            {
+                StateHasChanged();
+            }
+        }
 
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
@@ -138,10 +144,13 @@ namespace AntDesign
             {
                 if (FieldExpression != null)
                 {
-                    _propertyReflector = PropertyReflector.Create(FieldExpression);
+                    if (FieldExpression.Body is not MemberExpression memberExp)
+                    {
+                        throw new ArgumentException("'Field' parameter must be child member");
+                    }
+
                     var paramExp = Expression.Parameter(ItemType);
-                    var member = ColumnExpressionHelper.GetReturnMemberInfo(FieldExpression);
-                    var bodyExp = Expression.MakeMemberAccess(paramExp, member);
+                    var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
                     GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
                 }
                 else if (DataIndex != null)
@@ -149,16 +158,18 @@ namespace AntDesign
                     (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
                 }
 
-                if (Sortable && GetFieldExpression != null)
-                {
-                    SortModel = new SortModel<TData>(GetFieldExpression, SorterMultiple, DefaultSortOrder, SorterCompare);
-                }
-
                 if (GetFieldExpression != null)
                 {
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
-                    DisplayName = member.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ?? member.Name;
-                    FieldName = member.Name;
+                    DisplayName = member?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName
+                               ?? member?.GetCustomAttribute<DisplayAttribute>(true)?.GetName()
+                               ?? member?.Name;
+                    FieldName = DataIndex ?? member?.Name;
+                }
+
+                if (Sortable && GetFieldExpression != null)
+                {
+                    SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
             }
             else if (IsBody)
@@ -217,7 +228,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    _columnFilterType = TableFilterType.FeildType;
+                    _columnFilterType = TableFilterType.FieldType;
                     InitFilters();
                 }
 
@@ -286,7 +297,7 @@ namespace AntDesign
         private void SetSorter(SortDirection sortDirection)
         {
             _sortDirection = sortDirection;
-            SortModel.SetSortDirection(sortDirection);
+            SortModel?.SetSortDirection(sortDirection);
         }
 
         private void ToggleTreeNode()
@@ -343,7 +354,7 @@ namespace AntDesign
 
         private void FilterSelected(TableFilter<TData> filter)
         {
-            if (_columnFilterType == TableFilterType.FeildType) return;
+            if (_columnFilterType == TableFilterType.FieldType) return;
             if (!FilterMultiple)
             {
                 Filters.ForEach(x => x.Selected = false);
@@ -361,9 +372,9 @@ namespace AntDesign
         private void FilterConfirm(bool isReset = false)
         {
             _filterOpened = false;
-            if (!isReset && _columnFilterType == TableFilterType.FeildType) Filters?.ForEach(f => { if (!f.Selected && f.Value != null) f.Selected = true; });
+            if (!isReset && _columnFilterType == TableFilterType.FieldType) Filters?.ForEach(f => { if (!f.Selected && f.Value != null) f.Selected = true; });
             _hasFilterSelected = Filters?.Any(x => x.Selected) == true;
-            FilterModel = _hasFilterSelected && _propertyReflector != null ? new FilterModel<TData>(_propertyReflector.Value.PropertyInfo, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
+            FilterModel = _hasFilterSelected ? new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 
             Table?.ReloadAndInvokeChange();
         }

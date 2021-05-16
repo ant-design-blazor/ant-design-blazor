@@ -32,7 +32,7 @@ namespace AntDesign
         Equals = 1,
         Contains = 2,
         StartsWith = 3,
-        EndsWidth = 4,
+        EndsWith = 4,
         GreaterThan = 5,
         LessThan = 6,
         GreaterThanOrEquals = 7,
@@ -53,6 +53,6 @@ namespace AntDesign
     public enum TableFilterType
     {
         List = 1,
-        FeildType = 2
+        FieldType = 2
     }
 }

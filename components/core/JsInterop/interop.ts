@@ -1,3 +1,11 @@
+import * as observable from './ObservableApi/observableApi';
+
+export { observable };
+
+export function isResizeObserverSupported(): boolean {  
+  return "ResizeObserver" in window;
+}
+
 export function getDom(element) {
   if (!element) {
     element = document.body;
@@ -12,9 +20,10 @@ export function getDom(element) {
 
 export function getDomInfo(element) {
   var result = {};
-
   var dom = getDom(element);
-
+  if (!dom) {
+    dom = {};
+  }
   result["offsetTop"] = dom.offsetTop || 0;
   result["offsetLeft"] = dom.offsetLeft || 0;
   result["offsetWidth"] = dom.offsetWidth || 0;
@@ -27,6 +36,7 @@ export function getDomInfo(element) {
   result["clientLeft"] = dom.clientLeft || 0;
   result["clientHeight"] = dom.clientHeight || 0;
   result["clientWidth"] = dom.clientWidth || 0;
+  result["selectionStart"] = dom.selectionStart || 0;
   var absolutePosition = getElementAbsolutePos(dom);
   result["absoluteTop"] = Math.round(absolutePosition.y);
   result["absoluteLeft"] = Math.round(absolutePosition.x);
@@ -147,7 +157,18 @@ export function triggerEvent(element, eventType, eventName) {
 export function getBoundingClientRect(element) {
   let dom = getDom(element);
   if (dom && dom.getBoundingClientRect) {
-    return dom.getBoundingClientRect();
+    let domRect = dom.getBoundingClientRect();
+    // Fixes #1468. This wrapping is necessary for old browsers. Remove this when one day we no longer support them.
+    return {
+      width: domRect.width,
+      height: domRect.height,
+      top: domRect.top,
+      right: domRect.right,
+      bottom: domRect.bottom,
+      left: domRect.left,
+      x: domRect.x,
+      y: domRect.y
+    };
   }
   return null;
 }
@@ -164,7 +185,7 @@ export function addDomEventListener(element, eventName, preventDefault, invoker)
       if (v instanceof Node) return 'Node';
       if (v instanceof Window) return 'Window';
       return v;
-    }, ' ');    
+    }, ' ');
     setTimeout(function () { invoker.invokeMethodAsync('Invoke', json) }, 0);
     if (preventDefault === true) {
       args.preventDefault();
@@ -179,7 +200,9 @@ export function addDomEventListener(element, eventName, preventDefault, invoker)
     }
   } else {
     let dom = getDom(element);
-    (dom as HTMLElement).addEventListener(eventName, callback);
+    if (dom) {
+      (dom as HTMLElement).addEventListener(eventName, callback);
+    }
   }
 }
 
@@ -222,13 +245,13 @@ export function copy(text) {
   });
 }
 
-export function focus(selector, noScroll: boolean=false) {
-  let dom = getDom(selector);     
+export function focus(selector, noScroll: boolean = false) {
+  let dom = getDom(selector);
   if (!(dom instanceof HTMLElement))
     throw new Error("Unable to focus an invalid element.");
   dom.focus({
     preventScroll: noScroll
-  })
+  });
 }
 
 export function hasFocus(selector) {
@@ -238,7 +261,9 @@ export function hasFocus(selector) {
 
 export function blur(selector) {
   let dom = getDom(selector);
-  dom.blur();
+  if (dom) {
+    dom.blur();
+  }
 }
 
 export function log(text) {
@@ -280,21 +305,26 @@ export function scrollTo(target) {
 
 export function getFirstChildDomInfo(element) {
   var dom = getDom(element);
-  if (dom.firstElementChild)
-    return getDomInfo(dom.firstElementChild);
-  return getDomInfo(dom);
+  if (dom) {
+    if (dom.firstElementChild) {
+      return getDomInfo(dom.firstElementChild);
+    } else {
+      return getDomInfo(dom);
+    }
+  }
+  return null;
 }
 
 export function addClsToFirstChild(element, className) {
   var dom = getDom(element);
-  if (dom.firstElementChild) {
+  if (dom && dom.firstElementChild) {
     dom.firstElementChild.classList.add(className);
   }
 }
 
 export function removeClsFromFirstChild(element, className) {
   var dom = getDom(element);
-  if (dom.firstElementChild) {
+  if (dom && dom.firstElementChild) {
     dom.firstElementChild.classList.remove(className);
   }
 }
@@ -302,7 +332,7 @@ export function removeClsFromFirstChild(element, className) {
 export function addDomEventListenerToFirstChild(element, eventName, preventDefault, invoker) {
   var dom = getDom(element);
 
-  if (dom.firstElementChild) {
+  if (dom && dom.firstElementChild) {
     addDomEventListener(dom.firstElementChild, eventName, preventDefault, invoker);
   }
 }
@@ -402,22 +432,25 @@ export function css(element: HTMLElement, name: string | object, value: string |
 
 export function addCls(selector: Element | string, clsName: string | Array<string>) {
   let element = getDom(selector);
-
-  if (typeof clsName === "string") {
-    element.classList.add(clsName);
-  } else {
-    element.classList.add(...clsName);
+  if (element) {
+    if (typeof clsName === "string") {
+      element.classList.add(clsName);
+    } else {
+      element.classList.add(...clsName);
+    }
   }
 }
 
 export function removeCls(selector: Element | string, clsName: string | Array<string>) {
   let element = getDom(selector);
-
-  if (typeof clsName === "string") {
-    element.classList.remove(clsName);
-  } else {
-    element.classList.remove(...clsName);
+  if (element) {
+    if (typeof clsName === "string") {
+      element.classList.remove(clsName);
+    } else {
+      element.classList.remove(...clsName);
+    }
   }
+
 }
 
 export function elementScrollIntoView(selector: Element | string) {
@@ -486,7 +519,8 @@ export function getScroll() {
 
 export function getInnerText(element) {
   let dom = getDom(element);
-  return dom.innerText;
+  if (dom) return dom.innerText;
+  return null;
 }
 
 export function getMaxZIndex() {
@@ -503,6 +537,7 @@ export function getStyle(element, styleProp) {
 export function getTextAreaInfo(element) {
   var result = {};
   var dom = getDom(element);
+  if (!dom) return null;
   result["scrollHeight"] = dom.scrollHeight || 0;
 
   if (element.currentStyle) {
@@ -639,8 +674,10 @@ export function addPreventKeys(inputElement, keys: string[]) {
 export function removePreventKeys(inputElement) {
   if (inputElement) {
     let dom = getDom(inputElement);
-    (dom as HTMLElement).removeEventListener("keydown", funcDict[inputElement.id + "keydown"]);
-    funcDict[inputElement.id + "keydown"] = null;
+    if(dom){
+      (dom as HTMLElement).removeEventListener("keydown", funcDict[inputElement.id + "keydown"]);
+      funcDict[inputElement.id + "keydown"] = null;
+    }
   }
 }
 
@@ -654,22 +691,58 @@ function preventKeyOnCondition(e, key: string, check: () => boolean) {
 export function addPreventEnterOnOverlayVisible(element, overlayElement) {
   if (element && overlayElement) {
     let dom = getDom(element);
-    funcDict[element.id + "keydown:Enter"] = (e) => preventKeyOnCondition(e, "enter", () => overlayElement.offsetParent !== null);
-    (dom as HTMLElement).addEventListener("keydown", funcDict[element.id + "keydown:Enter"], false);
+    if(dom){
+      funcDict[element.id + "keydown:Enter"] = (e) => preventKeyOnCondition(e, "enter", () => overlayElement.offsetParent !== null);
+      (dom as HTMLElement).addEventListener("keydown", funcDict[element.id + "keydown:Enter"], false);
+    }
   }
 }
 
 export function removePreventEnterOnOverlayVisible(element) {
   if (element) {
     let dom = getDom(element);
-    (dom as HTMLElement).removeEventListener("keydown", funcDict[element.id + "keydown:Enter"]);
-    funcDict[element.id + "keydown:Enter"] = null;
+    if(dom){
+      (dom as HTMLElement).removeEventListener("keydown", funcDict[element.id + "keydown:Enter"]);
+      funcDict[element.id + "keydown:Enter"] = null;
+    }
   }
 }
 
 export function setDomAttribute(element, attributes) {
   let dom = getDom(element);
-  for (var key in attributes) {
-    (dom as HTMLElement).setAttribute(key, attributes[key]);
+  if(dom){
+    for (var key in attributes) {
+      (dom as HTMLElement).setAttribute(key, attributes[key]);
+    }
+  }
+}
+
+export function setSelectionStart(element, position) {
+  if (position >= 0) {
+    let dom = getDom(element);
+    if(dom){
+      if (position <= dom.value.length) {
+        dom.selectionStart = position;
+        dom.selectionEnd = position;
+      }
+    }
+  }
+}
+
+//copied from https://www.telerik.com/forums/trigger-tab-key-when-enter-key-is-pressed
+export function invokeTabKey() {  
+  var currInput = document.activeElement;
+  if (currInput.tagName.toLowerCase() == "input") {
+    var inputs = document.getElementsByTagName("input");
+    var currInput = document.activeElement;
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i] == currInput) {
+        var next = inputs[i + 1];
+        if (next && next.focus) {
+          next.focus();
+        }
+        break;
+      }
+    }
   }
 }

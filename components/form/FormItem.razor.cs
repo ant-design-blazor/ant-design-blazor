@@ -202,14 +202,14 @@ namespace AntDesign
         {
             if (control.FieldIdentifier.Model == null)
             {
-                throw new InvalidOperationException($"Please use @bind-Value in the control with generic type `{typeof(TValue)}`.");
+                throw new InvalidOperationException($"Please use @bind-Value (or @bind-Values for selected components) in the control with generic type `{typeof(TValue)}`.");
             }
 
             this._control = control;
 
             CurrentEditContext.OnValidationStateChanged += (s, e) =>
             {
-                control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).ToArray();
+                control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
                 this._isValid = !control.ValidationMessages.Any();
 
                 StateHasChanged();
@@ -223,7 +223,10 @@ namespace AntDesign
                 builder.CloseComponent();
             };
 
-            _propertyReflector = PropertyReflector.Create(control.ValueExpression);
+            if (control.ValueExpression is not null)
+                _propertyReflector = PropertyReflector.Create(control.ValueExpression);
+            else
+                _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
 
             if (_propertyReflector.RequiredAttribute != null)
             {

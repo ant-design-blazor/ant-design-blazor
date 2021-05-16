@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
+using AntDesign.Core.JsInterop.ObservableApi;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -114,14 +114,14 @@ namespace AntDesign.Select.Internal
                     if (_prefixRef.Id != default)
                     {
                         _prefixElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _prefixRef);
-                        _prefixElement.width += ItemMargin;
+                        _prefixElement.Width += ItemMargin;
                     }
                     if (_suffixRef.Id != default)
                     {
                         _suffixElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _suffixRef);
-                        _suffixElement.width += 7;
+                        _suffixElement.Width += 7;
                     }
-                    DomEventService.AddEventListener("window", "resize", OnWindowResize, false);
+                    await DomEventService.AddResizeObserver(_overflow, OnOveralyResize);
                     await CalculateResponsiveTags();
                 }
                 DomEventService.AddEventListener(ParentSelect._inputRef, "focusout", OnBlurInternal, true);
@@ -136,20 +136,23 @@ namespace AntDesign.Select.Internal
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        protected async void OnWindowResize(JsonElement element)
+        protected async void OnOveralyResize(List<ResizeObserverEntry> entries)
         {
-            await CalculateResponsiveTags();
+            await CalculateResponsiveTags(false, entries[0].ContentRect);
         }
 
-        internal async Task CalculateResponsiveTags(bool forceInputFocus = false)
+        internal async Task CalculateResponsiveTags(bool forceInputFocus = false, DomRect entry = null)
         {
             if (!ParentSelect.IsResponsive)
                 return;
 
-            _overflowElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _overflow);
+            if (entry is null)
+                _overflowElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _overflow);
+            else
+                _overflowElement = entry;
 
             //distance between items is margin-inline-left=4px
-            decimal accumulatedWidth = _prefixElement.width + _suffixElement.width + (4 + (SearchValue?.Length ?? 0) * 8);
+            decimal accumulatedWidth = _prefixElement.Width + _suffixElement.Width + (4 + (SearchValue?.Length ?? 0) * 8);
             int i = 0;
             bool overflowing = false;
             bool renderAgain = false;
@@ -158,15 +161,15 @@ namespace AntDesign.Select.Internal
                 if (item.Width == 0)
                 {
                     var itemElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, item.SelectedTagRef);
-                    item.Width = itemElement.width;
+                    item.Width = itemElement.Width;
                 }
 
                 if (!overflowing)
                 {
-                    if (accumulatedWidth + item.Width > _overflowElement.width)
+                    if (accumulatedWidth + item.Width > _overflowElement.Width)
                     {
                         //current item will overflow; check if with aggregateTag will overflow
-                        if (accumulatedWidth + _aggregateTagElement.width > _overflowElement.width)
+                        if (accumulatedWidth + _aggregateTagElement.Width > _overflowElement.Width)
                         {
                             if (_calculatedMaxCount != Math.Max(0, i - 1))
                             {
@@ -391,6 +394,8 @@ namespace AntDesign.Select.Internal
                 _ = InvokeAsync(async () =>
                 {
                     await Task.Delay(100);
+                    if (ParentSelect.IsResponsive)
+                        await DomEventService.DisposeResizeObserver(_overflow);
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, ParentSelect._inputRef);
                     await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventEnterOnOverlayVisible, ParentSelect._inputRef);
                 });
@@ -398,8 +403,6 @@ namespace AntDesign.Select.Internal
             DomEventService.RemoveEventListerner<JsonElement>(ParentSelect._inputRef, "focus", OnFocusInternal);
             DomEventService.RemoveEventListerner<JsonElement>(ParentSelect._inputRef, "focusout", OnBlurInternal);
             DomEventService.RemoveEventListerner<JsonElement>("window", "beforeunload", Reloading);
-            if (ParentSelect.IsResponsive)
-                DomEventService.RemoveEventListerner<JsonElement>("window", "resize", OnWindowResize);
 
             if (IsDisposed) return;
 

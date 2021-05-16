@@ -18,10 +18,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/cH1BOLfxC/Tag.svg
 
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
-| Mode |方式选择 `default`, `closable`, `checkable`     | string         |
 | Closable | 值标签是否可以关闭| boolean         |-       |
-| Checked | 标签是否关闭所对应的值| boolean         |-       |
-| CheckedChange | 点击标签时触发的回调| function(e)         |-       |
+| Checkable | 值标签是否可以选择 | boolean         |-       |
+| Checked | 标签是否关闭所对应的值 | boolean         |-       |
+| CheckedChange | 点击标签时触发的回调 | function(e)         |-       |
 | Color | 预设标签色 | string   | -         |
 | OnClose | 关闭时的回调     | function(e)         | -         |
 | Visible | 是否显示标签 | boolean         |

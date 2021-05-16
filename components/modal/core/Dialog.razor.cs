@@ -142,7 +142,7 @@ namespace AntDesign
         {
             if (Config.MaskClosable && _dialogMouseDown)
             {
-                await Task.Delay(50);
+                await Task.Delay(4);
                 _dialogMouseDown = false;
             }
         }
@@ -395,5 +395,16 @@ namespace AntDesign
             await base.OnAfterRenderAsync(isFirst);
         }
         #endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            // enable body scroll
+            if (_disableBodyScroll)
+            {
+                _disableBodyScroll = false;
+                _ = Task.Delay(250);
+                _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+            }
+        }
     }
 }
