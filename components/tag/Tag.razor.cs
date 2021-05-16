@@ -26,7 +26,8 @@ namespace AntDesign
             {
                 _color = value;
                 _isPresetColor = IsPresetColor(_color);
-                _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value      
+                _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value  
+                _style = GetStyle();    
             }
         }
 
@@ -85,6 +86,7 @@ namespace AntDesign
         private bool _isCustomColor;
         private bool _closed;
         private string _color;
+        private string _style;
 
         protected override void OnInitialized()
         {
