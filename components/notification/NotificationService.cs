@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -11,6 +13,7 @@ namespace AntDesign
     {
         internal event Action<NotificationGlobalConfig> OnConfiging;
         internal event Func<NotificationConfig, Task> OnNoticing;
+        internal event Func<string, OneOf<string, RenderFragment>, OneOf<string, RenderFragment>?, Task> OnUpdating;
         internal event Func<string, Task> OnClosing;
         internal event Action OnDestroying;
 
@@ -19,85 +22,138 @@ namespace AntDesign
             OnConfiging?.Invoke(config);
         }
 
+        /// <summary>
+        /// just create a NotificationRef without open it
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public Task<NotificationRef> CreateRefAsync([NotNull] NotificationConfig config)
+        {
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+            var notificationRef = new NotificationRef(this, config);
+            return Task.FromResult(notificationRef);
+        }
+
+        internal async Task InternalOpen(NotificationConfig config)
+        {
+            if (OnNoticing != null)
+            {
+                if (string.IsNullOrWhiteSpace(config.Key))
+                {
+                    config.Key = Guid.NewGuid().ToString();
+                }
+                await OnNoticing.Invoke(config);
+            }
+        }
+
+        /// <summary>
+        /// update a existed notification box
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="description"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public async Task UpdateAsync(string key, OneOf<string, RenderFragment> description, OneOf<string, RenderFragment>? message = null)
+        {
+            if (OnUpdating != null && !string.IsNullOrWhiteSpace(key))
+            {
+                await OnUpdating.Invoke(key, description, message);
+            }
+        }
 
         /// <summary>
         /// Open a notification box
         /// </summary>
         /// <param name="config"></param>
-        public async Task Open([NotNull] NotificationConfig config)
+        public async Task<NotificationRef> Open([NotNull] NotificationConfig config)
         {
             if (config == null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
 
-            if (OnNoticing != null)
-            {
-                await OnNoticing.Invoke(config);
-            }
+            var notificationRef = await CreateRefAsync(config);
+            await notificationRef.OpenAsync();
+            return notificationRef;
         }
 
         #region Api
 
         /// <summary>
-        /// 
+        /// open a notification box with NotificationType.Success style
         /// </summary>
         /// <param name="config"></param>
-        public async Task Success(NotificationConfig config)
+        public async Task<NotificationRef> Success(NotificationConfig config)
         {
-            if (config != null)
+            if (config == null)
             {
-                config.NotificationType = NotificationType.Success;
-                await Open(config);
+                return null;
             }
+
+            config.NotificationType = NotificationType.Success;
+            return await Open(config);
+
         }
 
         /// <summary>
-        /// 
+        /// open a notification box with NotificationType.Error style
         /// </summary>
         /// <param name="config"></param>
-        public async Task Error(NotificationConfig config)
+        public async Task<NotificationRef> Error(NotificationConfig config)
         {
-            if (config != null)
+            if (config == null)
             {
-                config.NotificationType = NotificationType.Error;
-                await Open(config);
+                return null;
             }
+
+            config.NotificationType = NotificationType.Error;
+            return await Open(config);
+
         }
 
         /// <summary>
-        /// 
+        /// open a notification box with NotificationType.Info style
         /// </summary>
         /// <param name="config"></param>
-        public async Task Info(NotificationConfig config)
+        public async Task<NotificationRef> Info(NotificationConfig config)
         {
-            if (config != null)
+            if (config == null)
             {
-                config.NotificationType = NotificationType.Info;
-                await Open(config);
+                return null;
             }
+
+            config.NotificationType = NotificationType.Info;
+            return await Open(config);
+
         }
 
         /// <summary>
-        /// 
+        /// open a notification box with NotificationType.Warning style
         /// </summary>
         /// <param name="config"></param>
-        public async Task Warning(NotificationConfig config)
+        public async Task<NotificationRef> Warning(NotificationConfig config)
         {
-            if (config != null)
+            if (config == null)
             {
-                config.NotificationType = NotificationType.Warning;
-                await Open(config);
+                return null;
             }
+
+            config.NotificationType = NotificationType.Warning;
+            await Open(config);
+
+            return null;
         }
 
         /// <summary>
-        /// 
+        /// Equivalent to Warning method
         /// </summary>
         /// <param name="config"></param>
-        public async Task Warn(NotificationConfig config)
+        public async Task<NotificationRef> Warn(NotificationConfig config)
         {
-            await Warning(config);
+            return await Warning(config);
         }
 
         /// <summary>
@@ -114,7 +170,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// destroy
+        /// destroy all Notification box
         /// </summary>
         public void Destroy()
         {
@@ -122,7 +178,6 @@ namespace AntDesign
         }
 
         #endregion
-
     }
 
 }
