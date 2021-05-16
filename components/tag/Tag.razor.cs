@@ -51,9 +51,6 @@ namespace AntDesign
         public bool Checkable { get; set; }
 
         [Parameter]
-        public bool Checkable { get; set; }
-
-        [Parameter]
         public bool Visible { get; set; } = true;
 
         [Parameter]
@@ -116,19 +113,19 @@ namespace AntDesign
         }
 
         private string GetStyle() {
-            StringBuilder style = new StringBuilder();
+            StringBuilder styleBuilder = new StringBuilder();
 
-            style.Append(style);
+            styleBuilder.Append(Style);
 
             if (!string.IsNullOrEmpty(Style) && !Style.EndsWith(";")) {
-                style.Append(";");
+                styleBuilder.Append(";");
             }
 
             if (_isCustomColor) {
-                style.Append($"background-color: {_color};");
+                styleBuilder.Append($"background-color: {_color};");
             }
 
-            return style.ToString();
+            return styleBuilder.ToString();
         }
 
         private async Task UpdateCheckedStatus()
