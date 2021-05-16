@@ -26,5 +26,10 @@ namespace AntDesign.Core.Extensions
             }
 #endif
         }
+
+        public static ValueTask SetSelectionStartAsync(this IJSRuntime jSRuntime, ElementReference target, int selectionStart) =>
+            jSRuntime.InvokeVoidAsync(JSInteropConstants.SetSelectionStart, target, selectionStart);
+
+        public static ValueTask<bool> IsResizeObserverSupported(this IJSRuntime jSRuntime) => jSRuntime.InvokeAsync<bool>(JSInteropConstants.IsResizeObserverSupported);
     }
 }

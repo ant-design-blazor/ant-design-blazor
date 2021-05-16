@@ -4,8 +4,7 @@
 <div @ref="Ref">
     @if (_affixed)
     {
-        <div aria-hidden="true" style="@_hiddenStyle">
-        </div>
+        <div aria-hidden="true" style="@_hiddenStyle"></div>
     }
     <div class="@ClassMapper.Class" @ref="_childRef" style="@_affixStyle">
         @ChildContent

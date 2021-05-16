@@ -144,7 +144,7 @@ namespace AntDesign
             if (RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null && IsOpen)
             {
                 var domInfo = await _overlayTrigger.GetTriggerDomInfo();
-                _popupMinWidthStyle = $"min-width: {domInfo.clientWidth}px";
+                _popupMinWidthStyle = $"min-width: {domInfo.ClientWidth}px";
             }
 
             await base.OnAfterRenderAsync(firstRender);

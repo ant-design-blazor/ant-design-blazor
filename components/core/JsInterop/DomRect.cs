@@ -1,18 +1,31 @@
-﻿namespace AntDesign.JsInterop
+﻿using System.Text.Json.Serialization;
+
+namespace AntDesign.JsInterop
 {
     public class DomRect
     {
-        public decimal x { get; set; }
+        [JsonPropertyName("x")]
+        public decimal X { get; set; }
 
-        public decimal y { get; set; }
+        [JsonPropertyName("y")]
+        public decimal Y { get; set; }
 
-        public decimal width { get; set; }
+        [JsonPropertyName("width")]
+        public decimal Width { get; set; }
 
-        public decimal height { get; set; }
+        [JsonPropertyName("height")]
+        public decimal Height { get; set; }
 
-        public decimal top { get; set; }
-        public decimal right { get; set; }
-        public decimal bottom { get; set; }
-        public decimal left { get; set; }
+        [JsonPropertyName("top")]
+        public decimal Top { get; set; }
+
+        [JsonPropertyName("right")]
+        public decimal Right { get; set; }
+
+        [JsonPropertyName("bottom")]
+        public decimal Bottom { get; set; }
+
+        [JsonPropertyName("left")]
+        public decimal Left { get; set; }
     }
 }

@@ -1,0 +1,55 @@
+﻿<Cascader Options="@options" Placeholder="Please select" ShowSearch />
+
+@code {
+    CascaderNode[] options = new CascaderNode[]
+    {
+        new()
+        {
+            Value = "zhejiang",
+            Label = "Zhejiang",
+            Children = new CascaderNode[]
+            {
+                new()
+                {
+                    Value = "hangzhou",
+                    Label = "Hangzhou",
+                    Children = new CascaderNode[]
+                    {
+                        new()
+                        {
+                            Value = "xihu",
+                            Label = "West Lake",
+                        },
+                        new()
+                        {
+                            Value = "xiasha",
+                            Label = "Xia Sha",
+                            Disabled = true
+                        }
+                    }
+                }
+            }
+        },
+        new()
+        {
+            Value = "jiangsu",
+            Label = "Jiangsu",
+            Children = new CascaderNode[]
+            {
+                new()
+                {
+                    Value = "nanjing",
+                    Label = "Nanjing",
+                    Children = new CascaderNode[]
+                    {
+                        new()
+                        {
+                            Value = "zhonghuamen",
+                            Label = "Zhong Hua men"
+                        }
+                    }
+                }
+            }
+        }
+    };
+}

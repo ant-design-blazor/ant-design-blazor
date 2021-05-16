@@ -5,20 +5,22 @@
 {
     <div class="@(PrefixCls)-input">
         <input @ref="Ref"
-                @onclick="OnClick"
-                @onkeyup="OnKeyUp"
-                @oninput="OnInput"
-                @onfocus="Onfocus"
-                @bind-value="@Value"
-                disabled="@Disabled"
-                placeholder="@Placeholder"
-                readonly="@ReadOnly">
+               @onclick="OnClick"
+               @onkeyup="OnKeyUp"
+               @onkeydown="@OnKeyDown"
+               @oninput="OnInput"
+               @onfocus="Onfocus"
+               @onblur="OnBlur"
+               @bind-value="@Value"
+               disabled="@Disabled"
+               placeholder="@Placeholder"
+               readonly="@ReadOnly">
         @if (ShowSuffixIcon)
         {
             @if (ShowClear())
             {
                 <span class="@(PrefixCls)-clear" onclick="@OnClickClear">
-                    <Icon type="close-circle" theme="fill"/>
+                    <Icon type="close-circle" theme="fill" />
                 </span>
             }
             <span class="@(PrefixCls)-suffix">
@@ -29,11 +31,11 @@
                 }
                 else if (ShowTime)
                 {
-                    <Icon type="clock-circle"/>
+                    <Icon type="clock-circle" />
                 }
                 else
                 {
-                    <Icon type="calendar"/>
+                    <Icon type="calendar" />
                 }
 
             </span>
@@ -44,21 +46,23 @@ else
 {
     <div class="@(PrefixCls)-input">
         <input @ref="Ref"
-                @onclick="OnClick"
-                @onkeyup="OnKeyUp"
-                @oninput="OnInput"
-                @onfocus="Onfocus"
-                @bind-value="@Value"
-                disabled="@Disabled"
-                placeholder="@Placeholder"
-                readonly="@ReadOnly">
+               @onclick="OnClick"
+               @onkeyup="OnKeyUp"
+               @onkeydown="@OnKeyDown"
+               @oninput="OnInput"
+               @onfocus="Onfocus"
+               @onblur="OnBlur"
+               @bind-value="@Value"
+               disabled="@Disabled"
+               placeholder="@Placeholder"
+               readonly="@ReadOnly">
     </div>
     @if (ShowSuffixIcon)
     {
         @if (ShowClear())
         {
             <span class="@(PrefixCls)-clear" onclick="@OnClickClear">
-                <Icon type="close-circle" theme="fill"/>
+                <Icon type="close-circle" theme="fill" />
             </span>
         }
         <span class="@(PrefixCls)-suffix">
@@ -69,11 +73,11 @@ else
             }
             else if (ShowTime)
             {
-                <Icon type="clock-circle"/>
+                <Icon type="clock-circle" />
             }
             else
             {
-                <Icon type="calendar"/>
+                <Icon type="calendar" />
             }
         </span>
     }
@@ -121,10 +125,16 @@ else
     public EventCallback Onfocus { get; set; }
 
     [Parameter]
+    public EventCallback OnBlur { get; set; }
+
+    [Parameter]
     public EventCallback Onfocusout { get; set; }
 
     [Parameter]
     public EventCallback<KeyboardEventArgs> OnKeyUp { get; set; }
+
+    [Parameter]
+    public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
 
     [Parameter]
     public EventCallback<ChangeEventArgs> OnInput { get; set; }
@@ -137,7 +147,8 @@ else
 
     public bool IsOnFocused { get; set; } = false;
 
-    public bool ShowClear() {
+    public bool ShowClear()
+    {
         return !Disabled && !String.IsNullOrEmpty(Value) && AllowClear;
     }
 }

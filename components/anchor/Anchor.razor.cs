@@ -158,7 +158,7 @@ namespace AntDesign
                                 _activatedByClick = false;
                                 await ActivateAsync(link, true);
                                 // the offset does not matter, since the dictionary's value will not change any more in case user set up GetCurrentAnchor
-                                _linkTops[link.Href] = hrefDom.top;
+                                _linkTops[link.Href] = hrefDom.Top;
                                 StateHasChanged();
                             }
                         }
@@ -223,7 +223,7 @@ namespace AntDesign
                         DomRect hrefDom = await link.GetHrefDom();
                         if (hrefDom != null)
                         {
-                            _linkTops[link.Href] = hrefDom.top + offset;
+                            _linkTops[link.Href] = hrefDom.Top + offset;
                         }
                     }
                     catch (Exception ex)
@@ -242,7 +242,7 @@ namespace AntDesign
                 if (Affix && _activeLink != null)
                 {
                     _ballClass = "ant-anchor-ink-ball visible";
-                    decimal top = (_activeLink.LinkDom.top - _selfDom.top) + _activeLink.LinkDom.height / 2 - 2;
+                    decimal top = (_activeLink.LinkDom.Top - _selfDom.Top) + _activeLink.LinkDom.Height / 2 - 2;
                     _ballStyle = $"top: {top}px;";
                 }
                 else

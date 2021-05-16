@@ -121,7 +121,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 @code
 {
 
-    string HeaderTitle => Title ?? DisplayName ?? FieldName ?? DataIndex;
+    string HeaderTitle => Title ?? DisplayName ?? FieldName;
 
     readonly RenderFragment<Column<TData>> SortHeader = col =>
     @<div class="ant-table-column-sorters">
@@ -173,6 +173,14 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                 @if (col.Sortable)
                 {
                     @col.ToolTipSorter(col)
+                }
+                else if (@col.TitleTemplate != null)
+                {
+                    @col.TitleTemplate
+                }
+                else
+                {
+                    @col.HeaderTitle
                 }
             </span>
 
@@ -231,7 +239,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                 }
                                 <Space Style="margin:10px">
                                     <SpaceItem>
-                                        <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="overflow:visible" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })" PopupContainerSelector="@("#popupSelForOperator" + col.Id)">
+                                        <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="overflow:visible" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })" PopupContainerSelector="@("#popupSelForOperator" + col.Id)" DropdownMatchSelectWidth="false">
                                             <SelectOptions>
                                                 <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Equals" Label="@col.Table?.Locale.FilterOptions.Equals"></SelectOption>
                                                 <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotEquals" Label="@col.Table?.Locale.FilterOptions.NotEquals"></SelectOption>
@@ -239,7 +247,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                                 {
                                                     <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Contains" Label="@col.Table?.Locale.FilterOptions.Contains"></SelectOption>
                                                     <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.StartsWith" Label="@col.Table?.Locale.FilterOptions.StartsWith"></SelectOption>
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.EndsWidth" Label="@col.Table?.Locale.FilterOptions.EndsWith"></SelectOption>
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.EndsWith" Label="@col.Table?.Locale.FilterOptions.EndsWith"></SelectOption>
                                                 }
                                                 else if (col._columnDataType.IsEnum)
                                                 {
@@ -301,7 +309,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                             <Button Size="small" Type="link" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.ResetFilters()) })">
                                 @col.Table?.Locale.FilterReset
                             </Button>
-                            @if (col._columnFilterType == TableFilterType.FeildType)
+                            @if (col._columnFilterType == TableFilterType.FieldType)
                             {
                                 <Button Size="small" Icon="plus" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.AddFilter()) })">
                                 </Button>

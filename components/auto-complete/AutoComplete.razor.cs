@@ -23,6 +23,7 @@ namespace AntDesign
 
         [Parameter]
         public bool DefaultActiveFirstOption { get; set; } = true;
+
         [Parameter]
         public bool Backfill { get; set; } = false;
 
@@ -40,6 +41,7 @@ namespace AntDesign
         /// 列表绑定数据源集合
         /// </summary>
         private IEnumerable<TOption> _options;
+
         [Parameter]
         public IEnumerable<TOption> Options
         {
@@ -72,6 +74,7 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback<AutoCompleteOption> OnSelectionChange { get; set; }
+
         [Parameter]
         public EventCallback<AutoCompleteOption> OnActiveChange { get; set; }
 
@@ -138,6 +141,7 @@ namespace AntDesign
         private OverlayTrigger _overlayTrigger;
 
         public object SelectedValue { get; set; }
+
         /// <summary>
         /// 选择的项
         /// </summary>
@@ -148,7 +152,6 @@ namespace AntDesign
         /// 高亮的项目
         /// </summary>
         public object ActiveValue { get; set; }
-
 
         [Parameter]
         public bool ShowPanel { get; set; } = false;
@@ -163,6 +166,7 @@ namespace AntDesign
         }
 
         #region 子控件触发事件
+
         public async Task InputFocus(FocusEventArgs e)
         {
             if (!_isOptionsZero)
@@ -208,7 +212,7 @@ namespace AntDesign
             }
         }
 
-        #endregion
+        #endregion 子控件触发事件
 
         protected override void OnParametersSet()
         {
@@ -221,8 +225,6 @@ namespace AntDesign
             await SetOverlayWidth();
             await base.OnFirstAfterRenderAsync();
         }
-
-
 
         public void AddOption(AutoCompleteOption option)
         {
@@ -371,7 +373,7 @@ namespace AntDesign
             this.ClosePanel();
         }
 
-        bool _parPanelVisible = false;
+        private bool _parPanelVisible = false;
 
         private async void OnOverlayTriggerVisibleChange(bool visible)
         {
@@ -388,6 +390,7 @@ namespace AntDesign
         }
 
         private string _minWidth = "";
+
         private async Task SetOverlayWidth()
         {
             string newWidth;
@@ -398,7 +401,7 @@ namespace AntDesign
             }
             else
             {
-                Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current); ;
+                HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current); ;
                 //Element element;
                 //if (_divRef.Id != null)
                 //{
@@ -408,7 +411,7 @@ namespace AntDesign
                 //{
                 //    element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current);
                 //}
-                newWidth = $"min-width:{element.clientWidth}px";
+                newWidth = $"min-width:{element.ClientWidth}px";
             }
             if (newWidth != _minWidth) _minWidth = newWidth;
         }
@@ -416,7 +419,9 @@ namespace AntDesign
 
     public class AutoCompleteDataItem<TOption>
     {
-        public AutoCompleteDataItem() { }
+        public AutoCompleteDataItem()
+        {
+        }
 
         public AutoCompleteDataItem(TOption value, string label)
         {
@@ -430,4 +435,3 @@ namespace AntDesign
         public bool IsDisabled { get; set; }
     }
 }
-

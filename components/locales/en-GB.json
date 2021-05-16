@@ -94,6 +94,7 @@
     },
     "timePickerLocale": { "placeholder": "Select time" }
   },
+  "global": { "placeholder": "Please select" },
   "Table": {
     "filterTitle": "Filter menu",
     "filterConfirm": "OK",

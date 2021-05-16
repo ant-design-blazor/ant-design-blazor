@@ -63,13 +63,26 @@
         }
 
         DatePickerDisabledTime disabledTime = GetDisabledTime();
+		bool isValueNull = Value is null;
+		Func<int, int?, string> selected;
+		string localValue;
+		if (Value is null)
+		{
+			localValue = "";
+			selected = (_, _) => "";
+		}
+		else
+		{
+			localValue = Value.Value.ToString(timeFormat);
+			selected = (viewTime, valueTime) =>  viewTime == valueTime ? $"{PrefixCls}-time-panel-cell-selected" : "";
+		}		
     }
     <div class="@(PrefixCls)-time-panel">
         @if(Picker == DatePickerType.Date)
         {
             <div class="@(PrefixCls)-header">
                 <div class="@(PrefixCls)-header-view">
-                    @Value.ToString(timeFormat) <br />
+                    @localValue <br />
                 </div>
             </div>
         }
@@ -82,7 +95,7 @@
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledHours.Contains(hour);
-                        string isSelectedCls = viewTime.Hour == Value.Hour ? $"{PrefixCls}-time-panel-cell-selected" : "";
+                        string isSelectedCls = selected(viewTime.Hour, Value?.Hour);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
                         <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
@@ -103,7 +116,7 @@
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledMinutes.Contains(minute);
-                        string isSelectedCls = viewTime.Minute == Value.Minute ? $"{PrefixCls}-time-panel-cell-selected" : "";
+                        string isSelectedCls = selected(viewTime.Minute, Value?.Minute);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
                         <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
@@ -124,7 +137,7 @@
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledSeconds.Contains(second);
-                        string isSelectedCls = viewTime.Second == Value.Second ? $"{PrefixCls}-time-panel-cell-selected" : "";
+						string isSelectedCls = selected(viewTime.Second, Value?.Second);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
                         <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
