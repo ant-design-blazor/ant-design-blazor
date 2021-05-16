@@ -419,8 +419,8 @@ namespace AntDesign
 
         private async Task TryRenderNavOperation()
         {
-            int navWidth = (await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tabBars)).clientWidth;
-            int navTotalWidth = (await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _scrollTabBar)).clientWidth;
+            int navWidth = (await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _tabBars)).ClientWidth;
+            int navTotalWidth = (await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _scrollTabBar)).ClientWidth;
             if (navTotalWidth < navWidth)
             {
                 _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
@@ -447,29 +447,29 @@ namespace AntDesign
             // TODO: slide to activated tab
             // animate Active Ink
             // ink bar
-            var element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _activePane.TabBar);
-            var navSection = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _tabBars);
+            var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _activePane.TabBar);
+            var navSection = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _tabBars);
 
             if (IsHorizontal)
             {
                 //_inkStyle = "left: 0px; width: 0px;";
-                _inkStyle = $"left: {element.offsetLeft}px; width: {element.clientWidth}px";
-                if (element.offsetLeft > _scrollOffset + navSection.clientWidth
-                    || element.offsetLeft < _scrollOffset)
+                _inkStyle = $"left: {element.OffsetLeft}px; width: {element.ClientWidth}px";
+                if (element.OffsetLeft > _scrollOffset + navSection.ClientWidth
+                    || element.OffsetLeft < _scrollOffset)
                 {
                     // need to scroll tab bars
-                    _scrollOffset = element.offsetLeft;
+                    _scrollOffset = element.OffsetLeft;
                     _navStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
                 }
             }
             else
             {
-                _inkStyle = $"top: {element.offsetTop}px; height: {element.clientHeight}px;";
-                if (element.offsetTop > _scrollOffset + navSection.clientHeight
-                    || element.offsetTop < _scrollOffset)
+                _inkStyle = $"top: {element.OffsetTop}px; height: {element.ClientHeight}px;";
+                if (element.OffsetTop > _scrollOffset + navSection.ClientHeight
+                    || element.OffsetTop < _scrollOffset)
                 {
                     // need to scroll tab bars
-                    _scrollOffset = element.offsetTop;
+                    _scrollOffset = element.OffsetTop;
                     _navStyle = $"transform: translate(0px, -{_scrollOffset}px);";
                 }
             }

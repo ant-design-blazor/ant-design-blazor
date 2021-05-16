@@ -1,0 +1,19 @@
+﻿@using System.Globalization
+<div>    
+    <AntDesign.InputNumber ValueChanged="(double val)=>OnClickChange(val, 0)"></AntDesign.InputNumber>
+    CurrentCulture: "@CultureInfo.CurrentCulture.Name" Input-Number = @myValue[0]
+</div>
+<div style="margin: 20px 0px 20px 0px;">    
+    <AntDesign.InputNumber CultureInfo="@CI" ValueChanged="(double val)=>OnClickChange(val, 1)"></AntDesign.InputNumber>
+    CultureInfo: "@CI.Name": Input-Number = @myValue[1]
+</div>
+
+@code {
+    private double[] myValue { get; set; } = new double[2];
+    private CultureInfo CI = CultureInfo.GetCultureInfo("de-DE");
+    private void OnClickChange(double val, int i)
+    {
+        Console.WriteLine(val);
+        myValue[i] = val;
+    }
+}

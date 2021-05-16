@@ -5,7 +5,7 @@
 @{
     var calendar = CultureInfo.Calendar;
 
-    DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
+    DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);    
     int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
 
     // sunday should be 7
@@ -15,7 +15,7 @@
     }
 
     int diffDay = (int) Locale.FirstDayOfWeek - monthFirstDayOfWeek;
-    DateTime startDate = monthFirstDayDate.AddDays(diffDay);
+    DateTime startDate = monthFirstDayDate.AddDays(diffDay);	
 }
 
 <div class='@($"{PrefixCls}-panel")' @ref="Ref">
@@ -53,14 +53,14 @@
                 }
             </tr>
         </RenderTableHeader>
-        <RenderFisrtCol>
+        <RenderFirstCol>
             @if (IsWeek)
-            {
+            {				
                 <td class="@(PrefixCls)-cell @(PrefixCls)-cell-weak">
-                    @DateHelper.GetWeekOfYear(context)
+                    @DateHelper.GetWeekOfYear(context, Locale.FirstDayOfWeek)
                 </td>
             }
-        </RenderFisrtCol>
+        </RenderFirstCol>
         <RenderColValue Context="currentColDate">
             @currentColDate.Day
         </RenderColValue>
@@ -96,7 +96,7 @@
 
     private string GetRowClass(DateTime viewDate)
     {
-        string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, Value) ? $"{PrefixCls}-week-panel-row-selected" : "";
+        string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, Value, Locale.FirstDayOfWeek) ? $"{PrefixCls}-week-panel-row-selected" : "";
         string rowClass = IsWeek ? $"{PrefixCls}-week-panel-row" : "";
 
         return $"{rowClass} {selectedRowClass}";
