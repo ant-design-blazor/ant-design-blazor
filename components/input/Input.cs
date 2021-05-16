@@ -22,6 +22,8 @@ namespace AntDesign
         private bool _hasAffixWrapper;
         protected string GroupWrapperClass { get; set; } = $"{PrefixCls}-group-wrapper";
 
+        protected virtual string InputType => "input";
+
         //protected string ClearIconClass { get; set; }
         protected static readonly EventCallbackFactory CallbackFactory = new EventCallbackFactory();
 
@@ -48,7 +50,8 @@ namespace AntDesign
         public bool AutoFocus
         {
             get { return _autoFocus; }
-            set { 
+            set
+            {
                 _autoFocus = value;
                 if (!_isInitialized && _autoFocus)
                     IsFocused = _autoFocus;
@@ -204,11 +207,14 @@ namespace AntDesign
 
         protected async Task OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (args != null && args.Key == "Enter" && EnableOnPressEnter)
+            if (args?.Key == "Enter" && InputType != "textarea")
             {
                 await ChangeValue(true);
-                await OnPressEnter.InvokeAsync(args);
-                await OnPressEnterAsync();
+                if (EnableOnPressEnter)
+                {
+                    await OnPressEnter.InvokeAsync(args);
+                    await OnPressEnterAsync();
+                }
             }
         }
 

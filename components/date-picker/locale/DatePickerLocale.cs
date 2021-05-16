@@ -4,7 +4,7 @@ namespace AntDesign
 {
     public class DatePickerLocale
     {
-        public DayOfWeek FirstDayOfWeek { get; set; }
+        public DayOfWeek FirstDayOfWeek { get; set; } = DayOfWeek.Sunday;
 
         public DateLocale Lang { get; set; } = new DateLocale();
 
@@ -12,7 +12,7 @@ namespace AntDesign
     }
 
     public class DateLocale
-    {       
+    {
         public string Placeholder { get; set; } = "Select date";
         public string YearPlaceholder { get; set; } = "Select year";
         public string QuarterPlaceholder { get; set; } = "Select quarter";
@@ -37,8 +37,10 @@ namespace AntDesign
         public string YearSelect { get; set; } = "Choose a year";
         public string DecadeSelect { get; set; } = "Choose a decade";
         public string MonthFormat { get; set; } = "MMM";
+        public string YearMonthFormat { get; set; } = "yyyy-MM";
         public string DateFormat { get; set; } = "yyyy-MM-dd";
         public string DayFormat { get; set; } = "D";
+        public string TimeFormat { get; set; } = "HH:mm:ss";
         public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
         public bool MonthBeforeYear { get; set; } = true;
         public string PreviousMonth { get; set; } = "Previous month (PageUp)";

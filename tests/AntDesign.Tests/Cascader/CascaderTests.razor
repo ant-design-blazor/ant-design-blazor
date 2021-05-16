@@ -1,0 +1,23 @@
+﻿@inherits AntDesignTestBase
+
+@code{
+
+    [Theory]
+    [InlineData(AntSizeLDSType.Large)]
+    [InlineData(AntSizeLDSType.Small)]
+    public void Renders_with_each_size(string size)
+    {
+        var _sizeMap = new Dictionary<string, string>()
+        {
+            ["large"] = "lg",
+            ["small"] = "sm"
+        };
+
+        var cut = Context.Render(@<AntDesign.Cascader Size="@size" />);
+        var spanNode = cut.Nodes.QuerySelector($".ant-cascader-picker.ant-cascader-picker-{size}");
+        var inputNode = cut.Nodes.QuerySelector($".ant-input.ant-cascader-input.ant-input-{_sizeMap[size]}");
+
+        Assert.NotNull(spanNode);
+        Assert.NotNull(inputNode);
+    }
+}

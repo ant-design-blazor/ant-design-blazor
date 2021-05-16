@@ -187,7 +187,7 @@ namespace AntDesign
                     IsDisabled = Disabled,
                     GroupName = _groupName,
                     Value = Value,
-                    Item = THelper.ChangeType<TItem>(Value),
+                    Item = THelper.ChangeType<TItem>(Value, CultureInfo.CurrentCulture),
                     ChildComponent = this
                 };
 

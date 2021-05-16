@@ -150,5 +150,11 @@ namespace AntDesign
             _hasAdd = cancel.Cancel;
             await InvokeStateHasChangedAsync();
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _ = _dialog?.TryResetModalStyle();
+            base.Dispose(disposing);
+        }
     }
 }

@@ -1,34 +1,29 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using OneOf;
 
 namespace AntDesign
 {
-    public partial class Switch : AntInputComponentBase<bool>
+    public partial class Switch : AntInputBoolComponentBase
     {
-        protected string _prefixCls = "ant-switch";
-
-        [Parameter]
-        public bool Checked { get; set; }
-
-        [Parameter]
-        public bool Disabled { get; set; }
-
         [Parameter]
         public bool Loading { get; set; }
-
-        [Parameter]
-        public bool Control { get; set; }
-
-        [Parameter]
-        public EventCallback<bool> OnChange { get; set; }
 
         [Parameter]
         public string CheckedChildren { get; set; } = string.Empty;
 
         [Parameter]
         public RenderFragment CheckedChildrenTemplate { get; set; }
+
+        /// <summary>
+        /// The status of Switch is completely up to the user and no longer 
+        /// automatically changes the data based on the click event.
+        /// </summary>
+        [Parameter]
+        public bool Control { get; set; }
+
+        [Parameter]
+        public EventCallback OnClick { get; set; }
 
         [Parameter]
         public string UnCheckedChildren { get; set; } = string.Empty;
@@ -38,40 +33,37 @@ namespace AntDesign
 
         private bool _clickAnimating = false;
 
+        private string _prefixCls = "ant-switch";
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            SetClass();
+        }
 
-            this.CurrentValue = this.CurrentValue ? this.CurrentValue : this.Checked;
-
+        protected void SetClass()
+        {
             ClassMapper.Clear()
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-checked", () => CurrentValue)
                 .If($"{_prefixCls}-disabled", () => Disabled || Loading)
                 .If($"{_prefixCls}-loading", () => Loading)
                 .If($"{_prefixCls}-small", () => Size == "small")
-                .If($"{_prefixCls}-rtl", () => RTL)
+                .If($"{_prefixCls}-rtl", () => RTL);
                 ;
         }
 
-        private void HandleClick(MouseEventArgs e)
+        private async Task HandleClick(MouseEventArgs e)
         {
-            if (!Disabled && !Loading && !Control)
-            {
-                this.CurrentValue = !CurrentValue;
-
-                this.OnChange.InvokeAsync(CurrentValue);
-            }
+            if (!Control)
+                await base.ChangeValue(!CurrentValue);
+            if (OnClick.HasDelegate)
+                await OnClick.InvokeAsync(null);
         }
 
-        private void HandleMouseOver(MouseEventArgs e)
-        {
-            _clickAnimating = true;
-        }
+        private void HandleMouseOver(MouseEventArgs e) => _clickAnimating = true;
 
-        private void HandleMouseOut(MouseEventArgs e)
-        {
-            _clickAnimating = false;
-        }
+        private void HandleMouseOut(MouseEventArgs e) => _clickAnimating = false;
+
     }
 }
