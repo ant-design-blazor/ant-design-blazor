@@ -24,6 +24,9 @@ namespace AntDesign
         }
 
         [Parameter]
+        public RenderFragment PaginationTemplate { get; set; }
+
+        [Parameter]
         public int Total
         {
             get => _total > _dataSourceCount ? _total : _dataSourceCount;

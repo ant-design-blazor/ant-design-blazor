@@ -16,6 +16,9 @@ namespace AntDesign
         [Parameter]
         public string Color { get; set; }
 
+        [Parameter]
+        public PresetColor? PresetColor { get; set; }
+
         /// <summary>
         /// Number to show in badge
         /// </summary>
@@ -113,15 +116,13 @@ namespace AntDesign
 
         private char[] _maxNumberArray = Array.Empty<char>();
 
-        private string StatusOrPresetColor => Status.IsIn(_badgeStatusTypes) ? Status : PresetColor;
+        private string StatusOrPresetColor => Status.IsIn(_badgeStatusTypes) ? Status : (PresetColor.HasValue ? Enum.GetName(typeof(PresetColor), PresetColor) : "");
 
-        private string PresetColor => Color.IsIn(_badgePresetColors) ? Color : null;
-
-        private bool HasStatusOrColor => !string.IsNullOrWhiteSpace(Status) || !string.IsNullOrWhiteSpace(Color);
+        private bool HasStatusOrColor => !string.IsNullOrWhiteSpace(Status) || !string.IsNullOrWhiteSpace(Color) || PresetColor.HasValue;
 
         private string CountStyle => Offset == default ? null : $"{(Offset.Item1 > 0 ? $"right:-{Offset.Item1}px" : "")};{(Offset.Item2 > 0 ? $"margin-top:{Offset.Item2}px" : "")};";
 
-        private string DotColorStyle => PresetColor == null && !string.IsNullOrWhiteSpace(Color) ? $"background:{Color};" : "";
+        private string DotColorStyle => (PresetColor == null && !string.IsNullOrWhiteSpace(Color) ? $"background:{Color};" : "");
 
         private bool ShowSup => (this.Dot && (!this.Count.HasValue || (this.Count > 0 || this.Count == 0 && this.ShowZero)))
                                 || this.Count > 0
@@ -242,23 +243,6 @@ namespace AntDesign
 
             return digits;
         }
-
-        private readonly static string[] _badgePresetColors =
-        {
-            "pink",
-            "red",
-            "yellow",
-            "orange",
-            "cyan",
-            "green",
-            "blue",
-            "purple",
-            "geekblue",
-            "magenta",
-            "volcano",
-            "gold",
-            "lime"
-        };
 
         private readonly static string[] _badgeStatusTypes =
         {

@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using System;
+using System.Text;
 
 namespace AntDesign
 {
@@ -16,17 +18,35 @@ namespace AntDesign
             get => _color;
             set
             {
-                if (_color != value)
-                {
-                    _color = value;
-                    _presetColor = IsPresetColor(_color);
-                }
+                _color = value;
+                _isPresetColor = IsPresetColor(_color);
+                _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value  
+                _style = GetStyle();    
             }
         }
 
         [Parameter]
-        public bool Closable { get; set; }
+        public PresetColor? PresetColor 
+        { 
+            get 
+            {
+                object result;
 
+                if (Enum.TryParse(typeof(PresetColor), _color, true, out result) == false) {
+                    return null;
+                }
+            
+                return (PresetColor)result;
+            }
+            set 
+            { 
+                Color = Enum.GetName(typeof(PresetColor), value).ToLowerInvariant();
+            } 
+        }
+
+        [Parameter]
+        public bool Closable { get; set; }
+        
         [Parameter]
         public bool Checkable { get; set; }
 
@@ -56,10 +76,11 @@ namespace AntDesign
 
         [Parameter]
         public EventCallback OnClick { get; set; }
-
-        private bool _presetColor;
+        private bool _isPresetColor;
+        private bool _isCustomColor;
         private bool _closed;
         private string _color;
+        private string _style;
 
         protected override void OnInitialized()
         {
@@ -75,7 +96,6 @@ namespace AntDesign
             }
 
             bool result = Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime)(-inverse)?$");
-            if (!result) result = Regex.IsMatch(color, "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$");
             return result;
         }
 
@@ -83,13 +103,29 @@ namespace AntDesign
         {
             string prefix = "ant-tag";
             this.ClassMapper.Add(prefix)
-                .If($"{prefix}-has-color", () => !string.IsNullOrEmpty(Color) && !_presetColor)
+                .If($"{prefix}-has-color", () => _isCustomColor)
                 .If($"{prefix}-hidden", () => Visible == false)
-                .GetIf(() => $"{prefix}-{Color}", () => _presetColor)
+                .GetIf(() => $"{prefix}-{_color}", () => _isPresetColor)
                 .If($"{prefix}-checkable", () => Checkable)
                 .If($"{prefix}-checkable-checked", () => Checked)
                 .If($"{prefix}-rtl", () => RTL)
                 ;
+        }
+
+        private string GetStyle() {
+            StringBuilder styleBuilder = new StringBuilder();
+
+            styleBuilder.Append(Style);
+
+            if (!string.IsNullOrEmpty(Style) && !Style.EndsWith(";")) {
+                styleBuilder.Append(";");
+            }
+
+            if (_isCustomColor) {
+                styleBuilder.Append($"background-color: {_color};");
+            }
+
+            return styleBuilder.ToString();
         }
 
         private async Task UpdateCheckedStatus()

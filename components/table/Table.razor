@@ -7,11 +7,18 @@
     <Spin Spinning="Loading">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
-            <Pagination Class="@_paginationClass"
-                        Total="Total"
-                        PageSize="PageSize"
-                        Current="PageIndex"
-                        OnChange="HandlePageChange"/>
+            if (PaginationTemplate == null)
+            {
+                <Pagination Class="@_paginationClass"
+                            Total="Total"
+                            PageSize="PageSize"
+                            Current="PageIndex"
+                            OnChange="HandlePageChange" />
+            }
+            else
+            {
+                @PaginationTemplate
+            }
         }
 
         <CascadingValue Value="@this" TValue="ITable" IsFixed>
@@ -95,11 +102,18 @@
         </CascadingValue>
         @if (!HidePagination && PaginationPosition.Contains("bottom"))
         {
-            <Pagination Class="@_paginationClass"
-                        Total="Total"
-                        PageSize="PageSize"
-                        Current="PageIndex"
-                        OnChange="HandlePageChange" />
+            if (PaginationTemplate == null)
+            {
+                <Pagination Class="@_paginationClass"
+                            Total="Total"
+                            PageSize="PageSize"
+                            Current="PageIndex"
+                            OnChange="HandlePageChange" />
+            }
+            else
+            {
+                @PaginationTemplate
+            }
         }
     </Spin>
 </div>

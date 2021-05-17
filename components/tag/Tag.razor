@@ -3,7 +3,7 @@
 
 @if (!_closed)
 {
-    <span class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref" @onclick="ClickTag">
+  <span class="@ClassMapper.Class" style="@_style" id="@Id" @ref="Ref" @onclick="ClickTag">
         @if (!string.IsNullOrEmpty(Icon))
         {
             <Icon Type="@Icon"></Icon>

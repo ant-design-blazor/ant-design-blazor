@@ -66,13 +66,13 @@ namespace AntDesign.TableModels
             }
             foreach (var filter in Filters)
             {
-                if (filter.Value == null && (filter.FilterCompareOperator != TableFilterCompareOperator.IsNull && filter.FilterCompareOperator != TableFilterCompareOperator.IsNotNull)) continue;
                 if (this.FilterType == TableFilterType.List)
                 {
                     lambda = Expression.OrElse(lambda!, Expression.Invoke(OnFilter, Expression.Constant(filter.Value, typeof(TField)), _getFieldExpression.Body));
                 }
                 else // TableFilterType.FieldType
                 {
+                    if (filter.Value == null && (filter.FilterCompareOperator != TableFilterCompareOperator.IsNull && filter.FilterCompareOperator != TableFilterCompareOperator.IsNotNull)) continue;
                     Expression constantExpression = null;
                     if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull)
                     {
