@@ -13,9 +13,17 @@
     "next_3": "3 páginas siguientes"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Sunday",
     "lang": {
       "placeholder": "Seleccionar fecha",
+      "yearPlaceholder": "Seleccionar año",
+      "quarterPlaceholder": "Seleccionar trimestre",
+      "monthPlaceholder": "Seleccionar mes",
+      "weekPlaceholder": "Seleccionar semana",
       "rangePlaceholder": [ "Fecha inicial", "Fecha final" ],
+      "rangeYearPlaceholder": [ "Año initial", "Año final" ],
+      "rangeMonthPlaceholder": [ "Mes inicial", "Mes final" ],
+      "rangeWeekPlaceholder": [ "Semana inicial", "Semana final" ],
       "locale": "es_ES",
       "today": "Hoy",
       "now": "Ahora",
@@ -26,6 +34,7 @@
       "year": "Año",
       "timeSelect": "Seleccionar hora",
       "dateSelect": "Seleccionar fecha",
+      "weekSelect": "Elegir semana",
       "monthSelect": "Elegir un mes",
       "yearSelect": "Elegir un año",
       "decadeSelect": "Elegir una década",
@@ -41,19 +50,42 @@
       "previousDecade": "Década anterior",
       "nextDecade": "Década siguiente",
       "previousCentury": "Siglo anterior",
-      "nextCentury": "Siglo siguiente"
+      "nextCentury": "Siglo siguiente",
+      "startDate": "Fecha inicial",
+      "startWeek": "Semana Inicial",
+      "startMonth": "Mes Inicial",
+      "startYear": "Año Inicial",
+      "startQuarter": "Trimestre inicial",
+      "endDate": "Fecha final",
+      "endWeek": "Semana final",
+      "endMonth": "Mes final",
+      "endYear": "Año final",
+      "endQuarter": "Trimestre final",
+      "quarterSelect": "Elegir trimestre",
+      "week": "Semana",
+      "monthFormat": "MMM",
+      "shortWeekDays": [ "Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa" ]
     },
     "timePickerLocale": {
-      "placeholder": "Seleccionar hora"
+      "placeholder": "Seleccionar hora",
+      "rangePlaceholder": [ "Hora inicial", "Hora final" ]
     }
   },
   "TimePicker": {
-    "placeholder": "Seleccionar hora"
+    "placeholder": "Seleccionar hora",
+    "rangePlaceholder": [ "Hora inicial", "Hora final" ]
   },
   "Calendar": {
     "lang": {
       "placeholder": "Seleccionar fecha",
+      "yearPlaceholder": "Seleccionar año",
+      "quarterPlaceholder": "Seleccionar trimestre",
+      "monthPlaceholder": "Seleccionar mes",
+      "weekPlaceholder": "Seleccionar semana",
       "rangePlaceholder": [ "Fecha inicial", "Fecha final" ],
+      "rangeYearPlaceholder": [ "Año initial", "Año final" ],
+      "rangeMonthPlaceholder": [ "Mes inicial", "Mes final" ],
+      "rangeWeekPlaceholder": [ "Semana inicial", "Semana final" ],
       "locale": "es_ES",
       "today": "Hoy",
       "now": "Ahora",
@@ -64,6 +96,7 @@
       "year": "Año",
       "timeSelect": "Seleccionar hora",
       "dateSelect": "Seleccionar fecha",
+      "weekSelect": "Elegir semana",
       "monthSelect": "Elegir un mes",
       "yearSelect": "Elegir un año",
       "decadeSelect": "Elegir una década",
@@ -82,19 +115,41 @@
       "nextCentury": "Siglo siguiente"
     },
     "timePickerLocale": {
-      "placeholder": "Seleccionar hora"
+      "placeholder": "Seleccionar hora",
+      "rangePlaceholder": [ "Hora inicial", "Hora final" ]
     }
   },
-  "global": {
-    "placeholder": "Seleccione"
-  },
+  "global": { "placeholder": "Seleccione" },
   "Table": {
     "filterTitle": "Filtrar menú",
     "filterConfirm": "Aceptar",
     "filterReset": "Reiniciar",
-    "selectAll": "Seleccionar todo",
+    "selectAll": "Seleccionar pagina actual",
     "selectInvert": "Invertir selección",
-    "sortTitle": "Ordenar"
+    "selectionAll": "Seleccionar todo",
+    "sortTitle": "Ordenar",
+    "expand": "Expandir fila",
+    "collapse": "Contraer fila",
+    "triggerDesc": "Click para ordenar descendente",
+    "triggerAsc": "Click para ordenar ascendente",
+    "cancelSort": "Click para cancelar orden",
+    "filterOptions": {
+      "true": "Verdadero",
+      "false": "Falso",
+      "and": "Y",
+      "or": "O",
+      "equals": "Igual",
+      "notEquals": "Distinto",
+      "contains": "Contiene",
+      "startsWith": "Empieza con",
+      "endsWith": "Termina con",
+      "greaterThan": "Mayor",
+      "lessThan": "Menor",
+      "greaterThanOrEquals": "Mayor igual",
+      "lessThanOrEquals": "Menor igual",
+      "isNull": "Es nulo",
+      "isNotNull": "No es nulo"
+    }
   },
   "Modal": {
     "okText": "Aceptar",
@@ -114,6 +169,7 @@
     "cancelText": "Cancelar"
   },
   "Transfer": {
+    "titles": [ "", "" ],
     "searchPlaceholder": "Buscar aquí",
     "itemUnit": "elemento",
     "itemsUnit": "elementos"
@@ -125,19 +181,63 @@
     "previewFile": "Vista previa",
     "downloadFile": "Descargar archivo"
   },
-  "Empty": {
-    "description": "No hay datos"
-  },
-  "Icon": {
-    "icon": "ícono"
-  },
+  "Empty": { "description": "No hay datos" },
+  "Icon": { "icon": "ícono" },
   "Text": {
     "edit": "editar",
     "copy": "copiar",
     "copied": "copiado",
     "expand": "expandir"
   },
-  "PageHeader": {
-    "back": "volver"
+  "PageHeader": { "back": "volver" },
+  "Form": {
+    "defaultValidateMessages": {
+      "default": "Error al validar campo ${label}",
+      "required": "Por favor ingrese ${label}",
+      "enum": "${label} tiene que ser uno de [${enum}]",
+      "whitespace": "${label} no puede ser un caracter vacio",
+      "date": {
+        "format": "${label} formato de fecha invalido",
+        "parse": "${label} no puede ser convertido a fecha",
+        "invalid": "${label} es una fecha invalida"
+      },
+      "types": {
+        "string": "${label} no es ${type} valido",
+        "method": "${label} no es ${type} valido",
+        "array": "${label} no es ${type} valida",
+        "object": "${label} no es ${type} valido",
+        "number": "${label} no es ${type} valido",
+        "date": "${label} no es ${type} valida",
+        "boolean": "${label} no es ${type} valido",
+        "integer": "${label} no es ${type} valido",
+        "float": "${label} no es ${type} valido",
+        "regexp": "${label} no es ${type} valida",
+        "email": "${label} no es ${type} valido",
+        "url": "${label} no es ${type} valida",
+        "hex": "${label} no es ${type} valido"
+      },
+      "string": {
+        "len": "${label} debe tener ${len} caracteres",
+        "min": "${label} debe tener mas de ${min} caracteres",
+        "max": "${label} debe tener menos de ${max} caracteres",
+        "range": "${label} debe estar entre ${min}-${max} caracteres"
+      },
+      "number": {
+        "len": "${label} tiene que ser igual ${len}",
+        "min": "${label} valor minimo es ${min}",
+        "max": "${label} valor maximo es ${max}",
+        "range": "${label} debe estar entre ${min}-${max}"
+      },
+      "array": {
+        "len": "Debe tener ${len} ${label}",
+        "min": "Al menos ${min} ${label}",
+        "max": "Como maximo ${max} ${label}",
+        "range": "La cantidad de ${label} debe estar entre ${min}-${max}"
+      },
+      "pattern": { "mismatch": "${label} no coincide con el patron ${pattern}" }
+    }
+  },
+  "Image": {
+    "preview": "Vista previa"
   }
 }
