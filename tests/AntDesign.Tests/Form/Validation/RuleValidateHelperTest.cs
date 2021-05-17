@@ -27,7 +27,7 @@ namespace AntDesign.Tests.Form.Validation
         [InlineData(RuleFieldType.Integer, 123, false, true)]
         public void RuleValidate_Required(RuleFieldType type, object value, bool required, bool expectedValid)
         {
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Type = type,
                 Required = required,
@@ -42,7 +42,7 @@ namespace AntDesign.Tests.Form.Validation
         [MemberData(nameof(RuleValidate_Len_Values))]
         public void RuleValidate_Len(RuleFieldType type, object value, decimal len, bool expectedValid)
         {
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Type = type,
                 Len = len,
@@ -68,7 +68,7 @@ namespace AntDesign.Tests.Form.Validation
         [MemberData(nameof(RuleValidate_Min_Values))]
         public void RuleValidate_Min(RuleFieldType type, object value, decimal min, bool expectedValid)
         {
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Type = type,
                 Min = min,
@@ -99,7 +99,7 @@ namespace AntDesign.Tests.Form.Validation
         [MemberData(nameof(RuleValidate_Max_Values))]
         public void RuleValidate_Max(RuleFieldType type, object value, decimal max, bool expectedValid)
         {
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Type = type,
                 Max = max,
@@ -128,7 +128,7 @@ namespace AntDesign.Tests.Form.Validation
         [Fact]
         public void RuleValidate_Transform()
         {
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Transform = value => 100,
                 Max = 10,
@@ -146,7 +146,7 @@ namespace AntDesign.Tests.Form.Validation
         [MemberData(nameof(RuleValidate_Pattern_Values))]
         public void RuleValidate_Pattern(object value, string pattern, bool expectedValid)
         {
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Pattern = pattern,
             };
@@ -166,7 +166,7 @@ namespace AntDesign.Tests.Form.Validation
         [MemberData(nameof(RuleValidate_Message_Values))]
         public void RuleValidate_Message(object value, string message, string expectedMessage)
         {
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Required = true,
                 Message = message,
@@ -191,7 +191,7 @@ namespace AntDesign.Tests.Form.Validation
             const int MAX = 10;
             int value = 15;
 
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Type = RuleFieldType.Integer,
                 Validator = (validationContext) =>
@@ -221,7 +221,7 @@ namespace AntDesign.Tests.Form.Validation
         [MemberData(nameof(RuleValidate_Type_Values))]
         public void RuleValidate_Type(RuleFieldType type, object value, bool expectedValid)
         {
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Type = type,
             };
@@ -286,7 +286,7 @@ namespace AntDesign.Tests.Form.Validation
         [MemberData(nameof(RuleValidate_DefaultField_Values))]
         public void RuleValidate_DefaultField(RuleFieldType type, object value, FormValidationRule defaultField, bool expectedValid)
         {
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Type = type,
                 DefaultField = defaultField,
@@ -299,15 +299,15 @@ namespace AntDesign.Tests.Form.Validation
 
         public static List<object[]> RuleValidate_DefaultField_Values => new()
         {
-            new object[] { RuleFieldType.Array, new string[] { "one", "there", "nine" }, new Rule { Type = RuleFieldType.String, Max = 5 }, true },
-            new object[] { RuleFieldType.Array, new string[] { "one", "there", "nine" }, new Rule { Type = RuleFieldType.String, Max = 3 }, false },
+            new object[] { RuleFieldType.Array, new string[] { "one", "there", "nine" }, new FormValidationRule { Type = RuleFieldType.String, Max = 5 }, true },
+            new object[] { RuleFieldType.Array, new string[] { "one", "there", "nine" }, new FormValidationRule { Type = RuleFieldType.String, Max = 3 }, false },
         };
 
         [Theory]
         [MemberData(nameof(RuleValidate_Fields_Values))]
         public void RuleValidate_Fields(RuleFieldType type, object value, Dictionary<object, FormValidationRule> fields, bool expectedValid)
         {
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Type = type,
                 Fields = fields,
@@ -324,9 +324,9 @@ namespace AntDesign.Tests.Form.Validation
                 RuleFieldType.Array,
                 new string[] { "one", "there", "nine" },
                 new Dictionary<object, FormValidationRule>{
-                    { 0, new Rule { Type = RuleFieldType.String, Max = 5 } },
-                    { 1, new Rule { Type = RuleFieldType.String, Len=5 } },
-                    { 2, new Rule { Type = RuleFieldType.String, Max = 4 } },
+                    { 0, new FormValidationRule { Type = RuleFieldType.String, Max = 5 } },
+                    { 1, new FormValidationRule { Type = RuleFieldType.String, Len=5 } },
+                    { 2, new FormValidationRule { Type = RuleFieldType.String, Max = 4 } },
                 },
                 true
             },
@@ -334,9 +334,9 @@ namespace AntDesign.Tests.Form.Validation
                 RuleFieldType.Array,
                 new string[] { "one", "there", "nine" },
                 new Dictionary<object, FormValidationRule>{
-                    { 0, new Rule { Type = RuleFieldType.String, Max = 2 } },
-                    { 1, new Rule { Type = RuleFieldType.String, Len=5 } },
-                    { 2, new Rule { Type = RuleFieldType.String, Max = 4 } },
+                    { 0, new FormValidationRule { Type = RuleFieldType.String, Max = 2 } },
+                    { 1, new FormValidationRule { Type = RuleFieldType.String, Len=5 } },
+                    { 2, new FormValidationRule { Type = RuleFieldType.String, Max = 4 } },
                 },
                 false
             },
@@ -344,10 +344,10 @@ namespace AntDesign.Tests.Form.Validation
                 RuleFieldType.Object,
                 new FieldsTestObj(),
                 new Dictionary<object, FormValidationRule>{
-                    { "_fieldName", new Rule { Type = RuleFieldType.String, Max = 3 } },
-                    { "_fieldAge", new Rule { Type = RuleFieldType.Integer, Len=10 } },
-                    { "PropertyName", new Rule { Type = RuleFieldType.String, Max = 3 } },
-                    { "PropertyAge", new Rule { Type = RuleFieldType.Integer, Len = 10 } },
+                    { "_fieldName", new FormValidationRule { Type = RuleFieldType.String, Max = 3 } },
+                    { "_fieldAge", new FormValidationRule { Type = RuleFieldType.Integer, Len=10 } },
+                    { "PropertyName", new FormValidationRule { Type = RuleFieldType.String, Max = 3 } },
+                    { "PropertyAge", new FormValidationRule { Type = RuleFieldType.Integer, Len = 10 } },
                 },
                 true
             },
@@ -357,7 +357,7 @@ namespace AntDesign.Tests.Form.Validation
         [MemberData(nameof(RuleValidate_OneOf_Values))]
         public void RuleValidate_OneOf(RuleFieldType type, object value, object[] oneOf, bool expectedValid)
         {
-            var rule = new Rule()
+            var rule = new FormValidationRule()
             {
                 Type = type,
                 OneOf = oneOf,
@@ -401,23 +401,23 @@ namespace AntDesign.Tests.Form.Validation
 
         public static List<object[]> RuleValidate_ValidateMessages_Values => new()
         {
-            new object[] { new Rule { Required = true }, null, string.Format($"{_defValidateMsgs.Required}{_customSuffix}", _displayName) },
+            new object[] { new FormValidationRule { Required = true }, null, string.Format($"{_defValidateMsgs.Required}{_customSuffix}", _displayName) },
             new object[] {
-                new Rule { Type= RuleFieldType.Integer, OneOf = new object[] { 1, 2 } },
+                new FormValidationRule { Type= RuleFieldType.Integer, OneOf = new object[] { 1, 2 } },
                 0,
                 string.Format($"{_defValidateMsgs.OneOf}{_customSuffix}", _displayName, JsonSerializer.Serialize(new object[] { 1, 2 }))
             },
-            new object[] { new Rule { Type = RuleFieldType.String }, 123, string.Format($"{_defValidateMsgs.Types.String }{_customSuffix}", _displayName, RuleFieldType.String) },
-            new object[] { new Rule { Type = RuleFieldType.Array }, 123, string.Format($"{_defValidateMsgs.Types.Array  }{_customSuffix}", _displayName, RuleFieldType.Array) },
-            new object[] { new Rule { Type = RuleFieldType.Enum }, 123, string.Format($"{_defValidateMsgs.Types.Enum   }{_customSuffix}", _displayName, RuleFieldType.Enum) },
-            new object[] { new Rule { Type = RuleFieldType.Number }, "str", string.Format($"{_defValidateMsgs.Types.Number }{_customSuffix}", _displayName, RuleFieldType.Number) },
-            new object[] { new Rule { Type = RuleFieldType.Date }, 123, string.Format($"{_defValidateMsgs.Types.Date   }{_customSuffix}", _displayName, RuleFieldType.Date) },
-            new object[] { new Rule { Type = RuleFieldType.Boolean }, "str", string.Format($"{_defValidateMsgs.Types.Boolean}{_customSuffix}", _displayName, RuleFieldType.Boolean) },
-            new object[] { new Rule { Type = RuleFieldType.Integer }, 1.0, string.Format($"{_defValidateMsgs.Types.Integer}{_customSuffix}", _displayName, RuleFieldType.Integer) },
-            new object[] { new Rule { Type = RuleFieldType.Float }, 123, string.Format($"{_defValidateMsgs.Types.Float  }{_customSuffix}", _displayName, RuleFieldType.Float) },
-            new object[] { new Rule { Type = RuleFieldType.Regexp }, 123, string.Format($"{_defValidateMsgs.Types.Regexp }{_customSuffix}", _displayName, RuleFieldType.Regexp) },
-            new object[] { new Rule { Type = RuleFieldType.Email }, "123", string.Format($"{_defValidateMsgs.Types.Email  }{_customSuffix}", _displayName, RuleFieldType.Email) },
-            new object[] { new Rule { Type = RuleFieldType.Url }, "123", string.Format($"{_defValidateMsgs.Types.Url    }{_customSuffix}", _displayName, RuleFieldType.Url) },
+            new object[] { new FormValidationRule { Type = RuleFieldType.String }, 123, string.Format($"{_defValidateMsgs.Types.String }{_customSuffix}", _displayName, RuleFieldType.String) },
+            new object[] { new FormValidationRule { Type = RuleFieldType.Array }, 123, string.Format($"{_defValidateMsgs.Types.Array  }{_customSuffix}", _displayName, RuleFieldType.Array) },
+            new object[] { new FormValidationRule { Type = RuleFieldType.Enum }, 123, string.Format($"{_defValidateMsgs.Types.Enum   }{_customSuffix}", _displayName, RuleFieldType.Enum) },
+            new object[] { new FormValidationRule { Type = RuleFieldType.Number }, "str", string.Format($"{_defValidateMsgs.Types.Number }{_customSuffix}", _displayName, RuleFieldType.Number) },
+            new object[] { new FormValidationRule { Type = RuleFieldType.Date }, 123, string.Format($"{_defValidateMsgs.Types.Date   }{_customSuffix}", _displayName, RuleFieldType.Date) },
+            new object[] { new FormValidationRule { Type = RuleFieldType.Boolean }, "str", string.Format($"{_defValidateMsgs.Types.Boolean}{_customSuffix}", _displayName, RuleFieldType.Boolean) },
+            new object[] { new FormValidationRule { Type = RuleFieldType.Integer }, 1.0, string.Format($"{_defValidateMsgs.Types.Integer}{_customSuffix}", _displayName, RuleFieldType.Integer) },
+            new object[] { new FormValidationRule { Type = RuleFieldType.Float }, 123, string.Format($"{_defValidateMsgs.Types.Float  }{_customSuffix}", _displayName, RuleFieldType.Float) },
+            new object[] { new FormValidationRule { Type = RuleFieldType.Regexp }, 123, string.Format($"{_defValidateMsgs.Types.Regexp }{_customSuffix}", _displayName, RuleFieldType.Regexp) },
+            new object[] { new FormValidationRule { Type = RuleFieldType.Email }, "123", string.Format($"{_defValidateMsgs.Types.Email  }{_customSuffix}", _displayName, RuleFieldType.Email) },
+            new object[] { new FormValidationRule { Type = RuleFieldType.Url }, "123", string.Format($"{_defValidateMsgs.Types.Url    }{_customSuffix}", _displayName, RuleFieldType.Url) },
         };
 
         private ValidateMessages GetCustomValidateMessages()
