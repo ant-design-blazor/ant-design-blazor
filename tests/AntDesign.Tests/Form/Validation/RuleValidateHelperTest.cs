@@ -284,7 +284,7 @@ namespace AntDesign.Tests.Form.Validation
 
         [Theory]
         [MemberData(nameof(RuleValidate_DefaultField_Values))]
-        public void RuleValidate_DefaultField(RuleFieldType type, object value, Rule defaultField, bool expectedValid)
+        public void RuleValidate_DefaultField(RuleFieldType type, object value, FormValidationRule defaultField, bool expectedValid)
         {
             var rule = new Rule()
             {
@@ -305,7 +305,7 @@ namespace AntDesign.Tests.Form.Validation
 
         [Theory]
         [MemberData(nameof(RuleValidate_Fields_Values))]
-        public void RuleValidate_Fields(RuleFieldType type, object value, Dictionary<object, Rule> fields, bool expectedValid)
+        public void RuleValidate_Fields(RuleFieldType type, object value, Dictionary<object, FormValidationRule> fields, bool expectedValid)
         {
             var rule = new Rule()
             {
@@ -323,7 +323,7 @@ namespace AntDesign.Tests.Form.Validation
             new object[] {
                 RuleFieldType.Array,
                 new string[] { "one", "there", "nine" },
-                new Dictionary<object, Rule>{
+                new Dictionary<object, FormValidationRule>{
                     { 0, new Rule { Type = RuleFieldType.String, Max = 5 } },
                     { 1, new Rule { Type = RuleFieldType.String, Len=5 } },
                     { 2, new Rule { Type = RuleFieldType.String, Max = 4 } },
@@ -333,7 +333,7 @@ namespace AntDesign.Tests.Form.Validation
             new object[] {
                 RuleFieldType.Array,
                 new string[] { "one", "there", "nine" },
-                new Dictionary<object, Rule>{
+                new Dictionary<object, FormValidationRule>{
                     { 0, new Rule { Type = RuleFieldType.String, Max = 2 } },
                     { 1, new Rule { Type = RuleFieldType.String, Len=5 } },
                     { 2, new Rule { Type = RuleFieldType.String, Max = 4 } },
@@ -343,7 +343,7 @@ namespace AntDesign.Tests.Form.Validation
             new object[] {
                 RuleFieldType.Object,
                 new FieldsTestObj(),
-                new Dictionary<object, Rule>{
+                new Dictionary<object, FormValidationRule>{
                     { "_fieldName", new Rule { Type = RuleFieldType.String, Max = 3 } },
                     { "_fieldAge", new Rule { Type = RuleFieldType.Integer, Len=10 } },
                     { "PropertyName", new Rule { Type = RuleFieldType.String, Max = 3 } },
@@ -383,7 +383,7 @@ namespace AntDesign.Tests.Form.Validation
 
         [Theory]
         [MemberData(nameof(RuleValidate_ValidateMessages_Values))]
-        public void RuleValidate_ValidateMessages(Rule rule, object value, string expectedMessage)
+        public void RuleValidate_ValidateMessages(FormValidationRule rule, object value, string expectedMessage)
         {
             var validationContext = new RuleValidationContext()
             {
@@ -462,7 +462,7 @@ namespace AntDesign.Tests.Form.Validation
             return customValidateMessage;
         }
 
-        private ValidationResult GetValidationResult(Rule rule, object value)
+        private ValidationResult GetValidationResult(FormValidationRule rule, object value)
         {
             var validationContext = new RuleValidationContext()
             {

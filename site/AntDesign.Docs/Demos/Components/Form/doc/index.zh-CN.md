@@ -19,13 +19,13 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 
 
 ### Rules
-Rules 支持接收 Rule[] 进行配置
+Rules 支持接收 FormValidationRule[] 进行配置
 
 | 名称 | 说明 | 类型 |
 | --- | --- | --- |
-| DefaultField | 仅在 `Type` 为 `Array` 类型时有效，用于指定数组元素的校验规则（FormItem暂不支持） | [Rule](zh-CN/components/form#Rule) |
+| DefaultField | 仅在 `Type` 为 `Array` 类型时有效，用于指定数组元素的校验规则（FormItem暂不支持） | [FormValidationRule](zh-CN/components/form#Rules) |
 | OneOf | 值是否包含在指定的多个值中 | object\[] |
-| Fields | 仅在 `Type` 为 `Array` 或 `Object` 类型时有效，用于指定子元素的校验规则（FormItem暂不支持） | Dictionary&lt;object, [Rule](#Rule)> |
+| Fields | 仅在 `Type` 为 `Array` 或 `Object` 类型时有效，用于指定子元素的校验规则（FormItem暂不支持） | Dictionary&lt;object, [FormValidationRule](zh-CN/components/form#Rules)> |
 | Len | String 类型时为字符串长度；Number 类型时为确定数字； Array 类型时为数组长度 | decimal |
 | Max | 必须设置 `Type`：String 类型为字符串最大长度；Number 类型时为最大值；Array 类型时为数组最大长度 | decimal |
 | Message | 错误信息，不设置时会通过ValidateMessages(查看下方)自动生成 | string |

@@ -18,13 +18,13 @@ High performance Form component with data scope management. Including data colle
 
 
 ### Rules
-Rules supports a config Rule[]
+Rules supports a config FormValidationRule[]
 
 | Name | Description | Type |
 | --- | --- | --- |
-| DefaultField | Validate rule for all array elements, valid when `type` is `Array`(FormItem not support now) | [Rule](en-US/components/form#Rule) |
+| DefaultField | Validate rule for all array elements, valid when `type` is `Array`(FormItem not support now) | [FormValidationRule](en-US/components/form#Rule) |
 | OneOf | Whether the value is in specified values | object\[] |
-| Fields | Validate rule for child elements, valid when `type` is `Array` or `Object`(FormItem not support now) | Dictionary&lt;object, [Rule](#Rule)> |
+| Fields | Validate rule for child elements, valid when `type` is `Array` or `Object`(FormItem not support now) | Dictionary&lt;object, [FormValidationRule](en-US/components/form#Rule)> |
 | Len | Length of String, Number, Array | decimal |
 | Max | `type` required: max length of `String`, `Number`, `Array` | decimal |
 | Message | Error message. Will auto generate by ValidateMessages(see below) if not provided | string |

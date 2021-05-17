@@ -103,7 +103,7 @@ namespace AntDesign
         public string LabelStyle { get; set; }
 
         [Parameter]
-        public Rule[] Rules { get; set; }
+        public FormValidationRule[] Rules { get; set; }
 
         private EditContext EditContext => Form?.EditContext;
 

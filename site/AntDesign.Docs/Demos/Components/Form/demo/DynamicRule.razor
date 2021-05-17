@@ -70,29 +70,29 @@
     private Model modelRules = new Model();
     private bool validateOnChange = false;
 
-    private Rule[] userNameRules = new Rule[] { 
-        new Rule { Pattern = "\\d" } 
+    private FormValidationRule[] userNameRules = new FormValidationRule[] { 
+        new FormValidationRule { Pattern = "\\d" } 
     };
 
-    private Rule[] numberRules = new Rule[]{ 
-        new Rule{ Type=RuleFieldType.Number, Len=100, Message = "number != 100" } 
+    private FormValidationRule[] numberRules = new FormValidationRule[]{ 
+        new FormValidationRule{ Type=RuleFieldType.Number, Len=100, Message = "number != 100" } 
     };
 
-    private Rule[] personNameRules = new Rule[]{ 
-        new Rule{ OneOf = new string[]{ "Blazor", "AntDesign" } } ,
-        new Rule{ Max=8 }
+    private FormValidationRule[] personNameRules = new FormValidationRule[]{ 
+        new FormValidationRule{ OneOf = new string[]{ "Blazor", "AntDesign" } } ,
+        new FormValidationRule{ Max=8 }
     };
 
-    private Rule[] personAgeRules= new Rule[]{ 
-        new Rule { Type=RuleFieldType.Integer, Min = 1, Max=5 } 
+    private FormValidationRule[] personAgeRules= new FormValidationRule[]{ 
+        new FormValidationRule { Type=RuleFieldType.Integer, Min = 1, Max=5 } 
     };
 
-    private Rule[] emailRules = new Rule[]{
-        new Rule { Type = RuleFieldType.Email, Required = true },
+    private FormValidationRule[] emailRules = new FormValidationRule[]{
+        new FormValidationRule { Type = RuleFieldType.Email, Required = true },
     };
 
-    private Rule[] validatorRules = new Rule[]{
-        new Rule { Validator = (validationContext) => { 
+    private FormValidationRule[] validatorRules = new FormValidationRule[]{
+        new FormValidationRule { Validator = (validationContext) => { 
                 var validationAttribute = new CustomValidationAttribute("hello validator");
 
                 if (validationAttribute.IsValid(validationContext.Value) == false)
@@ -109,8 +109,8 @@
         },
     };
     
-    private Rule[] transformRules = new Rule[]{
-        new Rule { Type = RuleFieldType.Number, Max=10, Transform = value => (decimal)value + 1},
+    private FormValidationRule[] transformRules = new FormValidationRule[]{
+        new FormValidationRule { Type = RuleFieldType.Number, Max=10, Transform = value => (decimal)value + 1},
     };
     
     private void OnFinish(EditContext editContext)
