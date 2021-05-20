@@ -490,13 +490,6 @@ namespace AntDesign
 
         #endregion Properties
 
-        private static readonly bool _isItemAndValueSameType;
-
-        static Select()
-        {
-            _isItemAndValueSameType = typeof(TItemValue) == typeof(TItem);
-        }
-
         private static bool IsSimpleType(Type type)
         {
             return
@@ -604,8 +597,6 @@ namespace AntDesign
         /// </summary>
         private void CreateDeleteSelectOptions()
         {
-            if (!_isItemAndValueSameType && string.IsNullOrWhiteSpace(ValueName)) throw new ArgumentNullException(nameof(ValueName));
-
             if (_datasource == null)
                 return;
 
