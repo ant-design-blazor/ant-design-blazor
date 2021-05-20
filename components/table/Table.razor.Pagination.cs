@@ -27,14 +27,7 @@ namespace AntDesign
         public RenderFragment PaginationTemplate { get; set; }
 
         [Parameter]
-        public int Total
-        {
-            get => _total > _dataSourceCount ? _total : _dataSourceCount;
-            set
-            {
-                _total = value;
-            }
-        }
+        public int Total { get; set; }
 
         [Parameter]
         public EventCallback<int> TotalChanged { get; set; }

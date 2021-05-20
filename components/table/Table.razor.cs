@@ -145,7 +145,7 @@ namespace AntDesign
         private ElementReference _tableBodyRef;
 
         private bool ServerSide =>
-            PaginationMode == TablePaginationMode.Server || (PaginationMode == TablePaginationMode.Auto && _total > _dataSourceCount);
+            PaginationMode == TablePaginationMode.Server || (PaginationMode == TablePaginationMode.Auto && Total > _dataSourceCount);
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -246,6 +246,7 @@ namespace AntDesign
             if (ServerSide)
             {
                 _showItems = _dataSource;
+                _total = Total > _dataSourceCount ? Total : _dataSourceCount;
             }
             else
             {
@@ -262,11 +263,26 @@ namespace AntDesign
                         query = filter.FilterList(query);
                     }
 
+                    var newTotal = query.Count();
+                    if (newTotal != _total)
+                    {
+                        _total = newTotal;
+                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
+                    }
+
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
-                    _total = _showItems.Count();
+                }
+                else
+                {
+                    _showItems = Enumerable.Empty<TItem>();
+                    if (_total != 0)
+                    {
+                        _total = 0;
+                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
+                    }
                 }
             }
 
@@ -390,19 +406,6 @@ namespace AntDesign
 
         protected override bool ShouldRender()
         {
-            if (_waitingReloadAndInvokeChange)
-            {
-                _waitingReloadAndInvokeChange = false;
-                _waitingReload = false;
-
-                ReloadAndInvokeChange();
-            }
-            else if (_waitingReload)
-            {
-                _waitingReload = false;
-                Reload();
-            }
-
             return this._shouldRender;
         }
 
