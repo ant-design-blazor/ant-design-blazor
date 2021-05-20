@@ -58,7 +58,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await GetForecastAsync(_pageIndex, _pageSize);
+        forecasts = await GetForecastAsync(1, 50);
         _total = 50;
     }
 
