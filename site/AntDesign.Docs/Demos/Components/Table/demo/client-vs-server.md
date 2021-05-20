@@ -19,10 +19,10 @@ title:
 ## en-US
 
 There are two pagination modes:
--Client side pagination: all data is loaded to the client at one time, and the table component implements the functions of sorting, filtering and paging.
--Server side pagination: load one page of data from the server each time. The functions of sorting, filtering and paging need to be implemented by the server.
+- Client side pagination: All data is loaded to the client at one time, and the table component implements the functions of sorting, filtering and paging.
+- Server side pagination: Load one page of data from the server each time. The functions of sorting, filtering and paging need to be implemented by the server.
 
 You can use the `PaginationMode` attribute to control the pagination mode of the table component. The values that can be specified for the `PaginationMode` attribute are:
-- `TablePaginationMode.Auto`: this is the default value. If the value of the 'Total' attribute is greater than the number of items in the 'DataSource' collection, server side pagination is used; Otherwise, use client side pagination.
-- `TablePaginationMode.Server`: always use server side pagination, the client sorting, filtering and paging logic will never be executed, even if the existing data cannot fill a page.
-- `TablePaginationMode.Client`: always use client side pagination, the value of `Total` attribute will be ignored.
+- `TablePaginationMode.Auto`: This is the default value. If the value of the 'Total' attribute is greater than the number of items in the 'DataSource' collection, server side pagination is used; Otherwise, use client side pagination.
+- `TablePaginationMode.Server`: Always use server side pagination, the client sorting, filtering and paging logic will never be executed, even if the existing data cannot fill a page.
+- `TablePaginationMode.Client`: Always use client side pagination, the value of `Total` attribute will be ignored.
