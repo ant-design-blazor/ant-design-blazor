@@ -115,6 +115,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<RowData<TItem>> OnRowClick { get; set; }
 
+        [Parameter]
+        public TablePaginationMode PaginationMode { get; set; }
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -141,7 +144,8 @@ namespace AntDesign
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
 
-        private bool ServerSide => _total > _dataSourceCount;
+        private bool ServerSide =>
+            PaginationMode == TablePaginationMode.Server || (PaginationMode == TablePaginationMode.Auto && _total > _dataSourceCount);
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -358,6 +362,19 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+
+            if (_waitingReloadAndInvokeChange)
+            {
+                _waitingReloadAndInvokeChange = false;
+                _waitingReload = false;
+
+                ReloadAndInvokeChange();
+            }
+            else if (_waitingReload)
+            {
+                _waitingReload = false;
+                Reload();
+            }
 
             if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
             {
