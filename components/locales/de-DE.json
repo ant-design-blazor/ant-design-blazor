@@ -104,7 +104,27 @@
     "selectionAll": "Wählen Sie alle Daten aus",
     "sortTitle": "Sortieren",
     "expand": "Zeile erweitern",
-    "collapse": "Zeile reduzieren"
+    "collapse": "Zeile reduzieren",
+    "triggerDesc": "Absteigend sortieren",
+    "triggerAsc": "Aufsteigend sortieren",
+    "cancelSort": "Sortierung löschen",
+    "filterOptions": {
+      "true": "Wahr",
+      "false": "Falsch",
+      "and": "Und",
+      "or": "Oder",
+      "equals": "Gleich",
+      "notEquals": "Nicht gleich",
+      "contains": "Enthält",
+      "startsWith": "Beginnt mit",
+      "endsWith": "Endet mit",
+      "greaterThan": "Größer als",
+      "lessThan": "Kleiner als",
+      "greaterThanOrEquals": "Grösser als oder gleich",
+      "lessThanOrEquals": "Kleiner als oder gleich",
+      "isNull": "Ist leer",
+      "isNotNull": "Ist nicht leer"
+    }
   },
   "Modal": {
     "okText": "OK",
