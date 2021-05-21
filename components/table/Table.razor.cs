@@ -116,7 +116,7 @@ namespace AntDesign
         public EventCallback<RowData<TItem>> OnRowClick { get; set; }
 
         [Parameter]
-        public TablePaginationMode PaginationMode { get; set; }
+        public bool RemoteDataSource { get; set; }
 
         [Inject]
         public DomEventService DomEventService { get; set; }
@@ -143,9 +143,6 @@ namespace AntDesign
 
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
-
-        private bool ServerSide =>
-            PaginationMode == TablePaginationMode.Server || (PaginationMode == TablePaginationMode.Auto && Total > _dataSourceCount);
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -243,7 +240,7 @@ namespace AntDesign
         {
             var queryModel = BuildQueryModel();
 
-            if (ServerSide)
+            if (RemoteDataSource)
             {
                 _showItems = _dataSource;
                 _total = Total > _dataSourceCount ? Total : _dataSourceCount;
