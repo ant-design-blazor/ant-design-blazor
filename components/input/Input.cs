@@ -228,6 +228,9 @@ namespace AntDesign
             await this.FocusAsync(Ref);
             if (OnChange.HasDelegate)
                 await OnChange.InvokeAsync(Value);
+            else
+                //Without the delay, focus is not enforced.
+                await Task.Delay(1);
         }
 
         private TValue _inputValue;
@@ -254,7 +257,7 @@ namespace AntDesign
         }
 
         protected virtual void SetClasses()
-        {            
+        {
             AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper";
 
@@ -422,6 +425,7 @@ namespace AntDesign
                     //await this.FocusAsync(Ref);
                     //if (OnChange.HasDelegate)
                     //    await OnChange.InvokeAsync(Value);
+
                     await Clear();
                     ToggleClearBtn();
                 }));

@@ -96,13 +96,12 @@ namespace AntDesign
         public override async Task Focus(FocusBehavior behavior = FocusBehavior.FocusAtLast, bool preventScroll = false)
         {
             await base.Focus(behavior, preventScroll);
-
+            //delay enforces focus - it counters the js blur that is called on button pressed
+            await Task.Delay(5);
             //An ugly solution for InputPassword in wasm to receive focus and keep 
             //cursor at the last character. Any improvements are very welcome. 
             if (Js.IsBrowser())
             {
-                await Task.Yield();
-                StateHasChanged();
                 await base.Focus(behavior, preventScroll);
             }
         }
