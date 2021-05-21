@@ -240,7 +240,8 @@ namespace AntDesign
         protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
         {
             validationErrorMessage = null;
-            if (!Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))
+
+            if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))           
             {
                 result = Value;
                 return true;
@@ -250,27 +251,16 @@ namespace AntDesign
             {
                 value = "0";
             }
-            if (!_isNullable)
+            if (string.IsNullOrWhiteSpace(value))
             {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    result = default;
-                }
-                else
-                {
-                    result = _parseFunc(value, Value);
-                }
+                result = default;
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    result = default;
-                }
+                if (Parser is not null)
+                    result = _parseFunc(Parser(value), Value);
                 else
-                {
                     result = _parseFunc(value, Value);
-                }
             }
             return true;
         }
