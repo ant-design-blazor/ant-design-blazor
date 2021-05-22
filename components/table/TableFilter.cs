@@ -29,7 +29,7 @@ namespace AntDesign
 
     public class TableFilter<TValue> : TableFilter
     {
-        new public TValue Value { get => (TValue)base.Value; set => base.Value = value; }
+        new public TValue Value { get => (TValue)(base.Value ?? default(TValue)); set => base.Value = value; }
     }
 
     public enum TableFilterCompareOperator

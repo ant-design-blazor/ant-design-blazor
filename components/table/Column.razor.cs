@@ -311,7 +311,6 @@ namespace AntDesign
         private void SetFilterCompareOperator(TableFilter filter, TableFilterCompareOperator compareOperator)
         {
             filter.FilterCompareOperator = compareOperator;
-            if (compareOperator == TableFilterCompareOperator.IsNull || compareOperator == TableFilterCompareOperator.IsNotNull) filter.Selected = true;
         }
 
         private void SetFilterCondition(TableFilter filter, TableFilterCondition filterCondition)
@@ -322,7 +321,6 @@ namespace AntDesign
         private void SetFilterValue(TableFilter filter, object value)
         {
             filter.Value = value;
-            filter.Selected = true;
         }
 
         private void FilterSelected(TableFilter filter)
@@ -345,7 +343,16 @@ namespace AntDesign
         private void FilterConfirm(bool isReset = false)
         {
             _filterOpened = false;
-            if (!isReset && _columnFilterType == TableFilterType.FieldType) Filters?.ForEach(f => { if (!f.Selected && f.Value != null) f.Selected = true; });
+            if (!isReset && _columnFilterType == TableFilterType.FieldType)
+            {
+                Filters?.ForEach(f =>
+                {
+                    f.Selected =
+                        f.Value != null ||
+                        f.FilterCompareOperator == TableFilterCompareOperator.IsNotNull ||
+                        f.FilterCompareOperator == TableFilterCompareOperator.IsNull;
+                });
+            }
             _hasFilterSelected = Filters?.Any(x => x.Selected) == true;
             FilterModel = _hasFilterSelected ? new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 
