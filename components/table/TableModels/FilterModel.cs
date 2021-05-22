@@ -27,7 +27,7 @@ namespace AntDesign.TableModels
 
         private TableFilterType FilterType { get; set; } = TableFilterType.List;
 
-        public FilterModel(LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter/*<TField>*/> filters, TableFilterType filterType)
+        public FilterModel(LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter> filters, TableFilterType filterType)
         {
             this._getFieldExpression = getFieldExpression;
             this.FieldName = fieldName;
