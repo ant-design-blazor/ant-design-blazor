@@ -184,7 +184,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                 }
             </span>
 
-            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(true); }) })">
+            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(); }) })">
                 <Unbound>
                     <span @ref="@col._filterTriggerRef" class="ant-table-filter-trigger-container @(col._filterOpened?" ant-table-filter-trigger-container-open":"")">
                         <span role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._hasFilterSelected?"active":"")"
@@ -194,7 +194,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                     </span>
                 </Unbound>
                 <Overlay>
-                    <div class="ant-table-filter-dropdown" style="min-width:180px;">
+                    <div class="ant-table-filter-dropdown">
                         <div id="@("popupSelForOperator" + col.Id)" style="position:relative!important"></div>
                         <div id="@("popupSelForValue" + col.Id)" style="position:relative!important"></div>
                         <div id="@("popupSelForCondition" + col.Id)" style="position:relative!important"></div>
@@ -281,6 +281,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                         <SpaceItem>
                                             @if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNull)
                                             {
+                                                <div style="width:80px;"></div>
                                             }
                                             else if (col._columnDataType == typeof(DateTime))
                                             {
