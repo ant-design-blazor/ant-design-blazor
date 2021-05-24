@@ -1,0 +1,23 @@
+﻿@using System.Text.RegularExpressions
+@inherits AntDesignTestBase	
+@code {
+
+	[Fact]
+	public async Task InputNumber_formatter_parser_change_value()
+	{
+		//Arrange
+		JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+		AntDesign.InputNumber<double> input = null;
+		Func<double, string> formatter = v => "$ " + v.ToString("n0");
+		Func<string, string> parser = v => Regex.Replace(v, @"\$\s?|(,*)", "");
+
+		var cut = Render<AntDesign.InputNumber<double>>(
+	@<AntDesign.InputNumber @ref="@input" Formatter="formatter" Parser="parser" DefaultValue="1000d"/>
+	);
+		//Act
+		cut.Find("input").Change("$ 10");
+		//Assert           
+		cut.Instance.Value.Should().Be(10);
+	}
+
+}
