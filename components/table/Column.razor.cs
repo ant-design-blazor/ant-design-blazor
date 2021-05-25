@@ -353,6 +353,12 @@ namespace AntDesign
 
         private void ResetFilters()
         {
+            ClearFilters();
+            FilterConfirm(true);
+        }
+
+        private void ClearFilters()
+        {
             if (_columnFilterType == TableFilterType.List)
             {
                 Filters.ForEach(x => x.Selected = false);
@@ -361,7 +367,7 @@ namespace AntDesign
             {
                 InitFilters();
             }
-            FilterConfirm(true);
+            _hasFilterSelected = false;
         }
 
         private void AddFilter()

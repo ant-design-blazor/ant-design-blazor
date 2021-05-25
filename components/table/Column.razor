@@ -178,7 +178,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                 }
             </span>
 
-            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(true); }) })">
+            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col._filterOpened = false; if (!col._hasFilterSelected) col.ClearFilters();  }) })">
                 <Unbound>
                     <span @ref="@col._filterTriggerRef" class="ant-table-filter-trigger-container @(col._filterOpened?" ant-table-filter-trigger-container-open":"")">
                         <span role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._hasFilterSelected?"active":"")"
@@ -217,12 +217,13 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                     <div style="border-top: 1px solid #f0f0f0">
                                         <Space Style="margin:10px">
                                             <SpaceItem>
-                                                <Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCondition>(col, value => col.SetFilterCondition(filter,value)) })">
+                                                <Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"]=_callbackFactory.Create<TableFilterCondition>(col, value => col.SetFilterCondition(filter,value)) })" PopupContainerSelector="@("#popupSelForCondition" + col.Id)">
                                                     <SelectOptions>
                                                         <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.And" Label="@col.Table?.Locale.FilterOptions.And"></SelectOption>
                                                         <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.Or" Label="@col.Table?.Locale.FilterOptions.Or"></SelectOption>
                                                     </SelectOptions>
                                                 </Select>
+                                                <div id="@("popupSelForCondition" + col.Id)" style="position:relative!important"></div>
                                             </SpaceItem>
                                             <SpaceItem>
                                                 <Button Size="small" Icon="close" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.RemoveFilter(filter)) })">
