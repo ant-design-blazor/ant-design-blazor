@@ -30,7 +30,7 @@
 		input.Focus(FocusBehavior.FocusAndClear);
 		//Assert           		
 		value.Should().BeNull();
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
 		JSInterop.VerifyFocusAsyncInvoke();
 #endif
 	}
