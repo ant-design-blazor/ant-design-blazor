@@ -420,12 +420,6 @@ namespace AntDesign
                 }
                 builder.AddAttribute(37, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
                 {
-                    //CurrentValue = default;
-                    //IsFocused = true;
-                    //await this.FocusAsync(Ref);
-                    //if (OnChange.HasDelegate)
-                    //    await OnChange.InvokeAsync(Value);
-
                     await Clear();
                     ToggleClearBtn();
                 }));

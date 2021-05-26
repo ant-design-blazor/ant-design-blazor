@@ -88,5 +88,35 @@
 		classList.Contains("testClass").Should().BeTrue();
 	}
 
+	[Fact]
+	public void Input_show_clearButton_when_input_set()
+	{
+		//Arrange		
+		AntDesign.Input<string> input = null;		
 
+		var cut = Render<AntDesign.Input<string>>(
+			@<AntDesign.Input @ref="@input" TValue="string" AllowClear/>);
+		//Act
+		bool isClearButtonHidden = cut.Find("span.ant-input-clear-icon").GetAttribute("style").Contains("visibility: hidden");
+		cut.Find("input").Input("test");		
+		//Assert  
+		isClearButtonHidden.Should().BeTrue();
+		cut.Find("span.ant-input-clear-icon").GetAttribute("style").Should().Contain("visibility: visible");
+	}
+
+	[Fact]
+	public void Input_hide_clearButton_when_input_reset()
+	{
+		//Arrange		
+		AntDesign.Input<string> input = null;		
+
+		var cut = Render<AntDesign.Input<string>>(
+			@<AntDesign.Input @ref="@input" Value="@("test")" AllowClear/>);
+		//Act
+		bool isClearButtonVisible = cut.Find("span.ant-input-clear-icon").GetAttribute("style").Contains("visibility: visible");
+		cut.Find("input").Input("");		
+		//Assert  
+		isClearButtonVisible.Should().BeTrue();
+		cut.Find("span.ant-input-clear-icon").GetAttribute("style").Should().Contain("visibility: hidden");
+	}
 }
