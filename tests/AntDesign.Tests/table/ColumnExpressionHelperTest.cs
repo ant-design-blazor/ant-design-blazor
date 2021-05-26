@@ -33,14 +33,6 @@ namespace AntDesign.Tests.Table
             Assert.Equal(nameof(T2.Arr), memberInfo.Name);
         }
 
-        [Fact]
-        public void NoMember()
-        {
-            var exp = typeof(List<Dictionary<string, string>>).BuildAccessPropertyLambdaExpression("[1][\"K2\"]");
-            var memberInfo = ColumnExpressionHelper.GetReturnMemberInfo(exp);
-            Assert.Null(memberInfo);
-        }
-
         public class T1
         {
             public T2 T2 { get; set; }

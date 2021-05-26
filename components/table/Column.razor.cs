@@ -100,7 +100,7 @@ namespace AntDesign
 
         private Type _columnDataType;
 
-        public string? DisplayName { get; private set; }
+        public string DisplayName { get; private set; }
 
         public string FieldName { get; private set; }
 
@@ -143,13 +143,9 @@ namespace AntDesign
             {
                 if (FieldExpression != null)
                 {
-                    if (FieldExpression.Body is not MemberExpression memberExp)
-                    {
-                        throw new ArgumentException("'Field' parameter must be child member");
-                    }
-
                     var paramExp = Expression.Parameter(ItemType);
-                    var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
+                    var member = ColumnExpressionHelper.GetReturnMemberInfo(FieldExpression);
+                    var bodyExp = Expression.MakeMemberAccess(paramExp, member);
                     GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
                 }
                 else if (DataIndex != null)
@@ -160,10 +156,8 @@ namespace AntDesign
                 if (GetFieldExpression != null)
                 {
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
-                    DisplayName = member?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName
-                               ?? member?.GetCustomAttribute<DisplayAttribute>(true)?.GetName()
-                               ?? member?.Name;
-                    FieldName = DataIndex ?? member?.Name;
+                    DisplayName = member.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ?? member.GetCustomAttribute<DisplayAttribute>(true)?.GetName() ?? member.Name;
+                    FieldName = DataIndex ?? member.Name;
                 }
 
                 if (Sortable && GetFieldExpression != null)
@@ -353,12 +347,6 @@ namespace AntDesign
 
         private void ResetFilters()
         {
-            ClearFilters();
-            FilterConfirm(true);
-        }
-
-        private void ClearFilters()
-        {
             if (_columnFilterType == TableFilterType.List)
             {
                 Filters.ForEach(x => x.Selected = false);
@@ -367,7 +355,7 @@ namespace AntDesign
             {
                 InitFilters();
             }
-            _hasFilterSelected = false;
+            FilterConfirm(true);
         }
 
         private void AddFilter()
