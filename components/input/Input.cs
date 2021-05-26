@@ -410,7 +410,7 @@ namespace AntDesign
                 builder.AddAttribute(32, "Type", "close-circle");
                 builder.AddAttribute(33, "Theme", "fill");
                 builder.AddAttribute(34, "Class", GetClearIconCls());
-                if (string.IsNullOrEmpty(Value?.ToString()))
+                if (string.IsNullOrEmpty(_inputValue?.ToString() ?? ""))
                 {
                     builder.AddAttribute(35, "Style", "visibility: hidden;");
                 }
