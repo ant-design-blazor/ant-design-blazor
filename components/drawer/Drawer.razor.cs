@@ -135,7 +135,7 @@ namespace AntDesign
         {
             get
             {
-                if (!this._isOpen || this.OffsetX == 0 || this.OffsetY == 0)
+                if (!this._isOpen || (OffsetX == 0 && OffsetY == 0))
                 {
                     return null;
                 }
@@ -194,7 +194,7 @@ namespace AntDesign
 
         private Regex _renderInCurrentContainerRegex = new Regex("position:[\\s]*absolute");
 
-        private string _drawerStyle;
+        private string _drawerStyle = "";
 
         private bool _isPlacementFirstChange = true;
 
@@ -261,13 +261,10 @@ namespace AntDesign
                     }
                     StateHasChanged();
                 }
-                else
+                if (!string.IsNullOrWhiteSpace(_drawerStyle))
                 {
-                    if (!string.IsNullOrWhiteSpace(_drawerStyle))
-                    {
-                        _drawerStyle = "";
-                        StateHasChanged();
-                    }
+                    _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform) ? $"transform: {OffsetTransform};" : "";
+                    StateHasChanged();
                 }
             }
             else
@@ -368,12 +365,13 @@ namespace AntDesign
 
                 style = $"transition:{_transformTransition} {_heightTransition} {_widthTransition};";
             }
-            _drawerStyle = style;
-        }
 
-        internal async Task InvokeStateHasChangedAsync()
-        {
-            await InvokeAsync(StateHasChanged);
+            if (!string.IsNullOrWhiteSpace(OffsetTransform))
+            {
+                style += $"transform: {OffsetTransform};";
+            }
+
+            _drawerStyle = style;
         }
     }
 }
