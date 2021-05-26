@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -10,7 +9,7 @@ namespace AntDesign.Internal
 {
     internal static class ColumnExpressionHelper
     {
-        internal static MemberInfo GetReturnMemberInfo(LambdaExpression expression)
+        internal static MemberInfo? GetReturnMemberInfo(LambdaExpression expression)
         {
             var accessorBody = expression.Body;
             while (true)
@@ -39,7 +38,7 @@ namespace AntDesign.Internal
 
             if (accessorBody is not MemberExpression memberExpression)
             {
-                throw new ArgumentException($"The type of the provided expression {accessorBody.GetType().Name} is not supported, it should be {nameof(MemberExpression)}.");
+                return null;
             }
 
             return memberExpression.Member;
