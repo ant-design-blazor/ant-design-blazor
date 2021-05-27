@@ -62,7 +62,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Specifies an inline style for an DOM element.
+        /// Specifies an inline style for a DOM element.
         /// </summary>
         [Parameter]
         public string Style
