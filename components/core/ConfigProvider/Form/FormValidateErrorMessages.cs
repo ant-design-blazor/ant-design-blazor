@@ -1,6 +1,7 @@
 ﻿namespace AntDesign
 {
-    public class ValidateMessages
+    public class FormValidateErrorMessages
+
     {
         private static string _typeTemplate = "'{0}' is not a valid {1}";
 
@@ -54,22 +55,22 @@
             Mismatch = "'{0}' does not match pattern {1}",
         };
 
-        internal string GetTypeMessage(RuleFieldType type)
+        internal string GetTypeMessage(FormFieldType type)
         {
             return type switch
             {
-                RuleFieldType.String => Types.String,
-                RuleFieldType.Number => Types.Number,
-                RuleFieldType.Boolean => Types.Boolean,
-                RuleFieldType.Regexp => Types.Regexp,
-                RuleFieldType.Integer => Types.Integer,
-                RuleFieldType.Float => Types.Float,
-                RuleFieldType.Array => Types.Array,
-                RuleFieldType.Object => Types.Object,
-                RuleFieldType.Enum => Types.Enum,
-                RuleFieldType.Date => Types.Date,
-                RuleFieldType.Url => Types.Url,
-                RuleFieldType.Email => Types.Email,
+                FormFieldType.String => Types.String,
+                FormFieldType.Number => Types.Number,
+                FormFieldType.Boolean => Types.Boolean,
+                FormFieldType.Regexp => Types.Regexp,
+                FormFieldType.Integer => Types.Integer,
+                FormFieldType.Float => Types.Float,
+                FormFieldType.Array => Types.Array,
+                FormFieldType.Object => Types.Object,
+                FormFieldType.Enum => Types.Enum,
+                FormFieldType.Date => Types.Date,
+                FormFieldType.Url => Types.Url,
+                FormFieldType.Email => Types.Email,
                 _ => "",
             };
         }

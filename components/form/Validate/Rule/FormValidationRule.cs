@@ -16,8 +16,8 @@ namespace AntDesign
         public FormValidationRule DefaultField { get; set; }
         public object[] OneOf { get; set; }
         public Dictionary<object, FormValidationRule> Fields { get; set; }
-        public Func<RuleValidationContext, ValidationResult> Validator { get; set; }
+        public Func<FormValidationContext, ValidationResult> Validator { get; set; }
         public Func<object, object> Transform { get; set; } = (value) => value;
-        public RuleFieldType Type { get; set; } = RuleFieldType.String;
+        public FormFieldType Type { get; set; } = FormFieldType.String;
     }
 }

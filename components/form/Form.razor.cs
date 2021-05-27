@@ -118,7 +118,7 @@ namespace AntDesign
         };
 
         [Parameter]
-        public ValidateMessages ValidateMessages { get; set; }
+        public FormValidateErrorMessages ValidateMessages { get; set; }
 
 
         [CascadingParameter(Name = "FormProvider")]
@@ -130,7 +130,7 @@ namespace AntDesign
         private IList<IFormItem> _formItems = new List<IFormItem>();
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
         private TModel _model;
-        private RulesValidator _rulesValidator;
+        private FormRulesValidator _rulesValidator;
 
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
@@ -147,7 +147,7 @@ namespace AntDesign
         bool IForm.IsModified => _editContext.IsModified();
 
         FormValidateMode IForm.ValidateMode => ValidateMode;
-        ValidateMessages IForm.ValidateMessages => ValidateMessages;
+        FormValidateErrorMessages IForm.ValidateMessages => ValidateMessages;
 
         public event Action<IForm> OnFinishEvent;
 

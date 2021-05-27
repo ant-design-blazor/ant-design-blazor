@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace AntDesign.Internal
+namespace AntDesign.Internal.Form.Validate
 {
-    internal class RuleValidateHelper
+    internal static class FormValidateHelper
+
     {
-        public static ValidationResult GetValidationResult(RuleValidationContext validationContext)
+        public static ValidationResult GetValidationResult(FormValidationContext validationContext)
         {
             validationContext.Value = validationContext.Rule.Transform(validationContext.Value);
 
@@ -26,7 +27,7 @@ namespace AntDesign.Internal
         }
 
         #region Validations
-        private static bool RequiredIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        private static bool RequiredIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
             if (validationContext.Rule.Required == true)
             {
@@ -46,24 +47,24 @@ namespace AntDesign.Internal
             return true;
         }
 
-        private static bool LenIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        private static bool LenIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
             var rule = validationContext.Rule;
             if (rule.Len != null)
             {
                 ValidationAttribute attribute = null;
 
-                if (rule.Type == RuleFieldType.String)
+                if (rule.Type == FormFieldType.String)
                 {
                     attribute = new StringLengthAttribute((int)rule.Len);
                     attribute.ErrorMessage = validationContext.ValidateMessages.String.Len;
                 }
-                if (rule.Type == RuleFieldType.Number)
+                if (rule.Type == FormFieldType.Number)
                 {
                     attribute = new NumberAttribute((decimal)rule.Len);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Len;
                 }
-                if (rule.Type == RuleFieldType.Array)
+                if (rule.Type == FormFieldType.Array)
                 {
                     attribute = new ArrayLengthAttribute((int)rule.Len);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Array.Len;
@@ -82,7 +83,7 @@ namespace AntDesign.Internal
             return true;
         }
 
-        private static bool MinIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        private static bool MinIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
             var rule = validationContext.Rule;
 
@@ -90,19 +91,19 @@ namespace AntDesign.Internal
             {
                 ValidationAttribute attribute = null;
 
-                if (rule.Type.IsIn(RuleFieldType.String))
+                if (rule.Type.IsIn(FormFieldType.String))
                 {
                     attribute = new MinLengthAttribute((int)rule.Min);
                     attribute.ErrorMessage = validationContext.ValidateMessages.String.Min;
                 }
 
-                if (rule.Type.IsIn(RuleFieldType.Array))
+                if (rule.Type.IsIn(FormFieldType.Array))
                 {
                     attribute = new MinLengthAttribute((int)rule.Min);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Array.Min;
                 }
 
-                if (rule.Type.IsIn(RuleFieldType.Number, RuleFieldType.Integer, RuleFieldType.Float))
+                if (rule.Type.IsIn(FormFieldType.Number, FormFieldType.Integer, FormFieldType.Float))
                 {
                     attribute = new NumberMinAttribute((decimal)rule.Min);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Min;
@@ -121,7 +122,7 @@ namespace AntDesign.Internal
             return true;
         }
 
-        private static bool MaxIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        private static bool MaxIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
             var rule = validationContext.Rule;
 
@@ -129,19 +130,19 @@ namespace AntDesign.Internal
             {
                 ValidationAttribute attribute = null;
 
-                if (rule.Type.IsIn(RuleFieldType.String))
+                if (rule.Type.IsIn(FormFieldType.String))
                 {
                     attribute = new MaxLengthAttribute((int)rule.Max);
                     attribute.ErrorMessage = validationContext.ValidateMessages.String.Max;
                 }
 
-                if (rule.Type.IsIn(RuleFieldType.Array))
+                if (rule.Type.IsIn(FormFieldType.Array))
                 {
                     attribute = new MaxLengthAttribute((int)rule.Max);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Array.Max;
                 }
 
-                if (rule.Type.IsIn(RuleFieldType.Number, RuleFieldType.Integer, RuleFieldType.Float))
+                if (rule.Type.IsIn(FormFieldType.Number, FormFieldType.Integer, FormFieldType.Float))
                 {
                     attribute = new NumberMaxAttribute((decimal)rule.Max);
                     attribute.ErrorMessage = validationContext.ValidateMessages.Number.Max;
@@ -160,7 +161,7 @@ namespace AntDesign.Internal
             return true;
         }
 
-        private static bool PatternIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        private static bool PatternIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
             var rule = validationContext.Rule;
             if (!string.IsNullOrEmpty(rule.Pattern))
@@ -181,7 +182,7 @@ namespace AntDesign.Internal
             return true;
         }
 
-        private static bool ValidatorIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        private static bool ValidatorIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
             var rule = validationContext.Rule;
             if (rule.Validator != null)
@@ -199,7 +200,7 @@ namespace AntDesign.Internal
             return true;
         }
 
-        private static bool TypeIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        private static bool TypeIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
             var rule = validationContext.Rule;
 
@@ -218,13 +219,13 @@ namespace AntDesign.Internal
             return true;
         }
 
-        private static bool DefaultFieldIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        private static bool DefaultFieldIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
-            if (validationContext.Rule.Type == RuleFieldType.Array && validationContext.Rule.DefaultField != null)
+            if (validationContext.Rule.Type == FormFieldType.Array && validationContext.Rule.DefaultField != null)
             {
                 Array values = validationContext.Value as Array;
 
-                var context = new RuleValidationContext()
+                var context = new FormValidationContext()
                 {
                     ValidateMessages = validationContext.ValidateMessages,
                     Rule = validationContext.Rule.DefaultField,
@@ -252,18 +253,18 @@ namespace AntDesign.Internal
             return true;
         }
 
-        private static bool FieldsIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        private static bool FieldsIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
             var rule = validationContext.Rule;
 
-            if (!rule.Type.IsIn(RuleFieldType.Array, RuleFieldType.Object) || rule.Fields == null)
+            if (!rule.Type.IsIn(FormFieldType.Array, FormFieldType.Object) || rule.Fields == null)
             {
                 result = null;
 
                 return true;
             }
 
-            var context = new RuleValidationContext()
+            var context = new FormValidationContext()
             {
                 ValidateMessages = validationContext.ValidateMessages,
                 DisplayName = validationContext.DisplayName,
@@ -275,7 +276,7 @@ namespace AntDesign.Internal
 
             foreach (var key in rule.Fields.Keys)
             {
-                if (rule.Type == RuleFieldType.Array)
+                if (rule.Type == FormFieldType.Array)
                 {
                     int index = (int)key;
 
@@ -325,11 +326,11 @@ namespace AntDesign.Internal
             return true;
         }
 
-        private static bool OneOfIsValid(RuleValidationContext validationContext, out ValidationResult result)
+        private static bool OneOfIsValid(FormValidationContext validationContext, out ValidationResult result)
         {
             var rule = validationContext.Rule;
 
-            if (rule.Type != RuleFieldType.Array && rule.OneOf != null)
+            if (rule.Type != FormFieldType.Array && rule.OneOf != null)
             {
                 var attribute = new OneOfAttribute(rule.OneOf);
                 attribute.ErrorMessage = validationContext.ValidateMessages.OneOf;
@@ -349,7 +350,7 @@ namespace AntDesign.Internal
 
         #endregion Validations
 
-        private static bool IsValid(ValidationAttribute validationAttribute, RuleValidationContext validationContext, out ValidationResult result)
+        private static bool IsValid(ValidationAttribute validationAttribute, FormValidationContext validationContext, out ValidationResult result)
         {
             if (validationAttribute.IsValid(validationContext.Value) == false)
             {
@@ -361,47 +362,13 @@ namespace AntDesign.Internal
                 string errorMessage = validationAttribute.FormatErrorMessage(validationContext.DisplayName);
 
                 result = new ValidationResult(errorMessage, new string[] { validationContext.FieldName });
-                Console.WriteLine($"isvalid validationContext.FieldName:{validationContext.FieldName}");
+
                 return false;
             }
 
             result = null;
 
             return true;
-        }
-
-        private static string GetMinValueString(Type type)
-        {
-            if (type == typeof(byte)) return byte.MinValue.ToString();
-            if (type == typeof(short)) return short.MinValue.ToString();
-            if (type == typeof(int)) return int.MinValue.ToString();
-            if (type == typeof(long)) return long.MinValue.ToString();
-            if (type == typeof(float)) return float.MinValue.ToString();
-            if (type == typeof(double)) return double.MinValue.ToString();
-            if (type == typeof(sbyte)) return sbyte.MinValue.ToString();
-            if (type == typeof(ushort)) return ushort.MinValue.ToString();
-            if (type == typeof(uint)) return uint.MinValue.ToString();
-            if (type == typeof(ulong)) return ulong.MinValue.ToString();
-            if (type == typeof(decimal)) return decimal.MinValue.ToString();
-
-            return null;
-        }
-
-        private static string GetMaxValueString(Type type)
-        {
-            if (type == typeof(byte)) return byte.MaxValue.ToString();
-            if (type == typeof(short)) return short.MaxValue.ToString();
-            if (type == typeof(int)) return int.MaxValue.ToString();
-            if (type == typeof(long)) return long.MaxValue.ToString();
-            if (type == typeof(float)) return float.MaxValue.ToString();
-            if (type == typeof(double)) return double.MaxValue.ToString();
-            if (type == typeof(sbyte)) return sbyte.MaxValue.ToString();
-            if (type == typeof(ushort)) return ushort.MaxValue.ToString();
-            if (type == typeof(uint)) return uint.MaxValue.ToString();
-            if (type == typeof(ulong)) return ulong.MaxValue.ToString();
-            if (type == typeof(decimal)) return decimal.MaxValue.ToString();
-
-            return null;
         }
     }
 }

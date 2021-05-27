@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace AntDesign.Internal
 {
-    public class RulesValidator : ComponentBase
+    public class FormRulesValidator : ComponentBase
     {
         private ValidationMessageStore _validationMessageStore;
 

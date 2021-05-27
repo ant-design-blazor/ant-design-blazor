@@ -13,7 +13,7 @@
               OnInvalidSubmit="OnInvalidSubmit">
         @if(ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
         {
-            <RulesValidator @ref="_rulesValidator" />
+            <FormRulesValidator @ref="_rulesValidator" />
         }
         @if (ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex))
         {

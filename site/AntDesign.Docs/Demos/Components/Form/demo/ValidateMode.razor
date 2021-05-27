@@ -29,7 +29,7 @@
 	<FormItem Label="Rules-UserName" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
 		<Input @bind-Value="@context.Username" />
 	</FormItem>
-	<FormItem Label="Rules-Number" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Type=RuleFieldType.Number, Len=100 } })>
+	<FormItem Label="Rules-Number" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Type=FormFieldType.Number, Len=100 } })>
 		<Input @bind-Value="@context.Number" />
 	</FormItem>
 	<FormItem WrapperColOffset="8" WrapperColSpan="16">

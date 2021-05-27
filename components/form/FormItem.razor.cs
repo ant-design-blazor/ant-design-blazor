@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using AntDesign.Core.Reflection;
 using AntDesign.Forms;
 using AntDesign.Internal;
+using AntDesign.Internal.Form.Validate;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using OneOf;
@@ -121,6 +123,7 @@ namespace AntDesign
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
 
         private FieldIdentifier _fieldIdentifier;
+        private PropertyInfo _fieldPropertyInfo;
 
         protected override void OnInitialized()
         {
@@ -238,6 +241,12 @@ namespace AntDesign
             _fieldIdentifier = control.FieldIdentifier;
             this._control = control;
 
+
+            if (Form.ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                _fieldPropertyInfo = _fieldIdentifier.Model.GetType().GetProperty(_fieldIdentifier.FieldName);
+            }
+
             CurrentEditContext.OnValidationStateChanged += (s, e) =>
             {
                 control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
@@ -254,7 +263,7 @@ namespace AntDesign
                 builder.CloseComponent();
             };
 
-			if (control.ValueExpression is not null)
+            if (control.ValueExpression is not null)
                 _propertyReflector = PropertyReflector.Create(control.ValueExpression);
             else
                 _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
@@ -270,18 +279,17 @@ namespace AntDesign
 
             var results = new List<ValidationResult>();
 
-            var propertyInfo = _fieldIdentifier.Model.GetType().GetProperty(_fieldIdentifier.FieldName);
             var displayName = string.IsNullOrEmpty(Label) ? _fieldIdentifier.FieldName : Label;
 
-            if (propertyInfo != null)
+            if (_fieldPropertyInfo != null)
             {
-                var validateMessages = Form.ValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new ValidateMessages();
+                var propertyValue = _fieldPropertyInfo.GetValue(_fieldIdentifier.Model);
+
+                var validateMessages = Form.ValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
 
                 foreach (var rule in Rules)
                 {
-                    var propertyValue = propertyInfo.GetValue(_fieldIdentifier.Model);
-
-                    var validationContext = new RuleValidationContext()
+                    var validationContext = new FormValidationContext()
                     {
                         Rule = rule,
                         Value = propertyValue,
@@ -290,7 +298,7 @@ namespace AntDesign
                         ValidateMessages = validateMessages,
                     };
 
-                    var result = RuleValidateHelper.GetValidationResult(validationContext);
+                    var result = FormValidateHelper.GetValidationResult(validationContext);
 
                     if (result != null)
                     {

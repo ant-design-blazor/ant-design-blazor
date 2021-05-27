@@ -34,16 +34,16 @@ Rules supports a config FormValidationRule[]
 | Transform | Transform value to the rule before validation | Func&lt;object,object> |
 | Type | Normally `String` \|`Number` \|`Boolean` \|`Url` \| `Email`. | RuleFieldType |
 | ValidateTrigger | TODO | string \| string\[] |
-| Validator |Customize validation rule. Accept ValidationResult as return see [example](en-US/components/form#components-form-demo-dynamic-rule) | Func&lt;RuleValidationContext,ValidationResult> |
+| Validator |Customize validation rule. Accept ValidationResult as return see [example](en-US/components/form#components-form-demo-dynamic-rule) | Func&lt;FormValidationContext,ValidationResult> |
 
 
 ### ValidateMessages
 (only support Rules validate mode)
 
-Form provides default verification error messages(ValidateMessages). You can modify the template by configuring `ValidateMessages` property. A common usage is to configure localization:
+Form provides default verification error messages(FormValidateErrorMessages). You can modify the template by configuring `ValidateMessages` property. A common usage is to configure localization:
 
 ```csharp
-var validateMessages = new ValidateMessages {
+var validateMessages = new FormValidateErrorMessages {
   Required = "'{0}' is required!",
   // ...
 };
@@ -54,7 +54,7 @@ var validateMessages = new ValidateMessages {
 Besides, [ConfigProvider](Demo TODO) also provides a global configuration scheme that allows for uniform configuration error notification templates:
 
 ```csharp
-var validateMessages = new ValidateMessages {
+var validateMessages = new FormValidateErrorMessages {
   Required = "'{0}' is Required!",
   // ...
 };

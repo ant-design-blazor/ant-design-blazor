@@ -35,15 +35,15 @@ Rules 支持接收 FormValidationRule[] 进行配置
 | Transform | 将字段值转换成目标值后进行校验 | Func&lt;object,object> |
 | Type | 类型，常见有 `String` \|`Number` \|`Boolean` \|`Url` \| `Email`。 | RuleFieldType |
 | ValidateTrigger | TODO | string \| string\[] |
-| Validator | 自定义校验，接收 ValidationResult 作为返回值。[示例](zh-CN/components/form#components-form-demo-dynamic-rule)参考 | Func&lt;RuleValidationContext,ValidationResult> |
+| Validator | 自定义校验，接收 ValidationResult 作为返回值。[示例](zh-CN/components/form#components-form-demo-dynamic-rule)参考 | Func&lt;FormValidationContext,ValidationResult> |
 
-### ValidateMessages
+### FormValidateErrorMessages
 (只支持在 Rules 验证模式下使用)
 
-Form 为验证提供了默认的错误提示信息（ValidateMessages类），你可以通过配置 `ValidateMessages` 属性，修改对应的提示模板。一种常见的使用方式，是配置国际化提示信息：
+Form 为验证提供了默认的错误提示信息（FormValidateErrorMessages类），你可以通过配置 `ValidateMessages` 属性，修改对应的提示模板。一种常见的使用方式，是配置国际化提示信息：
 
 ```csharp
-var validateMessages = new ValidateMessages {
+var validateMessages = new FormValidateErrorMessages {
   Required = "'{0}' 是必选字段",
   // ...
 };
@@ -54,7 +54,7 @@ var validateMessages = new ValidateMessages {
 此外，[ConfigProvider](Demo TODO) 也提供了全局化配置方案，允许统一配置错误提示模板：
 
 ```csharp
-var validateMessages = new ValidateMessages {
+var validateMessages = new FormValidateErrorMessages {
   Required = "'{0}' is Required!",
   // ...
 };

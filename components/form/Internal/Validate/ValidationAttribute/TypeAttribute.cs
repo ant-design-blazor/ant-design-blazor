@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace AntDesign.Internal
+namespace AntDesign.Internal.Form.Validate
 {
     internal class TypeAttribute : ValidationAttribute
     {
-        internal RuleFieldType Type { get; set; }
-        internal TypeAttribute(RuleFieldType type)
+        internal FormFieldType Type { get; set; }
+        internal TypeAttribute(FormFieldType type)
         {
             Type = type;
         }
@@ -27,18 +27,18 @@ namespace AntDesign.Internal
 
             return Type switch
             {
-                RuleFieldType.String => value is string,
-                RuleFieldType.Number => IsNumber(value),
-                RuleFieldType.Integer => IsInteger(value),
-                RuleFieldType.Float => IsFloat(value),
-                RuleFieldType.Boolean => value is bool,
-                RuleFieldType.Regexp => IsRegexp(value),
-                RuleFieldType.Array => value is Array,
-                RuleFieldType.Object => value is object,
-                RuleFieldType.Enum => value is Enum,
-                RuleFieldType.Date => value is DateTime,
-                RuleFieldType.Url => new UrlAttribute().IsValid(value),
-                RuleFieldType.Email => new EmailAddressAttribute().IsValid(value),
+                FormFieldType.String => value is string,
+                FormFieldType.Number => IsNumber(value),
+                FormFieldType.Integer => IsInteger(value),
+                FormFieldType.Float => IsFloat(value),
+                FormFieldType.Boolean => value is bool,
+                FormFieldType.Regexp => IsRegexp(value),
+                FormFieldType.Array => value is Array,
+                FormFieldType.Object => value is object,
+                FormFieldType.Enum => value is Enum,
+                FormFieldType.Date => value is DateTime,
+                FormFieldType.Url => new UrlAttribute().IsValid(value),
+                FormFieldType.Email => new EmailAddressAttribute().IsValid(value),
                 _ => false,
             };
         }

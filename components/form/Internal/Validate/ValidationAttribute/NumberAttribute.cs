@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace AntDesign.Internal
+namespace AntDesign.Internal.Form.Validate
 {
     internal class NumberAttribute : ValidationAttribute
     {

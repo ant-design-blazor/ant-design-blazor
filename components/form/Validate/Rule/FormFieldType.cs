@@ -1,6 +1,6 @@
 ﻿namespace AntDesign
 {
-    public enum RuleFieldType
+    public enum FormFieldType
     {
         String,
         Number,

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.Json;
 
-namespace AntDesign.Internal
+namespace AntDesign.Internal.Form.Validate
 {
     internal class OneOfAttribute : ValidationAttribute
     {

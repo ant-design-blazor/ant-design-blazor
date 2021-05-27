@@ -75,7 +75,7 @@
     };
 
     private FormValidationRule[] numberRules = new FormValidationRule[]{ 
-        new FormValidationRule{ Type=RuleFieldType.Number, Len=100, Message = "number != 100" } 
+        new FormValidationRule{ Type=FormFieldType.Number, Len=100, Message = "number != 100" } 
     };
 
     private FormValidationRule[] personNameRules = new FormValidationRule[]{ 
@@ -84,11 +84,11 @@
     };
 
     private FormValidationRule[] personAgeRules= new FormValidationRule[]{ 
-        new FormValidationRule { Type=RuleFieldType.Integer, Min = 1, Max=5 } 
+        new FormValidationRule { Type=FormFieldType.Integer, Min = 1, Max=5 } 
     };
 
     private FormValidationRule[] emailRules = new FormValidationRule[]{
-        new FormValidationRule { Type = RuleFieldType.Email, Required = true },
+        new FormValidationRule { Type = FormFieldType.Email, Required = true },
     };
 
     private FormValidationRule[] validatorRules = new FormValidationRule[]{
@@ -110,7 +110,7 @@
     };
     
     private FormValidationRule[] transformRules = new FormValidationRule[]{
-        new FormValidationRule { Type = RuleFieldType.Number, Max=10, Transform = value => (decimal)value + 1},
+        new FormValidationRule { Type = FormFieldType.Number, Max=10, Transform = value => (decimal)value + 1},
     };
     
     private void OnFinish(EditContext editContext)
