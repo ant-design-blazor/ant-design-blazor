@@ -260,17 +260,17 @@ namespace AntDesign
                         query = filter.FilterList(query);
                     }
 
-                    var newTotal = query.Count();
-                    if (newTotal != _total)
-                    {
-                        _total = newTotal;
-                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
-                    }
+                    var newTotal = query.Count();                    
 
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
+                    if (newTotal != _total)
+                    {
+                        _total = newTotal;
+                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
+                    }
                 }
                 else
                 {
