@@ -1,8 +1,10 @@
 ﻿import { getDom } from '../interop';
 
+// @ts-ignore: TS2304: Cannot find name 'ResizeObserver'
 const resizeObservers: Map<string, ResizeObserver> = new Map<string, ResizeObserver>();
 
 export function create(key, invoker) {
+  // @ts-ignore: TS2304: Cannot find name 'ResizeObserver'
   const observer = new ResizeObserver((entries, observer) => observerCallBack(entries, observer, invoker));
   resizeObservers.set(key, observer)
 }
