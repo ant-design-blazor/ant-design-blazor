@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -32,31 +33,18 @@ namespace AntDesign
         [Parameter]
         public bool AutoSize { get; set; }
 
+        /// <summary>
+        /// When `false`, value will be set to `null` when content is empty 
+        /// or whitespace. When `true`, value will be set to empty string.        
+        /// </summary>
         [Parameter]
         public bool DefaultToEmptyString { get; set; }
 
-        [Parameter]
-        public uint MinRows
-        {
-            get
-            {
-                return _minRows;
-            }
-            set
-            {
-                _hasMinOrMaxSet = true;
-                if (value >= DEFAULT_MIN_ROWS && value <= MaxRows)
-                {
-                    _minRows = value;
-                    AutoSize = true;
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException(nameof(MinRows), $"Please enter a value between {DEFAULT_MIN_ROWS} and {MaxRows}");
-                }
-            }
-        }
-
+        /// <summary>
+        /// `TextArea` will allow growing, but it will stop when visible 
+        /// rows = MaxRows (will not grow further).
+        /// Default value = uint.MaxValue
+        /// </summary>
         [Parameter]
         public uint MaxRows
         {
@@ -74,13 +62,57 @@ namespace AntDesign
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException($"Please enter a value between {MinRows} and {uint.MaxValue}");
+                    _maxRows = uint.MaxValue;
+                    Debug.WriteLine($"Value of {nameof(MaxRows)}({MaxRows}) has to be between {nameof(MinRows)}({MinRows}) and {uint.MaxValue}");
                 }
             }
         }
 
+        /// <summary>
+        /// `TextArea` will allow shrinking, but it will stop when visible 
+        /// rows = MinRows (will not shrink further).
+        /// Default value = DEFAULT_MIN_ROWS = 1
+        /// </summary>
+        [Parameter]
+        public uint MinRows
+        {
+            get
+            {
+                return _minRows;
+            }
+            set
+            {
+                _hasMinOrMaxSet = true;
+                if (value >= DEFAULT_MIN_ROWS && value <= MaxRows)
+                {
+                    _minRows = value;
+                    AutoSize = true;
+                }
+                else
+                {
+                    _minRows = DEFAULT_MIN_ROWS;
+                    Debug.WriteLine($"Value of {nameof(MinRows)}({MinRows}) has to be between {DEFAULT_MIN_ROWS} and {nameof(MaxRows)}({MaxRows})");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Callback when the size changes
+        /// </summary>
         [Parameter]
         public EventCallback<OnResizeEventArgs> OnResize { get; set; }
+
+        /// <summary>
+        /// Show character counting.
+        /// </summary>
+        [Parameter]
+        public bool ShowCount
+        {
+            get => _showCount && MaxLength >= 0;
+            set => _showCount = value;
+        }
+
+        private bool _showCount;
 
         private ClassMapper _warpperClassMapper = new ClassMapper();
 
@@ -163,7 +195,8 @@ namespace AntDesign
         [JSInvokable]
         public void ChangeSizeAsyncJs(float width, float height)
         {
-            OnResize.InvokeAsync(new OnResizeEventArgs { Width = width, Height = height });
+            if (OnResize.HasDelegate)
+                OnResize.InvokeAsync(new OnResizeEventArgs { Width = width, Height = height });
         }
 
         private async Task CalculateRowHeightAsync()
@@ -196,11 +229,6 @@ namespace AntDesign
                 height = rows * _rowHeight + _offsetHeight;
                 Style = $"height: {height}px;overflow-y: hidden;";
             }
-        }
-
-        protected override string GetClearIconCls()
-        {
-            return $"{PrefixCls}-textarea-clear-icon";
         }
 
         private class TextAreaInfo

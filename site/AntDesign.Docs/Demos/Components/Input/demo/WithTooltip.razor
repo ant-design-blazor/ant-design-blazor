@@ -1,0 +1,19 @@
+<Tooltip Title="@TooltipValue">
+	<Unbound>
+		<Input RefBack="@context" @bind-Value=_value Placeholder="Input a number" MaxLength="25" Style="width: 120px;"/>
+	</Unbound>
+</Tooltip>
+
+@code {
+	string _value;
+
+	string TooltipValue => ConvertValue();
+
+	private string ConvertValue()
+	{
+		if (string.IsNullOrWhiteSpace(_value))
+			return string.Empty;
+		else
+			return Convert.ToDecimal(_value).ToString("#,0.##############################");
+	}
+}

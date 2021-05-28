@@ -19,6 +19,7 @@
             { "style", Style },
             { "class", ClassMapper.Class },
             { "disabled", Disabled },
+			{ "readonly", ReadOnly },
          };
 
     if (Attributes != null)
@@ -27,14 +28,34 @@
     }
 }
 
-@if (Suffix != null)
+@if (ShowCount)
 {
-    <span class="@_warpperClassMapper.Class">
-        <textarea @ref="Ref" @attributes="attributes"/>
-        @Suffix
-    </span>
+	<div class="ant-input=textarea ant-input-textarea-show-count" data-count="@(Value?.Length ?? 0)">
+		@if (Suffix != null)
+		{
+			<span class="@_warpperClassMapper.Class">
+				<textarea @ref="Ref" @attributes="attributes"/>
+				@Suffix				
+			</span>		
+		}
+		else
+		{
+			<textarea @ref="Ref" @attributes="attributes"/>
+		}
+		<AntDesign.Text Style="float: right; pointer-events: none; white-space: nowrap; color: rgba(0, 0, 0, 0.45)">&nbsp;@($"/ {MaxLength}")</AntDesign.Text>
+	</div>
 }
 else
 {
-    <textarea @ref="Ref" @attributes="attributes"/>
+	@if (Suffix != null)
+	{
+		<span class="@_warpperClassMapper.Class">
+			<textarea @ref="Ref" @attributes="attributes"/>
+			@Suffix				
+		</span>
+	}
+	else
+	{
+		<textarea @ref="Ref" @attributes="attributes"/>	
+	}
 }

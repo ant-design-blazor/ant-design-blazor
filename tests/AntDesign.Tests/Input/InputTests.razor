@@ -1,0 +1,122 @@
+﻿@inherits AntDesignTestBase	
+@code {
+
+	[Fact]
+	public void Input_Bordered_sets_class()
+	{
+		//Arrange
+		var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" Bordered="false"/>
+	);
+		//Act
+		ITokenList classList = cut.Find("input").ClassList;		
+		//Assert           
+		classList.Contains("ant-input-borderless").Should().BeTrue();
+	}
+
+	[Fact]
+	public void Input_FocusClear_behavior_should_clear()
+	{
+		//Arrange
+		JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+		AntDesign.Input<string> input = null;
+		string value = "initial value";
+		var cut = Render<AntDesign.Input<string>>(
+		@<AntDesign.Input 
+			@ref="@input" 
+			@bind-Value=value 
+			DebounceMiliseconds="0"/>
+	);
+		//Act
+		input.Focus(FocusBehavior.FocusAndClear);
+		//Assert           		
+		value.Should().BeNull();
+#if NET6_0_OR_GREATER
+		JSInterop.VerifyFocusAsyncInvoke();
+#endif
+	}
+
+	[Fact]
+	public void Input_FocusBehavior_passed_to_js()
+	{
+		//Arrange
+		var plannedInvocation = JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+		AntDesign.Input<string> input = null;
+		string value = "initial value";
+		var cut = Render<AntDesign.Input<string>>(
+		@<AntDesign.Input 
+			@ref="@input" 
+			@bind-Value=value 
+			DebounceMiliseconds="0"/>
+	);
+		//Act
+		input.Focus(FocusBehavior.FocusAndSelectAll);
+		plannedInvocation.SetVoidResult();
+		//Assert           		
+		plannedInvocation.Invocations.First().Arguments[2].Should().Be(FocusBehavior.FocusAndSelectAll);	
+	}
+
+	[Fact]
+	public void Input_Blur_passed_to_js()
+	{
+		//Arrange
+		var plannedInvocation = JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+		AntDesign.Input<string> input = null;
+		string value = "initial value";
+		var cut = Render<AntDesign.Input<string>>(
+		@<AntDesign.Input 
+			@ref="@input" 
+			@bind-Value=value 
+			DebounceMiliseconds="0"/>
+	);
+		//Act
+		input.Blur();
+		plannedInvocation.SetVoidResult();
+		//Assert           		
+		plannedInvocation.Invocations.Should().HaveCount(1);
+	}
+
+	[Fact]
+	public void Input_InputElementSuffixClass_is_added_to_class()
+	{
+		//Arrange						
+		var cut = Render<AntDesign.Input<string>>(
+			@<AntDesign.Input TValue="string" InputElementSuffixClass="testClass"/>
+	);						
+		//Act
+		ITokenList classList = cut.Find("input").ClassList;
+		//Assert           
+		classList.Contains("testClass").Should().BeTrue();
+	}
+
+	[Fact]
+	public void Input_show_clearButton_when_input_set()
+	{
+		//Arrange		
+		AntDesign.Input<string> input = null;		
+
+		var cut = Render<AntDesign.Input<string>>(
+			@<AntDesign.Input @ref="@input" TValue="string" AllowClear/>);
+		//Act
+		bool isClearButtonHidden = cut.Find("span.ant-input-clear-icon").GetAttribute("style").Contains("visibility: hidden");
+		cut.Find("input").Input("test");		
+		//Assert  
+		isClearButtonHidden.Should().BeTrue();
+		cut.Find("span.ant-input-clear-icon").GetAttribute("style").Should().Contain("visibility: visible");
+	}
+
+	[Fact]
+	public void Input_hide_clearButton_when_input_reset()
+	{
+		//Arrange		
+		AntDesign.Input<string> input = null;		
+
+		var cut = Render<AntDesign.Input<string>>(
+			@<AntDesign.Input @ref="@input" Value="@("test")" AllowClear/>);
+		//Act
+		bool isClearButtonVisible = cut.Find("span.ant-input-clear-icon").GetAttribute("style").Contains("visibility: visible");
+		cut.Find("input").Input("");		
+		//Assert  
+		isClearButtonVisible.Should().BeTrue();
+		cut.Find("span.ant-input-clear-icon").GetAttribute("style").Should().Contain("visibility: hidden");
+	}
+}
