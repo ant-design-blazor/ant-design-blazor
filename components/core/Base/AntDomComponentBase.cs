@@ -71,6 +71,10 @@ namespace AntDesign
             set
             {
                 _style = value;
+                if (!string.IsNullOrWhiteSpace(_style) && !_style.EndsWith(";"))
+                {
+                    _style += ";";
+                }
                 this.StateHasChanged();
             }
         }
