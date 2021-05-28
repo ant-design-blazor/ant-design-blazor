@@ -126,6 +126,7 @@ namespace AntDesign
 
         private bool _isClosing = false;
         private bool _isOpen = default;
+        private bool _isRenderedDrawerStyle = false;
 
         private string _originalPlacement;
 
@@ -261,8 +262,10 @@ namespace AntDesign
                     }
                     StateHasChanged();
                 }
-                if (!string.IsNullOrWhiteSpace(_drawerStyle))
+                if (!_isRenderedDrawerStyle)
                 {
+                    _isRenderedDrawerStyle = true;
+                    await Task.Delay(300);
                     _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform) ? $"transform: {OffsetTransform};" : "";
                     StateHasChanged();
                 }
@@ -322,6 +325,7 @@ namespace AntDesign
         private async Task HandleClose(bool isChangeByParamater = false)
         {
             _isRenderAnimation = false;
+            _isRenderedDrawerStyle = false;
             if (!isChangeByParamater)
             {
                 await OnClose.InvokeAsync(this);
