@@ -1,7 +1,6 @@
 ﻿namespace AntDesign
 {
     public class FormValidateErrorMessages
-
     {
         private static string _typeTemplate = "'{0}' is not a valid {1}";
 
