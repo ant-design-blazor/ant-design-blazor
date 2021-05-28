@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 namespace AntDesign.Internal.Form.Validate
 {
     internal static class FormValidateHelper
-
     {
         public static ValidationResult GetValidationResult(FormValidationContext validationContext)
         {
