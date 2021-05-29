@@ -196,7 +196,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
             <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(); }) })">
                 <Unbound>
                     <span @ref="@col._filterTriggerRef" @onclick:stopPropagation role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._filterOpened?"ant-dropdown-open":"") @(col._hasFilterSelected?"active":"")"
-                          @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col._filterOpened = !col._filterOpened )})">
+                          @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, () => { if (col._filterOpened) col.FilterConfirm(); else col._filterOpened = true; })})">
                         <Icon Type="filter" Theme="fill" />
                     </span>
                 </Unbound>
