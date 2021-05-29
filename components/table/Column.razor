@@ -50,13 +50,13 @@ else if (IsHeader && HeaderColSpan != 0)
 
     @if (Sortable)
     {
-        <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")" @onclick="HandleSort" @attributes="headerCellAttributes">
+        <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis?HeaderTitle:"")" @onclick="HandleSort" @attributes="headerCellAttributes">
             @FilterToolTipSorter(this)
         </th>
     }
     else
     {
-        <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")" @attributes="headerCellAttributes">
+        <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis?HeaderTitle:"")" @attributes="headerCellAttributes">
             @if (Filters?.Any() == true)
             {
                 @FilterToolTipSorter(this)
