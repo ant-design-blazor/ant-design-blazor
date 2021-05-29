@@ -63,6 +63,24 @@ else if (IsHeader && HeaderColSpan != 0)
         }
     </th>
 }
+                @TitleTemplate
+            }
+            else
+            {
+                @HeaderTitle
+            }
+        </th>
+    }
+}
+                @TitleTemplate
+            }
+            else
+            {
+                @HeaderTitle
+            }
+        </th>
+    }
+}
 else if (IsBody && RowSpan != 0 && ColSpan != 0)
 {
 
@@ -127,24 +145,6 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         <span>
             @if (col.TitleTemplate != null) @col.TitleTemplate else @col.HeaderTitle
         </span>
-        @{
-            bool hasDescendingSorter = SortDirection.Descending.IsIn(col.SortDirections);
-            bool hasAscendingSorter = SortDirection.Ascending.IsIn(col.SortDirections);
-        }
-        <span class="ant-table-column-sorter@(hasDescendingSorter && hasAscendingSorter ? " ant-table-column-sorter-full" : "")">
-            <span class="ant-table-column-sorter-inner">
-                @if (hasAscendingSorter)
-                {
-                    <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up{(col._sortDirection == SortDirection.Ascending ? " active" : "")}") />
-                }
-                @if (hasDescendingSorter)
-                {
-                    <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down{(col._sortDirection == SortDirection.Descending ? " active" : "")}") />
-                }
-            </span>
-        </span>
-    </Template>;
-
     readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
     @<Template>
         @if (col.ShowSorterTooltip)
@@ -164,24 +164,24 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             </div>
         }
     </Template>;
-
-    readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
-    @<Template>
-        @if (col.Filterable)
-        {
-            <div class="ant-table-filter-column">
-                @if (col.Sortable)
-                {
-                    @col.ToolTipSorter(col)
-                }
-                else if (col.TitleTemplate != null)
-                {
-                    @col.TitleTemplate
-                }
-                else
-                {
-                    @col.HeaderTitle
-                }
+@<Template>
+    @if (col.ShowSorterTooltip)
+    {
+        <Tooltip Title="@col.SorterTooltip">
+            <Unbound>
+                <div class="ant-table-column-sorters" @ref="context.Current">
+                    @col.SortHeader(col)
+                </div>
+            </Unbound>
+        </Tooltip>
+    }
+    else
+    {
+        <div class="ant-table-column-sorters">
+            @col.SortHeader(col)
+        </div>
+    }
+</Template>;
 
                 <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(); }) })">
                     <Unbound>
@@ -290,6 +290,24 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                                     <Button Size="small" Icon="plus" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, col.AddFilter) })">
                                     </Button>
                                 }
+                                            <SpaceItem>
+                                                <Button Size="small" Icon="close" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.RemoveFilter(filter)) })">
+                                                </Button>
+                                            </SpaceItem>
+                                        }
+                                    </Space>
+                                </div>
+                            }
+                        }
+                        <div class="ant-table-filter-dropdown-btns">
+                            <Button Size="small" Type="link" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.ResetFilters()) })">
+                                @col.Table?.Locale.FilterReset
+                            </Button>
+                            @if (col._columnFilterType == TableFilterType.FieldType)
+                            {
+                                <Button Size="small" Icon="plus" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.AddFilter()) })">
+                                </Button>
+                            }
 
                                 <Button Size="small" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col.FilterConfirm()) })">
                                     @col.Table?.Locale.FilterConfirm
