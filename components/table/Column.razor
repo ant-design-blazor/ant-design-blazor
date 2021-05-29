@@ -48,20 +48,29 @@ else if (IsHeader && HeaderColSpan != 0)
 
     var headerCellAttributes = OnHeaderCell?.Invoke();
 
-    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")" @attributes="headerCellAttributes">
-        @if (Sortable || Filters?.Any() == true)
-        {
+    @if (Sortable)
+    {
+        <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")" @onclick="HandleSort" @attributes="headerCellAttributes">
             @FilterToolTipSorter(this)
-        }
-        else if (TitleTemplate != null)
-        {
-            @TitleTemplate
-        }
-        else
-        {
-            @HeaderTitle
-        }
-    </th>
+        </th>
+    }
+    else
+    {
+        <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")" @attributes="headerCellAttributes">
+            @if (Filters?.Any() == true)
+            {
+                @FilterToolTipSorter(this)
+            }
+            else if (TitleTemplate != null)
+            {
+                @TitleTemplate
+            }
+            else
+            {
+                @HeaderTitle
+            }
+        </th>
+    }
 }
 else if (IsBody && RowSpan != 0 && ColSpan != 0)
 {
@@ -124,7 +133,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
     string HeaderTitle => Title ?? DisplayName ?? FieldName;
 
     readonly RenderFragment<Column<TData>> SortHeader = col =>
-    @<div class="ant-table-column-sorters">
+    @<Template>
         <span>
             @if (col.TitleTemplate != null)@col.TitleTemplate else @col.HeaderTitle
         </span>
@@ -144,7 +153,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                 }
             </span>
         </span>
-    </div>;
+    </Template>;
 
 readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
 @<Template>
@@ -152,7 +161,7 @@ readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
     {
         <Tooltip Title="@col.SorterTooltip">
             <Unbound>
-                <div class="ant-table-column-sorters-with-tooltip" @ref="context.Current">
+                <div class="ant-table-column-sorters" @ref="context.Current">
                     @col.SortHeader(col)
                 </div>
             </Unbound>
@@ -160,7 +169,9 @@ readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
     }
     else
     {
-        @col.SortHeader(col)
+        <div class="ant-table-column-sorters">
+            @col.SortHeader(col)
+        </div>
     }
 </Template>;
 
@@ -169,28 +180,24 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
     @if (col.Filterable)
     {
         <div class="ant-table-filter-column">
-            <span class="ant-table-filter-column-title" @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create(col, col.HandleSort) })">
-                @if (col.Sortable)
-                {
-                    @col.ToolTipSorter(col)
-                }
-                else if (@col.TitleTemplate != null)
-                {
-                    @col.TitleTemplate
-                }
-                else
-                {
-                    @col.HeaderTitle
-                }
-            </span>
+            @if (col.Sortable)
+            {
+                @col.ToolTipSorter(col)
+            }
+            else if (col.TitleTemplate != null)
+            {
+                @col.TitleTemplate
+            }
+            else
+            {
+                @col.HeaderTitle
+            }
 
             <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(); }) })">
                 <Unbound>
-                    <span @ref="@col._filterTriggerRef" class="ant-table-filter-trigger-container @(col._filterOpened?" ant-table-filter-trigger-container-open":"")">
-                        <span role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._hasFilterSelected?"active":"")"
-                              @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col._filterOpened = !col._filterOpened )})">
-                            <Icon Type="filter" Theme="fill" />
-                        </span>
+                    <span @ref="@col._filterTriggerRef" @onclick:stopPropagation role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._filterOpened?"ant-dropdown-open":"") @(col._hasFilterSelected?"active":"")"
+                          @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col._filterOpened = !col._filterOpened )})">
+                        <Icon Type="filter" Theme="fill" />
                     </span>
                 </Unbound>
                 <Overlay>
@@ -271,7 +278,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                             </Select>
                                         </SpaceItem>
                                         <SpaceItem>
-                                            @FilterInput((col, filter))
+                                            @col.FilterInput((col, filter))
                                         </SpaceItem>
                                         @if (filterCount > 1)
                                         {
@@ -305,24 +312,11 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
     }
     else
     {
-        @if (col.Sortable)
-        {
-            <div @attributes="@(new Dictionary<string, object>() { ["onclick"]=_callbackFactory.Create(col, col.HandleSort )})">
-                @col.ToolTipSorter(col)
-            </div>
-        }
-        else if (col.TitleTemplate != null)
-        {
-            @col.TitleTemplate
-        }
-        else
-        {
-            @col.HeaderTitle
-        }
+        @col.ToolTipSorter(col)
     }
 </Template>;
 
-readonly static RenderFragment<(Column<TData>, TableFilter)> FilterInput = tuple =>
+readonly RenderFragment<(Column<TData>, TableFilter)> FilterInput = tuple =>
 @<Template>
     @{ (var col, var filter) = tuple; }
     @if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNull)
