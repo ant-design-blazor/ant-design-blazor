@@ -47,30 +47,21 @@ else if (IsHeader && HeaderColSpan != 0)
     }
 
     var headerCellAttributes = OnHeaderCell?.Invoke();
-
-    @if (Sortable)
-    {
-        <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis?HeaderTitle:"")" @onclick="HandleSort" @attributes="headerCellAttributes">
+    
+    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis?HeaderTitle:"")" @attributes="headerCellAttributes">
+        @if (Sortable || Filters?.Any() == true)
+        {
             @FilterToolTipSorter(this)
-        </th>
-    }
-    else
-    {
-        <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis?HeaderTitle:"")" @attributes="headerCellAttributes">
-            @if (Filters?.Any() == true)
-            {
-                @FilterToolTipSorter(this)
-            }
-            else if (TitleTemplate != null)
-            {
-                @TitleTemplate
-            }
-            else
-            {
-                @HeaderTitle
-            }
-        </th>
-    }
+        }
+        else if (TitleTemplate != null)
+        {
+            @TitleTemplate
+        }
+        else
+        {
+            @HeaderTitle
+        }
+    </th>
 }
 else if (IsBody && RowSpan != 0 && ColSpan != 0)
 {
@@ -161,7 +152,7 @@ readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
     {
         <Tooltip Title="@col.SorterTooltip">
             <Unbound>
-                <div class="ant-table-column-sorters" @ref="context.Current">
+                <div class="ant-table-column-sorters" @ref="context.Current" @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col.HandleSort()) })">
                     @col.SortHeader(col)
                 </div>
             </Unbound>
@@ -169,7 +160,7 @@ readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
     }
     else
     {
-        <div class="ant-table-column-sorters">
+        <div class="ant-table-column-sorters" @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col.HandleSort()) })">
             @col.SortHeader(col)
         </div>
     }
@@ -195,7 +186,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
 
             <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(); }) })">
                 <Unbound>
-                    <span @ref="@col._filterTriggerRef" @onclick:stopPropagation role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._filterOpened?"ant-dropdown-open":"") @(col._hasFilterSelected?"active":"")"
+                    <span @ref="@col._filterTriggerRef" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._filterOpened?"ant-dropdown-open":"") @(col._hasFilterSelected?"active":"")"
                           @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, () => { if (col._filterOpened) col.FilterConfirm(); else col._filterOpened = true; })})">
                         <Icon Type="filter" Theme="fill" />
                     </span>
