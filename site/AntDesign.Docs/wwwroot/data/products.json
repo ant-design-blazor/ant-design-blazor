@@ -16,5 +16,11 @@
     "title": "Vditor Blazor",
     "description": "app.home.product-vditor-slogan",
     "href": "https://github.com/ant-design-blazor/vditor-blazor"
+  },
+  {
+    "img": "https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*mb-WQILTlSEAAAAAAAAAAABkARQnAQ",
+    "title": "UEditor Blazor",
+    "description": "app.home.product-ueditor-slogan",
+    "href": "https://github.com/ant-design-blazor/ueditor-blazor"
   }
 ]
