@@ -192,9 +192,6 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                     </Unbound>
                     <Overlay>
                         <div class="ant-table-filter-dropdown">
-                            <div id="@("popupSelForOperator" + col.Id)" style="position:relative!important"></div>
-                            <div id="@("popupSelForValue" + col.Id)" style="position:relative!important"></div>
-                            <div id="@("popupSelForCondition" + col.Id)" style="position:relative!important"></div>
                             @if (col.Filters?.Any() == true && col._columnFilterType == TableFilterType.List)
                             {
                                 <Menu AutoCloseDropdown="false" SelectedKeys="col._selectedFilterValues">
@@ -215,6 +212,9 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                             }
                             else
                             {
+                                <div id="@("popupSelForOperator" + col.Id)" style="position:relative!important"></div>
+                                <div id="@("popupSelForValue" + col.Id)" style="position:relative!important"></div>
+                                <div id="@("popupSelForCondition" + col.Id)" style="position:relative!important"></div>
                                 int filterCount = col.Filters.Count();
                                 @for (int index = 0; index < filterCount; index++)
                                 {
