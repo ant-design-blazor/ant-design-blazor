@@ -54,7 +54,8 @@ $ dotnet add package AntDesign
 Add dependency registration in `Startup.cs`.
 
 ```cs
-public void ConfigureServices(IServiceCollection services){
+public void ConfigureServices(IServiceCollection services)
+{
   ...
   services.AddAntDesign();
 }
