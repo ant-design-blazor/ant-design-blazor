@@ -275,7 +275,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                                 Type = "menuItem",
                                 Cover = x.Value.Cover,
                             })
-                            .OrderBy(x => x.Title, new MenuComparer())
+                            .OrderBy(x => x.Title)
                             .ToArray(),
                         });
                     }
