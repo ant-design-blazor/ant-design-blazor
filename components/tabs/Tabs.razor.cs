@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -505,6 +506,28 @@ namespace AntDesign
         protected override bool ShouldRender()
         {
             return _needRefresh || _renderedActivePane != _activePane;
+        }
+
+        private IEnumerable<TabPane> GetInvisibleTabs()
+        {
+            double average;
+            int invisibleHeadCount, visibleCount;
+
+            if (IsHorizontal)
+            {
+                average = 1.0 * _listWidth / _panes.Count;
+                visibleCount = (int)(_navWidth / average);
+            }
+            else
+            {
+                average = 1.0 * _listHeight / _panes.Count;
+                visibleCount = (int)(_navHeight / average);
+            }
+
+            invisibleHeadCount = (int)Math.Ceiling(_scrollOffset / average);
+            IEnumerable<TabPane> invisibleTabs = _panes.Take(invisibleHeadCount).Concat(_panes.Skip(invisibleHeadCount + visibleCount));
+
+            return invisibleTabs;
         }
 
         #region DRAG & DROP
