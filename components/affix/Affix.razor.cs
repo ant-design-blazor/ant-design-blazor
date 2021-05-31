@@ -141,7 +141,7 @@ namespace AntDesign
                 return;
             }
 
-            _hiddenStyle = $"width: {childRect.Width}px; height: {childRect.Height}px;";
+            _hiddenStyle = $"width: {domRect.Width}px; height: {domRect.Height}px;";
 
             DomRect containerRect;
             if (string.IsNullOrEmpty(TargetSelector))
