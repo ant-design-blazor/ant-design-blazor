@@ -454,6 +454,8 @@ namespace AntDesign
 
             if (closeDropdown)
                 Close();
+            if (OnClickClear.HasDelegate)
+                OnClickClear.InvokeAsync();
         }
 
         private void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
