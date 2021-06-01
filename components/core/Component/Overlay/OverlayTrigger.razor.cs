@@ -139,7 +139,7 @@ namespace AntDesign.Internal
         }
 
         [Inject]
-        private DomEventService DomEventService { get; set; }
+        protected DomEventService DomEventService { get; set; }
 
         private bool _mouseInTrigger = false;
         private bool _mouseInOverlay = false;
@@ -173,22 +173,22 @@ namespace AntDesign.Internal
             return base.OnAfterRenderAsync(firstRender);
         }
 
-        private void OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
+        protected void OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
 
-        private void OnUnboundMouseLeave(JsonElement jsonElement) => OnTriggerMouseLeave();
+        protected void OnUnboundMouseLeave(JsonElement jsonElement) => OnTriggerMouseLeave();
 
-        private void OnUnboundFocusIn(JsonElement jsonElement) => OnTriggerFocusIn();
+        protected void OnUnboundFocusIn(JsonElement jsonElement) => OnTriggerFocusIn();
 
-        private void OnUnboundFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
+        protected void OnUnboundFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
 
-        private async void OnUnboundClick(JsonElement jsonElement)
+        protected async void OnUnboundClick(JsonElement jsonElement)
         {
             var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             await OnClickDiv(eventArgs);
         }
 
-        private async void OnContextMenu(JsonElement jsonElement)
+        protected async void OnContextMenu(JsonElement jsonElement)
         {
             var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
