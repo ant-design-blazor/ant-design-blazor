@@ -278,6 +278,8 @@ namespace AntDesign
                 CurrentValue = default;
             if (closeDropdown)
                 Close();
+            if (OnClearClick.HasDelegate)
+                OnClearClick.InvokeAsync(null);
         }
 
         private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)

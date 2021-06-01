@@ -198,6 +198,12 @@ namespace AntDesign
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
+        /// <summary>
+        /// Called when  clear button clicked.
+        /// </summary>
+        [Parameter]
+        public EventCallback OnClearClick { get; set; }
+
         [Parameter]
         public EventCallback<bool> OnOpenChange { get; set; }
 
