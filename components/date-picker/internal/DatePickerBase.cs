@@ -202,7 +202,7 @@ namespace AntDesign
         /// Called when  clear button clicked.
         /// </summary>
         [Parameter]
-        public EventCallback OnClickClear { get; set; }
+        public EventCallback OnClearClick { get; set; }
 
         [Parameter]
         public EventCallback<bool> OnOpenChange { get; set; }
