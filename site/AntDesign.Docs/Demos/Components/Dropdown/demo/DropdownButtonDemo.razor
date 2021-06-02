@@ -1,4 +1,4 @@
-﻿<Divider Orientation="left" Plain>Div</Divider>
+﻿<Divider Orientation="left">Div</Divider>
 <Space Direction="@DirectionVHType.Vertical" Style="width: 100%">
 	<SpaceItem>
 		<Space Size=@(("8", "16")) Wrap>
@@ -13,12 +13,42 @@
                 </DropdownButton>
 			</SpaceItem>
 			<SpaceItem>
-                <DropdownButton Icon="user">
+                <DropdownButton Icon="user" Type="@((ButtonType.Dashed, ButtonType.Dashed))">
                     <Overlay>        
                         @_overlayMenu
                     </Overlay>    
                     <ChildContent>
                         Dropdown
+                    </ChildContent>
+                </DropdownButton>
+			</SpaceItem>
+			<SpaceItem>
+                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }' Type="@((ButtonType.Primary, ButtonType.Default))">
+                    <Overlay>
+                        @_overlayMenu
+                    </Overlay>
+                    <ChildContent>
+                        Primary
+                    </ChildContent>
+                </DropdownButton>
+			</SpaceItem>
+			<SpaceItem>
+                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }' Danger="true">
+                    <Overlay>
+                        @_overlayMenu
+                    </Overlay>
+                    <ChildContent>
+                        Danger
+                    </ChildContent>
+                </DropdownButton>
+			</SpaceItem>
+			<SpaceItem Class="site-button-ghost-wrapper">
+                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }' Ghost="true">
+                    <Overlay>
+                        @_overlayMenu
+                    </Overlay>
+                    <ChildContent>
+                        Ghost
                     </ChildContent>
                 </DropdownButton>
 			</SpaceItem>
@@ -47,7 +77,7 @@
                 </DropdownButton>    
 			</SpaceItem>
 			<SpaceItem>
-                <Dropdown>
+                <Dropdown Trigger="@(new TriggerType[] { TriggerType.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
                     <Overlay>
                         @_overlayMenu
                     </Overlay>
@@ -59,7 +89,7 @@
 		</Space>
 	</SpaceItem>
 </Space>
-<Divider Orientation="left" Plain>Unbound</Divider>
+<Divider Orientation="left">Unbound</Divider>
 <Space Direction="@DirectionVHType.Vertical" Style="width: 100%">
 	<SpaceItem>
 		<Space Size=@(("8", "16")) Wrap>
@@ -122,7 +152,7 @@
                 </DropdownButton>    
 			</SpaceItem>
 			<SpaceItem>
-                <Dropdown>
+                <Dropdown Trigger="@(new TriggerType[] { TriggerType.Click })" OnClick='e => { Console.WriteLine("Dropdown button clicked."); }'>
                     <Overlay>
                         @_overlayMenu
                     </Overlay>
@@ -134,6 +164,12 @@
 		</Space>
 	</SpaceItem>
 </Space>
+<style>
+    .site-button-ghost-wrapper {
+        background: rgb(190, 200, 200);
+        padding: 26px 16px 16px;
+    }
+</style>
 @code
 {
 private RenderFragment _overlayMenu =@<Menu>
