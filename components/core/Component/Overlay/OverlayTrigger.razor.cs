@@ -143,6 +143,7 @@ namespace AntDesign.Internal
 
         private bool _mouseInTrigger = false;
         private bool _mouseInOverlay = false;
+        private bool _mouseUpInOverlay = false;
 
         protected Overlay _overlay = null;
 
@@ -288,6 +289,11 @@ namespace AntDesign.Internal
             }
         }
 
+        protected virtual void OnOverlayMouseUp()
+        {
+            _mouseUpInOverlay = true;
+        }
+
         public virtual async Task OnClickDiv(MouseEventArgs args)
         {
             if (!IsButton)
@@ -338,7 +344,13 @@ namespace AntDesign.Internal
 
         protected virtual void OnMouseUp(JsonElement element)
         {
-            if (_mouseInOverlay == false && _mouseInTrigger == false)
+            if (_mouseUpInOverlay)
+            {
+                _mouseUpInOverlay = false;
+                return;
+            }
+
+            if (_mouseInTrigger == false)
             {
                 if (OnMaskClick.HasDelegate)
                 {

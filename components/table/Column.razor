@@ -219,11 +219,11 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                                 @for (int index = 0; index < filterCount; index++)
                                 {
                                     var filter = col.Filters.ElementAt(index);
-                                    <div @key="filter">
+                                    <div @key="filter" style="padding:10px;@(index > 0 ? "border-top:1px solid #f0f0f0;" : "")">
                                         @if (index > 0)
                                         {
-                                            <div style="border-top: 1px solid #f0f0f0">
-                                                <Space Style="margin:10px">
+                                            <div>
+                                                <Space Style="margin-bottom:10px">
                                                     <SpaceItem>
                                                         <Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCondition>(col, value => col.SetFilterCondition(filter,value)) })" PopupContainerSelector="@("#popupSelForCondition" + col.Id)">
                                                             <SelectOptions>
@@ -235,7 +235,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                                                 </Space>
                                             </div>
                                         }
-                                        <Space Style="margin:10px">
+                                        <Space Style="width:100%;">
                                             <SpaceItem>
                                                 <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="overflow:visible" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })" PopupContainerSelector="@("#popupSelForOperator" + col.Id)" DropdownMatchSelectWidth="false">
                                                     <SelectOptions>
@@ -267,7 +267,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                                                     </SelectOptions>
                                                 </Select>
                                             </SpaceItem>
-                                            <SpaceItem>
+                                            <SpaceItem Style="flex:auto;">
                                                 @col.FilterInput((col, filter))
                                             </SpaceItem>
                                             @if (filterCount > 1)
