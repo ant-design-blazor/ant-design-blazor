@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
