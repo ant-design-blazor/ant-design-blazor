@@ -284,7 +284,6 @@ namespace AntDesign
         private void SetFilterCompareOperator(TableFilter<TData> filter, TableFilterCompareOperator compareOperator)
         {
             filter.FilterCompareOperator = compareOperator;
-            if (compareOperator == TableFilterCompareOperator.IsNull || compareOperator == TableFilterCompareOperator.IsNotNull) filter.Selected = true;
         }
 
         private void SetFilterCondition(TableFilter<TData> filter, TableFilterCondition filterCondition)
@@ -295,7 +294,6 @@ namespace AntDesign
         private void SetFilterValue(TableFilter<TData> filter, TData value)
         {
             filter.Value = value;
-            filter.Selected = true;
         }
 
         private void SetFilterValue(TableFilter<TData> filter, DateTime? value)
@@ -303,12 +301,10 @@ namespace AntDesign
             if (value == null)
             {
                 filter.Value = default;
-                filter.Selected = false;
             }
             else
             {
                 filter.Value = (TData)Convert.ChangeType(value, typeof(DateTime), CultureInfo.InvariantCulture);
-                filter.Selected = true;
             }
         }
 
@@ -344,7 +340,16 @@ namespace AntDesign
         private void FilterConfirm(bool isReset = false)
         {
             _filterOpened = false;
-            if (!isReset && _columnFilterType == TableFilterType.FieldType) Filters?.ForEach(f => { if (!f.Selected && f.Value != null) f.Selected = true; });
+            if (!isReset && _columnFilterType == TableFilterType.FieldType)
+            {
+                Filters?.ForEach(f =>
+                {
+                    f.Selected =
+                        f.Value != null ||
+                        f.FilterCompareOperator == TableFilterCompareOperator.IsNotNull ||
+                        f.FilterCompareOperator == TableFilterCompareOperator.IsNull;
+                });
+            }
             _hasFilterSelected = Filters?.Any(x => x.Selected) == true;
             FilterModel = _hasFilterSelected ? new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 
