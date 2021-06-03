@@ -17,9 +17,9 @@ namespace AntDesign
 
         public bool Selected { get; set; }
 
-        internal TableFilterCompareOperator FilterCompareOperator { get; set; }
+        public TableFilterCompareOperator FilterCompareOperator { get; internal set; }
 
-        internal TableFilterCondition FilterCondition { get; set; }
+        public TableFilterCondition FilterCondition { get; internal set; }
 
         internal void SelectValue(bool selected)
         {

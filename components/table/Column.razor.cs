@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using System.Reflection;
 using AntDesign.Core.Reflection;
@@ -9,7 +10,6 @@ using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using System.Globalization;
-using System.ComponentModel.DataAnnotations;
 
 namespace AntDesign
 {
@@ -79,7 +79,7 @@ namespace AntDesign
         public bool Filterable { get; set; }
 
         [Parameter]
-        public IEnumerable<TableFilter<TData>> Filters { get; set; }
+        public IEnumerable<TableFilter> Filters { get; set; }
 
         [Parameter]
         public bool FilterMultiple { get; set; } = true;
@@ -98,11 +98,9 @@ namespace AntDesign
 
         private TableFilterType _columnFilterType;
 
-        private PropertyReflector? _propertyReflector;
-
         private Type _columnDataType;
 
-        public string DisplayName { get; private set; }
+        public string? DisplayName { get; private set; }
 
         public string FieldName { get; private set; }
 
@@ -116,7 +114,14 @@ namespace AntDesign
 
         public LambdaExpression GetFieldExpression { get; private set; }
 
-        void IFieldColumn.ClearSorter() => SetSorter(SortDirection.None);
+        void IFieldColumn.ClearSorter()
+        {
+            SetSorter(SortDirection.None);
+            if (FieldExpression == null)
+            {
+                StateHasChanged();
+            }
+        }
 
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
 
@@ -138,10 +143,13 @@ namespace AntDesign
             {
                 if (FieldExpression != null)
                 {
-                    _propertyReflector = PropertyReflector.Create(FieldExpression);
+                    if (FieldExpression.Body is not MemberExpression memberExp)
+                    {
+                        throw new ArgumentException("'Field' parameter must be child member");
+                    }
+
                     var paramExp = Expression.Parameter(ItemType);
-                    var member = ColumnExpressionHelper.GetReturnMemberInfo(FieldExpression);
-                    var bodyExp = Expression.MakeMemberAccess(paramExp, member);
+                    var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
                     GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
                 }
                 else if (DataIndex != null)
@@ -149,16 +157,18 @@ namespace AntDesign
                     (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
                 }
 
-                if (Sortable && GetFieldExpression != null)
-                {
-                    SortModel = new SortModel<TData>(GetFieldExpression, SorterMultiple, DefaultSortOrder, SorterCompare);
-                }
-
                 if (GetFieldExpression != null)
                 {
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
-                    DisplayName = member.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName ?? member.Name;
-                    FieldName = member.Name;
+                    DisplayName = member?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName
+                               ?? member?.GetCustomAttribute<DisplayAttribute>(true)?.GetName()
+                               ?? member?.Name;
+                    FieldName = DataIndex ?? member?.Name;
+                }
+
+                if (Sortable && GetFieldExpression != null)
+                {
+                    SortModel = new SortModel<TData>(GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
             }
             else if (IsBody)
@@ -188,22 +198,22 @@ namespace AntDesign
                 {
                     _columnFilterType = TableFilterType.List;
 
-                    Filters = new List<TableFilter<TData>>();
+                    Filters = new List<TableFilter>();
 
                     var trueFilterOption = GetNewFilter();
                     trueFilterOption.Text = Table.Locale.FilterOptions.True;
-                    trueFilterOption.Value = THelper.ChangeType<TData>(true);
-                    ((List<TableFilter<TData>>)Filters).Add(trueFilterOption);
+                    trueFilterOption.Value = true;
+                    ((List<TableFilter>)Filters).Add(trueFilterOption);
                     var falseFilterOption = GetNewFilter();
                     falseFilterOption.Text = Table.Locale.FilterOptions.False;
-                    falseFilterOption.Value = THelper.ChangeType<TData>(false);
-                    ((List<TableFilter<TData>>)Filters).Add(falseFilterOption);
+                    falseFilterOption.Value = false;
+                    ((List<TableFilter>)Filters).Add(falseFilterOption);
                 }
                 else if (_columnDataType.IsEnum && _columnDataType.GetCustomAttribute<FlagsAttribute>() == null)
                 {
                     _columnFilterType = TableFilterType.List;
 
-                    Filters = new List<TableFilter<TData>>();
+                    Filters = new List<TableFilter>();
 
                     foreach (var enumValue in Enum.GetValues(_columnDataType))
                     {
@@ -211,13 +221,13 @@ namespace AntDesign
                         var filterOption = GetNewFilter();
                         // use DisplayAttribute only, DisplayNameAttribute is not valid for enum values
                         filterOption.Text = _columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
-                        filterOption.Value = THelper.ChangeType<TData>(enumValue);
-                        ((List<TableFilter<TData>>)Filters).Add(filterOption);
+                        filterOption.Value = enumValue;
+                        ((List<TableFilter>)Filters).Add(filterOption);
                     }
                 }
                 else
                 {
-                    _columnFilterType = TableFilterType.FeildType;
+                    _columnFilterType = TableFilterType.FieldType;
                     InitFilters();
                 }
 
@@ -225,8 +235,8 @@ namespace AntDesign
                 {
                     var nullFilterOption = GetNewFilter();
                     nullFilterOption.Text = Table.Locale.FilterOptions.IsNull;
-                    nullFilterOption.Value = THelper.ChangeType<TData>(null);
-                    ((List<TableFilter<TData>>)Filters).Add(nullFilterOption);
+                    nullFilterOption.Value = null;
+                    ((List<TableFilter>)Filters).Add(nullFilterOption);
                 }
             }
 
@@ -235,7 +245,7 @@ namespace AntDesign
                .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortDirection.IsIn(SortDirection.Ascending, SortDirection.Descending));
         }
 
-        private string NumberFormatter(TData value)
+        private string NumberFormatter(object value)
         {
             if (value == null) return null;
             return Convert.ToDouble(value).ToString(Format);
@@ -286,7 +296,7 @@ namespace AntDesign
         private void SetSorter(SortDirection sortDirection)
         {
             _sortDirection = sortDirection;
-            SortModel.SetSortDirection(sortDirection);
+            SortModel?.SetSortDirection(sortDirection);
         }
 
         private void ToggleTreeNode()
@@ -298,52 +308,24 @@ namespace AntDesign
                 Table?.Refresh();
         }
 
-        private void SetFilterCompareOperator(TableFilter<TData> filter, TableFilterCompareOperator compareOperator)
+        private void SetFilterCompareOperator(TableFilter filter, TableFilterCompareOperator compareOperator)
         {
             filter.FilterCompareOperator = compareOperator;
-            if (compareOperator == TableFilterCompareOperator.IsNull || compareOperator == TableFilterCompareOperator.IsNotNull) filter.Selected = true;
         }
 
-        private void SetFilterCondition(TableFilter<TData> filter, TableFilterCondition filterCondition)
+        private void SetFilterCondition(TableFilter filter, TableFilterCondition filterCondition)
         {
             filter.FilterCondition = filterCondition;
         }
 
-        private void SetFilterValue(TableFilter<TData> filter, TData value)
+        private void SetFilterValue(TableFilter filter, object value)
         {
             filter.Value = value;
-            filter.Selected = true;
         }
 
-        private void SetFilterValue(TableFilter<TData> filter, DateTime? value)
+        private void FilterSelected(TableFilter filter)
         {
-            if (value == null)
-            {
-                filter.Value = default;
-                filter.Selected = false;
-            }
-            else
-            {
-                filter.Value = (TData)Convert.ChangeType(value, typeof(DateTime), CultureInfo.InvariantCulture);
-                filter.Selected = true;
-            }
-        }
-
-        private DateTime? FilterDateTimeValue(TableFilter<TData> filter)
-        {
-            if (EqualityComparer<TData>.Default.Equals(filter.Value, default(TData)))
-            {
-                return null;
-            }
-            else
-            {
-                return Convert.ToDateTime(filter.Value);
-            }
-        }
-
-        private void FilterSelected(TableFilter<TData> filter)
-        {
-            if (_columnFilterType == TableFilterType.FeildType) return;
+            if (_columnFilterType == TableFilterType.FieldType) return;
             if (!FilterMultiple)
             {
                 Filters.ForEach(x => x.Selected = false);
@@ -354,16 +336,25 @@ namespace AntDesign
                 filter.Selected = !filter.Selected;
             }
 
-            _selectedFilterValues = Filters.Where(x => x.Selected).Select(x => x.Value.ToString()).ToArray();
+            _selectedFilterValues = Filters.Where(x => x.Selected).Select(x => x.Value?.ToString()).ToArray();
             StateHasChanged();
         }
 
         private void FilterConfirm(bool isReset = false)
         {
             _filterOpened = false;
-            if (!isReset && _columnFilterType == TableFilterType.FeildType) Filters?.ForEach(f => { if (!f.Selected && f.Value != null) f.Selected = true; });
+            if (!isReset && _columnFilterType == TableFilterType.FieldType)
+            {
+                Filters?.ForEach(f =>
+                {
+                    f.Selected =
+                        f.Value != null ||
+                        f.FilterCompareOperator == TableFilterCompareOperator.IsNotNull ||
+                        f.FilterCompareOperator == TableFilterCompareOperator.IsNull;
+                });
+            }
             _hasFilterSelected = Filters?.Any(x => x.Selected) == true;
-            FilterModel = _hasFilterSelected && _propertyReflector != null ? new FilterModel<TData>(_propertyReflector.Value.PropertyInfo, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
+            FilterModel = _hasFilterSelected ? new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, Filters.Where(x => x.Selected).ToList(), _columnFilterType) : null;
 
             Table?.ReloadAndInvokeChange();
         }
@@ -383,17 +374,17 @@ namespace AntDesign
 
         private void AddFilter()
         {
-            ((List<TableFilter<TData>>)Filters).Add(GetNewFilter());
+            ((List<TableFilter>)Filters).Add(GetNewFilter());
         }
 
-        private void RemoveFilter(TableFilter<TData> filter)
+        private void RemoveFilter(TableFilter filter)
         {
-            ((List<TableFilter<TData>>)Filters).Remove(filter);
+            ((List<TableFilter>)Filters).Remove(filter);
         }
 
-        private TableFilter<TData> GetNewFilter()
+        private TableFilter GetNewFilter()
         {
-            return new TableFilter<TData>()
+            return new TableFilter()
             {
                 FilterCondition = TableFilterCondition.And,
                 FilterCompareOperator = _columnDataType == typeof(string) ? TableFilterCompareOperator.Contains : TableFilterCompareOperator.Equals
@@ -402,7 +393,7 @@ namespace AntDesign
 
         private void InitFilters()
         {
-            Filters = new List<TableFilter<TData>>() { GetNewFilter() };
+            Filters = new List<TableFilter>() { GetNewFilter() };
         }
     }
 }
