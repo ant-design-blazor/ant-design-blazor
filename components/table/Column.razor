@@ -48,7 +48,7 @@ else if (IsHeader && HeaderColSpan != 0)
 
     var headerCellAttributes = OnHeaderCell?.Invoke();
 
-    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")" @attributes="headerCellAttributes">
+    <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis ? HeaderTitle : false)" @attributes="headerCellAttributes">
         @if (Sortable || Filters?.Any() == true)
         {
             @FilterToolTipSorter(this)
@@ -74,21 +74,21 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             @if (Table.RowExpandable(RowData) && (!Table.TreeMode || !RowData.HasChildren))
             {
                 <button type="button" @onclick="ToggleTreeNode"
-                        class="ant-table-row-expand-icon @(RowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
-                        aria-label="@(RowData.Expanded?Table.Locale.Collapse:Table.Locale.Expand)"></button>
+                        class="ant-table-row-expand-icon @(RowData.Expanded ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")"
+                        aria-label="@(RowData.Expanded ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
             }
         </td>
     }
 
     var cellAttributes = OnCell?.Invoke(RowData);
 
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis? fieldText:"")" @attributes="cellAttributes">
+    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@(Ellipsis ? fieldText : false)" @attributes="cellAttributes">
         @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
         {
             <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
             @if (RowData.HasChildren)
             {
-                <button type="button" @onclick="ToggleTreeNode" class="ant-table-row-expand-icon @(RowData?.Expanded==true?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded==true?Table.Locale.Collapse:Table.Locale.Expand)"></button>
+                <button type="button" @onclick="ToggleTreeNode" class="ant-table-row-expand-icon @(RowData?.Expanded == true ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded == true ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
             }
             else
             {
@@ -120,61 +120,61 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 
 @code
 {
-
     string HeaderTitle => Title ?? DisplayName ?? FieldName;
 
     readonly RenderFragment<Column<TData>> SortHeader = col =>
-    @<div class="ant-table-column-sorters">
+    @<Template>
         <span>
-            @if (col.TitleTemplate != null)@col.TitleTemplate else @col.HeaderTitle
+            @if (col.TitleTemplate != null) @col.TitleTemplate else @col.HeaderTitle
         </span>
         @{
             bool hasDescendingSorter = SortDirection.Descending.IsIn(col.SortDirections);
             bool hasAscendingSorter = SortDirection.Ascending.IsIn(col.SortDirections);
         }
-        <span class="ant-table-column-sorter @(hasDescendingSorter && hasAscendingSorter?"ant-table-column-sorter-full":"")">
+        <span class="ant-table-column-sorter@(hasDescendingSorter && hasAscendingSorter ? " ant-table-column-sorter-full" : "")">
             <span class="ant-table-column-sorter-inner">
                 @if (hasAscendingSorter)
                 {
-                    <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up {(col._sortDirection == SortDirection.Ascending? "active":"")}") />
+                    <Icon Type="caret-up" Class=@($"ant-table-column-sorter-up{(col._sortDirection == SortDirection.Ascending ? " active" : "")}") />
                 }
                 @if (hasDescendingSorter)
                 {
-                    <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down {(col._sortDirection == SortDirection.Descending ? "active" : "")}") />
+                    <Icon Type="caret-down" Class=@($"ant-table-column-sorter-down{(col._sortDirection == SortDirection.Descending ? " active" : "")}") />
                 }
             </span>
         </span>
-    </div>;
+    </Template>;
 
-readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
-@<Template>
-    @if (col.ShowSorterTooltip)
-    {
-        <Tooltip Title="@col.SorterTooltip">
-            <Unbound>
-                <div class="ant-table-column-sorters-with-tooltip" @ref="context.Current">
-                    @col.SortHeader(col)
-                </div>
-            </Unbound>
-        </Tooltip>
-    }
-    else
-    {
-        @col.SortHeader(col)
-    }
-</Template>;
+    readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
+    @<Template>
+        @if (col.ShowSorterTooltip)
+        {
+            <Tooltip Title="@col.SorterTooltip">
+                <Unbound>
+                    <div class="ant-table-column-sorters" @ref="context.Current" @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, col.HandleSort) })">
+                        @col.SortHeader(col)
+                    </div>
+                </Unbound>
+            </Tooltip>
+        }
+        else
+        {
+            <div class="ant-table-column-sorters" @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, col.HandleSort) })">
+                @col.SortHeader(col)
+            </div>
+        }
+    </Template>;
 
-readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
-@<Template>
-    @if (col.Filterable)
-    {
-        <div class="ant-table-filter-column">
-            <span class="ant-table-filter-column-title" @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create(col, col.HandleSort) })">
+    readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
+    @<Template>
+        @if (col.Filterable)
+        {
+            <div class="ant-table-filter-column">
                 @if (col.Sortable)
                 {
                     @col.ToolTipSorter(col)
                 }
-                else if (@col.TitleTemplate != null)
+                else if (col.TitleTemplate != null)
                 {
                     @col.TitleTemplate
                 }
@@ -182,165 +182,200 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                 {
                     @col.HeaderTitle
                 }
-            </span>
 
-            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(true); }) })">
-                <Unbound>
-                    <span @ref="@col._filterTriggerRef" class="ant-table-filter-trigger-container @(col._filterOpened?" ant-table-filter-trigger-container-open":"")">
-                        <span role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._hasFilterSelected?"active":"")"
-                              @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col._filterOpened = !col._filterOpened )})">
+                <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" TriggerReference="col._filterTriggerRef" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(); }) })">
+                    <Unbound>
+                        <span @ref="@col._filterTriggerRef" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((col._filterOpened ? " ant-dropdown-open" : "") + (col._hasFilterSelected ? " active" : ""))"
+                              @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create<MouseEventArgs>(col, () => { if (col._filterOpened) col.FilterConfirm(); else col._filterOpened = true; }) })">
                             <Icon Type="filter" Theme="fill" />
                         </span>
-                    </span>
-                </Unbound>
-                <Overlay>
-                    <div class="ant-table-filter-dropdown">
-                        @if (col.Filters?.Any() == true && col._columnFilterType == TableFilterType.List)
-                        {
-                            <Menu AutoCloseDropdown="false" SelectedKeys="col._selectedFilterValues">
-                                @foreach (var filter in col.Filters)
-                                {
-                                    <MenuItem Key="@filter.Value.ToString()" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col.FilterSelected(filter))})">
-                                        @if (col.FilterMultiple)
-                                        {
-                                            <Checkbox Value="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<bool>(col, value => col.FilterSelected(filter)) })">@filter.Text</Checkbox>
-                                        }
-                                        else
-                                        {
-                                            <Radio TValue="bool" Checked="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["CheckedChanged"] = _callbackFactory.Create<bool>(col, value => col.FilterSelected(filter))})">@filter.Text</Radio>
-                                        }
-                                    </MenuItem>
-                                }
-                            </Menu>
-                        }
-                        else
-                        {
-                            @for (int index = 0; index < col.Filters.Count(); index++)
+                    </Unbound>
+                    <Overlay>
+                        <div class="ant-table-filter-dropdown">
+                            @if (col.Filters?.Any() == true && col._columnFilterType == TableFilterType.List)
                             {
-                                var filter = col.Filters.ElementAt(index);
-                                @if (index > 0)
+                                <Menu AutoCloseDropdown="false" SelectedKeys="col._selectedFilterValues">
+                                    @foreach (var filter in col.Filters)
+                                    {
+                                        <MenuItem Key="@filter.Value?.ToString()" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col.FilterSelected(filter)) })">
+                                            @if (col.FilterMultiple)
+                                            {
+                                                <Checkbox Value="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<bool>(col, value => col.FilterSelected(filter)) })">@filter.Text</Checkbox>
+                                            }
+                                            else
+                                            {
+                                                <Radio TValue="bool" Checked="filter.Selected" @attributes="@(new Dictionary<string, object>() { ["CheckedChanged"] = _callbackFactory.Create<bool>(col, value => col.FilterSelected(filter)) })">@filter.Text</Radio>
+                                            }
+                                        </MenuItem>
+                                    }
+                                </Menu>
+                            }
+                            else
+                            {
+                                <div id="@("popup-container-" + col.Id)" style="position:relative!important"></div>
+                                int filterCount = col.Filters.Count();
+                                @for (int index = 0; index < filterCount; index++)
                                 {
-                                    <div style="border-top: 1px solid #f0f0f0">
-                                        <Space Style="margin:10px">
+                                    var filter = col.Filters.ElementAt(index);
+                                    <div @key="filter" style="padding:10px;@(index > 0 ? "border-top:1px solid #f0f0f0;" : "")">
+                                        @if (index > 0)
+                                        {
+                                            <div>
+                                                <Space Style="margin-bottom:10px">
+                                                    <SpaceItem>
+                                                        <Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCondition>(col, value => col.SetFilterCondition(filter,value)) })" PopupContainerSelector="@("#popup-container-" + col.Id)">
+                                                            <SelectOptions>
+                                                                <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.And" Label="@col.Table?.Locale.FilterOptions.And"></SelectOption>
+                                                                <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.Or" Label="@col.Table?.Locale.FilterOptions.Or"></SelectOption>
+                                                            </SelectOptions>
+                                                        </Select>
+                                                    </SpaceItem>
+                                                </Space>
+                                            </div>
+                                        }
+                                        <Space Style="width:100%;">
                                             <SpaceItem>
-                                                <Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCondition>(col, value => col.SetFilterCondition(filter,value)) })">
+                                                <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="overflow:visible" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })" PopupContainerSelector="@("#popup-container-" + col.Id)" DropdownMatchSelectWidth="false">
                                                     <SelectOptions>
-                                                        <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.And" Label="@col.Table?.Locale.FilterOptions.And"></SelectOption>
-                                                        <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.Or" Label="@col.Table?.Locale.FilterOptions.Or"></SelectOption>
+                                                        <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Equals" Label="@col.Table?.Locale.FilterOptions.Equals"></SelectOption>
+                                                        <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotEquals" Label="@col.Table?.Locale.FilterOptions.NotEquals"></SelectOption>
+                                                        @if (col._columnDataType == typeof(string))
+                                                        {
+                                                            <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Contains" Label="@col.Table?.Locale.FilterOptions.Contains"></SelectOption>
+                                                            <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.StartsWith" Label="@col.Table?.Locale.FilterOptions.StartsWith"></SelectOption>
+                                                            <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.EndsWith" Label="@col.Table?.Locale.FilterOptions.EndsWith"></SelectOption>
+                                                        }
+                                                        else if (col._columnDataType.IsEnum)
+                                                        {
+                                                            <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Contains" Label="@col.Table?.Locale.FilterOptions.Contains"></SelectOption>
+                                                            <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotContains" Label="@col.Table?.Locale.FilterOptions.NotContains"></SelectOption>
+                                                        }
+                                                        else
+                                                        {
+                                                            <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.GreaterThan" Label="@col.Table?.Locale.FilterOptions.GreaterThan"></SelectOption>
+                                                            <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.LessThan" Label="@col.Table?.Locale.FilterOptions.LessThan"></SelectOption>
+                                                            <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.GreaterThanOrEquals" Label="@col.Table?.Locale.FilterOptions.GreaterThanOrEquals"></SelectOption>
+                                                            <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.LessThanOrEquals" Label="@col.Table?.Locale.FilterOptions.LessThanOrEquals"></SelectOption>
+                                                        }
+                                                        @if (THelper.IsTypeNullable<TData>() || col._columnDataType == typeof(string))
+                                                        {
+                                                            <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.IsNull" Label="@col.Table?.Locale.FilterOptions.IsNull"></SelectOption>
+                                                            <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.IsNotNull" Label="@col.Table?.Locale.FilterOptions.IsNotNull"></SelectOption>
+                                                        }
                                                     </SelectOptions>
                                                 </Select>
                                             </SpaceItem>
-                                            <SpaceItem>
-                                                <Button Size="small" Icon="close" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.RemoveFilter(filter)) })">
-                                                </Button>
+                                            <SpaceItem Style="flex:auto;">
+                                                @col.FilterInput((col, filter))
                                             </SpaceItem>
+                                            @if (filterCount > 1)
+                                            {
+                                                <SpaceItem>
+                                                    <Button Size="small" Icon="close" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.RemoveFilter(filter)) })">
+                                                    </Button>
+                                                </SpaceItem>
+                                            }
                                         </Space>
                                     </div>
                                 }
-                                <Space Style="margin:10px">
-                                    <SpaceItem>
-                                        <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="overflow:visible" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })" PopupContainerSelector="@("#popupSelForOperator" + col.Id)" DropdownMatchSelectWidth="false">
-                                            <SelectOptions>
-                                                <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Equals" Label="@col.Table?.Locale.FilterOptions.Equals"></SelectOption>
-                                                <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotEquals" Label="@col.Table?.Locale.FilterOptions.NotEquals"></SelectOption>
-                                                @if (col._columnDataType == typeof(string))
-                                                {
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Contains" Label="@col.Table?.Locale.FilterOptions.Contains"></SelectOption>
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.StartsWith" Label="@col.Table?.Locale.FilterOptions.StartsWith"></SelectOption>
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.EndsWith" Label="@col.Table?.Locale.FilterOptions.EndsWith"></SelectOption>
-                                                }
-                                                else if (col._columnDataType.IsEnum)
-                                                {
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Contains" Label="@col.Table?.Locale.FilterOptions.Contains"></SelectOption>
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotContains" Label="@col.Table?.Locale.FilterOptions.NotContains"></SelectOption>
-                                                }
-                                                else
-                                                {
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.GreaterThan" Label="@col.Table?.Locale.FilterOptions.GreaterThan"></SelectOption>
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.LessThan" Label="@col.Table?.Locale.FilterOptions.LessThan"></SelectOption>
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.GreaterThanOrEquals" Label="@col.Table?.Locale.FilterOptions.GreaterThanOrEquals"></SelectOption>
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.LessThanOrEquals" Label="@col.Table?.Locale.FilterOptions.LessThanOrEquals"></SelectOption>
-                                                }
-                                                @if (THelper.IsTypeNullable<TData>() || col._columnDataType == typeof(string))
-                                                {
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.IsNull" Label="@col.Table?.Locale.FilterOptions.IsNull"></SelectOption>
-                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.IsNotNull" Label="@col.Table?.Locale.FilterOptions.IsNotNull"></SelectOption>
-                                                }
-                                            </SelectOptions>
-                                        </Select>
-                                        <div id="@("popupSelForOperator" + col.Id)" style="position:relative!important"></div>
-                                    </SpaceItem>
-
-                                    <SpaceItem>
-                                        @if (col._columnDataType == typeof(DateTime))
-                                        {
-                                            <DatePicker Value="col.FilterDateTimeValue(filter)" Format="@col.Format" TValue="DateTime?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<DateTime?>(col, value => col.SetFilterValue(filter,value)) })" PopupContainerSelector="@("#popupSelForValue" + col.Id)"></DatePicker>
-                                            <div id="@("popupSelForValue" + col.Id)" style="position:relative!important"></div>
-                                        }
-                                        else if (col._columnDataType.IsEnum)
-                                        {
-                                            <Select TItem="TData" TItemValue="TData" Mode="multiple" Values="filter.Value?.ToString().Split(',').Select(x => (TData)Enum.Parse(col._columnDataType, x)) ?? Array.Empty<TData>()" PopupContainerSelector="@("#popupSelForValue" + col.Id)" Style="width:180px;"
-                                                    @attributes="@(new Dictionary<string, object>() { ["ValuesChanged"] = _callbackFactory.Create<IEnumerable<TData>>(col, value => col.SetFilterValue(filter, EnumHelper<TData>.Combine(value))) })">
-                                                <SelectOptions>
-                                                    @foreach (var enumValue in Enum.GetValues(col._columnDataType))
-                                                    {
-                                                        var enumName = Enum.GetName(col._columnDataType, enumValue);
-                                                        var text = col._columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
-                                                        var value = (TData)enumValue;
-                                                        <SelectOption TItemValue="TData" TItem="TData" Value="value" Label="@text" />
-                                                    }
-                                                </SelectOptions>
-                                            </Select>
-                                            <div id="@("popupSelForValue" + col.Id)" style="position:relative!important"></div>
-                                        }
-                                        else if (THelper.IsNumericType<TData>())
-                                        {
-                                            <InputNumber Value="filter.Value" Formatter="col.NumberFormatter" TValue="TData" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter,value)) })"></InputNumber>
-                                        }
-                                        else
-                                        {
-                                            <Input TValue="TData" Value="filter.Value" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter,value)) })" />
-                                        }
-                                    </SpaceItem>
-                                </Space>
                             }
-                        }
-                        <div class="ant-table-filter-dropdown-btns">
-                            <Button Size="small" Type="link" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.ResetFilters()) })">
-                                @col.Table?.Locale.FilterReset
-                            </Button>
-                            @if (col._columnFilterType == TableFilterType.FieldType)
-                            {
-                                <Button Size="small" Icon="plus" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.AddFilter()) })">
+                            <div class="ant-table-filter-dropdown-btns">
+                                <Button Size="small" Type="link" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, col.ResetFilters) })">
+                                    @col.Table?.Locale.FilterReset
                                 </Button>
-                            }
-
-                            <Button Size="small" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.FilterConfirm()) })">
-                                @col.Table?.Locale.FilterConfirm
-                            </Button>
+                                @if (col._columnFilterType == TableFilterType.FieldType)
+                                {
+                                    <Button Size="small" Icon="plus" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, col.AddFilter) })">
+                                    </Button>
+                                }
+                                <Button Size="small" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col.FilterConfirm()) })">
+                                    @col.Table?.Locale.FilterConfirm
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                </Overlay>
-            </Dropdown>
-        </div>
-    }
-    else
-    {
-        @if (col.Sortable)
-        {
-            <div @attributes="@(new Dictionary<string, object>() { ["onclick"]=_callbackFactory.Create(col, col.HandleSort )})">
-                @col.ToolTipSorter(col)
+                    </Overlay>
+                </Dropdown>
             </div>
-        }
-        else if (col.TitleTemplate != null)
-        {
-            @col.TitleTemplate
         }
         else
         {
-            @col.HeaderTitle
+            @col.ToolTipSorter(col)
         }
-    }
-</Template>;
+    </Template>;
 
+    readonly RenderFragment<(Column<TData>, TableFilter)> FilterInput = tuple =>
+    @<Template>
+        @{ (var col, var filter) = tuple; }
+        @if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNull)
+        {
+            <div style="width:80px;"></div>
+        }
+        else if (col._columnDataType == typeof(DateTime))
+        {
+            <DatePicker Value="(DateTime?)filter.Value" Format="@col.Format" TValue="DateTime?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<DateTime?>(col, value => col.SetFilterValue(filter, value)) })" PopupContainerSelector="@("#popup-container-" + col.Id)"></DatePicker>
+        }
+        else if (col._columnDataType.IsEnum)
+        {
+            <Select TItem="TData" TItemValue="TData" Mode="multiple" Values="filter.Value?.ToString().Split(',').Select(x => (TData)Enum.Parse(col._columnDataType, x)) ?? Array.Empty<TData>()" PopupContainerSelector="@("#popup-container-" + col.Id)" Style="width:180px;"
+                    @attributes="@(new Dictionary<string, object>() { ["ValuesChanged"] = _callbackFactory.Create<IEnumerable<TData>>(col, value => col.SetFilterValue(filter, EnumHelper<TData>.Combine(value))) })">
+                <SelectOptions>
+                    @foreach (var enumValue in Enum.GetValues(col._columnDataType))
+                    {
+                        var enumName = Enum.GetName(col._columnDataType, enumValue);
+                        var text = col._columnDataType.GetMember(enumName)[0].GetCustomAttribute<DisplayAttribute>()?.Name ?? enumName;
+                        var value = (TData)enumValue;
+                        <SelectOption TItemValue="TData" TItem="TData" Value="value" Label="@text" />
+                    }
+                </SelectOptions>
+            </Select>
+        }
+        else if (col._columnDataType == typeof(byte))
+        {
+            <InputNumber Value="(byte?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="byte?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<byte?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(decimal))
+        {
+            <InputNumber Value="(decimal?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="decimal?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<decimal?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(double))
+        {
+            <InputNumber Value="(double?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="double?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<double?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(short))
+        {
+            <InputNumber Value="(short?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="short?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<short?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(int))
+        {
+            <InputNumber Value="(int?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="int?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<int?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(long))
+        {
+            <InputNumber Value="(long?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="long?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<long?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(sbyte))
+        {
+            <InputNumber Value="(sbyte?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="sbyte?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<sbyte?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(float))
+        {
+            <InputNumber Value="(float?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="float?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<float?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(ushort))
+        {
+            <InputNumber Value="(ushort?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="ushort?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<ushort?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(uint))
+        {
+            <InputNumber Value="(uint?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="uint?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<uint?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(ulong))
+        {
+            <InputNumber Value="(ulong?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="ulong?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<ulong?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else
+        {
+            <Input TValue="TData" Value="(TData)filter.Value" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter, value)) })" />
+        }
+    </Template>;
 }

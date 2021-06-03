@@ -17,7 +17,7 @@ namespace AntDesign.TableModels
 
         public IEnumerable<string> SelectedValues { get; set; }
 
-        public IList<TableFilter<TField>> Filters { get; }
+        public IList<TableFilter> Filters { get; }
 
         public Expression<Func<TField, TField, bool>> OnFilter { get; set; }
 
@@ -27,7 +27,7 @@ namespace AntDesign.TableModels
 
         private TableFilterType FilterType { get; set; } = TableFilterType.List;
 
-        public FilterModel(LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter<TField>> filters, TableFilterType filterType)
+        public FilterModel(LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter> filters, TableFilterType filterType)
         {
             this._getFieldExpression = getFieldExpression;
             this.FieldName = fieldName;
