@@ -260,7 +260,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                         </Select>                                        
                                     </SpaceItem>
                                     <SpaceItem Style="@(noInput || filterCount == 1 ? "margin-right:0 !important" : null)">
-                                        @if (noInput) { }
+                                    @if (noInput) { }
                                         else if (col._columnDataType == typeof(DateTime))
                                         {
                                             <DatePicker Value="col.FilterDateTimeValue(filter)" Format="@col.Format" TValue="DateTime?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<DateTime?>(col, value => col.SetFilterValue(filter,value)) })" PopupContainerSelector="@("#popupSelForValue" + col.Id)"></DatePicker>
