@@ -67,6 +67,13 @@ namespace AntDesign.Internal
         public bool InlineFlexMode { get; set; } = false;
 
         /// <summary>
+        /// Behave like a button: when clicked invoke OnClick 
+        /// (unless OnClickDiv is overriden and does not call base).
+        /// </summary>
+        [Parameter]
+        public bool IsButton { get; set; } = false;
+
+        /// <summary>
         /// Callback when triggger is clicked
         /// </summary>
         [Parameter]
@@ -356,7 +363,14 @@ namespace AntDesign.Internal
 
         public virtual async Task OnClickDiv(MouseEventArgs args)
         {
-            await OnTriggerClick();
+            if (!IsButton)
+            {
+                await OnTriggerClick();
+            }
+            else
+            {
+                await OnClick.InvokeAsync(args);
+            }
         }
 
         protected virtual async Task OnTriggerClick()

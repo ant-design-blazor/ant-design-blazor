@@ -8,12 +8,6 @@ namespace AntDesign
 {
     public partial class Dropdown : OverlayTrigger
     {
-        /// <summary>
-        /// Behave like a button. For `DropdownButton` is always `true`.
-        /// </summary>
-        [Parameter]
-        public bool IsButton { get; set; } = false;
-
         internal Func<RenderFragment, RenderFragment, RenderFragment> ButtonsRender { get; set; }
         internal bool Block { get; set; }
 
