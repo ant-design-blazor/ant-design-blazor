@@ -209,7 +209,10 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                         }
                         else
                         {
-                            @for (int index = 0; index < col.Filters.Count(); index++)
+                            <div id="@("popupSelForOperator" + col.Id)" style="position:relative!important"></div>
+                            <div id="@("popupSelForValue" + col.Id)" style="position:relative!important"></div>
+                            int filterCount = col.Filters.Count();
+                            for (int index = 0; index < filterCount; index++)
                             {
                                 var filter = col.Filters.ElementAt(index);
                                 var noInput = filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull;
@@ -226,16 +229,12 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                                     </SelectOptions>
                                                 </Select>
                                             </SpaceItem>
-                                            <SpaceItem>
-                                                <Button Size="small" Icon="close" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.RemoveFilter(filter)) })">
-                                                </Button>
-                                            </SpaceItem>
                                         </Space>
                                     </div>
                                 }
                                 <Space Style="width:100%">
-                                    <SpaceItem Style="@(noInput ? "width:100%" : null)">
-                                        <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="@(noInput ? "width:100%;overflow:visible" : "overflow:visible")" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })" PopupContainerSelector="@("#popupSelForOperator" + col.Id)" DropdownMatchSelectWidth="false">
+                                    <SpaceItem Style="@((noInput && filterCount == 1 ? "margin-right:0 !important;" : "") + "flex:auto")">
+                                        <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="width:100%;overflow:visible" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TableFilterCompareOperator>(col, value => col.SetFilterCompareOperator(filter,value)) })" PopupContainerSelector="@("#popupSelForOperator" + col.Id)" DropdownMatchSelectWidth="false">
                                             <SelectOptions>
                                                 <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Equals" Label="@col.Table?.Locale.FilterOptions.Equals"></SelectOption>
                                                 <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotEquals" Label="@col.Table?.Locale.FilterOptions.NotEquals"></SelectOption>
@@ -258,16 +257,13 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                                     <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.IsNotNull" Label="@col.Table?.Locale.FilterOptions.IsNotNull"></SelectOption>
                                                 }
                                             </SelectOptions>
-                                        </Select>
-                                        <div id="@("popupSelForOperator" + col.Id)" style="position:relative!important"></div>
+                                        </Select>                                        
                                     </SpaceItem>
-                                    @if (!noInput)
-                                    {
-                                    <SpaceItem>
-                                        @if (col._columnDataType == typeof(DateTime))
+                                    <SpaceItem Style="@(noInput || filterCount == 1 ? "margin-right:0 !important" : null)">
+                                        @if (noInput) { }
+                                        else if (col._columnDataType == typeof(DateTime))
                                         {
                                             <DatePicker Value="col.FilterDateTimeValue(filter)" Format="@col.Format" TValue="DateTime?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<DateTime?>(col, value => col.SetFilterValue(filter,value)) })" PopupContainerSelector="@("#popupSelForValue" + col.Id)"></DatePicker>
-                                            <div id="@("popupSelForValue" + col.Id)" style="position:relative!important"></div>
                                         }
                                         else
                                         {
@@ -281,6 +277,12 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                             }
                                         }
                                     </SpaceItem>
+                                    @if (filterCount > 1)
+                                    {
+                                        <SpaceItem>
+                                            <Button Size="small" Icon="close" Type="primary" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, ()=> col.RemoveFilter(filter)) })">
+                                            </Button>
+                                        </SpaceItem>
                                     }
                                 </Space>
                                 </div>
