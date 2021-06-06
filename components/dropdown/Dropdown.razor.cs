@@ -60,6 +60,11 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        /// <summary>
+        /// Handle the trigger click.
+        /// </summary>
+        /// <param name="args">MouseEventArgs</param>
+        /// <returns></returns>
         public override async Task OnClickDiv(MouseEventArgs args)
         {
             if (!IsButton)

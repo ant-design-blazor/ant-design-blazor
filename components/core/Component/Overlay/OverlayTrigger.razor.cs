@@ -361,6 +361,11 @@ namespace AntDesign.Internal
             }
         }
 
+        /// <summary>
+        /// Handle the trigger click.
+        /// </summary>
+        /// <param name="args">MouseEventArgs</param>
+        /// <returns></returns>
         public virtual async Task OnClickDiv(MouseEventArgs args)
         {
             if (!IsButton)
@@ -531,16 +536,28 @@ namespace AntDesign.Internal
             return await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Ref);
         }
 
+        /// <summary>
+        /// Will hide the overlay.
+        /// </summary>
+        /// <returns></returns>
         public async Task Close()
         {
             await _overlay.Hide(true);
         }
 
+        /// <summary>
+        /// Checks if overlay is currently in visible state.
+        /// </summary>
+        /// <returns></returns>
         public bool IsOverlayShow()
         {
             return _overlay != null ? _overlay.IsPopup() : false;
         }
 
+        /// <summary>
+        /// Toggle overlay visibility.
+        /// </summary>
+        /// <param name="visible">boolean: visibility true/false</param>
         public void SetVisible(bool visible) => Visible = visible;
     }
 }
