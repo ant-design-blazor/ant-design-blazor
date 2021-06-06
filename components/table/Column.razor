@@ -213,7 +213,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                             {
                                 var filter = col.Filters.ElementAt(index);
                                 var noInput = filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull;
-                                <div @key="filter" style="padding:10px;@(index > 0 ? "border-top:1px solid #f0f0f0;min-width:150px" : "min-width:150px")">
+                                <div @key="filter" style="padding:10px;min-width:150px;@(index > 0 ? "border-top:1px solid #f0f0f0" : "")">
                                 @if (index > 0)
                                 {
                                     <div>
