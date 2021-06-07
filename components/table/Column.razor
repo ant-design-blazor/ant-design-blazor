@@ -43,7 +43,7 @@ else if (IsHeader && HeaderColSpan != 0)
     var headerCellAttributes = OnHeaderCell?.Invoke();
 
     <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")" @attributes="headerCellAttributes">
-        @if (Sortable || Filters?.Any() == true)
+        @if (Sortable || _filters?.Any() == true)
         {
             @FilterToolTipSorter(this)
         }
@@ -178,7 +178,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                 }
             </span>
 
-            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(true); }) })">
+            <Dropdown Trigger="new[] { TriggerType.Click }" Visible="col._filterOpened" Placement="PlacementType.BottomRight" @attributes="@(new Dictionary<string, object>() { ["OnMaskClick"] = _callbackFactory.Create(col, () => { if (col._filterOpened) col.FilterConfirm(); }) })">
                 <Unbound>
                     <span @ref="context.Current" class="ant-table-filter-trigger-container @(col._filterOpened?" ant-table-filter-trigger-container-open":"")">
                         <span role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger @(col._hasFilterSelected?"active":"")"
@@ -189,10 +189,10 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                 </Unbound>
                 <Overlay>
                     <div class="ant-table-filter-dropdown">
-                        @if (col.Filters?.Any() == true && col._columnFilterType == TableFilterType.List)
+                        @if (col._filters?.Any() == true && col._columnFilterType == TableFilterType.List)
                         {
                             <Menu AutoCloseDropdown="false" SelectedKeys="col._selectedFilterValues">
-                                @foreach (var filter in col.Filters)
+                                @foreach (var filter in col._filters)
                                 {
                                     <MenuItem Key="@filter.Value.ToString()" @attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(col, () => col.FilterSelected(filter))})">
                                         @if (col.FilterMultiple)
@@ -209,9 +209,11 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                         }
                         else
                         {
-                            @for (int index = 0; index < col.Filters.Count(); index++)
+                            <div id="@("popupSelForOperator" + col.Id)" style="position:relative!important"></div>
+                            <div id="@("popupSelForValue" + col.Id)" style="position:relative!important"></div>
+                            @for (int index = 0; index < col._filters.Count(); index++)
                             {
-                                var filter = col.Filters.ElementAt(index);
+                                var filter = col._filters.ElementAt(index);
                                 @if (index > 0)
                                 {
                                     <div style="border-top: 1px solid #f0f0f0">
@@ -257,26 +259,9 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                                 }
                                             </SelectOptions>
                                         </Select>
-                                        <div id="@("popupSelForOperator" + col.Id)" style="position:relative!important"></div>
                                     </SpaceItem>
-
                                     <SpaceItem>
-                                        @if (col._columnDataType == typeof(DateTime))
-                                        {
-                                            <DatePicker Value="col.FilterDateTimeValue(filter)" Format="@col.Format" TValue="DateTime?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<DateTime?>(col, value => col.SetFilterValue(filter,value)) })" PopupContainerSelector="@("#popupSelForValue" + col.Id)"></DatePicker>
-                                            <div id="@("popupSelForValue" + col.Id)" style="position:relative!important"></div>
-                                        }
-                                        else
-                                        {
-                                            if (THelper.IsNumericType<TData>())
-                                            {
-                                                <InputNumber Value="filter.Value" Formatter="col.NumberFormatter" TValue="TData" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter,value)) })"></InputNumber>
-                                            }
-                                            else
-                                            {
-                                                <Input TValue="TData" Value="filter.Value" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter,value)) })" />
-                                            }
-                                        }
+                                        @col.FilterInput(col, filter)
                                     </SpaceItem>
                                 </Space>
                             }
@@ -319,4 +304,59 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
     }
 </Template>;
 
+    readonly Func<Column<TData>, TableFilter, RenderFragment> FilterInput = (col, filter) =>
+    @<Template>
+        @if (col._columnDataType == typeof(DateTime))
+        {
+            <DatePicker Value="(DateTime?)filter.Value" Format="@col.Format" TValue="DateTime?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<DateTime?>(col, value => col.SetFilterValue(filter, value)) })" PopupContainerSelector="@("#popupSelForValue" + col.Id)"></DatePicker>
+        }
+        else if (col._columnDataType == typeof(byte))
+        {
+            <InputNumber Value="(byte?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="byte?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<byte?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(decimal))
+        {
+            <InputNumber Value="(decimal?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="decimal?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<decimal?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(double))
+        {
+            <InputNumber Value="(double?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="double?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<double?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(short))
+        {
+            <InputNumber Value="(short?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="short?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<short?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(int))
+        {
+            <InputNumber Value="(int?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="int?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<int?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(long))
+        {
+            <InputNumber Value="(long?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="long?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<long?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(sbyte))
+        {
+            <InputNumber Value="(sbyte?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="sbyte?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<sbyte?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(float))
+        {
+            <InputNumber Value="(float?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="float?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<float?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(ushort))
+        {
+            <InputNumber Value="(ushort?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="ushort?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<ushort?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(uint))
+        {
+            <InputNumber Value="(uint?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="uint?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<uint?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else if (col._columnDataType == typeof(ulong))
+        {
+            <InputNumber Value="(ulong?)filter.Value" Formatter="number => col.NumberFormatter(number)" TValue="ulong?" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<ulong?>(col, value => col.SetFilterValue(filter, value)) })"></InputNumber>
+        }
+        else
+        {
+            <Input TValue="TData" Value="(TData)filter.Value" @attributes="@(new Dictionary<string, object>() { ["ValueChanged"] = _callbackFactory.Create<TData>(col, value => col.SetFilterValue(filter, value)) })" />
+        }
+    </Template>;
 }
