@@ -257,7 +257,7 @@ readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
                                                     <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.IsNotNull" Label="@col.Table?.Locale.FilterOptions.IsNotNull"></SelectOption>
                                                 }
                                             </SelectOptions>
-                                        </Select>                                        
+                                        </Select>
                                     </SpaceItem>
                                     <SpaceItem Style="@(noInput || filterCount == 1 ? "margin-right:0 !important" : null)">
                                         @col.FilterInput(col, filter)
