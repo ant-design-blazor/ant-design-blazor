@@ -9,11 +9,11 @@ using System.Text;
 
 namespace AntDesign
 {
-    public class TableFilter<TValue>
+    public class TableFilter
     {
         public string Text { get; set; }
 
-        public TValue Value { get; set; }
+        public object Value { get; set; }
 
         public bool Selected { get; set; }
 
@@ -25,6 +25,11 @@ namespace AntDesign
         {
             this.Selected = selected;
         }
+    }
+
+    public class TableFilter<TValue> : TableFilter
+    {
+        new public TValue Value { get => (TValue)(base.Value ?? default(TValue)); set => base.Value = value; }
     }
 
     public enum TableFilterCompareOperator
