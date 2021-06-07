@@ -55,7 +55,8 @@ namespace AntDesign.Internal
         public bool Disabled { get; set; }
 
         /// <summary>
-        /// ??
+        /// Property forwarded to Overlay component. Consult the Overlay
+        /// property for more detailed explanation.
         /// </summary>
         [Parameter]
         public bool HiddenMode { get; set; } = false;
