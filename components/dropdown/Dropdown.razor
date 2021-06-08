@@ -7,7 +7,7 @@
 	@if (IsButton)
 	{
 		<div class="@ClassMapper.Class"
-			 style="display: inline-block; width: fit-content; @Style"
+			 style="display: inline-block; width: @(Block ? "100%" : "fit-content" ); @Style"
 			 id="@Id"         			 
 			 >        
 			<CascadingValue Value="this" IsFixed="@true">
