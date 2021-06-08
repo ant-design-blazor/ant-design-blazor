@@ -49,7 +49,7 @@ else if (IsHeader && HeaderColSpan != 0)
     var headerCellAttributes = OnHeaderCell?.Invoke();
 
     <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" title="@(Ellipsis ? HeaderTitle : false)" @attributes="headerCellAttributes">
-        @if (Sortable || Filters?.Any() == true)
+        @if (Sortable || _filters?.Any() == true)
         {
             @FilterToolTipSorter
         }
@@ -192,10 +192,10 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                     </Unbound>
                     <Overlay>
                         <div class="ant-table-filter-dropdown">
-                            @if (Filters?.Any() == true && _columnFilterType == TableFilterType.List)
+                            @if (_filters?.Any() == true && _columnFilterType == TableFilterType.List)
                             {
                                 <Menu AutoCloseDropdown="false" SelectedKeys="_selectedFilterValues">
-                                    @foreach (var filter in Filters)
+                                    @foreach (var filter in _filters)
                                     {
                                         <MenuItem Key="@filter.Value?.ToString()" OnClick="() => FilterSelected(filter)">
                                             @if (FilterMultiple)
@@ -213,10 +213,10 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                             else
                             {
                                 <div id="@("popup-container-" + Id)" style="position:relative!important"></div>
-                                int filterCount = Filters.Count();
+                                int filterCount = _filters.Count();
                                 @for (int index = 0; index < filterCount; index++)
                                 {
-                                    var filter = Filters.ElementAt(index);
+                                    var filter = _filters.ElementAt(index);
                                     <div @key="filter" style="padding:10px;@(index > 0 ? "border-top:1px solid #f0f0f0;" : "")">
                                         @if (index > 0)
                                         {
