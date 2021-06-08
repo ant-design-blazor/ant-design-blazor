@@ -96,12 +96,6 @@ namespace AntDesign
         public bool OnClickStopPropagation { get; set; }
 
         /// <summary>
-        /// Adds class `ant-input-search-button` to the button.
-        /// </summary>
-        [Parameter]
-        public bool Search { get; set; } = false;
-
-        /// <summary>
         /// Can set button shape: `circle` | `round` or `null` (default, which is rectangle).
         /// </summary>
         [Parameter]
@@ -140,10 +134,9 @@ namespace AntDesign
                 .If($"{prefixName}-lg", () => Size == "large")
                 .If($"{prefixName}-sm", () => Size == "small")
                 .If($"{prefixName}-loading", () => Loading)
-                .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && !this.Search && this.ChildContent == null)
+                .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && this.ChildContent == null)
                 .If($"{prefixName}-background-ghost", () => Ghost)
                 .If($"{prefixName}-block", () => this.Block)
-                .If($"ant-input-search-button", () => this.Search)
                 .If($"{prefixName}-rtl", () => RTL)
                 ;
         }
