@@ -7,42 +7,6 @@ namespace AntDesign
 {
     public partial class Button : AntDomComponentBase
     {
-        [Parameter]
-        public bool Block { get; set; } = false;
-
-        [Parameter]
-        public bool Ghost { get; set; } = false;
-
-        [Parameter]
-        public bool Search { get; set; } = false;
-
-        [Parameter]
-        public bool Loading
-        {
-            get => _loading;
-            set
-            {
-                if (_loading != value)
-                {
-                    _loading = value;
-                    UpdateIconDisplay(_loading);
-                }
-            }
-        }
-
-        [Parameter]
-        public string Type { get; set; } = ButtonType.Default;
-
-        [Parameter]
-        public string HtmlType { get; set; } = "button";
-
-        [Parameter]
-        public string Shape { get; set; } = null;
-
-        private bool _animating = false;
-
-        private string _btnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
-
         private string _formSize;
 
         [CascadingParameter(Name = "FormSize")]
@@ -60,31 +24,102 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Option to fit button width to its parent width
+        /// </summary>
         [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public bool Block { get; set; } = false;
 
-        [Parameter]
-        public string Icon { get; set; }
-
-        [Parameter]
-        public bool Disabled { get; set; }
-
-        [Parameter]
-        public bool Danger { get; set; }
-
+        /// <summary>
+        /// Content of the button.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Set the danger status of button.
+        /// </summary>
+        [Parameter]
+        public bool Danger { get; set; }
+
+        /// <summary>
+        ///  Whether the `Button` is disabled.
+        /// </summary>
+        [Parameter]
+        public bool Disabled { get; set; }
+
+        /// <summary>
+        /// Make background transparent and invert text and border colors
+        /// </summary>
+        [Parameter]
+        public bool Ghost { get; set; } = false;
+
+        /// <summary>
+        /// Set the original html type of the button element.
+        /// </summary>
+        [Parameter]
+        public string HtmlType { get; set; } = "button";
+
+        /// <summary>
+        /// Set the icon component of button.
+        /// </summary>
+        [Parameter]
+        public string Icon { get; set; }
+
+        /// <summary>
+        ///  Show loading indicator. You have to write the loading logic on your own. 
+        /// </summary>
+        [Parameter]
+        public bool Loading
+        {
+            get => _loading;
+            set
+            {
+                if (_loading != value)
+                {
+                    _loading = value;
+                    UpdateIconDisplay(_loading);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Callback when `Button` is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
+        /// <summary>
+        /// Do not propagate events when button is clicked.
+        /// </summary>
         [Parameter]
         public bool OnClickStopPropagation { get; set; }
+
+        /// <summary>
+        /// Can set button shape: `circle` | `round` or `null` (default, which is rectangle).
+        /// </summary>
+        [Parameter]
+        public string Shape { get; set; } = null;
+
+        /// <summary>
+        /// Set the size of button.
+        /// </summary>
+        [Parameter]
+        public string Size { get; set; } = AntSizeLDSType.Default;
+
+        /// <summary>
+        ///  Type of the button.
+        /// </summary>
+        [Parameter]
+        public string Type { get; set; } = ButtonType.Default;
 
         public IList<Icon> Icons { get; set; } = new List<Icon>();
 
         protected string IconStyle { get; set; }
 
+        private bool _animating = false;
+
+        private string _btnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
         private bool _loading = false;
 
         protected void SetClassMap()
@@ -99,10 +134,9 @@ namespace AntDesign
                 .If($"{prefixName}-lg", () => Size == "large")
                 .If($"{prefixName}-sm", () => Size == "small")
                 .If($"{prefixName}-loading", () => Loading)
-                .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && !this.Search && this.ChildContent == null)
+                .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && this.ChildContent == null)
                 .If($"{prefixName}-background-ghost", () => Ghost)
                 .If($"{prefixName}-block", () => this.Block)
-                .If($"ant-input-search-button", () => this.Search)
                 .If($"{prefixName}-rtl", () => RTL)
                 ;
         }

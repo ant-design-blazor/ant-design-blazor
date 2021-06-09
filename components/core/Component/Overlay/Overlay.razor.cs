@@ -54,6 +54,14 @@ namespace AntDesign.Internal
         [Parameter]
         public int HorizontalOffset { get; set; } = 4;
 
+        /// <summary>
+        /// By default Overlay does not render its content if Overlay hasn't been
+        /// activated (shown at least once). Setting HiddenMode = true will 
+        /// go through rendering process.
+        /// Use case: Select component, when using <SimpleOption> or <SelectOption>
+        /// needs HiddenMode = true, so the select options are initialized and 
+        /// potential defaults can be rendered properly.
+        /// </summary>
         [Parameter]
         public bool HiddenMode { get; set; } = false;
 
