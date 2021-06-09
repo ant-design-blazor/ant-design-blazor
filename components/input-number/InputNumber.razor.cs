@@ -405,10 +405,6 @@ namespace AntDesign
                 await ChangeValueAsync(Value);
                 return;
             }
-
-            if (!CurrentValueAsString.Equals(_inputString))
-                CurrentValueAsString = _inputString;
-
             _inputString = null;
         }
 
