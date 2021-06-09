@@ -25,3 +25,24 @@ cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
 - 幽灵：用于背景色比较复杂的地方，常用在首页/产品页等展示场景。
 - 禁用：行动点不可用的时候，一般需要文案解释。
 - 加载中：用于异步操作等待反馈的时候，也可以避免多次提交。
+
+## API
+
+
+
+| Property | Description | Type | Default Value | Version 
+| --- | --- | --- | --- |
+| Block | 将按钮宽度调整为其父宽度的选项 | bool    | false         | 
+| ChildContent | Content of the button.   | RenderFragment    | -         |
+| Danger | 设置危险按钮 | bool    | false         | 
+| Disabled | 按钮失效状态         | bool    | false     |
+| Ghost | 幽灵属性，使按钮背景透明 | bool    | false         | 
+| HtmlType | 设置 button 原生的 type 值，可选值请参考 [HTML 标准]('https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attr-type')         | string    | `button` |
+| Icon | 设置按钮的图标组件 | string | -         | 
+| Loading | 设置按钮载入状态        | bool    | false         | 
+| OnClick | Callback when `Button` is clicked          | Action    | -         |
+| OnClickStopPropagation | Do not propagate events when button is clicked. | bool    | false    |
+| Search | Adds class `ant-input-search-button` to the button.   | bool | false         |
+| Shape | Can set button shape: `circle` &#124; `round` or `null` (default, which is rectangle).    | string    | null |
+| Size | 设置按钮大小        | AntSizeLDSType    | `AntSizeLDSType.Default`         | 
+| Type | 设置按钮类型        | ButtonType | `ButtonType.Default` | 

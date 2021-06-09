@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -7,10 +8,130 @@ namespace AntDesign
 {
     public class DropdownButton : Dropdown
     {
+        /// <summary>
+        /// Option to fit button width to its parent width
+        /// </summary>
+        [Parameter]
+        public new bool Block
+        {
+            get => base.Block;
+            set => base.Block = value;
+        }
+
+        /// <summary>
+        /// Fully customizable button.
+        /// </summary>
+        [Parameter]
+        public new Func<RenderFragment, RenderFragment, RenderFragment> ButtonsRender
+        {
+            get => base.ButtonsRender;
+            set => base.ButtonsRender = value;
+        }
+
+        /// <summary>
+        /// Set the danger status of button
+        /// </summary>
+        [Parameter]
+        public bool Danger
+        {
+            get => _danger;
+            set
+            {
+                _danger = value;
+                ChangeButtonDanger(value);
+            }
+        }
+
+        /// <summary>
+        /// Used in situations with complex background, home pages usually.
+        /// </summary>
+        [Parameter]
+        public bool Ghost
+        {
+            get => _ghost;
+            set
+            {
+                _ghost = value;
+                ChangeButtonGhost(value);
+            }
+        }
+
+        private string _icon = "ellipsis";
+        /// <summary>
+        /// Icon that will be rendered in the right
+        /// button.
+        /// </summary>
+        [Parameter]
+        public string Icon
+        {
+            get => _icon;
+            set
+            {
+                _icon = value;
+                ChangeRightButtonIcon(value);
+            }
+        }
+
+        /// <summary>
+        /// Indicates if loading icon is going to be included. 
+        /// If set to true, then dropdown will not be active.
+        /// </summary>
+        [Parameter]
+        public bool Loading
+        {
+            get => _loading;
+            set
+            {
+                _loading = value;
+                ChangeButtonLoading(value);
+            }
+        }
+
+        private string _size = AntSizeLDSType.Default;
+        /// <summary>
+        /// Button size.
+        /// </summary>
+        [Parameter]
+        public string Size
+        {
+            get => _size;
+            set
+            {
+                _size = value;
+                ChangeButtonSize(value);
+            }
+        }
+
+        private (string LeftButton, string RightButton) _type = (ButtonType.Default, ButtonType.Default);
+        private bool _loading;
+        private bool _danger;
+        private bool _ghost = false;
+
+        /// <summary>
+        /// Button type is a tuple where first item refers to LeftButton type 
+        /// and second item refers to RightButton type.
+        /// </summary>
+        [Parameter]
+        public (string LeftButton, string RightButton) Type
+        {
+            get => _type;
+            set
+            {
+                _type = value;
+                ChangeButtonType(value);
+            }
+        }
+
+        public DropdownButton() => IsButton = true;
+
         protected override void OnInitialized()
         {
+            string prefixCls = "ant-btn";
+            ClassMapper.Clear();
             Placement = PlacementType.BottomRight;
             base.OnInitialized();
+            ClassMapper.If($"{prefixCls}-block", () => Block);
+
         }
 
         /// <summary>
@@ -58,68 +179,5 @@ namespace AntDesign
                 await _overlay.Show(overlayLeft, overlayTop);
             }
         }
-
-        [Parameter]
-        public bool Loading
-        {
-            get => _loading;
-            set
-            {
-                _loading = value;
-                if (value)
-                {
-                    _preLoadingIcon = _icon;
-                    Icon = "loading";
-                }
-                else
-                {
-                    Icon = _preLoadingIcon;
-                }
-            }
-        }
-
-        private string _preLoadingIcon;
-        private string _icon = "ellipsis";
-        [Parameter]
-        public string Icon
-        {
-            get => _icon;
-            set
-            {
-                if (!_loading || value == "loading")
-                {
-                    _icon = value;
-                    ChangeRightButtonIcon(value);
-                }
-            }
-        }
-
-        private string _size = AntSizeLDSType.Default;
-        [Parameter]
-        public string Size
-        {
-            get => _size;
-            set
-            {
-                _size = value;
-                ChangeButtonSize(value);
-            }
-        }
-
-        private string _type = ButtonType.Default;
-        private bool _loading;
-
-        [Parameter]
-        public string Type
-        {
-            get => _type;
-            set
-            {
-                _type = value;
-                ChangeButtonType(value);
-            }
-        }
-
-        public DropdownButton() => IsButton = true;
     }
 }
