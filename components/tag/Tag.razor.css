@@ -1,0 +1,22 @@
+﻿.ant-tag-animate-shrink {
+    transition: 0.3s;
+    transform: scale(0.000001,0.000001);
+    transform-origin: 1% 100%;
+}
+
+.ant-tag-animate-grow {
+    transform: scale(0,0);
+    transform-origin: 1% 100%;
+    animation: grow cubic-bezier(0.785, 0.135, 0.15, 0.86) 0.5s forwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes grow {
+    from {
+        transform: scale(0,0);
+    }
+
+    to {
+        transform: scale(1,1);
+    }
+}
