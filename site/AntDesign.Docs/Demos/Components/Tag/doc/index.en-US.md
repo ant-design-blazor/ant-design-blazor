@@ -14,13 +14,17 @@ Tag for categorizing or markup.
 
 ## API
 
-| Property | Description | Type | Default Value |
-| --- | --- | --- | --- |
-| Closable | Whether the Tag can be closed| boolean         |-       |
-| Checkable | Whether the Tag can be checked | boolean         |-       |
-| Checked | 	Checked status of Tag| boolean         |-       |
-| CheckedChange | Callback executed when Tag is checked/unchecked| function(e)         |-       |
-| Color | Color of the Tag | string   | -         |
-| OnClose | Callback executed when tag is closed     | function(e)        | -         |
-| Visible | Whether the Tag is closed or not | boolean         | true         |
-| Icon | Set the icon of tag  | string        | -         |
+| Property | Description | Type | Default Value | Version | 
+| --- | --- | --- | --- | --- |
+| Animate | Whether the `Tag` will be animated when it appears or disappears. | boolean         | false       | 0.9 
+| ChildContent | Contents of the `Tag`| RenderFragment  |-       |
+| Closable | Whether the `Tag` can be closed| boolean         | false       |
+| Checkable | Whether the `Tag` can be checked | boolean         | false       |
+| Checked | 	Checked status of `Tag` | boolean         |false       |
+| CheckedChange | Callback executed when `Tag` is checked/unchecked| Action<bool>         |-       |
+| Color | Color of the `Tag` | string   | -         |
+| Icon | Set the icon of the `Tag`  | string        | -         |
+| OnClose | Callback executed when the `Tag` is closed     | Action<MouseEventArgs>        | -         |
+| OnClosing | Callback executed when the `Tag` is being closed. Closing can be canceled here.     | Action<CloseEventArgs<MouseEventArgs>>        | -         |
+| OnClick | Callback executed when the `Tag` is clicked (excluding closing button) | Action | -         |
+| Visible | Whether the `Tag` is closed or not | boolean         | true         |

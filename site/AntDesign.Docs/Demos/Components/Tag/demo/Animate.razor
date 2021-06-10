@@ -1,0 +1,110 @@
+﻿<div>
+    <div style="margin-bottom: 16px;">
+        @foreach (var item in lstTags)
+        {
+            <Tag @key="item" Animate="@_animate" Closable OnClose="()=>OnClose(item)" >@item</Tag>
+        }
+    </div>
+    <div>
+        @if (inputVisible)
+        {
+            <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="HandleInputConfirm" OnPressEnter="HandleInputConfirm" AutoFocus/>
+        }
+        else
+        {
+            <Tag Class="site-tag-plus" OnClick="@(() => inputVisible = !inputVisible)">
+                <Icon Type="plus" />New Tag
+            </Tag>
+        }
+    </div>
+</div>
+<style>
+    .site-tag-plus {
+        background: #fff;
+        border-style: dashed;
+    }
+
+	//below classes are only needed in this demo; 
+	//normally they are part of the library (supplied blazor css isolation)
+	.ant-tag-animate-shrink {
+		transition: 0.3s;
+		transform: scale(0.000001,0.000001);
+		transform-origin: 1% 100%;
+	}
+
+	.ant-tag-animate-grow {
+		transform: scale(0,0);
+		transform-origin: 1% 100%;
+		animation: grow cubic-bezier(0.785, 0.135, 0.15, 0.86) 0.5s forwards;
+		animation-delay: 0.3s;
+	}
+
+	@@keyframes grow {
+		from {
+			transform: scale(0,0);
+		}
+
+		to {
+			transform: scale(1,1);
+		}
+	}
+
+</style>
+@code{
+    private bool inputVisible { get; set; } = false;
+    private bool _animate;
+    string _inputValue;
+    Input<string> _inputRef;
+    List<string> lstTags { get; set; } = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        lstTags.Add("Tag 1");
+        lstTags.Add("Tag 2");
+        lstTags.Add("Tag 3");        
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _animate = true;
+            StateHasChanged();
+        }
+    }
+
+    void ValueChange(ChangeEventArgs value)
+    {
+        lstTags.Add(value.Value.ToString());
+    }
+
+    void OnClose(string item)
+    {
+        lstTags.Remove(item);
+    }
+
+    void HandleInputConfirm()
+    {
+        if (string.IsNullOrEmpty(_inputValue))
+        {
+            CancelInput();
+            return;
+        }
+
+        string res = lstTags.Find(s => s == _inputValue);
+
+        if (string.IsNullOrEmpty(res))
+        {
+            lstTags.Add(_inputValue);
+        }
+
+        CancelInput();
+    }
+
+    void CancelInput()
+    {
+        this._inputValue = "";
+        this.inputVisible = false;
+    }   
+
+}

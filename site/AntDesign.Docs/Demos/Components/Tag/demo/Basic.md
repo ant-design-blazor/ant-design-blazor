@@ -2,7 +2,7 @@
 order: 0
 title:
   zh-CN: 基本用法 
-  en-US: basic Usage
+  en-US: Basic
 ---
 
 ## zh-CN
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Usage of basic Tag, and it could be closable by set `closable` property. Closable Tag supports `close` events.
+Usage of basic Tag. It can be closable by setting `closable` property. Closable Tag supports `close` events.
