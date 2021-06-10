@@ -149,11 +149,13 @@ namespace AntDesign
 
                 ChangePickerValue(changeValue, index);
 
+                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+                {
+                    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                }
 
                 StateHasChanged();
             }
-
-            UpdateCurrentValueAsString();
         }
 
         /// <summary>
@@ -407,8 +409,6 @@ namespace AntDesign
             _pickerStatus[index]._hadSelectValue = true;
             _pickerStatus[index]._currentShowHadSelectValue = true;
 
-            UpdateCurrentValueAsString(index);
-
             if (!IsShowTime && Picker != DatePickerType.Time)
             {
                 if (_pickerStatus[0]._currentShowHadSelectValue && _pickerStatus[1]._currentShowHadSelectValue)
@@ -424,6 +424,11 @@ namespace AntDesign
                     Dates = new DateTime?[] { array.GetValue(0) as DateTime?, array.GetValue(1) as DateTime? },
                     DateStrings = new string[] { GetInputValue(0), GetInputValue(1) }
                 });
+            }
+
+            if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+            {
+                EditContext?.NotifyFieldChanged(FieldIdentifier);
             }
         }
 
@@ -492,13 +497,6 @@ namespace AntDesign
             }
         }
 
-        protected override void UpdateCurrentValueAsString(int index = 0)
-        {
-            if (EditContext != null)
-            {
-                CurrentValueAsString = $"{GetInputValue(0)},{GetInputValue(1)}";
-            }
-        }
 
         protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
         {
