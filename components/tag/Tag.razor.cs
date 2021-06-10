@@ -170,7 +170,7 @@ namespace AntDesign
                 await this.CheckedChange.InvokeAsync(this.Checked);
             }
         }
-        
+
         private async Task CloseTag(MouseEventArgs e)
         {
             var closeEvent = new CloseEventArgs<MouseEventArgs>(e);
