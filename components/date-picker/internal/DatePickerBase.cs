@@ -449,14 +449,6 @@ namespace AntDesign
             }
         }
 
-        protected virtual void UpdateCurrentValueAsString(int index = 0)
-        {
-            if (EditContext != null)
-            {
-                CurrentValueAsString = GetInputValue(index);
-            }
-        }
-
         public void Close()
         {
             _duringManualInput = false;
