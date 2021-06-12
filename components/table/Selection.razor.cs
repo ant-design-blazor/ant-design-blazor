@@ -52,30 +52,30 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            if (IsHeader && Type == "radio" && RowSelections.Count(x => x.Checked) > 1)
-            {
-                var first = RowSelections.FirstOrDefault(x => x.Checked);
-                if (first != null)
-                {
-                    Table?.Selection.RowSelections.Where(x => x.ColIndex != first.ColIndex).ForEach(x => x.RowData.Selected = false);
-                }
-            }
+            //if (IsHeader && Type == "radio" && RowSelections.Count(x => x.Checked) > 1)
+            //{
+            //    var first = RowSelections.FirstOrDefault(x => x.Checked);
+            //    if (first != null)
+            //    {
+            //        Table?.Selection.RowSelections.Where(x => x.ColIndex != first.ColIndex).ForEach(x => x.RowData.SetSelected(false));
+            //    }
+            //}
         }
 
         private void HandleCheckedChange(bool @checked)
         {
             if (this.IsHeader)
             {
-                RowSelections.Where(x => !x.Disabled).ForEach(x => x.RowData.Selected = @checked);
+                RowSelections.Where(x => !x.Disabled).ForEach(x => x.RowData.SetSelected(@checked));
                 InvokeSelectedRowsChange();
             }
             else if (IsBody)
             {
-                RowData.Selected = @checked;
+                RowData.SetSelected(@checked);
 
                 if (Type == "radio")
                 {
-                    Table?.Selection.RowSelections.Where(x => x.RowData.CacheKey != this.RowData.CacheKey).ForEach(x => x.RowData.Selected = false);
+                    Table?.Selection.RowSelections.Where(x => x.RowData.CacheKey != this.RowData.CacheKey).ForEach(x => x.RowData.SetSelected(false));
                 }
 
                 Table?.Selection.InvokeSelectedRowsChange();
@@ -118,12 +118,12 @@ namespace AntDesign
         {
             if (keys == null || !keys.Any())
             {
-                this.Table.Selection.RowSelections.ForEach(x => x.RowData.Selected = false);
+                this.Table.Selection.RowSelections.ForEach(x => x.RowData.SetSelected(false));
                 this.Table.Selection.InvokeSelectedRowsChange();
             }
             else
             {
-                this.Table.Selection.RowSelections.ForEach(x => x.RowData.Selected = x.Key.IsIn(keys));
+                this.Table.Selection.RowSelections.ForEach(x => x.RowData.SetSelected(x.Key.IsIn(keys)));
                 this.Table.Selection.InvokeSelectedRowsChange();
             }
         }

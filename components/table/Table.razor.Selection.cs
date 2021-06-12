@@ -35,6 +35,15 @@ namespace AntDesign
         private ISelectionColumn _selection;
         private IEnumerable<TItem> _selectedRows;
 
+        private void RowDataSelectedChanged(RowData rowData, bool selected)
+        {
+            _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
+            if (SelectedRowsChanged.HasDelegate)
+            {
+                SelectedRowsChanged.InvokeAsync(_selectedRows);
+            }
+        }
+
         ISelectionColumn ITable.Selection
         {
             get => _selection;
