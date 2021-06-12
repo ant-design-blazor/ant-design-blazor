@@ -24,9 +24,7 @@ namespace AntDesign
                     _dataSourceCache.Values.ForEach(x => x.Selected = false);
                 }
 
-                _selectedRows = value;
-
-                StateHasChanged();
+                _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
             }
         }
 
@@ -51,15 +49,14 @@ namespace AntDesign
 
         private void SelectionChanged()
         {
-            foreach (var selection in _selection.RowSelections)
-            {
-                _dataSourceCache[selection.RowData.CacheKey].Selected = selection.Checked;
-            }
-
             if (SelectedRowsChanged.HasDelegate)
             {
                 _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
                 SelectedRowsChanged.InvokeAsync(_selectedRows);
+            }
+            else
+            {
+                StateHasChanged();
             }
         }
     }

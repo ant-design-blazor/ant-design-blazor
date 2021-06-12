@@ -23,8 +23,8 @@ namespace AntDesign
         private bool _checked;
 
         private bool Indeterminate => IsHeader
-                                      && this.RowSelections.Any(x => x.Checked)
-                                      && !this.RowSelections.All(x => x.Checked);
+                                      && this.RowSelections.Where(x => !x.Disabled).Any(x => x.Checked)
+                                      && !this.RowSelections.Where(x => !x.Disabled).All(x => x.Checked);
 
         public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
 
@@ -57,25 +57,25 @@ namespace AntDesign
                 var first = RowSelections.FirstOrDefault(x => x.Checked);
                 if (first != null)
                 {
-                    Table?.Selection.RowSelections.Where(x => x.ColIndex != first.ColIndex).ForEach(x => x.Check(false));
+                    Table?.Selection.RowSelections.Where(x => x.ColIndex != first.ColIndex).ForEach(x => x.RowData.Selected = false);
                 }
             }
         }
 
         private void HandleCheckedChange(bool @checked)
         {
-            Check(@checked);
-
             if (this.IsHeader)
             {
-                RowSelections.Where(x => !x.Disabled).ForEach(x => x.Check(@checked));
+                RowSelections.Where(x => !x.Disabled).ForEach(x => x.RowData.Selected = @checked);
                 InvokeSelectedRowsChange();
             }
             else if (IsBody)
             {
+                RowData.Selected = @checked;
+
                 if (Type == "radio")
                 {
-                    Table?.Selection.RowSelections.Where(x => x.RowData.CacheKey != this.RowData.CacheKey).ForEach(x => x.Check(false));
+                    Table?.Selection.RowSelections.Where(x => x.RowData.CacheKey != this.RowData.CacheKey).ForEach(x => x.RowData.Selected = false);
                 }
 
                 Table?.Selection.InvokeSelectedRowsChange();
@@ -105,37 +105,26 @@ namespace AntDesign
             if (IsHeader)
             {
                 Table.SelectionChanged();
-
-                StateHasChanged();
             }
         }
 
         public void ChangeSelection()
         {
-            var cacheKeys = Table.GetSelectedCacheKeys();
-            if (cacheKeys == null || !cacheKeys.Any())
-            {
-                this.Table.Selection.RowSelections.ForEach(x => x.Check(false));
-                this.Table.Selection.StateHasChanged();
-            }
-            else
-            {
-                this.Table.Selection.RowSelections.ForEach(x => x.Check(x.RowData.CacheKey.IsIn(cacheKeys)));
-                this.Table.Selection.StateHasChanged();
-            }
+            this.Table.Selection.RowSelections.ForEach(x => x.Check(x.RowData.Selected));
+            this.Table.Selection.StateHasChanged();
         }
 
         public void SetSelection(string[] keys)
         {
             if (keys == null || !keys.Any())
             {
-                this.Table.Selection.RowSelections.ForEach(x => x.Check(false));
-                this.Table.Selection.Check(false);
+                this.Table.Selection.RowSelections.ForEach(x => x.RowData.Selected = false);
+                this.Table.Selection.InvokeSelectedRowsChange();
             }
             else
             {
-                this.Table.Selection.RowSelections.ForEach(x => x.Check(x.Key.IsIn(keys)));
-                this.Table.Selection.StateHasChanged();
+                this.Table.Selection.RowSelections.ForEach(x => x.RowData.Selected = x.Key.IsIn(keys));
+                this.Table.Selection.InvokeSelectedRowsChange();
             }
         }
 
@@ -148,7 +137,7 @@ namespace AntDesign
         {
             if (IsHeader)
             {
-                _checked = this.RowSelections.Any() && this.RowSelections.All(x => x.Checked);
+                _checked = this.RowSelections.Any() && this.RowSelections.Where(x => !x.Disabled).All(x => x.Checked);
                 StateHasChanged();
             }
         }
