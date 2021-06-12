@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -42,7 +43,22 @@ namespace AntDesign
 
         public void SetSelection(string[] keys)
         {
-            _selection.SetSelection(keys);
+            if (_selection == null)
+            {
+                if (keys == null || !keys.Any())
+                {
+                    _dataSourceCache.Values.ForEach(x => x.Selected = false);
+                    StateHasChanged();
+                }
+                else
+                {
+                    throw new NotSupportedException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
+                }
+            }
+            else
+            {
+                _selection.SetSelection(keys);
+            }
         }
 
         void ITable.SelectionChanged() => SelectionChanged();
