@@ -44,3 +44,33 @@ Drawer 的 service 用法，示例中演示了用户自定义模板、自定义c
 
 Usage of Drawer's service, examples demonstrate user-defined templates, custom components.
 
+Template code: DrawerTemplateDemo.razor
+
+``` csharp
+@namespace AntDesign
+@inherits FeedbackComponent<string, string>
+
+<div>
+    value: <Input @bind-Value="value" />
+    <br/>
+    <br/>
+    <Button Type="primary" OnClick="OnClose">Confirm</Button>
+</div>
+
+@code{
+
+    string value;
+
+    protected override void OnInitialized()
+    {
+        value = base.Options;
+        base.OnInitialized();
+    }
+
+    async void OnClose()
+    {
+        DrawerRef<string> drawerRef = base.FeedbackRef as DrawerRef<string>;
+        await drawerRef!.CloseAsync(value);
+    }
+}
+```
