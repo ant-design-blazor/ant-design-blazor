@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+﻿using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
@@ -15,8 +11,6 @@ namespace AntDesign
         public bool Block { get; set; } = false;
 
         public bool Ghost { get; set; } = false;
-
-        public bool Search { get; set; } = false;
 
         public bool Loading { get; set; } = false;
 
