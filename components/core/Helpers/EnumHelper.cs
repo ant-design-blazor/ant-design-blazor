@@ -16,7 +16,7 @@ namespace AntDesign
         }
 
         // There is no constraint or type check for type parameter T, be sure that T is an enumeration type  
-        public static T Combine(IEnumerable<T> enumValues)
+        public static object Combine(IEnumerable<T> enumValues)
         {
             if (enumValues?.Count() > 0)
             {
@@ -24,7 +24,7 @@ namespace AntDesign
             }
             else
             {
-                return default;
+                return null;
             }
         }
 

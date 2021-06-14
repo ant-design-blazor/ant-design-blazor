@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -106,11 +108,18 @@ namespace AntDesign
         [Parameter]
         public bool ValidateOnChange { get; set; }
 
+        [Parameter]
+        public FormValidateMode ValidateMode { get; set; } = FormValidateMode.Default;
+
         private static readonly RenderFragment _defaultValidator = builder =>
         {
             builder.OpenComponent<ObjectGraphDataAnnotationsValidator>(0);
             builder.CloseComponent();
         };
+
+        [Parameter]
+        public FormValidateErrorMessages ValidateMessages { get; set; }
+
 
         [CascadingParameter(Name = "FormProvider")]
         private IFormProvider FormProvider { get; set; }
@@ -121,6 +130,7 @@ namespace AntDesign
         private IList<IFormItem> _formItems = new List<IFormItem>();
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
         private TModel _model;
+        private FormRulesValidator _rulesValidator;
 
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
@@ -135,6 +145,9 @@ namespace AntDesign
         bool IForm.ValidateOnChange => ValidateOnChange;
 
         bool IForm.IsModified => _editContext.IsModified();
+
+        FormValidateMode IForm.ValidateMode => ValidateMode;
+        FormValidateErrorMessages IForm.ValidateMessages => ValidateMessages;
 
         public event Action<IForm> OnFinishEvent;
 
@@ -156,6 +169,11 @@ namespace AntDesign
             if (OnValidationStateChanged.HasDelegate)
                 _editContext.OnValidationStateChanged += OnValidationStateChangedHandler;
 
+            if (ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                _editContext.OnFieldChanged += RulesModeOnFieldChanged;
+                _editContext.OnValidationRequested += RulesModeOnValidationRequested;
+            }
         }
 
         private void OnFieldChangedHandler(object sender, FieldChangedEventArgs e) => InvokeAsync(() => OnFieldChanged.InvokeAsync(e));
@@ -171,6 +189,13 @@ namespace AntDesign
                 _editContext.OnValidationRequested -= OnValidationRequestedHandler;
             if (OnValidationStateChanged.HasDelegate)
                 _editContext.OnValidationStateChanged -= OnValidationStateChangedHandler;
+
+            if (ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                _editContext.OnFieldChanged -= RulesModeOnFieldChanged;
+                _editContext.OnValidationRequested -= RulesModeOnValidationRequested;
+            }
+
             base.Dispose(disposing);
         }
 
@@ -200,6 +225,52 @@ namespace AntDesign
         private async Task OnInvalidSubmit(EditContext editContext)
         {
             await OnFinishFailed.InvokeAsync(editContext);
+        }
+
+        private void RulesModeOnFieldChanged(object sender, FieldChangedEventArgs args)
+        {
+            if (!ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                return;
+            }
+
+            _rulesValidator.ClearError(args.FieldIdentifier);
+
+            var formItem = _formItems
+                .Single(t => t.GetFieldIdentifier().FieldName == args.FieldIdentifier.FieldName);
+
+            var result = formItem.ValidateField();
+
+            if (result.Length > 0)
+            {
+                var errors = new Dictionary<FieldIdentifier, List<string>>();
+                errors[args.FieldIdentifier] = result.Select(r => r.ErrorMessage).ToList();
+
+                _rulesValidator.DisplayErrors(errors);
+            }
+        }
+
+        private void RulesModeOnValidationRequested(object sender, ValidationRequestedEventArgs args)
+        {
+            if (!ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+            {
+                return;
+            }
+
+            _rulesValidator.ClearErrors();
+
+            var errors = new Dictionary<FieldIdentifier, List<string>>();
+
+            foreach (var formItem in _formItems)
+            {
+                var result = formItem.ValidateField();
+                if (result.Length > 0)
+                {
+                    errors[formItem.GetFieldIdentifier()] = result.Select(r => r.ErrorMessage).ToList();
+                }
+            }
+
+            _rulesValidator.DisplayErrors(errors);
         }
 
         public void Reset()
