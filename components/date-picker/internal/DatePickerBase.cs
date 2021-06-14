@@ -104,7 +104,12 @@ namespace AntDesign
             }
             set
             {
-                if (!_isLocaleSetOutside && base.CultureInfo != value && base.CultureInfo.Name != value.Name)
+                if (!_isLocaleSetOutside && 
+                    (
+                    (base.CultureInfo != value && base.CultureInfo.Name != value.Name)
+                    ||
+                    LocaleProvider.CurrentLocale.LocaleName != value.Name
+                    ))
                 {
                     _locale = LocaleProvider.GetLocale(value.Name).DatePicker;
                 }

@@ -34,6 +34,10 @@ namespace AntDesign
                 else if ((IsNullable && DefaultValue != null) || (!IsNullable && !DefaultValue.Equals(default(TValue))))
                 {
                     DefaultPickerValue = DefaultValue;
+                    if (!DefaultValue.Equals(Value))
+                    {
+                        CurrentValue = DefaultValue;
+                    }
                 }
                 else if (!IsNullable && Value.Equals(default(TValue)))
                 {
@@ -119,7 +123,7 @@ namespace AntDesign
                 if (!Value.Equals(_cacheDuringInput))
                 {
                     //reset picker to Value         
-                    Value = _cacheDuringInput;
+                    CurrentValue = _cacheDuringInput;
                     _pickerStatus[0]._hadSelectValue = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
                     GetIfNotNull(Value ?? DefaultValue ?? DefaultPickerValue, (notNullValue) =>
                     {

@@ -1,0 +1,28 @@
+﻿@inherits AntDesignTestBase
+
+@code {
+	[Fact]
+	public void DefaultValue_applied_to_value()
+	{
+		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+		DateTime expectedValue = DateTime.Now;
+		var cut = Render<AntDesign.DatePicker<DateTime>>(
+			@<DatePicker TValue="DateTime" DefaultValue="@expectedValue" />
+		);
+		cut.Instance.Value.Should().Be(expectedValue);
+	}
+
+	[Fact]
+	public void DefaultValue_applied_to_value()
+	{
+		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+		DateTime expectedValue = DateTime.Now;
+		var cut = Render<AntDesign.DatePicker<DateTime>>(
+			@<DatePicker TValue="DateTime" DefaultValue="@expectedValue" />
+	);
+		var input = cut.Find("input");
+		input.Input(DateTime.Now.AddDays(-1).ToShortDateString());
+	}
+}
