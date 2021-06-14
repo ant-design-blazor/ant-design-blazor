@@ -1,5 +1,5 @@
 ---
-order: 32
+order: 10
 title:
   en-US: Ajax
   zh-CN: 远程加载数据
