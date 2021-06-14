@@ -11,16 +11,16 @@
 </Table>
 
 @code{
-        bool _loading = false;
-        int _pageIndex = 1;
-        int _pageSize = 10;
-        int _total;
-        Data[] _data = Array.Empty<Data>();
-        TableFilter<string>[] _genderFilters = new TableFilter<string>[]
-        {
+    bool _loading = false;
+    int _pageIndex = 1;
+    int _pageSize = 10;
+    int _total;
+    Data[] _data = Array.Empty<Data>();
+    TableFilter<string>[] _genderFilters = new TableFilter<string>[]
+    {
         new TableFilter<string> { Text = "Male", Value = "male" },
         new TableFilter<string> { Text = "Female", Value = "female" },
-        };
+    };
 
     public class Data
     {
