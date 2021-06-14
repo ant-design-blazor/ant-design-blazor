@@ -89,13 +89,13 @@ There are some ways to display the information based on the content's nature:
 
 | CancelText        | Text  of the Cancel button, equivalent to Button2Props.ChildContent | string\|RenderFragment                         | Cancel  |
 | ----------------- | ------------------------------------------------------------ | ------------------------------ | ------- |
-| Centered          | Centered Modal                                               | bool                           | fasle   |
+| Centered          | Centered Modal                                               | bool                           | false   |
 | ClassName         | className of container                                       | string                         | -       |
 | Content           | Content                                                      | string\|RenderFragment         | -       |
 | Icon              | custom icon                                                  | RenderFragment                 | -       |
 | Keyboard          | Whether support press esc to  close                          | bool                           | true    |
 | Mask              | Whether show mask or not.                                    | bool                           | true    |
-| MaskClosable      | Whether to close the modal  dialog when the mask (area outside the modal) is clicked | bool                           | fasle   |
+| MaskClosable      | Whether to close the modal  dialog when the mask (area outside the modal) is clicked | bool                           | false   |
 | OkText            | Text of the OK button, equivalent to Button1Props.ChildContent | string                         | OK      |
 | OkType            | Button type of the OK button, equivalent to Button1Props.Type  | string                         | primary |
 | OkButtonProps     | The ok button props , equivalent to Button1Props  | ButtonProps                    | -       |

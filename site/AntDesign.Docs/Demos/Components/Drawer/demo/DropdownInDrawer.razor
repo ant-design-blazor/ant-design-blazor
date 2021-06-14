@@ -15,8 +15,15 @@
             @if (context.Type == 1)
             {
                 <FormItem>
-                    <Select TItem="string" TItemValue="string" @bind-Value="@context.Name" DefaultValue=@("lucy") Style="width:120px" AllowClear>
-                        <SelectOption TItem="string" TItemValue="string" Value=@("lucy")>Lucy</SelectOption>
+                    <Select @bind-Value="@context.Name"
+                             DefaultValue="@("lucy")"
+                             Style="width: 120px;"
+                             TItemValue="string"
+                             TItem="string"
+                             AllowClear>
+                        <SelectOptions>
+                            <SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+                        </SelectOptions>
                     </Select>
                 </FormItem>
             }
@@ -67,7 +74,7 @@
 @code{
     class FormModal
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
         public int Type { get; set; }
     }
 
