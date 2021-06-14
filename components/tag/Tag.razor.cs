@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -8,12 +7,6 @@ namespace AntDesign
 {
     public partial class Tag : AntDomComponentBase
     {
-        /// <summary>
-        /// Animate transitions - closing and adding.
-        /// </summary>
-        [Parameter]
-        public bool Animate { get; set; }
-
         /// <summary>
         /// Tag content
         /// </summary>
@@ -71,6 +64,13 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Any css class that will be added to tag. 
+        /// Use case: animation.
+        /// </summary>
+        [Parameter]
+        public string ExtraCls { get; set; } = "";
+
+        /// <summary>
         /// Set the tag's icon 
         /// </summary>
         [Parameter]
@@ -111,27 +111,6 @@ namespace AntDesign
         {
             this.UpdateClassMap();
             base.OnInitialized();
-            if (Animate)
-            {
-                AnimationCls = $"{_prefix}-animate-grow";
-            }
-        }
-
-        protected string AnimationCls { get; set; } = "";
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender && Animate)
-            {
-                if (Js.IsBrowser())
-                {
-                    await Task.Delay(900);
-                }
-                AnimationCls = "";
-                await InvokeAsync(StateHasChanged);
-
-            }
-            await base.OnAfterRenderAsync(firstRender);
         }
 
         private static bool IsPresetColor(string color)
@@ -185,14 +164,7 @@ namespace AntDesign
                 return;
             }
 
-            if (Animate)
-            {
-                AnimationCls = $"{_prefix}-animate-shrink";
-                await Task.Delay(300);
-            }
-
-            this._closed = true;
-            AnimationCls = "";
+            this._closed = true;            
 
             if (OnClose.HasDelegate)
             {

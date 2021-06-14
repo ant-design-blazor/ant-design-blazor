@@ -16,13 +16,13 @@ Tag for categorizing or markup.
 
 | Property | Description | Type | Default Value | Version | 
 | --- | --- | --- | --- | --- |
-| Animate | Whether the `Tag` will be animated when it appears or disappears. | boolean         | false       | 0.9 
 | ChildContent | Contents of the `Tag`| RenderFragment  |-       |
 | Closable | Whether the `Tag` can be closed| boolean         | false       |
 | Checkable | Whether the `Tag` can be checked | boolean         | false       |
 | Checked | 	Checked status of `Tag` | boolean         |false       |
 | CheckedChange | Callback executed when `Tag` is checked/unchecked| Action<bool>         |-       |
 | Color | Color of the `Tag` | string   | -         |
+| ExtraCls | Any css class that will be added to tag. Use case: adding animation. | string   | -  | 0.9 
 | Icon | Set the icon of the `Tag`  | string        | -         |
 | OnClose | Callback executed when the `Tag` is closed     | Action<MouseEventArgs>        | -         |
 | OnClosing | Callback executed when the `Tag` is being closed. Closing can be canceled here.     | Action<CloseEventArgs<MouseEventArgs>>        | -         |

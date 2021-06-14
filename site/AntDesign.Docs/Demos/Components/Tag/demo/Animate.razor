@@ -1,8 +1,12 @@
 ﻿<div>
     <div style="margin-bottom: 16px;">
-        @foreach (var item in lstTags)
-        {
-            <Tag @key="item" Animate="@_animate" Closable OnClose="()=>OnClose(item)" >@item</Tag>
+        @foreach(var item in lstTags)
+        {                        
+            if (!_eachTagAnimationClass.ContainsKey(item))
+            {
+                _eachTagAnimationClass.Add(item, "");
+            }
+            <Tag @key="item" Closable OnClose="()=>OnClose(item)" OnClosing="@((e) => OnClosing(e, item))" ExtraCls="@_eachTagAnimationClass[item]">@item</Tag>
         }
     </div>
     <div>
@@ -23,10 +27,36 @@
         background: #fff;
         border-style: dashed;
     }
+
+    .animate-shrink {
+        transition: 0.3s;
+        transform: scale(0.000001,0.000001);
+        transform-origin: 1% 100%;
+    }
+
+    .animate-grow {
+        transform: scale(0,0);
+        transform-origin: 1% 100%;
+        animation: grow cubic-bezier(0.785, 0.135, 0.15, 0.86) 0.5s forwards;
+        animation-delay: 0.3s;
+    }
+
+    @@keyframes grow {
+        from {
+            transform: scale(0,0);
+        }
+
+        to {
+            transform: scale(1,1);
+        }
+    }
+
 </style>
 @code{
     private bool inputVisible { get; set; } = false;
     private bool _animate;
+    private Dictionary<string, string> _eachTagAnimationClass = new();
+    private int _i;
     string _inputValue;
     Input<string> _inputRef;
     List<string> lstTags { get; set; } = new List<string>();
@@ -37,15 +67,7 @@
         lstTags.Add("Tag 2");
         lstTags.Add("Tag 3");        
     }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _animate = true;
-            StateHasChanged();
-        }
-    }
+    
 
     void ValueChange(ChangeEventArgs value)
     {
@@ -55,6 +77,12 @@
     void OnClose(string item)
     {
         lstTags.Remove(item);
+    }
+
+    async Task OnClosing(CloseEventArgs<MouseEventArgs> args, string key)    
+    {        
+        _eachTagAnimationClass[key] = $"animate-shrink";        
+        await Task.Delay(300);
     }
 
     void HandleInputConfirm()
@@ -70,6 +98,7 @@
         if (string.IsNullOrEmpty(res))
         {
             lstTags.Add(_inputValue);
+            _eachTagAnimationClass.Add(_inputValue, "animate-grow");
         }
 
         CancelInput();
