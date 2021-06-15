@@ -11,16 +11,16 @@
 </Table>
 
 @code{
-    bool _loading = false;
-    int _pageIndex = 1;
-    int _pageSize = 10;
-    int _total;
-    Data[] _data = Array.Empty<Data>();
-    TableFilter<string>[] _genderFilters = new TableFilter<string>[]
-    {
-        new TableFilter<string> { Text = "Male", Value = "male" },
-        new TableFilter<string> { Text = "Female", Value = "female" },
-    };
+        bool _loading = false;
+        int _pageIndex = 1;
+        int _pageSize = 10;
+        int _total;
+        Data[] _data = Array.Empty<Data>();
+        TableFilter<string>[] _genderFilters = new[]
+        {
+            new TableFilter<string> { Text = "Male", Value = "male" },
+            new TableFilter<string> { Text = "Female", Value = "female" },
+        };
 
     public class Data
     {
@@ -52,39 +52,42 @@
     {
         _loading = true;
         StateHasChanged();
-        if (Http.DefaultRequestHeaders.Accept.Any() == false)
-        {
-            Http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        }
-        var response = await Http.GetAsync("https://randomuser.me/api?" + GetRandomuserParams(queryModel));
-        ApiResponse data = await response.Content.ReadFromJsonAsync<ApiResponse>();
+
+        ApiResponse data = await Http.GetFromJsonAsync<ApiResponse>("https://randomuser.me/api?" + GetRandomuserParams(queryModel));
+
         _loading = false;
         _data = data.Results;
-        _total = 200;
-        // 200 is mock data, you should read it from server
-        //_total = data.TotalCount;
+        _total = 200;  // 200 is mock data, you should read it from server,e.g. _total = data.TotalCount;
     }
 
     string GetRandomuserParams(QueryModel<Data> queryModel)
     {
-        Dictionary<string, object> queryStringParams = new Dictionary<string, object>
+        List<string> query = new List<string>()
         {
-            ["results"] = queryModel.PageSize,
-            ["page"] = queryModel.PageIndex,
-            ["sortField"] = queryModel.SortModel.FirstOrDefault()?.FieldName,
-            ["sortOrder"] = queryModel.SortModel.FirstOrDefault()?.Sort,
+            $"results={queryModel.PageSize}",
+            $"page={queryModel.PageIndex}",
         };
+
+        if (queryModel.SortModel?.Any() == true)
+        {
+            queryModel.SortModel.ForEach(x =>
+            {
+                query.Add($"sortField={x.FieldName.ToLower()}");
+                query.Add($"sortOrder={x.Sort}");
+            });
+        }
 
         if (queryModel.FilterModel?.Any() == true)
         {
-            foreach (var filter in queryModel.FilterModel.FirstOrDefault().SelectedValues)
+            foreach (var filter in queryModel.FilterModel)
             {
-                queryStringParams.Add("gender[]", filter);
+                foreach(var filterValue in filter.SelectedValues)
+                {
+                    query.Add($"{Uri.EscapeDataString(filter.FieldName.ToLower())}[]={filterValue}");
+                }
             }
         }
 
-        return string.Join(
-            '&',
-            queryStringParams.Select(param => $"{Uri.EscapeDataString(param.Key)}={Uri.EscapeDataString(param.Value?.ToString() ?? "")}"));
+        return string.Join('&', query);
     }
 }
