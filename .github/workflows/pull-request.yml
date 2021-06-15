@@ -34,10 +34,13 @@ jobs:
           dotnet build
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o cargo
 
-      - name: Test And Coverage Report 📝
+      - name: Test 📝
         run: |
           dotnet test --collect:"XPlat Code Coverage"
           find ./tests -name "coverage.cobertura.xml" -type f -exec cp {} ./ \;
-          bash <(curl -s https://codecov.io/bash) -Z -f coverage.cobertura.xml -t $CODECOV_TOKEN
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload coverage to Codecov 
+        uses: codecov/codecov-action@v1
+        with:
+          files: ./coverage.cobertura.xml
+          fail_ci_if_error: false

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Components.Web;
 namespace AntDesign
 {
     /// <summary>
-    ///
+    /// Base class for input type components.
     /// </summary>
     public class Input<TValue> : AntInputComponentBase<TValue>
     {
@@ -34,17 +34,23 @@ namespace AntDesign
         [Inject]
         public DomEventService DomEventService { get; set; }
 
-        [Parameter]
-        public string Type { get; set; } = "text";
-
+        /// <summary>
+        /// The label text displayed before (on the left side of) the input field.
+        /// </summary>
         [Parameter]
         public RenderFragment AddOnBefore { get; set; }
 
+        /// <summary>
+        /// The label text displayed after (on the right side of) the input field.
+        /// </summary>
         [Parameter]
         public RenderFragment AddOnAfter { get; set; }
 
+        /// <summary>
+        /// Allow to remove input content with clear icon 
+        /// </summary>
         [Parameter]
-        public string Placeholder { get; set; }
+        public bool AllowClear { get; set; }
 
         [Parameter]
         public bool AutoFocus
@@ -58,60 +64,174 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Whether has border style
+        /// </summary>
         [Parameter]
-        public TValue DefaultValue { get; set; }
+        public bool Bordered { get; set; } = true;
 
-        [Parameter]
-        public int MaxLength { get; set; } = -1;
-
-        [Parameter]
-        public bool Disabled { get; set; }
-
-        [Parameter]
-        public bool AllowClear { get; set; }
-
-        [Parameter]
-        public RenderFragment Prefix { get; set; }
-
-        [Parameter]
-        public RenderFragment Suffix { get; set; }
-
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
-
-        [Parameter]
-        public EventCallback<TValue> OnChange { get; set; }
-
-        [Parameter]
-        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
-
-        [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyUp { get; set; }
-
-        [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
-
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnMouseUp { get; set; }
-
-        [Parameter]
-        public EventCallback<ChangeEventArgs> OnInput { get; set; }
-
-        [Parameter]
-        public EventCallback<FocusEventArgs> OnBlur { get; set; }
-
-        [Parameter]
-        public EventCallback<FocusEventArgs> OnFocus { get; set; }
-
+        /// <summary>
+        /// Delays the processing of the KeyUp event until the user has stopped 
+        /// typing for a predetermined amount of time
+        /// </summary>
         [Parameter]
         public int DebounceMilliseconds { get; set; } = 250;
 
+        /// <summary>
+        /// The initial input content  
+        /// </summary>
+        [Parameter]
+        public TValue DefaultValue { get; set; }
+
+        /// <summary>
+        /// Whether the input is disabled.
+        /// </summary>
+        [Parameter]
+        public bool Disabled { get; set; }
+
+        /// <summary>
+        /// Css class that will be  added to input element class
+        /// as the last class entry.
+        /// </summary>
+        [Parameter]
+        public string InputElementSuffixClass { get; set; }
+
+        /// <summary>
+        /// Max length
+        /// </summary>
+        [Parameter]
+        public int MaxLength { get; set; } = -1;
+
+        /// <summary>
+        /// Callback when input looses focus
+        /// </summary>
+        [Parameter]
+        public EventCallback<FocusEventArgs> OnBlur { get; set; }
+
+        /// <summary>
+        /// Callback when the content changes
+        /// </summary>
+        [Parameter]
+        public EventCallback<TValue> OnChange { get; set; }
+
+        /// <summary>
+        /// Callback when input receives focus
+        /// </summary>
+        [Parameter]
+        public EventCallback<FocusEventArgs> OnFocus { get; set; }
+
+        /// <summary>
+        /// Callback when value is inputed
+        /// </summary>
+        [Parameter]
+        public EventCallback<ChangeEventArgs> OnInput { get; set; }
+
+        /// <summary>
+        /// Callback when a key is pressed
+        /// </summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
+
+        /// <summary>
+        /// Callback when a key is released
+        /// </summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnkeyUp { get; set; }
+
+        /// <summary>
+        /// Callback when a mouse button is released
+        /// </summary>
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnMouseUp { get; set; }
+
+        /// <summary>
+        /// The callback function that is triggered when Enter key is pressed
+        /// </summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
+
+        /// <summary>
+        /// Provide prompt information that describes the expected value of the input field
+        /// </summary>
+        [Parameter]
+        public string Placeholder { get; set; }
+
+        /// <summary>
+        /// The prefix icon for the Input.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Prefix { get; set; }
+
+        /// <summary>
+        /// When present, it specifies that an input field is read-only.
+        /// </summary>
+        [Parameter]
+        public bool ReadOnly { get; set; }
+
+        /// <summary>
+        /// The suffix icon for the Input.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Suffix { get; set; }
+
+
+        /// <summary>
+        /// The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)
+        /// </summary>
+        [Parameter]
+        public string Type { get; set; } = "text";
+
+        /// <summary>
+        /// Set CSS style of wrapper. Is used when component has visible: `Prefix`/`Suffix` 
+        /// or has paramter set `AllowClear` or for components: `Password` & `Search`. In 
+        /// these cases, html `<span>` elements is used to wrap the html `<input>` element. 
+        /// `WrapperStyle` is used on the `<span>` element.
+        /// </summary>
         [Parameter]
         public string WrapperStyle { get; set; }
 
         public Dictionary<string, object> Attributes { get; set; }
 
         public ForwardRef WrapperRefBack { get; set; }
+
+        /// <summary>
+        /// Focus behavior for input component with optional behaviors.
+        /// </summary>
+        /// <param name="behavior">enum: AntDesign.FocusBehavior</param>
+        /// <param name="preventScroll">When true, element receiving focus will not be scrolled to.</param>
+        public virtual async Task Focus(FocusBehavior behavior = default, bool preventScroll = false)
+        {
+            if (behavior == FocusBehavior.FocusAndClear)
+            {
+                await Clear();
+                StateHasChanged();
+            }
+            else
+            {
+                await FocusAsync(Ref, behavior, preventScroll);
+                IsFocused = true;
+            }
+        }
+
+        /// <summary>
+        /// Removes focus from input element.
+        /// </summary>       
+        public async Task Blur()
+        {
+            await BlurAsync(Ref);
+        }
+
+        private async Task Clear()
+        {
+            CurrentValue = default;
+            IsFocused = true;
+            await this.FocusAsync(Ref);
+            if (OnChange.HasDelegate)
+                await OnChange.InvokeAsync(Value);
+            else
+                //Without the delay, focus is not enforced.
+                await Task.Delay(1);
+        }
 
         private TValue _inputValue;
         private bool _compositionInputting;
@@ -138,7 +258,7 @@ namespace AntDesign
 
         protected virtual void SetClasses()
         {
-            AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")}";
+            AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper";
 
             if (!string.IsNullOrWhiteSpace(Class))
@@ -149,9 +269,11 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add($"{PrefixCls}")
+                .If($"{PrefixCls}-borderless", () => !Bordered)
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-rtl", () => RTL)
+                .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass))
                 ;
 
             Attributes ??= new Dictionary<string, object>();
@@ -286,22 +408,19 @@ namespace AntDesign
             {
                 builder.OpenComponent<Icon>(31);
                 builder.AddAttribute(32, "Type", "close-circle");
-                builder.AddAttribute(33, "Class", GetClearIconCls());
-                if (string.IsNullOrEmpty(Value?.ToString()))
+                builder.AddAttribute(33, "Theme", "fill");
+                builder.AddAttribute(34, "Class", GetClearIconCls());
+                if (string.IsNullOrEmpty(_inputValue?.ToString() ?? ""))
                 {
-                    builder.AddAttribute(34, "Style", "visibility: hidden;");
+                    builder.AddAttribute(35, "Style", "visibility: hidden;");
                 }
                 else
                 {
-                    builder.AddAttribute(34, "Style", "visibility: visible;");
+                    builder.AddAttribute(36, "Style", "visibility: visible;");
                 }
-                builder.AddAttribute(35, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
+                builder.AddAttribute(37, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
                 {
-                    CurrentValue = default;
-                    IsFocused = true;
-                    await this.FocusAsync(Ref);
-                    if (OnChange.HasDelegate)
-                        await OnChange.InvokeAsync(Value);
+                    await Clear();
                     ToggleClearBtn();
                 }));
                 builder.CloseComponent();
@@ -471,10 +590,7 @@ namespace AntDesign
                 // input
                 builder.OpenElement(41, "input");
                 builder.AddAttribute(42, "class", ClassMapper.Class);
-                if (container == "input")
-                {
-                    builder.AddAttribute(43, "style", Style);
-                }
+                builder.AddAttribute(43, "style", Style);
 
                 bool needsDisabled = Disabled;
                 if (Attributes != null)
@@ -500,6 +616,7 @@ namespace AntDesign
                 builder.AddAttribute(60, "placeholder", Placeholder);
                 builder.AddAttribute(61, "value", CurrentValue);
                 builder.AddAttribute(62, "disabled", needsDisabled);
+                builder.AddAttribute(63, "readonly", ReadOnly);
 
                 // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
                 if (!IgnoreOnChangeAndBlur)

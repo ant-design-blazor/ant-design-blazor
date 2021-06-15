@@ -33,7 +33,13 @@
             {
                 <AntDesign.Col Xl="6" Lg="8" Sm="12" Xs="24" Style="padding:12px">
                     <a href=@($"/{CurrentLanguage}/{item.Url}")>
-                        <Card Bordered Title="@($"{item.Title} {@item.SubTitle}")" Hoverable>
+                        <Card Bordered Class="components-overview-card" Size="small" Hoverable>
+                            <TitleTemplate>
+                                <div class="components-overview-title">
+                                    @item.Title
+                                    @item.SubTitle
+                                </div>
+                            </TitleTemplate>
                             <Body>
                                 <div class="components-overview-img">
                                     <img src="@item.Cover" alt="@(item.Title)">

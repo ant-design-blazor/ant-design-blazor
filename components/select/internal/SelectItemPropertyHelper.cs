@@ -24,12 +24,13 @@ namespace AntDesign.Select.Internal
 
         internal static Func<TItem, TItemValue> CreateGetValueFunc<TItem, TItemValue>(string valueName)
         {
-            var key = new DelegateCacheKey(typeof(TItem), typeof(TItemValue), valueName);
+            var itemType = typeof(TItem);
+            var key = new DelegateCacheKey(itemType, typeof(TItemValue), valueName);
             var func = _getValueDelegateCache.GetOrAdd(
                 key,
                 _ =>
                 {
-                    var itemParamExp = Expression.Parameter(typeof(TItem));
+                    var itemParamExp = Expression.Parameter(itemType);
                     var labelExp = Expression.Property(itemParamExp, valueName);
                     var labelPropType = (labelExp.Member as PropertyInfo)?.PropertyType ?? throw new InvalidOperationException($"Member '{valueName}' should be Property");
                     if (labelPropType.IsClass)
