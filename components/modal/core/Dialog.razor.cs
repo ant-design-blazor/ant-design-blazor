@@ -142,7 +142,7 @@ namespace AntDesign
         {
             if (Config.MaskClosable && _dialogMouseDown)
             {
-                await Task.Delay(50);
+                await Task.Delay(4);
                 _dialogMouseDown = false;
             }
         }

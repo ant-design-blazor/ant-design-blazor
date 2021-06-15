@@ -14,9 +14,11 @@
                 @RenderTableHeader
             </thead>
             <tbody>
-                @{ 
+				@{					
                     var startDate = ViewStartDate;
                     bool shouldStopRender = false;
+					DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
+					bool firstWeekNotInMonth = ViewStartDate.AddDays(7).Equals(monthFirstDayDate);	
                 }
                 @for (int row = 1; row <= MaxRow; row++)
                 {
@@ -24,13 +26,13 @@
                     {
                         break;
                     }
-
                     var startColDate = startDate;
 
                     <tr class="@(GetRowClass?.Invoke(startColDate))"
-                        @onclick="e => OnRowSelect?.Invoke(startColDate)">
+                        @onclick="e => OnRowSelect?.Invoke(startColDate.CompareTo(monthFirstDayDate) < 0 && !firstWeekNotInMonth ? monthFirstDayDate: startColDate)">
+						
+						@RenderFirstCol?.Invoke(startColDate.CompareTo(monthFirstDayDate) < 0 && !firstWeekNotInMonth ? monthFirstDayDate: startColDate)
 
-                        @RenderFisrtCol?.Invoke(startColDate)
 
                         @for (int col = 1; col <= MaxCol; col++)
                         {

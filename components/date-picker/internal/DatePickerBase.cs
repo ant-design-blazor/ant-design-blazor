@@ -96,13 +96,19 @@ namespace AntDesign
         }
 
         [Parameter]
-        public CultureInfo CultureInfo
+        public override CultureInfo CultureInfo
         {
-            get { return _cultureInfo; }
+            get
+            {
+                return base.CultureInfo;
+            }
             set
             {
-                _cultureInfo = value;
-                _isCultureSetOutside = true;
+                if (!_isLocaleSetOutside && base.CultureInfo != value && base.CultureInfo.Name != value.Name)
+                {
+                    _locale = LocaleProvider.GetLocale(value.Name).DatePicker;
+                }
+                base.CultureInfo = value;
             }
         }
 
@@ -240,10 +246,9 @@ namespace AntDesign
         protected bool _isClose = true;
         protected bool _needRefresh;
         protected bool _duringManualInput;
-        private bool _isCultureSetOutside;
         private bool _isLocaleSetOutside;
-        private CultureInfo _cultureInfo = LocaleProvider.CurrentLocale.CurrentCulture;
         private DatePickerLocale _locale = LocaleProvider.CurrentLocale.DatePicker;
+        protected bool _openingOverlay;
 
         protected ClassMapper _panelClassMapper = new ClassMapper();
 
@@ -404,9 +409,6 @@ namespace AntDesign
 
         protected void InitPicker(string picker)
         {
-            if (_isCultureSetOutside && !_isLocaleSetOutside)
-                Locale = LocaleProvider.GetLocale(_cultureInfo.Name).DatePicker;
-
             if (string.IsNullOrEmpty(_pickerStatus[0]._initPicker))
             {
                 _pickerStatus[0]._initPicker = picker;
@@ -596,7 +598,7 @@ namespace AntDesign
             if (string.IsNullOrEmpty(Format))
                 format = _pickerStatus[index]._initPicker switch
                 {
-                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{DateHelper.GetWeekOfYear(value)}{Locale.Lang.Week}",
+                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{DateHelper.GetWeekOfYear(value, Locale.FirstDayOfWeek)}{Locale.Lang.Week}",
                     DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
                     _ => InternalFormat,
                 };

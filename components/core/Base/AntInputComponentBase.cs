@@ -93,6 +93,9 @@ namespace AntDesign
         [Parameter]
         public string Size { get; set; } = AntSizeLDSType.Default;
 
+        [Parameter]
+        public virtual CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
+
         /// <summary>
         /// Gets the associated <see cref="EditContext"/>.
         /// </summary>
@@ -180,6 +183,8 @@ namespace AntDesign
 
         private TValue _firstValue;
         protected bool _isNotifyFieldChanged = true;
+        private bool _isValueGuid;
+
 
         /// <summary>
         /// Constructs an instance of <see cref="InputBase{TValue}"/>.
@@ -214,8 +219,20 @@ namespace AntDesign
                 return true;
             }
 
-            var success = BindConverter.TryConvertTo<TValue>(
-               value, CultureInfo.CurrentCulture, out var parsedValue);
+            TValue parsedValue = default;
+            bool success;
+
+            // BindConverter.TryConvertTo<Guid> doesn't work for a incomplete Guid fragment. Remove this when the BCL bug is fixed.
+            if (_isValueGuid)
+            {
+                success = Guid.TryParse(value, out Guid parsedGuidValue);
+                if (success)
+                    parsedValue = THelper.ChangeType<TValue>(parsedGuidValue);
+            }
+            else
+            {
+                success = BindConverter.TryConvertTo(value, CultureInfo, out parsedValue);
+            }
 
             if (success)
             {
@@ -243,6 +260,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            _isValueGuid = THelper.GetUnderlyingType<TValue>() == typeof(Guid);
             base.OnInitialized();
 
             FormItem?.AddControl(this);
@@ -284,11 +302,11 @@ namespace AntDesign
             {
                 // Not the first run
 
-                // We don't support changing EditContext because it's messy to be clearing up state and event
-                // handlers for the previous one, and there's no strong use case. If a strong use case
-                // emerges, we can consider changing this.
-                throw new InvalidOperationException($"{GetType()} does not support changing the " +
-                    $"{nameof(EditContext)} dynamically.");
+                //Be careful when changing this. New EditContext carried from Form should
+                //already have all events transferred from original EditContext. The
+                //transfer is done in Form.BuildEditContext() method. State is lost
+                //though.
+                EditContext = Form?.EditContext;
             }
 
             // For derived components, retain the usual lifecycle with OnInit/OnParametersSet/etc.

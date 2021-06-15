@@ -23,6 +23,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/cH1BOLfxC/Tag.svg
 | Checked | 标签是否关闭所对应的值 | boolean         |-       |
 | CheckedChange | 点击标签时触发的回调 | function(e)         |-       |
 | Color | 预设标签色 | string   | -         |
+| PresetColor | 标签的预设颜色 | PresetColor   | -         |
 | OnClose | 关闭时的回调     | function(e)         | -         |
 | Visible | 是否显示标签 | boolean         |
 | Icon | 设置图标  | string        | -         |

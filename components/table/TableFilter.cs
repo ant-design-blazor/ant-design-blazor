@@ -9,22 +9,27 @@ using System.Text;
 
 namespace AntDesign
 {
-    public class TableFilter<TValue>
+    public class TableFilter
     {
         public string Text { get; set; }
 
-        public TValue Value { get; set; }
+        public object Value { get; set; }
 
         public bool Selected { get; set; }
 
-        internal TableFilterCompareOperator FilterCompareOperator { get; set; }
+        public TableFilterCompareOperator FilterCompareOperator { get; internal set; }
 
-        internal TableFilterCondition FilterCondition { get; set; }
+        public TableFilterCondition FilterCondition { get; internal set; }
 
         internal void SelectValue(bool selected)
         {
             this.Selected = selected;
         }
+    }
+
+    public class TableFilter<TValue> : TableFilter
+    {
+        new public TValue Value { get => (TValue)(base.Value ?? default(TValue)); set => base.Value = value; }
     }
 
     public enum TableFilterCompareOperator
@@ -40,7 +45,8 @@ namespace AntDesign
         Condition = 9,
         NotEquals = 10,
         IsNull = 11,
-        IsNotNull = 12
+        IsNotNull = 12,
+        NotContains = 13,
     }
 
     public enum TableFilterCondition

@@ -68,13 +68,14 @@ namespace AntDesign
 
         private readonly bool _isNullable;
 
+
         private readonly Func<TValue, TValue, TValue> _increaseFunc;
         private readonly Func<TValue, TValue, TValue> _decreaseFunc;
         private readonly Func<TValue, TValue, bool> _greaterThanFunc;
         private readonly Func<TValue, TValue, bool> _equalToFunc;
-        private readonly Func<TValue, string, string> _toStringFunc;
+        private Func<TValue, string, string> _toStringFunc;
         private readonly Func<TValue, int, TValue> _roundFunc;
-        private readonly Func<string, TValue, TValue> _parseFunc;
+        private Func<string, TValue, TValue> _parseFunc;
 
         private static readonly Type _surfaceType = typeof(TValue);
 
@@ -159,14 +160,7 @@ namespace AntDesign
                 throw new NotSupportedException("InputNumber supports only numeric types.");
             }
 
-            // 数字解析
-            ParameterExpression input = Expression.Parameter(typeof(string), "input");
-            ParameterExpression defaultValue = Expression.Parameter(typeof(TValue), "defaultValue");
-            MethodCallExpression inputParse = Expression.Call(null, typeof(InputNumberMath).GetMethod(nameof(InputNumberMath.Parse), new Type[] { typeof(string), typeof(TValue) }), input, defaultValue);
-            var lambdaParse = Expression.Lambda<Func<string, TValue, TValue>>(inputParse, input, defaultValue);
-            _parseFunc = lambdaParse.Compile();
-
-            //递增与递减
+            //递增与递减 Increment and decrement
             ParameterExpression piValue = Expression.Parameter(_surfaceType, "value");
             ParameterExpression piStep = Expression.Parameter(_surfaceType, "step");
             Expression<Func<TValue, TValue, TValue>> fexpAdd;
@@ -184,7 +178,7 @@ namespace AntDesign
             _increaseFunc = fexpAdd.Compile();
             _decreaseFunc = fexpSubtract.Compile();
 
-            //数字比较
+            //数字比较 Digital comparison
             ParameterExpression piLeft = Expression.Parameter(_surfaceType, "left");
             ParameterExpression piRight = Expression.Parameter(_surfaceType, "right");
             var fexpGreaterThan = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThan(piLeft, piRight), piLeft, piRight);
@@ -192,19 +186,7 @@ namespace AntDesign
             var fexpEqualTo = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.Equal(piLeft, piRight), piLeft, piRight);
             _equalToFunc = fexpEqualTo.Compile();
 
-            //格式化
-            ParameterExpression format = Expression.Parameter(typeof(string), "format");
-            ParameterExpression value = Expression.Parameter(_surfaceType, "value");
-            Expression expValue;
-            if (_isNullable)
-                expValue = Expression.Property(value, "Value");
-            else
-                expValue = value;
-            MethodCallExpression expToString = Expression.Call(expValue, expValue.Type.GetMethod("ToString", new Type[] { typeof(string), typeof(IFormatProvider) }), format, Expression.Constant(CultureInfo.InvariantCulture));
-            var lambdaToString = Expression.Lambda<Func<TValue, string, string>>(expToString, value, format);
-            _toStringFunc = lambdaToString.Compile();
-
-            //四舍五入
+            //四舍五入 rounding
             if (_floatTypes.Contains(_surfaceType))
             {
                 ParameterExpression num = Expression.Parameter(_surfaceType, "num");
@@ -223,6 +205,27 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            // 数字解析 Digital analysis
+            ParameterExpression input = Expression.Parameter(typeof(string), "input");
+            ParameterExpression defaultValue = Expression.Parameter(typeof(TValue), "defaultValue");
+            MethodCallExpression inputParse = Expression.Call(null, typeof(InputNumberMath).GetMethod(nameof(InputNumberMath.Parse), new Type[] { typeof(string), typeof(TValue), typeof(CultureInfo) }), input, defaultValue, Expression.Constant(CultureInfo));
+            var lambdaParse = Expression.Lambda<Func<string, TValue, TValue>>(inputParse, input, defaultValue);
+            _parseFunc = lambdaParse.Compile();
+
+            //格式化 format
+            ParameterExpression format = Expression.Parameter(typeof(string), "format");
+            ParameterExpression value = Expression.Parameter(_surfaceType, "value");
+            Expression expValue;
+            if (_isNullable)
+                expValue = Expression.Property(value, "Value");
+            else
+                expValue = value;
+            MethodCallExpression expToString = Expression.Call(expValue, expValue.Type.GetMethod("ToString", new Type[] { typeof(string), typeof(IFormatProvider) }), format, Expression.Constant(CultureInfo));
+            var lambdaToString = Expression.Lambda<Func<TValue, string, string>>(expToString, value, format);
+            _toStringFunc = lambdaToString.Compile();
+
+
             SetClass();
             CurrentValue = Value ?? DefaultValue;
         }
@@ -237,7 +240,7 @@ namespace AntDesign
         protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
         {
             validationErrorMessage = null;
-            if (!Regex.IsMatch(value, @"^[+-]?\d*[.]?\d*$"))
+            if (!Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))
             {
                 result = Value;
                 return true;
@@ -413,9 +416,9 @@ namespace AntDesign
                 return;
             }
 
-            _inputString = Parser != null ? Parser(_inputString) : Regex.Replace(_inputString, @"[^\+\-\d.\d]", "");
+            if (!CurrentValueAsString.Equals(_inputString))
+                CurrentValueAsString = _inputString;
 
-            await ConvertNumberAsync(_inputString);
             _inputString = null;
         }
 

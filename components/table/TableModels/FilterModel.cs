@@ -17,7 +17,7 @@ namespace AntDesign.TableModels
 
         public IEnumerable<string> SelectedValues { get; set; }
 
-        public IList<TableFilter<TField>> Filters { get; }
+        public IList<TableFilter> Filters { get; }
 
         public Expression<Func<TField, TField, bool>> OnFilter { get; set; }
 
@@ -27,7 +27,7 @@ namespace AntDesign.TableModels
 
         private TableFilterType FilterType { get; set; } = TableFilterType.List;
 
-        public FilterModel(LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter<TField>> filters, TableFilterType filterType)
+        public FilterModel(LambdaExpression getFieldExpression, string fieldName, Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter> filters, TableFilterType filterType)
         {
             this._getFieldExpression = getFieldExpression;
             this.FieldName = fieldName;
@@ -66,13 +66,13 @@ namespace AntDesign.TableModels
             }
             foreach (var filter in Filters)
             {
-                if (filter.Value == null && (filter.FilterCompareOperator != TableFilterCompareOperator.IsNull && filter.FilterCompareOperator != TableFilterCompareOperator.IsNotNull)) continue;
                 if (this.FilterType == TableFilterType.List)
                 {
                     lambda = Expression.OrElse(lambda!, Expression.Invoke(OnFilter, Expression.Constant(filter.Value, typeof(TField)), _getFieldExpression.Body));
                 }
                 else // TableFilterType.FieldType
                 {
+                    if (filter.Value == null && (filter.FilterCompareOperator != TableFilterCompareOperator.IsNull && filter.FilterCompareOperator != TableFilterCompareOperator.IsNotNull)) continue;
                     Expression constantExpression = null;
                     if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull)
                     {

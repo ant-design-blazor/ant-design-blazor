@@ -28,6 +28,9 @@ namespace AntDesign.Internal
         public EventCallback OnOverlayMouseLeave { get; set; }
 
         [Parameter]
+        public EventCallback OnOverlayMouseUp { get; set; }
+
+        [Parameter]
         public Action OnShow { get; set; }
 
         [Parameter]
@@ -84,6 +87,12 @@ namespace AntDesign.Internal
         private const int VERTICAL_ARROW_SHIFT = 5;
 
         private int _overlayClientWidth = 0;
+
+        protected override void OnInitialized()
+        {
+            _overlayCls = Trigger.GetOverlayHiddenClass();
+            base.OnInitialized();
+        }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -156,9 +165,8 @@ namespace AntDesign.Internal
                 return;
             }
             await Task.Yield();
-
             HtmlElement trigger;
-            if (Trigger.ChildContent != null)
+            if (Trigger.ChildContent is not null)
             {
                 trigger = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Trigger.Ref);
                 // fix bug in submenu: Overlay show when OvelayTrigger is not rendered complete.
@@ -323,7 +331,7 @@ namespace AntDesign.Internal
         {
             int top = 0;
 
-            int triggerTop = trigger.AbsoluteTop - containerElement.AbsoluteTop;
+            int triggerTop = (int)(containerElement.ScrollTop + trigger.AbsoluteTop - containerElement.AbsoluteTop);
             int triggerHeight = trigger.ClientHeight != 0 ? trigger.ClientHeight : trigger.OffsetHeight;
 
             // contextMenu
@@ -583,6 +591,7 @@ namespace AntDesign.Internal
             if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
             {
                 overlayCls = Trigger.GetOverlayHiddenClass();
+                _overlayCls = Trigger.GetOverlayEnterClass();
             }
             else
             {
@@ -594,14 +603,17 @@ namespace AntDesign.Internal
 
         private string GetDisplayStyle()
         {
-            string display = _isOverlayShow ? "display: inline-flex;" : "visibility: hidden;";
-
             if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
-            {
-                display = "";
-            }
+                return "";
 
-            return display;
+            if (_isOverlayShow && _hasAddOverlayToBody)
+                return "display: inline-flex;";
+
+            if (_hasAddOverlayToBody)
+                return "visibility: hidden;";
+
+
+            return "display: inline-flex; visibility: hidden;";
         }
 
         internal async Task UpdatePosition(int? overlayLeft = null, int? overlayTop = null)
