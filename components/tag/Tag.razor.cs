@@ -64,13 +64,6 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Any css class that will be added to tag. 
-        /// Use case: animation.
-        /// </summary>
-        [Parameter]
-        public string ExtraCls { get; set; } = "";
-
-        /// <summary>
         /// Set the tag's icon 
         /// </summary>
         [Parameter]

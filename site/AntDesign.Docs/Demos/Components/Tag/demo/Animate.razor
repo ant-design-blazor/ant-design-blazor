@@ -6,7 +6,7 @@
             {
                 _eachTagAnimationClass.Add(item, "");
             }
-            <Tag @key="item" Closable OnClose="()=>OnClose(item)" OnClosing="@((e) => OnClosing(e, item))" ExtraCls="@_eachTagAnimationClass[item]">@item</Tag>
+            <Tag @key="item" Closable OnClose="()=>OnClose(item)" OnClosing="@((e) => OnClosing(e, item))" Class="@_eachTagAnimationClass[item]">@item</Tag>
         }
     </div>
     <div>
