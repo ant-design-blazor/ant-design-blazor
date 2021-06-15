@@ -11,13 +11,13 @@
 </Table>
 
 @code{
-        bool _loading = false;
-        int _pageIndex = 1;
-        int _pageSize = 10;
-        int _total;
-        Data[] _data = Array.Empty<Data>();
-        TableFilter<string>[] _genderFilters = new[]
-        {
+    bool _loading = false;
+    int _pageIndex = 1;
+    int _pageSize = 10;
+    int _total;
+    Data[] _data = Array.Empty<Data>();
+    TableFilter<string>[] _genderFilters = new[]
+    {
             new TableFilter<string> { Text = "Male", Value = "male" },
             new TableFilter<string> { Text = "Female", Value = "female" },
         };
@@ -68,25 +68,19 @@
             $"page={queryModel.PageIndex}",
         };
 
-        if (queryModel.SortModel?.Any() == true)
+        queryModel.SortModel.ForEach(x =>
         {
-            queryModel.SortModel.ForEach(x =>
-            {
-                query.Add($"sortField={x.FieldName.ToLower()}");
-                query.Add($"sortOrder={x.Sort}");
-            });
-        }
+            query.Add($"sortField={x.FieldName.ToLower()}");
+            query.Add($"sortOrder={x.Sort}");
+        });
 
-        if (queryModel.FilterModel?.Any() == true)
+        queryModel.FilterModel.ForEach(filter =>
         {
-            foreach (var filter in queryModel.FilterModel)
+            filter.SelectedValues.ForEach(value =>
             {
-                foreach(var filterValue in filter.SelectedValues)
-                {
-                    query.Add($"{Uri.EscapeDataString(filter.FieldName.ToLower())}[]={filterValue}");
-                }
-            }
-        }
+                query.Add($"{filter.FieldName.ToLower()}={value}");
+            });
+        });
 
         return string.Join('&', query);
     }
