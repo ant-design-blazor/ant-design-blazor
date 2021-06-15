@@ -51,7 +51,6 @@
     async Task HandleTableChange(QueryModel<Data> queryModel)
     {
         _loading = true;
-        StateHasChanged();
 
         ApiResponse data = await Http.GetFromJsonAsync<ApiResponse>("https://randomuser.me/api?" + GetRandomuserParams(queryModel));
 
