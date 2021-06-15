@@ -115,6 +115,9 @@ namespace AntDesign
         [Parameter]
         public EventCallback<RowData<TItem>> OnRowClick { get; set; }
 
+        [Parameter]
+        public bool RemoteDataSource { get; set; }
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
@@ -140,8 +143,6 @@ namespace AntDesign
 
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
-
-        private bool ServerSide => _total > _dataSourceCount;
 
         bool ITable.TreeMode => _treeMode;
         int ITable.IndentSize => IndentSize;
@@ -239,9 +240,10 @@ namespace AntDesign
         {
             var queryModel = BuildQueryModel();
 
-            if (ServerSide)
+            if (RemoteDataSource)
             {
                 _showItems = _dataSource;
+                _total = Total > _dataSourceCount ? Total : _dataSourceCount;
             }
             else
             {
@@ -258,11 +260,26 @@ namespace AntDesign
                         query = filter.FilterList(query);
                     }
 
+                    var newTotal = query.Count();                    
+
                     query = query.Skip((PageIndex - 1) * PageSize).Take(PageSize);
                     queryModel.SetQueryableLambda(query);
 
                     _showItems = query;
-                    _total = _showItems.Count();
+                    if (newTotal != _total)
+                    {
+                        _total = newTotal;
+                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
+                    }
+                }
+                else
+                {
+                    _showItems = Enumerable.Empty<TItem>();
+                    if (_total != 0)
+                    {
+                        _total = 0;
+                        if (TotalChanged.HasDelegate) TotalChanged.InvokeAsync(_total);
+                    }
                 }
             }
 
@@ -359,6 +376,19 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
+            if (_waitingReloadAndInvokeChange)
+            {
+                _waitingReloadAndInvokeChange = false;
+                _waitingReload = false;
+
+                ReloadAndInvokeChange();
+            }
+            else if (_waitingReload)
+            {
+                _waitingReload = false;
+                Reload();
+            }
+
             if (this.RenderMode == RenderMode.ParametersHashCodeChanged)
             {
                 var hashCode = this.GetParametersHashCode();
@@ -373,19 +403,6 @@ namespace AntDesign
 
         protected override bool ShouldRender()
         {
-            if (_waitingReloadAndInvokeChange)
-            {
-                _waitingReloadAndInvokeChange = false;
-                _waitingReload = false;
-
-                ReloadAndInvokeChange();
-            }
-            else if (_waitingReload)
-            {
-                _waitingReload = false;
-                Reload();
-            }
-
             return this._shouldRender;
         }
 
