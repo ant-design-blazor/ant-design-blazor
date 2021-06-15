@@ -10,13 +10,13 @@
         {
             @foreach (var selected in selectedRows)
             {
-                <Tag  Closable OnClose="e=>RemoveSelection(selected.Name)">@selected.Name</Tag>
+                <Tag @key="selected" Closable OnClose="e=>RemoveSelection(selected.Name)">@selected.Name</Tag>
             }
             <Button Danger Size="small" OnClick="@(e => { table.SetSelection(null); })">Clear</Button>
         }
     </h5>
 
-    <Table @ref="table" DataSource="@data" SelectedRows="selectedRows">
+    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows">
         <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name=="Disabled User")"/>
         <Column @bind-Field="@context.Name">
             <a>@context.Name</a>
