@@ -1,7 +1,7 @@
 ﻿<div>
     <div style="margin-bottom: 16px;">
-        @foreach(var item in lstTags)
-        {                        
+        @foreach (var item in lstTags)
+        {
             if (!_eachTagAnimationClass.ContainsKey(item))
             {
                 _eachTagAnimationClass.Add(item, "");
@@ -12,7 +12,7 @@
     <div>
         @if (inputVisible)
         {
-            <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="HandleInputConfirm" OnPressEnter="HandleInputConfirm" AutoFocus/>
+            <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="HandleInputConfirm" OnPressEnter="HandleInputConfirm" AutoFocus />
         }
         else
         {
@@ -50,7 +50,6 @@
             transform: scale(1,1);
         }
     }
-
 </style>
 @code{
     private bool inputVisible { get; set; } = false;
@@ -65,9 +64,9 @@
     {
         lstTags.Add("Tag 1");
         lstTags.Add("Tag 2");
-        lstTags.Add("Tag 3");        
+        lstTags.Add("Tag 3");
     }
-    
+
 
     void ValueChange(ChangeEventArgs value)
     {
@@ -79,13 +78,13 @@
         lstTags.Remove(item);
     }
 
-    async Task OnClosing(CloseEventArgs<MouseEventArgs> args, string key)    
-    {        
-        _eachTagAnimationClass[key] = $"animate-shrink";        
-        await Task.Delay(300);
+    async Task OnClosing(CloseEventArgs<MouseEventArgs> args, string key)
+    {
+        _eachTagAnimationClass[key] = $"animate-shrink";
+        await Task.Delay(500);
     }
 
-    void HandleInputConfirm()
+    async Task HandleInputConfirm()
     {
         if (string.IsNullOrEmpty(_inputValue))
         {
@@ -94,20 +93,25 @@
         }
 
         string res = lstTags.Find(s => s == _inputValue);
+        string tag = _inputValue;
 
         if (string.IsNullOrEmpty(res))
         {
-            lstTags.Add(_inputValue);
             _eachTagAnimationClass.Add(_inputValue, "animate-grow");
+            lstTags.Add(_inputValue);
         }
 
         CancelInput();
+
+        StateHasChanged();
+        await Task.Delay(500);
+        _eachTagAnimationClass[tag] = "";
     }
 
     void CancelInput()
     {
         this._inputValue = "";
         this.inputVisible = false;
-    }   
+    }
 
 }
