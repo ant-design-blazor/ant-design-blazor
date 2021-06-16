@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -24,9 +25,7 @@ namespace AntDesign
                     _dataSourceCache.Values.ForEach(x => x.Selected = false);
                 }
 
-                _selectedRows = value;
-
-                StateHasChanged();
+                _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
             }
         }
 
@@ -36,6 +35,15 @@ namespace AntDesign
         private ISelectionColumn _selection;
         private IEnumerable<TItem> _selectedRows;
 
+        private void RowDataSelectedChanged(RowData rowData, bool selected)
+        {
+            _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
+            if (SelectedRowsChanged.HasDelegate)
+            {
+                SelectedRowsChanged.InvokeAsync(_selectedRows);
+            }
+        }
+
         ISelectionColumn ITable.Selection
         {
             get => _selection;
@@ -44,22 +52,36 @@ namespace AntDesign
 
         public void SetSelection(string[] keys)
         {
-            _selection.SetSelection(keys);
+            if (_selection == null)
+            {
+                if (keys == null || !keys.Any())
+                {
+                    _dataSourceCache.Values.ForEach(x => x.Selected = false);
+                    StateHasChanged();
+                }
+                else
+                {
+                    throw new NotSupportedException("To use SetSelection method for a table, you should add a Selection component to the column definition.");
+                }
+            }
+            else
+            {
+                _selection.SetSelection(keys);
+            }
         }
 
         void ITable.SelectionChanged() => SelectionChanged();
 
         private void SelectionChanged()
         {
-            foreach (var selection in _selection.RowSelections)
-            {
-                _dataSourceCache[selection.RowData.CacheKey].Selected = selection.Checked;
-            }
-
             if (SelectedRowsChanged.HasDelegate)
             {
                 _selectedRows = _dataSourceCache.Values.Where(x => x.Selected).Select(x => x.Data);
                 SelectedRowsChanged.InvokeAsync(_selectedRows);
+            }
+            else
+            {
+                StateHasChanged();
             }
         }
     }
