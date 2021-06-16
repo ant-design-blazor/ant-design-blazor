@@ -1,0 +1,85 @@
+﻿@inherits AntDesignTestBase
+@code {
+	[Fact]
+	public void Renders_basic_tag()
+	{
+		var cut = Context.Render(@<AntDesign.Tag>Tag 1</AntDesign.Tag>);		
+		cut.MarkupMatches(@<span class="ant-tag" id:ignore>Tag 1</span>);
+	}
+
+	[Fact]
+	public void Renders_basic_tag_invisible()
+	{
+		var cut = Context.Render(@<AntDesign.Tag Visible="false"> Tag 1</AntDesign.Tag>);		
+		cut.MarkupMatches(@<span class="ant-tag ant-tag-hidden" id:ignore>Tag 1</span>);
+	}
+
+	[Theory]
+	[InlineData("success")]
+	[InlineData("processing")]
+	[InlineData("error")]
+	public void Renders_predefined_tag(string color)
+	{
+		var cut = Context.Render(@<AntDesign.Tag Color="@color">Tag 1</AntDesign.Tag>);		
+		cut.MarkupMatches(@<span class="ant-tag ant-tag-@color" id:ignore>Tag 1</span>);
+	}
+
+	[Fact]
+	public void Closes_tag()
+	{
+		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Closable>Tag 1</AntDesign.Tag>);
+		var icon = cut.Find("span.anticon");
+		icon.Click();
+		cut.MarkupMatches(string.Empty);
+	}
+
+	[Fact]
+	public void Prevents_tag_closing()
+	{
+		Action<CloseEventArgs<MouseEventArgs>> onClosing = value => { value.Cancel = true; };
+		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Closable OnClosing="onClosing">Tag 1</AntDesign.Tag>);
+		var icon = cut.Find("span.anticon");
+		icon.Click();
+		cut.MarkupMatches(
+			@<span class="ant-tag" id:ignore >Tag 1
+			      <span role="img" class="anticon anticon-close" id:ignore   tabindex="-1" >       
+					<svg focusable="false" width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024">
+					  <path d:ignore></path>
+					</svg>
+				  </span>
+			</span>
+	);
+	}
+
+	[Fact]
+	public void Click_on_close_does_not_invoke_OnClick()
+	{
+		bool isOnClickCalled = false;
+		Action onClick = () => { isOnClickCalled = true; };
+		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Closable OnClick="onClick">Tag 1</AntDesign.Tag>);
+		var icon = cut.Find("span.anticon");
+		icon.Click();
+		isOnClickCalled.Should().BeFalse();
+	}
+
+	[Fact]
+	public void Click_changes_Checked()
+	{
+		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Checkable>Tag 1</AntDesign.Tag>);			
+		var tag = cut.Find("span.ant-tag");
+		tag.Click();
+		cut.Instance.Checked.Should().BeTrue();
+	}
+
+	[Fact]
+	public void Checked_change_invokes_callback()
+	{
+		bool isCheckedChangeCalled = false;
+		Action<bool> onCheckedChange = (value) => { isCheckedChangeCalled = true; };
+		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Checkable CheckedChange="onCheckedChange">Tag 1</AntDesign.Tag>);			
+		var tag = cut.Find("span.ant-tag");
+		tag.Click();
+		isCheckedChangeCalled.Should().BeTrue();
+	}
+}
+}

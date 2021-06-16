@@ -1,5 +1,5 @@
 ﻿---
-order: 9
+order: 8
 title:
   zh-CN: 关闭前确认
   en-US: Confirm before closing
