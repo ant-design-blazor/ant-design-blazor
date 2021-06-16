@@ -7,7 +7,7 @@ title:
 
 ## zh-CN
 
-Animate the tag when appears or disappears.
+给标签增加添加或删除时的动画。
 
 ## en-US
 
