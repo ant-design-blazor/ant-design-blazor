@@ -7,9 +7,40 @@ namespace AntDesign
 {
     public partial class Tag : AntDomComponentBase
     {
+        /// <summary>
+        /// Tag content
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Whether the Tag can be closed
+        /// </summary>
+        [Parameter]
+        public bool Closable { get; set; }
+
+        /// <summary>
+        /// Whether the Tag can be checked
+        /// </summary>
+        [Parameter]
+        public bool Checkable { get; set; }
+
+        /// <summary>
+        /// Checked status of Tag
+        /// </summary>
+        [Parameter]
+        public bool Checked { get; set; }
+
+        /// <summary>
+        /// Callback executed when Tag is checked/unchecked
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> CheckedChange { get; set; }
+
+        /// <summary>
+        /// Tag color. Can either be a predefined color (string)
+        /// or hex color.
+        /// </summary>
         [Parameter]
         public string Color
         {
@@ -20,28 +51,27 @@ namespace AntDesign
                 {
                     _color = value;
                     _presetColor = IsPresetColor(_color);
+                    if (_presetColor)
+                    {
+                        _style = Style;
+                    }
+                    else
+                    {
+                        _style = $"background-color: {_color};{Style}";
+                    }
                 }
             }
         }
 
-        [Parameter]
-        public bool Closable { get; set; }
-
-        [Parameter]
-        public bool Checkable { get; set; }
-
-        [Parameter]
-        public bool Visible { get; set; } = true;
-
-        [Parameter]
-        public bool Checked { get; set; }
-
+        /// <summary>
+        /// Set the tag's icon 
+        /// </summary>
         [Parameter]
         public string Icon { get; set; }
 
-        [Parameter]
-        public bool NoAnimation { get; set; }
-
+        /// <summary>
+        /// Callback executed when tag is closed
+        /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnClose { get; set; }
 
@@ -51,15 +81,24 @@ namespace AntDesign
         [Parameter]
         public EventCallback<CloseEventArgs<MouseEventArgs>> OnClosing { get; set; }
 
-        [Parameter]
-        public EventCallback<bool> CheckedChange { get; set; }
-
+        /// <summary>
+        /// Callback executed when tag is clicked (it is not called 
+        /// when closing icon is clicked).
+        /// </summary>
         [Parameter]
         public EventCallback OnClick { get; set; }
+
+        /// <summary>
+        /// Whether the Tag is closed or not
+        /// </summary>
+        [Parameter]
+        public bool Visible { get; set; } = true;
+
 
         private bool _presetColor;
         private bool _closed;
         private string _color;
+        private string _style;
 
         protected override void OnInitialized()
         {
@@ -74,21 +113,19 @@ namespace AntDesign
                 return false;
             }
 
-            bool result = Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime)(-inverse)?$");
-            if (!result) result = Regex.IsMatch(color, "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$");
+            bool result = Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime|success|processing|error|warning|default)(-inverse)?$");
             return result;
         }
-
+        private string _prefix = "ant-tag";
         private void UpdateClassMap()
         {
-            string prefix = "ant-tag";
-            this.ClassMapper.Add(prefix)
-                .If($"{prefix}-has-color", () => !string.IsNullOrEmpty(Color) && !_presetColor)
-                .If($"{prefix}-hidden", () => Visible == false)
-                .GetIf(() => $"{prefix}-{Color}", () => _presetColor)
-                .If($"{prefix}-checkable", () => Checkable)
-                .If($"{prefix}-checkable-checked", () => Checked)
-                .If($"{prefix}-rtl", () => RTL)
+            this.ClassMapper.Add(_prefix)
+                .If($"{_prefix}-has-color", () => !string.IsNullOrEmpty(Color) && !_presetColor)
+                .If($"{_prefix}-hidden", () => Visible == false)
+                .GetIf(() => $"{_prefix}-{Color}", () => _presetColor)
+                .If($"{_prefix}-checkable", () => Checkable)
+                .If($"{_prefix}-checkable-checked", () => Checked)
+                .If($"{_prefix}-rtl", () => RTL)
                 ;
         }
 
@@ -120,12 +157,12 @@ namespace AntDesign
                 return;
             }
 
+            this._closed = true;            
+
             if (OnClose.HasDelegate)
             {
                 await this.OnClose.InvokeAsync(e);
             }
-
-            this._closed = true;
         }
 
         private async Task ClickTag(MouseEventArgs e)

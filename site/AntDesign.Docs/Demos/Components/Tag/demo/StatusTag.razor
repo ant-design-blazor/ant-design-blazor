@@ -1,0 +1,25 @@
+﻿<Divider Orientation="left">Without icon</Divider>
+<div id="tag-status-tag-demo">
+    <Tag Color="success">success</Tag>
+    <Tag Color="processing">processing</Tag>
+    <Tag Color="error">error</Tag>
+    <Tag Color="warning">warning</Tag>
+    <Tag Color="default">default</Tag>
+       
+</div>
+<Divider Orientation="left">With icon</Divider>    
+<div id="tag-status-tag-demo">
+    <Tag Icon="check-circle" Color="success">success</Tag>
+    <Tag Color="processing"><Icon Type="sync" Theme="outline" Spin /> processing</Tag>
+    <Tag Icon="close-circle" Color="error">error</Tag>
+    <Tag Icon="exclamation-circle" Color="warning">warning</Tag>
+    <Tag Icon="clock-circle" Color="default">waiting</Tag>
+    <Tag Icon="minus-circle" Color="default">stop</Tag>
+</div>
+
+<style>
+	#tag-status-tag-demo > * {
+		margin-bottom: 12px;
+		margin-right: 8px;
+	}
+</style>
