@@ -415,6 +415,11 @@ namespace AntDesign
                 {
                     Close();
                 }
+                // if the other DatePickerInput is disabled, then close picker panel 
+                else if (IsDisabled(Math.Abs(index - 1)))
+                {
+                    Close();
+                }
             }
 
             if (OnChange.HasDelegate)

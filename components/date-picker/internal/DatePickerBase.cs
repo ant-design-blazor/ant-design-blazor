@@ -67,7 +67,7 @@ namespace AntDesign
         public string PopupContainerSelector { get; set; }
 
         [Parameter]
-        public bool Disabled { get; set; } = false;
+        public OneOf<bool, bool[]> Disabled { get; set; } = new bool[] { false, false };
 
         [Parameter]
         public bool Bordered { get; set; } = true;
@@ -284,7 +284,7 @@ namespace AntDesign
                 .Get(() => $"{PrefixCls}-{Size}")
                 .If($"{PrefixCls}-rtl", () => RTL)
                 .If($"{PrefixCls}-borderless", () => Bordered == false)
-                .If($"{PrefixCls}-disabled", () => Disabled == true)
+                .If($"{PrefixCls}-disabled", () => IsDisabled() == true)
                 .If($"{ClassName}", () => !string.IsNullOrEmpty(ClassName))
                 .If($"{PrefixCls}-range", () => IsRange == true)
                 .If($"{PrefixCls}-focused", () => AutoFocus == true)
@@ -385,12 +385,12 @@ namespace AntDesign
                 // auto focus the other input
                 if (IsRange && (!IsShowTime || Picker == DatePickerType.Time))
                 {
-                    if (index == 0 && !_pickerStatus[1]._currentShowHadSelectValue && !_inputEnd.IsOnFocused)
+                    if (index == 0 && !_pickerStatus[1]._currentShowHadSelectValue && !_inputEnd.IsOnFocused && !IsDisabled(1))
                     {
                         await Blur(0);
                         await Focus(1);
                     }
-                    else if (index == 1 && !_pickerStatus[0]._currentShowHadSelectValue && !_inputStart.IsOnFocused)
+                    else if (index == 1 && !_pickerStatus[0]._currentShowHadSelectValue && !_inputStart.IsOnFocused && !IsDisabled(0))
                     {
                         await Blur(1);
                         await Focus(0);
@@ -447,6 +447,28 @@ namespace AntDesign
                 _placeholders[0] = first;
                 _placeholders[1] = first;
             }
+        }
+
+        protected bool IsDisabled(int? index = null)
+        {
+            bool disabled = false;
+
+            Disabled.Switch(single =>
+            {
+                disabled = single;
+            }, arr =>
+            {
+                if (index == null || index > 1 || index < 0)
+                {
+                    disabled = arr[0] && arr[1];
+                }
+                else
+                {
+                    disabled = arr[(int)index];
+                }
+            });
+
+            return disabled;
         }
 
         public void Close()
