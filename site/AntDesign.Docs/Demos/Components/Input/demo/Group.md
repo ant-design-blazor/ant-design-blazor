@@ -1,5 +1,5 @@
 ﻿---
-order: 7
+order: 3
 title:
   zh-CN: 输入框组合 
   en-US: Input Group

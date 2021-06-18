@@ -1,4 +1,5 @@
 import * as observable from './ObservableApi/observableApi';
+import * as enums from './enums';
 
 export { observable };
 
@@ -245,13 +246,28 @@ export function copy(text) {
   });
 }
 
-export function focus(selector, noScroll: boolean = false) {
+export function focus(selector, noScroll: boolean = false, option: enums.FocusBehavior = enums.FocusBehavior.FocusAtLast) {
   let dom = getDom(selector);
   if (!(dom instanceof HTMLElement))
     throw new Error("Unable to focus an invalid element.");
+
   dom.focus({
     preventScroll: noScroll
   });
+
+  if (dom instanceof HTMLInputElement || dom instanceof HTMLTextAreaElement) {
+    switch (option) {      
+      case enums.FocusBehavior.FocusAndSelectAll:
+        dom.select();
+        break;
+      case enums.FocusBehavior.FocusAtFirst:
+        dom.setSelectionRange(0, 0);
+        break;
+      case enums.FocusBehavior.FocusAtLast:
+        dom.setSelectionRange(-1, -1);
+        break;
+    }
+  }
 }
 
 export function hasFocus(selector) {

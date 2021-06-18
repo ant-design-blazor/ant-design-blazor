@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign.Internal
 @inherits AntDomComponentBase
 
-<ButtonGroup Class="ant-dropdown-button">
+<ButtonGroup Class="ant-dropdown-button" Style="@(Dropdown.Block ? $"display:flex; flex-direction:row;{Style}": Style)">
     @if (Dropdown.ButtonsRender != null)
     {
         @Dropdown.ButtonsRender(LeftButton, RightButton)

@@ -1,15 +1,11 @@
 ﻿<div>
-    <Tag Checkable Checked="check1">Tag1</Tag>
-    <Tag Checkable Checked="check1">Tag2</Tag>
-    <Tag Checkable Checked="check1" CheckedChange="_checked=>checkChange(_checked)">Tag3</Tag>
+    <span style="margin-right:8px">Categories:</span>
+    <Tag Checkable Checked="lstCheck[0]">Movies</Tag>
+    <Tag Checkable Checked="lstCheck[1]">Books</Tag>
+    <Tag Checkable Checked="lstCheck[2]">Music</Tag>
+    <Tag Checkable Checked="lstCheck[3]">Sports</Tag>	
 </div>
 
 @code{
-    bool check1 { get; set; } = false;
-
-    private void checkChange(bool e)
-    {
-        check1 = !check1;
-    }
+    bool[] lstCheck = new bool[] { false, true, false, false };
 }
-    

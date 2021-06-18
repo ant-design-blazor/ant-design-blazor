@@ -17,21 +17,13 @@ Previewable image.
 
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
-| alt | Image description | string | - | 4.6.0 |
-| fallback | Load failure fault-tolerant src | string | - | 4.6.0 |
-| height | Image height | string \| number | - | 4.6.0 |
-| placeholder | Load placeholder, use default placeholder when set `true` | ReactNode | - | 4.6.0 |
-| preview | preview config, disabled when `false` | boolean \| [previewType](#previewType) | true | 4.6.0 [previewType](#previewType):4.7.0 |
-| src | Image path | string | - | 4.6.0 |
-| width | Image width | string \| number | - | 4.6.0 |
+| Alt | Image description | string | - | 0.6.0 |
+| Fallback | Load failure fault-tolerant src | string | - | 0.6.0 |
+| Height | Image height | string | - | 0.6.0 |
+| Locale | Locale Object | ImageLocale | - |- |
+| Placeholder | Load placeholder | RenderFragment | - | 0.6.0 |
+| Preview | preview config, disabled when `false` | boolean  | true | 0.6.0 |
+| PreviewSrc | path of the preview image before loading is complete | string | the same as `Src` | 0.6.0 |
+| Src | Image path | string | - | 0.6.0 |
+| Width | Image width | string | - | 0.6.0 |
 
-### previewType
-
-```js
-{
-  visible?: boolean;
-  onVisibleChange?: (visible, prevVisible) => void;
-}
-```
-
-Other attributes [<img\>](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#Attributes)

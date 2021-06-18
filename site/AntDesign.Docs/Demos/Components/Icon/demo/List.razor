@@ -2,17 +2,17 @@
 <div style="display: flex; justify-content: space-between;">
     <RadioGroup @bind-Value="currentTheme" ButtonStyle="solid" Size="large" TValue="string" OnChange="OnThemeChanged">
         <Radio RadioButton Value="@("outline")">
-            <Icon Component="OutlineSvg" Style="font-size:16px" />@LanguageService.Resources["app.docs.components.icon.outlined"]
+            <Icon Component="OutlineSvg" />@LanguageService.Resources["app.docs.components.icon.outlined"]
         </Radio>
         <Radio RadioButton Value="@("fill")">
-            <Icon Component="FilledSvg" Style="font-size:16px" />@LanguageService.Resources["app.docs.components.icon.filled"]
+            <Icon Component="FilledSvg" />@LanguageService.Resources["app.docs.components.icon.filled"]
         </Radio>
         <Radio RadioButton Value="@("twotone")">
-            <Icon Component="TwoToneSvg" Style="font-size:16px" />@LanguageService.Resources["app.docs.components.icon.two-tone"]
+            <Icon Component="TwoToneSvg" />@LanguageService.Resources["app.docs.components.icon.two-tone"]
         </Radio>
     </RadioGroup>
     <Search Size="@InputSize.Large"
-            Style="margin: 0px 10px; flex: 1 1 0%;"
+            WrapperStyle="margin: 0px 10px; flex: 1 1 0%;"
             Placeholder="@LanguageService.Resources["app.docs.components.icon.search.placeholder"]"
             OnInput="@(args => OnSearching(args.Value?.ToString()))" />
 </div>
@@ -123,4 +123,4 @@ else
 
         messageService.Success(htmlIcon+ "  copied 🎉!");
     }
-    }
+}

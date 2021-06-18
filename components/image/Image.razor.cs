@@ -59,9 +59,7 @@ namespace AntDesign
         private ImageService ImageService { get; set; }
 
         private bool _isError;
-
-        private string _imgStyle;
-
+        private string _wrapperStyle;
         private bool _loaded;
         private string _src;
         private ImageRef _imageRef;
@@ -70,15 +68,15 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (!string.IsNullOrWhiteSpace(Width))
-            {
-                Style = $"width:{(CssSizeLength)Width};" + Style;
-            }
-
             if (!string.IsNullOrWhiteSpace(Height))
             {
-                Style = $"height:{(CssSizeLength)Height};" + Style;
-                _imgStyle = $"height:{(CssSizeLength)Height};" + _imgStyle;
+                _wrapperStyle += $"height:{(CssSizeLength)Height};";
+                Style += $"height:{(CssSizeLength)Height};";
+            }
+
+            if (!string.IsNullOrWhiteSpace(Width))
+            {
+                _wrapperStyle += $"width:{(CssSizeLength)Width};";
             }
 
             if (string.IsNullOrWhiteSpace(PreviewSrc))

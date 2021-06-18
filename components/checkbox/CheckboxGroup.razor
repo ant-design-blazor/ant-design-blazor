@@ -1,38 +1,41 @@
 ﻿@namespace AntDesign
 @inherits AntInputComponentBase<string[]>
+@using AntDesign.Internal;
 
-<CascadingValue Value="this" IsFixed="@true">
-    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-		@if (MixedMode == CheckboxGroupMixedMode.ChildContentFirst)
-			@ChildContent
-        @if (Options.Value != null)
-        {
-            if (Options.IsT0)
+<CascadingValue Value="null" Name="FormItem" TValue="IFormItem" IsFixed="@true">        
+    <CascadingValue Value="this" IsFixed="@true">
+        <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+            @if (MixedMode == CheckboxGroupMixedMode.ChildContentFirst)
+                @ChildContent
+            @if (Options.Value != null)
             {
-                @foreach (var option in Options.AsT0)
-                { 
-                    <Checkbox class="ant-checkbox-group-item"
-                              Disabled="option.Disabled || Disabled"
-                              Checked="@option.Checked"
-                              Label="@option.Value">
-                        <span>@option.Label</span>
-                    </Checkbox>
-                }
-            }
-            else
-            {
-                @foreach (var option in Options.AsT1)
+                if (Options.IsT0)
                 {
-                    <Checkbox class="ant-checkbox-group-item"
-                              Disabled="Disabled"
-                              Checked="@option.IsIn(_selectedValues)"
-                              Label="@option">
-                        <span>@option</span>
-                    </Checkbox>
+                    @foreach (var option in Options.AsT0)
+                    { 
+                        <Checkbox class="ant-checkbox-group-item"
+                                  Disabled="option.Disabled || Disabled"
+                                  Checked="@option.Checked"
+                                  Label="@option.Value">
+                            <span>@option.Label</span>
+                        </Checkbox>
+                    }
+                }
+                else
+                {
+                    @foreach (var option in Options.AsT1)
+                    {
+                        <Checkbox class="ant-checkbox-group-item"
+                                  Disabled="Disabled"
+                                  Checked="@option.IsIn(_selectedValues)"
+                                  Label="@option">
+                            <span>@option</span>
+                        </Checkbox>
+                    }
                 }
             }
-        }
-        @if (MixedMode == CheckboxGroupMixedMode.OptionsFirst)
-			@ChildContent
-    </div>
+            @if (MixedMode == CheckboxGroupMixedMode.OptionsFirst)
+                @ChildContent
+        </div>
+    </CascadingValue>
 </CascadingValue>

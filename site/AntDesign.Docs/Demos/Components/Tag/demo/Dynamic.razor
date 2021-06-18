@@ -1,20 +1,20 @@
-﻿<div>
-    <div>
-        @foreach (var item in lstTags)
-        {
-            <Tag @key="item" Closable OnClose="()=>onClose(item)">@item</Tag>
-        }
-        @if (inputVisible)
-        {
-            <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="handleInputConfirm" OnPressEnter="handleInputConfirm" AutoFocus/>
-        }
-        else
-        {
-            <Tag Class="site-tag-plus" OnClick="OnChecked">
-                <Icon Type="plus" />New Tag
-            </Tag>
-        }
-    </div>
+﻿
+<div>    
+    <Tag>Unremovable</Tag>
+    @foreach (var item in lstTags)
+    {
+        <Tag @key="item" Closable OnClose="()=>OnClose(item)" >@item</Tag>
+    }        
+    @if (inputVisible)
+    {
+        <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="HandleInputConfirm" OnPressEnter="HandleInputConfirm" AutoFocus/>
+    }
+    else
+    {
+        <Tag Class="site-tag-plus" OnClick="@(() => inputVisible = !inputVisible)">
+            <Icon Type="plus" />New Tag
+        </Tag>
+    }    
 </div>
 <style>
     .site-tag-plus {
@@ -30,9 +30,8 @@
 
     protected override void OnInitialized()
     {
-        lstTags.Add("Apple");
-        lstTags.Add("Mongo");
-        lstTags.Add("Peach");
+        lstTags.Add("Tag 2");
+        lstTags.Add("Tag 3");        
     }
 
     void ValueChange(ChangeEventArgs value)
@@ -40,21 +39,16 @@
         lstTags.Add(value.Value.ToString());
     }
 
-    async Task OnChecked()
-    {
-        inputVisible = !inputVisible;
-    }
-
-    void onClose(string item)
+    void OnClose(string item)
     {
         lstTags.Remove(item);
     }
 
-    void handleInputConfirm()
+    void HandleInputConfirm()
     {
         if (string.IsNullOrEmpty(_inputValue))
         {
-            cancelInput();
+            CancelInput();
             return;
         }
 
@@ -65,13 +59,13 @@
             lstTags.Add(_inputValue);
         }
 
-        cancelInput();
+        CancelInput();
     }
 
-    void cancelInput()
+    void CancelInput()
     {
         this._inputValue = "";
         this.inputVisible = false;
-    }
+    }   
 
 }

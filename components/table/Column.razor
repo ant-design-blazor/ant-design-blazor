@@ -183,9 +183,9 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                     @HeaderTitle
                 }
 
-                <Dropdown Trigger="new[] { TriggerType.Click }" Visible="_filterOpened" Placement="PlacementType.BottomRight" TriggerReference="_filterTriggerRef" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }">
+                <Dropdown Trigger="new[] { TriggerType.Click }" Visible="_filterOpened" Placement="PlacementType.BottomRight" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }">
                     <Unbound>
-                        <span @ref="@_filterTriggerRef" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (_hasFilterSelected ? " active" : ""))"
+                        <span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (_hasFilterSelected ? " active" : ""))"
                               @onclick="() => { if (_filterOpened) FilterConfirm(); else _filterOpened = true; }">
                             <Icon Type="filter" Theme="fill" />
                         </span>
@@ -217,7 +217,8 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                                 @for (int index = 0; index < filterCount; index++)
                                 {
                                     var filter = _filters.ElementAt(index);
-                                    <div @key="filter" style="padding:10px;@(index > 0 ? "border-top:1px solid #f0f0f0;" : "")">
+                                    var noInput = filter.FilterCompareOperator == TableFilterCompareOperator.IsNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull;
+                                    <div @key="filter" style="padding:10px;min-width:150px;@(index > 0 ? "border-top:1px solid #f0f0f0" : "")">
                                         @if (index > 0)
                                         {
                                             <div>
@@ -234,8 +235,8 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                                             </div>
                                         }
                                         <Space Style="width:100%;">
-                                            <SpaceItem>
-                                                <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="overflow:visible" ValueChanged="value => SetFilterCompareOperator(filter,value)" PopupContainerSelector="@("#popup-container-" + Id)" DropdownMatchSelectWidth="false">
+                                            <SpaceItem Style="@((noInput && filterCount == 1 ? "margin-right:0 !important;" : "") + "flex:auto;")">
+                                                <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="width: 100%; overflow: visible" ValueChanged="value => SetFilterCompareOperator(filter,value)" PopupContainerSelector="@("#popup-container-" + Id)" DropdownMatchSelectWidth="false">
                                                     <SelectOptions>
                                                         <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.Equals" Label="@Table?.Locale.FilterOptions.Equals"></SelectOption>
                                                         <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@TableFilterCompareOperator.NotEquals" Label="@Table?.Locale.FilterOptions.NotEquals"></SelectOption>
@@ -265,7 +266,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                                                     </SelectOptions>
                                                 </Select>
                                             </SpaceItem>
-                                            <SpaceItem Style="flex:auto;">
+                                            <SpaceItem Style="@(noInput || filterCount == 1 ? "margin-right:0 !important;" : null)">
                                                 @FilterInput(filter)
                                             </SpaceItem>
                                             @if (filterCount > 1)
@@ -307,7 +308,6 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
     @<Template>
         @if (filter.FilterCompareOperator == TableFilterCompareOperator.IsNotNull || filter.FilterCompareOperator == TableFilterCompareOperator.IsNull)
         {
-            <div style="width:80px;"></div>
         }
         else if (_columnDataType == typeof(DateTime))
         {

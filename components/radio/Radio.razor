@@ -3,16 +3,16 @@
 @inherits AntDomComponentBase
 
 <label @onclick="OnClick" @onclick:preventDefault="true" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-    <span class="@RadioClassMapper.Class">
+    <span class="@_radioClassMapper.Class">
         <input type="radio"
                autofocus="@AutoFocus"
-               class="@InputClassMapper.Class"
+               class="@_inputClassMapper.Class"
                disabled="@Disabled"
                checked="@IsChecked"
                name="@_name"
-               @bind="@Value"
-               @ref="InputRef" />
-        <span class="@InnerClassMapper.Class"></span>
+               value="@Value"
+               @ref="_inputRef" />
+        <span class="@_innerClassMapper.Class"></span>
     </span>
     @if (ChildContent != null)
     {

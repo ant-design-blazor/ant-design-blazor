@@ -116,7 +116,6 @@ namespace AntDesign
         private async Task RenderAffixAsync()
         {
             var originalAffixStyle = _affixStyle;
-            DomRect childRect = null;
             DomRect domRect = null;
             Window window = null;
 
@@ -130,18 +129,13 @@ namespace AntDesign
                 domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
             }
 
-            async Task GetChildReact()
-            {
-                childRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _childRef);
-            }
-
-            await Task.WhenAll(new[] { GetWindow(), GetDomReact(), GetChildReact() });
-            if (childRect == null || domRect == null || window == null)
+            await Task.WhenAll(new[] { GetWindow(), GetDomReact() });
+            if (domRect == null || window == null)
             {
                 return;
             }
 
-            _hiddenStyle = $"width: {childRect.Width}px; height: {childRect.Height}px;";
+            _hiddenStyle = $"width: {domRect.Width}px; height: {domRect.Height}px;";
 
             DomRect containerRect;
             if (string.IsNullOrEmpty(TargetSelector))
@@ -195,15 +189,16 @@ namespace AntDesign
         {
             base.Dispose(disposing);
 
-            if (string.IsNullOrEmpty(TargetSelector))
+            if (_rootListened)
             {
                 DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
                 DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "resize", OnWindowResize);
             }
-            else
+
+            if (_targetListened)
             {
-                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "scroll", OnWindowScroll);
-                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "resize", OnWindowResize);
+                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "scroll", OnTargetScroll);
+                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "resize", OnTargetResize);
             }
         }
     }

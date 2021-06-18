@@ -24,3 +24,26 @@ And 4 other properties additionally.
 - `ghost`: used in situations with complex background, home pages usually.
 - `disabled`: when actions is not available.
 - `loading`: add loading spinner in button, avoiding multiple submits too.
+
+## API
+
+
+
+| Property | Description | Type | Default Value | Version 
+| --- | --- | --- | --- |
+| Block | Option to fit button width to its parent width         | bool    | false         | 
+| ChildContent | Content of the button.   | RenderFragment    | -         |
+| Danger | Set the danger status of button | bool    | false         | 
+| Disabled | Whether the `Button` is disabled.         | bool    | false     |
+| Ghost | Make background transparent and invert text and border colors | bool    | false         | 
+| HtmlType | Set the original html `type` of `button`, see: [MDN]('https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attr-type')         | string    | `button` |
+| Icon | Set the icon component of button | string | -         | 
+| Loading | Set the loading status of button        | bool    | false         | 
+| OnClick | Callback when `Button` is clicked          | Action    | -         |
+| OnClickStopPropagation | Do not propagate events when button is clicked. | bool    | false    |
+| Search | Adds class `ant-input-search-button` to the button.   | bool | false         |
+| Shape | Can set button shape: `circle` &#124; `round` or `null` (default, which is rectangle).    | string    | null |
+| Size | Set the size of `Button`.         | AntSizeLDSType    | `AntSizeLDSType.Default`         | 
+| Type | Type of the button.         | ButtonType | `ButtonType.Default` | 
+
+
