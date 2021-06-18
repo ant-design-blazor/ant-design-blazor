@@ -1,0 +1,99 @@
+﻿@inherits AntDesignTestBase
+@code {
+    [Fact]
+    public void Renders_basic_radioGroup()
+    {
+        var cut = Context.Render(@<RadioGroup Value="1">
+            <Radio Value="1">A</Radio>
+            <Radio Value="2">B</Radio>
+            <Radio Value="3">C</Radio>
+            <Radio Value="4">D</Radio>
+        </RadioGroup>);
+        cut.MarkupMatches(
+        @<div class="ant-radio-group ant-radio-group-outline" id:ignore>
+            <label class="ant-radio-wrapper ant-radio-wrapper-checked" id:ignore>
+                <span class="ant-radio ant-radio-checked">
+                    <input type="radio" class="ant-radio-input" value="1" checked="">
+                    <span class="ant-radio-inner"></span>
+                </span>
+                <span>A</span>
+            </label>
+            <label class="ant-radio-wrapper" id:ignore>
+                <span class="ant-radio">
+                    <input type="radio" class="ant-radio-input" value="2">
+                    <span class="ant-radio-inner"></span>
+                </span>
+                <span>B</span>
+            </label>
+            <label class="ant-radio-wrapper" id:ignore>
+                <span class="ant-radio">
+                    <input type="radio" class="ant-radio-input" value="3">
+                    <span class="ant-radio-inner"></span>
+                </span>
+                <span>C</span>
+            </label>
+            <label class="ant-radio-wrapper" id:ignore>
+                <span class="ant-radio">
+                    <input type="radio" class="ant-radio-input" value="4">
+                    <span class="ant-radio-inner"></span>
+                </span>
+                <span>D</span>
+            </label>
+        </div>);
+    }
+
+
+    [Fact]
+    public void Toggle_basic_radioGroup()
+    {
+        //Arrange
+        IRenderedComponent<RadioGroup<string>> cut = Render<RadioGroup<string>>(@<RadioGroup Value=@("1")>
+            <Radio Value=@("1")>A</Radio>
+            <Radio Value=@("2")>B</Radio>
+            <Radio Value=@("3")>C</Radio>
+            <Radio Value=@("4")>D</Radio>
+        </RadioGroup>);
+        var radioComponent = cut.Instance;
+        var inputElement = cut.Find("[type=radio][value=2]");
+
+        //Act
+        inputElement.Click();
+
+        //Assert
+        radioComponent.Value.Should().Be("2");
+    }
+
+    [Fact]
+    public void Bind_Value_basic_radioGroup()
+    {
+        //Arrange
+        int value = 1;
+        var cut = Context.Render(@<RadioGroup @bind-Value="@value">
+            <Radio Value="1">A</Radio>
+            <Radio Value="2">B</Radio>
+            <Radio Value="3">C</Radio>
+            <Radio Value="4">D</Radio>
+        </RadioGroup>);
+
+        var inputElement = cut.Find("[type=radio][value=2]");
+        //Act
+        inputElement.Click();
+        //Assert
+        value.Should().Be(2);
+    }
+
+    [Fact]
+    public void Bind_Default_radioGroup()
+    {
+        //Arrange
+        var cut = Render<RadioGroup<int>>(@<RadioGroup DefaultValue="2">
+            <Radio Value="1">A</Radio>
+            <Radio Value="2">B</Radio>
+            <Radio Value="3">C</Radio>
+            <Radio Value="4">D</Radio>
+        </RadioGroup>);
+
+        //Assert
+        cut.Instance.Value.Should().Be(2);
+    }
+}

@@ -33,11 +33,11 @@ Drawer comes very handy.
 | MaskStyle | Style for Drawer's mask element.                               | object        | -         |
 | Placement | The placement of the Drawer, option could be `left` , `top`,`right`,`bottom`        | string  | `right`         |
 | WrapClassName | The class name of the container of the Drawer dialog.                               | string        | -         |
-| Width | 	Width of the Drawer dialog.                               | |int        | 256         |
+| Width | 	Width of the Drawer dialog.                               | |int        |
 | Height | placement is top or bottom, height of the Drawer dialog.                               | int        | 256        |
 | ZIndex | 	The z-index of the Drawer.                              | int        | -         |
-| OffsetX | the offset of in X-axis                                 | int        | 0         |
-| OffsetY |  the offset of in Y-axis                                | int        | 0         |
+| OffsetX | The the X coordinate offset(px), only when placement is `'left'` or `'right'`. | int        | 0         |
+| OffsetY | The the Y coordinate offset(px), only when placement is `'top'` or `'bottom'`. | int        | 0         |
 | Visible | Whether the Drawer dialog is visible or not.                               | boolean        | -         |
 | Keyboard | Whether support press esc to close                          | boolean        | true         |
 | OnClose        |Specify a callback that will be called when a user clicks mask, close button or Cancel button.                                   | function(e)     | -         |
@@ -52,25 +52,25 @@ Drawer comes very handy.
 
 ### DrawerOptions
 
-| 参数                | 说明                                                                                                                 | 类型                                                                | 默认值    |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | --------- |
-| Content           | The drawer body content.                                                                                                | `OneOf<RenderFragment, string>`       | -         |
-| ContentParams     | The component inputs the param / The Template context.                                                                            | `D`                                                                 | -         |
-| Closable          | Whether a close (x) button is visible on top right of the Drawer dialog or not.              | `boolean`                                                           | `true`    |
-| MaskClosable      | Clicking on the mask (area outside the Drawer) to close the Drawer or not.                                                                                            | `boolean`                                                           | `true`    |
-| Mask              | Whether to show mask or not.                         | `boolean`                                                           | `true`    |
-| CloseOnNavigation | Whether to close the drawer when the navigation history changes           | `boolean`                                                           | `true`    |
-| Keyboard          | 是否支持键盘esc关闭                                                                                                  | `boolean`                                                           | `true`    |
-| MaskStyle         | Style for Drawer's mask element.                     | `string`                                                            | `{}`      |
-| BodyStyle         |  Body style for modal body element. Such as height, padding etc.                          | `string`                                                            | `{}`      |
-| Title             | The title for Drawer.                                                    | `OneOf<RenderFragment, string>`                                       | -         |
-| Width             | Width of the Drawer dialog.                            | `int`                                                  | `256`     |
-| Height            | Height of the Drawer dialog, only when placement is `'top'` or `'bottom'`.                | `int`                                                  | `256`     |
-| WrapClassName     | The class name of the container of the Drawer dialog.               | `string`                                                            | -         |
-| ZIndex            |  The `z-index` of the Drawer.                      | `int`                                                            | `1000`    |
-| Placement         |  The placement of the Drawer.                                   | `'top' \| 'right' \| 'bottom' \| 'left'`                            | `'right'` |
-| OffsetX           |  The the X coordinate offset(px).                     | `int`                                                            | `0`       |
-| OffsetY           | The the Y coordinate offset(px), only when placement is `'top'` or `'bottom'`.    | `int`                                                            | `0`       |
+| 参数              | 说明                                                         | 类型                                     | 默认值    |
+| ----------------- | ------------------------------------------------------------ | ---------------------------------------- | --------- |
+| Content           | The drawer body content.                                     | `OneOf<RenderFragment, string>`          | -         |
+| ContentParams     | The component inputs the param / The Template context.       | `D`                                      | -         |
+| Closable          | Whether a close (x) button is visible on top right of the Drawer dialog or not. | `boolean`                                | `true`    |
+| MaskClosable      | Clicking on the mask (area outside the Drawer) to close the Drawer or not. | `boolean`                                | `true`    |
+| Mask              | Whether to show mask or not.                                 | `boolean`                                | `true`    |
+| CloseOnNavigation | Whether to close the drawer when the navigation history changes | `boolean`                                | `true`    |
+| Keyboard          | 是否支持键盘esc关闭                                          | `boolean`                                | `true`    |
+| MaskStyle         | Style for Drawer's mask element.                             | `string`                                 | `{}`      |
+| BodyStyle         | Body style for modal body element. Such as height, padding etc. | `string`                                 | `{}`      |
+| Title             | The title for Drawer.                                        | `OneOf<RenderFragment, string>`          | -         |
+| Width             | Width of the Drawer dialog.                                  | `int`                                    | `256`     |
+| Height            | Height of the Drawer dialog, only when placement is `'top'` or `'bottom'`. | `int`                                    | `256`     |
+| WrapClassName     | The class name of the container of the Drawer dialog.        | `string`                                 | -         |
+| ZIndex            | The `z-index` of the Drawer.                                 | `int`                                    | `1000`    |
+| Placement         | The placement of the Drawer.                                 | `'top' \| 'right' \| 'bottom' \| 'left'` | `'right'` |
+| OffsetX           | The the X coordinate offset(px), only when placement is `'left'` or `'right'`. | `int`                                    | `0`       |
+| OffsetY           | The the Y coordinate offset(px), only when placement is `'top'` or `'bottom'`. | `int`                                    | `0`       |
 
 ### DrawerRef
 

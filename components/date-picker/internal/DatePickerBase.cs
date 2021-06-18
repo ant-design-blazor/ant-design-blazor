@@ -198,6 +198,12 @@ namespace AntDesign
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
+        /// <summary>
+        /// Called when  clear button clicked.
+        /// </summary>
+        [Parameter]
+        public EventCallback OnClearClick { get; set; }
+
         [Parameter]
         public EventCallback<bool> OnOpenChange { get; set; }
 
@@ -440,14 +446,6 @@ namespace AntDesign
                 string first = DatePickerPlaceholder.GetPlaceholderByType(picker, Locale);
                 _placeholders[0] = first;
                 _placeholders[1] = first;
-            }
-        }
-
-        protected virtual void UpdateCurrentValueAsString(int index = 0)
-        {
-            if (EditContext != null)
-            {
-                CurrentValueAsString = GetInputValue(index);
             }
         }
 

@@ -3,7 +3,9 @@
 @inherits AntInputComponentBase<TValue>
 
 <CascadingValue Value="this" IsFixed="@true">
-    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-        @ChildContent
-    </div>
+    <CascadingValue Value="true" Name="InGroup" IsFixed>
+        <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+            @ChildContent
+        </div>
+    </CascadingValue>
 </CascadingValue>
