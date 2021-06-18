@@ -4,49 +4,99 @@
 
 @if (ChildContent != null)
 {
-    <div class="@ClassMapper.Class"
-         style="display: inline-block; width: fit-content; @Style"
-         id="@Id"
-         @ref="@Ref"
-         @onclick="OnClickDiv"
-         @onmouseenter="OnTriggerMouseEnter"
-         @onmouseleave="OnTriggerMouseLeave"
-         @oncontextmenu="OnTriggerContextmenu"
-         @oncontextmenu:preventDefault>
-        @if (IsButton)
-        {
-            <CascadingValue Value="this" IsFixed="@true">
-                <DropdownGroupButton>
-                    <LeftButton>
-                        <Button @key="1" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled">@ChildContent</Button>
-                    </LeftButton>
-                    <RightButton>
-                        <Button @key="2" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled" OnClick="OnTriggerClick" Class="ant-dropdown-trigger" Icon="@_rightButtonIcon" />
-                    </RightButton>
-                </DropdownGroupButton>
-            </CascadingValue>
-        }
-        else
-        {
-            @ChildContent
-        }
-    </div>
+	@if (IsButton)
+	{
+		<div class="@ClassMapper.Class"
+			 style="display: inline-block; width: @(Block ? "100%" : "fit-content" ); @Style"
+			 id="@Id"         			 
+			 >        
+			<CascadingValue Value="this" IsFixed="@true">
+				<DropdownGroupButton>
+					<LeftButton>
+						<Button @key="1" 
+							Size="@_buttonSize" 
+							Type="@_buttonTypeLeft" 
+							Disabled="@Disabled" 
+							Danger="@_danger" 
+							Ghost="@_ghost"
+							OnClick="@OnClick"
+							Style="@(Block ? "flex: 1 0 auto;" : "" )"
+							>
+							@ChildContent
+						</Button>
+					</LeftButton>
+					<RightButton>
+						<span @ref="@Ref">
+							<Button @key="2" 
+								Size="@_buttonSize" 
+								Type="@_buttonTypeRight" 
+								Disabled="@Disabled" 
+								OnClick="OnTriggerClick" 
+								Class="ant-dropdown-trigger" 
+								Icon="@_rightButtonIcon" 
+								Danger="@_danger" 
+								Loading="@_isLoading"
+								Style="@(Block ? "flex: 0 0 auto;" : "" )"
+								Ghost="@_ghost"/>
+						</span>
+					</RightButton>
+				</DropdownGroupButton>
+			</CascadingValue>
+		</div>		
+	}
+	else
+	{
+		<div class="@ClassMapper.Class"
+			 style="display: inline-block; width: fit-content; @Style"
+			 id="@Id"
+			 @ref="@Ref"			 
+			 @onclick="OnClickDiv"
+			 @onmouseenter="OnTriggerMouseEnter"
+			 @onmouseleave="OnTriggerMouseLeave"
+			 @oncontextmenu="OnTriggerContextmenu"
+			 @oncontextmenu:preventDefault
+			 >		
+			 @ChildContent
+		 </div>
+	}
 }
 
 @if (Unbound != null)
 {
     @if (IsButton)
     {
-        <CascadingValue Value="this" IsFixed="@true">
-            <DropdownGroupButton>
-                <LeftButton>
-                    <Button @key="1" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled">@ChildContent</Button>
-                </LeftButton>
-                <RightButton>
-                    <Button @key="2" Size="@_buttonSize" Type="@_buttonType" Disabled="@Disabled" OnClick="OnTriggerClick" Class="ant-dropdown-trigger" Icon="@_rightButtonIcon" />
-                </RightButton>
-            </DropdownGroupButton>
-        </CascadingValue>
+		<CascadingValue Value="this" IsFixed="@true">
+			<DropdownGroupButton Style=@Style>
+				<LeftButton>
+					<Button @key="1" 
+						Size="@_buttonSize" 
+						Type="@_buttonTypeLeft" 
+						Disabled="@Disabled" 
+						Danger="@_danger" 
+						Ghost="@_ghost"
+						OnClick="@OnClick"
+						Style="@(Block ? "flex: 1 0 auto;" : "" )"
+						>
+						@Unbound(default)
+					</Button>
+				</LeftButton>
+				<RightButton>
+					<span @ref="@Ref">
+						<Button @key="2" 
+							Size="@_buttonSize" 
+							Type="@_buttonTypeRight" 
+							Disabled="@Disabled" 
+							OnClick="OnTriggerClick" 
+							Class="ant-dropdown-trigger" 
+							Icon="@_rightButtonIcon" 
+							Loading="@_isLoading"
+							Danger="@_danger" 
+							Style="@(Block ? "flex: 0 0 auto;" : "" )"
+							Ghost="@_ghost"/>						
+					</span>
+				</RightButton>
+			</DropdownGroupButton>
+		</CascadingValue>
     }
     else
     {

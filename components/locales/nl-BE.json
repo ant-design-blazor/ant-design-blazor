@@ -13,9 +13,17 @@
     "next_3": "Volgende 3 pagina's"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Monday",
     "lang": {
       "placeholder": "Selecteer datum",
+      "yearPlaceholder": "Selecteer jaar",
+      "quarterPlaceholder": "Selecteer kwartaal",
+      "monthPlaceholder": "Selecteer maand",
+      "weekPlaceholder": "Selecteer week",
       "rangePlaceholder": [ "Begin datum", "Eind datum" ],
+      "rangeYearPlaceholder": [ "Begin jaar", "Eind jaar" ],
+      "rangeMonthPlaceholder": [ "Begin maand", "Eind maand" ],
+      "rangeWeekPlaceholder": [ "Begin week", "Eind week" ],
       "locale": "nl_BE",
       "today": "Vandaag",
       "now": "Nu",
@@ -26,34 +34,58 @@
       "year": "Jaar",
       "timeSelect": "Selecteer tijd",
       "dateSelect": "Selecteer datum",
+      "weekSelect": "Kies een week",
       "monthSelect": "Kies een maand",
       "yearSelect": "Kies een jaar",
       "decadeSelect": "Kies een decennium",
       "yearFormat": "yyyy",
-      "dateFormat": "d-M-yyyy",
+      "dateFormat": "dd-MM-yyyy",
       "dayFormat": "d",
-      "dateTimeFormat": "d-M-yyyy HH:mm:ss",
+      "dateTimeFormat": "dd-MM-yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Vorige maand (PageUp)",
       "nextMonth": "Volgende maand (PageDown)",
-      "previousYear": "Vorig jaar (Control + left)",
-      "nextYear": "Volgend jaar (Control + right)",
+      "previousYear": "Vorig jaar (Control + links)",
+      "nextYear": "Volgend jaar (Control + rechts)",
       "previousDecade": "Vorig decennium",
       "nextDecade": "Volgend decennium",
       "previousCentury": "Vorige eeuw",
-      "nextCentury": "Volgende eeuw"
+      "nextCentury": "Volgende eeuw",
+      "startDate": "Begin datum",
+      "startWeek": "Begin week",
+      "startMonth": "Begin maand",
+      "startYear": "Begin jaar",
+      "startQuarter": "Begin kwartaal",
+      "endDate": "Eind datum",
+      "endWeek": "Eind week",
+      "endMonth": "Eind maand",
+      "endYear": "Eind jaar",
+      "endQuarter": "Eind kwartaal",
+      "quarterSelect": "Selecteer kwartaal",
+      "week": "Week",
+      "monthFormat": "MMM",
+      "shortWeekDays": [ "Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo" ]
     },
     "timePickerLocale": {
-      "placeholder": "Selecteer tijd"
+      "placeholder": "Selecteer tijd",
+      "rangePlaceholder": [ "Begin tijd", "Eind tijd" ]
     }
   },
   "TimePicker": {
-    "placeholder": "Selecteer tijd"
+    "placeholder": "Selecteer tijd",
+    "rangePlaceholder": [ "Begin tijd", "Eind tijd" ]
   },
   "Calendar": {
     "lang": {
       "placeholder": "Selecteer datum",
+      "yearPlaceholder": "Selecteer jaar",
+      "quarterPlaceholder": "Selecteer kwartaal",
+      "monthPlaceholder": "Selecteer maand",
+      "weekPlaceholder": "Selecteer week",
       "rangePlaceholder": [ "Begin datum", "Eind datum" ],
+      "rangeYearPlaceholder": [ "Begin jaar", "Eind jaar" ],
+      "rangeMonthPlaceholder": [ "Begin maand", "Eind maand" ],
+      "rangeWeekPlaceholder": [ "Begin week", "Eind week" ],
       "locale": "nl_BE",
       "today": "Vandaag",
       "now": "Nu",
@@ -64,33 +96,60 @@
       "year": "Jaar",
       "timeSelect": "Selecteer tijd",
       "dateSelect": "Selecteer datum",
+      "weekSelect": "Kies een week",
       "monthSelect": "Kies een maand",
       "yearSelect": "Kies een jaar",
       "decadeSelect": "Kies een decennium",
       "yearFormat": "yyyy",
-      "dateFormat": "d-M-yyyy",
-      "dayFormat": "d",
-      "dateTimeFormat": "d-M-yyyy HH:mm:ss",
+      "dateFormat": "dd-MM-yyyy",
+      "dayFormat": "dd",
+      "dateTimeFormat": "dd-MM-yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Vorige maand (PageUp)",
       "nextMonth": "Volgende maand (PageDown)",
-      "previousYear": "Vorig jaar (Control + left)",
-      "nextYear": "Volgend jaar (Control + right)",
+      "previousYear": "Vorig jaar (Control + links)",
+      "nextYear": "Volgend jaar (Control + rechts)",
       "previousDecade": "Vorig decennium",
       "nextDecade": "Volgend decennium",
       "previousCentury": "Vorige eeuw",
       "nextCentury": "Volgende eeuw"
     },
     "timePickerLocale": {
-      "placeholder": "Selecteer tijd"
+      "placeholder": "Selecteer tijd",
+      "rangePlaceholder": [ "Begin tijd", "Eind tijd" ]
     }
   },
+  "global": { "placeholder": "Maak een selectie" },
   "Table": {
-    "filterTitle": "FilterMenu",
+    "filterTitle": "Filteren",
     "filterConfirm": "OK",
     "filterReset": "Reset",
     "selectAll": "Selecteer huidige pagina",
-    "selectInvert": "Selecteer huidige pagina"
+    "selectInvert": "Deselecteer huidige pagina",
+    "selectionAll": "Selecteer alle data",
+    "sortTitle": "Sorteer",
+    "expand": "Rij uitklappen",
+    "collapse": "Rij inklappen",
+    "triggerDesc": "Klik sorteer aflopend",
+    "triggerAsc": "Klik sorteer oplopend",
+    "cancelSort": "Klik annuleer sortering",
+    "filterOptions": {
+      "true": "Waar",
+      "false": "Onwaar",
+      "and": "En",
+      "or": "Of",
+      "equals": "Gelijk",
+      "notEquals": "Niet Gelijk",
+      "contains": "Bevat",
+      "startsWith": "Begint Met",
+      "endsWith": "Eindigt Op",
+      "greaterThan": "Groter Dan",
+      "lessThan": "Kleiner Dan",
+      "greaterThanOrEquals": "Groter Dan Of Gelijk",
+      "lessThanOrEquals": "Kleiner Dan Of Gelijk",
+      "isNull": "Is Null",
+      "isNotNull": "Is Niet Null"
+    }
   },
   "Modal": {
     "okText": "OK",
@@ -101,7 +160,7 @@
     "cancelText": "Annuleer",
     "yesText": "Ja",
     "noText": "Nee",
-    "retryText": "Terugtrekken",
+    "retryText": "Herproberen",
     "abortText": "Afbreken",
     "ignoreText": "Negeren"
   },
@@ -110,18 +169,75 @@
     "cancelText": "Annuleer"
   },
   "Transfer": {
+    "titles": [ "", "" ],
     "searchPlaceholder": "Zoek hier",
     "itemUnit": "item",
     "itemsUnit": "items"
   },
   "Upload": {
     "uploading": "Uploaden...",
-    "removeFile": "Bestand verwijderen",
-    "uploadError": "Upload fout",
-    "previewFile": "Preview bestand",
+    "removeFile": "Verwijder bestand",
+    "uploadError": "Fout tijdens uploaden",
+    "previewFile": "Bekijk bestand",
     "downloadFile": "Download bestand"
   },
-  "Empty": {
-    "description": "Geen gegevens"
+  "Empty": { "description": "Geen gegevens" },
+  "Icon": { "icon": "icoon" },
+  "Text": {
+    "edit": "Bewerken",
+    "copy": "Kopiëren",
+    "copied": "Gekopieerd",
+    "expand": "Uitklappen"
+  },
+  "PageHeader": { "back": "Terug" },
+  "Form": {
+    "defaultValidateMessages": {
+      "default": "Validatiefout ${label}",
+      "required": "${label} is verplicht",
+      "enum": "${label} moet een element zijn van [${enum}]",
+      "whitespace": "${label} kan geen leeg karakter zijn",
+      "date": {
+        "format": "${label} datumformaat is ongeldig",
+        "parse": "${label} kan niet naar een datum worden omgezet",
+        "invalid": "${label} is een ongeldige datum"
+      },
+      "types": {
+        "string": "${label} is geen geldige ${type}",
+        "method": "${label} is geen geldige ${type}",
+        "array": "${label} is geen geldige ${type}",
+        "object": "${label} is geen geldige ${type}",
+        "number": "${label} is geen geldige ${type}",
+        "date": "${label} is geen geldige ${type}",
+        "boolean": "${label} is geen geldige ${type}",
+        "integer": "${label} is geen geldige ${type}",
+        "float": "${label} is geen geldige ${type}",
+        "regexp": "${label} is geen geldige ${type}",
+        "email": "${label} is geen geldige ${type}",
+        "url": "${label} is geen geldige ${type}",
+        "hex": "${label} is geen geldige ${type}"
+      },
+      "string": {
+        "len": "${label} moet ${len} karakters bevatten",
+        "min": "${label} moet minstens ${min} karakters bevatten",
+        "max": "${label} mag hoogstens ${max} karakters bevatten",
+        "range": "${label} moet tussen ${min}-${max} karakters bevatten"
+      },
+      "number": {
+        "len": "${label} moet gelijk zijn aan ${len}",
+        "min": "${label} moet minstens ${min} zijn",
+        "max": "${label} mag hoogstens ${max} zijn",
+        "range": "${label} moet tussen ${min}-${max} liggen"
+      },
+      "array": {
+        "len": "Moet ${len} ${label} zijn",
+        "min": "Minstens ${min} ${label}",
+        "max": "Hoogstens ${max} ${label}",
+        "range": "Het aantal van ${label} moet tussen ${min}-${max} liggen"
+      },
+      "pattern": { "mismatch": "${label} voldoet niet aan het patroon ${pattern}" }
+    }
+  },
+  "Image": {
+    "preview": "Preview"
   }
 }

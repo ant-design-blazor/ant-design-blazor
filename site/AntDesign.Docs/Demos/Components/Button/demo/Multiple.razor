@@ -8,8 +8,11 @@
 
 <Button Type="primary">primary</Button>
 <Button>secondary</Button>
-<Dropdown Overlay=@menu>
-    <Button>
-        Actions <Icon Type="down" />
-    </Button>
-</Dropdown>
+<DropdownButton>
+    <Overlay>
+        @menu
+    </Overlay>
+    <Unbound>
+        Actions
+    </Unbound>
+</DropdownButton>

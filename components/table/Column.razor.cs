@@ -137,7 +137,7 @@ namespace AntDesign
 
         private string[] _selectedFilterValues;
 
-        private ElementReference _filterTriggerRef;
+        //private ElementReference _filterTriggerRef;
 
         protected override void OnInitialized()
         {

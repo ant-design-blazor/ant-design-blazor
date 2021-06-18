@@ -29,34 +29,17 @@ namespace AntDesign.Internal
             }
         }
 
+        /// <summary>
+        /// Overlay adjustment strategy (when for example browser resize is happening)
+        /// </summary>
         [Parameter]
-        public string PopupContainerSelector { get; set; } = "body";
+        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
+        /// <summary>
+        /// Trigger (link, button, etc) 
+        /// </summary>
         [Parameter]
-        public string PlacementCls { get; set; }
-
-        [Parameter]
-        public string OverlayEnterCls { get; set; }
-
-        [Parameter]
-        public string OverlayLeaveCls { get; set; }
-
-        [Parameter]
-        public string OverlayHiddenCls { get; set; }
-
-        [Parameter]
-        public string OverlayClassName { get; set; }
-
-        [Parameter]
-        public string OverlayStyle { get; set; }
-
-        [Parameter]
-        public bool Disabled { get; set; }
-
-        [Parameter]
-        public bool Visible { get; set; } = false;
-
-        public void SetVisible(bool visible) => Visible = visible;
+        public RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// 自动关闭功能和Visible参数同时生效
@@ -65,29 +48,113 @@ namespace AntDesign.Internal
         [Parameter]
         public bool ComplexAutoCloseAndVisible { get; set; } = false;
 
+        /// <summary>
+        /// Whether the trigger is disabled.
+        /// </summary>
         [Parameter]
-        public bool IsButton { get; set; } = false;
+        public bool Disabled { get; set; }
 
-        [Parameter]
-        public bool InlineFlexMode { get; set; } = false;
-
+        /// <summary>
+        /// Property forwarded to Overlay component. Consult the Overlay
+        /// property for more detailed explanation.
+        /// </summary>
         [Parameter]
         public bool HiddenMode { get; set; } = false;
 
+        /// <summary>
+        /// (not used in Unbound) Sets wrapping div style to `display: inline-flex;`.
+        /// </summary>
         [Parameter]
-        public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
+        public bool InlineFlexMode { get; set; } = false;
 
-        /*
-         * 通过参数赋值的placement，不应该通过其它方式赋值
-         * Placement set by Parameter, should not be change by other way
-         */
-        private PlacementType _paramPlacement = PlacementType.BottomLeft;
+        /// <summary>
+        /// Behave like a button: when clicked invoke OnClick 
+        /// (unless OnClickDiv is overriden and does not call base).
+        /// </summary>
+        [Parameter]
+        public bool IsButton { get; set; } = false;
+
+        /// <summary>
+        /// Callback when triggger is clicked
+        /// </summary>
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+        /// <summary>
+        ///  Callback - equivalent of OnMouseUp event on the trigger trigger.
+        /// </summary>
+        [Parameter]
+        public EventCallback OnMaskClick { get; set; }
+
+        /// <summary>
+        /// Callback when mouse enters trigger boundaries.
+        /// </summary>
+        [Parameter] public Action OnMouseEnter { get; set; }
+
+        /// <summary>
+        /// Callback when mouse leaves trigger boundaries.
+        /// </summary>
+        [Parameter] public Action OnMouseLeave { get; set; }
+
+        /// <summary>
+        /// Callback when overlay is hiding.
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> OnOverlayHiding { get; set; }
+
+        /// <summary>
+        /// Callback when overlay visibility is changing. 
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> OnVisibleChange { get; set; }
+
+        /// <summary>
+        /// Overlay content (what will be rendered after trigger is activated)
+        /// </summary>
+        [Parameter]
+        public RenderFragment Overlay { get; set; }
+
+        /// <summary>
+        /// Overlay container custom css class.
+        /// </summary>
+        [Parameter]
+        public string OverlayClassName { get; set; }
+
+        /// <summary>
+        /// Css class added to overlay when overlay is shown.
+        /// </summary>
+        [Parameter]
+        public string OverlayEnterCls { get; set; }
+
+        /// <summary>
+        /// Css class added to overlay when overlay is hidden.
+        /// </summary>
+        [Parameter]
+        public string OverlayHiddenCls { get; set; }
+
+        /// <summary>
+        /// Css class added to overlay when overlay is hiding.
+        /// </summary>
+        [Parameter]
+        public string OverlayLeaveCls { get; set; }
+
+        /// <summary>
+        /// Css style that will be added to overlay div.
+        /// </summary>
+        [Parameter]
+        public string OverlayStyle { get; set; }
 
         /*
          * 当前的placement，某些情况下可能会被Overlay组件修改（通过ChangePlacementForShow函数）
          * Current placement, would change by overlay in some cases(via ChangePlacementForShow function)
          */
         private PlacementType _placement = PlacementType.BottomLeft;
+
+        /*
+         * 通过参数赋值的placement，不应该通过其它方式赋值
+         * Placement set by Parameter, should not be change by other way
+         */
+        private PlacementType _paramPlacement = PlacementType.BottomLeft;
 
         [Parameter]
         public PlacementType Placement
@@ -103,34 +170,29 @@ namespace AntDesign.Internal
             }
         }
 
-        [Parameter] public Action OnMouseEnter { get; set; }
-
-        [Parameter] public Action OnMouseLeave { get; set; }
-
+        /// <summary>
+        /// Override default placement class which is based on `Placement` parameter. 
+        /// </summary>
         [Parameter]
-        public EventCallback<bool> OnVisibleChange { get; set; }
+        public string PlacementCls { get; set; }
 
+        /// <summary>
+        /// Define what is going to be the container of the overlay. 
+        /// Example use case: when overlay has to be contained in a 
+        /// scrollable area.
+        /// </summary>
         [Parameter]
-        public EventCallback<bool> OnOverlayHiding { get; set; }
+        public string PopupContainerSelector { get; set; } = "body";
 
+        /// <summary>
+        /// Trigger mode. Could be multiple by passing an array.
+        /// </summary>
         [Parameter]
-        public RenderFragment Overlay { get; set; }
+        public TriggerType[] Trigger { get; set; } = new TriggerType[] { TriggerType.Hover };
 
-        [Parameter]
-        public RenderFragment ChildContent { get; set; }
-
-        [Parameter]
-        public RenderFragment<ForwardRef> Unbound { get; set; }
-
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnClick { get; set; }
-
-        [Parameter]
-        public EventCallback OnMaskClick { get; set; }
-
-        [Parameter]
-        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
-
+        /// <summary>
+        /// Manually set reference to triggering element. 
+        /// </summary>
         [Parameter]
         public ElementReference TriggerReference
         {
@@ -138,8 +200,20 @@ namespace AntDesign.Internal
             set => Ref = value;
         }
 
+        /// <summary>
+        /// ChildElement with ElementReference set to avoid wrapping div. 
+        /// </summary>
+        [Parameter]
+        public RenderFragment<ForwardRef> Unbound { get; set; }
+
+        /// <summary>
+        /// Toggles overlay viability.
+        /// </summary>
+        [Parameter]
+        public bool Visible { get; set; } = false;
+
         [Inject]
-        private DomEventService DomEventService { get; set; }
+        protected DomEventService DomEventService { get; set; }
 
         private bool _mouseInTrigger = false;
         private bool _mouseInOverlay = false;
@@ -174,22 +248,22 @@ namespace AntDesign.Internal
             return base.OnAfterRenderAsync(firstRender);
         }
 
-        private void OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
+        protected void OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
 
-        private void OnUnboundMouseLeave(JsonElement jsonElement) => OnTriggerMouseLeave();
+        protected void OnUnboundMouseLeave(JsonElement jsonElement) => OnTriggerMouseLeave();
 
-        private void OnUnboundFocusIn(JsonElement jsonElement) => OnTriggerFocusIn();
+        protected void OnUnboundFocusIn(JsonElement jsonElement) => OnTriggerFocusIn();
 
-        private void OnUnboundFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
+        protected void OnUnboundFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
 
-        private async void OnUnboundClick(JsonElement jsonElement)
+        protected async void OnUnboundClick(JsonElement jsonElement)
         {
             var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             await OnClickDiv(eventArgs);
         }
 
-        private async void OnContextMenu(JsonElement jsonElement)
+        protected async void OnContextMenu(JsonElement jsonElement)
         {
             var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -294,6 +368,11 @@ namespace AntDesign.Internal
             _mouseUpInOverlay = true;
         }
 
+        /// <summary>
+        /// Handle the trigger click.
+        /// </summary>
+        /// <param name="args">MouseEventArgs</param>
+        /// <returns></returns>
         public virtual async Task OnClickDiv(MouseEventArgs args)
         {
             if (!IsButton)
@@ -470,14 +549,28 @@ namespace AntDesign.Internal
             return await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, Ref);
         }
 
+        /// <summary>
+        /// Will hide the overlay.
+        /// </summary>
+        /// <returns></returns>
         public async Task Close()
         {
             await _overlay.Hide(true);
         }
 
+        /// <summary>
+        /// Checks if overlay is currently in visible state.
+        /// </summary>
+        /// <returns></returns>
         public bool IsOverlayShow()
         {
             return _overlay != null ? _overlay.IsPopup() : false;
         }
+
+        /// <summary>
+        /// Toggle overlay visibility.
+        /// </summary>
+        /// <param name="visible">boolean: visibility true/false</param>
+        public void SetVisible(bool visible) => Visible = visible;
     }
 }

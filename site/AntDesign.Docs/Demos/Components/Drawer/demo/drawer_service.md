@@ -9,11 +9,11 @@ title:
 
 Drawer 的 service 用法，示例中演示了用户自定义模板、自定义component。
 
-模板代码：Drawer_service.razor
+模板代码：DrawerTemplateDemo.razor
 
 ``` csharp
 @namespace AntDesign
-@inherits DrawerTemplate<string, string>
+@inherits FeedbackComponent<string, string>
 
 <div>
     value: <Input @bind-Value="value" />
@@ -28,20 +28,49 @@ Drawer 的 service 用法，示例中演示了用户自定义模板、自定义c
 
     protected override void OnInitialized()
     {
-        value = this.Config;
+        value = base.Options;
         base.OnInitialized();
     }
 
-
     async void OnClose()
     {
-        await this.CloseAsync(value);
+        DrawerRef<string> drawerRef = base.FeedbackRef as DrawerRef<string>;
+        await drawerRef!.CloseAsync(value);
     }
 }
-
 ```
 
 ## en-US
 
 Usage of Drawer's service, examples demonstrate user-defined templates, custom components.
 
+Template code: DrawerTemplateDemo.razor
+
+``` csharp
+@namespace AntDesign
+@inherits FeedbackComponent<string, string>
+
+<div>
+    value: <Input @bind-Value="value" />
+    <br/>
+    <br/>
+    <Button Type="primary" OnClick="OnClose">Confirm</Button>
+</div>
+
+@code{
+
+    string value;
+
+    protected override void OnInitialized()
+    {
+        value = base.Options;
+        base.OnInitialized();
+    }
+
+    async void OnClose()
+    {
+        DrawerRef<string> drawerRef = base.FeedbackRef as DrawerRef<string>;
+        await drawerRef!.CloseAsync(value);
+    }
+}
+```

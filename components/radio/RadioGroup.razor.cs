@@ -22,9 +22,25 @@ namespace AntDesign
         public string Name { get; set; }
 
         [Parameter]
+        public TValue DefaultValue
+        {
+            get => _defaultValue;
+            set
+            {
+                _defaultValue = value;
+                _hasDefaultValue = true;
+            }
+        }
+
+        [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
 
-        internal List<Radio<TValue>> RadioItems { get; set; } = new List<Radio<TValue>>();
+        private List<Radio<TValue>> _radioItems = new List<Radio<TValue>>();
+
+        private TValue _defaultValue;
+
+        private bool _hasDefaultValue;
+        private bool _defaultValueSetted;
 
         protected override void OnInitialized()
         {
@@ -37,25 +53,36 @@ namespace AntDesign
                 ;
 
             base.OnInitialized();
+
+            if (_hasDefaultValue && !_defaultValueSetted)
+            {
+                CurrentValue = _defaultValue;
+                _defaultValueSetted = true;
+            }
         }
 
         internal async Task AddRadio(Radio<TValue> radio)
         {
             if (this.Name != null)
             {
-                radio._name = Name;
+                radio.SetName(Name);
             }
-            RadioItems.Add(radio);
+            _radioItems.Add(radio);
             if (EqualsValue(this.CurrentValue, radio.Value))
             {
                 await radio.Select();
+                StateHasChanged();
             }
-            StateHasChanged();
+        }
+
+        internal void RemoveRadio(Radio<TValue> radio)
+        {
+            _radioItems.Remove(radio);
         }
 
         protected override async Task OnParametersSetAsync()
         {
-            foreach (var radio in RadioItems)
+            foreach (var radio in _radioItems)
             {
                 if (EqualsValue(this.CurrentValue, radio.Value))
                 {
