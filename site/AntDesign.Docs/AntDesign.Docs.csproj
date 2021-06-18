@@ -7,8 +7,15 @@
 
   <ItemGroup>
     <PackageReference Include="AntDesign.Charts" Version="0.2.0" />
-    <PackageReference Include="System.Net.Http.Json" Version="6.0.0-preview.*" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework) == 'net5'">
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework) == 'net6'">
+    <PackageReference Include="System.Net.Http.Json" Version="6.0.0-preview.*" />
   </ItemGroup>
 
   <ItemGroup>
