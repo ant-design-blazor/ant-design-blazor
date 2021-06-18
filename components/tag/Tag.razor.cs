@@ -107,7 +107,13 @@ namespace AntDesign
         [Parameter]
         public EventCallback OnClick { get; set; }
 
-        
+        /// <summary>
+        /// Whether the Tag is closed or not
+        /// </summary>
+        [Parameter]
+        public bool Visible { get; set; } = true;
+
+
         private bool _isPresetColor;
         private bool _isCustomColor;
         private bool _closed;
