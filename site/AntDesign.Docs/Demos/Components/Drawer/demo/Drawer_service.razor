@@ -73,20 +73,21 @@
         <Button OnClick="CloseDrawer">close</Button>
     </div>;
 
-            var options = new DrawerOptions()
-            {
-                Title = "Drawer",
-                Width = 350,
-                Content = content,
-            };
+        var options = new DrawerOptions()
+        {
+            Title = "Drawer",
+            Width = 350,
+            Content = content,
+        };
 
-            _drawerRef = await DrawerService.CreateAsync(options);
+        _drawerRef = await DrawerService.CreateAsync(options);
 
-            _drawerRef.OnClosing = async (handle) =>
-            {
-                Console.WriteLine("Closing Drawer");
-            };
-        }
+        _drawerRef.OnClosing = (handle) =>
+        {
+            Console.WriteLine("Closing Drawer");
+            return Task.CompletedTask;
+        };
+    }
 
         private async Task CloseDrawer()
         {

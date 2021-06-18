@@ -1,0 +1,55 @@
+﻿<Space Direction="@DirectionVHType.Vertical" Style="width: 100%">
+	<SpaceItem>
+		<Space Size=@(("8", "16")) Wrap>
+			<SpaceItem>
+				<Button OnClick=@(() => OnClick(FocusBehavior.FocusAtFirst))>Focus at first</Button><br/>
+			</SpaceItem>
+			<SpaceItem>
+				<Button OnClick=@(() => OnClick(FocusBehavior.FocusAtLast))>Focus at last</Button>
+			</SpaceItem>
+			<SpaceItem>
+				<Button OnClick=@(() => OnClick(FocusBehavior.FocusAndSelectAll))>Focus to select all</Button>
+			</SpaceItem>
+			<SpaceItem>
+				<Button OnClick=@(() => OnClick(FocusBehavior.FocusAndClear))>Focus & clear</Button>
+			</SpaceItem>
+			<SpaceItem>
+				<Button OnClick=@(() => OnClick(FocusBehavior.FocusAtLast, true))>Focus prevent scroll</Button>
+			</SpaceItem>
+			<SpaceItem>
+				<Switch @bind-Checked=_isInput CheckedChildren="Input" UnCheckedChildren="TextArea" />
+			</SpaceItem>
+		</Space>
+	</SpaceItem>
+	<br/>
+	<SpaceItem>
+		@if (_isInput)
+		{
+			<AntDesign.Input @ref=@_input DefaultValue=@_defaultValue OnkeyDown="Blur"/>
+		}
+		else
+		{
+			<AntDesign.TextArea @ref=@_input DefaultValue=@_defaultValue OnkeyDown="Blur"/>
+		}
+	</SpaceItem>
+</Space>
+
+
+@code 
+{
+	AntDesign.Input<string> _input;	
+	bool _isInput = true;
+	const string _defaultValue = "Ant Blazor loves you! (Ctrl+Q to blur)";
+
+	async Task OnClick(FocusBehavior behavior, bool preventScroll = false) 
+	{
+		await _input.Focus(behavior, preventScroll);
+	}
+
+	async Task Blur(KeyboardEventArgs e) 
+	{
+		Console.WriteLine(e.Code);
+		if (e.CtrlKey && e.Code == "KeyQ")
+			await _input.Blur();
+	}
+}

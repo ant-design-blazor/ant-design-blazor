@@ -178,11 +178,13 @@ RenderFragment<(Table<TItem> table, IEnumerable<TItem> showItems, int level)> bo
             var rowIndex = table.PageSize * (table.PageIndex - 1) + i + 1;
             var data = showItems.ElementAt(i);
             var cacheKey = data.GetHashCode();
-            if (!table._dataSourceCache.ContainsKey(cacheKey))
+            if (!table._dataSourceCache.ContainsKey(cacheKey) || table._dataSourceCache[cacheKey] == null)
             {
-                table._dataSourceCache[cacheKey] = new RowData<TItem>(rowIndex, table.PageIndex, data);
+                var rowData = new RowData<TItem>(rowIndex, table.PageIndex, data);
+                rowData.SelectedChanged += table.RowDataSelectedChanged;
+                table._dataSourceCache[cacheKey] = rowData;
             }
-            var currentRowData = table._dataSourceCache[cacheKey] ?? new RowData<TItem>(rowIndex, table.PageIndex, data);
+            var currentRowData = table._dataSourceCache[cacheKey];
             var hasChildren = table.TreeChildren(data)?.Any() == true;
             currentRowData.CacheKey = cacheKey;
             currentRowData.Level = level;

@@ -49,6 +49,18 @@ Entry files will be built and generated in `dist/wwwroot` directory, where we ca
 $ dotnet add package AntDesign
 ```
 
+### Register Dependencies
+
+Add dependency registration in `Startup.cs`.
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+  ...
+  services.AddAntDesign();
+}
+```
+
 ### Import Styles
 
 #### Use styles and JS

@@ -90,9 +90,17 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<IEnumerable<TValue>>> ValuesExpression { get; set; }
 
+        /// <summary>
+        /// The size of the input box. Note: in the context of a form, 
+        /// the `large` size is used. Available: `large` `default` `small`
+        /// </summary>
         [Parameter]
         public string Size { get; set; } = AntSizeLDSType.Default;
 
+        /// <summary>
+        /// What Culture will be used when converting string to value and value to string
+        /// Useful for InputNumber component.
+        /// </summary>
         [Parameter]
         public virtual CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
 

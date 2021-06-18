@@ -1,0 +1,24 @@
+﻿<Space Direction="@DirectionVHType.Vertical">
+    <SpaceItem>
+        <Search Placeholder="input search text" WrapperStyle="width: 200px;" ClassicSearchIcon />
+    </SpaceItem>
+    <SpaceItem>
+        <Search Placeholder="input search text" WrapperStyle="width: 200px;" />
+    </SpaceItem>
+    <SpaceItem>    
+        <Search Placeholder="input search text" AllowClear WrapperStyle="width: 200px;" />
+    </SpaceItem>
+    <SpaceItem> 
+        <Search Placeholder="input search text" EnterButton="true"/>
+    </SpaceItem>
+    <SpaceItem> 
+        <Search Placeholder="input search text" AllowClear EnterButton="@("Search")" Size="large"/>
+    </SpaceItem>
+    <SpaceItem> 
+        <Search Placeholder="input search text" EnterButton="@("Search")" Size="large" Suffix="@_audioIcon"/>
+    </SpaceItem>
+</Space>
+
+@code {
+    RenderFragment _audioIcon =@<Icon Type="audio" Theme="outline" Style="color: #1890ff"/>;
+}

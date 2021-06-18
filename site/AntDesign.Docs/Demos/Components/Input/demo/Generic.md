@@ -1,5 +1,5 @@
 ﻿---
-order: 9
+order: 15
 title:
   zh-CN: 泛型
   en-US: Generic

@@ -16,16 +16,18 @@ cover: https://gw.alipayobjects.com/zos/alicdn/cH1BOLfxC/Tag.svg
 
 ## API
 
-| 参数             | 说明                                         | 类型          | 默认值    |
-| ---------------- | -------------------------------------------- | ------------- | --------- |
-| Closable | 值标签是否可以关闭| boolean         |-       |
-| Checkable | 值标签是否可以选择 | boolean         |-       |
-| Checked | 标签是否关闭所对应的值 | boolean         |-       |
-| CheckedChange | 点击标签时触发的回调 | function(e)         |-       |
+| 参数             | 说明                                         | 类型          | 默认值    | Version 
+| ---------------- | -------------------------------------------- | ------------- | --------- | ----- 
+| Checkable | 值标签是否可以选择 | boolean         |false   |
+| Checked | 标签是否关闭所对应的值 | boolean         |fakse   |
+| CheckedChange | 点击标签时触发的回调 | Action<bool>         |-       |
+| ChildContent | Contents of the `Tag`| RenderFragment  |-       |
+| Class | Any css class that will be added to tag. Use case: adding animation. | string   | -  | 0.9 
+| Closable | 值标签是否可以关闭| boolean         |false       |
 | Color | 预设标签色 | string   | -         |
-| PresetColor | 标签的预设颜色 | PresetColor   | -         |
-| OnClose | 关闭时的回调     | function(e)         | -         |
-| Visible | 是否显示标签 | boolean         |
 | Icon | 设置图标  | string        | -         |
-
-
+| OnClick | Callback executed when the `Tag` is clicked (excluding closing button) | Action | -         |
+| OnClose | 关闭时的回调     | Action<MouseEventArgs>         | -         |
+| OnClosing | Callback executed when the `Tag` is being closed. Closing can be canceled here.     | Action<CloseEventArgs<MouseEventArgs>>        | -         |
+| PresetColor | 标签的预设颜色 | PresetColor   | -         |
+| Visible | 是否显示标签 | boolean         |

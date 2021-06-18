@@ -1,5 +1,5 @@
 ﻿---
-order: 1
+order: 3
 title:
   zh-CN: 可选择
   en-US: Checkable 

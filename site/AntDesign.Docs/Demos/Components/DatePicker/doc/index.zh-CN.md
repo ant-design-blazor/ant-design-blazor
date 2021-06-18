@@ -53,6 +53,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | style | 自定义输入框样式 | CSSProperties | {} |  |
 | onOpenChange | 弹出日历和关闭日历的回调 | function(open) | 无 |  |
 | onPanelChange | 日历面板切换的回调 | function(value, mode) | - |  |
+| OnClearClick | 清除按钮点击时的回调 | Action | - |  |
 | inputReadOnly | 设置输入框为只读（避免在移动设备上打开虚拟键盘） | boolean | false |  |
 
 ### 共同的方法

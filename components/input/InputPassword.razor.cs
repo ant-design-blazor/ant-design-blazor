@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -11,6 +12,32 @@ namespace AntDesign
         private bool _visible = false;
         private string _eyeIcon;
 
+        /// <summary>
+        /// Custom icon render
+        /// </summary>
+        [Parameter]
+        public RenderFragment IconRender { get; set; }
+
+        /// <summary>
+        ///  Whether to show password
+        /// </summary>
+        [Parameter]
+        public bool ShowPassword
+        {
+            get => _visible;
+            set
+            {
+                _visible = value;
+                if (_visible)
+                    Type = "text";
+                else
+                    Type = "password";
+            }
+        }
+
+        /// <summary>
+        /// Whether show toggle button
+        /// </summary>
         [Parameter]
         public bool VisibilityToggle { get; set; } = true;
 
@@ -31,33 +58,51 @@ namespace AntDesign
                 .If($"{PrefixCls}-password-small", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-password-rtl", () => RTL);
 
-            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-password");
-
+            AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-password");            
             if (VisibilityToggle)
             {
                 Suffix = new RenderFragment((builder) =>
                 {
-                    int i = 0;
-                    builder.OpenElement(i++, "span");
-                    builder.AddAttribute(i++, "class", $"{PrefixCls}-suffix");
-                    builder.OpenComponent<Icon>(i++);
-                    builder.AddAttribute(i++, "class", $"{PrefixCls}-password-icon");
-                    builder.AddAttribute(i++, "type", _eyeIcon);
-                    builder.AddAttribute(i++, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async args =>
+                    builder.OpenElement(0, "span");
+                    builder.AddAttribute(1, "class", $"{PrefixCls}-suffix");
+                    if (IconRender is null)
                     {
-                        var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
+                        builder.OpenComponent<Icon>(2);
+                        builder.AddAttribute(3, "class", $"{PrefixCls}-password-icon");
+                        builder.AddAttribute(4, "type", _eyeIcon);
+                        builder.AddAttribute(5, "onclick", CallbackFactory.Create<MouseEventArgs>(this, async args =>
+                        {
+                            ToggleVisibility(args);
 
-                        IsFocused = true;
-                        await this.FocusAsync(Ref);
-
-                        ToggleVisibility(args);
-
-                        if (element.SelectionStart != 0)
-                            await Js.SetSelectionStartAsync(Ref, element.SelectionStart);
-                    }));
-                    builder.CloseComponent();
+                            await Focus(FocusBehavior.FocusAtLast);
+                        }));
+                        builder.CloseComponent();
+                    }
+                    else
+                    {
+                        builder.AddContent(6, IconRender);
+                    }
                     builder.CloseElement();
                 });
+            }
+        }
+
+        /// <summary>
+        /// Focus behavior for InputPassword component with optional behaviors.
+        /// Special behavior required for wasm.
+        /// </summary>
+        /// <param name="behavior">enum: AntDesign.FocusBehavior</param>
+        /// <param name="preventScroll">When true, element receiving focus will not be scrolled to.</param>
+        public override async Task Focus(FocusBehavior behavior = FocusBehavior.FocusAtLast, bool preventScroll = false)
+        {
+            await base.Focus(behavior, preventScroll);
+            //delay enforces focus - it counters the js blur that is called on button pressed
+            await Task.Delay(5);
+            //An ugly solution for InputPassword in wasm to receive focus and keep 
+            //cursor at the last character. Any improvements are very welcome. 
+            if (Js.IsBrowser())
+            {
+                await base.Focus(behavior, preventScroll);
             }
         }
 
