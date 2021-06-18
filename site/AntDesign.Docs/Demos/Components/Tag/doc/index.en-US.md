@@ -27,5 +27,5 @@ Tag for categorizing or markup.
 | OnClick | Callback executed when the `Tag` is clicked (excluding closing button) | Action | -         |
 | OnClose | Callback executed when the `Tag` is closed     | Action<MouseEventArgs>        | -         |
 | OnClosing | Callback executed when the `Tag` is being closed. Closing can be canceled here.     | Action<CloseEventArgs<MouseEventArgs>>        | -         |
-| PresetColor | The Preset Color of the Tag | PresetColor   | -         |
+| PresetColor | The preset color of the `Tag` | PresetColor   | -         |
 | Visible | Whether the `Tag` is closed or not | boolean         | true         |
