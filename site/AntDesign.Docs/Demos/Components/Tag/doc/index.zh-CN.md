@@ -19,7 +19,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/cH1BOLfxC/Tag.svg
 | 参数             | 说明                                         | 类型          | 默认值    | Version 
 | ---------------- | -------------------------------------------- | ------------- | --------- | ----- 
 | Checkable | 值标签是否可以选择 | boolean         |false   |
-| Checked | 标签是否关闭所对应的值 | boolean         |fakse   |
+| Checked | 标签是否关闭所对应的值 | boolean         |false   |
 | CheckedChange | 点击标签时触发的回调 | Action<bool>         |-       |
 | ChildContent | Contents of the `Tag`| RenderFragment  |-       |
 | Class | Any css class that will be added to tag. Use case: adding animation. | string   | -  | 0.9 
@@ -30,4 +30,4 @@ cover: https://gw.alipayobjects.com/zos/alicdn/cH1BOLfxC/Tag.svg
 | OnClose | 关闭时的回调     | Action<MouseEventArgs>         | -         |
 | OnClosing | Callback executed when the `Tag` is being closed. Closing can be canceled here.     | Action<CloseEventArgs<MouseEventArgs>>        | -         |
 | PresetColor | 标签的预设颜色 | PresetColor   | -         |
-| Visible | 是否显示标签 | boolean         |
+| Visible | 是否显示标签 | boolean         |true
