@@ -60,9 +60,11 @@ There are 2 rendering approaches for `Dropdown`:
 | --- | --- | --- | --- |
 | Block | 将按钮宽度调整为其父宽度的选项        | bool    | false         | 0.9
 | ButtonsRender | 自定义左右两个按钮 | Func<RenderFragment, RenderFragment, RenderFragment>    | -         | 
+| ButtonsClass |  Allows to set each button's css class either to the same string or separately.   | OneOf<string, (string LeftButton, string RightButton)>    | -         | 0.9
+| ButtonsStyle |  Allows to set each button's style either to the same string or separately.   | OneOf<string, (string LeftButton, string RightButton)>    | -         | 0.9
 | Danger | 设置危险按钮 | bool    | false         | 0.9
 | Ghost | 幽灵属性，使按钮背景透明 | bool    | false         | 0.9
 | Icon | 右侧的 icon | string | `ellipsis`         | 
 | Loading | 设置按钮载入状态         | bool    | false         | 0.9
 | Size | 按钮大小，和 [`Button`](zh-CN/components/button) 一致         | AntSizeLDSType    | `AntSizeLDSType.Default`         | 
-| Type | Type of the button, the same as [`Button`](zh-CN/components/button). Left and right button type can be set independently.         | Tuple<(ButtonType LeftButton, ButtonType RightButton)>    | `(LeftButton: ButtonType.Default, RightButton: ButtonType.Default)` | 0.9
+| Type | Type of the button, the same as [`Button`](en-US/components/button). Left and right button type can be set independently.         | OneOf<string, (string LeftButton, string RightButton)>    | `ButtonType.Default` | 0.9

@@ -33,7 +33,7 @@
                 </DropdownButton>
 			</SpaceItem>
 			<SpaceItem>
-                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }' Danger="true">
+                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }' Danger>
                     <Overlay>
                         @_overlayMenu
                     </Overlay>
@@ -43,7 +43,7 @@
                 </DropdownButton>
 			</SpaceItem>
 			<SpaceItem Class="site-button-ghost-wrapper">
-                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }' Ghost="true">
+                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }' Ghost>
                     <Overlay>
                         @_overlayMenu
                     </Overlay>
@@ -53,7 +53,7 @@
                 </DropdownButton>
 			</SpaceItem>
 			<SpaceItem>
-                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }' Disabled="@true">
+                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }' Disabled>
                     <Overlay>
                         @_overlayMenu
                     </Overlay>
@@ -94,7 +94,7 @@
 	<SpaceItem>
 		<Space Size=@(("8", "16")) Wrap>
 			<SpaceItem>
-                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }'>
+                <DropdownButton ButtonsStyle="@("background-color: #91d5ff;")" OnClick='e => { Console.WriteLine("Click on left button."); }'>
                     <Overlay>
                         @_overlayMenu
                     </Overlay>
@@ -104,7 +104,7 @@
                 </DropdownButton>
 			</SpaceItem>
 			<SpaceItem>
-                <DropdownButton Icon="user">
+                <DropdownButton Icon="user" ButtonsStyle="@(("background-color:#91d5ff;", "background-color: #fff0f6;"))">
                     <Overlay>        
                         @_overlayMenu
                     </Overlay>    
@@ -114,7 +114,7 @@
                 </DropdownButton>
 			</SpaceItem>
 			<SpaceItem>
-                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }' Disabled="@true">
+                <DropdownButton OnClick='e => { Console.WriteLine("Click on left button."); }' Disabled>
                     <Overlay>
                         @_overlayMenu
                     </Overlay>
@@ -124,7 +124,7 @@
                 </DropdownButton>
 			</SpaceItem>
 			<SpaceItem>
-                <DropdownButton ButtonsRender="ButtonsRender" Loading>
+                <DropdownButton ButtonsRender="ButtonsRender" Loading ButtonsClass="@("demo-dropdown-button1")">
                     <Overlay>
                         @_overlayMenu
                     </Overlay>
@@ -138,7 +138,7 @@
                 </DropdownButton>    
 			</SpaceItem>
 			<SpaceItem>
-                <DropdownButton ButtonsRender="ButtonsRender" >
+                <DropdownButton ButtonsRender="ButtonsRender" ButtonsClass="@(("demo-dropdown-button1", "demo-dropdown-button2"))">
                     <Overlay>
                         @_overlayMenu
                     </Overlay>
@@ -169,6 +169,14 @@
         background: rgb(190, 200, 200);
         padding: 26px 16px 16px;
     }
+
+	.demo-dropdown-button1, .demo-dropdown-button1:hover {
+		background: #f6ffed;
+	}
+	
+	.demo-dropdown-button2, .demo-dropdown-button2:hover {
+		background: #b7eb8f;
+	}
 </style>
 @code
 {
