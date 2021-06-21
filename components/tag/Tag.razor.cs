@@ -126,6 +126,7 @@ namespace AntDesign
                 .If($"{_prefix}-checkable", () => Checkable)
                 .If($"{_prefix}-checkable-checked", () => Checked)
                 .If($"{_prefix}-rtl", () => RTL)
+                .If($"{_prefix}-clickable", () => OnClick.HasDelegate)
                 ;
         }
 
