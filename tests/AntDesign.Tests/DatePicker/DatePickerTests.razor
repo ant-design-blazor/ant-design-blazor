@@ -35,7 +35,6 @@
 		await Task.Delay(1);
 		//Assert
 		cut.WaitForAssertion(() => cut.Find("button.ant-picker-month-btn").TextContent.Trim().Should().Be(expectedMonth));
-		//cut.Find("button.ant-picker-month-btn").TextContent.Trim().Should().Be(expectedMonth);
 		cut.Find("button.ant-picker-year-btn").TextContent.Trim().Should().Be(value.Year.ToString());
 		var selectedCell = cut.Find("td.ant-picker-cell-selected");
 		selectedCell.GetAttribute("title").Should().Be(expectedAsString);
@@ -46,7 +45,7 @@
 	[InlineData("yyyy-MM-dd", "2020-04-05")]
 	[InlineData("dd/MM/yyyy", "05/04/2020")]
 	[InlineData("MM/dd/yyyy", "04/05/2020")]
-	public async Task Format_is_applied(string format, string expected)
+	public void Format_is_applied(string format, string expected)
 	{
 		//Arrange
 		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -63,7 +62,7 @@
 	[Theory]
 	[InlineData("en-US", "2020-04-05")]	
 	[InlineData("en-GB", "5/4/2020")]
-	public async Task Culture_is_applied(string culture, string expected)
+	public void Culture_is_applied(string culture, string expected)
 	{
 		//Arrange
 		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -78,7 +77,7 @@
 	}
 
 	[Fact]
-	public async Task Format_is_prioritized_over_Culture()
+	public void Format_is_prioritized_over_Culture()
 	{
 		//Arrange
 		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -94,5 +93,4 @@
 		//Assert
 		input.GetAttribute("value").Should().Be("2020/04/05");
 	}
-
 }

@@ -113,10 +113,10 @@ namespace AntDesign
             }
         }
 
-        protected override Task OnBlur(int index)
+        protected override async Task OnBlur(int index)
         {
             if (_openingOverlay)
-                return Task.CompletedTask;
+                return;
 
             if (_duringManualInput)
             {
@@ -134,7 +134,7 @@ namespace AntDesign
             }
 
             AutoFocus = false;
-            return Task.CompletedTask;
+            return;
         }
 
         /// <summary>
