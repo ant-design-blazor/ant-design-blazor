@@ -36,6 +36,7 @@ jobs:
         id: site
         run: |
           npm install
+          dotnet build ./site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj
           dotnet build
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o _site
