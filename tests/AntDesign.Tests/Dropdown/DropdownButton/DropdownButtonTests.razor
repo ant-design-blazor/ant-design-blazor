@@ -1,0 +1,135 @@
+﻿@inherits AntDesignTestBase	
+@code {
+
+	[Fact]
+	public void Single_button_style_applied_to_both_buttons()
+	{
+		//Arrange
+		var cut = Render<AntDesign.DropdownButton>(
+			@<DropdownButton ButtonsStyle="@("background-color: #91d5ff;")">
+                    <Overlay>
+						<AntDesing.Menu>
+							<MenuItem>item 1</MenuItem>
+						</AntDesing.Menu>
+                    </Overlay>
+                    <Unbound>Dropdown</Unbound>
+                </DropdownButton>
+		);
+		//Act
+		var buttons = cut.FindAll("[type=button]");
+		//Assert           
+		buttons.Should().HaveCount(2);
+		buttons[0].GetAttribute("style").Should().Be("background-color: #91d5ff;");
+		buttons[1].GetAttribute("style").Should().Be("background-color: #91d5ff;");	
+	}
+
+	[Fact]
+	public void Buttons_style_applied_to_both_buttons()
+	{
+		//Arrange
+		var cut = Render<AntDesign.DropdownButton>(
+			@<DropdownButton ButtonsStyle="@(("background-color: #91d5ff;", "background-color: #fff0f6;"))">
+                    <Overlay>
+						<AntDesing.Menu>
+							<MenuItem>item 1</MenuItem>
+						</AntDesing.Menu>
+                    </Overlay>
+                    <Unbound>Dropdown</Unbound>
+                </DropdownButton>
+		);
+		//Act
+		var buttons = cut.FindAll("[type=button]");
+		//Assert           
+		buttons.Should().HaveCount(2);
+		buttons[0].GetAttribute("style").Should().Be("background-color: #91d5ff;");
+		buttons[1].GetAttribute("style").Should().Be("background-color: #fff0f6;");	
+	}
+
+	[Fact]
+	public void Single_button_class_applied_to_both_buttons()
+	{
+		//Arrange
+		var cut = Render<AntDesign.DropdownButton>(
+			@<DropdownButton ButtonsClass="@("singleClass")">
+                    <Overlay>
+						<AntDesing.Menu>
+							<MenuItem>item 1</MenuItem>
+						</AntDesing.Menu>
+                    </Overlay>
+                    <Unbound>Dropdown</Unbound>
+                </DropdownButton>
+		);
+		//Act
+		var buttons = cut.FindAll("[type=button]");
+		//Assert           
+		buttons.Should().HaveCount(2);
+		buttons[0].GetAttribute("class").Should().Contain("singleClass");
+		buttons[1].GetAttribute("class").Should().Contain("singleClass");	
+	}
+
+	[Fact]
+	public void Buttons_class_applied_to_both_buttons()
+	{
+		//Arrange
+		var cut = Render<AntDesign.DropdownButton>(
+			@<DropdownButton ButtonsClass="@(("leftClass", "rightClass"))">
+                    <Overlay>
+						<AntDesing.Menu>
+							<MenuItem>item 1</MenuItem>
+						</AntDesing.Menu>
+                    </Overlay>
+                    <Unbound>Dropdown</Unbound>
+                </DropdownButton>
+		);
+		//Act
+		var buttons = cut.FindAll("[type=button]");
+		//Assert           
+		buttons.Should().HaveCount(2);
+		buttons[0].GetAttribute("class").Should().Contain("leftClass");
+		buttons[1].GetAttribute("class").Should().Contain("rightClass");	
+	}
+
+	[Fact]
+	public void Single_button_type_applied_to_both_buttons()
+	{
+		//Arrange
+		var cut = Render<AntDesign.DropdownButton>(
+			@<DropdownButton Type="@ButtonType.Primary">
+                    <Overlay>
+						<AntDesing.Menu>
+							<MenuItem>item 1</MenuItem>
+						</AntDesing.Menu>
+                    </Overlay>
+                    <Unbound>Dropdown</Unbound>
+                </DropdownButton>
+		);
+		//Act
+		var buttons = cut.FindAll("[type=button]");
+		//Assert           
+		buttons.Should().HaveCount(2);
+		buttons[0].GetAttribute("class").Should().Contain("ant-btn-primary");
+		buttons[1].GetAttribute("class").Should().Contain("ant-btn-primary");	
+	}
+
+	[Fact]
+	public void Buttons_type_applied_to_both_buttons()
+	{
+		//Arrange
+		var cut = Render<AntDesign.DropdownButton>(
+			@<DropdownButton Type="@((ButtonType.Primary, ButtonType.Dashed))">
+                    <Overlay>
+						<AntDesing.Menu>
+							<MenuItem>item 1</MenuItem>
+						</AntDesing.Menu>
+                    </Overlay>
+                    <Unbound>Dropdown</Unbound>
+                </DropdownButton>
+		);
+		//Act
+		var buttons = cut.FindAll("[type=button]");
+		//Assert           
+		buttons.Should().HaveCount(2);
+		buttons[0].GetAttribute("class").Should().Contain("ant-btn-primary");
+		buttons[1].GetAttribute("class").Should().Contain("ant-btn-dashed");	
+	}
+}

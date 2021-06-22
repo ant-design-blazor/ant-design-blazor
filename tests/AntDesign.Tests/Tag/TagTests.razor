@@ -21,7 +21,7 @@
 	public void Renders_predefined_tag(string color)
 	{
 		var cut = Context.Render(@<AntDesign.Tag Color="@color">Tag 1</AntDesign.Tag>);		
-		cut.MarkupMatches(@<span class="ant-tag ant-tag-@color" id:ignore>Tag 1</span>);
+		cut.MarkupMatches(@<span class="ant-tag ant-tag-@color" id:ignore style:ignore>Tag 1</span>);
 	}
 
 	[Fact]
