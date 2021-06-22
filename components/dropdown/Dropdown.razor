@@ -10,38 +10,7 @@
 			 style="display: inline-block; width: @(Block ? "100%" : "fit-content" ); @Style"
 			 id="@Id"         			 
 			 >        
-			<CascadingValue Value="this" IsFixed="@true">
-				<DropdownGroupButton>
-					<LeftButton>
-						<Button @key="1" 
-							Size="@_buttonSize" 
-							Type="@_buttonTypeLeft" 
-							Disabled="@Disabled" 
-							Danger="@_danger" 
-							Ghost="@_ghost"
-							OnClick="@OnClick"
-							Style="@(Block ? "flex: 1 0 auto;" : "" )"
-							>
-							@ChildContent
-						</Button>
-					</LeftButton>
-					<RightButton>
-						<span @ref="@Ref">
-							<Button @key="2" 
-								Size="@_buttonSize" 
-								Type="@_buttonTypeRight" 
-								Disabled="@Disabled" 
-								OnClick="OnTriggerClick" 
-								Class="ant-dropdown-trigger" 
-								Icon="@_rightButtonIcon" 
-								Danger="@_danger" 
-								Loading="@_isLoading"
-								Style="@(Block ? "flex: 0 0 auto;" : "" )"
-								Ghost="@_ghost"/>
-						</span>
-					</RightButton>
-				</DropdownGroupButton>
-			</CascadingValue>
+			@buttons((this, ChildContent))
 		</div>		
 	}
 	else
@@ -65,38 +34,7 @@
 {
     @if (IsButton)
     {
-		<CascadingValue Value="this" IsFixed="@true">
-			<DropdownGroupButton Style=@Style>
-				<LeftButton>
-					<Button @key="1" 
-						Size="@_buttonSize" 
-						Type="@_buttonTypeLeft" 
-						Disabled="@Disabled" 
-						Danger="@_danger" 
-						Ghost="@_ghost"
-						OnClick="@OnClick"
-						Style="@(Block ? "flex: 1 0 auto;" : "" )"
-						>
-						@Unbound(default)
-					</Button>
-				</LeftButton>
-				<RightButton>
-					<span @ref="@Ref">
-						<Button @key="2" 
-							Size="@_buttonSize" 
-							Type="@_buttonTypeRight" 
-							Disabled="@Disabled" 
-							OnClick="OnTriggerClick" 
-							Class="ant-dropdown-trigger" 
-							Icon="@_rightButtonIcon" 
-							Loading="@_isLoading"
-							Danger="@_danger" 
-							Style="@(Block ? "flex: 0 0 auto;" : "" )"
-							Ghost="@_ghost"/>						
-					</span>
-				</RightButton>
-			</DropdownGroupButton>
-		</CascadingValue>
+		@buttons((this, Unbound(default)))
     }
     else
     {
@@ -111,3 +49,41 @@
              OnOverlayMouseLeave="OnOverlayMouseLeave"
              OnOverlayMouseUp="OnOverlayMouseUp" />
 </CascadingValue>
+
+
+@code {
+	RenderFragment<(Dropdown dropdown, RenderFragment childContent)> buttons = data => @<CascadingValue Value="@data.dropdown" IsFixed>			
+		<DropdownGroupButton>
+			<LeftButton>
+				<Button @key="1" 
+					Size="@data.dropdown.ButtonSize" 
+					Class="@data.dropdown.ButtonClassLeft"
+					Type="@data.dropdown.ButtonTypeLeft" 
+					Disabled="@data.dropdown.Disabled" 
+					Danger="@data.dropdown.ButtonDanger" 
+					Ghost="@data.dropdown.ButtonGhost"					
+					Style="@(data.dropdown.Block ? "flex: 1 0 auto;" + data.dropdown.ButtonStyleLeft : data.dropdown.ButtonStyleLeft)"
+					@attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(data.dropdown, data.dropdown.OnClick) })"
+					>
+					@data.childContent
+				</Button>
+			</LeftButton>
+			<RightButton>
+				<span @ref="@data.dropdown.Ref">
+					<Button @key="2" 
+						Size="@data.dropdown.ButtonSize" 						
+						Type="@data.dropdown.ButtonTypeRight" 
+						Disabled="@data.dropdown.Disabled" 						
+						Class="@("ant-dropdown-trigger " + @data.dropdown.ButtonClassRight)" 
+						Icon="@data.dropdown.RightButtonIcon" 
+						Danger="@data.dropdown.ButtonDanger" 
+						Loading="@data.dropdown.IsLoading"
+						Ghost="@data.dropdown.ButtonGhost"
+						Style="@(data.dropdown.Block ? "flex: 0 0 auto;" + data.dropdown.ButtonStyleRight : data.dropdown.ButtonStyleRight)"
+						@attributes="@(new Dictionary<string, object>() { ["OnClick"] = _callbackFactory.Create<MouseEventArgs>(data.dropdown, data.dropdown.OnTriggerClick) })"
+						/>
+				</span>
+			</RightButton>
+		</DropdownGroupButton>
+	</CascadingValue>;
+}
