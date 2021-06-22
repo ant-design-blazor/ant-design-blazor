@@ -59,9 +59,11 @@ There are 2 rendering approaches for `Dropdown`:
 | --- | --- | --- | --- |
 | Block | Option to fit button width to its parent width         | bool    | false         | 0.9
 | ButtonsRender |Fully customizable button.         | Func<RenderFragment, RenderFragment, RenderFragment>    | -         | 
+| ButtonsClass |  Allows to set each button's css class either to the same string or separately.   | OneOf<string, (string LeftButton, string RightButton)>    | -         | 0.9
+| ButtonsStyle |  Allows to set each button's style either to the same string or separately.   | OneOf<string, (string LeftButton, string RightButton)>    | -         | 0.9
 | Danger | Set the danger status of button | bool    | false         | 0.9
 | Ghost | Make background transparent and invert text and border colors | bool    | false         | 0.9
 | Icon | Icon (appears on the right) | string | `ellipsis`         | 
 | Loading | Show loading indicator. You have to write the loading logic on your own.         | bool    | false         | 0.9
 | Size | Size of the button, the same as [`Button`](en-US/components/button)         | AntSizeLDSType    | `AntSizeLDSType.Default`         | 
-| Type | Type of the button, the same as [`Button`](en-US/components/button). Left and right button type can be set independently.         | Tuple<(ButtonType LeftButton, ButtonType RightButton)>    | `(LeftButton: ButtonType.Default, RightButton: ButtonType.Default)` | 0.9
+| Type | Type of the button, the same as [`Button`](en-US/components/button). Left and right button type can be set independently.         | OneOf<string, (string LeftButton, string RightButton)>    | `ButtonType.Default` | 0.9
