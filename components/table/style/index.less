@@ -60,6 +60,12 @@
         text-overflow: ellipsis;
       }
     }
+
+    .@{table-prefix-cls}-column-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: keep-all;
+    }
   }
 
   // ============================ Title =============================
@@ -217,6 +223,12 @@
         background-color: transparent !important;
       }
     }
+
+    // https://github.com/ant-design/ant-design/issues/30969
+    &.@{table-prefix-cls}-cell-fix-left:hover,
+    &.@{table-prefix-cls}-cell-fix-right:hover {
+      background: lighten(@black, 96%);
+    }
   }
 
   &-thead th.@{table-prefix-cls}-column-sort {
@@ -229,6 +241,12 @@
 
   td&-column-sort {
     background: @table-body-sort-bg;
+  }
+
+  &-column-title {
+    position: relative;
+    z-index: 1;
+    flex: 1;
   }
 
   &-column-sorters {
