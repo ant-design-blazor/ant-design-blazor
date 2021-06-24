@@ -245,6 +245,18 @@ namespace AntDesign
                .If($"ant-table-column-sort", () => Sortable && SortModel != null && SortModel.SortDirection.IsIn(SortDirection.Ascending, SortDirection.Descending));
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (IsHeader)
+            {
+                FilterModel = _filterable && _filters?.Any(x => x.Selected) == true ?
+                    new FilterModel<TData>(GetFieldExpression, FieldName, OnFilter, _filters.Where(x => x.Selected).ToList(), _columnFilterType) :
+                    null;
+            }
+        }
+
         private string NumberFormatter(object value)
         {
             if (value == null) return null;
