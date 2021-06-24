@@ -108,6 +108,8 @@ namespace AntDesign
         private ClassMapper _labelClassMapper = new ClassMapper();
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
 
+        private EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -191,8 +193,20 @@ namespace AntDesign
             return Required ? $"{_prefixCls}-required" : _labelCls;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (CurrentEditContext != null && _validationStateChangedHandler != null)
+            {
+                CurrentEditContext.OnValidationStateChanged -= _validationStateChangedHandler;
+            }
+
+            base.Dispose(disposing);
+        }
+
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
+            if (_control != null) return;
+
             if (control.FieldIdentifier.Model == null)
             {
                 throw new InvalidOperationException($"Please use @bind-Value (or @bind-Values for selected components) in the control with generic type `{typeof(TValue)}`.");
@@ -200,13 +214,15 @@ namespace AntDesign
 
             this._control = control;
 
-            CurrentEditContext.OnValidationStateChanged += (s, e) =>
+            _validationStateChangedHandler = (s, e) =>
             {
                 control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
                 this._isValid = !control.ValidationMessages.Any();
 
                 StateHasChanged();
             };
+
+            CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
 
             _formValidationMessages = builder =>
             {
