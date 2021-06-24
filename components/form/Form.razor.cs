@@ -182,6 +182,14 @@ namespace AntDesign
             this._controls.Add(valueAccessor);
         }
 
+        void IForm.RemoveControl(IControlValueAccessor valueAccessor)
+        {
+            if (_controls.Contains(valueAccessor))
+            {
+                this._controls.Remove(valueAccessor);
+            }
+        }
+
         public void Submit()
         {
             var isValid = _editContext.Validate();
