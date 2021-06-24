@@ -40,29 +40,20 @@ jobs:
         with:
           node-version: "10.x"
 
-      - name: Test And Coverage Report 📝
-        run: |
-          dotnet build
-          dotnet test --collect:"XPlat Code Coverage"
-          find ./tests -name "coverage.cobertura.xml" -type f -exec cp {} ./ \;
-          bash <(curl -s https://codecov.io/bash) -Z -f coverage.cobertura.xml -t $CODECOV_TOKEN
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: 'Get Last Release'
+      - name: "Get Last Release"
         id: previoustag
         run: |
           LAST_VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/ant-design-blazor/ant-design-blazor/tags | grep 'name' | cut -d\" -f4 | head -1)
           echo "Last Version: ${LAST_VERSION}"
           echo "::set-output name=previous_tag::${LAST_VERSION}"
 
-      - name: 'Get Next Semantic Version'
+      - name: "Get Next Semantic Version"
         id: semvers
         uses: "WyriHaximus/github-action-next-semvers@v1"
         with:
           version: ${{ steps.previoustag.outputs.previous_tag }}
 
-      - name: 'Get Next Version'
+      - name: "Get Next Version"
         id: get_next_version
         run: |
           current_branch=$(git symbolic-ref --short -q HEAD)
@@ -74,35 +65,13 @@ jobs:
             else
               next_version=$minor_version
           fi
-          echo Will release version $next_version for branch $current_branch
-          echo "::set-output name=next_version::${next_version}"
           echo "::set-output name=current_branch::${current_branch}"
-        env:
-          patch_version: ${{ steps.semvers.outputs.patch }}
-          minor_version: ${{ steps.semvers.outputs.minor }}
-
-      - name: Package Nightly Nuget 📦
-        id: pack
-        run: |
           FULL_VERSION=$next_version-nightly-`date "+%y%m%d%H%M"`
           echo "Version: ${FULL_VERSION}"
           echo "::set-output name=package_version::${FULL_VERSION}"
-          dotnet pack components/AntDesign.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
-          dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
         env:
-          next_version: ${{ steps.get_next_version.outputs.next_version }}
-
-      - name: Push to MyGet package registry
-        run: dotnet nuget push ./publish/*.nupkg --source https://www.myget.org/F/ant-design-blazor/api/v3/index.json --api-key ${{ secrets.MYGET_API_KEY }} --skip-duplicate
-
-      - name: Sync to Gitee 💕
-        uses: wearerequired/git-mirror-action@master
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-        with:
-          source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
-          destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
-                    
+          patch_version: ${{ steps.semvers.outputs.patch }}
+          minor_version: ${{ steps.semvers.outputs.minor }}
 
       - name: Prepare AOT workload
         run: |
@@ -123,4 +92,3 @@ jobs:
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
           BRANCH: ${{ steps.get_next_version.outputs.current_branch }}
-
