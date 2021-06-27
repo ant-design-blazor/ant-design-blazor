@@ -85,6 +85,9 @@ namespace AntDesign.Internal
             }
         }
 
+        [Parameter]
+        public int SkipDays { get; set; }
+
         private void DateOnMouseEnter(DateTime hoverDateTime)
         {
             if (IsRange)

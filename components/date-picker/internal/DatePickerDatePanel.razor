@@ -5,7 +5,7 @@
 @{
     var calendar = CultureInfo.Calendar;
 
-    DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);    
+    DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
     int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
 
     // sunday should be 7
@@ -15,7 +15,17 @@
     }
 
     int diffDay = (int) Locale.FirstDayOfWeek - monthFirstDayOfWeek;
-    DateTime startDate = monthFirstDayDate.AddDays(diffDay);	
+    DateTime startDate;
+    int skipDays = 0;
+    if (monthFirstDayDate == DateTime.MinValue)
+    {
+        startDate = monthFirstDayDate;
+        skipDays = monthFirstDayOfWeek - (int)Locale.FirstDayOfWeek;
+    }
+    else
+    {
+        startDate = monthFirstDayDate.AddDays(diffDay);
+    }
 }
 
 <div class='@($"{PrefixCls}-panel")' @ref="Ref">
@@ -32,7 +42,8 @@
                            GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                            OnRowSelect="OnRowSelect"
                            OnValueSelect="OnValueSelect"
-                           GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)">
+                           GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
+                           SkipDays="skipDays">
         <RenderPickerHeader>
             <DatePickerHeader TValue="TValue"
                               @attributes="GetAttritubes()"
