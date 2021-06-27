@@ -7,6 +7,7 @@
 	{
 		//Arrange
 		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+		JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
 
 		DateTime value = DateTime.MinValue;
 		DateTime defaultValue = new DateTime(2020,1,1);
@@ -52,6 +53,7 @@
 	{
 		//Arrange
 		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+		JSInterop.SetupVoid(JSInteropConstants.InvokeTabKey, _ => true);
 
 		DateTime value = DateTime.MinValue;
 		DateTime defaultValue = new DateTime(2020,1,1);		
