@@ -43,7 +43,7 @@ else if (IsHeader && HeaderColSpan != 0)
     var headerCellAttributes = OnHeaderCell?.Invoke();
 
     <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" title="@(Ellipsis?HeaderTitle:"")" @attributes="headerCellAttributes">
-        @if (Sortable || _filters?.Any() == true)
+        @if (Sortable || (_filterable && _filters?.Any() == true))
         {
             @FilterToolTipSorter(this)
         }
@@ -160,7 +160,7 @@ readonly RenderFragment<Column<TData>> ToolTipSorter = col =>
 
 readonly RenderFragment<Column<TData>> FilterToolTipSorter = col =>
 @<Template>
-    @if (col.Filterable)
+    @if (col._filterable && col._filters?.Any() == true)
     {
         <div class="ant-table-filter-column">
             <span class="ant-table-filter-column-title" @attributes="@(new Dictionary<string, object>() { ["onclick"] = _callbackFactory.Create(col, col.HandleSort) })">
