@@ -1,0 +1,22 @@
+<div class="scrollable-container" id="scrollable-container">
+	<div class="background">
+		<Affix TargetSelector="#scrollable-container">
+			<Button Type="@ButtonType.Primary">
+				Fixed at the top of container
+			</Button>
+		</Affix>
+	</div>
+</div>
+
+<style>
+    .scrollable-container {
+        height: 100px;
+        overflow-y: scroll;
+    }
+
+    .background {
+        padding-top: 60px;
+        height: 300px;
+        background-image: url("https://zos.alipayobjects.com/rmsportal/RmjwQiJorKyobvI.jpg")
+    }
+</style>

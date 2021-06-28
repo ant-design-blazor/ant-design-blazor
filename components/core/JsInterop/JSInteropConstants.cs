@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 
 namespace AntDesign
 {
@@ -9,6 +6,7 @@ namespace AntDesign
     {
         private const string FUNC_PREFIX = "AntDesign.interop.";
 
+        public static string IsResizeObserverSupported => $"{FUNC_PREFIX}isResizeObserverSupported";
         public static string GetDomInfo => $"{FUNC_PREFIX}getDomInfo";
 
         public static string TriggerEvent => $"{FUNC_PREFIX}triggerEvent";
@@ -35,11 +33,18 @@ namespace AntDesign
 
         public static string Log => $"{FUNC_PREFIX}log";
 
+#if NET5_0_OR_GREATER
+        [Obsolete("It will be removed in the future, because Blazor already has a native implementation.")]
+#endif 
         public static string Focus => $"{FUNC_PREFIX}focus";
+
+        public static string HasFocus => $"{FUNC_PREFIX}hasFocus";
 
         public static string Blur => $"{FUNC_PREFIX}blur";
 
-        public static string BackTop => $"{FUNC_PREFIX}BackTop";
+        public static string BackTop => $"{FUNC_PREFIX}backTop";
+
+        public static string ScrollTo => $"{FUNC_PREFIX}scrollTo";
 
         public static string GetFirstChildDomInfo => $"{FUNC_PREFIX}getFirstChildDomInfo";
 
@@ -82,6 +87,30 @@ namespace AntDesign
         public static string DisposeObj => $"{FUNC_PREFIX}disposeObj";
 
         public static string ElementScrollIntoView => $"{FUNC_PREFIX}elementScrollIntoView";
+
+        public static string BindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}bindTableHeaderAndBodyScroll";
+
+        public static string UnbindTableHeaderAndBodyScroll => $"{FUNC_PREFIX}unbindTableHeaderAndBodyScroll";
+
+        public static string AddPreventKeys => $"{FUNC_PREFIX}addPreventKeys";
+
+        public static string RemovePreventKeys => $"{FUNC_PREFIX}removePreventKeys";
+
+        public static string AddPreventEnterOnOverlayVisible => $"{FUNC_PREFIX}addPreventEnterOnOverlayVisible";
+
+        public static string RemovePreventEnterOnOverlayVisible => $"{FUNC_PREFIX}removePreventEnterOnOverlayVisible";
+
+        public static string GetStyle => $"{FUNC_PREFIX}getStyle";
+
+        public static string RegisterResizeTextArea => $"{FUNC_PREFIX}registerResizeTextArea";
+
+        public static string DisposeResizeTextArea => $"{FUNC_PREFIX}disposeResizeTextArea";
+
+        public static string SetDomAttribute => $"{FUNC_PREFIX}setDomAttribute";
+
+        public static string SetSelectionStart => $"{FUNC_PREFIX}setSelectionStart";
+        public static string InvokeTabKey => $"{FUNC_PREFIX}invokeTabKey";
+
         #region Draggable Modal
 
         public static string EnableDraggable => $"{FUNC_PREFIX}enableDraggable";
@@ -91,5 +120,21 @@ namespace AntDesign
         public static string ResetModalPosition => $"{FUNC_PREFIX}resetModalPosition";
 
         #endregion Draggable Modal
+
+        public static class ObserverConstants
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "observable.";
+
+            public static class Resize
+            {
+                private const string FUNC_PREFIX = ObserverConstants.FUNC_PREFIX + "resize.";
+
+                public static string Create = $"{FUNC_PREFIX}create";
+                public static string Observe = $"{FUNC_PREFIX}observe";
+                public static string Unobserve = $"{FUNC_PREFIX}unobserve";
+                public static string Disconnect = $"{FUNC_PREFIX}disconnect";
+                public static string Dispose = $"{FUNC_PREFIX}dispose";
+            }
+        }
     }
 }

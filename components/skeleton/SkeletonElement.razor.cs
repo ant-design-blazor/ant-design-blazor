@@ -10,6 +10,7 @@ namespace AntDesign
     public partial class SkeletonElement : AntDomComponentBase
     {
         #region Parameters
+
         [Parameter]
         public bool Active { get; set; } = false;
 
@@ -24,15 +25,17 @@ namespace AntDesign
 
         #endregion Parameters
 
-        ClassMapper _spanClassMapper = new ClassMapper();
+        private ClassMapper _spanClassMapper = new ClassMapper();
 
-        string _spanStyle = "";
+        private string _spanStyle = "";
 
         private void SetClassMap()
         {
-            ClassMapper.Clear().Add("ant-skeleton")
+            ClassMapper
+                .Add("ant-skeleton")
                 .If("ant-skeleton-element", () => true)
-                .If("ant-skeleton-active", () => Active);
+                .If("ant-skeleton-active", () => Active)
+                .If("ant-skeleton-rtl", () => RTL);
         }
 
         protected override void OnInitialized()
@@ -71,7 +74,6 @@ namespace AntDesign
                .If("ant-skeleton-input-lg", () => Size.AsT1 == SkeletonElementSize.Large)
                .If("ant-skeleton-input-sm", () => Size.AsT1 == SkeletonElementSize.Small);
         }
-
 
         protected override void OnParametersSet()
         {

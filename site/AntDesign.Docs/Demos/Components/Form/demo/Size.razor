@@ -1,0 +1,132 @@
+﻿@using System.Text.Json;
+
+<Form Model="@model"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      Size="@model.Size">
+    <FormItem Label="Form Size">
+        <RadioGroup @bind-Value="@context.Size">
+            <Radio RadioButton Value="@AntSizeLDSType.Small">Small</Radio>
+            <Radio RadioButton Value="@AntSizeLDSType.Default">Default</Radio>
+            <Radio RadioButton Value="@AntSizeLDSType.Large">Large</Radio>
+        </RadioGroup>
+    </FormItem>
+
+    <FormItem Label="Input">
+        <Input @bind-Value="@context.Input" />
+    </FormItem>
+    <FormItem Label="InputArea">
+        <TextArea @bind-Value="@context.InputArea" />
+    </FormItem>
+    <FormItem Label="Cascader">
+        <Cascader @bind-Value="@context.Cascader" Options="districts" />
+    </FormItem>
+    <FormItem Label="DatePicker">
+        <DatePicker @bind-Value="@context.DatePicker" />
+    </FormItem>
+    <FormItem Label="RangePicker">
+        <RangePicker @bind-Value="@context.RangePicker" />
+    </FormItem>
+    <FormItem Label="InputNumber">
+        <AntDesign.InputNumber @bind-Value="@context.Number" />
+    </FormItem>
+    <FormItem Label="Switch">
+        <Switch @bind-Value="@context.Switch" />
+    </FormItem>
+    <FormItem Label="Radio">
+        <RadioGroup @bind-Value="@context.Radio">
+            <Radio RadioButton Value="@("Hangzhou")">Hangzhou</Radio>
+            <Radio RadioButton Value="@("Shanghai")">Shanghai</Radio>
+            <Radio RadioButton Value="@("Beijing")">Beijing</Radio>
+            <Radio RadioButton Value="@("Chengdu")">Chengdu</Radio>
+        </RadioGroup>
+    </FormItem>
+    <FormItem Label="AutoComplete">
+        <AutoComplete @bind-Value="@context.AutoComplete" Options="@autoCompleteOptions" Placeholder="Input here" />
+    </FormItem>
+    <FormItem Label="Select">
+        <Select Mode="default"
+            DataSource="@_persons"            
+            @bind-Value="@context.Name"
+            LabelName="@nameof(Person.Name)"
+            ValueName="@nameof(Person.Name)">
+        </Select>
+    </FormItem>
+    <FormItem Label="Multiselect">
+        <Select Mode="multiple"
+            DataSource="@_persons"            
+            @bind-Values="@context.Names"
+            LabelName="@nameof(Person.Name)"
+            ValueName="@nameof(Person.Name)">
+        </Select>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+</Form>
+
+@code
+{
+    public class Model
+    {
+        public string Size { get; set; } = AntSizeLDSType.Small;
+        public string Input { get; set; } = "input";
+        public string InputArea { get; set; } = "inputArea";
+        public string Cascader { get; set; } = "11";
+        public DateTime? DatePicker { get; set; } = DateTime.Now;
+        public DateTime?[] RangePicker { get; set; } = new DateTime?[] { DateTime.Now, DateTime.Now.AddDays(10) };
+        public double Number { get; set; } = 1;
+        public bool Switch { get; set; } = true;
+        public string Radio { get; set; } = "Beijing";
+        public string AutoComplete { get; set; }
+		public string Name { get; set; }
+		public IEnumerable<string> Names { get; set; } = Array.Empty<string>();
+    }
+
+    private Model model = new Model();
+
+    private List<CascaderNode> districts = new List<CascaderNode>
+{
+        new CascaderNode()
+        {
+            Value = "1",
+            Label = "Zhejianng",
+            Children = new []
+    {
+                new CascaderNode {Value = "11", Label = "Hangzhou"},
+                new CascaderNode {Value = "12", Label = "Wenzhou"},
+            }
+        },
+        new CascaderNode()
+        {
+            Value = "2",
+            Label = "Shanghai",
+        }
+    };
+
+    private List<string> autoCompleteOptions = new List<string> { "Primary", "Junior", "Senior", "Undergraduate", "Master", "Doctor" };
+
+	record Person(string Name);
+    private List<Person> _persons = new List<Person>
+        {
+            new Person("John"),
+            new Person("Lucy"),
+            new Person("Jack"),
+            new Person("Emily"),
+        };
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+
+}

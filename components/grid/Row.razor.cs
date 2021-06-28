@@ -7,7 +7,17 @@ using OneOf;
 
 namespace AntDesign
 {
-    using GutterType = OneOf<int, Dictionary<string, int>, (int, int)>;
+    /*
+     * Possible values and meaning
+     * int                                                  - horizontal gutter
+     * Dictionary<string, int>                              - horizontal gutters for different screen sizes
+     * (int, int)                                           - horizontal gutter, vertical gutter
+     * (Dictionary<string, int>, int)                       - horizontal gutters for different screen sizes, vertical gutter
+     * (int, Dictionary<string, int>)                       - horizontal gutter, vertical gutter for different screen sizes
+     * (Dictionary<string, int>, Dictionary<string, int>)   - horizontal gutters for different screen sizes, vertical gutter for different screen sizes
+     */
+
+    using GutterType = OneOf<int, Dictionary<string, int>, (int, int), (Dictionary<string, int>, int), (int, Dictionary<string, int>), (Dictionary<string, int>, Dictionary<string, int>)>;
 
     public partial class Row : AntDomComponentBase
     {
@@ -30,27 +40,27 @@ namespace AntDesign
         public string Justify { get; set; }
 
         [Parameter]
+        public bool Wrap { get; set; } = true;
+
+        [Parameter]
         public GutterType Gutter { get; set; }
 
         [Parameter]
         public EventCallback<BreakpointType> OnBreakpoint { get; set; }
 
+        /// <summary>
+        /// Used to set gutter during pre-rendering
+        /// </summary>
+        [Parameter]
+        public BreakpointType DefaultBreakpoint { get; set; } = BreakpointType.Xxl;
+
         [Inject]
         public DomEventService DomEventService { get; set; }
 
-        private string GutterStyle { get; set; }
+        private string _gutterStyle;
+        private BreakpointType _currentBreakPoint;
 
-        public IList<Col> Cols { get; } = new List<Col>();
-
-        private static Hashtable _gridResponsiveMap = new Hashtable()
-        {
-            [nameof(BreakpointType.Xs)] = "(max-width: 575px)",
-            [nameof(BreakpointType.Sm)] = "(max-width: 576px)",
-            [nameof(BreakpointType.Md)] = "(max-width: 768px)",
-            [nameof(BreakpointType.Lg)] = "(max-width: 992px)",
-            [nameof(BreakpointType.Xl)] = "(max-width: 1200px)",
-            [nameof(BreakpointType.Xxl)] = "(max-width: 1600px)",
-        };
+        private IList<Col> _cols = new List<Col>();
 
         private static BreakpointType[] _breakpoints = new[] {
             BreakpointType.Xs,
@@ -73,7 +83,14 @@ namespace AntDesign
                 .If($"{prefixCls}-center", () => Justify == "center")
                 .If($"{prefixCls}-space-around", () => Justify == "space-around")
                 .If($"{prefixCls}-space-between", () => Justify == "space-between")
+                .If($"{prefixCls}-no-wrap", () => !Wrap)
+                .If($"{prefixCls}-rtl", () => RTL)
                 ;
+
+            if (DefaultBreakpoint != null)
+            {
+                SetGutterStyle(DefaultBreakpoint.Name);
+            }
 
             await base.OnInitializedAsync();
         }
@@ -88,6 +105,18 @@ namespace AntDesign
             }
 
             await base.OnAfterRenderAsync(firstRender);
+        }
+
+        internal void AddCol(Col col)
+        {
+            this._cols.Add(col);
+            var gutter = this.GetGutter((_currentBreakPoint ?? DefaultBreakpoint).Name);
+            col.RowGutterChanged(gutter);
+        }
+
+        internal void RemoveCol(Col col)
+        {
+            this._cols.Remove(col);
         }
 
         private async void OnResize(Window window)
@@ -106,6 +135,8 @@ namespace AntDesign
                 }
             }
 
+            this._currentBreakPoint = actualBreakpoint;
+
             SetGutterStyle(actualBreakpoint.Name);
 
             if (OnBreakpoint.HasDelegate)
@@ -119,17 +150,14 @@ namespace AntDesign
         private void SetGutterStyle(string breakPoint)
         {
             var gutter = this.GetGutter(breakPoint);
-            Cols.ForEach(x => x.RowGutterChanged(gutter));
+            _cols.ForEach(x => x.RowGutterChanged(gutter));
 
-            GutterStyle = "";
+            _gutterStyle = "";
             if (gutter.horizontalGutter > 0)
             {
-                GutterStyle = $"margin-left: -{gutter.horizontalGutter / 2}px;margin-right: -{gutter.horizontalGutter / 2}px;";
+                _gutterStyle = $"margin-left: -{gutter.horizontalGutter / 2}px; margin-right: -{gutter.horizontalGutter / 2}px; ";
             }
-            if (gutter.verticalGutter > 0)
-            {
-                GutterStyle += $"margin-top: -{gutter.verticalGutter / 2}px;margin-bottom: -{gutter.verticalGutter / 2}px;";
-            }
+            _gutterStyle += $"row-gap: {gutter.verticalGutter}px; ";
 
             StateHasChanged();
         }
@@ -143,7 +171,10 @@ namespace AntDesign
             return gutter.Match(
                 num => (num, 0),
                 dic => breakPoint != null && dic.ContainsKey(breakPoint) ? (dic[breakPoint], 0) : (0, 0),
-                tuple => tuple
+                tuple => tuple,
+                tupleDicInt => (tupleDicInt.Item1.ContainsKey(breakPoint) ? tupleDicInt.Item1[breakPoint] : 0, tupleDicInt.Item2),
+                tupleIntDic => (tupleIntDic.Item1, tupleIntDic.Item2.ContainsKey(breakPoint) ? tupleIntDic.Item2[breakPoint] : 0),
+                tupleDicDic => (tupleDicDic.Item1.ContainsKey(breakPoint) ? tupleDicDic.Item1[breakPoint] : 0, tupleDicDic.Item2.ContainsKey(breakPoint) ? tupleDicDic.Item2[breakPoint] : 0)
             );
         }
 

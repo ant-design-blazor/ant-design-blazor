@@ -1,0 +1,15 @@
+<Pagination Total="200" PrevIcon="prevIcon" NextIcon="nextIcon" JumpPrevIcon="jumpPrevIcon" JumpNextIcon="jumpNextIcon"></Pagination>
+
+@code {
+
+    const string disabledStyle = "color: rgba(0,0,0,.25); border-color: #d9d9d9; cursor: not-allowed;";
+
+    RenderFragment<PaginationItemRenderContext> prevIcon = ctx => @<Icon Type="caret-left" Style="@(ctx.Disabled ? disabledStyle : "")" Theme="outline"/>;
+
+    RenderFragment<PaginationItemRenderContext> nextIcon = ctx => @<Icon Type="caret-right" Style="@(ctx.Disabled ? disabledStyle : "")" Theme="outline"/>;
+
+    RenderFragment<PaginationItemRenderContext> jumpPrevIcon = _ => @<span>-</span>;
+
+    RenderFragment<PaginationItemRenderContext> jumpNextIcon = _ => @<span>+</span>;
+
+}

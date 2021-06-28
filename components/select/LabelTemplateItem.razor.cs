@@ -16,6 +16,22 @@ namespace AntDesign.Select
         [Parameter] public string ContentClass { get; set; }
         [Parameter] public string RemoveIconStyle { get; set; }
         [Parameter] public string RemoveIconClass { get; set; }
+        [Parameter] public ForwardRef RefBack { get; set; } = new ForwardRef();
+
+        private ElementReference _ref;
+
+        /// <summary>
+        /// Returned ElementRef reference for DOM element.
+        /// </summary>
+        public virtual ElementReference Ref
+        {
+            get => _ref;
+            set
+            {
+                _ref = value;
+                RefBack?.Set(value);
+            }
+        }
 
         protected override void OnInitialized()
         {

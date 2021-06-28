@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.AspNetCore.Components;
@@ -78,7 +77,21 @@ namespace AntDesign
 
         [Parameter] public int Height { get; set; } = 256;
 
-        [Parameter] public int ZIndex { get; set; } = 1000;
+        [Parameter]
+        public int ZIndex
+        {
+            get { return _zIndex; }
+            set
+            {
+                _zIndex = value;
+                if (_zIndex == 1000)
+                    _zIndexStyle = "";
+                else
+                    _zIndexStyle = $"z-index: {_zIndex};";
+            }
+        }
+
+        private string InnerZIndexStyle => (_isOpen || _isClosing) ? _zIndexStyle : "z-index:-9999;";
 
         [Parameter] public int OffsetX { get; set; } = 0;
 
@@ -113,6 +126,7 @@ namespace AntDesign
 
         private bool _isClosing = false;
         private bool _isOpen = default;
+        private bool _isRenderedDrawerStyle = false;
 
         private string _originalPlacement;
 
@@ -122,17 +136,17 @@ namespace AntDesign
         {
             get
             {
-                if (!this._isOpen || this.OffsetX + this.OffsetY == 0)
+                if (!this._isOpen || (OffsetX == 0 && OffsetY == 0))
                 {
                     return null;
                 }
 
                 return Placement switch
                 {
-                    "left" => $"translateX({this.OffsetX}px)",
-                    "right" => $"translateX(-{this.OffsetX}px)",
-                    "top" => $"translateY({this.OffsetY}px)",
-                    "bottom" => $"translateY(-{this.OffsetY}px)",
+                    "left" => $"translateX({this.OffsetX}px);",
+                    "right" => $"translateX(-{this.OffsetX}px);",
+                    "top" => $"translateY({this.OffsetY}px);",
+                    "bottom" => $"translateY(-{this.OffsetY}px);",
                     _ => null
                 };
             }
@@ -181,7 +195,7 @@ namespace AntDesign
 
         private Regex _renderInCurrentContainerRegex = new Regex("position:[\\s]*absolute");
 
-        private string _drawerStyle;
+        private string _drawerStyle = "";
 
         private bool _isPlacementFirstChange = true;
 
@@ -192,6 +206,7 @@ namespace AntDesign
                 .Add(prefixCls)
                 .If($"{prefixCls}-open", () => _isOpen)
                 .If($"{prefixCls}-{Placement}", () => Placement.IsIn("top", "bottom", "right", "left"))
+                .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
             this.TitleClassMapper.Clear()
@@ -247,13 +262,12 @@ namespace AntDesign
                     }
                     StateHasChanged();
                 }
-                else
+                if (!_isRenderedDrawerStyle)
                 {
-                    if (!string.IsNullOrWhiteSpace(_drawerStyle))
-                    {
-                        _drawerStyle = "";
-                        StateHasChanged();
-                    }
+                    _isRenderedDrawerStyle = true;
+                    await Task.Delay(300);
+                    _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform) ? $"transform: {OffsetTransform};" : "";
+                    StateHasChanged();
                 }
             }
             else
@@ -267,6 +281,8 @@ namespace AntDesign
         }
 
         private Timer _timer;
+        private int _zIndex = 1000;
+        private string _zIndexStyle = "";
 
         private void TriggerPlacementChangeCycleOnce()
         {
@@ -309,6 +325,7 @@ namespace AntDesign
         private async Task HandleClose(bool isChangeByParamater = false)
         {
             _isRenderAnimation = false;
+            _isRenderedDrawerStyle = false;
             if (!isChangeByParamater)
             {
                 await OnClose.InvokeAsync(this);
@@ -352,12 +369,13 @@ namespace AntDesign
 
                 style = $"transition:{_transformTransition} {_heightTransition} {_widthTransition};";
             }
-            _drawerStyle = style;
-        }
 
-        internal async Task InvokeStateHasChangedAsync()
-        {
-            await InvokeAsync(StateHasChanged);
+            if (!string.IsNullOrWhiteSpace(OffsetTransform))
+            {
+                style += $"transform: {OffsetTransform};";
+            }
+
+            _drawerStyle = style;
         }
     }
 }

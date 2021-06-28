@@ -1,0 +1,46 @@
+﻿@using System.ComponentModel
+@inherits FeedbackComponent<string, string>
+
+<div>
+    <Text>Please input "@config"</Text>
+    value: <Input @bind-Value="value" Placeholder="@config" />
+</div>
+
+@code{
+
+    string config;
+
+    string value;
+
+    protected override void OnInitialized()
+    {
+        config = this.Options;
+        base.OnInitialized();
+    }
+
+
+    public override async Task OnFeedbackOkAsync(ModalClosingEventArgs args)
+    {
+        if (FeedbackRef is ConfirmRef confirmRef)
+        {
+            confirmRef.Config.OkButtonProps.Loading = true;
+            await confirmRef.UpdateConfigAsync();
+        }
+        else if (FeedbackRef is ModalRef modalRef)
+        {
+            modalRef.Config.ConfirmLoading = true;
+            await modalRef.UpdateConfigAsync();
+        }
+
+        await Task.Delay(1000);
+        // only the input's value equals the initialized value, the OK button will close the confirm dialog box
+        if (value != config)
+            args.Cancel = true;
+        else
+            // method 1(not recommended): await (FeedbackRef as ConfirmRef<string>)!.OkAsync(value);
+            // method 2: await (FeedbackRef as IOkCancelRef<string>)!.OkAsync(value);
+            await base.OkCancelRefWithResult!.OnOk(value);
+
+        await base.OnFeedbackOkAsync(args);
+    }
+}

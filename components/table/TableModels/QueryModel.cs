@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace AntDesign.TableModels
 {
-    public class QueryModel<TItem>
+    public class QueryModel
     {
         public int PageIndex { get; }
 
@@ -12,19 +12,40 @@ namespace AntDesign.TableModels
 
         public IList<ITableSortModel> SortModel { get; private set; }
 
-        [JsonIgnore]
-        public IQueryable<TItem> QueryableLambda { get; private set; }
+        public IList<ITableFilterModel> FilterModel { get; private set; }
+
+        public QueryModel()
+        {
+            this.SortModel = new List<ITableSortModel>();
+            this.FilterModel = new List<ITableFilterModel>();
+        }
 
         internal QueryModel(int pageIndex, int pageSize)
         {
             this.PageSize = pageSize;
             this.PageIndex = pageIndex;
             this.SortModel = new List<ITableSortModel>();
+            this.FilterModel = new List<ITableFilterModel>();
+        }
+    }
+
+    public class QueryModel<TItem> : QueryModel
+    {
+        [JsonIgnore]
+        public IQueryable<TItem> QueryableLambda { get; private set; }
+
+        internal QueryModel(int pageIndex, int pageSize) : base(pageIndex, pageSize)
+        {
         }
 
         internal void AddSortModel(ITableSortModel model)
         {
             SortModel.Add(model);
+        }
+
+        internal void AddFilterModel(ITableFilterModel model)
+        {
+            FilterModel.Add(model);
         }
 
         internal void SetQueryableLambda(IQueryable<TItem> query)

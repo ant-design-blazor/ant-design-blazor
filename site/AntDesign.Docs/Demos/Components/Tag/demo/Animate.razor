@@ -1,0 +1,117 @@
+﻿<div>
+    <div style="margin-bottom: 16px;">
+        @foreach (var item in lstTags)
+        {
+            if (!_eachTagAnimationClass.ContainsKey(item))
+            {
+                _eachTagAnimationClass.Add(item, "");
+            }
+            <Tag @key="item" Closable OnClose="()=>OnClose(item)" OnClosing="@((e) => OnClosing(e, item))" Class="@_eachTagAnimationClass[item]">@item</Tag>
+        }
+    </div>
+    <div>
+        @if (inputVisible)
+        {
+            <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="HandleInputConfirm" OnPressEnter="HandleInputConfirm" AutoFocus />
+        }
+        else
+        {
+            <Tag Class="site-tag-plus" OnClick="@(() => inputVisible = !inputVisible)">
+                <Icon Type="plus" />New Tag
+            </Tag>
+        }
+    </div>
+</div>
+<style>
+    .site-tag-plus {
+        background: #fff;
+        border-style: dashed;
+    }
+
+    .animate-shrink {
+        transition: 0.3s;
+        transform: scale(0.000001,0.000001);
+        transform-origin: 1% 100%;
+    }
+
+    .animate-grow {
+        transform: scale(0,0);
+        transform-origin: 1% 100%;
+        animation: grow cubic-bezier(0.785, 0.135, 0.15, 0.86) 0.5s forwards;
+        animation-delay: 0.3s;
+    }
+
+    @@keyframes grow {
+        from {
+            transform: scale(0,0);
+        }
+
+        to {
+            transform: scale(1,1);
+        }
+    }
+</style>
+@code{
+    private bool inputVisible { get; set; } = false;
+    private bool _animate;
+    private Dictionary<string, string> _eachTagAnimationClass = new();
+    private int _i;
+    string _inputValue;
+    Input<string> _inputRef;
+    List<string> lstTags { get; set; } = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        lstTags.Add("Tag 1");
+        lstTags.Add("Tag 2");
+        lstTags.Add("Tag 3");
+    }
+
+
+    void ValueChange(ChangeEventArgs value)
+    {
+        lstTags.Add(value.Value.ToString());
+    }
+
+    void OnClose(string item)
+    {
+        lstTags.Remove(item);
+    }
+
+    async Task OnClosing(CloseEventArgs<MouseEventArgs> args, string key)
+    {
+        _eachTagAnimationClass[key] = $"animate-shrink";
+        await Task.Delay(500);
+    }
+
+    async Task HandleInputConfirm()
+    {
+        if (string.IsNullOrEmpty(_inputValue))
+        {
+            CancelInput();
+            return;
+        }
+
+        string res = lstTags.Find(s => s == _inputValue);
+        string tag = _inputValue;
+
+        if (string.IsNullOrEmpty(res))
+        {
+            _eachTagAnimationClass.Add(_inputValue, "animate-grow");
+            lstTags.Add(_inputValue);
+        }
+
+        CancelInput();
+
+        StateHasChanged();
+        await Task.Delay(500);
+        _eachTagAnimationClass[tag] = "";
+    }
+
+    void CancelInput()
+    {
+        this._inputValue = "";
+        this.inputVisible = false;
+    }
+
+}

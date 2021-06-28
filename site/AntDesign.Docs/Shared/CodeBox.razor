@@ -1,0 +1,105 @@
+﻿@using AntDesign.JsInterop
+@using AntDesign.Docs.Services
+@inherits ComponentBase
+
+<div class="code-box" id="@DemoId">
+    <section class="code-box-demo">
+        @if (Demo.Iframe > 0)
+        {
+            <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@($"/mock?demoId={DemoId}&type={Demo.Type}")" />
+        }
+        else
+        {
+            @Component
+        }
+    </section>
+    <section class="code-box-meta markdown">
+        <div class="code-box-title" @onclick="@AnchorClick">
+            <a @onclick="AnchorClick">@Demo.Title</a>
+            <Tooltip Title="@lang.Resources["app.content.edit-demo"]">
+                <Unbound>
+                    <a @ref="context.Current" class="edit-button" href="@EditUrl" target="_blank" rel="noopener noreferrer">
+                        <Icon Type="edit" />
+                    </a>
+                </Unbound>
+            </Tooltip>
+        </div>
+        <div class="code-box-description">
+            @((MarkupString)Demo.Description)
+        </div>
+        <div class="code-box-actions">
+            <Tooltip Title="@lang.Resources[_copied?"app.demo.copied":"app.demo.copy"]" OnVisibleChange="() => _copied = false">
+                <Unbound>
+                    <Icon RefBack="context" Type="@(_copied?"check" : "snippets")" Class="code-box-code-copy code-box-code-action" OnClick="Copy" />
+                </Unbound>
+            </Tooltip>
+            <Tooltip Title="@(CodeExpand?lang.Resources["app.demo.code.hide"] : lang.Resources["app.demo.code.show"])">
+                <Unbound>
+                    <span @ref="context.Current" class="code-expand-icon code-box-code-action" @onclick="_ => CodeExpand = !CodeExpand">
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(CodeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="@(!CodeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
+                    </span>
+                </Unbound>
+            </Tooltip>
+            @DebugIcon
+        </div>
+    </section>
+    <section class="highlight-wrapper @(CodeExpand?"highlight-wrapper-expand":"")">
+        <div class="highlight">
+            <HighlightedCode Code="@Demo.Code" CanLoad="CodeExpand" Language="html"></HighlightedCode>
+        </div>
+    </section>
+    <style>
+        @Demo.Style
+    </style>
+</div>
+
+@inject InteropService InteropService
+@inject DemoService demoService;
+@inject ILanguageService lang;
+
+@code {
+
+    [Parameter]
+    public string ComponentName { get; set; }
+
+    [Parameter]
+    public DemoItem Demo { get; set; }
+
+    [Parameter]
+    public bool CodeExpand { get; set; }
+
+    RenderFragment Component;
+
+    RenderFragment DebugIcon;
+
+    private bool _copied;
+
+    protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
+
+    private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/{ComponentName}/demo/{Demo.Name}.razor";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Component = demoService.GetShowCase(Demo.Type);
+
+#if DEBUG
+        DebugIcon =@<a href="mock?type=@(Demo.Type)" class="code-box-code-action" target="_blank">
+            <Icon Type="bug" />
+        </a>;
+#endif
+    }
+
+    async Task Copy()
+    {
+        await InteropService.Copy(Demo.Code);
+        _copied = true;
+    }
+
+    async Task AnchorClick()
+    {
+        await InteropService.JsInvokeAsync("window.eval", $"window.location.hash='{DemoId}'");
+    }
+}

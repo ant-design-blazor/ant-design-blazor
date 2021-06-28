@@ -1,0 +1,103 @@
+<Tree @ref="tree" Checkable Multiple TItem="string">
+    <Nodes>
+        <TreeNode Title="A" Key="100" TItem="string">
+            <Nodes>
+                <TreeNode Title="A1" Key="110" TItem="string">
+                    <Nodes>
+                        <TreeNode Title="A1-1" Key="111" TItem="string"></TreeNode>
+                        <TreeNode Title="A2-2" Key="112" TItem="string"></TreeNode>
+                    </Nodes>
+                </TreeNode>
+                <TreeNode Title="A2" Key="120" Disabled TItem="string">
+                    <Nodes>
+                        <TreeNode Title="A2-1" Key="121" TItem="string"></TreeNode>
+                        <TreeNode Title="A1-2" Key="122" TItem="string"></TreeNode>
+                    </Nodes>
+                </TreeNode>
+                <TreeNode Title="A3" Key="130" DisableCheckbox TItem="string">
+                    <Nodes>
+                        <TreeNode Title="A3-1" Key="131" TItem="string"></TreeNode>
+                        <TreeNode Title="A3-2" Key="132" DisableCheckbox TItem="string"></TreeNode>
+                        <TreeNode Title="A3-3" Key="133" Disabled TItem="string"></TreeNode>
+                    </Nodes>
+                </TreeNode>
+            </Nodes>
+        </TreeNode>
+        <TreeNode Title="B" Key="200" TItem="string"></TreeNode>
+    </Nodes>
+</Tree>
+
+<br />
+<Button OnClick="PrintCheckedNodesTitle">Print Checked Nodes Title</Button>
+
+<Button OnClick="PrintCheckedNodesKey">Print Checked Nodes Key</Button>
+
+<Button OnClick="DecheckedAll">Dechecked All</Button>
+<br />
+<br />
+
+<Button OnClick="PrintSelectedNodes">Print Selected Nodes</Button>
+
+<Button OnClick="DeselectAll">Deselect All</Button>
+<br />
+
+<Button OnClick="ExpandAll">Expand All Nodes</Button>
+
+<Button OnClick="CollapseAll">Collapse All Nodes</Button>
+
+@if (string.IsNullOrWhiteSpace(printType) == false)
+{
+    <div>@printType</div>
+    <ul>
+        @foreach (var item in printTexts)
+        {
+            <li>@item</li>
+        }
+    </ul>
+}
+@code{
+
+    string printType;
+
+    List<string> printTexts = new List<string>();
+
+    Tree<string> tree;
+
+    private void PrintCheckedNodesTitle()
+    {
+        printType = "CheckedNodesTitle";
+        printTexts = tree.CheckedTitles;
+    }
+
+    private void PrintCheckedNodesKey()
+    {
+        printType = "CheckedNodesKey";
+        printTexts = tree.CheckedKeys;
+    }
+
+    private void DecheckedAll()
+    {
+        tree.DecheckedAll();
+    }
+
+    private void PrintSelectedNodes()
+    {
+        printType = "SelectedNodes";
+        printTexts = tree.SelectedTitles;
+    }
+
+    private void DeselectAll()
+    {
+        tree.DeselectAll();
+    }
+
+    private void ExpandAll()
+    {
+        tree.ExpandAll();
+    }
+
+    private void CollapseAll()
+    {
+        tree.CollapseAll();
+    }
+}

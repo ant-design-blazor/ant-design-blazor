@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
-using OneOf;
 
 namespace AntDesign
 {
@@ -40,12 +37,12 @@ namespace AntDesign
 
         internal override string GetOverlayEnterClass()
         {
-            return "zoom-big-fast-enter zoom-big-fast-enter-active zoom-big-fast";
+            return "ant-zoom-big-enter ant-zoom-big-enter-active ant-zoom-big";
         }
 
         internal override string GetOverlayLeaveClass()
         {
-            return "zoom-big-fast-leave zoom-big-fast-leave-active zoom-big-fast";
+            return "ant-zoom-big-leave ant-zoom-big-leave-active ant-zoom-big";
         }
 
         internal override async Task Show(int? overlayLeft = null, int? overlayTop = null)
@@ -67,6 +64,5 @@ namespace AntDesign
 
             await base.Hide(force);
         }
-
     }
 }

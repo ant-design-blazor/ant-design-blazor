@@ -1,8 +1,8 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<CascadingValue Value="this">
-    <div class="@ClassMapper.Class" style="@Style" id="@Id">
+<CascadingValue Value="this" IsFixed="@true">
+    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
         @if (TitleTemplate != null || Title != null || Extra != null || CardTabs != null)
         {
             <div class="ant-card-head">
@@ -57,7 +57,13 @@
                 }
             </div>
         }
-        @if (Actions.Count > 0)
+        @if (ActionTemplate != null)
+        {
+            <ul class="ant-card-actions">
+                @ActionTemplate
+            </ul>
+        }
+        else if (Actions.Count > 0)
         {
             <ul class="ant-card-actions">
                 @foreach (var action in Actions)

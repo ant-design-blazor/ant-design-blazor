@@ -1,0 +1,25 @@
+﻿<Dropdown>
+    <Overlay>
+        <Menu>
+            <MenuItem @key="0">
+                <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
+                    1st menu item
+                </a>
+            </MenuItem>
+            <MenuItem @key="1">
+                <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
+                    2nd menu item
+                </a>
+            </MenuItem>            
+            <MenuDivider/>
+            <MenuItem @key="3" disabled>
+                3rd menu item（disabled）
+            </MenuItem>
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        <a class="ant-dropdown-link" @onclick:preventDefault>
+            Hover me <Icon Type="down" />
+        </a>
+    </ChildContent>
+</Dropdown>

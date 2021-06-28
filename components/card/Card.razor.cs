@@ -13,6 +13,9 @@ namespace AntDesign
         public RenderFragment Body { get; set; }
 
         [Parameter]
+        public RenderFragment ActionTemplate { get; set; }
+
+        [Parameter]
         public bool Bordered { get; set; } = true;
 
         [Parameter]
@@ -49,6 +52,7 @@ namespace AntDesign
         public RenderFragment CardTabs { get; set; }
 
         private bool _hasGrids;
+        internal IList<CardAction> _cardActions;
 
         protected void SetClassMap()
         {
@@ -80,6 +84,12 @@ namespace AntDesign
         {
             this.Body = body;
             StateHasChanged();
+        }
+
+        internal void AddCardAction(CardAction action)
+        {
+            _cardActions ??= new List<CardAction>();
+            _cardActions.Add(action);
         }
     }
 }

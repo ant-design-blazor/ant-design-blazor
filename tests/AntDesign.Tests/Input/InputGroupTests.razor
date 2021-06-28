@@ -1,0 +1,22 @@
+﻿@inherits AntDesignTestBase
+@code {
+
+	[Fact]
+	public void InputGroup_overrides_block_style()
+	{
+		//Arrange	
+		string value = null;
+		int debounce = 50;
+		var cut = Render(
+			@<InputGroup Compact>
+				<Input DefaultValue="@("")"/>
+				<Input DefaultValue="@("")"/>
+			</InputGroup>
+	);
+		var container = cut.Find("span");
+		//Act
+		var style = container.GetAttribute("style");
+		//Assert				
+		style.Should().Contain("display:", Exactly.Once()).And.Contain("display: flex;");		
+	} 
+}

@@ -41,10 +41,12 @@ namespace AntDesign
 
         private void SetClassMap()
         {
-            ClassMapper.Clear().Add("ant-collapse")
+            ClassMapper
+                .Add("ant-collapse")
                 .If("ant-collapse-icon-position-left", () => ExpandIconPosition == CollapseExpandIconPosition.Left)
                 .If("ant-collapse-icon-position-right", () => ExpandIconPosition == CollapseExpandIconPosition.Right)
-                .If("ant-collapse-borderless", () => !this.Bordered);
+                .If("ant-collapse-borderless", () => !this.Bordered)
+                .If("ant-collapse-rtl", () => RTL); ;
         }
 
         protected override async Task OnInitializedAsync()

@@ -1,0 +1,71 @@
+﻿<div class="space-align-container">
+    <div class="space-align-block">
+        <Space Align="center">
+            <SpaceItem>
+                center
+            </SpaceItem>
+            <SpaceItem>
+                <Button Type="primary">Primary</Button>
+            </SpaceItem>
+            <SpaceItem>
+                <span class="mock-block">Block</span>
+            </SpaceItem>
+        </Space>
+    </div>
+    <div class="space-align-block">
+        <Space Align="start">
+            <SpaceItem>
+                start
+            </SpaceItem>
+            <SpaceItem>
+                <Button Type="primary">Primary</Button>
+            </SpaceItem>
+            <SpaceItem>
+                <span class="mock-block">Block</span>
+            </SpaceItem>
+        </Space>
+    </div>
+    <div class="space-align-block">
+        <Space Align="end">
+            <SpaceItem>
+                end
+                <Button Type="primary">Primary</Button>
+            </SpaceItem>
+            <SpaceItem>
+                <span class="mock-block">Block</span>
+            </SpaceItem>
+        </Space>
+    </div>
+    <div class="space-align-block">
+        <Space Align="baseline">
+            <SpaceItem>
+                baseline
+                <Button Type="primary">Primary</Button>
+            </SpaceItem>
+            <SpaceItem>
+                <span class="mock-block">Block</span>
+            </SpaceItem>
+        </Space>
+    </div>
+</div>
+
+<style>
+    .space-align-container {
+        display: flex;
+        align-item: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .space-align-block {
+        margin: 8px 4px;
+        border: 1px solid #40a9ff;
+        padding: 4px;
+        flex: none;
+    }
+
+        .space-align-block .mock-block {
+            display: inline-block;
+            padding: 32px 8px 16px;
+            background: rgba(150, 150, 150, 0.2);
+        }
+</style>

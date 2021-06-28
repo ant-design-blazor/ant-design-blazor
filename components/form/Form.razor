@@ -12,7 +12,7 @@
               OnValidSubmit="OnValidSubmit"
               OnInvalidSubmit="OnInvalidSubmit">
         @Validator
-        <CascadingValue Value="this" Name="Form" TValue="IForm">
+        <CascadingValue Value="this" Name="Form" TValue="IForm" IsFixed="@true">
             @if (!string.IsNullOrEmpty(Size))
             {
                 <CascadingValue Value="Size" Name="FormSize">

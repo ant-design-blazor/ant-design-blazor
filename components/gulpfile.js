@@ -9,9 +9,33 @@ var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var buffer = require('vinyl-buffer');
 
-gulp.task('less', function () {
+gulp.task('less-default', function () {
   return gulp
     .src('ant-design-blazor.less')
+    .pipe(less({ javascriptEnabled: true }))
+    .pipe(cleanCss({ compatibility: 'ie8' }))
+    .pipe(gulp.dest('wwwroot/css'));
+});
+
+gulp.task('less-aliyun', function () {
+  return gulp
+    .src('ant-design-blazor.aliyun.less')
+    .pipe(less({ javascriptEnabled: true }))
+    .pipe(cleanCss({ compatibility: 'ie8' }))
+    .pipe(gulp.dest('wwwroot/css'));
+});
+
+gulp.task('less-compact', function () {
+  return gulp
+    .src('ant-design-blazor.compact.less')
+    .pipe(less({ javascriptEnabled: true }))
+    .pipe(cleanCss({ compatibility: 'ie8' }))
+    .pipe(gulp.dest('wwwroot/css'));
+});
+
+gulp.task('less-dark', function () {
+  return gulp
+    .src('ant-design-blazor.dark.less')
     .pipe(less({ javascriptEnabled: true }))
     .pipe(cleanCss({ compatibility: 'ie8' }))
     .pipe(gulp.dest('wwwroot/css'));
@@ -43,4 +67,4 @@ gulp.task('src', function () {
   return gulp.src(['**/*.less', '!wwwroot/**']).pipe(gulp.dest('wwwroot/less'));
 });
 
-gulp.task('default', gulp.parallel('less', 'ts', 'src'), function () { });
+gulp.task('default', gulp.parallel('less-default', 'less-aliyun', 'less-compact', 'less-dark', 'ts', 'src'), function () { });

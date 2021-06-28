@@ -7,11 +7,15 @@
     var calendar = CultureInfo.InvariantCulture.Calendar;
 
     int startYear = PickerValue.Year / 10 * 10 - 1;
-    DateTime startDate = new DateTime(startYear, 1, 1);
+    DateTime startDate;
+    if (startYear > 0)
+        startDate = new DateTime(startYear, 1, 1);
+    else
+        startDate = DateTime.MinValue;
 
     int yearIndex = 0;
 }
-<div class='@($"{PrefixCls}-panel")'>
+<div class='@($"{PrefixCls}-panel")' @ref="Ref">
     <DatePickerTemplate @attributes="GetAttritubes()"
                         TValue="TValue"
                         MaxRow="MAX_ROW"
@@ -22,7 +26,7 @@
                         IsSelected="date => DateHelper.IsSameYear(date, Value)"
                         GetColTitle='date => date.ToString(Locale.Lang.YearFormat, CultureInfo)'
                         OnValueSelect="date => OnSelectYear(date)"
-                        GetNextColValue="date => date.AddYears(1)">
+                        GetNextColValue="date => DateHelper.AddYearsSafely(date, 1)">
         <RenderPickerHeader>
             <DatePickerHeader @attributes="GetAttritubes()"
                               TValue="TValue"
@@ -47,7 +51,7 @@
 
     private bool IsInView(DateTime date, DateTime startDate)
     {
-        return date.Year != startDate.AddYears(FIRST_YEAR_INDEX).Year
-        && date.Year != startDate.AddYears(LAST_YEAR_INDEX).Year;
+        return date.Year != DateHelper.AddYearsSafely(startDate, FIRST_YEAR_INDEX).Year
+        && date.Year != DateHelper.AddYearsSafely(startDate, LAST_YEAR_INDEX).Year;
     }
 }

@@ -84,7 +84,6 @@ namespace AntDesign
             {
                 if (await JsInvokeAsync<bool>(JSInteropConstants.MatchMedia, _gridResponsiveMap[bp]))
                 {
-                    Console.WriteLine(bp);
                     breakPoint = bp;
                 }
             });

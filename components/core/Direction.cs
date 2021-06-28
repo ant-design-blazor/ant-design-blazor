@@ -12,12 +12,6 @@ namespace AntDesign
         Inline
     }
 
-    public enum AntDirectionVHType
-    {
-        Vertical,
-        Horizontal
-    }
-
     public enum AntFourDirectionType
     {
         Top,
@@ -31,5 +25,10 @@ namespace AntDesign
         Top,
         Middle,
         Bottom
+    }
+    public enum AntLabelAlignType
+    {
+        Left,
+        Right
     }
 }

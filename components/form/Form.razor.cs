@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -22,6 +21,9 @@ namespace AntDesign
 
         [Parameter]
         public ColLayoutParam LabelCol { get; set; } = new ColLayoutParam();
+
+        [Parameter]
+        public AntLabelAlignType? LabelAlign { get; set; }
 
         [Parameter]
         public OneOf<string, int> LabelColSpan
@@ -61,7 +63,18 @@ namespace AntDesign
         public string Name { get; set; }
 
         [Parameter]
-        public TModel Model { get; set; }
+        public TModel Model
+        {
+            get { return _model; }
+            set
+            {
+                if (!(_model?.Equals(value) ?? false))
+                {
+                    _model = value;
+                    _editContext = new EditContext(Model);
+                }
+            }
+        }
 
         [Parameter]
         public bool Loading { get; set; }
@@ -95,6 +108,7 @@ namespace AntDesign
         private EditContext _editContext;
         private IList<IFormItem> _formItems = new List<IFormItem>();
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
+        private TModel _model;
 
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
@@ -102,6 +116,7 @@ namespace AntDesign
 
         EditContext IForm.EditContext => _editContext;
 
+        AntLabelAlignType? IForm.LabelAlign => LabelAlign;
         string IForm.Size => Size;
         string IForm.Name => Name;
         object IForm.Model => Model;
@@ -134,7 +149,8 @@ namespace AntDesign
         {
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
-                .Add($"{_prefixCls}-{Layout.ToLower()}")
+                .Get(() => $"{_prefixCls}-{Layout.ToLowerInvariant()}")
+                .If($"{_prefixCls}-rtl", () => RTL)
                ;
         }
 
@@ -153,6 +169,7 @@ namespace AntDesign
         public void Reset()
         {
             _controls.ForEach(item => item.Reset());
+            _editContext = new EditContext(Model);
         }
 
         void IForm.AddFormItem(IFormItem formItem)
@@ -163,6 +180,14 @@ namespace AntDesign
         void IForm.AddControl(IControlValueAccessor valueAccessor)
         {
             this._controls.Add(valueAccessor);
+        }
+
+        void IForm.RemoveControl(IControlValueAccessor valueAccessor)
+        {
+            if (_controls.Contains(valueAccessor))
+            {
+                this._controls.Remove(valueAccessor);
+            }
         }
 
         public void Submit()
@@ -187,6 +212,11 @@ namespace AntDesign
         public bool Validate()
         {
             return _editContext.Validate();
+        }
+
+        public void ValidationReset()
+        {
+            _editContext = new EditContext(Model);
         }
     }
 }

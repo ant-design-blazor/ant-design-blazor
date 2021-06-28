@@ -9,6 +9,8 @@ namespace AntDesign
     {
         public ITable Table { get; set; }
 
+        public bool IsInitialize { get; set; }
+
         public bool IsHeader { get; set; }
 
         public bool IsPlaceholder { get; set; }

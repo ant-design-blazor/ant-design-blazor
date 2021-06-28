@@ -44,14 +44,16 @@ namespace AntDesign
         private void SetClassMap()
         {
             string prefixName = "ant-statistic";
-            ClassMapper.Clear().Add(prefixName);
+            ClassMapper
+                .Add(prefixName)
+                .If($"{prefixName}-rtl", () => RTL);
         }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             SetClassMap();
         }
-
     }
 }

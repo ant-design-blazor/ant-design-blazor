@@ -3,16 +3,23 @@
 @using AntDesign.Internal;
 
 <Row class="@ClassMapper.Class" style="@Style" id="@Id">
-    @if (!string.IsNullOrEmpty(Label))
+    @if (!string.IsNullOrEmpty(Label) || LabelTemplate != null)
     {
-        <AntDesign.Col @attributes="GetLabelColAttributes()" class=@($"{_prefixCls}-label")>
-            <label class=@(Required ? $"{_prefixCls}-required" : _labelCls)> @(Label)</label>
+        <AntDesign.Col @attributes="GetLabelColAttributes()" Class="@_labelClassMapper.Class">
+            @if (LabelTemplate != null)
+            {
+                @LabelTemplate
+            }
+            else
+            {
+                <label class=@GetLabelClass()>@(Label)</label>
+            }
         </AntDesign.Col>
     }
-    <AntDesign.Col @attributes="GetWrapperColAttributes()" class=@($"{_prefixCls}-control")>
+    <AntDesign.Col @attributes="GetWrapperColAttributes()" Class=@($"{_prefixCls}-control")>
         <div class=@($"{_prefixCls}-control-input")>
             <div class=@($"{_prefixCls}-control-input-content")>
-                <CascadingValue Value="this" Name="FormItem" TValue="IFormItem">
+                <CascadingValue Value="this" Name="FormItem" TValue="IFormItem" IsFixed="@true">
                     @ChildContent
                 </CascadingValue>
             </div>

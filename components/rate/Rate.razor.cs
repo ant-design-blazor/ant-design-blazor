@@ -8,7 +8,6 @@ namespace AntDesign
 {
     public partial class Rate : AntDomComponentBase
     {
-
         [Parameter] public RenderFragment ChildContent { get; set; }
 
         /// <summary>
@@ -50,6 +49,7 @@ namespace AntDesign
             get { return _currentValue; }
             set
             {
+                _valueWasSet = true;
                 if (_currentValue != value)
                 {
                     this._currentValue = value;
@@ -81,34 +81,45 @@ namespace AntDesign
 
         /// <summary>
         /// 是否允许半选
+        /// Whether to allow half-selection
         /// </summary>
         private bool _hasHalf = false;
+
         /// <summary>
         /// 鼠标悬停时从最左到光标位置的星星数。
+        /// The number of stars from the far left to the cursor position when the hovered with mouse.
         /// </summary>
         private int _hoverValue = 0;
 
         /// <summary>
         /// 当前被选中的星星数量
+        /// Number of stars currently selected
         /// </summary>
         private decimal _currentValue;
 
         /// <summary>
         /// 是否获取的输入焦点
+        /// Wheter to get input focus.
         /// </summary>
         private bool _isFocused = false;
+
+        /// <summary>
+        /// Indicates if Value has been changed. Needed to avoid reseting to DefaultValue if exists.
+        /// </summary>
+        private bool _valueWasSet;
 
         private void Blur(FocusEventArgs e)
         {
             this._isFocused = false;
             OnBlur.InvokeAsync(e);
-
         }
+
         private void Focus(FocusEventArgs e)
         {
             this._isFocused = true;
             OnFocus.InvokeAsync(e);
         }
+
         private void KeyDown(KeyboardEventArgs e)
         {
             decimal oldVal = this.Value;
@@ -127,6 +138,7 @@ namespace AntDesign
                 this._hoverValue = (int)Math.Ceiling(this.Value);
             }
         }
+
         private void MouseLeave()
         {
             this._hasHalf = !(this.Value == (int)this.Value);
@@ -165,10 +177,9 @@ namespace AntDesign
             }
         }
 
-
         protected override void OnInitialized()
         {
-            if (DefaultValue > 0)
+            if (DefaultValue > 0 && !_valueWasSet)
             {
                 this.Value = DefaultValue;
             }
@@ -177,6 +188,7 @@ namespace AntDesign
             RateMetaDatas = Enumerable.Range(1, Count).Select(c => new RateMetaData() { SerialNumber = c - 1, ToolTipText = this.Tooltips?[c - 1] });
             base.OnInitialized();
         }
+
         protected override void OnParametersSet()
         {
             if (RateMetaDatas == null)
@@ -191,7 +203,8 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(clsPrefix)
-            .If("ant-rate-disabled", () => Disabled);
+                .If($"{clsPrefix}-disabled", () => Disabled)
+                .If($"{clsPrefix}-rtl", () => RTL);
         }
     }
 
@@ -200,7 +213,6 @@ namespace AntDesign
         public int SerialNumber { get; set; }
 
         public string ToolTipText { get; set; }
-
     }
 
     public class RateItemRenderContext

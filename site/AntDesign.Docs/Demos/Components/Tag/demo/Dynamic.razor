@@ -1,0 +1,71 @@
+﻿
+<div>    
+    <Tag>Unremovable</Tag>
+    @foreach (var item in lstTags)
+    {
+        <Tag @key="item" Closable OnClose="()=>OnClose(item)" >@item</Tag>
+    }        
+    @if (inputVisible)
+    {
+        <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="HandleInputConfirm" OnPressEnter="HandleInputConfirm" AutoFocus/>
+    }
+    else
+    {
+        <Tag Class="site-tag-plus" OnClick="@(() => inputVisible = !inputVisible)">
+            <Icon Type="plus" />New Tag
+        </Tag>
+    }    
+</div>
+<style>
+    .site-tag-plus {
+        background: #fff;
+        border-style: dashed;
+    }
+</style>
+@code{
+    private bool inputVisible { get; set; } = false;
+    string _inputValue;
+    Input<string> _inputRef;
+    List<string> lstTags { get; set; } = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        lstTags.Add("Tag 2");
+        lstTags.Add("Tag 3");        
+    }
+
+    void ValueChange(ChangeEventArgs value)
+    {
+        lstTags.Add(value.Value.ToString());
+    }
+
+    void OnClose(string item)
+    {
+        lstTags.Remove(item);
+    }
+
+    void HandleInputConfirm()
+    {
+        if (string.IsNullOrEmpty(_inputValue))
+        {
+            CancelInput();
+            return;
+        }
+
+        string res = lstTags.Find(s => s == _inputValue);
+
+        if (string.IsNullOrEmpty(res))
+        {
+            lstTags.Add(_inputValue);
+        }
+
+        CancelInput();
+    }
+
+    void CancelInput()
+    {
+        this._inputValue = "";
+        this.inputVisible = false;
+    }   
+
+}

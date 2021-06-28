@@ -39,8 +39,6 @@ namespace AntDesign
 
         #endregion Parameters
 
-        private ElementReference _divRef;
-
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -75,7 +73,9 @@ namespace AntDesign
 
         private void SetClassMap()
         {
-            ClassMapper.Clear().Add("ant-descriptions")
+            ClassMapper
+                .Add("ant-descriptions")
+                .If("ant-descriptions", () => RTL)
                 .If("ant-descriptions-bordered", () => this.Bordered)
                 .If("ant-descriptions-middle", () => this.Size == DescriptionsSize.Middle)
                 .If("ant-descriptions-small", () => this.Size == DescriptionsSize.Small);
@@ -122,7 +122,6 @@ namespace AntDesign
 
         protected override async Task OnParametersSetAsync()
         {
-            SetClassMap();
             PrepareMatrix();
             await InvokeAsync(StateHasChanged);
             await base.OnParametersSetAsync();
@@ -171,20 +170,17 @@ namespace AntDesign
 
         private async Task SetRealColumn()
         {
-
             if (Column.IsT0)
             {
                 _realColumn = Column.AsT0 == 0 ? 3 : Column.AsT0;
             }
             else
             {
-                Element element = await JsInvokeAsync<Element>(JSInteropConstants.GetDomInfo, _divRef);
-                var breakpointTuple = _descriptionsResponsiveMap.FirstOrDefault(x => x.PixelWidth > element.clientWidth);
+                HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
+                var breakpointTuple = _descriptionsResponsiveMap.FirstOrDefault(x => x.PixelWidth > element.ClientWidth);
                 var bp = breakpointTuple == default ? BreakpointEnum.xxl : breakpointTuple.Breakpoint;
                 _realColumn = Column.AsT1.ContainsKey(bp.ToString()) ? Column.AsT1[bp.ToString()] : _defaultColumnMap[bp.ToString()];
             }
         }
-
-
     }
 }

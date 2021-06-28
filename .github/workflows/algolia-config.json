@@ -2,13 +2,13 @@
   "index_name": "ant-design-blazor-docs",
   "start_urls": [
     {
-      "url": "https://ant-design-blazor.github.io/zh-CN/",
+      "url": "https://antblazor.com/zh-CN/",
       "tags": [
         "cn"
       ]
     },
     {
-      "url": "https://ant-design-blazor.github.io/en-US/",
+      "url": "https://antblazor.com/en-US/",
       "tags": [
         "en"
       ]

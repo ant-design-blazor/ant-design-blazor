@@ -8,7 +8,9 @@ namespace AntDesign
     /// <summary>
     /// Confirm footer buttons type
     /// </summary>
+#pragma warning disable CA1717 // 只有 FlagsAttribute 枚举应采用复数形式的名称
     public enum ConfirmButtons
+#pragma warning restore CA1717 // 只有 FlagsAttribute 枚举应采用复数形式的名称
     {
         /// <summary>
         /// Only a OK button

@@ -1,15 +1,16 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
+@typeparam TItem
 
-<div class="@ClassMapper.Class" style="@Style">
+<div class="@ClassMapper.Class" style="@Style" @ref="Ref">
     <div class="ant-tree-list">
         <div class="ant-tree-list-holder-inner">
-            <CascadingValue Value="this" Name="Tree">
+            <CascadingValue Value="this" Name="Tree" IsFixed="@true">
                 @if (DataSource != null)
                 {
                     foreach (var item in DataSource)
                     {
-                        <TreeNode DataItem="@item"></TreeNode>
+                        <TreeNode DataItem="@item" @key="item.GetHashCode()"></TreeNode>
                     }
                 }
                 else

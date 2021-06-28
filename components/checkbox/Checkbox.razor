@@ -1,13 +1,13 @@
 ﻿@namespace AntDesign
-@inherits AntInputComponentBase<bool>
+@inherits AntInputBoolComponentBase
 
-<label class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-    <span class="@ClassMapperSpan.Class">
+<label class="@ClassMapperLabel.Class" style="@Style" id="@Id" @ref="Ref">
+    <span class="@ClassMapper.Class">
         <input value="@Label"
                checked="@Checked"
                disabled="@Disabled"
-               @onchange="@InputCheckedChange"
-               @attributes="@InputAttributes"
+			   autofocus=@AutoFocus
+               @onchange="@InputCheckedChange"               
                type="checkbox"
                class="ant-checkbox-input" />
         <span class="ant-checkbox-inner"></span>

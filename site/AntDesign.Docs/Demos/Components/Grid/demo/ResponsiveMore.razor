@@ -1,0 +1,13 @@
+﻿<Row>
+    <Col Xs="@Property(5,1)" Lg="@Property(6,2)">
+      Col
+    </Col>
+    <Col Xs="@Property(11,1)" Lg="@Property(6,2)">
+      Col
+    </Col>
+    <Col Xs="@Property(5,1)" Lg="@Property(6,2)">
+      Col
+    </Col>
+</Row>
+
+@code{ EmbeddedProperty Property(int span, int offset) => new() { Span = span, Offset = offset }; }

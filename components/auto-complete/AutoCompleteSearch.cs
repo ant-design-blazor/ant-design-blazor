@@ -13,6 +13,13 @@ namespace AntDesign
         [CascadingParameter]
         public IAutoCompleteRef AutoComplete { get; set; }
 
+        [CascadingParameter(Name = "OverlayTriggerContext")]
+        public ForwardRef OverlayTriggerContext
+        {
+            get { return WrapperRefBack; }
+            set { WrapperRefBack = value; }
+        }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();

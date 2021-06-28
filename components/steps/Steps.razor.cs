@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -55,6 +54,13 @@ namespace AntDesign
 
         [Parameter] public EventCallback<int> OnChange { get; set; }
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            SetClassMap();
+        }
+
         protected override void Dispose(bool disposing)
         {
             for (int i = 0; i < _children.Count; i++)
@@ -105,7 +111,6 @@ namespace AntDesign
             base.OnParametersSet();
 
             ResetChildrenSteps();
-            SetClassMap();
         }
 
         internal void NavigateTo(int current)
@@ -122,12 +127,13 @@ namespace AntDesign
             string prefixName = "ant-steps";
             ClassMapper.Clear()
                 .Add(prefixName)
-                .If($"{prefixName}-{Direction}", () => !string.IsNullOrEmpty(Direction))
+                .GetIf(() => $"{prefixName}-{Direction}", () => !string.IsNullOrEmpty(Direction))
                 .If($"{prefixName}-label-horizontal", () => Direction == "horizontal")
                 .If($"{prefixName}-label-vertical", () => (_showProgressDot || LabelPlacement == "vertical") && Direction == "horizontal")
                 .If($"{prefixName}-dot", () => _showProgressDot)
                 .If($"{prefixName}-small", () => Size == "small")
                 .If($"{prefixName}-navigation", () => Type == "navigation")
+                .If($"{prefixName}-with-progress", () => Percent != null)
                 ;
         }
     }

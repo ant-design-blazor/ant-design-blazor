@@ -1,0 +1,17 @@
+  <div>
+    <Checkbox @bind-Checked="isChecked" Disabled="@disabled">
+                @($"{(isChecked ? "Check" : "Uncheck")}-{(disabled ? "Disable" : "Enable")}")
+    </Checkbox>
+  </div>
+  
+  @code{
+    bool isChecked = true;
+    bool disabled = false;
+    
+    void ToggleDisable()
+    {
+        disabled = !disabled;
+    }
+}
+
+  

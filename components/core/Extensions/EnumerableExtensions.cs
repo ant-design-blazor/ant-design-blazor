@@ -76,5 +76,24 @@ namespace AntDesign
 
             return array.Where(x => !item.Equals(x)).ToArray();
         }
+
+        /// <summary>
+        /// add item to items when condition is true
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="condition"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static IList<T> AddIf<T>(this IList<T> items, bool condition, T item)
+        {
+            items ??= new List<T>();
+            if (condition)
+            {
+                items.Add(item);
+            }
+
+            return items;
+        }
     }
 }

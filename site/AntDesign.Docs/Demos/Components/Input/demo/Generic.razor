@@ -1,0 +1,75 @@
+﻿<div>
+    <Text>string</Text>
+    <Input @bind-Value="@_str" />
+    <p>value:@_str</p>
+    <br />
+
+    <Text>int</Text>
+    <Input @bind-Value="@_int" />
+    <p>value:@_int</p>
+    <br />
+
+    <Text>int?</Text>
+    <Input Placeholder="Null" @bind-Value="@_intNull" />
+    <p>value:@_intNull</p>
+    <br />
+
+    <Text>decimal</Text>
+    <Input @bind-Value="@_dec" />
+    <p>value:@_dec</p>
+    <br />
+
+    <Text>decimal?</Text>
+    <Input Placeholder="Null " @bind-Value="@_decNull" />
+    <p>value:@_decNull</p>
+    <br />
+
+    <Text>double</Text>
+    <Input @bind-Value="@_double" />
+    <p>value:@_double</p>
+    <br />
+
+    <Text>double?</Text>
+    <Input Placeholder="Null " @bind-Value="@_doubleNull" />
+    <p>value:@_doubleNull</p>
+    <br />
+
+    <Text>DateTime</Text>
+    <Input @bind-Value="@_date" />
+    <p>value:@_date</p>
+    <br />
+
+    <Text>DateTime?</Text>
+    <Input Placeholder="Null" @bind-Value="@_dateNull" />
+    <p>value:@_dateNull</p>
+    <br />
+
+    <Text>Guid</Text>
+    <Input @bind-Value="@_guid" />
+    <p>value:@_guid</p>
+    <br />
+
+    <Text>Guid?</Text>
+    <Input Placeholder="Null" @bind-Value="@_guidNull" />
+    <p>value:@_guidNull</p>
+    <br />
+
+    <Text>Type=Number</Text>
+    <Input Max="4" Type="number" Placeholder="0" @bind-Value="@_int" />
+    <p>value:@_int</p>
+
+</div>
+@code{
+    string _str;
+    int _int;
+    int _intNum;
+    int? _intNull;
+    decimal _dec;
+    decimal? _decNull;
+    double _double;
+    double? _doubleNull;
+    DateTime _date;
+    DateTime? _dateNull;
+    Guid _guid;
+    Guid? _guidNull;
+}

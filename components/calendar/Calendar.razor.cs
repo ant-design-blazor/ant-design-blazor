@@ -114,6 +114,7 @@ namespace AntDesign
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-full", () => FullScreen)
+                .If($"{PrefixCls}-rtl", () => RTL)
                ;
         }
 

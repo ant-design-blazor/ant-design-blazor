@@ -45,7 +45,7 @@ namespace AntDesign
 
         internal int Level => RootMenu?.InternalMode == MenuMode.Inline ? (Parent?.Level ?? 0) + 1 : 0;
 
-        private int PaddingLeft => Level * 24;
+        private int PaddingLeft => Level * RootMenu?.InlineIndent ?? 0;
 
         private ClassMapper SubMenuMapper { get; } = new ClassMapper();
 
@@ -56,6 +56,8 @@ namespace AntDesign
         private string _popupMinWidthStyle = "";
         private OverlayTrigger _overlayTrigger;
 
+        internal bool _overlayVisible;
+
         private void SetClass()
         {
             string prefixCls = $"{RootMenu.PrefixCls}-submenu";
@@ -63,7 +65,7 @@ namespace AntDesign
             ClassMapper
                     .Clear()
                     .Add(prefixCls)
-                    .Add($"{prefixCls}-{RootMenu?.InternalMode}")
+                    .Get(() => $"{prefixCls}-{RootMenu?.InternalMode}")
                     .If($"{prefixCls}-disabled", () => Disabled)
                     .If($"{prefixCls}-selected", () => _isSelected)
                     .If($"{prefixCls}-open", () => RootMenu?.InternalMode == MenuMode.Inline && IsOpen)
@@ -73,8 +75,8 @@ namespace AntDesign
                 .Clear()
                 .Add(RootMenu?.PrefixCls)
                 .Add($"{RootMenu?.PrefixCls}-sub")
-                .Add($"{RootMenu?.PrefixCls}-{RootMenu?.Theme}")
-                .Add($"{RootMenu?.PrefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
+                .Get(() => $"{RootMenu?.PrefixCls}-{RootMenu?.Theme}")
+                .Get(() => $"{RootMenu?.PrefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
                 //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
                 .If($"{RootMenu?.PrefixCls}-hidden", () => RootMenu?.InternalMode == MenuMode.Inline && !IsOpen)
                 ;
@@ -87,11 +89,10 @@ namespace AntDesign
                     .If($"{prefixCls}-selected", () => overlay != null && overlay.IsPopup());
 
                 SubMenuMapper
-                    .If($"{RootMenu?.PrefixCls}-hidden", () => overlay != null && overlay.IsHiding() == false && overlay.IsPopup() == false)
-                    .If($"zoom-big zoom-big-enter zoom-big-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsPopup() && !overlay.IsHiding())
-                    .If($"zoom-big zoom-big-leave zoom-big-leave-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsHiding())
-                    .If($"slide-up slide-up-enter slide-up-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Horizontal && overlay.IsPopup() && !overlay.IsHiding())
-                    .If($"slide-up slide-up-leave slide-up-leave-active", () => overlay != null && RootMenu?.Mode == MenuMode.Horizontal && overlay.IsHiding())
+                    .If($"ant-zoom-big ant-zoom-big-enter ant-zoom-big-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsPopup() && !overlay.IsHiding())
+                    .If($"ant-zoom-big ant-zoom-big-leave ant-zoom-big-leave-active", () => overlay != null && RootMenu?.Mode == MenuMode.Vertical && overlay.IsHiding())
+                    .If($"ant-slide-up ant-slide-up-enter ant-slide-up-enter-active", () => overlay != null && RootMenu?.Mode == MenuMode.Horizontal && overlay.IsPopup() && !overlay.IsHiding())
+                    .If($"ant-slide-up ant-slide-up-leave ant-slide-up-leave-active", () => overlay != null && RootMenu?.Mode == MenuMode.Horizontal && overlay.IsHiding())
                     ;
             }
         }
@@ -126,12 +127,13 @@ namespace AntDesign
 
             if (RootMenu.DefaultOpenKeys.Contains(Key))
                 IsOpen = true;
+
+            _overlayVisible = IsOpen;
         }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            SetClass();
 
             if (!RootMenu.InlineCollapsed && RootMenu.OpenKeys.Contains(Key))
                 IsOpen = true;
@@ -142,7 +144,7 @@ namespace AntDesign
             if (RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null && IsOpen)
             {
                 var domInfo = await _overlayTrigger.GetTriggerDomInfo();
-                _popupMinWidthStyle = $"min-width: {domInfo.clientWidth}px";
+                _popupMinWidthStyle = $"min-width: {domInfo.ClientWidth}px";
             }
 
             await base.OnAfterRenderAsync(firstRender);
@@ -171,15 +173,11 @@ namespace AntDesign
 
         private void OnOverlayVisibleChange(bool visible)
         {
-            if (visible)
-            {
-                SetClass();
-            }
+            _overlayVisible = visible;
         }
 
         private void OnOverlayHiding(bool _)
         {
-            SetClass();
         }
 
         public void Select()

@@ -19,7 +19,7 @@
               @onkeydown="@OnKeyDown"
               @onkeyup="@OnKeyUp" />
 
-    <CascadingValue Value="this">
+    <CascadingValue Value="this" IsFixed="@true">
         @if (ShowSuggestions)
         {
             <div class="ant-mentions-measure" style="z-index:1050;">

@@ -23,6 +23,8 @@ namespace AntDesign.Locales
 
         public ModalLocale Modal { get; set; }
 
+        public ConfirmLocale Confirm { get; set; }
+
         public PopconfirmLocale Popconfirm { get; set; }
 
         public TransferLocale Transfer { get; set; }
@@ -42,5 +44,7 @@ namespace AntDesign.Locales
         public TextLocale Text { get; set; }
 
         public FormLocale Form { get; set; }
+
+        public ImageLocale Image { get; set; }
     }
 }

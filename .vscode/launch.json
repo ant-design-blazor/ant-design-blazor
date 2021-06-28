@@ -34,7 +34,7 @@
             "timeout": 300000,
             // If you have changed the default port / launch URL make sure to update the expectation below
             "url": "http://localhost:5000",
-            "webRoot": "${workspaceFolder}/site/AntBlazor.Docs.Wasm",
+            "webRoot": "${workspaceFolder}/site/AntDesign.Docs.Wasm",
         }
     ]
 }

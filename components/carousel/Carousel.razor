@@ -1,17 +1,13 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<CascadingValue Value="this">
-    @ChildContent
-</CascadingValue>
-
-<div class="@ClassMapper.Class" id="@Id">
-    <div class="@SlickSliderClassMapper.Class" dir="ltr">
-        <div class="slick-list" @ref="_ref" style="@_slickListStyle">
-            <div class="slick-track" style="@_trackStyle">
+<div class="@ClassMapper.Class">
+    <div class="@SlickSliderClassMapper.Class">
+        <div class="slick-list" @ref="Ref" style="@SlickListStyle">
+            <div class="slick-track" style="@TrackStyle">
                 @if (_slicks.Count > 0 && Effect == CarouselEffect.ScrollX)
                 {
-                    <div data-index="-1" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@_slickClonedStyle">
+                    <div data-index="-1" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@SlickClonedStyle">
                         <div>
                             <div tabindex="-1" style="width: 100%; display: inline-block;">
                                 @_slicks.Last().ChildContent
@@ -19,23 +15,15 @@
                         </div>
                     </div>
                 }
-                @for (int i = 0; i < _slicks.Count; i++)
-                {
-                    int index = i;
-                    <div data-index="@index" class="@_slicks[index].Class" tabindex="-1" aria-hidden="@((!_slicks[index].Active).ToString())" style="@_slicks[index].GetStyle(index, _slickWidth, Effect)">
-                        <div>
-                            <div tabindex="-1" style="width: 100%; display: inline-block;">
-                                @_slicks[index].ChildContent
-                            </div>
-                        </div>
-                    </div>
-                }
+                <CascadingValue Value="this" IsFixed="@true">
+                    @ChildContent
+                </CascadingValue>
                 @if (Effect == CarouselEffect.ScrollX)
                 {
                     for (int i = 0; i < _slicks.Count; i++)
                     {
                         int index = i;
-                        <div data-index="@(i+_slicks.Count)" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@_slickClonedStyle">
+                        <div data-index="@(i+_slicks.Count)" class="slick-slide slick-cloned" tabindex="-1" aria-hidden="true" style="@SlickClonedStyle">
                             <div>
                                 <div tabindex="-1" style="width: 100%; display: inline-block;">
                                     @_slicks[index].ChildContent
@@ -51,7 +39,7 @@
             {
                 int index = i;
                 <li class="@(_slicks[index].Active?"slick-active":string.Empty)">
-                    <button @onclick="(e)=>Activate(index)">@(index + 1)</button>
+                    <button @onclick="(e)=>Activate(_slicks[index])">@(index + 1)</button>
                 </li>
             }
         </ul>

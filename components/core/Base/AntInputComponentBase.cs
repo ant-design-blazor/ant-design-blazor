@@ -88,7 +88,21 @@ namespace AntDesign
         public Expression<Func<TValue>> ValueExpression { get; set; }
 
         [Parameter]
+        public Expression<Func<IEnumerable<TValue>>> ValuesExpression { get; set; }
+
+        /// <summary>
+        /// The size of the input box. Note: in the context of a form, 
+        /// the `large` size is used. Available: `large` `default` `small`
+        /// </summary>
+        [Parameter]
         public string Size { get; set; } = AntSizeLDSType.Default;
+
+        /// <summary>
+        /// What Culture will be used when converting string to value and value to string
+        /// Useful for InputNumber component.
+        /// </summary>
+        [Parameter]
+        public virtual CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
 
         /// <summary>
         /// Gets the associated <see cref="EditContext"/>.
@@ -176,7 +190,9 @@ namespace AntDesign
         }
 
         private TValue _firstValue;
-        private bool _isNotifyFieldChanged = true;
+        protected bool _isNotifyFieldChanged = true;
+        private bool _isValueGuid;
+
 
         /// <summary>
         /// Constructs an instance of <see cref="InputBase{TValue}"/>.
@@ -211,8 +227,20 @@ namespace AntDesign
                 return true;
             }
 
-            var success = BindConverter.TryConvertTo<TValue>(
-               value, CultureInfo.CurrentCulture, out var parsedValue);
+            TValue parsedValue = default;
+            bool success;
+
+            // BindConverter.TryConvertTo<Guid> doesn't work for a incomplete Guid fragment. Remove this when the BCL bug is fixed.
+            if (_isValueGuid)
+            {
+                success = Guid.TryParse(value, out Guid parsedGuidValue);
+                if (success)
+                    parsedValue = THelper.ChangeType<TValue>(parsedGuidValue);
+            }
+            else
+            {
+                success = BindConverter.TryConvertTo(value, CultureInfo, out parsedValue);
+            }
 
             if (success)
             {
@@ -230,12 +258,17 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// When this method is called, Value is only has been modified, but the ValueChanged is not triggered, so the outside bound Value is not changed.
+        /// </summary>
+        /// <param name="value"></param>
         protected virtual void OnValueChange(TValue value)
         {
         }
 
         protected override void OnInitialized()
         {
+            _isValueGuid = THelper.GetUnderlyingType<TValue>() == typeof(Guid);
             base.OnInitialized();
 
             FormItem?.AddControl(this);
@@ -259,13 +292,16 @@ namespace AntDesign
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
-                if (ValueExpression == null)
+                if (ValueExpression == null && ValuesExpression == null)
                 {
                     return base.SetParametersAsync(ParameterView.Empty);
                 }
 
                 EditContext = Form?.EditContext;
-                FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                if (ValuesExpression == null)
+                    FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                else
+                    FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
                 _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
 
                 EditContext.OnValidationStateChanged += _validationStateChangedHandler;
@@ -291,6 +327,8 @@ namespace AntDesign
             {
                 EditContext.OnValidationStateChanged -= _validationStateChangedHandler;
             }
+
+            Form?.RemoveControl(this);
 
             base.Dispose(disposing);
         }

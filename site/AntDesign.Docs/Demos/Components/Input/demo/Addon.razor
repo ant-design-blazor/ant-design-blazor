@@ -1,0 +1,58 @@
+﻿<div>
+    <AntDesign.Input DefaultValue="@("mysite")"  >
+        <AddOnBefore>https://</AddOnBefore>
+        <AddOnAfter>.com</AddOnAfter>
+    </AntDesign.Input>    
+    <br />
+    <br />
+    <AntDesign.Input TValue="string" @bind-Value=@CoreAddress>
+        <AddOnBefore>
+            <SimpleSelect @bind-Value=@_prefix Style="width: auto;" OnSelectedItemChanged="@OnItemChanged">
+                <SelectOptions>
+                    <SimpleSelectOption Value="http://" Label="http://"></SimpleSelectOption>
+                    <SimpleSelectOption Value="https://" Label="https://"></SimpleSelectOption>
+                </SelectOptions>
+            </SimpleSelect>            
+        </AddOnBefore>
+        <AddOnAfter>
+            <SimpleSelect @bind-Value=@_suffix Style="width: auto;" OnSelectedItemChanged="@OnItemChanged">
+                <SelectOptions>
+                    <SimpleSelectOption Value=".com" Label=".com"></SimpleSelectOption>
+                    <SimpleSelectOption Value=".jp" Label=".jp"></SimpleSelectOption>
+                    <SimpleSelectOption Value=".cn" Label=".cn"></SimpleSelectOption>
+                    <SimpleSelectOption Value=".org" Label=".org"></SimpleSelectOption>
+                </SelectOptions>
+            </SimpleSelect>            
+        </AddOnAfter>
+    </AntDesign.Input>    
+    <br />
+    <br />
+    <AntDesign.Input DefaultValue="@("mysite")"  >
+        <AddOnAfter><Icon Type="setting"></Icon></AddOnAfter>
+    </AntDesign.Input>
+    <br />
+    <br />
+    <AntDesign.Input DefaultValue="@("mysite")" >
+        <AddOnBefore>https://</AddOnBefore>
+    </AntDesign.Input>
+
+</div>
+@code {
+    string _prefix = "http://";
+    string _suffix = ".com";
+    string _coreAddress = "mysite";
+    string CoreAddress 
+    { 
+        get => _coreAddress; 
+        set
+        {
+            _coreAddress = value;            
+            OnItemChanged(value);
+        }
+    } 
+
+    private void OnItemChanged(string value)
+    {
+        Console.WriteLine($"{_prefix}{_coreAddress.ToString()}{_suffix}");
+    }
+}

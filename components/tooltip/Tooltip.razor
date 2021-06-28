@@ -3,6 +3,8 @@
 
 @using AntDesign.Internal
 
+@if (ChildContent != null)
+{
 <div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-block; @Style"
      @onclick="OnClickDiv"
      @onmouseenter="OnTriggerMouseEnter"
@@ -13,6 +15,11 @@
      @oncontextmenu:preventDefault>
     @ChildContent
 </div>
+}
+@if (Unbound != null)
+{
+    @Unbound(RefBack)
+}
 
 <CascadingValue Value="this" Name="Trigger">
     <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">

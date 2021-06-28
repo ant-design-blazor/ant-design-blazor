@@ -1,0 +1,20 @@
+﻿<div>
+    <Tag>Tag 1</Tag>
+    <Tag>
+        <a href="https://github.com/ant-design-blazor/ant-design-blazor">Link</a>
+    </Tag>
+    <Tag Closable OnClick="OnClick">Tag 2</Tag>
+    <Tag Closable OnClosing="PreventDefault">Prevent Default</Tag>
+</div>
+
+@code{
+	void PreventDefault(CloseEventArgs<MouseEventArgs> closeArgs)
+    {
+        closeArgs.Cancel = true;
+    }
+
+	void OnClick()
+	{
+		Console.WriteLine("OnClick called.");
+	}
+}

@@ -1,0 +1,44 @@
+﻿<Row Gutter="16">
+    <GridCol Span="8">
+        <Card Style="width:300px;" Bordered Cover="coverTemplate"
+              Actions="@(new[] {
+                actionSetting(()=> OnClick("setting")) ,
+                actionEdit(()=> OnClick("edit")),
+                actionEllipsis(()=> OnClick("ellipsis")) })">
+            <CardMeta AvatarTemplate="@avatarTemplate" Title="Meta Card" Description="This is the description" />
+        </Card>
+    </GridCol>
+    <GridCol Span="8">
+        <Card Style="width:300px;" Bordered Cover="coverTemplate">
+            <ChildContent>
+                <CardMeta AvatarTemplate="@avatarTemplate" Title="Meta Card" Description="This is the description" />
+            </ChildContent>
+            <ActionTemplate>
+                <CardAction><Icon Type="setting" OnClick="@(()=> OnClick("setting"))" /></CardAction>
+                <CardAction><Icon Type="edit" OnClick="@(()=> OnClick("edit"))" /></CardAction>
+                <CardAction><Icon Type="ellipsis" OnClick="@(()=> OnClick("ellipsis"))" /></CardAction>
+            </ActionTemplate>
+        </Card>
+    </GridCol>
+</Row>
+
+@code
+{
+    RenderFragment actionSetting(Action clickAction) =>@<Icon Type="setting" OnClick="@clickAction" />;
+
+    RenderFragment actionEdit(Action clickAction) =>@<Icon Type="edit" OnClick="@clickAction" />;
+
+    RenderFragment actionEllipsis(Action clickAction) => @<Icon Type="ellipsis" OnClick="@clickAction" />;
+
+    RenderFragment avatarTemplate = @<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
+
+    RenderFragment coverTemplate = @<img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />;
+
+    void OnClick(string icon)
+    {
+        Console.WriteLine($"icon {icon} is clicked");
+    }
+
+}
+
+

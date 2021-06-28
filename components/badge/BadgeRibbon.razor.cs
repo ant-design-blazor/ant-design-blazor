@@ -35,7 +35,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-
         private string PresetColor => Color.IsIn(_badgePresetColors) ? Color : null;
 
         private string _colorStyle;
@@ -51,11 +50,10 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add(prefixName)
                 .Add($"{prefixName}-placement-{Placement}")
-                //.If($"{prefixName}-rtl", () => Direction == "RTL" # Placeholder for when RTL support is added
+                .If($"{prefixName}-rtl", () => RTL)
                 .If($"{prefixName}-color-{PresetColor}", () => Color.IsIn(_badgePresetColors))
                 ;
         }
-
 
         private void SetStyle()
         {

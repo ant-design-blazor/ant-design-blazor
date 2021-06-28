@@ -1,0 +1,10 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div data-index="@Parent.IndexOfSlick(this)" class="@Class" tabindex="-1" aria-hidden="@((!Active).ToString())" style="@Style">
+  <div>
+    <div tabindex="-1" style="width: 100%; display: inline-block;">
+      @ChildContent
+    </div>
+  </div>
+</div>

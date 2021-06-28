@@ -9,9 +9,15 @@ namespace AntDesign
 {
     public class AutoCompleteInput<TValue> : Input<TValue>, IAutoCompleteInput
     {
-
         [CascadingParameter]
         public IAutoCompleteRef AutoComplete { get; set; }
+
+        [CascadingParameter(Name = "OverlayTriggerContext")]
+        public ForwardRef OverlayTriggerContext
+        {
+            get { return RefBack; }
+            set { RefBack = value; }
+        }
 
         protected override void OnInitialized()
         {

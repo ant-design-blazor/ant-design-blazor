@@ -1,5 +1,5 @@
 ﻿{
-  "locale": "zh-cn",
+  "locale": "zh-CN",
   "Pagination": {
     "items_per_page": "条/页",
     "jump_to": "跳至",
@@ -41,9 +41,9 @@
       "yearSelect": "选择年份",
       "decadeSelect": "选择年代",
       "yearFormat": "yyyy年",
-      "dayFormat": "D日",
-      "dateFormat": "yyyy年M月D日",
-      "dateTimeFormat": "yyyy年M月D日 HH时mm分ss秒",
+      "dayFormat": "d日",
+      "dateFormat": "yyyy年M月d日",
+      "dateTimeFormat": "yyyy年M月d日 HH时mm分ss秒",
       "previousYear": "上一年 (Control键加左方向键)",
       "nextYear": "下一年 (Control键加右方向键)",
       "previousDecade": "上一年代",
@@ -89,10 +89,10 @@
       "monthSelect": "选择月份",
       "yearSelect": "选择年份",
       "decadeSelect": "选择年代",
-      "yearFormat": "YYYY年",
-      "dayFormat": "D日",
-      "dateFormat": "YYYY年M月D日",
-      "dateTimeFormat": "YYYY年M月D日 HH时mm分ss秒",
+      "yearFormat": "yyyy年",
+      "dayFormat": "d日",
+      "dateFormat": "yyyy年M月d日",
+      "dateTimeFormat": "yyyy年M月d日 HH时mm分ss秒",
       "previousYear": "上一年 (Control键加左方向键)",
       "nextYear": "下一年 (Control键加右方向键)",
       "previousDecade": "上一年代",
@@ -118,12 +118,37 @@
     "collapse": "关闭行",
     "triggerDesc": "点击降序",
     "triggerAsc": "点击升序",
-    "cancelSort": "取消排序"
+    "cancelSort": "取消排序",
+    "filterOptions": {
+      "true": "是",
+      "false": "否",
+      "and": "且",
+      "or": "或",
+      "equals": "等于",
+      "notEquals": "不等于",
+      "contains": "包含",
+      "startsWith": "开头是",
+      "endsWith": "结尾是",
+      "greaterThan": "大于",
+      "lessThan": "小于",
+      "greaterThanOrEquals": "大于或等于",
+      "lessThanOrEquals": "小于或等于",
+      "isNull": "为 Null",
+      "isNotNull": "不为 Null"
+    }
   },
   "Modal": {
     "okText": "确定",
+    "cancelText": "取消"
+  },
+  "Confirm": {
+    "okText": "确定",
     "cancelText": "取消",
-    "justOkText": "知道了"
+    "yesText": "是",
+    "noText": "否",
+    "retryText": "重试",
+    "abortText": "终止",
+    "ignoreText": "忽略"
   },
   "Popconfirm": {
     "cancelText": "取消",
@@ -196,5 +221,8 @@
       },
       "pattern": { "mismatch": "${label}与模式不匹配${pattern}" }
     }
+  },
+  "Image": {
+    "preview": "预览"
   }
 }

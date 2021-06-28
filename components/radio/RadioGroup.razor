@@ -2,8 +2,10 @@
 @typeparam TValue
 @inherits AntInputComponentBase<TValue>
 
-<CascadingValue Value="this">
-    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-        @ChildContent
-    </div>
+<CascadingValue Value="this" IsFixed="@true">
+    <CascadingValue Value="true" Name="InGroup" IsFixed>
+        <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+            @ChildContent
+        </div>
+    </CascadingValue>
 </CascadingValue>

@@ -43,7 +43,8 @@ namespace AntDesign
         {
             base.OnInitialized();
             this.ClassMapper.Clear()
-                .Add("ant-comment");
+                .Add("ant-comment")
+                .If("ant-comment-rtl", () => RTL);
         }
     }
 }

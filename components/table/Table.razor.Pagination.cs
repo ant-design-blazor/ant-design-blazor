@@ -49,6 +49,7 @@ namespace AntDesign
                 }
             }
         }
+
         [Parameter]
         public EventCallback<int> PageIndexChanged { get; set; }
 
@@ -65,6 +66,7 @@ namespace AntDesign
                 }
             }
         }
+
         [Parameter]
         public EventCallback<int> PageSizeChanged { get; set; }
 
@@ -74,8 +76,8 @@ namespace AntDesign
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 
-        private int _total = 0;
-        private int _dataSourceCount = 0;
+        private int _total;
+        private int _dataSourceCount;
         private string _paginationPosition = "bottomRight";
         private string _paginationClass;
         private int _pageIndex = 1;
@@ -86,26 +88,55 @@ namespace AntDesign
             _paginationClass = $"ant-table-pagination ant-table-pagination-{Regex.Replace(_paginationPosition, "bottom|top", "").ToLowerInvariant()}";
         }
 
+        private async Task HandlePageChange(PaginationEventArgs args)
+        {
+            if (_pageIndex != args.Page)
+            {
+                await HandlePageIndexChange(args);
+            }
+
+            if (_pageSize != args.PageSize)
+            {
+                await HandlePageSizeChange(args);
+            }
+        }
+
         private async Task HandlePageIndexChange(PaginationEventArgs args)
         {
-            PageIndex = args.PageIndex;
+            _pageIndex = args.Page;
 
-            await PageIndexChanged.InvokeAsync(args.PageIndex);
-            await OnPageIndexChange.InvokeAsync(args);
+            if (PageIndexChanged.HasDelegate)
+            {
+                await PageIndexChanged.InvokeAsync(args.Page);
+            }
+
+            if (OnPageIndexChange.HasDelegate)
+            {
+                await OnPageIndexChange.InvokeAsync(args);
+            }
 
             ReloadAndInvokeChange();
 
             StateHasChanged();
         }
 
-        private void HandlePageSizeChange(PaginationEventArgs args)
+        private async Task HandlePageSizeChange(PaginationEventArgs args)
         {
-            PageSize = args.PageSize;
+            _pageSize = args.PageSize;
+
+            if (PageSizeChanged.HasDelegate)
+            {
+                await PageSizeChanged.InvokeAsync(args.PageSize);
+            }
+
+            if (OnPageSizeChange.HasDelegate)
+            {
+                await OnPageSizeChange.InvokeAsync(args);
+            }
 
             ReloadAndInvokeChange();
 
-            PageSizeChanged.InvokeAsync(args.PageSize);
-            OnPageSizeChange.InvokeAsync(args);
+            StateHasChanged();
         }
     }
 }

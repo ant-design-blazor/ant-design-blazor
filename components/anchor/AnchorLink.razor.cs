@@ -20,7 +20,6 @@ namespace AntDesign
 
         private bool _hrefDomExist;
         private ClassMapper _titleClass = new ClassMapper();
-        private ElementReference _self;
         private List<AnchorLink> _links = new List<AnchorLink>();
         public DomRect LinkDom { get; private set; }
 
@@ -91,7 +90,7 @@ namespace AntDesign
         {
             await base.OnFirstAfterRenderAsync();
 
-            LinkDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _self);
+            LinkDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
             try
             {
                 await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, "#" + Href.Split('#')[1]);

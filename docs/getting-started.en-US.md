@@ -15,7 +15,7 @@ Such features, together with packaging the production version, are covered in th
 
 ### Installation
 
-We strongly recommended to develop Blazor with `.NET Core SDK`, you can install it form `https://dotnet.microsoft.com/download`.
+We strongly recommended to develop Blazor with `.NET Core SDK`, you can install it form `https://dotnet.microsoft.com/download?WT.mc_id=DT-MVP-5003987`.
 
 ### Create a New Blazor WebAssembly Project
 
@@ -47,6 +47,18 @@ Entry files will be built and generated in `dist/wwwroot` directory, where we ca
 
 ```bash
 $ dotnet add package AntDesign
+```
+
+### Register Dependencies
+
+Add dependency registration in `Startup.cs`.
+
+```cs
+public void ConfigureServices(IServiceCollection services)
+{
+  ...
+  services.AddAntDesign();
+}
 ```
 
 ### Import Styles

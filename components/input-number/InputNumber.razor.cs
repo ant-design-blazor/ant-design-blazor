@@ -4,8 +4,10 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -66,13 +68,14 @@ namespace AntDesign
 
         private readonly bool _isNullable;
 
+
         private readonly Func<TValue, TValue, TValue> _increaseFunc;
         private readonly Func<TValue, TValue, TValue> _decreaseFunc;
         private readonly Func<TValue, TValue, bool> _greaterThanFunc;
         private readonly Func<TValue, TValue, bool> _equalToFunc;
-        private readonly Func<TValue, string, string> _toStringFunc;
+        private Func<TValue, string, string> _toStringFunc;
         private readonly Func<TValue, int, TValue> _roundFunc;
-        private readonly Func<string, TValue, TValue> _parseFunc;
+        private Func<string, TValue, TValue> _parseFunc;
 
         private static readonly Type _surfaceType = typeof(TValue);
 
@@ -143,7 +146,10 @@ namespace AntDesign
         private static Type[] _floatTypes = new Type[] { typeof(float), typeof(double), typeof(decimal) };
         private string _inputString;
         private bool _focused;
-        private ElementReference _inputRef;
+
+        private readonly int _interval = 200;
+        private CancellationTokenSource _increaseTokenSource;
+        private CancellationTokenSource _decreaseTokenSource;
 
         public InputNumber()
         {
@@ -154,14 +160,7 @@ namespace AntDesign
                 throw new NotSupportedException("InputNumber supports only numeric types.");
             }
 
-            // 数字解析
-            ParameterExpression input = Expression.Parameter(typeof(string), "input");
-            ParameterExpression defaultValue = Expression.Parameter(typeof(TValue), "defaultValue");
-            MethodCallExpression inputParse = Expression.Call(null, typeof(InputNumberMath).GetMethod(nameof(InputNumberMath.Parse), new Type[] { typeof(string), typeof(TValue) }), input, defaultValue);
-            var lambdaParse = Expression.Lambda<Func<string, TValue, TValue>>(inputParse, input, defaultValue);
-            _parseFunc = lambdaParse.Compile();
-
-            //递增与递减
+            //递增与递减 Increment and decrement
             ParameterExpression piValue = Expression.Parameter(_surfaceType, "value");
             ParameterExpression piStep = Expression.Parameter(_surfaceType, "step");
             Expression<Func<TValue, TValue, TValue>> fexpAdd;
@@ -179,7 +178,7 @@ namespace AntDesign
             _increaseFunc = fexpAdd.Compile();
             _decreaseFunc = fexpSubtract.Compile();
 
-            //数字比较
+            //数字比较 Digital comparison
             ParameterExpression piLeft = Expression.Parameter(_surfaceType, "left");
             ParameterExpression piRight = Expression.Parameter(_surfaceType, "right");
             var fexpGreaterThan = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.GreaterThan(piLeft, piRight), piLeft, piRight);
@@ -187,19 +186,7 @@ namespace AntDesign
             var fexpEqualTo = Expression.Lambda<Func<TValue, TValue, bool>>(Expression.Equal(piLeft, piRight), piLeft, piRight);
             _equalToFunc = fexpEqualTo.Compile();
 
-            //格式化
-            ParameterExpression format = Expression.Parameter(typeof(string), "format");
-            ParameterExpression value = Expression.Parameter(_surfaceType, "value");
-            Expression expValue;
-            if (_isNullable)
-                expValue = Expression.Property(value, "Value");
-            else
-                expValue = value;
-            MethodCallExpression expToString = Expression.Call(expValue, expValue.Type.GetMethod("ToString", new Type[] { typeof(string), typeof(IFormatProvider) }), format, Expression.Constant(CultureInfo.InvariantCulture));
-            var lambdaToString = Expression.Lambda<Func<TValue, string, string>>(expToString, value, format);
-            _toStringFunc = lambdaToString.Compile();
-
-            //四舍五入
+            //四舍五入 rounding
             if (_floatTypes.Contains(_surfaceType))
             {
                 ParameterExpression num = Expression.Parameter(_surfaceType, "num");
@@ -218,9 +205,31 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+
+            // 数字解析 Digital analysis
+            ParameterExpression input = Expression.Parameter(typeof(string), "input");
+            ParameterExpression defaultValue = Expression.Parameter(typeof(TValue), "defaultValue");
+            MethodCallExpression inputParse = Expression.Call(null, typeof(InputNumberMath).GetMethod(nameof(InputNumberMath.Parse), new Type[] { typeof(string), typeof(TValue), typeof(CultureInfo) }), input, defaultValue, Expression.Constant(CultureInfo));
+            var lambdaParse = Expression.Lambda<Func<string, TValue, TValue>>(inputParse, input, defaultValue);
+            _parseFunc = lambdaParse.Compile();
+
+            //格式化 format
+            ParameterExpression format = Expression.Parameter(typeof(string), "format");
+            ParameterExpression value = Expression.Parameter(_surfaceType, "value");
+            Expression expValue;
+            if (_isNullable)
+                expValue = Expression.Property(value, "Value");
+            else
+                expValue = value;
+            MethodCallExpression expToString = Expression.Call(expValue, expValue.Type.GetMethod("ToString", new Type[] { typeof(string), typeof(IFormatProvider) }), format, Expression.Constant(CultureInfo));
+            var lambdaToString = Expression.Lambda<Func<TValue, string, string>>(expToString, value, format);
+            _toStringFunc = lambdaToString.Compile();
+
+
             SetClass();
             CurrentValue = Value ?? DefaultValue;
         }
+
         /// <summary>
         /// Always return true, if input string is invalid, result = default, if input string is null or empty, result = DefaultValue
         /// </summary>
@@ -231,7 +240,8 @@ namespace AntDesign
         protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
         {
             validationErrorMessage = null;
-            if (!Regex.IsMatch(value, @"^[+-]?\d*[.]?\d*$"))
+
+            if (Parser is null && !Regex.IsMatch(value, @"^[+-]?\d*[.,]?\d*$"))           
             {
                 result = Value;
                 return true;
@@ -241,27 +251,16 @@ namespace AntDesign
             {
                 value = "0";
             }
-            if (!_isNullable)
+            if (string.IsNullOrWhiteSpace(value))
             {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    result = default;
-                }
-                else
-                {
-                    result = _parseFunc(value, Value);
-                }
+                result = default;
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    result = default;
-                }
+                if (Parser is not null)
+                    result = _parseFunc(Parser(value), Value);
                 else
-                {
                     result = _parseFunc(value, Value);
-                }
             }
             return true;
         }
@@ -273,10 +272,13 @@ namespace AntDesign
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-focused", () => _focused)
-                .If($"{PrefixCls}-disabled", () => this.Disabled);
+                .If($"{PrefixCls}-disabled", () => this.Disabled)
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
 
-        private async Task Increase()
+        #region Value Increase and Decrease Methods
+
+        private async Task IncreaseDown()
         {
             if (_isNullable && Value == null)
             {
@@ -289,9 +291,30 @@ namespace AntDesign
             await SetFocus();
             var num = _increaseFunc(Value, _step);
             await ChangeValueAsync(num);
+
+            _increaseTokenSource = new CancellationTokenSource();
+            _ = Increase(_increaseTokenSource.Token).ConfigureAwait(false);
         }
 
-        private async Task Decrease()
+        private void IncreaseUp() => _increaseTokenSource?.Cancel();
+
+        private async Task Increase(CancellationToken cancellationToken)
+        {
+            await Task.Delay(600, CancellationToken.None);
+            while (true)
+            {
+                if (_equalToFunc(Value, Max) || cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                var num = _increaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+                await Task.Delay(_interval, CancellationToken.None);
+            }
+        }
+
+        private async Task DecreaseDown()
         {
             if (_isNullable && Value == null)
             {
@@ -304,12 +327,63 @@ namespace AntDesign
             await SetFocus();
             var num = _decreaseFunc(Value, _step);
             await ChangeValueAsync(num);
+
+            _decreaseTokenSource = new CancellationTokenSource();
+            _ = Decrease(_decreaseTokenSource.Token).ConfigureAwait(false);
         }
+
+        private void DecreaseUp() => _decreaseTokenSource?.Cancel();
+
+        private async Task Decrease(CancellationToken cancellationToken)
+        {
+            await Task.Delay(600, CancellationToken.None);
+            while (true)
+            {
+                if (_equalToFunc(Value, Min) || cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                var num = _decreaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+                await Task.Delay(_interval, CancellationToken.None);
+            }
+        }
+
+        private async Task OnKeyDown(KeyboardEventArgs e)
+        {
+            if (_isNullable && Value == null)
+            {
+                return;
+            }
+            if (e.Key == "ArrowUp")
+            {
+                if (_equalToFunc(Value, Max))
+                {
+                    return;
+                }
+                var num = _increaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+            }
+            else if (e.Key == "ArrowDown")
+            {
+                if (_equalToFunc(Value, Min))
+                {
+                    return;
+                }
+                var num = _decreaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+                StateHasChanged();
+            }
+        }
+
+        #endregion Value Increase and Decrease Methods
 
         private async Task SetFocus()
         {
             _focused = true;
-            await JsInvokeAsync(JSInteropConstants.Focus, _inputRef);
+            await FocusAsync(Ref);
         }
 
         private void OnInput(ChangeEventArgs args)
@@ -331,10 +405,6 @@ namespace AntDesign
                 await ChangeValueAsync(Value);
                 return;
             }
-
-            _inputString = Parser != null ? Parser(_inputString) : Regex.Replace(_inputString, @"[^\+\-\d.\d]", "");
-
-            await ConvertNumberAsync(_inputString);
             _inputString = null;
         }
 

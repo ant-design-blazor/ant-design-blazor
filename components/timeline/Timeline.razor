@@ -1,8 +1,8 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<CascadingValue Value="this">
-    <ul class="@ClassMapper.Class" style="@Style" id="@Id">
+<CascadingValue Value="this" IsFixed="@true">
+    <ul class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
         @ChildContent
 
         @foreach (var item in _displayItems)

@@ -9,20 +9,20 @@
                     IsButton="@true"
                     Disabled="Disabled"
                     PopupContainerSelector="@PopupContainerSelector"
-                    OnVisibleChange="visible => { AutoFocus = visible; OnOpenChange.InvokeAsync(visible); }"
-                    OverlayEnterCls="slide-up-enter slide-up-enter-active slide-up"
-                    OverlayLeaveCls="slide-up-leave slide-up-leave-active slide-up"
+                    OnVisibleChange="OverlayVisibleChange"
+                    OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
+                    OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
                     Trigger="new TriggerType[] { TriggerType.Click }">
         <Overlay>
-            <div class="@(PrefixCls)-panel-container">
-                <div class="@(PrefixCls)-panel">
+            <div class="@(PrefixCls)-panel-container" @onclick="@PickerClicked">
+                <div class="@_panelClassMapper.Class">
                     <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date)" />
                 </div>
             </div>
         </Overlay>
-        <ChildContent>
+        <Unbound>
             <div class="@ClassMapper.Class"
-                 @ref="@Ref"
+                 @ref="@context.Current"
                  style="@Style"
                  Id="@Id">
                 <DatePickerInput @ref="_inputStart"
@@ -33,12 +33,15 @@
                                  Placeholder="@_placeholders[0]"
                                  ReadOnly="@InputReadOnly"
                                  AutoFocus="@AutoFocus"
-                                 OnClick="async e => { await _dropDown.Show(); ChangeFocusTarget(true, false); }"
+                                 OnClick="async e => { await OnInputClick(); }"
+                                 OnKeyDown="@OnKeyDown"
                                  OnInput="e => OnInput(e, 0)"
+                                 OnBlur="e => OnBlur(0)"
+                                 Onfocus="e => AutoFocus = true"
                                  ShowTime="@(Picker == DatePickerType.Time)"
                                  OnClickClear="e => ClearValue(0)"
-                                 AllowClear="@AllowClear"/>
+                                 AllowClear="@AllowClear" />
             </div>
-        </ChildContent>
+        </Unbound>
     </OverlayTrigger>
 </CascadingValue>

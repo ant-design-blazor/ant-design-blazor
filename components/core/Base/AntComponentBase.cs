@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using AntDesign.Core.Extensions;
 
 namespace AntDesign
 {
     public abstract class AntComponentBase : ComponentBase, IDisposable
     {
         [Parameter]
-        public ForwardRef RefBack { get; set; }
+        public ForwardRef RefBack { get; set; } = new ForwardRef();
 
         private readonly Queue<Func<Task>> _afterRenderCallQuene = new Queue<Func<Task>>();
 
@@ -102,6 +103,32 @@ namespace AntDesign
                 throw;
             }
         }
+
+        /// <summary>
+        /// Standard Focus. From Net5 uses Blazor extension method on ElementReference.
+        /// Before, uses JS implemented exactly the same as Net5 JS.
+        /// </summary>
+        /// <param name="target">Element that will receive focus.</param>
+        /// <param name="preventScroll">Whether to scroll to focused element</param>
+        protected async Task FocusAsync(ElementReference target, bool preventScroll = false) 
+            => await Js.FocusAsync(target, preventScroll);
+
+        /// <summary>
+        /// Focus with behaviors. Behavior will work only for elements that are
+        /// HTMLInputElement or HTMLTextAreaElement. Otherwise will only focus.
+        /// </summary>
+        /// <param name="target">Element that will receive focus.</param>
+        /// <param name="behavior">Behavior of focused element</param>
+        /// <param name="preventScroll">Whether to scroll to focused element</param>
+        protected async Task FocusAsync(ElementReference target, FocusBehavior behavior, bool preventScroll = false)
+            => await Js.FocusAsync(target, behavior, preventScroll);
+
+        /// <summary>
+        /// Standard Blur. Uses JS interop.
+        /// </summary>
+        /// <param name="target">Element that will receive focus.</param>
+        protected async Task BlurAsync(ElementReference target)
+            => await Js.BlurAsyc(target);
 
         protected bool IsDisposed { get; private set; }
 

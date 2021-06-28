@@ -18,7 +18,7 @@
 
         string yearFormat = Calendar.Locale.Lang.YearFormat;
     }
-    <Select class=@($"{PrefixCls}-year-select")
+    <Select Class=@($"{PrefixCls}-year-select")
             @bind-Value="@_yearValue"
             Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
             DefaultValue=@Calendar.Value.Year

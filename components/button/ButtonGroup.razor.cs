@@ -16,7 +16,6 @@ namespace AntDesign
             set
             {
                 this._size = value;
-                SetClassMap();
             }
         }
 
@@ -25,10 +24,11 @@ namespace AntDesign
         private void SetClassMap()
         {
             string prefixName = "ant-btn-group";
-            ClassMapper.Clear().Add(prefixName)
+            ClassMapper.Add(prefixName)
                 .If("ant-dropdown-button", () => _isInDropdown)
                 .If($"{prefixName}-lg", () => this._size == "large")
-                .If($"{prefixName}-sm", () => this._size == "small");
+                .If($"{prefixName}-sm", () => this._size == "small")
+                .If($"{prefixName}-rtl", () => RTL);
         }
 
         protected override void OnInitialized()

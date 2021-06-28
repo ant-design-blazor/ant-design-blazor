@@ -9,7 +9,7 @@ namespace AntDesign
 
         public string FileName { get; set; }
 
-        public int Progress { get; set; }
+        public int Percent { get; set; }
 
         public string ObjectURL { get; set; }
 
@@ -25,7 +25,7 @@ namespace AntDesign
 
         public string Type { get; set; }
 
-        public ResponseModel GetResponse<ResponseModel>(JsonSerializerOptions options = null) => JsonSerializer.Deserialize<ResponseModel>(this.Response, options);
+        public TResponseModel GetResponse<TResponseModel>(JsonSerializerOptions options = null) => JsonSerializer.Deserialize<TResponseModel>(this.Response, options);
 
         public bool IsPicture()
         {

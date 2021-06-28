@@ -7,7 +7,7 @@
     var configs = configKv.Value;
     var className = GetClassName(placement);
     var style = GetStyle(placement);
-    <div @key="placement" class="@className" style="@style">
+    <div @key="placement" class="@className" style="@style" @ref="Ref">
         <span>
             @foreach (var itemConfig in configs)
             {

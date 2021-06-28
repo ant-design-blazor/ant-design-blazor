@@ -1,7 +1,7 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<CascadingValue Value="this">
+<CascadingValue Value="this" IsFixed="@true">
     <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
         @ChildContent
         @if (AutoGenerate)

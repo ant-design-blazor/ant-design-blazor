@@ -1,0 +1,17 @@
+﻿<Popover ContentTemplate="@_content" Title="Title">
+    <Button type="primary">Hover me</Button>
+</Popover>
+<br />
+<Popover ContentTemplate="@_content" Title="Title">
+    <Unbound>
+        <Button type="primary" RefBack="@context">Hover me (unbound)</Button>
+    </Unbound>
+</Popover>
+
+@code{
+    RenderFragment _content =
+    @<div>
+        <p>Content</p>
+        <p>Content</p>
+    </div>;
+}

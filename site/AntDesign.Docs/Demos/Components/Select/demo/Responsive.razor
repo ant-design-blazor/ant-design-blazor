@@ -1,0 +1,60 @@
+﻿@using AntDesign.Select
+<Select Mode="multiple"
+        Id="selectDemo"
+        Placeholder="Please select"
+		@bind-Values="@_selectedValues1"
+		TItemValue="string"
+		TItem="string"
+		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
+		Style="width: 100%; margin-bottom: 8px;"
+        MaxTagCount="@ResponsiveTag.Responsive"
+		EnableSearch
+		AllowClear>
+		<SelectOptions>
+			@foreach(var item in _items)
+			{
+				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@($"Long label: {item}") />
+			}
+		</SelectOptions>
+</Select>
+<Select Mode="multiple"
+        Id="selectDemoDisabled"
+        Placeholder="Please select"
+		@bind-Values="@_selectedValues1"
+		TItemValue="string"
+		TItem="string"        
+        MaxTagCount="@ResponsiveTag.Responsive"
+		Disabled>
+		<SelectOptions>
+			@foreach(var item in _items)
+			{
+				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@($"Long label: {item}") />
+			}
+		</SelectOptions>
+</Select>
+@code
+{
+    List<string> _items;
+    IEnumerable<string> _selectedValues1;
+
+	protected override void OnInitialized()
+    {
+        const int min = 10;
+        const int max = 36;
+        _items = new List<string>();
+
+        for (var i = min; max > i; i++)
+        {
+            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+            _items.Add(value);
+        }
+
+		_selectedValues1 = new List<string> { "0a10" , "0c12", "0h17", "1117", "1824", "0d13"};
+    }
+
+    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+    {
+		if (values != null)
+			Console.WriteLine($"selected: ${string.Join(",", values)}");
+    }
+}

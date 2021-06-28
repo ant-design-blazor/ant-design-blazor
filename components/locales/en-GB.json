@@ -1,5 +1,5 @@
 ﻿{
-  "locale": "en-gb",
+  "locale": "en-GB",
   "Pagination": {
     "items_per_page": "/ page",
     "jump_to": "Go to",
@@ -78,10 +78,10 @@
       "monthSelect": "Choose a month",
       "yearSelect": "Choose a year",
       "decadeSelect": "Choose a decade",
-      "yearFormat": "YYYY",
-      "dateFormat": "D/M/YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D/M/YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d/M/yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d/M/yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Previous month (PageUp)",
       "nextMonth": "Next month (PageDown)",
@@ -94,17 +94,50 @@
     },
     "timePickerLocale": { "placeholder": "Select time" }
   },
+  "global": { "placeholder": "Please select" },
   "Table": {
     "filterTitle": "Filter menu",
     "filterConfirm": "OK",
     "filterReset": "Reset",
     "selectAll": "Select current page",
-    "selectInvert": "Invert current page"
+    "selectInvert": "Invert current page",
+    "selectionAll": "Select all data",
+    "sortTitle": "Sort",
+    "expand": "Expand row",
+    "collapse": "Collapse row",
+    "triggerDesc": "Click sort by descend",
+    "triggerAsc": "Click sort by ascend",
+    "cancelSort": "Click to cancel sort",
+    "filterOptions": {
+      "true": "True",
+      "false": "False",
+      "and": "And",
+      "or": "Or",
+      "equals": "Equal",
+      "notEquals": "Not Equal",
+      "contains": "Contains",
+      "startsWith": "Start With",
+      "endsWith": "End With",
+      "greaterThan": "Greater Than",
+      "lessThan": "Less Than",
+      "greaterThanOrEquals": "Greater Than Or Equals",
+      "lessThanOrEquals": "Less Than Or Equals",
+      "isNull": "Is Null",
+      "isNotNull": "Is Not Null"
+    }
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Cancel"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Cancel",
-    "justOkText": "OK"
+    "yesText": "Yes",
+    "noText": "No",
+    "retryText": "Retry",
+    "abortText": "Abort",
+    "ignoreText": "Ignore"
   },
   "Popconfirm": {
     "okText": "OK",

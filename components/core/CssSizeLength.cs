@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 
 namespace AntDesign
 {
@@ -22,33 +20,61 @@ namespace AntDesign
         Vmin,
         Vmax,
         Fr,
+        Calc,
+        NoUnit,
     }
 
     public readonly struct CssSizeLength : IEquatable<CssSizeLength>
     {
-        private readonly int _value;
+        public decimal Value => _value ?? 0;
+
+        public string StringValue => _stringValue;
+
+        internal CssSizeLengthUnit Unit => _unit;
+
+        private readonly decimal? _value;
+        private readonly string _stringValue;
 
         private readonly CssSizeLengthUnit _unit;
 
-        public override string ToString() => _value.ToString(CultureInfo.InvariantCulture) + _unit switch
+        public override string ToString()
         {
-            CssSizeLengthUnit.Percent => "%",
-            _ => Enum.GetName(typeof(CssSizeLengthUnit), _unit).ToLowerInvariant()
-        };
+            var numericValue = _value?.ToString(CultureInfo.InvariantCulture);
+            var unit = _unit switch
+            {
+                CssSizeLengthUnit.Percent => "%",
+                CssSizeLengthUnit.Calc or CssSizeLengthUnit.NoUnit => "",
+                _ => Enum.GetName(typeof(CssSizeLengthUnit), _unit).ToLowerInvariant()
+            };
 
-        private CssSizeLength(int value, CssSizeLengthUnit unit)
+            return $"{numericValue ?? StringValue}{unit}";
+        }
+
+        private CssSizeLength(decimal value, CssSizeLengthUnit unit)
         {
             _value = value;
+            _stringValue = null;
             _unit = unit;
         }
 
-        public CssSizeLength(int value) : this(value, CssSizeLengthUnit.Px)
-        {
-        }
+        private static CssSizeLengthUnit EvalUnitless(bool noUnit) => (noUnit ? CssSizeLengthUnit.NoUnit : CssSizeLengthUnit.Px);
+
+        public CssSizeLength(int value, bool noUnit = false) : this(value, EvalUnitless(noUnit)) { }
+        public CssSizeLength(double value, bool noUnit = false) : this(Convert.ToDecimal(value), EvalUnitless(noUnit)) { }
+        public CssSizeLength(decimal value, bool noUnit = false) : this(value, EvalUnitless(noUnit)) { }
 
         public CssSizeLength(string value)
         {
             value = value?.ToLowerInvariant() ?? throw new ArgumentNullException(nameof(value));
+            _stringValue = value;
+
+            if (value.StartsWith("calc", StringComparison.OrdinalIgnoreCase))
+            {
+                _stringValue = value;
+                _value = null;
+                _unit = CssSizeLengthUnit.Calc;
+                return;
+            }
 
             var index = value
                 .Select((c, i) => ((char c, int i)?)(c, i))
@@ -66,6 +92,7 @@ namespace AntDesign
             if (index == value.Length)
             {
                 _unit = CssSizeLengthUnit.Px;
+                _stringValue = null;
                 return;
             }
 
@@ -81,6 +108,10 @@ namespace AntDesign
         }
 
         public static implicit operator CssSizeLength(int value) => new CssSizeLength(value);
+
+        public static implicit operator CssSizeLength(double value) => new CssSizeLength(value);
+
+        public static implicit operator CssSizeLength(decimal value) => new CssSizeLength(value);
 
         public static implicit operator CssSizeLength(string value) => new CssSizeLength(value);
 

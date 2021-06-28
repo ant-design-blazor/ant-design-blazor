@@ -1,0 +1,59 @@
+﻿<div>
+    <Divider Orientation="left">Align Top</Divider>
+    <Row Justify="center" Align="top">
+        <Col Span="4">
+            @DemoBox((100, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((50, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((120, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((80, "col-4"))
+        </Col>
+    </Row>
+
+    <Divider Orientation="left">Align Middle</Divider>
+    <Row Justify="space-around" Align="middle">
+        <Col Span="4">
+            @DemoBox((100, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((50, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((120, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((80, "col-4"))
+        </Col>
+    </Row>
+
+    <Divider Orientation="left">Align Bottom</Divider>
+    <Row Justify="space-between" Align="bottom">
+        <Col Span="4">
+            @DemoBox((100, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((50, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((120, "col-4"))
+        </Col>
+        <Col Span="4">
+            @DemoBox((80, "col-4"))
+        </Col>
+    </Row>
+</div>
+
+<style>
+    #components-grid-demo-flex-align [class~='ant-row'] {
+        background: rgba(128, 128, 128, 0.08);
+    }
+</style>
+
+@code{
+    RenderFragment<(int value, string children)> DemoBox = props =>@<p class="@($"height-{props.value}")">@props.children</p>;
+}

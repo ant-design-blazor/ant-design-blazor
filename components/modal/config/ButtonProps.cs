@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+﻿using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// button props
+    /// </summary>
     public class ButtonProps
     {
         public bool Block { get; set; } = false;
 
         public bool Ghost { get; set; } = false;
-
-        public bool Search { get; set; } = false;
 
         public bool Loading { get; set; } = false;
 
@@ -39,6 +36,6 @@ namespace AntDesign
             }
         }
 
-        public OneOf<string, RenderFragment> ChildContent { get; set; } = "";
+        public OneOf<string, RenderFragment>? ChildContent { get; set; } = null;
     }
 }

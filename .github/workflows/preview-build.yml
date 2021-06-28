@@ -1,0 +1,62 @@
+# Each PR will build preview site that help to check code is work as expect.
+
+name: Preview Build
+
+on: pull_request
+
+jobs:
+
+  # Prepare
+  setup:
+    name: prepare preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@master
+      
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.100
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+
+  build-site:
+    name: build preview
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: checkout
+        uses: actions/checkout@master
+
+      - name:  build site
+        id: site
+        run: |
+          npm install
+          dotnet build
+          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net5 -o _site
+        env:
+          PACKAGE_VERSION: ${{ github.event.number }}
+
+      - name: upload site artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: site
+          path: _site/wwwroot/
+          retention-days: 5
+
+      # Upload PR id for next workflow use
+      - name: Save PR number
+        if: ${{ always() }}
+        run: echo ${{ github.event.number }} > ./pr-id.txt
+
+      - name: Upload PR number
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: pr
+          path: ./pr-id.txt

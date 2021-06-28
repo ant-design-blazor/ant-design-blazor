@@ -1,0 +1,38 @@
+﻿<Menu Mode=MenuMode.Horizontal>
+    <MenuItem Key="mail">
+        <Icon Type="mail" Theme="outline"></Icon>
+        Navigation One
+    </MenuItem>
+    <MenuItem Key="app" Disabled>
+        <Icon Type="appstore" Theme="outline"></Icon>
+        Navigation Two
+    </MenuItem>
+    <SubMenu TitleTemplate=@sub1Title>
+        <MenuItemGroup Title="Item 1">
+            <MenuItem Key="setting:1">Option 1</MenuItem>
+            <MenuItem Key="setting:2">Option 2</MenuItem>
+        </MenuItemGroup>
+        <MenuDivider />
+        <MenuItemGroup Title="Item 2">
+            <MenuItem Key="setting:3">Option 3</MenuItem>
+            <SubMenu Title="Option 4">
+                <MenuItem Key="setting4:1">Option 1</MenuItem>
+                <MenuItem Key="setting4:2">Option 2</MenuItem>
+            </SubMenu>
+        </MenuItemGroup>
+    </SubMenu>
+    <MenuItem Key="alipay">
+        <MenuLink Href="https://ant.design" target="_blank" rel="noopener noreferrer">
+            Navigation Four - Link
+        </MenuLink>
+    </MenuItem>
+</Menu>
+
+@code
+{
+    RenderFragment sub1Title =
+    @<Template>
+        <Icon Type="setting" Theme="outline"></Icon>
+        Navigation Three - Submenu
+    </Template>;
+}

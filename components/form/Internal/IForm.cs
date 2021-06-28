@@ -10,6 +10,8 @@ namespace AntDesign.Internal
 
         internal ColLayoutParam LabelCol { get; }
 
+        internal AntLabelAlignType? LabelAlign { get; }
+
         internal EditContext EditContext { get; }
 
         internal string Size { get; }
@@ -17,6 +19,8 @@ namespace AntDesign.Internal
         internal void AddFormItem(IFormItem formItem);
 
         internal void AddControl(IControlValueAccessor valueAccessor);
+
+        internal void RemoveControl(IControlValueAccessor valueAccessor);
 
         internal bool ValidateOnChange { get; }
 

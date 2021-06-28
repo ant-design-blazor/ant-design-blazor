@@ -1,0 +1,99 @@
+﻿<Result Icon="@icon"
+        Status="@status"
+        Title="@title"
+        SubTitle="@subTitle">
+</Result>
+<Divider/>
+<Space Direction="DirectionVHType.Vertical" Size=@("large")>
+    <SpaceItem>
+        <Space>
+            <SpaceItem>
+                <Text>Select Icon</Text>
+            </SpaceItem>
+            <SpaceItem>
+                <RadioGroup TValue="string" @bind-Value="@icon" Size="large" OnChange="Rb_OnChange">
+                    <Radio RadioButton Value="@("smile-outline")">
+                        <Icon Type="smile" Theme="outline" />
+                    </Radio>
+                    <Radio RadioButton Value="@("like-outline")">
+                        <Icon Type="like" Theme="outline" />
+                    </Radio>
+                    <Radio RadioButton Value="@("bug-outline")">
+                        <Icon Type="bug" Theme="outline" />
+                    </Radio>
+                    <Radio RadioButton Value="@("")">
+                        Use Image
+                    </Radio>
+                </RadioGroup>
+            </SpaceItem>
+        </Space>
+    </SpaceItem>
+    <SpaceItem>
+        <Space>
+            <SpaceItem>
+                <Text>Select Result</Text>
+            </SpaceItem>
+            <SpaceItem>
+                <SimpleSelect Style="width:150px;" @bind-Value="@status" OnSelectedItemChanged="Cbo_OnSelectedItemChanged">
+                    <SelectOptions>
+                        <SimpleSelectOption Label="Icon-Info" Value="info" />
+                        <SimpleSelectOption Label="Icon-Warning" Value="warning" />
+                        <SimpleSelectOption Label="Icon-Error" Value="error" />
+                        <SimpleSelectOption Label="Icon-Success" Value="success" />
+                        <SimpleSelectOption Label="Image-403" Value="403" />
+                        <SimpleSelectOption Label="Image-404" Value="404" />
+                        <SimpleSelectOption Label="Image-500" Value="500" />
+                    </SelectOptions>
+                </SimpleSelect>
+            </SpaceItem>
+        </Space>
+    </SpaceItem>
+</Space>
+
+@code
+{
+    private string status = "info";
+    private string icon = "smile-outline";
+    private string title = "smile-outline";
+    private string subTitle = "The status is info, and the icon used is 'smile-outline'";
+
+    private void Rb_OnChange(string value)
+    {
+        bool isImageStatus = status.IsIn("403", "404", "500");
+        bool isUseIcon = !string.IsNullOrEmpty(value);
+        if (!isUseIcon)
+        {
+            if (!isImageStatus)
+            {
+                status = "403";
+            }
+        }
+        else if (isImageStatus)
+        {
+            status = "info";
+        }
+
+        title = isUseIcon ? icon : status;
+        subTitle = $"The status is {status}";
+        if (isUseIcon)
+        {
+            subTitle += $" and the icon used is '{icon}'";
+        }
+    }
+
+    private void Cbo_OnSelectedItemChanged(string value)
+    {
+        if (!string.IsNullOrEmpty(value) && value.IsIn("403", "404", "500"))
+        {
+            icon = "";
+        }
+
+        bool isUseIcon = !string.IsNullOrEmpty(icon);
+        title = isUseIcon ? icon : status;
+        subTitle = $"The status is {status}";
+        if (isUseIcon)
+        {
+            subTitle += $" and the icon used is '{icon}'";
+        }
+    }
+}

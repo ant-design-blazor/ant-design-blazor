@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Components.Web;
 namespace AntDesign
 {
     /// <summary>
-    ///
+    /// Base class for input type components.
     /// </summary>
     public class Input<TValue> : AntInputComponentBase<TValue>
     {
@@ -18,7 +19,10 @@ namespace AntDesign
 
         private bool _allowClear;
         protected string AffixWrapperClass { get; set; } = $"{PrefixCls}-affix-wrapper";
+        private bool _hasAffixWrapper;
         protected string GroupWrapperClass { get; set; } = $"{PrefixCls}-group-wrapper";
+
+        protected virtual string InputType => "input";
 
         //protected string ClearIconClass { get; set; }
         protected static readonly EventCallbackFactory CallbackFactory = new EventCallbackFactory();
@@ -30,75 +34,214 @@ namespace AntDesign
         [Inject]
         public DomEventService DomEventService { get; set; }
 
-        [Parameter]
-        public string Type { get; set; } = "text";
-
+        /// <summary>
+        /// The label text displayed before (on the left side of) the input field.
+        /// </summary>
         [Parameter]
         public RenderFragment AddOnBefore { get; set; }
 
+        /// <summary>
+        /// The label text displayed after (on the right side of) the input field.
+        /// </summary>
         [Parameter]
         public RenderFragment AddOnAfter { get; set; }
 
-        [Parameter]
-        public string Placeholder { get; set; }
-
-        [Parameter]
-        public bool AutoFocus { get; set; }
-
-        [Parameter]
-        public TValue DefaultValue { get; set; }
-
-        [Parameter]
-        public int MaxLength { get; set; } = -1;
-
-        [Parameter]
-        public bool Disabled { get; set; }
-
+        /// <summary>
+        /// Allow to remove input content with clear icon 
+        /// </summary>
         [Parameter]
         public bool AllowClear { get; set; }
 
         [Parameter]
-        public RenderFragment Prefix { get; set; }
+        public bool AutoFocus
+        {
+            get { return _autoFocus; }
+            set
+            {
+                _autoFocus = value;
+                if (!_isInitialized && _autoFocus)
+                    IsFocused = _autoFocus;
+            }
+        }
 
+        /// <summary>
+        /// Whether has border style
+        /// </summary>
         [Parameter]
-        public RenderFragment Suffix { get; set; }
+        public bool Bordered { get; set; } = true;
 
+        /// <summary>
+        /// Delays the processing of the KeyUp event until the user has stopped 
+        /// typing for a predetermined amount of time
+        /// </summary>
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public int DebounceMilliseconds { get; set; } = 250;
 
+        /// <summary>
+        /// The initial input content  
+        /// </summary>
         [Parameter]
-        public EventCallback<TValue> OnChange { get; set; }
+        public TValue DefaultValue { get; set; }
 
+        /// <summary>
+        /// Whether the input is disabled.
+        /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
+        public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Css class that will be  added to input element class
+        /// as the last class entry.
+        /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyUp { get; set; }
+        public string InputElementSuffixClass { get; set; }
 
+        /// <summary>
+        /// Max length
+        /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
+        public int MaxLength { get; set; } = -1;
 
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnMouseUp { get; set; }
-
-        [Parameter]
-        public EventCallback<ChangeEventArgs> OnInput { get; set; }
-
+        /// <summary>
+        /// Callback when input looses focus
+        /// </summary>
         [Parameter]
         public EventCallback<FocusEventArgs> OnBlur { get; set; }
 
+        /// <summary>
+        /// Callback when the content changes
+        /// </summary>
+        [Parameter]
+        public EventCallback<TValue> OnChange { get; set; }
+
+        /// <summary>
+        /// Callback when input receives focus
+        /// </summary>
         [Parameter]
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
 
+        /// <summary>
+        /// Callback when value is inputed
+        /// </summary>
         [Parameter]
-        public int DebounceMilliseconds { get; set; } = 500;
+        public EventCallback<ChangeEventArgs> OnInput { get; set; }
+
+        /// <summary>
+        /// Callback when a key is pressed
+        /// </summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
+
+        /// <summary>
+        /// Callback when a key is released
+        /// </summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnkeyUp { get; set; }
+
+        /// <summary>
+        /// Callback when a mouse button is released
+        /// </summary>
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnMouseUp { get; set; }
+
+        /// <summary>
+        /// The callback function that is triggered when Enter key is pressed
+        /// </summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
+
+        /// <summary>
+        /// Provide prompt information that describes the expected value of the input field
+        /// </summary>
+        [Parameter]
+        public string Placeholder { get; set; }
+
+        /// <summary>
+        /// The prefix icon for the Input.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Prefix { get; set; }
+
+        /// <summary>
+        /// When present, it specifies that an input field is read-only.
+        /// </summary>
+        [Parameter]
+        public bool ReadOnly { get; set; }
+
+        /// <summary>
+        /// The suffix icon for the Input.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Suffix { get; set; }
+
+
+        /// <summary>
+        /// The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)
+        /// </summary>
+        [Parameter]
+        public string Type { get; set; } = "text";
+
+        /// <summary>
+        /// Set CSS style of wrapper. Is used when component has visible: `Prefix`/`Suffix` 
+        /// or has paramter set `AllowClear` or for components: `Password` & `Search`. In 
+        /// these cases, html `<span>` elements is used to wrap the html `<input>` element. 
+        /// `WrapperStyle` is used on the `<span>` element.
+        /// </summary>
+        [Parameter]
+        public string WrapperStyle { get; set; }
 
         public Dictionary<string, object> Attributes { get; set; }
+
+        public ForwardRef WrapperRefBack { get; set; }
+
+        /// <summary>
+        /// Focus behavior for input component with optional behaviors.
+        /// </summary>
+        /// <param name="behavior">enum: AntDesign.FocusBehavior</param>
+        /// <param name="preventScroll">When true, element receiving focus will not be scrolled to.</param>
+        public virtual async Task Focus(FocusBehavior behavior = default, bool preventScroll = false)
+        {
+            if (behavior == FocusBehavior.FocusAndClear)
+            {
+                await Clear();
+                StateHasChanged();
+            }
+            else
+            {
+                await FocusAsync(Ref, behavior, preventScroll);
+                IsFocused = true;
+            }
+        }
+
+        /// <summary>
+        /// Removes focus from input element.
+        /// </summary>       
+        public async Task Blur()
+        {
+            await BlurAsync(Ref);
+        }
+
+        private async Task Clear()
+        {
+            CurrentValue = default;
+            IsFocused = true;
+            await this.FocusAsync(Ref);
+            if (OnChange.HasDelegate)
+                await OnChange.InvokeAsync(Value);
+            else
+                //Without the delay, focus is not enforced.
+                await Task.Delay(1);
+        }
 
         private TValue _inputValue;
         private bool _compositionInputting;
         private Timer _debounceTimer;
+        private bool _autoFocus;
+        private bool _isInitialized;
+
         private bool DebounceEnabled => DebounceMilliseconds != 0;
+
+        protected bool IsFocused { get; set; }
 
         protected override void OnInitialized()
         {
@@ -110,11 +253,12 @@ namespace AntDesign
             }
 
             SetClasses();
+            _isInitialized = true;
         }
 
         protected virtual void SetClasses()
         {
-            AffixWrapperClass = $"{PrefixCls}-affix-wrapper";
+            AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper";
 
             if (!string.IsNullOrWhiteSpace(Class))
@@ -125,8 +269,12 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add($"{PrefixCls}")
+                .If($"{PrefixCls}-borderless", () => !Bordered)
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
-                .If($"{PrefixCls}-sm", () => Size == InputSize.Small);
+                .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
+                .If($"{PrefixCls}-rtl", () => RTL)
+                .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass))
+                ;
 
             Attributes ??= new Dictionary<string, object>();
 
@@ -168,11 +316,6 @@ namespace AntDesign
             SetClasses();
         }
 
-        public async Task Focus()
-        {
-            await JsInvokeAsync(JSInteropConstants.Focus, Ref);
-        }
-
         protected virtual async Task OnChangeAsync(ChangeEventArgs args)
         {
             if (CurrentValueAsString != args?.Value?.ToString())
@@ -186,11 +329,14 @@ namespace AntDesign
 
         protected async Task OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (args != null && args.Key == "Enter" && EnableOnPressEnter)
+            if (args?.Key == "Enter" && InputType != "textarea")
             {
-                await ChangeValue();
-                await OnPressEnter.InvokeAsync(args);
-                await OnPressEnterAsync();
+                await ChangeValue(true);
+                if (EnableOnPressEnter)
+                {
+                    await OnPressEnter.InvokeAsync(args);
+                    await OnPressEnterAsync();
+                }
             }
         }
 
@@ -210,13 +356,16 @@ namespace AntDesign
 
         protected async Task OnMouseUpAsync(MouseEventArgs args)
         {
-            await ChangeValue();
+            await ChangeValue(true);
 
             if (OnMouseUp.HasDelegate) await OnMouseUp.InvokeAsync(args);
         }
 
         internal virtual async Task OnBlurAsync(FocusEventArgs e)
         {
+            IsFocused = false;
+            if (_hasAffixWrapper)
+                SetClasses();
             if (_compositionInputting)
             {
                 _compositionInputting = false;
@@ -230,8 +379,13 @@ namespace AntDesign
             }
         }
 
+        private async void OnFocusInternal(JsonElement e) => await OnFocusAsync(new());
+
         internal virtual async Task OnFocusAsync(FocusEventArgs e)
         {
+            IsFocused = true;
+            if (_hasAffixWrapper)
+                SetClasses();
             if (OnFocus.HasDelegate)
             {
                 await OnFocus.InvokeAsync(e);
@@ -254,20 +408,19 @@ namespace AntDesign
             {
                 builder.OpenComponent<Icon>(31);
                 builder.AddAttribute(32, "Type", "close-circle");
-                builder.AddAttribute(33, "Class", GetClearIconCls());
-                if (string.IsNullOrEmpty(Value?.ToString()))
+                builder.AddAttribute(33, "Theme", "fill");
+                builder.AddAttribute(34, "Class", GetClearIconCls());
+                if (string.IsNullOrEmpty(_inputValue?.ToString() ?? ""))
                 {
-                    builder.AddAttribute(34, "Style", "visibility: hidden;");
+                    builder.AddAttribute(35, "Style", "visibility: hidden;");
                 }
                 else
                 {
-                    builder.AddAttribute(34, "Style", "visibility: visible;");
+                    builder.AddAttribute(36, "Style", "visibility: visible;");
                 }
-                builder.AddAttribute(35, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, (args) =>
+                builder.AddAttribute(37, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
                 {
-                    CurrentValue = default;
-                    if (OnChange.HasDelegate)
-                        OnChange.InvokeAsync(Value);
+                    await Clear();
                     ToggleClearBtn();
                 }));
                 builder.CloseComponent();
@@ -294,13 +447,11 @@ namespace AntDesign
                     DebounceChangeValue();
                     return;
                 }
-                else
+
+                _debounceTimer?.Dispose();
+                if (_debounceTimer != null)
                 {
-                    _debounceTimer?.Dispose();
-                    if (_debounceTimer != null)
-                    {
-                        _debounceTimer = null;
-                    }
+                    _debounceTimer = null;
                 }
             }
 
@@ -325,11 +476,12 @@ namespace AntDesign
             {
                 DomEventService.AddEventListener(Ref, "compositionstart", OnCompositionStart);
                 DomEventService.AddEventListener(Ref, "compositionend", OnCompositionEnd);
-
                 if (this.AutoFocus)
                 {
-                    await this.Focus();
+                    IsFocused = true;
+                    await this.FocusAsync(Ref);
                 }
+                DomEventService.AddEventListener(Ref, "focus", OnFocusInternal, true);
             }
         }
 
@@ -337,6 +489,7 @@ namespace AntDesign
         {
             DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionstart", OnCompositionStart);
             DomEventService.RemoveEventListerner<JsonElement>(Ref, "compositionend", OnCompositionEnd);
+            DomEventService.RemoveEventListerner<JsonElement>(Ref, "focus", OnFocusInternal);
 
             _debounceTimer?.Dispose();
 
@@ -390,15 +543,17 @@ namespace AntDesign
                 if (AddOnBefore != null || AddOnAfter != null)
                 {
                     container = "groupWrapper";
+                    _hasAffixWrapper = true;
                     builder.OpenElement(1, "span");
                     builder.AddAttribute(2, "class", GroupWrapperClass);
-                    builder.AddAttribute(3, "style", Style);
+                    builder.AddAttribute(3, "style", WrapperStyle);
                     builder.OpenElement(4, "span");
                     builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
                 }
 
                 if (AddOnBefore != null)
                 {
+                    _hasAffixWrapper = true;
                     // addOnBefore
                     builder.OpenElement(11, "span");
                     builder.AddAttribute(12, "class", $"{PrefixCls}-group-addon");
@@ -408,17 +563,23 @@ namespace AntDesign
 
                 if (Prefix != null || Suffix != null)
                 {
+                    _hasAffixWrapper = true;
                     builder.OpenElement(21, "span");
                     builder.AddAttribute(22, "class", AffixWrapperClass);
                     if (container == "input")
                     {
                         container = "affixWrapper";
-                        builder.AddAttribute(23, "style", Style);
+                        builder.AddAttribute(3, "style", WrapperStyle);
+                    }
+                    if (WrapperRefBack != null)
+                    {
+                        builder.AddElementReferenceCapture(24, r => WrapperRefBack.Current = r);
                     }
                 }
 
                 if (Prefix != null)
                 {
+                    _hasAffixWrapper = true;
                     // prefix
                     builder.OpenElement(31, "span");
                     builder.AddAttribute(32, "class", $"{PrefixCls}-prefix");
@@ -429,48 +590,59 @@ namespace AntDesign
                 // input
                 builder.OpenElement(41, "input");
                 builder.AddAttribute(42, "class", ClassMapper.Class);
-                if (container == "input")
-                {
-                    builder.AddAttribute(43, "style", Style);
-                }
+                builder.AddAttribute(43, "style", Style);
 
+                bool needsDisabled = Disabled;
                 if (Attributes != null)
                 {
                     builder.AddMultipleAttributes(44, Attributes);
+                    if (!Attributes.TryGetValue("disabled", out object disabledAttribute))
+                    {
+                        needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
+                    }
                 }
 
                 if (AdditionalAttributes != null)
                 {
                     builder.AddMultipleAttributes(45, AdditionalAttributes);
+                    if (!AdditionalAttributes.TryGetValue("disabled", out object disabledAttribute))
+                    {
+                        needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
+                    }
                 }
 
                 builder.AddAttribute(50, "Id", Id);
                 builder.AddAttribute(51, "type", Type);
                 builder.AddAttribute(60, "placeholder", Placeholder);
                 builder.AddAttribute(61, "value", CurrentValue);
+                builder.AddAttribute(62, "disabled", needsDisabled);
+                builder.AddAttribute(63, "readonly", ReadOnly);
 
                 // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
                 if (!IgnoreOnChangeAndBlur)
                 {
-                    builder.AddAttribute(62, "onchange", CallbackFactory.Create(this, OnChangeAsync));
-                    builder.AddAttribute(65, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+                    builder.AddAttribute(70, "onchange", CallbackFactory.Create(this, OnChangeAsync));
+                    builder.AddAttribute(71, "onblur", CallbackFactory.Create(this, OnBlurAsync));
                 }
 
-                builder.AddAttribute(63, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
-                builder.AddAttribute(63, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
-                builder.AddAttribute(63, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
-                builder.AddAttribute(64, "oninput", CallbackFactory.Create(this, OnInputAsync));
-                builder.AddAttribute(66, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
-                builder.AddAttribute(67, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
-                builder.AddElementReferenceCapture(68, r => Ref = r);
+                builder.AddAttribute(72, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
+                builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
+                builder.AddAttribute(74, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
+                builder.AddAttribute(75, "oninput", CallbackFactory.Create(this, OnInputAsync));
+
+                //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
+                //builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
+                builder.AddAttribute(77, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
+                builder.AddElementReferenceCapture(90, r => Ref = r);
                 builder.CloseElement();
 
                 if (Suffix != null)
                 {
+                    _hasAffixWrapper = true;
                     // suffix
-                    builder.OpenElement(71, "span");
-                    builder.AddAttribute(72, "class", $"{PrefixCls}-suffix");
-                    builder.AddContent(73, Suffix);
+                    builder.OpenElement(91, "span");
+                    builder.AddAttribute(92, "class", $"{PrefixCls}-suffix");
+                    builder.AddContent(93, Suffix);
                     builder.CloseElement();
                 }
 
@@ -481,10 +653,11 @@ namespace AntDesign
 
                 if (AddOnAfter != null)
                 {
+                    _hasAffixWrapper = true;
                     // addOnAfter
-                    builder.OpenElement(81, "span");
-                    builder.AddAttribute(82, "class", $"{PrefixCls}-group-addon");
-                    builder.AddContent(83, AddOnAfter);
+                    builder.OpenElement(100, "span");
+                    builder.AddAttribute(101, "class", $"{PrefixCls}-group-addon");
+                    builder.AddContent(102, AddOnAfter);
                     builder.CloseElement();
                 }
 

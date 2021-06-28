@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -10,58 +7,103 @@ namespace AntDesign
 {
     public partial class Tag : AntDomComponentBase
     {
+        /// <summary>
+        /// Tag content
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        ///  'default' | 'closeable' | 'checkable'
+        /// Whether the Tag can be closed
         /// </summary>
-        [Parameter]
-        public string Mode { get; set; } = "default";
-
-        [Parameter]
-        public string Color { get; set; }
-
         [Parameter]
         public bool Closable { get; set; }
 
+        /// <summary>
+        /// Whether the Tag can be checked
+        /// </summary>
         [Parameter]
-        public bool Visible { get; set; } = true;
+        public bool Checkable { get; set; }
 
+        /// <summary>
+        /// Checked status of Tag
+        /// </summary>
         [Parameter]
         public bool Checked { get; set; }
 
-        [Parameter]
-        public string Icon { get; set; }
-
-        [Parameter]
-        public bool NoAnimation { get; set; }
-
-        [Parameter]
-        public EventCallback AfterClose { get; set; }
-
-        [Parameter]
-        public EventCallback<MouseEventArgs> OnClose { get; set; }
-
+        /// <summary>
+        /// Callback executed when Tag is checked/unchecked
+        /// </summary>
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
 
+        /// <summary>
+        /// Tag color. Can either be a predefined color (string)
+        /// or hex color.
+        /// </summary>
+        [Parameter]
+        public string Color
+        {
+            get => _color;
+            set
+            {
+                if (_color != value)
+                {
+                    _color = value;
+                    _presetColor = IsPresetColor(_color);
+                    if (_presetColor)
+                    {
+                        _style = Style;
+                    }
+                    else
+                    {
+                        _style = $"background-color: {_color};{Style}";
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set the tag's icon 
+        /// </summary>
+        [Parameter]
+        public string Icon { get; set; }
+
+        /// <summary>
+        /// Callback executed when tag is closed
+        /// </summary>
+        [Parameter]
+        public EventCallback<MouseEventArgs> OnClose { get; set; }
+
+        /// <summary>
+        /// Triggered before true closing, can prevent the closing
+        /// </summary>
+        [Parameter]
+        public EventCallback<CloseEventArgs<MouseEventArgs>> OnClosing { get; set; }
+
+        /// <summary>
+        /// Callback executed when tag is clicked (it is not called 
+        /// when closing icon is clicked).
+        /// </summary>
         [Parameter]
         public EventCallback OnClick { get; set; }
 
+        /// <summary>
+        /// Whether the Tag is closed or not
+        /// </summary>
+        [Parameter]
+        public bool Visible { get; set; } = true;
+
+
         private bool _presetColor;
         private bool _closed;
+        private string _color;
+        private string _style;
 
-        protected override Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             this.UpdateClassMap();
-            return base.OnInitializedAsync();
-        }
-
-        protected override void OnParametersSet()
-        {
-            this.UpdateClassMap();
-            base.OnParametersSet();
+            base.OnInitialized();
         }
 
         private static bool IsPresetColor(string color)
@@ -71,38 +113,57 @@ namespace AntDesign
                 return false;
             }
 
-            bool result = Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime)(-inverse)?$");
-            if (!result) result = Regex.IsMatch(color, "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$");
+            bool result = Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime|success|processing|error|warning|default)(-inverse)?$");
             return result;
         }
-
+        private string _prefix = "ant-tag";
         private void UpdateClassMap()
         {
-            this._presetColor = IsPresetColor(this.Color);
-            string prefix = "ant-tag";
-            this.ClassMapper.Clear().Add(prefix)
-                .If($"{prefix}-has-color", () => !string.IsNullOrEmpty(Color) && !_presetColor)
-                .If($"{prefix}-hidden", () => Visible == false)
-                .If($"{prefix}-{Color}", () => _presetColor)
-                .If($"{prefix}-checkable", () => Mode == "checkable")
-                .If($"{prefix}-checkable-checked", () => Checked)
+            this.ClassMapper.Add(_prefix)
+                .If($"{_prefix}-has-color", () => !string.IsNullOrEmpty(Color) && !_presetColor)
+                .If($"{_prefix}-hidden", () => Visible == false)
+                .GetIf(() => $"{_prefix}-{Color}", () => _presetColor)
+                .If($"{_prefix}-checkable", () => Checkable)
+                .If($"{_prefix}-checkable-checked", () => Checked)
+                .If($"{_prefix}-rtl", () => RTL)
+                .If($"{_prefix}-clickable", () => OnClick.HasDelegate)
                 ;
         }
 
         private async Task UpdateCheckedStatus()
         {
-            if (Mode == "checkable")
+            if (!Checkable)
             {
-                this.Checked = !this.Checked;
+                return;
+            }
+
+            this.Checked = !this.Checked;
+            if (this.CheckedChange.HasDelegate)
+            {
                 await this.CheckedChange.InvokeAsync(this.Checked);
-                this.UpdateClassMap();
             }
         }
 
         private async Task CloseTag(MouseEventArgs e)
         {
-            await this.OnClose.InvokeAsync(e);
-            this._closed = true;
+            var closeEvent = new CloseEventArgs<MouseEventArgs>(e);
+
+            if (OnClosing.HasDelegate)
+            {
+                await this.OnClosing.InvokeAsync(closeEvent);
+            }
+
+            if (closeEvent.Cancel)
+            {
+                return;
+            }
+
+            this._closed = true;            
+
+            if (OnClose.HasDelegate)
+            {
+                await this.OnClose.InvokeAsync(e);
+            }
         }
 
         private async Task ClickTag(MouseEventArgs e)

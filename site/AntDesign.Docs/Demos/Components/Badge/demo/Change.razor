@@ -1,0 +1,54 @@
+﻿<div>
+    <div>
+        <Badge Count="@count">
+            <a href="#" class="head-example" />
+        </Badge>
+        <ButtonGroup>
+            <Button OnClick="decline">
+                <Icon Type="minus"></Icon>
+            </Button>
+            <Button OnClick="increase">
+                <Icon Type="plus"></Icon>
+            </Button>
+            <Button OnClick="random">
+                <Icon Type="question"></Icon>
+            </Button>
+        </ButtonGroup>
+    </div>
+    <div style="margin-top: 10px">
+        <Badge Dot="@show">
+            <a href="#" class="head-example" />
+        </Badge>
+        <Switch OnChange="onChange" Checked="@show" />
+    </div>
+</div>
+
+@code {
+    int count = 5;
+    bool show = true;
+    Random _random = new Random();
+
+    void increase()
+    {
+        count++;
+    }
+
+    void decline()
+    {
+        count--;
+        if (count < 0)
+        {
+            count = 0;
+        }
+    }
+
+    void random()
+    {
+        count = _random.Next(0, 99);
+    }
+
+    void onChange(bool show)
+    {
+        this.show = show;
+    }
+}

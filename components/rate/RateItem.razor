@@ -1,42 +1,47 @@
 ﻿@namespace AntDesign
 @inherits AntDesign.AntDomComponentBase
 
-@{
+@{ 
     RenderFragment<RateItem> template = item =>
-    @<li class="@item._starClassMapper.Class">
-        <div role="radio" aria-checked="true" aria-posinset="@(item.IndexOfGroup + 1)" aria-setsize="5" tabindex="@item.IndexOfGroup">
-            <div class="ant-rate-star-first" @onclick="@(async e => await item.OnClick(true))" @onmouseover="@(async e => await item.OnHover(true))">
-                @if (@item.Character != null)
-                {
-                    @item.Character.Invoke(new RateItemRenderContext());
-                }
-                else
-                {
-                    <Icon Type="star" Theme="fill"></Icon>
-                }
-            </div>
-            <div class="ant-rate-star-second" @onclick="@(async e => await item.OnClick(false))" @onmouseover="@(async e => await item.OnHover(false))">
-                @if (@item.Character != null)
-                {
-                    @item.Character.Invoke(new RateItemRenderContext());
-                }
-                else
-                {
-                    <Icon Type="star" Theme="fill"></Icon>
-                }
-            </div>
+    @<div role="radio" aria-checked="true" aria-posinset="@(item.IndexOfGroup + 1)" aria-setsize="5" tabindex="@item.IndexOfGroup">
+        <div class="ant-rate-star-first" @onclick="@(async e => await item.OnClick(true))" @onmouseover="@(async e => await item.OnHover(true))">
+            @if (@item.Character != null)
+            {
+                @item.Character.Invoke(new RateItemRenderContext());
+            }
+            else
+            {
+                <Icon Type="star" Theme="fill"></Icon>
+            }
         </div>
-    </li>;
+        <div class="ant-rate-star-second" @onclick="@(async e => await item.OnClick(false))" @onmouseover="@(async e => await item.OnHover(false))">
+            @if (@item.Character != null)
+            {
+                @item.Character.Invoke(new RateItemRenderContext());
+            }
+            else
+            {
+                <Icon Type="star" Theme="fill"></Icon>
+            }
+        </div>
+    </div>;
 
 }
 
 @if (string.IsNullOrWhiteSpace(Tooltip))
 {
-    @template(this)
+    <li class="@_starClassMapper.Class" @ref="Ref">
+        @template(this)
+    </li>
 }
 else
 {
     <Tooltip Title="@Tooltip">
-        @template(this)
+        <Unbound>
+            <li class="@_starClassMapper.Class" @ref="@context.Current">
+
+                @template(this)
+            </li>
+        </Unbound>
     </Tooltip>
 }

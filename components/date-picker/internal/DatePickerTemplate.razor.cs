@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Text;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign.Internal
 {
     public partial class DatePickerTemplate<TValue> : DatePickerPanelBase<TValue>
     {
+        private int _maxCol;
+        private int _maxRow;
+        private DateTime _viewStartDate;
+
         [Parameter]
         public RenderFragment RenderPickerHeader { get; set; }
 
@@ -13,7 +18,7 @@ namespace AntDesign.Internal
         public RenderFragment RenderTableHeader { get; set; }
 
         [Parameter]
-        public RenderFragment<DateTime> RenderFisrtCol { get; set; }
+        public RenderFragment<DateTime> RenderFirstCol { get; set; }
 
         [Parameter]
         public RenderFragment<DateTime> RenderColValue { get; set; }
@@ -22,7 +27,15 @@ namespace AntDesign.Internal
         public RenderFragment<DateTime> RenderLastCol { get; set; }
 
         [Parameter]
-        public DateTime ViewStartDate { get; set; }
+        public DateTime ViewStartDate
+        {
+            get { return _viewStartDate; }
+            set
+            {
+                if (_viewStartDate != value)
+                    _viewStartDate = value;
+            }
+        }
 
         [Parameter]
         public Func<DateTime, string> GetColTitle { get; set; }
@@ -52,10 +65,29 @@ namespace AntDesign.Internal
         public bool ShowFooter { get; set; } = false;
 
         [Parameter]
-        public int MaxRow { get; set; } = 0;
+        public int MaxRow
+        {
+            get { return _maxRow; }
+            set
+            {
+                if (_maxRow != value)
+                    _maxRow = value;
+            }
+        }
 
         [Parameter]
-        public int MaxCol { get; set; } = 0;
+        public int MaxCol
+        {
+            get { return _maxCol; }
+            set
+            {
+                if (_maxCol != value)
+                    _maxCol = value;
+            }
+        }
+
+        [Parameter]
+        public int SkipDays { get; set; }
 
         private void DateOnMouseEnter(DateTime hoverDateTime)
         {
@@ -106,7 +138,8 @@ namespace AntDesign.Internal
 
         private bool IsDateInRange(DateTime currentColDate)
         {
-            if (!IsRange || !Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month))
+            if (!IsRange ||
+                !Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter))
             {
                 return false;
             }
@@ -145,12 +178,7 @@ namespace AntDesign.Internal
             string selectedCls = isSelected ? $"{PrefixCls}-cell-selected" : "";
             string inRangeCls = isInRange ? $"{PrefixCls}-cell-in-range" : "";
 
-            string disabledCls = "";
-            if (DisabledDate != null && DisabledDate(currentColDate))
-            {
-                disabledCls = $"{PrefixCls}-cell-disabled";
-            }
-
+            string disabledCls = GetDisabledCls(currentColDate);
             string rangeStartCls = GetRangeStartCls(currentColDate);
             string rangeEndCls = GetRangeEndCls(currentColDate);
             string rangeHoverCls = GetRangeHoverCls(currentColDate);
@@ -181,7 +209,7 @@ namespace AntDesign.Internal
         private string GetRangeHoverCls(DateTime currentColDate)
         {
             if (!IsRange || DatePicker.HoverDateTime == null
-                || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month) == false)
+                || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter) == false)
             {
                 return "";
             }
@@ -263,7 +291,7 @@ namespace AntDesign.Internal
 
         private string GetRangeStartCls(DateTime currentColDate)
         {
-            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month) == false)
+            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter) == false)
             {
                 return "";
             }
@@ -304,7 +332,7 @@ namespace AntDesign.Internal
 
         private string GetRangeEndCls(DateTime currentColDate)
         {
-            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month) == false)
+            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter) == false)
             {
                 return "";
             }
@@ -346,7 +374,7 @@ namespace AntDesign.Internal
 
         private string GetRangeEdgeCls(DateTime currentColDate)
         {
-            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month) == false)
+            if (!IsRange || Picker.IsIn(DatePickerType.Date, DatePickerType.Year, DatePickerType.Month, DatePickerType.Quarter) == false)
             {
                 return "";
             }
@@ -389,6 +417,20 @@ namespace AntDesign.Internal
             return cls.ToString();
         }
 
+        private string GetDisabledCls(DateTime currentColDate)
+        {
+            string disabledCls = "";
+
+            var nextStartDate = GetNextStartDate(currentColDate);
+
+            if (DisabledDate?.Invoke(DateHelper.AddDaysSafely(nextStartDate, -1)) == true)
+            {
+                disabledCls = $"{PrefixCls}-cell-disabled";
+            }
+
+            return disabledCls;
+        }
+
         private DateTime? FormatDateByPicker(DateTime? dateTime)
         {
             return DateHelper.FormatDateByPicker(dateTime, Picker);
@@ -401,25 +443,60 @@ namespace AntDesign.Internal
 
         private DateTime GetPreDate(DateTime dateTime)
         {
-            return Picker switch
+            try
             {
-                DatePickerType.Date => dateTime.AddDays(-1),
-                DatePickerType.Year => dateTime.AddYears(-1),
-                DatePickerType.Month => dateTime.AddMonths(-1),
-                DatePickerType.Quarter => dateTime.AddMonths(-3),
-                _ => dateTime,
-            };
+                return Picker switch
+                {
+                    DatePickerType.Date => DateHelper.AddDaysSafely(dateTime, -1),
+                    DatePickerType.Year => DateHelper.AddYearsSafely(dateTime, -1),
+                    DatePickerType.Month => DateHelper.AddMonthsSafely(dateTime, -1),
+                    DatePickerType.Quarter => DateHelper.AddMonthsSafely(dateTime, -3),
+                    _ => dateTime,
+                };
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return dateTime; //reached min date, return requested
+            }
         }
 
         private DateTime GetNextDate(DateTime dateTime)
         {
             return Picker switch
             {
-                DatePickerType.Date => dateTime.AddDays(1),
-                DatePickerType.Year => dateTime.AddYears(1),
-                DatePickerType.Month => dateTime.AddMonths(1),
-                DatePickerType.Quarter => dateTime.AddMonths(3),
+                DatePickerType.Date => DateHelper.AddDaysSafely(dateTime, 1),
+                DatePickerType.Year => DateHelper.AddYearsSafely(dateTime, 1),
+                DatePickerType.Month => DateHelper.AddMonthsSafely(dateTime, 1),
+                DatePickerType.Quarter => DateHelper.AddMonthsSafely(dateTime, 3),
                 _ => dateTime,
+            };
+        }
+
+        private DateTime GetNextStartDate(DateTime currentDateTime)
+        {
+            return Picker switch
+            {
+                DatePickerType.Decade => DateHelper.GetNextStartDateOfDecade(currentDateTime),
+                DatePickerType.Year => DateHelper.GetNextStartDateOfYear(currentDateTime),
+                DatePickerType.Quarter => DateHelper.GetNextStartDateOfQuarter(currentDateTime),
+                DatePickerType.Month => DateHelper.GetNextStartDateOfMonth(currentDateTime),
+                DatePickerType.Week => DateHelper.GetNextStartDateOfDay(currentDateTime),
+                DatePickerType.Date => DateHelper.GetNextStartDateOfDay(currentDateTime),
+                DatePickerType.Time => DateHelper.GetNextStartDateOfDay(currentDateTime),
+                _ => currentDateTime,
+            };
+        }
+
+        private bool ShouldStopRenderDate(DateTime preDate, DateTime nextDate)
+        {
+            return Picker switch
+            {
+                DatePickerType.Date => DateHelper.IsSameDay(preDate, nextDate),
+                DatePickerType.Year => DateHelper.IsSameYear(preDate, nextDate),
+                DatePickerType.Month => DateHelper.IsSameMonth(preDate, nextDate),
+                DatePickerType.Quarter => DateHelper.IsSameQuarter(preDate, nextDate),
+                DatePickerType.Decade => DateHelper.IsSameYear(preDate, nextDate) || nextDate.Year == DateTime.MaxValue.Year,
+                _ => false,
             };
         }
     }

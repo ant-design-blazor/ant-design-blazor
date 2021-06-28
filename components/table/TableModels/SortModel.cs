@@ -1,85 +1,66 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using AntDesign.Internal;
 
 namespace AntDesign.TableModels
 {
-    public class SortModel<TField> : ITableSortModel
+    public class SortModel<TField> : ITableSortModel, IComparer<TField>
     {
-        private PropertyInfo _propertyInfo;
-
-        public SortType SortType { get; private set; }
-
         public int Priority { get; }
 
         public string FieldName { get; }
 
-        public SortModel(PropertyInfo propertyInfo, int priority, string sort)
+        public string Sort => _sortDirection?.Name;
+
+        SortDirection ITableSortModel.SortDirection => _sortDirection;
+
+        private readonly Func<TField, TField, int> _comparer;
+
+        private SortDirection _sortDirection;
+
+        private LambdaExpression _getFieldExpression;
+
+        public SortModel(LambdaExpression getFieldExpression, string fieldName, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
         {
-            this._propertyInfo = propertyInfo;
             this.Priority = priority;
-            this.FieldName = propertyInfo?.Name;
-            this.SortType = SortType.Parse(sort) ?? SortType.None;
+            this._getFieldExpression = getFieldExpression;
+            this.FieldName = fieldName;
+            this._comparer = comparer;
+            this._sortDirection = defaultSortOrder ?? SortDirection.None;
         }
 
-        IOrderedQueryable<TItem> ITableSortModel.Sort<TItem>(IQueryable<TItem> source)
+        void ITableSortModel.SetSortDirection(SortDirection sortDirection)
         {
-            if (SortType == SortType.None)
+            _sortDirection = sortDirection;
+        }
+
+        IOrderedQueryable<TItem> ITableSortModel.SortList<TItem>(IQueryable<TItem> source)
+        {
+            if (_sortDirection == SortDirection.None)
             {
                 return source as IOrderedQueryable<TItem>;
             }
 
-            var sourceExpression = Expression.Parameter(typeof(TItem));
+            var lambda = (Expression<Func<TItem, TField>>)_getFieldExpression;
 
-            var propertyExpression = Expression.Property(sourceExpression, _propertyInfo);
-
-            var lambda = Expression.Lambda<Func<TItem, TField>>(propertyExpression, sourceExpression);
-
-            if (SortType == SortType.Ascending)
+            if (_sortDirection == SortDirection.Ascending)
             {
-                return source.OrderBy(lambda);
+                return _comparer == null ? source.OrderBy(lambda) : source.OrderBy(lambda, this);
             }
             else
             {
-                return source.OrderByDescending(lambda);
+                return _comparer == null ? source.OrderByDescending(lambda) : source.OrderByDescending(lambda, this);
             }
         }
 
-        void ITableSortModel.SwitchSortType()
+        /// <inheritdoc />
+        public int Compare(TField x, TField y)
         {
-            SortType = GetNextType();
-        }
-
-        void ITableSortModel.SetSortType(SortType sortType)
-        {
-            this.SortType = sortType;
-        }
-
-        void ITableSortModel.SetSortType(string sortType)
-        {
-            this.SortType = SortType.Parse(sortType);
-        }
-
-        SortType ITableSortModel.NextType()
-        {
-            return GetNextType();
-        }
-
-        private SortType GetNextType()
-        {
-            if (SortType == SortType.None)
-            {
-                return SortType.Ascending;
-            }
-            else if (SortType == SortType.Ascending)
-            {
-                return SortType.Descending; ;
-            }
-            else
-            {
-                return SortType.None;
-            }
+            return _comparer?.Invoke(x, y) ?? 0;
         }
     }
 }

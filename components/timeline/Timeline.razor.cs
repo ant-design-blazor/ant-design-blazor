@@ -129,13 +129,20 @@ namespace AntDesign
                 .If($"{prefix}-right", () => Mode == "right")
                 .If($"{prefix}-alternate", () => Mode == "alternate")
                 .If($"{prefix}-pending", () => Pending.Value != null)
-                .If($"{prefix}-reverse", () => Reverse);
+                .If($"{prefix}-reverse", () => Reverse)
+                .If($"{prefix}-rtl", () => RTL);
+        }
+
+        internal void RemoveItem(TimelineItem item)
+        {
+            this._items.Remove(item);
+            _waitingItemUpdate = true;
         }
 
         internal void AddItem(TimelineItem item)
         {
             this._items.Add(item);
-            StateHasChanged();
+            _waitingItemUpdate = true;
         }
 
         protected IEnumerable<TimelineItem> UpdateChildren(IEnumerable<TimelineItem> items)

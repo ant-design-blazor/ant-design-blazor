@@ -1,0 +1,54 @@
+<Switch @bind-Value="@checkable" />Checkable
+<br />
+<Switch @bind-Value="@blockNode" />BlockNode
+<br />
+<Switch @bind-Value="@showExpand" />ShowExpand
+<br />
+<Switch @bind-Value="@showIcon" />ShowIcon
+<br />
+<Switch @bind-Value="@multiple" />Multiple
+<br />
+<br />
+<Tree Checkable="@checkable" BlockNode="@blockNode" ShowExpand="@showExpand" ShowIcon="@showIcon" Multiple="@multiple" TItem="string">
+    <Nodes>
+        <TreeNode Title="A" Icon="folder-open" TItem="string">
+            <Nodes>
+                <TreeNode Title="A1" Icon="folder-open" TItem="string">
+                    <Nodes>
+                        <TreeNode Title="A1-1" Icon="file" TItem="string"></TreeNode>
+                        <TreeNode Title="A1-2" Icon="file" TItem="string"></TreeNode>
+                    </Nodes>
+                </TreeNode>
+                <TreeNode Title="A2" Icon="folder-open" Disabled TItem="string">
+                    <Nodes>
+                        <TreeNode Title="A2-1" Icon="file" TItem="string"></TreeNode>
+                        <TreeNode Title="A2-2" Icon="file" TItem="string"></TreeNode>
+                    </Nodes>
+                </TreeNode>
+                <TreeNode Title="A3" Icon="folder-open" DisableCheckbox TItem="string">
+                    <Nodes>
+                        <TreeNode Title="A3-1" Icon="file" TItem="string"></TreeNode>
+                        <TreeNode Title="A3-2" Icon="file" DisableCheckbox TItem="string"></TreeNode>
+                        <TreeNode Title="A3-3" Icon="file" Disabled TItem="string"></TreeNode>
+
+                    </Nodes>
+                </TreeNode>
+            </Nodes>
+        </TreeNode>
+        <TreeNode Title="B" Icon="folder-open" TItem="string"></TreeNode>
+    </Nodes>
+</Tree>
+
+@code
+{
+    private bool checkable = true;
+
+    private bool blockNode = true;
+
+    private bool showExpand = true;
+
+    private bool showIcon = true;
+
+    private bool multiple;
+
+}

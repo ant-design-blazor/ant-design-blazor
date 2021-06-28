@@ -36,7 +36,7 @@ namespace AntDesign
         public Action ClosePanel { get; set; }
 
         [Parameter]
-        public Action<DateTime, int> ChangePickerValue { get; set; }
+        public Action<DateTime, int?> ChangePickerValue { get; set; } //nullable int as picker index is no longer needed here unless forced
 
         [Parameter]
         public Action<DateTime, int> ChangeValue { get; set; }
@@ -188,12 +188,12 @@ namespace AntDesign
 
         protected void ChangePickerYearValue(int interval)
         {
-            ChangePickerValue(PickerValue.AddYears(interval), PickerIndex);
+            ChangePickerValue(DateHelper.AddYearsSafely(PickerValue, interval), null);
         }
 
         protected void ChangePickerMonthValue(int interval)
         {
-            ChangePickerValue(PickerValue.AddMonths(interval), PickerIndex);
+            ChangePickerValue(DateHelper.AddMonthsSafely(PickerValue, interval), null);
         }
 
         protected void Close()
@@ -203,11 +203,19 @@ namespace AntDesign
 
         protected DateTime PickerValue { get => GetIndexPickerValue(PickerIndex); }
 
-        protected DateTime Value { get => GetIndexValue(PickerIndex) ?? DateTime.Now; }
+        protected DateTime? Value { get => GetIndexValue(PickerIndex); }
 
         public void PopUpPicker(string type)
         {
             ChangePickerType(type, PickerIndex);
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            ClassMapper.Add($"{PrefixCls}-panel")
+                .If($"{PrefixCls}-panel-rtl", () => RTL);
         }
     }
 }

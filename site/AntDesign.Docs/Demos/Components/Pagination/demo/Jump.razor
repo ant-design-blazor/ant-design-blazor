@@ -1,0 +1,12 @@
+﻿<div>
+    <Pagination ShowQuickJumper DefaultCurrent="2" Total="500" OnChange="OnChange" />
+    <br />
+    <Pagination ShowQuickJumper DefaultCurrent="2" Total="500" OnChange="OnChange" Disabled />
+</div>
+@code{
+
+    void OnChange(PaginationEventArgs args) {
+        Console.WriteLine($"Page: {args.Page}");
+    }
+
+}

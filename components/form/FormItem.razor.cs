@@ -32,7 +32,13 @@ namespace AntDesign
         public string Label { get; set; }
 
         [Parameter]
+        public RenderFragment LabelTemplate { get; set; }
+
+        [Parameter]
         public ColLayoutParam LabelCol { get; set; }
+
+        [Parameter]
+        public AntLabelAlignType? LabelAlign { get; set; }
 
         [Parameter]
         public OneOf<string, int> LabelColSpan
@@ -99,6 +105,11 @@ namespace AntDesign
 
         private PropertyReflector _propertyReflector;
 
+        private ClassMapper _labelClassMapper = new ClassMapper();
+        private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form.LabelAlign;
+
+        private EventHandler<ValidationStateChangedEventArgs> _validationStateChangedHandler;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -108,22 +119,23 @@ namespace AntDesign
                 throw new InvalidOperationException("Form is null.FormItem should be childContent of Form.");
             }
 
-            Form.AddFormItem(this);
-        }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
-
             SetClass();
+
+            Form.AddFormItem(this);
         }
 
         protected void SetClass()
         {
-            this.ClassMapper.Clear()
+            this.ClassMapper
                 .Add(_prefixCls)
                 .If($"{_prefixCls}-with-help {_prefixCls}-has-error", () => _isValid == false)
+                .If($"{_prefixCls}-rtl", () => RTL)
                ;
+
+            _labelClassMapper
+                .Add($"{_prefixCls}-label")
+                .If($"{_prefixCls}-label-left", () => FormLabelAlign == AntLabelAlignType.Left)
+                ;
         }
 
         private Dictionary<string, object> GetLabelColAttributes()
@@ -176,22 +188,41 @@ namespace AntDesign
             return wrapperColParameter.ToAttributes();
         }
 
+        private string GetLabelClass()
+        {
+            return Required ? $"{_prefixCls}-required" : _labelCls;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (CurrentEditContext != null && _validationStateChangedHandler != null)
+            {
+                CurrentEditContext.OnValidationStateChanged -= _validationStateChangedHandler;
+            }
+
+            base.Dispose(disposing);
+        }
+
         void IFormItem.AddControl<TValue>(AntInputComponentBase<TValue> control)
         {
+            if (_control != null) return;
+
             if (control.FieldIdentifier.Model == null)
             {
-                throw new InvalidOperationException($"Please use @bind-Value in the control with generic type `{typeof(TValue)}`.");
+                throw new InvalidOperationException($"Please use @bind-Value (or @bind-Values for selected components) in the control with generic type `{typeof(TValue)}`.");
             }
 
             this._control = control;
 
-            CurrentEditContext.OnValidationStateChanged += (s, e) =>
+            _validationStateChangedHandler = (s, e) =>
             {
-                control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).ToArray();
+                control.ValidationMessages = CurrentEditContext.GetValidationMessages(control.FieldIdentifier).Distinct().ToArray();
                 this._isValid = !control.ValidationMessages.Any();
 
                 StateHasChanged();
             };
+
+            CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
 
             _formValidationMessages = builder =>
             {
@@ -201,7 +232,10 @@ namespace AntDesign
                 builder.CloseComponent();
             };
 
-            _propertyReflector = PropertyReflector.Create(control.ValueExpression);
+            if (control.ValueExpression is not null)
+                _propertyReflector = PropertyReflector.Create(control.ValueExpression);
+            else
+                _propertyReflector = PropertyReflector.Create(control.ValuesExpression);
 
             if (_propertyReflector.RequiredAttribute != null)
             {

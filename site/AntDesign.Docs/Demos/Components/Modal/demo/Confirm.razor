@@ -1,0 +1,91 @@
+﻿@inject ModalService _modalService
+@inject MessageService _message
+<Space>
+    <SpaceItem>
+        <Button OnClick="@ShowConfirm">Confirm</Button>
+    </SpaceItem>
+    <SpaceItem>
+        <Button OnClick="@ShowDeleteConfirm" Type="dashed">Delete</Button>
+    </SpaceItem>
+
+    <SpaceItem>
+        <Button OnClick="@ShowPropsConfirm" Type="dashed"> With extra props</Button>
+    </SpaceItem>
+</Space>
+<br />
+<br />
+<Space>
+    <SpaceItem>
+        <Button OnClick="@BlockingConfirm">Blocking Confirm</Button>
+    </SpaceItem>
+</Space>
+@code{
+    Func<ModalClosingEventArgs, Task> onOk = (e) =>
+    {
+        Console.WriteLine("Ok");
+        return Task.CompletedTask;
+    };
+    Func<ModalClosingEventArgs, Task> onCancel = (e) =>
+    {
+        Console.WriteLine("Cancel");
+        return Task.CompletedTask;
+    };
+    RenderFragment icon = @<Icon Type="exclamation-circle" Theme="outline"></Icon>;
+
+    private void ShowConfirm()
+    {
+        _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Do you Want to delete these items?",
+            Icon = icon,
+            Content = "Some descriptions",
+            OnOk = onOk,
+            OnCancel = onCancel
+        });
+    }
+
+    private void ShowDeleteConfirm()
+    {
+        _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Are you sure delete this task?",
+            Icon = icon,
+            Content = "Some descriptions",
+            OnOk = onOk,
+            OnCancel = onCancel,
+            OkType = "danger",
+        });
+    }
+
+    private void ShowPropsConfirm()
+    {
+        _modalService.Confirm(new ConfirmOptions()
+        {
+            Title = "Are you sure delete this task?",
+            Icon = icon,
+            Content = "Some descriptions",
+            OnOk = onOk,
+            OnCancel = onCancel,
+            OkType = "danger",
+            OkButtonProps = new AntDesign.ButtonProps()
+            {
+                Disabled = true,
+            }
+        });
+    }
+
+
+    private async Task BlockingConfirm()
+    {
+        var content = "Here is a blocking confirm, you can get OK or cancel button is click";
+        var title = "Info";
+
+        var isTrue = await _modalService.ConfirmAsync(new ConfirmOptions()
+        {
+            Content = content,
+            Title = title
+        });
+
+        await _message.Info($"The confirm return {isTrue}");
+    }
+}

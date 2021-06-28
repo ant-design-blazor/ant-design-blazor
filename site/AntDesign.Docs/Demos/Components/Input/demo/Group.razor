@@ -1,0 +1,184 @@
+﻿<div class="site-input-group-wrapper">
+    <InputGroup Size="@InputSize.Large">
+        <Row Gutter="8">
+            <Col Span="5">
+            <Input DefaultValue="@("0571")"/>
+            </Col>
+            <Col Span="8">
+            <Input DefaultValue="@("26888888")" />
+            </Col>
+        </Row>
+    </InputGroup>
+    <br />    
+    <InputGroup Compact>
+        <Input DefaultValue="@("0571")" Style="width: 20%;" />
+        <Input DefaultValue="@("26888888")" Style="width: 30%;" />
+    </InputGroup>
+    <br />        
+    <InputGroup Compact>
+        <SimpleSelect DefaultValue="@("Zhejiang")" Style="width: auto;">
+            <SelectOptions>
+                <SimpleSelectOption Value="Zhejiang" Label="Zhejiang"></SimpleSelectOption>
+                <SimpleSelectOption Value="Jiangsu" Label="Jiangsu"></SimpleSelectOption>
+            </SelectOptions>
+        </SimpleSelect>
+        <Input DefaultValue="@("Xihu District, Hangzhou")" Style="width: 50%;" />
+    </InputGroup>
+    <br>
+    <InputGroup Compact>
+        <Search DefaultValue="@("0571")" WrapperStyle="width: 40%;" />
+        <Search AllowClear DefaultValue="@("26888888")" WrapperStyle="width: 40%;" />
+    </InputGroup>
+    <br/>
+    <InputGroup Compact>
+        <Search AllowClear DefaultValue="@("0571")" WrapperStyle="width: 40%;" />
+        <Search AllowClear DefaultValue="@("26888888")" WrapperStyle="width: 40%;" />
+    </InputGroup>
+    <br/>
+    <InputGroup Compact>
+        <SimpleSelect DefaultValue="@("Option1")" Style="width: auto;">
+            <SelectOptions>
+                <SimpleSelectOption Value="Option1" Label="Option1"></SimpleSelectOption>
+                <SimpleSelectOption Value="Option1" Label="Option1"></SimpleSelectOption>
+            </SelectOptions>
+        </SimpleSelect>
+        <Input DefaultValue="@("input content")" Style="width: 50%;" />
+        <AntDesign.InputNumber TValue="int?"/>
+    </InputGroup>
+    <br/>
+    <InputGroup Compact>
+        <Input DefaultValue="@("input content")" Style="width: 50%;" />
+        <DatePicker TValue="DateTime?" Style="width: 50%"/>
+    </InputGroup>
+    <br/>
+    <InputGroup Compact>
+        <Input DefaultValue="@("input content")" Style="width: 30%;" />
+        <RangePicker TValue="DateTime?[]" Style="width: 70%"/>
+    </InputGroup>
+    <br/>
+    <InputGroup Compact>
+        <SimpleSelect DefaultValue="@("Option1-1")" Style="width: auto;">
+            <SelectOptions>
+                <SimpleSelectOption Value="Option1-1" Label="Option1-1"></SimpleSelectOption>
+                <SimpleSelectOption Value="Option1-1" Label="Option1-1"></SimpleSelectOption>
+            </SelectOptions>
+        </SimpleSelect>
+        <SimpleSelect DefaultValue="@("Option2-2")" Style="width: auto;">
+            <SelectOptions>
+                <SimpleSelectOption Value="Option2-1" Label="Option2-1"></SimpleSelectOption>
+                <SimpleSelectOption Value="Option2-1" Label="Option2-2"></SimpleSelectOption>
+            </SelectOptions>
+        </SimpleSelect>
+    </InputGroup>
+    <br/>
+    <InputGroup Compact>
+        <SimpleSelect DefaultValue="@("1")" Style="width: auto;">
+            <SelectOptions>
+                <SimpleSelectOption Value="1" Label="Between"></SimpleSelectOption>
+                <SimpleSelectOption Value="2" Label="Except"></SimpleSelectOption>
+            </SelectOptions>
+        </SimpleSelect>
+        <Input TValue="string" Style="width: 100px; textAlign: center" Placeholder="Minimum" />
+        <Input TValue="string" InputElementSuffixClass="site-input-split" Style="width: 30px; border-left: 0; border-right: 0; pointer-events: none;" Placeholder="~" Disabled />
+        <Input TValue="string" InputElementSuffixClass="site-input-right" Style="width: 100px; textAlign: center" Placeholder="Maximum" />
+    </InputGroup>
+    <br/>
+    <InputGroup Compact>
+        <SimpleSelect DefaultValue="@("Sign Up")" Style="width: 30%;">
+            <SelectOptions>
+                <SimpleSelectOption Value="Sign Up" Label="Sign Up"></SimpleSelectOption>
+                <SimpleSelectOption Value="Sign In" Label="Sign In"></SimpleSelectOption>
+            </SelectOptions>
+        </SimpleSelect>
+        <AutoComplete Options="@(new List<string>() { "text 1", "text 2"})" Style="width: 70%" Placeholder="Email"/>                   
+    </InputGroup>
+    <br/>
+    <InputGroup Compact>
+        <SimpleSelect DefaultValue="@("Home")" Style="width: 30%;">
+            <SelectOptions>
+                <SimpleSelectOption Value="Home" Label="Home"></SimpleSelectOption>
+                <SimpleSelectOption Value="Company" Label="Company"></SimpleSelectOption>
+            </SelectOptions>
+        </SimpleSelect>
+        <Cascader Options="@options" Placeholder="Please Address" Style="width: 70%" />
+    </InputGroup>
+    <br/>
+</div>
+
+<style>
+    .site-input-group-wrapper .site-input-split {
+      background-color: #fff;
+    }
+
+    .site-input-group-wrapper .site-input-right {
+      border-left-width: 0;
+    }
+
+    .site-input-group-wrapper .site-input-right:hover,
+    .site-input-group-wrapper .site-input-right:focus {
+      border-left-width: 1px;
+    }
+
+    .site-input-group-wrapper .ant-input-rtl.site-input-right {
+      border-right-width: 0;
+    }
+
+    .site-input-group-wrapper .ant-input-rtl.site-input-right:hover,
+    .site-input-group-wrapper .ant-input-rtl.site-input-right:focus {
+      border-right-width: 1px;
+    }
+</style>
+
+@code {
+    CascaderNode[] options = new CascaderNode[]
+    {
+        new()
+        {
+            Value = "zhejiang",
+            Label = "Zhejiang",
+            Children = new CascaderNode[]
+            {
+                new()
+                {
+                    Value = "hangzhou",
+                    Label = "Hangzhou",
+                    Children = new CascaderNode[]
+                    {
+                        new()
+                        {
+                            Value = "xihu",
+                            Label = "West Lake",
+                        },
+                        new()
+                        {
+                            Value = "xiasha",
+                            Label = "Xia Sha",
+                            Disabled = true
+                        }
+                    }
+                }
+            }
+        },
+        new()
+        {
+            Value = "jiangsu",
+            Label = "Jiangsu",
+            Children = new CascaderNode[]
+            {
+                new()
+                {
+                    Value = "nanjing",
+                    Label = "Nanjing",
+                    Children = new CascaderNode[]
+                    {
+                        new()
+                        {
+                            Value = "zhonghuamen",
+                            Label = "Zhong Hua men"
+                        }
+                    }
+                }
+            }
+        }
+    };
+}

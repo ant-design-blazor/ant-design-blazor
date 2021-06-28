@@ -9,19 +9,22 @@ namespace AntDesign
 {
     public class DrawerService
     {
-        internal event Func<IDrawerRef, Task> OnOpenEvent;
+        internal event Func<DrawerRef, Task> OnOpenEvent;
 
-        internal event Func<IDrawerRef, Task> OnCloseEvent;
+        internal event Func<DrawerRef, Task> OnCloseEvent;
+
+        internal event Func<DrawerRef, Task> OnUpdateEvent;
+
 
         /// <summary>
         /// Create and open a simple drawer without result
         /// </summary>
         /// <param name="options">drawer options</param>
         /// <returns>The reference of drawer</returns>
-        public async Task<IDrawerRef> CreateAsync(DrawerOptions options)
+        public async Task<DrawerRef> CreateAsync(DrawerOptions options)
         {
             CheckIsNull(options);
-            IDrawerRef drawerRef = new DrawerRef<object>(options, this);
+            var drawerRef = new DrawerRef<object>(options, this);
             await (OnOpenEvent?.Invoke(drawerRef) ?? Task.CompletedTask);
             return drawerRef;
         }
@@ -35,7 +38,7 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="options"></param>
         /// <returns>The reference of drawer</returns>
-        public async Task<DrawerRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>(DrawerOptions config, TComponentOptions options) where TComponent : DrawerTemplate<TComponentOptions, TResult>
+        public async Task<DrawerRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>(DrawerOptions config, TComponentOptions options) where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             CheckIsNull(config);
 
@@ -45,7 +48,7 @@ namespace AntDesign
             RenderFragment child = (builder) =>
             {
                 builder.OpenComponent<TComponent>(0);
-                builder.AddAttribute(1, "DrawerRef", drawerRef);
+                builder.AddAttribute(1, "FeedbackRef", drawerRef);
                 builder.AddAttribute(2, "Options", options);
                 builder.CloseComponent();
             };
@@ -54,7 +57,26 @@ namespace AntDesign
             return drawerRef;
         }
 
-        public async Task<TResult> CreateDialogAsync<TComponent, TComponentOptions, TResult>(DrawerOptions config, TComponentOptions options) where TComponent : DrawerTemplate<TComponentOptions, TResult>
+        /// <summary>
+        /// Update a drawer 
+        /// </summary>
+        /// <param name="drawerRef"></param>
+        /// <returns></returns>
+        public async Task UpdateAsync(DrawerRef drawerRef)
+        {
+            await (OnUpdateEvent?.Invoke(drawerRef) ?? Task.CompletedTask);
+        }
+
+        /// <summary>
+        /// Create and open a drawer 
+        /// </summary>
+        /// <typeparam name="TComponent"></typeparam>
+        /// <typeparam name="TComponentOptions"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public async Task<TResult> CreateDialogAsync<TComponent, TComponentOptions, TResult>(DrawerOptions config, TComponentOptions options) where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             CheckIsNull(config);
             DrawerRef<TResult> drawerRef = new DrawerRef<TResult>(config, this);
@@ -65,7 +87,7 @@ namespace AntDesign
             RenderFragment child = (builder) =>
             {
                 builder.OpenComponent<TComponent>(0);
-                builder.AddAttribute(1, "DrawerRef", drawerRef);
+                builder.AddAttribute(1, "FeedbackRef", drawerRef);
                 builder.AddAttribute(2, "Options", options);
                 builder.CloseComponent();
             };
@@ -82,7 +104,7 @@ namespace AntDesign
             int width = 256,
             bool mask = true,
             bool noAnimation = false,
-             string placement = "right") where TComponent : DrawerTemplate<TComponentOptions, TResult>
+             string placement = "right") where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             var config = new DrawerOptions()
             {
@@ -97,7 +119,7 @@ namespace AntDesign
             return await CreateDialogAsync<TComponent, TComponentOptions, TResult>(config, options);
         }
 
-        internal Task OpenAsync(IDrawerRef drawerRef)
+        internal Task OpenAsync(DrawerRef drawerRef)
         {
             if (OnOpenEvent != null)
             {
@@ -106,7 +128,7 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-        internal Task CloseAsync(IDrawerRef drawerRef)
+        internal Task CloseAsync(DrawerRef drawerRef)
         {
             if (OnCloseEvent != null)
             {

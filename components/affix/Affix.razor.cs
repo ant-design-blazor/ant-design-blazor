@@ -9,8 +9,9 @@ namespace AntDesign
     {
         private const string PrefixCls = "ant-affix";
         private const string RootScollSelector = "window";
-        private const string RootRectSelector = "app";
+
         private bool _affixed;
+
         private bool _rootListened;
         private bool _targetListened;
 
@@ -22,7 +23,7 @@ namespace AntDesign
                 if (_affixed != value)
                 {
                     _affixed = value;
-                    StateHasChanged();
+
                     if (OnChange.HasDelegate)
                     {
                         OnChange.InvokeAsync(_affixed);
@@ -31,7 +32,6 @@ namespace AntDesign
             }
         }
 
-        private ElementReference _ref;
         private ElementReference _childRef;
         private string _hiddenStyle;
         private string _affixStyle;
@@ -45,19 +45,16 @@ namespace AntDesign
         /// Offset from the bottom of the viewport (in pixels)
         /// </summary>
         [Parameter]
-        public uint? OffsetBottom { get; set; }
+        public int OffsetBottom { get; set; }
 
         /// <summary>
         /// Offset from the top of the viewport (in pixels)
         /// </summary>
         [Parameter]
-        public uint? OffsetTop { get; set; } = 0;
+        public int OffsetTop { get; set; }
 
-        /// <summary>
-        /// Specifies the scrollable area DOM node
-        /// </summary>
         [Parameter]
-        public ElementReference Target { get; set; }
+        public string TargetSelector { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
@@ -71,115 +68,138 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            SetClasses();
+            ClassMapper
+               .If(PrefixCls, () => _affixed);
         }
 
         public async override Task SetParametersAsync(ParameterView parameters)
         {
             await base.SetParametersAsync(parameters);
-
-            if (!_targetListened && !string.IsNullOrEmpty(Target.Id))
-            {
-                DomEventService.AddEventListener(Target, "scroll", OnScroll);
-                DomEventService.AddEventListener(Target, "resize", OnWindowResize);
-
-                await RenderAffixAsync();
-                _targetListened = true;
-            }
         }
 
         protected async override Task OnFirstAfterRenderAsync()
         {
             await base.OnFirstAfterRenderAsync();
 
-            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _childRef);
-            _hiddenStyle = $"width: {domRect.width}px; height: {domRect.height}px;";
-
-            if (_rootListened)
+            if (ChildContent == null)
             {
-                await RenderAffixAsync();
+                return;
             }
-            else if (!_rootListened && string.IsNullOrEmpty(Target.Id))
+
+            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _childRef);
+            _hiddenStyle = $"width: {domRect.Width}px; height: {domRect.Height}px;";
+
+            await RenderAffixAsync();
+            if (!_rootListened && string.IsNullOrEmpty(TargetSelector))
             {
-                DomEventService.AddEventListener(RootScollSelector, "scroll", OnScroll, false);
+                DomEventService.AddEventListener(RootScollSelector, "scroll", OnWindowScroll, false);
                 DomEventService.AddEventListener(RootScollSelector, "resize", OnWindowResize, false);
+
                 _rootListened = true;
             }
+            else if (!string.IsNullOrEmpty(TargetSelector))
+            {
+                DomEventService.AddEventListener(TargetSelector, "scroll", OnTargetScroll);
+                DomEventService.AddEventListener(TargetSelector, "resize", OnTargetResize);
+                _targetListened = true;
+            }
         }
 
-        private async void OnScroll(JsonElement obj)
-        {
-            await RenderAffixAsync();
-        }
+        private async void OnWindowScroll(JsonElement obj) => await RenderAffixAsync();
 
-        private async void OnWindowResize(JsonElement obj)
-        {
-            await RenderAffixAsync();
-        }
+        private async void OnWindowResize(JsonElement obj) => await RenderAffixAsync();
 
-        private void SetClasses()
-        {
-            ClassMapper.Clear()
-                .If(PrefixCls, () => _affixed);
-        }
+        private async void OnTargetScroll(JsonElement obj) => await RenderAffixAsync();
+
+        private async void OnTargetResize(JsonElement obj) => await RenderAffixAsync();
 
         private async Task RenderAffixAsync()
         {
-            DomRect childRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _childRef);
-            _hiddenStyle = $"width: {childRect.width}px; height: {childRect.height}px;";
+            var originalAffixStyle = _affixStyle;
+            DomRect domRect = null;
+            Window window = null;
 
-            DomRect domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _ref);
-            DomRect appRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, RootRectSelector);
-            // reset appRect.top / bottom, so its position is fixed.
-            appRect.top = 0;
-            appRect.bottom = appRect.height;
-            DomRect containerRect;
-            if (string.IsNullOrEmpty(Target.Id))
+            async Task GetWindow()
             {
-                containerRect = appRect;
+                window = await JsInvokeAsync<Window>(JSInteropConstants.GetWindow);
+            }
+
+            async Task GetDomReact()
+            {
+                domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
+            }
+
+            await Task.WhenAll(new[] { GetWindow(), GetDomReact() });
+            if (domRect == null || window == null)
+            {
+                return;
+            }
+
+            _hiddenStyle = $"width: {domRect.Width}px; height: {domRect.Height}px;";
+
+            DomRect containerRect;
+            if (string.IsNullOrEmpty(TargetSelector))
+            {
+                containerRect = new DomRect()
+                {
+                    Top = 0,
+                    Bottom = window.innerHeight,
+                    Height = window.innerHeight,
+                };
             }
             else
             {
-                containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Target);
-            }
-            // become affixed
-            if (OffsetBottom.HasValue)
-            {
-                // domRect.bottom / domRect.top have the identical value here.
-                if (domRect.top > containerRect.height + containerRect.top)
-                {
-                    _affixStyle = _hiddenStyle + $"bottom: { appRect.height - containerRect.bottom + OffsetBottom}px; position: fixed;";
-                    Affixed = true;
-                }
-                else
-                {
-                    _affixStyle = string.Empty;
-                    Affixed = false;
-                }
-            }
-            else if (OffsetTop.HasValue)
-            {
-                if (domRect.top < containerRect.top + OffsetTop.Value)
-                {
-                    _affixStyle = _hiddenStyle + $"top: {containerRect.top + OffsetTop}px; position: fixed;";
-                    Affixed = true;
-                }
-                else
-                {
-                    _affixStyle = string.Empty;
-                    Affixed = false;
-                }
+                containerRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, TargetSelector);
             }
 
-            StateHasChanged();
+            var topDist = containerRect.Top + OffsetTop;
+            var bottomDist = containerRect.Bottom - OffsetBottom;
+
+            if (OffsetBottom > 0) // only affix bottom
+            {
+                if (domRect.Bottom > bottomDist)
+                {
+                    _affixStyle = _hiddenStyle + $"bottom: { window.innerHeight - bottomDist}px; position: fixed;";
+                    Affixed = true;
+                }
+                else
+                {
+                    _affixStyle = string.Empty;
+                    Affixed = false;
+                }
+            }
+            else if (domRect.Top < topDist)
+            {
+                _affixStyle = _hiddenStyle + $"top: {topDist}px; position: fixed;";
+                Affixed = true;
+            }
+            else
+            {
+                _affixStyle = string.Empty;
+                Affixed = false;
+            }
+
+            if (originalAffixStyle != _affixStyle)
+            {
+                StateHasChanged();
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
 
-            DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "scroll", OnScroll);
-            DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "resize", OnWindowResize);
+            if (_rootListened)
+            {
+                DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "scroll", OnWindowScroll);
+                DomEventService.RemoveEventListerner<JsonElement>(RootScollSelector, "resize", OnWindowResize);
+            }
+
+            if (_targetListened)
+            {
+                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "scroll", OnTargetScroll);
+                DomEventService.RemoveEventListerner<JsonElement>(TargetSelector, "resize", OnTargetResize);
+            }
         }
     }
 }

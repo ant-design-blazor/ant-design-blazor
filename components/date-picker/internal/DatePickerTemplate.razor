@@ -3,7 +3,7 @@
 @inherits DatePickerPanelBase<TValue>
 @using AntDesign
 
-<div class="@(PrefixCls)-@(Picker)-panel">
+<div class="@(PrefixCls)-@(Picker)-panel" @ref="Ref">
     @if (IsShowHeader)
     {
         @RenderPickerHeader
@@ -14,16 +14,39 @@
                 @RenderTableHeader
             </thead>
             <tbody>
-                @{ var startDate = ViewStartDate; }
+				@{					
+                    var startDate = ViewStartDate;
+                    bool shouldStopRender = false;
+					DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
+					bool firstWeekNotInMonth = ViewStartDate.AddDays(7).Equals(monthFirstDayDate);	
+                }
                 @for (int row = 1; row <= MaxRow; row++)
                 {
+                    if (shouldStopRender)
+                    {
+                        break;
+                    }
                     var startColDate = startDate;
-                    <tr class="@(GetRowClass?.Invoke(startColDate))"
-                        @onclick="e => OnRowSelect?.Invoke(startColDate)">
 
-                        @RenderFisrtCol?.Invoke(startColDate)
+                <tr class="@(GetRowClass?.Invoke(startColDate))"
+                    @onclick="e => OnRowSelect?.Invoke(startColDate.CompareTo(monthFirstDayDate) < 0 && !firstWeekNotInMonth ? monthFirstDayDate: startColDate)">
 
-                        @for (int col = 1; col <= MaxCol; col++)
+                    @RenderFirstCol?.Invoke(startColDate.CompareTo(monthFirstDayDate) < 0 && !firstWeekNotInMonth ? monthFirstDayDate : startColDate)
+
+
+                    @for (int col = 1; col <= MaxCol; col++)
+                    {
+                        if (shouldStopRender)
+                        {
+                            break;
+                        }
+
+                        if (Picker == DatePickerType.Date && row == 1 && col <= SkipDays)
+                        {
+                            <td>
+                            </td>
+                        }
+                        else
                         {
                             var currentColDate = startDate;
 
@@ -35,7 +58,7 @@
                                 @onmouseenter="e => DateOnMouseEnter(currentColDate)"
                                 @onmouseleave="e => DateOnMouseLeave()">
                                 <div class="@innerCellCls"
-                                     @onclick="e => OnValueSelect?.Invoke(currentColDate)">
+                                     @onclick="e => OnValueSelect?.Invoke(currentColDate)" @onclick:stopPropagation="true">
                                     @if (IsCalendar)
                                     {
                                         <div class="@(PrefixCls)-calendar-date-value">
@@ -82,11 +105,18 @@
                             </td>
 
                             startDate = @GetNextColValue(currentColDate);
+
+                            if (ShouldStopRenderDate(currentColDate, startDate))
+                            {
+                                shouldStopRender = true;
+                            }
                         }
 
-                        @{ var endColDate = startDate;}
-                        @RenderLastCol?.Invoke(endColDate)
-                    </tr>
+                    }
+
+                    @{ var endColDate = startDate;}
+                    @RenderLastCol?.Invoke(endColDate)
+                </tr>
                 }
             </tbody>
         </table>

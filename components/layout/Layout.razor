@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 
-<CascadingValue Value="this">
+<CascadingValue Value="this" IsFixed="@true">
     <section class="@ClassMapper.Class" style="@Style" id="@Id">
         @ChildContent
     </section>
@@ -21,7 +21,8 @@
         base.OnInitialized();
         ClassMapper
             .Add("ant-layout")
-            .If("ant-layout-has-sider", () => _hasSider);
+            .If("ant-layout-has-sider", () => _hasSider)
+            .If("ant-layout-rtl", () => RTL);
     }
 
     internal void HasSider()

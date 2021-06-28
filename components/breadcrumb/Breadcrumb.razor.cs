@@ -30,7 +30,11 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            this.ClassMapper.Add("ant-breadcrumb");
+            string prefixCls = "ant-breadcrumb";
+
+            this.ClassMapper
+                .Add(prefixCls)
+                .If($"{prefixCls}-rtl", () => RTL);
 
             base.OnInitialized();
         }

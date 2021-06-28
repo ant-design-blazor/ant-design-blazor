@@ -22,6 +22,17 @@ namespace AntDesign
         public bool Checked { get => _checked ?? false; set { _checked = value; } }
 
         [Parameter]
+        public bool DefaultChecked
+        {
+            get => _defaultChecked;
+            set
+            {
+                _defaultChecked = value;
+                _hasDefaultChecked = true;
+            }
+        }
+
+        [Parameter]
         public EventCallback<bool> CheckedChanged { get; set; }
 
         [Parameter]
@@ -30,58 +41,83 @@ namespace AntDesign
         [Parameter]
         public EventCallback<bool> CheckedChange { get; set; }
 
-        [CascadingParameter] public RadioGroup<TValue> RadioGroup { get; set; }
+        [CascadingParameter]
+        public RadioGroup<TValue> RadioGroup { get; set; }
 
-        protected ClassMapper RadioClassMapper { get; set; } = new ClassMapper();
+        [CascadingParameter(Name = "InGroup")]
+        public bool InGroup { get; set; }
 
-        protected ClassMapper InputClassMapper { get; set; } = new ClassMapper();
+        private ClassMapper _radioClassMapper = new ClassMapper();
+        private ClassMapper _inputClassMapper = new ClassMapper();
+        private ClassMapper _innerClassMapper = new ClassMapper();
 
-        protected ClassMapper InnerClassMapper { get; set; } = new ClassMapper();
+        private ElementReference _inputRef;
 
-        protected ElementReference InputRef { get; set; }
-
-        protected bool IsChecked => _checked ?? this.Checked;
+        private bool IsChecked => _checked ?? this.Checked;
 
         private bool? _checked;
 
-        internal string _name;
+        private bool _hasDefaultChecked;
+        private bool _defaultCheckedSetted;
+
+        private string _name;
+        private bool _defaultChecked;
 
         protected void SetClass()
         {
             string prefixCls = "ant-radio";
-            ClassMapper.Clear()
+            ClassMapper
                 .If($"{prefixCls}-wrapper", () => !RadioButton)
                 .If($"{prefixCls}-button-wrapper", () => RadioButton)
                 .If($"{prefixCls}-wrapper-checked", () => IsChecked && !RadioButton)
                 .If($"{prefixCls}-button-wrapper-checked", () => IsChecked && RadioButton)
                 .If($"{prefixCls}-wrapper-disabled", () => Disabled && !RadioButton)
-                .If($"{prefixCls}-button-wrapper-disabled", () => Disabled && RadioButton);
+                .If($"{prefixCls}-button-wrapper-disabled", () => Disabled && RadioButton)
+                .If($"{prefixCls}-button-wrapper-rtl", () => RTL);
 
-            RadioClassMapper.Clear()
+            _radioClassMapper
                 .If(prefixCls, () => !RadioButton)
                 .If($"{prefixCls}-checked", () => IsChecked && !RadioButton)
                 .If($"{prefixCls}-disabled", () => Disabled && !RadioButton)
                 .If($"{prefixCls}-button", () => RadioButton)
                 .If($"{prefixCls}-button-checked", () => IsChecked && RadioButton)
-                .If($"{prefixCls}-button-disabled", () => Disabled && RadioButton);
+                .If($"{prefixCls}-button-disabled", () => Disabled && RadioButton)
+                .If($"{prefixCls}-rtl", () => RTL);
 
-            InputClassMapper.Clear()
+            _inputClassMapper
                 .If($"{prefixCls}-input", () => !RadioButton)
                 .If($"{prefixCls}-button-input", () => RadioButton);
 
-            InnerClassMapper.Clear()
+            _innerClassMapper
                 .If($"{prefixCls}-inner", () => !RadioButton)
                 .If($"{prefixCls}-button-inner", () => RadioButton);
+        }
+
+        internal void SetName(string name)
+        {
+            _name = name;
         }
 
         protected override void OnInitialized()
         {
             SetClass();
+
+            if (InGroup && RadioGroup == null)
+            {
+                throw new InvalidOperationException($"Please make sure that both RadioGroup and Radio have the same generic type: {typeof(TValue)} .");
+            }
+
             RadioGroup?.AddRadio(this);
 
-            if (RadioGroup != null && RadioGroup.Disabled)
+            if (RadioGroup?.Disabled == true)
             {
                 Disabled = true;
+            }
+
+            if (_hasDefaultChecked && !_defaultCheckedSetted)
+            {
+                _checked = _defaultChecked;
+                _defaultCheckedSetted = true;
             }
 
             base.OnInitialized();
@@ -89,7 +125,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            RadioGroup?.RadioItems?.Remove(this);
+            RadioGroup?.RemoveRadio(this);
             base.Dispose(disposing);
         }
 
@@ -97,7 +133,7 @@ namespace AntDesign
         {
             if (this.AutoFocus)
             {
-                await this.Focus();
+                await FocusAsync(this._inputRef);
             }
 
             await base.OnFirstAfterRenderAsync();
@@ -140,14 +176,9 @@ namespace AntDesign
             }
         }
 
-        protected async Task Focus()
-        {
-            await JsInvokeAsync(JSInteropConstants.Focus, this.InputRef);
-        }
-
         protected async Task Blur()
         {
-            await JsInvokeAsync(JSInteropConstants.Blur, this.InputRef);
+            await JsInvokeAsync(JSInteropConstants.Blur, this._inputRef);
         }
     }
 }

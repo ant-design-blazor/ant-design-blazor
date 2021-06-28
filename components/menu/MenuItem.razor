@@ -1,22 +1,39 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<CascadingValue Value="this">
-    <li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key">
-        @if (RouterLink == null)
-        {
-            if (Title != null)
+<CascadingValue Value="this" IsFixed>
+    <Tooltip Title="@content(this)" Placement="@PlacementType.Right" Disabled="TooltipDisabled">
+        <Unbound>
+            <li class="@ClassMapper.Class" role="menuitem" style=" @(PaddingLeft>0? $"padding-left:{PaddingLeft}px;":"") @Style" @onclick="HandleOnClick" @key="Key" @ref="context.Current">
+                @if (Icon != null)
+                {
+                    <Icon Type="@Icon" />
+                }
+
+                @if (RouterLink == null)
+                {
+                    @content(this)
+                }
+                else
+                {
+                    <MenuLink Href="@RouterLink" Match="@RouterMatch">@content(this)</MenuLink>
+                }
+            </li>
+        </Unbound>
+    </Tooltip>
+</CascadingValue>
+
+@code {
+    RenderFragment<MenuItem> content = item =>@<Template>
+        <span>
+            @if (item.Title != null)
             {
-                @Title
+                @item.Title
             }
             else
             {
-                @ChildContent
-            }            
-        }
-        else
-        {
-            <MenuLink Href="@RouterLink" Match="@RouterMatch">@ChildContent</MenuLink>
-        }
-    </li>
-</CascadingValue>
+                @item.ChildContent
+            }
+        </span>
+    </Template>;
+}

@@ -128,7 +128,7 @@ class Dragger {
             this._container.style.left = newDomX + "px";
             this._container.style.top = newDomY + "px";
         }
-    }, 60).bind(this)
+    }, 10).bind(this);
 
     onResize = throttle((e) => {
         const state = this._state;
@@ -147,7 +147,7 @@ class Dragger {
         if (state.domStartX > state.domMaxX) {
             this._container.style.left = state.domMaxX + "px";
         }
-    }, 60).bind(this)
+    }, 10).bind(this);
 
     bindDrag() {
         const triggler = this._triggler;

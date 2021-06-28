@@ -3,7 +3,7 @@
 
 @if (Position == null || (Position == "shown" && !Overflow) || (Position == "hidden" && Overflow))
 {
-    <span class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+    <span class="@ClassMapper.Class" style="@_sizeStyles @Style" id="@Id" @ref="Ref">
         @if (_hasIcon)
         {
             <Icon Type="@Icon" />

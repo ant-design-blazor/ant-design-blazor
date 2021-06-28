@@ -15,10 +15,20 @@
     }
 
     int diffDay = (int) Locale.FirstDayOfWeek - monthFirstDayOfWeek;
-    DateTime startDate = monthFirstDayDate.AddDays(diffDay);
+    DateTime startDate;
+    int skipDays = 0;
+    if (monthFirstDayDate == DateTime.MinValue)
+    {
+        startDate = monthFirstDayDate;
+        skipDays = monthFirstDayOfWeek - (int)Locale.FirstDayOfWeek;
+    }
+    else
+    {
+        startDate = monthFirstDayDate.AddDays(diffDay);
+    }
 }
 
-<div class='@($"{PrefixCls}-panel")'>
+<div class='@($"{PrefixCls}-panel")' @ref="Ref">
     <DatePickerTemplate TValue="TValue"
                         @attributes="GetAttritubes()"
                            MaxRow="6"
@@ -32,7 +42,8 @@
                            GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                            OnRowSelect="OnRowSelect"
                            OnValueSelect="OnValueSelect"
-                           GetNextColValue="date => date.AddDays(1)">
+                           GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
+                           SkipDays="skipDays">
         <RenderPickerHeader>
             <DatePickerHeader TValue="TValue"
                               @attributes="GetAttritubes()"
@@ -48,19 +59,19 @@
                     <th></th>
                 }
                 @foreach(string weekDay in Locale.Lang.ShortWeekDays)
-                {
+                {                    
                     <th>@(weekDay)</th>
                 }
             </tr>
         </RenderTableHeader>
-        <RenderFisrtCol>
+        <RenderFirstCol>
             @if (IsWeek)
-            {
+            {				
                 <td class="@(PrefixCls)-cell @(PrefixCls)-cell-weak">
-                    @DateHelper.GetWeekOfYear(context)
+                    @DateHelper.GetWeekOfYear(context, Locale.FirstDayOfWeek)
                 </td>
             }
-        </RenderFisrtCol>
+        </RenderFirstCol>
         <RenderColValue Context="currentColDate">
             @currentColDate.Day
         </RenderColValue>
@@ -96,7 +107,7 @@
 
     private string GetRowClass(DateTime viewDate)
     {
-        string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, Value) ? $"{PrefixCls}-week-panel-row-selected" : "";
+        string selectedRowClass = IsWeek && DateHelper.IsSameWeak(viewDate, Value, Locale.FirstDayOfWeek) ? $"{PrefixCls}-week-panel-row-selected" : "";
         string rowClass = IsWeek ? $"{PrefixCls}-week-panel-row" : "";
 
         return $"{rowClass} {selectedRowClass}";

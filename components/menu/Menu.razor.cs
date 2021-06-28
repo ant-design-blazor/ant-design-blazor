@@ -29,7 +29,7 @@ namespace AntDesign
                 if (_mode != value)
                 {
                     _mode = value;
-                    CollapseUpdated(_collapsed);
+                    UpdateMode();
                 }
             }
         }
@@ -55,21 +55,19 @@ namespace AntDesign
         [Parameter]
         public bool InlineCollapsed
         {
-            get => _inlineCollapsed;
+            get => Parent?.Collapsed ?? _inlineCollapsed;
             set
             {
                 if (_inlineCollapsed != value)
                 {
                     _inlineCollapsed = value;
-                    if (Parent == null)
-                    {
-                        this._collapsed = _inlineCollapsed;
-                    }
-
-                    CollapseUpdated(_collapsed);
+                    UpdateMode();
                 }
             }
         }
+
+        [Parameter]
+        public int InlineIndent { get; set; } = 24;
 
         [Parameter]
         public bool AutoCloseDropdown { get; set; } = true;
@@ -104,14 +102,18 @@ namespace AntDesign
             set
             {
                 _selectedKeys = value;
+                MenuItems.ForEach(x => x.UpdateStelected());
             }
         }
 
         [Parameter]
         public EventCallback<string[]> SelectedKeysChanged { get; set; }
 
+        [Parameter]
+        public TriggerType TriggerSubMenuAction { get; set; } = TriggerType.Hover;
+
         internal MenuMode InternalMode { get; private set; }
-        private bool _collapsed;
+
         private string[] _openKeys;
         private string[] _selectedKeys;
         private bool _inlineCollapsed;
@@ -122,30 +124,42 @@ namespace AntDesign
 
         public void SelectItem(MenuItem item)
         {
-            if (item == null)
+            if (item == null || item.IsSelected)
             {
                 return;
             }
-
+            var selectedKeys = new List<string>();
+            bool skipParentSelection = false;
             if (!Multiple)
             {
                 foreach (MenuItem menuitem in MenuItems.Where(x => x != item))
                 {
-                    menuitem.Deselect();
+                    if (item.RouterLink != null && menuitem.RouterLink != null && menuitem.RouterLink.Equals(item.RouterLink) && !menuitem.IsSelected)
+                    {
+                        menuitem.Select();
+                        selectedKeys.Add(menuitem.Key);
+                    }
+                    else if (menuitem.IsSelected || menuitem.FirstRun)
+                    {
+                        if (!menuitem.FirstRun)
+                            skipParentSelection = item.ParentMenu?.Key == menuitem.ParentMenu?.Key;
+                        menuitem.Deselect(skipParentSelection);
+                    }
                 }
             }
 
             if (!item.IsSelected)
             {
-                item.Select();
+                item.Select(skipParentSelection);
             }
+            selectedKeys.Add(item.Key);
+            _selectedKeys = selectedKeys.ToArray();
 
             StateHasChanged();
 
             if (OnMenuItemClicked.HasDelegate)
                 OnMenuItemClicked.InvokeAsync(item);
 
-            _selectedKeys = MenuItems.Where(x => x.IsSelected).Select(x => x.Key).ToArray();
             if (SelectedKeysChanged.HasDelegate)
                 SelectedKeysChanged.InvokeAsync(_selectedKeys);
 
@@ -199,31 +213,37 @@ namespace AntDesign
                 .If($"{PrefixCls}-{MenuMode.Inline}", () => InternalMode == MenuMode.Inline)
                 .If($"{PrefixCls}-{MenuMode.Vertical}", () => InternalMode == MenuMode.Vertical)
                 .If($"{PrefixCls}-{MenuMode.Horizontal}", () => InternalMode == MenuMode.Horizontal)
-                .If($"{PrefixCls}-inline-collapsed", () => _collapsed)
-                .If($"{PrefixCls}-unselectable", () => !Selectable);
+                .If($"{PrefixCls}-inline-collapsed", () => InlineCollapsed)
+                .If($"{PrefixCls}-unselectable", () => !Selectable)
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            if (InternalMode != MenuMode.Inline && _collapsed)
+            if (InternalMode != MenuMode.Inline && _inlineCollapsed)
                 throw new ArgumentException($"{nameof(Menu)} in the {Mode} mode cannot be {nameof(InlineCollapsed)}");
 
             InternalMode = Mode;
-            if (Parent != null)
-            {
-                Parent.OnCollapsed += CollapseUpdated;
-                CollapseUpdated(Parent.Collapsed);
-            }
+
+            Parent?.AddMenu(this);
+
+            OpenKeys = DefaultOpenKeys?.ToArray() ?? OpenKeys;
 
             SetClass();
         }
 
         public void CollapseUpdated(bool collapsed)
         {
-            this._collapsed = collapsed;
-            if (collapsed)
+            _inlineCollapsed = collapsed;
+
+            UpdateMode();
+        }
+
+        private void UpdateMode()
+        {
+            if (_inlineCollapsed)
             {
                 InternalMode = MenuMode.Vertical;
                 foreach (SubMenu item in Submenus)
@@ -261,16 +281,6 @@ namespace AntDesign
             }
 
             StateHasChanged();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (Parent != null)
-            {
-                Parent.OnCollapsed -= CollapseUpdated;
-            }
-
-            base.Dispose(disposing);
         }
 
         internal void MarkStateHasChanged()

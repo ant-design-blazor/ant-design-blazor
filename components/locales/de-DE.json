@@ -1,5 +1,5 @@
 ﻿{
-  "locale": "de",
+  "locale": "de-DE",
   "Pagination": {
     "items_per_page": "/ Seite",
     "jump_to": "Gehe zu",
@@ -78,10 +78,10 @@
       "monthSelect": "Wähle einen Monat",
       "yearSelect": "Wähle ein Jahr",
       "decadeSelect": "Wähle ein Jahrzehnt",
-      "yearFormat": "YYYY",
-      "dateFormat": "D.M.YYYY",
-      "dayFormat": "D",
-      "dateTimeFormat": "D.M.YYYY HH:mm:ss",
+      "yearFormat": "yyyy",
+      "dateFormat": "d.M.yyyy",
+      "dayFormat": "d",
+      "dateTimeFormat": "d.M.yyyy HH:mm:ss",
       "monthBeforeYear": true,
       "previousMonth": "Vorheriger Monat (PageUp)",
       "nextMonth": "Nächster Monat (PageDown)",
@@ -104,12 +104,40 @@
     "selectionAll": "Wählen Sie alle Daten aus",
     "sortTitle": "Sortieren",
     "expand": "Zeile erweitern",
-    "collapse": "Zeile reduzieren"
+    "collapse": "Zeile reduzieren",
+    "triggerDesc": "Absteigend sortieren",
+    "triggerAsc": "Aufsteigend sortieren",
+    "cancelSort": "Sortierung löschen",
+    "filterOptions": {
+      "true": "Wahr",
+      "false": "Falsch",
+      "and": "Und",
+      "or": "Oder",
+      "equals": "Gleich",
+      "notEquals": "Nicht gleich",
+      "contains": "Enthält",
+      "startsWith": "Beginnt mit",
+      "endsWith": "Endet mit",
+      "greaterThan": "Größer als",
+      "lessThan": "Kleiner als",
+      "greaterThanOrEquals": "Grösser als oder gleich",
+      "lessThanOrEquals": "Kleiner als oder gleich",
+      "isNull": "Ist leer",
+      "isNotNull": "Ist nicht leer"
+    }
   },
   "Modal": {
     "okText": "OK",
+    "cancelText": "Abbrechen"
+  },
+  "Confirm": {
+    "okText": "OK",
     "cancelText": "Abbrechen",
-    "justOkText": "OK"
+    "yesText": "Ja",
+    "noText": "Nein",
+    "retryText": "Wiederholen",
+    "abortText": "Abbrechen",
+    "ignoreText": "Ignorieren"
   },
   "Popconfirm": {
     "okText": "OK",

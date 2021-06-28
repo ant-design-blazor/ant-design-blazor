@@ -6,14 +6,30 @@
     var calendar = CultureInfo.Calendar;
 
     DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
-    DayOfWeek monthFirstDayOfWeek = calendar.GetDayOfWeek(monthFirstDayDate);
+    int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
 
-    int diffDay = (int)CultureInfo.DateTimeFormat.FirstDayOfWeek - (int)monthFirstDayOfWeek;
-    DateTime startDate = monthFirstDayDate.AddDays(diffDay);
+    // sunday should be 7
+    if (monthFirstDayOfWeek == 0)
+    {
+        monthFirstDayOfWeek = DayOfWeekHelper.GetDiffForDayOfWeek(Locale.FirstDayOfWeek);
+        Console.WriteLine($"{DateTime.Now} DatePickerDatePanel.razor monthFirstDayOfWeek: {monthFirstDayOfWeek}");
+    }
 
+    int diffDay = (int)Locale.FirstDayOfWeek - monthFirstDayOfWeek;
+    DateTime startDate;
+    int skipDays = 0;
+    if (monthFirstDayDate == DateTime.MinValue)
+    {
+        startDate = monthFirstDayDate;
+        skipDays = monthFirstDayOfWeek - (int)Locale.FirstDayOfWeek;
+    }
+    else
+    {
+        startDate = monthFirstDayDate.AddDays(diffDay);
+    }
 }
 
-<div class='@($"{PrefixCls}-datetime-panel")'>
+<div class='@($"{PrefixCls}-datetime-panel")' @ref="Ref">
     @if (IsShowTime)
     {
         <DatePickerTemplate TValue="TValue"
@@ -27,7 +43,8 @@
                             IsSelected="date => DateHelper.IsSameDay(date, Value)"
                             GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
                             OnValueSelect="OnSelectDate"
-                            GetNextColValue="date => date.AddDays(1)">
+                            GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
+                            SkipDays="skipDays">
             <RenderPickerHeader>
                 <DatePickerHeader TValue="TValue"
                                   @attributes="GetAttritubes()" />
@@ -56,13 +73,26 @@
         }
 
         DatePickerDisabledTime disabledTime = GetDisabledTime();
+		bool isValueNull = Value is null;
+		Func<int, int?, string> selected;
+		string localValue;
+		if (Value is null)
+		{
+			localValue = "";
+			selected = (_, _) => "";
+		}
+		else
+		{
+			localValue = Value.Value.ToString(timeFormat);
+			selected = (viewTime, valueTime) =>  viewTime == valueTime ? $"{PrefixCls}-time-panel-cell-selected" : "";
+		}		
     }
     <div class="@(PrefixCls)-time-panel">
         @if(Picker == DatePickerType.Date)
         {
             <div class="@(PrefixCls)-header">
                 <div class="@(PrefixCls)-header-view">
-                    @Value.ToString(timeFormat) <br />
+                    @localValue <br />
                 </div>
             </div>
         }
@@ -75,7 +105,7 @@
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledHours.Contains(hour);
-                        string isSelectedCls = viewTime.Hour == Value.Hour ? $"{PrefixCls}-time-panel-cell-selected" : "";
+                        string isSelectedCls = selected(viewTime.Hour, Value?.Hour);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
                         <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
@@ -96,7 +126,7 @@
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledMinutes.Contains(minute);
-                        string isSelectedCls = viewTime.Minute == Value.Minute ? $"{PrefixCls}-time-panel-cell-selected" : "";
+                        string isSelectedCls = selected(viewTime.Minute, Value?.Minute);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
                         <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
@@ -117,7 +147,7 @@
                     {
                         var viewTime = startTime;
                         bool disabled = disabledTime._disabledSeconds.Contains(second);
-                        string isSelectedCls = viewTime.Second == Value.Second ? $"{PrefixCls}-time-panel-cell-selected" : "";
+						string isSelectedCls = selected(viewTime.Second, Value?.Second);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
                         <li class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">

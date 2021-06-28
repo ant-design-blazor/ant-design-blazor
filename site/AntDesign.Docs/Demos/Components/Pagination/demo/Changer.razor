@@ -1,0 +1,22 @@
+﻿<Pagination
+    ShowSizeChanger
+    OnShowSizeChange="OnShowSizeChange"
+    DefaultCurrent="3"
+    Total="500"/>
+<br/>
+<Pagination
+    ShowSizeChanger
+    OnShowSizeChange="OnShowSizeChange"
+    DefaultCurrent="3"
+    Total="500"
+    Disabled/>
+
+@code {
+
+    private void OnShowSizeChange(PaginationEventArgs args)
+    {
+        var(current, pageSize) = args;
+        Console.WriteLine($"{current}, {pageSize}");
+    }
+
+}

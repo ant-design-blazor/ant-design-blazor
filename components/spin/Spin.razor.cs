@@ -51,11 +51,13 @@ namespace AntDesign
                 .If(WrapperClassName, () => !string.IsNullOrWhiteSpace(WrapperClassName))
                 .If($"{PrefixCls}-nested-loading", () => !Simple);
 
-            ClassMapper.Add(PrefixCls)
+            ClassMapper
+                .Add(PrefixCls)
                 .If($"{PrefixCls}-spinning", () => _isLoading)
                 .If($"{PrefixCls}-lg", () => Size == "large")
                 .If($"{PrefixCls}-sm", () => Size == "small")
-                .If($"{PrefixCls}-show-text", () => string.IsNullOrWhiteSpace(Tip));
+                .If($"{PrefixCls}-show-text", () => string.IsNullOrWhiteSpace(Tip))
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
 
         protected override void OnInitialized()

@@ -10,6 +10,11 @@ namespace AntDesign
         [Parameter]
         public string Id { get; set; }
 
+        [CascadingParameter]
+        public ConfigProvider ConfigProvider { get; set; }
+
+        protected bool RTL => ConfigProvider?.Direction == "RTL";
+
         //[Parameter(CaptureUnmatchedValues = true)]
         //public Dictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();
 
@@ -57,7 +62,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Specifies an inline style for an DOM element.
+        /// Specifies an inline style for a DOM element.
         /// </summary>
         [Parameter]
         public string Style
@@ -66,6 +71,10 @@ namespace AntDesign
             set
             {
                 _style = value;
+                if (!string.IsNullOrWhiteSpace(_style) && !_style.EndsWith(";"))
+                {
+                    _style += ";";
+                }
                 this.StateHasChanged();
             }
         }

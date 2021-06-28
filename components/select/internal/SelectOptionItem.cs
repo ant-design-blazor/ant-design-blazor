@@ -11,6 +11,15 @@ namespace AntDesign.Select.Internal
     public class SelectOptionItem<TItemValue, TItem>
     {
         public ElementReference Ref { get => ChildComponent.Ref; }
+        //public ForwardRef SelectedTagRefBack { get; set; } = new ForwardRef();
+
+        /// <summary>
+        /// ElementRef that will be used by <see cref="SelectContent.razor"/> only
+        /// for selected Mode=Multiple & MaxTagCount=Responsive
+        /// </summary>
+        public ElementReference SelectedTagRef { get; set; }
+
+        internal decimal Width { get; set; } //TODO: rename tp Width
 
         public Guid InternalId { get; set; } = Guid.NewGuid();
 
@@ -151,6 +160,9 @@ namespace AntDesign.Select.Internal
                 }
             }
         }
+
+
+        public bool IsAddedTag { get; set; }
 
         private SelectOption<TItemValue, TItem> _childComponent;
 

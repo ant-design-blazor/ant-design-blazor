@@ -16,6 +16,8 @@ namespace AntDesign
 
         [Parameter] public string Description { get; set; }
 
+        [Parameter] public RenderFragment DescriptionTemplate { get; set; }
+
         [CascadingParameter] public ListItem ListItem { get; set; }
 
         protected override void OnInitialized()

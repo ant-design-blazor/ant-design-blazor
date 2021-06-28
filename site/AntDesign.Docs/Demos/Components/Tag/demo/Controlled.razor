@@ -1,0 +1,14 @@
+﻿<div>
+    <Tag Closable Visible="bVisible">Movies</Tag>
+    <br />
+    <br />
+    <Button Size="small" OnClick="onClick">Toggle</Button>
+</div>
+
+@code{
+    bool bVisible { get; set; } = true;
+    void onClick()
+    {
+        bVisible = !bVisible;
+    }
+}
