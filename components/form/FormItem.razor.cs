@@ -241,6 +241,10 @@ namespace AntDesign
             {
                 _labelCls = $"{_prefixCls}-required";
             }
+            if (_propertyReflector.DisplayName != null)
+            {
+                Label ??= _propertyReflector.DisplayName;
+            }
         }
     }
 }
