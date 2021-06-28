@@ -2,8 +2,8 @@
 @inherits AntDomComponentBase
 
 
-<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-    <img alt="@Alt" class="ant-image-img" src="@Src" style="@_imgStyle"
+<div class="@ClassMapper.Class" style="@_wrapperStyle" id="@Id" @ref="Ref">
+    <img alt="@Alt" class="ant-image-img" src="@Src" style="@Style"
          @onerror="HandleOnError"
          @onloadstart="HandleOnLoadStart"
          @onload="HandleOnLoad" />

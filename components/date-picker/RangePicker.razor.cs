@@ -80,6 +80,7 @@ namespace AntDesign
 
         private async Task OnInputClick(int index)
         {
+            _duringFocus = false;
             if (_duringManualInput)
             {
                 return;
@@ -149,11 +150,13 @@ namespace AntDesign
 
                 ChangePickerValue(changeValue, index);
 
+                if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+                {
+                    EditContext?.NotifyFieldChanged(FieldIdentifier);
+                }
 
                 StateHasChanged();
             }
-
-            UpdateCurrentValueAsString();
         }
 
         /// <summary>
@@ -273,8 +276,10 @@ namespace AntDesign
             return true;
         }
 
+
         private async Task OnFocus(int index)
         {
+            _duringFocus = true;
             if (index == 0)
             {
                 if (!_inputStart.IsOnFocused)
@@ -294,10 +299,22 @@ namespace AntDesign
             AutoFocus = true;
         }
 
-        protected override Task OnBlur(int index)
+        protected override async Task OnBlur(int index)
         {
+            //Await for Focus event - if it is going to happen, it will be 
+            //right after OnBlur. Best way to achieve that is to wait. 
+            //Task.Yield() does not work here.
+            await Task.Delay(1);
+            if (_duringFocus)
+            {
+                _duringFocus = false;
+                _shouldRender = false;
+                return;
+            }
             if (_openingOverlay)
-                return Task.CompletedTask;
+            {
+                return;
+            }
 
             if (_duringManualInput)
             {
@@ -317,7 +334,7 @@ namespace AntDesign
                 _duringManualInput = false;
             }
             AutoFocus = false;
-            return Task.CompletedTask;
+            return;
         }
 
         protected override void OnInitialized()
@@ -407,8 +424,6 @@ namespace AntDesign
             _pickerStatus[index]._hadSelectValue = true;
             _pickerStatus[index]._currentShowHadSelectValue = true;
 
-            UpdateCurrentValueAsString(index);
-
             if (!IsShowTime && Picker != DatePickerType.Time)
             {
                 if (_pickerStatus[0]._currentShowHadSelectValue && _pickerStatus[1]._currentShowHadSelectValue)
@@ -424,6 +439,11 @@ namespace AntDesign
                     Dates = new DateTime?[] { array.GetValue(0) as DateTime?, array.GetValue(1) as DateTime? },
                     DateStrings = new string[] { GetInputValue(0), GetInputValue(1) }
                 });
+            }
+
+            if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+            {
+                EditContext?.NotifyFieldChanged(FieldIdentifier);
             }
         }
 
@@ -454,6 +474,8 @@ namespace AntDesign
 
             if (closeDropdown)
                 Close();
+            if (OnClearClick.HasDelegate)
+                OnClearClick.InvokeAsync(null);
         }
 
         private void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
@@ -490,13 +512,6 @@ namespace AntDesign
             }
         }
 
-        protected override void UpdateCurrentValueAsString(int index = 0)
-        {
-            if (EditContext != null)
-            {
-                CurrentValueAsString = $"{GetInputValue(0)},{GetInputValue(1)}";
-            }
-        }
 
         protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
         {

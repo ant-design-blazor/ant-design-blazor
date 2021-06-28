@@ -1,5 +1,5 @@
 ﻿---
-order: 3
+order: 2
 title:
   zh-CN: 动态添加和删除 
   en-US: Add & Remove Dynamically

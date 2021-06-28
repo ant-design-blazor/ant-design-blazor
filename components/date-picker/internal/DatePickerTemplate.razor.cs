@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign.Internal
 {
@@ -84,6 +85,9 @@ namespace AntDesign.Internal
                     _maxCol = value;
             }
         }
+
+        [Parameter]
+        public int SkipDays { get; set; }
 
         private void DateOnMouseEnter(DateTime hoverDateTime)
         {

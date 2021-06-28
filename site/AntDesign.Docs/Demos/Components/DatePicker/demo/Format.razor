@@ -1,7 +1,13 @@
-﻿<DatePicker TValue="DateTime?" DefaultValue="new DateTime(2015, 1, 1)" Format="yyyy/MM/dd" />
+﻿<DatePicker @bind-Value="@_format1" Format="yyyy/MM/dd" />
 <br />
-<DatePicker TValue="DateTime?" DefaultValue="new DateTime(2015, 1, 1)" Format="dd/MM/yyyy" />
+<DatePicker @bind-Value="@_format2" Format="dd/MM/yyyy" />
 <br />
-<DatePicker TValue="DateTime?" DefaultValue="new DateTime(2015, 1, 1)" Format="yyyy/MM" />
+<DatePicker @bind-Value="@_format3" Format="yyyy/MM" />
 <br />
-<DatePicker TValue="DateTime?" DefaultValue="new DateTime(2015, 1, 1)" Format="yyyy/MM/dd" />
+<DatePicker @bind-Value="@_format4" Format="yyyy/MM/dd" />
+@code {
+	DateTime? _format1 = new DateTime(2015, 1, 1);
+	DateTime? _format2 = new DateTime(2015, 1, 1);
+	DateTime? _format3 = new DateTime(2015, 1, 1);
+	DateTime? _format4 = new DateTime(2015, 1, 1);
+}

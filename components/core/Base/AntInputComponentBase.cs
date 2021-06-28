@@ -328,6 +328,8 @@ namespace AntDesign
                 EditContext.OnValidationStateChanged -= _validationStateChangedHandler;
             }
 
+            Form?.RemoveControl(this);
+
             base.Dispose(disposing);
         }
 

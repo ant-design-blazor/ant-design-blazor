@@ -18,21 +18,12 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/D1dXz9PZqa/image.svg
 
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
-| alt | 图像描述 | string | - | 4.6.0 |
-| fallback | 加载失败容错地址 | string | - | 4.6.0 |
-| height | 图像高度 | string \| number | - | 4.6.0 |
-| placeholder | 加载占位, 为 `true` 时使用默认占位 | ReactNode | - | 4.6.0 |
-| preview | 预览参数，为 `false` 时禁用 | boolean \| [previewType](#previewType) | true | 4.6.0 [previewType](#previewType):4.7.0 |
-| src | 图片地址 | string | - | 4.6.0 |
-| width | 图像宽度 | string \| number | - | 4.6.0 |
-
-### previewType
-
-```js
-{
-  visible?: boolean;
-  onVisibleChange?: (visible, prevVisible) => void;
-}
-```
-
-其他属性见 [<img\>](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#Attributes)
+| Alt | 图像描述 | string | - | 0.6.0 |
+| Fallback | 加载失败时容错图片的地址 | string | - | 0.6.0 |
+| Height | 图像高度 | string | - | 4.6.0 |
+| Locale | 语言对象 | ImageLocale | - |- |
+| Placeholder | 加载占位 | RenderFragment | - | 0.6.0 |
+| Preview | 预览参数，为 `false` 时禁用 | boolean | true | 0.6.0 |
+| PreviewSrc | 加载完成前预览图的地址 | string | 与 `Src` 一样 | 0.6.0 |
+| Src | 图片地址 | string | - | 0.6.0 |
+| Width | 图像宽度 | string | - | 0.6.0 |

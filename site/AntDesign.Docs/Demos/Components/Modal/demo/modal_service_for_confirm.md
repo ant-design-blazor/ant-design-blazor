@@ -56,3 +56,48 @@ title:
 ## en-US
 
 Create a Confirm dialog box through ModalService, examples demonstrate user-defined templates, custom components.
+
+Template code: ConfirmTemplateDemo.razor
+
+``` c#
+
+@using System.ComponentModel
+@inherits FeedbackComponent<string, string>
+
+<div>
+    <Text>Please input "@config"</Text>
+    value: <Input @bind-Value="value" Placeholder="@config" />
+</div>
+
+@code{
+
+    string config;
+
+    string value;
+
+    protected override void OnInitialized()
+    {
+        config = this.Options;
+        base.OnInitialized();
+    }
+
+
+    public override async Task OkAsync(ModalClosingEventArgs args)
+    {
+        if (FeedbackRef is ConfirmRef confirmRef)
+        {
+            confirmRef.Config.OkButtonProps.Loading = true;
+        }
+
+        await Task.Delay(1000);
+        // only the input's value equals the initialized value, the OK button will close the confirm dialog box
+        if (value != config)
+            args.Cancel = true;
+        else
+            await (FeedbackRef as IFeedbackRef<string>)!.OkAsync(value);
+
+        await base.OkAsync(args);
+    }
+}
+
+```

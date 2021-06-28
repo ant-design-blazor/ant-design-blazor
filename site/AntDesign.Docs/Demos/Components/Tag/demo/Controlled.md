@@ -1,8 +1,8 @@
 ﻿---
-order: 5
+order: 4
 title:
   zh-CN: 控制关闭状态 
-  en-US: Controlled 
+  en-US: Controlled
 ---
 
 ## zh-CN

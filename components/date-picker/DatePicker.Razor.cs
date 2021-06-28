@@ -34,6 +34,10 @@ namespace AntDesign
                 else if ((IsNullable && DefaultValue != null) || (!IsNullable && !DefaultValue.Equals(default(TValue))))
                 {
                     DefaultPickerValue = DefaultValue;
+                    if (!DefaultValue.Equals(Value))
+                    {
+                        CurrentValue = DefaultValue;
+                    }
                 }
                 else if (!IsNullable && Value.Equals(default(TValue)))
                 {
@@ -99,7 +103,7 @@ namespace AntDesign
             }
             if (FormatAnalyzer.TryPickerStringConvert(args.Value.ToString(), out TValue changeValue, IsNullable))
             {
-                Value = changeValue;
+                CurrentValue = changeValue;
                 GetIfNotNull(changeValue, (notNullValue) =>
                 {
                     PickerValues[0] = notNullValue;
@@ -107,21 +111,19 @@ namespace AntDesign
 
                 StateHasChanged();
             }
-
-            UpdateCurrentValueAsString();
         }
 
-        protected override Task OnBlur(int index)
+        protected override async Task OnBlur(int index)
         {
             if (_openingOverlay)
-                return Task.CompletedTask;
+                return;
 
             if (_duringManualInput)
             {
                 if (!Value.Equals(_cacheDuringInput))
                 {
                     //reset picker to Value         
-                    Value = _cacheDuringInput;
+                    CurrentValue = _cacheDuringInput;
                     _pickerStatus[0]._hadSelectValue = !(Value is null && (DefaultValue is not null || DefaultPickerValue is not null));
                     GetIfNotNull(Value ?? DefaultValue ?? DefaultPickerValue, (notNullValue) =>
                     {
@@ -132,7 +134,7 @@ namespace AntDesign
             }
 
             AutoFocus = false;
-            return Task.CompletedTask;
+            return;
         }
 
         /// <summary>
@@ -245,8 +247,6 @@ namespace AntDesign
 
             _pickerStatus[0]._hadSelectValue = true;
 
-            UpdateCurrentValueAsString();
-
             if (!IsShowTime && Picker != DatePickerType.Time)
             {
                 Close();
@@ -278,6 +278,8 @@ namespace AntDesign
                 CurrentValue = default;
             if (closeDropdown)
                 Close();
+            if (OnClearClick.HasDelegate)
+                OnClearClick.InvokeAsync(null);
         }
 
         private void GetIfNotNull(TValue value, Action<DateTime> notNullAction)
